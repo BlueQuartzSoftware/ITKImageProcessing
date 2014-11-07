@@ -33,8 +33,19 @@ class ZeissImportFilter : public AbstractFilter
 
     virtual ~ZeissImportFilter();
 
+    DREAM3D_FILTER_PARAMETER(QString, CellAttributeMatrixName)
+    Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
+
+
     DREAM3D_FILTER_PARAMETER(QString, InputFile)
     Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
+
+    DREAM3D_FILTER_PARAMETER(QString, DataContainerPrefix)
+    Q_PROPERTY(QString DataContainerPrefix READ getDataContainerPrefix WRITE setDataContainerPrefix)
+
+
+    DREAM3D_FILTER_PARAMETER(QString, ImageDataArrayName)
+    Q_PROPERTY(QString ImageDataArrayName READ getImageDataArrayName WRITE setImageDataArrayName)
 
 
     /**
@@ -145,7 +156,7 @@ class ZeissImportFilter : public AbstractFilter
      * @param tags
      * @return
      */
-    ZeissTagsXmlSection::Pointer parseRootTagsSection(QDomElement& tags);
+    ZeissTagsXmlSection::Pointer parseTagsSection(QDomElement& tags);
 
     /**
      * @brief parseImages
@@ -155,6 +166,7 @@ class ZeissImportFilter : public AbstractFilter
 
     void setDataContainerDims(VolumeDataContainer* dc, ZeissTagsXmlSection::Pointer photoTagsSection);
     void generateMetaDataAttributeMatrix(VolumeDataContainer* dc, ZeissTagsXmlSection::Pointer photoTagsSection);
+    void generateDataArrays(VolumeDataContainer* dc, const QString &imageName, const QString &pTag, const QString &dcName);
 
 
   private:

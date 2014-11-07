@@ -66,7 +66,7 @@ class AbstractZeissMetaData
 #endif
     virtual void printValue(std::ostream &out) = 0;
 
-    virtual IDataArray::Pointer createDataArray() = 0;
+    virtual IDataArray::Pointer createDataArray(bool allocate = true) = 0;
 
   protected:
     AbstractZeissMetaData() {m_ZeissIdTag = 0;}
@@ -101,7 +101,7 @@ class Int32ZeissMetaEntry : public AbstractZeissMetaData
 
     void printValue(std::ostream &out) { out << _value; }
 
-    virtual IDataArray::Pointer createDataArray();
+    virtual IDataArray::Pointer createDataArray(bool allocate = true);
 
 
   protected:
@@ -143,7 +143,7 @@ class Int64ZeissMetaEntry : public AbstractZeissMetaData
 #endif
     void printValue(std::ostream &out) { out << _value; }
 
-    virtual IDataArray::Pointer createDataArray();
+    virtual IDataArray::Pointer createDataArray(bool allocate = true);
 
   protected:
     Int64ZeissMetaEntry()
@@ -202,7 +202,7 @@ class FloatZeissMetaEntry : public AbstractZeissMetaData
 
     void printValue(std::ostream &out) { out << _value; }
 
-    virtual IDataArray::Pointer createDataArray();
+    virtual IDataArray::Pointer createDataArray(bool allocate = true);
 
 
   protected:
@@ -255,7 +255,7 @@ class StringZeissMetaEntry : public AbstractZeissMetaData
 
     void printValue(std::ostream &out) { out << _value.toStdString(); }
 
-    virtual IDataArray::Pointer createDataArray();
+    virtual IDataArray::Pointer createDataArray(bool allocate = true);
 
   protected:
     StringZeissMetaEntry()

@@ -46,13 +46,13 @@ bool className::setValue(int32_t value)\
 }\
 int32_t className::getValue() { \
   return _value; }\
-IDataArray::Pointer className::createDataArray() {\
+IDataArray::Pointer className::createDataArray(bool allocate) {\
   ZeissTagMapping::Pointer tagMap = ZeissTagMapping::instance();\
   QString tagName = tagMap->nameForId(this->getZeissIdTag());\
   if (tagName.isEmpty() == true) { std::cout << "writeHDF5Attribute: Error writing attribute. No zeiss id was found "\
     << " for id=" << getZeissIdTag(); return ArrayType::NullPointer(); } \
-  ArrayType::Pointer array = ArrayType::CreateArray(1, tagName, true);\
-  array->setValue(0, _value);\
+  ArrayType::Pointer array = ArrayType::CreateArray(1, tagName, allocate);\
+  if(allocate) {array->setValue(0, _value); }\
   return array;\
   }
 
@@ -150,14 +150,14 @@ ReadHDF5Attribute_DEFINITION(int64_t, Int64ZeissMetaEntry)
 // -----------------------------------------------------------------------------
 // FloatZeissMetaEntry Implementations
 // -----------------------------------------------------------------------------
-IDataArray::Pointer FloatZeissMetaEntry::createDataArray()
+IDataArray::Pointer FloatZeissMetaEntry::createDataArray(bool allocate)
 {
   ZeissTagMapping::Pointer tagMap = ZeissTagMapping::instance();
   QString tagName = tagMap->nameForId(this->getZeissIdTag());
   if (tagName.isEmpty() == true) { std::cout << "writeHDF5Attribute: Error writing attribute. No zeiss id was found "
                                              << " for id=" << getZeissIdTag(); return FloatArrayType::NullPointer(); }
-  FloatArrayType::Pointer array = FloatArrayType::CreateArray(1, tagName, true);
-  array->setValue(0, _value);
+  FloatArrayType::Pointer array = FloatArrayType::CreateArray(1, tagName, allocate);
+  if(allocate) {array->setValue(0, _value);}
   return array;
 }
 #ifdef ZEISS_HDF_SUPPORT
@@ -168,14 +168,14 @@ ReadHDF5Attribute_DEFINITION(float, FloatZeissMetaEntry)
 // -----------------------------------------------------------------------------
 // StringZeissMetaEntry Implementations
 // -----------------------------------------------------------------------------
-IDataArray::Pointer StringZeissMetaEntry::createDataArray()
+IDataArray::Pointer StringZeissMetaEntry::createDataArray(bool allocate)
 {
   ZeissTagMapping::Pointer tagMap = ZeissTagMapping::instance();
   QString tagName = tagMap->nameForId(this->getZeissIdTag());
   if (tagName.isEmpty() == true) { std::cout << "writeHDF5Attribute: Error writing attribute. No zeiss id was found "
                                              << " for id=" << getZeissIdTag(); return StringDataArray::NullPointer(); }
-  StringDataArray::Pointer array = StringDataArray::CreateArray(1, tagName, true);
-  array->setValue(0, _value);
+  StringDataArray::Pointer array = StringDataArray::CreateArray(1, tagName, allocate);
+  if(allocate) {array->setValue(0, _value);}
   return array;
 }
 #ifdef ZEISS_HDF_SUPPORT
