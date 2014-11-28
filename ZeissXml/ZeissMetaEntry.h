@@ -46,6 +46,8 @@ type getValue();\
 int writeHDF5Attribute(hid_t fileId, const QString &datasetPath);\
 int readHDF5Attribute(hid_t fileId, const QString &datasetPath);\
 
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -76,7 +78,6 @@ class AbstractZeissMetaData
     AbstractZeissMetaData(const AbstractZeissMetaData&);    // Copy Constructor Not Implemented
     void operator=(const AbstractZeissMetaData&);  // Operator '=' Not Implemented
 };
-
 
 // -----------------------------------------------------------------------------
 //
@@ -275,5 +276,29 @@ class StringZeissMetaEntry : public AbstractZeissMetaData
     StringZeissMetaEntry(const StringZeissMetaEntry&);    // Copy Constructor Not Implemented
       void operator=(const StringZeissMetaEntry&);  // Operator '=' Not Implemented
 };
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+namespace ZeissMetaEntry {
+
+
+  template<typename DestMetaData>
+  typename DestMetaData::Pointer convert(AbstractZeissMetaData::Pointer src)
+  {
+
+    StringZeissMetaEntry::Pointer srcPtr = boost::dynamic_pointer_cast<StringZeissMetaEntry>(src);
+    Q_ASSERT_X(srcPtr.get() != NULL, "Could not Cast to StringZeissMetaEntry", "");
+
+
+    typename DestMetaData::Pointer destPtr = DestMetaData::New();
+    destPtr->setValue(srcPtr->getValue());
+    return destPtr;
+
+  }
+
+}
+
 
 #endif /* ZEISSMETAENTRY_HPP_ */

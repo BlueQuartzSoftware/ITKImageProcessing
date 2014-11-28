@@ -6,6 +6,7 @@
 
 #include <string.h>
 
+#include <set>
 
 #include <QtCore/QString>
 #include <QtCore/QFileInfo>
@@ -107,10 +108,19 @@ void ZeissImportFilter::dataCheck()
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
+  if(getErrorCondition() < 0) { return; }
+
   // Parse the XML file to get all the meta-data information and create all the
   // data structure that is needed.
   QFile xmlFile(getInputFile());
   int success = readMetaXml(&xmlFile);
+  if(success < 0)
+  {
+    ss = QObject::tr("Could not parse Zeiss XML file");
+    setErrorCondition(-389);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
 
 }
 
@@ -199,7 +209,6 @@ int ZeissImportFilter::readMetaXml(QIODevice* device)
 // -----------------------------------------------------------------------------
 ZeissTagsXmlSection::Pointer ZeissImportFilter::parseTagsSection(QDomElement& tags)
 {
-  int err = 0;
   int count = -1;
   bool ok = false;
   // qDebug() << tags.nodeName() << " node type: " << tags.nodeType();
@@ -217,6 +226,8 @@ ZeissTagsXmlSection::Pointer ZeissImportFilter::parseTagsSection(QDomElement& ta
 
   ZeissTagsXmlSection::Pointer rootTagsSection = ZeissTagsXmlSection::New();
   ZeissTagMapping::Pointer tagMapping = ZeissTagMapping::instance();
+
+  std::set<int> unknownTags;
 
   for(int c = 0; c < count; c++)
   {
@@ -236,13 +247,29 @@ ZeissTagsXmlSection::Pointer ZeissImportFilter::parseTagsSection(QDomElement& ta
 #if ZIF_PRINT_DBG_MSGS
     else
     {
-      QString str;
-      QTextStream ss(&str);
-      ss << "<" << Ix << ">" << idValue << "</" << Ix << "> is Unknown to the Tag Mapping Software";
-      qDebug() << str;
+      unknownTags.insert(idValue);
+//      QString str;
+//      QTextStream ss(&str);
+//      ss << "<" << Ix << ">" << idValue << "</" << Ix << "> is Unknown to the Tag Mapping Software";
+//      qDebug() << str;
     }
 #endif
   }
+
+#if ZIF_PRINT_DBG_MSGS
+
+  if(unknownTags.size() > 0)
+  {
+    QString str;
+    QTextStream ss(&str);
+    ss << "======= Unknown Zeiss Axio Vision _Meta XML Tags ===================\n";
+    for(std::set<int>::iterator iter = unknownTags.begin(); iter != unknownTags.end(); ++iter)
+    {
+      ss <<  *iter << " is Unknown to the Tag Mapping Software\n";
+    }
+    qDebug() << str;
+  }
+#endif
 
   return rootTagsSection;
 }
@@ -253,10 +280,13 @@ ZeissTagsXmlSection::Pointer ZeissImportFilter::parseTagsSection(QDomElement& ta
 void ZeissImportFilter::parseImages(QDomElement& root, ZeissTagsXmlSection::Pointer rootTagsSection)
 {
   AbstractZeissMetaData::Pointer ptr = rootTagsSection->getEntry(Zeiss::MetaXML::ImageCountRawId);
-  Int32ZeissMetaEntry::Pointer imageCountPtr = boost::dynamic_pointer_cast<Int32ZeissMetaEntry>(ptr);
+
+  Int32ZeissMetaEntry::Pointer imageCountPtr = ZeissMetaEntry::convert<Int32ZeissMetaEntry>(ptr);
+  Q_ASSERT_X(imageCountPtr.get() != NULL, "Could not Cast to Int32ZeissMetaEntry", "");
+
   qint32 imageCount = imageCountPtr->getValue();
 
-  ptr = rootTagsSection->getEntry(Zeiss::MetaXML::DocumentNameId);
+  ptr = rootTagsSection->getEntry(Zeiss::MetaXML::FilenameId);
   StringZeissMetaEntry::Pointer imageNamePtr = boost::dynamic_pointer_cast<StringZeissMetaEntry>(ptr);
   QString imageName = imageNamePtr->getValue();
 
@@ -329,8 +359,10 @@ void ZeissImportFilter::parseImages(QDomElement& root, ZeissTagsXmlSection::Poin
       bundle->setMetaDataArrays(metaDataArrayNames);
     }
 
-    AbstractZeissMetaData::Pointer ptr = photoTagsSection->getEntry(Zeiss::MetaXML::ImageIndexPId);
-    Int32ZeissMetaEntry::Pointer int32Entry = boost::dynamic_pointer_cast<Int32ZeissMetaEntry>(ptr);
+    AbstractZeissMetaData::Pointer ptr = photoTagsSection->getEntry(Zeiss::MetaXML::ImageTileIndexId);
+
+    Int32ZeissMetaEntry::Pointer int32Entry = ZeissMetaEntry::convert<Int32ZeissMetaEntry>(ptr);
+    Q_ASSERT_X(int32Entry.get() != NULL, "Could not Cast to Int32ZeissMetaEntry", "");
 
     // Create the Data Container
     QString dcName = getDataContainerPrefix() + pTag;
@@ -456,14 +488,17 @@ void ZeissImportFilter::generateDataArrays(const QString &imageName, const QStri
 // -----------------------------------------------------------------------------
 void ZeissImportFilter::setDataContainerDims(VolumeDataContainer* dc, ZeissTagsXmlSection::Pointer photoTagsSection)
 {
-  AbstractZeissMetaData::Pointer ptr = photoTagsSection->getEntry(Zeiss::MetaXML::ImageWidthId);
-  Int32ZeissMetaEntry::Pointer int32Entry = boost::dynamic_pointer_cast<Int32ZeissMetaEntry>(ptr);
+  AbstractZeissMetaData::Pointer ptr = photoTagsSection->getEntry(Zeiss::MetaXML::ImageWidthPixelId);
+  Int32ZeissMetaEntry::Pointer int32Entry = ZeissMetaEntry::convert<Int32ZeissMetaEntry>(ptr);
+  Q_ASSERT_X(int32Entry.get() != NULL, "Could not Cast to Int32ZeissMetaEntry", "");
 
   size_t dims[3] = {0,0,1};
   dims[0] = int32Entry->getValue();
 
-  ptr = photoTagsSection->getEntry(Zeiss::MetaXML::ImageHeightId);
-  int32Entry = boost::dynamic_pointer_cast<Int32ZeissMetaEntry>(ptr);
+  ptr = photoTagsSection->getEntry(Zeiss::MetaXML::ImageHeightPixelId);
+  int32Entry = ZeissMetaEntry::convert<Int32ZeissMetaEntry>(ptr);
+  Q_ASSERT_X(int32Entry.get() != NULL, "Could not Cast to Int32ZeissMetaEntry", "");
+
   dims[1] = int32Entry->getValue();
   dc->setDimensions(dims);
 }

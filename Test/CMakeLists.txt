@@ -75,3 +75,5 @@ endmacro()
 
 ADD_DREAM3D_TEST(ZeissImportFilterAvailabilityTest  "DREAM3DLib")
 
+#ADD_DREAM3D_TEST(ZeissImportZVITagParser  "DREAM3DLib")
+

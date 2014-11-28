@@ -23,4 +23,14 @@ namespace UnitTest
 
 }
 
+namespace ZeissImport
+{
+  namespace Tools
+  {
+    const QString TagsTextFile("@ZeissImport_SOURCE_DIR@/ZVI_Tags.txt");
+    const QString ZeissTagMappingConstantsFile("@ZeissImport_SOURCE_DIR@/ZeissXML/ZeissTagMappingConstants.h");
+    const QString ZeissInitIdNameMapFile("@ZeissImport_SOURCE_DIR@/ZeissXML/ZeissTagMapping_InitMaps.cpp");
+  }
+}
+
 #endif
