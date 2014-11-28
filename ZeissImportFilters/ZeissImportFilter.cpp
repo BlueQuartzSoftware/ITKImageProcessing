@@ -154,8 +154,8 @@ void ZeissImportFilter::execute()
   /* If some error occurs this code snippet can report the error up the call chain*/
   if (err < 0)
   {
-    QString ss = QObject::tr("Some error message");
-    setErrorCondition(-99999999);
+    QString ss = QObject::tr("Error Importing a Zeiss AxioVision file set.");
+    setErrorCondition(-90000);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
