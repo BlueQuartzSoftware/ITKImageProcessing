@@ -17,6 +17,7 @@ set(ZeissXml_HDRS
    ${${PLUGIN_NAME}_SOURCE_DIR}/ZeissXml/ZeissTagMapping.h
 #   ${${PLUGIN_NAME}_SOURCE_DIR}/ZeissXml/ZeissXmlReader.h
    ${${PLUGIN_NAME}_SOURCE_DIR}/ZeissXml/ZeissTagsXmlSection.h
+   ${${PLUGIN_NAME}_SOURCE_DIR}/ZeissXml/ZeissTagMappingConstants.h
 )
 
 
