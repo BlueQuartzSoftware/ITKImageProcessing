@@ -25,8 +25,6 @@
 #define ZIF_PRINT_DBG_MSGS 0
 
 
-static const QString k_DataContainerBundleDefaultName("Zeiss Axio Vision Montage");
-static const QString k_DataContainePrefixDefaultName("Zeiss Axio Vision Tile_");
 
 // -----------------------------------------------------------------------------
 //
@@ -34,10 +32,10 @@ static const QString k_DataContainePrefixDefaultName("Zeiss Axio Vision Tile_");
 CalculateBackground::CalculateBackground() :
   AbstractFilter(),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
-  m_InputFile(""),
-  m_DataContainerBundleName(k_DataContainerBundleDefaultName),
-  m_DataContainerPrefix(k_DataContainePrefixDefaultName),
-  m_ImageDataArrayName(DREAM3D::CellData::ImageData)
+//  m_InputFile(""),
+  m_DataContainerBundleName("")
+//  m_DataContainerPrefix(k_DataContainePrefixDefaultName),
+//  m_ImageDataArrayName(DREAM3D::CellData::ImageData)
 {
   setupFilterParameters();
 }
@@ -55,9 +53,9 @@ CalculateBackground::~CalculateBackground()
 void CalculateBackground::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FileSystemFilterParameter::New("Input File", "InputFile", FilterParameterWidgetType::InputFileWidget, getInputFile(), false, "", "*.xml"));
-  parameters.push_back(FilterParameter::New("DataContainer Prefix", "DataContainerPrefix", FilterParameterWidgetType::StringWidget, getDataContainerPrefix(), false));
-  parameters.push_back(FilterParameter::New("DataContainerBundle Name", "DataContainerBundleName", FilterParameterWidgetType::DataContainerSelectionWidget, getDataContainerBundleName(), true));
+  //parameters.push_back(FileSystemFilterParameter::New("Input File", "InputFile", FilterParameterWidgetType::InputFileWidget, getInputFile(), false, "", "*.xml"));
+//  parameters.push_back(FilterParameter::New("DataContainer Prefix", "DataContainerPrefix", FilterParameterWidgetType::StringWidget, getDataContainerPrefix(), false));
+  parameters.push_back(FilterParameter::New("DataContainerBundle Name", "DataContainerBundleName", FilterParameterWidgetType::DataBundleSelectionWidget, getDataContainerBundleName(), true));
 
   setFilterParameters(parameters);
 }
@@ -68,9 +66,9 @@ void CalculateBackground::setupFilterParameters()
 void CalculateBackground::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setInputFile(reader->readString("InputFile", getInputFile() ) );
+  //setInputFile(reader->readString("InputFile", getInputFile() ) );
   setDataContainerBundleName(reader->readString("DataContainerBundleName", getDataContainerBundleName() ) );
-  setDataContainerPrefix(reader->readString("DataContainerPrefix", getDataContainerPrefix() ) );
+//  setDataContainerPrefix(reader->readString("DataContainerPrefix", getDataContainerPrefix() ) );
   reader->closeFilterGroup();
 }
 
@@ -95,33 +93,11 @@ void CalculateBackground::dataCheck()
   setErrorCondition(0);
 
   QString ss;
-  QFileInfo fi(getInputFile());
-  if (getInputFile().isEmpty() == true)
-  {
-    ss = QObject::tr("%1 needs the Input File Set and it was not.").arg(ClassName());
-    setErrorCondition(-387);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-  }
-  else if (fi.exists() == false)
-  {
-    ss = QObject::tr("The input file does not exist.");
-    setErrorCondition(-388);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-  }
+
 
   if(getErrorCondition() < 0) { return; }
 
-  // Parse the XML file to get all the meta-data information and create all the
-  // data structure that is needed.
-  QFile xmlFile(getInputFile());
-  int success = readMetaXml(&xmlFile);
-  if(success < 0)
-  {
-    ss = QObject::tr("Could not parse Zeiss XML file");
-    setErrorCondition(-389);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return;
-  }
+
 
 }
 
