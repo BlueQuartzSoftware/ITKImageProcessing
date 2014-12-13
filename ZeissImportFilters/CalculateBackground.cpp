@@ -358,7 +358,7 @@ void CalculateBackground::parseImages(QDomElement& root, ZeissTagsXmlSection::Po
     generateDataArrays(imageName, pTag, dcName);
 
     // Add the data container into the bundle
-    bundle->append(dc);
+    bundle->addDataContainer(dc);
   }
 
 }

@@ -381,7 +381,7 @@ void ZeissImportFilter::parseImages(QDomElement& root, ZeissTagsXmlSection::Poin
     generateDataArrays(imageName, pTag, dcName);
 
     // Add the data container into the bundle
-    bundle->append(dc);
+    bundle->addDataContainer(dc);
   }
 
 }
