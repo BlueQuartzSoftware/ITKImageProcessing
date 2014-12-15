@@ -116,7 +116,7 @@ void CalculateBackground::dataCheck()
         if(NULL == imagePtr)
         {
             setErrorCondition(-76001);
-            notifyErrorMessage(getHumanLabel(), "The data bundle has not been selected properly", -76001);
+            notifyErrorMessage(getHumanLabel(), "The data was not found", -76001);
         }
     }
 
@@ -167,42 +167,36 @@ void CalculateBackground::execute()
 
 
 
+    UInt8ArrayType::Pointer imagePtr = UInt8ArrayType::NullPointer();
+    IDataArray::Pointer iDataArray = IDataArray::NullPointer();
+
+    IDataContainerBundle::Pointer dcb = getDataContainerArray()->getDataContainerBundle(m_DataContainerBundleName);
+    QVector<QString> dcList = dcb->getDataContainerNames();
+    for(int i = 0; i < dcList.size(); i++)
+    {
+        m_ImageDataArrayPath.update(dcList[0], "CellData", "ImageData");
+        iDataArray = getDataContainerArray()->getExistingPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, m_ImageDataArrayPath);
+
+        imagePtr = boost::dynamic_pointer_cast<DataArray<uint8_t> >(iDataArray);
+
+        if(NULL != imagePtr.get())
+        {
+            int64_t totalPoints = imagePtr->getNumberOfTuples();
+
+            uint8_t* image = imagePtr->getPointer(0);
+
+            for(size_t t = 0; t < totalPoints; t++)
+            {
+
+               // background[t] = background[0] + static_cast<double>(image[0]);
+            }
+
+        }
 
 
-
-
-//    UInt8ArrayType::imagePtr = UInt8ArrayType::NullPointer();
-//    IDataArray::Pointer iDataArray = IDataArray::NullPointer();
-
-//    IDataContainerBundle::Pointer dcb = getDataContainerArray()->getDataContainerBundle(m_DataContainerBundleName);
-//    QVector<QString> dcList = dcb->getDataContainerNames();
-//    for(int i = 0; i < dcList.size(); i++)
-//    {
-//        m_ImageDataArrayPath.update(dcList[0], "CellData", "ImageData");
-//        iDataArray = getDataContainerArray()->getExistingPrereqArrayFromPath(this, m_ImageDataArrayPath);
-
-//        imagePtr = boost::dynamic_pointer_cast<DataArray<uint8_t> >(iDataArray);
-
-//        if(NULL != imagePtr.get())
-//        {
-//          //  m_ImageData = m_ImageDataPtr.lock()->getPointer(0);
-//            int64_t totalPoints = imagePtr->getNumberOfTuples();
-
-
-//        uint8_t* image = imagePtr->getPointer(0);
-
-//        for(size_t t = 0; t < totalPoints; t++)
-//        {
-
-//            background[t] = background[0] + static_cast<double>(image[0]);
-//        }
-
-//    }
-
-
-//    /* Let the GUI know we are done with this filter */
-//    notifyStatusMessage(getHumanLabel(), "Complete");
-//    }
+    /* Let the GUI know we are done with this filter */
+    notifyStatusMessage(getHumanLabel(), "Complete");
+    }
 }
 
 
