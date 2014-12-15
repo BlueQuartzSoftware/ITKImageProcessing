@@ -38,18 +38,15 @@ class CalculateBackground : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(QString, CellAttributeMatrixName)
     Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, ImageDataArrayPath)
+    Q_PROPERTY(DataArrayPath ImageDataArrayPath READ getImageDataArrayPath WRITE setImageDataArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(QString, InputFile)
-    Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
+
 
     DREAM3D_FILTER_PARAMETER(QString, DataContainerBundleName)
     Q_PROPERTY(QString DataContainerBundleName READ getDataContainerBundleName WRITE setDataContainerBundleName)
 
-    DREAM3D_FILTER_PARAMETER(QString, DataContainerPrefix)
-    Q_PROPERTY(QString DataContainerPrefix READ getDataContainerPrefix WRITE setDataContainerPrefix)
 
-    DREAM3D_FILTER_PARAMETER(QString, ImageDataArrayName)
-    Q_PROPERTY(QString ImageDataArrayName READ getImageDataArrayName WRITE setImageDataArrayName)
 
 
     /**
@@ -153,25 +150,20 @@ class CalculateBackground : public AbstractFilter
      * @param device
      * @return
      */
-    int readMetaXml(QIODevice* device);
+
 
     /**
      * @brief parseRootTagsSection
      * @param tags
      * @return
      */
-    ZeissTagsXmlSection::Pointer parseTagsSection(QDomElement& tags);
 
     /**
      * @brief parseImages
      * @param rootTags
      */
-    void parseImages(QDomElement& root, ZeissTagsXmlSection::Pointer rootTagsSection);
-
-    void setDataContainerDims(VolumeDataContainer* dc, ZeissTagsXmlSection::Pointer photoTagsSection);
     void generateMetaDataAttributeMatrix(DataContainer *dc, ZeissTagsXmlSection::Pointer photoTagsSection);
-    void generateDataArrays(const QString &imageName, const QString &pTag, const QString &dcName);
-
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int8_t, ImageData)
 
   private:
     /* Your private class instance variables go here. You can use several preprocessor macros to help
