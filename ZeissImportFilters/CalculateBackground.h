@@ -46,6 +46,12 @@ class CalculateBackground : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(QString, DataContainerBundleName)
     Q_PROPERTY(QString DataContainerBundleName READ getDataContainerBundleName WRITE setDataContainerBundleName)
 
+    DREAM3D_FILTER_PARAMETER(int, lowThresh)
+    Q_PROPERTY(int lowThresh READ getlowThresh WRITE setlowThresh)
+
+    DREAM3D_FILTER_PARAMETER(int, highThresh)
+    Q_PROPERTY(int highThresh READ gethighThresh WRITE sethighThresh)
+
 
 
 
@@ -172,8 +178,8 @@ class CalculateBackground : public AbstractFilter
      */
 
     int64_t m_totalPoints;
-    uint64_t m_lowThresh;
-    uint64_t m_highThresh;
+//    uint64_t m_lowThresh;
+//    uint64_t m_highThresh;
 
     CalculateBackground(const CalculateBackground&); // Copy Constructor Not Implemented
     void operator=(const CalculateBackground&); // Operator '=' Not Implemented

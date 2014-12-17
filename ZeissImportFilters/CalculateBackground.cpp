@@ -33,12 +33,12 @@
 // -----------------------------------------------------------------------------
 CalculateBackground::CalculateBackground() :
     AbstractFilter(),
-    m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
+    m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),    
+    m_DataContainerBundleName(""),
     m_ImageDataArrayName("ImageData"),
-    //  m_InputFile(""),
-    m_DataContainerBundleName("")
-  //  m_DataContainerPrefix(k_DataContainePrefixDefaultName),
-  //  m_ImageDataArrayName(DREAM3D::CellData::ImageData)
+    m_lowThresh(0),
+    m_highThresh(255)
+
 {
     setupFilterParameters();
 }
@@ -59,6 +59,8 @@ void CalculateBackground::setupFilterParameters()
     //parameters.push_back(FileSystemFilterParameter::New("Input File", "InputFile", FilterParameterWidgetType::InputFileWidget, getInputFile(), false, "", "*.xml"));
     //  parameters.push_back(FilterParameter::New("DataContainer Prefix", "DataContainerPrefix", FilterParameterWidgetType::StringWidget, getDataContainerPrefix(), false));
     parameters.push_back(FilterParameter::New("DataContainerBundle Name", "DataContainerBundleName", FilterParameterWidgetType::DataBundleSelectionWidget, getDataContainerBundleName(), true));
+    parameters.push_back(FilterParameter::New("lowest allowed Image value", "lowThresh", FilterParameterWidgetType::IntWidget, getlowThresh(), false, "Image Value"));
+    parameters.push_back(FilterParameter::New("highest allowed Image value", "highThresh", FilterParameterWidgetType::IntWidget, gethighThresh(), false, "Image Value"));
 
     setFilterParameters(parameters);
 }
@@ -71,6 +73,8 @@ void CalculateBackground::readFilterParameters(AbstractFilterParametersReader* r
     reader->openFilterGroup(this, index);
     //setInputFile(reader->readString("InputFile", getInputFile() ) );
     setDataContainerBundleName(reader->readString("DataContainerBundleName", getDataContainerBundleName() ) );
+    setlowThresh(reader->readValue("lowThresh", getlowThresh()) );
+    sethighThresh(reader->readValue("highThresh", gethighThresh()) );
     //  setDataContainerPrefix(reader->readString("DataContainerPrefix", getDataContainerPrefix() ) );
     reader->closeFilterGroup();
 }
@@ -82,7 +86,9 @@ int CalculateBackground::writeFilterParameters(AbstractFilterParametersWriter* w
 {
     writer->openFilterGroup(this, index);
     DREAM3D_FILTER_WRITE_PARAMETER(DataContainerBundleName)
-            writer->closeFilterGroup();
+    DREAM3D_FILTER_WRITE_PARAMETER(lowThresh)
+    DREAM3D_FILTER_WRITE_PARAMETER(highThresh)
+    writer->closeFilterGroup();
     return ++index; // we want to return the next index that was just written to
 }
 
@@ -184,6 +190,7 @@ void CalculateBackground::execute()
 
     IDataContainerBundle::Pointer dcb = getDataContainerArray()->getDataContainerBundle(m_DataContainerBundleName);
     QVector<QString> dcList = dcb->getDataContainerNames();
+    // getting the fist data container just to get the dimensions of each image.
     VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(dcList[0]);
 
     size_t udims[3] = {0, 0, 0};
@@ -203,8 +210,7 @@ void CalculateBackground::execute()
 
 
 
-    m_lowThresh = 0;
-    m_highThresh = 100;
+
 
 // run through all the data containers (images) and add them up to be averaged after the loop
     for(int i = 0; i < dcList.size(); i++)
@@ -234,7 +240,6 @@ void CalculateBackground::execute()
         }
 
 
-    /* Let the GUI know we are done with this filter */
 
     }
 
@@ -264,10 +269,10 @@ void CalculateBackground::execute()
        A(i, 4) = xval*xval;
        A(i, 5) = yval*yval;
     }
-
+   notifyStatusMessage(getHumanLabel(), "Fitting a polynomial to data. May take a while to solve if images are large");
    Eigen::VectorXd p = A.colPivHouseholderQr().solve(B);
 
-
+   /* Let the GUI know we are done with this filter */
     notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
