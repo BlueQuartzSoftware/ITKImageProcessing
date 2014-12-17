@@ -21,6 +21,8 @@
 
 #include "ZeissImport/ZeissImportConstants.h"
 #include "ZeissImport/ZeissXml/ZeissTagMapping.h"
+#include <Eigen/Dense>
+
 
 #define ZIF_PRINT_DBG_MSGS 0
 
@@ -113,12 +115,16 @@ void CalculateBackground::dataCheck()
         iDataArray = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, getImageDataArrayPath(), dims);
         imagePtr = boost::dynamic_pointer_cast<DataArray<uint8_t> >(iDataArray);
 
+
         if(NULL == imagePtr)
         {
             setErrorCondition(-76001);
             notifyErrorMessage(getHumanLabel(), "The data was not found", -76001);
         }
     }
+
+    m_totalPoints = imagePtr->getNumberOfTuples();
+
 
 
     if(getErrorCondition() < 0)
@@ -149,6 +155,8 @@ void CalculateBackground::preflight()
 void CalculateBackground::execute()
 {
     int err = 0;
+    int xval = 0;
+    int yval = 0;
     // typically run your dataCheck function to make sure you can get that far and all your variables are initialized
     dataCheck();
     // Check to make sure you made it through the data check. Errors would have been reported already so if something
@@ -169,34 +177,98 @@ void CalculateBackground::execute()
 
     UInt8ArrayType::Pointer imagePtr = UInt8ArrayType::NullPointer();
     IDataArray::Pointer iDataArray = IDataArray::NullPointer();
+    uint8_t* image;
+
+    std::vector<double> background(m_totalPoints, 0);
+    std::vector<double> counter(m_totalPoints,0);
 
     IDataContainerBundle::Pointer dcb = getDataContainerArray()->getDataContainerBundle(m_DataContainerBundleName);
     QVector<QString> dcList = dcb->getDataContainerNames();
+    VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(dcList[0]);
+
+    size_t udims[3] = {0, 0, 0};
+    m->getDimensions(udims);
+
+  #if (CMP_SIZEOF_SIZE_T == 4)
+    typedef int32_t DimType;
+  #else
+    typedef int64_t DimType;
+  #endif
+    DimType dims[3] =
+    {
+      static_cast<DimType>(udims[0]),
+      static_cast<DimType>(udims[1]),
+      static_cast<DimType>(udims[2]),
+    };
+
+
+
+    m_lowThresh = 0;
+    m_highThresh = 100;
+
+// run through all the data containers (images) and add them up to be averaged after the loop
     for(int i = 0; i < dcList.size(); i++)
     {
-        m_ImageDataArrayPath.update(dcList[0], "CellData", "ImageData");
+        m_ImageDataArrayPath.update(dcList[i], "CellData", "ImageData");
         iDataArray = getDataContainerArray()->getExistingPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, m_ImageDataArrayPath);
+
 
         imagePtr = boost::dynamic_pointer_cast<DataArray<uint8_t> >(iDataArray);
 
         if(NULL != imagePtr.get())
         {
-            int64_t totalPoints = imagePtr->getNumberOfTuples();
+//            int64_t totalPoints = imagePtr->getNumberOfTuples();
 
-            uint8_t* image = imagePtr->getPointer(0);
-
-            for(size_t t = 0; t < totalPoints; t++)
+            for(size_t t = 0; t < m_totalPoints; t++)
             {
+                image = imagePtr->getPointer(t);
 
-               // background[t] = background[0] + static_cast<double>(image[0]);
+
+                if (static_cast<uint64_t>(image[t]) >= m_lowThresh && static_cast<uint64_t>(image[t])  <= m_highThresh)
+                {
+                   background[t] = background[t] + static_cast<double>(image[t]);
+                   counter[t]++;
+                }
             }
 
         }
 
 
     /* Let the GUI know we are done with this filter */
-    notifyStatusMessage(getHumanLabel(), "Complete");
+
     }
+
+    // average the background values by the number of counts (counts will be the number of images unless the threshold values do not include all the possible image values
+    // (i.e. for an 8 bit image, if we only include values from 0 to 100, not every image value will be counted)
+
+    for (int j=0; j<m_totalPoints; j++)
+    {
+        background[j] = double(background[j] /= (counter[j]));
+    }
+
+
+    // Fit the background to a second order polynomial
+    // p are the coefficients p[0] + p[1]*x + p[2]*y +p[3]*xy + p[4]*x^2 + p[5]*y^2
+    Eigen::MatrixXd A(m_totalPoints, 6);
+    Eigen::VectorXd B(m_totalPoints);
+
+    for(int i=0; i < m_totalPoints; ++i)
+    {
+       xval = int(i/dims[0]);
+       yval = int(i % dims[0]);
+       B(i) = background[i];
+       A(i, 0) = 1;
+       A(i, 1) = xval;
+       A(i, 2) = yval;
+       A(i, 3) = xval*yval;
+       A(i, 4) = xval*xval;
+       A(i, 5) = yval*yval;
+    }
+
+   Eigen::VectorXd p = A.colPivHouseholderQr().solve(B);
+
+
+    notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 

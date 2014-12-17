@@ -171,6 +171,10 @@ class CalculateBackground : public AbstractFilter
      * and  DEFINE_CREATED_DATAARRAY_VARIABLE() which are defined in DREAM3DGetSetMacros.h
      */
 
+    int64_t m_totalPoints;
+    uint64_t m_lowThresh;
+    uint64_t m_highThresh;
+
     CalculateBackground(const CalculateBackground&); // Copy Constructor Not Implemented
     void operator=(const CalculateBackground&); // Operator '=' Not Implemented
 };
