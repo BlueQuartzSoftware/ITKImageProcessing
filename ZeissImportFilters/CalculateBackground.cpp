@@ -33,9 +33,11 @@
 // -----------------------------------------------------------------------------
 CalculateBackground::CalculateBackground() :
     AbstractFilter(),
-    m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),    
+    m_VolumeDataContainerName("ZeissBundleBackground"),
+    m_BackgroundAttributeMatrixName("Background"),
+    m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
+    m_PolynomialCoefficientsArrayName("PolynomialCoefficients"),
     m_DataContainerBundleName(""),
-    m_ImageDataArrayName("ImageData"),
     m_lowThresh(0),
     m_highThresh(255)
 
@@ -56,11 +58,13 @@ CalculateBackground::~CalculateBackground()
 void CalculateBackground::setupFilterParameters()
 {
     FilterParameterVector parameters;
-    //parameters.push_back(FileSystemFilterParameter::New("Input File", "InputFile", FilterParameterWidgetType::InputFileWidget, getInputFile(), false, "", "*.xml"));
-    //  parameters.push_back(FilterParameter::New("DataContainer Prefix", "DataContainerPrefix", FilterParameterWidgetType::StringWidget, getDataContainerPrefix(), false));
     parameters.push_back(FilterParameter::New("DataContainerBundle Name", "DataContainerBundleName", FilterParameterWidgetType::DataBundleSelectionWidget, getDataContainerBundleName(), true));
     parameters.push_back(FilterParameter::New("lowest allowed Image value", "lowThresh", FilterParameterWidgetType::IntWidget, getlowThresh(), false, "Image Value"));
     parameters.push_back(FilterParameter::New("highest allowed Image value", "highThresh", FilterParameterWidgetType::IntWidget, gethighThresh(), false, "Image Value"));
+    parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
+    parameters.push_back(FilterParameter::New("Volume Data Container", "VolumeDataContainerName", FilterParameterWidgetType::StringWidget, getVolumeDataContainerName(), true, ""));
+    parameters.push_back(FilterParameter::New("Background Attribute Matrix", "BackgroundAttributeMatrixName", FilterParameterWidgetType::StringWidget, getBackgroundAttributeMatrixName(), true, ""));
+    parameters.push_back(FilterParameter::New("Polynomial Coefficients", "PolynomialCoefficientsArrayName", FilterParameterWidgetType::StringWidget, getPolynomialCoefficientsArrayName(), true, ""));
 
     setFilterParameters(parameters);
 }
@@ -71,11 +75,12 @@ void CalculateBackground::setupFilterParameters()
 void CalculateBackground::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
     reader->openFilterGroup(this, index);
-    //setInputFile(reader->readString("InputFile", getInputFile() ) );
+    setVolumeDataContainerName(reader->readString("VolumeDataContainerName", getVolumeDataContainerName() ) );
+    setBackgroundAttributeMatrixName(reader->readString("BackgroundAttributeMatrixName", getBackgroundAttributeMatrixName()));
+    setPolynomialCoefficientsArrayName(reader->readString("PolynomialCoefficientsArrayName", getPolynomialCoefficientsArrayName()));
     setDataContainerBundleName(reader->readString("DataContainerBundleName", getDataContainerBundleName() ) );
     setlowThresh(reader->readValue("lowThresh", getlowThresh()) );
     sethighThresh(reader->readValue("highThresh", gethighThresh()) );
-    //  setDataContainerPrefix(reader->readString("DataContainerPrefix", getDataContainerPrefix() ) );
     reader->closeFilterGroup();
 }
 
@@ -85,6 +90,9 @@ void CalculateBackground::readFilterParameters(AbstractFilterParametersReader* r
 int CalculateBackground::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
     writer->openFilterGroup(this, index);
+    DREAM3D_FILTER_WRITE_PARAMETER(VolumeDataContainerName)
+    DREAM3D_FILTER_WRITE_PARAMETER(BackgroundAttributeMatrixName)
+    DREAM3D_FILTER_WRITE_PARAMETER(PolynomialCoefficientsArrayName)
     DREAM3D_FILTER_WRITE_PARAMETER(DataContainerBundleName)
     DREAM3D_FILTER_WRITE_PARAMETER(lowThresh)
     DREAM3D_FILTER_WRITE_PARAMETER(highThresh)
@@ -98,6 +106,7 @@ int CalculateBackground::writeFilterParameters(AbstractFilterParametersWriter* w
 void CalculateBackground::dataCheck()
 {
     setErrorCondition(0);
+    DataArrayPath tempPath;
 
     QString ss;
 
@@ -132,9 +141,20 @@ void CalculateBackground::dataCheck()
     m_totalPoints = imagePtr->getNumberOfTuples();
 
 
+    VolumeDataContainer* m = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getVolumeDataContainerName());
+    if(getErrorCondition() < 0){ return; }
+    QVector<size_t> tDims(1, 0);
+    AttributeMatrix::Pointer backgroundAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getBackgroundAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
+    if(getErrorCondition() < 0){ return; }
 
-    if(getErrorCondition() < 0)
-    { return; }
+    dims[0] = 1;
+    tempPath.update(getVolumeDataContainerName(), getBackgroundAttributeMatrixName(), getPolynomialCoefficientsArrayName() );
+    m_PolynomialCoefficientsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if( NULL != m_PolynomialCoefficientsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    { m_PolynomialCoefficients = m_PolynomialCoefficientsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
+
+    if(getErrorCondition() < 0){ return; }
 
 
 }
@@ -191,10 +211,10 @@ void CalculateBackground::execute()
     IDataContainerBundle::Pointer dcb = getDataContainerArray()->getDataContainerBundle(m_DataContainerBundleName);
     QVector<QString> dcList = dcb->getDataContainerNames();
     // getting the fist data container just to get the dimensions of each image.
-    VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(dcList[0]);
+    VolumeDataContainer* m2 = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(dcList[0]);
 
     size_t udims[3] = {0, 0, 0};
-    m->getDimensions(udims);
+    m2->getDimensions(udims);
 
   #if (CMP_SIZEOF_SIZE_T == 4)
     typedef int32_t DimType;
@@ -213,7 +233,7 @@ void CalculateBackground::execute()
 
 
 // run through all the data containers (images) and add them up to be averaged after the loop
-    for(int i = 0; i < dcList.size(); i++)
+    for(size_t i = 0; i < dcList.size(); i++)
     {
         m_ImageDataArrayPath.update(dcList[i], "CellData", "ImageData");
         iDataArray = getDataContainerArray()->getExistingPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, m_ImageDataArrayPath);
@@ -246,7 +266,7 @@ void CalculateBackground::execute()
     // average the background values by the number of counts (counts will be the number of images unless the threshold values do not include all the possible image values
     // (i.e. for an 8 bit image, if we only include values from 0 to 100, not every image value will be counted)
 
-    for (int j=0; j<m_totalPoints; j++)
+    for (size_t j=0; j<m_totalPoints; j++)
     {
         background[j] = double(background[j] /= (counter[j]));
     }
@@ -269,8 +289,21 @@ void CalculateBackground::execute()
        A(i, 4) = xval*xval;
        A(i, 5) = yval*yval;
     }
+
    notifyStatusMessage(getHumanLabel(), "Fitting a polynomial to data. May take a while to solve if images are large");
    Eigen::VectorXd p = A.colPivHouseholderQr().solve(B);
+
+   QVector<size_t> tDims(1, 6);
+   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getVolumeDataContainerName());
+   m->getAttributeMatrix(getBackgroundAttributeMatrixName())->resizeAttributeArrays(tDims);
+   if( NULL != m_PolynomialCoefficientsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+   { m_PolynomialCoefficients = m_PolynomialCoefficientsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
+   for(size_t i=0; i < 6; i++)
+   {
+       m_PolynomialCoefficients[i] = p[i];
+   }
+
 
    /* Let the GUI know we are done with this filter */
     notifyStatusMessage(getHumanLabel(), "Complete");

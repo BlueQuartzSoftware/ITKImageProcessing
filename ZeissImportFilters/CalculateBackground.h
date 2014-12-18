@@ -33,13 +33,20 @@ class CalculateBackground : public AbstractFilter
 
     virtual ~CalculateBackground();
 
+    DREAM3D_FILTER_PARAMETER(QString, VolumeDataContainerName)
+    Q_PROPERTY(QString VolumeDataContainerName READ getVolumeDataContainerName WRITE setVolumeDataContainerName)
 
+    DREAM3D_FILTER_PARAMETER(QString, BackgroundAttributeMatrixName)
+    Q_PROPERTY(QString BackgroundAttributeMatrixName READ getBackgroundAttributeMatrixName WRITE setBackgroundAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(QString, CellAttributeMatrixName)
     Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, ImageDataArrayPath)
     Q_PROPERTY(DataArrayPath ImageDataArrayPath READ getImageDataArrayPath WRITE setImageDataArrayPath)
+
+    DREAM3D_FILTER_PARAMETER(QString, PolynomialCoefficientsArrayName)
+    Q_PROPERTY(QString PolynomialCoefficientsArrayName READ getPolynomialCoefficientsArrayName WRITE setPolynomialCoefficientsArrayName)
 
 
 
@@ -169,7 +176,6 @@ class CalculateBackground : public AbstractFilter
      * @param rootTags
      */
     void generateMetaDataAttributeMatrix(DataContainer *dc, ZeissTagsXmlSection::Pointer photoTagsSection);
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int8_t, ImageData)
 
   private:
     /* Your private class instance variables go here. You can use several preprocessor macros to help
@@ -180,6 +186,8 @@ class CalculateBackground : public AbstractFilter
     int64_t m_totalPoints;
 //    uint64_t m_lowThresh;
 //    uint64_t m_highThresh;
+
+    DEFINE_CREATED_DATAARRAY_VARIABLE(double, PolynomialCoefficients)
 
     CalculateBackground(const CalculateBackground&); // Copy Constructor Not Implemented
     void operator=(const CalculateBackground&); // Operator '=' Not Implemented
