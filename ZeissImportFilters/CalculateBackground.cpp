@@ -312,25 +312,7 @@ void CalculateBackground::execute()
 
 
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void CalculateBackground::generateMetaDataAttributeMatrix(DataContainer* dc, ZeissTagsXmlSection::Pointer photoTagsSection)
-{
-    // Create the Meta Data AttributeMatrix
-    QVector<size_t> attrDims(1, 1);
-    AttributeMatrix::Pointer metaData = dc->createNonPrereqAttributeMatrix<AbstractFilter>(this, DataContainerBundle::GetMetaDataName(), attrDims, DREAM3D::AttributeMatrixType::MetaData);
 
-    ZeissTagsXmlSection::MetaDataType tagMap = photoTagsSection->getMetaDataMap();
-    QMapIterator<int, AbstractZeissMetaData::Pointer> iter(tagMap);
-    while(iter.hasNext())
-    {
-        iter.next();
-        IDataArray::Pointer dataArray = iter.value()->createDataArray(!getInPreflight());
-        metaData->addAttributeArray(dataArray->getName(), dataArray);
-    }
-
-}
 
 // -----------------------------------------------------------------------------
 //

@@ -175,7 +175,6 @@ class CalculateBackground : public AbstractFilter
      * @brief parseImages
      * @param rootTags
      */
-    void generateMetaDataAttributeMatrix(DataContainer *dc, ZeissTagsXmlSection::Pointer photoTagsSection);
 
   private:
     /* Your private class instance variables go here. You can use several preprocessor macros to help
