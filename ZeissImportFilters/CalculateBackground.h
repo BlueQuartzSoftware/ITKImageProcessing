@@ -59,6 +59,11 @@ class CalculateBackground : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(int, highThresh)
     Q_PROPERTY(int highThresh READ gethighThresh WRITE sethighThresh)
 
+    DREAM3D_FILTER_PARAMETER(bool, subtractBackground)
+    Q_PROPERTY(int subtractBackground READ getsubtractBackground WRITE setsubtractBackground)
+
+
+
 
 
 

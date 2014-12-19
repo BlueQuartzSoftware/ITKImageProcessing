@@ -311,6 +311,58 @@ void CalculateBackground::execute()
 
    // Add the data container into the bundle
    dcb->addDataContainer(dc);
+   m_subtractBackground = false;
+
+   if(m_subtractBackground == true)
+   {
+       std::vector<double> calcBackground(m_totalPoints, 0); // create a new array to store background values based on the polynomial fit
+       Eigen::VectorXd Bcalc(m_totalPoints);
+
+       Bcalc = A*p;
+//       Bcalc = Bcalc - Bcalc.mean();
+
+
+       for(int i=0; i < m_totalPoints; ++i)
+       {
+           calcBackground[i] = Bcalc[i];
+       }
+
+       for(size_t i = 0; i < dcList.size(); i++)
+       {
+           m_ImageDataArrayPath.update(dcList[i], "CellData", "ImageData");
+           iDataArray = getDataContainerArray()->getExistingPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, m_ImageDataArrayPath);
+
+
+           imagePtr = boost::dynamic_pointer_cast<DataArray<uint8_t> >(iDataArray);
+
+           if(NULL != imagePtr.get())
+           {
+   //            int64_t totalPoints = imagePtr->getNumberOfTuples();
+
+               for(size_t t = 0; t < m_totalPoints; t++)
+               {
+                   image = imagePtr->getPointer(t);
+
+
+                   if (static_cast<uint64_t>(image[t]) >= m_lowThresh && static_cast<uint64_t>(image[t])  <= m_highThresh)
+                   {
+                      background[t] = background[t] + static_cast<double>(image[t]);
+                      counter[t]++;
+                   }
+               }
+
+           }
+
+
+
+       }
+
+
+
+
+   }
+
+
 
 
    /* Let the GUI know we are done with this filter */
