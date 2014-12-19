@@ -36,10 +36,11 @@ CalculateBackground::CalculateBackground() :
     m_VolumeDataContainerName("ZeissBundleBackground"),
     m_BackgroundAttributeMatrixName("Background"),
     m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
-    m_PolynomialCoefficientsArrayName("PolynomialCoefficients"),
     m_DataContainerBundleName(""),
+    m_BackgroundImageArrayName(getDataContainerBundleName() + "BackgroundImage"),
     m_lowThresh(0),
-    m_highThresh(255)
+    m_highThresh(255),
+    m_SubtractBackground(false)
 
 {
     setupFilterParameters();
@@ -64,8 +65,8 @@ void CalculateBackground::setupFilterParameters()
     parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
     parameters.push_back(FilterParameter::New("Volume Data Container", "VolumeDataContainerName", FilterParameterWidgetType::StringWidget, getVolumeDataContainerName(), true, ""));
     parameters.push_back(FilterParameter::New("Background Attribute Matrix", "BackgroundAttributeMatrixName", FilterParameterWidgetType::StringWidget, getBackgroundAttributeMatrixName(), true, ""));
-    parameters.push_back(FilterParameter::New("Polynomial Coefficients", "PolynomialCoefficientsArrayName", FilterParameterWidgetType::StringWidget, getPolynomialCoefficientsArrayName(), true, ""));
-
+    parameters.push_back(FilterParameter::New("Background Image Array Name", "BackgroundImageArrayName", FilterParameterWidgetType::StringWidget, getBackgroundImageArrayName(), true, ""));
+    parameters.push_back(FilterParameter::New("Subtract Background from Current Images", "SubtractBackground", FilterParameterWidgetType::BooleanWidget, getSubtractBackground(), false));
     setFilterParameters(parameters);
 }
 
@@ -77,10 +78,11 @@ void CalculateBackground::readFilterParameters(AbstractFilterParametersReader* r
     reader->openFilterGroup(this, index);
     setVolumeDataContainerName(reader->readString("VolumeDataContainerName", getVolumeDataContainerName() ) );
     setBackgroundAttributeMatrixName(reader->readString("BackgroundAttributeMatrixName", getBackgroundAttributeMatrixName()));
-    setPolynomialCoefficientsArrayName(reader->readString("PolynomialCoefficientsArrayName", getPolynomialCoefficientsArrayName()));
+    setBackgroundImageArrayName(reader->readString("BackgroundImageArrayName", getBackgroundImageArrayName()));
     setDataContainerBundleName(reader->readString("DataContainerBundleName", getDataContainerBundleName() ) );
     setlowThresh(reader->readValue("lowThresh", getlowThresh()) );
     sethighThresh(reader->readValue("highThresh", gethighThresh()) );
+    setSubtractBackground(reader->readValue("SubtractBackground", getSubtractBackground()));
     reader->closeFilterGroup();
 }
 
@@ -92,10 +94,12 @@ int CalculateBackground::writeFilterParameters(AbstractFilterParametersWriter* w
     writer->openFilterGroup(this, index);
     DREAM3D_FILTER_WRITE_PARAMETER(VolumeDataContainerName)
     DREAM3D_FILTER_WRITE_PARAMETER(BackgroundAttributeMatrixName)
-    DREAM3D_FILTER_WRITE_PARAMETER(PolynomialCoefficientsArrayName)
+    DREAM3D_FILTER_WRITE_PARAMETER(BackgroundImageArrayName)
     DREAM3D_FILTER_WRITE_PARAMETER(DataContainerBundleName)
     DREAM3D_FILTER_WRITE_PARAMETER(lowThresh)
     DREAM3D_FILTER_WRITE_PARAMETER(highThresh)
+    DREAM3D_FILTER_WRITE_PARAMETER(SubtractBackground)
+
     writer->closeFilterGroup();
     return ++index; // we want to return the next index that was just written to
 }
@@ -140,20 +144,20 @@ void CalculateBackground::dataCheck()
 
     m_totalPoints = imagePtr->getNumberOfTuples();
 
-
+    // New data container and attribute matrix to store background image
     VolumeDataContainer* m = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getVolumeDataContainerName());
     if(getErrorCondition() < 0){ return; }
     QVector<size_t> tDims(1, 0);
     AttributeMatrix::Pointer backgroundAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getBackgroundAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
     if(getErrorCondition() < 0){ return; }
 
+
+    // Background Image array
     dims[0] = 1;
-    tempPath.update(getVolumeDataContainerName(), getBackgroundAttributeMatrixName(), getPolynomialCoefficientsArrayName() );
-    m_PolynomialCoefficientsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_PolynomialCoefficientsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-    { m_PolynomialCoefficients = m_PolynomialCoefficientsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-
-
+    tempPath.update(getVolumeDataContainerName(), getBackgroundAttributeMatrixName(), getBackgroundImageArrayName() );
+    m_BackgroundImagePtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if( NULL != m_BackgroundImagePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    { m_BackgroundImage = m_BackgroundImagePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
     if(getErrorCondition() < 0){ return; }
 
 
@@ -293,39 +297,33 @@ void CalculateBackground::execute()
    notifyStatusMessage(getHumanLabel(), "Fitting a polynomial to data. May take a while to solve if images are large");
    Eigen::VectorXd p = A.colPivHouseholderQr().solve(B);
 
-   QVector<size_t> tDims(1, ZeissImport::PolynomialOrder::NumConsts2ndOrder);
+   QVector<size_t> tDims(3);
+   tDims[0] = dims[0];
+   tDims[1] = dims[1];
+   tDims[2] = dims[2];
    VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getVolumeDataContainerName());
    m->getAttributeMatrix(getBackgroundAttributeMatrixName())->resizeAttributeArrays(tDims);
-   if( NULL != m_PolynomialCoefficientsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-   { m_PolynomialCoefficients = m_PolynomialCoefficientsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+   if( NULL != m_BackgroundImagePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+   { m_BackgroundImage = m_BackgroundImagePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-   for(size_t i=0; i < ZeissImport::PolynomialOrder::NumConsts2ndOrder; i++)
+
+   Eigen::VectorXd Bcalc(m_totalPoints);
+   double average = 0;
+
+   Bcalc = A*p;
+   average = Bcalc.mean();
+   Bcalc = Bcalc - Eigen::VectorXd::Constant(m_totalPoints, average);
+
+   for(int i=0; i < m_totalPoints; ++i)
    {
-       m_PolynomialCoefficients[i] = p[i];
+        m_BackgroundImage[i] = Bcalc(i);
    }
 
-   // Get a generic DataContainer reference
-    DataContainerArray::Pointer dca = getDataContainerArray();
-    DataContainer::Pointer dc = dca->getDataContainer(getVolumeDataContainerName());
 
 
-   // Add the data container into the bundle
-   dcb->addDataContainer(dc);
-   m_subtractBackground = false;
 
-   if(m_subtractBackground == true)
+   if(m_SubtractBackground == true)
    {
-       std::vector<double> calcBackground(m_totalPoints, 0); // create a new array to store background values based on the polynomial fit
-       Eigen::VectorXd Bcalc(m_totalPoints);
-
-       Bcalc = A*p;
-//       Bcalc = Bcalc - Bcalc.mean();
-
-
-       for(int i=0; i < m_totalPoints; ++i)
-       {
-           calcBackground[i] = Bcalc[i];
-       }
 
        for(size_t i = 0; i < dcList.size(); i++)
        {
@@ -337,18 +335,17 @@ void CalculateBackground::execute()
 
            if(NULL != imagePtr.get())
            {
-   //            int64_t totalPoints = imagePtr->getNumberOfTuples();
 
                for(size_t t = 0; t < m_totalPoints; t++)
                {
                    image = imagePtr->getPointer(t);
 
-
-                   if (static_cast<uint64_t>(image[t]) >= m_lowThresh && static_cast<uint64_t>(image[t])  <= m_highThresh)
-                   {
-                      background[t] = background[t] + static_cast<double>(image[t]);
-                      counter[t]++;
-                   }
+                   image[t] = image[t] - Bcalc(t);
+//                   if (static_cast<uint64_t>(image[t]) >= m_lowThresh && static_cast<uint64_t>(image[t])  <= m_highThresh)
+//                   {
+//                      background[t] = background[t] + static_cast<double>(image[t]);
+//                      counter[t]++;
+//                   }
                }
 
            }
@@ -356,7 +353,6 @@ void CalculateBackground::execute()
 
 
        }
-
 
 
 

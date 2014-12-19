@@ -45,13 +45,11 @@ class CalculateBackground : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, ImageDataArrayPath)
     Q_PROPERTY(DataArrayPath ImageDataArrayPath READ getImageDataArrayPath WRITE setImageDataArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(QString, PolynomialCoefficientsArrayName)
-    Q_PROPERTY(QString PolynomialCoefficientsArrayName READ getPolynomialCoefficientsArrayName WRITE setPolynomialCoefficientsArrayName)
-
-
-
     DREAM3D_FILTER_PARAMETER(QString, DataContainerBundleName)
     Q_PROPERTY(QString DataContainerBundleName READ getDataContainerBundleName WRITE setDataContainerBundleName)
+
+    DREAM3D_FILTER_PARAMETER(QString, BackgroundImageArrayName)
+    Q_PROPERTY(QString BackgroundImageArrayName READ getBackgroundImageArrayName WRITE setBackgroundImageArrayName)
 
     DREAM3D_FILTER_PARAMETER(int, lowThresh)
     Q_PROPERTY(int lowThresh READ getlowThresh WRITE setlowThresh)
@@ -59,8 +57,8 @@ class CalculateBackground : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(int, highThresh)
     Q_PROPERTY(int highThresh READ gethighThresh WRITE sethighThresh)
 
-    DREAM3D_FILTER_PARAMETER(bool, subtractBackground)
-    Q_PROPERTY(int subtractBackground READ getsubtractBackground WRITE setsubtractBackground)
+    DREAM3D_FILTER_PARAMETER(bool, SubtractBackground)
+    Q_PROPERTY(int SubtractBackground READ getSubtractBackground WRITE setSubtractBackground)
 
 
 
@@ -191,7 +189,7 @@ class CalculateBackground : public AbstractFilter
 //    uint64_t m_lowThresh;
 //    uint64_t m_highThresh;
 
-    DEFINE_CREATED_DATAARRAY_VARIABLE(double, PolynomialCoefficients)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(double, BackgroundImage)
 
     CalculateBackground(const CalculateBackground&); // Copy Constructor Not Implemented
     void operator=(const CalculateBackground&); // Operator '=' Not Implemented
