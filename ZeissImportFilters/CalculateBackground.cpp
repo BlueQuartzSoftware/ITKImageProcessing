@@ -274,7 +274,7 @@ void CalculateBackground::execute()
 
     // Fit the background to a second order polynomial
     // p are the coefficients p[0] + p[1]*x + p[2]*y +p[3]*xy + p[4]*x^2 + p[5]*y^2
-    Eigen::MatrixXd A(m_totalPoints, 6);
+    Eigen::MatrixXd A(m_totalPoints, ZeissImport::PolynomialOrder::NumConsts2ndOrder);
     Eigen::VectorXd B(m_totalPoints);
 
     for(int i=0; i < m_totalPoints; ++i)
@@ -293,16 +293,24 @@ void CalculateBackground::execute()
    notifyStatusMessage(getHumanLabel(), "Fitting a polynomial to data. May take a while to solve if images are large");
    Eigen::VectorXd p = A.colPivHouseholderQr().solve(B);
 
-   QVector<size_t> tDims(1, 6);
+   QVector<size_t> tDims(1, ZeissImport::PolynomialOrder::NumConsts2ndOrder);
    VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getVolumeDataContainerName());
    m->getAttributeMatrix(getBackgroundAttributeMatrixName())->resizeAttributeArrays(tDims);
    if( NULL != m_PolynomialCoefficientsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
    { m_PolynomialCoefficients = m_PolynomialCoefficientsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-   for(size_t i=0; i < 6; i++)
+   for(size_t i=0; i < ZeissImport::PolynomialOrder::NumConsts2ndOrder; i++)
    {
        m_PolynomialCoefficients[i] = p[i];
    }
+
+   // Get a generic DataContainer reference
+    DataContainerArray::Pointer dca = getDataContainerArray();
+    DataContainer::Pointer dc = dca->getDataContainer(getVolumeDataContainerName());
+
+
+   // Add the data container into the bundle
+   dcb->addDataContainer(dc);
 
 
    /* Let the GUI know we are done with this filter */

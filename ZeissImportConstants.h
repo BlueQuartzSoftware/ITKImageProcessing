@@ -19,8 +19,12 @@ namespace ZeissImport {
   namespace Xml {
     static const QString Tags("Tags");
     static const QString Count("Count");
-
   }
+
+  namespace PolynomialOrder
+    {
+    const unsigned int NumConsts2ndOrder = 6;
+    }
 }
 
 /**
@@ -33,4 +37,8 @@ namespace FilterParameterWidgetType
 /*  const QString SomeCustomWidget("SomeCustomWidget"); */
 
 }
+
+
+
+
 #endif
