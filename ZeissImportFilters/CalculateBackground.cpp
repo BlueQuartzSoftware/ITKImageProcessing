@@ -340,12 +340,11 @@ void CalculateBackground::execute()
                {
                    image = imagePtr->getPointer(t);
 
-                   image[t] = image[t] - Bcalc(t);
-//                   if (static_cast<uint64_t>(image[t]) >= m_lowThresh && static_cast<uint64_t>(image[t])  <= m_highThresh)
-//                   {
-//                      background[t] = background[t] + static_cast<double>(image[t]);
-//                      counter[t]++;
-//                   }
+                   if (static_cast<uint8_t>(*image) >= m_lowThresh && static_cast<uint8_t>(*image)  <= m_highThresh)
+                   {
+                       *image = *image - Bcalc(t);
+
+                   }
                }
 
            }
