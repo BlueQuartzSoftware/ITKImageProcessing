@@ -51,11 +51,11 @@ class CalculateBackground : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(QString, BackgroundImageArrayName)
     Q_PROPERTY(QString BackgroundImageArrayName READ getBackgroundImageArrayName WRITE setBackgroundImageArrayName)
 
-    DREAM3D_FILTER_PARAMETER(int, lowThresh)
-    Q_PROPERTY(int lowThresh READ getlowThresh WRITE setlowThresh)
+    DREAM3D_FILTER_PARAMETER(uint, lowThresh)
+    Q_PROPERTY(uint lowThresh READ getlowThresh WRITE setlowThresh)
 
-    DREAM3D_FILTER_PARAMETER(int, highThresh)
-    Q_PROPERTY(int highThresh READ gethighThresh WRITE sethighThresh)
+    DREAM3D_FILTER_PARAMETER(uint, highThresh)
+    Q_PROPERTY(uint highThresh READ gethighThresh WRITE sethighThresh)
 
     DREAM3D_FILTER_PARAMETER(bool, SubtractBackground)
     Q_PROPERTY(int SubtractBackground READ getSubtractBackground WRITE setSubtractBackground)

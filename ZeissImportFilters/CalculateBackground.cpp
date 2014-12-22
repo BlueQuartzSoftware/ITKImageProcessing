@@ -115,7 +115,7 @@ void CalculateBackground::dataCheck()
     QString ss;
 
 
-    QVector<size_t> dims(1, 3);
+    QVector<size_t> dims(1, 1);
     IDataContainerBundle::Pointer dcb = getDataContainerArray()->getDataContainerBundle(m_DataContainerBundleName);
     if(NULL == dcb.get())
     {
@@ -141,7 +141,7 @@ void CalculateBackground::dataCheck()
             notifyErrorMessage(getHumanLabel(), "The data was not found", -76001);
         }
     }
-
+    if(getErrorCondition() < 0){ return; }
     m_totalPoints = imagePtr->getNumberOfTuples();
 
     // New data container and attribute matrix to store background image
@@ -254,9 +254,9 @@ void CalculateBackground::execute()
                 image = imagePtr->getPointer(t);
 
 
-                if (static_cast<uint64_t>(image[t]) >= m_lowThresh && static_cast<uint64_t>(image[t])  <= m_highThresh)
+                if (static_cast<uint8_t>(*image) >= m_lowThresh && static_cast<uint8_t>(*image)  <= m_highThresh)
                 {
-                   background[t] = background[t] + static_cast<double>(image[t]);
+                   background[t] = background[t] + static_cast<double>(*image);
                    counter[t]++;
                 }
             }
