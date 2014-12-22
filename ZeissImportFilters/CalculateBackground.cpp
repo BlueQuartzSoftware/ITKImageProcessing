@@ -161,6 +161,8 @@ void CalculateBackground::dataCheck()
     if(getErrorCondition() < 0){ return; }
 
 
+
+
 }
 
 // -----------------------------------------------------------------------------
@@ -207,7 +209,7 @@ void CalculateBackground::execute()
 
     UInt8ArrayType::Pointer imagePtr = UInt8ArrayType::NullPointer();
     IDataArray::Pointer iDataArray = IDataArray::NullPointer();
-    uint8_t* image;
+    uint8_t* image = NULL;
 
     std::vector<double> background(m_totalPoints, 0);
     std::vector<double> counter(m_totalPoints,0);
@@ -248,15 +250,13 @@ void CalculateBackground::execute()
         if(NULL != imagePtr.get())
         {
 //            int64_t totalPoints = imagePtr->getNumberOfTuples();
-
+            image = imagePtr->getPointer(0);
             for(size_t t = 0; t < m_totalPoints; t++)
             {
-                image = imagePtr->getPointer(t);
 
-
-                if (static_cast<uint8_t>(*image) >= m_lowThresh && static_cast<uint8_t>(*image)  <= m_highThresh)
+                if (static_cast<uint8_t>(image[t]) >= m_lowThresh && static_cast<uint8_t>(image[t])  <= m_highThresh)
                 {
-                   background[t] = background[t] + static_cast<double>(*image);
+                   background[t] = background[t] + static_cast<double>(image[t]);
                    counter[t]++;
                 }
             }
@@ -335,14 +335,15 @@ void CalculateBackground::execute()
 
            if(NULL != imagePtr.get())
            {
+               image = imagePtr->getPointer(0);
 
                for(size_t t = 0; t < m_totalPoints; t++)
                {
-                   image = imagePtr->getPointer(t);
 
-                   if (static_cast<uint8_t>(*image) >= m_lowThresh && static_cast<uint8_t>(*image)  <= m_highThresh)
+
+                   if (static_cast<uint8_t>(image[t]) >= m_lowThresh && static_cast<uint8_t>(image[t])  <= m_highThresh)
                    {
-                       *image = *image - Bcalc(t);
+                       image[t] = image[t] - Bcalc(t);
 
                    }
                }
