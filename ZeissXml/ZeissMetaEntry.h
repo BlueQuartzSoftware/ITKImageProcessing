@@ -135,7 +135,7 @@ class Int64ZeissMetaEntry : public AbstractZeissMetaData
     DREAM3D_TYPE_MACRO(Int64ZeissMetaEntry)
     DREAM3D_STATIC_NEW_MACRO(Int64ZeissMetaEntry)
 
-    STATIC_NEW_METHODS(AbstractZeissMetaData, Int64ZeissMetaEntry, int64_t)
+    STATIC_NEW_METHODS(AbstractZeissMetaData, Int64ZeissMetaEntry, qint64)
 
     VALUE_DECLARATION(int32_t)
 

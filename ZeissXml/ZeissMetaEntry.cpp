@@ -144,7 +144,7 @@ ReadHDF5Attribute_DEFINITION(int32_t, Int32ZeissMetaEntry)
 VALUE_DEFINITION(Int64ZeissMetaEntry, _value, Int64ArrayType)
 #ifdef ZEISS_HDF_SUPPORT
 WriteHDF5Attribute_Implementation(Int64ZeissMetaEntry)
-ReadHDF5Attribute_DEFINITION(int64_t, Int64ZeissMetaEntry)
+ReadHDF5Attribute_DEFINITION(qint64, Int64ZeissMetaEntry)
 #endif
 
 // -----------------------------------------------------------------------------
