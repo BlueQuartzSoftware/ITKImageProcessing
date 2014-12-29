@@ -131,7 +131,7 @@ void CalculateBackground::dataCheck()
     for(int i = 0; i < dcList.size(); i++)
     {
         m_ImageDataArrayPath.update(dcList[i], "CellData", "ImageData");
-        iDataArray = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, getImageDataArrayPath(), dims);
+        iDataArray = getDataContainerArray()->getExistingPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, m_ImageDataArrayPath);
         imagePtr = boost::dynamic_pointer_cast<DataArray<uint8_t> >(iDataArray);
 
 
@@ -141,6 +141,7 @@ void CalculateBackground::dataCheck()
             notifyErrorMessage(getHumanLabel(), "The data was not found", -76001);
         }
     }
+
     if(getErrorCondition() < 0){ return; }
     m_totalPoints = imagePtr->getNumberOfTuples();
 
