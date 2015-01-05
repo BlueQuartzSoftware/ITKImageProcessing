@@ -15,6 +15,11 @@ START_FILTER_GROUP(${ZeissImport_BINARY_DIR} "${_filterGroupName}" "ZeissImport"
 set(_PublicFilters
   ZeissImportFilter
   CalculateBackground
+  MultiRGBToGray
+  DetermineStitchingCoordinates
+  EMMPMSegmentation
+  FindFiberEdges
+  CalculateFiberStatistics
 
 )
 

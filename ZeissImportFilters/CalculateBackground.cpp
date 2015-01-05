@@ -405,7 +405,7 @@ const QString CalculateBackground::getHumanLabel()
 // -----------------------------------------------------------------------------
 const QString CalculateBackground::getSubGroupName()
 {
-    return "IO";
+    return "Misc";
 }
 
 // -----------------------------------------------------------------------------
