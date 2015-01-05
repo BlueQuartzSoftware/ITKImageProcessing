@@ -33,22 +33,26 @@ class ZeissImportFilter : public AbstractFilter
 
     virtual ~ZeissImportFilter();
 
-    DREAM3D_FILTER_PARAMETER(QString, CellAttributeMatrixName)
-    Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
-
+//    DREAM3D_FILTER_PARAMETER(QString, CellAttributeMatrixName)
+//    Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(QString, InputFile)
     Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
-    DREAM3D_FILTER_PARAMETER(QString, DataContainerBundleName)
-    Q_PROPERTY(QString DataContainerBundleName READ getDataContainerBundleName WRITE setDataContainerBundleName)
+    DREAM3D_FILTER_PARAMETER(QString, DataContainerName)
+    Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
 
-    DREAM3D_FILTER_PARAMETER(QString, DataContainerPrefix)
-    Q_PROPERTY(QString DataContainerPrefix READ getDataContainerPrefix WRITE setDataContainerPrefix)
+    DREAM3D_FILTER_PARAMETER(QString, ImageAttributeMatrixName)
+    Q_PROPERTY(QString ImageAttributeMatrixName READ getImageAttributeMatrixName WRITE setImageAttributeMatrixName)
 
-    DREAM3D_FILTER_PARAMETER(QString, ImageDataArrayName)
-    Q_PROPERTY(QString ImageDataArrayName READ getImageDataArrayName WRITE setImageDataArrayName)
+    DREAM3D_FILTER_PARAMETER(QString, ImageDataArrayPrefix)
+    Q_PROPERTY(QString ImageDataArrayPrefix READ getImageDataArrayPrefix WRITE setImageDataArrayPrefix)
 
+    DREAM3D_FILTER_PARAMETER(bool, ConvertToGrayScale)
+    Q_PROPERTY(bool ConvertToGrayScale READ getConvertToGrayScale WRITE setConvertToGrayScale)
+
+    DREAM3D_FILTER_PARAMETER(FloatVec3_t, ColorWeights)
+    Q_PROPERTY(FloatVec3_t ColorWeights READ getColorWeights WRITE setColorWeights)
 
     /**
      * @brief getCompiledLibraryName Returns the name of the Library that this filter is a part of
@@ -166,9 +170,36 @@ class ZeissImportFilter : public AbstractFilter
      */
     void parseImages(QDomElement& root, ZeissTagsXmlSection::Pointer rootTagsSection);
 
-    void setDataContainerDims(VolumeDataContainer* dc, ZeissTagsXmlSection::Pointer photoTagsSection);
-    void generateMetaDataAttributeMatrix(DataContainer *dc, ZeissTagsXmlSection::Pointer photoTagsSection);
-    void generateDataArrays(const QString &imageName, const QString &pTag, const QString &dcName);
+    /**
+     * @brief getImageDimensions
+     * @param photoTagsSection
+     * @return
+     */
+    QVector<size_t> getImageDimensions(ZeissTagsXmlSection::Pointer photoTagsSection);
+
+    /**
+     * @brief generateMetaDataAttributeMatrix
+     * @param photoTagsSection
+     * @param imageCount
+     * @return
+     */
+    void addMetaData(AttributeMatrix::Pointer metaAm, ZeissTagsXmlSection::Pointer photoTagsSection, int index);
+
+    /**
+     * @brief generateDataArrays
+     * @param imageName
+     * @param pTag
+     * @param dcName
+     */
+    void importImage(const QString &imageName, const QString &pTag, const QString &dcName);
+
+    /**
+     * @brief convertToGrayScale
+     * @param imageName
+     * @param pTag
+     * @param dcName
+     */
+    void convertToGrayScale(const QString &imageName, const QString &pTag, const QString &dcName);
 
 
   private:
