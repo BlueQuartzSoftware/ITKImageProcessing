@@ -14,6 +14,10 @@ endif()
 include( ${QT_USE_FILE} )
 
 
+## YOU MUST INCLUDE THIS FILE TO USE ITK !!!
+## Then do not forget to add "${ITK_LIBRARIES}" to the target_link_libraries below
+include( ${DREAM3D_SUPPORT_DIR}/ITKSupport/IncludeITK.cmake)
+
 set(${PLUGIN_NAME}_Project_SRCS "")
 
 include(${DREAM3DProj_SOURCE_DIR}/Source/DREAM3DLib/DREAM3DLibMacros.cmake)
@@ -193,6 +197,7 @@ target_link_libraries(${PLUGIN_NAME}
                     QtSupport
                     DREAM3DWidgetsLib
                     ${QT_QTXML_LIBRARY}
+                    ${ITK_LIBRARIES}
                     )
 SET_TARGET_PROPERTIES(${PLUGIN_NAME} PROPERTIES FOLDER ${PLUGIN_NAME}Plugin)
 
