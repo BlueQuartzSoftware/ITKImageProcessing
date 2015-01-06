@@ -33,9 +33,10 @@
 // -----------------------------------------------------------------------------
 CalculateBackground::CalculateBackground() :
     AbstractFilter(),
-    m_VolumeDataContainerName("ZeissBundleBackground"),
+//    m_VolumeDataContainerName("ZeissBundleBackground"),
     m_BackgroundAttributeMatrixName("Background"),
     m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
+    m_AttributeMatrixName(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, ""),
     m_DataContainerBundleName(""),
     m_BackgroundImageArrayName(getDataContainerBundleName() + "BackgroundImage"),
     m_lowThresh(0),
@@ -59,11 +60,12 @@ CalculateBackground::~CalculateBackground()
 void CalculateBackground::setupFilterParameters()
 {
     FilterParameterVector parameters;
-    parameters.push_back(FilterParameter::New("DataContainerBundle Name", "DataContainerBundleName", FilterParameterWidgetType::DataBundleSelectionWidget, getDataContainerBundleName(), true));
+    //parameters.push_back(FilterParameter::New("DataContainerBundle Name", "DataContainerBundleName", FilterParameterWidgetType::DataBundleSelectionWidget, getDataContainerBundleName(), true));
+    parameters.push_back(FilterParameter::New("Attribute Matrix Name", "AttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getAttributeMatrixName(), false, ""));
     parameters.push_back(FilterParameter::New("lowest allowed Image value", "lowThresh", FilterParameterWidgetType::IntWidget, getlowThresh(), false, "Image Value"));
     parameters.push_back(FilterParameter::New("highest allowed Image value", "highThresh", FilterParameterWidgetType::IntWidget, gethighThresh(), false, "Image Value"));
     parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-    parameters.push_back(FilterParameter::New("Volume Data Container", "VolumeDataContainerName", FilterParameterWidgetType::StringWidget, getVolumeDataContainerName(), true, ""));
+//    parameters.push_back(FilterParameter::New("Volume Data Container", "VolumeDataContainerName", FilterParameterWidgetType::StringWidget, getVolumeDataContainerName(), true, ""));
     parameters.push_back(FilterParameter::New("Background Attribute Matrix", "BackgroundAttributeMatrixName", FilterParameterWidgetType::StringWidget, getBackgroundAttributeMatrixName(), true, ""));
     parameters.push_back(FilterParameter::New("Background Image Array Name", "BackgroundImageArrayName", FilterParameterWidgetType::StringWidget, getBackgroundImageArrayName(), true, ""));
     parameters.push_back(FilterParameter::New("Subtract Background from Current Images", "SubtractBackground", FilterParameterWidgetType::BooleanWidget, getSubtractBackground(), false));
@@ -76,7 +78,8 @@ void CalculateBackground::setupFilterParameters()
 void CalculateBackground::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
     reader->openFilterGroup(this, index);
-    setVolumeDataContainerName(reader->readString("VolumeDataContainerName", getVolumeDataContainerName() ) );
+    setAttributeMatrixName(reader->readDataArrayPath("AttributeMatrixName", getAttributeMatrixName()));
+//    setVolumeDataContainerName(reader->readString("VolumeDataContainerName", getVolumeDataContainerName() ) );
     setBackgroundAttributeMatrixName(reader->readString("BackgroundAttributeMatrixName", getBackgroundAttributeMatrixName()));
     setBackgroundImageArrayName(reader->readString("BackgroundImageArrayName", getBackgroundImageArrayName()));
     setDataContainerBundleName(reader->readString("DataContainerBundleName", getDataContainerBundleName() ) );
@@ -92,10 +95,11 @@ void CalculateBackground::readFilterParameters(AbstractFilterParametersReader* r
 int CalculateBackground::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
     writer->openFilterGroup(this, index);
-    DREAM3D_FILTER_WRITE_PARAMETER(VolumeDataContainerName)
+    DREAM3D_FILTER_WRITE_PARAMETER(AttributeMatrixName)
+//    DREAM3D_FILTER_WRITE_PARAMETER(VolumeDataContainerName)
     DREAM3D_FILTER_WRITE_PARAMETER(BackgroundAttributeMatrixName)
     DREAM3D_FILTER_WRITE_PARAMETER(BackgroundImageArrayName)
-    DREAM3D_FILTER_WRITE_PARAMETER(DataContainerBundleName)
+//    DREAM3D_FILTER_WRITE_PARAMETER(DataContainerBundleName)
     DREAM3D_FILTER_WRITE_PARAMETER(lowThresh)
     DREAM3D_FILTER_WRITE_PARAMETER(highThresh)
     DREAM3D_FILTER_WRITE_PARAMETER(SubtractBackground)
@@ -114,23 +118,27 @@ void CalculateBackground::dataCheck()
 
     QString ss;
 
+    AttributeMatrix::Pointer am = getDataContainerArray()->getAttributeMatrix(m_AttributeMatrixName);
 
-    QVector<size_t> dims(1, 1);
-    IDataContainerBundle::Pointer dcb = getDataContainerArray()->getDataContainerBundle(m_DataContainerBundleName);
-    if(NULL == dcb.get())
+    if (am.get() == NULL)
     {
         setErrorCondition(-76000);
-        notifyErrorMessage(getHumanLabel(), "The data bundle has not been selected properly", -76000);
+        notifyErrorMessage(getHumanLabel(), "The attribute matrix has not been selected properly", -76000);
         return;
     }
-    QVector<QString> dcList = dcb->getDataContainerNames();
+
+   QList<QString> names = am->getAttributeArrayNames();
+
+
+    QVector<size_t> dims(1, 1);
+
 
     UInt8ArrayType::Pointer imagePtr = UInt8ArrayType::NullPointer();
     IDataArray::Pointer iDataArray = IDataArray::NullPointer();
 
-    for(int i = 0; i < dcList.size(); i++)
+    for(int i = 0; i < names.size(); i++)
     {
-        m_ImageDataArrayPath.update(dcList[i], "CellData", "ImageData");
+        m_ImageDataArrayPath.update(getAttributeMatrixName().getDataContainerName(), getAttributeMatrixName().getAttributeMatrixName(), names[i]);
         iDataArray = getDataContainerArray()->getExistingPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, m_ImageDataArrayPath);
         imagePtr = boost::dynamic_pointer_cast<DataArray<uint8_t> >(iDataArray);
 
@@ -145,9 +153,10 @@ void CalculateBackground::dataCheck()
     if(getErrorCondition() < 0){ return; }
     m_totalPoints = imagePtr->getNumberOfTuples();
 
-    // New data container and attribute matrix to store background image
-    VolumeDataContainer* m = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getVolumeDataContainerName());
-    if(getErrorCondition() < 0){ return; }
+    setDataContainerName(getAttributeMatrixName().getDataContainerName());
+    VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
+    if(getErrorCondition() < 0 || NULL == m) { return; }
+
     QVector<size_t> tDims(1, 0);
     AttributeMatrix::Pointer backgroundAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getBackgroundAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
     if(getErrorCondition() < 0){ return; }
@@ -155,7 +164,7 @@ void CalculateBackground::dataCheck()
 
     // Background Image array
     dims[0] = 1;
-    tempPath.update(getVolumeDataContainerName(), getBackgroundAttributeMatrixName(), getBackgroundImageArrayName() );
+    tempPath.update(getDataContainerName(), getBackgroundAttributeMatrixName(), getBackgroundImageArrayName() );
     m_BackgroundImagePtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_BackgroundImagePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_BackgroundImage = m_BackgroundImagePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -206,7 +215,10 @@ void CalculateBackground::execute()
         return;
     }
 
+    AttributeMatrix::Pointer am = getDataContainerArray()->getAttributeMatrix(m_AttributeMatrixName);
 
+
+    QList<QString> names = am->getAttributeArrayNames();
 
     UInt8ArrayType::Pointer imagePtr = UInt8ArrayType::NullPointer();
     IDataArray::Pointer iDataArray = IDataArray::NullPointer();
@@ -215,13 +227,13 @@ void CalculateBackground::execute()
     std::vector<double> background(m_totalPoints, 0);
     std::vector<double> counter(m_totalPoints,0);
 
-    IDataContainerBundle::Pointer dcb = getDataContainerArray()->getDataContainerBundle(m_DataContainerBundleName);
-    QVector<QString> dcList = dcb->getDataContainerNames();
-    // getting the fist data container just to get the dimensions of each image.
-    VolumeDataContainer* m2 = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(dcList[0]);
 
-    size_t udims[3] = {0, 0, 0};
-    m2->getDimensions(udims);
+    // getting the fist data container just to get the dimensions of each image.
+    VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+
+
+    QVector<size_t> udims;
+    udims = am->getTupleDimensions();
 
   #if (CMP_SIZEOF_SIZE_T == 4)
     typedef int32_t DimType;
@@ -240,9 +252,9 @@ void CalculateBackground::execute()
 
 
 // run through all the data containers (images) and add them up to be averaged after the loop
-    for(size_t i = 0; i < dcList.size(); i++)
+    for(size_t i = 0; i < names.size(); i++)
     {
-        m_ImageDataArrayPath.update(dcList[i], "CellData", "ImageData");
+        m_ImageDataArrayPath.update(getDataContainerName(), getAttributeMatrixName().getAttributeMatrixName(), names[i]);
         iDataArray = getDataContainerArray()->getExistingPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, m_ImageDataArrayPath);
 
 
@@ -302,7 +314,7 @@ void CalculateBackground::execute()
    tDims[0] = dims[0];
    tDims[1] = dims[1];
    tDims[2] = dims[2];
-   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getVolumeDataContainerName());
+   //VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getVolumeDataContainerName());
    m->getAttributeMatrix(getBackgroundAttributeMatrixName())->resizeAttributeArrays(tDims);
    if( NULL != m_BackgroundImagePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
    { m_BackgroundImage = m_BackgroundImagePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -326,9 +338,9 @@ void CalculateBackground::execute()
    if(m_SubtractBackground == true)
    {
 
-       for(size_t i = 0; i < dcList.size(); i++)
+       for(size_t i = 0; i < names.size(); i++)
        {
-           m_ImageDataArrayPath.update(dcList[i], "CellData", "ImageData");
+           m_ImageDataArrayPath.update(getDataContainerName(), getAttributeMatrixName().getAttributeMatrixName(), names[i]);
            iDataArray = getDataContainerArray()->getExistingPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, m_ImageDataArrayPath);
 
 

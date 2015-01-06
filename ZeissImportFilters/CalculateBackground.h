@@ -33,6 +33,9 @@ class CalculateBackground : public AbstractFilter
 
     virtual ~CalculateBackground();
 
+    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
+
+
     DREAM3D_FILTER_PARAMETER(QString, VolumeDataContainerName)
     Q_PROPERTY(QString VolumeDataContainerName READ getVolumeDataContainerName WRITE setVolumeDataContainerName)
 
@@ -44,6 +47,9 @@ class CalculateBackground : public AbstractFilter
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, ImageDataArrayPath)
     Q_PROPERTY(DataArrayPath ImageDataArrayPath READ getImageDataArrayPath WRITE setImageDataArrayPath)
+
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, AttributeMatrixName)
+    Q_PROPERTY(DataArrayPath AttributeMatrixName READ getAttributeMatrixName WRITE setAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(QString, DataContainerBundleName)
     Q_PROPERTY(QString DataContainerBundleName READ getDataContainerBundleName WRITE setDataContainerBundleName)
