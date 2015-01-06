@@ -92,12 +92,12 @@ int ZeissImportFilter::writeFilterParameters(AbstractFilterParametersWriter* wri
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(InputFile)
-  DREAM3D_FILTER_WRITE_PARAMETER(DataContainerName)
-  DREAM3D_FILTER_WRITE_PARAMETER(ImageAttributeMatrixName)
-  DREAM3D_FILTER_WRITE_PARAMETER(ImageDataArrayPrefix)
-  DREAM3D_FILTER_WRITE_PARAMETER(ConvertToGrayScale)
-  DREAM3D_FILTER_WRITE_PARAMETER(ColorWeights)
-  writer->closeFilterGroup();
+      DREAM3D_FILTER_WRITE_PARAMETER(DataContainerName)
+      DREAM3D_FILTER_WRITE_PARAMETER(ImageAttributeMatrixName)
+      DREAM3D_FILTER_WRITE_PARAMETER(ImageDataArrayPrefix)
+      DREAM3D_FILTER_WRITE_PARAMETER(ConvertToGrayScale)
+      DREAM3D_FILTER_WRITE_PARAMETER(ColorWeights)
+      writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 
@@ -123,6 +123,42 @@ void ZeissImportFilter::dataCheck()
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
+
+  QString filtName = "ReadImage";
+  FilterManager* fm = FilterManager::Instance();
+  IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+  if (NULL != filterFactory.get() )
+  {
+    // If we get this far, the Factory is good so creating the filter should not fail unless something has
+    // horribly gone wrong in which case the system is going to come down quickly after this.
+    AbstractFilter::Pointer filter = filterFactory->create();
+    if(NULL == filter.get())
+    {
+      ss = QObject::tr("The 'ReadImage' filter is not Available, did the ImageProcessing Plugin Load.");
+      setErrorCondition(-391);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+
+    }
+  }
+  if(getConvertToGrayScale())
+  {
+    QString filtName = "RGBToGray";
+    FilterManager* fm = FilterManager::Instance();
+    IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+    if (NULL != filterFactory.get() )
+    {
+      // If we get this far, the Factory is good so creating the filter should not fail unless something has
+      // horribly gone wrong in which case the system is going to come down quickly after this.
+      AbstractFilter::Pointer filter = filterFactory->create();
+      if(NULL == filter.get())
+      {
+        ss = QObject::tr("The 'RGBToGray' filter is not Available, did the ImageProcessing Plugin Load.");
+        setErrorCondition(-391);
+        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+
+      }
+    }
+  }
   if(getErrorCondition() < 0) { return; }
 
   DataContainerArray::Pointer dca = getDataContainerArray();
@@ -494,7 +530,7 @@ void ZeissImportFilter::importImage(const QString &imageName, const QString &pTa
     if(false == propWasSet)
     {
       QString ss = QObject::tr("Error Setting Property '%1' into filter '%2' which is a subfilter called by %3. The property was not set which could mean the property was not exposed with a Q_PROPERTY macro. Please notify the developers.")
-      .arg("ImageDataArrayName").arg(filtName).arg(getHumanLabel());
+          .arg("ImageDataArrayName").arg(filtName).arg(getHumanLabel());
       setErrorCondition(-70008);
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     }
