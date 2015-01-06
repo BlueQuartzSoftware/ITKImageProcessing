@@ -18,6 +18,7 @@
 
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/Common/IFilterFactory.hpp"
+#include "DREAM3DLib/DataArrays/StringDataArray.hpp"
 
 #include "ZeissImport/ZeissImportConstants.h"
 #include "ZeissImport/ZeissXml/ZeissTagMapping.h"
@@ -260,12 +261,8 @@ ZeissTagsXmlSection::Pointer ZeissImportFilter::parseTagsSection(QDomElement& ta
     QString Ix = QString("I%1").arg(c);
     QString Ax = QString("A%1").arg(c);
 
-
-
     QDomElement vxEle = tags.firstChildElement(Vx);
     QDomElement ixEle = tags.firstChildElement(Ix);
-
- //   qDebug() << Ix << " " << ixEle.text() << "   " << Vx << " " << vxEle.text();
 
     qint32 idValue =  ixEle.text().toInt(&ok, 10);
     AbstractZeissMetaData::Pointer ptr = ZeissTagMapping::instance()->metaDataForId(idValue, vxEle.text());
@@ -378,22 +375,6 @@ void ZeissImportFilter::parseImages(QDomElement& root, ZeissTagsXmlSection::Poin
       return;
     }
 
-    //Get the list of Meta Data Array Names that we are going to parse
-//    if(p == 0)
-//    {
-//      QStringList metaDataArrayNames;
-//      ZeissTagMapping::Pointer tagMap = ZeissTagMapping::instance();
-
-//      ZeissTagsXmlSection::MetaDataType metaDataMap = photoTagsSection->getMetaDataMap();
-//      QMapIterator<int, AbstractZeissMetaData::Pointer> iter(metaDataMap);
-//      while(iter.hasNext())
-//      {
-//        iter.next();
-//        QString tagName = tagMap->nameForId(iter.value()->getZeissIdTag());
-//        metaDataArrayNames.append(tagName);
-//      }
-//    }
-
     AbstractZeissMetaData::Pointer ptr = photoTagsSection->getEntry(Zeiss::MetaXML::ImageTileIndexId);
 
     Int32ZeissMetaEntry::Pointer int32Entry = ZeissMetaEntry::convert<Int32ZeissMetaEntry>(ptr);
@@ -436,7 +417,24 @@ void ZeissImportFilter::parseImages(QDomElement& root, ZeissTagsXmlSection::Poin
 // -----------------------------------------------------------------------------
 void ZeissImportFilter::addMetaData(AttributeMatrix::Pointer metaAm, ZeissTagsXmlSection::Pointer photoTagsSection, int index)
 {
+  //qDebug() << "-------\np" << index;
+  ZeissTagMapping::Pointer tagMap = ZeissTagMapping::instance();
 
+  ZeissTagsXmlSection::MetaDataType tags = photoTagsSection->getMetaDataMap();
+  QMapIterator<int, AbstractZeissMetaData::Pointer> iter(tags);
+  while(iter.hasNext())
+  {
+    iter.next();
+    StringZeissMetaEntry::Pointer zStrVal = boost::dynamic_pointer_cast<StringZeissMetaEntry>(iter.value());
+
+    //qDebug() << iter.key() << "  " << zStrVal->getValue();
+    QString tagName = tagMap->nameForId(iter.key());
+    IDataArray::Pointer iDataArray = metaAm->getAttributeArray(tagName);
+    StringDataArray::Pointer strArray = boost::dynamic_pointer_cast<StringDataArray>(iDataArray);
+    strArray->setValue(index, zStrVal->getValue());
+    //IDataArray::Pointer dataArray = iter.value()->createDataArray(!getInPreflight());
+    //metaData->addAttributeArray(dataArray->getName(), dataArray);
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -579,19 +577,26 @@ void ZeissImportFilter::convertToGrayScale(const QString &imageName, const QStri
     if(getInPreflight() == true)
     {
       filter->preflight();
+
     }
     else
     {
       filter->execute();
     }
 
-    DataContainerArray::Pointer dca = getDataContainerArray();
-    DataContainer::Pointer dc = dca->getDataContainer(getDataContainerName());
-    AttributeMatrix::Pointer am = dc->getAttributeMatrix(getImageAttributeMatrixName());
-    IDataArray::Pointer rgb = am->removeAttributeArray(dataArrayName);
-    IDataArray::Pointer gray = am->removeAttributeArray(k_GrayScaleTempArrayName);
-    gray->setName(rgb->getName());
-    am->addAttributeArray(gray->getName(), gray);
+    if(filter->getErrorCondition() < 0)
+    {
+
+    }
+    else {
+      DataContainerArray::Pointer dca = getDataContainerArray();
+      DataContainer::Pointer dc = dca->getDataContainer(getDataContainerName());
+      AttributeMatrix::Pointer am = dc->getAttributeMatrix(getImageAttributeMatrixName());
+      IDataArray::Pointer rgb = am->removeAttributeArray(dataArrayName);
+      IDataArray::Pointer gray = am->removeAttributeArray(k_GrayScaleTempArrayName);
+      gray->setName(rgb->getName());
+      am->addAttributeArray(gray->getName(), gray);
+    }
   }
   else {
     QString ss = QObject::tr("Error trying to instantiate the 'ReadImage' filter which is typically included in the 'ImageProcessing' plugin.");
