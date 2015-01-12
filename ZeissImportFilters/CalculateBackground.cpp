@@ -140,6 +140,8 @@ void CalculateBackground::dataCheck()
     {
         m_ImageDataArrayPath.update(getAttributeMatrixName().getDataContainerName(), getAttributeMatrixName().getAttributeMatrixName(), names[i]);
         iDataArray = getDataContainerArray()->getExistingPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, m_ImageDataArrayPath);
+
+        imagePtr = boost::dynamic_pointer_cast<DataArray<uint8_t> >(iDataArray);
 //        QVector<IDataArray::Pointer> pointerList;
 
 //        pointerList[i] = iDataArray;
