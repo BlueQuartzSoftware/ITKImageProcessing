@@ -140,7 +140,12 @@ void CalculateBackground::dataCheck()
     {
         m_ImageDataArrayPath.update(getAttributeMatrixName().getDataContainerName(), getAttributeMatrixName().getAttributeMatrixName(), names[i]);
         iDataArray = getDataContainerArray()->getExistingPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, m_ImageDataArrayPath);
-        imagePtr = boost::dynamic_pointer_cast<DataArray<uint8_t> >(iDataArray);
+//        QVector<IDataArray::Pointer> pointerList;
+
+//        pointerList[i] = iDataArray;
+
+
+//        imagePtr = boost::dynamic_pointer_cast<DataArray<uint8_t> >(pointerList[i]);
 
 
         if(NULL == imagePtr)
@@ -148,7 +153,11 @@ void CalculateBackground::dataCheck()
             setErrorCondition(-76001);
             notifyErrorMessage(getHumanLabel(), "The data was not found", -76001);
         }
+
+
     }
+
+
 
     if(getErrorCondition() < 0){ return; }
     m_totalPoints = imagePtr->getNumberOfTuples();

@@ -12,7 +12,8 @@
 //
 // -----------------------------------------------------------------------------
 DetermineStitchingCoordinates::DetermineStitchingCoordinates() :
-  AbstractFilter()
+  AbstractFilter(),
+  m_AttributeMatrixName(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, "")
 /* DO NOT FORGET TO INITIALIZE ALL YOUR DREAM3D Filter Parameters HERE */
 {
   setupFilterParameters();
@@ -31,21 +32,8 @@ DetermineStitchingCoordinates::~DetermineStitchingCoordinates()
 void DetermineStitchingCoordinates::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  /* There are several types of FilterParameter classes to choose from and several
-  * options for each class type. The programmer can put the entire invocation into
-  * a single line if they want. For example:
-  *
-  *   parameters.push_back(FilterParameter::New("Reference Direction", "ReferenceDir", FilterParameterWidgetType::FloatVec3Widget, getReferenceDir(), false));
-  * or the programmer can create a FilterParameter like usual C++ codes:
-  * {
-  *  FilterParameter::Pointer parameter = FilterParameter::New();
-  *  parameter->setHumanLabel("Eulers Array");
-  *  parameter->setPropertyName("CellEulerAnglesArrayName");
-  *  parameter->setWidgetType(FilterParameterWidgetType::SingleArraySelectionWidget);
-  *  parameter->setUnits("");
-  *  parameters.push_back(parameter);
-  * }
-  */
+  parameters.push_back(FilterParameter::New("Attribute Matrix Name", "AttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getAttributeMatrixName(), false, ""));
+
   setFilterParameters(parameters);
 }
 
@@ -55,10 +43,8 @@ void DetermineStitchingCoordinates::setupFilterParameters()
 void DetermineStitchingCoordinates::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  /*
-   Place code in here that will read the parameters from a file
-   setOutputFile( reader->readValue("OutputFile", getOutputFile() ) );
-   */
+  setAttributeMatrixName(reader->readDataArrayPath("AttributeMatrixName", getAttributeMatrixName()));
+
   reader->closeFilterGroup();
 }
 
@@ -68,8 +54,7 @@ void DetermineStitchingCoordinates::readFilterParameters(AbstractFilterParameter
 int DetermineStitchingCoordinates::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  /* Place code that will write the inputs values into a file. reference the AbstractFilterParametersWriter class for the proper API to use. */
-  /*  writer->writeValue("OutputFile", getOutputFile() ); */
+  DREAM3D_FILTER_WRITE_PARAMETER(AttributeMatrixName)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -79,41 +64,49 @@ int DetermineStitchingCoordinates::writeFilterParameters(AbstractFilterParameter
 // -----------------------------------------------------------------------------
 void DetermineStitchingCoordinates::dataCheck()
 {
-  setErrorCondition(0);
+    setErrorCondition(0);
+    DataArrayPath tempPath;
 
-  /* Example code for preflighting looking for a valid string for the output file
-   * but not necessarily the fact that the file exists: Example code to make sure
-   * we have something in a string before proceeding.*/
-  /*
-  if (m_OutputFile.empty() == true)
-  {
-    QString ss = QObject::tr("Output file name was not set").arg(getHumanLabel());
-    setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), ss, -1);
-    return;
-  }
-  * We can also check for the availability of REQUIRED ARRAYS:
-  * QVector<size_t> dims(1, 1);
-  * // Assigns the shared_ptr<> to an instance variable that is a weak_ptr<>
-  * m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(), dims);
-  *  // Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object
-  * if( NULL != m_CellPhasesPtr.lock().get() )
-  * {
-  *   // Now assign the raw pointer to data from the DataArray<T> object
-  *   m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0);
-  * }
-  *
-  * We can also CREATE a new array to dump new data into
-  *   tempPath.update(m_CellEulerAnglesArrayPath.getDataContainerName(), m_CellEulerAnglesArrayPath.getAttributeMatrixName(), getCellIPFColorsArrayName() );
-  * // Assigns the shared_ptr<> to an instance variable that is a weak_ptr<>
-  * m_CellIPFColorsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, tempPath, 0, dims);
-  * // Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object
-  * if( NULL != m_CellIPFColorsPtr.lock().get() )
-  * {
-  * // Now assign the raw pointer to data from the DataArray<T> object
-  * m_CellIPFColors = m_CellIPFColorsPtr.lock()->getPointer(0);
-  * }
-  */
+    QString ss;
+
+    AttributeMatrix::Pointer am = getDataContainerArray()->getAttributeMatrix(m_AttributeMatrixName);
+
+    if (am.get() == NULL)
+    {
+        setErrorCondition(-76000);
+        notifyErrorMessage(getHumanLabel(), "The attribute matrix has not been selected properly", -76000);
+        return;
+    }
+
+   QList<QString> names = am->getAttributeArrayNames();
+
+
+    QVector<size_t> dims(1, 1);
+
+
+    UInt8ArrayType::Pointer imagePtr = UInt8ArrayType::NullPointer();
+    IDataArray::Pointer iDataArray = IDataArray::NullPointer();
+
+    for(int i = 0; i < names.size(); i++)
+    {
+        tempPath.update(getAttributeMatrixName().getDataContainerName(), getAttributeMatrixName().getAttributeMatrixName(), names[i]);
+        iDataArray = getDataContainerArray()->getExistingPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, tempPath);
+        QVector<IDataArray::Pointer> pointerList;
+
+        pointerList[i] = iDataArray;
+
+        imagePtr = boost::dynamic_pointer_cast<DataArray<uint8_t> >(pointerList[i]);
+
+        if(NULL == imagePtr)
+        {
+            setErrorCondition(-76001);
+            notifyErrorMessage(getHumanLabel(), "The data was not found", -76001);
+        }
+
+
+    }
+
+
 }
 
 // -----------------------------------------------------------------------------

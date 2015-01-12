@@ -40,6 +40,10 @@ class DetermineStitchingCoordinates : public AbstractFilter
     // DREAM3D_FILTER_PARAMETER(int, ImageSize)
     // Q_PROPERTY(int ImageSize READ getImageSize WRITE setImageSize)
 
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, AttributeMatrixName)
+    Q_PROPERTY(DataArrayPath AttributeMatrixName READ getAttributeMatrixName WRITE setAttributeMatrixName)
+
+
 
 
     /**
