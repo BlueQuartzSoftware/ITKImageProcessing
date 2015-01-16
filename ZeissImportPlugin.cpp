@@ -5,10 +5,12 @@
 
 #include "ZeissImportPlugin.h"
 
+#include <QtCore/QFile>
+#include <QtCore/QFileInfo>
+
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/Common/IFilterFactory.hpp"
 #include "DREAM3DLib/Common/FilterFactory.hpp"
-
 
 #include "ZeissImport/moc_ZeissImportPlugin.cpp"
 
@@ -34,7 +36,6 @@ m_Location(""),
 m_Platforms(QList<QString>()),
 m_Description(""),
 m_Copyright(""),
-m_License(""),
 m_Dependencies(QList<QString>())
 {
 
@@ -60,7 +61,7 @@ QString ZeissImportPlugin::getPluginName()
 // -----------------------------------------------------------------------------
 QString ZeissImportPlugin::getVersion()
 {
-  return "";
+  return m_Version;
 }
 
 // -----------------------------------------------------------------------------
@@ -68,7 +69,7 @@ QString ZeissImportPlugin::getVersion()
 // -----------------------------------------------------------------------------
 QString ZeissImportPlugin::getCompatibilityVersion()
 {
-  return "";
+  return m_CompatibilityVersion;
 }
 
 // -----------------------------------------------------------------------------
@@ -76,7 +77,7 @@ QString ZeissImportPlugin::getCompatibilityVersion()
 // -----------------------------------------------------------------------------
 QString ZeissImportPlugin::getVendor()
 {
-  return "";
+  return m_Vendor;
 }
 
 // -----------------------------------------------------------------------------
@@ -84,7 +85,7 @@ QString ZeissImportPlugin::getVendor()
 // -----------------------------------------------------------------------------
 QString ZeissImportPlugin::getGroup()
 {
-  return "";
+  return m_Group;
 }
 
 // -----------------------------------------------------------------------------
@@ -92,7 +93,7 @@ QString ZeissImportPlugin::getGroup()
 // -----------------------------------------------------------------------------
 QString ZeissImportPlugin::getURL()
 {
-  return "";
+  return m_URL;
 }
 
 // -----------------------------------------------------------------------------
@@ -100,7 +101,7 @@ QString ZeissImportPlugin::getURL()
 // -----------------------------------------------------------------------------
 QString ZeissImportPlugin::getLocation()
 {
-  return "";
+  return m_Location;
 }
 
 // -----------------------------------------------------------------------------
@@ -108,8 +109,7 @@ QString ZeissImportPlugin::getLocation()
 // -----------------------------------------------------------------------------
 QList<QString> ZeissImportPlugin::getPlatforms()
 {
-  QList<QString> empty;
-  return empty;
+  return m_Platforms;
 }
 
 // -----------------------------------------------------------------------------
@@ -117,7 +117,7 @@ QList<QString> ZeissImportPlugin::getPlatforms()
 // -----------------------------------------------------------------------------
 QString ZeissImportPlugin::getDescription()
 {
-  return "";
+  return m_Description;
 }
 
 // -----------------------------------------------------------------------------
@@ -125,7 +125,7 @@ QString ZeissImportPlugin::getDescription()
 // -----------------------------------------------------------------------------
 QString ZeissImportPlugin::getCopyright()
 {
-  return "";
+  return m_Copyright;
 }
 
 // -----------------------------------------------------------------------------
@@ -133,7 +133,19 @@ QString ZeissImportPlugin::getCopyright()
 // -----------------------------------------------------------------------------
 QString ZeissImportPlugin::getLicense()
 {
-  return "";
+  QFile licenseFile(":/ZeissImportResources/License.txt");
+  QFileInfo licenseFileInfo(licenseFile);
+  QString text = "<<--License was not read-->>";
+
+  if ( licenseFileInfo.exists() )
+  {
+    if ( licenseFile.open(QIODevice::ReadOnly | QIODevice::Text) )
+    {
+      QTextStream in(&licenseFile);
+      text = in.readAll();
+    }
+  }
+  return text;
 }
 
 // -----------------------------------------------------------------------------
@@ -141,8 +153,7 @@ QString ZeissImportPlugin::getLicense()
 // -----------------------------------------------------------------------------
 QList<QString> ZeissImportPlugin::getDependencies()
 {
-  QList<QString> empty;
-  return empty;
+  return m_Dependencies;
 }
 
 // -----------------------------------------------------------------------------
