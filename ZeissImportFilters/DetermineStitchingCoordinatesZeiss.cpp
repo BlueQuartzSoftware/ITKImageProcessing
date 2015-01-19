@@ -2,16 +2,18 @@
  * Your License or Copyright Information can go here
  */
 
-#include "DetermineStitchingCoordinates.h"
+#include "DetermineStitchingCoordinatesZeiss.h"
 
 #include <QtCore/QString>
 
 #include "ZeissImport/ZeissImportConstants.h"
 
+#include "DREAM3DLib/Common/FilterManager.h"
+#include "DREAM3DLib/Common/IFilterFactory.hpp"
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DetermineStitchingCoordinates::DetermineStitchingCoordinates() :
+DetermineStitchingCoordinatesZeiss::DetermineStitchingCoordinatesZeiss() :
   AbstractFilter(),
   m_AttributeMatrixName(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, "")
 /* DO NOT FORGET TO INITIALIZE ALL YOUR DREAM3D Filter Parameters HERE */
@@ -22,14 +24,14 @@ DetermineStitchingCoordinates::DetermineStitchingCoordinates() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DetermineStitchingCoordinates::~DetermineStitchingCoordinates()
+DetermineStitchingCoordinatesZeiss::~DetermineStitchingCoordinatesZeiss()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DetermineStitchingCoordinates::setupFilterParameters()
+void DetermineStitchingCoordinatesZeiss::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Attribute Matrix Name", "AttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getAttributeMatrixName(), false, ""));
@@ -40,7 +42,7 @@ void DetermineStitchingCoordinates::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DetermineStitchingCoordinates::readFilterParameters(AbstractFilterParametersReader* reader, int index)
+void DetermineStitchingCoordinatesZeiss::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
   setAttributeMatrixName(reader->readDataArrayPath("AttributeMatrixName", getAttributeMatrixName()));
@@ -51,7 +53,7 @@ void DetermineStitchingCoordinates::readFilterParameters(AbstractFilterParameter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int DetermineStitchingCoordinates::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int DetermineStitchingCoordinatesZeiss::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(AttributeMatrixName)
@@ -62,7 +64,7 @@ int DetermineStitchingCoordinates::writeFilterParameters(AbstractFilterParameter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DetermineStitchingCoordinates::dataCheck()
+void DetermineStitchingCoordinatesZeiss::dataCheck()
 {
     setErrorCondition(0);
     DataArrayPath tempPath;
@@ -86,23 +88,22 @@ void DetermineStitchingCoordinates::dataCheck()
 
     UInt8ArrayType::Pointer imagePtr = UInt8ArrayType::NullPointer();
     IDataArray::Pointer iDataArray = IDataArray::NullPointer();
+    m_PointerList.resize(names.size());
 
     for(int i = 0; i < names.size(); i++)
     {
         tempPath.update(getAttributeMatrixName().getDataContainerName(), getAttributeMatrixName().getAttributeMatrixName(), names[i]);
         iDataArray = getDataContainerArray()->getExistingPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, tempPath);
-        QVector<IDataArray::Pointer> pointerList;
 
-        pointerList[i] = iDataArray;
+        m_PointerList[i] = iDataArray;
 
-        imagePtr = boost::dynamic_pointer_cast<DataArray<uint8_t> >(pointerList[i]);
+        imagePtr = boost::dynamic_pointer_cast<DataArray<uint8_t> >(m_PointerList[i]);
 
         if(NULL == imagePtr)
         {
             setErrorCondition(-76001);
             notifyErrorMessage(getHumanLabel(), "The data was not found", -76001);
         }
-
 
     }
 
@@ -112,7 +113,7 @@ void DetermineStitchingCoordinates::dataCheck()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DetermineStitchingCoordinates::preflight()
+void DetermineStitchingCoordinatesZeiss::preflight()
 {
   // These are the REQUIRED lines of CODE to make sure the filter behaves correctly
   setInPreflight(true); // Set the fact that we are preflighting.
@@ -126,7 +127,7 @@ void DetermineStitchingCoordinates::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString DetermineStitchingCoordinates::getCompiledLibraryName()
+const QString DetermineStitchingCoordinatesZeiss::getCompiledLibraryName()
 {
   return ZeissImport::ZeissImportBaseName;
 }
@@ -134,7 +135,7 @@ const QString DetermineStitchingCoordinates::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString DetermineStitchingCoordinates::getGroupName()
+const QString DetermineStitchingCoordinatesZeiss::getGroupName()
 {
   return "ZeissImport";
 }
@@ -142,15 +143,15 @@ const QString DetermineStitchingCoordinates::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString DetermineStitchingCoordinates::getHumanLabel()
+const QString DetermineStitchingCoordinatesZeiss::getHumanLabel()
 {
-  return "DetermineStitchingCoordinates";
+  return "DetermineStitchingCoordinatesZeiss";
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString DetermineStitchingCoordinates::getSubGroupName()
+const QString DetermineStitchingCoordinatesZeiss::getSubGroupName()
 {
   return "Misc";
 }
@@ -158,15 +159,22 @@ const QString DetermineStitchingCoordinates::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DetermineStitchingCoordinates::execute()
+void DetermineStitchingCoordinatesZeiss::execute()
 {
   int err = 0;
-  // typically run your dataCheck function to make sure you can get that far and all your variables are initialized
   dataCheck();
-  // Check to make sure you made it through the data check. Errors would have been reported already so if something
-  // happens to fail in the dataCheck() then we simply return
   if(getErrorCondition() < 0) { return; }
   setErrorCondition(0);
+
+  QString filtName = "RGBToGray";
+  FilterManager* fm = FilterManager::Instance();
+  fm->printFactoryNames();
+  IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+
+  if (NULL != filterFactory.get() )
+  {
+      std::cout << "not null" << std::endl;
+  }
 
   /* Place all your code to execute your filter here. */
 
@@ -186,12 +194,12 @@ void DetermineStitchingCoordinates::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer DetermineStitchingCoordinates::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer DetermineStitchingCoordinatesZeiss::newFilterInstance(bool copyFilterParameters)
 {
   /*
   * write code to optionally copy the filter parameters from the current filter into the new instance
   */
-  DetermineStitchingCoordinates::Pointer filter = DetermineStitchingCoordinates::New();
+  DetermineStitchingCoordinatesZeiss::Pointer filter = DetermineStitchingCoordinatesZeiss::New();
   if(true == copyFilterParameters)
   {
     /* If the filter uses all the standard Filter Parameter Widgets you can probabaly get

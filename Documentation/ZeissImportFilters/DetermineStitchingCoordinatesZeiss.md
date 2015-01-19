@@ -1,4 +1,4 @@
-DetermineStitchingCoordinates {#determinestitchingcoordinates}
+DetermineStitchingCoordinatesZeiss {#DetermineStitchingCoordinatesZeiss}
 =====
 
 ## Group (Subgroup) ##

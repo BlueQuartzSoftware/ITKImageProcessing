@@ -2,8 +2,8 @@
  * Your License or Copyright Information can go here
  */
 
-#ifndef _DetermineStitchingCoordinates_H_
-#define _DetermineStitchingCoordinates_H_
+#ifndef _DetermineStitchingCoordinatesZeiss_H_
+#define _DetermineStitchingCoordinatesZeiss_H_
 
 
 #include "DREAM3DLib/DREAM3DLib.h"
@@ -12,22 +12,22 @@
 
 
 /**
- * @class DetermineStitchingCoordinates DetermineStitchingCoordinates.h ZeissImport/ZeissImportFilters/DetermineStitchingCoordinates.h
+ * @class DetermineStitchingCoordinatesZeiss DetermineStitchingCoordinatesZeiss.h ZeissImport/ZeissImportFilters/DetermineStitchingCoordinatesZeiss.h
  * @brief
  * @author
  * @date
  * @version 1.0
  */
-class DetermineStitchingCoordinates : public AbstractFilter
+class DetermineStitchingCoordinatesZeiss : public AbstractFilter
 {
   Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
 
   public:
-    DREAM3D_SHARED_POINTERS(DetermineStitchingCoordinates)
-    DREAM3D_STATIC_NEW_MACRO(DetermineStitchingCoordinates)
-    DREAM3D_TYPE_MACRO_SUPER(DetermineStitchingCoordinates, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(DetermineStitchingCoordinatesZeiss)
+    DREAM3D_STATIC_NEW_MACRO(DetermineStitchingCoordinatesZeiss)
+    DREAM3D_TYPE_MACRO_SUPER(DetermineStitchingCoordinatesZeiss, AbstractFilter)
 
-    virtual ~DetermineStitchingCoordinates();
+    virtual ~DetermineStitchingCoordinatesZeiss();
 
     /* Place your input parameters here using the DREAM3D macros to declare the Filter Parameters
      * or other instance variables
@@ -135,7 +135,7 @@ class DetermineStitchingCoordinates : public AbstractFilter
     void preflightExecuted();
 
   protected:
-    DetermineStitchingCoordinates();
+    DetermineStitchingCoordinatesZeiss();
 
     /**
     * @brief Checks for the appropriate parameter values and availability of arrays in the data container
@@ -143,13 +143,12 @@ class DetermineStitchingCoordinates : public AbstractFilter
     void dataCheck();
 
   private:
-    /* Your private class instance variables go here. You can use several preprocessor macros to help
-     * make sure you have all the variables defined correctly. Those are "DEFINE_REQUIRED_DATAARRAY_VARIABLE()"
-     * and  DEFINE_CREATED_DATAARRAY_VARIABLE() which are defined in DREAM3DGetSetMacros.h
-     */
+//    DEFINE_CREATED_DATAARRAY_VARIABLE(QVector<IDataArray::Pointer>, PointerList)
+    QVector<IDataArray::Pointer> m_PointerList;
 
-    DetermineStitchingCoordinates(const DetermineStitchingCoordinates&); // Copy Constructor Not Implemented
-    void operator=(const DetermineStitchingCoordinates&); // Operator '=' Not Implemented
+
+    DetermineStitchingCoordinatesZeiss(const DetermineStitchingCoordinatesZeiss&); // Copy Constructor Not Implemented
+    void operator=(const DetermineStitchingCoordinatesZeiss&); // Operator '=' Not Implemented
 };
 
-#endif /* _DetermineStitchingCoordinates_H_ */
+#endif /* _DetermineStitchingCoordinatesZeiss_H_ */
