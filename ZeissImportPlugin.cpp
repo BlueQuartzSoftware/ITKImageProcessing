@@ -7,6 +7,8 @@
 
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
+#include <QtCore/QDir>
+#include <QtCore/QStringList>
 
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/Common/IFilterFactory.hpp"
@@ -19,7 +21,7 @@ Q_EXPORT_PLUGIN2(ZeissImportPlugin, ZeissImportPlugin)
 namespace Detail
 {
   const QString ZeissImportPluginFile("ZeissImportPlugin");
-  const QString ZeissImportPluginDisplayName("ZeissImportPlugin");
+  const QString ZeissImportPluginDisplayName("ZeissImport");
   const QString ZeissImportPluginBaseName("ZeissImportPlugin");
 }
 
@@ -27,15 +29,13 @@ namespace Detail
 //
 // -----------------------------------------------------------------------------
 ZeissImportPlugin::ZeissImportPlugin() :
-m_Version(""),
-m_CompatibilityVersion(""),
-m_Vendor(""),
-m_Group(""),
-m_URL(""),
+m_Version(DREAM3DLib::Version::Package()),
+m_CompatibilityVersion(DREAM3DLib::Version::Package()),
+m_Vendor(DREAM3D::BlueQuartz::VendorName),
+m_URL(DREAM3D::BlueQuartz::URL),
 m_Location(""),
 m_Platforms(QList<QString>()),
-m_Description(""),
-m_Copyright(""),
+m_Copyright(DREAM3D::BlueQuartz::Copyright),
 m_Dependencies(QList<QString>())
 {
 
@@ -83,14 +83,6 @@ QString ZeissImportPlugin::getVendor()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString ZeissImportPlugin::getGroup()
-{
-  return m_Group;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 QString ZeissImportPlugin::getURL()
 {
   return m_URL;
@@ -117,7 +109,19 @@ QList<QString> ZeissImportPlugin::getPlatforms()
 // -----------------------------------------------------------------------------
 QString ZeissImportPlugin::getDescription()
 {
-  return m_Description;
+  QFile licenseFile(":/ZeissImport/ZeissImportDescription.txt");
+  QFileInfo licenseFileInfo(licenseFile);
+  QString text = "<<--Description was not read-->>";
+
+  if ( licenseFileInfo.exists() )
+  {
+    if ( licenseFile.open(QIODevice::ReadOnly | QIODevice::Text) )
+    {
+      QTextStream in(&licenseFile);
+      text = in.readAll();
+    }
+  }
+  return text;
 }
 
 // -----------------------------------------------------------------------------
@@ -133,7 +137,7 @@ QString ZeissImportPlugin::getCopyright()
 // -----------------------------------------------------------------------------
 QString ZeissImportPlugin::getLicense()
 {
-  QFile licenseFile(":/ZeissImportResources/License.txt");
+  QFile licenseFile(":/ZeissImport/ZeissImportLicense.txt");
   QFileInfo licenseFileInfo(licenseFile);
   QString text = "<<--License was not read-->>";
 
