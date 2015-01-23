@@ -186,6 +186,15 @@ class ZeissImportFilter : public AbstractFilter
     void addMetaData(AttributeMatrix::Pointer metaAm, ZeissTagsXmlSection::Pointer photoTagsSection, int index);
 
     /**
+     * @brief generateMetaDataAttributeMatrix -root data
+     * @param rootTagsSection
+     * @param imageCount
+     * @return
+     */
+
+    void addRootMetaData(AttributeMatrix::Pointer metaAm, ZeissTagsXmlSection::Pointer rootTagsSection, int index);
+
+    /**
      * @brief generateDataArrays
      * @param imageName
      * @param pTag

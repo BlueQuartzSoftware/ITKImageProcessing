@@ -434,9 +434,31 @@ void ZeissImportFilter::parseImages(QDomElement& root, ZeissTagsXmlSection::Poin
         dataArray->resize(imageCount);
         metaAm->addAttributeArray(dataArray->getName(), dataArray);
       }
+
+      ZeissTagsXmlSection::MetaDataType tagMapRoot = rootTagsSection->getMetaDataMap();
+      QMapIterator<int, AbstractZeissMetaData::Pointer> iterRoot(tagMapRoot);
+
+
+      while(iterRoot.hasNext())
+      {
+
+            iterRoot.next();
+            IDataArray::Pointer dataArrayRoot = iterRoot.value()->createDataArray(!getInPreflight());
+            dataArrayRoot->resize(imageCount);
+            if (dataArrayRoot->getName() == "ScaleFactorForX" || dataArrayRoot->getName()  == "ScaleFactorForY")
+            {
+                metaAm->addAttributeArray(dataArrayRoot->getName(), dataArrayRoot);
+            }
+
+      }
+
+
+
     }
     // Generate all the Meta Data Values:
     addMetaData(metaAm, photoTagsSection, p);
+
+    addRootMetaData(metaAm, rootTagsSection, p);
 
     // Read the image into a data array
     importImage(imageName, pTag, dc->getName());
@@ -457,6 +479,7 @@ void ZeissImportFilter::addMetaData(AttributeMatrix::Pointer metaAm, ZeissTagsXm
   ZeissTagMapping::Pointer tagMap = ZeissTagMapping::instance();
 
   ZeissTagsXmlSection::MetaDataType tags = photoTagsSection->getMetaDataMap();
+
   QMapIterator<int, AbstractZeissMetaData::Pointer> iter(tags);
   while(iter.hasNext())
   {
@@ -472,6 +495,37 @@ void ZeissImportFilter::addMetaData(AttributeMatrix::Pointer metaAm, ZeissTagsXm
     //metaData->addAttributeArray(dataArray->getName(), dataArray);
   }
 }
+
+void ZeissImportFilter::addRootMetaData(AttributeMatrix::Pointer metaAm, ZeissTagsXmlSection::Pointer rootTagsSection, int index)
+{
+    ZeissTagMapping::Pointer tagMap = ZeissTagMapping::instance();
+    ZeissTagsXmlSection::MetaDataType tags = rootTagsSection->getMetaDataMap();
+
+    QMapIterator<int, AbstractZeissMetaData::Pointer> iter(tags);
+    while(iter.hasNext())
+    {
+      iter.next();
+      StringZeissMetaEntry::Pointer zStrVal = boost::dynamic_pointer_cast<StringZeissMetaEntry>(iter.value());
+
+          //qDebug() << iter.key() << "  " << zStrVal->getValue();
+      QString tagName = tagMap->nameForId(iter.key());
+      if (tagName == "ScaleFactorForX" || tagName == "ScaleFactorForY")
+      {
+          IDataArray::Pointer iDataArray = metaAm->getAttributeArray(tagName);
+          StringDataArray::Pointer strArray = boost::dynamic_pointer_cast<StringDataArray>(iDataArray);
+          strArray->setValue(index, zStrVal->getValue());
+          //IDataArray::Pointer dataArray = iter.value()->createDataArray(!getInPreflight());
+          //metaData->addAttributeArray(dataArray->getName(), dataArray);
+      }
+
+    }
+
+
+
+
+}
+
+
 
 // -----------------------------------------------------------------------------
 //
