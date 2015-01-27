@@ -145,7 +145,7 @@ const QString DetermineStitchingCoordinatesZeiss::getGroupName()
 // -----------------------------------------------------------------------------
 const QString DetermineStitchingCoordinatesZeiss::getHumanLabel()
 {
-  return "DetermineStitchingCoordinatesZeiss";
+  return "Determine Stitching Coordinates (Zeiss AxioVision)";
 }
 
 // -----------------------------------------------------------------------------

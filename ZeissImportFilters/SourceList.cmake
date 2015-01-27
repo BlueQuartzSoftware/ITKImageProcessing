@@ -20,7 +20,7 @@ set(_PublicFilters
   EMMPMSegmentation
   FindFiberEdges
   CalculateFiberStatistics
-
+  MontageXdmfWriter
 )
 
 

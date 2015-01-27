@@ -155,7 +155,6 @@ void ZeissImportFilter::dataCheck()
         ss = QObject::tr("The 'RGBToGray' filter is not Available, did the ImageProcessing Plugin Load.");
         setErrorCondition(-391);
         notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-
       }
     }
   }
@@ -553,6 +552,7 @@ void ZeissImportFilter::importImage(const QString &imageName, const QString &pTa
     // Connect up the Error/Warning/Progress object so the filter can report those things
     connect(filter.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
             this, SLOT(broadcastPipelineMessage(const PipelineMessage&)));
+    filter->setMessagePrefix(getMessagePrefix());
     filter->setDataContainerArray(getDataContainerArray()); // AbstractFilter implements this so no problem
 
     bool propWasSet = filter->setProperty("InputFileName", imagePath);
@@ -613,12 +613,8 @@ void ZeissImportFilter::importImage(const QString &imageName, const QString &pTa
 // -------------------------------------------------------------------------
 void ZeissImportFilter::convertToGrayScale(const QString &imageName, const QString &pTag, const QString &dcName)
 {
-
-
   QFileInfo fi(imageName);
   QString dataArrayName = fi.completeBaseName() + "_" + pTag;
-
-
 
   QString filtName = "RGBToGray";
   FilterManager* fm = FilterManager::Instance();
@@ -632,6 +628,7 @@ void ZeissImportFilter::convertToGrayScale(const QString &imageName, const QStri
     // Connect up the Error/Warning/Progress object so the filter can report those things
     connect(filter.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
             this, SLOT(broadcastPipelineMessage(const PipelineMessage&)));
+    filter->setMessagePrefix(getMessagePrefix());
     filter->setDataContainerArray(getDataContainerArray()); // AbstractFilter implements this so no problem
 
     DataArrayPath dap(getDataContainerName(), getImageAttributeMatrixName(), dataArrayName);
