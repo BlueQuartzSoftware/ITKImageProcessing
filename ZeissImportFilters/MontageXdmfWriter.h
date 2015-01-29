@@ -45,6 +45,9 @@ class MontageXdmfWriter : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, OriginsDataArrayPath)
     Q_PROPERTY(DataArrayPath OriginsDataArrayPath READ getOriginsDataArrayPath WRITE setOriginsDataArrayPath)
 
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, ResolutionsDataArrayPath)
+    Q_PROPERTY(DataArrayPath ResolutionsDataArrayPath READ getResolutionsDataArrayPath WRITE setResolutionsDataArrayPath)
+
     DREAM3D_FILTER_PARAMETER(DataArrayPath, AttributeMatrixName)
     Q_PROPERTY(DataArrayPath AttributeMatrixName READ getAttributeMatrixName WRITE setAttributeMatrixName)
 
@@ -150,6 +153,8 @@ class MontageXdmfWriter : public AbstractFilter
 
     void writeHeader(QTextStream& out);
     void writeFooter(QTextStream& out);
+    void writeGrid(QTextStream& out, const QString& arrayName, float *origin, float *resolution);
+    void writeGeometrySection(QTextStream& out, float *origin, float *resolution);
   private:
 
 
