@@ -1,4 +1,4 @@
-DetermineStitchingCoordinatesZeiss {#DetermineStitchingCoordinatesZeiss}
+DetermineStitchingCoordinatesZeiss {#determinestitchingcoordinateszeiss}
 =====
 
 ## Group (Subgroup) ##
@@ -6,7 +6,8 @@ ZeissImport (ZeissImport)
 
 
 ## Description ##
-This filter does the following...
+This filter determines the absolute coordinates of each image in a Zeiss AxioVision montage
+data set
 
 ## Parameters ##
 | Name             | Type |

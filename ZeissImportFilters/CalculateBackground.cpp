@@ -32,19 +32,19 @@
 //
 // -----------------------------------------------------------------------------
 CalculateBackground::CalculateBackground() :
-    AbstractFilter(),
-//    m_VolumeDataContainerName("ZeissBundleBackground"),
-    m_BackgroundAttributeMatrixName("Background"),
-    m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
-    m_AttributeMatrixName(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, ""),
-    m_DataContainerBundleName(""),
-    m_BackgroundImageArrayName(getDataContainerBundleName() + "BackgroundImage"),
-    m_lowThresh(0),
-    m_highThresh(255),
-    m_SubtractBackground(false)
+  AbstractFilter(),
+  //    m_VolumeDataContainerName("ZeissBundleBackground"),
+  m_BackgroundAttributeMatrixName("Background"),
+  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
+  m_AttributeMatrixName(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, ""),
+  m_DataContainerBundleName(""),
+  m_BackgroundImageArrayName(getDataContainerBundleName() + "BackgroundImage"),
+  m_lowThresh(0),
+  m_highThresh(255),
+  m_SubtractBackground(false)
 
 {
-    setupFilterParameters();
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -59,17 +59,17 @@ CalculateBackground::~CalculateBackground()
 // -----------------------------------------------------------------------------
 void CalculateBackground::setupFilterParameters()
 {
-    FilterParameterVector parameters;
-    //parameters.push_back(FilterParameter::New("DataContainerBundle Name", "DataContainerBundleName", FilterParameterWidgetType::DataBundleSelectionWidget, getDataContainerBundleName(), true));
-    parameters.push_back(FilterParameter::New("Attribute Matrix Name", "AttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getAttributeMatrixName(), false, ""));
-    parameters.push_back(FilterParameter::New("lowest allowed Image value", "lowThresh", FilterParameterWidgetType::IntWidget, getlowThresh(), false, "Image Value"));
-    parameters.push_back(FilterParameter::New("highest allowed Image value", "highThresh", FilterParameterWidgetType::IntWidget, gethighThresh(), false, "Image Value"));
-    parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-//    parameters.push_back(FilterParameter::New("Volume Data Container", "VolumeDataContainerName", FilterParameterWidgetType::StringWidget, getVolumeDataContainerName(), true, ""));
-    parameters.push_back(FilterParameter::New("Background Attribute Matrix", "BackgroundAttributeMatrixName", FilterParameterWidgetType::StringWidget, getBackgroundAttributeMatrixName(), true, ""));
-    parameters.push_back(FilterParameter::New("Background Image Array Name", "BackgroundImageArrayName", FilterParameterWidgetType::StringWidget, getBackgroundImageArrayName(), true, ""));
-    parameters.push_back(FilterParameter::New("Subtract Background from Current Images", "SubtractBackground", FilterParameterWidgetType::BooleanWidget, getSubtractBackground(), false));
-    setFilterParameters(parameters);
+  FilterParameterVector parameters;
+  //parameters.push_back(FilterParameter::New("DataContainerBundle Name", "DataContainerBundleName", FilterParameterWidgetType::DataBundleSelectionWidget, getDataContainerBundleName(), true));
+  parameters.push_back(FilterParameter::New("Attribute Matrix Name", "AttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getAttributeMatrixName(), false, ""));
+  parameters.push_back(FilterParameter::New("lowest allowed Image value", "lowThresh", FilterParameterWidgetType::IntWidget, getlowThresh(), false, "Image Value"));
+  parameters.push_back(FilterParameter::New("highest allowed Image value", "highThresh", FilterParameterWidgetType::IntWidget, gethighThresh(), false, "Image Value"));
+  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
+  //    parameters.push_back(FilterParameter::New("Volume Data Container", "VolumeDataContainerName", FilterParameterWidgetType::StringWidget, getVolumeDataContainerName(), true, ""));
+  parameters.push_back(FilterParameter::New("Background Attribute Matrix", "BackgroundAttributeMatrixName", FilterParameterWidgetType::StringWidget, getBackgroundAttributeMatrixName(), true, ""));
+  parameters.push_back(FilterParameter::New("Background Image Array Name", "BackgroundImageArrayName", FilterParameterWidgetType::StringWidget, getBackgroundImageArrayName(), true, ""));
+  parameters.push_back(FilterParameter::New("Subtract Background from Current Images", "SubtractBackground", FilterParameterWidgetType::BooleanWidget, getSubtractBackground(), false));
+  setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------
@@ -77,16 +77,16 @@ void CalculateBackground::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void CalculateBackground::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
-    reader->openFilterGroup(this, index);
-    setAttributeMatrixName(reader->readDataArrayPath("AttributeMatrixName", getAttributeMatrixName()));
-//    setVolumeDataContainerName(reader->readString("VolumeDataContainerName", getVolumeDataContainerName() ) );
-    setBackgroundAttributeMatrixName(reader->readString("BackgroundAttributeMatrixName", getBackgroundAttributeMatrixName()));
-    setBackgroundImageArrayName(reader->readString("BackgroundImageArrayName", getBackgroundImageArrayName()));
-    setDataContainerBundleName(reader->readString("DataContainerBundleName", getDataContainerBundleName() ) );
-    setlowThresh(reader->readValue("lowThresh", getlowThresh()) );
-    sethighThresh(reader->readValue("highThresh", gethighThresh()) );
-    setSubtractBackground(reader->readValue("SubtractBackground", getSubtractBackground()));
-    reader->closeFilterGroup();
+  reader->openFilterGroup(this, index);
+  setAttributeMatrixName(reader->readDataArrayPath("AttributeMatrixName", getAttributeMatrixName()));
+  //    setVolumeDataContainerName(reader->readString("VolumeDataContainerName", getVolumeDataContainerName() ) );
+  setBackgroundAttributeMatrixName(reader->readString("BackgroundAttributeMatrixName", getBackgroundAttributeMatrixName()));
+  setBackgroundImageArrayName(reader->readString("BackgroundImageArrayName", getBackgroundImageArrayName()));
+  setDataContainerBundleName(reader->readString("DataContainerBundleName", getDataContainerBundleName() ) );
+  setlowThresh(reader->readValue("lowThresh", getlowThresh()) );
+  sethighThresh(reader->readValue("highThresh", gethighThresh()) );
+  setSubtractBackground(reader->readValue("SubtractBackground", getSubtractBackground()));
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
@@ -94,18 +94,18 @@ void CalculateBackground::readFilterParameters(AbstractFilterParametersReader* r
 // -----------------------------------------------------------------------------
 int CalculateBackground::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
-    writer->openFilterGroup(this, index);
-    DREAM3D_FILTER_WRITE_PARAMETER(AttributeMatrixName)
-//    DREAM3D_FILTER_WRITE_PARAMETER(VolumeDataContainerName)
-    DREAM3D_FILTER_WRITE_PARAMETER(BackgroundAttributeMatrixName)
-    DREAM3D_FILTER_WRITE_PARAMETER(BackgroundImageArrayName)
-//    DREAM3D_FILTER_WRITE_PARAMETER(DataContainerBundleName)
-    DREAM3D_FILTER_WRITE_PARAMETER(lowThresh)
-    DREAM3D_FILTER_WRITE_PARAMETER(highThresh)
-    DREAM3D_FILTER_WRITE_PARAMETER(SubtractBackground)
+  writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(AttributeMatrixName)
+      //    DREAM3D_FILTER_WRITE_PARAMETER(VolumeDataContainerName)
+      DREAM3D_FILTER_WRITE_PARAMETER(BackgroundAttributeMatrixName)
+      DREAM3D_FILTER_WRITE_PARAMETER(BackgroundImageArrayName)
+      //    DREAM3D_FILTER_WRITE_PARAMETER(DataContainerBundleName)
+      DREAM3D_FILTER_WRITE_PARAMETER(lowThresh)
+      DREAM3D_FILTER_WRITE_PARAMETER(highThresh)
+      DREAM3D_FILTER_WRITE_PARAMETER(SubtractBackground)
 
-    writer->closeFilterGroup();
-    return ++index; // we want to return the next index that was just written to
+      writer->closeFilterGroup();
+  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------
@@ -113,73 +113,73 @@ int CalculateBackground::writeFilterParameters(AbstractFilterParametersWriter* w
 // -----------------------------------------------------------------------------
 void CalculateBackground::dataCheck()
 {
-    setErrorCondition(0);
-    DataArrayPath tempPath;
+  setErrorCondition(0);
+  DataArrayPath tempPath;
 
-    QString ss;
+  QString ss;
 
-    AttributeMatrix::Pointer am = getDataContainerArray()->getAttributeMatrix(m_AttributeMatrixName);
+  AttributeMatrix::Pointer am = getDataContainerArray()->getAttributeMatrix(m_AttributeMatrixName);
 
-    if (am.get() == NULL)
+  if (am.get() == NULL)
+  {
+    setErrorCondition(-76000);
+    notifyErrorMessage(getHumanLabel(), "The attribute matrix has not been selected properly", -76000);
+    return;
+  }
+
+  QList<QString> names = am->getAttributeArrayNames();
+
+
+  QVector<size_t> dims(1, 1);
+
+
+  UInt8ArrayType::Pointer imagePtr = UInt8ArrayType::NullPointer();
+  IDataArray::Pointer iDataArray = IDataArray::NullPointer();
+
+  for(int i = 0; i < names.size(); i++)
+  {
+    m_ImageDataArrayPath.update(getAttributeMatrixName().getDataContainerName(), getAttributeMatrixName().getAttributeMatrixName(), names[i]);
+    iDataArray = getDataContainerArray()->getExistingPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, m_ImageDataArrayPath);
+
+    imagePtr = boost::dynamic_pointer_cast<DataArray<uint8_t> >(iDataArray);
+    //        QVector<IDataArray::Pointer> pointerList;
+
+    //        pointerList[i] = iDataArray;
+
+
+    //        imagePtr = boost::dynamic_pointer_cast<DataArray<uint8_t> >(pointerList[i]);
+
+
+    if(NULL == imagePtr)
     {
-        setErrorCondition(-76000);
-        notifyErrorMessage(getHumanLabel(), "The attribute matrix has not been selected properly", -76000);
-        return;
-    }
-
-   QList<QString> names = am->getAttributeArrayNames();
-
-
-    QVector<size_t> dims(1, 1);
-
-
-    UInt8ArrayType::Pointer imagePtr = UInt8ArrayType::NullPointer();
-    IDataArray::Pointer iDataArray = IDataArray::NullPointer();
-
-    for(int i = 0; i < names.size(); i++)
-    {
-        m_ImageDataArrayPath.update(getAttributeMatrixName().getDataContainerName(), getAttributeMatrixName().getAttributeMatrixName(), names[i]);
-        iDataArray = getDataContainerArray()->getExistingPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, m_ImageDataArrayPath);
-
-        imagePtr = boost::dynamic_pointer_cast<DataArray<uint8_t> >(iDataArray);
-//        QVector<IDataArray::Pointer> pointerList;
-
-//        pointerList[i] = iDataArray;
-
-
-//        imagePtr = boost::dynamic_pointer_cast<DataArray<uint8_t> >(pointerList[i]);
-
-
-        if(NULL == imagePtr)
-        {
-            setErrorCondition(-76001);
-            notifyErrorMessage(getHumanLabel(), "The data was not found", -76001);
-        }
-
-
+      setErrorCondition(-76001);
+      notifyErrorMessage(getHumanLabel(), "The data was not found", -76001);
     }
 
 
-
-    if(getErrorCondition() < 0){ return; }
-    m_totalPoints = imagePtr->getNumberOfTuples();
-
-    setDataContainerName(getAttributeMatrixName().getDataContainerName());
-    VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-    if(getErrorCondition() < 0 || NULL == m) { return; }
-
-    QVector<size_t> tDims(1, 0);
-    AttributeMatrix::Pointer backgroundAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getBackgroundAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
-    if(getErrorCondition() < 0){ return; }
+  }
 
 
-    // Background Image array
-    dims[0] = 1;
-    tempPath.update(getDataContainerName(), getBackgroundAttributeMatrixName(), getBackgroundImageArrayName() );
-    m_BackgroundImagePtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( NULL != m_BackgroundImagePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-    { m_BackgroundImage = m_BackgroundImagePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-    if(getErrorCondition() < 0){ return; }
+
+  if(getErrorCondition() < 0){ return; }
+  m_totalPoints = imagePtr->getNumberOfTuples();
+
+  setDataContainerName(getAttributeMatrixName().getDataContainerName());
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
+  if(getErrorCondition() < 0 || NULL == m) { return; }
+
+  QVector<size_t> tDims(1, 0);
+  AttributeMatrix::Pointer backgroundAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getBackgroundAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
+  if(getErrorCondition() < 0){ return; }
+
+
+  // Background Image array
+  dims[0] = 1;
+  tempPath.update(getDataContainerName(), getBackgroundAttributeMatrixName(), getBackgroundImageArrayName() );
+  m_BackgroundImagePtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_BackgroundImagePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_BackgroundImage = m_BackgroundImagePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(getErrorCondition() < 0){ return; }
 
 
 
@@ -191,13 +191,13 @@ void CalculateBackground::dataCheck()
 // -----------------------------------------------------------------------------
 void CalculateBackground::preflight()
 {
-    // These are the REQUIRED lines of CODE to make sure the filter behaves correctly
-    setInPreflight(true); // Set the fact that we are preflighting.
-    emit preflightAboutToExecute(); // Emit this signal so that other widgets can do one file update
-    emit updateFilterParameters(this); // Emit this signal to have the widgets push their values down to the filter
-    dataCheck(); // Run our DataCheck to make sure everthing is setup correctly
-    emit preflightExecuted(); // We are done preflighting this filter
-    setInPreflight(false); // Inform the system this filter is NOT in preflight mode anymore.
+  // These are the REQUIRED lines of CODE to make sure the filter behaves correctly
+  setInPreflight(true); // Set the fact that we are preflighting.
+  emit preflightAboutToExecute(); // Emit this signal so that other widgets can do one file update
+  emit updateFilterParameters(this); // Emit this signal to have the widgets push their values down to the filter
+  dataCheck(); // Run our DataCheck to make sure everthing is setup correctly
+  emit preflightExecuted(); // We are done preflighting this filter
+  setInPreflight(false); // Inform the system this filter is NOT in preflight mode anymore.
 }
 
 
@@ -207,204 +207,165 @@ void CalculateBackground::preflight()
 // -----------------------------------------------------------------------------
 void CalculateBackground::execute()
 {
-    int err = 0;
-    int xval = 0;
-    int yval = 0;
-    // typically run your dataCheck function to make sure you can get that far and all your variables are initialized
-    dataCheck();
-    // Check to make sure you made it through the data check. Errors would have been reported already so if something
-    // happens to fail in the dataCheck() then we simply return
-    if(getErrorCondition() < 0) { return; }
-    setErrorCondition(0);
+  int err = 0;
+  int xval = 0;
+  int yval = 0;
+  // typically run your dataCheck function to make sure you can get that far and all your variables are initialized
+  dataCheck();
+  // Check to make sure you made it through the data check. Errors would have been reported already so if something
+  // happens to fail in the dataCheck() then we simply return
+  if(getErrorCondition() < 0) { return; }
+  setErrorCondition(0);
 
-    /* If some error occurs this code snippet can report the error up the call chain*/
-    if (err < 0)
+  /* If some error occurs this code snippet can report the error up the call chain*/
+  if (err < 0)
+  {
+    QString ss = QObject::tr("Error Importing a Zeiss AxioVision file set.");
+    setErrorCondition(-90000);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
+
+  AttributeMatrix::Pointer am = getDataContainerArray()->getAttributeMatrix(m_AttributeMatrixName);
+
+
+  QList<QString> names = am->getAttributeArrayNames();
+
+  UInt8ArrayType::Pointer imagePtr = UInt8ArrayType::NullPointer();
+  IDataArray::Pointer iDataArray = IDataArray::NullPointer();
+  uint8_t* image = NULL;
+
+  std::vector<double> background(m_totalPoints, 0);
+  std::vector<double> counter(m_totalPoints,0);
+
+
+  // getting the fist data container just to get the dimensions of each image.
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+
+
+  QVector<size_t> udims;
+  udims = am->getTupleDimensions();
+
+#if (CMP_SIZEOF_SIZE_T == 4)
+  typedef int32_t DimType;
+#else
+  typedef int64_t DimType;
+#endif
+  DimType dims[3] =
+  {
+    static_cast<DimType>(udims[0]),
+    static_cast<DimType>(udims[1]),
+    static_cast<DimType>(udims[2]),
+  };
+
+  // run through all the data containers (images) and add them up to be averaged after the loop
+  for(size_t i = 0; i < names.size(); i++)
+  {
+    m_ImageDataArrayPath.update(getDataContainerName(), getAttributeMatrixName().getAttributeMatrixName(), names[i]);
+    iDataArray = getDataContainerArray()->getExistingPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, m_ImageDataArrayPath);
+    imagePtr = boost::dynamic_pointer_cast<DataArray<uint8_t> >(iDataArray);
+    if(NULL != imagePtr.get())
     {
-        QString ss = QObject::tr("Error Importing a Zeiss AxioVision file set.");
-        setErrorCondition(-90000);
-        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-        return;
+      //            int64_t totalPoints = imagePtr->getNumberOfTuples();
+      image = imagePtr->getPointer(0);
+      for(int64_t t = 0; t < m_totalPoints; t++)
+      {
+
+        if (static_cast<uint8_t>(image[t]) >= m_lowThresh && static_cast<uint8_t>(image[t])  <= m_highThresh)
+        {
+          background[t] = background[t] + static_cast<double>(image[t]);
+          counter[t]++;
+        }
+      }
     }
+  }
 
-    AttributeMatrix::Pointer am = getDataContainerArray()->getAttributeMatrix(m_AttributeMatrixName);
+  // average the background values by the number of counts (counts will be the number of images unless the threshold values do not include all the possible image values
+  // (i.e. for an 8 bit image, if we only include values from 0 to 100, not every image value will be counted)
 
-
-    QList<QString> names = am->getAttributeArrayNames();
-
-    UInt8ArrayType::Pointer imagePtr = UInt8ArrayType::NullPointer();
-    IDataArray::Pointer iDataArray = IDataArray::NullPointer();
-    uint8_t* image = NULL;
-
-    std::vector<double> background(m_totalPoints, 0);
-    std::vector<double> counter(m_totalPoints,0);
+  for (int64_t j=0; j < m_totalPoints; j++)
+  {
+    background[j] = double(background[j] /= (counter[j]));
+  }
 
 
-    // getting the fist data container just to get the dimensions of each image.
-    VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  // Fit the background to a second order polynomial
+  // p are the coefficients p[0] + p[1]*x + p[2]*y +p[3]*xy + p[4]*x^2 + p[5]*y^2
+  Eigen::MatrixXd A(m_totalPoints, ZeissImport::PolynomialOrder::NumConsts2ndOrder);
+  Eigen::VectorXd B(m_totalPoints);
+
+  for(int i=0; i < m_totalPoints; ++i)
+  {
+    xval = int(i/dims[0]);
+    yval = int(i % dims[0]);
+    B(i) = background[i];
+    A(i, 0) = 1;
+    A(i, 1) = xval;
+    A(i, 2) = yval;
+    A(i, 3) = xval*yval;
+    A(i, 4) = xval*xval;
+    A(i, 5) = yval*yval;
+  }
+
+  notifyStatusMessage(getHumanLabel(), "Fitting a polynomial to data. May take a while to solve if images are large");
+  Eigen::VectorXd p = A.colPivHouseholderQr().solve(B);
+
+  QVector<size_t> tDims(3);
+  tDims[0] = dims[0];
+  tDims[1] = dims[1];
+  tDims[2] = dims[2];
+  //VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getVolumeDataContainerName());
+  m->getAttributeMatrix(getBackgroundAttributeMatrixName())->resizeAttributeArrays(tDims);
+  if( NULL != m_BackgroundImagePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_BackgroundImage = m_BackgroundImagePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
 
-    QVector<size_t> udims;
-    udims = am->getTupleDimensions();
+  Eigen::VectorXd Bcalc(m_totalPoints);
+  double average = 0;
 
-  #if (CMP_SIZEOF_SIZE_T == 4)
-    typedef int32_t DimType;
-  #else
-    typedef int64_t DimType;
-  #endif
-    DimType dims[3] =
-    {
-      static_cast<DimType>(udims[0]),
-      static_cast<DimType>(udims[1]),
-      static_cast<DimType>(udims[2]),
-    };
+  Bcalc = A*p;
+  average = Bcalc.mean();
+  Bcalc = Bcalc - Eigen::VectorXd::Constant(m_totalPoints, average);
 
+  for(int i=0; i < m_totalPoints; ++i)
+  {
+    m_BackgroundImage[i] = Bcalc(i);
+  }
 
-
-
-
-// run through all the data containers (images) and add them up to be averaged after the loop
+  if(m_SubtractBackground == true)
+  {
     for(size_t i = 0; i < names.size(); i++)
     {
-        m_ImageDataArrayPath.update(getDataContainerName(), getAttributeMatrixName().getAttributeMatrixName(), names[i]);
-        iDataArray = getDataContainerArray()->getExistingPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, m_ImageDataArrayPath);
+      m_ImageDataArrayPath.update(getDataContainerName(), getAttributeMatrixName().getAttributeMatrixName(), names[i]);
+      iDataArray = getDataContainerArray()->getExistingPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, m_ImageDataArrayPath);
+      imagePtr = boost::dynamic_pointer_cast<DataArray<uint8_t> >(iDataArray);
+      if(NULL != imagePtr.get())
+      {
+        image = imagePtr->getPointer(0);
 
-
-        imagePtr = boost::dynamic_pointer_cast<DataArray<uint8_t> >(iDataArray);
-
-        if(NULL != imagePtr.get())
+        for(int64_t t = 0; t < m_totalPoints; t++)
         {
-//            int64_t totalPoints = imagePtr->getNumberOfTuples();
-            image = imagePtr->getPointer(0);
-            for(size_t t = 0; t < m_totalPoints; t++)
-            {
+          if (static_cast<uint8_t>(image[t]) >= m_lowThresh && static_cast<uint8_t>(image[t])  <= m_highThresh)
+          {
+            image[t] = image[t] - Bcalc(t);
 
-                if (static_cast<uint8_t>(image[t]) >= m_lowThresh && static_cast<uint8_t>(image[t])  <= m_highThresh)
-                {
-                   background[t] = background[t] + static_cast<double>(image[t]);
-                   counter[t]++;
-                }
-            }
-
+          }
         }
 
-
-
+      }
     }
+  }
 
-    // average the background values by the number of counts (counts will be the number of images unless the threshold values do not include all the possible image values
-    // (i.e. for an 8 bit image, if we only include values from 0 to 100, not every image value will be counted)
-
-    for (size_t j=0; j<m_totalPoints; j++)
-    {
-        background[j] = double(background[j] /= (counter[j]));
-    }
-
-
-    // Fit the background to a second order polynomial
-    // p are the coefficients p[0] + p[1]*x + p[2]*y +p[3]*xy + p[4]*x^2 + p[5]*y^2
-    Eigen::MatrixXd A(m_totalPoints, ZeissImport::PolynomialOrder::NumConsts2ndOrder);
-    Eigen::VectorXd B(m_totalPoints);
-
-    for(int i=0; i < m_totalPoints; ++i)
-    {
-       xval = int(i/dims[0]);
-       yval = int(i % dims[0]);
-       B(i) = background[i];
-       A(i, 0) = 1;
-       A(i, 1) = xval;
-       A(i, 2) = yval;
-       A(i, 3) = xval*yval;
-       A(i, 4) = xval*xval;
-       A(i, 5) = yval*yval;
-    }
-
-   notifyStatusMessage(getHumanLabel(), "Fitting a polynomial to data. May take a while to solve if images are large");
-   Eigen::VectorXd p = A.colPivHouseholderQr().solve(B);
-
-   QVector<size_t> tDims(3);
-   tDims[0] = dims[0];
-   tDims[1] = dims[1];
-   tDims[2] = dims[2];
-   //VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getVolumeDataContainerName());
-   m->getAttributeMatrix(getBackgroundAttributeMatrixName())->resizeAttributeArrays(tDims);
-   if( NULL != m_BackgroundImagePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-   { m_BackgroundImage = m_BackgroundImagePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-
-
-   Eigen::VectorXd Bcalc(m_totalPoints);
-   double average = 0;
-
-   Bcalc = A*p;
-   average = Bcalc.mean();
-   Bcalc = Bcalc - Eigen::VectorXd::Constant(m_totalPoints, average);
-
-   for(int i=0; i < m_totalPoints; ++i)
-   {
-        m_BackgroundImage[i] = Bcalc(i);
-   }
-
-
-
-
-   if(m_SubtractBackground == true)
-   {
-
-       for(size_t i = 0; i < names.size(); i++)
-       {
-           m_ImageDataArrayPath.update(getDataContainerName(), getAttributeMatrixName().getAttributeMatrixName(), names[i]);
-           iDataArray = getDataContainerArray()->getExistingPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, m_ImageDataArrayPath);
-
-
-           imagePtr = boost::dynamic_pointer_cast<DataArray<uint8_t> >(iDataArray);
-
-           if(NULL != imagePtr.get())
-           {
-               image = imagePtr->getPointer(0);
-
-               for(size_t t = 0; t < m_totalPoints; t++)
-               {
-
-
-                   if (static_cast<uint8_t>(image[t]) >= m_lowThresh && static_cast<uint8_t>(image[t])  <= m_highThresh)
-                   {
-                       image[t] = image[t] - Bcalc(t);
-
-                   }
-               }
-
-           }
-
-
-
-       }
-
-
-
-   }
-
-
-
-
-   /* Let the GUI know we are done with this filter */
-    notifyStatusMessage(getHumanLabel(), "Complete");
+  /* Let the GUI know we are done with this filter */
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
-
-
-
-
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString CalculateBackground::getCompiledLibraryName()
 {
-    return ZeissImport::ZeissImportBaseName;
+  return ZeissImport::ZeissImportBaseName;
 }
 
 // -----------------------------------------------------------------------------
@@ -412,7 +373,7 @@ const QString CalculateBackground::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 const QString CalculateBackground::getGroupName()
 {
-    return "ZeissImport";
+  return "ZeissImport";
 }
 
 // -----------------------------------------------------------------------------
@@ -420,7 +381,7 @@ const QString CalculateBackground::getGroupName()
 // -----------------------------------------------------------------------------
 const QString CalculateBackground::getHumanLabel()
 {
-    return "Calculate Background";
+  return "Calculate Background";
 }
 
 // -----------------------------------------------------------------------------
@@ -428,7 +389,7 @@ const QString CalculateBackground::getHumanLabel()
 // -----------------------------------------------------------------------------
 const QString CalculateBackground::getSubGroupName()
 {
-    return "Misc";
+  return "Misc";
 }
 
 // -----------------------------------------------------------------------------
@@ -436,26 +397,26 @@ const QString CalculateBackground::getSubGroupName()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer CalculateBackground::newFilterInstance(bool copyFilterParameters)
 {
-    /*
+  /*
   * write code to optionally copy the filter parameters from the current filter into the new instance
   */
-    CalculateBackground::Pointer filter = CalculateBackground::New();
-    if(true == copyFilterParameters)
-    {
-        /* If the filter uses all the standard Filter Parameter Widgets you can probabaly get
+  CalculateBackground::Pointer filter = CalculateBackground::New();
+  if(true == copyFilterParameters)
+  {
+    /* If the filter uses all the standard Filter Parameter Widgets you can probabaly get
      * away with using this method to copy the filter parameters from the current instance
      * into the new instance
      */
-        copyFilterParameterInstanceVariables(filter.get());
-        /* If your filter is using a lot of custom FilterParameterWidgets @see ReadH5Ebsd then you
+    copyFilterParameterInstanceVariables(filter.get());
+    /* If your filter is using a lot of custom FilterParameterWidgets @see ReadH5Ebsd then you
      * may need to copy each filter parameter explicitly plus any other instance variables that
      * are needed into the new instance. Here is some example code from ReadH5Ebsd
      */
-        //    DREAM3D_COPY_INSTANCEVAR(OutputFile)
-        //    DREAM3D_COPY_INSTANCEVAR(ZStartIndex)
-        //    DREAM3D_COPY_INSTANCEVAR(ZEndIndex)
-        //    DREAM3D_COPY_INSTANCEVAR(ZResolution)
-    }
-    return filter;
+    //    DREAM3D_COPY_INSTANCEVAR(OutputFile)
+    //    DREAM3D_COPY_INSTANCEVAR(ZStartIndex)
+    //    DREAM3D_COPY_INSTANCEVAR(ZEndIndex)
+    //    DREAM3D_COPY_INSTANCEVAR(ZResolution)
+  }
+  return filter;
 }
 
