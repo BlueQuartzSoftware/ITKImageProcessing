@@ -146,14 +146,6 @@ QString ZeissImportPlugin::getLicense()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QList<QString> ZeissImportPlugin::getFilters()
-{
-  return getFiltersList();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 QMap<QString, QString> ZeissImportPlugin::getThirdPartyLicenses()
 {
   QMap<QString, QString> licenseMap;
