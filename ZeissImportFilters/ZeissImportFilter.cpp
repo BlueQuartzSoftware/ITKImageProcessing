@@ -91,6 +91,7 @@ void ZeissImportFilter::readFilterParameters(AbstractFilterParametersReader* rea
 int ZeissImportFilter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(InputFile)
       DREAM3D_FILTER_WRITE_PARAMETER(DataContainerName)
       DREAM3D_FILTER_WRITE_PARAMETER(ImageAttributeMatrixName)

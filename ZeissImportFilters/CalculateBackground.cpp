@@ -95,6 +95,7 @@ void CalculateBackground::readFilterParameters(AbstractFilterParametersReader* r
 int CalculateBackground::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(AttributeMatrixName)
       //    DREAM3D_FILTER_WRITE_PARAMETER(VolumeDataContainerName)
       DREAM3D_FILTER_WRITE_PARAMETER(BackgroundAttributeMatrixName)
