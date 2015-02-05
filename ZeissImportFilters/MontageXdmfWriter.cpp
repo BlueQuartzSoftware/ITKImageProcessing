@@ -160,6 +160,12 @@ void MontageXdmfWriter::preflight()
   dataCheck(); // Run our DataCheck to make sure everthing is setup correctly
   emit preflightExecuted(); // We are done preflighting this filter
   setInPreflight(false); // Inform the system this filter is NOT in preflight mode anymore.
+
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
+  setErrorCondition(0xABABABAB);
+  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
+  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 
 
@@ -194,8 +200,8 @@ void MontageXdmfWriter::execute()
 
   writeHeader(out);
 
-  FloatArrayType::Pointer coordinates = getDataContainerArray()->getExistingPrereqArrayFromPath<FloatArrayType, AbstractFilter>(this, getOriginsDataArrayPath());
-  StringDataArray::Pointer names = getDataContainerArray()->getExistingPrereqArrayFromPath<StringDataArray, AbstractFilter>(this, getDataArrayNamesPath());
+  FloatArrayType::Pointer coordinates = getDataContainerArray()->getPrereqIDataArrayFromPath<FloatArrayType, AbstractFilter>(this, getOriginsDataArrayPath());
+  StringDataArray::Pointer names = getDataContainerArray()->getPrereqIDataArrayFromPath<StringDataArray, AbstractFilter>(this, getDataArrayNamesPath());
 
   float origin[3] = { 0.0f, 0.0f, 0.0f };
   float resolution[3] = {1.0f, 1.0f, 1.0f };

@@ -36,7 +36,7 @@ CalculateBackground::CalculateBackground() :
   //    m_VolumeDataContainerName("ZeissBundleBackground"),
   m_BackgroundAttributeMatrixName("Background"),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
-  m_AttributeMatrixName(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, ""),
+  m_AttributeMatrixName(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, ""),
   m_DataContainerBundleName(""),
   m_BackgroundImageArrayName(getDataContainerBundleName() + "BackgroundImage"),
   m_lowThresh(0),
@@ -140,7 +140,7 @@ void CalculateBackground::dataCheck()
   for(int i = 0; i < names.size(); i++)
   {
     m_ImageDataArrayPath.update(getAttributeMatrixName().getDataContainerName(), getAttributeMatrixName().getAttributeMatrixName(), names[i]);
-    iDataArray = getDataContainerArray()->getExistingPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, m_ImageDataArrayPath);
+    iDataArray = getDataContainerArray()->getPrereqIDataArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, m_ImageDataArrayPath);
 
     imagePtr = boost::dynamic_pointer_cast<DataArray<uint8_t> >(iDataArray);
     //        QVector<IDataArray::Pointer> pointerList;
@@ -166,7 +166,7 @@ void CalculateBackground::dataCheck()
   m_totalPoints = imagePtr->getNumberOfTuples();
 
   setDataContainerName(getAttributeMatrixName().getDataContainerName());
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
+DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getDataContainerName(), false);
   if(getErrorCondition() < 0 || NULL == m) { return; }
 
   QVector<size_t> tDims(1, 0);
@@ -199,6 +199,12 @@ void CalculateBackground::preflight()
   dataCheck(); // Run our DataCheck to make sure everthing is setup correctly
   emit preflightExecuted(); // We are done preflighting this filter
   setInPreflight(false); // Inform the system this filter is NOT in preflight mode anymore.
+
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
+  setErrorCondition(0xABABABAB);
+  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
+  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 
 
@@ -241,7 +247,7 @@ void CalculateBackground::execute()
 
 
   // getting the fist data container just to get the dimensions of each image.
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
 
 
   QVector<size_t> udims;
@@ -263,7 +269,7 @@ void CalculateBackground::execute()
   for(size_t i = 0; i < names.size(); i++)
   {
     m_ImageDataArrayPath.update(getDataContainerName(), getAttributeMatrixName().getAttributeMatrixName(), names[i]);
-    iDataArray = getDataContainerArray()->getExistingPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, m_ImageDataArrayPath);
+    iDataArray = getDataContainerArray()->getPrereqIDataArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, m_ImageDataArrayPath);
     imagePtr = boost::dynamic_pointer_cast<DataArray<uint8_t> >(iDataArray);
     if(NULL != imagePtr.get())
     {
@@ -315,7 +321,6 @@ void CalculateBackground::execute()
   tDims[0] = dims[0];
   tDims[1] = dims[1];
   tDims[2] = dims[2];
-  //VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getVolumeDataContainerName());
   m->getAttributeMatrix(getBackgroundAttributeMatrixName())->resizeAttributeArrays(tDims);
   if( NULL != m_BackgroundImagePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_BackgroundImage = m_BackgroundImagePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -338,7 +343,7 @@ void CalculateBackground::execute()
     for(size_t i = 0; i < names.size(); i++)
     {
       m_ImageDataArrayPath.update(getDataContainerName(), getAttributeMatrixName().getAttributeMatrixName(), names[i]);
-      iDataArray = getDataContainerArray()->getExistingPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, m_ImageDataArrayPath);
+      iDataArray = getDataContainerArray()->getPrereqIDataArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, m_ImageDataArrayPath);
       imagePtr = boost::dynamic_pointer_cast<DataArray<uint8_t> >(iDataArray);
       if(NULL != imagePtr.get())
       {
