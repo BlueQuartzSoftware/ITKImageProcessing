@@ -16,7 +16,7 @@
 
 #include "ZeissImport/moc_ZeissImportPlugin.cpp"
 
-Q_EXPORT_PLUGIN2(ZeissImportPlugin, ZeissImportPlugin)
+
 
 namespace Detail
 {

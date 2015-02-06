@@ -175,7 +175,6 @@ void DetermineStitchingCoordinatesZeiss::execute()
 
   QString filtName = "RGBToGray";
   FilterManager* fm = FilterManager::Instance();
-  fm->printFactoryNames();
   IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
 
   if (NULL != filterFactory.get() )
