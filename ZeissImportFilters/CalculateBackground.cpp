@@ -97,15 +97,14 @@ int CalculateBackground::writeFilterParameters(AbstractFilterParametersWriter* w
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(AttributeMatrixName)
-      //    DREAM3D_FILTER_WRITE_PARAMETER(VolumeDataContainerName)
-      DREAM3D_FILTER_WRITE_PARAMETER(BackgroundAttributeMatrixName)
-      DREAM3D_FILTER_WRITE_PARAMETER(BackgroundImageArrayName)
-      //    DREAM3D_FILTER_WRITE_PARAMETER(DataContainerBundleName)
-      DREAM3D_FILTER_WRITE_PARAMETER(lowThresh)
-      DREAM3D_FILTER_WRITE_PARAMETER(highThresh)
-      DREAM3D_FILTER_WRITE_PARAMETER(SubtractBackground)
-
-      writer->closeFilterGroup();
+  //    DREAM3D_FILTER_WRITE_PARAMETER(VolumeDataContainerName)
+  DREAM3D_FILTER_WRITE_PARAMETER(BackgroundAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(BackgroundImageArrayName)
+  //    DREAM3D_FILTER_WRITE_PARAMETER(DataContainerBundleName)
+  DREAM3D_FILTER_WRITE_PARAMETER(lowThresh)
+  DREAM3D_FILTER_WRITE_PARAMETER(highThresh)
+  DREAM3D_FILTER_WRITE_PARAMETER(SubtractBackground)
+  writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 
@@ -166,7 +165,7 @@ void CalculateBackground::dataCheck()
   m_totalPoints = imagePtr->getNumberOfTuples();
 
   setDataContainerName(getAttributeMatrixName().getDataContainerName());
-DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getDataContainerName(), false);
+  DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getDataContainerName(), false);
   if(getErrorCondition() < 0 || NULL == m) { return; }
 
   QVector<size_t> tDims(1, 0);
@@ -199,12 +198,6 @@ void CalculateBackground::preflight()
   dataCheck(); // Run our DataCheck to make sure everthing is setup correctly
   emit preflightExecuted(); // We are done preflighting this filter
   setInPreflight(false); // Inform the system this filter is NOT in preflight mode anymore.
-
-  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
-  setErrorCondition(0xABABABAB);
-  QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
-  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-  /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 
 
