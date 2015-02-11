@@ -367,6 +367,15 @@ void ZeissImportFilter::parseImages(QDomElement& root, ZeissTagsXmlSection::Poin
   AttributeMatrix::Pointer tileAm = AttributeMatrix::NullPointer();
   AttributeMatrix::Pointer metaAm = AttributeMatrix::NullPointer();
 
+
+  // Create the Image Geometry
+  ImageGeom::Pointer image = ImageGeom::CreateGeometry(DREAM3D::Geometry::ImageGeometry);
+  dc->setGeometry(image);
+  float origin[3] = { 0.0f, 0.0f, 0.0f};
+  image->getOrigin(origin);
+  float resolution[3] = { 1.0f, 1.0f, 1.0f};
+  image->setResolution(resolution);
+
   for(int p = 0; p < imageCount; p++)
   {
 
@@ -420,6 +429,7 @@ void ZeissImportFilter::parseImages(QDomElement& root, ZeissTagsXmlSection::Poin
     {
       QVector<size_t> dims = getImageDimensions(photoTagsSection);
       tileAm = dc->createAndAddAttributeMatrix(dims, getImageAttributeMatrixName(), DREAM3D::AttributeMatrixType::Generic);
+      image->setDimensions(dims[0], dims[1], 1);
 
       dims.resize(1);
       dims[0] = imageCount;
@@ -441,19 +451,14 @@ void ZeissImportFilter::parseImages(QDomElement& root, ZeissTagsXmlSection::Poin
 
       while(iterRoot.hasNext())
       {
-
-            iterRoot.next();
-            IDataArray::Pointer dataArrayRoot = iterRoot.value()->createDataArray(!getInPreflight());
-            dataArrayRoot->resize(imageCount);
-            if (dataArrayRoot->getName() == "ScaleFactorForX" || dataArrayRoot->getName()  == "ScaleFactorForY")
-            {
-                metaAm->addAttributeArray(dataArrayRoot->getName(), dataArrayRoot);
-            }
-
+        iterRoot.next();
+        IDataArray::Pointer dataArrayRoot = iterRoot.value()->createDataArray(!getInPreflight());
+        dataArrayRoot->resize(imageCount);
+        if (dataArrayRoot->getName() == "ScaleFactorForX" || dataArrayRoot->getName()  == "ScaleFactorForY")
+        {
+            metaAm->addAttributeArray(dataArrayRoot->getName(), dataArrayRoot);
+        }
       }
-
-
-
     }
     // Generate all the Meta Data Values:
     addMetaData(metaAm, photoTagsSection, p);
