@@ -41,7 +41,8 @@ CalculateBackground::CalculateBackground() :
   m_BackgroundImageArrayName(getDataContainerBundleName() + "BackgroundImage"),
   m_lowThresh(0),
   m_highThresh(255),
-  m_SubtractBackground(false)
+  m_SubtractBackground(false),
+  m_DivideBackground(false)
 
 {
   setupFilterParameters();
@@ -69,6 +70,8 @@ void CalculateBackground::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Background Attribute Matrix", "BackgroundAttributeMatrixName", FilterParameterWidgetType::StringWidget, getBackgroundAttributeMatrixName(), true, ""));
   parameters.push_back(FilterParameter::New("Background Image Array Name", "BackgroundImageArrayName", FilterParameterWidgetType::StringWidget, getBackgroundImageArrayName(), true, ""));
   parameters.push_back(FilterParameter::New("Subtract Background from Current Images", "SubtractBackground", FilterParameterWidgetType::BooleanWidget, getSubtractBackground(), false));
+  parameters.push_back(FilterParameter::New("Divide Background from Current Images", "DivideBackground", FilterParameterWidgetType::BooleanWidget, getDivideBackground(), false));
+
   setFilterParameters(parameters);
 }
 
@@ -86,6 +89,7 @@ void CalculateBackground::readFilterParameters(AbstractFilterParametersReader* r
   setlowThresh(reader->readValue("lowThresh", getlowThresh()) );
   sethighThresh(reader->readValue("highThresh", gethighThresh()) );
   setSubtractBackground(reader->readValue("SubtractBackground", getSubtractBackground()));
+  setDivideBackground(reader->readValue("DivideBackground", getDivideBackground()));
   reader->closeFilterGroup();
 }
 
@@ -104,6 +108,7 @@ int CalculateBackground::writeFilterParameters(AbstractFilterParametersWriter* w
   DREAM3D_FILTER_WRITE_PARAMETER(lowThresh)
   DREAM3D_FILTER_WRITE_PARAMETER(highThresh)
   DREAM3D_FILTER_WRITE_PARAMETER(SubtractBackground)
+  DREAM3D_FILTER_WRITE_PARAMETER(DivideBackground)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -159,6 +164,11 @@ void CalculateBackground::dataCheck()
 
   }
 
+  if(m_SubtractBackground == true && m_DivideBackground == true)
+  {
+      setErrorCondition(-76002);
+      notifyErrorMessage(getHumanLabel(), "Cannot choose BOTH subtract and divide. Choose one or neither.", -76002);
+  }
 
 
   if(getErrorCondition() < 0){ return; }
@@ -347,6 +357,30 @@ void CalculateBackground::execute()
           if (static_cast<uint8_t>(image[t]) >= m_lowThresh && static_cast<uint8_t>(image[t])  <= m_highThresh)
           {
             image[t] = image[t] - Bcalc(t);
+
+          }
+        }
+
+      }
+    }
+  }
+
+  if(m_DivideBackground == true)
+  {
+    for(size_t i = 0; i < names.size(); i++)
+    {
+      m_ImageDataArrayPath.update(getDataContainerName(), getAttributeMatrixName().getAttributeMatrixName(), names[i]);
+      iDataArray = getDataContainerArray()->getPrereqIDataArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, m_ImageDataArrayPath);
+      imagePtr = boost::dynamic_pointer_cast<DataArray<uint8_t> >(iDataArray);
+      if(NULL != imagePtr.get())
+      {
+        image = imagePtr->getPointer(0);
+
+        for(int64_t t = 0; t < m_totalPoints; t++)
+        {
+          if (static_cast<uint8_t>(image[t]) >= m_lowThresh && static_cast<uint8_t>(image[t])  <= m_highThresh)
+          {
+            image[t] = image[t]/Bcalc(t);
 
           }
         }

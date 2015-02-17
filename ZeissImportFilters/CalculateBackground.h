@@ -66,6 +66,9 @@ class CalculateBackground : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(bool, SubtractBackground)
     Q_PROPERTY(int SubtractBackground READ getSubtractBackground WRITE setSubtractBackground)
 
+    DREAM3D_FILTER_PARAMETER(bool, DivideBackground)
+    Q_PROPERTY(int DivideBackground READ getDivideBackground WRITE setDivideBackground)
+
 
 
 
