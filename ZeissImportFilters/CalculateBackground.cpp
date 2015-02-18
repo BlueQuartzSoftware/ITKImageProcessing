@@ -358,6 +358,9 @@ void CalculateBackground::execute()
           {
             image[t] = image[t] - Bcalc(t);
 
+            if (image[t]<0) {image[t] = 0;}
+            if (image[t]>255) {image[t] = 255;}
+
           }
         }
 
