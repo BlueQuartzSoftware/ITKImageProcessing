@@ -428,7 +428,7 @@ void ZeissImportFilter::parseImages(QDomElement& root, ZeissTagsXmlSection::Poin
     if(p == 0)
     {
       QVector<size_t> dims = getImageDimensions(photoTagsSection);
-      tileAm = dc->createAndAddAttributeMatrix(dims, getImageAttributeMatrixName(), DREAM3D::AttributeMatrixType::Generic);
+      tileAm = dc->createAndAddAttributeMatrix(dims, getImageAttributeMatrixName(), DREAM3D::AttributeMatrixType::Cell);
       image->setDimensions(dims[0], dims[1], 1);
 
       dims.resize(1);
@@ -522,15 +522,8 @@ void ZeissImportFilter::addRootMetaData(AttributeMatrix::Pointer metaAm, ZeissTa
           //IDataArray::Pointer dataArray = iter.value()->createDataArray(!getInPreflight());
           //metaData->addAttributeArray(dataArray->getName(), dataArray);
       }
-
     }
-
-
-
-
 }
-
-
 
 // -----------------------------------------------------------------------------
 //

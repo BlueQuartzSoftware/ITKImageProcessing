@@ -16,7 +16,6 @@ set(_PublicFilters
   ZeissImportFilter
   CalculateBackground
   MultiRGBToGray
-  EMMPMSegmentation
   FindFiberEdges
   CalculateFiberStatistics
   MontageXdmfWriter
