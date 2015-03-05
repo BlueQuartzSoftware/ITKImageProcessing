@@ -1,7 +1,6 @@
 #--////////////////////////////////////////////////////////////////////////////
 #--
-#--  Copyright (c) 2009, Michael A. Jackson. BlueQuartz Software
-#--  Copyright (c) 2009, Michael Groeber, US Air Force Research Laboratory
+#--  Copyright (c) 2015, BlueQuartz Software
 #--  All rights reserved.
 #--  BSD License: http://www.opensource.org/licenses/bsd-license.html
 #--
@@ -9,71 +8,33 @@
 #--
 #--////////////////////////////////////////////////////////////////////////////
 
-project(ZeissImportTest)
+project(TransformationPhaseTest)
 
-include_directories(${ZeissImportTest_SOURCE_DIR})
+include(${DREAM3DTest_SOURCE_DIR}/DREAM3DTestFunctions.cmake)
 
-# --------------------------------------------------------------------------
-macro(ConvertPathToHeaderCompatible INPUT)
-    if(WIN32)
-      STRING(REPLACE "\\" "\\\\" ${INPUT} ${${INPUT}} )
-      STRING(REPLACE "/" "\\\\" ${INPUT} ${${INPUT}}  )
-    endif()
-endmacro()
-include_directories(${ZeissImportTest_BINARY_DIR})
-set(TEST_TEMP_DIR ${ZeissImportTest_BINARY_DIR}/Temp)
+
+include_directories(${${PROJECT_NAME}_SOURCE_DIR})
+include_directories(${${PROJECT_NAME}_BINARY_DIR})
+
+
+set(TEST_TEMP_DIR ${${PROJECT_NAME}_BINARY_DIR}/Temp)
+# Make sure the directory is created during CMake time
 file(MAKE_DIRECTORY ${TEST_TEMP_DIR})
 
-#-- Convert all '\' to '\\' so that they are properly escaped in the header file
-set(DATAIMPORT_TEST_XMLH5TIFF_OUTPUT_FILE "${TEST_TEMP_DIR}DataImportTest_XMLH5Tiff.h5")
+
+configure_file(${${PROJECT_NAME}_SOURCE_DIR}/TestFileLocations.h.in
+               ${${PROJECT_NAME}_BINARY_DIR}/${PROJECT_NAME}FileLocations.h @ONLY IMMEDIATE)
 
 
-configure_file(${ZeissImportTest_SOURCE_DIR}/TestFileLocations.h.in
-               ${ZeissImportTest_BINARY_DIR}/TestFileLocations.h @ONLY IMMEDIATE)
+AddDREAM3DUnitTest(TESTNAME ZeissImportFilterAvailabilityTest 
+                   SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/ZeissImportFilterAvailabilityTest.cpp 
+                   LINK_LIBRARIES Qt5::Core H5Support DREAM3DLib ${ITK_LIBRARIES})
 
-include_directories(${ZeissImportTest_BINARY_DIR})
-include_directories(${DREAM3DProj_SOURCE_DIR}/Source/Applications)
-include_directories(${DREAM3DProj_SOURCE_DIR}/Source/Plugins)
-include_directories(${DREAM3DProj_SOURCE_DIR}/Source/QtSupport)
-include_directories(${DREAM3DProj_SOURCE_DIR}/Source/FilterWidgets)
+# This is an example of creating a simple unit test. Make the test name unique enough that
+# another plugin would not have the same name as your test. Possible prefix the name of the
+# test and/or the name of the plugin
+# AddDREAM3DUnitTest(TESTNAME SomeTest 
+#                   SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/SomeTest.cpp 
+#                   LINK_LIBRARIES Qt5::Core H5Support DREAM3DLib)
 
-
-# --------------------------------------------------------------------------
-#
-# --------------------------------------------------------------------------
-macro(DREAM3D_ADD_UNIT_TEST testname Exename)
-    if(NOT APPLE)
-        ADD_TEST(${testname} ${Exename})
-    else()
-        if(NOT ${CMAKE_OSX_ARCHITECTURES} STREQUAL "")
-        foreach(arch ${CMAKE_OSX_ARCHITECTURES})
-            ADD_TEST( ${arch}_${testname} ${CMP_OSX_TOOLS_SOURCE_DIR}/UBTest.sh ${arch} ${Exename} )
-        endforeach()
-        else()
-            ADD_TEST(${testname} ${Exename})
-        endif()
-    endif()
-endmacro()
-
-
-
-macro(ADD_DREAM3D_TEST testname LIBRARIES)
-  add_executable( ${testname} "${ZeissImportTest_SOURCE_DIR}/${testname}.cpp")
-  target_link_libraries( ${testname} "${LIBRARIES}")
-  set_target_properties( ${testname} PROPERTIES FOLDER Test)
-  add_test(${testname} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${testname})
-endmacro()
-
-macro(ADD_DREAM3D_TEST_2 testname LIBRARIES SOURCES)
-  add_executable( ${testname} "${ZeissImportTest_SOURCE_DIR}/${testname}.cpp" ${SOURCES})
-  target_link_libraries( ${testname} "${LIBRARIES}")
-  set_target_properties( ${testname} PROPERTIES FOLDER Test)
-  add_test(${testname} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${testname})
-endmacro()
-
-
-
-ADD_DREAM3D_TEST(ZeissImportFilterAvailabilityTest  "DREAM3DLib")
-
-#ADD_DREAM3D_TEST(ZeissImportZVITagParser  "DREAM3DLib")
 
