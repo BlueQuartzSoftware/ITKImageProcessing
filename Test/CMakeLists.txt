@@ -8,7 +8,7 @@
 #--
 #--////////////////////////////////////////////////////////////////////////////
 
-project(TransformationPhaseTest)
+project(ZeissImportTest)
 
 include(${DREAM3DProj_SOURCE_DIR}/Test/DREAM3DTestFunctions.cmake)
 
