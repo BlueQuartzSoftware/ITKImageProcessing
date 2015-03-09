@@ -40,12 +40,12 @@ If the user selects Subtract Background from Current Images, the background will
 
 ## Authors: ##
 
-**Copyright:** Who holds the copyright for the code
+**Copyright:** 2015 BlueQuartz Software, LLC
 
-**Contact Info:** email address
+**Contact Info:** dream3d@bluequartz.net
 
-**Version:** x.y.z
+**Version:** 1.0.0
 
-**License:**  What is the license for this code
+**License:**  See the License.txt file that came with DREAM3D.
 
 
