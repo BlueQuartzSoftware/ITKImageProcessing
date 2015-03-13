@@ -30,15 +30,46 @@ static const QString k_DataContaineNameDefaultName("Zeiss Axio Vision Montage");
 static const QString k_TileAttributeMatrixDefaultName("Tile AttributeMatrix");
 static const QString k_GrayScaleTempArrayName("gray_scale_temp");
 
+/* ############## Start Private Implementation ############################### */
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+class ZeissImportFilterPrivate
+{
+	Q_DISABLE_COPY(ZeissImportFilterPrivate)
+		Q_DECLARE_PUBLIC(ZeissImportFilter)
+		ZeissImportFilter* const q_ptr;
+	ZeissImportFilterPrivate(ZeissImportFilter* ptr);
+
+	QDomElement m_Root;
+	ZeissTagsXmlSection::Pointer m_RootTagsSection;
+	QString m_InputFile_Cache;
+	QDateTime m_LastRead;
+};
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+ZeissImportFilterPrivate::ZeissImportFilterPrivate(ZeissImportFilter* ptr) :
+q_ptr(ptr),
+m_InputFile_Cache(""),
+m_LastRead(QDateTime()),
+m_Root(QDomElement())
+{
+
+}
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 ZeissImportFilter::ZeissImportFilter() :
   AbstractFilter(),
   m_InputFile(""),
+  m_FileWasRead(false),
   m_DataContainerName(k_DataContaineNameDefaultName),
   m_ImageDataArrayPrefix(DREAM3D::CellData::ImageData),
-  m_ImageAttributeMatrixName(k_TileAttributeMatrixDefaultName)
+  m_ImageAttributeMatrixName(k_TileAttributeMatrixDefaultName),
+  d_ptr(new ZeissImportFilterPrivate(this))
 {
   m_ColorWeights.x = 0.2125f;
   m_ColorWeights.y = 0.7154f;
@@ -52,6 +83,12 @@ ZeissImportFilter::ZeissImportFilter() :
 ZeissImportFilter::~ZeissImportFilter()
 {
 }
+
+DREAM3D_PIMPL_PROPERTY_DEF(ZeissImportFilter, QString, InputFile_Cache)
+DREAM3D_PIMPL_PROPERTY_DEF(ZeissImportFilter, QDateTime, LastRead)
+DREAM3D_PIMPL_PROPERTY_DEF(ZeissImportFilter, QDomElement, Root)
+DREAM3D_PIMPL_PROPERTY_DEF(ZeissImportFilter, ZeissTagsXmlSection::Pointer, RootTagsSection)
+
 
 // -----------------------------------------------------------------------------
 //
@@ -107,6 +144,7 @@ int ZeissImportFilter::writeFilterParameters(AbstractFilterParametersWriter* wri
 // -----------------------------------------------------------------------------
 void ZeissImportFilter::dataCheck()
 {
+	qDebug() << "Begin: " << QDateTime::currentDateTime().toString();
   setErrorCondition(0);
 
   QString ss;
@@ -184,6 +222,7 @@ void ZeissImportFilter::dataCheck()
     return;
   }
 
+  qDebug() << "End: " << QDateTime::currentDateTime().toString();
 }
 
 // -----------------------------------------------------------------------------
@@ -232,32 +271,64 @@ void ZeissImportFilter::execute()
 int ZeissImportFilter::readMetaXml(QIODevice* device)
 {
   int err = 0;
-  QDomDocument domDocument;
   QString errorStr;
   int errorLine;
   int errorColumn;
-  if (!domDocument.setContent(device, true, &errorStr, &errorLine, &errorColumn))   {
-    QString ss = QObject::tr("Parse error at line %1, column %2:\n%3").arg(errorLine).arg(errorColumn).arg(errorStr);
-    setErrorCondition(-70000);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return -1;
-  }
-  QDomElement root = domDocument.documentElement();
 
-  QDomElement tags = root.firstChildElement(ZeissImport::Xml::Tags);
-  if (tags.isNull() == true)
-  {
-    QString ss = QObject::tr("Could not find the <ROOT><Tags> element. Aborting Parsing. Is the file a Zeiss _meta.xml file");
-    setErrorCondition(-70001);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return -1;
-  }
+  QFileInfo fi(getInputFile());
+  QDateTime lastModified(fi.lastModified());
 
-  // First parse the <ROOT><Tags> section to get the values of how many images we are going to have
-  ZeissTagsXmlSection::Pointer rootTagsSection = parseTagsSection(tags);
-  if(NULL == rootTagsSection.get() )
+  QDomDocument domDocument;
+  QDomElement root;
+  ZeissTagsXmlSection::Pointer rootTagsSection;
+
+  if (getInputFile() == getInputFile_Cache() && getLastRead().isValid() && lastModified.msecsTo(getLastRead()) >= 0)
   {
-    return -1;
+	  // We are reading from the cache, so set the FileWasRead flag to false
+	  m_FileWasRead = false;
+
+	  root = getRoot();
+	  rootTagsSection = getRootTagsSection();
+  }
+  else
+  {
+	  // We are reading from the file, so set the FileWasRead flag to true
+	  m_FileWasRead = true;
+
+	  if (!domDocument.setContent(device, true, &errorStr, &errorLine, &errorColumn))   {
+		  QString ss = QObject::tr("Parse error at line %1, column %2:\n%3").arg(errorLine).arg(errorColumn).arg(errorStr);
+		  setErrorCondition(-70000);
+		  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+		  return -1;
+	  }
+
+	  root = domDocument.documentElement();
+
+	  QDomElement tags = root.firstChildElement(ZeissImport::Xml::Tags);
+	  if (tags.isNull() == true)
+	  {
+		  QString ss = QObject::tr("Could not find the <ROOT><Tags> element. Aborting Parsing. Is the file a Zeiss _meta.xml file");
+		  setErrorCondition(-70001);
+		  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+		  return -1;
+	  }
+
+	  // First parse the <ROOT><Tags> section to get the values of how many images we are going to have
+	  rootTagsSection = parseTagsSection(tags);
+	  if (NULL == rootTagsSection.get())
+	  {
+		  return -1;
+	  }
+
+	  // Set the data into the cache
+	  setRootTagsSection(rootTagsSection);
+
+	  QDomElement rootCopy = root.cloneNode().toElement();
+	  setRoot(rootCopy);
+
+	  // Set the file path and time stamp into the cache
+	  setLastRead(QDateTime::currentDateTime());
+	  setInputFile_Cache(getInputFile());
   }
 
   // Now parse each of the <pXXX> tags
@@ -372,7 +443,7 @@ void ZeissImportFilter::parseImages(QDomElement& root, ZeissTagsXmlSection::Poin
   ImageGeom::Pointer image = ImageGeom::CreateGeometry(DREAM3D::Geometry::ImageGeometry);
   dc->setGeometry(image);
   float origin[3] = { 0.0f, 0.0f, 0.0f};
-  image->getOrigin(origin);
+  image->setOrigin(origin);
   float resolution[3] = { 1.0f, 1.0f, 1.0f};
   image->setResolution(resolution);
 
