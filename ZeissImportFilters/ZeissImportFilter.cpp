@@ -19,6 +19,10 @@
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/Common/IFilterFactory.hpp"
 #include "DREAM3DLib/DataArrays/StringDataArray.hpp"
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
+
+
 
 #include "ZeissImport/ZeissImportConstants.h"
 #include "ZeissImport/ZeissXml/ZeissTagMapping.h"
@@ -36,15 +40,15 @@ static const QString k_GrayScaleTempArrayName("gray_scale_temp");
 // -----------------------------------------------------------------------------
 class ZeissImportFilterPrivate
 {
-	Q_DISABLE_COPY(ZeissImportFilterPrivate)
-		Q_DECLARE_PUBLIC(ZeissImportFilter)
-		ZeissImportFilter* const q_ptr;
-	ZeissImportFilterPrivate(ZeissImportFilter* ptr);
+  Q_DISABLE_COPY(ZeissImportFilterPrivate)
+    Q_DECLARE_PUBLIC(ZeissImportFilter)
+    ZeissImportFilter* const q_ptr;
+  ZeissImportFilterPrivate(ZeissImportFilter* ptr);
 
-	QDomElement m_Root;
-	ZeissTagsXmlSection::Pointer m_RootTagsSection;
-	QString m_InputFile_Cache;
-	QDateTime m_LastRead;
+  QDomElement m_Root;
+  ZeissTagsXmlSection::Pointer m_RootTagsSection;
+  QString m_InputFile_Cache;
+  QDateTime m_LastRead;
 };
 
 // -----------------------------------------------------------------------------
@@ -144,7 +148,7 @@ int ZeissImportFilter::writeFilterParameters(AbstractFilterParametersWriter* wri
 // -----------------------------------------------------------------------------
 void ZeissImportFilter::dataCheck()
 {
-	qDebug() << "Begin: " << QDateTime::currentDateTime().toString();
+  qDebug() << "Begin: " << QDateTime::currentDateTime().toString();
   setErrorCondition(0);
 
   QString ss;
@@ -284,51 +288,51 @@ int ZeissImportFilter::readMetaXml(QIODevice* device)
 
   if (getInputFile() == getInputFile_Cache() && getLastRead().isValid() && lastModified.msecsTo(getLastRead()) >= 0)
   {
-	  // We are reading from the cache, so set the FileWasRead flag to false
-	  m_FileWasRead = false;
+    // We are reading from the cache, so set the FileWasRead flag to false
+    m_FileWasRead = false;
 
-	  root = getRoot();
-	  rootTagsSection = getRootTagsSection();
+    root = getRoot();
+    rootTagsSection = getRootTagsSection();
   }
   else
   {
-	  // We are reading from the file, so set the FileWasRead flag to true
-	  m_FileWasRead = true;
+    // We are reading from the file, so set the FileWasRead flag to true
+    m_FileWasRead = true;
 
-	  if (!domDocument.setContent(device, true, &errorStr, &errorLine, &errorColumn))   {
-		  QString ss = QObject::tr("Parse error at line %1, column %2:\n%3").arg(errorLine).arg(errorColumn).arg(errorStr);
-		  setErrorCondition(-70000);
-		  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-		  return -1;
-	  }
+    if (!domDocument.setContent(device, true, &errorStr, &errorLine, &errorColumn))   {
+      QString ss = QObject::tr("Parse error at line %1, column %2:\n%3").arg(errorLine).arg(errorColumn).arg(errorStr);
+      setErrorCondition(-70000);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      return -1;
+    }
 
-	  root = domDocument.documentElement();
+    root = domDocument.documentElement();
 
-	  QDomElement tags = root.firstChildElement(ZeissImport::Xml::Tags);
-	  if (tags.isNull() == true)
-	  {
-		  QString ss = QObject::tr("Could not find the <ROOT><Tags> element. Aborting Parsing. Is the file a Zeiss _meta.xml file");
-		  setErrorCondition(-70001);
-		  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-		  return -1;
-	  }
+    QDomElement tags = root.firstChildElement(ZeissImport::Xml::Tags);
+    if (tags.isNull() == true)
+    {
+      QString ss = QObject::tr("Could not find the <ROOT><Tags> element. Aborting Parsing. Is the file a Zeiss _meta.xml file");
+      setErrorCondition(-70001);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      return -1;
+    }
 
-	  // First parse the <ROOT><Tags> section to get the values of how many images we are going to have
-	  rootTagsSection = parseTagsSection(tags);
-	  if (NULL == rootTagsSection.get())
-	  {
-		  return -1;
-	  }
+    // First parse the <ROOT><Tags> section to get the values of how many images we are going to have
+    rootTagsSection = parseTagsSection(tags);
+    if (NULL == rootTagsSection.get())
+    {
+      return -1;
+    }
 
-	  // Set the data into the cache
-	  setRootTagsSection(rootTagsSection);
+    // Set the data into the cache
+    setRootTagsSection(rootTagsSection);
 
-	  QDomElement rootCopy = root.cloneNode().toElement();
-	  setRoot(rootCopy);
+    QDomElement rootCopy = root.cloneNode().toElement();
+    setRoot(rootCopy);
 
-	  // Set the file path and time stamp into the cache
-	  setLastRead(QDateTime::currentDateTime());
-	  setInputFile_Cache(getInputFile());
+    // Set the file path and time stamp into the cache
+    setLastRead(QDateTime::currentDateTime());
+    setInputFile_Cache(getInputFile());
   }
 
   // Now parse each of the <pXXX> tags
