@@ -29,7 +29,7 @@
 
 #define ZIF_PRINT_DBG_MSGS 0
 
-static const QString k_AttributeArrayNames("Attribute Array Names");
+static const QString k_AttributeArrayNames("AttributeArrayNames");
 static const QString k_DataContaineNameDefaultName("Zeiss Axio Vision Montage");
 static const QString k_TileAttributeMatrixDefaultName("Tile AttributeMatrix");
 static const QString k_GrayScaleTempArrayName("gray_scale_temp");
