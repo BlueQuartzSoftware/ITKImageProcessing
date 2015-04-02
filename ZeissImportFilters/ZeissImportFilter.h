@@ -13,6 +13,7 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/DataArrays/StringDataArray.hpp"
 
 #include "ZeissImport/ZeissXml/ZeissTagsXmlSection.h"
 
@@ -29,7 +30,7 @@ class ZeissImportFilterPrivate;
 class ZeissImportFilter : public AbstractFilter
 {
   Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
-	  Q_DECLARE_PRIVATE(ZeissImportFilter)
+    Q_DECLARE_PRIVATE(ZeissImportFilter)
 
   public:
     DREAM3D_SHARED_POINTERS(ZeissImportFilter)
@@ -59,8 +60,8 @@ class ZeissImportFilter : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(FloatVec3_t, ColorWeights)
     Q_PROPERTY(FloatVec3_t ColorWeights READ getColorWeights WRITE setColorWeights)
 
-	DREAM3D_FILTER_PARAMETER(bool, FileWasRead)
-	Q_PROPERTY(bool FileWasRead READ getFileWasRead)
+  DREAM3D_FILTER_PARAMETER(bool, FileWasRead)
+  Q_PROPERTY(bool FileWasRead READ getFileWasRead)
 
     /**
      * @brief getCompiledLibraryName Returns the name of the Library that this filter is a part of
@@ -127,10 +128,10 @@ class ZeissImportFilter : public AbstractFilter
      */
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
 
-	DREAM3D_PIMPL_PROPERTY_DECL(QDomElement, Root)
-	DREAM3D_PIMPL_PROPERTY_DECL(ZeissTagsXmlSection::Pointer, RootTagsSection)
-	DREAM3D_PIMPL_PROPERTY_DECL(QString, InputFile_Cache)
-	DREAM3D_PIMPL_PROPERTY_DECL(QDateTime, LastRead)
+  DREAM3D_PIMPL_PROPERTY_DECL(QDomElement, Root)
+  DREAM3D_PIMPL_PROPERTY_DECL(ZeissTagsXmlSection::Pointer, RootTagsSection)
+  DREAM3D_PIMPL_PROPERTY_DECL(QString, InputFile_Cache)
+  DREAM3D_PIMPL_PROPERTY_DECL(QDateTime, LastRead)
 
   signals:
     /**
@@ -213,7 +214,8 @@ class ZeissImportFilter : public AbstractFilter
      * @param pTag
      * @param dcName
      */
-    void importImage(const QString &imageName, const QString &pTag, const QString &dcName);
+    void importImage(const QString &imageName, const QString &pTag,
+                     const QString &dcName, int imageIndex, StringDataArray::Pointer attributeArrayNames);
 
     /**
      * @brief convertToGrayScale
@@ -225,7 +227,7 @@ class ZeissImportFilter : public AbstractFilter
 
 
   private:
-	  QScopedPointer<ZeissImportFilterPrivate> const d_ptr;
+    QScopedPointer<ZeissImportFilterPrivate> const d_ptr;
 
     /* Your private class instance variables go here. You can use several preprocessor macros to help
      * make sure you have all the variables defined correctly. Those are "DEFINE_REQUIRED_DATAARRAY_VARIABLE()"
