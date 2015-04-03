@@ -27,8 +27,9 @@ configure_file(${${PROJECT_NAME}_SOURCE_DIR}/TestFileLocations.h.in
 
 
 AddDREAM3DUnitTest(TESTNAME ZeissImportFilterAvailabilityTest 
-                   SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/ZeissImportFilterAvailabilityTest.cpp 
-                   LINK_LIBRARIES Qt5::Core H5Support DREAM3DLib ${ITK_LIBRARIES})
+                  SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/ZeissImportFilterAvailabilityTest.cpp 
+                  FOLDER "${PLUGIN_NAME}Plugin/Test" 
+                  LINK_LIBRARIES Qt5::Core H5Support DREAM3DLib ${ITK_LIBRARIES})
 
 # This is an example of creating a simple unit test. Make the test name unique enough that
 # another plugin would not have the same name as your test. Possible prefix the name of the
