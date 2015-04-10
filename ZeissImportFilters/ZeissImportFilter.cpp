@@ -29,7 +29,7 @@
 
 #define ZIF_PRINT_DBG_MSGS 0
 
-
+static const QString k_AttributeArrayNames("AttributeArrayNames");
 static const QString k_DataContaineNameDefaultName("Zeiss Axio Vision Montage");
 static const QString k_TileAttributeMatrixDefaultName("Tile AttributeMatrix");
 static const QString k_GrayScaleTempArrayName("gray_scale_temp");
@@ -451,6 +451,8 @@ void ZeissImportFilter::parseImages(QDomElement& root, ZeissTagsXmlSection::Poin
   float resolution[3] = { 1.0f, 1.0f, 1.0f};
   image->setResolution(resolution);
 
+  StringDataArray::Pointer attributeArrayNames = StringDataArray::NullPointer();
+
   for(int p = 0; p < imageCount; p++)
   {
 
@@ -520,6 +522,10 @@ void ZeissImportFilter::parseImages(QDomElement& root, ZeissTagsXmlSection::Poin
         metaAm->addAttributeArray(dataArray->getName(), dataArray);
       }
 
+      // Add an extra AttributeArray that stores the names of the actual AttributeArray names that holds the image data
+      attributeArrayNames = StringDataArray::CreateArray(imageCount, k_AttributeArrayNames);
+      metaAm->addAttributeArray(attributeArrayNames->getName(), attributeArrayNames);
+
       ZeissTagsXmlSection::MetaDataType tagMapRoot = rootTagsSection->getMetaDataMap();
       QMapIterator<int, AbstractZeissMetaData::Pointer> iterRoot(tagMapRoot);
 
@@ -541,7 +547,8 @@ void ZeissImportFilter::parseImages(QDomElement& root, ZeissTagsXmlSection::Poin
     addRootMetaData(metaAm, rootTagsSection, p);
 
     // Read the image into a data array
-    importImage(imageName, pTag, dc->getName());
+    importImage(imageName, pTag, dc->getName(), p, attributeArrayNames);
+
     if(getConvertToGrayScale())
     {
       convertToGrayScale(imageName, pTag, dc->getName());
@@ -603,12 +610,16 @@ void ZeissImportFilter::addRootMetaData(AttributeMatrix::Pointer metaAm, ZeissTa
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ZeissImportFilter::importImage(const QString &imageName, const QString &pTag, const QString &dcName)
+void ZeissImportFilter::importImage(const QString &imageName, const QString &pTag,
+                                    const QString &dcName, int imageIndex, StringDataArray::Pointer attributeArrayNames)
 {
 
   QFileInfo fi(imageName);
   QString imagePath = fi.completeBaseName() + "_" + pTag + "." + fi.suffix();
   QString dataArrayName = fi.completeBaseName() + "_" + pTag;
+
+  //Add this Array name to the DataArray that will ensure the correct ordering
+  attributeArrayNames->setValue(imageIndex, dataArrayName);
 
   fi = QFileInfo(getInputFile());
   imagePath = fi.absoluteDir().path() + "/" + imagePath;
