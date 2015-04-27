@@ -11,7 +11,8 @@
 /**
 * @brief This namespace is used to define some Constants for the plugin itself.
 */
-namespace ZeissImport {
+namespace ZeissImportConstants
+{
   const QString ZeissImportPluginFile("ZeissImportPlugin");
   const QString ZeissImportPluginDisplayName("ZeissImportPlugin");
   const QString ZeissImportBaseName("ZeissImportPlugin");

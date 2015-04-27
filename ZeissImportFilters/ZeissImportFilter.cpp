@@ -21,8 +21,8 @@
 #include "DREAM3DLib/DataArrays/StringDataArray.hpp"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-
-
+#include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
 
 #include "ZeissImport/ZeissImportConstants.h"
 #include "ZeissImport/ZeissXml/ZeissTagMapping.h"
@@ -308,7 +308,7 @@ int ZeissImportFilter::readMetaXml(QIODevice* device)
 
     root = domDocument.documentElement();
 
-    QDomElement tags = root.firstChildElement(ZeissImport::Xml::Tags);
+    QDomElement tags = root.firstChildElement(ZeissImportConstants::Xml::Tags);
     if (tags.isNull() == true)
     {
       QString ss = QObject::tr("Could not find the <ROOT><Tags> element. Aborting Parsing. Is the file a Zeiss _meta.xml file");
@@ -350,7 +350,7 @@ ZeissTagsXmlSection::Pointer ZeissImportFilter::parseTagsSection(QDomElement& ta
   bool ok = false;
   // qDebug() << tags.nodeName() << " node type: " << tags.nodeType();
 
-  QDomElement countEle = tags.firstChildElement(ZeissImport::Xml::Count);
+  QDomElement countEle = tags.firstChildElement(ZeissImportConstants::Xml::Count);
 
   count = countEle.text().toInt(&ok, 10);
   if(!ok)
@@ -478,7 +478,7 @@ void ZeissImportFilter::parseImages(QDomElement& root, ZeissTagsXmlSection::Poin
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return;
     }
-    QDomElement tags = photoEle.firstChildElement(ZeissImport::Xml::Tags);
+    QDomElement tags = photoEle.firstChildElement(ZeissImportConstants::Xml::Tags);
     if (tags.isNull() == true)
     {
       QString ss = QObject::tr("Could not find the <ROOT><%1><Tags> element. Aborting Parsing. Is the file a Zeiss _meta.xml file").arg(pTag);
@@ -807,7 +807,7 @@ QVector<size_t> ZeissImportFilter::getImageDimensions(ZeissTagsXmlSection::Point
 // -----------------------------------------------------------------------------
 const QString ZeissImportFilter::getCompiledLibraryName()
 {
-  return ZeissImport::ZeissImportBaseName;
+  return ZeissImportConstants::ZeissImportBaseName;
 }
 
 // -----------------------------------------------------------------------------

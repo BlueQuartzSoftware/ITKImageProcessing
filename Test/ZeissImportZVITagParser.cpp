@@ -16,7 +16,7 @@
 // -----------------------------------------------------------------------------
 QString getZVITagsFile()
 {
-  return ZeissImport::Tools::TagsTextFile;
+  return ZeissImportConstants::Tools::TagsTextFile;
 }
 
 // -----------------------------------------------------------------------------
@@ -281,9 +281,9 @@ void makeCPPFile(const QString filename)
 int main(int argc, char *argv[])
 {
 
-  makeHeaderFile(ZeissImport::Tools::ZeissTagMappingConstantsFile);
+  makeHeaderFile(ZeissImportConstants::Tools::ZeissTagMappingConstantsFile);
 
-  makeCPPFile(ZeissImport::Tools::ZeissInitIdNameMapFile);
+  makeCPPFile(ZeissImportConstants::Tools::ZeissInitIdNameMapFile);
 
   return 0;
 }

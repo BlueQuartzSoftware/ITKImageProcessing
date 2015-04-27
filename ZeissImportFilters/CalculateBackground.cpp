@@ -305,7 +305,7 @@ void CalculateBackground::execute()
 
   // Fit the background to a second order polynomial
   // p are the coefficients p[0] + p[1]*x + p[2]*y +p[3]*xy + p[4]*x^2 + p[5]*y^2
-  Eigen::MatrixXd A(m_totalPoints, ZeissImport::PolynomialOrder::NumConsts2ndOrder);
+  Eigen::MatrixXd A(m_totalPoints, ZeissImportConstants::PolynomialOrder::NumConsts2ndOrder);
   Eigen::VectorXd B(m_totalPoints);
 
   for(int i=0; i < m_totalPoints; ++i)
@@ -405,7 +405,7 @@ void CalculateBackground::execute()
 // -----------------------------------------------------------------------------
 const QString CalculateBackground::getCompiledLibraryName()
 {
-  return ZeissImport::ZeissImportBaseName;
+  return ZeissImportConstants::ZeissImportBaseName;
 }
 
 // -----------------------------------------------------------------------------
