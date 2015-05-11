@@ -37,9 +37,10 @@
 // -----------------------------------------------------------------------------
 CalculateBackground::CalculateBackground() :
   AbstractFilter(),
-  //    m_VolumeDataContainerName("ZeissBundleBackground"),
-  m_BackgroundAttributeMatrixName("Background"),
+  m_VolumeDataContainerName(""),
+  m_BackgroundAttributeMatrixName(""),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
+  m_ImageDataArrayPath("", "", ""),
   m_AttributeMatrixName(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, ""),
   m_DataContainerBundleName(""),
   m_BackgroundImageArrayName(getDataContainerBundleName() + "BackgroundImage"),
@@ -47,7 +48,6 @@ CalculateBackground::CalculateBackground() :
   m_highThresh(255),
   m_SubtractBackground(false),
   m_DivideBackground(false)
-
 {
   setupFilterParameters();
 }

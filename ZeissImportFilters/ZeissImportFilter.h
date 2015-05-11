@@ -39,9 +39,6 @@ class ZeissImportFilter : public AbstractFilter
 
     virtual ~ZeissImportFilter();
 
-//    DREAM3D_FILTER_PARAMETER(QString, CellAttributeMatrixName)
-//    Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
-
     DREAM3D_FILTER_PARAMETER(QString, InputFile)
     Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
@@ -60,8 +57,8 @@ class ZeissImportFilter : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(FloatVec3_t, ColorWeights)
     Q_PROPERTY(FloatVec3_t ColorWeights READ getColorWeights WRITE setColorWeights)
 
-  DREAM3D_FILTER_PARAMETER(bool, FileWasRead)
-  Q_PROPERTY(bool FileWasRead READ getFileWasRead)
+    DREAM3D_FILTER_PARAMETER(bool, FileWasRead)
+    Q_PROPERTY(bool FileWasRead READ getFileWasRead)
 
     /**
      * @brief getCompiledLibraryName Returns the name of the Library that this filter is a part of
@@ -128,10 +125,10 @@ class ZeissImportFilter : public AbstractFilter
      */
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
 
-  DREAM3D_PIMPL_PROPERTY_DECL(QDomElement, Root)
-  DREAM3D_PIMPL_PROPERTY_DECL(ZeissTagsXmlSection::Pointer, RootTagsSection)
-  DREAM3D_PIMPL_PROPERTY_DECL(QString, InputFile_Cache)
-  DREAM3D_PIMPL_PROPERTY_DECL(QDateTime, LastRead)
+    DREAM3D_PIMPL_PROPERTY_DECL(QDomElement, Root)
+    DREAM3D_PIMPL_PROPERTY_DECL(ZeissTagsXmlSection::Pointer, RootTagsSection)
+    DREAM3D_PIMPL_PROPERTY_DECL(QString, InputFile_Cache)
+    DREAM3D_PIMPL_PROPERTY_DECL(QDateTime, LastRead)
 
   signals:
     /**

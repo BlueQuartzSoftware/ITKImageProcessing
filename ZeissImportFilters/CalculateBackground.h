@@ -69,11 +69,6 @@ class CalculateBackground : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(bool, DivideBackground)
     Q_PROPERTY(int DivideBackground READ getDivideBackground WRITE setDivideBackground)
 
-
-
-
-
-
     /**
      * @brief getCompiledLibraryName Returns the name of the Library that this filter is a part of
      * @return

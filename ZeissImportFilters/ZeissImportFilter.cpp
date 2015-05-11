@@ -56,9 +56,9 @@ class ZeissImportFilterPrivate
 // -----------------------------------------------------------------------------
 ZeissImportFilterPrivate::ZeissImportFilterPrivate(ZeissImportFilter* ptr) :
 q_ptr(ptr),
+m_Root(QDomElement()),
 m_InputFile_Cache(""),
-m_LastRead(QDateTime()),
-m_Root(QDomElement())
+m_LastRead(QDateTime())
 {
 
 }
@@ -69,10 +69,10 @@ m_Root(QDomElement())
 ZeissImportFilter::ZeissImportFilter() :
   AbstractFilter(),
   m_InputFile(""),
-  m_FileWasRead(false),
   m_DataContainerName(k_DataContaineNameDefaultName),
-  m_ImageDataArrayPrefix(DREAM3D::CellData::ImageData),
   m_ImageAttributeMatrixName(k_TileAttributeMatrixDefaultName),
+  m_ImageDataArrayPrefix(DREAM3D::CellData::ImageData),
+  m_FileWasRead(false),
   d_ptr(new ZeissImportFilterPrivate(this))
 {
   m_ColorWeights.x = 0.2125f;
