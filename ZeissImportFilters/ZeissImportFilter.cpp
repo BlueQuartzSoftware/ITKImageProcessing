@@ -148,7 +148,6 @@ int ZeissImportFilter::writeFilterParameters(AbstractFilterParametersWriter* wri
 // -----------------------------------------------------------------------------
 void ZeissImportFilter::dataCheck()
 {
-  qDebug() << "Begin: " << QDateTime::currentDateTime().toString();
   setErrorCondition(0);
 
   QString ss;
@@ -225,8 +224,6 @@ void ZeissImportFilter::dataCheck()
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
-
-  qDebug() << "End: " << QDateTime::currentDateTime().toString();
 }
 
 // -----------------------------------------------------------------------------
