@@ -13,8 +13,8 @@
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/Common/IFilterFactory.hpp"
 #include "DREAM3DLib/Common/FilterFactory.hpp"
-
-#include "ZeissImport/moc_ZeissImportPlugin.cpp"
+ 
+#include "ZeissImport/ZeissImportVersion.h"
 
 
 
@@ -29,12 +29,12 @@ namespace Detail
 //
 // -----------------------------------------------------------------------------
 ZeissImportPlugin::ZeissImportPlugin() :
-m_Version(DREAM3DLib::Version::Package()),
-m_CompatibilityVersion(DREAM3DLib::Version::Package()),
-m_Vendor(DREAM3D::BlueQuartz::VendorName),
-m_URL(DREAM3D::BlueQuartz::URL),
-m_Location(""),
-m_Copyright(DREAM3D::BlueQuartz::Copyright),
+  m_Version(ZeissImport::Version::Package()),
+  m_CompatibilityVersion(ZeissImport::Version::Package()),
+  m_Vendor(DREAM3D::BlueQuartz::VendorName),
+  m_URL(DREAM3D::BlueQuartz::URL),
+  m_Location(""),
+  m_Copyright(DREAM3D::BlueQuartz::Copyright),
   m_DidLoad(false)
 {
 

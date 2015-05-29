@@ -12,6 +12,16 @@ if(NOT Qt5Core_FOUND)
     message(FATAL_ERROR "Qt 5 is Needed for plugin ${PLUGIN_NAME}Plugin.")
 endif()
 
+set(CMP_TOP_HEADER_FILE "${PLUGIN_NAME}Plugin.h")
+set(CMP_VERSION_HEADER_FILE_NAME "${PLUGIN_NAME}Version.h")
+cmpVersionStringsFromGit( GENERATED_HEADER_FILE_PATH "${${PLUGIN_NAME}_BINARY_DIR}/${PLUGIN_NAME}Version.h"
+                          GENERATED_SOURCE_FILE_PATH "${${PLUGIN_NAME}_BINARY_DIR}/${PLUGIN_NAME}Version.cpp"
+                          NAMESPACE "${PLUGIN_NAME}"
+                          cmpProjectName "${PLUGIN_NAME}"
+                          PROJECT_SOURCE_DIR ${${PLUGIN_NAME}_SOURCE_DIR}
+                          PROJECT_VERSION_MAJOR  "1.0"
+                          EXPORT_MACRO "")
+
 
 ## YOU MUST INCLUDE THIS FILE TO USE ITK !!!
 ## Then do not forget to add "${ITK_LIBRARIES}" to the target_link_libraries below
@@ -141,6 +151,8 @@ set(${PLUGIN_NAME}_GEN_HDRS
    ${RegisterKnownFiltersFile}
    ${AllFilterParameterWidgetsHeaderFile}
    ${RegisterKnownFilterParameterWidgetsFile}
+  "${${PLUGIN_NAME}_BINARY_DIR}/${PLUGIN_NAME}Version.h"
+  "${${PLUGIN_NAME}_BINARY_DIR}/${PLUGIN_NAME}Version.cpp"
 )
 
 # --------------------------------------------------------------------
