@@ -105,7 +105,7 @@ void ZeissImportFilter::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Attribute Matrix Name", "ImageAttributeMatrixName", FilterParameterWidgetType::StringWidget, getImageAttributeMatrixName(), FilterParameter::Uncategorized));
 
   QStringList linkedProps("ColorWeights");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Convert To GrayScale", "ConvertToGrayScale", getConvertToGrayScale(), linkedProps, false));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Convert To GrayScale", "ConvertToGrayScale", getConvertToGrayScale(), linkedProps, FilterParameter::Uncategorized));
   parameters.push_back(FilterParameter::New("Color Weighting", "ColorWeights", FilterParameterWidgetType::FloatVec3Widget, getColorWeights(), FilterParameter::Uncategorized));
 
   setFilterParameters(parameters);
