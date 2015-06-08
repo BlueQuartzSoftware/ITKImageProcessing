@@ -69,7 +69,7 @@ void CalculateBackground::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Attribute Matrix Name", "AttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getAttributeMatrixName(), FilterParameter::Uncategorized, ""));
   parameters.push_back(FilterParameter::New("lowest allowed Image value", "lowThresh", FilterParameterWidgetType::IntWidget, getlowThresh(), FilterParameter::Uncategorized, "Image Value"));
   parameters.push_back(FilterParameter::New("highest allowed Image value", "highThresh", FilterParameterWidgetType::IntWidget, gethighThresh(), FilterParameter::Uncategorized, "Image Value"));
-  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
+  parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));
   //    parameters.push_back(FilterParameter::New("Volume Data Container", "VolumeDataContainerName", FilterParameterWidgetType::StringWidget, getVolumeDataContainerName(), FilterParameter::Uncategorized, ""));
   parameters.push_back(FilterParameter::New("Background Attribute Matrix", "BackgroundAttributeMatrixName", FilterParameterWidgetType::StringWidget, getBackgroundAttributeMatrixName(), FilterParameter::Uncategorized, ""));
   parameters.push_back(FilterParameter::New("Background Image Array Name", "BackgroundImageArrayName", FilterParameterWidgetType::StringWidget, getBackgroundImageArrayName(), FilterParameter::Uncategorized, ""));
