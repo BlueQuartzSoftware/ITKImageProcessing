@@ -100,13 +100,13 @@ DREAM3D_PIMPL_PROPERTY_DEF(ZeissImportFilter, ZeissTagsXmlSection::Pointer, Root
 void ZeissImportFilter::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FileSystemFilterParameter::New("Input File", "InputFile", FilterParameterWidgetType::InputFileWidget, getInputFile(), false, "", "*.xml"));
-  parameters.push_back(FilterParameter::New("DataContainer Name", "DataContainerName", FilterParameterWidgetType::StringWidget, getDataContainerName(), false));
-  parameters.push_back(FilterParameter::New("Attribute Matrix Name", "ImageAttributeMatrixName", FilterParameterWidgetType::StringWidget, getImageAttributeMatrixName(), false));
+  parameters.push_back(FileSystemFilterParameter::New("Input File", "InputFile", FilterParameterWidgetType::InputFileWidget, getInputFile(), FilterParameter::Uncategorized, "", "*.xml"));
+  parameters.push_back(FilterParameter::New("DataContainer Name", "DataContainerName", FilterParameterWidgetType::StringWidget, getDataContainerName(), FilterParameter::Uncategorized));
+  parameters.push_back(FilterParameter::New("Attribute Matrix Name", "ImageAttributeMatrixName", FilterParameterWidgetType::StringWidget, getImageAttributeMatrixName(), FilterParameter::Uncategorized));
 
   QStringList linkedProps("ColorWeights");
   parameters.push_back(LinkedBooleanFilterParameter::New("Convert To GrayScale", "ConvertToGrayScale", getConvertToGrayScale(), linkedProps, false));
-  parameters.push_back(FilterParameter::New("Color Weighting", "ColorWeights", FilterParameterWidgetType::FloatVec3Widget, getColorWeights(), false));
+  parameters.push_back(FilterParameter::New("Color Weighting", "ColorWeights", FilterParameterWidgetType::FloatVec3Widget, getColorWeights(), FilterParameter::Uncategorized));
 
   setFilterParameters(parameters);
 }
