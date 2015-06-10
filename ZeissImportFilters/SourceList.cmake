@@ -13,8 +13,8 @@ START_FILTER_GROUP(${ZeissImport_BINARY_DIR} "${_filterGroupName}" "ZeissImport"
 #---------
 # List your public filters here
 set(_PublicFilters
-  ZeissImportFilter
   CalculateBackground
+  ZeissImportFilter
 )
 
 
