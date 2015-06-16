@@ -17,15 +17,21 @@ namespace ZeissImportConstants
   const QString ZeissImportPluginDisplayName("ZeissImportPlugin");
   const QString ZeissImportBaseName("ZeissImportPlugin");
 
-  namespace Xml {
+  namespace FilterGroups
+  {
+    const QString ZeissImportFilters("Zeiss Import");
+  }
+
+  namespace Xml
+  {
     static const QString Tags("Tags");
     static const QString Count("Count");
   }
 
   namespace PolynomialOrder
-    {
+  {
     const unsigned int NumConsts2ndOrder = 6;
-    }
+  }
 }
 
 /**

@@ -13,17 +13,9 @@
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/Common/IFilterFactory.hpp"
 #include "DREAM3DLib/Common/FilterFactory.hpp"
- 
+
+#include "ZeissImport/ZeissImportConstants.h"
 #include "ZeissImport/ZeissImportVersion.h"
-
-
-
-namespace Detail
-{
-  const QString ZeissImportPluginFile("ZeissImportPlugin");
-  const QString ZeissImportPluginDisplayName("ZeissImport");
-  const QString ZeissImportPluginBaseName("ZeissImportPlugin");
-}
 
 // -----------------------------------------------------------------------------
 //
@@ -52,7 +44,7 @@ ZeissImportPlugin::~ZeissImportPlugin()
 // -----------------------------------------------------------------------------
 QString ZeissImportPlugin::getPluginName()
 {
-  return (Detail::ZeissImportPluginDisplayName);
+  return (ZeissImportConstants::ZeissImportPluginDisplayName);
 }
 
 // -----------------------------------------------------------------------------

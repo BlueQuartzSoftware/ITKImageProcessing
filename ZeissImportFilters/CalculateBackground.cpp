@@ -414,7 +414,7 @@ const QString CalculateBackground::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 const QString CalculateBackground::getGroupName()
 {
-  return "ZeissImport";
+  return ZeissImportConstants::FilterGroups::ZeissImportFilters;
 }
 
 // -----------------------------------------------------------------------------

@@ -812,7 +812,7 @@ const QString ZeissImportFilter::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 const QString ZeissImportFilter::getGroupName()
 {
-  return "ZeissImport";
+  return ZeissImportConstants::FilterGroups::ZeissImportFilters;
 }
 
 // -----------------------------------------------------------------------------
