@@ -203,7 +203,7 @@ set(${PLUGIN_NAME}_MODULE_SRCS
   ${ZeissXml_HDRS}
   # -- Add in our Generated Version Files
   ${${PLUGIN_NAME}_BINARY_DIR}/${VERSION_HEADER_FILE_NAME}
-  ${${PLUGIN_NAME}_BINARY_DIR}/ ${VERSION_SOURCE_FILE_NAME}
+  ${${PLUGIN_NAME}_BINARY_DIR}/${VERSION_SOURCE_FILE_NAME}
 )
 
 # --------------------------------------------------------------------
