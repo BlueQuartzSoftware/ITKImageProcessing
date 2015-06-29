@@ -67,7 +67,7 @@ std::string ZeissDirectoryPatterns::generateZeissDirectory(int slice)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::string ZeissDirectoryPatterns::generateZeissDirectory(const std::string &slice)
+std::string ZeissDirectoryPatterns::generateZeissDirectory(const std::string& slice)
 {
   std::stringstream ss;
   ss << m_Prefix << slice << m_Suffix << Zeiss::DirectoryPatterns::Dot << m_Extension << Zeiss::DirectoryPatterns::_Files;
@@ -87,7 +87,7 @@ std::string ZeissDirectoryPatterns::generateZeissMetaXMLName(int slice)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::string ZeissDirectoryPatterns::generateZeissMetaXMLName(const std::string &slice)
+std::string ZeissDirectoryPatterns::generateZeissMetaXMLName(const std::string& slice)
 {
   std::stringstream ss;
   ss <<  generateZeissDirectory(slice) << MXADir::Separator << Zeiss::DirectoryPatterns::MetaXML;
@@ -100,17 +100,17 @@ std::string ZeissDirectoryPatterns::generateZeissMetaXMLName(const std::string &
 std::string ZeissDirectoryPatterns::generateZeissTileName(int slice, int numberWidth, int tileIndex)
 {
   std::stringstream ss;
-    ss.setf(std::ios::fixed);
-    ss.fill('0');
-    int32_t width = numberWidth;
-    ss << m_Prefix << slice << m_Suffix << Zeiss::DirectoryPatterns::_P << std::setw(width) << tileIndex << Zeiss::DirectoryPatterns::Dot << m_Extension;
-    return ss.str();
+  ss.setf(std::ios::fixed);
+  ss.fill('0');
+  int32_t width = numberWidth;
+  ss << m_Prefix << slice << m_Suffix << Zeiss::DirectoryPatterns::_P << std::setw(width) << tileIndex << Zeiss::DirectoryPatterns::Dot << m_Extension;
+  return ss.str();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int ZeissDirectoryPatterns::extractSlice(const std::string &dirName)
+int ZeissDirectoryPatterns::extractSlice(const std::string& dirName)
 {
   std::string::size_type pos = m_Prefix.length();
   const char* data = dirName.data();
@@ -124,19 +124,20 @@ int ZeissDirectoryPatterns::extractSlice(const std::string &dirName)
   std::string sliceStr = dirName.substr(m_Prefix.length(),  sliceLen);
   int sliceVal = -1;
   bool ok = StringUtils::stringToNum<int>(sliceVal, sliceStr);
-  if (!ok) {
+  if (!ok)
+  {
     sliceVal = -1;
   }
 
- return sliceVal;
+  return sliceVal;
 }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int ZeissDirectoryPatterns::parseDocumentName(const std::string &guessedPrefix,
-                              const std::string &zeissDocumentName)
+int ZeissDirectoryPatterns::parseDocumentName(const std::string& guessedPrefix,
+                                              const std::string& zeissDocumentName)
 {
   //std::cout << "ZeissDirectoryPatterns::parseDocumentName: " << zeissDocumentName << std::endl;
   m_Extension = MXAFileInfo::extension(zeissDocumentName);
@@ -173,7 +174,7 @@ int ZeissDirectoryPatterns::parseDocumentName(const std::string &guessedPrefix,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ZeissDirectoryPatterns::print(std::ostream &ostream)
+void ZeissDirectoryPatterns::print(std::ostream& ostream)
 {
   ostream << "Prefix: " << getPrefix() << std::endl;
   ostream << "Suffix: " << getSuffix() << std::endl;

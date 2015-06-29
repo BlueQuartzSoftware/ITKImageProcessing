@@ -62,7 +62,7 @@ QString ZeissTagMapping::nameForId(int idTag)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int ZeissTagMapping::idForName(const QString &name)
+int ZeissTagMapping::idForName(const QString& name)
 {
   ZeissNameIdMap::const_iterator i = _nameIdMap.find(name);
   if (i != _nameIdMap.end())
@@ -89,7 +89,7 @@ ZeissMetaFactory::Pointer ZeissTagMapping::factoryForId(int idTag)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractZeissMetaData::Pointer ZeissTagMapping::metaDataForTagName(const QString &name)
+AbstractZeissMetaData::Pointer ZeissTagMapping::metaDataForTagName(const QString& name)
 {
   int idTag = idForName(name);
   if (idTag < 0)
@@ -110,7 +110,7 @@ AbstractZeissMetaData::Pointer ZeissTagMapping::metaDataForTagName(const QString
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractZeissMetaData::Pointer ZeissTagMapping::metaDataForId(int idTag, const QString &value)
+AbstractZeissMetaData::Pointer ZeissTagMapping::metaDataForId(int idTag, const QString& value)
 {
   ZeissMetaFactory::Pointer f = _idFactoryMap[idTag];
   if (NULL != f.get() )

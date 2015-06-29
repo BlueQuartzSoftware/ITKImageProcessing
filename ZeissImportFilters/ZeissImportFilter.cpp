@@ -40,25 +40,25 @@ static const QString k_GrayScaleTempArrayName("gray_scale_temp");
 // -----------------------------------------------------------------------------
 class ZeissImportFilterPrivate
 {
-  Q_DISABLE_COPY(ZeissImportFilterPrivate)
+    Q_DISABLE_COPY(ZeissImportFilterPrivate)
     Q_DECLARE_PUBLIC(ZeissImportFilter)
     ZeissImportFilter* const q_ptr;
-  ZeissImportFilterPrivate(ZeissImportFilter* ptr);
+    ZeissImportFilterPrivate(ZeissImportFilter* ptr);
 
-  QDomElement m_Root;
-  ZeissTagsXmlSection::Pointer m_RootTagsSection;
-  QString m_InputFile_Cache;
-  QDateTime m_LastRead;
+    QDomElement m_Root;
+    ZeissTagsXmlSection::Pointer m_RootTagsSection;
+    QString m_InputFile_Cache;
+    QDateTime m_LastRead;
 };
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 ZeissImportFilterPrivate::ZeissImportFilterPrivate(ZeissImportFilter* ptr) :
-q_ptr(ptr),
-m_Root(QDomElement()),
-m_InputFile_Cache(""),
-m_LastRead(QDateTime())
+  q_ptr(ptr),
+  m_Root(QDomElement()),
+  m_InputFile_Cache(""),
+  m_LastRead(QDateTime())
 {
 
 }
@@ -134,12 +134,12 @@ int ZeissImportFilter::writeFilterParameters(AbstractFilterParametersWriter* wri
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(InputFile)
-      DREAM3D_FILTER_WRITE_PARAMETER(DataContainerName)
-      DREAM3D_FILTER_WRITE_PARAMETER(ImageAttributeMatrixName)
-      DREAM3D_FILTER_WRITE_PARAMETER(ImageDataArrayPrefix)
-      DREAM3D_FILTER_WRITE_PARAMETER(ConvertToGrayScale)
-      DREAM3D_FILTER_WRITE_PARAMETER(ColorWeights)
-      writer->closeFilterGroup();
+  DREAM3D_FILTER_WRITE_PARAMETER(DataContainerName)
+  DREAM3D_FILTER_WRITE_PARAMETER(ImageAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(ImageDataArrayPrefix)
+  DREAM3D_FILTER_WRITE_PARAMETER(ConvertToGrayScale)
+  DREAM3D_FILTER_WRITE_PARAMETER(ColorWeights)
+  writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 
@@ -296,7 +296,8 @@ int ZeissImportFilter::readMetaXml(QIODevice* device)
     // We are reading from the file, so set the FileWasRead flag to true
     m_FileWasRead = true;
 
-    if (!domDocument.setContent(device, true, &errorStr, &errorLine, &errorColumn))   {
+    if (!domDocument.setContent(device, true, &errorStr, &errorLine, &errorColumn))
+    {
       QString ss = QObject::tr("Parse error at line %1, column %2:\n%3").arg(errorLine).arg(errorColumn).arg(errorStr);
       setErrorCondition(-70000);
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
@@ -534,7 +535,7 @@ void ZeissImportFilter::parseImages(QDomElement& root, ZeissTagsXmlSection::Poin
         dataArrayRoot->resize(imageCount);
         if (dataArrayRoot->getName() == "ScaleFactorForX" || dataArrayRoot->getName()  == "ScaleFactorForY")
         {
-            metaAm->addAttributeArray(dataArrayRoot->getName(), dataArrayRoot);
+          metaAm->addAttributeArray(dataArrayRoot->getName(), dataArrayRoot);
         }
       }
     }
@@ -582,33 +583,33 @@ void ZeissImportFilter::addMetaData(AttributeMatrix::Pointer metaAm, ZeissTagsXm
 
 void ZeissImportFilter::addRootMetaData(AttributeMatrix::Pointer metaAm, ZeissTagsXmlSection::Pointer rootTagsSection, int index)
 {
-    ZeissTagMapping::Pointer tagMap = ZeissTagMapping::instance();
-    ZeissTagsXmlSection::MetaDataType tags = rootTagsSection->getMetaDataMap();
+  ZeissTagMapping::Pointer tagMap = ZeissTagMapping::instance();
+  ZeissTagsXmlSection::MetaDataType tags = rootTagsSection->getMetaDataMap();
 
-    QMapIterator<int, AbstractZeissMetaData::Pointer> iter(tags);
-    while(iter.hasNext())
+  QMapIterator<int, AbstractZeissMetaData::Pointer> iter(tags);
+  while(iter.hasNext())
+  {
+    iter.next();
+    StringZeissMetaEntry::Pointer zStrVal = boost::dynamic_pointer_cast<StringZeissMetaEntry>(iter.value());
+
+    //qDebug() << iter.key() << "  " << zStrVal->getValue();
+    QString tagName = tagMap->nameForId(iter.key());
+    if (tagName == "ScaleFactorForX" || tagName == "ScaleFactorForY")
     {
-      iter.next();
-      StringZeissMetaEntry::Pointer zStrVal = boost::dynamic_pointer_cast<StringZeissMetaEntry>(iter.value());
-
-          //qDebug() << iter.key() << "  " << zStrVal->getValue();
-      QString tagName = tagMap->nameForId(iter.key());
-      if (tagName == "ScaleFactorForX" || tagName == "ScaleFactorForY")
-      {
-          IDataArray::Pointer iDataArray = metaAm->getAttributeArray(tagName);
-          StringDataArray::Pointer strArray = boost::dynamic_pointer_cast<StringDataArray>(iDataArray);
-          strArray->setValue(index, zStrVal->getValue());
-          //IDataArray::Pointer dataArray = iter.value()->createDataArray(!getInPreflight());
-          //metaData->addAttributeArray(dataArray->getName(), dataArray);
-      }
+      IDataArray::Pointer iDataArray = metaAm->getAttributeArray(tagName);
+      StringDataArray::Pointer strArray = boost::dynamic_pointer_cast<StringDataArray>(iDataArray);
+      strArray->setValue(index, zStrVal->getValue());
+      //IDataArray::Pointer dataArray = iter.value()->createDataArray(!getInPreflight());
+      //metaData->addAttributeArray(dataArray->getName(), dataArray);
     }
+  }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ZeissImportFilter::importImage(const QString &imageName, const QString &pTag,
-                                    const QString &dcName, int imageIndex, StringDataArray::Pointer attributeArrayNames)
+void ZeissImportFilter::importImage(const QString& imageName, const QString& pTag,
+                                    const QString& dcName, int imageIndex, StringDataArray::Pointer attributeArrayNames)
 {
 
   QFileInfo fi(imageName);
@@ -641,7 +642,7 @@ void ZeissImportFilter::importImage(const QString &imageName, const QString &pTa
     if(false == propWasSet)
     {
       QString ss = QObject::tr("Error Setting Property '%1' into filter '%2' which is a subfilter called by %3. The property was not set which could mean the property was not exposed with a Q_PROPERTY macro. Please notify the developers.")
-          .arg("InputFileName").arg(filtName).arg(getHumanLabel());
+                   .arg("InputFileName").arg(filtName).arg(getHumanLabel());
       setErrorCondition(-70005);
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     }
@@ -650,7 +651,7 @@ void ZeissImportFilter::importImage(const QString &imageName, const QString &pTa
     if(false == propWasSet)
     {
       QString ss = QObject::tr("Error Setting Property '%1' into filter '%2' which is a subfilter called by %3. The property was not set which could mean the property was not exposed with a Q_PROPERTY macro. Please notify the developers.")
-          .arg("DataContainerName").arg(filtName).arg(getHumanLabel());
+                   .arg("DataContainerName").arg(filtName).arg(getHumanLabel());
       setErrorCondition(-70006);
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     }
@@ -658,7 +659,7 @@ void ZeissImportFilter::importImage(const QString &imageName, const QString &pTa
     if(false == propWasSet)
     {
       QString ss = QObject::tr("Error Setting Property '%1' into filter '%2' which is a subfilter called by %3. The property was not set which could mean the property was not exposed with a Q_PROPERTY macro. Please notify the developers.")
-          .arg("CellAttributeMatrixName").arg(filtName).arg(getHumanLabel());
+                   .arg("CellAttributeMatrixName").arg(filtName).arg(getHumanLabel());
       setErrorCondition(-70007);
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     }
@@ -666,7 +667,7 @@ void ZeissImportFilter::importImage(const QString &imageName, const QString &pTa
     if(false == propWasSet)
     {
       QString ss = QObject::tr("Error Setting Property '%1' into filter '%2' which is a subfilter called by %3. The property was not set which could mean the property was not exposed with a Q_PROPERTY macro. Please notify the developers.")
-          .arg("ImageDataArrayName").arg(filtName).arg(getHumanLabel());
+                   .arg("ImageDataArrayName").arg(filtName).arg(getHumanLabel());
       setErrorCondition(-70008);
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     }
@@ -680,7 +681,8 @@ void ZeissImportFilter::importImage(const QString &imageName, const QString &pTa
     }
 
   }
-  else {
+  else
+  {
     QString ss = QObject::tr("Error trying to instantiate the 'ReadImage' filter which is typically included in the 'ImageProcessing' plugin.");
     setErrorCondition(-70009);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
@@ -693,7 +695,7 @@ void ZeissImportFilter::importImage(const QString &imageName, const QString &pTa
 // -----------------------------------------------------------------------------
 //
 // -------------------------------------------------------------------------
-void ZeissImportFilter::convertToGrayScale(const QString &imageName, const QString &pTag, const QString &dcName)
+void ZeissImportFilter::convertToGrayScale(const QString& imageName, const QString& pTag, const QString& dcName)
 {
   QFileInfo fi(imageName);
   QString dataArrayName = fi.completeBaseName() + "_" + pTag;
@@ -721,7 +723,7 @@ void ZeissImportFilter::convertToGrayScale(const QString &imageName, const QStri
     if(false == propWasSet)
     {
       QString ss = QObject::tr("Error Setting Property '%1' into filter '%2' which is a subfilter called by %3. The property was not set which could mean the property was not exposed with a Q_PROPERTY macro. Please notify the developers.")
-          .arg("InputFileName").arg(filtName).arg(getHumanLabel());
+                   .arg("InputFileName").arg(filtName).arg(getHumanLabel());
       setErrorCondition(-70005);
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     }
@@ -731,7 +733,7 @@ void ZeissImportFilter::convertToGrayScale(const QString &imageName, const QStri
     if(false == propWasSet)
     {
       QString ss = QObject::tr("Error Setting Property '%1' into filter '%2' which is a subfilter called by %3. The property was not set which could mean the property was not exposed with a Q_PROPERTY macro. Please notify the developers.")
-          .arg("DataContainerName").arg(filtName).arg(getHumanLabel());
+                   .arg("DataContainerName").arg(filtName).arg(getHumanLabel());
       setErrorCondition(-70006);
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     }
@@ -739,7 +741,7 @@ void ZeissImportFilter::convertToGrayScale(const QString &imageName, const QStri
     if(false == propWasSet)
     {
       QString ss = QObject::tr("Error Setting Property '%1' into filter '%2' which is a subfilter called by %3. The property was not set which could mean the property was not exposed with a Q_PROPERTY macro. Please notify the developers.")
-          .arg("CellAttributeMatrixName").arg(filtName).arg(getHumanLabel());
+                   .arg("CellAttributeMatrixName").arg(filtName).arg(getHumanLabel());
       setErrorCondition(-70007);
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     }
@@ -757,7 +759,8 @@ void ZeissImportFilter::convertToGrayScale(const QString &imageName, const QStri
     {
 
     }
-    else {
+    else
+    {
       DataContainerArray::Pointer dca = getDataContainerArray();
       DataContainer::Pointer dc = dca->getDataContainer(getDataContainerName());
       AttributeMatrix::Pointer am = dc->getAttributeMatrix(getImageAttributeMatrixName());
@@ -767,7 +770,8 @@ void ZeissImportFilter::convertToGrayScale(const QString &imageName, const QStri
       am->addAttributeArray(gray->getName(), gray);
     }
   }
-  else {
+  else
+  {
     QString ss = QObject::tr("Error trying to instantiate the 'ReadImage' filter which is typically included in the 'ImageProcessing' plugin.");
     setErrorCondition(-70009);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
@@ -812,7 +816,7 @@ const QString ZeissImportFilter::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 const QString ZeissImportFilter::getGroupName()
 {
-  return ZeissImportConstants::FilterGroups::ZeissImportFilters;
+  return DREAM3D::FilterGroups::Unsupported;
 }
 
 // -----------------------------------------------------------------------------

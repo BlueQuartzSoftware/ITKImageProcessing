@@ -33,16 +33,16 @@ QString cleanupValue(const QString val)
   value = value.replace(".", "_");
   value = value.replace("[", "_");
   value = value.replace("]", "_");
-  if(value.startsWith("0")) value = value.replace("0", "Zero");
-  if(value.startsWith("1")) value = value.replace("1", "One");
-  if(value.startsWith("2")) value = value.replace("2", "Two");
-  if(value.startsWith("3")) value = value.replace("3", "Three");
-  if(value.startsWith("4")) value = value.replace("4", "Four");
-  if(value.startsWith("5")) value = value.replace("5", "Five");
-  if(value.startsWith("6")) value = value.replace("6", "Six");
-  if(value.startsWith("7")) value = value.replace("7", "Seven");
-  if(value.startsWith("8")) value = value.replace("8", "Eight");
-  if(value.startsWith("9")) value = value.replace("9", "Nine");
+  if(value.startsWith("0")) { value = value.replace("0", "Zero"); }
+  if(value.startsWith("1")) { value = value.replace("1", "One"); }
+  if(value.startsWith("2")) { value = value.replace("2", "Two"); }
+  if(value.startsWith("3")) { value = value.replace("3", "Three"); }
+  if(value.startsWith("4")) { value = value.replace("4", "Four"); }
+  if(value.startsWith("5")) { value = value.replace("5", "Five"); }
+  if(value.startsWith("6")) { value = value.replace("6", "Six"); }
+  if(value.startsWith("7")) { value = value.replace("7", "Seven"); }
+  if(value.startsWith("8")) { value = value.replace("8", "Eight"); }
+  if(value.startsWith("9")) { value = value.replace("9", "Nine"); }
   return value;
 }
 
@@ -252,9 +252,9 @@ void makeCPPFile(const QString filename)
   stream << "/** THIS FILE WAS AUTO-GENERATED FROM THE ZVI_TAGS.TXT FILE WHICH WAS MANUALLY GENERATED FROM\n";
   stream << "* THE ZVI DOCUMENTATION FILE THAT IS DOWNLOADED FROM CARL ZEISS UNDER LICENSE.\n";
   stream << "*/\n\n";
-    stream << "// -----------------------------------------------------------------------------\n";
-    stream << "//\n";
-    stream << "// -----------------------------------------------------------------------------\n";
+  stream << "// -----------------------------------------------------------------------------\n";
+  stream << "//\n";
+  stream << "// -----------------------------------------------------------------------------\n";
   stream << "void ZeissTagMapping::initIdNameMap()\n{\n";
   stream << outLines.join("");
   stream << "}\n\n";
@@ -278,7 +278,7 @@ void makeCPPFile(const QString filename)
   hOut.close();
 }
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
 
   makeHeaderFile(ZeissImportConstants::Tools::ZeissTagMappingConstantsFile);

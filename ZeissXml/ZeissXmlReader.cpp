@@ -81,7 +81,7 @@ namespace Zeiss
     const std::string Root("ROOT");
     const std::string Tags("Tags");
 
- //   const std::string Scaling("Scaling");
+//   const std::string Scaling("Scaling");
 
     const std::string V2072("V2072");
     const std::string V2121("V2121");
@@ -100,10 +100,10 @@ namespace Zeiss
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ZeissXMLReader::ZeissXMLReader(const std::string &xmlFile) :
-_xmlFilename(xmlFile),
-_xmlParseError(0),
-_parseData(false)
+ZeissXMLReader::ZeissXMLReader(const std::string& xmlFile) :
+  _xmlFilename(xmlFile),
+  _xmlParseError(0),
+  _parseData(false)
 {
   _xmlSection = Zeiss::XML::RootSection;
   _tileSection = 0;
@@ -122,11 +122,11 @@ ZeissXMLReader::~ZeissXMLReader()
 template <typename T>
 struct Compare: std::binary_function<const T, const T, bool>
 {
-    bool operator()(const T lhs, const T rhs) const
-    {
+  bool operator()(const T lhs, const T rhs) const
+  {
 
-      return (lhs.first < rhs.first);
-    }
+    return (lhs.first < rhs.first);
+  }
 };
 
 
@@ -193,29 +193,29 @@ int32_t ZeissXMLReader::_parseXMLFile()
 // -----------------------------------------------------------------------------
 void ZeissXMLReader::OnStartElement(const XML_Char* name, const XML_Char** attrs)
 {
-    std::string currentTag(name);
-   // std::cout << "currentTag: " << name << std::endl;
-    if ( currentTag.compare(Zeiss::XML::Tags) == 0 )
-    {
-      onTags_StartTag(name, attrs);
-      _xmlSection = Zeiss::XML::TagsSection;
-    }
-    else if (name[0] == 'V')  // The value of this tag
-    {
-      onVx_StartTag(name, attrs);
-    }
-    else if (name[0] == 'I')  // The ID of the unique Tag
-    {
-      onIx_StartTag(name, attrs);
-    }
-    else if (name[0] == 'A')
-    {
+  std::string currentTag(name);
+  // std::cout << "currentTag: " << name << std::endl;
+  if ( currentTag.compare(Zeiss::XML::Tags) == 0 )
+  {
+    onTags_StartTag(name, attrs);
+    _xmlSection = Zeiss::XML::TagsSection;
+  }
+  else if (name[0] == 'V')  // The value of this tag
+  {
+    onVx_StartTag(name, attrs);
+  }
+  else if (name[0] == 'I')  // The ID of the unique Tag
+  {
+    onIx_StartTag(name, attrs);
+  }
+  else if (name[0] == 'A')
+  {
 
-    }
-    else if (name[0] == 'p')
-    {
-      onTile_StartTag(name, attrs);
-    }
+  }
+  else if (name[0] == 'p')
+  {
+    onTile_StartTag(name, attrs);
+  }
 
 //    else
 //    {
@@ -324,7 +324,7 @@ void ZeissXMLReader::onVx_StartTag(const XML_Char* name, const XML_Char** attrs)
 // -----------------------------------------------------------------------------
 void ZeissXMLReader::onVx_EndTag(const XML_Char* name)
 {
-  if (this->_xmlParseError < 0) return;
+  if (this->_xmlParseError < 0) { return; }
   this->_vTagContent = this->_charData;
   this->_parseData = false; // Stop parsing character data
 }
@@ -343,7 +343,7 @@ void ZeissXMLReader::onIx_StartTag(const XML_Char* name, const XML_Char** attrs)
 // -----------------------------------------------------------------------------
 void ZeissXMLReader::onIx_EndTag(const XML_Char* name)
 {
-  if (this->_xmlParseError < 0) return;
+  if (this->_xmlParseError < 0) { return; }
   int32_t idValue;
   this->extractValue(this->_charData, idValue);
   this->_parseData = false; // Stop parsing character data
@@ -352,7 +352,7 @@ void ZeissXMLReader::onIx_EndTag(const XML_Char* name)
   {
     if (_xmlSection == Zeiss::XML::TagsSection)
     {
-     m_CurrentTagSection->addMetaDataEntry(ptr);
+      m_CurrentTagSection->addMetaDataEntry(ptr);
     }
   }
 }
@@ -375,7 +375,7 @@ void ZeissXMLReader::OnCharacterData(const XML_Char* data, int32_t len)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ZeissXMLReader::printStats(std::ostream &out)
+void ZeissXMLReader::printStats(std::ostream& out)
 {
   std::cout << "RoboMet XML Reader Statistics" << std::endl;
 

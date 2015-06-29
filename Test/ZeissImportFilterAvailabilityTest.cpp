@@ -110,7 +110,7 @@ int main(int argc, char** argv)
   DREAM3D_REGISTER_TEST( loadFilterPlugins() );
   DREAM3D_REGISTER_TEST( TestFilterAvailability() );
 
-      PRINT_TEST_SUMMARY();
+  PRINT_TEST_SUMMARY();
   return err;
 }
 

@@ -171,12 +171,12 @@ void CalculateBackground::dataCheck()
 
   if(m_SubtractBackground == true && m_DivideBackground == true)
   {
-      setErrorCondition(-76002);
-      notifyErrorMessage(getHumanLabel(), "Cannot choose BOTH subtract and divide. Choose one or neither.", -76002);
+    setErrorCondition(-76002);
+    notifyErrorMessage(getHumanLabel(), "Cannot choose BOTH subtract and divide. Choose one or neither.", -76002);
   }
 
 
-  if(getErrorCondition() < 0){ return; }
+  if(getErrorCondition() < 0) { return; }
   m_totalPoints = imagePtr->getNumberOfTuples();
 
   setDataContainerName(getAttributeMatrixName().getDataContainerName());
@@ -185,7 +185,7 @@ void CalculateBackground::dataCheck()
 
   QVector<size_t> tDims(1, 0);
   AttributeMatrix::Pointer backgroundAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getBackgroundAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
-  if(getErrorCondition() < 0){ return; }
+  if(getErrorCondition() < 0) { return; }
 
 
   // Background Image array
@@ -194,7 +194,7 @@ void CalculateBackground::dataCheck()
   m_BackgroundImagePtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_BackgroundImagePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_BackgroundImage = m_BackgroundImagePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() < 0){ return; }
+  if(getErrorCondition() < 0) { return; }
 
 
 
@@ -251,7 +251,7 @@ void CalculateBackground::execute()
   uint8_t* image = NULL;
 
   std::vector<double> background(m_totalPoints, 0);
-  std::vector<double> counter(m_totalPoints,0);
+  std::vector<double> counter(m_totalPoints, 0);
 
 
   // getting the fist data container just to get the dimensions of each image.
@@ -298,7 +298,7 @@ void CalculateBackground::execute()
   // average the background values by the number of counts (counts will be the number of images unless the threshold values do not include all the possible image values
   // (i.e. for an 8 bit image, if we only include values from 0 to 100, not every image value will be counted)
 
-  for (int64_t j=0; j < m_totalPoints; j++)
+  for (int64_t j = 0; j < m_totalPoints; j++)
   {
     background[j] = double(background[j] /= (counter[j]));
   }
@@ -309,17 +309,17 @@ void CalculateBackground::execute()
   Eigen::MatrixXd A(m_totalPoints, ZeissImportConstants::PolynomialOrder::NumConsts2ndOrder);
   Eigen::VectorXd B(m_totalPoints);
 
-  for(int i=0; i < m_totalPoints; ++i)
+  for(int i = 0; i < m_totalPoints; ++i)
   {
-    xval = int(i/dims[0]);
+    xval = int(i / dims[0]);
     yval = int(i % dims[0]);
     B(i) = background[i];
     A(i, 0) = 1;
     A(i, 1) = xval;
     A(i, 2) = yval;
-    A(i, 3) = xval*yval;
-    A(i, 4) = xval*xval;
-    A(i, 5) = yval*yval;
+    A(i, 3) = xval * yval;
+    A(i, 4) = xval * xval;
+    A(i, 5) = yval * yval;
   }
 
   notifyStatusMessage(getHumanLabel(), "Fitting a polynomial to data. May take a while to solve if images are large");
@@ -337,11 +337,11 @@ void CalculateBackground::execute()
   Eigen::VectorXd Bcalc(m_totalPoints);
   double average = 0;
 
-  Bcalc = A*p;
+  Bcalc = A * p;
   average = Bcalc.mean();
   Bcalc = Bcalc - Eigen::VectorXd::Constant(m_totalPoints, average);
 
-  for(int i=0; i < m_totalPoints; ++i)
+  for(int i = 0; i < m_totalPoints; ++i)
   {
     m_BackgroundImage[i] = Bcalc(i);
   }
@@ -363,8 +363,8 @@ void CalculateBackground::execute()
           {
             image[t] = image[t] - Bcalc(t);
 
-            if (image[t]<0) {image[t] = 0;}
-            if (image[t]>255) {image[t] = 255;}
+            if (image[t] < 0) {image[t] = 0;}
+            if (image[t] > 255) {image[t] = 255;}
 
           }
         }
@@ -388,7 +388,7 @@ void CalculateBackground::execute()
         {
           if (static_cast<uint8_t>(image[t]) >= m_lowThresh && static_cast<uint8_t>(image[t])  <= m_highThresh)
           {
-            image[t] = image[t]/Bcalc(t);
+            image[t] = image[t] / Bcalc(t);
 
           }
         }
@@ -414,7 +414,7 @@ const QString CalculateBackground::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 const QString CalculateBackground::getGroupName()
 {
-  return ZeissImportConstants::FilterGroups::ZeissImportFilters;
+  return DREAM3D::FilterGroups::Unsupported;
 }
 
 // -----------------------------------------------------------------------------
