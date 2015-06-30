@@ -14,6 +14,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/DataArrays/StringDataArray.hpp"
+#include "DREAM3DLib/FilterParameters/FloatVec3FilterParameter.h"
 
 #include "ZeissImport/ZeissXml/ZeissTagsXmlSection.h"
 
