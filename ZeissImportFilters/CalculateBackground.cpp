@@ -19,6 +19,12 @@
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/Common/IFilterFactory.hpp"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+
+#include "DREAM3DLib/FilterParameters/DataBundleSelectionFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/IntFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/BooleanFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
 
@@ -66,16 +72,16 @@ CalculateBackground::~CalculateBackground()
 void CalculateBackground::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  //parameters.push_back(FilterParameter::New("DataContainerBundle Name", "DataContainerBundleName", FilterParameterWidgetType::DataBundleSelectionWidget, getDataContainerBundleName(), FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Input AttributeMatrix Name", "AttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getAttributeMatrixName(), FilterParameter::RequiredArray, ""));
-  parameters.push_back(FilterParameter::New("Lowest allowed Image value", "lowThresh", FilterParameterWidgetType::IntWidget, getlowThresh(), FilterParameter::Parameter, "Image Value"));
-  parameters.push_back(FilterParameter::New("Highest allowed Image value", "highThresh", FilterParameterWidgetType::IntWidget, gethighThresh(), FilterParameter::Parameter, "Image Value"));
+  //parameters.push_back(DataBundleSelectionFilterParameter::New("DataContainerBundle Name", "DataContainerBundleName", getDataContainerBundleName(), FilterParameter::Uncategorized));
+  parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Input AttributeMatrix Name", "AttributeMatrixName", getAttributeMatrixName(), FilterParameter::RequiredArray));
+  parameters.push_back(IntFilterParameter::New("Lowest allowed Image value (Image Value)", "lowThresh", getlowThresh(), FilterParameter::Parameter));
+  parameters.push_back(IntFilterParameter::New("Highest allowed Image value (Image Value)", "highThresh", gethighThresh(), FilterParameter::Parameter));
   //    parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));
-  //    parameters.push_back(FilterParameter::New("Volume Data Container", "VolumeDataContainerName", FilterParameterWidgetType::StringWidget, getVolumeDataContainerName(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("Background Attribute Matrix", "BackgroundAttributeMatrixName", FilterParameterWidgetType::StringWidget, getBackgroundAttributeMatrixName(), FilterParameter::CreatedArray, ""));
-  parameters.push_back(FilterParameter::New("Background Image Array Name", "BackgroundImageArrayName", FilterParameterWidgetType::StringWidget, getBackgroundImageArrayName(), FilterParameter::CreatedArray, ""));
-  parameters.push_back(FilterParameter::New("Subtract Background from Current Images", "SubtractBackground", FilterParameterWidgetType::BooleanWidget, getSubtractBackground(), FilterParameter::Parameter));
-  parameters.push_back(FilterParameter::New("Divide Background from Current Images", "DivideBackground", FilterParameterWidgetType::BooleanWidget, getDivideBackground(), FilterParameter::Parameter));
+  //    parameters.push_back(StringFilterParameter::New("Volume Data Container", "VolumeDataContainerName", getVolumeDataContainerName(), FilterParameter::Uncategorized));
+  parameters.push_back(StringFilterParameter::New("Background Attribute Matrix", "BackgroundAttributeMatrixName", getBackgroundAttributeMatrixName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Background Image Array Name", "BackgroundImageArrayName", getBackgroundImageArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(BooleanFilterParameter::New("Subtract Background from Current Images", "SubtractBackground", getSubtractBackground(), FilterParameter::Parameter));
+  parameters.push_back(BooleanFilterParameter::New("Divide Background from Current Images", "DivideBackground", getDivideBackground(), FilterParameter::Parameter));
 
   setFilterParameters(parameters);
 }

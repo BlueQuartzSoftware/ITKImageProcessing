@@ -20,8 +20,12 @@
 #include "DREAM3DLib/Common/IFilterFactory.hpp"
 #include "DREAM3DLib/DataArrays/StringDataArray.hpp"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+
+#include "DREAM3DLib/FilterParameters/InputFileFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/FloatVec3FilterParameter.h"
+#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
+
 #include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
 
 #include "ZeissImport/ZeissImportConstants.h"
@@ -100,13 +104,13 @@ DREAM3D_PIMPL_PROPERTY_DEF(ZeissImportFilter, ZeissTagsXmlSection::Pointer, Root
 void ZeissImportFilter::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FileSystemFilterParameter::New("Input File", "InputFile", FilterParameterWidgetType::InputFileWidget, getInputFile(), FilterParameter::Parameter, "", "*.xml"));
+  parameters.push_back(InputFileFilterParameter::New("Input File", "InputFile", getInputFile(), FilterParameter::Parameter, "*.xml"));
   QStringList linkedProps("ColorWeights");
   parameters.push_back(LinkedBooleanFilterParameter::New("Convert To GrayScale", "ConvertToGrayScale", getConvertToGrayScale(), linkedProps, FilterParameter::Parameter));
-  parameters.push_back(FilterParameter::New("Color Weighting", "ColorWeights", FilterParameterWidgetType::FloatVec3Widget, getColorWeights(), FilterParameter::Parameter));
+  parameters.push_back(FloatVec3FilterParameter::New("Color Weighting", "ColorWeights", getColorWeights(), FilterParameter::Parameter));
 
-  parameters.push_back(FilterParameter::New("DataContainer Name", "DataContainerName", FilterParameterWidgetType::StringWidget, getDataContainerName(), FilterParameter::CreatedArray));
-  parameters.push_back(FilterParameter::New("Attribute Matrix Name", "ImageAttributeMatrixName", FilterParameterWidgetType::StringWidget, getImageAttributeMatrixName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("DataContainer Name", "DataContainerName", getDataContainerName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Attribute Matrix Name", "ImageAttributeMatrixName", getImageAttributeMatrixName(), FilterParameter::CreatedArray));
 
   setFilterParameters(parameters);
 }
