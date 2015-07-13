@@ -66,7 +66,7 @@ void RemoveTestFiles()
 int TestFilterAvailability()
 {
   // Now instantiate the PhWriter Filter from the FilterManager
-  QString filtName = "ReadImage";
+  QString filtName = "ItkReadImage";
   FilterManager* fm = FilterManager::Instance();
   IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
   if (NULL == filterFactory.get() )

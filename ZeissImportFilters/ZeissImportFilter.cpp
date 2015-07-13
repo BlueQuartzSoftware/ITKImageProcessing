@@ -170,7 +170,7 @@ void ZeissImportFilter::dataCheck()
   }
 
 
-  QString filtName = "ReadImage";
+  QString filtName = "ItkReadImage";
   FilterManager* fm = FilterManager::Instance();
   IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
   if (NULL != filterFactory.get() )
@@ -180,7 +180,7 @@ void ZeissImportFilter::dataCheck()
     AbstractFilter::Pointer filter = filterFactory->create();
     if(NULL == filter.get())
     {
-      ss = QObject::tr("The 'ReadImage' filter is not Available, did the ImageProcessing Plugin Load.");
+      ss = QObject::tr("The 'ItkReadImage' filter is not Available, did the ImageProcessing Plugin Load.");
       setErrorCondition(-391);
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
 
