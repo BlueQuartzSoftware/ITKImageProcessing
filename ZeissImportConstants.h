@@ -14,7 +14,7 @@
 namespace ZeissImportConstants
 {
   const QString ZeissImportPluginFile("ZeissImportPlugin");
-  const QString ZeissImportPluginDisplayName("ZeissImportPlugin");
+  const QString ZeissImportPluginDisplayName("ZeissImport");
   const QString ZeissImportBaseName("ZeissImportPlugin");
 
   namespace FilterGroups
