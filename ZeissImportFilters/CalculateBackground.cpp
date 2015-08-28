@@ -74,7 +74,7 @@ void CalculateBackground::setupFilterParameters()
   FilterParameterVector parameters;
   //parameters.push_back(DataBundleSelectionFilterParameter::New("DataContainerBundle Name", "DataContainerBundleName", getDataContainerBundleName(), FilterParameter::Uncategorized));
   {
-    AttributeMatrixSelectionFilterParameter::DataStructureRequirements req;
+    AttributeMatrixSelectionFilterParameter::RequirementType req;
     parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Input AttributeMatrix Name", "AttributeMatrixName", getAttributeMatrixName(), FilterParameter::RequiredArray, req));
   }
   parameters.push_back(IntFilterParameter::New("Lowest allowed Image value (Image Value)", "lowThresh", getlowThresh(), FilterParameter::Parameter));
