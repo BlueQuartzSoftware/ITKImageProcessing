@@ -16,17 +16,17 @@
 #include <QtCore/QVector>
 #include <QtCore/QTextStream>
 
-#include "DREAM3DLib/Common/FilterManager.h"
-#include "DREAM3DLib/Common/IFilterFactory.hpp"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/Common/FilterManager.h"
+#include "SIMPLib/Common/IFilterFactory.hpp"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "DREAM3DLib/FilterParameters/DataBundleSelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/IntFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/BooleanFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataBundleSelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/IntFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 
 
 
@@ -113,16 +113,16 @@ void CalculateBackground::readFilterParameters(AbstractFilterParametersReader* r
 int CalculateBackground::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(AttributeMatrixName)
-  //    DREAM3D_FILTER_WRITE_PARAMETER(VolumeDataContainerName)
-  DREAM3D_FILTER_WRITE_PARAMETER(BackgroundAttributeMatrixName)
-  DREAM3D_FILTER_WRITE_PARAMETER(BackgroundImageArrayName)
-  //    DREAM3D_FILTER_WRITE_PARAMETER(DataContainerBundleName)
-  DREAM3D_FILTER_WRITE_PARAMETER(lowThresh)
-  DREAM3D_FILTER_WRITE_PARAMETER(highThresh)
-  DREAM3D_FILTER_WRITE_PARAMETER(SubtractBackground)
-  DREAM3D_FILTER_WRITE_PARAMETER(DivideBackground)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(AttributeMatrixName)
+  //    SIMPL_FILTER_WRITE_PARAMETER(VolumeDataContainerName)
+  SIMPL_FILTER_WRITE_PARAMETER(BackgroundAttributeMatrixName)
+  SIMPL_FILTER_WRITE_PARAMETER(BackgroundImageArrayName)
+  //    SIMPL_FILTER_WRITE_PARAMETER(DataContainerBundleName)
+  SIMPL_FILTER_WRITE_PARAMETER(lowThresh)
+  SIMPL_FILTER_WRITE_PARAMETER(highThresh)
+  SIMPL_FILTER_WRITE_PARAMETER(SubtractBackground)
+  SIMPL_FILTER_WRITE_PARAMETER(DivideBackground)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -462,10 +462,10 @@ AbstractFilter::Pointer CalculateBackground::newFilterInstance(bool copyFilterPa
      * may need to copy each filter parameter explicitly plus any other instance variables that
      * are needed into the new instance. Here is some example code from ReadH5Ebsd
      */
-    //    DREAM3D_COPY_INSTANCEVAR(OutputFile)
-    //    DREAM3D_COPY_INSTANCEVAR(ZStartIndex)
-    //    DREAM3D_COPY_INSTANCEVAR(ZEndIndex)
-    //    DREAM3D_COPY_INSTANCEVAR(ZResolution)
+    //    SIMPL_COPY_INSTANCEVAR(OutputFile)
+    //    SIMPL_COPY_INSTANCEVAR(ZStartIndex)
+    //    SIMPL_COPY_INSTANCEVAR(ZEndIndex)
+    //    SIMPL_COPY_INSTANCEVAR(ZResolution)
   }
   return filter;
 }

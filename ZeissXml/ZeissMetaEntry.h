@@ -11,9 +11,9 @@
 #ifndef ZEISSMETAENTRY_HPP_
 #define ZEISSMETAENTRY_HPP_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/DataArrays/IDataArray.h"
 
 #include "ZeissImport/ZeissImportConstants.h"
 
@@ -54,12 +54,12 @@ int readHDF5Attribute(hid_t fileId, const QString &datasetPath);\
 class AbstractZeissMetaData
 {
   public:
-    DREAM3D_SHARED_POINTERS(AbstractZeissMetaData)
-    DREAM3D_TYPE_MACRO(AbstractZeissMetaData)
+    SIMPL_SHARED_POINTERS(AbstractZeissMetaData)
+    SIMPL_TYPE_MACRO(AbstractZeissMetaData)
 
     virtual ~AbstractZeissMetaData() {}
 
-    DREAM3D_INSTANCE_PROPERTY(int32_t, ZeissIdTag)
+    SIMPL_INSTANCE_PROPERTY(int32_t, ZeissIdTag)
 
     virtual bool setValue(const QString &value) = 0;
 #ifdef ZEISS_HDF_SUPPORT
@@ -85,9 +85,9 @@ class AbstractZeissMetaData
 class Int32ZeissMetaEntry : public AbstractZeissMetaData
 {
   public:
-    DREAM3D_SHARED_POINTERS(Int32ZeissMetaEntry)
-    DREAM3D_TYPE_MACRO(Int32ZeissMetaEntry)
-    DREAM3D_STATIC_NEW_MACRO(Int32ZeissMetaEntry)
+    SIMPL_SHARED_POINTERS(Int32ZeissMetaEntry)
+    SIMPL_TYPE_MACRO(Int32ZeissMetaEntry)
+    SIMPL_STATIC_NEW_MACRO(Int32ZeissMetaEntry)
 
     STATIC_NEW_METHODS(AbstractZeissMetaData, Int32ZeissMetaEntry, int32_t)
 
@@ -131,9 +131,9 @@ class Int32ZeissMetaEntry : public AbstractZeissMetaData
 class Int64ZeissMetaEntry : public AbstractZeissMetaData
 {
   public:
-    DREAM3D_SHARED_POINTERS(Int64ZeissMetaEntry)
-    DREAM3D_TYPE_MACRO(Int64ZeissMetaEntry)
-    DREAM3D_STATIC_NEW_MACRO(Int64ZeissMetaEntry)
+    SIMPL_SHARED_POINTERS(Int64ZeissMetaEntry)
+    SIMPL_TYPE_MACRO(Int64ZeissMetaEntry)
+    SIMPL_STATIC_NEW_MACRO(Int64ZeissMetaEntry)
 
     STATIC_NEW_METHODS(AbstractZeissMetaData, Int64ZeissMetaEntry, qint64)
 
@@ -171,9 +171,9 @@ class Int64ZeissMetaEntry : public AbstractZeissMetaData
 class FloatZeissMetaEntry : public AbstractZeissMetaData
 {
   public:
-    DREAM3D_SHARED_POINTERS(FloatZeissMetaEntry)
-    DREAM3D_TYPE_MACRO(FloatZeissMetaEntry)
-    DREAM3D_STATIC_NEW_MACRO(FloatZeissMetaEntry)
+    SIMPL_SHARED_POINTERS(FloatZeissMetaEntry)
+    SIMPL_TYPE_MACRO(FloatZeissMetaEntry)
+    SIMPL_STATIC_NEW_MACRO(FloatZeissMetaEntry)
 
     STATIC_NEW_METHODS(AbstractZeissMetaData, FloatZeissMetaEntry, float)
 
@@ -229,9 +229,9 @@ class FloatZeissMetaEntry : public AbstractZeissMetaData
 class StringZeissMetaEntry : public AbstractZeissMetaData
 {
   public:
-    DREAM3D_SHARED_POINTERS(StringZeissMetaEntry)
-    DREAM3D_TYPE_MACRO(StringZeissMetaEntry)
-    DREAM3D_STATIC_NEW_MACRO(StringZeissMetaEntry)
+    SIMPL_SHARED_POINTERS(StringZeissMetaEntry)
+    SIMPL_TYPE_MACRO(StringZeissMetaEntry)
+    SIMPL_STATIC_NEW_MACRO(StringZeissMetaEntry)
 
     static AbstractZeissMetaData::Pointer New(int32_t idTag, const QString &value) {
       AbstractZeissMetaData::Pointer ptr (new StringZeissMetaEntry(idTag));

@@ -14,8 +14,8 @@
 
 #include "ZeissImport/ZeissXml/ZeissMetaFactory.h"
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 #include <map>
 
@@ -36,7 +36,7 @@ typedef QMap<int, ZeissMetaFactory::Pointer> ZeissFactoryMap;
 class ZeissTagMapping
 {
   public:
-    DREAM3D_SHARED_POINTERS(ZeissTagMapping)
+    SIMPL_SHARED_POINTERS(ZeissTagMapping)
 
     virtual ~ZeissTagMapping();
 

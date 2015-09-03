@@ -40,8 +40,8 @@
 #include <sstream>
 #include <vector>
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 #include "ZeissTagsXmlSection.h"
 
@@ -57,8 +57,8 @@ class ZeissXMLReader : public ExpatEvtHandler
 {
 public:
 
-  DREAM3D_SHARED_POINTERS(ZeissXMLReader)
-  DREAM3D_TYPE_MACRO(ZeissXMLReader)
+  SIMPL_SHARED_POINTERS(ZeissXMLReader)
+  SIMPL_TYPE_MACRO(ZeissXMLReader)
 
   /**
   * @brief Creates a new Object which is wrapped in a shared_ptr
@@ -121,9 +121,9 @@ public:
    */
   void printStats(std::ostream &out);
 
-  DREAM3D_INSTANCE_PROPERTY(ZeissTagsXmlSection::Pointer, TagsSection);
+  SIMPL_INSTANCE_PROPERTY(ZeissTagsXmlSection::Pointer, TagsSection);
 
-  DREAM3D_INSTANCE_PROPERTY(std::vector<ZeissTagsXmlSection::Pointer>, ImageTags);
+  SIMPL_INSTANCE_PROPERTY(std::vector<ZeissTagsXmlSection::Pointer>, ImageTags);
 
 protected:
   ZeissXMLReader(const std::string &xmlFile);

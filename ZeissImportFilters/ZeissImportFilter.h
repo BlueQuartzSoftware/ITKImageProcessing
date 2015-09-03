@@ -10,11 +10,11 @@
 #include <QtCore/QDateTime>
 #include <QtXml/QDomDocument>
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/DataArrays/StringDataArray.hpp"
-#include "DREAM3DLib/FilterParameters/FloatVec3FilterParameter.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/DataArrays/StringDataArray.hpp"
+#include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 
 #include "ZeissImport/ZeissXml/ZeissTagsXmlSection.h"
 
@@ -34,31 +34,31 @@ class ZeissImportFilter : public AbstractFilter
     Q_DECLARE_PRIVATE(ZeissImportFilter)
 
   public:
-    DREAM3D_SHARED_POINTERS(ZeissImportFilter)
-    DREAM3D_STATIC_NEW_MACRO(ZeissImportFilter)
-    DREAM3D_TYPE_MACRO_SUPER(ZeissImportFilter, AbstractFilter)
+    SIMPL_SHARED_POINTERS(ZeissImportFilter)
+    SIMPL_STATIC_NEW_MACRO(ZeissImportFilter)
+    SIMPL_TYPE_MACRO_SUPER(ZeissImportFilter, AbstractFilter)
 
     virtual ~ZeissImportFilter();
 
-    DREAM3D_FILTER_PARAMETER(QString, InputFile)
+    SIMPL_FILTER_PARAMETER(QString, InputFile)
     Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
-    DREAM3D_FILTER_PARAMETER(QString, DataContainerName)
+    SIMPL_FILTER_PARAMETER(QString, DataContainerName)
     Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
 
-    DREAM3D_FILTER_PARAMETER(QString, ImageAttributeMatrixName)
+    SIMPL_FILTER_PARAMETER(QString, ImageAttributeMatrixName)
     Q_PROPERTY(QString ImageAttributeMatrixName READ getImageAttributeMatrixName WRITE setImageAttributeMatrixName)
 
-    DREAM3D_FILTER_PARAMETER(QString, ImageDataArrayPrefix)
+    SIMPL_FILTER_PARAMETER(QString, ImageDataArrayPrefix)
     Q_PROPERTY(QString ImageDataArrayPrefix READ getImageDataArrayPrefix WRITE setImageDataArrayPrefix)
 
-    DREAM3D_FILTER_PARAMETER(bool, ConvertToGrayScale)
+    SIMPL_FILTER_PARAMETER(bool, ConvertToGrayScale)
     Q_PROPERTY(bool ConvertToGrayScale READ getConvertToGrayScale WRITE setConvertToGrayScale)
 
-    DREAM3D_FILTER_PARAMETER(FloatVec3_t, ColorWeights)
+    SIMPL_FILTER_PARAMETER(FloatVec3_t, ColorWeights)
     Q_PROPERTY(FloatVec3_t ColorWeights READ getColorWeights WRITE setColorWeights)
 
-    DREAM3D_FILTER_PARAMETER(bool, FileWasRead)
+    SIMPL_FILTER_PARAMETER(bool, FileWasRead)
     Q_PROPERTY(bool FileWasRead READ getFileWasRead)
 
     /**
@@ -126,10 +126,10 @@ class ZeissImportFilter : public AbstractFilter
      */
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
 
-    DREAM3D_PIMPL_PROPERTY_DECL(QDomElement, Root)
-    DREAM3D_PIMPL_PROPERTY_DECL(ZeissTagsXmlSection::Pointer, RootTagsSection)
-    DREAM3D_PIMPL_PROPERTY_DECL(QString, InputFile_Cache)
-    DREAM3D_PIMPL_PROPERTY_DECL(QDateTime, LastRead)
+    SIMPL_PIMPL_PROPERTY_DECL(QDomElement, Root)
+    SIMPL_PIMPL_PROPERTY_DECL(ZeissTagsXmlSection::Pointer, RootTagsSection)
+    SIMPL_PIMPL_PROPERTY_DECL(QString, InputFile_Cache)
+    SIMPL_PIMPL_PROPERTY_DECL(QDateTime, LastRead)
 
   signals:
     /**

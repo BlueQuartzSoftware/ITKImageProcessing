@@ -37,8 +37,8 @@
 
 #include <QtCore/QMap>
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 #include "ZeissImport/ZeissImportConstants.h"
 #include "ZeissImport/ZeissXml/ZeissMetaEntry.h"
@@ -49,15 +49,15 @@
 class ZeissTagsXmlSection
 {
   public:
-    DREAM3D_SHARED_POINTERS(ZeissTagsXmlSection)
-    DREAM3D_TYPE_MACRO(ZeissTagsXmlSection)
-    DREAM3D_STATIC_NEW_MACRO(ZeissTagsXmlSection)
+    SIMPL_SHARED_POINTERS(ZeissTagsXmlSection)
+    SIMPL_TYPE_MACRO(ZeissTagsXmlSection)
+    SIMPL_STATIC_NEW_MACRO(ZeissTagsXmlSection)
     typedef QMap<int, AbstractZeissMetaData::Pointer>  MetaDataType;
     //typedef boost::shared_ptr<MetaDataType>            MetaDataPtrType;
 
     virtual ~ZeissTagsXmlSection();
 
-    //DREAM3D_INSTANCE_PROPERTY(MetaDataType, MetaDataMap)
+    //SIMPL_INSTANCE_PROPERTY(MetaDataType, MetaDataMap)
     MetaDataType& getMetaDataMap();
 
     void addMetaDataEntry(AbstractZeissMetaData::Pointer entry);

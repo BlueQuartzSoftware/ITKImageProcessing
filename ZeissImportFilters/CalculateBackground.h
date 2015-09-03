@@ -9,9 +9,9 @@
 #include <QtCore/QString>
 #include <QtXml/QDomDocument>
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/Common/AbstractFilter.h"
 
 #include "ZeissImport/ZeissXml/ZeissTagsXmlSection.h"
 
@@ -27,46 +27,46 @@ class CalculateBackground : public AbstractFilter
   Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
 
   public:
-    DREAM3D_SHARED_POINTERS(CalculateBackground)
-    DREAM3D_STATIC_NEW_MACRO(CalculateBackground)
-    DREAM3D_TYPE_MACRO_SUPER(CalculateBackground, AbstractFilter)
+    SIMPL_SHARED_POINTERS(CalculateBackground)
+    SIMPL_STATIC_NEW_MACRO(CalculateBackground)
+    SIMPL_TYPE_MACRO_SUPER(CalculateBackground, AbstractFilter)
 
     virtual ~CalculateBackground();
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
+    SIMPL_INSTANCE_STRING_PROPERTY(DataContainerName)
 
 
-    DREAM3D_FILTER_PARAMETER(QString, VolumeDataContainerName)
+    SIMPL_FILTER_PARAMETER(QString, VolumeDataContainerName)
     Q_PROPERTY(QString VolumeDataContainerName READ getVolumeDataContainerName WRITE setVolumeDataContainerName)
 
-    DREAM3D_FILTER_PARAMETER(QString, BackgroundAttributeMatrixName)
+    SIMPL_FILTER_PARAMETER(QString, BackgroundAttributeMatrixName)
     Q_PROPERTY(QString BackgroundAttributeMatrixName READ getBackgroundAttributeMatrixName WRITE setBackgroundAttributeMatrixName)
 
-    DREAM3D_FILTER_PARAMETER(QString, CellAttributeMatrixName)
+    SIMPL_FILTER_PARAMETER(QString, CellAttributeMatrixName)
     Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, ImageDataArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, ImageDataArrayPath)
     Q_PROPERTY(DataArrayPath ImageDataArrayPath READ getImageDataArrayPath WRITE setImageDataArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, AttributeMatrixName)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, AttributeMatrixName)
     Q_PROPERTY(DataArrayPath AttributeMatrixName READ getAttributeMatrixName WRITE setAttributeMatrixName)
 
-    DREAM3D_FILTER_PARAMETER(QString, DataContainerBundleName)
+    SIMPL_FILTER_PARAMETER(QString, DataContainerBundleName)
     Q_PROPERTY(QString DataContainerBundleName READ getDataContainerBundleName WRITE setDataContainerBundleName)
 
-    DREAM3D_FILTER_PARAMETER(QString, BackgroundImageArrayName)
+    SIMPL_FILTER_PARAMETER(QString, BackgroundImageArrayName)
     Q_PROPERTY(QString BackgroundImageArrayName READ getBackgroundImageArrayName WRITE setBackgroundImageArrayName)
 
-    DREAM3D_FILTER_PARAMETER(uint, lowThresh)
+    SIMPL_FILTER_PARAMETER(uint, lowThresh)
     Q_PROPERTY(uint lowThresh READ getlowThresh WRITE setlowThresh)
 
-    DREAM3D_FILTER_PARAMETER(uint, highThresh)
+    SIMPL_FILTER_PARAMETER(uint, highThresh)
     Q_PROPERTY(uint highThresh READ gethighThresh WRITE sethighThresh)
 
-    DREAM3D_FILTER_PARAMETER(bool, SubtractBackground)
+    SIMPL_FILTER_PARAMETER(bool, SubtractBackground)
     Q_PROPERTY(int SubtractBackground READ getSubtractBackground WRITE setSubtractBackground)
 
-    DREAM3D_FILTER_PARAMETER(bool, DivideBackground)
+    SIMPL_FILTER_PARAMETER(bool, DivideBackground)
     Q_PROPERTY(int DivideBackground READ getDivideBackground WRITE setDivideBackground)
 
     /**

@@ -10,9 +10,9 @@
 #include <QtCore/QDir>
 #include <QtCore/QStringList>
 
-#include "DREAM3DLib/Common/FilterManager.h"
-#include "DREAM3DLib/Common/IFilterFactory.hpp"
-#include "DREAM3DLib/Common/FilterFactory.hpp"
+#include "SIMPLib/Common/FilterManager.h"
+#include "SIMPLib/Common/IFilterFactory.hpp"
+#include "SIMPLib/Common/FilterFactory.hpp"
 
 #include "ZeissImport/ZeissImportConstants.h"
 #include "ZeissImport/ZeissImportVersion.h"

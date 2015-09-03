@@ -12,8 +12,8 @@
 #ifndef ZEISSDIRECTORYPATTERNS_H_
 #define ZEISSDIRECTORYPATTERNS_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 #include <string>
 
@@ -33,16 +33,16 @@ namespace Zeiss {
 class ZeissDirectoryPatterns
 {
   public:
-    DREAM3D_SHARED_POINTERS(ZeissDirectoryPatterns)
-    DREAM3D_TYPE_MACRO(ZeissDirectoryPatterns)
-    DREAM3D_STATIC_NEW_MACRO(ZeissDirectoryPatterns)
+    SIMPL_SHARED_POINTERS(ZeissDirectoryPatterns)
+    SIMPL_TYPE_MACRO(ZeissDirectoryPatterns)
+    SIMPL_STATIC_NEW_MACRO(ZeissDirectoryPatterns)
 
 
     virtual ~ZeissDirectoryPatterns();
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(Prefix)
-    DREAM3D_INSTANCE_STRING_PROPERTY(Suffix)
-    DREAM3D_INSTANCE_STRING_PROPERTY(Extension)
+    SIMPL_INSTANCE_STRING_PROPERTY(Prefix)
+    SIMPL_INSTANCE_STRING_PROPERTY(Suffix)
+    SIMPL_INSTANCE_STRING_PROPERTY(Extension)
 
     std::string generateZeissDirectory(int slice);
     std::string generateZeissDirectory(const std::string &slice);

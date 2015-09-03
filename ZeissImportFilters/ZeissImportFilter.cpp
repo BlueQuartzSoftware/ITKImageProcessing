@@ -16,17 +16,17 @@
 #include <QtCore/QVector>
 #include <QtCore/QTextStream>
 
-#include "DREAM3DLib/Common/FilterManager.h"
-#include "DREAM3DLib/Common/IFilterFactory.hpp"
-#include "DREAM3DLib/DataArrays/StringDataArray.hpp"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/Common/FilterManager.h"
+#include "SIMPLib/Common/IFilterFactory.hpp"
+#include "SIMPLib/DataArrays/StringDataArray.hpp"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "DREAM3DLib/FilterParameters/InputFileFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/FloatVec3FilterParameter.h"
-#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
+#include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 
-#include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 
 #include "ZeissImport/ZeissImportConstants.h"
 #include "ZeissImport/ZeissXml/ZeissTagMapping.h"
@@ -92,10 +92,10 @@ ZeissImportFilter::~ZeissImportFilter()
 {
 }
 
-DREAM3D_PIMPL_PROPERTY_DEF(ZeissImportFilter, QString, InputFile_Cache)
-DREAM3D_PIMPL_PROPERTY_DEF(ZeissImportFilter, QDateTime, LastRead)
-DREAM3D_PIMPL_PROPERTY_DEF(ZeissImportFilter, QDomElement, Root)
-DREAM3D_PIMPL_PROPERTY_DEF(ZeissImportFilter, ZeissTagsXmlSection::Pointer, RootTagsSection)
+SIMPL_PIMPL_PROPERTY_DEF(ZeissImportFilter, QString, InputFile_Cache)
+SIMPL_PIMPL_PROPERTY_DEF(ZeissImportFilter, QDateTime, LastRead)
+SIMPL_PIMPL_PROPERTY_DEF(ZeissImportFilter, QDomElement, Root)
+SIMPL_PIMPL_PROPERTY_DEF(ZeissImportFilter, ZeissTagsXmlSection::Pointer, RootTagsSection)
 
 
 // -----------------------------------------------------------------------------
@@ -136,13 +136,13 @@ void ZeissImportFilter::readFilterParameters(AbstractFilterParametersReader* rea
 int ZeissImportFilter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(InputFile)
-  DREAM3D_FILTER_WRITE_PARAMETER(DataContainerName)
-  DREAM3D_FILTER_WRITE_PARAMETER(ImageAttributeMatrixName)
-  DREAM3D_FILTER_WRITE_PARAMETER(ImageDataArrayPrefix)
-  DREAM3D_FILTER_WRITE_PARAMETER(ConvertToGrayScale)
-  DREAM3D_FILTER_WRITE_PARAMETER(ColorWeights)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(InputFile)
+  SIMPL_FILTER_WRITE_PARAMETER(DataContainerName)
+  SIMPL_FILTER_WRITE_PARAMETER(ImageAttributeMatrixName)
+  SIMPL_FILTER_WRITE_PARAMETER(ImageDataArrayPrefix)
+  SIMPL_FILTER_WRITE_PARAMETER(ConvertToGrayScale)
+  SIMPL_FILTER_WRITE_PARAMETER(ColorWeights)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -859,10 +859,10 @@ AbstractFilter::Pointer ZeissImportFilter::newFilterInstance(bool copyFilterPara
      * may need to copy each filter parameter explicitly plus any other instance variables that
      * are needed into the new instance. Here is some example code from ReadH5Ebsd
      */
-    //    DREAM3D_COPY_INSTANCEVAR(OutputFile)
-    //    DREAM3D_COPY_INSTANCEVAR(ZStartIndex)
-    //    DREAM3D_COPY_INSTANCEVAR(ZEndIndex)
-    //    DREAM3D_COPY_INSTANCEVAR(ZResolution)
+    //    SIMPL_COPY_INSTANCEVAR(OutputFile)
+    //    SIMPL_COPY_INSTANCEVAR(ZStartIndex)
+    //    SIMPL_COPY_INSTANCEVAR(ZEndIndex)
+    //    SIMPL_COPY_INSTANCEVAR(ZResolution)
   }
   return filter;
 }

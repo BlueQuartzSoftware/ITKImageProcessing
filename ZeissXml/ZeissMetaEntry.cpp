@@ -16,8 +16,8 @@
 #include "H5Support/H5Utilities.h"
 #endif
 
-#include "DREAM3DLib/DataArrays/DataArray.hpp"
-#include "DREAM3DLib/DataArrays/StringDataArray.hpp"
+#include "SIMPLib/DataArrays/DataArray.hpp"
+#include "SIMPLib/DataArrays/StringDataArray.hpp"
 
 #include "ZeissImport/ZeissXml/ZeissTagMapping.h"
 

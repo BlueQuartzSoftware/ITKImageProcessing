@@ -13,8 +13,8 @@
 
 #include "ZeissImport/ZeissXml/ZeissMetaEntry.h"
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 
 // -----------------------------------------------------------------------------
@@ -23,7 +23,7 @@
 class ZeissMetaFactory
 {
   public:
-    DREAM3D_SHARED_POINTERS(ZeissMetaFactory);
+    SIMPL_SHARED_POINTERS(ZeissMetaFactory);
 
     virtual ~ZeissMetaFactory() {}
 
@@ -42,8 +42,8 @@ class ZeissMetaFactory
 class Int32ZeissMetaFactory : public ZeissMetaFactory
 {
   public:
-    DREAM3D_SHARED_POINTERS(Int32ZeissMetaFactory);
-    DREAM3D_NEW_SUPERCLASS(Int32ZeissMetaFactory, ZeissMetaFactory);
+    SIMPL_SHARED_POINTERS(Int32ZeissMetaFactory);
+    SIMPL_NEW_SUPERCLASS(Int32ZeissMetaFactory, ZeissMetaFactory);
 
     AbstractZeissMetaData::Pointer createMetaEntry();
 
@@ -61,8 +61,8 @@ class Int32ZeissMetaFactory : public ZeissMetaFactory
 class Int64ZeissMetaFactory : public ZeissMetaFactory
 {
   public:
-    DREAM3D_SHARED_POINTERS(Int64ZeissMetaFactory);
-    DREAM3D_NEW_SUPERCLASS(Int64ZeissMetaFactory, ZeissMetaFactory);
+    SIMPL_SHARED_POINTERS(Int64ZeissMetaFactory);
+    SIMPL_NEW_SUPERCLASS(Int64ZeissMetaFactory, ZeissMetaFactory);
 
     AbstractZeissMetaData::Pointer createMetaEntry();
 
@@ -82,8 +82,8 @@ class Int64ZeissMetaFactory : public ZeissMetaFactory
 class FloatZeissMetaFactory : public ZeissMetaFactory
 {
   public:
-    DREAM3D_SHARED_POINTERS(FloatZeissMetaFactory);
-    DREAM3D_NEW_SUPERCLASS(FloatZeissMetaFactory, ZeissMetaFactory);
+    SIMPL_SHARED_POINTERS(FloatZeissMetaFactory);
+    SIMPL_NEW_SUPERCLASS(FloatZeissMetaFactory, ZeissMetaFactory);
 
     AbstractZeissMetaData::Pointer createMetaEntry();
 
@@ -101,8 +101,8 @@ class FloatZeissMetaFactory : public ZeissMetaFactory
 class StringZeissMetaFactory : public ZeissMetaFactory
 {
   public:
-    DREAM3D_SHARED_POINTERS(StringZeissMetaFactory);
-    DREAM3D_NEW_SUPERCLASS(StringZeissMetaFactory, ZeissMetaFactory);
+    SIMPL_SHARED_POINTERS(StringZeissMetaFactory);
+    SIMPL_NEW_SUPERCLASS(StringZeissMetaFactory, ZeissMetaFactory);
 
     AbstractZeissMetaData::Pointer createMetaEntry();
 
