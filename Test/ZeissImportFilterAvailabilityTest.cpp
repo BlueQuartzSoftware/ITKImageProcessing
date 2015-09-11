@@ -48,6 +48,7 @@
 #include "SIMPLib/Utilities/QMetaObjectUtilities.h"
 
 #include "ZeissImportTestFileLocations.h"
+#include "ZeissImport/ZeissImportConstants.h"
 
 
 // -----------------------------------------------------------------------------
@@ -63,10 +64,10 @@ void RemoveTestFiles()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TestFilterAvailability()
+void TestFilterAvailability()
 {
   // Now instantiate the PhWriter Filter from the FilterManager
-  QString filtName = "ItkReadImage";
+  QString filtName = ZeissImportConstants::ImageProcessingFilters::k_ReadImageFilterClassName;
   FilterManager* fm = FilterManager::Instance();
   IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
   if (NULL == filterFactory.get() )
@@ -76,7 +77,17 @@ int TestFilterAvailability()
     DREAM3D_TEST_THROW_EXCEPTION(ss.str())
   }
 
-  return 0;
+  filtName = ZeissImportConstants::ImageProcessingFilters::k_RgbToGrayFilterClassName;
+  fm = FilterManager::Instance();
+  filterFactory = fm->getFactoryForFilter(filtName);
+  if (NULL == filterFactory.get() )
+  {
+    std::stringstream ss;
+    ss << "The ZeissImport Plugin Requires the use of the " << filtName.toStdString() << " filter which is found in the ImageProcessing Plugin";
+    DREAM3D_TEST_THROW_EXCEPTION(ss.str())
+  }
+
+  return;
 }
 
 

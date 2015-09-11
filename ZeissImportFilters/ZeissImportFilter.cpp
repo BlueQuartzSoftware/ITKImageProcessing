@@ -33,6 +33,7 @@
 
 #define ZIF_PRINT_DBG_MSGS 0
 
+
 static const QString k_AttributeArrayNames("AttributeArrayNames");
 static const QString k_DataContaineNameDefaultName("Zeiss Axio Vision Montage");
 static const QString k_TileAttributeMatrixDefaultName("Tile AttributeMatrix");
@@ -170,7 +171,7 @@ void ZeissImportFilter::dataCheck()
   }
 
 
-  QString filtName = "ItkReadImage";
+  QString filtName = ZeissImportConstants::ImageProcessingFilters::k_ReadImageFilterClassName;
   FilterManager* fm = FilterManager::Instance();
   IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
   if (NULL != filterFactory.get() )
@@ -627,7 +628,7 @@ void ZeissImportFilter::importImage(const QString& imageName, const QString& pTa
   imagePath = fi.absoluteDir().path() + "/" + imagePath;
   //   std::string sPath = imagePath.toStdString();
 
-  QString filtName = "ReadImage";
+  QString filtName = ZeissImportConstants::ImageProcessingFilters::k_ReadImageFilterClassName;
   FilterManager* fm = FilterManager::Instance();
   IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
   if (NULL != filterFactory.get() )
@@ -687,7 +688,7 @@ void ZeissImportFilter::importImage(const QString& imageName, const QString& pTa
   }
   else
   {
-    QString ss = QObject::tr("Error trying to instantiate the 'ReadImage' filter which is typically included in the 'ImageProcessing' plugin.");
+    QString ss = QObject::tr("Error trying to instantiate the '%1' filter which is typically included in the 'ImageProcessing' plugin.").arg(ZeissImportConstants::ImageProcessingFilters::k_ReadImageFilterClassName);
     setErrorCondition(-70009);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
@@ -704,7 +705,7 @@ void ZeissImportFilter::convertToGrayScale(const QString& imageName, const QStri
   QFileInfo fi(imageName);
   QString dataArrayName = fi.completeBaseName() + "_" + pTag;
 
-  QString filtName = "RGBToGray";
+  QString filtName = ZeissImportConstants::ImageProcessingFilters::k_RgbToGrayFilterClassName;
   FilterManager* fm = FilterManager::Instance();
   IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
   if (NULL != filterFactory.get() )
@@ -776,7 +777,7 @@ void ZeissImportFilter::convertToGrayScale(const QString& imageName, const QStri
   }
   else
   {
-    QString ss = QObject::tr("Error trying to instantiate the 'ReadImage' filter which is typically included in the 'ImageProcessing' plugin.");
+    QString ss = QObject::tr("Error trying to instantiate the '%1' filter which is typically included in the 'ImageProcessing' plugin.").arg(ZeissImportConstants::ImageProcessingFilters::k_RgbToGrayFilterClassName);
     setErrorCondition(-70009);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
