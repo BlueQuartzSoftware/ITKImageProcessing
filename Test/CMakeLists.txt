@@ -8,8 +8,9 @@
 #--
 #--////////////////////////////////////////////////////////////////////////////
 
-project(ZeissImportTest)
-
+# project(ZeissImportTest)
+set(${PLUGIN_NAME}Test_SOURCE_DIR ${${PLUGIN_NAME}_SOURCE_DIR}/Test)
+set(${PLUGIN_NAME}Test_BINARY_DIR ${${PLUGIN_NAME}_BINARY_DIR}/Test)
 include(${DREAM3DProj_SOURCE_DIR}/Test/DREAM3DTestFunctions.cmake)
 
 
@@ -17,19 +18,20 @@ include_directories(${${PROJECT_NAME}_SOURCE_DIR})
 include_directories(${${PROJECT_NAME}_BINARY_DIR})
 
 
-set(TEST_TEMP_DIR ${${PROJECT_NAME}_BINARY_DIR}/Temp)
+set(TEST_TEMP_DIR ${${PLUGIN_NAME}Test_BINARY_DIR}/Temp)
 # Make sure the directory is created during CMake time
 file(MAKE_DIRECTORY ${TEST_TEMP_DIR})
 
 
-configure_file(${${PROJECT_NAME}_SOURCE_DIR}/TestFileLocations.h.in
-               ${${PROJECT_NAME}_BINARY_DIR}/${PROJECT_NAME}FileLocations.h @ONLY IMMEDIATE)
+configure_file(${${PLUGIN_NAME}_SOURCE_DIR}/Test/TestFileLocations.h.in
+               ${${PLUGIN_NAME}_BINARY_DIR}/Test/${PLUGIN_NAME}TestFileLocations.h @ONLY IMMEDIATE)
+
 
 set(${PROJECT_NAME}_Link_Libs Qt5::Core H5Support SIMPLib Qt5::Gui Qt5::Widgets QtSupportLib ${ITK_LIBRARIES} )
 
 
 AddDREAM3DUnitTest(TESTNAME ZeissImportFilterAvailabilityTest
-                  SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/ZeissImportFilterAvailabilityTest.cpp
+                  SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/Test/ZeissImportFilterAvailabilityTest.cpp
                   FOLDER "${PLUGIN_NAME}Plugin/Test"
                   LINK_LIBRARIES ${${PROJECT_NAME}_Link_Libs})
 
@@ -37,7 +39,7 @@ AddDREAM3DUnitTest(TESTNAME ZeissImportFilterAvailabilityTest
 # another plugin would not have the same name as your test. Possible prefix the name of the
 # test and/or the name of the plugin
 # AddDREAM3DUnitTest(TESTNAME SomeTest
-#                   SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/SomeTest.cpp
+#                   SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/Test/SomeTest.cpp
 #                   LINK_LIBRARIES ${${PROJECT_NAME}_Link_Libs})
 
 
