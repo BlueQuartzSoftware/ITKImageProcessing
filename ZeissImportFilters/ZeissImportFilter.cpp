@@ -27,6 +27,7 @@
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "ZeissImport/ZeissImportConstants.h"
 #include "ZeissImport/ZeissXml/ZeissTagMapping.h"
