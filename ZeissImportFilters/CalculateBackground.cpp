@@ -165,13 +165,13 @@ void CalculateBackground::dataCheck()
     m_ImageDataArrayPath.update(getAttributeMatrixName().getDataContainerName(), getAttributeMatrixName().getAttributeMatrixName(), names[i]);
     iDataArray = getDataContainerArray()->getPrereqIDataArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, m_ImageDataArrayPath);
 
-    imagePtr = boost::dynamic_pointer_cast<DataArray<uint8_t> >(iDataArray);
+    imagePtr = std::dynamic_pointer_cast<DataArray<uint8_t> >(iDataArray);
     //        QVector<IDataArray::Pointer> pointerList;
 
     //        pointerList[i] = iDataArray;
 
 
-    //        imagePtr = boost::dynamic_pointer_cast<DataArray<uint8_t> >(pointerList[i]);
+    //        imagePtr = std::dynamic_pointer_cast<DataArray<uint8_t> >(pointerList[i]);
 
 
     if(NULL == imagePtr)
@@ -292,7 +292,7 @@ void CalculateBackground::execute()
   {
     m_ImageDataArrayPath.update(getDataContainerName(), getAttributeMatrixName().getAttributeMatrixName(), names[i]);
     iDataArray = getDataContainerArray()->getPrereqIDataArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, m_ImageDataArrayPath);
-    imagePtr = boost::dynamic_pointer_cast<DataArray<uint8_t> >(iDataArray);
+    imagePtr = std::dynamic_pointer_cast<DataArray<uint8_t> >(iDataArray);
     if(NULL != imagePtr.get())
     {
       //            int64_t totalPoints = imagePtr->getNumberOfTuples();
@@ -366,7 +366,7 @@ void CalculateBackground::execute()
     {
       m_ImageDataArrayPath.update(getDataContainerName(), getAttributeMatrixName().getAttributeMatrixName(), names[i]);
       iDataArray = getDataContainerArray()->getPrereqIDataArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, m_ImageDataArrayPath);
-      imagePtr = boost::dynamic_pointer_cast<DataArray<uint8_t> >(iDataArray);
+      imagePtr = std::dynamic_pointer_cast<DataArray<uint8_t> >(iDataArray);
       if(NULL != imagePtr.get())
       {
         image = imagePtr->getPointer(0);
@@ -393,7 +393,7 @@ void CalculateBackground::execute()
     {
       m_ImageDataArrayPath.update(getDataContainerName(), getAttributeMatrixName().getAttributeMatrixName(), names[i]);
       iDataArray = getDataContainerArray()->getPrereqIDataArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, m_ImageDataArrayPath);
-      imagePtr = boost::dynamic_pointer_cast<DataArray<uint8_t> >(iDataArray);
+      imagePtr = std::dynamic_pointer_cast<DataArray<uint8_t> >(iDataArray);
       if(NULL != imagePtr.get())
       {
         image = imagePtr->getPointer(0);

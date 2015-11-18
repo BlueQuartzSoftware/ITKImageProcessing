@@ -288,7 +288,7 @@ namespace ZeissMetaEntry {
   typename DestMetaData::Pointer convert(AbstractZeissMetaData::Pointer src)
   {
 
-    StringZeissMetaEntry::Pointer srcPtr = boost::dynamic_pointer_cast<StringZeissMetaEntry>(src);
+    StringZeissMetaEntry::Pointer srcPtr = std::dynamic_pointer_cast<StringZeissMetaEntry>(src);
     Q_ASSERT_X(srcPtr.get() != NULL, "Could not Cast to StringZeissMetaEntry", "");
 
 

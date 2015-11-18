@@ -433,7 +433,7 @@ void ZeissImportFilter::parseImages(QDomElement& root, ZeissTagsXmlSection::Poin
   qint32 imageCount = imageCountPtr->getValue();
 
   ptr = rootTagsSection->getEntry(Zeiss::MetaXML::FilenameId);
-  StringZeissMetaEntry::Pointer imageNamePtr = boost::dynamic_pointer_cast<StringZeissMetaEntry>(ptr);
+  StringZeissMetaEntry::Pointer imageNamePtr = std::dynamic_pointer_cast<StringZeissMetaEntry>(ptr);
   QString imageName = imageNamePtr->getValue();
 
   int zeroPadding = 0;
@@ -580,12 +580,12 @@ void ZeissImportFilter::addMetaData(AttributeMatrix::Pointer metaAm, ZeissTagsXm
   while(iter.hasNext())
   {
     iter.next();
-    StringZeissMetaEntry::Pointer zStrVal = boost::dynamic_pointer_cast<StringZeissMetaEntry>(iter.value());
+    StringZeissMetaEntry::Pointer zStrVal = std::dynamic_pointer_cast<StringZeissMetaEntry>(iter.value());
 
     //qDebug() << iter.key() << "  " << zStrVal->getValue();
     QString tagName = tagMap->nameForId(iter.key());
     IDataArray::Pointer iDataArray = metaAm->getAttributeArray(tagName);
-    StringDataArray::Pointer strArray = boost::dynamic_pointer_cast<StringDataArray>(iDataArray);
+    StringDataArray::Pointer strArray = std::dynamic_pointer_cast<StringDataArray>(iDataArray);
     strArray->setValue(index, zStrVal->getValue());
     //IDataArray::Pointer dataArray = iter.value()->createDataArray(!getInPreflight());
     //metaData->addAttributeArray(dataArray->getName(), dataArray);
@@ -601,14 +601,14 @@ void ZeissImportFilter::addRootMetaData(AttributeMatrix::Pointer metaAm, ZeissTa
   while(iter.hasNext())
   {
     iter.next();
-    StringZeissMetaEntry::Pointer zStrVal = boost::dynamic_pointer_cast<StringZeissMetaEntry>(iter.value());
+    StringZeissMetaEntry::Pointer zStrVal = std::dynamic_pointer_cast<StringZeissMetaEntry>(iter.value());
 
     //qDebug() << iter.key() << "  " << zStrVal->getValue();
     QString tagName = tagMap->nameForId(iter.key());
     if (tagName == "ScaleFactorForX" || tagName == "ScaleFactorForY")
     {
       IDataArray::Pointer iDataArray = metaAm->getAttributeArray(tagName);
-      StringDataArray::Pointer strArray = boost::dynamic_pointer_cast<StringDataArray>(iDataArray);
+      StringDataArray::Pointer strArray = std::dynamic_pointer_cast<StringDataArray>(iDataArray);
       strArray->setValue(index, zStrVal->getValue());
       //IDataArray::Pointer dataArray = iter.value()->createDataArray(!getInPreflight());
       //metaData->addAttributeArray(dataArray->getName(), dataArray);

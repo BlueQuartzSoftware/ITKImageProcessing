@@ -53,7 +53,7 @@ class ZeissTagsXmlSection
     SIMPL_TYPE_MACRO(ZeissTagsXmlSection)
     SIMPL_STATIC_NEW_MACRO(ZeissTagsXmlSection)
     typedef QMap<int, AbstractZeissMetaData::Pointer>  MetaDataType;
-    //typedef boost::shared_ptr<MetaDataType>            MetaDataPtrType;
+    //typedef std::shared_ptr<MetaDataType>            MetaDataPtrType;
 
     virtual ~ZeissTagsXmlSection();
 
