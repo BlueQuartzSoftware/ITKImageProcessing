@@ -30,6 +30,7 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "ZeissImport/ZeissImportConstants.h"
+#include "ZeissImport/ZeissImportVersion.h"
 #include "ZeissImport/ZeissXml/ZeissTagMapping.h"
 
 #define ZIF_PRINT_DBG_MSGS 0
@@ -820,6 +821,25 @@ QVector<size_t> ZeissImportFilter::getImageDimensions(ZeissTagsXmlSection::Point
 const QString ZeissImportFilter::getCompiledLibraryName()
 {
   return ZeissImportConstants::ZeissImportBaseName;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ZeissImportFilter::getBrandingString()
+{
+  return "ZeissImport";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ZeissImportFilter::getFilterVersion()
+{
+  QString version;
+  QTextStream vStream(&version);
+  vStream <<  ZeissImport::Version::Major() << "." << ZeissImport::Version::Minor() << "." << ZeissImport::Version::Patch();
+  return version;
 }
 
 // -----------------------------------------------------------------------------

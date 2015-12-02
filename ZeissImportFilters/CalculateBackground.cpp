@@ -19,7 +19,6 @@
 #include "SIMPLib/Common/FilterManager.h"
 #include "SIMPLib/Common/IFilterFactory.hpp"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
-
 #include "SIMPLib/FilterParameters/DataBundleSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
@@ -31,7 +30,10 @@
 
 
 #include "ZeissImport/ZeissImportConstants.h"
+#include "ZeissImport/ZeissImportVersion.h"
 #include "ZeissImport/ZeissXml/ZeissTagMapping.h"
+
+
 #include <Eigen/Dense>
 
 
@@ -421,6 +423,25 @@ void CalculateBackground::execute()
 const QString CalculateBackground::getCompiledLibraryName()
 {
   return ZeissImportConstants::ZeissImportBaseName;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString CalculateBackground::getBrandingString()
+{
+  return "ZeissImport";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString CalculateBackground::getFilterVersion()
+{
+  QString version;
+  QTextStream vStream(&version);
+  vStream <<  ZeissImport::Version::Major() << "." << ZeissImport::Version::Minor() << "." << ZeissImport::Version::Patch();
+  return version;
 }
 
 // -----------------------------------------------------------------------------
