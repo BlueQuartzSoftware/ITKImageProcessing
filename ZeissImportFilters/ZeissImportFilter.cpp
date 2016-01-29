@@ -81,7 +81,7 @@ ZeissImportFilter::ZeissImportFilter() :
   m_InputFile(""),
   m_DataContainerName(k_DataContaineNameDefaultName),
   m_ImageAttributeMatrixName(k_TileAttributeMatrixDefaultName),
-  m_ImageDataArrayPrefix(DREAM3D::CellData::ImageData),
+  m_ImageDataArrayPrefix(SIMPL::CellData::ImageData),
   m_FileWasRead(false),
   d_ptr(new ZeissImportFilterPrivate(this))
 {
@@ -452,7 +452,7 @@ void ZeissImportFilter::parseImages(QDomElement& root, ZeissTagsXmlSection::Poin
 
 
   // Create the Image Geometry
-  ImageGeom::Pointer image = ImageGeom::CreateGeometry(DREAM3D::Geometry::ImageGeometry);
+  ImageGeom::Pointer image = ImageGeom::CreateGeometry(SIMPL::Geometry::ImageGeometry);
   dc->setGeometry(image);
   float origin[3] = { 0.0f, 0.0f, 0.0f};
   image->setOrigin(origin);
@@ -513,13 +513,13 @@ void ZeissImportFilter::parseImages(QDomElement& root, ZeissTagsXmlSection::Poin
     if(p == 0)
     {
       QVector<size_t> dims = getImageDimensions(photoTagsSection);
-      tileAm = dc->createAndAddAttributeMatrix(dims, getImageAttributeMatrixName(), DREAM3D::AttributeMatrixType::Cell);
+      tileAm = dc->createAndAddAttributeMatrix(dims, getImageAttributeMatrixName(), SIMPL::AttributeMatrixType::Cell);
       image->setDimensions(dims[0], dims[1], 1);
 
       dims.resize(1);
       dims[0] = imageCount;
-      QString metaName = getImageAttributeMatrixName() + DREAM3D::StringConstants::MetaData;
-      metaAm = dc->createAndAddAttributeMatrix(dims, metaName, DREAM3D::AttributeMatrixType::Generic);
+      QString metaName = getImageAttributeMatrixName() + SIMPL::StringConstants::MetaData;
+      metaAm = dc->createAndAddAttributeMatrix(dims, metaName, SIMPL::AttributeMatrixType::Generic);
       ZeissTagsXmlSection::MetaDataType tagMap = photoTagsSection->getMetaDataMap();
       QMapIterator<int, AbstractZeissMetaData::Pointer> iter(tagMap);
       while(iter.hasNext())
@@ -845,7 +845,7 @@ const QString ZeissImportFilter::getFilterVersion()
 // -----------------------------------------------------------------------------
 const QString ZeissImportFilter::getGroupName()
 {
-  return DREAM3D::FilterGroups::Unsupported;
+  return SIMPL::FilterGroups::Unsupported;
 }
 
 // -----------------------------------------------------------------------------
