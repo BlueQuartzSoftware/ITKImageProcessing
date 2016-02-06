@@ -53,9 +53,9 @@ CalculateBackground::CalculateBackground() :
   AbstractFilter(),
   m_VolumeDataContainerName(""),
   m_BackgroundAttributeMatrixName(""),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
+  m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName),
   m_ImageDataArrayPath("", "", ""),
-  m_AttributeMatrixName(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, ""),
+  m_AttributeMatrixName(SIMPL::Defaults::DataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, ""),
   m_DataContainerBundleName(""),
   m_BackgroundImageArrayName(getDataContainerBundleName() + "BackgroundImage"),
   m_lowThresh(0),
@@ -200,7 +200,7 @@ void CalculateBackground::dataCheck()
   if(getErrorCondition() < 0 || NULL == m) { return; }
 
   QVector<size_t> tDims(1, 0);
-  AttributeMatrix::Pointer backgroundAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getBackgroundAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
+  AttributeMatrix::Pointer backgroundAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getBackgroundAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::Cell);
   if(getErrorCondition() < 0) { return; }
 
 
@@ -449,7 +449,7 @@ const QString CalculateBackground::getFilterVersion()
 // -----------------------------------------------------------------------------
 const QString CalculateBackground::getGroupName()
 {
-  return DREAM3D::FilterGroups::Unsupported;
+  return SIMPL::FilterGroups::Unsupported;
 }
 
 // -----------------------------------------------------------------------------
