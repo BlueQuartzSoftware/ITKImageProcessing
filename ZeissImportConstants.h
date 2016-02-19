@@ -1,8 +1,8 @@
 /*
  * Your License should go here
  */
-#ifndef _ZeissImportConstants_H_
-#define _ZeissImportConstants_H_
+#ifndef _zeissimportconstants_h_
+#define _zeissimportconstants_h_
 
 #include <QtCore/QString>
 

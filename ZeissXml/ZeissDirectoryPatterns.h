@@ -9,8 +9,8 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#ifndef ZEISSDIRECTORYPATTERNS_H_
-#define ZEISSDIRECTORYPATTERNS_H_
+#ifndef _zeissdirectorypatterns_h_
+#define _zeissdirectorypatterns_h_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"

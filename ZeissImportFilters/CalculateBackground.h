@@ -2,8 +2,8 @@
  * Your License or Copyright Information can go here
  */
 
-#ifndef _CalculateBackground_H_
-#define _CalculateBackground_H_
+#ifndef _calculatebackground_h_
+#define _calculatebackground_h_
 
 
 #include <QtCore/QString>

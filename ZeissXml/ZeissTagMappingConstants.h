@@ -2,8 +2,8 @@
 * THE ZVI DOCUMENTATION FILE THAT IS DOWNLOADED FROM CARL ZEISS UNDER LICENSE.
 */
 
-#ifndef _ZEISSTAGMAPPINGConstants_H_
-#define _ZEISSTAGMAPPINGConstants_H_
+#ifndef _zeisstagmappingconstants_h_
+#define _zeisstagmappingconstants_h_
 
 #include <QtCore/QString>
 

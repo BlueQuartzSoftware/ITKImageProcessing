@@ -8,8 +8,8 @@
 //                           F33615-03-C-5220
 //
 ///////////////////////////////////////////////////////////////////////////////
-#ifndef ZEISSMETAFACTORY_HPP_
-#define ZEISSMETAFACTORY_HPP_
+#ifndef _zeissmetafactory_h_
+#define _zeissmetafactory_h_
 
 #include "ZeissImport/ZeissXml/ZeissMetaEntry.h"
 

@@ -2,8 +2,8 @@
  * Your License or Copyright Information can go here
  */
 
-#ifndef _ZeissImport_H_
-#define _ZeissImport_H_
+#ifndef _zeissimportplugin_h_
+#define _zeissimportplugin_h_
 
 #include <QtCore/QObject>
 #include <QtCore/QSettings>

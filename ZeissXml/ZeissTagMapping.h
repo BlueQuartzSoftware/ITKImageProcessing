@@ -8,8 +8,8 @@
 //                           F33615-03-C-5220
 //
 ///////////////////////////////////////////////////////////////////////////////
-#ifndef ZEISSTAGMAPPING_H_
-#define ZEISSTAGMAPPING_H_
+#ifndef _zeisstagmapping_h_
+#define _zeisstagmapping_h_
 
 
 #include "ZeissImport/ZeissXml/ZeissMetaFactory.h"

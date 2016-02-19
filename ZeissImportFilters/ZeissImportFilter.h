@@ -2,8 +2,8 @@
  * Your License or Copyright Information can go here
  */
 
-#ifndef _ZeissImportFilter_H_
-#define _ZeissImportFilter_H_
+#ifndef _zeissimportfilter_h_
+#define _zeissimportfilter_h_
 
 
 #include <QtCore/QString>

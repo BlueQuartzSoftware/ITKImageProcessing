@@ -32,8 +32,8 @@
  //                           FA8650-07-D-5800
  //
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef ZEISSTAGSXMLSECTION_H_
-#define ZEISSTAGSXMLSECTION_H_
+#ifndef _zeisstagsxmlsection_h_
+#define _zeisstagsxmlsection_h_
 
 #include <QtCore/QMap>
 

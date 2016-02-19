@@ -32,8 +32,8 @@
  //                           FA8650-07-D-5800
  //
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef ZEISSXMLREADER_H_
-#define ZEISSXMLREADER_H_
+#ifndef _zeissxmlreader_h_
+#define _zeissxmlreader_h_
 
 //-- C++ Includes
 #include <string>
