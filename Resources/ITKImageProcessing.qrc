@@ -1,0 +1,7 @@
+ <!DOCTYPE RCC>
+ <RCC version="1.0">
+ <qresource>
+ <file>ITKImageProcessing/ITKImageProcessingLicense.txt</file>
+ <file>ITKImageProcessing/ITKImageProcessingDescription.txt</file>
+ </qresource>
+ </RCC>
