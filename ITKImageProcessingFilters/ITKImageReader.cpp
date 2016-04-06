@@ -36,10 +36,15 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
-
+#include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
+
+// ITK includes
+#include <itkImageIOFactory.h>
+#include <itkPNGImageIOFactory.h>
 
 // Include the MOC generated file for this class
 #include "moc_ITKImageReader.cpp"
@@ -48,8 +53,14 @@
 //
 // -----------------------------------------------------------------------------
 ITKImageReader::ITKImageReader() :
-  AbstractFilter()
+  AbstractFilter(),
+  m_FileName(""),
+  m_DataContainerName(SIMPL::Defaults::ImageDataContainerName)
 {
+  // As for now, register factories by hand. There is probably a better place
+  // to do this than here.
+  itk::PNGImageIOFactory::RegisterOneFactory();
+
   setupFilterParameters();
 }
 
@@ -66,7 +77,11 @@ ITKImageReader::~ITKImageReader()
 void ITKImageReader::setupFilterParameters()
 {
   FilterParameterVector parameters;
-
+  QString supportedExtensions = ""; // \todo Change to actual supported formats
+  parameters.push_back(
+    InputFileFilterParameter::New("File", "FileName", getFileName(), FilterParameter::Parameter, supportedExtensions, "Image"));
+  parameters.push_back(
+    StringFilterParameter::New("Data Container", "DataContainerName", getDataContainerName(), FilterParameter::CreatedArray));
   setFilterParameters(parameters);
 }
 
@@ -76,7 +91,8 @@ void ITKImageReader::setupFilterParameters()
 void ITKImageReader::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-
+  setFileName(reader->readString("FileName", getFileName()));
+  setDataContainerName(reader->readString("DataContainerName", getDataContainerName()));
   reader->closeFilterGroup();
 }
 
@@ -86,7 +102,8 @@ void ITKImageReader::readFilterParameters(AbstractFilterParametersReader* reader
 int ITKImageReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-
+  SIMPL_FILTER_WRITE_PARAMETER(FileName);
+  SIMPL_FILTER_WRITE_PARAMETER(DataContainerName);
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -96,8 +113,38 @@ int ITKImageReader::writeFilterParameters(AbstractFilterParametersWriter* writer
 // -----------------------------------------------------------------------------
 void ITKImageReader::dataCheck()
 {
-  setErrorCondition(0);
+  //check file name exists
+  QString filename = getFileName();
+  if (filename.isEmpty())
+  {
+    setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), "Invalid filename.", getErrorCondition());
+    return;
+  }
 
+  // Try to print image properties:
+  itk::ImageIOBase::Pointer imageIO = itk::ImageIOFactory::CreateImageIO(filename.toLatin1(), itk::ImageIOFactory::ReadMode);
+  if (NULL == imageIO)
+  {
+    setErrorCondition(-2);
+    QString errorMessage = "ITK could not read the given file \"%1\". Format is likely unsupported.";
+    notifyErrorMessage(getHumanLabel(), errorMessage.arg(filename), getErrorCondition());
+    return;
+  }
+  imageIO->SetFileName(filename.toLatin1());
+  imageIO->ReadImageInformation();
+
+  typedef itk::ImageIOBase::IOComponentType ScalarPixelType;
+  const ScalarPixelType pixelType = imageIO->GetComponentType();
+  // Notifying a warning because it can't get the status messages in the GUI.
+  notifyWarningMessage(getHumanLabel(), QString("Component Type: %1").arg(imageIO->GetComponentTypeAsString(pixelType).c_str()), 1);
+  notifyWarningMessage(getHumanLabel(), QString("NumDimensions: %1").arg(imageIO->GetNumberOfDimensions()), 1);
+  notifyWarningMessage(getHumanLabel(), QString("Component size:  %1").arg(imageIO->GetComponentSize()), 1);
+  notifyWarningMessage(getHumanLabel(), QString("Pixel Type (string): %1").arg(imageIO->GetPixelTypeAsString(imageIO->GetPixelType()).c_str()), 1);
+  notifyWarningMessage(getHumanLabel(), QString("Pixel Type : %1").arg(imageIO->GetPixelType()), 1);
+
+  // If we got here, that means that there is no error
+  setErrorCondition(0);
 }
 
 // -----------------------------------------------------------------------------
@@ -180,7 +227,7 @@ const QString ITKImageReader::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString ITKImageReader::getGroupName()
-{ return SIMPL::FilterGroups::Unsupported; }
+{ return SIMPL::FilterGroups::IOFilters; }
 
 // -----------------------------------------------------------------------------
 //

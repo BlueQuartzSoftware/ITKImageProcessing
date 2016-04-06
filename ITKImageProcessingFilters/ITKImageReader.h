@@ -54,7 +54,11 @@ class ITKImageReader : public AbstractFilter
 
 	  virtual ~ITKImageReader();
 
+    SIMPL_FILTER_PARAMETER(QString, FileName)
+    Q_PROPERTY(QString FileName READ getFileName WRITE setFileName)
 
+    SIMPL_FILTER_PARAMETER(QString, DataContainerName)
+    Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
 
     /**
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class

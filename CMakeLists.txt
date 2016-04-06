@@ -24,6 +24,17 @@ cmpRevisionString( GENERATED_HEADER_FILE_PATH "${VERSION_HEADER_FILE_NAME}"
 set(${PLUGIN_NAME}_Project_SRCS "")
 
 include(${SIMPLProj_SOURCE_DIR}/Source/SIMPLib/SIMPLibMacros.cmake)
+
+# --------------------------------------------------------------------
+# ITK Include
+if(SIMPLib_USE_ITK)
+  include( ${DREAM3D_SUPPORT_DIR}/ITKSupport/IncludeITK.cmake)
+  include_directories(${SimpleITKExplicit_BINARY_DIR}/Common/include)
+  include_directories(${SimpleITKExplicit_SOURCE_DIR}/Explicit/include)
+else()
+  message( FATAL_ERROR "${PLUGIN_NAME} needs ITK. Please turn SIMPLib_USE_ITK ON.")
+endif()
+
 #-------
 # Start writing this header file
 set(AllFiltersHeaderFile ${${PLUGIN_NAME}_BINARY_DIR}/${PLUGIN_NAME}Filters/${PLUGIN_NAME}Filters.h_tmp)
@@ -227,6 +238,7 @@ target_link_libraries(${PLUGIN_NAME}
                     Qt5::Widgets
                     QtSupportLib
                     SIMPLViewWidgetsLib
+                    ${ITK_LIBRARIES}
                     )
 SET_TARGET_PROPERTIES(${PLUGIN_NAME} PROPERTIES FOLDER ${PLUGIN_NAME}Plugin)
 qt5_use_modules(${PLUGIN_NAME} Core Gui Widgets)
