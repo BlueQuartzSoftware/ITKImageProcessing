@@ -1,0 +1,13 @@
+machine:
+  services:
+    - docker
+
+dependencies:
+  override:
+    - docker info
+    - docker pull dream3d/data
+    - docker pull dream3d/dream3d
+
+test:
+  override:
+    - ~/ITKImageProcessing/Test/Docker/run.sh
