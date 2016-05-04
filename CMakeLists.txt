@@ -111,9 +111,14 @@ include_directories( ${PLUGINS_BINARY_DIR}/${PLUGIN_NAME}/${PLUGIN_NAME}Filters)
 include_directories( ${PLUGINS_BINARY_DIR}/${PLUGIN_NAME}/FilterParameterWidgets)
 include_directories( ${PLUGINS_BINARY_DIR}/${PLUGIN_NAME}/Test)
 include_directories( ${SIMPLProj_SOURCE_DIR}/Source)
-include_directories( ${SIMPLViewProj_SOURCE_DIR}/Source)
 include_directories( ${SIMPLProj_BINARY_DIR})
+
+include_directories( ${SIMPLViewProj_SOURCE_DIR}/Source)
+include_directories( ${SIMPLViewProj_SOURCE_DIR}/Source/SVWidgetsLib/QtSupport)
 include_directories( ${SIMPLViewProj_BINARY_DIR})
+include_directories( ${SIMPLViewProj_BINARY_DIR}/SVWidgetsLib/QtSupport)
+
+
 
 # Remove the temp files that we no longer need
 file(REMOVE ${FilterWidget_GEN_HDRS_File})
@@ -237,8 +242,7 @@ target_link_libraries(${PLUGIN_NAME}
                     SIMPLib
                     Qt5::Gui
                     Qt5::Widgets
-                    QtSupportLib
-                    SIMPLViewWidgetsLib
+                    SVWidgetsLib
                     Qt5::Xml
                     ${ITK_LIBRARIES}
                     )
