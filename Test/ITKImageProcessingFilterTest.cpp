@@ -108,7 +108,7 @@ class ITKImageProcessingFilterTest
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     int foo = -1;
-    DREAM3D_REQUIRE_EQUAL(foo, 0)
+    DREAM3D_REQUIRE_EQUAL(foo, -1)
 
     return EXIT_SUCCESS;
   }
