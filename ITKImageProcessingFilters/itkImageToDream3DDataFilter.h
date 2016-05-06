@@ -24,21 +24,26 @@ namespace itk
 		typedef DecoratorType::Pointer                                      DecoratorPointer;
 		/** Method for creation through the object factory. */
 		itkNewMacro(Self);
-		void SetDataArrayPath(DataArrayPath dataArray);
-		itkGetMacro(DataArrayPath, DataArrayPath);
 		virtual void SetInput(const ImageType *image);
+		void SetDataContainer(DataContainer::Pointer &dc);
 		virtual void GenerateData() ITK_OVERRIDE;
 		virtual void GenerateOutputInformation() ITK_OVERRIDE;
 		DecoratorType* GetOutput();
 		ProcessObject::DataObjectPointer MakeOutput(ProcessObject::DataObjectPointerArraySizeType);
+		itkSetMacro(DataArrayName, std::string);
+		itkGetMacro(DataArrayName, std::string);
+		itkSetMacro(MatrixArrayName, std::string);
+		itkGetMacro(MatrixArrayName, std::string);
 	protected:
 		virtual void VerifyPreconditions() ITK_OVERRIDE;
 		ImageToDream3DDataFilter();
 		virtual ~ImageToDream3DDataFilter();
+		void CheckValidArrayPathComponentName(std::string var);
 	private:
 		ImageToDream3DDataFilter(const ImageToDream3DDataFilter&); // Copy Constructor Not Implemented
 		void operator=(const ImageToDream3DDataFilter&); // Operator '=' Not Implemented
-		DataArrayPath m_DataArrayPath;
+		std::string m_DataArrayName;
+		std::string m_MatrixArrayName;
 	};// end of class ImageToDream3DDataFilter
 } //end of itk namespace
 

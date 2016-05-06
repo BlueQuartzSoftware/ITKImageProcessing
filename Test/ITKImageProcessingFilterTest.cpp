@@ -119,6 +119,7 @@ class ITKImageProcessingFilterTest
 	  const unsigned int dimension = 3;
 	  int tol = 1;
 	  //////////////////////////////////////////////////
+	  DataContainer::Pointer dc = DataContainer::New("TestContainer");
 	  typedef float PixelType;
 	  typedef itk::Image<PixelType, dimension> ImageType;
 	  ImageType::Pointer image = ImageType::New();
@@ -147,9 +148,11 @@ class ITKImageProcessingFilterTest
 	  itkImageToDream3DDataFilterType::Pointer filter = itkImageToDream3DDataFilterType::New();
 	  filter->SetInput(image);
 	  DataArrayPath dataArrayPath("TestContainer","TestAttributeMatrixName","TestAttributeArrayName");
-	  filter->SetDataArrayPath(dataArrayPath);
+	  filter->SetDataArrayName(dataArrayPath.getDataArrayName().toStdString());
+	  filter->SetMatrixArrayName(dataArrayPath.getAttributeMatrixName().toStdString());
+	  filter->SetDataContainer(dc);
 	  filter->Update();
-	  DataContainer::Pointer dc = filter->GetOutput()->Get();
+	  dc = filter->GetOutput()->Get();
 	  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	  // Compare output to baseline result
 	  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

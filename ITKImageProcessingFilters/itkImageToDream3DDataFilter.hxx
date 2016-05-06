@@ -3,6 +3,7 @@
 
 #include "itkImageToDream3DDataFilter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include <QString>
 
 namespace itk
 {
@@ -11,9 +12,8 @@ template<typename PixelType, unsigned int VDimension>
 ImageToDream3DDataFilter<PixelType,VDimension>
 ::ImageToDream3DDataFilter()
 {
-	m_DataArrayPath.update(SIMPL::Defaults::ImageDataContainerName,
-		SIMPL::Defaults::CellAttributeMatrixName,
-		SIMPL::CellData::ImageData);
+	m_DataArrayName = (SIMPL::Defaults::CellAttributeMatrixName).toStdString();
+	m_MatrixArrayName = (SIMPL::CellData::ImageData).toStdString();
 	// Create the output. We use static_cast<> here because we know the default
 	// output must be of type DecoratorType
 	typename DecoratorType::Pointer output =
@@ -21,7 +21,19 @@ ImageToDream3DDataFilter<PixelType,VDimension>
 	this->ProcessObject::SetNumberOfRequiredOutputs(1);
 	this->ProcessObject::SetNthOutput(0, output.GetPointer());
 	this->SetNumberOfRequiredInputs(1);
+	this->SetDataContainer(DataContainer::NullPointer());
 }
+
+template< typename PixelType, unsigned int VDimension>
+void
+ImageToDream3DDataFilter< PixelType, VDimension >
+::SetDataContainer(DataContainer::Pointer &dc)
+{
+	DecoratorType *outputPtr = this->GetOutput();
+	outputPtr->Set(dc);
+}
+
+
 
 template< typename PixelType, unsigned int VDimension>
 ProcessObject::DataObjectPointer
@@ -48,56 +60,65 @@ ImageToDream3DDataFilter< PixelType, VDimension >
 		const_cast< ImageType * >(input));
 }
 
-template< typename PixelType, unsigned int VDimension>
-void
-ImageToDream3DDataFilter< PixelType, VDimension >
-::SetDataArrayPath(DataArrayPath dataArray)
-{
-	if (!(dataArray == m_DataArrayPath))
-	{
-		m_DataArrayPath = dataArray;
-		this->Modified();
-	}
-}
 
 template<typename PixelType, unsigned int VDimension>
 void
 ImageToDream3DDataFilter<PixelType, VDimension>
 ::GenerateOutputInformation()
 {
-	DataContainer::Pointer dataContainer = DataContainer::New();
-	dataContainer = DataContainer::New(m_DataArrayPath.getDataContainerName());
-	if (!dataContainer)
-	{
-		itkExceptionMacro("Could not create data container");
-	}
-	//// Create image geometry (data container)
-	ImageGeom::Pointer image = ImageGeom::CreateGeometry(SIMPL::Geometry::ImageGeometry);
-	if (!image)
-	{
-		itkExceptionMacro("Could not create image geometry");
-	}
+	DecoratorType *outputPtr = this->GetOutput();
+	DataContainer::Pointer dataContainer = outputPtr->Get();
+	float tol = 0.000001;
+	float torigin[3];
+	float tspacing[3];
+	size_t tDims[3];
 	// Get Input image properties
 	ImagePointer inputPtr = dynamic_cast<ImageType*>(this->GetInput(0));
 	ImageType::PointType origin = inputPtr->GetOrigin();
 	ImageType::SpacingType spacing = inputPtr->GetSpacing();
 	ImageType::SizeType size = inputPtr->GetLargestPossibleRegion().GetSize();
-	//Configure global settings
-	QVector<float> torigin(3, 0);
-	QVector<float> tspacing(3, 1);
-	QVector<size_t> tDims(3, 1);
-	for (size_t i = 0; i < VDimension; i++)
+	//// Create image geometry (data container)
+	ImageGeom::Pointer imageGeom;
+	IGeometry::Pointer geom = dataContainer->getGeometry();
+	if (geom)
 	{
-		torigin[i] = origin[i];
-		tspacing[i] = spacing[i];
-		tDims[i] = size[i];
+		imageGeom = std::dynamic_pointer_cast<ImageGeom>(geom);
+		if (!imageGeom)
+		{
+			itkExceptionMacro("Data container contains a geometry that is not ImageGeometry");
+		}
+		imageGeom->getOrigin(torigin[0], torigin[1], torigin[2]);
+		imageGeom->getResolution(tspacing[0], tspacing[1], tspacing[2]);
+		imageGeom->getDimensions(tDims[0], tDims[1], tDims[2]);
+		for( size_t i=0; i < 3; i++ )
+		{
+			if (abs(torigin[i] - origin[i]) > tol
+				|| abs(tspacing[i] - spacing[i]) > tol
+				|| tDims[i] != size[i]
+				)
+			{
+				itkExceptionMacro("Data container contains a geometry that do not match image properties");
+			}
+		}
 	}
-	image->setOrigin(torigin[0], torigin[1], torigin[2]);
-	image->setResolution(tspacing[0], tspacing[1], tspacing[2]);
-	image->setDimensions(tDims[0], tDims[1], tDims[2]);
-	dataContainer->setGeometry(image);
-	DecoratorType *outputPtr = this->GetOutput();
-	outputPtr->Set(dataContainer);
+	else
+	{
+		imageGeom = ImageGeom::CreateGeometry(SIMPL::Geometry::ImageGeometry);
+		if (!imageGeom)
+		{
+			itkExceptionMacro("Could not create image geometry");
+		}
+		for (size_t i = 0; i < VDimension; i++)
+		{
+			torigin[i] = origin[i];
+			tspacing[i] = spacing[i];
+			tDims[i] = size[i];
+		}
+		imageGeom->setOrigin(torigin[0], torigin[1], torigin[2]);
+		imageGeom->setResolution(tspacing[0], tspacing[1], tspacing[2]);
+		imageGeom->setDimensions(tDims[0], tDims[1], tDims[2]);
+		dataContainer->setGeometry(imageGeom);
+	}
 }
 
 template<typename PixelType, unsigned int VDimension>
@@ -117,14 +138,58 @@ ImageToDream3DDataFilter<PixelType, VDimension>
 	imageGeom->getDimensions(dims[0], dims[1], dims[2]);
 	QVector<size_t> tDims(3, 1);
 	qCopy(dims, dims + 3, tDims.begin());
-	AttributeMatrix::Pointer ma = dataContainer->createAndAddAttributeMatrix(tDims, m_DataArrayPath.getAttributeMatrixName(), SIMPL::AttributeMatrixType::Cell);
-	inputPtr->SetBufferedRegion(inputPtr->GetLargestPossibleRegion());
-	DataArray<PixelType>::Pointer data = DataArray<PixelType>::WrapPointer(inputPtr->GetBufferPointer(), imageGeom->getNumberOfElements(), cDims, m_DataArrayPath.getDataArrayName(), false);
-	ma->addAttributeArray(m_DataArrayPath.getDataArrayName(), data);
+	AttributeMatrix::Pointer ma;
+	if (dataContainer->doesAttributeMatrixExist(m_MatrixArrayName.c_str()))
+	{
+		// Check that size matches
+		ma = dataContainer->getAttributeMatrix(m_MatrixArrayName.c_str());
+		size_t numofTuples = ma->getNumTuples();
+		QVector<size_t> matDims = ma->getTupleDimensions();
+		if (matDims != tDims)
+		{
+			itkExceptionMacro("Tuples dimension of existing matrix array do not match image size.");
+		}
+		if (ma->getType() != SIMPL::AttributeMatrixType::Cell)
+		{
+			itkExceptionMacro("Attribute matrix is not of type SIMPL::AttributeMatrixType::Cell.");
+		}
+	}
+	else
+	{
+		ma = dataContainer->createAndAddAttributeMatrix(tDims, m_MatrixArrayName.c_str(), SIMPL::AttributeMatrixType::Cell);
+	}
+	// Checks if doesAttributeArray exists
+	if (ma->doesAttributeArrayExist(m_DataArrayName.c_str()))
+	{
+		itkExceptionMacro("Existing data array with same name.");
+	}
+	else
+	{
+		inputPtr->SetBufferedRegion(inputPtr->GetLargestPossibleRegion());
+		DataArray<PixelType>::Pointer data = DataArray<PixelType>::WrapPointer(inputPtr->GetBufferPointer(), imageGeom->getNumberOfElements(), cDims, m_DataArrayName.c_str(), false);
+		ma->addAttributeArray(m_DataArrayName.c_str(), data);
+	}
 	outputPtr->Set(dataContainer);
 }
 
-// Check that m_DataArrayPath has been initialized correctly
+// Check that names has been initialized correctly
+template<typename PixelType, unsigned int VDimension>
+void
+ImageToDream3DDataFilter<PixelType, VDimension>
+::CheckValidArrayPathComponentName(std::string var)
+{
+	if (var.find('/') != std::string::npos)
+	{
+		itkExceptionMacro("Name contains a '/'");
+	}
+	if (var.empty())
+	{
+		itkExceptionMacro("Name is empty");
+	}
+}
+
+
+// Check that the inputs have been initialized correctly
 template<typename PixelType, unsigned int VDimension>
 void
 ImageToDream3DDataFilter<PixelType, VDimension>
@@ -135,18 +200,15 @@ ImageToDream3DDataFilter<PixelType, VDimension>
 	{
 		itkExceptionMacro("Dimension must be 2 or 3.");
 	}
-	if (m_DataArrayPath.getDataContainerName().contains('/'))
+	CheckValidArrayPathComponentName(m_MatrixArrayName);
+	CheckValidArrayPathComponentName(m_DataArrayName);
+	// Verify data container
+	DecoratorType *outputPtr = this->GetOutput();
+	if (!outputPtr->Get())
 	{
-		itkExceptionMacro("DataContainerName contains a '/'");
+		itkExceptionMacro("Data container not set");
 	}
-	if (m_DataArrayPath.getAttributeMatrixName().contains('/'))
-	{
-		itkExceptionMacro("AttributeMatrixName contains a '/'");
-	}
-	if (m_DataArrayPath.getDataArrayName().contains('/'))
-	{
-		itkExceptionMacro("DataArrayName contains a '/'");
-	}
+	//
 	Superclass::VerifyPreconditions();
 }
 
