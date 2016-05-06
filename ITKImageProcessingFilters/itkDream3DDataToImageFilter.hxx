@@ -21,7 +21,7 @@ Dream3DDataToImageFilter<PixelType, VDimension>::~Dream3DDataToImageFilter()
 template< typename PixelType, unsigned int VDimension>
 void
 Dream3DDataToImageFilter< PixelType, VDimension >
-::SetInput(DataContainer::Pointer dc)
+::SetInput(DataContainer::Pointer &dc)
 {
 	if (!(dc == m_DataContainer))
 	{
@@ -33,7 +33,7 @@ Dream3DDataToImageFilter< PixelType, VDimension >
 template< typename PixelType, unsigned int VDimension>
 void
 Dream3DDataToImageFilter< PixelType, VDimension >
-::Check()
+::VerifyPreconditions()
 {
 	if (m_DataContainer == DataContainer::NullPointer() )
 	{
@@ -57,18 +57,19 @@ Dream3DDataToImageFilter< PixelType, VDimension >
 	{
 		itkExceptionMacro("Attribute array (" + m_DataArrayName + ") does not exist");
 	}
+	Superclass::VerifyPreconditions();
 }
 
 template< typename PixelType, unsigned int VDimension>
 void
-Dream3DDataToImageFilter< PixelType, VDimension >::GenerateOutputInformation()
+Dream3DDataToImageFilter< PixelType, VDimension >
+::GenerateOutputInformation()
 {
-	this->Check();
 	IGeometry::Pointer geom = m_DataContainer->getGeometry();
 	ImageGeom* imageGeom = dynamic_cast<ImageGeom*>(geom.get());
 	if (!imageGeom)
 	{
-		// This should never happen as Check() verifies that the geometry of
+		// This should never happen as VerifyPreconditions() verifies that the geometry of
 		// the data container is ImageGeom.
 		itkExceptionMacro("Error casting geometry!!!");
 	}
@@ -95,14 +96,14 @@ Dream3DDataToImageFilter< PixelType, VDimension >::GenerateOutputInformation()
 	this->SetSpacing(spacing);
 	this->SetRegion(size);
 	this->SetDirection(direction);
-	ImportImageFilter::GenerateOutputInformation();
+	Superclass::GenerateOutputInformation();
 }
 
 template< typename PixelType, unsigned int VDimension>
 void
-Dream3DDataToImageFilter< PixelType, VDimension >::GenerateData()
+Dream3DDataToImageFilter< PixelType, VDimension >
+::GenerateData()
 {
-	this->Check();
 	// Get data pointer
 	AttributeMatrix::Pointer ma = m_DataContainer->getAttributeMatrix(m_MatrixArrayName.c_str());
 	IDataArray::Pointer dataArray = ma->getAttributeArray(m_DataArrayName.c_str());

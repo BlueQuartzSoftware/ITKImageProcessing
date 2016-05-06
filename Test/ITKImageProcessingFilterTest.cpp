@@ -149,7 +149,7 @@ class ITKImageProcessingFilterTest
 	  DataArrayPath dataArrayPath("TestContainer","TestAttributeMatrixName","TestAttributeArrayName");
 	  filter->SetDataArrayPath(dataArrayPath);
 	  filter->Update();
-	  DataContainer::Pointer dc = filter->GetOutput();
+	  DataContainer::Pointer dc = filter->GetOutput()->Get();
 	  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	  // Compare output to baseline result
 	  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

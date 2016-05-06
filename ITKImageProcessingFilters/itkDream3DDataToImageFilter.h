@@ -10,14 +10,15 @@ namespace itk
 	{
 	public:
 		/** Standard class typedefs. */
-		typedef Dream3DDataToImageFilter                                   Self;
-		typedef SmartPointer<Self>                                         Pointer;
-		typedef typename Image<PixelType, VDimension> ImageType;
-		typedef typename ImageType::Pointer ImagePointer;
-		typedef typename DataArray<PixelType> DataArrayPixelType;
+		typedef Dream3DDataToImageFilter                           Self;
+		typedef SmartPointer<Self>                                 Pointer;
+		typedef typename Image<PixelType, VDimension>              ImageType;
+		typedef typename ImageType::Pointer                        ImagePointer;
+		typedef typename DataArray<PixelType>                      DataArrayPixelType;
+		typedef typename ImportImageFilter<PixelType, VDimension>  Superclass;
 		/** Method for creation through the object factory. */
 		itkNewMacro(Self);
-		void SetInput(DataContainer::Pointer dc);
+		virtual void SetInput(DataContainer::Pointer &dc);
 		itkSetMacro(DataArrayName, std::string);
 		itkGetMacro(DataArrayName, std::string);
 		itkSetMacro(MatrixArrayName, std::string);
@@ -25,9 +26,9 @@ namespace itk
 	protected:
 		Dream3DDataToImageFilter();
 		virtual ~Dream3DDataToImageFilter();
-		void Check();
-        void GenerateOutputInformation();
-        void GenerateData();
+		virtual void VerifyPreconditions() ITK_OVERRIDE;
+		virtual void GenerateOutputInformation() ITK_OVERRIDE;
+		virtual void GenerateData() ITK_OVERRIDE;
 
 	private:
 		Dream3DDataToImageFilter(const Dream3DDataToImageFilter&); // Copy Constructor Not Implemented
