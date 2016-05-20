@@ -27,7 +27,7 @@ ImageToDream3DDataFilter<PixelType,VDimension>
 template< typename PixelType, unsigned int VDimension>
 void
 ImageToDream3DDataFilter< PixelType, VDimension >
-::SetDataContainer(DataContainer::Pointer &dc)
+::SetDataContainer(DataContainer::Pointer dc)
 {
 	DecoratorType *outputPtr = this->GetOutput();
 	outputPtr->Set(dc);
@@ -74,9 +74,9 @@ ImageToDream3DDataFilter<PixelType, VDimension>
 	size_t tDims[3];
 	// Get Input image properties
 	ImagePointer inputPtr = dynamic_cast<ImageType*>(this->GetInput(0));
-	ImageType::PointType origin = inputPtr->GetOrigin();
-	ImageType::SpacingType spacing = inputPtr->GetSpacing();
-	ImageType::SizeType size = inputPtr->GetLargestPossibleRegion().GetSize();
+	typename ImageType::PointType origin = inputPtr->GetOrigin();
+	typename ImageType::SpacingType spacing = inputPtr->GetSpacing();
+	typename ImageType::SizeType size = inputPtr->GetLargestPossibleRegion().GetSize();
 	//// Create image geometry (data container)
 	ImageGeom::Pointer imageGeom;
 	IGeometry::Pointer geom = dataContainer->getGeometry();
@@ -166,7 +166,7 @@ ImageToDream3DDataFilter<PixelType, VDimension>
 	else
 	{
 		inputPtr->SetBufferedRegion(inputPtr->GetLargestPossibleRegion());
-		DataArray<PixelType>::Pointer data = DataArray<PixelType>::WrapPointer(inputPtr->GetBufferPointer(), imageGeom->getNumberOfElements(), cDims, m_DataArrayName.c_str(), false);
+		typename DataArrayPixelType::Pointer data = DataArrayPixelType::WrapPointer(inputPtr->GetBufferPointer(), imageGeom->getNumberOfElements(), cDims, m_DataArrayName.c_str(), false);
 		ma->addAttributeArray(m_DataArrayName.c_str(), data);
 	}
 	outputPtr->Set(dataContainer);

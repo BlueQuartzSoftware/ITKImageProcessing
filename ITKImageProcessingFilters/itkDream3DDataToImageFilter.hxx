@@ -80,10 +80,10 @@ Dream3DDataToImageFilter< PixelType, VDimension >
 	imageGeom->getOrigin(torigin[0], torigin[1], torigin[2]);
 	imageGeom->getResolution(tspacing[0], tspacing[1], tspacing[2]);
 	imageGeom->getDimensions(tDims[0], tDims[1], tDims[2]);
-	ImageType::PointType origin;
-	ImageType::SizeType size;
-	ImageType::SpacingType spacing;
-	ImageType::DirectionType direction;
+	typename ImageType::PointType origin;
+	typename ImageType::SizeType size;
+	typename ImageType::SpacingType spacing;
+	typename ImageType::DirectionType direction;
 	direction.SetIdentity();
 	for (size_t i = 0; i < VDimension; i++)
 	{
@@ -110,7 +110,7 @@ Dream3DDataToImageFilter< PixelType, VDimension >
 	const bool importImageFilterWillOwnTheBuffer = false;
 	this->SetImportPointer(static_cast<PixelType*>(dataArray->getVoidPointer(0)), dataArray->getSize(),
 		importImageFilterWillOwnTheBuffer);
-	ImportImageFilter::GenerateData();
+	Superclass::GenerateData();
 }
 
 }// end of itk namespace

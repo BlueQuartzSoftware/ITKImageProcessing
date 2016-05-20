@@ -12,10 +12,10 @@ namespace itk
 		/** Standard class typedefs. */
 		typedef Dream3DDataToImageFilter                           Self;
 		typedef SmartPointer<Self>                                 Pointer;
-		typedef typename Image<PixelType, VDimension>              ImageType;
+		typedef typename itk::Image<PixelType, VDimension>              ImageType;
 		typedef typename ImageType::Pointer                        ImagePointer;
-		typedef typename DataArray<PixelType>                      DataArrayPixelType;
-		typedef typename ImportImageFilter<PixelType, VDimension>  Superclass;
+		typedef typename ::DataArray<PixelType>                      DataArrayPixelType;
+		typedef typename itk::ImportImageFilter<PixelType, VDimension>  Superclass;
 		/** Method for creation through the object factory. */
 		itkNewMacro(Self);
 		virtual void SetInput(DataContainer::Pointer &dc);

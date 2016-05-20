@@ -97,8 +97,8 @@ class ITKImageProcessingFilterTest
 	                    )
   {
 	  typedef itk::Image<PixelType, dimension> ImageType;
-	  ImageType::Pointer image = ImageType::New();
-	  ImageType::DirectionType direction;
+	  typename ImageType::Pointer image = ImageType::New();
+	  typename ImageType::DirectionType direction;
 	  direction.SetIdentity();
 	  image->SetOrigin(origin);
 	  image->SetDirection(direction);

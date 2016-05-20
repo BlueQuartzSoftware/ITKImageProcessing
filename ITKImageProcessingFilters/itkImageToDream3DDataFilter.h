@@ -17,15 +17,15 @@ namespace itk
 		typedef ImageToDream3DDataFilter                                    Self;
 		typedef ProcessObject                                               Superclass;
 		typedef SmartPointer<Self>                                          Pointer;
-		typedef typename Image<PixelType, VDimension>                       ImageType;
+		typedef typename itk::Image<PixelType, VDimension>                       ImageType;
 		typedef typename ImageType::Pointer                                 ImagePointer;
-		typedef typename DataArray<PixelType>                               DataArrayPixelType;
-		typedef typename SimpleDataObjectDecorator<DataContainer::Pointer>  DecoratorType;
+		typedef typename ::DataArray<PixelType>                               DataArrayPixelType;
+		typedef typename itk::SimpleDataObjectDecorator<DataContainer::Pointer>  DecoratorType;
 		typedef DecoratorType::Pointer                                      DecoratorPointer;
 		/** Method for creation through the object factory. */
 		itkNewMacro(Self);
 		virtual void SetInput(const ImageType *image);
-		void SetDataContainer(DataContainer::Pointer &dc);
+		void SetDataContainer(DataContainer::Pointer dc);
 		virtual void GenerateData() ITK_OVERRIDE;
 		virtual void GenerateOutputInformation() ITK_OVERRIDE;
 		DecoratorType* GetOutput();
