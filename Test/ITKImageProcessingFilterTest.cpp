@@ -433,9 +433,9 @@ class ITKImageProcessingFilterTest
 	DREAM3D_REGISTER_TEST(TestDream3DDataToImage<itk::Dream3DDataToImageFilter>())
 	DREAM3D_REGISTER_TEST(TestDream3DDataToImageOutOfScope<itk::Dream3DDataToImageFilter>())
 	DREAM3D_REGISTER_TEST(TestImageToDream3DData<itk::InPlaceImageToDream3DDataFilter>())
-	//DREAM3D_REGISTER_TEST(TestImageToDream3DDataOutOfScope<itk::InPlaceImageToDream3DDataFilter>())
+	DREAM3D_REGISTER_TEST(TestImageToDream3DDataOutOfScope<itk::InPlaceImageToDream3DDataFilter>())
 	DREAM3D_REGISTER_TEST(TestDream3DDataToImage<itk::InPlaceDream3DDataToImageFilter>())
-	//DREAM3D_REGISTER_TEST(TestDream3DDataToImageOutOfScope<itk::InPlaceDream3DDataToImageFilter>())
+	DREAM3D_REGISTER_TEST(TestDream3DDataToImageOutOfScope<itk::InPlaceDream3DDataToImageFilter>())
     
 	DREAM3D_REGISTER_TEST( RemoveTestFiles() )
   }
