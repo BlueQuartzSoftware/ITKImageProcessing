@@ -46,8 +46,8 @@
 
 #include <itkImage.h>
 
-#include "ITKImageProcessing/ITKImageProcessingFilters/itkImageToDream3DDataFilter.h"
-#include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DDataToImageFilter.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/itkInPlaceImageToDream3DDataFilter.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/itkInPlaceDream3DDataToImageFilter.h"
 
 #include "ITKImageProcessingTestFileLocations.h"
 
@@ -112,6 +112,7 @@ class ITKImageProcessingFilterTest
   // -----------------------------------------------------------------------------
   //
   // -----------------------------------------------------------------------------
+  template<template<typename PixelType, unsigned int VDimension> class ImageToDream3DDataFilterType>
   int TestImageToDream3DData()
   {
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -157,7 +158,7 @@ class ITKImageProcessingFilterTest
 	  index.Fill(0);
 	  float val=image->GetPixel(index);
 	  // Create converter
-	  typedef itk::ImageToDream3DDataFilter<PixelType, dimension> itkImageToDream3DDataFilterType;
+	  typedef ImageToDream3DDataFilterType<PixelType, dimension> itkImageToDream3DDataFilterType;
 	  itkImageToDream3DDataFilterType::Pointer filter = itkImageToDream3DDataFilterType::New();
 	  filter->SetInput(image);
 	  DataArrayPath dataArrayPath("TestContainer","TestAttributeMatrixName","TestAttributeArrayName");
@@ -224,6 +225,7 @@ class ITKImageProcessingFilterTest
   // -----------------------------------------------------------------------------
   //
   // -----------------------------------------------------------------------------
+  template<template<typename PixelType, unsigned int VDimension> class ImageToDream3DDataFilterType>
   int TestImageToDream3DDataOutOfScope()
   {
 	  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -251,7 +253,7 @@ class ITKImageProcessingFilterTest
 		  }
 		  ImageType::Pointer image = CreateITKImageForTests<PixelType, dimension>(origin, size, spacing, initialValue);
 		  // Create converter
-		  typedef itk::ImageToDream3DDataFilter<PixelType, dimension> itkImageToDream3DDataFilterType;
+		  typedef ImageToDream3DDataFilterType<PixelType, dimension> itkImageToDream3DDataFilterType;
 		  itkImageToDream3DDataFilterType::Pointer filter = itkImageToDream3DDataFilterType::New();
 		  filter->SetInput(image);
 		  filter->SetDataArrayName(dataArrayPath.getDataArrayName().toStdString());
@@ -282,6 +284,7 @@ class ITKImageProcessingFilterTest
 	  return EXIT_SUCCESS;
   }
 
+  template<template<typename PixelType, unsigned int VDimension> class Dream3DDataToImageFilterType>
   int TestDream3DDataToImage()
   {
 	  const unsigned int Dimension = 3;
@@ -313,7 +316,7 @@ class ITKImageProcessingFilterTest
 	  ma->addAttributeArray(dataArrayName, data);
 	  // Create filter
 	  typedef itk::Image<PixelType, Dimension> ImageType;
-	  typedef itk::Dream3DDataToImageFilter<PixelType, Dimension> FilterType;
+	  typedef Dream3DDataToImageFilterType<PixelType, Dimension> FilterType;
 	  FilterType::Pointer filter = FilterType::New();
 	  filter->SetInput(dc);
 	  filter->SetMatrixArrayName(attributeMatrixName.toStdString());
@@ -350,6 +353,7 @@ class ITKImageProcessingFilterTest
 	  return EXIT_SUCCESS;
   }
 
+  template<template<typename PixelType, unsigned int VDimension> class Dream3DDataToImageFilterType>
   int TestDream3DDataToImageOutOfScope()
   {
 	  const unsigned int Dimension = 3;
@@ -387,7 +391,7 @@ class ITKImageProcessingFilterTest
 		  ma->addAttributeArray(dataArrayName, data);
 		  dataSize = data->getSize();
 		  // Create filter
-		  typedef itk::Dream3DDataToImageFilter<PixelType, Dimension> FilterType;
+		  typedef Dream3DDataToImageFilterType<PixelType, Dimension> FilterType;
 		  FilterType::Pointer filter = FilterType::New();
 		  filter->SetInput(dc);
 		  filter->SetMatrixArrayName(attributeMatrixName.toStdString());
@@ -414,10 +418,14 @@ class ITKImageProcessingFilterTest
 
     DREAM3D_REGISTER_TEST( TestFilterAvailability() );
 
-	DREAM3D_REGISTER_TEST(TestImageToDream3DData())
-	DREAM3D_REGISTER_TEST(TestImageToDream3DDataOutOfScope())
-	DREAM3D_REGISTER_TEST(TestDream3DDataToImage())
-	DREAM3D_REGISTER_TEST(TestDream3DDataToImageOutOfScope())
+	DREAM3D_REGISTER_TEST(TestImageToDream3DData<itk::ImageToDream3DDataFilter>())
+	DREAM3D_REGISTER_TEST(TestImageToDream3DDataOutOfScope<itk::ImageToDream3DDataFilter>())
+	DREAM3D_REGISTER_TEST(TestDream3DDataToImage<itk::Dream3DDataToImageFilter>())
+	DREAM3D_REGISTER_TEST(TestDream3DDataToImageOutOfScope<itk::Dream3DDataToImageFilter>())
+	DREAM3D_REGISTER_TEST(TestImageToDream3DData<itk::InPlaceImageToDream3DDataFilter>())
+	DREAM3D_REGISTER_TEST(TestImageToDream3DDataOutOfScope<itk::InPlaceImageToDream3DDataFilter>())
+	DREAM3D_REGISTER_TEST(TestDream3DDataToImage<itk::InPlaceDream3DDataToImageFilter>())
+	DREAM3D_REGISTER_TEST(TestDream3DDataToImageOutOfScope<itk::InPlaceDream3DDataToImageFilter>())
     
 	DREAM3D_REGISTER_TEST( RemoveTestFiles() )
   }

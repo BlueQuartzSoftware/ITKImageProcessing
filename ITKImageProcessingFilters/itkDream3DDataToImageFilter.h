@@ -29,11 +29,11 @@ namespace itk
 		virtual void VerifyPreconditions() ITK_OVERRIDE;
 		virtual void GenerateOutputInformation() ITK_OVERRIDE;
 		virtual void GenerateData() ITK_OVERRIDE;
+		DataContainer::Pointer m_DataContainer;
 
 	private:
 		Dream3DDataToImageFilter(const Dream3DDataToImageFilter&); // Copy Constructor Not Implemented
 		void operator=(const Dream3DDataToImageFilter&); // Operator '=' Not Implemented
-		DataContainer::Pointer m_DataContainer;
 		std::string m_DataArrayName;
 		std::string m_MatrixArrayName;
 	};
