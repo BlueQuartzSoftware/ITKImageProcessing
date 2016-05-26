@@ -21,14 +21,14 @@ void
 InPlaceDream3DDataToImageFilter< PixelType, VDimension >
 ::GenerateData()
 {
-	// Get data pointer
-	AttributeMatrix::Pointer ma = m_DataContainer->getAttributeMatrix(this->GetMatrixArrayName().c_str());
-	IDataArray::Pointer dataArray = ma->getAttributeArray(this->GetDataArrayName().c_str());
-	dataArray->releaseOwnership();
-	const bool pixelContainerWillOwnTheBuffer = true;
-	this->SetImportPointer(static_cast<PixelType*>(dataArray->getVoidPointer(0)), dataArray->getSize(),
-		pixelContainerWillOwnTheBuffer);
-	Superclass::Superclass::GenerateData();
+  // Get data pointer
+  AttributeMatrix::Pointer ma = m_DataContainer->getAttributeMatrix(this->GetMatrixArrayName().c_str());
+  IDataArray::Pointer dataArray = ma->getAttributeArray(this->GetDataArrayName().c_str());
+  dataArray->releaseOwnership();
+  const bool pixelContainerWillOwnTheBuffer = true;
+  this->SetImportPointer(static_cast<PixelType*>(dataArray->getVoidPointer(0)), dataArray->getSize(),
+    pixelContainerWillOwnTheBuffer);
+  Superclass::Superclass::GenerateData();
 }
 
 }// end of itk namespace

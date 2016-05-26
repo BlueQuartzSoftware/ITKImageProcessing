@@ -5,29 +5,29 @@
 
 namespace itk
 {
-	template< typename PixelType, unsigned int VDimension >
-	class InPlaceDream3DDataToImageFilter : public Dream3DDataToImageFilter<PixelType, VDimension>
-	{
-	public:
-		/** Standard class typedefs. */
-		typedef InPlaceDream3DDataToImageFilter                           Self;
-		typedef SmartPointer<Self>                                 Pointer;
-		typedef typename itk::Image<PixelType, VDimension>              ImageType;
-		typedef typename ImageType::Pointer                        ImagePointer;
-		typedef typename ::DataArray<PixelType>                      DataArrayPixelType;
-		typedef typename itk::Dream3DDataToImageFilter<PixelType, VDimension>  Superclass;
-		/** Method for creation through the object factory. */
-		itkNewMacro(Self);
-		itkTypeMacro(InPlaceDream3DDataToImageFilter, Dream3DDataToImageFilter);
-	protected:
-		InPlaceDream3DDataToImageFilter();
-		virtual ~InPlaceDream3DDataToImageFilter();
-		virtual void GenerateData() ITK_OVERRIDE;
+  template< typename PixelType, unsigned int VDimension >
+  class InPlaceDream3DDataToImageFilter : public Dream3DDataToImageFilter<PixelType, VDimension>
+  {
+  public:
+    /** Standard class typedefs. */
+    typedef InPlaceDream3DDataToImageFilter                                Self;
+    typedef SmartPointer<Self>                                             Pointer;
+    typedef typename itk::Image<PixelType, VDimension>                     ImageType;
+    typedef typename ImageType::Pointer                                    ImagePointer;
+    typedef typename ::DataArray<PixelType>                                DataArrayPixelType;
+    typedef typename itk::Dream3DDataToImageFilter<PixelType, VDimension>  Superclass;
+    /** Method for creation through the object factory. */
+    itkNewMacro(Self);
+    itkTypeMacro(InPlaceDream3DDataToImageFilter, Dream3DDataToImageFilter);
+  protected:
+    InPlaceDream3DDataToImageFilter();
+    virtual ~InPlaceDream3DDataToImageFilter();
+    virtual void GenerateData() ITK_OVERRIDE;
 
-	private:
-		InPlaceDream3DDataToImageFilter(const InPlaceDream3DDataToImageFilter&); // Copy Constructor Not Implemented
-		void operator=(const InPlaceDream3DDataToImageFilter&); // Operator '=' Not Implemented
-	};
+  private:
+    InPlaceDream3DDataToImageFilter(const InPlaceDream3DDataToImageFilter&); // Copy Constructor Not Implemented
+    void operator=(const InPlaceDream3DDataToImageFilter&); // Operator '=' Not Implemented
+  };
 }//end of itk namespace
 
 #ifndef ITK_MANUAL_INSTANTIATION
