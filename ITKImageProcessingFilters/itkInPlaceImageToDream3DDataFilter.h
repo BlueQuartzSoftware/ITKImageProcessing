@@ -20,6 +20,7 @@ namespace itk
 		typedef DecoratorType::Pointer                                      DecoratorPointer;
 		/** Method for creation through the object factory. */
 		itkNewMacro(Self);
+		itkTypeMacro(InPlaceImageToDream3DDataFilter, ImageToDream3DDataFilter);
 		virtual void GenerateData() ITK_OVERRIDE;
 	protected:
 		InPlaceImageToDream3DDataFilter();

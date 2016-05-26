@@ -165,8 +165,8 @@ ImageToDream3DDataFilter<PixelType, VDimension>
 	}
 	else
 	{
-		inputPtr->SetBufferedRegion(inputPtr->GetLargestPossibleRegion());
-		typename DataArrayPixelType::Pointer data = DataArrayPixelType::WrapPointer(inputPtr->GetBufferPointer(), imageGeom->getNumberOfElements(), cDims, m_DataArrayName.c_str(), false);
+		DataArrayPixelType::Pointer data;
+		data = DataArrayPixelType::FromPointer(inputPtr->GetBufferPointer(), imageGeom->getNumberOfElements(), m_DataArrayName.c_str(), true);
 		ma->addAttributeArray(m_DataArrayName.c_str(), data);
 	}
 	outputPtr->Set(dataContainer);

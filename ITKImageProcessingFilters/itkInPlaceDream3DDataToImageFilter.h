@@ -18,6 +18,7 @@ namespace itk
 		typedef typename itk::Dream3DDataToImageFilter<PixelType, VDimension>  Superclass;
 		/** Method for creation through the object factory. */
 		itkNewMacro(Self);
+		itkTypeMacro(InPlaceDream3DDataToImageFilter, Dream3DDataToImageFilter);
 	protected:
 		InPlaceDream3DDataToImageFilter();
 		virtual ~InPlaceDream3DDataToImageFilter();

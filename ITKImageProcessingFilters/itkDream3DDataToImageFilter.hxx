@@ -107,9 +107,11 @@ Dream3DDataToImageFilter< PixelType, VDimension >
 	// Get data pointer
 	AttributeMatrix::Pointer ma = m_DataContainer->getAttributeMatrix(m_MatrixArrayName.c_str());
 	IDataArray::Pointer dataArray = ma->getAttributeArray(m_DataArrayName.c_str());
-	const bool importImageFilterWillOwnTheBuffer = false;
-	this->SetImportPointer(static_cast<PixelType*>(dataArray->getVoidPointer(0)), dataArray->getSize(),
-		importImageFilterWillOwnTheBuffer);
+	size_t size = dataArray->getSize();
+	PixelType *buffer = new PixelType[size];
+	::memcpy(buffer, static_cast<PixelType*>(dataArray->getVoidPointer(0)), size * sizeof(PixelType));
+	const bool pixelContainerWillOwnTheBuffer = true;
+	this->SetImportPointer(buffer, size, pixelContainerWillOwnTheBuffer);
 	Superclass::GenerateData();
 }
 

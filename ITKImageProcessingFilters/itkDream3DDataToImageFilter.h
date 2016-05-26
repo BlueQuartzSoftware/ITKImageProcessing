@@ -18,6 +18,7 @@ namespace itk
 		typedef typename itk::ImportImageFilter<PixelType, VDimension>  Superclass;
 		/** Method for creation through the object factory. */
 		itkNewMacro(Self);
+		itkTypeMacro(Dream3DDataToImageFilter, ImportImageFilter);
 		virtual void SetInput(DataContainer::Pointer &dc);
 		itkSetMacro(DataArrayName, std::string);
 		itkGetMacro(DataArrayName, std::string);
