@@ -66,6 +66,9 @@ void
 InPlaceDream3DDataToImageFilter< PixelType, VDimension >
 ::GenerateOutputInformation()
 {
+  // call the superclass' implementation of this method
+  Superclass::GenerateOutputInformation();
+
   IGeometry::Pointer geom = m_DataContainer->getGeometry();
   ImageGeom* imageGeom = dynamic_cast<ImageGeom*>(geom.get());
   if (!imageGeom)
@@ -92,12 +95,15 @@ InPlaceDream3DDataToImageFilter< PixelType, VDimension >
     origin[i] = torigin[i];
     size[i] = tDims[i];
   }
-  // Set ImportImageFilter properties
-  this->SetOrigin(origin);
-  this->SetSpacing(spacing);
-  this->SetRegion(size);
-  this->SetDirection(direction);
-  Superclass::GenerateOutputInformation();
+  // get pointer to the output
+  OutputImagePointer outputPtr = this->GetOutput();
+
+  // we need to compute the output spacing, the output origin, the
+  // output image size, and the output image start index
+  outputPtr->SetSpacing( spacing );
+  outputPtr->SetOrigin( origin );
+  outputPtr->SetDirection( direction );
+  outputPtr->SetLargestPossibleRegion( size );
 }
 
 template< typename PixelType, unsigned int VDimension>
@@ -121,9 +127,17 @@ InPlaceDream3DDataToImageFilter< PixelType, VDimension >
     buffer = new PixelType[size];
     ::memcpy( buffer, static_cast<PixelType*>(dataArray->getVoidPointer( 0 )), size * sizeof( PixelType ) );
   }
-  this->SetImportPointer( buffer, size, pixelContainerWillOwnTheBuffer );
-  Superclass::GenerateData();
-}
+  if( !m_ImportImageContainer || buffer != m_ImportImageContainer->GetImportPointer() )
+  {
+    m_ImportImageContainer = ImportImageContainerType::New();
+    m_ImportImageContainer->SetImportPointer( buffer,
+      size, pixelContainerWillOwnTheBuffer );
+  }
+  // get pointer to the output
+  OutputImagePointer outputPtr = this->GetOutput();
+  outputPtr->SetBufferedRegion( outputPtr->GetLargestPossibleRegion() );
+  outputPtr->SetPixelContainer( m_ImportImageContainer );
+ }
 
 }// end of itk namespace
 #endif
