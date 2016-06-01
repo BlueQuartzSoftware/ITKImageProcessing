@@ -46,6 +46,9 @@
 #include <itkImageIOFactory.h>
 #include <itkPNGImageIOFactory.h>
 
+// ITK-SCIFIO
+#include <itkSCIFIOImageIOFactory.h>
+
 // Include the MOC generated file for this class
 #include "moc_ITKImageReader.cpp"
 
@@ -60,6 +63,7 @@ ITKImageReader::ITKImageReader() :
   // As for now, register factories by hand. There is probably a better place
   // to do this than here.
   itk::PNGImageIOFactory::RegisterOneFactory();
+  itk::SCIFIOImageIOFactory::RegisterOneFactory();
 
   setupFilterParameters();
 }
