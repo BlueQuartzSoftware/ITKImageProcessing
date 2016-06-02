@@ -28,6 +28,9 @@ include(${SIMPLProj_SOURCE_DIR}/Source/SIMPLib/SIMPLibMacros.cmake)
 # --------------------------------------------------------------------
 # ITK Include
 if(SIMPLib_USE_ITK)
+  set(DREAM3D_ADDITIONAL_ITK_MODULES SCIFIO)
+  set_property(GLOBAL APPEND PROPERTY DREAM3D_ADDITIONAL_ITK_MODULES ${DREAM3D_ADDITIONAL_ITK_MODULES})
+
   include( ${DREAM3D_SUPPORT_DIR}/ITKSupport/IncludeITK.cmake)
   include_directories(${SimpleITKExplicit_BINARY_DIR}/Common/include)
   include_directories(${SimpleITKExplicit_SOURCE_DIR}/Explicit/include)
@@ -238,6 +241,7 @@ target_link_libraries(${PLUGIN_NAME}
                     Qt5::Widgets
                     SVWidgetsLib
                     ${ITK_LIBRARIES}
+                    ${SCIFIO_LIBRARIES}
                     )
 SET_TARGET_PROPERTIES(${PLUGIN_NAME} PROPERTIES FOLDER ${PLUGIN_NAME}Plugin)
 qt5_use_modules(${PLUGIN_NAME} Core Gui Widgets)
