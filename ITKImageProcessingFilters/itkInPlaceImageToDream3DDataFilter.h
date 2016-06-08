@@ -33,11 +33,12 @@ namespace itk
     ProcessObject::DataObjectPointer MakeOutput(ProcessObject::DataObjectPointerArraySizeType);
     itkSetMacro(DataArrayName, std::string);
     itkGetMacro(DataArrayName, std::string);
-    itkSetMacro(MatrixArrayName, std::string);
-    itkGetMacro(MatrixArrayName, std::string);
+    itkSetMacro(AttributeMatrixArrayName, std::string);
+    itkGetMacro(AttributeMatrixArrayName, std::string);
+    virtual void SetDataArrayPath( DataArrayPath dataArrayPath );
     itkSetMacro( InPlace, bool );
-    itkGetConstMacro( InPlace, bool );
-    itkBooleanMacro( InPlace );
+    itkGetConstMacro(InPlace, bool);
+    itkBooleanMacro(InPlace);
   protected:
     virtual void VerifyPreconditions() ITK_OVERRIDE;
     InPlaceImageToDream3DDataFilter();
@@ -47,7 +48,7 @@ namespace itk
     InPlaceImageToDream3DDataFilter(const InPlaceImageToDream3DDataFilter&); // Copy Constructor Not Implemented
     void operator=(const InPlaceImageToDream3DDataFilter&); // Operator '=' Not Implemented
     std::string m_DataArrayName;
-    std::string m_MatrixArrayName;
+    std::string m_AttributeMatrixArrayName;
     bool m_InPlace; // enable the possibility of in-place
   };// end of class InPlaceImageToDream3DDataFilter
 } //end of itk namespace

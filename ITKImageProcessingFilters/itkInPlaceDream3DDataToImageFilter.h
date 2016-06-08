@@ -27,11 +27,12 @@ namespace itk
     virtual void SetInput(DataContainer::Pointer &dc);
     itkSetMacro(DataArrayName, std::string);
     itkGetMacro(DataArrayName, std::string);
-    itkSetMacro(MatrixArrayName, std::string);
-    itkGetMacro(MatrixArrayName, std::string);
-    itkSetMacro( InPlace, bool );
-    itkGetConstMacro( InPlace, bool );
-    itkBooleanMacro( InPlace );
+    itkSetMacro(AttributeMatrixArrayName, std::string);
+    itkGetMacro(AttributeMatrixArrayName, std::string);
+    virtual void SetDataArrayPath(DataArrayPath dataArrayPath);
+    itkSetMacro(InPlace, bool);
+    itkGetConstMacro(InPlace, bool);
+    itkBooleanMacro(InPlace);
   protected:
     InPlaceDream3DDataToImageFilter();
     virtual ~InPlaceDream3DDataToImageFilter();
@@ -44,7 +45,7 @@ namespace itk
     InPlaceDream3DDataToImageFilter(const InPlaceDream3DDataToImageFilter&); // Copy Constructor Not Implemented
     void operator=(const InPlaceDream3DDataToImageFilter&); // Operator '=' Not Implemented
     std::string m_DataArrayName;
-    std::string m_MatrixArrayName;
+    std::string m_AttributeMatrixArrayName;
     typename ImportImageContainerType::Pointer m_ImportImageContainer;
     bool m_InPlace; // enable the possibility of in-place
   };

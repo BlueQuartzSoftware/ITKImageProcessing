@@ -19,6 +19,20 @@ InPlaceDream3DDataToImageFilter<PixelType, VDimension>::~InPlaceDream3DDataToIma
 {
 }
 
+template< typename PixelType, unsigned int VDimension >
+void
+InPlaceDream3DDataToImageFilter<PixelType, VDimension>
+::SetDataArrayPath(DataArrayPath dataArrayPath)
+{
+  if( m_AttributeMatrixArrayName != dataArrayPath.getAttributeMatrixName().toStdString()
+    || m_DataArrayName != dataArrayPath.getDataArrayName().toStdString() )
+  {
+    m_AttributeMatrixArrayName = dataArrayPath.getAttributeMatrixName().toStdString();
+    m_DataArrayName = dataArrayPath.getDataArrayName().toStdString();
+    this->Modified();
+  }
+}
+
 template< typename PixelType, unsigned int VDimension>
 void
 InPlaceDream3DDataToImageFilter< PixelType, VDimension >
@@ -48,11 +62,11 @@ InPlaceDream3DDataToImageFilter< PixelType, VDimension >
     itkExceptionMacro("DataContainer geometry is not ImageGeometry. It is " + geomTypeName.toStdString());
   }
   // Verifies that data container contains matrix array
-  if (!m_DataContainer->doesAttributeMatrixExist(m_MatrixArrayName.c_str()))
+  if( !m_DataContainer->doesAttributeMatrixExist(m_AttributeMatrixArrayName.c_str()))
   {
-    itkExceptionMacro("Matrix array (" + m_MatrixArrayName + ") does not exist");
+    itkExceptionMacro( "Matrix array (" + m_AttributeMatrixArrayName + ") does not exist" );
   }
-  AttributeMatrix::Pointer ma = m_DataContainer->getAttributeMatrix(m_MatrixArrayName.c_str());
+  AttributeMatrix::Pointer ma = m_DataContainer->getAttributeMatrix(m_AttributeMatrixArrayName.c_str());
   // Verifies that matrix array contains data array
   if (!ma->doesAttributeArrayExist(m_DataArrayName.c_str()))
   {
@@ -112,7 +126,7 @@ InPlaceDream3DDataToImageFilter< PixelType, VDimension >
 ::GenerateData()
 {
   // Get data pointer
-  AttributeMatrix::Pointer ma = m_DataContainer->getAttributeMatrix(m_MatrixArrayName.c_str());
+  AttributeMatrix::Pointer ma = m_DataContainer->getAttributeMatrix(m_AttributeMatrixArrayName.c_str());
   IDataArray::Pointer dataArray = ma->getAttributeArray(m_DataArrayName.c_str());
   const bool pixelContainerWillOwnTheBuffer = true;
   size_t size = dataArray->getSize();

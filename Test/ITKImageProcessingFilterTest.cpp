@@ -145,7 +145,7 @@ class ITKImageProcessingFilterTest
     filter->SetInPlace(inPlace);
     DataArrayPath dataArrayPath("TestContainer","TestAttributeMatrixName","TestAttributeArrayName");
     filter->SetDataArrayName(dataArrayPath.getDataArrayName().toStdString());
-    filter->SetMatrixArrayName(dataArrayPath.getAttributeMatrixName().toStdString());
+    filter->SetAttributeMatrixArrayName( dataArrayPath.getAttributeMatrixName().toStdString() );
     filter->SetDataContainer(dc);
     filter->Update();
     dc = filter->GetOutput()->Get();
@@ -246,7 +246,7 @@ class ITKImageProcessingFilterTest
       filter->SetInput(image);
       filter->SetInPlace(inPlace);
       filter->SetDataArrayName(dataArrayPath.getDataArrayName().toStdString());
-      filter->SetMatrixArrayName(dataArrayPath.getAttributeMatrixName().toStdString());
+      filter->SetAttributeMatrixArrayName( dataArrayPath.getAttributeMatrixName().toStdString() );
       filter->SetDataContainer(dc);
       filter->Update();
       dc = filter->GetOutput()->Get();
@@ -308,7 +308,7 @@ class ITKImageProcessingFilterTest
     FilterType::Pointer filter = FilterType::New();
     filter->SetInput(dc);
     filter->SetInPlace(inPlace);
-    filter->SetMatrixArrayName(attributeMatrixName.toStdString());
+    filter->SetAttributeMatrixArrayName( attributeMatrixName.toStdString() );
     filter->SetDataArrayName(dataArrayName.toStdString());
     filter->Update();
     ImageType::Pointer image = filter->GetOutput();
@@ -390,7 +390,7 @@ class ITKImageProcessingFilterTest
       FilterType::Pointer filter = FilterType::New();
       filter->SetInput(dc);
       filter->SetInPlace(inPlace);
-      filter->SetMatrixArrayName(attributeMatrixName.toStdString());
+      filter->SetAttributeMatrixArrayName( attributeMatrixName.toStdString() );
       filter->SetDataArrayName(dataArrayName.toStdString());
       filter->Update();
       image = filter->GetOutput();

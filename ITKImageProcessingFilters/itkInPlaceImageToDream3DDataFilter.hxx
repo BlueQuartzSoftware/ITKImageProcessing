@@ -13,7 +13,7 @@ InPlaceImageToDream3DDataFilter<PixelType,VDimension>
 ::InPlaceImageToDream3DDataFilter()
 {
   m_DataArrayName = (SIMPL::Defaults::CellAttributeMatrixName).toStdString();
-  m_MatrixArrayName = (SIMPL::CellData::ImageData).toStdString();
+  m_AttributeMatrixArrayName = (SIMPL::CellData::ImageData).toStdString();
   // Create the output. We use static_cast<> here because we know the default
   // output must be of type DecoratorType
   typename DecoratorType::Pointer output =
@@ -23,6 +23,20 @@ InPlaceImageToDream3DDataFilter<PixelType,VDimension>
   this->SetNumberOfRequiredInputs(1);
   this->SetDataContainer(DataContainer::NullPointer());
   m_InPlace = true;
+}
+
+template< typename PixelType, unsigned int VDimension >
+void
+InPlaceImageToDream3DDataFilter<PixelType, VDimension>
+::SetDataArrayPath( DataArrayPath dataArrayPath )
+{
+  if( m_AttributeMatrixArrayName != dataArrayPath.getAttributeMatrixName().toStdString()
+    || m_DataArrayName != dataArrayPath.getDataArrayName().toStdString() )
+  {
+    m_AttributeMatrixArrayName = dataArrayPath.getAttributeMatrixName().toStdString();
+    m_DataArrayName = dataArrayPath.getDataArrayName().toStdString();
+    this->Modified();
+  }
 }
 
 template< typename PixelType, unsigned int VDimension>
@@ -140,10 +154,10 @@ InPlaceImageToDream3DDataFilter<PixelType, VDimension>
   QVector<size_t> tDims(3, 1);
   qCopy(dims, dims + 3, tDims.begin());
   AttributeMatrix::Pointer ma;
-  if (dataContainer->doesAttributeMatrixExist(m_MatrixArrayName.c_str()))
+  if( dataContainer->doesAttributeMatrixExist(m_AttributeMatrixArrayName.c_str()))
   {
     // Check that size matches
-    ma = dataContainer->getAttributeMatrix(m_MatrixArrayName.c_str());
+    ma = dataContainer->getAttributeMatrix(m_AttributeMatrixArrayName.c_str());
     size_t numofTuples = ma->getNumTuples();
     QVector<size_t> matDims = ma->getTupleDimensions();
     if (matDims != tDims)
@@ -157,7 +171,7 @@ InPlaceImageToDream3DDataFilter<PixelType, VDimension>
   }
   else
   {
-    ma = dataContainer->createAndAddAttributeMatrix(tDims, m_MatrixArrayName.c_str(), SIMPL::AttributeMatrixType::Cell);
+    ma = dataContainer->createAndAddAttributeMatrix(tDims, m_AttributeMatrixArrayName.c_str(), SIMPL::AttributeMatrixType::Cell);
   }
   // Checks if doesAttributeArray exists
   if (ma->doesAttributeArrayExist(m_DataArrayName.c_str()))
@@ -212,7 +226,7 @@ InPlaceImageToDream3DDataFilter<PixelType, VDimension>
   {
     itkExceptionMacro("Dimension must be 2 or 3.");
   }
-  CheckValidArrayPathComponentName(m_MatrixArrayName);
+  CheckValidArrayPathComponentName(m_AttributeMatrixArrayName);
   CheckValidArrayPathComponentName(m_DataArrayName);
   // Verify data container
   DecoratorType *outputPtr = this->GetOutput();
