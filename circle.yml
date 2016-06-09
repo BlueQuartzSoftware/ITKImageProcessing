@@ -10,4 +10,5 @@ dependencies:
 
 test:
   override:
-    - ~/ITKImageProcessing/Test/Docker/run.sh
+    - ~/ITKImageProcessing/Test/Docker/run.sh :
+       timeout: 6000
