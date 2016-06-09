@@ -235,12 +235,8 @@ endif()
 
 add_library(${PLUGIN_NAME} MODULE ${${PLUGIN_NAME}_MODULE_SRCS})
 target_link_libraries(${PLUGIN_NAME}
-                    Qt5::Core
-                    SIMPLib
-                    Qt5::Gui 
-                    Qt5::Widgets
                     SVWidgetsLib
-                    ${ITK_LIBRARIES}
+                    SimpleITKExplicit
                     ${SCIFIO_LIBRARIES}
                     )
 SET_TARGET_PROPERTIES(${PLUGIN_NAME} PROPERTIES FOLDER ${PLUGIN_NAME}Plugin)

@@ -231,7 +231,7 @@ const QString ITKImageReader::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString ITKImageReader::getGroupName()
-{ return SIMPL::FilterGroups::IOFilters; }
+{ return "Image Processing"; }
 
 // -----------------------------------------------------------------------------
 //
@@ -243,5 +243,5 @@ const QString ITKImageReader::getSubGroupName()
 //
 // -----------------------------------------------------------------------------
 const QString ITKImageReader::getHumanLabel()
-{ return "ITKImageReader"; }
+{ return "[ITK] ImageReader (KW)"; }
 

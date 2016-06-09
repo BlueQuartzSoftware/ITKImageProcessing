@@ -61,4 +61,31 @@ namespace UnitTest
   }
 }
 
+namespace UnitTest
+{
+  namespace ItkGaussianBlurTest
+  {
+   const QString TestFile1("@TEST_TEMP_DIR@/TestFile1.txt");
+   const QString TestFile2("@TEST_TEMP_DIR@/TestFile2.txt");
+  }
+}
+
+namespace UnitTest
+{
+  namespace Itk_GaussianBlurTest
+  {
+   const QString TestFile1("@TEST_TEMP_DIR@/TestFile1.txt");
+   const QString TestFile2("@TEST_TEMP_DIR@/TestFile2.txt");
+  }
+}
+
+namespace UnitTest
+{
+  namespace Itk_BinaryThresholdTest
+  {
+   const QString TestFile1("@TEST_TEMP_DIR@/TestFile1.txt");
+   const QString TestFile2("@TEST_TEMP_DIR@/TestFile2.txt");
+  }
+}
+
 #endif

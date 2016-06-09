@@ -137,7 +137,7 @@ class ITKImageProcessingFilterTest
     ImageType::Pointer image = CreateITKImageForTests<PixelType,dimension>(origin, size, spacing, 12);
     ImageType::IndexType index;
     index.Fill(0);
-    float val=image->GetPixel(index);
+    //float val=image->GetPixel(index);
     // Create converter
     typedef itk::InPlaceImageToDream3DDataFilter<PixelType, dimension> InPlaceImageToDream3DDataFilterType;
     InPlaceImageToDream3DDataFilterType::Pointer filter = InPlaceImageToDream3DDataFilterType::New();
@@ -302,6 +302,7 @@ class ITKImageProcessingFilterTest
     DataArray<PixelType>::Pointer data = DataArray<PixelType>::CreateArray(tDims, cDims, dataArrayName, true);
     data->initializeWithValue(11.0);
     ma->addAttributeArray(dataArrayName, data);
+
     // Create filter
     typedef itk::Image<PixelType, Dimension> ImageType;
     typedef itk::InPlaceDream3DDataToImageFilter<PixelType, Dimension> FilterType;
@@ -312,6 +313,8 @@ class ITKImageProcessingFilterTest
     filter->SetDataArrayName(dataArrayName.toStdString());
     filter->Update();
     ImageType::Pointer image = filter->GetOutput();
+
+
     // Check image properties (size, spacing, origin): must match baseline properties
     ImageType::SizeType size;
     size = image->GetLargestPossibleRegion().GetSize();

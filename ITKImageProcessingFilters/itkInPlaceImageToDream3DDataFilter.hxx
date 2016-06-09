@@ -153,28 +153,28 @@ InPlaceImageToDream3DDataFilter<PixelType, VDimension>
   imageGeom->getDimensions(dims[0], dims[1], dims[2]);
   QVector<size_t> tDims(3, 1);
   qCopy(dims, dims + 3, tDims.begin());
-  AttributeMatrix::Pointer ma;
+  AttributeMatrix::Pointer attrMat;
   if( dataContainer->doesAttributeMatrixExist(m_AttributeMatrixArrayName.c_str()))
   {
     // Check that size matches
-    ma = dataContainer->getAttributeMatrix(m_AttributeMatrixArrayName.c_str());
-    size_t numofTuples = ma->getNumTuples();
-    QVector<size_t> matDims = ma->getTupleDimensions();
+    attrMat = dataContainer->getAttributeMatrix(m_AttributeMatrixArrayName.c_str());
+    //size_t numofTuples = attrMat->getNumTuples();
+    QVector<size_t> matDims = attrMat->getTupleDimensions();
     if (matDims != tDims)
     {
       itkExceptionMacro("Tuples dimension of existing matrix array do not match image size.");
     }
-    if (ma->getType() != SIMPL::AttributeMatrixType::Cell)
+    if (attrMat->getType() != SIMPL::AttributeMatrixType::Cell)
     {
       itkExceptionMacro("Attribute matrix is not of type SIMPL::AttributeMatrixType::Cell.");
     }
   }
   else
   {
-    ma = dataContainer->createAndAddAttributeMatrix(tDims, m_AttributeMatrixArrayName.c_str(), SIMPL::AttributeMatrixType::Cell);
+    attrMat = dataContainer->createAndAddAttributeMatrix(tDims, m_AttributeMatrixArrayName.c_str(), SIMPL::AttributeMatrixType::Cell);
   }
   // Checks if doesAttributeArray exists
-  if (ma->doesAttributeArrayExist(m_DataArrayName.c_str()))
+  if (attrMat->doesAttributeArrayExist(m_DataArrayName.c_str()))
   {
     itkExceptionMacro("Existing data array with same name.");
   }
@@ -193,7 +193,7 @@ InPlaceImageToDream3DDataFilter<PixelType, VDimension>
         data = DataArrayPixelType::FromPointer(inputPtr->GetBufferPointer(),
                                  imageGeom->getNumberOfElements(), m_DataArrayName.c_str(), true);
     }
-    ma->addAttributeArray(m_DataArrayName.c_str(), data);
+    attrMat->addAttributeArray(m_DataArrayName.c_str(), data);
   }
   outputPtr->Set(dataContainer);
 }

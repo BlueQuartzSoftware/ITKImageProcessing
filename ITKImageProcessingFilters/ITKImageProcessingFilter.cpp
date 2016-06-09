@@ -179,7 +179,7 @@ const QString ITKImageProcessingFilter::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString ITKImageProcessingFilter::getGroupName()
-{ return SIMPL::FilterGroups::Unsupported; }
+{ return "Image Processing"; }
 
 // -----------------------------------------------------------------------------
 //
@@ -191,5 +191,5 @@ const QString ITKImageProcessingFilter::getSubGroupName()
 //
 // -----------------------------------------------------------------------------
 const QString ITKImageProcessingFilter::getHumanLabel()
-{ return "ITKImageProcessingFilter"; }
+{ return "[ITK] Image Processing Filter (KW)"; }
 
