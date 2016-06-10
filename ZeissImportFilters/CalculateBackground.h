@@ -170,34 +170,8 @@ class CalculateBackground : public AbstractFilter
      */
     void initialize();
 
-
-    /**
-     * @brief readMetaXml
-     * @param device
-     * @return
-     */
-
-
-    /**
-     * @brief parseRootTagsSection
-     * @param tags
-     * @return
-     */
-
-    /**
-     * @brief parseImages
-     * @param rootTags
-     */
-
   private:
-    /* Your private class instance variables go here. You can use several preprocessor macros to help
-     * make sure you have all the variables defined correctly. Those are "DEFINE_DATAARRAY_VARIABLE()"
-     * and  DEFINE_DATAARRAY_VARIABLE() which are defined in DREAM3DGetSetMacros.h
-     */
-
-    int64_t m_totalPoints;
-//    uint64_t m_lowThresh;
-//    uint64_t m_highThresh;
+    int64_t m_TotalPoints;
 
     DEFINE_DATAARRAY_VARIABLE(double, BackgroundImage)
 

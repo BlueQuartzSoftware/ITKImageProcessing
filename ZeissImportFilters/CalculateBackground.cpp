@@ -139,7 +139,7 @@ int CalculateBackground::writeFilterParameters(AbstractFilterParametersWriter* w
 // -----------------------------------------------------------------------------
 void CalculateBackground::initialize()
 {
-
+  m_TotalPoints = 0;
 }
 
 // -----------------------------------------------------------------------------
@@ -148,6 +148,8 @@ void CalculateBackground::initialize()
 void CalculateBackground::dataCheck()
 {
   setErrorCondition(0);
+  initialize();
+
   DataArrayPath tempPath;
 
   QString ss;
@@ -201,7 +203,7 @@ void CalculateBackground::dataCheck()
 
 
   if(getErrorCondition() < 0) { return; }
-  m_totalPoints = imagePtr->getNumberOfTuples();
+  m_TotalPoints = imagePtr->getNumberOfTuples();
 
   setDataContainerName(getAttributeMatrixName().getDataContainerName());
   DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getDataContainerName(), false);
@@ -274,8 +276,8 @@ void CalculateBackground::execute()
   IDataArray::Pointer iDataArray = IDataArray::NullPointer();
   uint8_t* image = NULL;
 
-  std::vector<double> background(m_totalPoints, 0);
-  std::vector<double> counter(m_totalPoints, 0);
+  std::vector<double> background(m_TotalPoints, 0);
+  std::vector<double> counter(m_TotalPoints, 0);
 
 
   // getting the fist data container just to get the dimensions of each image.
@@ -303,7 +305,7 @@ void CalculateBackground::execute()
     {
       //            int64_t totalPoints = imagePtr->getNumberOfTuples();
       image = imagePtr->getPointer(0);
-      for(int64_t t = 0; t < m_totalPoints; t++)
+      for(int64_t t = 0; t < m_TotalPoints; t++)
       {
 
         if (static_cast<uint8_t>(image[t]) >= m_lowThresh && static_cast<uint8_t>(image[t])  <= m_highThresh)
@@ -318,7 +320,7 @@ void CalculateBackground::execute()
   // average the background values by the number of counts (counts will be the number of images unless the threshold values do not include all the possible image values
   // (i.e. for an 8 bit image, if we only include values from 0 to 100, not every image value will be counted)
 
-  for (int64_t j = 0; j < m_totalPoints; j++)
+  for (int64_t j = 0; j < m_TotalPoints; j++)
   {
     background[j] = double(background[j] /= (counter[j]));
   }
@@ -326,10 +328,10 @@ void CalculateBackground::execute()
 
   // Fit the background to a second order polynomial
   // p are the coefficients p[0] + p[1]*x + p[2]*y +p[3]*xy + p[4]*x^2 + p[5]*y^2
-  Eigen::MatrixXd A(m_totalPoints, ZeissImportConstants::PolynomialOrder::NumConsts2ndOrder);
-  Eigen::VectorXd B(m_totalPoints);
+  Eigen::MatrixXd A(m_TotalPoints, ZeissImportConstants::PolynomialOrder::NumConsts2ndOrder);
+  Eigen::VectorXd B(m_TotalPoints);
 
-  for(int i = 0; i < m_totalPoints; ++i)
+  for(int i = 0; i < m_TotalPoints; ++i)
   {
     xval = int(i / dims[0]);
     yval = int(i % dims[0]);
@@ -354,14 +356,14 @@ void CalculateBackground::execute()
   { m_BackgroundImage = m_BackgroundImagePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
 
-  Eigen::VectorXd Bcalc(m_totalPoints);
+  Eigen::VectorXd Bcalc(m_TotalPoints);
   double average = 0;
 
   Bcalc = A * p;
   average = Bcalc.mean();
-  Bcalc = Bcalc - Eigen::VectorXd::Constant(m_totalPoints, average);
+  Bcalc = Bcalc - Eigen::VectorXd::Constant(m_TotalPoints, average);
 
-  for(int i = 0; i < m_totalPoints; ++i)
+  for(int i = 0; i < m_TotalPoints; ++i)
   {
     m_BackgroundImage[i] = Bcalc(i);
   }
@@ -377,7 +379,7 @@ void CalculateBackground::execute()
       {
         image = imagePtr->getPointer(0);
 
-        for(int64_t t = 0; t < m_totalPoints; t++)
+        for(int64_t t = 0; t < m_TotalPoints; t++)
         {
           if (static_cast<uint8_t>(image[t]) >= m_lowThresh && static_cast<uint8_t>(image[t])  <= m_highThresh)
           {
@@ -404,7 +406,7 @@ void CalculateBackground::execute()
       {
         image = imagePtr->getPointer(0);
 
-        for(int64_t t = 0; t < m_totalPoints; t++)
+        for(int64_t t = 0; t < m_TotalPoints; t++)
         {
           if (static_cast<uint8_t>(image[t]) >= m_lowThresh && static_cast<uint8_t>(image[t])  <= m_highThresh)
           {
