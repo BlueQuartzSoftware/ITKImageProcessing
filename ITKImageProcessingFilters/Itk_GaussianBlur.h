@@ -124,16 +124,16 @@ class Itk_GaussianBlur : public AbstractFilter
 
   protected:
     Itk_GaussianBlur();
-
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
 
     /**
-    * @brief Initializes all the private instance variables
-    */
+     * @brief Initializes all the private instance variables.
+     */
     void initialize();
+
 
   private:
 

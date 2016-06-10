@@ -95,6 +95,14 @@ int ITKImageProcessingFilter::writeFilterParameters(AbstractFilterParametersWrit
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void ITKImageProcessingFilter::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void ITKImageProcessingFilter::dataCheck()
 {
   setErrorCondition(0);

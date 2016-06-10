@@ -134,8 +134,8 @@ class Itk_BinaryThreshold : public AbstractFilter
     void dataCheck();
 
     /**
-    * @brief Initializes all the private instance variables
-    */
+     * @brief Initializes all the private instance variables.
+     */
     void initialize();
 
   private:

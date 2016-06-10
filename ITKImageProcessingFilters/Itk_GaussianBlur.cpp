@@ -49,15 +49,6 @@ Itk_GaussianBlur::~Itk_GaussianBlur()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Itk_GaussianBlur::initialize()
-{
-  setErrorCondition(0);
-  setCancel(false);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void Itk_GaussianBlur::setupFilterParameters()
 {
   FilterParameterVector parameters;
@@ -106,6 +97,15 @@ int Itk_GaussianBlur::writeFilterParameters(AbstractFilterParametersWriter* writ
   SIMPL_FILTER_WRITE_PARAMETER(SaveAsNewArray)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void Itk_GaussianBlur::initialize()
+{
+  setErrorCondition(0);
+  setCancel(false);
 }
 
 // -----------------------------------------------------------------------------

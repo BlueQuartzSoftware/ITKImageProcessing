@@ -149,11 +149,16 @@ class ITKImageReader : public AbstractFilter
 
   protected:
     ITKImageReader();
-
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
 
   private:
 	  ITKImageReader(const ITKImageReader&); // Copy Constructor Not Implemented

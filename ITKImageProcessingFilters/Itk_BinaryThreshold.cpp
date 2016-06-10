@@ -53,15 +53,6 @@ Itk_BinaryThreshold::~Itk_BinaryThreshold()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Itk_BinaryThreshold::initialize()
-{
-  setErrorCondition(0);
-  setCancel(false);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void Itk_BinaryThreshold::setupFilterParameters()
 {
   FilterParameterVector parameters;
@@ -106,6 +97,16 @@ int Itk_BinaryThreshold::writeFilterParameters(AbstractFilterParametersWriter* w
   SIMPL_FILTER_WRITE_PARAMETER(ManualParameter)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void Itk_BinaryThreshold::initialize()
+{
+  setErrorCondition(0);
+  setCancel(false);
 }
 
 // -----------------------------------------------------------------------------
