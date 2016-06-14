@@ -360,7 +360,7 @@ class ITKImageProcessingFilterTest
     ImageType::Pointer image;
     PixelType initial_value = 11 ;
     size_t dataSize;
-    int tol = 1;
+    //int tol = 1;
     //Local scope
     {
       // Create test data (baseline)

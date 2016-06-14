@@ -30,7 +30,7 @@ namespace itk
     virtual void GenerateData() ITK_OVERRIDE;
     virtual void GenerateOutputInformation() ITK_OVERRIDE;
     DecoratorType* GetOutput();
-    ProcessObject::DataObjectPointer MakeOutput(ProcessObject::DataObjectPointerArraySizeType);
+    ProcessObject::DataObjectPointer MakeOutput(ProcessObject::DataObjectPointerArraySizeType) override;
     itkSetMacro(DataArrayName, std::string);
     itkGetMacro(DataArrayName, std::string);
     itkSetMacro(AttributeMatrixArrayName, std::string);

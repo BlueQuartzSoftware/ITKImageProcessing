@@ -107,8 +107,8 @@ InPlaceImageToDream3DDataFilter<PixelType, VDimension>
     imageGeom->getDimensions(tDims[0], tDims[1], tDims[2]);
     for( size_t i=0; i < 3; i++ )
     {
-      if (abs(torigin[i] - origin[i]) > tol
-        || abs(tspacing[i] - spacing[i]) > tol
+      if (std::abs(torigin[i] - origin[i]) > tol
+        || std::abs(tspacing[i] - spacing[i]) > tol
         || tDims[i] != size[i]
         )
       {
