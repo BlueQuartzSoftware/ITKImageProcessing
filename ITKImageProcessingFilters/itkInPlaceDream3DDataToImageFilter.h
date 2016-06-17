@@ -1,25 +1,28 @@
 #ifndef _itkInPlaceDream3DDataToImageFilter_h
 #define _itkInPlaceDream3DDataToImageFilter_h
 
+#include "itkImportImageMallocContainer.h"
+#include "itkImageContainerTemplated.h"
 #include <itkImportImageFilter.h>
 
 namespace itk
 {
   template< typename PixelType, unsigned int VDimension >
-  class InPlaceDream3DDataToImageFilter : public ImageSource< itk::Image<PixelType, VDimension> >
+  class InPlaceDream3DDataToImageFilter : public ImageSource< itk::ImageContainerTemplated<PixelType,
+                           VDimension, itk::ImportImageMallocContainer< itk::SizeValueType, PixelType> > >
   {
   public:
     /** Standard class typedefs. */
     typedef InPlaceDream3DDataToImageFilter                                 Self;
     typedef SmartPointer<Self>                                              Pointer;
-    typedef typename itk::Image<PixelType, VDimension>                      ImageType;
+    typedef typename itk::ImportImageMallocContainer< SizeValueType,
+                                                      PixelType >           ImportImageContainerType;
+    typedef typename itk::ImageContainerTemplated<PixelType, VDimension,
+                                                 ImportImageContainerType > ImageType;
     typedef typename ImageType::Pointer                                     ImagePointer;
     typedef typename ::DataArray<PixelType>                                 DataArrayPixelType;
-    typedef typename itk::ImageSource< itk::Image<PixelType, VDimension> >  Superclass;
-    typedef itk::SizeValueType                                              SizeValueType;
-    typedef ImportImageContainer< SizeValueType, PixelType >                ImportImageContainerType;
-    typedef Image< PixelType, VDimension >                                  OutputImageType;
-    typedef typename OutputImageType::Pointer                               OutputImagePointer;
+    typedef typename itk::ImageSource< ImageType >                          Superclass;
+    typedef typename itk::SizeValueType                                     SizeValueType;
 
     /** Method for creation through the object factory. */
     itkNewMacro(Self);

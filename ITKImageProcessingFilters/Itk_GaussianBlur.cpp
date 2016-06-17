@@ -171,7 +171,8 @@ void Itk_GaussianBlur::execute()
 
   const unsigned int Dimension = 3;
   typedef DefaultPixelType PixelType;
-  typedef itk::Image<PixelType, Dimension> ImageType;
+  typedef itk::ImportImageMallocContainer<itk::SizeValueType, PixelType> ImageContainerType;
+  typedef itk::ImageContainerTemplated<PixelType, Dimension, ImageContainerType> ImageType;
   typedef itk::InPlaceDream3DDataToImageFilter<PixelType, Dimension> FilterType;
   const QString outputArrayName("Output Array");
 
