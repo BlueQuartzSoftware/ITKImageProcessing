@@ -110,7 +110,7 @@ InPlaceDream3DDataToImageFilter< PixelType, VDimension >
     size[i] = tDims[i];
   }
   // get pointer to the output
-  OutputImagePointer outputPtr = this->GetOutput();
+  ImagePointer outputPtr = this->GetOutput();
 
   // we need to compute the output spacing, the output origin, the
   // output image size, and the output image start index
@@ -148,7 +148,7 @@ InPlaceDream3DDataToImageFilter< PixelType, VDimension >
       size, pixelContainerWillOwnTheBuffer );
   }
   // get pointer to the output
-  OutputImagePointer outputPtr = this->GetOutput();
+  ImagePointer outputPtr = this->GetOutput();
   outputPtr->SetBufferedRegion( outputPtr->GetLargestPossibleRegion() );
   outputPtr->SetPixelContainer( m_ImportImageContainer );
  }

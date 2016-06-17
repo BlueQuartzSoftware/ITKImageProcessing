@@ -16,6 +16,7 @@
 
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkInPlaceDream3DDataToImageFilter.h"
 
 #include "sitkExplicitITK.h"
@@ -171,7 +172,7 @@ void Itk_GaussianBlur::execute()
 
   const unsigned int Dimension = 3;
   typedef DefaultPixelType PixelType;
-  typedef itk::Image<PixelType, Dimension> ImageType;
+  typedef itk::Dream3DImage<PixelType, Dimension> ImageType;
   typedef itk::InPlaceDream3DDataToImageFilter<PixelType, Dimension> FilterType;
   const QString outputArrayName("Output Array");
 
