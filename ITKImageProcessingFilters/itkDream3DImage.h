@@ -15,9 +15,10 @@
 *  limitations under the License.
 *
 *=========================================================================*/
-#ifndef itkImageContainerTemplated_h
-#define itkImageContainerTemplated_h
+#ifndef itkDream3DImage_h
+#define itkDream3DImage_h
 
+#include "itkImportDream3DImageContainer.h"
 #include "itkImage.h"
 #include "itkImageRegion.h"
 #include "itkDefaultPixelAccessor.h"
@@ -29,17 +30,17 @@
 
 namespace itk
 {
-  /** \class ImageContainerTemplated
-  *  \brief Templated n-dimensional ImageContainerTemplated class.
+  /** \class Dream3DImage
+  *  \brief Templated n-dimensional Dream3DImage class.
   *
-  * ImageContainerTemplateds are templated over a pixel type (modeling the dependent
+  * Dream3DImages are templated over a pixel type (modeling the dependent
   * variables), and a dimension (number of independent variables).  The
   * container for the pixel data is the templated ImportImageContainer.
   *
-  * Within the pixel container, ImageContainerTemplateds are modelled as arrays, defined by a
+  * Within the pixel container, Dream3DImages are modelled as arrays, defined by a
   * start index and a size.
   *
-  * The superclass of ImageContainerTemplated, Image, defines the geometry of the
+  * The superclass of Dream3DImage, Image, defines the geometry of the
   * image in terms of where the image sits in physical space, how the
   * image is oriented in physical space, the size of a pixel, and the
   * extent of the image itself.  ImageBase provides the methods to
@@ -72,12 +73,12 @@ namespace itk
   * \wikiexample{SimpleOperations/SetPixels,Set specified pixels to specified values}
   * \endwiki
   */
-  template< typename TPixel, unsigned int VImageDimension = 2, typename PixelContainerType = ImportImageContainer< itk::SizeValueType, TPixel > >
-  class ImageContainerTemplated :public Image< TPixel, VImageDimension >
+  template< typename TPixel, unsigned int VImageDimension = 2 >
+  class Dream3DImage :public Image< TPixel, VImageDimension >
   {
   public:
     /** Standard class typedefs */
-    typedef ImageContainerTemplated      Self;
+    typedef Dream3DImage      Self;
     typedef Image< TPixel,VImageDimension >     Superclass;
     typedef SmartPointer< Self >         Pointer;
     typedef SmartPointer< const Self >   ConstPointer;
@@ -87,7 +88,7 @@ namespace itk
     itkNewMacro( Self );
 
     /** Run-time type information (and related methods). */
-    itkTypeMacro( ImageContainerTemplated, Image );
+    itkTypeMacro( Dream3DImage, Image );
 
     /** Pixel typedef support. Used to declare pixel type in filters
     * or other operations. */
@@ -144,8 +145,9 @@ namespace itk
     typedef typename Superclass::PointType PointType;
 
     /** A pointer to the pixel container. */
-    typedef typename PixelContainerType::Pointer      PixelContainerPointer;
-    typedef typename PixelContainerType::ConstPointer PixelContainerConstPointer;
+    typedef typename ImportDream3DImageContainer< itk::SizeValueType, TPixel > PixelContainerType;
+    typedef typename PixelContainerType::Pointer                               PixelContainerPointer;
+    typedef typename PixelContainerType::ConstPointer                          PixelContainerConstPointer;
 
     /** Offset typedef (relative position between indices) */
     typedef typename Superclass::OffsetValueType OffsetValueType;
@@ -243,13 +245,13 @@ namespace itk
       return NeighborhoodAccessorFunctorType();
     }
   protected:
-    ImageContainerTemplated();
+    Dream3DImage();
     void PrintSelf( std::ostream & os, Indent indent ) const ITK_OVERRIDE;
 
-    virtual ~ImageContainerTemplated() {}
+    virtual ~Dream3DImage() {}
 
   private:
-    ImageContainerTemplated( const Self & ) ITK_DELETE_FUNCTION;
+    Dream3DImage( const Self & ) ITK_DELETE_FUNCTION;
     void operator=(const Self &)ITK_DELETE_FUNCTION;
 
     /** Memory for the current buffer. */
@@ -258,7 +260,7 @@ namespace itk
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkImageContainerTemplated.hxx"
+#include "itkDream3DImage.hxx"
 #endif
 
 #endif

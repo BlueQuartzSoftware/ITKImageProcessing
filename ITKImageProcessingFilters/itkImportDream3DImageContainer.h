@@ -15,8 +15,8 @@
 *  limitations under the License.
 *
 *=========================================================================*/
-#ifndef itkImportImageMallocContainer_h
-#define itkImportImageMallocContainer_h
+#ifndef itkImportDream3DImageContainer_h
+#define itkImportDream3DImageContainer_h
 
 #include "itkObject.h"
 #include "itkObjectFactory.h"
@@ -24,7 +24,7 @@
 
 namespace itk
 {
-  /** \class ImportImageMallocContainer
+  /** \class ImportDream3DImageContainer
   *  \brief Defines an itk::Image front-end to a standard C-array.
   *
   * Defines an itk::Image front-end to a standard C-array. This container
@@ -42,11 +42,11 @@ namespace itk
   */
 
   template< typename TElementIdentifier, typename TElement >
-  class ImportImageMallocContainer :public Object
+  class ImportDream3DImageContainer :public Object
   {
   public:
     /** Standard class typedefs. */
-    typedef ImportImageMallocContainer       Self;
+    typedef ImportDream3DImageContainer       Self;
     typedef Object                     Superclass;
     typedef SmartPointer< Self >       Pointer;
     typedef SmartPointer< const Self > ConstPointer;
@@ -59,7 +59,7 @@ namespace itk
     itkNewMacro( Self );
 
     /** Standard part of every itk Object. */
-    itkTypeMacro( ImportImageMallocContainer, Object );
+    itkTypeMacro( ImportDream3DImageContainer, Object );
 
     /** Get the pointer from which the image data is imported. */
     TElement * GetImportPointer() { return m_ImportPointer; }
@@ -146,8 +146,8 @@ namespace itk
     itkBooleanMacro( ContainerManageMemory );
 
   protected:
-    ImportImageMallocContainer();
-    virtual ~ImportImageMallocContainer();
+    ImportDream3DImageContainer();
+    virtual ~ImportDream3DImageContainer();
 
     /** PrintSelf routine. Normally this is a protected internal method. It is
     * made public here so that Image can call this method.  Users should not
@@ -186,7 +186,7 @@ namespace itk
     void SetImportPointer( TElement *ptr ){ m_ImportPointer = ptr; }
 
   private:
-    ImportImageMallocContainer( const Self & ) ITK_DELETE_FUNCTION;
+    ImportDream3DImageContainer( const Self & ) ITK_DELETE_FUNCTION;
     void operator=(const Self &)ITK_DELETE_FUNCTION;
 
     TElement *         m_ImportPointer;
@@ -197,7 +197,7 @@ namespace itk
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkImportImageMallocContainer.hxx"
+#include "itkImportDream3DImageContainer.hxx"
 #endif
 
 #endif

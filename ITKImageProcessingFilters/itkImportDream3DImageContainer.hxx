@@ -25,16 +25,16 @@
 *  please refer to the NOTICE file at the top of the ITK source tree.
 *
 *=========================================================================*/
-#ifndef itkImportImageMallocContainer_hxx
-#define itkImportImageMallocContainer_hxx
+#ifndef itkImportDream3DImageContainer_hxx
+#define itkImportDream3DImageContainer_hxx
 
-#include "itkImportImageMallocContainer.h"
+#include "itkImportDream3DImageContainer.h"
 
 namespace itk
 {
   template< typename TElementIdentifier, typename TElement >
-  ImportImageMallocContainer< TElementIdentifier, TElement >
-    ::ImportImageMallocContainer()
+  ImportDream3DImageContainer< TElementIdentifier, TElement >
+    ::ImportDream3DImageContainer()
   {
     m_ImportPointer = ITK_NULLPTR;
     m_ContainerManageMemory = true;
@@ -43,8 +43,8 @@ namespace itk
   }
 
   template< typename TElementIdentifier, typename TElement >
-  ImportImageMallocContainer< TElementIdentifier, TElement >
-    ::~ImportImageMallocContainer()
+  ImportDream3DImageContainer< TElementIdentifier, TElement >
+    ::~ImportDream3DImageContainer()
   {
     DeallocateManagedMemory();
   }
@@ -55,7 +55,7 @@ namespace itk
   */
   template< typename TElementIdentifier, typename TElement >
   void
-    ImportImageMallocContainer< TElementIdentifier, TElement >
+    ImportDream3DImageContainer< TElementIdentifier, TElement >
     ::Reserve( ElementIdentifier size, const bool UseDefaultConstructor )
   {
     // Reserve has a Resize semantics. We keep it that way for
@@ -101,7 +101,7 @@ namespace itk
   */
   template< typename TElementIdentifier, typename TElement >
   void
-    ImportImageMallocContainer< TElementIdentifier, TElement >
+    ImportDream3DImageContainer< TElementIdentifier, TElement >
     ::Squeeze( void )
   {
     if( m_ImportPointer )
@@ -132,7 +132,7 @@ namespace itk
   */
   template< typename TElementIdentifier, typename TElement >
   void
-    ImportImageMallocContainer< TElementIdentifier, TElement >
+    ImportDream3DImageContainer< TElementIdentifier, TElement >
     ::Initialize( void )
   {
     if( m_ImportPointer )
@@ -155,7 +155,7 @@ namespace itk
   */
   template< typename TElementIdentifier, typename TElement >
   void
-    ImportImageMallocContainer< TElementIdentifier, TElement >
+    ImportDream3DImageContainer< TElementIdentifier, TElement >
     ::SetImportPointer( TElement *ptr, TElementIdentifier num,
     bool LetContainerManageMemory )
   {
@@ -169,7 +169,7 @@ namespace itk
   }
 
   template< typename TElementIdentifier, typename TElement >
-  TElement *ImportImageMallocContainer< TElementIdentifier, TElement >
+  TElement *ImportDream3DImageContainer< TElementIdentifier, TElement >
     ::AllocateElements( ElementIdentifier size, bool UseDefaultConstructor ) const
   {
   // Encapsulate all image memory allocation here to throw an
@@ -201,7 +201,7 @@ namespace itk
   }
 
   template< typename TElementIdentifier, typename TElement >
-  void ImportImageMallocContainer< TElementIdentifier, TElement >
+  void ImportDream3DImageContainer< TElementIdentifier, TElement >
     ::DeallocateManagedMemory()
   {
     // Encapsulate all image memory deallocation here
@@ -217,7 +217,7 @@ namespace itk
 
   template< typename TElementIdentifier, typename TElement >
   void
-    ImportImageMallocContainer< TElementIdentifier, TElement >
+    ImportDream3DImageContainer< TElementIdentifier, TElement >
     ::PrintSelf( std::ostream & os, Indent indent ) const
   {
     Superclass::PrintSelf( os, indent );

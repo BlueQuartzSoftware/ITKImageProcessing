@@ -1,8 +1,7 @@
 #ifndef _ITKInPlaceImageToDream3DDataFilter_h
 #define _ITKInPlaceImageToDream3DDataFilter_h
 
-#include "itkImportImageMallocContainer.h"
-#include "itkImageContainerTemplated.h"
+#include "itkDream3DImage.h"
 #include "itkProcessObject.h"
 #include "itkSimpleDataObjectDecorator.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
@@ -18,8 +17,7 @@ namespace itk
     typedef InPlaceImageToDream3DDataFilter                                  Self;
     typedef ProcessObject                                                    Superclass;
     typedef SmartPointer<Self>                                               Pointer;
-    typedef typename itk::ImageContainerTemplated<PixelType, VDimension,
-       itk::ImportImageMallocContainer< itk::SizeValueType, PixelType> >     ImageType;
+    typedef typename itk::Dream3DImage<PixelType, VDimension >               ImageType;
     typedef typename ImageType::Pointer                                      ImagePointer;
     typedef typename ::DataArray<PixelType>                                  DataArrayPixelType;
     typedef typename itk::SimpleDataObjectDecorator<DataContainer::Pointer>  DecoratorType;

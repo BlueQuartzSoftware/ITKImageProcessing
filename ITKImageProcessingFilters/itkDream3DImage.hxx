@@ -25,27 +25,27 @@
 *  please refer to the NOTICE file at the top of the ITK source tree.
 *
 *=========================================================================*/
-#ifndef itkImageContainerTemplated_hxx
-#define itkImageContainerTemplated_hxx
+#ifndef itkDream3DImage_hxx
+#define itkDream3DImage_hxx
 
-#include "itkImageContainerTemplated.h"
+#include "itkDream3DImage.h"
 #include "itkProcessObject.h"
 #include <algorithm>
 
 namespace itk
 {
 
-  template< typename TPixel, unsigned int VImageDimension, typename PixelContainerType >
-  ImageContainerTemplated< TPixel, VImageDimension, PixelContainerType >
-    ::ImageContainerTemplated()
+  template< typename TPixel, unsigned int VImageDimension >
+  Dream3DImage< TPixel, VImageDimension >
+    ::Dream3DImage()
   {
     m_TemplatedBuffer = PixelContainerType::New();
   }
 
 
-  template< typename TPixel, unsigned int VImageDimension, typename PixelContainerType >
+  template< typename TPixel, unsigned int VImageDimension >
   void
-    ImageContainerTemplated< TPixel, VImageDimension, PixelContainerType >
+    Dream3DImage< TPixel, VImageDimension >
     ::Allocate( bool initializePixels )
   {
     SizeValueType num;
@@ -57,9 +57,9 @@ namespace itk
   }
 
 
-  template< typename TPixel, unsigned int VImageDimension, typename PixelContainerType >
+  template< typename TPixel, unsigned int VImageDimension >
   void
-    ImageContainerTemplated< TPixel, VImageDimension, PixelContainerType >
+    Dream3DImage< TPixel, VImageDimension >
     ::Initialize()
   {
     //
@@ -78,9 +78,9 @@ namespace itk
   }
 
 
-  template< typename TPixel, unsigned int VImageDimension, typename PixelContainerType >
+  template< typename TPixel, unsigned int VImageDimension >
   void
-    ImageContainerTemplated< TPixel, VImageDimension, PixelContainerType >
+    Dream3DImage< TPixel, VImageDimension >
     ::FillBuffer( const TPixel & value )
   {
     const SizeValueType numberOfPixels =
@@ -90,9 +90,9 @@ namespace itk
   }
 
 
-  template< typename TPixel, unsigned int VImageDimension, typename PixelContainerType >
+  template< typename TPixel, unsigned int VImageDimension >
   void
-    ImageContainerTemplated< TPixel, VImageDimension, PixelContainerType >
+    Dream3DImage< TPixel, VImageDimension >
     ::SetPixelContainer( PixelContainerType *container )
   {
     if( m_TemplatedBuffer != container )
@@ -104,9 +104,9 @@ namespace itk
 
 
 
-  template< typename TPixel, unsigned int VImageDimension, typename PixelContainerType >
+  template< typename TPixel, unsigned int VImageDimension >
   void
-    ImageContainerTemplated< TPixel, VImageDimension, PixelContainerType >
+    Dream3DImage< TPixel, VImageDimension >
     ::PrintSelf( std::ostream & os, Indent indent ) const
   {
     Superclass::PrintSelf( os, indent );

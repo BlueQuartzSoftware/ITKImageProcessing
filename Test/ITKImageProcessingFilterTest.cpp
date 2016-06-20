@@ -44,12 +44,10 @@
 #include "SIMPLib/Utilities/UnitTestSupport.hpp"
 #include "SIMPLib/Utilities/QMetaObjectUtilities.h"
 
-#include <itkImage.h>
-#include <itkImageFileReader.h>
-#include <itkImportImageContainer.h>
-#include "ITKImageProcessing/ITKImageProcessingFilters/itkImportImageMallocContainer.h"
-#include "ITKImageProcessing/ITKImageProcessingFilters/itkImageContainerTemplated.h"
 
+#include <itkImageFileReader.h>
+
+#include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkInPlaceImageToDream3DDataFilter.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkInPlaceDream3DDataToImageFilter.h"
 
@@ -127,8 +125,7 @@ class ITKImageProcessingFilterTest
     //////////////////////////////////////////////////
     DataContainer::Pointer dc = DataContainer::New("TestContainer");
     typedef float PixelType;
-    typedef itk::ImportImageMallocContainer<itk::SizeValueType, PixelType> ImageContainerType;
-    typedef itk::ImageContainerTemplated<PixelType, dimension, ImageContainerType> ImageType;
+    typedef itk::Dream3DImage<PixelType, dimension> ImageType;
     ImageType::PointType origin;
     ImageType::SizeType size;
     ImageType::SpacingType spacing;
@@ -233,8 +230,7 @@ class ITKImageProcessingFilterTest
     typedef int PixelType;
     // beginning of the local scope in which the image is created
     {
-      typedef itk::ImportImageMallocContainer<itk::SizeValueType, PixelType> ImageContainerType;
-      typedef itk::ImageContainerTemplated<PixelType, dimension, ImageContainerType> ImageType;
+      typedef itk::Dream3DImage<PixelType, dimension> ImageType;
       ImageType::PointType origin;
       ImageType::SizeType size;
       ImageType::SpacingType spacing;
@@ -309,8 +305,7 @@ class ITKImageProcessingFilterTest
     ma->addAttributeArray(dataArrayName, data);
 
     // Create filter
-    typedef itk::ImportImageMallocContainer<itk::SizeValueType, PixelType> ImageContainerType;
-    typedef itk::ImageContainerTemplated<PixelType, Dimension, ImageContainerType> ImageType;
+    typedef itk::Dream3DImage<PixelType, Dimension> ImageType;
     typedef itk::InPlaceDream3DDataToImageFilter<PixelType, Dimension> FilterType;
     FilterType::Pointer filter = FilterType::New();
     filter->SetInput(dc);
@@ -362,8 +357,7 @@ class ITKImageProcessingFilterTest
   {
     const unsigned int Dimension = 3;
     typedef int PixelType;
-    typedef itk::ImportImageMallocContainer<itk::SizeValueType, PixelType> ImageContainerType;
-    typedef itk::ImageContainerTemplated<PixelType, Dimension, ImageContainerType> ImageType;
+    typedef itk::Dream3DImage<PixelType, Dimension> ImageType;
     ImageType::Pointer image;
     PixelType initial_value = 11 ;
     size_t dataSize;
