@@ -55,7 +55,7 @@ void Itk_GaussianBlur::setupFilterParameters()
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Save as New Array", "SaveAsNewArray", getSaveAsNewArray(), linkedProps, FilterParameter::Parameter));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Save as New Array", "SaveAsNewArray", getSaveAsNewArray(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(Itk_GaussianBlur, this, SaveAsNewArray), SIMPL_BIND_GETTER(Itk_GaussianBlur, this, SaveAsNewArray)));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req
@@ -66,10 +66,10 @@ void Itk_GaussianBlur::setupFilterParameters()
     vec.push_back(SIMPL::TypeNames::Int32);
     vec.push_back(SIMPL::TypeNames::Int64);
     req.daTypes = vec;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Attribute Array to Blur", "SelectedCellArrayPath", getSelectedCellArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Attribute Array to Blur", "SelectedCellArrayPath", getSelectedCellArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(Itk_GaussianBlur, this, SelectedCellArrayPath), SIMPL_BIND_GETTER(Itk_GaussianBlur, this, SelectedCellArrayPath)));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Blurred Array", "NewCellArrayName", getNewCellArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Blurred Array", "NewCellArrayName", getNewCellArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(Itk_GaussianBlur, this, NewCellArrayName), SIMPL_BIND_GETTER(Itk_GaussianBlur, this, NewCellArrayName)));
 
   setFilterParameters(parameters);
 }
