@@ -17,7 +17,7 @@ namespace itk
     typedef InPlaceImageToDream3DDataFilter                                  Self;
     typedef ProcessObject                                                    Superclass;
     typedef SmartPointer<Self>                                               Pointer;
-    typedef typename itk::Dream3DImage<PixelType, VDimension >               ImageType;
+    typedef typename itk::Dream3DImage<PixelType, VDimension>               ImageType;
     typedef typename ImageType::Pointer                                      ImagePointer;
     typedef typename ::DataArray<PixelType>                                  DataArrayPixelType;
     typedef typename itk::SimpleDataObjectDecorator<DataContainer::Pointer>  DecoratorType;
