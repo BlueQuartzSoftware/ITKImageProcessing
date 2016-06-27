@@ -1,25 +1,25 @@
 #ifndef _itkInPlaceDream3DDataToImageFilter_h
 #define _itkInPlaceDream3DDataToImageFilter_h
 
+#include "itkDream3DImage.h"
 #include <itkImportImageFilter.h>
 
 namespace itk
 {
   template< typename PixelType, unsigned int VDimension >
-  class InPlaceDream3DDataToImageFilter : public ImageSource< itk::Image<PixelType, VDimension> >
+  class InPlaceDream3DDataToImageFilter : public ImageSource< itk::Dream3DImage<PixelType, VDimension > >
   {
   public:
     /** Standard class typedefs. */
     typedef InPlaceDream3DDataToImageFilter                                 Self;
     typedef SmartPointer<Self>                                              Pointer;
-    typedef typename itk::Image<PixelType, VDimension>                      ImageType;
+    typedef typename itk::Dream3DImage<PixelType, VDimension >              ImageType;
+    typedef typename ImageType::PixelContainerType                          ImportImageContainerType;
+
     typedef typename ImageType::Pointer                                     ImagePointer;
     typedef typename ::DataArray<PixelType>                                 DataArrayPixelType;
-    typedef typename itk::ImageSource< itk::Image<PixelType, VDimension> >  Superclass;
-    typedef itk::SizeValueType                                              SizeValueType;
-    typedef ImportImageContainer< SizeValueType, PixelType >                ImportImageContainerType;
-    typedef Image< PixelType, VDimension >                                  OutputImageType;
-    typedef typename OutputImageType::Pointer                               OutputImagePointer;
+    typedef typename itk::ImageSource< ImageType >                          Superclass;
+    typedef typename itk::SizeValueType                                     SizeValueType;
 
     /** Method for creation through the object factory. */
     itkNewMacro(Self);
