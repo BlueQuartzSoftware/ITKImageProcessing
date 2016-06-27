@@ -34,12 +34,8 @@ namespace itk
 {
   template< typename TElementIdentifier, typename TElement >
   ImportDream3DImageContainer< TElementIdentifier, TElement >
-    ::ImportDream3DImageContainer()
+    ::ImportDream3DImageContainer() : ImportImageContainer()
   {
-    m_ImportPointer = ITK_NULLPTR;
-    m_ContainerManageMemory = true;
-    m_Capacity = 0;
-    m_Size = 0;
   }
 
   template< typename TElementIdentifier, typename TElement >
@@ -49,140 +45,22 @@ namespace itk
     DeallocateManagedMemory();
   }
 
-  /**
-  * Tell the container to allocate enough memory to allow at least
-  * as many elements as the size given to be stored.
-  */
   template< typename TElementIdentifier, typename TElement >
-  void
-    ImportDream3DImageContainer< TElementIdentifier, TElement >
-    ::Reserve( ElementIdentifier size, const bool UseDefaultConstructor )
-  {
-    // Reserve has a Resize semantics. We keep it that way for
-    // backwards compatibility .
-    // See http://www.itk.org/Bug/view.php?id=2893 for details
-    if( m_ImportPointer )
-    {
-      if( size > m_Capacity )
-      {
-        TElement *temp = this->AllocateElements( size, UseDefaultConstructor );
-        // only copy the portion of the data used in the old buffer
-        std::copy( m_ImportPointer,
-          m_ImportPointer + m_Size,
-          temp );
-
-        DeallocateManagedMemory();
-
-        m_ImportPointer = temp;
-        m_ContainerManageMemory = true;
-        m_Capacity = size;
-        m_Size = size;
-        this->Modified();
-      }
-      else
-      {
-        m_Size = size;
-        this->Modified();
-      }
-    }
-    else
-    {
-      m_ImportPointer = this->AllocateElements( size, UseDefaultConstructor );
-      m_Capacity = size;
-      m_Size = size;
-      m_ContainerManageMemory = true;
-      this->Modified();
-    }
-  }
-
-  /**
-  * Tell the container to try to minimize its memory usage for storage of
-  * the current number of elements.
-  */
-  template< typename TElementIdentifier, typename TElement >
-  void
-    ImportDream3DImageContainer< TElementIdentifier, TElement >
-    ::Squeeze( void )
-  {
-    if( m_ImportPointer )
-    {
-      if( m_Size < m_Capacity )
-      {
-        const TElementIdentifier size = m_Size;
-        TElement *               temp = this->AllocateElements( size, false );
-        std::copy( m_ImportPointer,
-          m_ImportPointer + m_Size,
-          temp );
-
-        DeallocateManagedMemory();
-
-        m_ImportPointer = temp;
-        m_ContainerManageMemory = true;
-        m_Capacity = size;
-        m_Size = size;
-
-        this->Modified();
-      }
-    }
-  }
-
-  /**
-  * Tell the container to try to minimize its memory usage for storage of
-  * the current number of elements.
-  */
-  template< typename TElementIdentifier, typename TElement >
-  void
-    ImportDream3DImageContainer< TElementIdentifier, TElement >
-    ::Initialize( void )
-  {
-    if( m_ImportPointer )
-    {
-      DeallocateManagedMemory();
-
-      m_ContainerManageMemory = true;
-
-      this->Modified();
-    }
-  }
-
-  /**
-  * Set the pointer from which the image data is imported.  "num" is
-  * the number of pixels in the block of memory. If
-  * "LetContainerManageMemory" is false, then the application retains
-  * the responsibility of freeing the memory for this image data.  If
-  * "LetContainerManageMemory" is true, then this class will free the
-  * memory when this object is destroyed.
-  */
-  template< typename TElementIdentifier, typename TElement >
-  void
-    ImportDream3DImageContainer< TElementIdentifier, TElement >
-    ::SetImportPointer( TElement *ptr, TElementIdentifier num,
-    bool LetContainerManageMemory )
-  {
-    DeallocateManagedMemory();
-    m_ImportPointer = ptr;
-    m_ContainerManageMemory = LetContainerManageMemory;
-    m_Capacity = num;
-    m_Size = num;
-
-    this->Modified();
-  }
-
-  template< typename TElementIdentifier, typename TElement >
-  TElement *ImportDream3DImageContainer< TElementIdentifier, TElement >
-    ::AllocateElements( ElementIdentifier size, bool UseDefaultConstructor ) const
+  typename ImportDream3DImageContainer< TElementIdentifier, TElement >::Element *
+  ImportDream3DImageContainer< TElementIdentifier, TElement >
+  ::AllocateElements(ElementIdentifier size, bool UseDefaultConstructor ) const
   {
   // Encapsulate all image memory allocation here to throw an
   // exception when memory allocation fails even when the compiler
   // does not do this by default.
-  TElement *data;
+  Element *data;
 
   try
     {
-    data = (TElement*)(malloc( sizeof( TElement ) * size ));
+      data = (Element*)(malloc( sizeof(Element ) * size ));
     if ( UseDefaultConstructor )
       {
-        new (data)TElement();//POD types initialized to 0, others use default constructor.
+        new (data)Element();//POD types initialized to 0, others use default constructor.
       }
     }
   catch ( ... )
@@ -197,36 +75,37 @@ namespace itk
                                 "Failed to allocate memory for image.",
                                 ITK_LOCATION);
     }
+  //this->SetImportPointer(data, size, this->GetContainerManageMemory());
+  SetImportPointer( ITK_NULLPTR, 0, true );
+
   return data;
   }
 
   template< typename TElementIdentifier, typename TElement >
-  void ImportDream3DImageContainer< TElementIdentifier, TElement >
+  void
+  ImportDream3DImageContainer< TElementIdentifier, TElement >
     ::DeallocateManagedMemory()
   {
     // Encapsulate all image memory deallocation here
-    if( m_ContainerManageMemory )
+    if( this->GetContainerManageMemory() )
     {
-      m_ImportPointer->~TElement();
-      free( m_ImportPointer );
+      TElement *data = this->GetBufferPointer();
+      data->~TElement();
+      free( data );
+      this->SetImportPointer( ITK_NULLPTR, 0, this->GetContainerManageMemory() );
     }
-    m_ImportPointer = ITK_NULLPTR;
-    m_Capacity = 0;
-    m_Size = 0;
+    ImportImageContainer::DeallocateManagedMemory();
+    ///debug////////////////
+    TElement *data;
+    this->SetImportPointer( data, 0, this->GetContainerManageMemory() );
   }
 
   template< typename TElementIdentifier, typename TElement >
   void
-    ImportDream3DImageContainer< TElementIdentifier, TElement >
+  ImportDream3DImageContainer< TElementIdentifier, TElement >
     ::PrintSelf( std::ostream & os, Indent indent ) const
   {
     Superclass::PrintSelf( os, indent );
-
-    os << indent << "Pointer: " << static_cast< void * >(m_ImportPointer) << std::endl;
-    os << indent << "Container manages memory: "
-      << (m_ContainerManageMemory ? "true" : "false") << std::endl;
-    os << indent << "Size: " << m_Size << std::endl;
-    os << indent << "Capacity: " << m_Capacity << std::endl;
   }
 } // end namespace itk
 
