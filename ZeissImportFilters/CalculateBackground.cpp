@@ -117,26 +117,6 @@ void CalculateBackground::readFilterParameters(AbstractFilterParametersReader* r
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int CalculateBackground::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(AttributeMatrixName)
-  //    SIMPL_FILTER_WRITE_PARAMETER(VolumeDataContainerName)
-  SIMPL_FILTER_WRITE_PARAMETER(BackgroundAttributeMatrixName)
-  SIMPL_FILTER_WRITE_PARAMETER(BackgroundImageArrayName)
-  //    SIMPL_FILTER_WRITE_PARAMETER(DataContainerBundleName)
-  SIMPL_FILTER_WRITE_PARAMETER(lowThresh)
-  SIMPL_FILTER_WRITE_PARAMETER(highThresh)
-  SIMPL_FILTER_WRITE_PARAMETER(SubtractBackground)
-  SIMPL_FILTER_WRITE_PARAMETER(DivideBackground)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void CalculateBackground::initialize()
 {
   m_TotalPoints = 0;
