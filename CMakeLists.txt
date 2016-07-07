@@ -25,6 +25,8 @@ set(${PLUGIN_NAME}_Project_SRCS "")
 
 include(${SIMPLProj_SOURCE_DIR}/Source/SIMPLib/SIMPLibMacros.cmake)
 
+## YOU MUST INCLUDE THIS FILE TO USE ITK !!!
+## Then do not forget to add "${ITK_LIBRARIES}" to the target_link_libraries below
 # --------------------------------------------------------------------
 # ITK Include
 if(SIMPLib_USE_ITK)
