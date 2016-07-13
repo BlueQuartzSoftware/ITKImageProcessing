@@ -140,6 +140,25 @@ void ZeissImportFilter::readFilterParameters(AbstractFilterParametersReader* rea
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void ZeissImportFilter::readFilterParameters(QJsonObject &obj)
+{
+  AbstractFilter::readFilterParameters(obj);
+  setImageDataArrayPrefix(obj["ImageDataArrayPrefix"].toString());
+}
+
+// FP: Check why these values are not connected to a filter parameter!
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ZeissImportFilter::writeFilterParameters(QJsonObject &obj)
+{
+  AbstractFilter::writeFilterParameters(obj);
+  obj["ImageDataArrayPrefix"] = getImageDataArrayPrefix();
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void ZeissImportFilter::initialize()
 {
 
