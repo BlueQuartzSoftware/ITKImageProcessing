@@ -44,8 +44,7 @@
 #include "SIMPLib/Utilities/UnitTestSupport.hpp"
 #include "SIMPLib/Utilities/QMetaObjectUtilities.h"
 
-#include <itkImage.h>
-
+#include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkInPlaceImageToDream3DDataFilter.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkInPlaceDream3DDataToImageFilter.h"
 
@@ -89,15 +88,14 @@ class ITKImageProcessingFilterTest
     return 0;
   }
 
-  template<class PixelType, unsigned int dimension>
-  typename itk::Image<PixelType, dimension>::Pointer
-  CreateITKImageForTests(typename itk::Image<PixelType, dimension>::PointType &origin,
-                         typename itk::Image<PixelType, dimension>::SizeType &size,
-                         typename itk::Image<PixelType, dimension>::SpacingType &spacing,
-                         PixelType value
+  template<class ImageType>
+  typename ImageType::Pointer
+  CreateITKImageForTests(typename ImageType::PointType &origin,
+                         typename ImageType::SizeType &size,
+                         typename ImageType::SpacingType &spacing,
+                         typename ImageType::PixelType value
                         )
   {
-    typedef itk::Image<PixelType, dimension> ImageType;
     typename ImageType::Pointer image = ImageType::New();
     typename ImageType::DirectionType direction;
     direction.SetIdentity();
@@ -124,7 +122,7 @@ class ITKImageProcessingFilterTest
     //////////////////////////////////////////////////
     DataContainer::Pointer dc = DataContainer::New("TestContainer");
     typedef float PixelType;
-    typedef itk::Image<PixelType, dimension> ImageType;
+    typedef itk::Dream3DImage<PixelType, dimension> ImageType;
     ImageType::PointType origin;
     ImageType::SizeType size;
     ImageType::SpacingType spacing;
@@ -134,7 +132,7 @@ class ITKImageProcessingFilterTest
       size[i] = 90 + i * 3;
       spacing[i] = .45 + float(i)*.2;
     }
-    ImageType::Pointer image = CreateITKImageForTests<PixelType,dimension>(origin, size, spacing, 12);
+    ImageType::Pointer image = CreateITKImageForTests<ImageType>(origin, size, spacing, 12);
     ImageType::IndexType index;
     index.Fill(0);
     //float val=image->GetPixel(index);
@@ -229,7 +227,7 @@ class ITKImageProcessingFilterTest
     typedef int PixelType;
     // beginning of the local scope in which the image is created
     {
-      typedef itk::Image<PixelType, dimension> ImageType;
+      typedef itk::Dream3DImage<PixelType, dimension> ImageType;
       ImageType::PointType origin;
       ImageType::SizeType size;
       ImageType::SpacingType spacing;
@@ -239,7 +237,7 @@ class ITKImageProcessingFilterTest
         size[i] = 90 + i * 3;
         spacing[i] = .45 + float(i)*.2;
       }
-      ImageType::Pointer image = CreateITKImageForTests<PixelType, dimension>(origin, size, spacing, initialValue);
+      ImageType::Pointer image = CreateITKImageForTests<ImageType>( origin, size, spacing, initialValue );
       // Create converter
       typedef itk::InPlaceImageToDream3DDataFilter<PixelType, dimension> InPlaceImageToDream3DDataFilterType;
       InPlaceImageToDream3DDataFilterType::Pointer filter = InPlaceImageToDream3DDataFilterType::New();
@@ -304,7 +302,7 @@ class ITKImageProcessingFilterTest
     ma->addAttributeArray(dataArrayName, data);
 
     // Create filter
-    typedef itk::Image<PixelType, Dimension> ImageType;
+    typedef itk::Dream3DImage<PixelType, Dimension> ImageType;
     typedef itk::InPlaceDream3DDataToImageFilter<PixelType, Dimension> FilterType;
     FilterType::Pointer filter = FilterType::New();
     filter->SetInput(dc);
@@ -356,7 +354,7 @@ class ITKImageProcessingFilterTest
   {
     const unsigned int Dimension = 3;
     typedef int PixelType;
-    typedef itk::Image<PixelType, Dimension> ImageType;
+    typedef itk::Dream3DImage<PixelType, Dimension> ImageType;
     ImageType::Pointer image;
     PixelType initial_value = 11 ;
     size_t dataSize;
@@ -416,6 +414,7 @@ class ITKImageProcessingFilterTest
 
     DREAM3D_REGISTER_TEST( TestFilterAvailability() );
 
+    // Test filters
     DREAM3D_REGISTER_TEST(TestImageToDream3DData(false))
     DREAM3D_REGISTER_TEST(TestImageToDream3DDataOutOfScope(false))
     DREAM3D_REGISTER_TEST(TestDream3DDataToImage(false))
