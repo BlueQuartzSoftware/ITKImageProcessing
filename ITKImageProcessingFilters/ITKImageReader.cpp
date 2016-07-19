@@ -83,9 +83,13 @@ void ITKImageReader::setupFilterParameters()
   FilterParameterVector parameters;
   QString supportedExtensions = ""; // \todo Change to actual supported formats
   parameters.push_back(
-    InputFileFilterParameter::New("File", "FileName", getFileName(), FilterParameter::Parameter, supportedExtensions, "Image"));
+    InputFileFilterParameter::New("File", "FileName", getFileName(), FilterParameter::Parameter,
+                                  SIMPL_BIND_SETTER(ITKImageReader, this, FileName),
+                                  SIMPL_BIND_GETTER(ITKImageReader, this, FileName), supportedExtensions, "Image"));
   parameters.push_back(
-    StringFilterParameter::New("Data Container", "DataContainerName", getDataContainerName(), FilterParameter::CreatedArray));
+    StringFilterParameter::New("Data Container", "DataContainerName", getDataContainerName(), FilterParameter::CreatedArray,
+                               SIMPL_BIND_SETTER(ITKImageReader, this, DataContainerName),
+                               SIMPL_BIND_GETTER(ITKImageReader, this, DataContainerName)));
   setFilterParameters(parameters);
 }
 
@@ -98,18 +102,6 @@ void ITKImageReader::readFilterParameters(AbstractFilterParametersReader* reader
   setFileName(reader->readString("FileName", getFileName()));
   setDataContainerName(reader->readString("DataContainerName", getDataContainerName()));
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int ITKImageReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FileName);
-  SIMPL_FILTER_WRITE_PARAMETER(DataContainerName);
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------
