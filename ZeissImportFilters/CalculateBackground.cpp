@@ -79,19 +79,19 @@ CalculateBackground::~CalculateBackground()
 void CalculateBackground::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  //parameters.push_back(DataBundleSelectionFilterParameter::New("DataContainerBundle Name", "DataContainerBundleName", getDataContainerBundleName(), FilterParameter::Uncategorized));
+  //parameters.push_back(DataBundleSelectionFilterParameter::New("DataContainerBundle Name", "DataContainerBundleName", getDataContainerBundleName(), FilterParameter::Uncategorized, SIMPL_BIND_SETTER(CalculateBackground, this, DataContainerBundleName), SIMPL_BIND_GETTER(CalculateBackground, this, DataContainerBundleName)));
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req;
-    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Input AttributeMatrix Name", "AttributeMatrixName", getAttributeMatrixName(), FilterParameter::RequiredArray, req));
+    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Input AttributeMatrix Name", "AttributeMatrixName", getAttributeMatrixName(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(CalculateBackground, this, AttributeMatrixName), SIMPL_BIND_GETTER(CalculateBackground, this, AttributeMatrixName)));
   }
-  parameters.push_back(IntFilterParameter::New("Lowest allowed Image value (Image Value)", "lowThresh", getlowThresh(), FilterParameter::Parameter));
-  parameters.push_back(IntFilterParameter::New("Highest allowed Image value (Image Value)", "highThresh", gethighThresh(), FilterParameter::Parameter));
+  parameters.push_back(IntFilterParameter::New("Lowest allowed Image value (Image Value)", "lowThresh", getlowThresh(), FilterParameter::Parameter, SIMPL_BIND_SETTER(CalculateBackground, this, lowThresh), SIMPL_BIND_GETTER(CalculateBackground, this, lowThresh)));
+  parameters.push_back(IntFilterParameter::New("Highest allowed Image value (Image Value)", "highThresh", gethighThresh(), FilterParameter::Parameter, SIMPL_BIND_SETTER(CalculateBackground, this, highThresh), SIMPL_BIND_GETTER(CalculateBackground, this, highThresh)));
   //    parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));
-  //    parameters.push_back(StringFilterParameter::New("Volume Data Container", "VolumeDataContainerName", getVolumeDataContainerName(), FilterParameter::Uncategorized));
-  parameters.push_back(StringFilterParameter::New("Background Attribute Matrix", "BackgroundAttributeMatrixName", getBackgroundAttributeMatrixName(), FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Background Image Array Name", "BackgroundImageArrayName", getBackgroundImageArrayName(), FilterParameter::CreatedArray));
-  parameters.push_back(BooleanFilterParameter::New("Subtract Background from Current Images", "SubtractBackground", getSubtractBackground(), FilterParameter::Parameter));
-  parameters.push_back(BooleanFilterParameter::New("Divide Background from Current Images", "DivideBackground", getDivideBackground(), FilterParameter::Parameter));
+  //    parameters.push_back(StringFilterParameter::New("Volume Data Container", "VolumeDataContainerName", getVolumeDataContainerName(), FilterParameter::Uncategorized, SIMPL_BIND_SETTER(CalculateBackground, this, VolumeDataContainerName), SIMPL_BIND_GETTER(CalculateBackground, this, VolumeDataContainerName)));
+  parameters.push_back(StringFilterParameter::New("Background Attribute Matrix", "BackgroundAttributeMatrixName", getBackgroundAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(CalculateBackground, this, BackgroundAttributeMatrixName), SIMPL_BIND_GETTER(CalculateBackground, this, BackgroundAttributeMatrixName)));
+  parameters.push_back(StringFilterParameter::New("Background Image Array Name", "BackgroundImageArrayName", getBackgroundImageArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(CalculateBackground, this, BackgroundImageArrayName), SIMPL_BIND_GETTER(CalculateBackground, this, BackgroundImageArrayName)));
+  parameters.push_back(BooleanFilterParameter::New("Subtract Background from Current Images", "SubtractBackground", getSubtractBackground(), FilterParameter::Parameter, SIMPL_BIND_SETTER(CalculateBackground, this, SubtractBackground), SIMPL_BIND_GETTER(CalculateBackground, this, SubtractBackground)));
+  parameters.push_back(BooleanFilterParameter::New("Divide Background from Current Images", "DivideBackground", getDivideBackground(), FilterParameter::Parameter, SIMPL_BIND_SETTER(CalculateBackground, this, DivideBackground), SIMPL_BIND_GETTER(CalculateBackground, this, DivideBackground)));
 
   setFilterParameters(parameters);
 }
@@ -112,26 +112,6 @@ void CalculateBackground::readFilterParameters(AbstractFilterParametersReader* r
   setSubtractBackground(reader->readValue("SubtractBackground", getSubtractBackground()));
   setDivideBackground(reader->readValue("DivideBackground", getDivideBackground()));
   reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int CalculateBackground::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(AttributeMatrixName)
-  //    SIMPL_FILTER_WRITE_PARAMETER(VolumeDataContainerName)
-  SIMPL_FILTER_WRITE_PARAMETER(BackgroundAttributeMatrixName)
-  SIMPL_FILTER_WRITE_PARAMETER(BackgroundImageArrayName)
-  //    SIMPL_FILTER_WRITE_PARAMETER(DataContainerBundleName)
-  SIMPL_FILTER_WRITE_PARAMETER(lowThresh)
-  SIMPL_FILTER_WRITE_PARAMETER(highThresh)
-  SIMPL_FILTER_WRITE_PARAMETER(SubtractBackground)
-  SIMPL_FILTER_WRITE_PARAMETER(DivideBackground)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------
