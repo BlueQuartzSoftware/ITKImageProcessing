@@ -19,7 +19,6 @@
 #include "SIMPLib/Common/FilterManager.h"
 #include "SIMPLib/Common/IFilterFactory.hpp"
 #include "SIMPLib/DataArrays/StringDataArray.hpp"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"

@@ -18,7 +18,6 @@
 
 #include "SIMPLib/Common/FilterManager.h"
 #include "SIMPLib/Common/IFilterFactory.hpp"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/DataBundleSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
