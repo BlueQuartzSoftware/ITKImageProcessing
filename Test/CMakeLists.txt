@@ -9,6 +9,9 @@ include_directories(${${PLUGIN_NAME}_BINARY_DIR})
 include_directories(${SIMPLProj_SOURCE_DIR}/Source)
 include_directories(${SIMPLProj_BINARY_DIR})
 
+
+include( ${DREAM3D_SUPPORT_DIR}/ITKSupport/IncludeITK.cmake)
+
 #------------------------------------------------------------------------------
 # Set any additional include directories here
 
@@ -31,6 +34,7 @@ set(TEST_NAMES
   Itk_BinaryThreshold
   Itk_GaussianBlur
   ITKImageProcessingFilter
+  ITKImageProcessingReader
 )
 
 set( ${PLUGIN_NAME}_TEST_SRCS )

@@ -63,6 +63,15 @@ namespace UnitTest
 
 namespace UnitTest
 {
+  namespace ITKImageProcessingReaderTest
+  {
+    const QString SCIFIOInputTestFile("@TEST_TEMP_DIR@/SCIFIOFile.tif");
+    const QString NonExistentInputTestFile("@TEST_TEMP_DIR@/NotHere.ghost");
+  }
+}
+
+namespace UnitTest
+{
   namespace ItkGaussianBlurTest
   {
    const QString TestFile1("@TEST_TEMP_DIR@/TestFile1.txt");

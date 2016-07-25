@@ -159,6 +159,13 @@ class ITKImageReader : public AbstractFilter
      */
     void initialize();
 
+    /**
+    * @brief Does the actual reading of the image with itkImageFileReader.
+    */
+    template<typename TPixel>
+    void readImage(unsigned int dimensions, const QString& filename, DataContainer::Pointer container);
+    template<typename TPixel, unsigned int>
+    void readImage(const QString& filename, DataContainer::Pointer dc);
 
   private:
 	  ITKImageReader(const ITKImageReader&); // Copy Constructor Not Implemented
