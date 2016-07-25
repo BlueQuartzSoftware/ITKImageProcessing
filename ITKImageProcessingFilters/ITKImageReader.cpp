@@ -47,6 +47,8 @@
 // ITK includes
 #include <itkImageFileReader.h>
 #include <itkImageIOFactory.h>
+#include <itkMetaImageIOFactory.h>
+#include <itkNRRDImageIOFactory.h>
 #include <itkPNGImageIOFactory.h>
 
 // ITK-SCIFIO
@@ -66,6 +68,8 @@ ITKImageReader::ITKImageReader() :
   // As for now, register factories by hand. There is probably a better place
   // to do this than here.
   itk::PNGImageIOFactory::RegisterOneFactory();
+  itk::MetaImageIOFactory::RegisterOneFactory();
+  itk::NrrdImageIOFactory::RegisterOneFactory();
   itk::SCIFIOImageIOFactory::RegisterOneFactory();
 
   setupFilterParameters();

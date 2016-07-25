@@ -65,6 +65,8 @@ namespace UnitTest
 {
   namespace ITKImageProcessingReaderTest
   {
+    const QString METAIOInputTestFile("@TEST_TEMP_DIR@/METAIOFile.mhd");
+    const QString NRRDIOInputTestFile("@TEST_TEMP_DIR@/NRRDIOFile.nrrd");
     const QString SCIFIOInputTestFile("@TEST_TEMP_DIR@/SCIFIOFile.tif");
     const QString NonExistentInputTestFile("@TEST_TEMP_DIR@/NotHere.ghost");
   }

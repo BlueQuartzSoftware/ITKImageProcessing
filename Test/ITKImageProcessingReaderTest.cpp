@@ -51,6 +51,8 @@
 #include <itkImageFileWriter.h>
 #include <itkImageIOBase.h>
 
+#include <itkMetaImageIO.h>
+#include <itkNrrdImageIO.h>
 #include <itkSCIFIOImageIO.h>
 
 class ITKImageProcessingReaderTest
@@ -68,7 +70,12 @@ class ITKImageProcessingReaderTest
   // -----------------------------------------------------------------------------
   void RemoveTestFiles()
   {
-  #if REMOVE_TEST_FILES
+#if REMOVE_TEST_FILES
+    QFile::remove(UnitTest::ITKImageProcessingReaderTest::NRRDIOInputTestFile);
+    QFile::remove(UnitTest::ITKImageProcessingReaderTest::METAIOInputTestFile);
+    QString rawFilename = UnitTest::ITKImageProcessingReaderTest::METAIOInputTestFile;
+    rawFilename.chop(4);
+    QFile::remove(rawFilename + ".raw");
     QFile::remove(UnitTest::ITKImageProcessingReaderTest::SCIFIOInputTestFile);
   #endif
   }
@@ -138,6 +145,28 @@ class ITKImageProcessingReaderTest
       io.GetPointer()
       );
   }
+
+  ImageType::Pointer WriteMetaIOTestFile()
+  {
+    itk::MetaImageIO::Pointer io = itk::MetaImageIO::New();
+
+    return WriteTestFile(
+      UnitTest::ITKImageProcessingReaderTest::METAIOInputTestFile,
+      io.GetPointer()
+      );
+  }
+
+
+  ImageType::Pointer WriteNRRDIOTestFile()
+  {
+    itk::NrrdImageIO::Pointer io = itk::NrrdImageIO::New();
+
+    return WriteTestFile(
+      UnitTest::ITKImageProcessingReaderTest::NRRDIOInputTestFile,
+      io.GetPointer()
+      );
+  }
+
 
   // -----------------------------------------------------------------------------
   //  Test methods
@@ -262,12 +291,10 @@ class ITKImageProcessingReaderTest
     imageGeometry->getDimensions(dimensions[0], dimensions[1], dimensions[2]);
     for (int i = 0; i < 3; i++)
     {
-      //float fspacing = expectedImage->GetSpacing()[i];
-      float imageSpacing = 1.0; // SCIFIO doesn't seem to take spacing into consideration
+      float imageSpacing = expectedImage->GetSpacing()[i];
       DREAM3D_COMPARE_FLOATS(&resolution[i], &imageSpacing, tol);
 
-      //float forigin = expectedImage->GetOrigin()[i];
-      float imageOrigin = 0.0; // SCIFIO doesn't seem to take origin into consideration
+      float imageOrigin = expectedImage->GetOrigin()[i];
       DREAM3D_COMPARE_FLOATS(&origin[i], &imageOrigin, tol);
 
       size_t imageDimension = expectedImage->GetLargestPossibleRegion().GetSize()[i];
@@ -303,10 +330,31 @@ class ITKImageProcessingReaderTest
 
     // SCIFIO
     ImageType::Pointer scifioImage = WriteSCIFIOTestFile();
+    // SCIFIO doesn't seem to take spacing into consideration
+    double scifioSpacing[3] = { 1.0, 1.0, 1.0};
+    scifioImage->SetSpacing(scifioSpacing);
+    // SCIFIO doesn't seem to take origine into consideration
+    double scifioOrigin[3] = { 0.0, 0.0, 0.0 };
+    scifioImage->SetOrigin(scifioOrigin);
     DREAM3D_REGISTER_TEST(
       TestCompareImage(
         UnitTest::ITKImageProcessingReaderTest::SCIFIOInputTestFile, scifioImage)
       )
+
+    // MetaIO
+    ImageType::Pointer metaioImage = WriteMetaIOTestFile();
+    DREAM3D_REGISTER_TEST(
+      TestCompareImage(
+      UnitTest::ITKImageProcessingReaderTest::METAIOInputTestFile, metaioImage)
+      )
+
+    // NrrdIO
+    ImageType::Pointer nrrdioImage = WriteNRRDIOTestFile();
+    DREAM3D_REGISTER_TEST(
+      TestCompareImage(
+      UnitTest::ITKImageProcessingReaderTest::NRRDIOInputTestFile, nrrdioImage)
+      )
+
 
     DREAM3D_REGISTER_TEST( RemoveTestFiles() )
   }
