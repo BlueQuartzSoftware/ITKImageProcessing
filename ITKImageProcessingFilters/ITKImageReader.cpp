@@ -38,11 +38,16 @@
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 
+#include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/itkInPlaceImageToDream3DDataFilter.h"
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
 
 // ITK includes
+#include <itkImageFileReader.h>
 #include <itkImageIOFactory.h>
+#include <itkMetaImageIOFactory.h>
+#include <itkNRRDImageIOFactory.h>
 #include <itkPNGImageIOFactory.h>
 
 // ITK-SCIFIO
@@ -62,6 +67,8 @@ ITKImageReader::ITKImageReader() :
   // As for now, register factories by hand. There is probably a better place
   // to do this than here.
   itk::PNGImageIOFactory::RegisterOneFactory();
+  itk::MetaImageIOFactory::RegisterOneFactory();
+  itk::NrrdImageIOFactory::RegisterOneFactory();
   itk::SCIFIOImageIOFactory::RegisterOneFactory();
 
   setupFilterParameters();
@@ -125,29 +132,23 @@ void ITKImageReader::dataCheck()
     return;
   }
 
-  // Try to print image properties:
-  itk::ImageIOBase::Pointer imageIO = itk::ImageIOFactory::CreateImageIO(filename.toLatin1(), itk::ImageIOFactory::ReadMode);
-  if (NULL == imageIO)
+  if (getDataContainerName().isEmpty())
   {
     setErrorCondition(-2);
-    QString errorMessage = "ITK could not read the given file \"%1\". Format is likely unsupported.";
-    notifyErrorMessage(getHumanLabel(), errorMessage.arg(filename), getErrorCondition());
+    notifyErrorMessage(getHumanLabel(), "No container.", getErrorCondition());
     return;
   }
-  imageIO->SetFileName(filename.toLatin1());
-  imageIO->ReadImageInformation();
 
-  typedef itk::ImageIOBase::IOComponentType ScalarPixelType;
-  const ScalarPixelType pixelType = imageIO->GetComponentType();
-  // Notifying a warning because it can't get the status messages in the GUI.
-  notifyWarningMessage(getHumanLabel(), QString("Component Type: %1").arg(imageIO->GetComponentTypeAsString(pixelType).c_str()), 1);
-  notifyWarningMessage(getHumanLabel(), QString("NumDimensions: %1").arg(imageIO->GetNumberOfDimensions()), 1);
-  notifyWarningMessage(getHumanLabel(), QString("Component size:  %1").arg(imageIO->GetComponentSize()), 1);
-  notifyWarningMessage(getHumanLabel(), QString("Pixel Type (string): %1").arg(imageIO->GetPixelTypeAsString(imageIO->GetPixelType()).c_str()), 1);
-  notifyWarningMessage(getHumanLabel(), QString("Pixel Type : %1").arg(imageIO->GetPixelType()), 1);
+  DataContainer::Pointer container =
+    getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
+  if (!container.get())
+    {
+      return;
+    }
 
   // If we got here, that means that there is no error
   setErrorCondition(0);
+  setWarningCondition(0);
 }
 
 // -----------------------------------------------------------------------------
@@ -167,23 +168,142 @@ void ITKImageReader::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+template<typename TPixel>
+void ITKImageReader::readImage(unsigned int dimensions, const QString& filename, DataContainer::Pointer container)
+{
+  switch (dimensions)
+  {
+    case 1:
+    {
+      readImage<TPixel, 1>(filename, container);
+      break;
+    }
+    case 2:
+    {
+      readImage<TPixel, 2>(filename, container);
+      break;
+    }
+    default:
+    {
+      readImage<TPixel, 3>(filename, container);
+      break;
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+template<typename TPixel, unsigned int dimensions>
+void ITKImageReader::readImage(const QString& filename, DataContainer::Pointer container)
+{
+  typedef itk::Dream3DImage<TPixel, dimensions>   ImageType;
+  typedef itk::ImageFileReader<ImageType>         ReaderType;
+  typedef itk::InPlaceImageToDream3DDataFilter<TPixel, dimensions> ToDream3DType;
+
+  typename ReaderType::Pointer reader = ReaderType::New();
+  reader->SetFileName(filename.toStdString().c_str());
+
+  typename ToDream3DType::Pointer toDream3DFilter = ToDream3DType::New();
+  toDream3DFilter->SetInput(reader->GetOutput());
+  toDream3DFilter->SetInPlace(true);
+  toDream3DFilter->SetDataContainer(container);
+  toDream3DFilter->Update();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void ITKImageReader::execute()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   dataCheck();
-
-  // \todo !
-  /*if(getErrorCondition() < 0) { return; }
-
-  if (getCancel() == true) { return; }
-
   if (getErrorCondition() < 0)
   {
-    QString ss = QObject::tr("Some error message");
-    setErrorCondition(-99999999);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
-  }*/
+  }
+
+  DataContainer::Pointer container =
+    getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
+  Q_ASSERT(container.get());
+
+  QString filename = getFileName();
+  itk::ImageIOBase::Pointer imageIO = itk::ImageIOFactory::CreateImageIO(filename.toLatin1(), itk::ImageIOFactory::ReadMode);
+  if (NULL == imageIO)
+  {
+    setErrorCondition(-3);
+    QString errorMessage = "ITK could not read the given file \"%1\". Format is likely unsupported.";
+    notifyErrorMessage(getHumanLabel(), errorMessage.arg(filename), getErrorCondition());
+    return;
+  }
+  imageIO->SetFileName(filename.toLatin1());
+  imageIO->ReadImageInformation();
+
+  typedef itk::ImageIOBase::IOComponentType ComponentType;
+  const ComponentType type = imageIO->GetComponentType();
+  const unsigned int dimensions = imageIO->GetNumberOfDimensions();
+
+  switch(type)
+  {
+    case itk::ImageIOBase::UCHAR:
+    {
+      readImage<unsigned char>(dimensions, filename, container);
+      break;
+    }
+    case itk::ImageIOBase::CHAR:
+    {
+      readImage<char>(dimensions, filename, container);
+      break;
+    }
+    case itk::ImageIOBase::USHORT:
+    {
+      readImage<unsigned short>(dimensions, filename, container);
+      break;
+    }
+    case itk::ImageIOBase::SHORT:
+    {
+      readImage<short>(dimensions, filename, container);
+      break;
+    }
+    case itk::ImageIOBase::UINT:
+    {
+      readImage<unsigned int>(dimensions, filename, container);
+      break;
+    }
+    case itk::ImageIOBase::INT:
+    {
+      readImage<int>(dimensions, filename, container);
+      break;
+    }
+    case itk::ImageIOBase::ULONG:
+    {
+      readImage<unsigned long>(dimensions, filename, container);
+      break;
+    }
+    case itk::ImageIOBase::LONG:
+    {
+      readImage<long>(dimensions, filename, container);
+      break;
+    }
+    case itk::ImageIOBase::FLOAT:
+    {
+      readImage<float>(dimensions, filename, container);
+      break;
+    }
+    case itk::ImageIOBase::DOUBLE:
+    {
+      readImage<double>(dimensions, filename, container);
+      break;
+    }
+    default:
+    {
+      setErrorCondition(-4);
+      QString errorMessage = QString("Unsupported pixel type: %1.").arg(imageIO->GetComponentTypeAsString(type).c_str());
+      notifyErrorMessage(getHumanLabel(), errorMessage, getErrorCondition());
+      break;
+    }
+  }
 
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
