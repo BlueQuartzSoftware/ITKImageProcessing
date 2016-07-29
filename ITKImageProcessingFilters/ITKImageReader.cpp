@@ -87,7 +87,7 @@ ITKImageReader::~ITKImageReader()
 void ITKImageReader::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  QString supportedExtensions = ""; // \todo Change to actual supported formats
+  QString supportedExtensions = ".png, .mhd, .mha, .nrrd, .tif";
   parameters.push_back(
     InputFileFilterParameter::New("File", "FileName", getFileName(), FilterParameter::Parameter,
                                   SIMPL_BIND_SETTER(ITKImageReader, this, FileName),
