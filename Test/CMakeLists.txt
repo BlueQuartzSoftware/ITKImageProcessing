@@ -35,6 +35,7 @@ set(TEST_NAMES
   Itk_GaussianBlur
   ITKImageProcessingFilter
   ITKImageProcessingReader
+  ITKImageProcessingWriter
 )
 
 set( ${PLUGIN_NAME}_TEST_SRCS )
