@@ -78,9 +78,9 @@ namespace itk
     * the default constructor is used to initialize each element.  POD date types
     * initialize to zero.
     */
-    virtual Element * AllocateElements( ElementIdentifier size, bool UseDefaultConstructor = false ) const;
+    virtual Element * AllocateElements( ElementIdentifier size, bool UseDefaultConstructor = false ) const ITK_OVERRIDE;
 
-    virtual void DeallocateManagedMemory();
+    virtual void DeallocateManagedMemory() ITK_OVERRIDE;
 
   private:
     ImportDream3DImageContainer( const Self & ) ITK_DELETE_FUNCTION;
