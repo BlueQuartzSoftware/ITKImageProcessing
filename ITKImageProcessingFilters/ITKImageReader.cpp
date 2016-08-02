@@ -47,7 +47,7 @@
 #include <itkImageFileReader.h>
 #include <itkImageIOFactory.h>
 #include <itkMetaImageIOFactory.h>
-#include <itkNRRDImageIOFactory.h>
+#include <itkNrrdImageIOFactory.h>
 #include <itkPNGImageIOFactory.h>
 
 // ITK-SCIFIO
