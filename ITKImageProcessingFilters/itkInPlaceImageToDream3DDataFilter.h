@@ -45,6 +45,7 @@ namespace itk
     virtual ~InPlaceImageToDream3DDataFilter();
     void CheckValidArrayPathComponentName(std::string var);
   private:
+    using Superclass::SetInput;
     InPlaceImageToDream3DDataFilter(const InPlaceImageToDream3DDataFilter&); // Copy Constructor Not Implemented
     void operator=(const InPlaceImageToDream3DDataFilter&); // Operator '=' Not Implemented
     std::string m_DataArrayName;

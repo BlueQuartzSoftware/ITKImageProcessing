@@ -298,7 +298,7 @@ class ITKImageProcessingReaderTest
       DREAM3D_COMPARE_FLOATS(&origin[i], &imageOrigin, tol);
 
       size_t imageDimension = expectedImage->GetLargestPossibleRegion().GetSize()[i];
-      DREAM3D_ASSERT(dimensions[i] == imageDimension);
+      DREAM3D_REQUIRE_EQUAL(dimensions[i], imageDimension);
     }
 
     const QString matrixName = "ImageData";
