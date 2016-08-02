@@ -203,11 +203,11 @@ namespace itk
 
     /** Return a pointer to the beginning of the buffer.  This is used by
     * the image iterator class. */
-    virtual TPixel * GetBufferPointer()
+    virtual TPixel * GetBufferPointer() ITK_OVERRIDE
     {
       return m_TemplatedBuffer ? m_TemplatedBuffer->GetBufferPointer() : ITK_NULLPTR;
     }
-    virtual const TPixel * GetBufferPointer() const
+    virtual const TPixel * GetBufferPointer() const ITK_OVERRIDE
     {
       return m_TemplatedBuffer ? m_TemplatedBuffer->GetBufferPointer() : ITK_NULLPTR;
     }

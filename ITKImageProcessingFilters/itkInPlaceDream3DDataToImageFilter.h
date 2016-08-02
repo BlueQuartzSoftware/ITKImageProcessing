@@ -44,6 +44,7 @@ namespace itk
   private:
     InPlaceDream3DDataToImageFilter(const InPlaceDream3DDataToImageFilter&); // Copy Constructor Not Implemented
     void operator=(const InPlaceDream3DDataToImageFilter&); // Operator '=' Not Implemented
+    using Superclass::SetInput;
     std::string m_DataArrayName;
     std::string m_AttributeMatrixArrayName;
     typename ImportImageContainerType::Pointer m_ImportImageContainer;
