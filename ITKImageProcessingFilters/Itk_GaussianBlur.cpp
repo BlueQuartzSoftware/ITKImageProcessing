@@ -55,7 +55,7 @@ void Itk_GaussianBlur::setupFilterParameters()
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Save as New Array", "SaveAsNewArray", getSaveAsNewArray(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(Itk_GaussianBlur, this, SaveAsNewArray), SIMPL_BIND_GETTER(Itk_GaussianBlur, this, SaveAsNewArray)));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Save as New Array", "SaveAsNewArray", getSaveAsNewArray(), FilterParameter::Parameter, SIMPL_BIND_SETTER(Itk_GaussianBlur, this, SaveAsNewArray), SIMPL_BIND_GETTER(Itk_GaussianBlur, this, SaveAsNewArray), linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req
