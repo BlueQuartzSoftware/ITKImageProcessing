@@ -64,7 +64,7 @@ void Itk_BinaryThreshold::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::UInt8, 1, SIMPL::AttributeMatrixObjectType::Any);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Attribute Array to Threshold", "SelectedCellArrayPath", getSelectedCellArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(Itk_BinaryThreshold, this, SelectedCellArrayPath), SIMPL_BIND_GETTER(Itk_BinaryThreshold, this, SelectedCellArrayPath)));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Attribute Array to Threshold", "SelectedCellArrayPath", getSelectedCellArrayPath(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(Itk_BinaryThreshold, this, SelectedCellArrayPath), SIMPL_BIND_GETTER(Itk_BinaryThreshold, this, SelectedCellArrayPath), req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
   parameters.push_back(StringFilterParameter::New("Threshold Array", "NewCellArrayName", getNewCellArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(Itk_BinaryThreshold, this, NewCellArrayName), SIMPL_BIND_GETTER(Itk_BinaryThreshold, this, NewCellArrayName)));
