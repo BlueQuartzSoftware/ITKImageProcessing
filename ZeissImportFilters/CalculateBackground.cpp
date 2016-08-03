@@ -80,7 +80,7 @@ void CalculateBackground::setupFilterParameters()
   //parameters.push_back(DataBundleSelectionFilterParameter::New("DataContainerBundle Name", "DataContainerBundleName", getDataContainerBundleName(), FilterParameter::Uncategorized, SIMPL_BIND_SETTER(CalculateBackground, this, DataContainerBundleName), SIMPL_BIND_GETTER(CalculateBackground, this, DataContainerBundleName)));
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req;
-    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Input AttributeMatrix Name", "AttributeMatrixName", getAttributeMatrixName(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(CalculateBackground, this, AttributeMatrixName), SIMPL_BIND_GETTER(CalculateBackground, this, AttributeMatrixName)));
+    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Input AttributeMatrix Name", "AttributeMatrixName", getAttributeMatrixName(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(CalculateBackground, this, AttributeMatrixName), SIMPL_BIND_GETTER(CalculateBackground, this, AttributeMatrixName), req));
   }
   parameters.push_back(IntFilterParameter::New("Lowest allowed Image value (Image Value)", "lowThresh", getlowThresh(), FilterParameter::Parameter, SIMPL_BIND_SETTER(CalculateBackground, this, lowThresh), SIMPL_BIND_GETTER(CalculateBackground, this, lowThresh)));
   parameters.push_back(IntFilterParameter::New("Highest allowed Image value (Image Value)", "highThresh", gethighThresh(), FilterParameter::Parameter, SIMPL_BIND_SETTER(CalculateBackground, this, highThresh), SIMPL_BIND_GETTER(CalculateBackground, this, highThresh)));
