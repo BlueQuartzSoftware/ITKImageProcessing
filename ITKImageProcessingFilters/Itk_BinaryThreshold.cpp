@@ -57,7 +57,7 @@ void Itk_BinaryThreshold::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(IntFilterParameter::New("Threshold Value", "ManualParameter", getManualParameter(), FilterParameter::Parameter, SIMPL_BIND_SETTER(Itk_BinaryThreshold, this, ManualParameter), SIMPL_BIND_GETTER(Itk_BinaryThreshold, this, ManualParameter)));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Threshold Value", ManualParameter, FilterParameter::Parameter, Itk_BinaryThreshold));
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
   parameters.push_back(LinkedBooleanFilterParameter::New("Save as New Array", "SaveAsNewArray", getSaveAsNewArray(), FilterParameter::Parameter, SIMPL_BIND_SETTER(Itk_BinaryThreshold, this, SaveAsNewArray), SIMPL_BIND_GETTER(Itk_BinaryThreshold, this, SaveAsNewArray), linkedProps));
