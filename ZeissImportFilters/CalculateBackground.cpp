@@ -82,8 +82,8 @@ void CalculateBackground::setupFilterParameters()
     AttributeMatrixSelectionFilterParameter::RequirementType req;
     parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Input AttributeMatrix Name", "AttributeMatrixName", getAttributeMatrixName(), FilterParameter::RequiredArray, SIMPL_BIND_SETTER(CalculateBackground, this, AttributeMatrixName), SIMPL_BIND_GETTER(CalculateBackground, this, AttributeMatrixName), req));
   }
-  parameters.push_back(IntFilterParameter::New("Lowest allowed Image value (Image Value)", "lowThresh", getlowThresh(), FilterParameter::Parameter, SIMPL_BIND_SETTER(CalculateBackground, this, lowThresh), SIMPL_BIND_GETTER(CalculateBackground, this, lowThresh)));
-  parameters.push_back(IntFilterParameter::New("Highest allowed Image value (Image Value)", "highThresh", gethighThresh(), FilterParameter::Parameter, SIMPL_BIND_SETTER(CalculateBackground, this, highThresh), SIMPL_BIND_GETTER(CalculateBackground, this, highThresh)));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Lowest allowed Image value (Image Value)", lowThresh, FilterParameter::Parameter, CalculateBackground));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Highest allowed Image value (Image Value)", highThresh, FilterParameter::Parameter, CalculateBackground));
   //    parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));
   //    parameters.push_back(StringFilterParameter::New("Volume Data Container", "VolumeDataContainerName", getVolumeDataContainerName(), FilterParameter::Uncategorized, SIMPL_BIND_SETTER(CalculateBackground, this, VolumeDataContainerName), SIMPL_BIND_GETTER(CalculateBackground, this, VolumeDataContainerName)));
   parameters.push_back(StringFilterParameter::New("Background Attribute Matrix", "BackgroundAttributeMatrixName", getBackgroundAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(CalculateBackground, this, BackgroundAttributeMatrixName), SIMPL_BIND_GETTER(CalculateBackground, this, BackgroundAttributeMatrixName)));
