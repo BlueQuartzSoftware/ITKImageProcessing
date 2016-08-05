@@ -88,8 +88,8 @@ void CalculateBackground::setupFilterParameters()
   //    parameters.push_back(StringFilterParameter::New("Volume Data Container", "VolumeDataContainerName", getVolumeDataContainerName(), FilterParameter::Uncategorized, SIMPL_BIND_SETTER(CalculateBackground, this, VolumeDataContainerName), SIMPL_BIND_GETTER(CalculateBackground, this, VolumeDataContainerName)));
   parameters.push_back(StringFilterParameter::New("Background Attribute Matrix", "BackgroundAttributeMatrixName", getBackgroundAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(CalculateBackground, this, BackgroundAttributeMatrixName), SIMPL_BIND_GETTER(CalculateBackground, this, BackgroundAttributeMatrixName)));
   parameters.push_back(StringFilterParameter::New("Background Image Array Name", "BackgroundImageArrayName", getBackgroundImageArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(CalculateBackground, this, BackgroundImageArrayName), SIMPL_BIND_GETTER(CalculateBackground, this, BackgroundImageArrayName)));
-  parameters.push_back(BooleanFilterParameter::New("Subtract Background from Current Images", "SubtractBackground", getSubtractBackground(), FilterParameter::Parameter, SIMPL_BIND_SETTER(CalculateBackground, this, SubtractBackground), SIMPL_BIND_GETTER(CalculateBackground, this, SubtractBackground)));
-  parameters.push_back(BooleanFilterParameter::New("Divide Background from Current Images", "DivideBackground", getDivideBackground(), FilterParameter::Parameter, SIMPL_BIND_SETTER(CalculateBackground, this, DivideBackground), SIMPL_BIND_GETTER(CalculateBackground, this, DivideBackground)));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Subtract Background from Current Images", SubtractBackground, FilterParameter::Parameter, CalculateBackground));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Divide Background from Current Images", DivideBackground, FilterParameter::Parameter, CalculateBackground));
 
   setFilterParameters(parameters);
 }
