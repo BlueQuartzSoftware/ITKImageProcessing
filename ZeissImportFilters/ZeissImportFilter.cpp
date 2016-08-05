@@ -112,7 +112,7 @@ void ZeissImportFilter::setupFilterParameters()
   parameters.push_back(InputFileFilterParameter::New("Input File", "InputFile", getInputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(ZeissImportFilter, this, InputFile), SIMPL_BIND_GETTER(ZeissImportFilter, this, InputFile), "*.xml"));
   QStringList linkedProps("ColorWeights");
   parameters.push_back(LinkedBooleanFilterParameter::New("Convert To GrayScale", "ConvertToGrayScale", getConvertToGrayScale(), FilterParameter::Parameter, SIMPL_BIND_SETTER(ZeissImportFilter, this, ConvertToGrayScale), SIMPL_BIND_GETTER(ZeissImportFilter, this, ConvertToGrayScale), linkedProps));
-  parameters.push_back(FloatVec3FilterParameter::New("Color Weighting", "ColorWeights", getColorWeights(), FilterParameter::Parameter, SIMPL_BIND_SETTER(ZeissImportFilter, this, ColorWeights), SIMPL_BIND_GETTER(ZeissImportFilter, this, ColorWeights)));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Color Weighting", ColorWeights, FilterParameter::Parameter, ZeissImportFilter));
 
 
   parameters.push_back(StringFilterParameter::New("DataContainer Name", "DataContainerName", getDataContainerName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(ZeissImportFilter, this, DataContainerName), SIMPL_BIND_GETTER(ZeissImportFilter, this, DataContainerName)));
