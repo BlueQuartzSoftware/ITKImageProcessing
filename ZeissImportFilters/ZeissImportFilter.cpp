@@ -109,7 +109,7 @@ SIMPL_PIMPL_PROPERTY_DEF(ZeissImportFilter, ZeissTagsXmlSection::Pointer, RootTa
 void ZeissImportFilter::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(InputFileFilterParameter::New("Input File", "InputFile", getInputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(ZeissImportFilter, this, InputFile), SIMPL_BIND_GETTER(ZeissImportFilter, this, InputFile), "*.xml"));
+  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Input File", InputFile, FilterParameter::Parameter, ZeissImportFilter, "*.xml"));
   QStringList linkedProps("ColorWeights");
   parameters.push_back(LinkedBooleanFilterParameter::New("Convert To GrayScale", "ConvertToGrayScale", getConvertToGrayScale(), FilterParameter::Parameter, SIMPL_BIND_SETTER(ZeissImportFilter, this, ConvertToGrayScale), SIMPL_BIND_GETTER(ZeissImportFilter, this, ConvertToGrayScale), linkedProps));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Color Weighting", ColorWeights, FilterParameter::Parameter, ZeissImportFilter));
