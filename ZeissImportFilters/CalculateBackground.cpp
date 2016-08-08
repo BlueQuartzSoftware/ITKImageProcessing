@@ -85,9 +85,9 @@ void CalculateBackground::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Lowest allowed Image value (Image Value)", lowThresh, FilterParameter::Parameter, CalculateBackground));
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Highest allowed Image value (Image Value)", highThresh, FilterParameter::Parameter, CalculateBackground));
   //    parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));
-  //    parameters.push_back(StringFilterParameter::New("Volume Data Container", "VolumeDataContainerName", getVolumeDataContainerName(), FilterParameter::Uncategorized, SIMPL_BIND_SETTER(CalculateBackground, this, VolumeDataContainerName), SIMPL_BIND_GETTER(CalculateBackground, this, VolumeDataContainerName)));
-  parameters.push_back(StringFilterParameter::New("Background Attribute Matrix", "BackgroundAttributeMatrixName", getBackgroundAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(CalculateBackground, this, BackgroundAttributeMatrixName), SIMPL_BIND_GETTER(CalculateBackground, this, BackgroundAttributeMatrixName)));
-  parameters.push_back(StringFilterParameter::New("Background Image Array Name", "BackgroundImageArrayName", getBackgroundImageArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(CalculateBackground, this, BackgroundImageArrayName), SIMPL_BIND_GETTER(CalculateBackground, this, BackgroundImageArrayName)));
+  //    parameters.push_back(SIMPL_NEW_STRING_FP("Volume Data Container", VolumeDataContainerName, FilterParameter::Uncategorized, CalculateBackground));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Background Attribute Matrix", BackgroundAttributeMatrixName, FilterParameter::CreatedArray, CalculateBackground));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Background Image Array Name", BackgroundImageArrayName, FilterParameter::CreatedArray, CalculateBackground));
   parameters.push_back(SIMPL_NEW_BOOL_FP("Subtract Background from Current Images", SubtractBackground, FilterParameter::Parameter, CalculateBackground));
   parameters.push_back(SIMPL_NEW_BOOL_FP("Divide Background from Current Images", DivideBackground, FilterParameter::Parameter, CalculateBackground));
 

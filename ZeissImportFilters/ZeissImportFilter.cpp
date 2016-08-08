@@ -115,8 +115,8 @@ void ZeissImportFilter::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Color Weighting", ColorWeights, FilterParameter::Parameter, ZeissImportFilter));
 
 
-  parameters.push_back(StringFilterParameter::New("DataContainer Name", "DataContainerName", getDataContainerName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(ZeissImportFilter, this, DataContainerName), SIMPL_BIND_GETTER(ZeissImportFilter, this, DataContainerName)));
-  parameters.push_back(StringFilterParameter::New("Attribute Matrix Name", "ImageAttributeMatrixName", getImageAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(ZeissImportFilter, this, ImageAttributeMatrixName), SIMPL_BIND_GETTER(ZeissImportFilter, this, ImageAttributeMatrixName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("DataContainer Name", DataContainerName, FilterParameter::CreatedArray, ZeissImportFilter));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Attribute Matrix Name", ImageAttributeMatrixName, FilterParameter::CreatedArray, ZeissImportFilter));
 
   setFilterParameters(parameters);
 }
