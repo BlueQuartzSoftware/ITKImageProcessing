@@ -67,7 +67,7 @@ void Itk_BinaryThreshold::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Attribute Array to Threshold", SelectedCellArrayPath, FilterParameter::RequiredArray, Itk_BinaryThreshold, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Threshold Array", "NewCellArrayName", getNewCellArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(Itk_BinaryThreshold, this, NewCellArrayName), SIMPL_BIND_GETTER(Itk_BinaryThreshold, this, NewCellArrayName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Threshold Array", NewCellArrayName, FilterParameter::CreatedArray, Itk_BinaryThreshold));
 
   setFilterParameters(parameters);
 }
