@@ -60,19 +60,17 @@ class ITKImageProcessingWriterTest
     ITKImageProcessingWriterTest() {}
     virtual ~ITKImageProcessingWriterTest() {}
 
-    QList<QString> FileToRemove;
+    QList<QString> FilesToRemove;
 
   // -----------------------------------------------------------------------------
   //
   // -----------------------------------------------------------------------------
   void RemoveTestFiles()
   {
-#if REMOVE_TEST_FILES
-    foreach(QString filename, FileToRemove)
+    foreach(QString filename, this->FilesToRemove)
     {
       QFile::remove(filename);
     }
-#endif
   }
 
   // -----------------------------------------------------------------------------
@@ -185,7 +183,7 @@ class ITKImageProcessingWriterTest
       TestWriteImage(filename, containerArray, path,
       expectedHash
       ));
-    this->FileToRemove << filename;
+    this->FilesToRemove << filename;
   }
 
   // -----------------------------------------------------------------------------
@@ -292,6 +290,9 @@ class ITKImageProcessingWriterTest
   {
     int err = EXIT_SUCCESS;
 
+    // Clean up before running the tests
+    this->RemoveTestFiles();
+
     DREAM3D_REGISTER_TEST(TestAvailability("ITKImageWriter"));
     DREAM3D_REGISTER_TEST(TestNoInput());
 
@@ -305,7 +306,9 @@ class ITKImageProcessingWriterTest
     // SCIFIO
     DREAM3D_REGISTER_TEST(TestWriteSCIFIOImage());
 
+#if REMOVE_TEST_FILES
     DREAM3D_REGISTER_TEST( RemoveTestFiles() )
+#endif
   }
 
   private:
