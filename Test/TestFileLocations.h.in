@@ -74,6 +74,14 @@ namespace UnitTest
 
 namespace UnitTest
 {
+  namespace ITKImageProcessingWriterTest
+  {
+    const QString OutputBaseFile("@TEST_TEMP_DIR@/OutputBaseFile.basefile");
+  }
+}
+
+namespace UnitTest
+{
   namespace ItkGaussianBlurTest
   {
    const QString TestFile1("@TEST_TEMP_DIR@/TestFile1.txt");

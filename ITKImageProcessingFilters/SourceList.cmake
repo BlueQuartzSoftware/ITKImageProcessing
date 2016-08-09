@@ -15,6 +15,7 @@ SIMPL_START_FILTER_GROUP(
 set(_PublicFilters
   ITKImageProcessingFilter
   ITKImageReader
+  ITKImageWriter
   Itk_GaussianBlur
   Itk_BinaryThreshold
 )

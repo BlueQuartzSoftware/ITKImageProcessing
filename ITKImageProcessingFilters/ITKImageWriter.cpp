@@ -31,38 +31,43 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "ITKImageReader.h"
+#include "ITKImageWriter.h"
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
-#include "ITKImageProcessing/ITKImageProcessingFilters/itkInPlaceImageToDream3DDataFilter.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/itkInPlaceDream3DDataToImageFilter.h"
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
 
 // ITK includes
-#include <itkImageFileReader.h>
+#include <itkImageFileWriter.h>
 #include <itkImageIOFactory.h>
 #include <itkMetaImageIOFactory.h>
-#include <itkNrrdImageIOFactory.h>
+#include <itkNRRDImageIOFactory.h>
 #include <itkPNGImageIOFactory.h>
 
 // ITK-SCIFIO
 #include <itkSCIFIOImageIOFactory.h>
 
 // Include the MOC generated file for this class
-#include "moc_ITKImageReader.cpp"
+#include "moc_ITKImageWriter.cpp"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKImageReader::ITKImageReader() :
+ITKImageWriter::ITKImageWriter() :
   AbstractFilter(),
   m_FileName(""),
-  m_DataContainerName(SIMPL::Defaults::ImageDataContainerName)
+  m_ImageArrayPath(
+    SIMPL::Defaults::ImageDataContainerName,
+    SIMPL::Defaults::CellAttributeMatrixName,
+    SIMPL::Defaults::CellEnsembleAttributeMatrixName)
 {
   // As for now, register factories by hand. There is probably a better place
   // to do this than here.
@@ -77,43 +82,52 @@ ITKImageReader::ITKImageReader() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKImageReader::~ITKImageReader()
+ITKImageWriter::~ITKImageWriter()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ITKImageReader::setupFilterParameters()
+void ITKImageWriter::setupFilterParameters()
 {
   FilterParameterVector parameters;
   QString supportedExtensions = ".png, .mhd, .mha, .nrrd, .tif";
   parameters.push_back(
     InputFileFilterParameter::New("File", "FileName", getFileName(), FilterParameter::Parameter,
-                                  SIMPL_BIND_SETTER(ITKImageReader, this, FileName),
-                                  SIMPL_BIND_GETTER(ITKImageReader, this, FileName), supportedExtensions, "Image"));
-  parameters.push_back(
-    StringFilterParameter::New("Data Container", "DataContainerName", getDataContainerName(), FilterParameter::CreatedArray,
-                               SIMPL_BIND_SETTER(ITKImageReader, this, DataContainerName),
-                               SIMPL_BIND_GETTER(ITKImageReader, this, DataContainerName)));
+                                  SIMPL_BIND_SETTER(ITKImageWriter, this, FileName),
+                                  SIMPL_BIND_GETTER(ITKImageWriter, this, FileName), supportedExtensions, "Image"));
+
+  parameters.push_back(SeparatorFilterParameter::New("Image Data", FilterParameter::RequiredArray));
+  {
+    DataArraySelectionFilterParameter::RequirementType req =
+      DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 2, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
+    parameters.push_back(
+      DataArraySelectionFilterParameter::New(
+        "Image", "ImageArrayPath", getImageArrayPath(),
+        FilterParameter::RequiredArray, req,
+        SIMPL_BIND_SETTER(ITKImageWriter, this, ImageArrayPath),
+        SIMPL_BIND_GETTER(ITKImageWriter, this, ImageArrayPath)));
+  }
+
   setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ITKImageReader::readFilterParameters(AbstractFilterParametersReader* reader, int index)
+void ITKImageWriter::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
   setFileName(reader->readString("FileName", getFileName()));
-  setDataContainerName(reader->readString("DataContainerName", getDataContainerName()));
+  setImageArrayPath(reader->readDataArrayPath("ImageArrayPath", getImageArrayPath()));
   reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ITKImageReader::initialize()
+void ITKImageWriter::initialize()
 {
 
 }
@@ -121,7 +135,7 @@ void ITKImageReader::initialize()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ITKImageReader::dataCheck()
+void ITKImageWriter::dataCheck()
 {
   //check file name exists
   QString filename = getFileName();
@@ -132,19 +146,23 @@ void ITKImageReader::dataCheck()
     return;
   }
 
-  if (getDataContainerName().isEmpty())
+  DataContainerArray::Pointer containerArray = getDataContainerArray();
+  if (!containerArray)
   {
     setErrorCondition(-2);
-    notifyErrorMessage(getHumanLabel(), "No container.", getErrorCondition());
+    notifyErrorMessage(getHumanLabel(), "No container array.", getErrorCondition());
     return;
   }
 
-  DataContainer::Pointer container =
-    getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
-  if (!container.get())
-    {
-      return;
-    }
+  ImageGeom::Pointer imageGeometry =
+    getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(
+      this, getImageArrayPath().getDataContainerName());
+  if (!imageGeometry.get())
+  {
+    setErrorCondition(-3);
+    notifyErrorMessage(getHumanLabel(), "No image geometry.", getErrorCondition());
+    return;
+  }
 
   // If we got here, that means that there is no error
   setErrorCondition(0);
@@ -154,7 +172,7 @@ void ITKImageReader::dataCheck()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ITKImageReader::preflight()
+void ITKImageWriter::preflight()
 {
   // These are the REQUIRED lines of CODE to make sure the filter behaves correctly
   setInPreflight(true); // Set the fact that we are preflighting.
@@ -168,53 +186,30 @@ void ITKImageReader::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename TPixel>
-void ITKImageReader::readImage(unsigned int dimensions, const QString& filename, DataContainer::Pointer container)
-{
-  switch (dimensions)
-  {
-    case 1:
-    {
-      readImage<TPixel, 1>(filename, container);
-      break;
-    }
-    case 2:
-    {
-      readImage<TPixel, 2>(filename, container);
-      break;
-    }
-    default:
-    {
-      readImage<TPixel, 3>(filename, container);
-      break;
-    }
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 template<typename TPixel, unsigned int dimensions>
-void ITKImageReader::readImage(const QString& filename, DataContainer::Pointer container)
+void ITKImageWriter::writeImage(const QString& filename,
+                                DataContainer::Pointer container,
+                                DataArrayPath& path)
 {
   typedef itk::Dream3DImage<TPixel, dimensions>   ImageType;
-  typedef itk::ImageFileReader<ImageType>         ReaderType;
-  typedef itk::InPlaceImageToDream3DDataFilter<TPixel, dimensions> ToDream3DType;
+  typedef itk::ImageFileWriter<ImageType>         WriterType;
+  typedef itk::InPlaceDream3DDataToImageFilter<TPixel, dimensions> ToITKType;
 
-  typename ReaderType::Pointer reader = ReaderType::New();
-  reader->SetFileName(filename.toStdString().c_str());
+  typename ToITKType::Pointer toITK = ToITKType::New();
+  toITK->SetInput(container);
+  toITK->SetDataArrayPath(path);
+  toITK->SetInPlace(true);
 
-  typename ToDream3DType::Pointer toDream3DFilter = ToDream3DType::New();
-  toDream3DFilter->SetInput(reader->GetOutput());
-  toDream3DFilter->SetInPlace(true);
-  toDream3DFilter->SetDataContainer(container);
-  toDream3DFilter->Update();
+  typename WriterType::Pointer writer = WriterType::New();
+  writer->SetInput(toITK->GetOutput());
+  writer->SetFileName(filename.toStdString().c_str());
+  writer->Write();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ITKImageReader::execute()
+void ITKImageWriter::execute()
 {
   setErrorCondition(0);
   setWarningCondition(0);
@@ -225,84 +220,60 @@ void ITKImageReader::execute()
   }
 
   DataContainer::Pointer container =
-    getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
-  Q_ASSERT(container.get());
+    getDataContainerArray()->getDataContainer(
+      getImageArrayPath().getDataContainerName());
 
-  QString filename = getFileName();
-  itk::ImageIOBase::Pointer imageIO = itk::ImageIOFactory::CreateImageIO(filename.toLatin1(), itk::ImageIOFactory::ReadMode);
-  if (NULL == imageIO)
+  IDataArray::Pointer inputData =
+    container->getAttributeMatrix(
+      getImageArrayPath().getAttributeMatrixName())->getAttributeArray(
+        getImageArrayPath().getDataArrayName());
+
+  QString type = inputData->getTypeAsString();
+if (type.compare("int8_t") == 0)
   {
-    setErrorCondition(-3);
-    QString errorMessage = "ITK could not read the given file \"%1\". Format is likely unsupported.";
-    notifyErrorMessage(getHumanLabel(), errorMessage.arg(filename), getErrorCondition());
-    return;
+    writeImage<int8_t, 3>(getFileName(), container, getImageArrayPath());
   }
-  imageIO->SetFileName(filename.toLatin1());
-  imageIO->ReadImageInformation();
-
-  typedef itk::ImageIOBase::IOComponentType ComponentType;
-  const ComponentType type = imageIO->GetComponentType();
-  const unsigned int dimensions = imageIO->GetNumberOfDimensions();
-
-  switch(type)
+  else if (type.compare("uint8_t") == 0)
   {
-    case itk::ImageIOBase::UCHAR:
-    {
-      readImage<unsigned char>(dimensions, filename, container);
-      break;
-    }
-    case itk::ImageIOBase::CHAR:
-    {
-      readImage<char>(dimensions, filename, container);
-      break;
-    }
-    case itk::ImageIOBase::USHORT:
-    {
-      readImage<unsigned short>(dimensions, filename, container);
-      break;
-    }
-    case itk::ImageIOBase::SHORT:
-    {
-      readImage<short>(dimensions, filename, container);
-      break;
-    }
-    case itk::ImageIOBase::UINT:
-    {
-      readImage<unsigned int>(dimensions, filename, container);
-      break;
-    }
-    case itk::ImageIOBase::INT:
-    {
-      readImage<int>(dimensions, filename, container);
-      break;
-    }
-    case itk::ImageIOBase::ULONG:
-    {
-      readImage<unsigned long>(dimensions, filename, container);
-      break;
-    }
-    case itk::ImageIOBase::LONG:
-    {
-      readImage<long>(dimensions, filename, container);
-      break;
-    }
-    case itk::ImageIOBase::FLOAT:
-    {
-      readImage<float>(dimensions, filename, container);
-      break;
-    }
-    case itk::ImageIOBase::DOUBLE:
-    {
-      readImage<double>(dimensions, filename, container);
-      break;
-    }
-    default:
-    {
-      setErrorCondition(-4);
-      QString errorMessage = QString("Unsupported pixel type: %1.").arg(imageIO->GetComponentTypeAsString(type).c_str());
-      notifyErrorMessage(getHumanLabel(), errorMessage, getErrorCondition());
-      break;
-    }
+    writeImage<uint8_t, 3>(getFileName(), container, getImageArrayPath());
+  }
+  else if (type.compare("int16_t") == 0)
+  {
+    writeImage<int16_t, 3>(getFileName(), container, getImageArrayPath());
+  }
+  else if (type.compare("uint16_t") == 0)
+  {
+    writeImage<uint16_t, 3>(getFileName(), container, getImageArrayPath());
+  }
+  else if (type.compare("int32_t") == 0)
+  {
+    writeImage<int32_t, 3>(getFileName(), container, getImageArrayPath());
+  }
+  else if (type.compare("uint32_t") == 0)
+  {
+    writeImage<uint32_t, 3>(getFileName(), container, getImageArrayPath());
+  }
+  else if (type.compare("int64_t") == 0)
+  {
+    writeImage<int64_t, 3>(getFileName(), container, getImageArrayPath());
+  }
+  else if (type.compare("uint64_t") == 0)
+  {
+    writeImage<uint64_t, 3>(getFileName(), container, getImageArrayPath());
+  }
+  else if (type.compare("float") == 0)
+  {
+    writeImage<float, 3>(getFileName(), container, getImageArrayPath());
+  }
+  else if (type.compare("double") == 0)
+  {
+    writeImage<double, 3>(getFileName(), container, getImageArrayPath());
+  }
+  else
+  {
+    setErrorCondition(-4);
+    QString errorMessage = QString("Unsupported pixel type: %1.").arg(type);
+    notifyErrorMessage(getHumanLabel(), errorMessage, getErrorCondition());
   }
 
   notifyStatusMessage(getHumanLabel(), "Complete");
@@ -311,9 +282,9 @@ void ITKImageReader::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKImageReader::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKImageWriter::newFilterInstance(bool copyFilterParameters)
 {
-  ITKImageReader::Pointer filter = ITKImageReader::New();
+  ITKImageWriter::Pointer filter = ITKImageWriter::New();
   if(true == copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
@@ -324,13 +295,13 @@ AbstractFilter::Pointer ITKImageReader::newFilterInstance(bool copyFilterParamet
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKImageReader::getCompiledLibraryName()
+const QString ITKImageWriter::getCompiledLibraryName()
 { return ITKImageProcessingConstants::ITKImageProcessingBaseName; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKImageReader::getBrandingString()
+const QString ITKImageWriter::getBrandingString()
 {
   return "ITKImageProcessing";
 }
@@ -338,7 +309,7 @@ const QString ITKImageReader::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKImageReader::getFilterVersion()
+const QString ITKImageWriter::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
@@ -349,18 +320,18 @@ const QString ITKImageReader::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKImageReader::getGroupName()
+const QString ITKImageWriter::getGroupName()
 { return "Image Processing"; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKImageReader::getSubGroupName()
+const QString ITKImageWriter::getSubGroupName()
 { return "ITKImageProcessing"; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKImageReader::getHumanLabel()
-{ return "[ITK] ImageReader (KW)"; }
+const QString ITKImageWriter::getHumanLabel()
+{ return "[ITK] ImageWriter (KW)"; }
 
