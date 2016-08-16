@@ -109,14 +109,14 @@ SIMPL_PIMPL_PROPERTY_DEF(ZeissImportFilter, ZeissTagsXmlSection::Pointer, RootTa
 void ZeissImportFilter::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(InputFileFilterParameter::New("Input File", "InputFile", getInputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(ZeissImportFilter, this, InputFile), SIMPL_BIND_GETTER(ZeissImportFilter, this, InputFile), "*.xml"));
+  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Input File", InputFile, FilterParameter::Parameter, ZeissImportFilter, "*.xml"));
   QStringList linkedProps("ColorWeights");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Convert To GrayScale", "ConvertToGrayScale", getConvertToGrayScale(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(ZeissImportFilter, this, ConvertToGrayScale), SIMPL_BIND_GETTER(ZeissImportFilter, this, ConvertToGrayScale)));
-  parameters.push_back(FloatVec3FilterParameter::New("Color Weighting", "ColorWeights", getColorWeights(), FilterParameter::Parameter, SIMPL_BIND_SETTER(ZeissImportFilter, this, ColorWeights), SIMPL_BIND_GETTER(ZeissImportFilter, this, ColorWeights)));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Convert To GrayScale", ConvertToGrayScale, FilterParameter::Parameter, ZeissImportFilter, linkedProps));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Color Weighting", ColorWeights, FilterParameter::Parameter, ZeissImportFilter));
 
 
-  parameters.push_back(StringFilterParameter::New("DataContainer Name", "DataContainerName", getDataContainerName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(ZeissImportFilter, this, DataContainerName), SIMPL_BIND_GETTER(ZeissImportFilter, this, DataContainerName)));
-  parameters.push_back(StringFilterParameter::New("Attribute Matrix Name", "ImageAttributeMatrixName", getImageAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(ZeissImportFilter, this, ImageAttributeMatrixName), SIMPL_BIND_GETTER(ZeissImportFilter, this, ImageAttributeMatrixName)));
+  parameters.push_back(SIMPL_NEW_STRING_FP("DataContainer Name", DataContainerName, FilterParameter::CreatedArray, ZeissImportFilter));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Attribute Matrix Name", ImageAttributeMatrixName, FilterParameter::CreatedArray, ZeissImportFilter));
 
   setFilterParameters(parameters);
 }
