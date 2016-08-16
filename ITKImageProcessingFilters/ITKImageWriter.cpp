@@ -105,9 +105,9 @@ void ITKImageWriter::setupFilterParameters()
     parameters.push_back(
       DataArraySelectionFilterParameter::New(
         "Image", "ImageArrayPath", getImageArrayPath(),
-        FilterParameter::RequiredArray, req,
+        FilterParameter::RequiredArray,
         SIMPL_BIND_SETTER(ITKImageWriter, this, ImageArrayPath),
-        SIMPL_BIND_GETTER(ITKImageWriter, this, ImageArrayPath)));
+        SIMPL_BIND_GETTER(ITKImageWriter, this, ImageArrayPath), req));
   }
 
   setFilterParameters(parameters);
@@ -189,7 +189,7 @@ void ITKImageWriter::preflight()
 template<typename TPixel, unsigned int dimensions>
 void ITKImageWriter::writeImage(const QString& filename,
                                 DataContainer::Pointer container,
-                                DataArrayPath& path)
+                                DataArrayPath path)
 {
   typedef itk::Dream3DImage<TPixel, dimensions>   ImageType;
   typedef itk::ImageFileWriter<ImageType>         WriterType;

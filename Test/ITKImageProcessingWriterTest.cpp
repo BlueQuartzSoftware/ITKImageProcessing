@@ -120,7 +120,7 @@ class ITKImageProcessingWriterTest
       container->createAndAddAttributeMatrix(
         dimensions, path.getAttributeMatrixName(),
         SIMPL::AttributeMatrixType::Cell);
-    DataArray<PixelType>::Pointer data =
+    typename DataArray<PixelType>::Pointer data =
       DataArray<PixelType>::CreateArray(
         dimensions, arrayDimensions, path.getDataArrayName(), true);
     data->initializeWithValue(11.0);
