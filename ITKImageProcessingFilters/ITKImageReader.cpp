@@ -88,14 +88,8 @@ void ITKImageReader::setupFilterParameters()
 {
   FilterParameterVector parameters;
   QString supportedExtensions = ".png, .mhd, .mha, .nrrd, .tif";
-  parameters.push_back(
-    InputFileFilterParameter::New("File", "FileName", getFileName(), FilterParameter::Parameter,
-                                  SIMPL_BIND_SETTER(ITKImageReader, this, FileName),
-                                  SIMPL_BIND_GETTER(ITKImageReader, this, FileName), supportedExtensions, "Image"));
-  parameters.push_back(
-    StringFilterParameter::New("Data Container", "DataContainerName", getDataContainerName(), FilterParameter::CreatedArray,
-                               SIMPL_BIND_SETTER(ITKImageReader, this, DataContainerName),
-                               SIMPL_BIND_GETTER(ITKImageReader, this, DataContainerName)));
+  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("File", FileName, FilterParameter::Parameter, ITKImageReader, supportedExtensions, "Image"));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Data Container", DataContainerName, FilterParameter::CreatedArray, ITKImageReader));
   setFilterParameters(parameters);
 }
 
