@@ -87,12 +87,18 @@ class ITKImageProcessingWriterTest
     return filterFactory->create();
   }
 
+  // -----------------------------------------------------------------------------
+  //
+  // -----------------------------------------------------------------------------
   QString FilenameWithDifferentExtension(const QString& filename, const QString& extension = ".raw")
   {
     QString nameWithoutExtension = filename.left(filename.lastIndexOf("."));
     return nameWithoutExtension + extension;
   }
 
+  // -----------------------------------------------------------------------------
+  //
+  // -----------------------------------------------------------------------------
   template<class PixelType>
   DataContainerArray::Pointer CreateTestData(const DataArrayPath& path)
   {
@@ -131,6 +137,9 @@ class ITKImageProcessingWriterTest
     return containerArray;
   }
 
+  // -----------------------------------------------------------------------------
+  //
+  // -----------------------------------------------------------------------------
   bool TestFileByHash(const QString& filename, const QByteArray& expectedHash)
   {
     // Compare files using their hashes
@@ -146,6 +155,9 @@ class ITKImageProcessingWriterTest
     return true;
   }
 
+  // -----------------------------------------------------------------------------
+  //
+  // -----------------------------------------------------------------------------
   bool TestWriteImage(const QString& filename,
     DataContainerArray::Pointer containerArray,
     DataArrayPath& path,
@@ -156,23 +168,35 @@ class ITKImageProcessingWriterTest
     {
       return false;
     }
-    bool propertySet = false;
+    bool propWasSet;
+    QVariant var;
 
-    ITKImageWriter::Pointer writer = std::dynamic_pointer_cast<ITKImageWriter>(filter);
-    DREAM3D_ASSERT(writer);
+    // We can use the method from Abstract filter to set the DataContainerArray
+    filter->setDataContainerArray(containerArray);
 
-    writer->setDataContainerArray(containerArray);
-    writer->setImageArrayPath(path);
-    writer->setFileName(filename);
+    // We must go through the QMetaSystem to set the other properties of the filter because
+    // we do not have access to the actual types because those are loaded up through
+    // a plugin and we can not link to a "module".
+    var.setValue(path);
+    propWasSet = filter->setProperty("ImageArrayPath", var);
+    DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
-    writer->execute();
-    DREAM3D_REQUIRED(writer->getErrorCondition(), >= , 0);
-    DREAM3D_REQUIRED(writer->getWarningCondition(), >= , 0);
+    var.setValue(filename);
+    propWasSet = filter->setProperty("FileName", var);
+    DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+
+    filter->execute();
+    DREAM3D_REQUIRED(filter->getErrorCondition(), >= , 0);
+    DREAM3D_REQUIRED(filter->getWarningCondition(), >= , 0);
 
     return TestFileByHash(filename, expectedHash);
   }
 
-  template<class PixelType> void TestWriteImage(const QString& extension, const QByteArray& expectedHash)
+  // -----------------------------------------------------------------------------
+  //
+  // -----------------------------------------------------------------------------
+  template<class PixelType>
+  void TestWriteImage(const QString& extension, const QByteArray& expectedHash)
   {
     QString filename = FilenameWithDifferentExtension(
       UnitTest::ITKImageProcessingWriterTest::OutputBaseFile, extension);
