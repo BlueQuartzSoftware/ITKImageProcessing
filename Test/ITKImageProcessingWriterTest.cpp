@@ -87,18 +87,12 @@ class ITKImageProcessingWriterTest
     return filterFactory->create();
   }
 
-  // -----------------------------------------------------------------------------
-  //
-  // -----------------------------------------------------------------------------
   QString FilenameWithDifferentExtension(const QString& filename, const QString& extension = ".raw")
   {
     QString nameWithoutExtension = filename.left(filename.lastIndexOf("."));
     return nameWithoutExtension + extension;
   }
 
-  // -----------------------------------------------------------------------------
-  //
-  // -----------------------------------------------------------------------------
   template<class PixelType>
   DataContainerArray::Pointer CreateTestData(const DataArrayPath& path)
   {
@@ -137,9 +131,6 @@ class ITKImageProcessingWriterTest
     return containerArray;
   }
 
-  // -----------------------------------------------------------------------------
-  //
-  // -----------------------------------------------------------------------------
   bool TestFileByHash(const QString& filename, const QByteArray& expectedHash)
   {
     // Compare files using their hashes
@@ -155,46 +146,41 @@ class ITKImageProcessingWriterTest
     return true;
   }
 
-  // -----------------------------------------------------------------------------
-  //
-  // -----------------------------------------------------------------------------
   bool TestWriteImage(const QString& filename,
     DataContainerArray::Pointer containerArray,
     DataArrayPath& path,
     const QByteArray& expectedHash)
   {
-    AbstractFilter::Pointer filter = GetFilterByName("ITKImageWriter");
-    if (!filter)
-    {
-      return false;
-    }
-    bool propWasSet;
+    QString filtName = "ITKImageWriter";
+    FilterManager* fm = FilterManager::Instance();
+    IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+
+    DREAM3D_REQUIRE_NE(filterFactory.get(),0);
+    // If we get this far, the Factory is good so creating the filter should not fail unless something has
+    // horribly gone wrong in which case the system is going to come down quickly after this.
+    AbstractFilter::Pointer filter = filterFactory->create();
+
     QVariant var;
-
-    // We can use the method from Abstract filter to set the DataContainerArray
-    filter->setDataContainerArray(containerArray);
-
-    // We must go through the QMetaSystem to set the other properties of the filter because
-    // we do not have access to the actual types because those are loaded up through
-    // a plugin and we can not link to a "module".
-    var.setValue(path);
-    propWasSet = filter->setProperty("ImageArrayPath", var);
-    DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+    bool propWasSet;
 
     var.setValue(filename);
     propWasSet = filter->setProperty("FileName", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+     
+    var.setValue(path);
+    propWasSet = filter->setProperty("ImageArrayPath", var);
+    DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+
+    filter->setDataContainerArray(containerArray);
 
     filter->execute();
+
     DREAM3D_REQUIRED(filter->getErrorCondition(), >= , 0);
     DREAM3D_REQUIRED(filter->getWarningCondition(), >= , 0);
 
     return TestFileByHash(filename, expectedHash);
   }
 
-  // -----------------------------------------------------------------------------
-  //
-  // -----------------------------------------------------------------------------
   template<class PixelType>
   void TestWriteImage(const QString& extension, const QByteArray& expectedHash)
   {
