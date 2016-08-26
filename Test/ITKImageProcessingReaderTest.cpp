@@ -246,17 +246,21 @@ class ITKImageProcessingReaderTest
 
   int TestCompareImage(const QString& file, ImageType::Pointer expectedImage)
   {
-    AbstractFilter::Pointer reader = GetFilterByName("ITKImageReader");
-    if (!reader)
-    {
-      return EXIT_FAILURE;
-    }
+    FilterPipeline::Pointer pipeline = FilterPipeline::New();
+
+    QString filtName = "ITKImageReader";
+    FilterManager* fm = FilterManager::Instance();
+    IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+
+    DREAM3D_REQUIRE_NE(NULL, filterFactory.get());
+
+    AbstractFilter::Pointer reader = filterFactory->create();
+    DREAM3D_REQUIRE_NE(NULL, reader.get());
+
     bool propertySet = false;
 
     const QString containerName = "TestContainer";
-    DataContainer::Pointer inputContainer = DataContainer::New(containerName);
     DataContainerArray::Pointer inputContainerArray = DataContainerArray::New();
-    inputContainerArray->addDataContainer(inputContainer);
 
     reader->setDataContainerArray(inputContainerArray);
     propertySet = reader->setProperty("DataContainerName", containerName);
@@ -312,7 +316,6 @@ class ITKImageProcessingReaderTest
       float expectedValue = expectedImage->GetBufferPointer()[i];
       DREAM3D_COMPARE_FLOATS(&value, &expectedValue, tol);
     }
-
     return EXIT_SUCCESS;
   }
 

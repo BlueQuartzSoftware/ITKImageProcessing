@@ -40,6 +40,11 @@
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
+#include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
+
+#include <itkImageFileReader.h>
+
+
 /**
  * @brief The ITKImageProcessingFilter class. See [Filter documentation](@ref itkimageprocessingfilter) for details.
  */
@@ -158,9 +163,16 @@ class ITKImageReader : public AbstractFilter
     * @brief Does the actual reading of the image with itkImageFileReader.
     */
     template<typename TPixel>
-    void readImage(unsigned int dimensions, const QString& filename, DataContainer::Pointer container);
+	void readImage(unsigned int dimensions, const QString& filename, bool dataCheck);
     template<typename TPixel, unsigned int>
-    void readImage(const QString& filename, DataContainer::Pointer dc);
+	void readImage(const QString& filename, bool dataCheck);
+	void readImage(bool dataCheck);
+
+    /**
+    * @brief Reads image size, spacing and origin, and updates container information accordingly.
+    */
+    template<typename TPixel, unsigned int dimensions>
+    void readImageOutputInformation(typename itk::ImageFileReader<itk::Dream3DImage<TPixel, dimensions> >::Pointer &reader, DataContainer::Pointer &container);
 
   private:
 	  ITKImageReader(const ITKImageReader&); // Copy Constructor Not Implemented
