@@ -12,6 +12,7 @@ InPlaceDream3DDataToImageFilter<PixelType, VDimension>::InPlaceDream3DDataToImag
 {
   m_DataContainer = DataContainer::NullPointer();
   m_InPlace = true;
+  m_PixelContainerWillOwnTheBuffer = false;
 }
 
 template< typename PixelType, unsigned int VDimension >
@@ -128,16 +129,19 @@ InPlaceDream3DDataToImageFilter< PixelType, VDimension >
   // Get data pointer
   AttributeMatrix::Pointer ma = m_DataContainer->getAttributeMatrix(m_AttributeMatrixArrayName.c_str());
   IDataArray::Pointer dataArray = ma->getAttributeArray(m_DataArrayName.c_str());
-  const bool pixelContainerWillOwnTheBuffer = true;
   size_t size = dataArray->getSize();
   PixelType *buffer;
   if(m_InPlace)
   {
-    dataArray->releaseOwnership();
+    if (m_PixelContainerWillOwnTheBuffer)
+    {
+      dataArray->releaseOwnership();
+    }
     buffer = static_cast<PixelType*>(dataArray->getVoidPointer( 0 ));
   }
   else
   {
+    m_PixelContainerWillOwnTheBuffer = true;
     buffer = new PixelType[size];
     ::memcpy( buffer, static_cast<PixelType*>(dataArray->getVoidPointer( 0 )), size * sizeof( PixelType ) );
   }
@@ -145,7 +149,7 @@ InPlaceDream3DDataToImageFilter< PixelType, VDimension >
   {
     m_ImportImageContainer = ImportImageContainerType::New();
     m_ImportImageContainer->SetImportPointer( buffer,
-      size, pixelContainerWillOwnTheBuffer );
+        size, m_PixelContainerWillOwnTheBuffer);
   }
   // get pointer to the output
   ImagePointer outputPtr = this->GetOutput();
