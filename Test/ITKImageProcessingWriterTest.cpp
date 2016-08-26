@@ -228,23 +228,23 @@ class ITKImageProcessingWriterTest
   {
     // uint8_t
     {
-      TestWriteImage<uint8_t>("_uint8.mha", "34bfdf119323fef41383bf35bda6e98765adca39");
+      TestWriteImage<uint8_t>("_uint8.mha", "a96204dedb5c3361fe3f6a438127afc17da488d6");
     }
     // int8_t
     {
-      TestWriteImage<int8_t>("_int8.mha", "e4f81d16c8b73b28644ab6bab0c2e4d18f25c2c2");
+      TestWriteImage<int8_t>("_int8.mha", "9bf8cd2e2b16534c71fb5e54a6ac32ff609a6187");
     }
     // uint32_t
     {
-      TestWriteImage<uint32_t>("_uint32_t.mha", "4f1f83eb90585ff605d4754270b42549050da0f4");
+      TestWriteImage<uint32_t>("_uint32_t.mha", "25f47f02fd923e1c2aea2535f65a08dfad8d48da");
     }
     // int32_t
     {
-      TestWriteImage<int32_t>("_int32_t.mha", "83e1d1f4fc21904b8872bc0427bc616b49fbc3af");
+      TestWriteImage<int32_t>("_int32_t.mha", "1ab673b4392f281c37138f247fcdd0d59267a61d");
     }
     // float
     {
-      TestWriteImage<float>("_float.mha", "91aeeeaa74c0786a00ac92b0cb53090cdcb209fe");
+      TestWriteImage<float>("_float.mha", "4bbc41bcc9e6eab297c7a063b3412c5f21e4eb97");
     }
 
     return EXIT_SUCCESS;
@@ -254,23 +254,23 @@ class ITKImageProcessingWriterTest
   {
     // uint8_t
     {
-      TestWriteImage<uint8_t>("_uint8.nrrd", "648a95abb10b63f95aa63cc47873444b0d083c66");
+      TestWriteImage<uint8_t>("_uint8.nrrd", "2c95f6c3b31dbb2ace2c35ab22903ea1c1084a3c");
     }
     // int8_t
     {
-      TestWriteImage<int8_t>("_int8.nrrd", "22c1caf246ce90e299234daec7116ee53c79ee08");
+      TestWriteImage<int8_t>("_int8.nrrd", "111bf2913c3b908cffba52a2f871eb355955fb39");
     }
     // uint32_t
     {
-      TestWriteImage<uint32_t>("_uint32_t.nrrd", "87c68da74918acb5399e312fec714a97d77acba3");
+      TestWriteImage<uint32_t>("_uint32_t.nrrd", "56b2993a4fa3e1c12ab7105cf649dff999da664d");
     }
     // int32_t
     {
-      TestWriteImage<int32_t>("_int32_t.nrrd", "392d5a065d29498902b81b1d23bed81fba3e9f43");
+      TestWriteImage<int32_t>("_int32_t.nrrd", "28847c18cc064ebf91a969f443121c6251e5fee1");
     }
     // float
     {
-      TestWriteImage<float>("_float.nrrd", "bdbcdf0ee130284bcc3f2c78029ebaaf1616c75e");
+      TestWriteImage<float>("_float.nrrd", "6134f2ecb8292f02bc6bd223f94d4a783e115f71");
     }
 
     return EXIT_SUCCESS;
@@ -280,15 +280,15 @@ class ITKImageProcessingWriterTest
   {
     // uint8_t
     {
-      TestWriteImage<uint8_t>("_uint8.tif", "43d51b0eebbf74a6e68dd8e5b6597a62adfac228");
+      TestWriteImage<uint8_t>("_uint8.tif", "b1f736d054b9d15ee255884d20077619a9bd07a6");
     }
     // int8_t
     {
-      TestWriteImage<int8_t>("_int8.tif", "313c8e11119dbcd6eaff5931c5cf8833ec3a51bf");
+      TestWriteImage<int8_t>("_int8.tif", "60fcaeaa2324de54bf9fb1ab50b2e6f30f8d5500");
     }
     // float
     {
-      TestWriteImage<float>("_float.tif", "16932e0885e564e5c601fbd25daa2ee52c02caef");
+      TestWriteImage<float>("_float.tif", "d6a7d7680f5f000d24b7c5c30f69379fa534c00b");
     }
 
     return EXIT_SUCCESS;

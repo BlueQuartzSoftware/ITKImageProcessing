@@ -36,7 +36,7 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
+#include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 
@@ -91,25 +91,17 @@ ITKImageWriter::~ITKImageWriter()
 // -----------------------------------------------------------------------------
 void ITKImageWriter::setupFilterParameters()
 {
-  FilterParameterVector parameters;
-  QString supportedExtensions = ".png, .mhd, .mha, .nrrd, .tif";
-  parameters.push_back(
-    InputFileFilterParameter::New("File", "FileName", getFileName(), FilterParameter::Parameter,
-                                  SIMPL_BIND_SETTER(ITKImageWriter, this, FileName),
-                                  SIMPL_BIND_GETTER(ITKImageWriter, this, FileName), supportedExtensions, "Image"));
+	FilterParameterVector parameters;
+	QString supportedExtensions = "*.png *.mhd *.mha *.nrrd *.tif";
+	parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Output File", FileName, FilterParameter::Parameter, ITKImageWriter, supportedExtensions));
 
-  parameters.push_back(SeparatorFilterParameter::New("Image Data", FilterParameter::RequiredArray));
-  {
-    DataArraySelectionFilterParameter::RequirementType req =
-      DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 2, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(
-      DataArraySelectionFilterParameter::New(
-        "Image", "ImageArrayPath", getImageArrayPath(),
-        FilterParameter::RequiredArray,
-        SIMPL_BIND_SETTER(ITKImageWriter, this, ImageArrayPath),
-        SIMPL_BIND_GETTER(ITKImageWriter, this, ImageArrayPath), req));
-  }
-
+	parameters.push_back(SeparatorFilterParameter::New("Image Data", FilterParameter::RequiredArray));
+	{
+		DataArraySelectionFilterParameter::RequirementType req =
+			DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize,
+			                                                     SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
+	  parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Image", ImageArrayPath, FilterParameter::RequiredArray, ITKImageWriter, req));
+	}
   setFilterParameters(parameters);
 }
 
@@ -203,7 +195,8 @@ void ITKImageWriter::writeImage(const QString& filename,
   typename WriterType::Pointer writer = WriterType::New();
   writer->SetInput(toITK->GetOutput());
   writer->SetFileName(filename.toStdString().c_str());
-  writer->Write();
+  writer->UseCompressionOn();
+  writer->Update();
 }
 
 // -----------------------------------------------------------------------------
