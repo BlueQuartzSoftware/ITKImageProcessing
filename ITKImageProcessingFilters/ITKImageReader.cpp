@@ -262,59 +262,69 @@ void ITKImageReader::readImage(const QString& filename, bool dataCheck)
 // -----------------------------------------------------------------------------
 void ITKImageReader::readImage(bool dataCheck)
 {
-    QString filename = getFileName();
-    itk::ImageIOBase::Pointer imageIO = itk::ImageIOFactory::CreateImageIO(filename.toLatin1(), itk::ImageIOFactory::ReadMode);
-    if (NULL == imageIO)
+    try
     {
-        setErrorCondition(-5);
-        QString errorMessage = "ITK could not read the given file \"%1\". Format is likely unsupported.";
-        notifyErrorMessage(getHumanLabel(), errorMessage.arg(filename), getErrorCondition());
-        return;
+        QString filename = getFileName();
+        itk::ImageIOBase::Pointer imageIO = itk::ImageIOFactory::CreateImageIO(filename.toLatin1(), itk::ImageIOFactory::ReadMode);
+        if (NULL == imageIO)
+        {
+            setErrorCondition(-5);
+            QString errorMessage = "ITK could not read the given file \"%1\". Format is likely unsupported.";
+            notifyErrorMessage(getHumanLabel(), errorMessage.arg(filename), getErrorCondition());
+            return;
+        }
+        imageIO->SetFileName(filename.toLatin1());
+        imageIO->ReadImageInformation();
+
+        typedef itk::ImageIOBase::IOComponentType ComponentType;
+        const ComponentType type = imageIO->GetComponentType();
+        const unsigned int dimensions = imageIO->GetNumberOfDimensions();
+
+        switch (type)
+        {
+        case itk::ImageIOBase::UCHAR:
+            readImage<unsigned char>(dimensions, filename, dataCheck);
+            break;
+        case itk::ImageIOBase::CHAR:
+            readImage<char>(dimensions, filename, dataCheck);
+            break;
+        case itk::ImageIOBase::USHORT:
+            readImage<unsigned short>(dimensions, filename, dataCheck);
+            break;
+        case itk::ImageIOBase::SHORT:
+            readImage<short>(dimensions, filename, dataCheck);
+            break;
+        case itk::ImageIOBase::UINT:
+            readImage<unsigned int>(dimensions, filename, dataCheck);
+            break;
+        case itk::ImageIOBase::INT:
+            readImage<int>(dimensions, filename, dataCheck);
+            break;
+        case itk::ImageIOBase::ULONG:
+            readImage<unsigned long>(dimensions, filename, dataCheck);
+            break;
+        case itk::ImageIOBase::LONG:
+            readImage<long>(dimensions, filename, dataCheck);
+            break;
+        case itk::ImageIOBase::FLOAT:
+            readImage<float>(dimensions, filename, dataCheck);
+            break;
+        case itk::ImageIOBase::DOUBLE:
+            readImage<double>(dimensions, filename, dataCheck);
+            break;
+        default:
+            setErrorCondition(-4);
+            QString errorMessage = QString("Unsupported pixel type: %1.").arg(imageIO->GetComponentTypeAsString(type).c_str());
+            notifyErrorMessage(getHumanLabel(), errorMessage, getErrorCondition());
+            break;
+        }
     }
-    imageIO->SetFileName(filename.toLatin1());
-    imageIO->ReadImageInformation();
-
-    typedef itk::ImageIOBase::IOComponentType ComponentType;
-    const ComponentType type = imageIO->GetComponentType();
-    const unsigned int dimensions = imageIO->GetNumberOfDimensions();
-
-    switch (type)
+    catch (itk::ExceptionObject & err)
     {
-    case itk::ImageIOBase::UCHAR:
-        readImage<unsigned char>(dimensions, filename, dataCheck);
-        break;
-    case itk::ImageIOBase::CHAR:
-        readImage<char>(dimensions, filename, dataCheck);
-        break;
-    case itk::ImageIOBase::USHORT:
-        readImage<unsigned short>(dimensions, filename, dataCheck);
-        break;
-    case itk::ImageIOBase::SHORT:
-        readImage<short>(dimensions, filename, dataCheck);
-        break;
-    case itk::ImageIOBase::UINT:
-        readImage<unsigned int>(dimensions, filename, dataCheck);
-        break;
-    case itk::ImageIOBase::INT:
-        readImage<int>(dimensions, filename, dataCheck);
-        break;
-    case itk::ImageIOBase::ULONG:
-        readImage<unsigned long>(dimensions, filename, dataCheck);
-        break;
-    case itk::ImageIOBase::LONG:
-        readImage<long>(dimensions, filename, dataCheck);
-        break;
-    case itk::ImageIOBase::FLOAT:
-        readImage<float>(dimensions, filename, dataCheck);
-        break;
-    case itk::ImageIOBase::DOUBLE:
-        readImage<double>(dimensions, filename, dataCheck);
-        break;
-    default:
-        setErrorCondition(-4);
-        QString errorMessage = QString("Unsupported pixel type: %1.").arg(imageIO->GetComponentTypeAsString(type).c_str());
-        notifyErrorMessage(getHumanLabel(), errorMessage, getErrorCondition());
-        break;
+        setErrorCondition(-6);
+        QString errorMessage = "ITK exception was thrown while processing input file:";
+        notifyErrorMessage(getHumanLabel(), errorMessage.arg(err.what()), getErrorCondition());
+        return;
     }
 }
 // -----------------------------------------------------------------------------

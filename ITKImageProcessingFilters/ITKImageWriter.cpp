@@ -187,16 +187,26 @@ void ITKImageWriter::writeImage(const QString& filename,
   typedef itk::ImageFileWriter<ImageType>         WriterType;
   typedef itk::InPlaceDream3DDataToImageFilter<TPixel, dimensions> ToITKType;
 
-  typename ToITKType::Pointer toITK = ToITKType::New();
-  toITK->SetInput(container);
-  toITK->SetDataArrayPath(path);
-  toITK->SetInPlace(true);
+  try
+  {
+      typename ToITKType::Pointer toITK = ToITKType::New();
+      toITK->SetInput(container);
+      toITK->SetDataArrayPath(path);
+      toITK->SetInPlace(true);
 
-  typename WriterType::Pointer writer = WriterType::New();
-  writer->SetInput(toITK->GetOutput());
-  writer->SetFileName(filename.toStdString().c_str());
-  writer->UseCompressionOn();
-  writer->Update();
+      typename WriterType::Pointer writer = WriterType::New();
+      writer->SetInput(toITK->GetOutput());
+      writer->SetFileName(filename.toStdString().c_str());
+      writer->UseCompressionOn();
+      writer->Update();
+  }
+  catch (itk::ExceptionObject & err)
+  {
+      setErrorCondition(-5);
+      QString errorMessage = "ITK exception was thrown while writing output file:";
+      notifyErrorMessage(getHumanLabel(), errorMessage.arg(err.what()), getErrorCondition());
+      return;
+  }
 }
 
 // -----------------------------------------------------------------------------
