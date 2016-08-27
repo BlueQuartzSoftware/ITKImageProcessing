@@ -252,10 +252,10 @@ class ITKImageProcessingReaderTest
     FilterManager* fm = FilterManager::Instance();
     IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
 
-    DREAM3D_REQUIRE_NE(NULL, filterFactory.get());
+    DREAM3D_REQUIRE_NE(0, filterFactory.get());
 
     AbstractFilter::Pointer reader = filterFactory->create();
-    DREAM3D_REQUIRE_NE(NULL, reader.get());
+    DREAM3D_REQUIRE_NE(0, reader.get());
 
     bool propertySet = false;
 

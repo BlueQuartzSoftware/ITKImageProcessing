@@ -32,7 +32,6 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include <QtCore/QCoreApplication>
 #include <QtCore/QFile>
-#include <QtCore/QCryptographicHash>
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
@@ -129,21 +128,6 @@ class ITKImageProcessingWriterTest
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
     containerArray->addDataContainer(container);
     return containerArray;
-  }
-
-  bool TestFileByHash(const QString& filename, const QByteArray& expectedHash)
-  {
-    // Compare files using their hashes
-    QCryptographicHash hash(QCryptographicHash::Sha1);
-    QFile file(filename);
-    DREAM3D_REQUIRE_NE(file.open(QIODevice::ReadOnly),NULL);
-    hash.addData(file.readAll());
-
-    DREAM3D_REQUIRE_NE(!hash.result().isNull(),NULL);
-
-    // Retrieve the SHA1 signature of the file
-    DREAM3D_REQUIRE_EQUAL(expectedHash, hash.result().toHex());
-    return true;
   }
 
   ImageGeom::Pointer GetImageGeometry(DataContainer::Pointer &container)
@@ -318,7 +302,6 @@ class ITKImageProcessingWriterTest
     DREAM3D_REQUIRED(filter->getWarningCondition(), >= , 0);
 
     return CompareImages<PixelType>(filename, containerArray, path);
-   // return TestFileByHash(filename, expectedHash);
   }
 
   template<class PixelType>
