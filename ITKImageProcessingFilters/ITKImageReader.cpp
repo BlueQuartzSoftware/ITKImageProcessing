@@ -194,9 +194,9 @@ void ITKImageReader::readImageOutputInformation(typename itk::ImageFileReader< i
     typedef itk::Dream3DImage<TPixel, dimensions>   ImageType;
 
     reader->UpdateOutputInformation();
-    typename ImageType::PointType origin = reader->GetOutput()->GetOrigin();
-    typename ImageType::SizeType size = reader->GetOutput()->GetLargestPossibleRegion().GetSize();
-    typename ImageType::SpacingType spacing = reader->GetOutput()->GetSpacing();
+    const typename ImageType::PointType origin = reader->GetOutput()->GetOrigin();
+    const typename ImageType::SizeType size = reader->GetOutput()->GetLargestPossibleRegion().GetSize();
+    const typename ImageType::SpacingType spacing = reader->GetOutput()->GetSpacing();
     QVector<float> torigin(3, 0);
     QVector<float> tspacing(3, 0);
     QVector<size_t> tDims(3, 1);
