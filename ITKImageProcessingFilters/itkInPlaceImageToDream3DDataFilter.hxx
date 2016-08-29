@@ -84,9 +84,9 @@ InPlaceImageToDream3DDataFilter<PixelType, VDimension>
   DecoratorType *outputPtr = this->GetOutput();
   DataContainer::Pointer dataContainer = outputPtr->Get();
   float tol = 0.000001;
-  float torigin[3];
-  float tspacing[3];
-  size_t tDims[3];
+  QVector<float> torigin(3, 0);
+  QVector<float> tspacing(3, 1);
+  QVector<size_t> tDims(3, 1);
   // Get Input image properties
   ImagePointer inputPtr = dynamic_cast<ImageType*>(this->GetInput(0));
   typename ImageType::PointType origin = inputPtr->GetOrigin();
@@ -102,19 +102,6 @@ InPlaceImageToDream3DDataFilter<PixelType, VDimension>
     {
       itkExceptionMacro("Data container contains a geometry that is not ImageGeometry");
     }
-    imageGeom->getOrigin(torigin[0], torigin[1], torigin[2]);
-    imageGeom->getResolution(tspacing[0], tspacing[1], tspacing[2]);
-    imageGeom->getDimensions(tDims[0], tDims[1], tDims[2]);
-    for( size_t i=0; i < 3; i++ )
-    {
-      if (std::abs(torigin[i] - origin[i]) > tol
-        || std::abs(tspacing[i] - spacing[i]) > tol
-        || tDims[i] != size[i]
-        )
-      {
-        itkExceptionMacro("Data container contains a geometry that do not match image properties");
-      }
-    }
   }
   else
   {
@@ -123,17 +110,17 @@ InPlaceImageToDream3DDataFilter<PixelType, VDimension>
     {
       itkExceptionMacro("Could not create image geometry");
     }
-    for (size_t i = 0; i < VDimension; i++)
-    {
-      torigin[i] = origin[i];
-      tspacing[i] = spacing[i];
-      tDims[i] = size[i];
-    }
-    imageGeom->setOrigin(torigin[0], torigin[1], torigin[2]);
-    imageGeom->setResolution(tspacing[0], tspacing[1], tspacing[2]);
-    imageGeom->setDimensions(tDims[0], tDims[1], tDims[2]);
-    dataContainer->setGeometry(imageGeom);
   }
+  for (size_t i = 0; i < VDimension; i++)
+  {
+	  torigin[i] = origin[i];
+	  tspacing[i] = spacing[i];
+	  tDims[i] = size[i];
+  }
+  imageGeom->setOrigin(torigin[0], torigin[1], torigin[2]);
+  imageGeom->setResolution(tspacing[0], tspacing[1], tspacing[2]);
+  imageGeom->setDimensions(tDims[0], tDims[1], tDims[2]);
+  dataContainer->setGeometry(imageGeom);
 }
 
 template<typename PixelType, unsigned int VDimension>
@@ -145,56 +132,61 @@ InPlaceImageToDream3DDataFilter<PixelType, VDimension>
   DataContainer::Pointer dataContainer = outputPtr->Get();
   ImagePointer inputPtr = dynamic_cast<ImageType*>(this->GetInput(0));
   // Create data array
-  QVector<size_t> cDims(1, 0);
-  cDims[0] = 1;
+  QVector<size_t> cDims(1, 1);
   IGeometry::Pointer geom = dataContainer->getGeometry();
   ImageGeom::Pointer imageGeom = std::dynamic_pointer_cast<ImageGeom>(geom);
-  size_t dims[3];
-  imageGeom->getDimensions(dims[0], dims[1], dims[2]);
   QVector<size_t> tDims(3, 1);
-  qCopy(dims, dims + 3, tDims.begin());
+  imageGeom->getDimensions(tDims[0], tDims[1], tDims[2]);
   AttributeMatrix::Pointer attrMat;
   if( dataContainer->doesAttributeMatrixExist(m_AttributeMatrixArrayName.c_str()))
   {
-    // Check that size matches
-    attrMat = dataContainer->getAttributeMatrix(m_AttributeMatrixArrayName.c_str());
-    //size_t numofTuples = attrMat->getNumTuples();
-    QVector<size_t> matDims = attrMat->getTupleDimensions();
-    if (matDims != tDims)
-    {
-      itkExceptionMacro("Tuples dimension of existing matrix array do not match image size.");
-    }
-    if (attrMat->getType() != SIMPL::AttributeMatrixType::Cell)
-    {
-      itkExceptionMacro("Attribute matrix is not of type SIMPL::AttributeMatrixType::Cell.");
-    }
+	attrMat = dataContainer->getAttributeMatrix(m_AttributeMatrixArrayName.c_str());
+	// Check that attribute matrix type is 'cell'
+	if (attrMat->getType() != SIMPL::AttributeMatrixType::Cell)
+	{
+		itkExceptionMacro("Attribute matrix is not of type SIMPL::AttributeMatrixType::Cell.");
+	}
+	// Check that if size does not match, there are no other data array than the one we expect.
+	// That makes it possible to modify the attribute matrix without having to worry.
+	QVector<size_t> matDims = attrMat->getTupleDimensions();
+	if (matDims != tDims)
+	{
+		if (!(attrMat->doesAttributeArrayExist(m_DataArrayName.c_str()) && attrMat->getNumAttributeArrays() == 1
+			|| !attrMat->doesAttributeArrayExist(m_DataArrayName.c_str()) && attrMat->getNumAttributeArrays() == 0))
+		{
+			itkExceptionMacro("Tuples dimension of existing matrix array do not match image size and other attribute arrays are contained in this attribute matrix.");
+		}
+		dataContainer->removeAttributeMatrix(m_AttributeMatrixArrayName.c_str());
+		attrMat = dataContainer->createAndAddAttributeMatrix(tDims, m_AttributeMatrixArrayName.c_str(), SIMPL::AttributeMatrixType::Cell);
+	}
   }
   else
   {
     attrMat = dataContainer->createAndAddAttributeMatrix(tDims, m_AttributeMatrixArrayName.c_str(), SIMPL::AttributeMatrixType::Cell);
   }
-  // Checks if doesAttributeArray exists
+  // Checks if doesAttributeArray exists and remove it if it is the case
   if (attrMat->doesAttributeArrayExist(m_DataArrayName.c_str()))
   {
-    itkExceptionMacro("Existing data array with same name.");
+	  IDataArray::Pointer attrArray = attrMat->getAttributeArray(m_DataArrayName.c_str());
+	  if (attrArray->getNumberOfTuples() != imageGeom->getNumberOfElements())
+	  {
+		  attrMat->removeAttributeArray(m_DataArrayName.c_str());
+	  }
+  }
+  typename DataArrayPixelType::Pointer data;
+  inputPtr->SetBufferedRegion( inputPtr->GetLargestPossibleRegion() );
+  if( m_InPlace )
+  {
+    inputPtr->GetPixelContainer()->SetContainerManageMemory( false );
+    data = DataArrayPixelType::WrapPointer( inputPtr->GetBufferPointer(),
+              imageGeom->getNumberOfElements(), cDims, this->GetDataArrayName().c_str(), true );
   }
   else
   {
-    typename DataArrayPixelType::Pointer data;
-    inputPtr->SetBufferedRegion( inputPtr->GetLargestPossibleRegion() );
-    if(m_InPlace )
-    {
-      inputPtr->GetPixelContainer()->SetContainerManageMemory( false );
-      data = DataArrayPixelType::WrapPointer( inputPtr->GetBufferPointer(),
-                                 imageGeom->getNumberOfElements(), cDims, this->GetDataArrayName().c_str(), true );
-    }
-    else
-    {
-        data = DataArrayPixelType::FromPointer(inputPtr->GetBufferPointer(),
-                                 imageGeom->getNumberOfElements(), m_DataArrayName.c_str(), true);
-    }
-    attrMat->addAttributeArray(m_DataArrayName.c_str(), data);
+    data = DataArrayPixelType::FromPointer(inputPtr->GetBufferPointer(),
+              imageGeom->getNumberOfElements(), m_DataArrayName.c_str(), true);
   }
+  attrMat->addAttributeArray(m_DataArrayName.c_str(), data);
   outputPtr->Set(dataContainer);
 }
 

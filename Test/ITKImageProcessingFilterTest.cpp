@@ -393,6 +393,7 @@ class ITKImageProcessingFilterTest
       filter->SetInPlace(inPlace);
       filter->SetAttributeMatrixArrayName( attributeMatrixName.toStdString() );
       filter->SetDataArrayName(dataArrayName.toStdString());
+      filter->SetPixelContainerWillOwnTheBuffer(true);
       filter->Update();
       image = filter->GetOutput();
     }

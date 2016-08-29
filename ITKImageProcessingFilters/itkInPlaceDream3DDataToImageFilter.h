@@ -29,6 +29,8 @@ namespace itk
     itkGetMacro(DataArrayName, std::string);
     itkSetMacro(AttributeMatrixArrayName, std::string);
     itkGetMacro(AttributeMatrixArrayName, std::string);
+    itkSetMacro(PixelContainerWillOwnTheBuffer, bool);
+    itkGetMacro(PixelContainerWillOwnTheBuffer, bool);
     virtual void SetDataArrayPath(DataArrayPath dataArrayPath);
     itkSetMacro(InPlace, bool);
     itkGetConstMacro(InPlace, bool);
@@ -49,6 +51,7 @@ namespace itk
     std::string m_AttributeMatrixArrayName;
     typename ImportImageContainerType::Pointer m_ImportImageContainer;
     bool m_InPlace; // enable the possibility of in-place
+    bool m_PixelContainerWillOwnTheBuffer; // By default, this filter does not take data ownership
   };
 }//end of itk namespace
 
