@@ -47,13 +47,6 @@
 
 // ITK includes
 #include <itkImageFileWriter.h>
-#include <itkImageIOFactory.h>
-#include <itkMetaImageIOFactory.h>
-#include <itkNrrdImageIOFactory.h>
-#include <itkPNGImageIOFactory.h>
-
-// ITK-SCIFIO
-#include <itkSCIFIOImageIOFactory.h>
 
 // Include the MOC generated file for this class
 #include "moc_ITKImageWriter.cpp"
@@ -69,13 +62,6 @@ ITKImageWriter::ITKImageWriter() :
     SIMPL::Defaults::CellAttributeMatrixName,
     SIMPL::Defaults::CellEnsembleAttributeMatrixName)
 {
-  // As for now, register factories by hand. There is probably a better place
-  // to do this than here.
-  itk::PNGImageIOFactory::RegisterOneFactory();
-  itk::MetaImageIOFactory::RegisterOneFactory();
-  itk::NrrdImageIOFactory::RegisterOneFactory();
-  itk::SCIFIOImageIOFactory::RegisterOneFactory();
-
   setupFilterParameters();
 }
 

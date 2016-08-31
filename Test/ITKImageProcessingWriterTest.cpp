@@ -92,7 +92,7 @@ class ITKImageProcessingWriterTest
     return nameWithoutExtension + extension;
   }
 
-  template<class PixelType>
+  template<class PixelType, unsigned int Dimension>
   DataContainerArray::Pointer CreateTestData(const DataArrayPath& path)
   {
     // Create test data (baseline)
@@ -103,7 +103,7 @@ class ITKImageProcessingWriterTest
     QVector<float> origin(3, 0);
     QVector<float> spacing(3, 1);
     QVector<size_t> dimensions(3, 1);
-    for (size_t i = 0; i < 3; i++)
+    for (size_t i = 0; i < Dimension; i++)
     {
       origin[i] = 1.23 + float(i);
       spacing[i] = .45 + float(i)*.2;
@@ -304,14 +304,14 @@ class ITKImageProcessingWriterTest
     return CompareImages<PixelType>(filename, containerArray, path);
   }
 
-  template<class PixelType>
+  template<class PixelType, unsigned Dimension>
   void TestWriteImage(const QString& extension)
   {
     QString filename = FilenameWithDifferentExtension(
       UnitTest::ITKImageProcessingWriterTest::OutputBaseFile, extension);
 
     DataArrayPath path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
-    DataContainerArray::Pointer containerArray = CreateTestData<PixelType>(path);
+    DataContainerArray::Pointer containerArray = CreateTestData<PixelType,Dimension>(path);
     DREAM3D_REQUIRE(
       TestWriteImage<PixelType>(filename, containerArray, path));
     this->FilesToRemove << filename;
@@ -349,23 +349,23 @@ class ITKImageProcessingWriterTest
   {
     // uint8_t
     {
-      TestWriteImage<uint8_t>("_uint8.mha");
+      TestWriteImage<uint8_t,3>("_uint8.mha");
     }
     // int8_t
     {
-      TestWriteImage<int8_t>("_int8.mha");
+      TestWriteImage<int8_t,3>("_int8.mha");
     }
     // uint32_t
     {
-      TestWriteImage<uint32_t>("_uint32_t.mha");
+      TestWriteImage<uint32_t,3>("_uint32_t.mha");
     }
     // int32_t
     {
-      TestWriteImage<int32_t>("_int32_t.mha");
+      TestWriteImage<int32_t,3>("_int32_t.mha");
     }
     // float
     {
-      TestWriteImage<float>("_float.mha");
+      TestWriteImage<float,3>("_float.mha");
     }
 
     return EXIT_SUCCESS;
@@ -375,23 +375,23 @@ class ITKImageProcessingWriterTest
   {
     // uint8_t
     {
-      TestWriteImage<uint8_t>("_uint8.nrrd");
+      TestWriteImage<uint8_t,3>("_uint8.nrrd");
     }
     // int8_t
     {
-      TestWriteImage<int8_t>("_int8.nrrd");
+      TestWriteImage<int8_t,3>("_int8.nrrd");
     }
     // uint32_t
     {
-      TestWriteImage<uint32_t>("_uint32_t.nrrd");
+      TestWriteImage<uint32_t,3>("_uint32_t.nrrd");
     }
     // int32_t
     {
-      TestWriteImage<int32_t>("_int32_t.nrrd");
+      TestWriteImage<int32_t,3>("_int32_t.nrrd");
     }
     // float
     {
-      TestWriteImage<float>("_float.nrrd");
+      TestWriteImage<float,3>("_float.nrrd");
     }
 
     return EXIT_SUCCESS;
@@ -401,15 +401,15 @@ class ITKImageProcessingWriterTest
   {
     // uint8_t
     {
-      TestWriteImage<uint8_t>("_uint8.tif");
+      TestWriteImage<uint8_t,2>("_uint8.tif");
     }
     // int8_t
     {
-      TestWriteImage<int8_t>("_int8.tif");
+      TestWriteImage<int8_t,2>("_int8.tif");
     }
     // float
     {
-      TestWriteImage<float>("_float.tif");
+      TestWriteImage<float,2>("_float.tif");
     }
 
     return EXIT_SUCCESS;

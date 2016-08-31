@@ -42,17 +42,9 @@
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
 
-// ITK includes
-#include <itkImageIOFactory.h>
-#include <itkMetaImageIOFactory.h>
-#include <itkNrrdImageIOFactory.h>
-#include <itkPNGImageIOFactory.h>
-
-// ITK-SCIFIO
-#include <itkSCIFIOImageIOFactory.h>
-
 // Include the MOC generated file for this class
 #include "moc_ITKImageReader.cpp"
+
 
 // -----------------------------------------------------------------------------
 //
@@ -62,13 +54,6 @@ ITKImageReader::ITKImageReader() :
   m_FileName(""),
   m_DataContainerName(SIMPL::Defaults::ImageDataContainerName)
 {
-  // As for now, register factories by hand. There is probably a better place
-  // to do this than here.
-  itk::PNGImageIOFactory::RegisterOneFactory();
-  itk::MetaImageIOFactory::RegisterOneFactory();
-  itk::NrrdImageIOFactory::RegisterOneFactory();
-  itk::SCIFIOImageIOFactory::RegisterOneFactory();
-
   setupFilterParameters();
 }
 
