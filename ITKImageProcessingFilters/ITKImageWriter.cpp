@@ -221,18 +221,38 @@ void ITKImageWriter::execute()
   {
     return;
   }
-
+  if (!getDataContainerArray()->doesDataContainerExist(getImageArrayPath().getDataContainerName()))
+  {
+    setErrorCondition(-6);
+    QString errorMessage = "Data container %1 does not exist.";
+    notifyErrorMessage(getHumanLabel(), errorMessage.arg(getImageArrayPath().getDataContainerName()), getErrorCondition());
+    return;
+  }
   DataContainer::Pointer container =
     getDataContainerArray()->getDataContainer(
-      getImageArrayPath().getDataContainerName());
-
-  IDataArray::Pointer inputData =
-    container->getAttributeMatrix(
-      getImageArrayPath().getAttributeMatrixName())->getAttributeArray(
+    getImageArrayPath().getDataContainerName());
+  if (!container->doesAttributeMatrixExist(getImageArrayPath().getAttributeMatrixName()))
+  {
+    setErrorCondition(-7);
+    QString errorMessage = "Attribute matrix %1 does not exist.";
+    notifyErrorMessage(getHumanLabel(), errorMessage.arg(getImageArrayPath().getAttributeMatrixName()), getErrorCondition());
+    return;
+  }
+  AttributeMatrix::Pointer attributeMatrix = container->getAttributeMatrix(
+    getImageArrayPath().getAttributeMatrixName());
+  if (!attributeMatrix->doesAttributeArrayExist(getImageArrayPath().getDataArrayName()))
+  {
+    setErrorCondition(-8);
+    QString errorMessage = "Attribute array %1 does not exist.";
+    notifyErrorMessage(getHumanLabel(), errorMessage.arg(getImageArrayPath().getDataArrayName()), getErrorCondition());
+    return;
+  }
+    IDataArray::Pointer inputData =
+      attributeMatrix->getAttributeArray(
         getImageArrayPath().getDataArrayName());
 
   QString type = inputData->getTypeAsString();
-if (type.compare("int8_t") == 0)
+  if (type.compare("int8_t") == 0)
   {
     writeImage<int8_t, 3>(getFileName(), container, getImageArrayPath());
   }
