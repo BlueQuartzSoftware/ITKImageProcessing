@@ -203,8 +203,8 @@ void ITKImageWriter::writeImage(const QString& filename,
   catch (itk::ExceptionObject & err)
   {
       setErrorCondition(-5);
-      QString errorMessage = "ITK exception was thrown while writing output file:";
-      notifyErrorMessage(getHumanLabel(), errorMessage.arg(err.what()), getErrorCondition());
+      QString errorMessage = "ITK exception was thrown while writing output file: %1";
+      notifyErrorMessage(getHumanLabel(), errorMessage.arg(err.GetDescription()), getErrorCondition());
       return;
   }
 }
