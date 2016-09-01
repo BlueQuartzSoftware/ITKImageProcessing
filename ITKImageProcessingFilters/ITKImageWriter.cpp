@@ -57,10 +57,7 @@
 ITKImageWriter::ITKImageWriter() :
   AbstractFilter(),
   m_FileName(""),
-  m_ImageArrayPath(
-    SIMPL::Defaults::ImageDataContainerName,
-    SIMPL::Defaults::CellAttributeMatrixName,
-    SIMPL::Defaults::CellEnsembleAttributeMatrixName)
+  m_ImageArrayPath("", "", "")
 {
   setupFilterParameters();
 }
@@ -177,7 +174,8 @@ void ITKImageWriter::writeImage(const QString& filename,
   {
       typename ToITKType::Pointer toITK = ToITKType::New();
       toITK->SetInput(container);
-      toITK->SetDataArrayPath(path);
+      toITK->SetAttributeMatrixArrayName(path.getAttributeMatrixName().toStdString());
+      toITK->SetDataArrayName(path.getDataArrayName().toStdString());
       toITK->SetInPlace(true);
 
       typename WriterType::Pointer writer = WriterType::New();

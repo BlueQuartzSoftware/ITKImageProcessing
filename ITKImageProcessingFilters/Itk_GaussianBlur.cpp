@@ -180,7 +180,8 @@ void Itk_GaussianBlur::execute()
   FilterType::Pointer filter = FilterType::New();
   filter->SetInput(dc);
   filter->SetInPlace(true);
-  filter->SetDataArrayPath(getSelectedCellArrayPath());
+  filter->SetAttributeMatrixArrayName(getSelectedCellArrayPath().getAttributeMatrixName().toStdString());
+  filter->SetDataArrayName(getSelectedCellArrayPath().getDataArrayName().toStdString());
   filter->Update();
   ImageType::Pointer wrappedInputImage = filter->GetOutput();
 

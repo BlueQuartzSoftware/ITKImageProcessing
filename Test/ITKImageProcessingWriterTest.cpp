@@ -223,7 +223,7 @@ class ITKImageProcessingWriterTest
       // Then compare values
       AttributeMatrix::Pointer inputAttributeMatrix;
       IDataArray::Pointer inputDataArray;
-      GetMatrixAndAttributeArray(inputContainer, SIMPL::CellData::ImageData, SIMPL::Defaults::CellAttributeMatrixName, inputAttributeMatrix, inputDataArray);
+      GetMatrixAndAttributeArray(inputContainer, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::ImageData, inputAttributeMatrix, inputDataArray);
       AttributeMatrix::Pointer baselineAttributeMatrix;
       IDataArray::Pointer baselineDataArray;
       GetMatrixAndAttributeArray(baselineContainer, baselinePath.getAttributeMatrixName(), baselinePath.getDataArrayName(), baselineAttributeMatrix, baselineDataArray);

@@ -182,7 +182,8 @@ void Itk_BinaryThreshold::execute()
   InPlaceDream3DDataToImageFilterType::Pointer dataArrayToItkImage = InPlaceDream3DDataToImageFilterType::New();
   dataArrayToItkImage->SetInput(dc);
   dataArrayToItkImage->SetInPlace(false);
-  dataArrayToItkImage->SetDataArrayPath(getSelectedCellArrayPath());
+  dataArrayToItkImage->SetAttributeMatrixArrayName(getSelectedCellArrayPath().getAttributeMatrixName().toStdString());
+  dataArrayToItkImage->SetDataArrayName(getSelectedCellArrayPath().getDataArrayName().toStdString());
 
   //define threshold filters
   typedef itk::BinaryThresholdImageFilter <ImageType, ImageType> BinaryThresholdImageFilterType;

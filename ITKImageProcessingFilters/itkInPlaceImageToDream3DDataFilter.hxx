@@ -25,19 +25,6 @@ InPlaceImageToDream3DDataFilter<PixelType,VDimension>
   m_InPlace = true;
 }
 
-template< typename PixelType, unsigned int VDimension >
-void
-InPlaceImageToDream3DDataFilter<PixelType, VDimension>
-::SetDataArrayPath( DataArrayPath dataArrayPath )
-{
-  if( m_AttributeMatrixArrayName != dataArrayPath.getAttributeMatrixName().toStdString()
-    || m_DataArrayName != dataArrayPath.getDataArrayName().toStdString() )
-  {
-    m_AttributeMatrixArrayName = dataArrayPath.getAttributeMatrixName().toStdString();
-    m_DataArrayName = dataArrayPath.getDataArrayName().toStdString();
-    this->Modified();
-  }
-}
 
 template< typename PixelType, unsigned int VDimension>
 void

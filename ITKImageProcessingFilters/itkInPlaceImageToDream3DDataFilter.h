@@ -35,7 +35,6 @@ namespace itk
     itkGetMacro(DataArrayName, std::string);
     itkSetMacro(AttributeMatrixArrayName, std::string);
     itkGetMacro(AttributeMatrixArrayName, std::string);
-    virtual void SetDataArrayPath( DataArrayPath dataArrayPath );
     itkSetMacro( InPlace, bool );
     itkGetConstMacro(InPlace, bool);
     itkBooleanMacro(InPlace);

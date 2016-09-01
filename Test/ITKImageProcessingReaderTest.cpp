@@ -309,10 +309,13 @@ class ITKImageProcessingReaderTest
       DREAM3D_REQUIRE_EQUAL(dimensions[i], imageDimension);
     }
 
-    const QString matrixName = "ImageData";
+    const QString matrixName = SIMPL::Defaults::CellAttributeMatrixName;
+    DREAM3D_REQUIRE_EQUAL(container->doesAttributeMatrixExist(matrixName),true);
     AttributeMatrix::Pointer attributeMatrix = container->getAttributeMatrix(matrixName);
     DREAM3D_REQUIRE_NE(attributeMatrix.get(), 0);
-    IDataArray::Pointer dataArray = attributeMatrix->getAttributeArray("CellData");
+    const QString attributeArrayName = SIMPL::CellData::ImageData;
+    DREAM3D_REQUIRE_EQUAL(attributeMatrix->doesAttributeArrayExist(attributeArrayName),true);
+    IDataArray::Pointer dataArray = attributeMatrix->getAttributeArray(attributeArrayName);
 
     for (size_t i = 0; i < dataArray->getSize(); i++)
     {
