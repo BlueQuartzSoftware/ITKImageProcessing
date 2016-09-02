@@ -49,6 +49,7 @@
 #include <itkMetaImageIOFactory.h>
 #include <itkNrrdImageIOFactory.h>
 #include <itkPNGImageIOFactory.h>
+#include <itkTIFFImageIOFactory.h>
 #include <itkNiftiImageIOFactory.h>
 #include <itkPNGImageIOFactory.h>
 #include <itkGiplImageIOFactory.h>
@@ -74,6 +75,7 @@ m_DidLoad(false)
 {
   itk::NrrdImageIOFactory::RegisterOneFactory();
   itk::PNGImageIOFactory::RegisterOneFactory();
+  itk::TIFFImageIOFactory::RegisterOneFactory();
   itk::MetaImageIOFactory::RegisterOneFactory();
   itk::NiftiImageIOFactory::RegisterOneFactory();
   itk::GiplImageIOFactory::RegisterOneFactory();

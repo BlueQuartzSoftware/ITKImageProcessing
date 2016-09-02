@@ -34,6 +34,7 @@ if(DREAM3D_USE_ITK)
       ITKIOImageBase
       SCIFIO
       ITKIONRRD
+      ITKIOTIFF
       ITKIOMeta
       ITKIOPNG
       ITKIONIFTI
