@@ -9,6 +9,8 @@
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
+#include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DFilterInterruption.h"
+
 /**
  * @brief The Itk_GaussianBlur class. See [Filter documentation](@ref itk_gaussianblur) for details.
  */
@@ -23,8 +25,6 @@ class Itk_GaussianBlur : public AbstractFilter
 
     virtual ~Itk_GaussianBlur();
 
-    typedef uint8_t DefaultPixelType;
-
     SIMPL_FILTER_PARAMETER(DataArrayPath, SelectedCellArrayPath)
     Q_PROPERTY(DataArrayPath SelectedCellArrayPath READ getSelectedCellArrayPath WRITE setSelectedCellArrayPath)
 
@@ -34,7 +34,14 @@ class Itk_GaussianBlur : public AbstractFilter
     SIMPL_FILTER_PARAMETER(bool, SaveAsNewArray)
     Q_PROPERTY(bool SaveAsNewArray READ getSaveAsNewArray WRITE setSaveAsNewArray)
 
+    SIMPL_FILTER_PARAMETER(int, MaximumKernelWidth)
+    Q_PROPERTY(int MaximumKernelWidth READ getMaximumKernelWidth WRITE setMaximumKernelWidth)
 
+    SIMPL_FILTER_PARAMETER(double, Variance)
+    Q_PROPERTY(double Variance READ getVariance WRITE setVariance)
+
+    SIMPL_FILTER_PARAMETER(double, MaximumError)
+    Q_PROPERTY(double MaximumError READ getMaximumError WRITE setMaximumError)
     /**
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
      */
@@ -122,7 +129,25 @@ class Itk_GaussianBlur : public AbstractFilter
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
+    template<typename PixelType>
     void dataCheck();
+
+    /**
+    * @brief process checks the pixel type of input data
+    */
+    void process(bool dataCheck);
+
+    /**
+    * @brief process (templated) starts either dataCheck() or filter()
+    */
+    template<typename PixelType>
+    void process(bool dataCheck);
+
+    /**
+    * @brief Applies the filter
+    */
+    template<typename PixelType>
+    void filter();
 
     /**
      * @brief Initializes all the private instance variables.
@@ -132,8 +157,7 @@ class Itk_GaussianBlur : public AbstractFilter
 
   private:
 
-    DEFINE_DATAARRAY_VARIABLE(DefaultPixelType, SelectedCellArray)
-    DEFINE_DATAARRAY_VARIABLE(DefaultPixelType, NewCellArray)
+    DEFINE_IDATAARRAY_VARIABLE(NewCellArray)
 
     Itk_GaussianBlur(const Itk_GaussianBlur&); // Copy Constructor Not Implemented
     void operator=(const Itk_GaussianBlur&); // Operator '=' Not Implemented
