@@ -102,6 +102,34 @@ namespace itk
     }
   }
 
+  template< typename TPixel, unsigned int VImageDimension >
+  void
+    Dream3DImage< TPixel, VImageDimension >
+    ::Graft(const DataObject *data)
+  {
+    // call the superclass' implementation
+    Superclass::Superclass::Graft(data);
+
+    if (data)
+    {
+      // Attempt to cast data to an Image
+      const Self * const imgData = dynamic_cast< const Self * >(data);
+
+      if (imgData != ITK_NULLPTR)
+      {
+        // Now copy anything remaining that is needed
+        this->SetPixelContainer(const_cast< PixelContainerType * >
+          (imgData->GetPixelContainer()));
+      }
+      else
+      {
+        // pointer could not be cast back down
+        itkExceptionMacro(<< "itk::Image::Graft() cannot cast "
+          << typeid(data).name() << " to "
+          << typeid(const Self *).name());
+      }
+    }
+  }
 
 
   template< typename TPixel, unsigned int VImageDimension >
