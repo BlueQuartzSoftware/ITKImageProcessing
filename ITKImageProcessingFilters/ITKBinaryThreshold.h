@@ -23,8 +23,6 @@ class ITKBinaryThreshold : public AbstractFilter
 
     virtual ~ITKBinaryThreshold();
 
-    typedef uint8_t DefaultPixelType;
-
     SIMPL_FILTER_PARAMETER(DataArrayPath, SelectedCellArrayPath)
     Q_PROPERTY(DataArrayPath SelectedCellArrayPath READ getSelectedCellArrayPath WRITE setSelectedCellArrayPath)
 
@@ -126,7 +124,14 @@ class ITKBinaryThreshold : public AbstractFilter
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
+    template<typename PixelType>
     void dataCheck();
+
+    /**
+    * @brief Applies the filter
+    */
+    template<typename PixelType>
+    void filter();
 
     /**
      * @brief Initializes all the private instance variables.
@@ -135,9 +140,7 @@ class ITKBinaryThreshold : public AbstractFilter
 
   private:
 
-    DEFINE_DATAARRAY_VARIABLE(DefaultPixelType, SelectedCellArray)
-    DEFINE_DATAARRAY_VARIABLE(DefaultPixelType, NewCellArray)
-
+    DEFINE_IDATAARRAY_VARIABLE(NewCellArray)
 
     ITKBinaryThreshold(const ITKBinaryThreshold&); // Copy Constructor Not Implemented
     void operator=(const ITKBinaryThreshold&); // Operator '=' Not Implemented
