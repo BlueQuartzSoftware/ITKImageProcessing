@@ -113,7 +113,7 @@ namespace itk
     if (data)
     {
       // Attempt to cast data to an Image
-      const Self * const imgData = dynamic_cast< const Self * >(data);
+      const Self * const imgData = itkDynamicCastInDebugMode< const Self * >(data);
 
       if (imgData != ITK_NULLPTR)
       {
