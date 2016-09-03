@@ -1,4 +1,4 @@
-Itk_BinaryThreshold {#itk_binarythreshold}
+ITKGaussianBlur {#itkgaussianblur}
 =============
 
 ## Group (Subgroup) ##

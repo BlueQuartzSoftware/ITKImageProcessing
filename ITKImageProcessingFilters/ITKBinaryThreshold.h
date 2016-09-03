@@ -2,28 +2,28 @@
  * Your License or Copyright can go here
  */
 
-#ifndef _itk_gaussianblur_h_
-#define _itk_gaussianblur_h_
+#ifndef _ITKBinaryThreshold_h_
+#define _ITKBinaryThreshold_h_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
-#include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DFilterInterruption.h"
-
 /**
- * @brief The Itk_GaussianBlur class. See [Filter documentation](@ref itk_gaussianblur) for details.
+ * @brief The ITKBinaryThreshold class. See [Filter documentation](@ref ITKBinaryThreshold) for details.
  */
-class Itk_GaussianBlur : public AbstractFilter
+class ITKBinaryThreshold : public AbstractFilter
 {
   Q_OBJECT
 
   public:
-    SIMPL_SHARED_POINTERS(Itk_GaussianBlur)
-    SIMPL_STATIC_NEW_MACRO(Itk_GaussianBlur)
-    SIMPL_TYPE_MACRO_SUPER(Itk_GaussianBlur, AbstractFilter)
+    SIMPL_SHARED_POINTERS(ITKBinaryThreshold)
+    SIMPL_STATIC_NEW_MACRO(ITKBinaryThreshold)
+    SIMPL_TYPE_MACRO_SUPER(ITKBinaryThreshold, AbstractFilter)
 
-    virtual ~Itk_GaussianBlur();
+    virtual ~ITKBinaryThreshold();
+
+    typedef uint8_t DefaultPixelType;
 
     SIMPL_FILTER_PARAMETER(DataArrayPath, SelectedCellArrayPath)
     Q_PROPERTY(DataArrayPath SelectedCellArrayPath READ getSelectedCellArrayPath WRITE setSelectedCellArrayPath)
@@ -34,14 +34,10 @@ class Itk_GaussianBlur : public AbstractFilter
     SIMPL_FILTER_PARAMETER(bool, SaveAsNewArray)
     Q_PROPERTY(bool SaveAsNewArray READ getSaveAsNewArray WRITE setSaveAsNewArray)
 
-    SIMPL_FILTER_PARAMETER(int, MaximumKernelWidth)
-    Q_PROPERTY(int MaximumKernelWidth READ getMaximumKernelWidth WRITE setMaximumKernelWidth)
+    SIMPL_FILTER_PARAMETER(int, ManualParameter)
+    Q_PROPERTY(int ManualParameter READ getManualParameter WRITE setManualParameter)
 
-    SIMPL_FILTER_PARAMETER(double, Variance)
-    Q_PROPERTY(double Variance READ getVariance WRITE setVariance)
 
-    SIMPL_FILTER_PARAMETER(double, MaximumError)
-    Q_PROPERTY(double MaximumError READ getMaximumError WRITE setMaximumError)
     /**
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
      */
@@ -125,42 +121,26 @@ class Itk_GaussianBlur : public AbstractFilter
     void preflightExecuted();
 
   protected:
-    Itk_GaussianBlur();
+    ITKBinaryThreshold();
+
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
-    template<typename PixelType>
     void dataCheck();
-
-    /**
-    * @brief process checks the pixel type of input data
-    */
-    void process(bool dataCheck);
-
-    /**
-    * @brief process (templated) starts either dataCheck() or filter()
-    */
-    template<typename PixelType>
-    void process(bool dataCheck);
-
-    /**
-    * @brief Applies the filter
-    */
-    template<typename PixelType>
-    void filter();
 
     /**
      * @brief Initializes all the private instance variables.
      */
     void initialize();
 
-
   private:
 
-    DEFINE_IDATAARRAY_VARIABLE(NewCellArray)
+    DEFINE_DATAARRAY_VARIABLE(DefaultPixelType, SelectedCellArray)
+    DEFINE_DATAARRAY_VARIABLE(DefaultPixelType, NewCellArray)
 
-    Itk_GaussianBlur(const Itk_GaussianBlur&); // Copy Constructor Not Implemented
-    void operator=(const Itk_GaussianBlur&); // Operator '=' Not Implemented
+
+    ITKBinaryThreshold(const ITKBinaryThreshold&); // Copy Constructor Not Implemented
+    void operator=(const ITKBinaryThreshold&); // Operator '=' Not Implemented
 };
 
-#endif /* _Itk_GaussianBlur_H_ */
+#endif /* _ITKBinaryThreshold_H_ */

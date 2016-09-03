@@ -2,7 +2,7 @@
  * Your License or Copyright can go here
  */
 
-#include "Itk_GaussianBlur.h"
+#include "ITKGaussianBlur.h"
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -28,12 +28,12 @@
 #include <itkDiscreteGaussianImageFilter.h>
 
 // Include the MOC generated file for this class
-#include "moc_Itk_GaussianBlur.cpp"
+#include "moc_ITKGaussianBlur.cpp"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Itk_GaussianBlur::Itk_GaussianBlur() :
+ITKGaussianBlur::ITKGaussianBlur() :
   AbstractFilter(),
   m_SelectedCellArrayPath("", "", ""),
   m_NewCellArrayName(""),
@@ -49,32 +49,32 @@ Itk_GaussianBlur::Itk_GaussianBlur() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Itk_GaussianBlur::~Itk_GaussianBlur()
+ITKGaussianBlur::~ITKGaussianBlur()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Itk_GaussianBlur::setupFilterParameters()
+void ITKGaussianBlur::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
-  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Save as New Array", SaveAsNewArray, FilterParameter::Parameter, Itk_GaussianBlur, linkedProps));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Save as New Array", SaveAsNewArray, FilterParameter::Parameter, ITKGaussianBlur, linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Blurred Array", NewCellArrayName, FilterParameter::CreatedArray, Itk_GaussianBlur));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Blurred Array", NewCellArrayName, FilterParameter::CreatedArray, ITKGaussianBlur));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
       DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize,
       SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Attribute Array to Blur", SelectedCellArrayPath, FilterParameter::RequiredArray, Itk_GaussianBlur, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Attribute Array to Blur", SelectedCellArrayPath, FilterParameter::RequiredArray, ITKGaussianBlur, req));
   }
-  parameters.push_back(SIMPL_NEW_INTEGER_FP("Maximum Kernel Width", MaximumKernelWidth, FilterParameter::Parameter, Itk_GaussianBlur));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Variance", Variance, FilterParameter::Parameter, Itk_GaussianBlur));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Maximum Error", MaximumError, FilterParameter::Parameter, Itk_GaussianBlur));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Maximum Kernel Width", MaximumKernelWidth, FilterParameter::Parameter, ITKGaussianBlur));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Variance", Variance, FilterParameter::Parameter, ITKGaussianBlur));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Maximum Error", MaximumError, FilterParameter::Parameter, ITKGaussianBlur));
 
   setFilterParameters(parameters);
 }
@@ -82,7 +82,7 @@ void Itk_GaussianBlur::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Itk_GaussianBlur::readFilterParameters(AbstractFilterParametersReader* reader, int index)
+void ITKGaussianBlur::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
   setSelectedCellArrayPath( reader->readDataArrayPath( "SelectedCellArrayPath", getSelectedCellArrayPath() ) );
@@ -94,7 +94,7 @@ void Itk_GaussianBlur::readFilterParameters(AbstractFilterParametersReader* read
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Itk_GaussianBlur::initialize()
+void ITKGaussianBlur::initialize()
 {
   setErrorCondition(0);
   setCancel(false);
@@ -105,7 +105,7 @@ void Itk_GaussianBlur::initialize()
 // -----------------------------------------------------------------------------
 
 template<typename PixelType>
-void Itk_GaussianBlur::dataCheck()
+void ITKGaussianBlur::dataCheck()
 {
   if (m_MaximumKernelWidth <= 0)
   {
@@ -158,7 +158,7 @@ void Itk_GaussianBlur::dataCheck()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Itk_GaussianBlur::preflight()
+void ITKGaussianBlur::preflight()
 {
   // These are the REQUIRED lines of CODE to make sure the filter behaves correctly
   setInPreflight(true); // Set the fact that we are preflighting.
@@ -174,7 +174,7 @@ void Itk_GaussianBlur::preflight()
 // -----------------------------------------------------------------------------
 
 template<typename PixelType>
-void Itk_GaussianBlur::filter()
+void ITKGaussianBlur::filter()
 {
   try
   {
@@ -243,7 +243,7 @@ void Itk_GaussianBlur::filter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Itk_GaussianBlur::execute()
+void ITKGaussianBlur::execute()
 {
   initialize();
   Dream3DArraySwitchMacro(dataCheck, getSelectedCellArrayPath(), -4);// Run our DataCheck to make sure everthing is setup correctly
@@ -255,9 +255,9 @@ void Itk_GaussianBlur::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer Itk_GaussianBlur::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKGaussianBlur::newFilterInstance(bool copyFilterParameters)
 {
-  Itk_GaussianBlur::Pointer filter = Itk_GaussianBlur::New();
+  ITKGaussianBlur::Pointer filter = ITKGaussianBlur::New();
   if(true == copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
@@ -268,13 +268,13 @@ AbstractFilter::Pointer Itk_GaussianBlur::newFilterInstance(bool copyFilterParam
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString Itk_GaussianBlur::getCompiledLibraryName()
+const QString ITKGaussianBlur::getCompiledLibraryName()
 { return ITKImageProcessingConstants::ITKImageProcessingBaseName; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString Itk_GaussianBlur::getBrandingString()
+const QString ITKGaussianBlur::getBrandingString()
 {
   return "ITKImageProcessing";
 }
@@ -282,7 +282,7 @@ const QString Itk_GaussianBlur::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString Itk_GaussianBlur::getFilterVersion()
+const QString ITKGaussianBlur::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
@@ -293,18 +293,18 @@ const QString Itk_GaussianBlur::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString Itk_GaussianBlur::getGroupName()
+const QString ITKGaussianBlur::getGroupName()
 { return "Image Processing"; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString Itk_GaussianBlur::getSubGroupName()
+const QString ITKGaussianBlur::getSubGroupName()
 { return "ITKImageProcessing"; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString Itk_GaussianBlur::getHumanLabel()
+const QString ITKGaussianBlur::getHumanLabel()
 { return "[ITK] GaussianBlur (KW)"; }
 

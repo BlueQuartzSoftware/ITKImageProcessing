@@ -2,28 +2,28 @@
  * Your License or Copyright can go here
  */
 
-#ifndef _itk_binarythreshold_h_
-#define _itk_binarythreshold_h_
+#ifndef _ITKGaussianBlur_h_
+#define _ITKGaussianBlur_h_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
+#include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DFilterInterruption.h"
+
 /**
- * @brief The Itk_BinaryThreshold class. See [Filter documentation](@ref itk_binarythreshold) for details.
+ * @brief The ITKGaussianBlur class. See [Filter documentation](@ref ITKGaussianBlur) for details.
  */
-class Itk_BinaryThreshold : public AbstractFilter
+class ITKGaussianBlur : public AbstractFilter
 {
   Q_OBJECT
 
   public:
-    SIMPL_SHARED_POINTERS(Itk_BinaryThreshold)
-    SIMPL_STATIC_NEW_MACRO(Itk_BinaryThreshold)
-    SIMPL_TYPE_MACRO_SUPER(Itk_BinaryThreshold, AbstractFilter)
+    SIMPL_SHARED_POINTERS(ITKGaussianBlur)
+    SIMPL_STATIC_NEW_MACRO(ITKGaussianBlur)
+    SIMPL_TYPE_MACRO_SUPER(ITKGaussianBlur, AbstractFilter)
 
-    virtual ~Itk_BinaryThreshold();
-
-    typedef uint8_t DefaultPixelType;
+    virtual ~ITKGaussianBlur();
 
     SIMPL_FILTER_PARAMETER(DataArrayPath, SelectedCellArrayPath)
     Q_PROPERTY(DataArrayPath SelectedCellArrayPath READ getSelectedCellArrayPath WRITE setSelectedCellArrayPath)
@@ -34,10 +34,14 @@ class Itk_BinaryThreshold : public AbstractFilter
     SIMPL_FILTER_PARAMETER(bool, SaveAsNewArray)
     Q_PROPERTY(bool SaveAsNewArray READ getSaveAsNewArray WRITE setSaveAsNewArray)
 
-    SIMPL_FILTER_PARAMETER(int, ManualParameter)
-    Q_PROPERTY(int ManualParameter READ getManualParameter WRITE setManualParameter)
+    SIMPL_FILTER_PARAMETER(int, MaximumKernelWidth)
+    Q_PROPERTY(int MaximumKernelWidth READ getMaximumKernelWidth WRITE setMaximumKernelWidth)
 
+    SIMPL_FILTER_PARAMETER(double, Variance)
+    Q_PROPERTY(double Variance READ getVariance WRITE setVariance)
 
+    SIMPL_FILTER_PARAMETER(double, MaximumError)
+    Q_PROPERTY(double MaximumError READ getMaximumError WRITE setMaximumError)
     /**
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
      */
@@ -121,26 +125,31 @@ class Itk_BinaryThreshold : public AbstractFilter
     void preflightExecuted();
 
   protected:
-    Itk_BinaryThreshold();
-
+    ITKGaussianBlur();
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
+    template<typename PixelType>
     void dataCheck();
+
+    /**
+    * @brief Applies the filter
+    */
+    template<typename PixelType>
+    void filter();
 
     /**
      * @brief Initializes all the private instance variables.
      */
     void initialize();
 
+
   private:
 
-    DEFINE_DATAARRAY_VARIABLE(DefaultPixelType, SelectedCellArray)
-    DEFINE_DATAARRAY_VARIABLE(DefaultPixelType, NewCellArray)
+    DEFINE_IDATAARRAY_VARIABLE(NewCellArray)
 
-
-    Itk_BinaryThreshold(const Itk_BinaryThreshold&); // Copy Constructor Not Implemented
-    void operator=(const Itk_BinaryThreshold&); // Operator '=' Not Implemented
+    ITKGaussianBlur(const ITKGaussianBlur&); // Copy Constructor Not Implemented
+    void operator=(const ITKGaussianBlur&); // Operator '=' Not Implemented
 };
 
-#endif /* _Itk_BinaryThreshold_H_ */
+#endif /* _ITKGaussianBlur_H_ */

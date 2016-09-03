@@ -16,8 +16,8 @@ set(_PublicFilters
   ITKImageProcessingFilter
   ITKImageReader
   ITKImageWriter
-  Itk_GaussianBlur
-  Itk_BinaryThreshold
+  ITKGaussianBlur
+  ITKBinaryThreshold
 )
 
 

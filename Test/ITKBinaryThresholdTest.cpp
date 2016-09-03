@@ -18,12 +18,12 @@
 
 #include "ITKImageProcessingTestFileLocations.h"
 
-class Itk_BinaryThresholdTest
+class ITKBinaryThresholdTest
 {
 
   public:
-    Itk_BinaryThresholdTest() {}
-    virtual ~Itk_BinaryThresholdTest() {}
+    ITKBinaryThresholdTest() {}
+    virtual ~ITKBinaryThresholdTest() {}
 
 
   // -----------------------------------------------------------------------------
@@ -32,8 +32,8 @@ class Itk_BinaryThresholdTest
   void RemoveTestFiles()
   {
   #if REMOVE_TEST_FILES
-    QFile::remove(UnitTest::Itk_BinaryThresholdTest::TestFile1);
-    QFile::remove(UnitTest::Itk_BinaryThresholdTest::TestFile2);
+    QFile::remove(UnitTest::ITKBinaryThresholdTest::TestFile1);
+    QFile::remove(UnitTest::ITKBinaryThresholdTest::TestFile2);
   #endif
   }
 
@@ -42,8 +42,8 @@ class Itk_BinaryThresholdTest
   // -----------------------------------------------------------------------------
   int TestFilterAvailability()
   {
-    // Now instantiate the Itk_BinaryThresholdTest Filter from the FilterManager
-    QString filtName = "Itk_BinaryThreshold";
+    // Now instantiate the ITKBinaryThresholdTest Filter from the FilterManager
+    QString filtName = "ITKBinaryThreshold";
     FilterManager* fm = FilterManager::Instance();
     IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
     if (NULL == filterFactory.get())
@@ -58,14 +58,14 @@ class Itk_BinaryThresholdTest
   // -----------------------------------------------------------------------------
   //
   // -----------------------------------------------------------------------------
-  int TestItk_BinaryThresholdTest()
+  int TestITKBinaryThresholdTest()
   {
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   /* Please write Itk_BinaryThresholdTest test code here.
+   /* Please write ITKBinaryThresholdTest test code here.
     *
     * Your IO test files are:
-    * UnitTest::Itk_BinaryThresholdTest::TestFile1
-    * UnitTest::Itk_BinaryThresholdTest::TestFile2
+    * UnitTest::ITKBinaryThresholdTest::TestFile1
+    * UnitTest::ITKBinaryThresholdTest::TestFile2
     *
     * SIMPLib provides some macros that will throw exceptions when a test fails
     * and thus report that during testing. These macros are located in the
@@ -94,14 +94,14 @@ class Itk_BinaryThresholdTest
 
     DREAM3D_REGISTER_TEST( TestFilterAvailability() );
 
-    DREAM3D_REGISTER_TEST( TestItk_BinaryThresholdTest() )
+    DREAM3D_REGISTER_TEST( TestITKBinaryThresholdTest() )
 
     DREAM3D_REGISTER_TEST( RemoveTestFiles() )
   }
 
   private:
-    Itk_BinaryThresholdTest(const Itk_BinaryThresholdTest&); // Copy Constructor Not Implemented
-    void operator=(const Itk_BinaryThresholdTest&); // Operator '=' Not Implemented
+    ITKBinaryThresholdTest(const ITKBinaryThresholdTest&); // Copy Constructor Not Implemented
+    void operator=(const ITKBinaryThresholdTest&); // Operator '=' Not Implemented
 
 
 };

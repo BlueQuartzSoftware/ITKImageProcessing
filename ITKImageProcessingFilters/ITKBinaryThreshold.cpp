@@ -2,7 +2,7 @@
  * Your License or Copyright can go here
  */
 
-#include "Itk_BinaryThreshold.h"
+#include "ITKBinaryThreshold.h"
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -25,12 +25,12 @@
 #include "itkBinaryThresholdImageFilter.h"
 
 // Include the MOC generated file for this class
-#include "moc_Itk_BinaryThreshold.cpp"
+#include "moc_ITKBinaryThreshold.cpp"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Itk_BinaryThreshold::Itk_BinaryThreshold() :
+ITKBinaryThreshold::ITKBinaryThreshold() :
   AbstractFilter(),
   m_SelectedCellArrayPath("", "", ""),
   m_NewCellArrayName(""),
@@ -46,28 +46,28 @@ Itk_BinaryThreshold::Itk_BinaryThreshold() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Itk_BinaryThreshold::~Itk_BinaryThreshold()
+ITKBinaryThreshold::~ITKBinaryThreshold()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Itk_BinaryThreshold::setupFilterParameters()
+void ITKBinaryThreshold::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(SIMPL_NEW_INTEGER_FP("Threshold Value", ManualParameter, FilterParameter::Parameter, Itk_BinaryThreshold));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Threshold Value", ManualParameter, FilterParameter::Parameter, ITKBinaryThreshold));
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
-  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Save as New Array", SaveAsNewArray, FilterParameter::Parameter, Itk_BinaryThreshold, linkedProps));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Save as New Array", SaveAsNewArray, FilterParameter::Parameter, ITKBinaryThreshold, linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::UInt8, 1, SIMPL::AttributeMatrixObjectType::Any);
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Attribute Array to Threshold", SelectedCellArrayPath, FilterParameter::RequiredArray, Itk_BinaryThreshold, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Attribute Array to Threshold", SelectedCellArrayPath, FilterParameter::RequiredArray, ITKBinaryThreshold, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Threshold Array", NewCellArrayName, FilterParameter::CreatedArray, Itk_BinaryThreshold));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Threshold Array", NewCellArrayName, FilterParameter::CreatedArray, ITKBinaryThreshold));
 
   setFilterParameters(parameters);
 }
@@ -75,7 +75,7 @@ void Itk_BinaryThreshold::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Itk_BinaryThreshold::readFilterParameters(AbstractFilterParametersReader* reader, int index)
+void ITKBinaryThreshold::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
   setSelectedCellArrayPath( reader->readDataArrayPath( "SelectedCellArrayPath", getSelectedCellArrayPath() ) );
@@ -88,7 +88,7 @@ void Itk_BinaryThreshold::readFilterParameters(AbstractFilterParametersReader* r
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Itk_BinaryThreshold::initialize()
+void ITKBinaryThreshold::initialize()
 {
   setErrorCondition(0);
   setCancel(false);
@@ -97,7 +97,7 @@ void Itk_BinaryThreshold::initialize()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Itk_BinaryThreshold::dataCheck()
+void ITKBinaryThreshold::dataCheck()
 {
   setErrorCondition(0);
   DataArrayPath tempPath;
@@ -129,7 +129,7 @@ void Itk_BinaryThreshold::dataCheck()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Itk_BinaryThreshold::preflight()
+void ITKBinaryThreshold::preflight()
 {
   // These are the REQUIRED lines of CODE to make sure the filter behaves correctly
   setInPreflight(true); // Set the fact that we are preflighting.
@@ -143,7 +143,7 @@ void Itk_BinaryThreshold::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Itk_BinaryThreshold::execute()
+void ITKBinaryThreshold::execute()
 {
   initialize();
   dataCheck();
@@ -254,9 +254,9 @@ void Itk_BinaryThreshold::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer Itk_BinaryThreshold::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKBinaryThreshold::newFilterInstance(bool copyFilterParameters)
 {
-  Itk_BinaryThreshold::Pointer filter = Itk_BinaryThreshold::New();
+  ITKBinaryThreshold::Pointer filter = ITKBinaryThreshold::New();
   if(true == copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
@@ -267,13 +267,13 @@ AbstractFilter::Pointer Itk_BinaryThreshold::newFilterInstance(bool copyFilterPa
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString Itk_BinaryThreshold::getCompiledLibraryName()
+const QString ITKBinaryThreshold::getCompiledLibraryName()
 { return ITKImageProcessingConstants::ITKImageProcessingBaseName; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString Itk_BinaryThreshold::getBrandingString()
+const QString ITKBinaryThreshold::getBrandingString()
 {
   return "ITKImageProcessing";
 }
@@ -281,7 +281,7 @@ const QString Itk_BinaryThreshold::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString Itk_BinaryThreshold::getFilterVersion()
+const QString ITKBinaryThreshold::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
@@ -292,18 +292,18 @@ const QString Itk_BinaryThreshold::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString Itk_BinaryThreshold::getGroupName()
+const QString ITKBinaryThreshold::getGroupName()
 { return "Image Processing"; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString Itk_BinaryThreshold::getSubGroupName()
+const QString ITKBinaryThreshold::getSubGroupName()
 { return "ImageProcessing"; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString Itk_BinaryThreshold::getHumanLabel()
+const QString ITKBinaryThreshold::getHumanLabel()
 { return "[ITK] Binary Threshold (KW)"; }
 

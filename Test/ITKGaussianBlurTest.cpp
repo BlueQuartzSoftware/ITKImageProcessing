@@ -18,12 +18,12 @@
 
 #include "ITKImageProcessingTestFileLocations.h"
 
-class Itk_GaussianBlurTest
+class ITKGaussianBlurTest
 {
 
   public:
-    Itk_GaussianBlurTest() {}
-    virtual ~Itk_GaussianBlurTest() {}
+    ITKGaussianBlurTest() {}
+    virtual ~ITKGaussianBlurTest() {}
 
 
   // -----------------------------------------------------------------------------
@@ -32,8 +32,8 @@ class Itk_GaussianBlurTest
   void RemoveTestFiles()
   {
   #if REMOVE_TEST_FILES
-    QFile::remove(UnitTest::Itk_GaussianBlurTest::TestFile1);
-    QFile::remove(UnitTest::Itk_GaussianBlurTest::TestFile2);
+    QFile::remove(UnitTest::ITKGaussianBlurTest::TestFile1);
+    QFile::remove(UnitTest::ITKGaussianBlurTest::TestFile2);
   #endif
   }
 
@@ -42,8 +42,8 @@ class Itk_GaussianBlurTest
   // -----------------------------------------------------------------------------
   int TestFilterAvailability()
   {
-    // Now instantiate the Itk_GaussianBlurTest Filter from the FilterManager
-    QString filtName = "Itk_GaussianBlur";
+    // Now instantiate the ITKGaussianBlurTest Filter from the FilterManager
+    QString filtName = "ITKGaussianBlur";
     FilterManager* fm = FilterManager::Instance();
     IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
     if (NULL == filterFactory.get())
@@ -58,14 +58,14 @@ class Itk_GaussianBlurTest
   // -----------------------------------------------------------------------------
   //
   // -----------------------------------------------------------------------------
-  int TestItk_GaussianBlurTest()
+  int TestITKGaussianBlurTest()
   {
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   /* Please write Itk_GaussianBlurTest test code here.
+   /* Please write ITKGaussianBlurTest test code here.
     *
     * Your IO test files are:
-    * UnitTest::Itk_GaussianBlurTest::TestFile1
-    * UnitTest::Itk_GaussianBlurTest::TestFile2
+    * UnitTest::ITKGaussianBlurTest::TestFile1
+    * UnitTest::ITKGaussianBlurTest::TestFile2
     *
     * SIMPLib provides some macros that will throw exceptions when a test fails
     * and thus report that during testing. These macros are located in the
@@ -94,14 +94,14 @@ class Itk_GaussianBlurTest
 
     DREAM3D_REGISTER_TEST( TestFilterAvailability() );
 
-    DREAM3D_REGISTER_TEST( TestItk_GaussianBlurTest() )
+    DREAM3D_REGISTER_TEST( TestITKGaussianBlurTest() )
 
     DREAM3D_REGISTER_TEST( RemoveTestFiles() )
   }
 
   private:
-    Itk_GaussianBlurTest(const Itk_GaussianBlurTest&); // Copy Constructor Not Implemented
-    void operator=(const Itk_GaussianBlurTest&); // Operator '=' Not Implemented
+    ITKGaussianBlurTest(const ITKGaussianBlurTest&); // Copy Constructor Not Implemented
+    void operator=(const ITKGaussianBlurTest&); // Operator '=' Not Implemented
 
 
 };
