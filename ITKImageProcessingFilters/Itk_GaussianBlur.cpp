@@ -21,6 +21,7 @@
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkInPlaceDream3DDataToImageFilter.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkInPlaceImageToDream3DDataFilter.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
 
 #include "sitkExplicitITK.h"
 
@@ -103,79 +104,6 @@ void Itk_GaussianBlur::initialize()
 //
 // -----------------------------------------------------------------------------
 
-void Itk_GaussianBlur::process(bool checkData)
-{
-  IDataArray::Pointer array = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, getSelectedCellArrayPath());
-  if (getErrorCondition() < 0) { return; }
-  QString type = array->getTypeAsString();
-    if (type.compare("int8_t") == 0)
-    {
-      process<int8_t>(checkData);
-    }
-    else if (type.compare("uint8_t") == 0)
-    {
-      process<uint8_t>(checkData);
-    }
-    else if (type.compare("int16_t") == 0)
-    {
-      process<int16_t>(checkData);
-    }
-    else if (type.compare("uint16_t") == 0)
-    {
-      process<uint16_t>(checkData);
-    }
-    else if (type.compare("int32_t") == 0)
-    {
-      process<int32_t>(checkData);
-    }
-    else if (type.compare("uint32_t") == 0)
-    {
-      process<uint32_t>(checkData);
-    }
-    else if (type.compare("int64_t") == 0)
-    {
-      process<int64_t>(checkData);
-    }
-    else if (type.compare("uint64_t") == 0)
-    {
-      process<uint64_t>(checkData);
-    }
-    else if (type.compare("float") == 0)
-    {
-      process<float>(checkData);
-    }
-    else if (type.compare("double") == 0)
-    {
-      process<double>(checkData);
-    }
-    else
-    {
-      setErrorCondition(-4);
-      QString errorMessage = QString("Unsupported pixel type: %1.").arg(type);
-      notifyErrorMessage(getHumanLabel(), errorMessage, getErrorCondition());
-    }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-
-template<typename PixelType>
-void Itk_GaussianBlur::process(bool checkData)
-{
-  if (checkData)
-  {
-    dataCheck<PixelType>();
-  }
-  else
-  {
-    filter<PixelType>();
-  }
-}
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-
 template<typename PixelType>
 void Itk_GaussianBlur::dataCheck()
 {
@@ -236,7 +164,7 @@ void Itk_GaussianBlur::preflight()
   setInPreflight(true); // Set the fact that we are preflighting.
   emit preflightAboutToExecute(); // Emit this signal so that other widgets can do one file update
   emit updateFilterParameters(this); // Emit this signal to have the widgets push their values down to the filter
-  process(true); // Run our DataCheck to make sure everthing is setup correctly
+  Dream3DArraySwitchMacro(dataCheck, getSelectedCellArrayPath(),-4);// Run our DataCheck to make sure everthing is setup correctly
   emit preflightExecuted(); // We are done preflighting this filter
   setInPreflight(false); // Inform the system this filter is NOT in preflight mode anymore.
 }
@@ -318,10 +246,10 @@ void Itk_GaussianBlur::filter()
 void Itk_GaussianBlur::execute()
 {
   initialize();
-  process(true);
-  if(getErrorCondition() < 0) { return; }
+  Dream3DArraySwitchMacro(dataCheck, getSelectedCellArrayPath(), -4);// Run our DataCheck to make sure everthing is setup correctly
+  if (getErrorCondition() < 0) { return; }
   if (getCancel() == true) { return; }
-  process(false);
+  Dream3DArraySwitchMacro(filter, getSelectedCellArrayPath(), -4);// Run our DataCheck to make sure everthing is setup correctly
 }
 
 // -----------------------------------------------------------------------------
