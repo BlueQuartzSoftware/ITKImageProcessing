@@ -88,6 +88,9 @@ void ITKGaussianBlur::readFilterParameters(AbstractFilterParametersReader* reade
   setSelectedCellArrayPath( reader->readDataArrayPath( "SelectedCellArrayPath", getSelectedCellArrayPath() ) );
   setNewCellArrayName( reader->readString( "NewCellArrayName", getNewCellArrayName() ) );
   setSaveAsNewArray( reader->readValue( "SaveAsNewArray", getSaveAsNewArray() ) );
+  setMaximumKernelWidth(reader->readValue("MaximumKernelWidth", getMaximumKernelWidth()));
+  setVariance(reader->readValue("Variance", getVariance()));
+  setMaximumError(reader->readValue("MaximumError", getMaximumError()));
   reader->closeFilterGroup();
 }
 
