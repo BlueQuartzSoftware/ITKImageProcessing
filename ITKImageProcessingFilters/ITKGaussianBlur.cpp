@@ -110,6 +110,7 @@ void ITKGaussianBlur::initialize()
 template<typename PixelType>
 void ITKGaussianBlur::dataCheck()
 {
+  setErrorCondition(0);
   if (m_MaximumKernelWidth <= 0)
   {
     setErrorCondition(-1);
@@ -131,7 +132,6 @@ void ITKGaussianBlur::dataCheck()
   DataArray<PixelType>::WeakPointer selectedCellArrayPtr;
   PixelType* selectedCellArray;
     
-  setErrorCondition(0);
   DataArrayPath tempPath;
 
   QVector<size_t> dims(1, 1);
