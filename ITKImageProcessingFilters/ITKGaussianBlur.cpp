@@ -129,7 +129,7 @@ void ITKGaussianBlur::dataCheck()
     notifyErrorMessage(getHumanLabel(), "Maximum error must be >0", getErrorCondition());
     return;
   }
-  DataArray<PixelType>::WeakPointer selectedCellArrayPtr;
+  typename DataArray<PixelType>::WeakPointer selectedCellArrayPtr;
   PixelType* selectedCellArray;
     
   DataArrayPath tempPath;
@@ -188,7 +188,7 @@ void ITKGaussianBlur::filter()
     typedef itk::Dream3DImage<PixelType, Dimension> ImageType;
     typedef itk::InPlaceDream3DDataToImageFilter<PixelType, Dimension> FilterType;
     // Create a Bridge to wrap an existing DREAM.3D array with an ItkImage container
-    FilterType::Pointer filter = FilterType::New();
+    typename FilterType::Pointer filter = FilterType::New();
     filter->SetInput(dc);
     filter->SetInPlace(true);
     filter->SetAttributeMatrixArrayName(getSelectedCellArrayPath().getAttributeMatrixName().toStdString());
@@ -199,7 +199,7 @@ void ITKGaussianBlur::filter()
 
     typedef itk::DiscreteGaussianImageFilter<ImageType, ImageType> GaussianFilterType;
 
-    GaussianFilterType::Pointer gaussianFilter = GaussianFilterType::New();
+    typename GaussianFilterType::Pointer gaussianFilter = GaussianFilterType::New();
     gaussianFilter->SetInput(filter->GetOutput());
     gaussianFilter->AddObserver(itk::ProgressEvent(), interruption);
     gaussianFilter->SetVariance(getVariance());
@@ -207,7 +207,7 @@ void ITKGaussianBlur::filter()
     gaussianFilter->SetMaximumError(getMaximumError());
     gaussianFilter->Update();
 
-    ImageType::Pointer image = ImageType::New();
+    typename ImageType::Pointer image = ImageType::New();
     //image = thresholdFilter->GetOutput();
     image=gaussianFilter->GetOutput();
     image->DisconnectPipeline();

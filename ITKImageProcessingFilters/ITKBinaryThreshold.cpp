@@ -147,7 +147,7 @@ void ITKBinaryThreshold::dataCheck()
     return;
   }
   // Check data array
-  DataArray<PixelType>::WeakPointer selectedCellArrayPtr;
+  typename DataArray<PixelType>::WeakPointer selectedCellArrayPtr;
   PixelType* selectedCellArray;
 
   DataArrayPath tempPath;
@@ -206,7 +206,7 @@ void ITKBinaryThreshold::filter()
     typedef itk::Dream3DImage<PixelType, Dimension> ImageType;
     typedef itk::InPlaceDream3DDataToImageFilter<PixelType, Dimension> FilterType;
     // Create a Bridge to wrap an existing DREAM.3D array with an ItkImage container
-    FilterType::Pointer filter = FilterType::New();
+    typename FilterType::Pointer filter = FilterType::New();
     filter->SetInput(dc);
     filter->SetInPlace(true);
     filter->SetAttributeMatrixArrayName(getSelectedCellArrayPath().getAttributeMatrixName().toStdString());
@@ -219,7 +219,7 @@ void ITKBinaryThreshold::filter()
     typedef itk::BinaryThresholdImageFilter <ImageType, ImageType> BinaryThresholdImageFilterType;
 
     //create Itk's binary threshold filter object
-    BinaryThresholdImageFilterType::Pointer thresholdFilter = BinaryThresholdImageFilterType::New();
+    typename BinaryThresholdImageFilterType::Pointer thresholdFilter = BinaryThresholdImageFilterType::New();
     thresholdFilter->SetInput(filter->GetOutput());
     thresholdFilter->SetLowerThreshold(static_cast<PixelType>(m_LowerThresholdValue));
     thresholdFilter->AddObserver(itk::ProgressEvent(), interruption);
@@ -228,7 +228,7 @@ void ITKBinaryThreshold::filter()
     thresholdFilter->SetOutsideValue(static_cast<PixelType>(m_OutsideValue));
     thresholdFilter->Update();
 
-    ImageType::Pointer image = ImageType::New();
+    typename ImageType::Pointer image = ImageType::New();
     //image = thresholdFilter->GetOutput();
     image = thresholdFilter->GetOutput();
     image->DisconnectPipeline();

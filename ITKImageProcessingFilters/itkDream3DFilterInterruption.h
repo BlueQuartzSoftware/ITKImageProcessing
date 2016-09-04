@@ -43,7 +43,7 @@ namespace itk
       object->AbortGenerateDataOff();
     }
 
-    void Command::Execute(const Object *, const EventObject &) // has to be implemented
+    void Execute(const Object *, const EventObject &) // has to be implemented
     {
     }
 
