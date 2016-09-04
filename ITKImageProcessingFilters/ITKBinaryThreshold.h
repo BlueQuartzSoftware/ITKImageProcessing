@@ -32,9 +32,17 @@ class ITKBinaryThreshold : public AbstractFilter
     SIMPL_FILTER_PARAMETER(bool, SaveAsNewArray)
     Q_PROPERTY(bool SaveAsNewArray READ getSaveAsNewArray WRITE setSaveAsNewArray)
 
-    SIMPL_FILTER_PARAMETER(int, ManualParameter)
-    Q_PROPERTY(int ManualParameter READ getManualParameter WRITE setManualParameter)
+    SIMPL_FILTER_PARAMETER(double, LowerThresholdValue)
+    Q_PROPERTY(double LowerThresholdValue READ getLowerThresholdValue WRITE setLowerThresholdValue)
 
+    SIMPL_FILTER_PARAMETER(double, UpperThresholdValue)
+    Q_PROPERTY(double UpperThresholdValue READ getUpperThresholdValue WRITE setUpperThresholdValue)
+
+    SIMPL_FILTER_PARAMETER(double, InsideValue)
+    Q_PROPERTY(double InsideValue READ getInsideValue WRITE setInsideValue)
+
+    SIMPL_FILTER_PARAMETER(double, OutsideValue)
+    Q_PROPERTY(double OutsideValue READ getOutsideValue WRITE setOutsideValue)
 
     /**
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -126,6 +134,12 @@ class ITKBinaryThreshold : public AbstractFilter
      */
     template<typename PixelType>
     void dataCheck();
+
+    /**
+    * @brief CheckLimits Checks that value is inside the bounds of the chosen PixelType
+    */
+    template<typename PixelType>
+    void CheckLimits(double value, QString name);
 
     /**
     * @brief Applies the filter

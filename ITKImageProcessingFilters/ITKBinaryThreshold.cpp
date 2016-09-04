@@ -11,6 +11,8 @@
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
+
 #include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "sitkExplicitITK.h"
@@ -37,7 +39,10 @@ ITKBinaryThreshold::ITKBinaryThreshold() :
   m_SelectedCellArrayPath("", "", ""),
   m_NewCellArrayName(""),
   m_SaveAsNewArray(true),
-  m_ManualParameter(128),
+  m_LowerThresholdValue(128.0),
+  m_UpperThresholdValue(255.0),
+  m_InsideValue(255.0),
+  m_OutsideValue(0),
   m_NewCellArray(NULL)
 {
   initialize();
@@ -58,7 +63,10 @@ void ITKBinaryThreshold::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(SIMPL_NEW_INTEGER_FP("Threshold Value", ManualParameter, FilterParameter::Parameter, ITKBinaryThreshold));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Lower Threshold Value", LowerThresholdValue, FilterParameter::Parameter, ITKBinaryThreshold));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Upper Threshold Value", UpperThresholdValue, FilterParameter::Parameter, ITKBinaryThreshold));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Inside Value", InsideValue, FilterParameter::Parameter, ITKBinaryThreshold));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Outisde Value", OutsideValue, FilterParameter::Parameter, ITKBinaryThreshold));
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Save as New Array", SaveAsNewArray, FilterParameter::Parameter, ITKBinaryThreshold, linkedProps));
@@ -84,7 +92,10 @@ void ITKBinaryThreshold::readFilterParameters(AbstractFilterParametersReader* re
   setSelectedCellArrayPath( reader->readDataArrayPath( "SelectedCellArrayPath", getSelectedCellArrayPath() ) );
   setNewCellArrayName( reader->readString( "NewCellArrayName", getNewCellArrayName() ) );
   setSaveAsNewArray( reader->readValue( "SaveAsNewArray", getSaveAsNewArray() ) );
-  setManualParameter( reader->readValue( "ManualParameter", getManualParameter() ) );
+  setLowerThresholdValue(reader->readValue("LowerThresholdValue", getLowerThresholdValue()));
+  setUpperThresholdValue(reader->readValue("UpperThresholdValue", getUpperThresholdValue()));
+  setInsideValue(reader->readValue("InsideValue", getInsideValue()));
+  setOutsideValue(reader->readValue("OutsideValue", getOutsideValue()));
   reader->closeFilterGroup();
 }
 
@@ -101,13 +112,44 @@ void ITKBinaryThreshold::initialize()
 //
 // -----------------------------------------------------------------------------
 template<typename PixelType>
+void ITKBinaryThreshold::CheckLimits(double value, QString name)
+{
+  if (value < static_cast<double>(std::numeric_limits<PixelType>::lowest())
+     || value > static_cast<double>(std::numeric_limits<PixelType>::max()))
+  {
+    setErrorCondition(-1);
+    QString errorMessage = name + QString("must be greater or equal than %1 and lesser or equal than %2");
+    notifyErrorMessage(getHumanLabel(), errorMessage.arg(
+        std::numeric_limits<PixelType>::lowest()).arg(std::numeric_limits<PixelType>::max())
+                                                         , getErrorCondition()
+                                                         );
+    return;
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+template<typename PixelType>
 void ITKBinaryThreshold::dataCheck()
 {
+  setErrorCondition(0);
+  // Check consistency of parameters
+  CheckLimits<PixelType>(m_InsideValue, "Inside value");
+  CheckLimits<PixelType>(m_OutsideValue, "Outside value");
+  CheckLimits<PixelType>(m_LowerThresholdValue, "Lower threshold value");
+  CheckLimits<PixelType>(m_UpperThresholdValue, "Upper threshold value");
 
+  if (m_LowerThresholdValue > m_UpperThresholdValue)
+  {
+    setErrorCondition(-2);
+    notifyErrorMessage(getHumanLabel(),"Lower threshold value must be lesser than upper threshold value", getErrorCondition());
+    return;
+  }
+  // Check data array
   DataArray<PixelType>::WeakPointer selectedCellArrayPtr;
   PixelType* selectedCellArray;
 
-  setErrorCondition(0);
   DataArrayPath tempPath;
 
   QVector<size_t> dims(1, 1);
@@ -179,11 +221,11 @@ void ITKBinaryThreshold::filter()
     //create Itk's binary threshold filter object
     BinaryThresholdImageFilterType::Pointer thresholdFilter = BinaryThresholdImageFilterType::New();
     thresholdFilter->SetInput(filter->GetOutput());
-    thresholdFilter->SetLowerThreshold(m_ManualParameter);
+    thresholdFilter->SetLowerThreshold(static_cast<PixelType>(m_LowerThresholdValue));
     thresholdFilter->AddObserver(itk::ProgressEvent(), interruption);
-    thresholdFilter->SetUpperThreshold(255);
-    thresholdFilter->SetInsideValue(255);
-    thresholdFilter->SetOutsideValue(0);
+    thresholdFilter->SetUpperThreshold(static_cast<PixelType>(m_UpperThresholdValue));
+    thresholdFilter->SetInsideValue(static_cast<PixelType>(m_InsideValue));
+    thresholdFilter->SetOutsideValue(static_cast<PixelType>(m_OutsideValue));
     thresholdFilter->Update();
 
     ImageType::Pointer image = ImageType::New();
