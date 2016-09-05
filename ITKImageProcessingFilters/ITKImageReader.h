@@ -65,6 +65,11 @@ class ITKImageReader : public AbstractFilter
     SIMPL_FILTER_PARAMETER(QString, DataContainerName)
     Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
 
+    SIMPL_FILTER_PARAMETER(QString, CellAttributeMatrixName)
+    Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
+
+    SIMPL_FILTER_PARAMETER(QString, ImageDataArrayName)
+    Q_PROPERTY(QString ImageDataArrayName READ getImageDataArrayName WRITE setImageDataArrayName)
     /**
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
      */

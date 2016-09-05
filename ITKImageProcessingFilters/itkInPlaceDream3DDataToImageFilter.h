@@ -31,7 +31,6 @@ namespace itk
     itkGetMacro(AttributeMatrixArrayName, std::string);
     itkSetMacro(PixelContainerWillOwnTheBuffer, bool);
     itkGetMacro(PixelContainerWillOwnTheBuffer, bool);
-    virtual void SetDataArrayPath(DataArrayPath dataArrayPath);
     itkSetMacro(InPlace, bool);
     itkGetConstMacro(InPlace, bool);
     itkBooleanMacro(InPlace);

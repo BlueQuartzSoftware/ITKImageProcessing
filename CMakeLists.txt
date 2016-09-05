@@ -31,9 +31,18 @@ include(${SIMPLProj_SOURCE_DIR}/Source/SIMPLib/SIMPLibMacros.cmake)
 # ITK Include
 if(DREAM3D_USE_ITK)
   set(DREAM3D_ADDITIONAL_ITK_MODULES
-      ITKIOMeta
-      ITKIONRRD
+      ITKIOImageBase
       SCIFIO
+      ITKIONRRD
+      ITKIOTIFF
+      ITKIOMeta
+      ITKIOPNG
+      ITKIONIFTI
+      ITKIOGIPL
+      ITKIOVTK
+      ITKIOStimulate
+      ITKIOBioRad
+      ITKIOGE
       )
   set_property(GLOBAL APPEND PROPERTY DREAM3D_ADDITIONAL_ITK_MODULES ${DREAM3D_ADDITIONAL_ITK_MODULES})
 

@@ -37,22 +37,15 @@
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkInPlaceImageToDream3DDataFilter.h"
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
 
-// ITK includes
-#include <itkImageIOFactory.h>
-#include <itkMetaImageIOFactory.h>
-#include <itkNrrdImageIOFactory.h>
-#include <itkPNGImageIOFactory.h>
-
-// ITK-SCIFIO
-#include <itkSCIFIOImageIOFactory.h>
-
 // Include the MOC generated file for this class
 #include "moc_ITKImageReader.cpp"
+
 
 // -----------------------------------------------------------------------------
 //
@@ -60,15 +53,10 @@
 ITKImageReader::ITKImageReader() :
   AbstractFilter(),
   m_FileName(""),
-  m_DataContainerName(SIMPL::Defaults::ImageDataContainerName)
+  m_DataContainerName(SIMPL::Defaults::ImageDataContainerName),
+  m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName),
+  m_ImageDataArrayName(SIMPL::CellData::ImageData)
 {
-  // As for now, register factories by hand. There is probably a better place
-  // to do this than here.
-  itk::PNGImageIOFactory::RegisterOneFactory();
-  itk::MetaImageIOFactory::RegisterOneFactory();
-  itk::NrrdImageIOFactory::RegisterOneFactory();
-  itk::SCIFIOImageIOFactory::RegisterOneFactory();
-
   setupFilterParameters();
 }
 
@@ -88,6 +76,9 @@ void ITKImageReader::setupFilterParameters()
   QString supportedExtensions = "*.png *.mhd *.mha *.nrrd *.tif";
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("File", FileName, FilterParameter::Parameter, ITKImageReader, supportedExtensions, "Image"));
   parameters.push_back(SIMPL_NEW_STRING_FP("Data Container", DataContainerName, FilterParameter::CreatedArray, ITKImageReader));
+  parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Cell Attribute Matrix", CellAttributeMatrixName, FilterParameter::CreatedArray, ITKImageReader));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Image Data", ImageDataArrayName, FilterParameter::CreatedArray, ITKImageReader));
   setFilterParameters(parameters);
 }
 
@@ -214,10 +205,10 @@ void ITKImageReader::readImageOutputInformation(typename itk::ImageFileReader< i
     container->setGeometry(image);
 
     QVector<size_t> cDims(1, 1);
-    AttributeMatrix::Pointer cellAttrMat = container->createNonPrereqAttributeMatrix<AbstractFilter>(this, SIMPL::CellData::ImageData, tDims, SIMPL::AttributeMatrixType::Cell);
+    AttributeMatrix::Pointer cellAttrMat = container->createNonPrereqAttributeMatrix<AbstractFilter>(this, m_CellAttributeMatrixName, tDims, SIMPL::AttributeMatrixType::Cell);
     if (getErrorCondition() < 0) { return; }
     DataArrayPath path;
-    path.update(getDataContainerName(), SIMPL::CellData::ImageData, SIMPL::Defaults::CellAttributeMatrixName);
+    path.update(getDataContainerName(), getCellAttributeMatrixName(), getImageDataArrayName());
     getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<TPixel>, AbstractFilter, TPixel>(this, path, 0, cDims);
 }
 
@@ -252,6 +243,8 @@ void ITKImageReader::readImage(const QString& filename, bool dataCheck)
         typename ToDream3DType::Pointer toDream3DFilter = ToDream3DType::New();
         toDream3DFilter->SetInput(reader->GetOutput());
         toDream3DFilter->SetInPlace(true);
+        toDream3DFilter->SetAttributeMatrixArrayName(m_CellAttributeMatrixName.toStdString());
+        toDream3DFilter->SetDataArrayName(m_ImageDataArrayName.toStdString());
         toDream3DFilter->SetDataContainer(container);
         toDream3DFilter->Update();
     }

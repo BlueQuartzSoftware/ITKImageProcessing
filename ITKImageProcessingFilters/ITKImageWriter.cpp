@@ -47,13 +47,6 @@
 
 // ITK includes
 #include <itkImageFileWriter.h>
-#include <itkImageIOFactory.h>
-#include <itkMetaImageIOFactory.h>
-#include <itkNrrdImageIOFactory.h>
-#include <itkPNGImageIOFactory.h>
-
-// ITK-SCIFIO
-#include <itkSCIFIOImageIOFactory.h>
 
 // Include the MOC generated file for this class
 #include "moc_ITKImageWriter.cpp"
@@ -64,18 +57,8 @@
 ITKImageWriter::ITKImageWriter() :
   AbstractFilter(),
   m_FileName(""),
-  m_ImageArrayPath(
-    SIMPL::Defaults::ImageDataContainerName,
-    SIMPL::Defaults::CellAttributeMatrixName,
-    SIMPL::Defaults::CellEnsembleAttributeMatrixName)
+  m_ImageArrayPath("", "", "")
 {
-  // As for now, register factories by hand. There is probably a better place
-  // to do this than here.
-  itk::PNGImageIOFactory::RegisterOneFactory();
-  itk::MetaImageIOFactory::RegisterOneFactory();
-  itk::NrrdImageIOFactory::RegisterOneFactory();
-  itk::SCIFIOImageIOFactory::RegisterOneFactory();
-
   setupFilterParameters();
 }
 
@@ -191,7 +174,8 @@ void ITKImageWriter::writeImage(const QString& filename,
   {
       typename ToITKType::Pointer toITK = ToITKType::New();
       toITK->SetInput(container);
-      toITK->SetDataArrayPath(path);
+      toITK->SetAttributeMatrixArrayName(path.getAttributeMatrixName().toStdString());
+      toITK->SetDataArrayName(path.getDataArrayName().toStdString());
       toITK->SetInPlace(true);
 
       typename WriterType::Pointer writer = WriterType::New();
@@ -203,8 +187,8 @@ void ITKImageWriter::writeImage(const QString& filename,
   catch (itk::ExceptionObject & err)
   {
       setErrorCondition(-5);
-      QString errorMessage = "ITK exception was thrown while writing output file:";
-      notifyErrorMessage(getHumanLabel(), errorMessage.arg(err.what()), getErrorCondition());
+      QString errorMessage = "ITK exception was thrown while writing output file: %1";
+      notifyErrorMessage(getHumanLabel(), errorMessage.arg(err.GetDescription()), getErrorCondition());
       return;
   }
 }
@@ -221,18 +205,38 @@ void ITKImageWriter::execute()
   {
     return;
   }
-
+  if (!getDataContainerArray()->doesDataContainerExist(getImageArrayPath().getDataContainerName()))
+  {
+    setErrorCondition(-6);
+    QString errorMessage = "Data container %1 does not exist.";
+    notifyErrorMessage(getHumanLabel(), errorMessage.arg(getImageArrayPath().getDataContainerName()), getErrorCondition());
+    return;
+  }
   DataContainer::Pointer container =
     getDataContainerArray()->getDataContainer(
-      getImageArrayPath().getDataContainerName());
-
-  IDataArray::Pointer inputData =
-    container->getAttributeMatrix(
-      getImageArrayPath().getAttributeMatrixName())->getAttributeArray(
+    getImageArrayPath().getDataContainerName());
+  if (!container->doesAttributeMatrixExist(getImageArrayPath().getAttributeMatrixName()))
+  {
+    setErrorCondition(-7);
+    QString errorMessage = "Attribute matrix %1 does not exist.";
+    notifyErrorMessage(getHumanLabel(), errorMessage.arg(getImageArrayPath().getAttributeMatrixName()), getErrorCondition());
+    return;
+  }
+  AttributeMatrix::Pointer attributeMatrix = container->getAttributeMatrix(
+    getImageArrayPath().getAttributeMatrixName());
+  if (!attributeMatrix->doesAttributeArrayExist(getImageArrayPath().getDataArrayName()))
+  {
+    setErrorCondition(-8);
+    QString errorMessage = "Attribute array %1 does not exist.";
+    notifyErrorMessage(getHumanLabel(), errorMessage.arg(getImageArrayPath().getDataArrayName()), getErrorCondition());
+    return;
+  }
+    IDataArray::Pointer inputData =
+      attributeMatrix->getAttributeArray(
         getImageArrayPath().getDataArrayName());
 
   QString type = inputData->getTypeAsString();
-if (type.compare("int8_t") == 0)
+  if (type.compare("int8_t") == 0)
   {
     writeImage<int8_t, 3>(getFileName(), container, getImageArrayPath());
   }

@@ -54,6 +54,8 @@
 #include <itkMetaImageIO.h>
 #include <itkNrrdImageIO.h>
 #include <itkSCIFIOImageIO.h>
+#include <itkTIFFImageIO.h>
+#include <itkPNGImageIO.h>
 
 class ITKImageProcessingReaderTest
 {
@@ -62,8 +64,8 @@ class ITKImageProcessingReaderTest
     ITKImageProcessingReaderTest() {}
     virtual ~ITKImageProcessingReaderTest() {}
 
-    typedef float PixelType;
-    typedef itk::Dream3DImage<PixelType, 3> ImageType;
+    typedef float DefaultPixelType;
+    typedef unsigned short PNGPixelType;
 
   // -----------------------------------------------------------------------------
   //
@@ -73,9 +75,8 @@ class ITKImageProcessingReaderTest
 #if REMOVE_TEST_FILES
     QFile::remove(UnitTest::ITKImageProcessingReaderTest::NRRDIOInputTestFile);
     QFile::remove(UnitTest::ITKImageProcessingReaderTest::METAIOInputTestFile);
-    QString rawFilename = UnitTest::ITKImageProcessingReaderTest::METAIOInputTestFile;
-    rawFilename.chop(4);
-    QFile::remove(rawFilename + ".raw");
+    QFile::remove(UnitTest::ITKImageProcessingReaderTest::TIFFIOInputTestFile);
+    QFile::remove(UnitTest::ITKImageProcessingReaderTest::PNGIOInputTestFile);
     QFile::remove(UnitTest::ITKImageProcessingReaderTest::SCIFIOInputTestFile);
   #endif
   }
@@ -114,21 +115,23 @@ class ITKImageProcessingReaderTest
     return image;
   }
 
-  ImageType::Pointer WriteTestFile(const QString& filePath, itk::ImageIOBase* io)
+  template<typename PixelType, unsigned int Dimension>
+  typename itk::Dream3DImage<PixelType, Dimension>::Pointer WriteTestFile(const QString& filePath, itk::ImageIOBase* io)
   {
-    ImageType::PointType origin;
-    ImageType::SizeType size;
-    ImageType::SpacingType spacing;
-    for (unsigned int i = 0; i < 3; i++)
+    typedef typename itk::Dream3DImage<PixelType, Dimension> ImageType;
+    typename ImageType::PointType origin;
+    typename ImageType::SizeType size;
+    typename ImageType::SpacingType spacing;
+    for (unsigned int i = 0; i < Dimension; i++)
     {
       origin[i] = -1.3 + float(i);
       size[i] = 42 + i * 3;
       spacing[i] = 10.3 + float(i)*.2;
     }
-    ImageType::Pointer image = CreateITKImageForTests<ImageType>(origin, size, spacing, 3);
+    typename  ImageType::Pointer image = CreateITKImageForTests<ImageType>(origin, size, spacing, 3);
 
     typedef itk::ImageFileWriter<ImageType> WriterType;
-    WriterType::Pointer writer = WriterType::New();
+    typename WriterType::Pointer writer = WriterType::New();
     writer->SetFileName(filePath.toStdString());
     writer->SetInput(image);
     writer->SetImageIO(io);
@@ -136,32 +139,56 @@ class ITKImageProcessingReaderTest
     return image;
   }
 
-  ImageType::Pointer WriteSCIFIOTestFile()
+  itk::Dream3DImage<DefaultPixelType, 2>::Pointer
+  WriteSCIFIOTestFile()
   {
     itk::SCIFIOImageIO::Pointer io = itk::SCIFIOImageIO::New();
 
-    return WriteTestFile(
+    return WriteTestFile<DefaultPixelType,2>(
       UnitTest::ITKImageProcessingReaderTest::SCIFIOInputTestFile,
       io.GetPointer()
       );
   }
 
-  ImageType::Pointer WriteMetaIOTestFile()
+  itk::Dream3DImage<PNGPixelType, 2>::Pointer
+    WritePNGIOTestFile()
+  {
+    itk::PNGImageIO::Pointer io = itk::PNGImageIO::New();
+
+    return WriteTestFile<PNGPixelType,2>(
+      UnitTest::ITKImageProcessingReaderTest::PNGIOInputTestFile,
+      io.GetPointer()
+      );
+  }
+
+  itk::Dream3DImage<DefaultPixelType, 2>::Pointer
+    WriteTIFFIOTestFile()
+  {
+    itk::TIFFImageIO::Pointer io = itk::TIFFImageIO::New();
+
+    return WriteTestFile<DefaultPixelType,2>(
+      UnitTest::ITKImageProcessingReaderTest::TIFFIOInputTestFile,
+      io.GetPointer()
+      );
+  }
+
+  itk::Dream3DImage<DefaultPixelType, 3>::Pointer
+  WriteMetaIOTestFile()
   {
     itk::MetaImageIO::Pointer io = itk::MetaImageIO::New();
 
-    return WriteTestFile(
+    return WriteTestFile<DefaultPixelType,3>(
       UnitTest::ITKImageProcessingReaderTest::METAIOInputTestFile,
       io.GetPointer()
       );
   }
 
-
-  ImageType::Pointer WriteNRRDIOTestFile()
+  itk::Dream3DImage<DefaultPixelType, 3>::Pointer
+  WriteNRRDIOTestFile()
   {
     itk::NrrdImageIO::Pointer io = itk::NrrdImageIO::New();
 
-    return WriteTestFile(
+    return WriteTestFile<DefaultPixelType,3>(
       UnitTest::ITKImageProcessingReaderTest::NRRDIOInputTestFile,
       io.GetPointer()
       );
@@ -244,7 +271,8 @@ class ITKImageProcessingReaderTest
     return EXIT_SUCCESS;
   }
 
-  int TestCompareImage(const QString& file, ImageType::Pointer expectedImage)
+  template<typename PixelType, unsigned int Dimension>
+  int TestCompareImage(const QString& file, typename itk::Dream3DImage<PixelType, Dimension>::Pointer expectedImage)
   {
     FilterPipeline::Pointer pipeline = FilterPipeline::New();
 
@@ -293,11 +321,11 @@ class ITKImageProcessingReaderTest
     imageGeometry->getOrigin(origin[0], origin[1], origin[2]);
     size_t dimensions[3];
     imageGeometry->getDimensions(dimensions[0], dimensions[1], dimensions[2]);
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < Dimension; i++)
     {
       float imageSpacing = expectedImage->GetSpacing()[i];
       DREAM3D_COMPARE_FLOATS(&resolution[i], &imageSpacing, tol);
-
+     
       float imageOrigin = expectedImage->GetOrigin()[i];
       DREAM3D_COMPARE_FLOATS(&origin[i], &imageOrigin, tol);
 
@@ -305,10 +333,13 @@ class ITKImageProcessingReaderTest
       DREAM3D_REQUIRE_EQUAL(dimensions[i], imageDimension);
     }
 
-    const QString matrixName = "ImageData";
+    const QString matrixName = SIMPL::Defaults::CellAttributeMatrixName;
+    DREAM3D_REQUIRE_EQUAL(container->doesAttributeMatrixExist(matrixName),true);
     AttributeMatrix::Pointer attributeMatrix = container->getAttributeMatrix(matrixName);
     DREAM3D_REQUIRE_NE(attributeMatrix.get(), 0);
-    IDataArray::Pointer dataArray = attributeMatrix->getAttributeArray("CellData");
+    const QString attributeArrayName = SIMPL::CellData::ImageData;
+    DREAM3D_REQUIRE_EQUAL(attributeMatrix->doesAttributeArrayExist(attributeArrayName),true);
+    IDataArray::Pointer dataArray = attributeMatrix->getAttributeArray(attributeArrayName);
 
     for (size_t i = 0; i < dataArray->getSize(); i++)
     {
@@ -332,30 +363,46 @@ class ITKImageProcessingReaderTest
     DREAM3D_REGISTER_TEST(TestBadFilename());
 
     // SCIFIO
-    ImageType::Pointer scifioImage = WriteSCIFIOTestFile();
+    itk::Dream3DImage<DefaultPixelType, 2>::Pointer scifioImage = WriteSCIFIOTestFile();
     // SCIFIO doesn't seem to take spacing into consideration
-    double scifioSpacing[3] = { 1.0, 1.0, 1.0};
+    double scifioSpacing[2] = { 1, 1 };
     scifioImage->SetSpacing(scifioSpacing);
-    // SCIFIO doesn't seem to take origine into consideration
-    double scifioOrigin[3] = { 0.0, 0.0, 0.0 };
-    scifioImage->SetOrigin(scifioOrigin);
+    // SCIFIO doesn't seem to take origin into consideration
+    double zeroOrigin[2] = { 0.0, 0.0 };
+    scifioImage->SetOrigin(zeroOrigin);
     DREAM3D_REGISTER_TEST(
-      TestCompareImage(
-        UnitTest::ITKImageProcessingReaderTest::SCIFIOInputTestFile, scifioImage)
+      (TestCompareImage<DefaultPixelType,2>(
+        UnitTest::ITKImageProcessingReaderTest::SCIFIOInputTestFile, scifioImage))
       )
-
-    // MetaIO
-    ImageType::Pointer metaioImage = WriteMetaIOTestFile();
+    // PNGIO
+    // PNG only supports 'unsigned char' and 'unsigned short' pixel types.
+    itk::Dream3DImage<PNGPixelType, 2>::Pointer pngioImage = WritePNGIOTestFile();
+    // PNGIO doesn't seem to take origin into consideration
+    pngioImage->SetOrigin(zeroOrigin);
     DREAM3D_REGISTER_TEST(
-      TestCompareImage(
-      UnitTest::ITKImageProcessingReaderTest::METAIOInputTestFile, metaioImage)
+      (TestCompareImage<PNGPixelType,2>(
+      UnitTest::ITKImageProcessingReaderTest::PNGIOInputTestFile, pngioImage))
+      )
+    // TIFFIO
+    itk::Dream3DImage<DefaultPixelType, 2>::Pointer tiffioImage = WriteTIFFIOTestFile();
+    // TIFFIO doesn't seem to take origin into consideration
+    tiffioImage->SetOrigin(zeroOrigin);
+    DREAM3D_REGISTER_TEST(
+      (TestCompareImage<DefaultPixelType,2>(
+      UnitTest::ITKImageProcessingReaderTest::TIFFIOInputTestFile, tiffioImage))
+      )
+    // MetaIO
+    itk::Dream3DImage<DefaultPixelType, 3>::Pointer metaioImage = WriteMetaIOTestFile();
+    DREAM3D_REGISTER_TEST(
+      (TestCompareImage<DefaultPixelType,3>(
+      UnitTest::ITKImageProcessingReaderTest::METAIOInputTestFile, metaioImage))
       )
 
     // NrrdIO
-    ImageType::Pointer nrrdioImage = WriteNRRDIOTestFile();
+    itk::Dream3DImage<DefaultPixelType, 3>::Pointer nrrdioImage = WriteNRRDIOTestFile();
     DREAM3D_REGISTER_TEST(
-      TestCompareImage(
-      UnitTest::ITKImageProcessingReaderTest::NRRDIOInputTestFile, nrrdioImage)
+      (TestCompareImage<DefaultPixelType,3>(
+      UnitTest::ITKImageProcessingReaderTest::NRRDIOInputTestFile, nrrdioImage))
       )
 
 

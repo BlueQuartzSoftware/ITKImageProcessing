@@ -1,4 +1,4 @@
-Itk_GaussianBlur {#itk_gaussianblur}
+ITKBinaryThreshold {#itkbinarythreshold}
 =============
 
 ## Group (Subgroup) ##

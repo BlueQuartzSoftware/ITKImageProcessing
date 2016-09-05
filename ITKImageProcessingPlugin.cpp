@@ -45,6 +45,20 @@
 // Include the MOC generated file for this class
 #include "moc_ITKImageProcessingPlugin.cpp"
 
+#include "itkSCIFIOImageIOFactory.h"
+#include <itkMetaImageIOFactory.h>
+#include <itkNrrdImageIOFactory.h>
+#include <itkPNGImageIOFactory.h>
+#include <itkTIFFImageIOFactory.h>
+#include <itkNiftiImageIOFactory.h>
+#include <itkPNGImageIOFactory.h>
+#include <itkGiplImageIOFactory.h>
+#include <itkVTKImageIOFactory.h>
+#include <itkStimulateImageIOFactory.h>
+#include <itkBioRadImageIOFactory.h>
+#include <itkGE4ImageIOFactory.h>
+#include <itkGE5ImageIOFactory.h>
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -59,7 +73,18 @@ m_Copyright("Copyright"),                               // Initialize ITKImagePr
 m_Filters(QList<QString>()),                        // Initialize ITKImageProcessing's List of Dependencies Here
 m_DidLoad(false)
 {
-
+  itk::NrrdImageIOFactory::RegisterOneFactory();
+  itk::PNGImageIOFactory::RegisterOneFactory();
+  itk::TIFFImageIOFactory::RegisterOneFactory();
+  itk::MetaImageIOFactory::RegisterOneFactory();
+  itk::NiftiImageIOFactory::RegisterOneFactory();
+  itk::GiplImageIOFactory::RegisterOneFactory();
+  itk::VTKImageIOFactory::RegisterOneFactory();
+  itk::StimulateImageIOFactory::RegisterOneFactory();
+  itk::BioRadImageIOFactory::RegisterOneFactory();
+  itk::GE4ImageIOFactory::RegisterOneFactory();
+  itk::GE5ImageIOFactory::RegisterOneFactory();
+  itk::SCIFIOImageIOFactory::RegisterOneFactory();
 }
 
 // -----------------------------------------------------------------------------

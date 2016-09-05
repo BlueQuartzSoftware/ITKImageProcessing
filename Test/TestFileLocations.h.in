@@ -65,7 +65,9 @@ namespace UnitTest
 {
   namespace ITKImageProcessingReaderTest
   {
-    const QString METAIOInputTestFile("@TEST_TEMP_DIR@/METAIOFile.mhd");
+    const QString METAIOInputTestFile("@TEST_TEMP_DIR@/METAIOFile.mha");
+    const QString TIFFIOInputTestFile("@TEST_TEMP_DIR@/TIFFIOFile.tif");
+	const QString PNGIOInputTestFile("@TEST_TEMP_DIR@/PNGIOFile.png");
     const QString NRRDIOInputTestFile("@TEST_TEMP_DIR@/NRRDIOFile.nrrd");
     const QString SCIFIOInputTestFile("@TEST_TEMP_DIR@/SCIFIOFile.tif");
     const QString NonExistentInputTestFile("@TEST_TEMP_DIR@/NotHere.ghost");
@@ -91,7 +93,7 @@ namespace UnitTest
 
 namespace UnitTest
 {
-  namespace Itk_GaussianBlurTest
+  namespace ITKGaussianBlurTest
   {
    const QString TestFile1("@TEST_TEMP_DIR@/TestFile1.txt");
    const QString TestFile2("@TEST_TEMP_DIR@/TestFile2.txt");
@@ -100,7 +102,7 @@ namespace UnitTest
 
 namespace UnitTest
 {
-  namespace Itk_BinaryThresholdTest
+  namespace ITKBinaryThresholdTest
   {
    const QString TestFile1("@TEST_TEMP_DIR@/TestFile1.txt");
    const QString TestFile2("@TEST_TEMP_DIR@/TestFile2.txt");

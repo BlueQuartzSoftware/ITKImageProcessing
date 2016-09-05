@@ -2,28 +2,26 @@
  * Your License or Copyright can go here
  */
 
-#ifndef _itk_binarythreshold_h_
-#define _itk_binarythreshold_h_
+#ifndef _ITKBinaryThreshold_h_
+#define _ITKBinaryThreshold_h_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 /**
- * @brief The Itk_BinaryThreshold class. See [Filter documentation](@ref itk_binarythreshold) for details.
+ * @brief The ITKBinaryThreshold class. See [Filter documentation](@ref ITKBinaryThreshold) for details.
  */
-class Itk_BinaryThreshold : public AbstractFilter
+class ITKBinaryThreshold : public AbstractFilter
 {
   Q_OBJECT
 
   public:
-    SIMPL_SHARED_POINTERS(Itk_BinaryThreshold)
-    SIMPL_STATIC_NEW_MACRO(Itk_BinaryThreshold)
-    SIMPL_TYPE_MACRO_SUPER(Itk_BinaryThreshold, AbstractFilter)
+    SIMPL_SHARED_POINTERS(ITKBinaryThreshold)
+    SIMPL_STATIC_NEW_MACRO(ITKBinaryThreshold)
+    SIMPL_TYPE_MACRO_SUPER(ITKBinaryThreshold, AbstractFilter)
 
-    virtual ~Itk_BinaryThreshold();
-
-    typedef uint8_t DefaultPixelType;
+    virtual ~ITKBinaryThreshold();
 
     SIMPL_FILTER_PARAMETER(DataArrayPath, SelectedCellArrayPath)
     Q_PROPERTY(DataArrayPath SelectedCellArrayPath READ getSelectedCellArrayPath WRITE setSelectedCellArrayPath)
@@ -34,9 +32,17 @@ class Itk_BinaryThreshold : public AbstractFilter
     SIMPL_FILTER_PARAMETER(bool, SaveAsNewArray)
     Q_PROPERTY(bool SaveAsNewArray READ getSaveAsNewArray WRITE setSaveAsNewArray)
 
-    SIMPL_FILTER_PARAMETER(int, ManualParameter)
-    Q_PROPERTY(int ManualParameter READ getManualParameter WRITE setManualParameter)
+    SIMPL_FILTER_PARAMETER(double, LowerThresholdValue)
+    Q_PROPERTY(double LowerThresholdValue READ getLowerThresholdValue WRITE setLowerThresholdValue)
 
+    SIMPL_FILTER_PARAMETER(double, UpperThresholdValue)
+    Q_PROPERTY(double UpperThresholdValue READ getUpperThresholdValue WRITE setUpperThresholdValue)
+
+    SIMPL_FILTER_PARAMETER(double, InsideValue)
+    Q_PROPERTY(double InsideValue READ getInsideValue WRITE setInsideValue)
+
+    SIMPL_FILTER_PARAMETER(double, OutsideValue)
+    Q_PROPERTY(double OutsideValue READ getOutsideValue WRITE setOutsideValue)
 
     /**
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -121,12 +127,25 @@ class Itk_BinaryThreshold : public AbstractFilter
     void preflightExecuted();
 
   protected:
-    Itk_BinaryThreshold();
+    ITKBinaryThreshold();
 
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
+    template<typename PixelType>
     void dataCheck();
+
+    /**
+    * @brief CheckLimits Checks that value is inside the bounds of the chosen PixelType
+    */
+    template<typename PixelType>
+    void CheckLimits(double value, QString name);
+
+    /**
+    * @brief Applies the filter
+    */
+    template<typename PixelType>
+    void filter();
 
     /**
      * @brief Initializes all the private instance variables.
@@ -135,12 +154,10 @@ class Itk_BinaryThreshold : public AbstractFilter
 
   private:
 
-    DEFINE_DATAARRAY_VARIABLE(DefaultPixelType, SelectedCellArray)
-    DEFINE_DATAARRAY_VARIABLE(DefaultPixelType, NewCellArray)
+    DEFINE_IDATAARRAY_VARIABLE(NewCellArray)
 
-
-    Itk_BinaryThreshold(const Itk_BinaryThreshold&); // Copy Constructor Not Implemented
-    void operator=(const Itk_BinaryThreshold&); // Operator '=' Not Implemented
+    ITKBinaryThreshold(const ITKBinaryThreshold&); // Copy Constructor Not Implemented
+    void operator=(const ITKBinaryThreshold&); // Operator '=' Not Implemented
 };
 
-#endif /* _Itk_BinaryThreshold_H_ */
+#endif /* _ITKBinaryThreshold_H_ */
