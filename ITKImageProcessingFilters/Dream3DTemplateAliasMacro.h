@@ -48,21 +48,21 @@
   Dream3DTemplateAliasMacroCase_##value(typeN, call, var_type, errorCondition, QUOTE(typeN))
 #define Dream3DTemplateAliasMacroCase_0(typeN, call, var_type, errorCondition, quotedType)           \
   if( var_type.compare(quotedType) == 0 )                                                            \
-  {                                                                                                \
+  {                                                                                                  \
     setErrorCondition(errorCondition);\
-    QString errorMessage = QString("Unsupported pixel type: %1.").arg(quotedType);                 \
-    notifyErrorMessage(getHumanLabel(), errorMessage, getErrorCondition());                        \
+    QString errorMessage = QString("Unsupported pixel type: %1.").arg(quotedType);                   \
+    notifyErrorMessage(getHumanLabel(), errorMessage, getErrorCondition());                          \
   }
 #define Dream3DTemplateAliasMacroCase_1(typeN, call, var_type, errorCondition, quotedType)           \
   if( var_type.compare(quotedType) == 0 )                                                            \
-  {                                                                                                \
+  {                                                                                                  \
     call<typeN>();                                                                                   \
   }
 
 
 // Define a macro to dispatch calls to a template instantiated over
 // the aliased scalar types.
-#define Dream3DTemplateAliasMacro(call, var_type, errorCondition)                                    \
+#define Dream3DTemplateAliasMacro(call, var_type, errorCondition)                                  \
   Dream3DTemplateAliasMacroCase(double, call, var_type, errorCondition)                            \
   else Dream3DTemplateAliasMacroCase(float, call, var_type, errorCondition)                        \
   else Dream3DTemplateAliasMacroCase(int8_t, call, var_type, errorCondition)                       \
@@ -81,9 +81,11 @@
   {                                                                                                  \
     IDataArray::Pointer array =                                                                      \
       getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, path);  \
-    if (getErrorCondition() < 0) { return; }                                                         \
-    QString type = array->getTypeAsString();                                                         \
-    Dream3DTemplateAliasMacro(call, type, errorCondition);                                           \
+    if (getErrorCondition() >= 0)                                                                    \
+    {                                                                                                \
+      QString type = array->getTypeAsString();                                                       \
+      Dream3DTemplateAliasMacro(call, type, errorCondition);                                         \
+    }                                                                                                \
   }
 
 #endif
