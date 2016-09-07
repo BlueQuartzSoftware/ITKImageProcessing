@@ -44,6 +44,8 @@
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkInPlaceDream3DDataToImageFilter.h"
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
+#include "ITKImageProcessingPlugin.h"
+
 
 // ITK includes
 #include <itkImageFileWriter.h>
@@ -75,7 +77,7 @@ ITKImageWriter::~ITKImageWriter()
 void ITKImageWriter::setupFilterParameters()
 {
 	FilterParameterVector parameters;
-	QString supportedExtensions = "*.png *.mhd *.mha *.nrrd *.tif";
+  QString supportedExtensions = ITKImageProcessingPlugin::getListSupportedFileExtensions();
 	parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Output File", FileName, FilterParameter::Parameter, ITKImageWriter, supportedExtensions));
 
 	parameters.push_back(SeparatorFilterParameter::New("Image Data", FilterParameter::RequiredArray));

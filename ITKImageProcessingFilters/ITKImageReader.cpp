@@ -42,6 +42,7 @@
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkInPlaceImageToDream3DDataFilter.h"
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
+#include "ITKImageProcessingPlugin.h"
 
 // Include the MOC generated file for this class
 #include "moc_ITKImageReader.cpp"
@@ -73,7 +74,7 @@ ITKImageReader::~ITKImageReader()
 void ITKImageReader::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  QString supportedExtensions = "*.png *.mhd *.mha *.nrrd *.tif";
+  QString supportedExtensions = ITKImageProcessingPlugin::getListSupportedFileExtensions();
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("File", FileName, FilterParameter::Parameter, ITKImageReader, supportedExtensions, "Image"));
   parameters.push_back(SIMPL_NEW_STRING_FP("Data Container", DataContainerName, FilterParameter::CreatedArray, ITKImageReader));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
