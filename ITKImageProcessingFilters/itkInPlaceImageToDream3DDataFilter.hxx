@@ -70,7 +70,7 @@ InPlaceImageToDream3DDataFilter<PixelType, VDimension>
 {
   DecoratorType *outputPtr = this->GetOutput();
   DataContainer::Pointer dataContainer = outputPtr->Get();
-  float tol = 0.000001;
+  //float tol = 0.000001;
   QVector<float> torigin(3, 0);
   QVector<float> tspacing(3, 1);
   QVector<size_t> tDims(3, 1);
@@ -138,8 +138,8 @@ InPlaceImageToDream3DDataFilter<PixelType, VDimension>
 	QVector<size_t> matDims = attrMat->getTupleDimensions();
 	if (matDims != tDims)
 	{
-		if (!(attrMat->doesAttributeArrayExist(m_DataArrayName.c_str()) && attrMat->getNumAttributeArrays() == 1
-			|| !attrMat->doesAttributeArrayExist(m_DataArrayName.c_str()) && attrMat->getNumAttributeArrays() == 0))
+    if (! ((attrMat->doesAttributeArrayExist(m_DataArrayName.c_str()) && attrMat->getNumAttributeArrays() == 1)
+      || ! (attrMat->doesAttributeArrayExist(m_DataArrayName.c_str()) && attrMat->getNumAttributeArrays() == 0)) )
 		{
 			itkExceptionMacro("Tuples dimension of existing matrix array do not match image size and other attribute arrays are contained in this attribute matrix.");
 		}

@@ -37,10 +37,10 @@ ITKGaussianBlur::ITKGaussianBlur() :
   AbstractFilter(),
   m_SelectedCellArrayPath("", "", ""),
   m_NewCellArrayName(""),
-  m_Variance(1),
-  m_MaximumError(0.01),
+  m_SaveAsNewArray(true),
   m_MaximumKernelWidth(4),
-  m_SaveAsNewArray(true)
+  m_Variance(1),
+  m_MaximumError(0.01)
 {
   initialize();
   setupFilterParameters();

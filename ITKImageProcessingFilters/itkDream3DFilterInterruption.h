@@ -26,7 +26,7 @@ namespace itk
 
   public:
 
-    void Execute(Object *caller, const EventObject & event)
+    void Execute(Object *caller, const EventObject & event) override
     {
       if (m_Filter && m_Filter->getCancel())
       {
@@ -43,7 +43,7 @@ namespace itk
       object->AbortGenerateDataOff();
     }
 
-    void Execute(const Object *, const EventObject &) // has to be implemented
+    void Execute(const Object *, const EventObject &) override // has to be implemented
     {
     }
 
