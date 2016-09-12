@@ -289,7 +289,7 @@ namespace ZeissMetaEntry {
   {
 
     StringZeissMetaEntry::Pointer srcPtr = std::dynamic_pointer_cast<StringZeissMetaEntry>(src);
-    Q_ASSERT_X(srcPtr.get() != NULL, "Could not Cast to StringZeissMetaEntry", "");
+    Q_ASSERT_X(srcPtr.get() != nullptr, "Could not Cast to StringZeissMetaEntry", "");
 
 
     typename DestMetaData::Pointer destPtr = DestMetaData::New();

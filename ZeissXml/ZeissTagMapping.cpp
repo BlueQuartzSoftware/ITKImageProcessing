@@ -38,7 +38,7 @@ ZeissTagMapping::Pointer ZeissTagMapping::instance()
 {
   static ZeissTagMapping::Pointer singleton;
 
-  if (singleton.get() == NULL)
+  if (singleton.get() == nullptr)
   {
     singleton.reset (new ZeissTagMapping() );
   }
@@ -98,7 +98,7 @@ AbstractZeissMetaData::Pointer ZeissTagMapping::metaDataForTagName(const QString
   }
 
   ZeissMetaFactory::Pointer f = _idFactoryMap[idTag];
-  if (NULL != f.get() )
+  if (nullptr != f.get() )
   {
     AbstractZeissMetaData::Pointer ptr = f->createMetaEntry();
     ptr->setZeissIdTag(idTag);
@@ -113,7 +113,7 @@ AbstractZeissMetaData::Pointer ZeissTagMapping::metaDataForTagName(const QString
 AbstractZeissMetaData::Pointer ZeissTagMapping::metaDataForId(int idTag, const QString& value)
 {
   ZeissMetaFactory::Pointer f = _idFactoryMap[idTag];
-  if (NULL != f.get() )
+  if (nullptr != f.get() )
   {
     AbstractZeissMetaData::Pointer ptr = f->createMetaEntry();
     ptr->setZeissIdTag(idTag);

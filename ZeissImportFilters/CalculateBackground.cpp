@@ -134,7 +134,7 @@ void CalculateBackground::dataCheck()
 
   AttributeMatrix::Pointer am = getDataContainerArray()->getAttributeMatrix(m_AttributeMatrixName);
 
-  if (am.get() == NULL)
+  if (am.get() == nullptr)
   {
     setErrorCondition(-76000);
     notifyErrorMessage(getHumanLabel(), "The attribute matrix has not been selected properly", -76000);
@@ -164,7 +164,7 @@ void CalculateBackground::dataCheck()
     //        imagePtr = std::dynamic_pointer_cast<DataArray<uint8_t> >(pointerList[i]);
 
 
-    if(NULL == imagePtr)
+    if(nullptr == imagePtr)
     {
       setErrorCondition(-76001);
       notifyErrorMessage(getHumanLabel(), "The data was not found", -76001);
@@ -185,7 +185,7 @@ void CalculateBackground::dataCheck()
 
   setDataContainerName(getAttributeMatrixName().getDataContainerName());
   DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0 || NULL == m) { return; }
+  if(getErrorCondition() < 0 || nullptr == m) { return; }
 
   QVector<size_t> tDims(1, 0);
   AttributeMatrix::Pointer backgroundAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getBackgroundAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::Cell);
@@ -196,7 +196,7 @@ void CalculateBackground::dataCheck()
   dims[0] = 1;
   tempPath.update(getDataContainerName(), getBackgroundAttributeMatrixName(), getBackgroundImageArrayName() );
   m_BackgroundImagePtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_BackgroundImagePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_BackgroundImagePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_BackgroundImage = m_BackgroundImagePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(getErrorCondition() < 0) { return; }
 
@@ -252,7 +252,7 @@ void CalculateBackground::execute()
 
   UInt8ArrayType::Pointer imagePtr = UInt8ArrayType::NullPointer();
   IDataArray::Pointer iDataArray = IDataArray::NullPointer();
-  uint8_t* image = NULL;
+  uint8_t* image = nullptr;
 
   std::vector<double> background(m_TotalPoints, 0);
   std::vector<double> counter(m_TotalPoints, 0);
@@ -279,7 +279,7 @@ void CalculateBackground::execute()
     m_ImageDataArrayPath.update(getDataContainerName(), getAttributeMatrixName().getAttributeMatrixName(), names[i]);
     iDataArray = getDataContainerArray()->getPrereqIDataArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, m_ImageDataArrayPath);
     imagePtr = std::dynamic_pointer_cast<DataArray<uint8_t> >(iDataArray);
-    if(NULL != imagePtr.get())
+    if(nullptr != imagePtr.get())
     {
       //            int64_t totalPoints = imagePtr->getNumberOfTuples();
       image = imagePtr->getPointer(0);
@@ -330,7 +330,7 @@ void CalculateBackground::execute()
   tDims[1] = dims[1];
   tDims[2] = dims[2];
   m->getAttributeMatrix(getBackgroundAttributeMatrixName())->resizeAttributeArrays(tDims);
-  if( NULL != m_BackgroundImagePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  if( nullptr != m_BackgroundImagePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_BackgroundImage = m_BackgroundImagePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
 
@@ -353,7 +353,7 @@ void CalculateBackground::execute()
       m_ImageDataArrayPath.update(getDataContainerName(), getAttributeMatrixName().getAttributeMatrixName(), names[i]);
       iDataArray = getDataContainerArray()->getPrereqIDataArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, m_ImageDataArrayPath);
       imagePtr = std::dynamic_pointer_cast<DataArray<uint8_t> >(iDataArray);
-      if(NULL != imagePtr.get())
+      if(nullptr != imagePtr.get())
       {
         image = imagePtr->getPointer(0);
 
@@ -380,7 +380,7 @@ void CalculateBackground::execute()
       m_ImageDataArrayPath.update(getDataContainerName(), getAttributeMatrixName().getAttributeMatrixName(), names[i]);
       iDataArray = getDataContainerArray()->getPrereqIDataArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, m_ImageDataArrayPath);
       imagePtr = std::dynamic_pointer_cast<DataArray<uint8_t> >(iDataArray);
-      if(NULL != imagePtr.get())
+      if(nullptr != imagePtr.get())
       {
         image = imagePtr->getPointer(0);
 

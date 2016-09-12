@@ -189,12 +189,12 @@ void ZeissImportFilter::dataCheck()
   QString filtName = ZeissImportConstants::ImageProcessingFilters::k_ReadImageFilterClassName;
   FilterManager* fm = FilterManager::Instance();
   IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
-  if (NULL != filterFactory.get() )
+  if (nullptr != filterFactory.get() )
   {
     // If we get this far, the Factory is good so creating the filter should not fail unless something has
     // horribly gone wrong in which case the system is going to come down quickly after this.
     AbstractFilter::Pointer filter = filterFactory->create();
-    if(NULL == filter.get())
+    if(nullptr == filter.get())
     {
       ss = QObject::tr("The 'ItkReadImage' filter is not Available, did the ImageProcessing Plugin Load.");
       setErrorCondition(-391);
@@ -207,12 +207,12 @@ void ZeissImportFilter::dataCheck()
     QString filtName = "RGBToGray";
     FilterManager* fm = FilterManager::Instance();
     IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
-    if (NULL != filterFactory.get() )
+    if (nullptr != filterFactory.get() )
     {
       // If we get this far, the Factory is good so creating the filter should not fail unless something has
       // horribly gone wrong in which case the system is going to come down quickly after this.
       AbstractFilter::Pointer filter = filterFactory->create();
-      if(NULL == filter.get())
+      if(nullptr == filter.get())
       {
         ss = QObject::tr("The 'RGBToGray' filter is not Available, did the ImageProcessing Plugin Load.");
         setErrorCondition(-391);
@@ -223,7 +223,7 @@ void ZeissImportFilter::dataCheck()
   if(getErrorCondition() < 0) { return; }
 
   DataContainerArray::Pointer dca = getDataContainerArray();
-  if(NULL == dca.get())
+  if(nullptr == dca.get())
   {
     ss = QObject::tr("%1 needs a valid DataContainerArray").arg(ClassName());
     setErrorCondition(-390);
@@ -337,7 +337,7 @@ int ZeissImportFilter::readMetaXml(QIODevice* device)
 
     // First parse the <ROOT><Tags> section to get the values of how many images we are going to have
     rootTagsSection = parseTagsSection(tags);
-    if (NULL == rootTagsSection.get())
+    if (nullptr == rootTagsSection.get())
     {
       return -1;
     }
@@ -395,7 +395,7 @@ ZeissTagsXmlSection::Pointer ZeissImportFilter::parseTagsSection(QDomElement& ta
 
     qint32 idValue =  ixEle.text().toInt(&ok, 10);
     AbstractZeissMetaData::Pointer ptr = ZeissTagMapping::instance()->metaDataForId(idValue, vxEle.text());
-    if (NULL != ptr.get() && vxEle.text().size() > 0)
+    if (nullptr != ptr.get() && vxEle.text().size() > 0)
     {
       rootTagsSection->addMetaDataEntry(ptr);
     }
@@ -437,7 +437,7 @@ void ZeissImportFilter::parseImages(QDomElement& root, ZeissTagsXmlSection::Poin
   AbstractZeissMetaData::Pointer ptr = rootTagsSection->getEntry(Zeiss::MetaXML::ImageCountRawId);
 
   Int32ZeissMetaEntry::Pointer imageCountPtr = ZeissMetaEntry::convert<Int32ZeissMetaEntry>(ptr);
-  Q_ASSERT_X(imageCountPtr.get() != NULL, "Could not Cast to Int32ZeissMetaEntry", "");
+  Q_ASSERT_X(imageCountPtr.get() != nullptr, "Could not Cast to Int32ZeissMetaEntry", "");
 
   qint32 imageCount = imageCountPtr->getValue();
 
@@ -507,7 +507,7 @@ void ZeissImportFilter::parseImages(QDomElement& root, ZeissTagsXmlSection::Poin
 
 
     ZeissTagsXmlSection::Pointer photoTagsSection = parseTagsSection(tags);
-    if(NULL == photoTagsSection.get() )
+    if(nullptr == photoTagsSection.get() )
     {
       QString ss = QObject::tr("Error Parsing the <ROOT><%1><Tags> element. Aborting Parsing. Is the file a Zeiss _meta.xml file").arg(pTag);
       setErrorCondition(-70004);
@@ -518,7 +518,7 @@ void ZeissImportFilter::parseImages(QDomElement& root, ZeissTagsXmlSection::Poin
     AbstractZeissMetaData::Pointer ptr = photoTagsSection->getEntry(Zeiss::MetaXML::ImageTileIndexId);
 
     Int32ZeissMetaEntry::Pointer int32Entry = ZeissMetaEntry::convert<Int32ZeissMetaEntry>(ptr);
-    Q_ASSERT_X(int32Entry.get() != NULL, "Could not Cast to Int32ZeissMetaEntry", "");
+    Q_ASSERT_X(int32Entry.get() != nullptr, "Could not Cast to Int32ZeissMetaEntry", "");
 
     if(p == 0)
     {
@@ -646,7 +646,7 @@ void ZeissImportFilter::importImage(const QString& imageName, const QString& pTa
   QString filtName = ZeissImportConstants::ImageProcessingFilters::k_ReadImageFilterClassName;
   FilterManager* fm = FilterManager::Instance();
   IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
-  if (NULL != filterFactory.get() )
+  if (nullptr != filterFactory.get() )
   {
     // If we get this far, the Factory is good so creating the filter should not fail unless something has
     // horribly gone wrong in which case the system is going to come down quickly after this.
@@ -723,7 +723,7 @@ void ZeissImportFilter::convertToGrayScale(const QString& imageName, const QStri
   QString filtName = ZeissImportConstants::ImageProcessingFilters::k_RgbToGrayFilterClassName;
   FilterManager* fm = FilterManager::Instance();
   IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
-  if (NULL != filterFactory.get() )
+  if (nullptr != filterFactory.get() )
   {
     // If we get this far, the Factory is good so creating the filter should not fail unless something has
     // horribly gone wrong in which case the system is going to come down quickly after this.
@@ -810,13 +810,13 @@ QVector<size_t> ZeissImportFilter::getImageDimensions(ZeissTagsXmlSection::Point
   QVector<size_t> dims(3);
   AbstractZeissMetaData::Pointer ptr = photoTagsSection->getEntry(Zeiss::MetaXML::ImageWidthPixelId);
   Int32ZeissMetaEntry::Pointer int32Entry = ZeissMetaEntry::convert<Int32ZeissMetaEntry>(ptr);
-  Q_ASSERT_X(int32Entry.get() != NULL, "Could not Cast to Int32ZeissMetaEntry", "");
+  Q_ASSERT_X(int32Entry.get() != nullptr, "Could not Cast to Int32ZeissMetaEntry", "");
 
   dims[0] = int32Entry->getValue();
 
   ptr = photoTagsSection->getEntry(Zeiss::MetaXML::ImageHeightPixelId);
   int32Entry = ZeissMetaEntry::convert<Int32ZeissMetaEntry>(ptr);
-  Q_ASSERT_X(int32Entry.get() != NULL, "Could not Cast to Int32ZeissMetaEntry", "");
+  Q_ASSERT_X(int32Entry.get() != nullptr, "Could not Cast to Int32ZeissMetaEntry", "");
 
   dims[1] = int32Entry->getValue();
   dims[2] = 1;
