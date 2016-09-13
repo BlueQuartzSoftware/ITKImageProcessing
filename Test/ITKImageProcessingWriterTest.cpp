@@ -182,7 +182,7 @@ class ITKImageProcessingWriterTest
   bool CompareAttributeMatrices(const AttributeMatrix::Pointer &baselineMatrix, const AttributeMatrix::Pointer &inputMatrix)
   {
       // Compare number of attributes
-      DREAM3D_REQUIRE_EQUAL(baselineMatrix->getNumTuples(),inputMatrix->getNumTuples());
+      DREAM3D_REQUIRE_EQUAL(baselineMatrix->getNumberOfTuples(),inputMatrix->getNumberOfTuples());
       DREAM3D_REQUIRE_EQUAL(baselineMatrix->getNumAttributeArrays(), inputMatrix->getNumAttributeArrays());
       QVector<size_t> baselineTupleDimensions = baselineMatrix->getTupleDimensions();
       QVector<size_t> inputTupleDimensions = inputMatrix->getTupleDimensions();
