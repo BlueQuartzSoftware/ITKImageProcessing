@@ -46,6 +46,7 @@
 #include "moc_ITKImageProcessingPlugin.cpp"
 
 #include "itkSCIFIOImageIOFactory.h"
+#include <itkJPEGImageIOFactory.h>
 #include <itkMetaImageIOFactory.h>
 #include <itkNrrdImageIOFactory.h>
 #include <itkPNGImageIOFactory.h>
@@ -73,6 +74,7 @@ m_Copyright("Copyright"),                               // Initialize ITKImagePr
 m_Filters(QList<QString>()),                        // Initialize ITKImageProcessing's List of Dependencies Here
 m_DidLoad(false)
 {
+  itk::JPEGImageIOFactory::RegisterOneFactory();
   itk::NrrdImageIOFactory::RegisterOneFactory();
   itk::PNGImageIOFactory::RegisterOneFactory();
   itk::TIFFImageIOFactory::RegisterOneFactory();
