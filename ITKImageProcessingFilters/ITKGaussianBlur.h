@@ -6,15 +6,14 @@
 #define _ITKGaussianBlur_h_
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
-#include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DFilterInterruption.h"
+#include "ITKImageBase.h"
 
 /**
  * @brief The ITKGaussianBlur class. See [Filter documentation](@ref ITKGaussianBlur) for details.
  */
-class ITKGaussianBlur : public AbstractFilter
+class ITKGaussianBlur : public ITKImageBase
 {
   Q_OBJECT
 
@@ -25,15 +24,6 @@ class ITKGaussianBlur : public AbstractFilter
 
     virtual ~ITKGaussianBlur();
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, SelectedCellArrayPath)
-    Q_PROPERTY(DataArrayPath SelectedCellArrayPath READ getSelectedCellArrayPath WRITE setSelectedCellArrayPath)
-
-    SIMPL_FILTER_PARAMETER(QString, NewCellArrayName)
-    Q_PROPERTY(QString NewCellArrayName READ getNewCellArrayName WRITE setNewCellArrayName)
-
-    SIMPL_FILTER_PARAMETER(bool, SaveAsNewArray)
-    Q_PROPERTY(bool SaveAsNewArray READ getSaveAsNewArray WRITE setSaveAsNewArray)
-
     SIMPL_FILTER_PARAMETER(int, MaximumKernelWidth)
     Q_PROPERTY(int MaximumKernelWidth READ getMaximumKernelWidth WRITE setMaximumKernelWidth)
 
@@ -42,39 +32,11 @@ class ITKGaussianBlur : public AbstractFilter
 
     SIMPL_FILTER_PARAMETER(double, MaximumError)
     Q_PROPERTY(double MaximumError READ getMaximumError WRITE setMaximumError)
-    /**
-     * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getCompiledLibraryName();
-
-    /**
-     * @brief getBrandingString Returns the branding string for the filter, which is a tag
-     * used to denote the filter's association with specific plugins
-     * @return Branding string
-    */
-    virtual const QString getBrandingString();
-
-    /**
-     * @brief getFilterVersion Returns a version string for this filter. Default
-     * value is an empty string.
-     * @return
-     */
-    virtual const QString getFilterVersion();
 
     /**
      * @brief newFilterInstance Reimplemented from @see AbstractFilter class
      */
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
-
-    /**
-     * @brief getGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getGroupName();
-
-    /**
-     * @brief getSubGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getSubGroupName();
 
     /**
      * @brief getHumanLabel Reimplemented from @see AbstractFilter class
@@ -91,46 +53,23 @@ class ITKGaussianBlur : public AbstractFilter
      */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-    /**
-     * @brief execute Reimplemented from @see AbstractFilter class
-     */
-    virtual void execute();
-
-    /**
-    * @brief preflight Reimplemented from @see AbstractFilter class
-    */
-    virtual void preflight();
-
-  signals:
-    /**
-     * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
-     * be pushed from a user-facing control (such as a widget)
-     * @param filter Filter instance pointer 
-     */
-    void updateFilterParameters(AbstractFilter* filter);
-
-    /**
-     * @brief parametersChanged Emitted when any Filter parameter is changed internally
-     */
-    void parametersChanged();
-
-    /**
-     * @brief preflightAboutToExecute Emitted just before calling dataCheck()
-     */
-    void preflightAboutToExecute();
-
-    /**
-     * @brief preflightExecuted Emitted just after calling dataCheck()
-     */
-    void preflightExecuted();
-
   protected:
     ITKGaussianBlur();
+
+    /**
+     * @brief dataCheckInternal overloads dataCheckInternal in ITKImageBase and calls templated dataCheck
+     */
+    void virtual dataCheckInternal() override;
+
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     template<typename PixelType>
     void dataCheck();
+
+    /* @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
+    */
+    void virtual filterInternal() override;
 
     /**
     * @brief Applies the filter

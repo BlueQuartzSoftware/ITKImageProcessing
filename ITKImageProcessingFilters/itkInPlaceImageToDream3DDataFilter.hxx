@@ -72,9 +72,7 @@ InPlaceImageToDream3DDataFilter<PixelType, VDimension>
   DataContainer::Pointer dataContainer = outputPtr->Get();
   //float tol = 0.000001;
   QVector<float> torigin(3, 0);
-  // Setting spacing to 0 means dimension is not used. Used to know if
-  // image is 2D or 3D. Setting dimensions to 0 leads to crashes
-  QVector<float> tspacing(3, 0);
+  QVector<float> tspacing(3, 1);
   QVector<size_t> tDims(3, 1);
   // Get Input image properties
   ImagePointer inputPtr = dynamic_cast<ImageType*>(this->GetInput(0));

@@ -17,12 +17,7 @@
 
 #include "sitkExplicitITK.h"
 
-#include "ITKImageProcessing/ITKImageProcessingConstants.h"
-#include "ITKImageProcessing/ITKImageProcessingVersion.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
-#include "ITKImageProcessing/ITKImageProcessingFilters/itkInPlaceDream3DDataToImageFilter.h"
-#include "ITKImageProcessing/ITKImageProcessingFilters/itkInPlaceImageToDream3DDataFilter.h"
-#include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DFilterInterruption.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
 
 //thresholding filter
@@ -35,17 +30,12 @@
 //
 // -----------------------------------------------------------------------------
 ITKBinaryThreshold::ITKBinaryThreshold() :
-  AbstractFilter(),
-  m_SelectedCellArrayPath("", "", ""),
-  m_NewCellArrayName(""),
-  m_SaveAsNewArray(true),
+  ITKImageBase(),
   m_LowerThresholdValue(128.0),
   m_UpperThresholdValue(255.0),
   m_InsideValue(255.0),
-  m_OutsideValue(0),
-  m_NewCellArray(nullptr)
+  m_OutsideValue(0)
 {
-  initialize();
   setupFilterParameters();
 }
 
@@ -102,15 +92,6 @@ void ITKBinaryThreshold::readFilterParameters(AbstractFilterParametersReader* re
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ITKBinaryThreshold::initialize()
-{
-  setErrorCondition(0);
-  setCancel(false);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 template<typename PixelType>
 void ITKBinaryThreshold::CheckLimits(double value, QString name)
 {
@@ -146,48 +127,15 @@ void ITKBinaryThreshold::dataCheck()
     notifyErrorMessage(getHumanLabel(),"Lower threshold value must be lesser than upper threshold value", getErrorCondition());
     return;
   }
-  // Check data array
-  typename DataArray<PixelType>::WeakPointer selectedCellArrayPtr;
-  PixelType* selectedCellArray;
-
-  DataArrayPath tempPath;
-
-  QVector<size_t> dims(1, 1);
-  selectedCellArrayPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<PixelType>, AbstractFilter>(this, getSelectedCellArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( nullptr != selectedCellArrayPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  { selectedCellArray = selectedCellArrayPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() < 0) { return; }
-
-  ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(getSelectedCellArrayPath().getDataContainerName())->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
-  if(getErrorCondition() < 0 || nullptr == image.get()) { return; }
-
-  if(m_SaveAsNewArray == true)
-  {
-    tempPath.update(getSelectedCellArrayPath().getDataContainerName(), getSelectedCellArrayPath().getAttributeMatrixName(), getNewCellArrayName() );
-    m_NewCellArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<PixelType>, AbstractFilter, PixelType>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if( nullptr != m_NewCellArrayPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-    { m_NewCellArray = m_NewCellArrayPtr.lock()->getVoidPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  }
-  else
-  {
-    m_NewCellArrayPtr = DataArray<PixelType>::NullPointer();
-    m_NewCellArray = nullptr;
-  }
-  
+  ITKImageBase::dataCheck<PixelType>();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ITKBinaryThreshold::preflight()
+void ITKBinaryThreshold::dataCheckInternal()
 {
-  // These are the REQUIRED lines of CODE to make sure the filter behaves correctly
-  setInPreflight(true); // Set the fact that we are preflighting.
-  emit preflightAboutToExecute(); // Emit this signal so that other widgets can do one file update
-  emit updateFilterParameters(this); // Emit this signal to have the widgets push their values down to the filter
-  Dream3DArraySwitchMacro(dataCheck, getSelectedCellArrayPath(), -4);// Run our DataCheck to make sure everthing is setup correctly
-  emit preflightExecuted(); // We are done preflighting this filter
-  setInPreflight(false); // Inform the system this filter is NOT in preflight mode anymore.
+  Dream3DArraySwitchMacro(this->dataCheck, getSelectedCellArrayPath(), -4);// Run our DataCheck to make sure everthing is setup correctly
 }
 
 // -----------------------------------------------------------------------------
@@ -197,83 +145,26 @@ void ITKBinaryThreshold::preflight()
 template<typename PixelType>
 void ITKBinaryThreshold::filter()
 {
-  try
-  {
-    DataArrayPath dap = getSelectedCellArrayPath();
-    DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(dap.getDataContainerName());
-
     const unsigned int Dimension = 3;
     typedef itk::Dream3DImage<PixelType, Dimension> ImageType;
-    typedef itk::InPlaceDream3DDataToImageFilter<PixelType, Dimension> FilterType;
-    // Create a Bridge to wrap an existing DREAM.3D array with an ItkImage container
-    typename FilterType::Pointer filter = FilterType::New();
-    filter->SetInput(dc);
-    filter->SetInPlace(true);
-    filter->SetAttributeMatrixArrayName(getSelectedCellArrayPath().getAttributeMatrixName().toStdString());
-    filter->SetDataArrayName(getSelectedCellArrayPath().getDataArrayName().toStdString());
-
-    itk::Dream3DFilterInterruption::Pointer interruption = itk::Dream3DFilterInterruption::New();
-    interruption->SetFilter(this);
-
     //define threshold filters
+    typedef itk::ImageToImageFilter <ImageType, ImageType> ImageToImageFilterType;
     typedef itk::BinaryThresholdImageFilter <ImageType, ImageType> BinaryThresholdImageFilterType;
-
     //create Itk's binary threshold filter object
     typename BinaryThresholdImageFilterType::Pointer thresholdFilter = BinaryThresholdImageFilterType::New();
-    thresholdFilter->SetInput(filter->GetOutput());
     thresholdFilter->SetLowerThreshold(static_cast<PixelType>(m_LowerThresholdValue));
-    thresholdFilter->AddObserver(itk::ProgressEvent(), interruption);
     thresholdFilter->SetUpperThreshold(static_cast<PixelType>(m_UpperThresholdValue));
     thresholdFilter->SetInsideValue(static_cast<PixelType>(m_InsideValue));
     thresholdFilter->SetOutsideValue(static_cast<PixelType>(m_OutsideValue));
-    thresholdFilter->Update();
-
-    typename ImageType::Pointer image = ImageType::New();
-    //image = thresholdFilter->GetOutput();
-    image = thresholdFilter->GetOutput();
-    image->DisconnectPipeline();
-    std::string outputArrayName(getNewCellArrayName().toStdString());
-
-    if (getSaveAsNewArray() == false)
-    {
-      outputArrayName = m_SelectedCellArrayPath.getDataArrayName().toStdString();
-      AttributeMatrix::Pointer attrMat = dc->getAttributeMatrix(m_SelectedCellArrayPath.getAttributeMatrixName());
-      // Remove the original input data array
-      attrMat->removeAttributeArray(m_SelectedCellArrayPath.getDataArrayName());
-    }
-
-    typename itk::InPlaceImageToDream3DDataFilter<PixelType, 3>::Pointer toDream3DFilter = itk::InPlaceImageToDream3DDataFilter<PixelType, 3>::New();
-    toDream3DFilter->SetInput(image);
-    toDream3DFilter->SetInPlace(true);
-    toDream3DFilter->SetAttributeMatrixArrayName(getSelectedCellArrayPath().getAttributeMatrixName().toStdString());
-    toDream3DFilter->SetDataArrayName(outputArrayName);
-    toDream3DFilter->SetDataContainer(dc);
-    toDream3DFilter->Update();
-
-
-  }
-  catch (itk::ExceptionObject & err)
-  {
-    setErrorCondition(-5);
-    QString errorMessage = "ITK exception was thrown while filtering input image: %1";
-    notifyErrorMessage(getHumanLabel(), errorMessage.arg(err.GetDescription()), getErrorCondition());
-    return;
-  }
-
-  notifyStatusMessage(getHumanLabel(), "Complete");
-
+    this->ITKImageBase::filter<PixelType, Dimension, BinaryThresholdImageFilterType>(thresholdFilter);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ITKBinaryThreshold::execute()
+void ITKBinaryThreshold::filterInternal()
 {
-  initialize();
-  Dream3DArraySwitchMacro(dataCheck, getSelectedCellArrayPath(), -4);// Run our DataCheck to make sure everthing is setup correctly
-  if (getErrorCondition() < 0) { return; }
-  if (getCancel() == true) { return; }
-  Dream3DArraySwitchMacro(filter, getSelectedCellArrayPath(), -4);// Run our DataCheck to make sure everthing is setup correctly
+  Dream3DArraySwitchMacro(this->filter, getSelectedCellArrayPath(), -4);// Run filter
 }
 
 // -----------------------------------------------------------------------------
@@ -288,43 +179,6 @@ AbstractFilter::Pointer ITKBinaryThreshold::newFilterInstance(bool copyFilterPar
   }
   return filter;
 }
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-const QString ITKBinaryThreshold::getCompiledLibraryName()
-{ return ITKImageProcessingConstants::ITKImageProcessingBaseName; }
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-const QString ITKBinaryThreshold::getBrandingString()
-{
-  return "ITKImageProcessing";
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-const QString ITKBinaryThreshold::getFilterVersion()
-{
-  QString version;
-  QTextStream vStream(&version);
-  vStream <<  ITKImageProcessing::Version::Major() << "." << ITKImageProcessing::Version::Minor() << "." << ITKImageProcessing::Version::Patch();
-  return version;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-const QString ITKBinaryThreshold::getGroupName()
-{ return "Image Processing"; }
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-const QString ITKBinaryThreshold::getSubGroupName()
-{ return "ImageProcessing"; }
 
 // -----------------------------------------------------------------------------
 //

@@ -204,9 +204,9 @@ void ITKImageWriter::writeImage()
   ImageGeom::Pointer imageGeometry =
     getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(
     this, getImageArrayPath().getDataContainerName());
-  QVector<float> resolution(3, 0);
-  imageGeometry->getResolution(resolution[0], resolution[1], resolution[2]);
-  if (resolution[2] < 0.000001) // Epsilon since comparing floats, not ints
+  QVector<size_t> tDims(3, 0);
+  imageGeometry->getResolution(tDims[0], tDims[1], tDims[2]);
+  if (resolution[2] == 1)
   {
     // 2D image
     writeImage<PixelType, 2>();
