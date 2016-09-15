@@ -220,7 +220,7 @@ template<typename TPixel, unsigned int dimensions>
 void ITKImageReader::readImage(const QString& filename, bool dataCheck)
 {
     DataContainer::Pointer container = getDataContainerArray()->getDataContainer(getDataContainerName());
-    if (NULL == container.get())
+    if (nullptr == container.get())
     {
         setErrorCondition(-4);
         notifyErrorMessage(getHumanLabel(), "Container not found.", getErrorCondition());
@@ -259,7 +259,7 @@ void ITKImageReader::readImage(bool dataCheck)
     {
         QString filename = getFileName();
         itk::ImageIOBase::Pointer imageIO = itk::ImageIOFactory::CreateImageIO(filename.toLatin1(), itk::ImageIOFactory::ReadMode);
-        if (NULL == imageIO)
+        if (nullptr == imageIO)
         {
             setErrorCondition(-5);
             QString errorMessage = "ITK could not read the given file \"%1\". Format is likely unsupported.";

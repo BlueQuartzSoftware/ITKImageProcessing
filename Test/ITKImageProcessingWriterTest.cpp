@@ -79,9 +79,9 @@ class ITKImageProcessingWriterTest
   {
     FilterManager* fm = FilterManager::Instance();
     IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filterName);
-    if (NULL == filterFactory.get())
+    if (nullptr == filterFactory.get())
     {
-      return NULL;
+      return nullptr;
     }
     return filterFactory->create();
   }
@@ -322,7 +322,7 @@ class ITKImageProcessingWriterTest
   // -----------------------------------------------------------------------------
   int TestAvailability(const QString& filterName)
   {
-    if (NULL == GetFilterByName(filterName))
+    if (nullptr == GetFilterByName(filterName))
     {
       QString msg;
       msg = "The test requires the use of %1 filter which is found in the ITKImageProcessing Plugin";
