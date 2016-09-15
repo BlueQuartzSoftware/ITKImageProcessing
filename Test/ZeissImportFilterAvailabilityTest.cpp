@@ -70,7 +70,7 @@ void TestFilterAvailability()
   QString filtName = ZeissImportConstants::ImageProcessingFilters::k_ReadImageFilterClassName;
   FilterManager* fm = FilterManager::Instance();
   IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
-  if (NULL == filterFactory.get() )
+  if (nullptr == filterFactory.get() )
   {
     std::stringstream ss;
     ss << "The ZeissImport Plugin Requires the use of the " << filtName.toStdString() << " filter which is found in the ImageProcessing Plugin";
@@ -80,7 +80,7 @@ void TestFilterAvailability()
   filtName = ZeissImportConstants::ImageProcessingFilters::k_RgbToGrayFilterClassName;
   fm = FilterManager::Instance();
   filterFactory = fm->getFactoryForFilter(filtName);
-  if (NULL == filterFactory.get() )
+  if (nullptr == filterFactory.get() )
   {
     std::stringstream ss;
     ss << "The ZeissImport Plugin Requires the use of the " << filtName.toStdString() << " filter which is found in the ImageProcessing Plugin";

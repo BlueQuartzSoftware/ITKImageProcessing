@@ -164,12 +164,12 @@ int32_t ZeissXMLReader::_parseXMLFile()
   // Create and initialise an instance of the parser.
   ExpatParser parser( static_cast<ExpatEvtHandler*>( this ) );
   //this->_parser = &parser;
-  parser.Create(NULL, NULL);
+  parser.Create(nullptr, nullptr);
   parser.EnableElementHandler();
   parser.EnableCharacterDataHandler();
   // Load the XML file.
   FILE*  fh    = fopen(_xmlFilename.c_str(), "r");
-  if (NULL == fh)
+  if (nullptr == fh)
   {
     std::cout << "Could Not Open XML File for reading: " << _xmlFilename << std::endl;
     return -1;
@@ -263,7 +263,7 @@ void ZeissXMLReader::OnEndElement(const XML_Char* name)
 void ZeissXMLReader::onTags_StartTag(const XML_Char* name, const XML_Char** attrs)
 {
 //  std::cout << "Starting: " << name << std::endl;
-  if (m_CurrentTagSection.get() == NULL)
+  if (m_CurrentTagSection.get() == nullptr)
   {
     m_CurrentTagSection = ZeissTagsXmlSection::New();
   }
@@ -348,7 +348,7 @@ void ZeissXMLReader::onIx_EndTag(const XML_Char* name)
   this->extractValue(this->_charData, idValue);
   this->_parseData = false; // Stop parsing character data
   AbstractZeissMetaData::Pointer ptr = ZeissTagMapping::instance()->metaDataForId(idValue, this->_vTagContent);
-  if (NULL != ptr.get() && _vTagContent.size() > 0)
+  if (nullptr != ptr.get() && _vTagContent.size() > 0)
   {
     if (_xmlSection == Zeiss::XML::TagsSection)
     {
