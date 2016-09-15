@@ -158,9 +158,14 @@ class ITKImageWriter : public AbstractFilter
     /**
     * @brief Does the actual writing of the image with itkImageFileWriter.
     */
-    template<typename TPixel, unsigned int>
-    void writeImage(const QString& filename, DataContainer::Pointer container, DataArrayPath path);
+    template<typename TPixel, unsigned int Dimension>
+    void writeImage();
 
+    /**
+    * @brief Checks the image dimension based on the container geometry.
+    */
+    template<typename PixelType>
+    void writeImage();
   private:
 	  ITKImageWriter(const ITKImageWriter&); // Copy Constructor Not Implemented
 	  void operator=(const ITKImageWriter&); // Operator '=' Not Implemented
