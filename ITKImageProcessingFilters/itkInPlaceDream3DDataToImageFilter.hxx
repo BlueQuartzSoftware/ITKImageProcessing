@@ -79,9 +79,11 @@ InPlaceDream3DDataToImageFilter< PixelType, VDimension >
     itkExceptionMacro("Error casting geometry!!!");
   }
   // Get data container properties
-  float torigin[3];
-  float tspacing[3];
-  size_t tDims[3];
+  QVector<float> torigin(3, 0);
+  // Setting spacing to 0 means dimension is not used. Used to know if
+  // image is 2D or 3D. Setting dimensions to 0 leads to crashes
+  QVector<float> tspacing(3, 0);
+  QVector<size_t> tDims(3, 1);
   imageGeom->getOrigin(torigin[0], torigin[1], torigin[2]);
   imageGeom->getResolution(tspacing[0], tspacing[1], tspacing[2]);
   imageGeom->getDimensions(tDims[0], tDims[1], tDims[2]);

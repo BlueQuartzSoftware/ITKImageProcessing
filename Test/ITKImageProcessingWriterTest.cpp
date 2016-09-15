@@ -48,10 +48,6 @@
 
 #include "ITKImageProcessingTestFileLocations.h"
 
-#include <itkMetaImageIO.h>
-#include <itkNrrdImageIO.h>
-#include <itkSCIFIOImageIO.h>
-
 class ITKImageProcessingWriterTest
 {
 
@@ -86,11 +82,6 @@ class ITKImageProcessingWriterTest
     return filterFactory->create();
   }
 
-  QString FilenameWithDifferentExtension(const QString& filename, const QString& extension = ".raw")
-  {
-    QString nameWithoutExtension = filename.left(filename.lastIndexOf("."));
-    return nameWithoutExtension + extension;
-  }
 
   template<class PixelType, unsigned int Dimension>
   DataContainerArray::Pointer CreateTestData(const DataArrayPath& path)
@@ -101,7 +92,9 @@ class ITKImageProcessingWriterTest
     ImageGeom::Pointer imageGeometry =
       ImageGeom::CreateGeometry(SIMPL::Geometry::ImageGeometry);
     QVector<float> origin(3, 0);
-    QVector<float> spacing(3, 1);
+  // Setting spacing to 0 means dimension is not used. Used to know if
+  // image is 2D or 3D. Setting dimensions to 0 leads to crashes
+    QVector<float> spacing(3, 0);
     QVector<size_t> dimensions(3, 1);
     for (size_t i = 0; i < Dimension; i++)
     {
@@ -273,7 +266,6 @@ class ITKImageProcessingWriterTest
     DataContainerArray::Pointer containerArray,
     DataArrayPath& path)
   {
-
     QString filtName = "ITKImageWriter";
     FilterManager* fm = FilterManager::Instance();
     IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
@@ -304,17 +296,20 @@ class ITKImageProcessingWriterTest
     return CompareImages<PixelType>(filename, containerArray, path);
   }
 
-  template<class PixelType, unsigned Dimension>
-  void TestWriteImage(const QString& extension)
+  template<class PixelType, unsigned int Dimension>
+  void TestWriteImage(const QString &suffix, const QString& extension, const QString &dataFileExtension)
   {
-    QString filename = FilenameWithDifferentExtension(
-      UnitTest::ITKImageProcessingWriterTest::OutputBaseFile, extension);
-
+    QString filename = UnitTest::ITKImageProcessingWriterTest::OutputBaseFile + suffix + extension;
     DataArrayPath path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = CreateTestData<PixelType,Dimension>(path);
     DREAM3D_REQUIRE(
       TestWriteImage<PixelType>(filename, containerArray, path));
     this->FilesToRemove << filename;
+    if (!dataFileExtension.isEmpty())
+    {
+      filename = UnitTest::ITKImageProcessingWriterTest::OutputBaseFile + suffix + dataFileExtension;
+      this->FilesToRemove << filename;
+    }
   }
 
   // -----------------------------------------------------------------------------
@@ -345,75 +340,56 @@ class ITKImageProcessingWriterTest
     return EXIT_SUCCESS;
   }
 
-  int TestWriteMetaImage()
-  {
-    // uint8_t
-    {
-      TestWriteImage<uint8_t,3>("_uint8.mha");
-    }
-    // int8_t
-    {
-      TestWriteImage<int8_t,3>("_int8.mha");
-    }
-    // uint32_t
-    {
-      TestWriteImage<uint32_t,3>("_uint32_t.mha");
-    }
-    // int32_t
-    {
-      TestWriteImage<int32_t,3>("_int32_t.mha");
-    }
-    // float
-    {
-      TestWriteImage<float,3>("_float.mha");
-    }
 
+  template<unsigned int Dimension>
+  int TestWriteImage(QString extension, QStringList listPixelTypes, QString dataFileExtension = "")
+  {
+    for (QStringList::const_iterator it = listPixelTypes.constBegin(); it != listPixelTypes.constEnd(); ++it)
+    {
+      if (*it == "uint8_t")
+      {
+        TestWriteImage<uint8_t, Dimension>("_uint8.", extension, dataFileExtension);
+      }
+      else if (*it == "int8_t")
+      {
+        TestWriteImage<int8_t, Dimension>("_int8.", extension, dataFileExtension);
+      }
+      else if (*it == "uint16_t")
+      {
+        TestWriteImage<uint16_t, Dimension>("_uint16.", extension, dataFileExtension);
+      }
+      else if (*it == "int16_t")
+      {
+        TestWriteImage<int16_t, Dimension>("_int16.", extension, dataFileExtension);
+      }
+      else if (*it == "uint32_t")
+      {
+        TestWriteImage<uint32_t, Dimension>("_uint32.", extension, dataFileExtension);
+      }
+      else if (*it == "int32_t")
+      {
+        TestWriteImage<int32_t, Dimension>("_int32.", extension, dataFileExtension);
+      }
+      //else if (*it == "uint64_t")
+      //{
+      //  TestWriteImage<uint64_t, Dimension>("_uint64.", extension, dataFileExtension);
+      //}
+      //else if (*it == "int64_t")
+      //{
+      //  TestWriteImage<int64_t, Dimension>("_int64.", extension, dataFileExtension);
+      //}
+      else if (*it == "float")
+      {
+        TestWriteImage<float, Dimension>("_float.", extension, dataFileExtension);
+      }
+      else if (*it == "double")
+      {
+        TestWriteImage<double, Dimension>("_double.", extension, dataFileExtension);
+      }
+    }
     return EXIT_SUCCESS;
   }
 
-  int TestWriteNrrdImage()
-  {
-    // uint8_t
-    {
-      TestWriteImage<uint8_t,3>("_uint8.nrrd");
-    }
-    // int8_t
-    {
-      TestWriteImage<int8_t,3>("_int8.nrrd");
-    }
-    // uint32_t
-    {
-      TestWriteImage<uint32_t,3>("_uint32_t.nrrd");
-    }
-    // int32_t
-    {
-      TestWriteImage<int32_t,3>("_int32_t.nrrd");
-    }
-    // float
-    {
-      TestWriteImage<float,3>("_float.nrrd");
-    }
-
-    return EXIT_SUCCESS;
-  }
-
-  int TestWriteSCIFIOImage()
-  {
-    // uint8_t
-    {
-      TestWriteImage<uint8_t,2>("_uint8.tif");
-    }
-    // int8_t
-    {
-      TestWriteImage<int8_t,2>("_int8.tif");
-    }
-    // float
-    {
-      TestWriteImage<float,2>("_float.tif");
-    }
-
-    return EXIT_SUCCESS;
-  }
   // -----------------------------------------------------------------------------
   //
   // -----------------------------------------------------------------------------
@@ -428,14 +404,48 @@ class ITKImageProcessingWriterTest
     DREAM3D_REGISTER_TEST(TestNoInput());
 
     // Meta
-    DREAM3D_REGISTER_TEST(TestWriteMetaImage());
-
+    QStringList listMetaPixelTypes;
+    listMetaPixelTypes << "uint8_t" << "int8_t" << "uint16_t" << "int16_t" << "uint32_t" << "int32_t" << "uint64_t" << "int64_t" << "float" << "double";
+    DREAM3D_REGISTER_TEST(TestWriteImage<3>("mha", listMetaPixelTypes));
+    DREAM3D_REGISTER_TEST(TestWriteImage<3>("mhd", listMetaPixelTypes, "raw"));
     // NRRD
-    DREAM3D_REGISTER_TEST(TestWriteNrrdImage());
+    QStringList listNRRDPixelTypes;
+    listNRRDPixelTypes << "uint8_t" << "int8_t" << "uint16_t" << "int16_t" << "uint32_t" << "int32_t" << "uint64_t" << "int64_t" << "float" << "double";
+    DREAM3D_REGISTER_TEST(TestWriteImage<3>("nrrd", listNRRDPixelTypes));
+    DREAM3D_REGISTER_TEST(TestWriteImage<3>("nhdr", listNRRDPixelTypes, "raw.gz"));
 
+    // NII
+    QStringList listNIIPixelTypes;
+    listNIIPixelTypes << "uint8_t" << "int8_t" << "uint16_t" << "int16_t" << "uint32_t" << "int32_t" << "uint64_t" << "int64_t" << "float" << "double";
+    DREAM3D_REGISTER_TEST(TestWriteImage<3>("nii", listNIIPixelTypes));
+    DREAM3D_REGISTER_TEST(TestWriteImage<3>("nii.gz", listNIIPixelTypes));
 
-    // SCIFIO
-    DREAM3D_REGISTER_TEST(TestWriteSCIFIOImage());
+    // GIPL
+    QStringList listGIPLPixelTypes;
+    listGIPLPixelTypes << "uint8_t" << "int8_t" << "uint16_t" << "int16_t" << "float";
+    DREAM3D_REGISTER_TEST(TestWriteImage<3>("gipl", listGIPLPixelTypes));
+    DREAM3D_REGISTER_TEST(TestWriteImage<3>("gipl.gz", listGIPLPixelTypes));
+
+    // ANALYZE
+    QStringList listHDRPixelTypes;
+    listHDRPixelTypes << "uint8_t" << "int8_t" << "uint16_t" << "int16_t" << "uint32_t" << "int32_t" << "uint64_t" << "int64_t" << "float" << "double";
+    DREAM3D_REGISTER_TEST(TestWriteImage<3>("hdr", listHDRPixelTypes, "img"));
+
+    // TIFF
+    QStringList listTIFFPixelTypes;
+    listTIFFPixelTypes << "uint8_t" << "int8_t" << "float";
+    DREAM3D_REGISTER_TEST(TestWriteImage<2>("tif", listTIFFPixelTypes));
+
+    // PNG
+    QStringList listPNGPixelTypes;
+    listPNGPixelTypes << "uint8_t" << "uint16_t";
+    DREAM3D_REGISTER_TEST(TestWriteImage<2>("png", listPNGPixelTypes));
+
+    // JPG
+    QStringList listJPGPixelTypes;
+    listJPGPixelTypes << "uint8_t" ;
+    DREAM3D_REGISTER_TEST(TestWriteImage<2>("jpg", listJPGPixelTypes));
+
 
 #if REMOVE_TEST_FILES
     DREAM3D_REGISTER_TEST( RemoveTestFiles() )
