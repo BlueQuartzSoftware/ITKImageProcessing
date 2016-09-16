@@ -48,7 +48,7 @@ void ITKImageBase::initialize()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename PixelType>
+template<typename PixelType, unsigned int Dimension>
 void ITKImageBase::dataCheck()
 {
   // Check data array

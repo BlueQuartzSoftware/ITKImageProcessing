@@ -111,7 +111,7 @@ void ITKBinaryThreshold::CheckLimits(double value, QString name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename PixelType>
+template<typename PixelType, unsigned int Dimension>
 void ITKBinaryThreshold::dataCheck()
 {
   setErrorCondition(0);
@@ -127,7 +127,7 @@ void ITKBinaryThreshold::dataCheck()
     notifyErrorMessage(getHumanLabel(),"Lower threshold value must be lesser than upper threshold value", getErrorCondition());
     return;
   }
-  ITKImageBase::dataCheck<PixelType>();
+  ITKImageBase::dataCheck<PixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
@@ -142,10 +142,9 @@ void ITKBinaryThreshold::dataCheckInternal()
 //
 // -----------------------------------------------------------------------------
 
-template<typename PixelType>
+template<typename PixelType, unsigned int Dimension>
 void ITKBinaryThreshold::filter()
 {
-    const unsigned int Dimension = 3;
     typedef itk::Dream3DImage<PixelType, Dimension> ImageType;
     //define threshold filters
     typedef itk::ImageToImageFilter <ImageType, ImageType> ImageToImageFilterType;

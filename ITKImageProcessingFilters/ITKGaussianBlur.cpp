@@ -89,7 +89,7 @@ void ITKGaussianBlur::readFilterParameters(AbstractFilterParametersReader* reade
 //
 // -----------------------------------------------------------------------------
 
-template<typename PixelType>
+template<typename PixelType, unsigned int Dimension>
 void ITKGaussianBlur::dataCheck()
 {
   setErrorCondition(0);
@@ -111,7 +111,7 @@ void ITKGaussianBlur::dataCheck()
     notifyErrorMessage(getHumanLabel(), "Maximum error must be >0", getErrorCondition());
     return;
   }
-  ITKImageBase::dataCheck<PixelType>();
+  ITKImageBase::dataCheck<PixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
@@ -127,13 +127,12 @@ void ITKGaussianBlur::dataCheckInternal()
 //
 // -----------------------------------------------------------------------------
 
-template<typename PixelType>
+template<typename PixelType, unsigned int Dimension>
 void ITKGaussianBlur::filter()
 {
     DataArrayPath dap = getSelectedCellArrayPath();
     DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(dap.getDataContainerName());
 
-    const unsigned int Dimension = 3;
     typedef itk::Dream3DImage<PixelType, Dimension> ImageType;
     typedef itk::DiscreteGaussianImageFilter<ImageType, ImageType> GaussianFilterType;
     typename GaussianFilterType::Pointer gaussianFilter = GaussianFilterType::New();

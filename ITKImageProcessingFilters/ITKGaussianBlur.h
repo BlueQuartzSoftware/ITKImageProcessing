@@ -64,7 +64,7 @@ class ITKGaussianBlur : public ITKImageBase
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
-    template<typename PixelType>
+    template<typename PixelType, unsigned int Dimension>
     void dataCheck();
 
     /* @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
@@ -74,7 +74,7 @@ class ITKGaussianBlur : public ITKImageBase
     /**
     * @brief Applies the filter
     */
-    template<typename PixelType>
+    template<typename PixelType, unsigned int Dimension>
     void filter();
 
     /**
