@@ -48,6 +48,9 @@
 
 #include "ITKImageProcessingTestFileLocations.h"
 
+#include <itkNumericSeriesFileNames.h>
+#include <QFileInfo>
+
 class ITKImageProcessingWriterTest
 {
 
@@ -260,7 +263,7 @@ class ITKImageProcessingWriterTest
   }
 
   template<class PixelType>
-  bool TestWriteImage(const QString& filename,
+  bool RunWriteImage(const QString& filename,
     DataContainerArray::Pointer containerArray,
     DataArrayPath& path)
   {
@@ -290,8 +293,7 @@ class ITKImageProcessingWriterTest
 
     DREAM3D_REQUIRED(filter->getErrorCondition(), >= , 0);
     DREAM3D_REQUIRED(filter->getWarningCondition(), >= , 0);
-
-    return CompareImages<PixelType>(filename, containerArray, path);
+    return true;
   }
 
   template<class PixelType, unsigned int Dimension>
@@ -300,8 +302,9 @@ class ITKImageProcessingWriterTest
     QString filename = UnitTest::ITKImageProcessingWriterTest::OutputBaseFile + suffix + extension;
     DataArrayPath path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = CreateTestData<PixelType,Dimension>(path);
-    DREAM3D_REQUIRE(
-      TestWriteImage<PixelType>(filename, containerArray, path));
+    DREAM3D_REQUIRE(RunWriteImage<PixelType>(filename, containerArray, path));
+    DREAM3D_REQUIRE(CompareImages<PixelType>(filename, containerArray, path));
+
     this->FilesToRemove << filename;
     if (!dataFileExtension.isEmpty())
     {
@@ -391,6 +394,34 @@ class ITKImageProcessingWriterTest
   // -----------------------------------------------------------------------------
   //
   // -----------------------------------------------------------------------------
+  int TestWriteImageSeries()
+  {
+    QString filename = UnitTest::ITKImageProcessingWriterTest::OutputBaseFile + ".png";
+    DataArrayPath path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
+    DataContainerArray::Pointer containerArray = CreateTestData<uint8_t, 3>(path);
+    DREAM3D_REQUIRE(RunWriteImage<uint8_t>(filename, containerArray, path));
+    typedef itk::NumericSeriesFileNames NamesGeneratorType;
+    QString seriesfilename = UnitTest::ITKImageProcessingWriterTest::OutputBaseFile + "%03d.png";
+    NamesGeneratorType::Pointer namesGenerator = NamesGeneratorType::New();
+    namesGenerator->SetSeriesFormat(seriesfilename.toStdString());
+    namesGenerator->SetIncrementIndex(1);
+    namesGenerator->SetStartIndex(0);
+    namesGenerator->SetEndIndex(95);//There should be 96 slices: 90 + 3*2 (see CreateTestData)
+    std::vector< std::string > listFileNames = namesGenerator->GetFileNames();
+    for (size_t ii = 0; ii < listFileNames.size(); ii++)
+    {
+      // Check that all files exist
+      QFileInfo check_file(listFileNames[ii].c_str());
+      DREAM3D_REQUIRE((check_file.exists() && check_file.isFile()));
+      // Remove file
+      this->FilesToRemove << QString(listFileNames[ii].c_str());
+    }
+    return EXIT_SUCCESS;
+  }
+
+  // -----------------------------------------------------------------------------
+  //
+  // -----------------------------------------------------------------------------
   void operator()()
   {
     int err = EXIT_SUCCESS;
@@ -405,7 +436,7 @@ class ITKImageProcessingWriterTest
     QStringList listMetaPixelTypes;
     listMetaPixelTypes << "uint8_t" << "int8_t" << "uint16_t" << "int16_t" << "uint32_t" << "int32_t" << "uint64_t" << "int64_t" << "float" << "double";
     DREAM3D_REGISTER_TEST(TestWriteImage<3>("mha", listMetaPixelTypes));
-    DREAM3D_REGISTER_TEST(TestWriteImage<3>("mhd", listMetaPixelTypes, "raw"));
+    DREAM3D_REGISTER_TEST(TestWriteImage<3>("mhd", listMetaPixelTypes, "zraw"));
     // NRRD
     QStringList listNRRDPixelTypes;
     listNRRDPixelTypes << "uint8_t" << "int8_t" << "uint16_t" << "int16_t" << "uint32_t" << "int32_t" << "uint64_t" << "int64_t" << "float" << "double";
@@ -444,6 +475,8 @@ class ITKImageProcessingWriterTest
     listJPGPixelTypes << "uint8_t" ;
     DREAM3D_REGISTER_TEST(TestWriteImage<2>("jpg", listJPGPixelTypes));
 
+    // Test image series
+    DREAM3D_REGISTER_TEST(TestWriteImageSeries())
 
 #if REMOVE_TEST_FILES
     DREAM3D_REGISTER_TEST( RemoveTestFiles() )

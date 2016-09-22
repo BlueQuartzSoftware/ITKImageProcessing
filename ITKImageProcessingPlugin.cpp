@@ -105,10 +105,30 @@ ITKImageProcessingPlugin::~ITKImageProcessingPlugin()
 // -----------------------------------------------------------------------------
 QString ITKImageProcessingPlugin::getListSupportedFileExtensions()
 {
-  QString supportedExtensions = "*.png *.mhd *.mha *.nrrd *.nhdr *.tif *.jpg *.jpeg *.nii *.nii.gz *.gipl *.gipl.gz *.hdr";
+  QStringList supportedExtensions = ITKImageProcessingPlugin::getList2DSupportedFileExtensions();
+  supportedExtensions += ITKImageProcessingPlugin::getList3DSupportedFileExtensions();
+  return "*" + supportedExtensions.join(" *");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QStringList ITKImageProcessingPlugin::getList3DSupportedFileExtensions()
+{
+  QStringList supportedExtensions;
+  supportedExtensions << ".mhd" << ".mha" << ".nrrd" << ".nhdr" << ".nii" << ".nii.gz" << ".gipl" << ".gipl.gz" << ".hdr";
   return supportedExtensions;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QStringList ITKImageProcessingPlugin::getList2DSupportedFileExtensions()
+{
+  QStringList supportedExtensions;
+  supportedExtensions << ".png" << ".tif" << ".jpg" << ".jpeg";
+  return supportedExtensions;
+}
 
 // -----------------------------------------------------------------------------
 //

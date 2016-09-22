@@ -53,9 +53,20 @@ class ITKImageProcessingPlugin : public QObject, public ISIMPLibPlugin
     virtual ~ITKImageProcessingPlugin();
 
     /**
-    * @brief get list of supported file extensions
+    * @brief get list of supported file extensions as QString
     */
     static QString getListSupportedFileExtensions();
+
+    /**
+    * @brief get list of supported file extensions as QStringList
+    */
+    static QStringList getList3DSupportedFileExtensions();
+
+    /**
+    * @brief get list of supported 2D file extensions as QStringList
+    */
+    static QStringList getList2DSupportedFileExtensions();
+
 
     /**
      * @brief getPluginName Returns the name of the plugin

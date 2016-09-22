@@ -38,7 +38,7 @@
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 
 /**
  * @brief The ITKImageProcessingFilter class. See [Filter documentation](@ref itkimageprocessingfilter) for details.
@@ -116,6 +116,12 @@ class ITKImageWriter : public AbstractFilter
     virtual void execute();
 
     /**
+    * @brief is2DFormat returns true if file name extension corresponds to a 2D image format
+    */
+    bool is2DFormat();
+
+
+    /**
     * @brief preflight Reimplemented from @see AbstractFilter class
     */
     virtual void preflight();
@@ -156,10 +162,22 @@ class ITKImageWriter : public AbstractFilter
     void initialize();
 
     /**
-    * @brief Does the actual writing of the image with itkImageFileWriter.
+    * @brief Converts Dream3D data to an ITK image and calls the actual writer.
     */
     template<typename TPixel, unsigned int Dimension>
     void writeImage();
+
+    /**
+    * @brief writeAs2DStack Writes 3D images as a stack of 2D images.
+    */
+    template<typename TPixel, unsigned int Dimensions>
+    void writeAs2DStack(typename itk::Dream3DImage<TPixel, Dimensions> *image, unsigned long z_size);
+
+    /**
+    * @brief writeAsOneFile Writes images as one file.
+    */
+    template<typename TPixel, unsigned int Dimensions>
+    void writeAsOneFile(typename itk::Dream3DImage<TPixel, Dimensions> *image);
 
   private:
 	  ITKImageWriter(const ITKImageWriter&); // Copy Constructor Not Implemented
