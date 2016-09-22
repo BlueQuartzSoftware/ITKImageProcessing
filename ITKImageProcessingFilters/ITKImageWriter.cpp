@@ -168,7 +168,7 @@ void ITKImageWriter::preflight()
 // -----------------------------------------------------------------------------
 bool ITKImageWriter::is2DFormat()
 {
-  QString Ext = itksys::SystemTools::GetFilenameExtension(getFileName().toStdString()).c_str();
+  QString Ext = itksys::SystemTools::LowerCase(itksys::SystemTools::GetFilenameExtension(getFileName().toStdString())).c_str();
   QStringList supported2DExtensions = ITKImageProcessingPlugin::getList2DSupportedFileExtensions();
   int index = supported2DExtensions.indexOf(QRegExp(".*" + Ext));
   if (index != -1)
