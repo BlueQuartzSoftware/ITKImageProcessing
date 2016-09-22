@@ -40,51 +40,81 @@
 // Define helper macros to switch types on and off.
 #define Q(x) #x
 #define QUOTE(x) Q(x)
-#define Dream3DTemplateAliasMacroCase(typeN, call, var_type, errorCondition)                         \
-  Dream3DTemplateAliasMacroCase0(typeN, call, var_type, errorCondition, DREAM3D_USE_##typeN)
-#define Dream3DTemplateAliasMacroCase0(typeN, call, var_type, errorCondition, value)                 \
-  Dream3DTemplateAliasMacroCase1(typeN, call, var_type, errorCondition, value)
-#define Dream3DTemplateAliasMacroCase1(typeN, call, var_type, errorCondition, value)                 \
-  Dream3DTemplateAliasMacroCase_##value(typeN, call, var_type, errorCondition, QUOTE(typeN))
-#define Dream3DTemplateAliasMacroCase_0(typeN, call, var_type, errorCondition, quotedType)           \
+#define Dream3DTemplateAliasMacroCase(typeN, call, var_type, dimensions, errorCondition)                         \
+  Dream3DTemplateAliasMacroCase0(typeN, call, var_type, dimensions, errorCondition, DREAM3D_USE_##typeN)
+#define Dream3DTemplateAliasMacroCase0(typeN, call, var_type, dimensions, errorCondition, value)                 \
+  Dream3DTemplateAliasMacroCase1(typeN, call, var_type, dimensions, errorCondition, value)
+#define Dream3DTemplateAliasMacroCase1(typeN, call, var_type, dimensions, errorCondition, value)                 \
+  Dream3DTemplateAliasMacroCase_##value(typeN, call, var_type, dimensions, errorCondition, QUOTE(typeN))
+#define Dream3DTemplateAliasMacroCase_0(typeN, call, var_type, dimensions, errorCondition, quotedType)           \
   if( var_type.compare(quotedType) == 0 )                                                            \
   {                                                                                                  \
     setErrorCondition(errorCondition);\
     QString errorMessage = QString("Unsupported pixel type: %1.").arg(quotedType);                   \
     notifyErrorMessage(getHumanLabel(), errorMessage, getErrorCondition());                          \
   }
-#define Dream3DTemplateAliasMacroCase_1(typeN, call, var_type, errorCondition, quotedType)           \
+#define Dream3DTemplateAliasMacroCase_1(typeN, call, var_type, dimensions, errorCondition, quotedType)           \
   if( var_type.compare(quotedType) == 0 )                                                            \
   {                                                                                                  \
-    call<typeN>();                                                                                   \
+    if (dimensions[2] == 1)\
+    {\
+      /* 2D image */\
+      call<typeN, 2>();\
+    }\
+    else\
+    {\
+      /* 3D */\
+      call<typeN, 3>();\
+    }\
   }
 
 
 // Define a macro to dispatch calls to a template instantiated over
 // the aliased scalar types.
-#define Dream3DTemplateAliasMacro(call, var_type, errorCondition)                                  \
-  Dream3DTemplateAliasMacroCase(double, call, var_type, errorCondition)                            \
-  else Dream3DTemplateAliasMacroCase(float, call, var_type, errorCondition)                        \
-  else Dream3DTemplateAliasMacroCase(int8_t, call, var_type, errorCondition)                       \
-  else Dream3DTemplateAliasMacroCase(uint8_t, call, var_type, errorCondition)                      \
-  else Dream3DTemplateAliasMacroCase(int16_t, call, var_type, errorCondition)                      \
-  else Dream3DTemplateAliasMacroCase(uint16_t, call, var_type, errorCondition)                     \
-  else Dream3DTemplateAliasMacroCase(int32_t, call, var_type, errorCondition)                      \
-  else Dream3DTemplateAliasMacroCase(uint32_t, call, var_type, errorCondition)                     \
-  else Dream3DTemplateAliasMacroCase(int64_t, call, var_type, errorCondition)                      \
-  else Dream3DTemplateAliasMacroCase(uint64_t, call, var_type, errorCondition)
+#define Dream3DTemplateAliasMacro(call, var_type, dimensions, errorCondition)                                  \
+  Dream3DTemplateAliasMacroCase(double, call, var_type, dimensions, errorCondition)                            \
+  else Dream3DTemplateAliasMacroCase(float, call, var_type, dimensions, errorCondition)                        \
+  else Dream3DTemplateAliasMacroCase(int8_t, call, var_type, dimensions, errorCondition)                       \
+  else Dream3DTemplateAliasMacroCase(uint8_t, call, var_type, dimensions, errorCondition)                      \
+  else Dream3DTemplateAliasMacroCase(int16_t, call, var_type, dimensions, errorCondition)                      \
+  else Dream3DTemplateAliasMacroCase(uint16_t, call, var_type, dimensions, errorCondition)                     \
+  else Dream3DTemplateAliasMacroCase(int32_t, call, var_type, dimensions, errorCondition)                      \
+  else Dream3DTemplateAliasMacroCase(uint32_t, call, var_type, dimensions, errorCondition)                     \
+  else Dream3DTemplateAliasMacroCase(int64_t, call, var_type, dimensions, errorCondition)                      \
+  else Dream3DTemplateAliasMacroCase(uint64_t, call, var_type, dimensions, errorCondition)
 
 // Define a macro that is specific to Dream3D and dispatches calls to a template
 // instantiated over the aliased scalar type based on the type of a data array
 // which is saved in the filter's data container array.
 #define Dream3DArraySwitchMacro(call, path, errorCondition)\
   {                                                                                                  \
-    IDataArray::Pointer array =                                                                      \
+    IDataArray::Pointer ptr =                                                                        \
       getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, path);  \
-    if (getErrorCondition() >= 0)                                                                    \
+    if( ptr.get() != nullptr)                                                                        \
     {                                                                                                \
-      QString type = array->getTypeAsString();                                                       \
-      Dream3DTemplateAliasMacro(call, type, errorCondition);                                         \
+      ImageGeom::Pointer imageGeometry =                                                             \
+      getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(        \
+      this, path.getDataContainerName());                                                            \
+      if (imageGeometry.get() != nullptr)                                                            \
+      {                                                                                              \
+        QVector<size_t> tDims(3, 0);                                                                 \
+        imageGeometry->getDimensions(tDims[0], tDims[1], tDims[2]);                                  \
+        if (getErrorCondition() >= 0)                                                                \
+        {                                                                                            \
+          QString type = ptr->getTypeAsString();                                                     \
+          Dream3DTemplateAliasMacro(call, type, tDims, errorCondition);                              \
+        }                                                                                            \
+      }                                                                                              \
+      else                                                                                           \
+      {                                                                                              \
+        setErrorCondition(errorCondition);                                                           \
+        notifyErrorMessage(getHumanLabel(), "Geometry not found", getErrorCondition());              \
+      }                                                                                              \
+    }                                                                                                \
+    else                                                                                             \
+    {                                                                                                \
+      setErrorCondition(errorCondition);                                                             \
+      notifyErrorMessage(getHumanLabel(), "Array not found", getErrorCondition());                   \
     }                                                                                                \
   }
 

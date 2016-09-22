@@ -195,28 +195,6 @@ void ITKImageWriter::writeImage()
       return;
   }
 }
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-template<typename PixelType>
-void ITKImageWriter::writeImage()
-{
-  ImageGeom::Pointer imageGeometry =
-    getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(
-    this, getImageArrayPath().getDataContainerName());
-  QVector<float> resolution(3, 0);
-  imageGeometry->getResolution(resolution[0], resolution[1], resolution[2]);
-  if (resolution[2] < 0.000001) // Epsilon since comparing floats, not ints
-  {
-    // 2D image
-    writeImage<PixelType, 2>();
-  }
-  else
-  {
-    //3D
-    writeImage<PixelType, 3>();
-  }
-}
 
 // -----------------------------------------------------------------------------
 //

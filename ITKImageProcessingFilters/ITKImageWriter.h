@@ -161,11 +161,6 @@ class ITKImageWriter : public AbstractFilter
     template<typename TPixel, unsigned int Dimension>
     void writeImage();
 
-    /**
-    * @brief Checks the image dimension based on the container geometry.
-    */
-    template<typename PixelType>
-    void writeImage();
   private:
 	  ITKImageWriter(const ITKImageWriter&); // Copy Constructor Not Implemented
 	  void operator=(const ITKImageWriter&); // Operator '=' Not Implemented

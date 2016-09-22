@@ -37,7 +37,7 @@ endforeach()
 # This is the list of Private Filters. These filters are available from other filters but the user will not
 # be able to use them from the DREAM3D user interface.
 set(_PrivateFilters
-
+  ITKImageBase
 )
 
 #-----------------
@@ -57,6 +57,8 @@ ADD_SIMPL_SUPPORT_HEADER(${${PLUGIN_NAME}_SOURCE_DIR} ${_filterGroupName} itkInP
 ADD_SIMPL_SUPPORT_HEADER(${${PLUGIN_NAME}_SOURCE_DIR} ${_filterGroupName} itkInPlaceDream3DDataToImageFilter.hxx)
 ADD_SIMPL_SUPPORT_HEADER(${${PLUGIN_NAME}_SOURCE_DIR} ${_filterGroupName} itkDream3DImage.h)
 ADD_SIMPL_SUPPORT_HEADER(${${PLUGIN_NAME}_SOURCE_DIR} ${_filterGroupName} itkDream3DImage.hxx)
+#ADD_SIMPL_SUPPORT_HEADER(${${PLUGIN_NAME}_SOURCE_DIR} ${_filterGroupName} ITKImageBase.h)
+#ADD_SIMPL_SUPPORT_HEADER(${${PLUGIN_NAME}_SOURCE_DIR} ${_filterGroupName} ITKImageBase.cpp)
 ADD_SIMPL_SUPPORT_HEADER(${${PLUGIN_NAME}_SOURCE_DIR} ${_filterGroupName} itkImportDream3DImageContainer.h)
 ADD_SIMPL_SUPPORT_HEADER(${${PLUGIN_NAME}_SOURCE_DIR} ${_filterGroupName} itkImportDream3DImageContainer.hxx)
 ADD_SIMPL_SUPPORT_HEADER(${${PLUGIN_NAME}_SOURCE_DIR} ${_filterGroupName} itkDream3DFilterInterruption.h)

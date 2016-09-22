@@ -92,9 +92,7 @@ class ITKImageProcessingWriterTest
     ImageGeom::Pointer imageGeometry =
       ImageGeom::CreateGeometry(SIMPL::Geometry::ImageGeometry);
     QVector<float> origin(3, 0);
-  // Setting spacing to 0 means dimension is not used. Used to know if
-  // image is 2D or 3D. Setting dimensions to 0 leads to crashes
-    QVector<float> spacing(3, 0);
+    QVector<float> spacing(3, 1);
     QVector<size_t> dimensions(3, 1);
     for (size_t i = 0; i < Dimension; i++)
     {
