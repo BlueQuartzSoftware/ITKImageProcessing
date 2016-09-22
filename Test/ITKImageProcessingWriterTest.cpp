@@ -475,6 +475,11 @@ class ITKImageProcessingWriterTest
     listJPGPixelTypes << "uint8_t" ;
     DREAM3D_REGISTER_TEST(TestWriteImage<2>("jpg", listJPGPixelTypes));
 
+    // BMP
+    QStringList listBMPPixelTypes;
+    listBMPPixelTypes << "uint8_t" ;
+    DREAM3D_REGISTER_TEST(TestWriteImage<2>("bmp", listBMPPixelTypes));
+
     // Test image series
     DREAM3D_REGISTER_TEST(TestWriteImageSeries())
 
