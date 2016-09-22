@@ -40,7 +40,6 @@
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 
-#include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkInPlaceDream3DDataToImageFilter.h"
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
@@ -50,6 +49,9 @@
 
 // ITK includes
 #include <itkImageFileWriter.h>
+#include <itkImageSeriesWriter.h>
+#include <itkNumericSeriesFileNames.h>
+#include <itksys/SystemTools.hxx>
 
 // Include the MOC generated file for this class
 #include "moc_ITKImageWriter.cpp"
@@ -164,12 +166,67 @@ void ITKImageWriter::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename TPixel, unsigned int dimensions>
+bool ITKImageWriter::is2DFormat()
+{
+  QString Ext = itksys::SystemTools::GetFilenameExtension(getFileName().toStdString()).c_str();
+  QStringList supported2DExtensions = ITKImageProcessingPlugin::getList2DSupportedFileExtensions();
+  int index = supported2DExtensions.indexOf(QRegExp(".*" + Ext));
+  if (index != -1)
+  {
+    return true;
+  }
+  return false;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+template<typename TPixel, unsigned int Dimensions>
+void ITKImageWriter::writeAs2DStack(typename itk::Dream3DImage<TPixel, Dimensions> *image, unsigned long z_size)
+{
+  typedef itk::NumericSeriesFileNames NamesGeneratorType;
+  NamesGeneratorType::Pointer namesGenerator = NamesGeneratorType::New();
+  std::string path = itksys::SystemTools::GetFilenamePath(getFileName().toStdString());
+  std::string filename = itksys::SystemTools::GetFilenameWithoutExtension(getFileName().toStdString());
+  std::string extension = itksys::SystemTools::GetFilenameExtension(getFileName().toStdString());
+  std::string format = path + "/" + filename + "%03d" + extension;
+  namesGenerator->SetSeriesFormat(format);
+  namesGenerator->SetIncrementIndex(1);
+  namesGenerator->SetStartIndex(0);
+  namesGenerator->SetEndIndex(z_size-1);
+  typedef itk::Dream3DImage<TPixel, Dimensions>   InputImageType;
+  typedef itk::Dream3DImage<TPixel, Dimensions - 1> OutputImageType;
+  typedef itk::ImageSeriesWriter<InputImageType, OutputImageType> SeriesWriterType;
+  typename SeriesWriterType::Pointer writer = SeriesWriterType::New();
+  writer->SetInput(image);
+  writer->SetFileNames(namesGenerator->GetFileNames());
+  writer->UseCompressionOn();
+  writer->Update();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+template<typename TPixel, unsigned int Dimensions>
+void ITKImageWriter::writeAsOneFile(typename itk::Dream3DImage<TPixel, Dimensions>* image)
+{
+  typedef itk::Dream3DImage<TPixel, Dimensions>   ImageType;
+  typedef itk::ImageFileWriter<ImageType> FileWriterType;
+  typename FileWriterType::Pointer writer = FileWriterType::New();
+  writer->SetInput(image);
+  writer->SetFileName(getFileName().toStdString().c_str());
+  writer->UseCompressionOn();
+  writer->Update();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+template<typename TPixel, unsigned int Dimensions>
 void ITKImageWriter::writeImage()
 {
-  typedef itk::Dream3DImage<TPixel, dimensions>   ImageType;
-  typedef itk::ImageFileWriter<ImageType>         WriterType;
-  typedef itk::InPlaceDream3DDataToImageFilter<TPixel, dimensions> ToITKType;
+  typedef itk::Dream3DImage<TPixel, Dimensions>   ImageType;
+  typedef itk::InPlaceDream3DDataToImageFilter<TPixel, Dimensions> ToITKType;
   DataArrayPath path = getImageArrayPath();
   DataContainer::Pointer container =
     getDataContainerArray()->getDataContainer(
@@ -181,11 +238,22 @@ void ITKImageWriter::writeImage()
       toITK->SetAttributeMatrixArrayName(path.getAttributeMatrixName().toStdString());
       toITK->SetDataArrayName(path.getDataArrayName().toStdString());
       toITK->SetInPlace(true);
-      typename WriterType::Pointer writer = WriterType::New();
-      writer->SetInput(toITK->GetOutput());
-      writer->SetFileName(getFileName().toStdString().c_str());
-      writer->UseCompressionOn();
-      writer->Update();
+      toITK->Update();
+      if (this->is2DFormat() && Dimensions == 3)
+      {
+        typename ImageType::SizeType size = toITK->GetOutput()->GetLargestPossibleRegion().GetSize();
+        if (size[2] < 2)
+        {
+          setErrorCondition(-6);
+          notifyErrorMessage(getHumanLabel(), "Image is 2D, not 3D.", getErrorCondition());
+          return;
+        }
+        this->writeAs2DStack<TPixel,Dimensions>(toITK->GetOutput(), size[2]);
+      }
+      else
+      {
+        this->writeAsOneFile<TPixel, Dimensions>(toITK->GetOutput());
+      }
   }
   catch (itk::ExceptionObject & err)
   {
