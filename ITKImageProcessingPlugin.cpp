@@ -126,7 +126,7 @@ QStringList ITKImageProcessingPlugin::getList3DSupportedFileExtensions()
 QStringList ITKImageProcessingPlugin::getList2DSupportedFileExtensions()
 {
   QStringList supportedExtensions;
-  supportedExtensions << ".png" << ".tif" << ".jpg" << ".jpeg";
+  supportedExtensions << ".png" << ".tif" << ".jpg" << ".jpeg" << ".bmp";
   return supportedExtensions;
 }
 
