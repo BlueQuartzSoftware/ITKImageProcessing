@@ -103,6 +103,16 @@ ITKImageProcessingPlugin::~ITKImageProcessingPlugin()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+QString ITKImageProcessingPlugin::getListSupportedFileExtensions()
+{
+  QString supportedExtensions = "*.png *.mhd *.mha *.nrrd *.nhdr *.tif *.jpg *.jpeg *.nii *.nii.gz *.gipl *.gipl.gz *.hdr";
+  return supportedExtensions;
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 QString ITKImageProcessingPlugin::getPluginName()
 {
   return (ITKImageProcessingConstants::ITKImageProcessingPluginDisplayName);

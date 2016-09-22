@@ -44,6 +44,9 @@
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkInPlaceDream3DDataToImageFilter.h"
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
+#include "ITKImageProcessingPlugin.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
+
 
 // ITK includes
 #include <itkImageFileWriter.h>
@@ -75,7 +78,7 @@ ITKImageWriter::~ITKImageWriter()
 void ITKImageWriter::setupFilterParameters()
 {
 	FilterParameterVector parameters;
-	QString supportedExtensions = "*.png *.mhd *.mha *.nrrd *.tif";
+  QString supportedExtensions = ITKImageProcessingPlugin::getListSupportedFileExtensions();
 	parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Output File", FileName, FilterParameter::Parameter, ITKImageWriter, supportedExtensions));
 
 	parameters.push_back(SeparatorFilterParameter::New("Image Data", FilterParameter::RequiredArray));
@@ -162,14 +165,15 @@ void ITKImageWriter::preflight()
 //
 // -----------------------------------------------------------------------------
 template<typename TPixel, unsigned int dimensions>
-void ITKImageWriter::writeImage(const QString& filename,
-                                DataContainer::Pointer container,
-                                DataArrayPath path)
+void ITKImageWriter::writeImage()
 {
   typedef itk::Dream3DImage<TPixel, dimensions>   ImageType;
   typedef itk::ImageFileWriter<ImageType>         WriterType;
   typedef itk::InPlaceDream3DDataToImageFilter<TPixel, dimensions> ToITKType;
-
+  DataArrayPath path = getImageArrayPath();
+  DataContainer::Pointer container =
+    getDataContainerArray()->getDataContainer(
+    path.getDataContainerName());
   try
   {
       typename ToITKType::Pointer toITK = ToITKType::New();
@@ -177,10 +181,9 @@ void ITKImageWriter::writeImage(const QString& filename,
       toITK->SetAttributeMatrixArrayName(path.getAttributeMatrixName().toStdString());
       toITK->SetDataArrayName(path.getDataArrayName().toStdString());
       toITK->SetInPlace(true);
-
       typename WriterType::Pointer writer = WriterType::New();
       writer->SetInput(toITK->GetOutput());
-      writer->SetFileName(filename.toStdString().c_str());
+      writer->SetFileName(getFileName().toStdString().c_str());
       writer->UseCompressionOn();
       writer->Update();
   }
@@ -190,6 +193,28 @@ void ITKImageWriter::writeImage(const QString& filename,
       QString errorMessage = "ITK exception was thrown while writing output file: %1";
       notifyErrorMessage(getHumanLabel(), errorMessage.arg(err.GetDescription()), getErrorCondition());
       return;
+  }
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+template<typename PixelType>
+void ITKImageWriter::writeImage()
+{
+  ImageGeom::Pointer imageGeometry =
+    getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(
+    this, getImageArrayPath().getDataContainerName());
+  QVector<float> resolution(3, 0);
+  imageGeometry->getResolution(resolution[0], resolution[1], resolution[2]);
+  if (resolution[2] < 0.000001) // Epsilon since comparing floats, not ints
+  {
+    // 2D image
+    writeImage<PixelType, 2>();
+  }
+  else
+  {
+    //3D
+    writeImage<PixelType, 3>();
   }
 }
 
@@ -205,84 +230,34 @@ void ITKImageWriter::execute()
   {
     return;
   }
-  if (!getDataContainerArray()->doesDataContainerExist(getImageArrayPath().getDataContainerName()))
+  DataArrayPath path = getImageArrayPath();
+  if (!getDataContainerArray()->doesDataContainerExist(path.getDataContainerName()))
   {
     setErrorCondition(-6);
     QString errorMessage = "Data container %1 does not exist.";
-    notifyErrorMessage(getHumanLabel(), errorMessage.arg(getImageArrayPath().getDataContainerName()), getErrorCondition());
+    notifyErrorMessage(getHumanLabel(), errorMessage.arg(path.getDataContainerName()), getErrorCondition());
     return;
   }
   DataContainer::Pointer container =
     getDataContainerArray()->getDataContainer(
-    getImageArrayPath().getDataContainerName());
-  if (!container->doesAttributeMatrixExist(getImageArrayPath().getAttributeMatrixName()))
+    path.getDataContainerName());
+  if (!container->doesAttributeMatrixExist(path.getAttributeMatrixName()))
   {
     setErrorCondition(-7);
     QString errorMessage = "Attribute matrix %1 does not exist.";
-    notifyErrorMessage(getHumanLabel(), errorMessage.arg(getImageArrayPath().getAttributeMatrixName()), getErrorCondition());
+    notifyErrorMessage(getHumanLabel(), errorMessage.arg(path.getAttributeMatrixName()), getErrorCondition());
     return;
   }
   AttributeMatrix::Pointer attributeMatrix = container->getAttributeMatrix(
-    getImageArrayPath().getAttributeMatrixName());
-  if (!attributeMatrix->doesAttributeArrayExist(getImageArrayPath().getDataArrayName()))
+    path.getAttributeMatrixName());
+  if (!attributeMatrix->doesAttributeArrayExist(path.getDataArrayName()))
   {
     setErrorCondition(-8);
     QString errorMessage = "Attribute array %1 does not exist.";
-    notifyErrorMessage(getHumanLabel(), errorMessage.arg(getImageArrayPath().getDataArrayName()), getErrorCondition());
+    notifyErrorMessage(getHumanLabel(), errorMessage.arg(path.getDataArrayName()), getErrorCondition());
     return;
   }
-    IDataArray::Pointer inputData =
-      attributeMatrix->getAttributeArray(
-        getImageArrayPath().getDataArrayName());
-
-  QString type = inputData->getTypeAsString();
-  if (type.compare("int8_t") == 0)
-  {
-    writeImage<int8_t, 3>(getFileName(), container, getImageArrayPath());
-  }
-  else if (type.compare("uint8_t") == 0)
-  {
-    writeImage<uint8_t, 3>(getFileName(), container, getImageArrayPath());
-  }
-  else if (type.compare("int16_t") == 0)
-  {
-    writeImage<int16_t, 3>(getFileName(), container, getImageArrayPath());
-  }
-  else if (type.compare("uint16_t") == 0)
-  {
-    writeImage<uint16_t, 3>(getFileName(), container, getImageArrayPath());
-  }
-  else if (type.compare("int32_t") == 0)
-  {
-    writeImage<int32_t, 3>(getFileName(), container, getImageArrayPath());
-  }
-  else if (type.compare("uint32_t") == 0)
-  {
-    writeImage<uint32_t, 3>(getFileName(), container, getImageArrayPath());
-  }
-  else if (type.compare("int64_t") == 0)
-  {
-    writeImage<int64_t, 3>(getFileName(), container, getImageArrayPath());
-  }
-  else if (type.compare("uint64_t") == 0)
-  {
-    writeImage<uint64_t, 3>(getFileName(), container, getImageArrayPath());
-  }
-  else if (type.compare("float") == 0)
-  {
-    writeImage<float, 3>(getFileName(), container, getImageArrayPath());
-  }
-  else if (type.compare("double") == 0)
-  {
-    writeImage<double, 3>(getFileName(), container, getImageArrayPath());
-  }
-  else
-  {
-    setErrorCondition(-4);
-    QString errorMessage = QString("Unsupported pixel type: %1.").arg(type);
-    notifyErrorMessage(getHumanLabel(), errorMessage, getErrorCondition());
-  }
-
+  Dream3DArraySwitchMacro(writeImage, getImageArrayPath(), -4);
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
