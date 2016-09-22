@@ -88,17 +88,33 @@
 // which is saved in the filter's data container array.
 #define Dream3DArraySwitchMacro(call, path, errorCondition)\
   {                                                                                                  \
-    IDataArray::Pointer array =                                                                      \
+    IDataArray::Pointer ptr =                                                                        \
       getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, path);  \
-  ImageGeom::Pointer imageGeometry = \
-    getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>( \
-    this, path.getDataContainerName());\
-  QVector<size_t> tDims(3, 0);\
-  imageGeometry->getDimensions(tDims[0], tDims[1], tDims[2]);\
-    if (getErrorCondition() >= 0)                                                                    \
+    if( ptr.get() != nullptr)                                                                        \
     {                                                                                                \
-      QString type = array->getTypeAsString();                                                       \
-      Dream3DTemplateAliasMacro(call, type, tDims, errorCondition);                                         \
+      ImageGeom::Pointer imageGeometry =                                                             \
+      getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(        \
+      this, path.getDataContainerName());                                                            \
+      if (imageGeometry.get() != nullptr)                                                            \
+      {                                                                                              \
+        QVector<size_t> tDims(3, 0);                                                                 \
+        imageGeometry->getDimensions(tDims[0], tDims[1], tDims[2]);                                  \
+        if (getErrorCondition() >= 0)                                                                \
+        {                                                                                            \
+          QString type = ptr->getTypeAsString();                                                     \
+          Dream3DTemplateAliasMacro(call, type, tDims, errorCondition);                              \
+        }                                                                                            \
+      }                                                                                              \
+      else                                                                                           \
+      {                                                                                              \
+        setErrorCondition(errorCondition);                                                           \
+        notifyErrorMessage(getHumanLabel(), "Geometry not found", getErrorCondition());              \
+      }                                                                                              \
+    }                                                                                                \
+    else                                                                                             \
+    {                                                                                                \
+      setErrorCondition(errorCondition);                                                             \
+      notifyErrorMessage(getHumanLabel(), "Array not found", getErrorCondition());                   \
     }                                                                                                \
   }
 
