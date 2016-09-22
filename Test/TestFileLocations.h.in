@@ -78,7 +78,7 @@ namespace UnitTest
 {
   namespace ITKImageProcessingWriterTest
   {
-    const QString OutputBaseFile("@TEST_TEMP_DIR@/OutputBaseFile.basefile");
+    const QString OutputBaseFile("@TEST_TEMP_DIR@/OutputBaseFile");
   }
 }
 
