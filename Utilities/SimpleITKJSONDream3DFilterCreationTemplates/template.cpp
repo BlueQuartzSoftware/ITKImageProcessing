@@ -20,9 +20,6 @@
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
 
-//Auto includes
-${IncludeName}
-
 // Include the MOC generated file for this class
 #include "moc_${FilterName}.cpp"
 
@@ -30,8 +27,9 @@ ${IncludeName}
 //
 // -----------------------------------------------------------------------------
 ${FilterName}::${FilterName}() :
-  ITKImageBase()${InitializationParameters}
+  ITKImageBase()
 {
+${InitializationParameters}
   setupFilterParameters();
 }
 
@@ -78,27 +76,6 @@ void ${FilterName}::readFilterParameters(AbstractFilterParametersReader* reader,
   setSaveAsNewArray( reader->readValue( "SaveAsNewArray", getSaveAsNewArray() ) );
 ${ReadFilterParameters}
   reader->closeFilterGroup();
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-template<typename VarType, typename SubsType>
-void ${FilterName}::CheckIntegerEntry(SubsType value, QString name)
-{
-  if (value < static_cast<SubsType>(std::numeric_limits<VarType>::lowest())
-     || value > static_cast<SubsType>(std::numeric_limits<VarType>::max())
-     || value != floor(value))
-  {
-    setErrorCondition(-1);
-    QString errorMessage = name + QString(" must be greater or equal than %1 and lesser or equal than %2");
-    notifyErrorMessage(getHumanLabel(), errorMessage.arg(
-        std::numeric_limits<VarType>::lowest()).arg(std::numeric_limits<VarType>::max())
-                                                         , getErrorCondition()
-                                                         );
-    return;
-  }
 }
 
 // -----------------------------------------------------------------------------

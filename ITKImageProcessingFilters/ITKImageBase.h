@@ -96,6 +96,60 @@ class ITKImageBase : public AbstractFilter
     */
     virtual void preflight();
 
+    /**
+     * @brief CastVec3ToITK Input type should be FloatVec3_t or IntVec3_t, Output
+       type should be some kind of ITK "array" (itk::Size, itk::Index,...)
+     */
+    template<typename InputType, typename OutputType, typename ComponentType>
+    OutputType CastVec3ToITK(const InputType &inputVec3, unsigned int dimension) const
+    {
+      OutputType output;
+      if (dimension > 0)
+      {
+        output[0] = static_cast<ComponentType>(inputVec3.x);
+        if (dimension > 1)
+        {
+          output[1] = static_cast<ComponentType>(inputVec3.y);
+          if (dimension > 2)
+          {
+            output[2] = static_cast<ComponentType>(inputVec3.z);
+          }
+        }
+      }
+      return output;
+    }
+    /**
+     * @brief StaticCast Performs a static cast on a value
+     */
+    template<typename InputType, typename OutputType>
+    OutputType StaticCastScalar(const InputType &val) const
+    {
+      return static_cast<OutputType>(val);
+    }
+
+    /**
+     * @brief CastStdToVec3 Input type should be std::vector<float> or std::vector<int>
+       and Output type should be FloatVec3_t or IntVec3_t
+     */
+    template<typename InputType, typename OutputType, typename ComponentType>
+    OutputType CastStdToVec3(const InputType &inputVector) const
+    {
+      OutputType outputVec3;
+      if (inputVector.size() > 0)
+      {
+        outputVec3.x = static_cast<ComponentType>(inputVector[0]);
+        if (inputVector.size() > 1)
+        {
+          outputVec3.y = static_cast<ComponentType>(inputVector[1]);
+          if (inputVector.size() > 2)
+          {
+            outputVec3.z = static_cast<ComponentType>(inputVector[2]);
+          }
+        }
+      }
+      return outputVec3;
+    }
+
   signals:
     /**
      * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
@@ -228,6 +282,63 @@ class ITKImageBase : public AbstractFilter
     notifyStatusMessage(getHumanLabel(), "Complete");
 
 }
+
+
+    /**
+    * @brief CheckIntegerEntry: Input types can only be of certain types (float, double, bool, int).
+      For the other type, we have to use one of this primitive type, and verify that the
+      value corresponds to what is expected.
+      The 3rd parameter, 'bool' is given to match the definition of CheckVectorEntry. This allows
+      to use a dictionary in Python to choose between the 2 functions.
+    */
+    template<typename VarType, typename SubsType>
+    void CheckIntegerEntry(SubsType value, QString name, bool)
+    {
+      SubsType lowest = static_cast<SubsType>(std::numeric_limits<VarType>::lowest());
+      SubsType max = static_cast<SubsType>(std::numeric_limits<VarType>::max());
+      if (value < lowest
+       || value > max
+       || value != floor(value)
+         )
+      {
+        setErrorCondition(-1);
+        QString errorMessage = name + QString(
+          " must be greater or equal than %1 and lesser or equal than %2 and an integer");
+        notifyErrorMessage(getHumanLabel(), errorMessage.arg(lowest).arg(max)
+                                                             , getErrorCondition()
+                                                             );
+      }
+    }
+
+    /**
+    * @brief CheckVectorEntry: Vector input types can only be of certain types (float or int).
+      For the other type, we have to use one of this primitive type, and verify that the
+      value corresponds to what is expected.
+    */
+    template<typename VarType, typename SubsType>
+    void CheckVectorEntry(SubsType value, QString name, bool integer)
+    {
+      float lowest = static_cast<float>(std::numeric_limits<VarType>::lowest());
+      float max = static_cast<float>(std::numeric_limits<VarType>::max());
+      if (value.x < lowest || value.x > max
+         || (integer && value.x != floor(value.x))
+         || value.y < lowest || value.y > max
+         || (integer && value.y != floor(value.y))
+         || value.z < lowest || value.z > max
+         || (integer && value.z != floor(value.z))
+         )
+      {
+        setErrorCondition(-1);
+        QString errorMessage = name + QString(
+          " values must be greater or equal than %1 and lesser or equal than %2");
+        if(integer)
+        {
+          errorMessage += QString(" and integers");
+        }
+        notifyErrorMessage(getHumanLabel(), errorMessage.arg(lowest).arg(max),
+                           getErrorCondition() );
+      }
+    }
 
     /**
     * @brief Applies the filter

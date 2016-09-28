@@ -71,7 +71,9 @@ members={
          [
            {'name':['name','itk_name'],'type':str,'required':True},
            {'name':['type'],'type':str,'required':False},
-           {'name':['default'],'type':str,'required':True}
+           {'name':['default'],'type':str,'required':True},
+           {'name':['dim_vec'],'type':int,'required':False },  # 159 occurences in JSON
+           {'name':['itk_type'],'type':str,'required':False}  # 121
          ],
         'ignored':
          [
@@ -87,9 +89,7 @@ members={
          'not_implemented':
          [
            {'name':['set_as_scalar']},  # 40; The parameter values will be set individually, not altogether using the same scalar value
-           {'name':['dim_vec'],'type':int,'required':False },  # 159 occurences in JSON
            {'name':['custom_itk_cast'],'type':str,'required':False},  # 123 (including in inputs)
-           {'name':['itk_type'],'type':str,'required':False},  # 121
            {'name':['pixeltype'],'type':str,'required':False},  # 158
            {'name':['point_vec'],'type':str,'required':False},  # 7
            {'name':['enum'],'type':list,'required':False}  # 29
@@ -114,23 +114,97 @@ inputs={
        }
 
 Dream3DTypeToMacro={
-  'double':{'include':'SIMPLib/FilterParameters/DoubleFilterParameter.h', 'macro':'SIMPL_NEW_DOUBLE_FP'},
-  'float':{'include':'SIMPLib/FilterParameters/FloatFilterParameter.h','macro':'SIMPL_NEW_INTEGER_FP'},
-  'int':{'include':'SIMPLib/FilterParameters/IntFilterParameter.h','macro':'SIMPL_NEW_INTEGER_FP'},
-  'bool':{'include':'SIMPLib/FilterParameters/BooleanFilterParameter.h','macro':'SIMPL_NEW_BOOL_FP'}
+  'double':{'include':'SIMPLib/FilterParameters/DoubleFilterParameter.h', 'macro':'SIMPL_NEW_DOUBLE_FP','component':'double','read':'readValue'},
+  'float':{'include':'SIMPLib/FilterParameters/FloatFilterParameter.h','macro':'SIMPL_NEW_INTEGER_FP','component':'float','read':'readValue'},
+  'int':{'include':'SIMPLib/FilterParameters/IntFilterParameter.h','macro':'SIMPL_NEW_INTEGER_FP','component':'int','read':'readValue'},
+  'bool':{'include':'SIMPLib/FilterParameters/BooleanFilterParameter.h','macro':'SIMPL_NEW_BOOL_FP','component':'bool','read':'readValue'},
+  'FloatVec3_t':{'include':'SIMPLib/FilterParameters/FloatVec3FilterParameter.h','macro':'SIMPL_NEW_FLOAT_VEC3_FP','component':'float','read':'readFloatVec3'},
+  'IntVec3_t':{'include':'SIMPLib/FilterParameters/IntVec3FilterParameter.h','macro':'SIMPL_NEW_INT_VEC3_FP','component':'int','read':'readIntVec3'}
+}
+
+TypeIsInt={
+'uint64_t':1,
+'uint8_t':1,
+'double':0,
+'float':0,
+'int':1,
+'unsigned int':1,
+'int64_t':1,
+'uint32_t':1,
+'int32_t':1,
+'bool':1
 }
 
 ITKToDream3DType={
-  'double':'double',
-  'float':'float',
-  'int':'int',
-  'int32_t':'int',
-  'unsigned int':'double',
-  'uint64_t':'double',
-  'uint32_t':'double',
-  'uint8_t':'int',
-  'bool':'bool'
+  ('double',0):{'d3d':'double','std':'double'},
+  ('float',0):{'d3d':'float','std':'float'},
+  ('int',0):{'d3d':'int','std':'int'},
+  ('int32_t',0):{'d3d':'int','std':'int'},
+  ('unsigned int',0):{'d3d':'double','std':'double'},
+  ('uint64_t',0):{'d3d':'double','std':'double'},
+  ('uint32_t',0):{'d3d':'double','std':'double'},
+  ('uint8_t',0):{'d3d':'int','std':'int'},
+  ('bool',0):{'d3d':'bool','std':'bool'},
+  ('double',1):{'d3d':'FloatVec3_t','std':'std::vector<double>'},
+  ('float',1):{'d3d':'FloatVec3_t','std':'std::vector<float>'},
+  ('int',1):{'d3d':'IntVec3_t','std':'std::vector<int>'},
+  ('unsigned int',1):{'d3d':'FloatVec3_t','std':'std::vector<unsigned int>'},
+  ('int64_t',1):{'d3d':'FloatVec3_t','std':'std::vector<int64_t>'},
+  ('uint32_t',1):{'d3d':'FloatVec3_t','std':'std::vector<uint32_t>'},
+  ('int32_t',1):{'d3d':'FloatVec3_t','std':'std::vector<int32_t>'},
+  ('bool',1):{'d3d':'IntVec3_t','std':'std::vector<bool>'}
 }
+
+# Used in filter implementation
+# CastDream3DToITKFunction=['StaticCastScalar','CastVec3ToITK']
+# Used in initialization
+CastStdToDream3D=['StaticCastScalar','CastStdToVec3']
+
+
+## Enums
+# typename FilterType::OutputRegionModeType:{'enum'},
+# typename FilterType::TopologyCheckType:{'enum'}
+# typename FilterType::ColormapEnumType
+# typename FilterType::MethodChoice
+# typename FilterType::DirectionCollapseStrategyEnum
+# typename FilterType::NoiseModelType
+# typename FilterType::ConnectivityEnumType
+# typename FilterType::OrderEnumType
+
+itkVectorTypes={
+'typename FilterType::SizeType':{'type':'Size','namespace':'FilterType::SizeType'},
+'typename FilterType::ArrayType':{'type':'Array','namespace':'FilterType::ArrayType'},
+'typename FilterType::PointType':{'type':'Point','namespace':'FilterType::PointType'},
+'typename FilterType::SpacingType':{'type':'Vector','namespace':'FilterType::SpacingType'},
+'typename FilterType::IndexType':{'type':'Index','namespace':'FilterType::IndexType'},
+'typename FilterType::InputSizeType':{'type':'Size','namespace':'FilterType::InputSizeType'},
+'typename FilterType::StandardDeviationsType':{'type':'Array','namespace':'FilterType::StandardDeviationsType'},
+'typename FilterType::OriginPointType':{'type':'Point','namespace':'FilterType::OriginPointType'},
+'typename FilterType::PatternArrayType':{'type':'Array','namespace':'FilterType::PatternArrayType'},
+'typename FilterType::FlipAxesArrayType':{'type':'Array','namespace':'FilterType::FlipAxesArrayType'},
+'typename InputImageType::SizeType':{'type':'Size','namespace':'InputImageType::SizeType'},
+'typename FilterType::OffsetType':{'type':'Offset','namespace':'FilterType::OffsetType'},
+'typename FilterType::OrderArrayType':{'type':'Array','namespace':'FilterType::OrderArrayType'},
+'typename FilterType::WeightsType':{'type':'Array','namespace':'FilterType::WeightsType'},
+'typename InputImageType::IndexType':{'type':'Index','namespace':'InputImageType::IndexType'},
+'typename FilterType::InputImageIndexType':{'type':'Index','namespace':'FilterType::InputImageIndexType'},
+'typename FilterType::LayoutArrayType':{'type':'Index','namespace':'FilterType::LayoutArrayType'},
+'typename FilterType::RadiusType':{'type':'Size','namespace':'FilterType::RadiusType'},
+'typename FilterType::PermuteOrderArrayType':{'type':'Array','namespace':'FilterType::PermuteOrderArrayType'},
+'typename FilterType::ExpandFactorsType':{'type':'Array','namespace':'FilterType::ExpandFactorsType'},
+'typename FilterType::ShrinkFactorsType':{'type':'Array','namespace':'FilterType::ShrinkFactorsType'}
+}
+
+ValueAndDimensionTypes={
+'Size':{'vtype':'SizeValueType','dim':'Dimension'},
+'Array':{'vtype':'ValueType','dim':'Dimension'},
+'Point':{'vtype':'ValueType','dim':'PointDimension'},
+'Vector':{'vtype':'ValueType','dim':'Dimension'},
+'Index':{'vtype':'IndexValueType','dim':'Dimension'},
+'Offset':{'vtype':'OffsetValueType','dim':'Dimension'},
+}
+
+CheckEntry=['CheckIntegerEntry','CheckVectorEntry']
 
 def ExtractDescritpion(data_json, fields, filter_description,verbose=False, not_implemented=False):
     # Print which fields are being processed
@@ -250,40 +324,61 @@ def FilterFields(fields, descriptions):
 
 def CheckTypeSupport(filter_members):
     for filter_member in filter_members:  # Expected to be a list
-        if filter_member['type'] not in ITKToDream3DType:
-            print("Type not supported: %s"%filter_member['type'])
+        if (filter_member['type'],filter_member['dim_vec']) not in ITKToDream3DType:
+            print("Type not supported: %s (vector: %d)"%(filter_member['type'],filter_member['dim_vec']))
             print filter_member
             return False
     return True
 
+def CheckITKTypeSupport(filter_members):
+    for filter_member in filter_members:  # Expected to be a list
+        if 'itk_type' in filter_member:
+            if filter_member['dim_vec'] > 0 and filter_member['itk_type'] not in itkVectorTypes:
+                print("itk_type not supported: %s "%filter_member['itk_type'])
+                print filter_member
+                return False
+    return True
+
 def GetDREAM3DParameters(filter_member):
-    dream3D_type = ITKToDream3DType[filter_member['type']]
+    dream3D_type = ITKToDream3DType[(filter_member['type'],filter_member['dim_vec'])]['d3d']
     parameter='    SIMPL_FILTER_PARAMETER('+dream3D_type+', '+filter_member['name']+')\n'
     parameter+='    Q_PROPERTY('+dream3D_type+' '+filter_member['name']+' READ get'+filter_member['name']+' WRITE set'+filter_member['name']+')\n\n'
     return parameter
 
 def GetDREAM3DSetupFilterParametersFromMembers(filter_member, filter_name):
-    if filter_member['type'] in ITKToDream3DType.keys():
-        include=Dream3DTypeToMacro[ITKToDream3DType[filter_member['type']]]['include']
-        macro=Dream3DTypeToMacro[ITKToDream3DType[filter_member['type']]]['macro']
-        setup='parameters.push_back('+macro+'("'+filter_member['name']+'", '+filter_member['name']+', FilterParameter::Parameter, '+filter_name+'));\n'
-        limits=""
-        dream3D_type = ITKToDream3DType[filter_member['type']]
-        if dream3D_type != filter_member['type']:
-            limits='CheckIntegerEntry<'+filter_member['type']+','+dream3D_type+'>(m_'+filter_member['name']+', "'+filter_member['name']+'");\n'
-        return [include, setup, limits, False]
-    else:
-        print("Type not supported: %s"%filter_member['type'])
-        return ["", "", "", True]
+    dream3D_type = ITKToDream3DType[(filter_member['type'],filter_member['dim_vec'])]['d3d']
+    include=Dream3DTypeToMacro[dream3D_type]['include']
+    macro=Dream3DTypeToMacro[dream3D_type]['macro']
+    setup='parameters.push_back('+macro+'("'+filter_member['name']+'", '+filter_member['name']+', FilterParameter::Parameter, '+filter_name+'));\n'
+    limits=""
+    component_type = Dream3DTypeToMacro[dream3D_type]['component']
+    if component_type != filter_member['type']:
+        limits='this->'+CheckEntry[filter_member['dim_vec']]+'<'+filter_member['type']+','+dream3D_type+'>(m_'+filter_member['name']+', "'+filter_member['name']+'",'+str(TypeIsInt[filter_member['type']])+');\n'
+    return [include, setup, limits]
 
 def GetDREAM3DReadFilterParameters(filter_member):
-  return '  set'+filter_member['name']+'(reader->readValue("'+filter_member['name']+'", get'+filter_member['name']+'()));\n'
+  dream3D_type = ITKToDream3DType[(filter_member['type'],filter_member['dim_vec'])]['d3d']
+  return '  set'+filter_member['name']+'(reader->'+Dream3DTypeToMacro[dream3D_type]['read']+'("'+filter_member['name']+'", get'+filter_member['name']+'()));\n'
 
 def ImplementFilter(filter_description, filter_members):
     filt = '  typedef itk::'+filter_description['name']+'<ImageType, ImageType> FilterType;\n'
     filt+= '  typename FilterType::Pointer filter = FilterType::New();\n'
     for filter_member in filter_members:
-        filt+= '  filter->Set'+filter_member['name']+'(static_cast<'+filter_member['type']+'>(m_'+filter_member['name']+'));\n'
+        if filter_member['dim_vec'] == 0:
+            call = 'static_cast<'+filter_member['type']+'>(m_'+filter_member['name']+')'
+        elif filter_member['dim_vec'] == 1:
+            if 'itk_type' in filter_member:
+                d3d_type = ITKToDream3DType[(filter_member['type'],filter_member['dim_vec'])]['d3d']
+                itk_type = itkVectorTypes[filter_member['itk_type']]['type']
+                itk_type_namespace = itkVectorTypes[filter_member['itk_type']]['namespace']
+                itk_type_dimension = itk_type_namespace+"::"+ValueAndDimensionTypes[itk_type]['dim']
+                itk_type_component = "typename "+itk_type_namespace+"::"+ValueAndDimensionTypes[itk_type]['vtype']
+                call = 'CastVec3ToITK<'+d3d_type+','+filter_member['itk_type']+','+itk_type_component+'>(m_'+filter_member['name']+','+itk_type_dimension+')'
+            else:
+                raise Exception("Vector with no itk_type - %s"%filter_member)
+        else:
+            raise Exception("dim_vec = % - %s"%(filter_member['dim_vec'],filter_member))
+        filt+= '  filter->Set'+filter_member['name']+'('+call+');\n'
     filt+='  this->ITKImageBase::filter<PixelType, Dimension, FilterType>(filter);\n'
     return filt
 
@@ -325,7 +420,11 @@ def InitializeParsingValues(DREAM3DFilter, filter_description):
 
 
 def GetDREAM3DInitializationParameters(filter_member):
-    return ',\nm_'+filter_member['name']+'('+str(filter_member['default'])+')'
+    type_conversion_dict = ITKToDream3DType[(filter_member['type'],filter_member['dim_vec'])]
+    input_type = type_conversion_dict['std']
+    output_type = type_conversion_dict['d3d']
+    component_type = Dream3DTypeToMacro[output_type]['component']
+    return '  m_'+filter_member['name']+'='+CastStdToDream3D[filter_member['dim_vec']]+'<'+input_type+','+output_type+','+component_type+'>('+str(filter_member['default'])+');\n'
 
 def main(argv=None):
     # Parse arguments
@@ -398,6 +497,8 @@ def main(argv=None):
         # Check filter members type
         if not CheckTypeSupport(filter_members):
             continue
+        if not CheckITKTypeSupport(filter_members):
+            continue
         # Create Filter content
         # Initialization of replacement strings
         DREAM3DFilter={}
@@ -407,9 +508,7 @@ def main(argv=None):
             # Append Parameters
             DREAM3DFilter['Parameters'] += GetDREAM3DParameters(filter_member)
             # SetupFilterParameters
-            [include, setup, limits, error] = GetDREAM3DSetupFilterParametersFromMembers(filter_member, DREAM3DFilter['FilterName'])
-            if error:
-                continue
+            [include, setup, limits] = GetDREAM3DSetupFilterParametersFromMembers(filter_member, DREAM3DFilter['FilterName'])
             DREAM3DFilter['SetupFilterParameters'] += '  '*bool(len(setup))+setup
             DREAM3DFilter['CheckIntegerEntry'] += '  '*bool(len(limits))+limits
             include_list.append(include)
