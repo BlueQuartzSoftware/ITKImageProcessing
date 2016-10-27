@@ -6,6 +6,7 @@ ITK filters and creates a Dream3D filter for each filter based on
 the information found in the JSON file.
 JSON files are taken from [1].
 Documentation about the JSON files is available here [2].
+Test implementation in SimpleITK: [3]
 
 Usage:
 
@@ -13,6 +14,7 @@ Usage:
 
 [1] https://github.com/SimpleITK/SimpleITK
 [2] https://itk.org/SimpleITKDoxygen/html/FilterTemplatesPage.html
+[3] https://github.com/SimpleITK/SimpleITK/blob/master/Testing/Unit/sitkImageFilterTestTemplate.cxx.in
 """
 import json
 import argparse
@@ -27,11 +29,11 @@ general={
                {'name':['number_of_inputs'],'type':int, 'required':True,'limitations':{'maximum':1, 'minimum':1}},
                {'name':['include_files'],'type':list,'required':False,'Filter':'sitk'},
                {'name':['members'],'type':list,'required':False},
-               {'name':['inputs'],'type':str,'required':False}
+               {'name':['inputs'],'type':str,'required':False},
+               {'name':['tests'],'type':list,'required':False}
              ],
         'ignored':
              [
-               {'name':['tests']},  # Dream3D does not need the SimpleITK test information
                {'name':['template_test_filename']},  # Dream3D does not need the SimpleITK test information
                {'name':['public_declarations']},  # Dream3D does not require additional C++ code
                {'name':['custom_methods']},  # Dream3D does not require to add methods to the filter
@@ -112,6 +114,56 @@ inputs={
            {'name':['optional'],'type':str,'required':False}  # 20
          ]
        }
+
+tests={
+       'name':'tests',
+       'processed':
+        [
+          {'name':['tag'],'type':str,'required':True},  # 498 occurences
+          {'name':['md5hash'], 'type':str, 'required':False},  # 329 occurences
+          {'name':['settings'], 'type':list,'required':False},  # 621 occurences
+          {'name':['inputs'],'type':list,'required':True,'limitations':{'len_maximum':1, 'len_minimum':1}},  # 816 (not limited to tests)
+          {'name':['tolerance'],'type':float,'required':False}  # 249 occurences
+        ],
+        'ignored':
+        [
+          {'name':['description'],'type':str,'required':False},  # 3162 (not limited to tests)
+          {'name':['inputA'],'type':str,'required':False},  # 0 occurence in JSON files
+          {'name':['inputB'],'type':str,'required':False},  # 0 occurence in JSON files
+          {'name':['sha1hash'],'type':str,'required':False}  # 0 occurence in JSON files
+        ],
+        'not_implemented':
+        [
+          {'name':['no_procedure'],'type':str,'required':False},  # 31
+          {'name':['inputA_cast'],'type':str,'required':False},  # after inputA is read the CastImageFilter is run, to covert the image type./24 occurences
+          {'name':['inputB_cast'],'type':str,'required':False}  # after inputB is read the CastImageFilter is run, to covert the image type./ 9 occurences
+        ]
+}
+
+tests_settings={
+       'name':'tests_settings',
+       'processed':
+        [
+          {'name':['parameter'],'type':str,'required':True},
+          {'name':['value'], 'type':str, 'required':True},
+          {'name':['dim_vec'], 'type':int, 'required':False},
+          {'name':['type'], 'type':str, 'required':False}
+        ],
+        'ignored':
+        [
+          {'name':['cxx_value'],'type':str,'required':False},  # 45 occurences
+          {'name':['python_value'],'type':str,'required':False},  # 82 occurences
+          {'name':['lua_value'],'type':str,'required':False},  # 44 occurences
+          {'name':['ruby_value'],'type':str,'required':False},  # 53 occurences
+          {'name':['java_value'],'type':str,'required':False},  # 56 occurences
+          {'name':['tcl_value'],'type':str,'required':False},  # 54 occurences
+          {'name':['R_value'],'type':str,'required':False},  # 80 occurences
+          {'name':['csharp_value'],'type':str,'required':False},  # 43 occurences
+          {'name':['no_get_method'],'type':bool,'required':False}
+        ],
+        'not_implemented':
+        []
+}
 
 Dream3DTypeToMacro={
   'double':{'include':'SIMPLib/FilterParameters/DoubleFilterParameter.h', 'macro':'SIMPL_NEW_DOUBLE_FP','component':'double','read':'readValue'},
@@ -206,7 +258,16 @@ ValueAndDimensionTypes={
 
 CheckEntry=['CheckIntegerEntry','CheckVectorEntry']
 
-def ExtractDescritpion(data_json, fields, filter_description,verbose=False, not_implemented=False):
+
+#
+def ExtractDescritpion(data_json, fields, filter_description, verbose=False, not_implemented=False):
+    """ ExtractDescritpion
+    Data structure: input data
+    fields: global dictionary describing expected fields
+    filter_description: output dictionary containing filtered results
+    verbose: boolean to print extra information
+    not_implemented: boolean to ignore fields that are not implemented/used yet
+    """
     # Print which fields are being processed
     if verbose:
         print("Processing %s"%fields['name'])
@@ -266,15 +327,22 @@ def CheckAutomaticallyGenerated(filename):
 def GetDREAM3DFilterFilePathNoExt(filter_name, directory):
     return os.path.join(directory, GetDREAM3DFilterName(filter_name))
 
+def CheckFileExists(filename):
+    return (os.path.isfile(filename) and os.path.getsize(filename)>0)
+
 def FilterFilesAlreadyExist(filter_name, directory, overwrite):
     exists={}
     automatic={}
     for ext in ['.h','.cpp']:
         filename=GetDREAM3DFilterFilePathNoExt(filter_name, directory)+ext
-        exists[ext]=(os.path.isfile(filename) and os.path.getsize(filename)>0)
+        exists[ext]=CheckFileExists(filename)
         automatic[ext]=CheckAutomaticallyGenerated(filename)
+    test_Filename=os.path.join(os.path.join(directory,"Test"),filter_name+"Test.cpp")
+    exists['test'] = CheckFileExists(test_Filename)
+    automatic['test'] = CheckAutomaticallyGenerated(test_Filename)
     error = False
-    if exists['.h'] != exists['.h'] or automatic['.h'] != automatic['.cpp']:
+    if exists['.h'] != exists['.cpp'] or automatic['.h'] != automatic['.cpp']\
+       or exists['.h'] != exists['test'] or automatic['.h'] != automatic['test']:
         print("Error checking filter files. Check them manually.")
         return False
     if exists['.h']:
@@ -296,7 +364,14 @@ def ReplaceVariablesInTemplate(lines,DREAM3DFilter):
             lines[ii]=lines[ii].replace('${'+key+'}', val)
     return lines
 
-def VerifyLimitations(fields, descriptions, verbose):
+def VerifyLimitations(fields, descriptions, verbose, islist=False):
+    # This is a list of list
+    if islist:
+        for description in descriptions:
+            if not VerifyLimitations(fields, description, verbose):
+                return False
+        return True
+    # If not a list of list
     for description in descriptions:  # Description is expected to be a list
         for key,val in description.iteritems():        
             field = [x for x in fields['processed'] if key in x['name']][0]  # There should be one and only one element in the list
@@ -312,9 +387,27 @@ def VerifyLimitations(fields, descriptions, verbose):
                         if verbose:
                             print("values (%d) in field (%s) is too small. Minimum accepted is %d"%(val,field['name'], limitation_field['minimum']))
                         return False  # Not handled yet
+                if 'len_maximum' in limitation_field:
+                    if len(val) > limitation_field['len_maximum']:
+                        if verbose:
+                            print("Length (%d) in field (%s) is too large. Maximum accepted is %d"%(len(val),field['name'], limitation_field['len_maximum']))
+                        return False  # Not handled yet
+                if 'len_minimum' in limitation_field:
+                    if len(val) < limitation_field['len_minimum']:
+                        if verbose:
+                            print("Length (%d) in field (%s) is too small. Minimum accepted is %d"%(len(val),field['name'], limitation_field['len_minimum']))
+                        return False  # Not handled yet
+
+
     return True
 
-def FilterFields(fields, descriptions):
+def FilterFields(fields, descriptions, isList=False):
+    # If description is list of list
+    if isList:
+        for description in descriptions:
+            FilterFields(fields, description)
+        return
+    # else: description is not list of list
     for ii in range(0,len(descriptions)):  # Description is expected to be a list
         for key,val in descriptions[ii].iteritems():        
             field = [x for x in fields['processed'] if key in x['name']][0]  # There should be one and only one element in the list
@@ -417,6 +510,8 @@ def InitializeParsingValues(DREAM3DFilter, filter_description):
     DREAM3DFilter['ReadFilterParameters'] = ''
     DREAM3DFilter['InitializationParameters'] = ''
     DREAM3DFilter['CheckIntegerEntry'] = ''
+    DREAM3DFilter['RegisterTests'] = ''
+    DREAM3DFilter['FilterTests'] = ''
 
 
 def GetDREAM3DInitializationParameters(filter_member):
@@ -425,6 +520,102 @@ def GetDREAM3DInitializationParameters(filter_member):
     output_type = type_conversion_dict['d3d']
     component_type = Dream3DTypeToMacro[output_type]['component']
     return '  m_'+filter_member['name']+'='+CastStdToDream3D[filter_member['dim_vec']]+'<'+input_type+','+output_type+','+component_type+'>('+str(filter_member['default'])+');\n'
+
+def GetOutputDirectory(directory):
+    return os.path.join(directory, 'ITKImageProcessingFilters')
+
+def ExtractDescriptionList(fields, description, filter_fields, verbose, not_implemented):
+    """ ExtractDescriptionList
+    fields: description of the expected fields (gloabal variable)
+    description: list containing input to be read and filtered
+    filter_fields: output filtered dictionary
+    verbose: boolean to print extra information
+    not_implemented: boolean to ignore fields that are not implemented/used yet
+    """
+    for descr in description:
+        filter_field={}
+        if not ExtractDescritpion(descr, fields, filter_field, verbose, not_implemented):
+            return False
+        filter_fields.append(filter_field)
+    return True
+
+def GetDream3DTestName(filter_description, test):
+    filterName=GetDREAM3DFilterName(filter_description['name'])
+    testName=test['tag']
+    return 'Test'+filterName+testName+'Test()'
+
+def GetDream3DFilterTests(filter_description, test, test_settings):
+    testFunctionCode = 'int ' + GetDream3DTestName(filter_description, test) + '\n'
+    testFunctionCode += '{\n'
+    # Create and initialized necessary variables
+    testFunctionCode += '    QString input_filename = UnitTest::DataDir + "/Data/JSONFilters/'+test['inputs'][0]+'";\n'  # Only reads the first file
+    testFunctionCode += '    DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");\n'
+    testFunctionCode += '    DataContainerArray::Pointer containerArray = DataContainerArray::New();\n'
+    # Read input image
+    testFunctionCode += '    ReadImage(input_filename, containerArray, input_path);\n'
+    # Filter image
+    testFunctionCode += '    QString filtName = "'+GetDREAM3DFilterName(filter_description['name'])+'";\n'
+    testFunctionCode += '    FilterManager* fm = FilterManager::Instance();\n'
+    testFunctionCode += '    IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);\n'
+    testFunctionCode += '    DREAM3D_REQUIRE_NE(filterFactory.get(),0);\n'
+    testFunctionCode += '    AbstractFilter::Pointer filter = filterFactory->create();\n'
+    testFunctionCode += '    QVariant var;\n'
+    testFunctionCode += '    bool propWasSet;\n'
+    testFunctionCode += '    var.setValue(input_path);\n'
+    testFunctionCode += '    propWasSet = filter->setProperty("SelectedCellArrayPath", var);\n'
+    testFunctionCode += '    DREAM3D_REQUIRE_EQUAL(propWasSet, true);\n'
+    testFunctionCode += '    var.setValue(false);\n'
+    testFunctionCode += '    propWasSet = filter->setProperty("SaveAsNewArray", var);\n'
+    testFunctionCode += '    DREAM3D_REQUIRE_EQUAL(propWasSet, true);\n'
+    testFunctionCode += '    filter->setDataContainerArray(containerArray);\n'
+    testFunctionCode += '    filter->execute();\n'
+    testFunctionCode += '    DREAM3D_REQUIRED(filter->getErrorCondition(), >= , 0);\n'
+    testFunctionCode += '    DREAM3D_REQUIRED(filter->getWarningCondition(), >= , 0);\n'
+    # Save filtered image for debugging purposes
+    testFunctionCode += '    WriteImage("'+GetDREAM3DFilterName(filter_description['name'])+test['tag']+'.nrrd", containerArray, input_path);\n'
+    if 'md5hash' in test and test['md5hash'] != '' and test['md5hash'] != None:
+        # If MD5
+        # Get MD5 from output image
+        testFunctionCode += '    QString md5Output;\n'
+        testFunctionCode += '    GetMD5FromDataContainer(containerArray, input_path, md5Output);\n'
+        testFunctionCode += '    DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("'+test['md5hash']+'"));\n'
+    else:
+        # Compare to expected MD5
+        # Read baseline image
+        testFunctionCode += '    QString baseline_filename = UnitTest::DataDir + "/Data/JSONFilters/Baseline/BasicFilters_'+filter_description['name']+'_'+test['tag']+'.nrrd";\n'
+        testFunctionCode += '    DataArrayPath baseline_path("BContainer", "BAttributeMatrixName", "BAttributeArrayName");\n'
+        testFunctionCode += '    ReadImage(baseline_filename, containerArray, baseline_path);\n'
+        testFunctionCode += '    int res = CompareImages(containerArray, input_path, baseline_path, '+str(test['tolerance'])+');\n'
+        testFunctionCode += '    DREAM3D_REQUIRE_EQUAL(res,0);\n'
+
+    testFunctionCode += '    return 0;\n'
+    testFunctionCode += '}\n\n'
+    return testFunctionCode
+
+def GetDream3DRegisterTests(filter_description, test, test_settings):
+    testName = GetDream3DTestName(filter_description, test)
+    return '    DREAM3D_REGISTER_TEST( ' + testName + ');\n'
+
+
+def VerifyFilterParameterTypes(filter_members,test_settings):
+    for settings in test_settings:
+        if len(settings.keys()) == 0:
+            continue
+        if settings['type'] == '':
+            print("No type in test for %s - searching..."%settings['parameter'])
+            print "settings:"+str(settings)
+            print "filter_members:"+str(filter_members)
+            list_types = [ x['type'] for x in filter_members if x['name'] == settings['parameter'] ]
+            print list_types
+            if len(list_types) != 1:
+                print("No type in test for %s - No type found in filter_members."%settings['parameter'])
+                return 0
+            print("No type in test for %s - %s"%(settings['parameter'],list_types[0]))
+            settings['type']=list_types[0]
+    return 1
+            
+
+
 
 def main(argv=None):
     # Parse arguments
@@ -442,13 +633,13 @@ def main(argv=None):
     parser.add_argument('-o', '--Overwrite', dest='overwrite', action='store_true', help="Overwrite files previously generated automatically")
     parser.set_defaults(verbose=False)
     options = parser.parse_args(argv[1:])
-    output_directory = os.path.join(options.root_directory, 'ITKImageProcessingFilters')
     documentation_directory = os.path.join(options.root_directory, 'Documentation/ITKImageProcessingFilters')
     template_directory = os.path.join(options.root_directory, 'Utilities/SimpleITKJSONDream3DFilterCreationTemplates')
+    filters_output_directory = GetOutputDirectory(options.root_directory)
     if options.verbose:
         print("JSON directory: %s"%options.json_directory)
         print("Root directory: %s"%options.root_directory)
-        print("Output directory: %s"%output_directory)
+        print("Output directory: %s"%filters_output_directory)
         print("Template directory: %s"%template_directory)
         print("NotImplemented: %r"%options.not_implemented)
         print("Overwrite: %r"%options.overwrite)
@@ -466,38 +657,77 @@ def main(argv=None):
         if not ExtractDescritpion(data_json, general, filter_description, options.extra_verbose, options.not_implemented):
             continue
         # Does filter already exist and has it been generated automatically
-        if not FilterFilesAlreadyExist(filter_description['name'], output_directory, options.overwrite):
+        if not FilterFilesAlreadyExist(filter_description['name'], options.root_directory, options.overwrite):
             continue
         # Read JSON sub fields
         filter_inputs=[]
-        for ii in filter_description['inputs']:
-            filter_input={}
-            if not ExtractDescritpion(ii, inputs, filter_input, options.extra_verbose, options.not_implemented):
-                continue
-            filter_inputs.append(filter_input)
+        if not ExtractDescriptionList(inputs, filter_description['inputs'],\
+                                      filter_inputs, options.extra_verbose, options.not_implemented):
+            continue
         # if 'inputs' specified, update 'number_of_input' with that value
         # if 'inputs' is specified, 'number_of_inputs' is typically initialized with '0'
         if len(filter_inputs):
             filter_description['number_of_inputs'] = len(filter_inputs)
         filter_members=[]
-        for ii in filter_description['members']:
-            member_description={}
-            if not ExtractDescritpion(ii, members, member_description, options.extra_verbose, options.not_implemented):
+        if not ExtractDescriptionList(members, filter_description['members'],\
+                                      filter_members, options.extra_verbose, options.not_implemented):
+            continue
+        # Read tests description
+        filter_tests=[]
+        if not ExtractDescriptionList(tests, filter_description['tests'],\
+                                      filter_tests, options.extra_verbose, options.not_implemented):
+            continue
+        # Read tests settings
+        # tests and settings are in the same order:
+        # filter_tests[0]->filter_tests_settings[0]
+        # A dictionary could have been used to contain filter_tests_settings
+        # but most functions in this script used on the data containers expect
+        # to work on lists.
+        filter_test_settings=[]
+        for ii in range(len(filter_tests)):
+            test_settings_description=[]
+            current_settings = filter_tests[ii]['settings']
+            if current_settings == []:
+                filter_test_settings.append([{}])
                 continue
-            filter_members.append(member_description)
+            if not ExtractDescriptionList(tests_settings, current_settings, test_settings_description,
+                                          options.extra_verbose, options.not_implemented):
+                filter_tests[ii]['error']=True
+                continue
+            # Only append list of test settings if no error found in settings
+            # The tests with errors in settings will be removed in the next step
+            if 'error' not in filter_tests[ii]:
+                filter_test_settings.append(test_settings_description)
+        # Remove tests that had errors in their settings
+        filter_tests[:] = [x for x in filter_tests if 'error' not in x]
+        # Since bad settings are not save, there should be the same number
+        # of tests and test settings
+        if len(filter_tests) != len(filter_test_settings):
+            print("Different number of tests and settings.")
+            print("filter_tests:%s"%(str(filter_tests)))
+            print("filter_test_settings:%s"%(str(filter_test_settings)))
+            print("skipping this filter")
+            continue
         # Verifies limitations
         if not VerifyLimitations(general, [filter_description], options.verbose) or\
            not VerifyLimitations(inputs, filter_inputs, options.verbose) or\
-           not VerifyLimitations(members, filter_members, options.verbose):
+           not VerifyLimitations(members, filter_members, options.verbose) or\
+           not VerifyLimitations(tests, filter_tests, options.verbose) or\
+           not VerifyLimitations(tests_settings, filter_test_settings, options.verbose, True):
+            print "VerifyLimitations Failed"
             continue
         # Filter lists in fields
         FilterFields(general, [filter_description])
         FilterFields(inputs, filter_inputs)
         FilterFields(members, filter_members)
+        FilterFields(tests, filter_tests)
+        FilterFields(tests_settings, filter_test_settings, True)
         # Check filter members type
         if not CheckTypeSupport(filter_members):
+            print "CheckTypeSupport Failed"
             continue
         if not CheckITKTypeSupport(filter_members):
+            print "CheckITKTypeSupport Failed"
             continue
         # Create Filter content
         # Initialization of replacement strings
@@ -520,16 +750,25 @@ def main(argv=None):
         DREAM3DFilter['Filter']=ImplementFilter(filter_description, filter_members)
         #includes
         DREAM3DFilter['IncludeName']=FormatIncludes(include_list)
+        # Implement tests
+        for ii in range(len(filter_tests)):
+            if not VerifyFilterParameterTypes(filter_members,filter_test_settings[ii]):
+              print("Could not find all parameters types for tests_settings. This script will likely crash.")
+            DREAM3DFilter['FilterTests'] += GetDream3DFilterTests(filter_description, filter_tests[ii], filter_test_settings[ii])
+            DREAM3DFilter['RegisterTests'] += GetDream3DRegisterTests(filter_description, filter_tests[ii], filter_test_settings[ii])
         # Replace variables in template files
-        ConfigureFiles('.h', template_directory, output_directory, DREAM3DFilter)
-        ConfigureFiles('.cpp', template_directory, output_directory, DREAM3DFilter)
+        ConfigureFiles('.h', template_directory, filters_output_directory, DREAM3DFilter)
+        ConfigureFiles('.cpp', template_directory, filters_output_directory, DREAM3DFilter)
+        testDirectory = os.path.join(options.root_directory, 'Test')
+        ConfigureFiles('Test.cpp', template_directory, testDirectory, DREAM3DFilter)
         ConfigureFiles('.md', template_directory, documentation_directory, DREAM3DFilter)
         # Append list of filters created
         filter_list.append(DREAM3DFilter['FilterName'])
     # Print manual step: Add created filters to CMakeLists
-    print("Add these filters to SourceList.cmake:")
+    print("Add these filters to  ITKImageProcessingFilters/SourceList.cmake and Test/CMakeLists.txt:")
     for filt in filter_list:
         print(filt)
+    print("Update 'Test/TestFileLocations.h.in'")
 
 if __name__=='__main__':
     main(sys.argv)

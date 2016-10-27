@@ -244,7 +244,7 @@ class ITKImageBase : public AbstractFilter
       interruption->SetFilter(this);
 
       // Set up filter
-      filter->SetInput(filter->GetOutput());
+      filter->SetInput(toITK->GetOutput());
       filter->AddObserver(itk::ProgressEvent(), interruption);
       filter->Update();
 
