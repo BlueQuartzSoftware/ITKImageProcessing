@@ -79,7 +79,7 @@ const QString ITKImageBase::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 const QString ITKImageBase::getBrandingString()
 {
-  return "ITKImageProcessing";
+  return "ITK Image Processing";
 }
 
 // -----------------------------------------------------------------------------
@@ -103,5 +103,5 @@ const QString ITKImageBase::getGroupName()
 //
 // -----------------------------------------------------------------------------
 const QString ITKImageBase::getSubGroupName()
-{ return "ImageProcessing"; }
+{ return "Image Processing"; }
 

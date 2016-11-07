@@ -170,5 +170,5 @@ AbstractFilter::Pointer ITKGaussianBlur::newFilterInstance(bool copyFilterParame
 //
 // -----------------------------------------------------------------------------
 const QString ITKGaussianBlur::getHumanLabel()
-{ return "[ITK] GaussianBlur (KW)"; }
+{ return "[ITK] Gaussian Blur (KW)"; }
 
