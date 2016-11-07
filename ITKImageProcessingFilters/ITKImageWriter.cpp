@@ -355,11 +355,11 @@ const QString ITKImageWriter::getGroupName()
 //
 // -----------------------------------------------------------------------------
 const QString ITKImageWriter::getSubGroupName()
-{ return "ITKImageProcessing"; }
+{ return "Output"; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ITKImageWriter::getHumanLabel()
-{ return "[ITK] ImageWriter (KW)"; }
+{ return "[ITK] Image Writer (KW)"; }
 

@@ -385,11 +385,11 @@ const QString ITKImageReader::getGroupName()
 //
 // -----------------------------------------------------------------------------
 const QString ITKImageReader::getSubGroupName()
-{ return "ITKImageProcessing"; }
+{ return "Input"; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ITKImageReader::getHumanLabel()
-{ return "[ITK] ImageReader (KW)"; }
+{ return "[ITK] Image Reader (KW)"; }
 
