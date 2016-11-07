@@ -33,7 +33,6 @@ set(${PLUGIN_NAME}_Link_Libs Qt5::Core H5Support SIMPLib)
 set(TEST_NAMES
   ITKBinaryThreshold
   ITKGaussianBlur
-  ITKImageProcessingFilter
   ITKImageProcessingReader
   ITKImageProcessingWriter
 )
