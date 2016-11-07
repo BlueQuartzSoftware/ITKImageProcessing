@@ -35,6 +35,7 @@
 #define _ITKImageReader_H_
 
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
