@@ -7,12 +7,27 @@
 <body>
 <h3>ITKImageProcessing Plugin</h3>
 
-<p>This plugin uses <a href="http://www.itk.org">ITK</a> to add image processing algorithms to DREAM.3D</p>
+<p>This plugin uses <a href="https://www.itk.org">ITK</a> to add image processing algorithms to DREAM.3D</p>
 
 <h4>Citations</h4>
 <p>
-[1]...
-[2]...
+[1] "ITK: enabling reproducible research and open science."
+  McCormick Matthew, Liu Xiaoxiao, Ibanez Luis, Jomier Julien, Marion Charles.
+  Frontiers in Neuroinformatics. Vol 8. Pages 13. 2014
+  http://journal.frontiersin.org/article/10.3389/fninf.2014.00013
+  doi: 10.3389/fninf.2014.00013
+[2] "The ITK Software Guide: Design and Functionality." Fourth Edition.
+  Johnson, McCormick, Ibanez.
+  Published by Kitware Inc. 2015
+  ISBN: 9781-930934-28-3
+[3] "The ITK Software Guide: Introduction and Development Guidelines." Fourth Edition.
+  Johnson, McCormick, Ibanez. Published by Kitware Inc.  2015
+  ISBN: 9781-930934-27-6
+[4] T.S. Yoo, M. J. Ackerman, W. E. Lorensen, W. Schroeder, V. Chalana, S.
+  Aylward, D. Metaxas, R. Whitaker. Engineering and Algorithm Design for an
+  Image Processing API: A Technical Report on ITK - The Insight Toolkit. In
+  Proc. of Medicine Meets Virtual Reality, J. Westwood, ed., IOS Press Amsterdam
+  pp 586-592 (2002).
 </p>
 </body>
 </html>
