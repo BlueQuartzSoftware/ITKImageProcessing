@@ -3,9 +3,14 @@ machine:
     - docker
 
 dependencies:
+  cache_directories:
+    - "~/docker"
+
   override:
     - docker info
+    - if [[ -e ~/docker/data.tar ]]; then docker load -i ~/docker/data.tar; fi
     - docker pull dream3d/data
+    - if [[ -e ~/docker/dream3d.tar ]]; then docker load -i ~/docker/dream3d.tar; fi
     - docker pull dream3d/dream3d
 
 test:
