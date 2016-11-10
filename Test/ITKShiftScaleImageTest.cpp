@@ -20,18 +20,20 @@
 
 #include "ITKImageProcessingTestFileLocations.h"
 
-${IncludeName}
+#include <itkShiftScaleImageFilter.h>
+#include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
+
 
 // Testing
 #include <itkTestingHashImageFilter.h>
 #include <itkTestingComparisonImageFilter.h>
 
-class ${FilterName}Test
+class ITKShiftScaleImageTest
 {
 
   public:
-    ${FilterName}Test() {}
-    virtual ~${FilterName}Test() {}
+    ITKShiftScaleImageTest() {}
+    virtual ~ITKShiftScaleImageTest() {}
 
 
   // -----------------------------------------------------------------------------
@@ -50,8 +52,8 @@ class ${FilterName}Test
   // -----------------------------------------------------------------------------
   int TestFilterAvailability()
   {
-    // Now instantiate the ${FilterName}Test Filter from the FilterManager
-    QString filtName = "${FilterName}";
+    // Now instantiate the ITKShiftScaleImageTest Filter from the FilterManager
+    QString filtName = "ITKShiftScaleImage";
     FilterManager* fm = FilterManager::Instance();
     IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
     if (nullptr == filterFactory.get())
@@ -66,14 +68,14 @@ class ${FilterName}Test
 //  // -----------------------------------------------------------------------------
 //  //
 //  // -----------------------------------------------------------------------------
-//  int Test${FilterName}Test()
+//  int TestITKShiftScaleImageTest()
 //  {
 //    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//   /* Please write ${FilterName}Test test code here.
+//   /* Please write ITKShiftScaleImageTest test code here.
 //    *
 //    * Your IO test files are:
-//    * UnitTest::${FilterName}Test::TestFile1
-//    * UnitTest::${FilterName}Test::TestFile2
+//    * UnitTest::ITKShiftScaleImageTest::TestFile1
+//    * UnitTest::ITKShiftScaleImageTest::TestFile2
 //    *
 //    * SIMPLib provides some macros that will throw exceptions when a test fails
 //    * and thus report that during testing. These macros are located in the
@@ -93,7 +95,81 @@ class ${FilterName}Test
 //    return EXIT_SUCCESS;
 //  }
 
-${FilterTests}
+int TestITKShiftScaleImagedefaultTest()
+{
+    QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/RA-Short.nrrd");
+    DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
+    DataContainerArray::Pointer containerArray = DataContainerArray::New();
+    ReadImage(input_filename, containerArray, input_path);
+    QString filtName = "ITKShiftScaleImage";
+    FilterManager* fm = FilterManager::Instance();
+    IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+    DREAM3D_REQUIRE_NE(filterFactory.get(),0);
+    AbstractFilter::Pointer filter = filterFactory->create();
+    QVariant var;
+    bool propWasSet;
+    var.setValue(input_path);
+    propWasSet = filter->setProperty("SelectedCellArrayPath", var);
+    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+    var.setValue(false);
+    propWasSet = filter->setProperty("SaveAsNewArray", var);
+    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+    filter->setDataContainerArray(containerArray);
+    filter->execute();
+    DREAM3D_REQUIRED(filter->getErrorCondition(), >= , 0);
+    DREAM3D_REQUIRED(filter->getWarningCondition(), >= , 0);
+    WriteImage("ITKShiftScaleImagedefault.nrrd", containerArray, input_path);
+    QString md5Output;
+    GetMD5FromDataContainer(containerArray, input_path, md5Output);
+    DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("a963bd6a755b853103a2d195e01a50d3"));
+    return 0;
+}
+
+int TestITKShiftScaleImageparamsTest()
+{
+    QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/RA-Short.nrrd");
+    DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
+    DataContainerArray::Pointer containerArray = DataContainerArray::New();
+    ReadImage(input_filename, containerArray, input_path);
+    QString filtName = "ITKShiftScaleImage";
+    FilterManager* fm = FilterManager::Instance();
+    IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+    DREAM3D_REQUIRE_NE(filterFactory.get(),0);
+    AbstractFilter::Pointer filter = filterFactory->create();
+    QVariant var;
+    bool propWasSet;
+    var.setValue(input_path);
+    propWasSet = filter->setProperty("SelectedCellArrayPath", var);
+    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+    var.setValue(false);
+    propWasSet = filter->setProperty("SaveAsNewArray", var);
+    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+    {
+        double d3d_var;
+        d3d_var = 100;
+        var.setValue(d3d_var);
+        propWasSet = filter->setProperty("Shift", var);
+        DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+        }
+    {
+        double d3d_var;
+        d3d_var = 0.5;
+        var.setValue(d3d_var);
+        propWasSet = filter->setProperty("Scale", var);
+        DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+        }
+    filter->setDataContainerArray(containerArray);
+    filter->execute();
+    DREAM3D_REQUIRED(filter->getErrorCondition(), >= , 0);
+    DREAM3D_REQUIRED(filter->getWarningCondition(), >= , 0);
+    WriteImage("ITKShiftScaleImageparams.nrrd", containerArray, input_path);
+    QString md5Output;
+    GetMD5FromDataContainer(containerArray, input_path, md5Output);
+    DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("e3bee902dc9339d28359ebfb96a70186"));
+    return 0;
+}
+
+
 
 template<typename PixelType, unsigned int Dimensions>
 int CompareImages(DataContainer::Pointer input_container,
@@ -446,8 +522,10 @@ int GetMD5FromDataContainer(DataContainerArray::Pointer &containerArray,
 
     DREAM3D_REGISTER_TEST( TestFilterAvailability() );
 
-    //DREAM3D_REGISTER_TEST( Test${FilterName}Test() )
-${RegisterTests}
+    //DREAM3D_REGISTER_TEST( TestITKShiftScaleImageTest() )
+    DREAM3D_REGISTER_TEST( TestITKShiftScaleImagedefaultTest());
+    DREAM3D_REGISTER_TEST( TestITKShiftScaleImageparamsTest());
+
     if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
     {
       DREAM3D_REGISTER_TEST( RemoveTestFiles() )
@@ -455,8 +533,8 @@ ${RegisterTests}
   }
 
   private:
-    ${FilterName}Test(const ${FilterName}Test&); // Copy Constructor Not Implemented
-    void operator=(const ${FilterName}Test&); // Operator '=' Not Implemented
+    ITKShiftScaleImageTest(const ITKShiftScaleImageTest&); // Copy Constructor Not Implemented
+    void operator=(const ITKShiftScaleImageTest&); // Operator '=' Not Implemented
     QList<QString> FilesToRemove;
 };
 

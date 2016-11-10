@@ -20,18 +20,20 @@
 
 #include "ITKImageProcessingTestFileLocations.h"
 
-${IncludeName}
+#include <itkMedianProjectionImageFilter.h>
+#include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
+
 
 // Testing
 #include <itkTestingHashImageFilter.h>
 #include <itkTestingComparisonImageFilter.h>
 
-class ${FilterName}Test
+class ITKMedianProjectionImageTest
 {
 
   public:
-    ${FilterName}Test() {}
-    virtual ~${FilterName}Test() {}
+    ITKMedianProjectionImageTest() {}
+    virtual ~ITKMedianProjectionImageTest() {}
 
 
   // -----------------------------------------------------------------------------
@@ -50,8 +52,8 @@ class ${FilterName}Test
   // -----------------------------------------------------------------------------
   int TestFilterAvailability()
   {
-    // Now instantiate the ${FilterName}Test Filter from the FilterManager
-    QString filtName = "${FilterName}";
+    // Now instantiate the ITKMedianProjectionImageTest Filter from the FilterManager
+    QString filtName = "ITKMedianProjectionImage";
     FilterManager* fm = FilterManager::Instance();
     IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
     if (nullptr == filterFactory.get())
@@ -66,14 +68,14 @@ class ${FilterName}Test
 //  // -----------------------------------------------------------------------------
 //  //
 //  // -----------------------------------------------------------------------------
-//  int Test${FilterName}Test()
+//  int TestITKMedianProjectionImageTest()
 //  {
 //    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//   /* Please write ${FilterName}Test test code here.
+//   /* Please write ITKMedianProjectionImageTest test code here.
 //    *
 //    * Your IO test files are:
-//    * UnitTest::${FilterName}Test::TestFile1
-//    * UnitTest::${FilterName}Test::TestFile2
+//    * UnitTest::ITKMedianProjectionImageTest::TestFile1
+//    * UnitTest::ITKMedianProjectionImageTest::TestFile2
 //    *
 //    * SIMPLib provides some macros that will throw exceptions when a test fails
 //    * and thus report that during testing. These macros are located in the
@@ -93,7 +95,141 @@ class ${FilterName}Test
 //    return EXIT_SUCCESS;
 //  }
 
-${FilterTests}
+int TestITKMedianProjectionImagedefaultsTest()
+{
+    QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/RA-Float.nrrd");
+    DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
+    DataContainerArray::Pointer containerArray = DataContainerArray::New();
+    ReadImage(input_filename, containerArray, input_path);
+    QString filtName = "ITKMedianProjectionImage";
+    FilterManager* fm = FilterManager::Instance();
+    IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+    DREAM3D_REQUIRE_NE(filterFactory.get(),0);
+    AbstractFilter::Pointer filter = filterFactory->create();
+    QVariant var;
+    bool propWasSet;
+    var.setValue(input_path);
+    propWasSet = filter->setProperty("SelectedCellArrayPath", var);
+    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+    var.setValue(false);
+    propWasSet = filter->setProperty("SaveAsNewArray", var);
+    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+    filter->setDataContainerArray(containerArray);
+    filter->execute();
+    DREAM3D_REQUIRED(filter->getErrorCondition(), >= , 0);
+    DREAM3D_REQUIRED(filter->getWarningCondition(), >= , 0);
+    WriteImage("ITKMedianProjectionImagedefaults.nrrd", containerArray, input_path);
+    QString md5Output;
+    GetMD5FromDataContainer(containerArray, input_path, md5Output);
+    DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("86de48c070480cb9809e28715f6e70e1"));
+    return 0;
+}
+
+int TestITKMedianProjectionImageanother_dimensionTest()
+{
+    QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/RA-Float.nrrd");
+    DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
+    DataContainerArray::Pointer containerArray = DataContainerArray::New();
+    ReadImage(input_filename, containerArray, input_path);
+    QString filtName = "ITKMedianProjectionImage";
+    FilterManager* fm = FilterManager::Instance();
+    IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+    DREAM3D_REQUIRE_NE(filterFactory.get(),0);
+    AbstractFilter::Pointer filter = filterFactory->create();
+    QVariant var;
+    bool propWasSet;
+    var.setValue(input_path);
+    propWasSet = filter->setProperty("SelectedCellArrayPath", var);
+    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+    var.setValue(false);
+    propWasSet = filter->setProperty("SaveAsNewArray", var);
+    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+    {
+        double d3d_var;
+        d3d_var = 2;
+        var.setValue(d3d_var);
+        propWasSet = filter->setProperty("ProjectionDimension", var);
+        DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+        }
+    filter->setDataContainerArray(containerArray);
+    filter->execute();
+    DREAM3D_REQUIRED(filter->getErrorCondition(), >= , 0);
+    DREAM3D_REQUIRED(filter->getWarningCondition(), >= , 0);
+    WriteImage("ITKMedianProjectionImageanother_dimension.nrrd", containerArray, input_path);
+    QString md5Output;
+    GetMD5FromDataContainer(containerArray, input_path, md5Output);
+    DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("0990f0f6c63ea9d63b701ed7c2467de7"));
+    return 0;
+}
+
+int TestITKMedianProjectionImageshort_imageTest()
+{
+    QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/Ramp-Up-Short.nrrd");
+    DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
+    DataContainerArray::Pointer containerArray = DataContainerArray::New();
+    ReadImage(input_filename, containerArray, input_path);
+    QString filtName = "ITKMedianProjectionImage";
+    FilterManager* fm = FilterManager::Instance();
+    IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+    DREAM3D_REQUIRE_NE(filterFactory.get(),0);
+    AbstractFilter::Pointer filter = filterFactory->create();
+    QVariant var;
+    bool propWasSet;
+    var.setValue(input_path);
+    propWasSet = filter->setProperty("SelectedCellArrayPath", var);
+    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+    var.setValue(false);
+    propWasSet = filter->setProperty("SaveAsNewArray", var);
+    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+    {
+        double d3d_var;
+        d3d_var = 1;
+        var.setValue(d3d_var);
+        propWasSet = filter->setProperty("ProjectionDimension", var);
+        DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+        }
+    filter->setDataContainerArray(containerArray);
+    filter->execute();
+    DREAM3D_REQUIRED(filter->getErrorCondition(), >= , 0);
+    DREAM3D_REQUIRED(filter->getWarningCondition(), >= , 0);
+    WriteImage("ITKMedianProjectionImageshort_image.nrrd", containerArray, input_path);
+    QString md5Output;
+    GetMD5FromDataContainer(containerArray, input_path, md5Output);
+    DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("9fcc7164f3294811cbf2d875b0e494d1"));
+    return 0;
+}
+
+int TestITKMedianProjectionImagergb_imageTest()
+{
+    QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/VM1111Shrink-RGB.png");
+    DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
+    DataContainerArray::Pointer containerArray = DataContainerArray::New();
+    ReadImage(input_filename, containerArray, input_path);
+    QString filtName = "ITKMedianProjectionImage";
+    FilterManager* fm = FilterManager::Instance();
+    IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+    DREAM3D_REQUIRE_NE(filterFactory.get(),0);
+    AbstractFilter::Pointer filter = filterFactory->create();
+    QVariant var;
+    bool propWasSet;
+    var.setValue(input_path);
+    propWasSet = filter->setProperty("SelectedCellArrayPath", var);
+    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+    var.setValue(false);
+    propWasSet = filter->setProperty("SaveAsNewArray", var);
+    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+    filter->setDataContainerArray(containerArray);
+    filter->execute();
+    DREAM3D_REQUIRED(filter->getErrorCondition(), >= , 0);
+    DREAM3D_REQUIRED(filter->getWarningCondition(), >= , 0);
+    WriteImage("ITKMedianProjectionImagergb_image.nrrd", containerArray, input_path);
+    QString md5Output;
+    GetMD5FromDataContainer(containerArray, input_path, md5Output);
+    DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("b66bc7e92a21a33c46d9a334d2292845"));
+    return 0;
+}
+
+
 
 template<typename PixelType, unsigned int Dimensions>
 int CompareImages(DataContainer::Pointer input_container,
@@ -446,8 +582,12 @@ int GetMD5FromDataContainer(DataContainerArray::Pointer &containerArray,
 
     DREAM3D_REGISTER_TEST( TestFilterAvailability() );
 
-    //DREAM3D_REGISTER_TEST( Test${FilterName}Test() )
-${RegisterTests}
+    //DREAM3D_REGISTER_TEST( TestITKMedianProjectionImageTest() )
+    DREAM3D_REGISTER_TEST( TestITKMedianProjectionImagedefaultsTest());
+    DREAM3D_REGISTER_TEST( TestITKMedianProjectionImageanother_dimensionTest());
+    DREAM3D_REGISTER_TEST( TestITKMedianProjectionImageshort_imageTest());
+    DREAM3D_REGISTER_TEST( TestITKMedianProjectionImagergb_imageTest());
+
     if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
     {
       DREAM3D_REGISTER_TEST( RemoveTestFiles() )
@@ -455,8 +595,8 @@ ${RegisterTests}
   }
 
   private:
-    ${FilterName}Test(const ${FilterName}Test&); // Copy Constructor Not Implemented
-    void operator=(const ${FilterName}Test&); // Operator '=' Not Implemented
+    ITKMedianProjectionImageTest(const ITKMedianProjectionImageTest&); // Copy Constructor Not Implemented
+    void operator=(const ITKMedianProjectionImageTest&); // Operator '=' Not Implemented
     QList<QString> FilesToRemove;
 };
 

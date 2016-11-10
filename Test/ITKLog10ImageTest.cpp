@@ -20,18 +20,19 @@
 
 #include "ITKImageProcessingTestFileLocations.h"
 
-${IncludeName}
+#include <itkLog10ImageFilter.h>
+
 
 // Testing
 #include <itkTestingHashImageFilter.h>
 #include <itkTestingComparisonImageFilter.h>
 
-class ${FilterName}Test
+class ITKLog10ImageTest
 {
 
   public:
-    ${FilterName}Test() {}
-    virtual ~${FilterName}Test() {}
+    ITKLog10ImageTest() {}
+    virtual ~ITKLog10ImageTest() {}
 
 
   // -----------------------------------------------------------------------------
@@ -50,8 +51,8 @@ class ${FilterName}Test
   // -----------------------------------------------------------------------------
   int TestFilterAvailability()
   {
-    // Now instantiate the ${FilterName}Test Filter from the FilterManager
-    QString filtName = "${FilterName}";
+    // Now instantiate the ITKLog10ImageTest Filter from the FilterManager
+    QString filtName = "ITKLog10Image";
     FilterManager* fm = FilterManager::Instance();
     IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
     if (nullptr == filterFactory.get())
@@ -66,14 +67,14 @@ class ${FilterName}Test
 //  // -----------------------------------------------------------------------------
 //  //
 //  // -----------------------------------------------------------------------------
-//  int Test${FilterName}Test()
+//  int TestITKLog10ImageTest()
 //  {
 //    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//   /* Please write ${FilterName}Test test code here.
+//   /* Please write ITKLog10ImageTest test code here.
 //    *
 //    * Your IO test files are:
-//    * UnitTest::${FilterName}Test::TestFile1
-//    * UnitTest::${FilterName}Test::TestFile2
+//    * UnitTest::ITKLog10ImageTest::TestFile1
+//    * UnitTest::ITKLog10ImageTest::TestFile2
 //    *
 //    * SIMPLib provides some macros that will throw exceptions when a test fails
 //    * and thus report that during testing. These macros are located in the
@@ -93,7 +94,39 @@ class ${FilterName}Test
 //    return EXIT_SUCCESS;
 //  }
 
-${FilterTests}
+int TestITKLog10ImagedefaultsTest()
+{
+    QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/Ramp-Zero-One-Float.nrrd");
+    DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
+    DataContainerArray::Pointer containerArray = DataContainerArray::New();
+    ReadImage(input_filename, containerArray, input_path);
+    QString filtName = "ITKLog10Image";
+    FilterManager* fm = FilterManager::Instance();
+    IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+    DREAM3D_REQUIRE_NE(filterFactory.get(),0);
+    AbstractFilter::Pointer filter = filterFactory->create();
+    QVariant var;
+    bool propWasSet;
+    var.setValue(input_path);
+    propWasSet = filter->setProperty("SelectedCellArrayPath", var);
+    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+    var.setValue(false);
+    propWasSet = filter->setProperty("SaveAsNewArray", var);
+    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+    filter->setDataContainerArray(containerArray);
+    filter->execute();
+    DREAM3D_REQUIRED(filter->getErrorCondition(), >= , 0);
+    DREAM3D_REQUIRED(filter->getWarningCondition(), >= , 0);
+    WriteImage("ITKLog10Imagedefaults.nrrd", containerArray, input_path);
+    QString baseline_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Baseline/BasicFilters_Log10ImageFilter_defaults.nrrd");
+    DataArrayPath baseline_path("BContainer", "BAttributeMatrixName", "BAttributeArrayName");
+    ReadImage(baseline_filename, containerArray, baseline_path);
+    int res = CompareImages(containerArray, input_path, baseline_path, 0.01);
+    DREAM3D_REQUIRE_EQUAL(res,0);
+    return 0;
+}
+
+
 
 template<typename PixelType, unsigned int Dimensions>
 int CompareImages(DataContainer::Pointer input_container,
@@ -446,8 +479,9 @@ int GetMD5FromDataContainer(DataContainerArray::Pointer &containerArray,
 
     DREAM3D_REGISTER_TEST( TestFilterAvailability() );
 
-    //DREAM3D_REGISTER_TEST( Test${FilterName}Test() )
-${RegisterTests}
+    //DREAM3D_REGISTER_TEST( TestITKLog10ImageTest() )
+    DREAM3D_REGISTER_TEST( TestITKLog10ImagedefaultsTest());
+
     if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
     {
       DREAM3D_REGISTER_TEST( RemoveTestFiles() )
@@ -455,8 +489,8 @@ ${RegisterTests}
   }
 
   private:
-    ${FilterName}Test(const ${FilterName}Test&); // Copy Constructor Not Implemented
-    void operator=(const ${FilterName}Test&); // Operator '=' Not Implemented
+    ITKLog10ImageTest(const ITKLog10ImageTest&); // Copy Constructor Not Implemented
+    void operator=(const ITKLog10ImageTest&); // Operator '=' Not Implemented
     QList<QString> FilesToRemove;
 };
 

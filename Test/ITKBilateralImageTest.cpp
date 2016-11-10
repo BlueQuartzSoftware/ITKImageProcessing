@@ -20,18 +20,20 @@
 
 #include "ITKImageProcessingTestFileLocations.h"
 
-${IncludeName}
+#include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
+#include <itkBilateralImageFilter.h>
+
 
 // Testing
 #include <itkTestingHashImageFilter.h>
 #include <itkTestingComparisonImageFilter.h>
 
-class ${FilterName}Test
+class ITKBilateralImageTest
 {
 
   public:
-    ${FilterName}Test() {}
-    virtual ~${FilterName}Test() {}
+    ITKBilateralImageTest() {}
+    virtual ~ITKBilateralImageTest() {}
 
 
   // -----------------------------------------------------------------------------
@@ -50,8 +52,8 @@ class ${FilterName}Test
   // -----------------------------------------------------------------------------
   int TestFilterAvailability()
   {
-    // Now instantiate the ${FilterName}Test Filter from the FilterManager
-    QString filtName = "${FilterName}";
+    // Now instantiate the ITKBilateralImageTest Filter from the FilterManager
+    QString filtName = "ITKBilateralImage";
     FilterManager* fm = FilterManager::Instance();
     IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
     if (nullptr == filterFactory.get())
@@ -66,14 +68,14 @@ class ${FilterName}Test
 //  // -----------------------------------------------------------------------------
 //  //
 //  // -----------------------------------------------------------------------------
-//  int Test${FilterName}Test()
+//  int TestITKBilateralImageTest()
 //  {
 //    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//   /* Please write ${FilterName}Test test code here.
+//   /* Please write ITKBilateralImageTest test code here.
 //    *
 //    * Your IO test files are:
-//    * UnitTest::${FilterName}Test::TestFile1
-//    * UnitTest::${FilterName}Test::TestFile2
+//    * UnitTest::ITKBilateralImageTest::TestFile1
+//    * UnitTest::ITKBilateralImageTest::TestFile2
 //    *
 //    * SIMPLib provides some macros that will throw exceptions when a test fails
 //    * and thus report that during testing. These macros are located in the
@@ -93,7 +95,83 @@ class ${FilterName}Test
 //    return EXIT_SUCCESS;
 //  }
 
-${FilterTests}
+int TestITKBilateralImagedefaultTest()
+{
+    QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/fruit.png");
+    DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
+    DataContainerArray::Pointer containerArray = DataContainerArray::New();
+    ReadImage(input_filename, containerArray, input_path);
+    QString filtName = "ITKBilateralImage";
+    FilterManager* fm = FilterManager::Instance();
+    IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+    DREAM3D_REQUIRE_NE(filterFactory.get(),0);
+    AbstractFilter::Pointer filter = filterFactory->create();
+    QVariant var;
+    bool propWasSet;
+    var.setValue(input_path);
+    propWasSet = filter->setProperty("SelectedCellArrayPath", var);
+    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+    var.setValue(false);
+    propWasSet = filter->setProperty("SaveAsNewArray", var);
+    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+    filter->setDataContainerArray(containerArray);
+    filter->execute();
+    DREAM3D_REQUIRED(filter->getErrorCondition(), >= , 0);
+    DREAM3D_REQUIRED(filter->getWarningCondition(), >= , 0);
+    WriteImage("ITKBilateralImagedefault.nrrd", containerArray, input_path);
+    QString md5Output;
+    GetMD5FromDataContainer(containerArray, input_path, md5Output);
+    DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("40d02c04323fc303a8a28261c6d4eb23"));
+    return 0;
+}
+
+int TestITKBilateralImage3dTest()
+{
+    QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/RA-Short.nrrd");
+    DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
+    DataContainerArray::Pointer containerArray = DataContainerArray::New();
+    ReadImage(input_filename, containerArray, input_path);
+    QString filtName = "ITKBilateralImage";
+    FilterManager* fm = FilterManager::Instance();
+    IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+    DREAM3D_REQUIRE_NE(filterFactory.get(),0);
+    AbstractFilter::Pointer filter = filterFactory->create();
+    QVariant var;
+    bool propWasSet;
+    var.setValue(input_path);
+    propWasSet = filter->setProperty("SelectedCellArrayPath", var);
+    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+    var.setValue(false);
+    propWasSet = filter->setProperty("SaveAsNewArray", var);
+    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+    {
+        double d3d_var;
+        d3d_var = 2.0;
+        var.setValue(d3d_var);
+        propWasSet = filter->setProperty("DomainSigma", var);
+        DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+        }
+    {
+        double d3d_var;
+        d3d_var = 500;
+        var.setValue(d3d_var);
+        propWasSet = filter->setProperty("RangeSigma", var);
+        DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+        }
+    filter->setDataContainerArray(containerArray);
+    filter->execute();
+    DREAM3D_REQUIRED(filter->getErrorCondition(), >= , 0);
+    DREAM3D_REQUIRED(filter->getWarningCondition(), >= , 0);
+    WriteImage("ITKBilateralImage3d.nrrd", containerArray, input_path);
+    QString baseline_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Baseline/BasicFilters_BilateralImageFilter_3d.nrrd");
+    DataArrayPath baseline_path("BContainer", "BAttributeMatrixName", "BAttributeArrayName");
+    ReadImage(baseline_filename, containerArray, baseline_path);
+    int res = CompareImages(containerArray, input_path, baseline_path, 1e-8);
+    DREAM3D_REQUIRE_EQUAL(res,0);
+    return 0;
+}
+
+
 
 template<typename PixelType, unsigned int Dimensions>
 int CompareImages(DataContainer::Pointer input_container,
@@ -446,8 +524,10 @@ int GetMD5FromDataContainer(DataContainerArray::Pointer &containerArray,
 
     DREAM3D_REGISTER_TEST( TestFilterAvailability() );
 
-    //DREAM3D_REGISTER_TEST( Test${FilterName}Test() )
-${RegisterTests}
+    //DREAM3D_REGISTER_TEST( TestITKBilateralImageTest() )
+    DREAM3D_REGISTER_TEST( TestITKBilateralImagedefaultTest());
+    DREAM3D_REGISTER_TEST( TestITKBilateralImage3dTest());
+
     if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
     {
       DREAM3D_REGISTER_TEST( RemoveTestFiles() )
@@ -455,8 +535,8 @@ ${RegisterTests}
   }
 
   private:
-    ${FilterName}Test(const ${FilterName}Test&); // Copy Constructor Not Implemented
-    void operator=(const ${FilterName}Test&); // Operator '=' Not Implemented
+    ITKBilateralImageTest(const ITKBilateralImageTest&); // Copy Constructor Not Implemented
+    void operator=(const ITKBilateralImageTest&); // Operator '=' Not Implemented
     QList<QString> FilesToRemove;
 };
 

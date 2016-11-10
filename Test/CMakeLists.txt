@@ -35,6 +35,48 @@ set(TEST_NAMES
   ITKGaussianBlur
   ITKImageProcessingReader
   ITKImageProcessingWriter
+  ITKAbsImage
+  ITKAcosImage
+  ITKAtanImage
+  ITKGradientMagnitudeRecursiveGaussianImage
+  ITKSqrtImage
+  ITKLaplacianRecursiveGaussianImage
+  ITKMinMaxCurvatureFlowImage
+  ITKSigmoidImage
+  ITKBinaryThinningImage
+  ITKHMaximaImage
+  ITKCurvatureAnisotropicDiffusionImage
+  ITKCosImage
+  ITKHMinimaImage
+  ITKExpImage
+  ITKLogImage
+  ITKRescaleIntensityImage
+  ITKLabelContourImage
+  ITKSaltAndPepperNoiseImage
+  ITKTanImage
+  ITKBinaryContourImage
+  ITKShotNoiseImage
+  ITKSpeckleNoiseImage
+  ITKGradientMagnitudeImage
+  ITKShiftScaleImage
+  ITKNotImage
+  ITKBinaryProjectionImage
+  ITKBinaryMinMaxCurvatureFlowImage
+  ITKInvertIntensityImage
+  ITKGrayscaleFillholeImage
+  ITKAsinImage
+  ITKHConvexImage
+  ITKIntensityWindowingImage
+  ITKGradientAnisotropicDiffusionImage
+  ITKExpNegativeImage
+  ITKSinImage
+  ITKValuedRegionalMinimaImage
+  ITKLog10Image
+  ITKSquareImage
+  ITKSobelEdgeDetectionImage
+  ITKValuedRegionalMaximaImage
+  ITKRelabelComponentImage
+  ITKGrayscaleGrindPeakImage
 )
 
 set( ${PLUGIN_NAME}_TEST_SRCS )

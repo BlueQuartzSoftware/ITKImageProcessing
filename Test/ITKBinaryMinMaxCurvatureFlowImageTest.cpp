@@ -20,18 +20,21 @@
 
 #include "ITKImageProcessingTestFileLocations.h"
 
-${IncludeName}
+#include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
+#include <itkBinaryMinMaxCurvatureFlowImageFilter.h>
+#include <SIMPLib/FilterParameters/IntFilterParameter.h>
+
 
 // Testing
 #include <itkTestingHashImageFilter.h>
 #include <itkTestingComparisonImageFilter.h>
 
-class ${FilterName}Test
+class ITKBinaryMinMaxCurvatureFlowImageTest
 {
 
   public:
-    ${FilterName}Test() {}
-    virtual ~${FilterName}Test() {}
+    ITKBinaryMinMaxCurvatureFlowImageTest() {}
+    virtual ~ITKBinaryMinMaxCurvatureFlowImageTest() {}
 
 
   // -----------------------------------------------------------------------------
@@ -50,8 +53,8 @@ class ${FilterName}Test
   // -----------------------------------------------------------------------------
   int TestFilterAvailability()
   {
-    // Now instantiate the ${FilterName}Test Filter from the FilterManager
-    QString filtName = "${FilterName}";
+    // Now instantiate the ITKBinaryMinMaxCurvatureFlowImageTest Filter from the FilterManager
+    QString filtName = "ITKBinaryMinMaxCurvatureFlowImage";
     FilterManager* fm = FilterManager::Instance();
     IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
     if (nullptr == filterFactory.get())
@@ -66,14 +69,14 @@ class ${FilterName}Test
 //  // -----------------------------------------------------------------------------
 //  //
 //  // -----------------------------------------------------------------------------
-//  int Test${FilterName}Test()
+//  int TestITKBinaryMinMaxCurvatureFlowImageTest()
 //  {
 //    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//   /* Please write ${FilterName}Test test code here.
+//   /* Please write ITKBinaryMinMaxCurvatureFlowImageTest test code here.
 //    *
 //    * Your IO test files are:
-//    * UnitTest::${FilterName}Test::TestFile1
-//    * UnitTest::${FilterName}Test::TestFile2
+//    * UnitTest::ITKBinaryMinMaxCurvatureFlowImageTest::TestFile1
+//    * UnitTest::ITKBinaryMinMaxCurvatureFlowImageTest::TestFile2
 //    *
 //    * SIMPLib provides some macros that will throw exceptions when a test fails
 //    * and thus report that during testing. These macros are located in the
@@ -93,7 +96,85 @@ class ${FilterName}Test
 //    return EXIT_SUCCESS;
 //  }
 
-${FilterTests}
+int TestITKBinaryMinMaxCurvatureFlowImagedefaultsTest()
+{
+    QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/RA-Float.nrrd");
+    DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
+    DataContainerArray::Pointer containerArray = DataContainerArray::New();
+    ReadImage(input_filename, containerArray, input_path);
+    QString filtName = "ITKBinaryMinMaxCurvatureFlowImage";
+    FilterManager* fm = FilterManager::Instance();
+    IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+    DREAM3D_REQUIRE_NE(filterFactory.get(),0);
+    AbstractFilter::Pointer filter = filterFactory->create();
+    QVariant var;
+    bool propWasSet;
+    var.setValue(input_path);
+    propWasSet = filter->setProperty("SelectedCellArrayPath", var);
+    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+    var.setValue(false);
+    propWasSet = filter->setProperty("SaveAsNewArray", var);
+    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+    filter->setDataContainerArray(containerArray);
+    filter->execute();
+    DREAM3D_REQUIRED(filter->getErrorCondition(), >= , 0);
+    DREAM3D_REQUIRED(filter->getWarningCondition(), >= , 0);
+    WriteImage("ITKBinaryMinMaxCurvatureFlowImagedefaults.nrrd", containerArray, input_path);
+    QString baseline_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Baseline/BasicFilters_BinaryMinMaxCurvatureFlowImageFilter_defaults.nrrd");
+    DataArrayPath baseline_path("BContainer", "BAttributeMatrixName", "BAttributeArrayName");
+    ReadImage(baseline_filename, containerArray, baseline_path);
+    int res = CompareImages(containerArray, input_path, baseline_path, 0.1);
+    DREAM3D_REQUIRE_EQUAL(res,0);
+    return 0;
+}
+
+int TestITKBinaryMinMaxCurvatureFlowImagelongerTest()
+{
+    QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/RA-Float.nrrd");
+    DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
+    DataContainerArray::Pointer containerArray = DataContainerArray::New();
+    ReadImage(input_filename, containerArray, input_path);
+    QString filtName = "ITKBinaryMinMaxCurvatureFlowImage";
+    FilterManager* fm = FilterManager::Instance();
+    IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+    DREAM3D_REQUIRE_NE(filterFactory.get(),0);
+    AbstractFilter::Pointer filter = filterFactory->create();
+    QVariant var;
+    bool propWasSet;
+    var.setValue(input_path);
+    propWasSet = filter->setProperty("SelectedCellArrayPath", var);
+    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+    var.setValue(false);
+    propWasSet = filter->setProperty("SaveAsNewArray", var);
+    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+    {
+        double d3d_var;
+        d3d_var = 0.1;
+        var.setValue(d3d_var);
+        propWasSet = filter->setProperty("TimeStep", var);
+        DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+        }
+    {
+        double d3d_var;
+        d3d_var = 10;
+        var.setValue(d3d_var);
+        propWasSet = filter->setProperty("NumberOfIterations", var);
+        DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+        }
+    filter->setDataContainerArray(containerArray);
+    filter->execute();
+    DREAM3D_REQUIRED(filter->getErrorCondition(), >= , 0);
+    DREAM3D_REQUIRED(filter->getWarningCondition(), >= , 0);
+    WriteImage("ITKBinaryMinMaxCurvatureFlowImagelonger.nrrd", containerArray, input_path);
+    QString baseline_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Baseline/BasicFilters_BinaryMinMaxCurvatureFlowImageFilter_longer.nrrd");
+    DataArrayPath baseline_path("BContainer", "BAttributeMatrixName", "BAttributeArrayName");
+    ReadImage(baseline_filename, containerArray, baseline_path);
+    int res = CompareImages(containerArray, input_path, baseline_path, 0.1);
+    DREAM3D_REQUIRE_EQUAL(res,0);
+    return 0;
+}
+
+
 
 template<typename PixelType, unsigned int Dimensions>
 int CompareImages(DataContainer::Pointer input_container,
@@ -446,8 +527,10 @@ int GetMD5FromDataContainer(DataContainerArray::Pointer &containerArray,
 
     DREAM3D_REGISTER_TEST( TestFilterAvailability() );
 
-    //DREAM3D_REGISTER_TEST( Test${FilterName}Test() )
-${RegisterTests}
+    //DREAM3D_REGISTER_TEST( TestITKBinaryMinMaxCurvatureFlowImageTest() )
+    DREAM3D_REGISTER_TEST( TestITKBinaryMinMaxCurvatureFlowImagedefaultsTest());
+    DREAM3D_REGISTER_TEST( TestITKBinaryMinMaxCurvatureFlowImagelongerTest());
+
     if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
     {
       DREAM3D_REGISTER_TEST( RemoveTestFiles() )
@@ -455,8 +538,8 @@ ${RegisterTests}
   }
 
   private:
-    ${FilterName}Test(const ${FilterName}Test&); // Copy Constructor Not Implemented
-    void operator=(const ${FilterName}Test&); // Operator '=' Not Implemented
+    ITKBinaryMinMaxCurvatureFlowImageTest(const ITKBinaryMinMaxCurvatureFlowImageTest&); // Copy Constructor Not Implemented
+    void operator=(const ITKBinaryMinMaxCurvatureFlowImageTest&); // Operator '=' Not Implemented
     QList<QString> FilesToRemove;
 };
 

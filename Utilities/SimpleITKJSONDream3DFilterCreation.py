@@ -548,7 +548,7 @@ def GetDream3DFilterTests(filter_description, test, test_settings):
     testFunctionCode = 'int ' + GetDream3DTestName(filter_description, test) + '\n'
     testFunctionCode += '{\n'
     # Create and initialized necessary variables
-    testFunctionCode += '    QString input_filename = UnitTest::DataDir + "/Data/JSONFilters/'+test['inputs'][0]+'";\n'  # Only reads the first file
+    testFunctionCode += '    QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/'+test['inputs'][0]+'");\n'  # Only reads the first file
     testFunctionCode += '    DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");\n'
     testFunctionCode += '    DataContainerArray::Pointer containerArray = DataContainerArray::New();\n'
     # Read input image
@@ -567,6 +567,25 @@ def GetDream3DFilterTests(filter_description, test, test_settings):
     testFunctionCode += '    var.setValue(false);\n'
     testFunctionCode += '    propWasSet = filter->setProperty("SaveAsNewArray", var);\n'
     testFunctionCode += '    DREAM3D_REQUIRE_EQUAL(propWasSet, true);\n'
+    for settings in test_settings:
+        if len(settings.keys()) == 0:
+            continue
+        testFunctionCode += '    {\n'
+        d3d_type = ITKToDream3DType[(settings['type'],settings['dim_vec'])]['d3d']
+        testFunctionCode += '        '+d3d_type+' d3d_var;\n'
+        if settings['dim_vec'] == 0:
+            testFunctionCode += '        d3d_var = '+str(settings['value'])+';\n'
+        else:
+            convertLettersToDims = {'x':0,'y':1,'z':2}
+            for key,val in convertLettersToDims.iteritems():
+                if len(settings['value']) > val:
+                    testFunctionCode += '        d3d_var.'+key+' = '+str(settings['value'][val])+';\n'
+                else:
+                    testFunctionCode += '        d3d_var.'+key+' = 0; // should not be taken into account. Dim <\n'
+        testFunctionCode += '        var.setValue(d3d_var);\n'
+        testFunctionCode += '        propWasSet = filter->setProperty("'+settings['parameter']+'", var);\n'
+        testFunctionCode += '        DREAM3D_REQUIRE_EQUAL(propWasSet, true);\n'
+        testFunctionCode += '        }\n'
     testFunctionCode += '    filter->setDataContainerArray(containerArray);\n'
     testFunctionCode += '    filter->execute();\n'
     testFunctionCode += '    DREAM3D_REQUIRED(filter->getErrorCondition(), >= , 0);\n'
@@ -582,7 +601,7 @@ def GetDream3DFilterTests(filter_description, test, test_settings):
     else:
         # Compare to expected MD5
         # Read baseline image
-        testFunctionCode += '    QString baseline_filename = UnitTest::DataDir + "/Data/JSONFilters/Baseline/BasicFilters_'+filter_description['name']+'_'+test['tag']+'.nrrd";\n'
+        testFunctionCode += '    QString baseline_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Baseline/BasicFilters_'+filter_description['name']+'_'+test['tag']+'.nrrd");\n'
         testFunctionCode += '    DataArrayPath baseline_path("BContainer", "BAttributeMatrixName", "BAttributeArrayName");\n'
         testFunctionCode += '    ReadImage(baseline_filename, containerArray, baseline_path);\n'
         testFunctionCode += '    int res = CompareImages(containerArray, input_path, baseline_path, '+str(test['tolerance'])+');\n'

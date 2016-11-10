@@ -20,18 +20,20 @@
 
 #include "ITKImageProcessingTestFileLocations.h"
 
-${IncludeName}
+#include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
+#include <itkMinimumProjectionImageFilter.h>
+
 
 // Testing
 #include <itkTestingHashImageFilter.h>
 #include <itkTestingComparisonImageFilter.h>
 
-class ${FilterName}Test
+class ITKMinimumProjectionImageTest
 {
 
   public:
-    ${FilterName}Test() {}
-    virtual ~${FilterName}Test() {}
+    ITKMinimumProjectionImageTest() {}
+    virtual ~ITKMinimumProjectionImageTest() {}
 
 
   // -----------------------------------------------------------------------------
@@ -50,8 +52,8 @@ class ${FilterName}Test
   // -----------------------------------------------------------------------------
   int TestFilterAvailability()
   {
-    // Now instantiate the ${FilterName}Test Filter from the FilterManager
-    QString filtName = "${FilterName}";
+    // Now instantiate the ITKMinimumProjectionImageTest Filter from the FilterManager
+    QString filtName = "ITKMinimumProjectionImage";
     FilterManager* fm = FilterManager::Instance();
     IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
     if (nullptr == filterFactory.get())
@@ -66,14 +68,14 @@ class ${FilterName}Test
 //  // -----------------------------------------------------------------------------
 //  //
 //  // -----------------------------------------------------------------------------
-//  int Test${FilterName}Test()
+//  int TestITKMinimumProjectionImageTest()
 //  {
 //    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//   /* Please write ${FilterName}Test test code here.
+//   /* Please write ITKMinimumProjectionImageTest test code here.
 //    *
 //    * Your IO test files are:
-//    * UnitTest::${FilterName}Test::TestFile1
-//    * UnitTest::${FilterName}Test::TestFile2
+//    * UnitTest::ITKMinimumProjectionImageTest::TestFile1
+//    * UnitTest::ITKMinimumProjectionImageTest::TestFile2
 //    *
 //    * SIMPLib provides some macros that will throw exceptions when a test fails
 //    * and thus report that during testing. These macros are located in the
@@ -93,7 +95,141 @@ class ${FilterName}Test
 //    return EXIT_SUCCESS;
 //  }
 
-${FilterTests}
+int TestITKMinimumProjectionImagedefaultsTest()
+{
+    QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/RA-Float.nrrd");
+    DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
+    DataContainerArray::Pointer containerArray = DataContainerArray::New();
+    ReadImage(input_filename, containerArray, input_path);
+    QString filtName = "ITKMinimumProjectionImage";
+    FilterManager* fm = FilterManager::Instance();
+    IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+    DREAM3D_REQUIRE_NE(filterFactory.get(),0);
+    AbstractFilter::Pointer filter = filterFactory->create();
+    QVariant var;
+    bool propWasSet;
+    var.setValue(input_path);
+    propWasSet = filter->setProperty("SelectedCellArrayPath", var);
+    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+    var.setValue(false);
+    propWasSet = filter->setProperty("SaveAsNewArray", var);
+    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+    filter->setDataContainerArray(containerArray);
+    filter->execute();
+    DREAM3D_REQUIRED(filter->getErrorCondition(), >= , 0);
+    DREAM3D_REQUIRED(filter->getWarningCondition(), >= , 0);
+    WriteImage("ITKMinimumProjectionImagedefaults.nrrd", containerArray, input_path);
+    QString md5Output;
+    GetMD5FromDataContainer(containerArray, input_path, md5Output);
+    DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("5591e0307db733396e8cc8143e7f29f7"));
+    return 0;
+}
+
+int TestITKMinimumProjectionImageanother_dimensionTest()
+{
+    QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/RA-Float.nrrd");
+    DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
+    DataContainerArray::Pointer containerArray = DataContainerArray::New();
+    ReadImage(input_filename, containerArray, input_path);
+    QString filtName = "ITKMinimumProjectionImage";
+    FilterManager* fm = FilterManager::Instance();
+    IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+    DREAM3D_REQUIRE_NE(filterFactory.get(),0);
+    AbstractFilter::Pointer filter = filterFactory->create();
+    QVariant var;
+    bool propWasSet;
+    var.setValue(input_path);
+    propWasSet = filter->setProperty("SelectedCellArrayPath", var);
+    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+    var.setValue(false);
+    propWasSet = filter->setProperty("SaveAsNewArray", var);
+    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+    {
+        double d3d_var;
+        d3d_var = 2;
+        var.setValue(d3d_var);
+        propWasSet = filter->setProperty("ProjectionDimension", var);
+        DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+        }
+    filter->setDataContainerArray(containerArray);
+    filter->execute();
+    DREAM3D_REQUIRED(filter->getErrorCondition(), >= , 0);
+    DREAM3D_REQUIRED(filter->getWarningCondition(), >= , 0);
+    WriteImage("ITKMinimumProjectionImageanother_dimension.nrrd", containerArray, input_path);
+    QString md5Output;
+    GetMD5FromDataContainer(containerArray, input_path, md5Output);
+    DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("6c16b87a823ca190294ac8b678ba4300"));
+    return 0;
+}
+
+int TestITKMinimumProjectionImageshort_imageTest()
+{
+    QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/Ramp-Up-Short.nrrd");
+    DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
+    DataContainerArray::Pointer containerArray = DataContainerArray::New();
+    ReadImage(input_filename, containerArray, input_path);
+    QString filtName = "ITKMinimumProjectionImage";
+    FilterManager* fm = FilterManager::Instance();
+    IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+    DREAM3D_REQUIRE_NE(filterFactory.get(),0);
+    AbstractFilter::Pointer filter = filterFactory->create();
+    QVariant var;
+    bool propWasSet;
+    var.setValue(input_path);
+    propWasSet = filter->setProperty("SelectedCellArrayPath", var);
+    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+    var.setValue(false);
+    propWasSet = filter->setProperty("SaveAsNewArray", var);
+    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+    {
+        double d3d_var;
+        d3d_var = 1;
+        var.setValue(d3d_var);
+        propWasSet = filter->setProperty("ProjectionDimension", var);
+        DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+        }
+    filter->setDataContainerArray(containerArray);
+    filter->execute();
+    DREAM3D_REQUIRED(filter->getErrorCondition(), >= , 0);
+    DREAM3D_REQUIRED(filter->getWarningCondition(), >= , 0);
+    WriteImage("ITKMinimumProjectionImageshort_image.nrrd", containerArray, input_path);
+    QString md5Output;
+    GetMD5FromDataContainer(containerArray, input_path, md5Output);
+    DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("c4d83f61ffd5cc3a163155bb5d6a0698"));
+    return 0;
+}
+
+int TestITKMinimumProjectionImagergb_imageTest()
+{
+    QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/VM1111Shrink-RGB.png");
+    DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
+    DataContainerArray::Pointer containerArray = DataContainerArray::New();
+    ReadImage(input_filename, containerArray, input_path);
+    QString filtName = "ITKMinimumProjectionImage";
+    FilterManager* fm = FilterManager::Instance();
+    IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+    DREAM3D_REQUIRE_NE(filterFactory.get(),0);
+    AbstractFilter::Pointer filter = filterFactory->create();
+    QVariant var;
+    bool propWasSet;
+    var.setValue(input_path);
+    propWasSet = filter->setProperty("SelectedCellArrayPath", var);
+    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+    var.setValue(false);
+    propWasSet = filter->setProperty("SaveAsNewArray", var);
+    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+    filter->setDataContainerArray(containerArray);
+    filter->execute();
+    DREAM3D_REQUIRED(filter->getErrorCondition(), >= , 0);
+    DREAM3D_REQUIRED(filter->getWarningCondition(), >= , 0);
+    WriteImage("ITKMinimumProjectionImagergb_image.nrrd", containerArray, input_path);
+    QString md5Output;
+    GetMD5FromDataContainer(containerArray, input_path, md5Output);
+    DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("344c2d7cf14b5e8b30b266b77a0548c2"));
+    return 0;
+}
+
+
 
 template<typename PixelType, unsigned int Dimensions>
 int CompareImages(DataContainer::Pointer input_container,
@@ -446,8 +582,12 @@ int GetMD5FromDataContainer(DataContainerArray::Pointer &containerArray,
 
     DREAM3D_REGISTER_TEST( TestFilterAvailability() );
 
-    //DREAM3D_REGISTER_TEST( Test${FilterName}Test() )
-${RegisterTests}
+    //DREAM3D_REGISTER_TEST( TestITKMinimumProjectionImageTest() )
+    DREAM3D_REGISTER_TEST( TestITKMinimumProjectionImagedefaultsTest());
+    DREAM3D_REGISTER_TEST( TestITKMinimumProjectionImageanother_dimensionTest());
+    DREAM3D_REGISTER_TEST( TestITKMinimumProjectionImageshort_imageTest());
+    DREAM3D_REGISTER_TEST( TestITKMinimumProjectionImagergb_imageTest());
+
     if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
     {
       DREAM3D_REGISTER_TEST( RemoveTestFiles() )
@@ -455,8 +595,8 @@ ${RegisterTests}
   }
 
   private:
-    ${FilterName}Test(const ${FilterName}Test&); // Copy Constructor Not Implemented
-    void operator=(const ${FilterName}Test&); // Operator '=' Not Implemented
+    ITKMinimumProjectionImageTest(const ITKMinimumProjectionImageTest&); // Copy Constructor Not Implemented
+    void operator=(const ITKMinimumProjectionImageTest&); // Operator '=' Not Implemented
     QList<QString> FilesToRemove;
 };
 

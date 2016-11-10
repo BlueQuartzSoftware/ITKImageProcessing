@@ -17,6 +17,56 @@ set(_PublicFilters
   ITKImageWriter
   ITKGaussianBlur
   ITKBinaryThreshold
+  ITKAbsImage
+  ITKBoxMeanImage
+  ITKAcosImage
+  ITKAtanImage
+  ITKGradientMagnitudeRecursiveGaussianImage
+  ITKSqrtImage
+  ITKLaplacianRecursiveGaussianImage
+  ITKMinMaxCurvatureFlowImage
+  ITKSigmoidImage
+  ITKBinaryThinningImage
+  ITKHMaximaImage
+  ITKCurvatureAnisotropicDiffusionImage
+  ITKCosImage
+  ITKHMinimaImage
+  ITKExpImage
+  ITKBinomialBlurImage
+  ITKLogImage
+  ITKRescaleIntensityImage
+  ITKLabelContourImage
+  ITKSaltAndPepperNoiseImage
+  ITKMinimumProjectionImage
+  ITKTanImage
+  ITKBinaryContourImage
+  ITKMedianProjectionImage
+  ITKShotNoiseImage
+  ITKMaximumProjectionImage
+  ITKSpeckleNoiseImage
+  ITKGradientMagnitudeImage
+  ITKShiftScaleImage
+  ITKNotImage
+  ITKBinaryProjectionImage
+  ITKBinaryMinMaxCurvatureFlowImage
+  ITKInvertIntensityImage
+  ITKGrayscaleFillholeImage
+  ITKAsinImage
+  ITKHConvexImage
+  ITKIntensityWindowingImage
+  ITKGradientAnisotropicDiffusionImage
+  ITKExpNegativeImage
+  ITKSinImage
+  ITKValuedRegionalMinimaImage
+  ITKLog10Image
+  ITKSquareImage
+  ITKSobelEdgeDetectionImage
+  ITKBilateralImage
+  ITKValuedRegionalMaximaImage
+  ITKRelabelComponentImage
+  ITKGrayscaleGrindPeakImage
+  ITKLaplacianSharpeningImage
+  ITKDiscreteGaussianImage
 )
 
 
