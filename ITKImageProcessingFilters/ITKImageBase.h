@@ -119,9 +119,9 @@ class ITKImageBase : public AbstractFilter
       return output;
     }
     /**
-     * @brief StaticCast Performs a static cast on a value
+     * @brief StaticCast Performs a static cast on a value. 'unused' type is to match 'CastStdToVec3' template format to simplify template declaration in conversion script.
      */
-    template<typename InputType, typename OutputType>
+    template<typename InputType, typename OutputType, typename unused>
     OutputType StaticCastScalar(const InputType &val) const
     {
       return static_cast<OutputType>(val);
