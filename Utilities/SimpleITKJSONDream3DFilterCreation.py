@@ -30,7 +30,9 @@ general={
                {'name':['include_files'],'type':list,'required':False,'Filter':'sitk'},
                {'name':['members'],'type':list,'required':False},
                {'name':['inputs'],'type':str,'required':False},
-               {'name':['tests'],'type':list,'required':False}
+               {'name':['tests'],'type':list,'required':False},
+               {'name':['briefdescription'],'type':str,'required':False},
+               {'name':['detaileddescription'],'type':str,'required':False}
              ],
         'ignored':
              [
@@ -38,8 +40,6 @@ general={
                {'name':['public_declarations']},  # Dream3D does not require additional C++ code
                {'name':['custom_methods']},  # Dream3D does not require to add methods to the filter
                {'name':['doc']},  # Dream3D does not require doc
-               {'name':['briefdescription'],'type':str,'required':False},
-               {'name':['detaileddescription'],'type':str,'required':False},
                {'name':['additional_template_types'],'type':str,'required':False},  # 0 occurences in JSON
                {'name':['custom_set_intput'],'type':str,'required':False}  # 0 occurences in JSON
              ],
@@ -75,15 +75,15 @@ members={
            {'name':['type'],'type':str,'required':False},
            {'name':['default'],'type':str,'required':True},
            {'name':['dim_vec'],'type':int,'required':False },  # 159 occurences in JSON
-           {'name':['itk_type'],'type':str,'required':False}  # 121
+           {'name':['itk_type'],'type':str,'required':False},  # 121
+           {'name':['briefdescriptionSet'],'type':str,'required':False},
+           {'name':['detaileddescriptionSet'],'type':str,'required':False},
+           {'name':['detaileddescriptionGet'],'type':str,'required':False},  # For some filters, the description is only written in this field, not in the equivalent "Set" field
+           {'name':['briefdescriptionGet'],'type':str,'required':False}  # For some filters, the description is only written in this field, not in the equivalent "Set" field
          ],
         'ignored':
          [
-            {'name':['detaileddescriptionGet']},  # The description of #Get functions is not necessary as #Get functions are not used
             {'name':['no_get_method']},  # #Get functions are not used. Only #Set functions are used
-            {'name':['briefdescriptionGet']},  # #Get functions are not used
-            {'name':['briefdescriptionSet']},  # #The #Set function description is currently not copied in the DREAM3D filter file
-            {'name':['detaileddescriptionSet']},  # #The #Set function description is currently not copied in the DREAM3D filter file
             {'name':['doc']},  # Dream3D does not require doc
             {'name':['no_print']},  # Dream3D does not print filter information
             {'name':['no_set_method'],'type':bool,'required':False }  # 0 occurences in JSON
@@ -499,6 +499,8 @@ def ExpandFilterName(filter_name):
       expanded_name += x
   return expanded_name
 
+       
+
 def InitializeParsingValues(DREAM3DFilter, filter_description):
     DREAM3DFilter['RawFilterName']=filter_description['name']
     DREAM3DFilter['FilterName']=GetDREAM3DFilterName(filter_description['name'])
@@ -512,6 +514,17 @@ def InitializeParsingValues(DREAM3DFilter, filter_description):
     DREAM3DFilter['CheckIntegerEntry'] = ''
     DREAM3DFilter['RegisterTests'] = ''
     DREAM3DFilter['FilterTests'] = ''
+    DREAM3DFilter['FilterDescription'] = ''
+    DREAM3DFilter['FilterParameterDescription'] = ''
+    if 'briefdescription' in filter_description:
+        DREAM3DFilter['FilterDescription'] += filter_description['briefdescription']+'\n\n'
+    if 'detaileddescription' in filter_description:
+        DREAM3DFilter['FilterDescription'] += filter_description['detaileddescription']
+    if 'output_pixel_type' in filter_description:
+        DREAM3DFilter['FilterOutputType'] = filter_description['output_pixel_type']
+    else:
+        DREAM3DFilter['FilterOutputType'] = 'N/A'
+    
 
 
 def GetDREAM3DInitializationParameters(filter_member):
@@ -633,7 +646,24 @@ def VerifyFilterParameterTypes(filter_members,test_settings):
             settings['type']=list_types[0]
     return 1
             
-
+def GetDREAM3DParameterDescription(filter_member):
+    description = '| '+filter_member['name']+' | '
+    type_conversion_dict = ITKToDream3DType[(filter_member['type'],filter_member['dim_vec'])]
+    member_type = type_conversion_dict['d3d']
+    description += member_type
+    description += '| '
+    if 'detaileddescriptionSet' in filter_member and filter_member['detaileddescriptionSet'].strip() != '':
+        description += filter_member['detaileddescriptionSet']
+    elif 'briefdescriptionSet' in filter_member and filter_member['briefdescriptionSet'].strip() != '':
+        description += filter_member['briefdescriptionSet']
+    elif 'detaileddescriptionGet' in filter_member and filter_member['detaileddescriptionGet'].strip() != '':
+        description += filter_member['detaileddescriptionGet']
+    elif 'briefdescriptionGet' in filter_member and filter_member['briefdescriptionGet'].strip() != '':
+        description += filter_member['briefdescriptionGet']
+    else:
+        description += 'N/A'
+    description += ' |'
+    return description
 
 
 def main(argv=None):
@@ -765,6 +795,8 @@ def main(argv=None):
             DREAM3DFilter['ReadFilterParameters'] += GetDREAM3DReadFilterParameters(filter_member)
             # initialization
             DREAM3DFilter['InitializationParameters'] += GetDREAM3DInitializationParameters(filter_member)
+            # Description
+            DREAM3DFilter['FilterParameterDescription'] += GetDREAM3DParameterDescription(filter_member) +'\n'
         #filter
         DREAM3DFilter['Filter']=ImplementFilter(filter_description, filter_members)
         #includes

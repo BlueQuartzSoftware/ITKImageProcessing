@@ -5,29 +5,34 @@ ITKShiftScaleImage {#itkshiftscaleimage}
 ITKImageProcessing (ITKImageProcessing)
 
 ## Description ##
-This **Filter** does the following...
+Shift and scale the pixels in an image.
+
+ShiftScaleImageFilter shifts the input pixel by Shift (default 0.0) and then scales the pixel by Scale (default 1.0). All computattions are performed in the precison of the input pixel's RealType. Before assigning the computed value to the output pixel, the value is clamped at the NonpositiveMin and max of the pixel type.
 
 ## Parameters ##
 | Name | Type | Description |
 |------|------|------|
-| Parameter Name | Parameter Type | Description of parameter... |
+| Shift | double| Set/Get the amount to Shift each Pixel. The shift is followed by a Scale. |
+| Scale | double| Set/Get the amount to Scale each Pixel. The Scale is applied after the Shift. |
+
 
 ## Required Geometry ##
-Required Geometry Type -or- Not Applicable
+Image
 
 ## Required Objects ##
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| **Data Container** | Data Container Name | N/A | N/A | Description of object... |
-| **Attribute Matrix** | Attribute Matrix Name | Element/Feature/Ensemble/etc. | N/A | Description of object... |
-| **Element/Feature/Ensemble/etc. Attribute Array** | AttributeArray Name | int32_t/float/etc. | (1)/(3)/etc. | Description of object... |
+| **Cell Attribute Array** | None | N/A | (1)  | Array containing input image
 
 ## Created Objects ##
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| **Data Container** | Data Container Name | N/A | N/A | Description of object... |
-| **Attribute Matrix** | Attribute Matrix Name | Element/Feature/Ensemble/etc. | N/A | Description of object... |
-| **Element/Feature/Ensemble/etc. Attribute Array** | AttributeArray Name | int32_t/float/etc. | (1)/(3)/etc. | Description of object... |
+| **Cell Attribute Array** | None | N/A | (1)  | Array containing filtered image
+
+## References ##
+[1] T.S. Yoo, M. J. Ackerman, W. E. Lorensen, W. Schroeder, V. Chalana, S. Aylward, D. Metaxas, R. Whitaker. Engineering and Algorithm Design for an Image Processing API: A Technical Report on ITK - The Insight Toolkit. In Proc. of Medicine Meets Virtual Reality, J. Westwood, ed., IOS Press Amsterdam pp 586-592 (2002). 
+[2] H. Johnson, M. McCormick, L. Ibanez. The ITK Software Guide: Design and Functionality. Fourth Edition. Published by Kitware Inc. 2015 ISBN: 9781-930934-28-3
+[3] H. Johnson, M. McCormick, L. Ibanez. The ITK Software Guide: Introduction and Development Guidelines. Fourth Edition. Published by Kitware Inc. 2015 ISBN: 9781-930934-27-6
 
 ## License & Copyright ##
 
