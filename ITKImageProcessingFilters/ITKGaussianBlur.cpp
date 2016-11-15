@@ -30,9 +30,9 @@
 // -----------------------------------------------------------------------------
 ITKGaussianBlur::ITKGaussianBlur() :
   ITKImageBase(),
+  m_MaximumKernelWidth(4),
   m_Variance(1),
-  m_MaximumError(0.01),
-  m_MaximumKernelWidth(4)
+  m_MaximumError(0.01)
 {
   setupFilterParameters();
 }

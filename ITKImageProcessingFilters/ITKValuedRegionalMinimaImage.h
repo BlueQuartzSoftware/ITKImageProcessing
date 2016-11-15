@@ -27,7 +27,7 @@ class ITKValuedRegionalMinimaImage : public ITKImageBase
   public:
     SIMPL_SHARED_POINTERS(ITKValuedRegionalMinimaImage)
     SIMPL_STATIC_NEW_MACRO(ITKValuedRegionalMinimaImage)
-    SIMPL_TYPE_MACRO_SUPER(ITKValuedRegionalMinimaImage, AbstractFilter)
+    SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKValuedRegionalMinimaImage, AbstractFilter)
 
     virtual ~ITKValuedRegionalMinimaImage();
 
@@ -39,22 +39,22 @@ class ITKValuedRegionalMinimaImage : public ITKImageBase
     /**
      * @brief newFilterInstance Reimplemented from @see AbstractFilter class
      */
-    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) override;
 
     /**
      * @brief getHumanLabel Reimplemented from @see AbstractFilter class
      */
-    virtual const QString getHumanLabel();
+    virtual const QString getHumanLabel() override;
 
     /**
      * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
      */
-    virtual void setupFilterParameters();
+    virtual void setupFilterParameters() override;
 
     /**
      * @brief readFilterParameters Reimplemented from @see AbstractFilter class
      */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
+    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
 
   protected:
     ITKValuedRegionalMinimaImage();

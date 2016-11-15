@@ -27,7 +27,7 @@ class ITKHMaximaImage : public ITKImageBase
   public:
     SIMPL_SHARED_POINTERS(ITKHMaximaImage)
     SIMPL_STATIC_NEW_MACRO(ITKHMaximaImage)
-    SIMPL_TYPE_MACRO_SUPER(ITKHMaximaImage, AbstractFilter)
+    SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKHMaximaImage, AbstractFilter)
 
     virtual ~ITKHMaximaImage();
 
@@ -39,22 +39,22 @@ class ITKHMaximaImage : public ITKImageBase
     /**
      * @brief newFilterInstance Reimplemented from @see AbstractFilter class
      */
-    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) override;
 
     /**
      * @brief getHumanLabel Reimplemented from @see AbstractFilter class
      */
-    virtual const QString getHumanLabel();
+    virtual const QString getHumanLabel() override;
 
     /**
      * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
      */
-    virtual void setupFilterParameters();
+    virtual void setupFilterParameters() override;
 
     /**
      * @brief readFilterParameters Reimplemented from @see AbstractFilter class
      */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
+    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
 
   protected:
     ITKHMaximaImage();

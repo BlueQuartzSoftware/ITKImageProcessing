@@ -26,7 +26,7 @@ class ITKSobelEdgeDetectionImage : public ITKImageBase
   public:
     SIMPL_SHARED_POINTERS(ITKSobelEdgeDetectionImage)
     SIMPL_STATIC_NEW_MACRO(ITKSobelEdgeDetectionImage)
-    SIMPL_TYPE_MACRO_SUPER(ITKSobelEdgeDetectionImage, AbstractFilter)
+    SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKSobelEdgeDetectionImage, AbstractFilter)
 
     virtual ~ITKSobelEdgeDetectionImage();
 
@@ -35,22 +35,22 @@ class ITKSobelEdgeDetectionImage : public ITKImageBase
     /**
      * @brief newFilterInstance Reimplemented from @see AbstractFilter class
      */
-    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) override;
 
     /**
      * @brief getHumanLabel Reimplemented from @see AbstractFilter class
      */
-    virtual const QString getHumanLabel();
+    virtual const QString getHumanLabel() override;
 
     /**
      * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
      */
-    virtual void setupFilterParameters();
+    virtual void setupFilterParameters() override;
 
     /**
      * @brief readFilterParameters Reimplemented from @see AbstractFilter class
      */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
+    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
 
   protected:
     ITKSobelEdgeDetectionImage();

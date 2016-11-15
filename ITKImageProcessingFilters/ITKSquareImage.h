@@ -26,7 +26,7 @@ class ITKSquareImage : public ITKImageBase
   public:
     SIMPL_SHARED_POINTERS(ITKSquareImage)
     SIMPL_STATIC_NEW_MACRO(ITKSquareImage)
-    SIMPL_TYPE_MACRO_SUPER(ITKSquareImage, AbstractFilter)
+    SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKSquareImage, AbstractFilter)
 
     virtual ~ITKSquareImage();
 
@@ -35,22 +35,22 @@ class ITKSquareImage : public ITKImageBase
     /**
      * @brief newFilterInstance Reimplemented from @see AbstractFilter class
      */
-    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) override;
 
     /**
      * @brief getHumanLabel Reimplemented from @see AbstractFilter class
      */
-    virtual const QString getHumanLabel();
+    virtual const QString getHumanLabel() override;
 
     /**
      * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
      */
-    virtual void setupFilterParameters();
+    virtual void setupFilterParameters() override;
 
     /**
      * @brief readFilterParameters Reimplemented from @see AbstractFilter class
      */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
+    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
 
   protected:
     ITKSquareImage();

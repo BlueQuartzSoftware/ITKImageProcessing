@@ -20,7 +20,7 @@ class ITKGaussianBlur : public ITKImageBase
   public:
     SIMPL_SHARED_POINTERS(ITKGaussianBlur)
     SIMPL_STATIC_NEW_MACRO(ITKGaussianBlur)
-    SIMPL_TYPE_MACRO_SUPER(ITKGaussianBlur, AbstractFilter)
+    SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKGaussianBlur, AbstractFilter)
 
     virtual ~ITKGaussianBlur();
 
@@ -36,22 +36,22 @@ class ITKGaussianBlur : public ITKImageBase
     /**
      * @brief newFilterInstance Reimplemented from @see AbstractFilter class
      */
-    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) override;
 
     /**
      * @brief getHumanLabel Reimplemented from @see AbstractFilter class
      */
-    virtual const QString getHumanLabel();
+    virtual const QString getHumanLabel() override;
 
     /**
      * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
      */
-    virtual void setupFilterParameters();
+    virtual void setupFilterParameters() override;
 
     /**
      * @brief readFilterParameters Reimplemented from @see AbstractFilter class
      */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
+    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
 
   protected:
     ITKGaussianBlur();

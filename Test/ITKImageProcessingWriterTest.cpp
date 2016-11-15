@@ -135,7 +135,6 @@ class ITKImageProcessingWriterTest
 
   bool CompareImageGeometries(const ImageGeom::Pointer &inputImageGeometry, const ImageGeom::Pointer &baselineImageGeometry)
   {
-      float tol = 1e-6;
       float inputResolution[3];
       float baselineResolution[3];
       inputImageGeometry->getResolution(inputResolution[0], inputResolution[1], inputResolution[2]);
@@ -150,6 +149,7 @@ class ITKImageProcessingWriterTest
       baselineImageGeometry->getDimensions(baselineDimensions[0], baselineDimensions[1], baselineDimensions[2]);
       for (int i = 0; i < 3; i++)
       {
+          // float tol = 1e-6;
           // SCIFIO does not save the spacing correctly. We disable this test until SCIFIO is fixed.
           //DREAM3D_COMPARE_FLOATS(&inputResolution[i], &baselineResolution[i], tol);
           // SCIFIO does not save the origin correctly. We disable this test until SCIFIO is fixed.

@@ -20,7 +20,7 @@ class ITKBinaryThreshold : public ITKImageBase
   public:
     SIMPL_SHARED_POINTERS(ITKBinaryThreshold)
     SIMPL_STATIC_NEW_MACRO(ITKBinaryThreshold)
-    SIMPL_TYPE_MACRO_SUPER(ITKBinaryThreshold, AbstractFilter)
+    SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKBinaryThreshold, AbstractFilter)
 
     virtual ~ITKBinaryThreshold();
 
@@ -39,22 +39,22 @@ class ITKBinaryThreshold : public ITKImageBase
     /**
      * @brief newFilterInstance Reimplemented from @see AbstractFilter class
      */
-    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) override;
 
     /**
      * @brief getHumanLabel Reimplemented from @see AbstractFilter class
      */
-    virtual const QString getHumanLabel();
+    virtual const QString getHumanLabel() override;
 
     /**
      * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
      */
-    virtual void setupFilterParameters();
+    virtual void setupFilterParameters() override;
 
     /**
      * @brief readFilterParameters Reimplemented from @see AbstractFilter class
      */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
+    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
 
   protected:
     ITKBinaryThreshold();

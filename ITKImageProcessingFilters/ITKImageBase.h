@@ -23,8 +23,8 @@ class ITKImageBase : public AbstractFilter
   Q_OBJECT
 
   public:
-    SIMPL_SHARED_POINTERS(ITKImageBase)
-    SIMPL_TYPE_MACRO_SUPER(ITKImageBase, AbstractFilter)
+    //SIMPL_SHARED_POINTERS(ITKImageBase)
+    //SIMPL_TYPE_MACRO_SUPER(ITKImageBase, AbstractFilter)
 
     virtual ~ITKImageBase();
 

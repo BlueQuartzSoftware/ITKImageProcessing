@@ -147,7 +147,6 @@ void ITKBinaryThreshold::filter()
 {
     typedef itk::Dream3DImage<PixelType, Dimension> ImageType;
     //define threshold filters
-    typedef itk::ImageToImageFilter <ImageType, ImageType> ImageToImageFilterType;
     typedef itk::BinaryThresholdImageFilter <ImageType, ImageType> BinaryThresholdImageFilterType;
     //create Itk's binary threshold filter object
     typename BinaryThresholdImageFilterType::Pointer thresholdFilter = BinaryThresholdImageFilterType::New();
