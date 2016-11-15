@@ -310,9 +310,8 @@ def FormatIncludes(include_files):
         include_string +='#include <'+include_files+'>\n'
     return include_string
 
-def GetDREAM3DitkInclude(filter_name, include_files):
-    includes=['itk'+filter_name+'.h']+include_files
-    return includes
+def GetDREAM3DITKInclude(filter_name):
+    return 'itk'+filter_name+'.h'
 
 def CheckAutomaticallyGenerated(filename):
     try:
@@ -565,7 +564,7 @@ def GetDream3DFilterTests(filter_description, test, test_settings):
     testFunctionCode += '    DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");\n'
     testFunctionCode += '    DataContainerArray::Pointer containerArray = DataContainerArray::New();\n'
     # Read input image
-    testFunctionCode += '    ReadImage(input_filename, containerArray, input_path);\n'
+    testFunctionCode += '    this->ReadImage(input_filename, containerArray, input_path);\n'
     # Filter image
     testFunctionCode += '    QString filtName = "'+GetDREAM3DFilterName(filter_description['name'])+'";\n'
     testFunctionCode += '    FilterManager* fm = FilterManager::Instance();\n'
@@ -616,8 +615,8 @@ def GetDream3DFilterTests(filter_description, test, test_settings):
         # Read baseline image
         testFunctionCode += '    QString baseline_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Baseline/BasicFilters_'+filter_description['name']+'_'+test['tag']+'.nrrd");\n'
         testFunctionCode += '    DataArrayPath baseline_path("BContainer", "BAttributeMatrixName", "BAttributeArrayName");\n'
-        testFunctionCode += '    ReadImage(baseline_filename, containerArray, baseline_path);\n'
-        testFunctionCode += '    int res = CompareImages(containerArray, input_path, baseline_path, '+str(test['tolerance'])+');\n'
+        testFunctionCode += '    this->ReadImage(baseline_filename, containerArray, baseline_path);\n'
+        testFunctionCode += '    int res = this->CompareImages(containerArray, input_path, baseline_path, '+str(test['tolerance'])+');\n'
         testFunctionCode += '    DREAM3D_REQUIRE_EQUAL(res,0);\n'
 
     testFunctionCode += '    return 0;\n'
@@ -782,7 +781,7 @@ def main(argv=None):
         # Initialization of replacement strings
         DREAM3DFilter={}
         InitializeParsingValues(DREAM3DFilter, filter_description)
-        include_list=GetDREAM3DitkInclude(filter_description['name'],filter_description['include_files'])
+        include_list=[GetDREAM3DITKInclude(filter_description['name'])]+filter_description['include_files']
         for filter_member in filter_members:
             # Append Parameters
             DREAM3DFilter['Parameters'] += GetDREAM3DParameters(filter_member)
