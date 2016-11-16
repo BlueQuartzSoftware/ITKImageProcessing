@@ -502,9 +502,10 @@ def ExpandFilterName(filter_name):
 
 def InitializeParsingValues(DREAM3DFilter, filter_description):
     DREAM3DFilter['RawFilterName']=filter_description['name']
+    DREAM3DFilter['ITKModule'] = ''
     DREAM3DFilter['FilterName']=GetDREAM3DFilterName(filter_description['name'])
     DREAM3DFilter['FilterNameLowerCase']=DREAM3DFilter['FilterName'].lower()
-    DREAM3DFilter['FilterNameExpanded']='ITK '+ExpandFilterName(filter_description['name'])
+    DREAM3DFilter['FilterNameExpanded']=ExpandFilterName(filter_description['name'])
     DREAM3DFilter['mdunderline']='='*len(DREAM3DFilter['FilterName'])
     DREAM3DFilter['Parameters']= ''
     DREAM3DFilter['SetupFilterParameters'] = ''
@@ -665,6 +666,20 @@ def GetDREAM3DParameterDescription(filter_member):
     return description
 
 
+def FindModuleInIncludeFile(name, path):
+    for root, dirs, files in os.walk(path):
+        if name in files:
+            file_path = os.path.join(root, name)
+            datafile = file(file_path)
+            for line in datafile:
+                if '\ingroup' in line:
+                    split_line=line.split('\ingroup')
+                    module_name=split_line[1].strip()
+                    if module_name[:3] == 'ITK':
+                        return module_name
+    return "ITKNoModule"
+            
+
 def main(argv=None):
     # Parse arguments
     if argv == None:
@@ -679,6 +694,7 @@ def main(argv=None):
     parser.add_argument('-vv', '--ExtraVerbose', dest='extra_verbose', action='store_true', help="Extra verbose")
     parser.add_argument('-n', '--NotImplemented', dest='not_implemented', action='store_true', help="Hide errors due to not yet implemented")
     parser.add_argument('-o', '--Overwrite', dest='overwrite', action='store_true', help="Overwrite files previously generated automatically")
+    parser.add_argument('-I', '--ITK_SRC_DIR', dest='itk_dir', required=True, help="ITK source directory")
     parser.set_defaults(verbose=False)
     options = parser.parse_args(argv[1:])
     documentation_directory = os.path.join(options.root_directory, 'Documentation/ITKImageProcessingFilters')
@@ -690,6 +706,7 @@ def main(argv=None):
         print("Output directory: %s"%filters_output_directory)
         print("Template directory: %s"%template_directory)
         print("NotImplemented: %r"%options.not_implemented)
+        print("ITK source directory: %s"%options.itk_dir)
         print("Overwrite: %r"%options.overwrite)
         print("Verbose: %r"%options.verbose)
         print("Extra Verbose: %r"%options.extra_verbose)
@@ -781,7 +798,11 @@ def main(argv=None):
         # Initialization of replacement strings
         DREAM3DFilter={}
         InitializeParsingValues(DREAM3DFilter, filter_description)
-        include_list=[GetDREAM3DITKInclude(filter_description['name'])]+filter_description['include_files']
+        itk_include_file=GetDREAM3DITKInclude(filter_description['name'])
+        # Find Module name in ITK_DIR
+        DREAM3DFilter['ITKModule'] = FindModuleInIncludeFile(itk_include_file, options.itk_dir)
+        #####
+        include_list=[itk_include_file]+filter_description['include_files']
         for filter_member in filter_members:
             # Append Parameters
             DREAM3DFilter['Parameters'] += GetDREAM3DParameters(filter_member)

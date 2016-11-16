@@ -67,11 +67,6 @@ class ITKImageBase : public AbstractFilter
     virtual const QString getGroupName();
 
     /**
-     * @brief getSubGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getSubGroupName();
-
-    /**
      * @brief getHumanLabel Reimplemented from @see AbstractFilter class
      */
     virtual const QString getHumanLabel() = 0;

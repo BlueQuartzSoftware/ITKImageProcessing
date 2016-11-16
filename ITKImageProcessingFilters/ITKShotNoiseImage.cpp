@@ -147,5 +147,12 @@ AbstractFilter::Pointer ITKShotNoiseImage::newFilterInstance(bool copyFilterPara
 //
 // -----------------------------------------------------------------------------
 const QString ITKShotNoiseImage::getHumanLabel()
-{ return "[ITK] ITK  Shot Noise Image Filter (KW)"; }
+{ return "[ITK] Shot Noise Image Filter (KW)"; }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ITKShotNoiseImage::getSubGroupName()
+{ return "ITKImageNoise"; }
+
 

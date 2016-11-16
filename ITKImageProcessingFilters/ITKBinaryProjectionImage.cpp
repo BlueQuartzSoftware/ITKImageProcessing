@@ -151,5 +151,12 @@ AbstractFilter::Pointer ITKBinaryProjectionImage::newFilterInstance(bool copyFil
 //
 // -----------------------------------------------------------------------------
 const QString ITKBinaryProjectionImage::getHumanLabel()
-{ return "[ITK] ITK  Binary Projection Image Filter (KW)"; }
+{ return "[ITK] Binary Projection Image Filter (KW)"; }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ITKBinaryProjectionImage::getSubGroupName()
+{ return "ITKImageStatistics"; }
+
 

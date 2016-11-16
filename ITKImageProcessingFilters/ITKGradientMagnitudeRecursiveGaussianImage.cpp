@@ -146,5 +146,12 @@ AbstractFilter::Pointer ITKGradientMagnitudeRecursiveGaussianImage::newFilterIns
 //
 // -----------------------------------------------------------------------------
 const QString ITKGradientMagnitudeRecursiveGaussianImage::getHumanLabel()
-{ return "[ITK] ITK  Gradient Magnitude Recursive Gaussian Image Filter (KW)"; }
+{ return "[ITK] Gradient Magnitude Recursive Gaussian Image Filter (KW)"; }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ITKGradientMagnitudeRecursiveGaussianImage::getSubGroupName()
+{ return "ITKImageGradient"; }
+
 

@@ -146,5 +146,12 @@ AbstractFilter::Pointer ITKLaplacianRecursiveGaussianImage::newFilterInstance(bo
 //
 // -----------------------------------------------------------------------------
 const QString ITKLaplacianRecursiveGaussianImage::getHumanLabel()
-{ return "[ITK] ITK  Laplacian Recursive Gaussian Image Filter (KW)"; }
+{ return "[ITK] Laplacian Recursive Gaussian Image Filter (KW)"; }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ITKLaplacianRecursiveGaussianImage::getSubGroupName()
+{ return "ITKImageFeature"; }
+
 

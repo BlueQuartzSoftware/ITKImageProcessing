@@ -143,5 +143,12 @@ AbstractFilter::Pointer ITKMedianProjectionImage::newFilterInstance(bool copyFil
 //
 // -----------------------------------------------------------------------------
 const QString ITKMedianProjectionImage::getHumanLabel()
-{ return "[ITK] ITK  Median Projection Image Filter (KW)"; }
+{ return "[ITK] Median Projection Image Filter (KW)"; }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ITKMedianProjectionImage::getSubGroupName()
+{ return "ITKImageStatistics"; }
+
 

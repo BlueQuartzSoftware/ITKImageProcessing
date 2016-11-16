@@ -135,5 +135,12 @@ AbstractFilter::Pointer ${FilterName}::newFilterInstance(bool copyFilterParamete
 //
 // -----------------------------------------------------------------------------
 const QString ${FilterName}::getHumanLabel()
-{ return "[ITK] ${FilterNameExpanded} (KW)"; }
+{ return "[ITK]${FilterNameExpanded} (KW)"; }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ${FilterName}::getSubGroupName()
+{ return "${ITKModule}"; }
+
 

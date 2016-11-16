@@ -170,5 +170,11 @@ AbstractFilter::Pointer ITKGaussianBlur::newFilterInstance(bool copyFilterParame
 //
 // -----------------------------------------------------------------------------
 const QString ITKGaussianBlur::getHumanLabel()
-{ return "[ITK] Gaussian Blur (KW)"; }
+{ return "[ITK] GaussianBlur (KW)"; }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ITKGaussianBlur::getSubGroupName()
+{ return "ITKSmoothing"; }
 

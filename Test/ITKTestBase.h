@@ -21,7 +21,7 @@
 
 #include "ITKImageProcessingTestFileLocations.h"
 
-
+#include "ITKImageProcessing/ITKImageProcessingFilters/itkInPlaceDream3DDataToImageFilter.h"
 
 // Testing
 #include <itkTestingHashImageFilter.h>

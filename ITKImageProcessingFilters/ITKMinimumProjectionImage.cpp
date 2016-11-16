@@ -143,5 +143,12 @@ AbstractFilter::Pointer ITKMinimumProjectionImage::newFilterInstance(bool copyFi
 //
 // -----------------------------------------------------------------------------
 const QString ITKMinimumProjectionImage::getHumanLabel()
-{ return "[ITK] ITK  Minimum Projection Image Filter (KW)"; }
+{ return "[ITK] Minimum Projection Image Filter (KW)"; }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ITKMinimumProjectionImage::getSubGroupName()
+{ return "ITKImageStatistics"; }
+
 

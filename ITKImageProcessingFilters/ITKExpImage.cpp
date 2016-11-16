@@ -138,5 +138,12 @@ AbstractFilter::Pointer ITKExpImage::newFilterInstance(bool copyFilterParameters
 //
 // -----------------------------------------------------------------------------
 const QString ITKExpImage::getHumanLabel()
-{ return "[ITK] ITK  Exp Image Filter (KW)"; }
+{ return "[ITK] Exp Image Filter (KW)"; }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ITKExpImage::getSubGroupName()
+{ return "ITKImageIntensity"; }
+
 

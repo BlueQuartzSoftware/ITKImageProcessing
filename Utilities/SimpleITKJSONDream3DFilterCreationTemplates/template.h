@@ -42,6 +42,11 @@ ${Parameters}
     virtual const QString getHumanLabel() override;
 
     /**
+     * @brief getSubGroupName Reimplemented from @see AbstractFilter class
+     */
+    virtual const QString getSubGroupName() override;
+    
+    /**
      * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
      */
     virtual void setupFilterParameters() override;

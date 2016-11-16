@@ -138,5 +138,12 @@ AbstractFilter::Pointer ITKCosImage::newFilterInstance(bool copyFilterParameters
 //
 // -----------------------------------------------------------------------------
 const QString ITKCosImage::getHumanLabel()
-{ return "[ITK] ITK  Cos Image Filter (KW)"; }
+{ return "[ITK] Cos Image Filter (KW)"; }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ITKCosImage::getSubGroupName()
+{ return "ITKImageIntensity"; }
+
 

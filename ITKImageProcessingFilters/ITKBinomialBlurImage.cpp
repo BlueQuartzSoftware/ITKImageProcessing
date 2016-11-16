@@ -143,5 +143,12 @@ AbstractFilter::Pointer ITKBinomialBlurImage::newFilterInstance(bool copyFilterP
 //
 // -----------------------------------------------------------------------------
 const QString ITKBinomialBlurImage::getHumanLabel()
-{ return "[ITK] ITK  Binomial Blur Image Filter (KW)"; }
+{ return "[ITK] Binomial Blur Image Filter (KW)"; }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ITKBinomialBlurImage::getSubGroupName()
+{ return "ITKSmoothing"; }
+
 

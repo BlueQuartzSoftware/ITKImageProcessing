@@ -151,5 +151,12 @@ AbstractFilter::Pointer ITKMinMaxCurvatureFlowImage::newFilterInstance(bool copy
 //
 // -----------------------------------------------------------------------------
 const QString ITKMinMaxCurvatureFlowImage::getHumanLabel()
-{ return "[ITK] ITK  Min Max Curvature Flow Image Filter (KW)"; }
+{ return "[ITK] Min Max Curvature Flow Image Filter (KW)"; }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ITKMinMaxCurvatureFlowImage::getSubGroupName()
+{ return "ITKCurvatureFlow"; }
+
 

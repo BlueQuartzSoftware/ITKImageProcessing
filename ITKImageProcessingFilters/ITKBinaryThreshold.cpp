@@ -184,3 +184,9 @@ AbstractFilter::Pointer ITKBinaryThreshold::newFilterInstance(bool copyFilterPar
 const QString ITKBinaryThreshold::getHumanLabel()
 { return "[ITK] Binary Threshold (KW)"; }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ITKBinaryThreshold::getSubGroupName()
+{ return "ITKThresholding"; }
+

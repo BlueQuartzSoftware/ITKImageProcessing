@@ -138,5 +138,12 @@ AbstractFilter::Pointer ITKTanImage::newFilterInstance(bool copyFilterParameters
 //
 // -----------------------------------------------------------------------------
 const QString ITKTanImage::getHumanLabel()
-{ return "[ITK] ITK  Tan Image Filter (KW)"; }
+{ return "[ITK] Tan Image Filter (KW)"; }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ITKTanImage::getSubGroupName()
+{ return "ITKImageIntensity"; }
+
 

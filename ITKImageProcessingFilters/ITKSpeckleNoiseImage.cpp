@@ -147,5 +147,12 @@ AbstractFilter::Pointer ITKSpeckleNoiseImage::newFilterInstance(bool copyFilterP
 //
 // -----------------------------------------------------------------------------
 const QString ITKSpeckleNoiseImage::getHumanLabel()
-{ return "[ITK] ITK  Speckle Noise Image Filter (KW)"; }
+{ return "[ITK] Speckle Noise Image Filter (KW)"; }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ITKSpeckleNoiseImage::getSubGroupName()
+{ return "ITKImageNoise"; }
+
 

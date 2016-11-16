@@ -142,5 +142,12 @@ AbstractFilter::Pointer ITKLaplacianSharpeningImage::newFilterInstance(bool copy
 //
 // -----------------------------------------------------------------------------
 const QString ITKLaplacianSharpeningImage::getHumanLabel()
-{ return "[ITK] ITK  Laplacian Sharpening Image Filter (KW)"; }
+{ return "[ITK] Laplacian Sharpening Image Filter (KW)"; }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ITKLaplacianSharpeningImage::getSubGroupName()
+{ return "ITKImageFeature"; }
+
 

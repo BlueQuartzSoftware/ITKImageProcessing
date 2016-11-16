@@ -142,5 +142,12 @@ AbstractFilter::Pointer ITKHMaximaImage::newFilterInstance(bool copyFilterParame
 //
 // -----------------------------------------------------------------------------
 const QString ITKHMaximaImage::getHumanLabel()
-{ return "[ITK] ITK  H Maxima Image Filter (KW)"; }
+{ return "[ITK] H Maxima Image Filter (KW)"; }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ITKHMaximaImage::getSubGroupName()
+{ return "ITKMathematicalMorphology"; }
+
 

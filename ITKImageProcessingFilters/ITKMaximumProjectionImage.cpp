@@ -143,5 +143,12 @@ AbstractFilter::Pointer ITKMaximumProjectionImage::newFilterInstance(bool copyFi
 //
 // -----------------------------------------------------------------------------
 const QString ITKMaximumProjectionImage::getHumanLabel()
-{ return "[ITK] ITK  Maximum Projection Image Filter (KW)"; }
+{ return "[ITK] Maximum Projection Image Filter (KW)"; }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ITKMaximumProjectionImage::getSubGroupName()
+{ return "ITKImageStatistics"; }
+
 
