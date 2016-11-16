@@ -81,13 +81,13 @@ ${ReadFilterParameters}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename PixelType, unsigned int Dimension>
+template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ${FilterName}::dataCheck()
 {
   // Check consistency of parameters
 ${CheckIntegerEntry}
   setErrorCondition(0);
-  ITKImageBase::dataCheck<PixelType, Dimension>();
+  ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
@@ -95,17 +95,18 @@ ${CheckIntegerEntry}
 // -----------------------------------------------------------------------------
 void ${FilterName}::dataCheckInternal()
 {
-  Dream3DArraySwitchMacro(this->dataCheck, getSelectedCellArrayPath(), -4);// Run our DataCheck to make sure everthing is setup correctly
+${DataCheckInternal}
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 
-template<typename PixelType, unsigned int Dimension>
+template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ${FilterName}::filter()
 {
-  typedef itk::Dream3DImage<PixelType, Dimension> ImageType;
+  typedef itk::Dream3DImage<InputPixelType, Dimension> InputImageType;
+  typedef itk::Dream3DImage<OutputPixelType, Dimension> OutputImageType;
   //define filter
 ${Filter}
 }
@@ -115,7 +116,7 @@ ${Filter}
 // -----------------------------------------------------------------------------
 void ${FilterName}::filterInternal()
 {
-  Dream3DArraySwitchMacro(this->filter, getSelectedCellArrayPath(), -4);// Run filter
+  ${FilterInternal}
 }
 
 // -----------------------------------------------------------------------------

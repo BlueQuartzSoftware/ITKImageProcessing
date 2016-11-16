@@ -164,7 +164,7 @@ class ITKImageWriter : public AbstractFilter
     /**
     * @brief Converts Dream3D data to an ITK image and calls the actual writer.
     */
-    template<typename TPixel, unsigned int Dimension>
+    template<typename TPixel, typename UnusedTPixel, unsigned int Dimension>
     void writeImage();
 
     /**

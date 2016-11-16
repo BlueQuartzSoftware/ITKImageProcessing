@@ -90,14 +90,14 @@ void ITKBilateralImage::readFilterParameters(AbstractFilterParametersReader* rea
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename PixelType, unsigned int Dimension>
+template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ITKBilateralImage::dataCheck()
 {
   // Check consistency of parameters
   this->CheckIntegerEntry<unsigned int,double>(m_NumberOfRangeGaussianSamples, "NumberOfRangeGaussianSamples",1);
 
   setErrorCondition(0);
-  ITKImageBase::dataCheck<PixelType, Dimension>();
+  ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
@@ -105,24 +105,25 @@ void ITKBilateralImage::dataCheck()
 // -----------------------------------------------------------------------------
 void ITKBilateralImage::dataCheckInternal()
 {
-  Dream3DArraySwitchMacro(this->dataCheck, getSelectedCellArrayPath(), -4);// Run our DataCheck to make sure everthing is setup correctly
+  Dream3DArraySwitchMacro(this->dataCheck, getSelectedCellArrayPath(), -4);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 
-template<typename PixelType, unsigned int Dimension>
+template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ITKBilateralImage::filter()
 {
-  typedef itk::Dream3DImage<PixelType, Dimension> ImageType;
+  typedef itk::Dream3DImage<InputPixelType, Dimension> InputImageType;
+  typedef itk::Dream3DImage<OutputPixelType, Dimension> OutputImageType;
   //define filter
-  typedef itk::BilateralImageFilter<ImageType, ImageType> FilterType;
+  typedef itk::BilateralImageFilter<InputImageType, OutputImageType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
   filter->SetDomainSigma(static_cast<double>(m_DomainSigma));
   filter->SetRangeSigma(static_cast<double>(m_RangeSigma));
   filter->SetNumberOfRangeGaussianSamples(static_cast<unsigned int>(m_NumberOfRangeGaussianSamples));
-  this->ITKImageBase::filter<PixelType, Dimension, FilterType>(filter);
+  this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
 
 }
 
@@ -131,7 +132,7 @@ void ITKBilateralImage::filter()
 // -----------------------------------------------------------------------------
 void ITKBilateralImage::filterInternal()
 {
-  Dream3DArraySwitchMacro(this->filter, getSelectedCellArrayPath(), -4);// Run filter
+    Dream3DArraySwitchMacro(this->filter, getSelectedCellArrayPath(), -4);
 }
 
 // -----------------------------------------------------------------------------

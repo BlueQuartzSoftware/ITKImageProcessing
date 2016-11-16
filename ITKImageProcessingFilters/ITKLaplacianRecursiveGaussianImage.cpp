@@ -87,13 +87,13 @@ void ITKLaplacianRecursiveGaussianImage::readFilterParameters(AbstractFilterPara
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename PixelType, unsigned int Dimension>
+template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ITKLaplacianRecursiveGaussianImage::dataCheck()
 {
   // Check consistency of parameters
 
   setErrorCondition(0);
-  ITKImageBase::dataCheck<PixelType, Dimension>();
+  ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
@@ -101,23 +101,24 @@ void ITKLaplacianRecursiveGaussianImage::dataCheck()
 // -----------------------------------------------------------------------------
 void ITKLaplacianRecursiveGaussianImage::dataCheckInternal()
 {
-  Dream3DArraySwitchMacro(this->dataCheck, getSelectedCellArrayPath(), -4);// Run our DataCheck to make sure everthing is setup correctly
+  Dream3DArraySwitchMacroOutputType(this->dataCheck, getSelectedCellArrayPath(), -4,float,0);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 
-template<typename PixelType, unsigned int Dimension>
+template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ITKLaplacianRecursiveGaussianImage::filter()
 {
-  typedef itk::Dream3DImage<PixelType, Dimension> ImageType;
+  typedef itk::Dream3DImage<InputPixelType, Dimension> InputImageType;
+  typedef itk::Dream3DImage<OutputPixelType, Dimension> OutputImageType;
   //define filter
-  typedef itk::LaplacianRecursiveGaussianImageFilter<ImageType, ImageType> FilterType;
+  typedef itk::LaplacianRecursiveGaussianImageFilter<InputImageType, OutputImageType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
   filter->SetSigma(static_cast<double>(m_Sigma));
   filter->SetNormalizeAcrossScale(static_cast<bool>(m_NormalizeAcrossScale));
-  this->ITKImageBase::filter<PixelType, Dimension, FilterType>(filter);
+  this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
 
 }
 
@@ -126,7 +127,7 @@ void ITKLaplacianRecursiveGaussianImage::filter()
 // -----------------------------------------------------------------------------
 void ITKLaplacianRecursiveGaussianImage::filterInternal()
 {
-  Dream3DArraySwitchMacro(this->filter, getSelectedCellArrayPath(), -4);// Run filter
+    Dream3DArraySwitchMacroOutputType(this->filter, getSelectedCellArrayPath(), -4,float,0);
 }
 
 // -----------------------------------------------------------------------------

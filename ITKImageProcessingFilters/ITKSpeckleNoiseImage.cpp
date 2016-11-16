@@ -87,14 +87,14 @@ void ITKSpeckleNoiseImage::readFilterParameters(AbstractFilterParametersReader* 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename PixelType, unsigned int Dimension>
+template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ITKSpeckleNoiseImage::dataCheck()
 {
   // Check consistency of parameters
   this->CheckIntegerEntry<uint32_t,double>(m_Seed, "Seed",1);
 
   setErrorCondition(0);
-  ITKImageBase::dataCheck<PixelType, Dimension>();
+  ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
@@ -102,23 +102,24 @@ void ITKSpeckleNoiseImage::dataCheck()
 // -----------------------------------------------------------------------------
 void ITKSpeckleNoiseImage::dataCheckInternal()
 {
-  Dream3DArraySwitchMacro(this->dataCheck, getSelectedCellArrayPath(), -4);// Run our DataCheck to make sure everthing is setup correctly
+  Dream3DArraySwitchMacro(this->dataCheck, getSelectedCellArrayPath(), -4);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 
-template<typename PixelType, unsigned int Dimension>
+template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ITKSpeckleNoiseImage::filter()
 {
-  typedef itk::Dream3DImage<PixelType, Dimension> ImageType;
+  typedef itk::Dream3DImage<InputPixelType, Dimension> InputImageType;
+  typedef itk::Dream3DImage<OutputPixelType, Dimension> OutputImageType;
   //define filter
-  typedef itk::SpeckleNoiseImageFilter<ImageType, ImageType> FilterType;
+  typedef itk::SpeckleNoiseImageFilter<InputImageType, OutputImageType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
   filter->SetStandardDeviation(static_cast<double>(m_StandardDeviation));
   filter->SetSeed(static_cast<uint32_t>(m_Seed));
-  this->ITKImageBase::filter<PixelType, Dimension, FilterType>(filter);
+  this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
 
 }
 
@@ -127,7 +128,7 @@ void ITKSpeckleNoiseImage::filter()
 // -----------------------------------------------------------------------------
 void ITKSpeckleNoiseImage::filterInternal()
 {
-  Dream3DArraySwitchMacro(this->filter, getSelectedCellArrayPath(), -4);// Run filter
+    Dream3DArraySwitchMacro(this->filter, getSelectedCellArrayPath(), -4);
 }
 
 // -----------------------------------------------------------------------------

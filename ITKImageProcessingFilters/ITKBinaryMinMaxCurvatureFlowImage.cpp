@@ -93,14 +93,14 @@ void ITKBinaryMinMaxCurvatureFlowImage::readFilterParameters(AbstractFilterParam
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename PixelType, unsigned int Dimension>
+template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ITKBinaryMinMaxCurvatureFlowImage::dataCheck()
 {
   // Check consistency of parameters
   this->CheckIntegerEntry<uint32_t,double>(m_NumberOfIterations, "NumberOfIterations",1);
 
   setErrorCondition(0);
-  ITKImageBase::dataCheck<PixelType, Dimension>();
+  ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
@@ -108,25 +108,26 @@ void ITKBinaryMinMaxCurvatureFlowImage::dataCheck()
 // -----------------------------------------------------------------------------
 void ITKBinaryMinMaxCurvatureFlowImage::dataCheckInternal()
 {
-  Dream3DArraySwitchMacro(this->dataCheck, getSelectedCellArrayPath(), -4);// Run our DataCheck to make sure everthing is setup correctly
+  Dream3DArraySwitchMacro(this->dataCheck, getSelectedCellArrayPath(), -4);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 
-template<typename PixelType, unsigned int Dimension>
+template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ITKBinaryMinMaxCurvatureFlowImage::filter()
 {
-  typedef itk::Dream3DImage<PixelType, Dimension> ImageType;
+  typedef itk::Dream3DImage<InputPixelType, Dimension> InputImageType;
+  typedef itk::Dream3DImage<OutputPixelType, Dimension> OutputImageType;
   //define filter
-  typedef itk::BinaryMinMaxCurvatureFlowImageFilter<ImageType, ImageType> FilterType;
+  typedef itk::BinaryMinMaxCurvatureFlowImageFilter<InputImageType, OutputImageType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
   filter->SetTimeStep(static_cast<double>(m_TimeStep));
   filter->SetNumberOfIterations(static_cast<uint32_t>(m_NumberOfIterations));
   filter->SetStencilRadius(static_cast<int>(m_StencilRadius));
   filter->SetThreshold(static_cast<double>(m_Threshold));
-  this->ITKImageBase::filter<PixelType, Dimension, FilterType>(filter);
+  this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
 
 }
 
@@ -135,7 +136,7 @@ void ITKBinaryMinMaxCurvatureFlowImage::filter()
 // -----------------------------------------------------------------------------
 void ITKBinaryMinMaxCurvatureFlowImage::filterInternal()
 {
-  Dream3DArraySwitchMacro(this->filter, getSelectedCellArrayPath(), -4);// Run filter
+    Dream3DArraySwitchMacro(this->filter, getSelectedCellArrayPath(), -4);
 }
 
 // -----------------------------------------------------------------------------

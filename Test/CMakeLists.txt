@@ -38,9 +38,7 @@ set(TEST_NAMES
   ITKAbsImage
   ITKAcosImage
   ITKAtanImage
-  ITKGradientMagnitudeRecursiveGaussianImage
   ITKSqrtImage
-  ITKLaplacianRecursiveGaussianImage
   ITKMinMaxCurvatureFlowImage
   ITKSigmoidImage
   ITKBinaryThinningImage
@@ -57,7 +55,6 @@ set(TEST_NAMES
   ITKBinaryContourImage
   ITKShotNoiseImage
   ITKSpeckleNoiseImage
-  ITKGradientMagnitudeImage
   ITKShiftScaleImage
   ITKNotImage
   ITKBinaryProjectionImage
@@ -77,6 +74,25 @@ set(TEST_NAMES
   ITKValuedRegionalMaximaImage
   ITKRelabelComponentImage
   ITKGrayscaleGrindPeakImage
+  ITKBinaryThresholdImage
+  ITKGradientMagnitudeImage
+  ITKGradientMagnitudeRecursiveGaussianImage
+  ITKSignedMaurerDistanceMapImage
+  ITKLaplacianRecursiveGaussianImage
+  ITKOtsuMultipleThresholdsImage
+  ITKDoubleThresholdImage
+  ITKSumProjectionImage
+  ITKApproximateSignedDistanceMapImage
+  ITKCurvatureFlowImage
+  ITKIsoContourDistanceImage
+  ITKRegionalMinimaImage
+  ITKRegionalMaximaImage
+  ITKSignedDanielssonDistanceMapImage
+  ITKNormalizeToConstantImage
+  ITKStandardDeviationProjectionImage
+  ITKDanielssonDistanceMapImage
+  ITKMeanProjectionImage
+  ITKZeroCrossingImage
 )
 
 set( ${PLUGIN_NAME}_TEST_SRCS )

@@ -222,7 +222,7 @@ void ITKImageWriter::writeAsOneFile(typename itk::Dream3DImage<TPixel, Dimension
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename TPixel, unsigned int Dimensions>
+template<typename TPixel, typename UnusedTPixel, unsigned int Dimensions>
 void ITKImageWriter::writeImage()
 {
   typedef itk::Dream3DImage<TPixel, Dimensions>   ImageType;

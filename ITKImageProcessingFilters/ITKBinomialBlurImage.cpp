@@ -84,14 +84,14 @@ void ITKBinomialBlurImage::readFilterParameters(AbstractFilterParametersReader* 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename PixelType, unsigned int Dimension>
+template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ITKBinomialBlurImage::dataCheck()
 {
   // Check consistency of parameters
   this->CheckIntegerEntry<unsigned int,double>(m_Repetitions, "Repetitions",1);
 
   setErrorCondition(0);
-  ITKImageBase::dataCheck<PixelType, Dimension>();
+  ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
@@ -99,22 +99,23 @@ void ITKBinomialBlurImage::dataCheck()
 // -----------------------------------------------------------------------------
 void ITKBinomialBlurImage::dataCheckInternal()
 {
-  Dream3DArraySwitchMacro(this->dataCheck, getSelectedCellArrayPath(), -4);// Run our DataCheck to make sure everthing is setup correctly
+  Dream3DArraySwitchMacro(this->dataCheck, getSelectedCellArrayPath(), -4);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 
-template<typename PixelType, unsigned int Dimension>
+template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ITKBinomialBlurImage::filter()
 {
-  typedef itk::Dream3DImage<PixelType, Dimension> ImageType;
+  typedef itk::Dream3DImage<InputPixelType, Dimension> InputImageType;
+  typedef itk::Dream3DImage<OutputPixelType, Dimension> OutputImageType;
   //define filter
-  typedef itk::BinomialBlurImageFilter<ImageType, ImageType> FilterType;
+  typedef itk::BinomialBlurImageFilter<InputImageType, OutputImageType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
   filter->SetRepetitions(static_cast<unsigned int>(m_Repetitions));
-  this->ITKImageBase::filter<PixelType, Dimension, FilterType>(filter);
+  this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
 
 }
 
@@ -123,7 +124,7 @@ void ITKBinomialBlurImage::filter()
 // -----------------------------------------------------------------------------
 void ITKBinomialBlurImage::filterInternal()
 {
-  Dream3DArraySwitchMacro(this->filter, getSelectedCellArrayPath(), -4);// Run filter
+    Dream3DArraySwitchMacro(this->filter, getSelectedCellArrayPath(), -4);
 }
 
 // -----------------------------------------------------------------------------

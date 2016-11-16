@@ -93,8 +93,14 @@ int CompareImages(DataContainer::Pointer input_container,
     typename ComparisonFilterType::Pointer comparisonFilter = ComparisonFilterType::New();
     comparisonFilter->SetTestInput(input);
     comparisonFilter->SetValidInput(baseline);
-    comparisonFilter->Update();
-    if(static_cast<double>(comparisonFilter->GetMaximumDifference()) > tolerance)
+    comparisonFilter->SetDifferenceThreshold(tolerance);
+    comparisonFilter->SetToleranceRadius(0);
+    comparisonFilter->UpdateLargestPossibleRegion();
+
+    itk::SizeValueType status = itk::NumericTraits<itk::SizeValueType>::ZeroValue();
+    status = comparisonFilter->GetNumberOfPixelsWithDifferences();
+
+    if(status > 0)
     {
         return 1;
     }

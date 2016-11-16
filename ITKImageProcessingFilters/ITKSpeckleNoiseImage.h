@@ -75,7 +75,7 @@ class ITKSpeckleNoiseImage : public ITKImageBase
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
-    template<typename PixelType, unsigned int Dimension>
+    template<typename InputImageType, typename OutputImageType, unsigned int Dimension>
     void dataCheck();
 
     /**
@@ -86,7 +86,7 @@ class ITKSpeckleNoiseImage : public ITKImageBase
     /**
     * @brief Applies the filter
     */
-    template<typename PixelType, unsigned int Dimension>
+    template<typename InputImageType, typename OutputImageType, unsigned int Dimension>
     void filter();
 
   private:

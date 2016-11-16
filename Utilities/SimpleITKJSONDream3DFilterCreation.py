@@ -32,7 +32,8 @@ general={
                {'name':['inputs'],'type':str,'required':False},
                {'name':['tests'],'type':list,'required':False},
                {'name':['briefdescription'],'type':str,'required':False},
-               {'name':['detaileddescription'],'type':str,'required':False}
+               {'name':['detaileddescription'],'type':str,'required':False},
+               {'name':['output_pixel_type'],'type':str,'required':False}  # 60
              ],
         'ignored':
              [
@@ -61,7 +62,6 @@ general={
                {'name':['custom_type2'],'type':str,'required':False},  # 3
                {'name':['custom_register'],'type':str,'required':False},  # 2
                {'name':['long'],'type':int,'required':False},  # 32
-               {'name':['output_pixel_type'],'type':str,'required':False},  # 60
                {'name':['custom_set_input'],'type':str,'required':False}  # 24
              ]
          
@@ -453,7 +453,7 @@ def GetDREAM3DReadFilterParameters(filter_member):
   return '  set'+filter_member['name']+'(reader->'+Dream3DTypeToMacro[dream3D_type]['read']+'("'+filter_member['name']+'", get'+filter_member['name']+'()));\n'
 
 def ImplementFilter(filter_description, filter_members):
-    filt = '  typedef itk::'+filter_description['name']+'<ImageType, ImageType> FilterType;\n'
+    filt = '  typedef itk::'+filter_description['name']+'<InputImageType, OutputImageType> FilterType;\n'
     filt+= '  typename FilterType::Pointer filter = FilterType::New();\n'
     for filter_member in filter_members:
         if filter_member['dim_vec'] == 0:
@@ -471,8 +471,31 @@ def ImplementFilter(filter_description, filter_members):
         else:
             raise Exception("dim_vec = % - %s"%(filter_member['dim_vec'],filter_member))
         filt+= '  filter->Set'+filter_member['name']+'('+call+');\n'
-    filt+='  this->ITKImageBase::filter<PixelType, Dimension, FilterType>(filter);\n'
+    filt+='  this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);\n'
     return filt
+
+def TypenameOutputPixelType(output_pixel_type):
+    if 'InputImageType::' in output_pixel_type:
+        return '1'
+    else:
+        return '0'
+
+
+def ImplementFilterInternal(filter_description):
+    if 'output_pixel_type' in filter_description and filter_description['output_pixel_type'] != '':
+        return '  Dream3DArraySwitchMacroOutputType(this->filter, getSelectedCellArrayPath(), -4,'\
+        +filter_description['output_pixel_type']+','\
+        +TypenameOutputPixelType(filter_description['output_pixel_type'])+');'
+    else:
+        return '  Dream3DArraySwitchMacro(this->filter, getSelectedCellArrayPath(), -4);'
+
+def ImplementDataCheckInternal(filter_description):
+    if 'output_pixel_type' in filter_description and filter_description['output_pixel_type'] != '':
+        return '  Dream3DArraySwitchMacroOutputType(this->dataCheck, getSelectedCellArrayPath(), -4,'\
+        +filter_description['output_pixel_type']+','\
+        +TypenameOutputPixelType(filter_description['output_pixel_type'])+');'
+    else:
+        return '  Dream3DArraySwitchMacro(this->dataCheck, getSelectedCellArrayPath(), -4);'
 
 def ConfigureFiles(ext, template_directory, directory, DREAM3DFilter):
     templateFilePath=os.path.join(template_directory, 'template')+ext
@@ -516,6 +539,8 @@ def InitializeParsingValues(DREAM3DFilter, filter_description):
     DREAM3DFilter['FilterTests'] = ''
     DREAM3DFilter['FilterDescription'] = ''
     DREAM3DFilter['FilterParameterDescription'] = ''
+    DREAM3DFilter['DataCheckInternal'] = ''
+    DREAM3DFilter['FilterInternal'] = ''
     if 'briefdescription' in filter_description:
         DREAM3DFilter['FilterDescription'] += filter_description['briefdescription']+'\n\n'
     if 'detaileddescription' in filter_description:
@@ -819,6 +844,8 @@ def main(argv=None):
             DREAM3DFilter['FilterParameterDescription'] += GetDREAM3DParameterDescription(filter_member) +'\n'
         #filter
         DREAM3DFilter['Filter']=ImplementFilter(filter_description, filter_members)
+        DREAM3DFilter['FilterInternal']=ImplementFilterInternal(filter_description)
+        DREAM3DFilter['DataCheckInternal']=ImplementDataCheckInternal(filter_description)
         #includes
         DREAM3DFilter['IncludeName']=FormatIncludes(include_list)
         # Implement tests

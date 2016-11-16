@@ -93,14 +93,14 @@ void ITKDiscreteGaussianImage::readFilterParameters(AbstractFilterParametersRead
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename PixelType, unsigned int Dimension>
+template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ITKDiscreteGaussianImage::dataCheck()
 {
   // Check consistency of parameters
   this->CheckIntegerEntry<unsigned int,double>(m_MaximumKernelWidth, "MaximumKernelWidth",1);
 
   setErrorCondition(0);
-  ITKImageBase::dataCheck<PixelType, Dimension>();
+  ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
@@ -108,25 +108,26 @@ void ITKDiscreteGaussianImage::dataCheck()
 // -----------------------------------------------------------------------------
 void ITKDiscreteGaussianImage::dataCheckInternal()
 {
-  Dream3DArraySwitchMacro(this->dataCheck, getSelectedCellArrayPath(), -4);// Run our DataCheck to make sure everthing is setup correctly
+  Dream3DArraySwitchMacro(this->dataCheck, getSelectedCellArrayPath(), -4);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 
-template<typename PixelType, unsigned int Dimension>
+template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ITKDiscreteGaussianImage::filter()
 {
-  typedef itk::Dream3DImage<PixelType, Dimension> ImageType;
+  typedef itk::Dream3DImage<InputPixelType, Dimension> InputImageType;
+  typedef itk::Dream3DImage<OutputPixelType, Dimension> OutputImageType;
   //define filter
-  typedef itk::DiscreteGaussianImageFilter<ImageType, ImageType> FilterType;
+  typedef itk::DiscreteGaussianImageFilter<InputImageType, OutputImageType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
   filter->SetVariance(static_cast<double>(m_Variance));
   filter->SetMaximumKernelWidth(static_cast<unsigned int>(m_MaximumKernelWidth));
   filter->SetMaximumError(static_cast<double>(m_MaximumError));
   filter->SetUseImageSpacing(static_cast<bool>(m_UseImageSpacing));
-  this->ITKImageBase::filter<PixelType, Dimension, FilterType>(filter);
+  this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
 
 }
 
@@ -135,7 +136,7 @@ void ITKDiscreteGaussianImage::filter()
 // -----------------------------------------------------------------------------
 void ITKDiscreteGaussianImage::filterInternal()
 {
-  Dream3DArraySwitchMacro(this->filter, getSelectedCellArrayPath(), -4);// Run filter
+    Dream3DArraySwitchMacro(this->filter, getSelectedCellArrayPath(), -4);
 }
 
 // -----------------------------------------------------------------------------

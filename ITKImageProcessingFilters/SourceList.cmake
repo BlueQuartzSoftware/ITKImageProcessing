@@ -21,9 +21,7 @@ set(_PublicFilters
   ITKBoxMeanImage
   ITKAcosImage
   ITKAtanImage
-  ITKGradientMagnitudeRecursiveGaussianImage
   ITKSqrtImage
-  ITKLaplacianRecursiveGaussianImage
   ITKMinMaxCurvatureFlowImage
   ITKSigmoidImage
   ITKBinaryThinningImage
@@ -44,7 +42,6 @@ set(_PublicFilters
   ITKShotNoiseImage
   ITKMaximumProjectionImage
   ITKSpeckleNoiseImage
-  ITKGradientMagnitudeImage
   ITKShiftScaleImage
   ITKNotImage
   ITKBinaryProjectionImage
@@ -67,6 +64,27 @@ set(_PublicFilters
   ITKGrayscaleGrindPeakImage
   ITKLaplacianSharpeningImage
   ITKDiscreteGaussianImage
+  ITKBinaryThresholdImage
+  ITKGradientMagnitudeImage
+  ITKSignedMaurerDistanceMapImage
+  ITKLaplacianRecursiveGaussianImage
+  ITKGradientMagnitudeRecursiveGaussianImage
+  ITKOtsuMultipleThresholdsImage
+  ITKDoubleThresholdImage
+  ITKSumProjectionImage
+  ITKNormalizeImage
+  ITKApproximateSignedDistanceMapImage
+  ITKCurvatureFlowImage
+  ITKIsoContourDistanceImage
+  ITKRegionalMinimaImage
+  ITKRegionalMaximaImage
+  ITKSignedDanielssonDistanceMapImage
+  ITKNormalizeToConstantImage
+  ITKStandardDeviationProjectionImage
+  ITKDanielssonDistanceMapImage
+  ITKMeanProjectionImage
+  ITKZeroCrossingImage
+  ITKBoundedReciprocalImage
 )
 
 

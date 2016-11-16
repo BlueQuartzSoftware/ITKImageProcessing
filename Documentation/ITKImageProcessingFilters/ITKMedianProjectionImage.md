@@ -42,7 +42,7 @@ Image
 ## Created Objects ##
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| **Cell Attribute Array** | None | N/A | (1)  | Array containing filtered image
+| **Cell Attribute Array** | None |  | (1)  | Array containing filtered image
 
 ## References ##
 [1] T.S. Yoo, M. J. Ackerman, W. E. Lorensen, W. Schroeder, V. Chalana, S. Aylward, D. Metaxas, R. Whitaker. Engineering and Algorithm Design for an Image Processing API: A Technical Report on ITK - The Insight Toolkit. In Proc. of Medicine Meets Virtual Reality, J. Westwood, ed., IOS Press Amsterdam pp 586-592 (2002). 
