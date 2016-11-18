@@ -33,11 +33,12 @@ general={
                {'name':['tests'],'type':list,'required':False},
                {'name':['briefdescription'],'type':str,'required':False},
                {'name':['detaileddescription'],'type':str,'required':False},
-               {'name':['output_pixel_type'],'type':str,'required':False}  # 60
+               {'name':['output_pixel_type'],'type':str,'required':False},  # 60
+               {'name':['template_code_filename'], 'type':str, 'required':True},  # 281
+               {'name':['template_test_filename'], 'type':str, 'required':True} # 280
              ],
         'ignored':
              [
-               {'name':['template_test_filename']},  # Dream3D does not need the SimpleITK test information
                {'name':['public_declarations']},  # Dream3D does not require additional C++ code
                {'name':['custom_methods']},  # Dream3D does not require to add methods to the filter
                {'name':['doc']},  # Dream3D does not require doc
@@ -48,7 +49,6 @@ general={
              [
                {'name':['pixel_types'], 'type':str, 'required':True},  # 337 occurences in JSON
                {'name':['filter_type'],'type':str,'required':False},  # 102 occurences
-               {'name':['template_code_filename'], 'type':str, 'required':True},  # 281
                {'name':['output_image_type'],'type':str,'required':False},  # 37
                {'name':['vector_pixel_types_by_component'],'type':str,'required':False},  # 42
                {'name':['no_procedure'],'type':str,'required':False},  # 31
@@ -500,8 +500,8 @@ def ImplementDataCheckInternal(filter_description):
     else:
         return '  Dream3DArraySwitchMacro(this->dataCheck, getSelectedCellArrayPath(), -4);'
 
-def ConfigureFiles(ext, template_directory, directory, DREAM3DFilter):
-    templateFilePath=os.path.join(template_directory, 'template')+ext
+def ConfigureFiles(ext, template_directory, directory, DREAM3DFilter, rootTemplateName):
+    templateFilePath=os.path.join(template_directory, rootTemplateName+'Template')+ext
     # Verify that template file exists
     if not os.path.isfile(templateFilePath):
         raise Exception("Missing template file %s"%templateFilePath)
@@ -858,11 +858,11 @@ def main(argv=None):
             DREAM3DFilter['FilterTests'] += GetDream3DFilterTests(filter_description, filter_tests[ii], filter_test_settings[ii])
             DREAM3DFilter['RegisterTests'] += GetDream3DRegisterTests(filter_description, filter_tests[ii], filter_test_settings[ii])
         # Replace variables in template files
-        ConfigureFiles('.h', template_directory, filters_output_directory, DREAM3DFilter)
-        ConfigureFiles('.cpp', template_directory, filters_output_directory, DREAM3DFilter)
+        ConfigureFiles('.h', template_directory, filters_output_directory, DREAM3DFilter, filter_description['template_code_filename'])
+        ConfigureFiles('.cpp', template_directory, filters_output_directory, DREAM3DFilter, filter_description['template_code_filename'])
         testDirectory = os.path.join(options.root_directory, 'Test')
-        ConfigureFiles('Test.cpp', template_directory, testDirectory, DREAM3DFilter)
-        ConfigureFiles('.md', template_directory, documentation_directory, DREAM3DFilter)
+        ConfigureFiles('Test.cpp', template_directory, testDirectory, DREAM3DFilter,  filter_description['template_test_filename'])
+        ConfigureFiles('.md', template_directory, documentation_directory, DREAM3DFilter, "")  #
         # Append list of filters created
         filter_list.append(DREAM3DFilter['FilterName'])
     # Print manual step: Add created filters to CMakeLists
