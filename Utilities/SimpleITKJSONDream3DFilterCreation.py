@@ -79,7 +79,8 @@ members={
            {'name':['briefdescriptionSet'],'type':str,'required':False},
            {'name':['detaileddescriptionSet'],'type':str,'required':False},
            {'name':['detaileddescriptionGet'],'type':str,'required':False},  # For some filters, the description is only written in this field, not in the equivalent "Set" field
-           {'name':['briefdescriptionGet'],'type':str,'required':False}  # For some filters, the description is only written in this field, not in the equivalent "Set" field
+           {'name':['briefdescriptionGet'],'type':str,'required':False},  # For some filters, the description is only written in this field, not in the equivalent "Set" field
+           {'name':['custom_itk_cast'],'type':str,'required':False}  # 123 (including in inputs)
          ],
         'ignored':
          [
@@ -91,7 +92,6 @@ members={
          'not_implemented':
          [
            {'name':['set_as_scalar']},  # 40; The parameter values will be set individually, not altogether using the same scalar value
-           {'name':['custom_itk_cast'],'type':str,'required':False},  # 123 (including in inputs)
            {'name':['pixeltype'],'type':str,'required':False},  # 158
            {'name':['point_vec'],'type':str,'required':False},  # 7
            {'name':['enum'],'type':list,'required':False}  # 29
@@ -470,7 +470,10 @@ def ImplementFilter(filter_description, filter_members):
                 raise Exception("Vector with no itk_type - %s"%filter_member)
         else:
             raise Exception("dim_vec = % - %s"%(filter_member['dim_vec'],filter_member))
-        filt+= '  filter->Set'+filter_member['name']+'('+call+');\n'
+        if 'custom_itk_cast' in filter_member and filter_member['custom_itk_cast'] != '':
+            filt+='  '+filter_member['custom_itk_cast']+'\n'
+        else:
+            filt+= '  filter->Set'+filter_member['name']+'('+call+');\n'
     filt+='  this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);\n'
     return filt
 

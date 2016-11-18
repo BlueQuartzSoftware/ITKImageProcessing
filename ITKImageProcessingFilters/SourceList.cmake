@@ -85,6 +85,7 @@ set(_PublicFilters
   ITKMeanProjectionImage
   ITKZeroCrossingImage
   ITKBoundedReciprocalImage
+  ITKThresholdMaximumConnectedComponentsImage
 )
 
 

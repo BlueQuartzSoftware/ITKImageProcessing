@@ -4,7 +4,7 @@
  * Your License or Copyright can go here
  */
 
-#include "ITKSaltAndPepperNoiseImage.h"
+#include "ITKThresholdMaximumConnectedComponentsImage.h"
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -21,16 +21,18 @@
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
 
 // Include the MOC generated file for this class
-#include "moc_ITKSaltAndPepperNoiseImage.cpp"
+#include "moc_ITKThresholdMaximumConnectedComponentsImage.cpp"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKSaltAndPepperNoiseImage::ITKSaltAndPepperNoiseImage() :
+ITKThresholdMaximumConnectedComponentsImage::ITKThresholdMaximumConnectedComponentsImage() :
   ITKImageBase()
 {
-  m_Probability=StaticCastScalar<double,double,double>(0.01);
-  m_Seed=StaticCastScalar<double,double,double>(0u);
+  m_MinimumObjectSizeInPixels=StaticCastScalar<double,double,double>(0u);
+  m_UpperBoundary=StaticCastScalar<double,double,double>(std::numeric_limits<double>::max());
+  m_InsideValue=StaticCastScalar<int,int,int>(1u);
+  m_OutsideValue=StaticCastScalar<int,int,int>(0u);
 
   setupFilterParameters();
 }
@@ -38,33 +40,35 @@ ITKSaltAndPepperNoiseImage::ITKSaltAndPepperNoiseImage() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKSaltAndPepperNoiseImage::~ITKSaltAndPepperNoiseImage()
+ITKThresholdMaximumConnectedComponentsImage::~ITKThresholdMaximumConnectedComponentsImage()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ITKSaltAndPepperNoiseImage::setupFilterParameters()
+void ITKThresholdMaximumConnectedComponentsImage::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Probability", Probability, FilterParameter::Parameter, ITKSaltAndPepperNoiseImage));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Seed", Seed, FilterParameter::Parameter, ITKSaltAndPepperNoiseImage));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("MinimumObjectSizeInPixels", MinimumObjectSizeInPixels, FilterParameter::Parameter, ITKThresholdMaximumConnectedComponentsImage));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("UpperBoundary", UpperBoundary, FilterParameter::Parameter, ITKThresholdMaximumConnectedComponentsImage));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("InsideValue", InsideValue, FilterParameter::Parameter, ITKThresholdMaximumConnectedComponentsImage));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("OutsideValue", OutsideValue, FilterParameter::Parameter, ITKThresholdMaximumConnectedComponentsImage));
 
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
-  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Save as New Array", SaveAsNewArray, FilterParameter::Parameter, ITKSaltAndPepperNoiseImage, linkedProps));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Save as New Array", SaveAsNewArray, FilterParameter::Parameter, ITKThresholdMaximumConnectedComponentsImage, linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
       DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize,
       SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Attribute Array to filter", SelectedCellArrayPath, FilterParameter::RequiredArray, ITKSaltAndPepperNoiseImage, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Attribute Array to filter", SelectedCellArrayPath, FilterParameter::RequiredArray, ITKThresholdMaximumConnectedComponentsImage, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Filtered Array", NewCellArrayName, FilterParameter::CreatedArray, ITKSaltAndPepperNoiseImage));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Filtered Array", NewCellArrayName, FilterParameter::CreatedArray, ITKThresholdMaximumConnectedComponentsImage));
 
   setFilterParameters(parameters);
 }
@@ -72,14 +76,16 @@ void ITKSaltAndPepperNoiseImage::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ITKSaltAndPepperNoiseImage::readFilterParameters(AbstractFilterParametersReader* reader, int index)
+void ITKThresholdMaximumConnectedComponentsImage::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
   setSelectedCellArrayPath( reader->readDataArrayPath( "SelectedCellArrayPath", getSelectedCellArrayPath() ) );
   setNewCellArrayName( reader->readString( "NewCellArrayName", getNewCellArrayName() ) );
   setSaveAsNewArray( reader->readValue( "SaveAsNewArray", getSaveAsNewArray() ) );
-  setProbability(reader->readValue("Probability", getProbability()));
-  setSeed(reader->readValue("Seed", getSeed()));
+  setMinimumObjectSizeInPixels(reader->readValue("MinimumObjectSizeInPixels", getMinimumObjectSizeInPixels()));
+  setUpperBoundary(reader->readValue("UpperBoundary", getUpperBoundary()));
+  setInsideValue(reader->readValue("InsideValue", getInsideValue()));
+  setOutsideValue(reader->readValue("OutsideValue", getOutsideValue()));
 
   reader->closeFilterGroup();
 }
@@ -88,10 +94,12 @@ void ITKSaltAndPepperNoiseImage::readFilterParameters(AbstractFilterParametersRe
 //
 // -----------------------------------------------------------------------------
 template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
-void ITKSaltAndPepperNoiseImage::dataCheck()
+void ITKThresholdMaximumConnectedComponentsImage::dataCheck()
 {
   // Check consistency of parameters
-  this->CheckIntegerEntry<uint32_t,double>(m_Seed, "Seed",1);
+  this->CheckIntegerEntry<uint32_t,double>(m_MinimumObjectSizeInPixels, "MinimumObjectSizeInPixels",1);
+  this->CheckIntegerEntry<uint8_t,int>(m_InsideValue, "InsideValue",1);
+  this->CheckIntegerEntry<uint8_t,int>(m_OutsideValue, "OutsideValue",1);
 
   setErrorCondition(0);
   ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
@@ -100,9 +108,9 @@ void ITKSaltAndPepperNoiseImage::dataCheck()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ITKSaltAndPepperNoiseImage::dataCheckInternal()
+void ITKThresholdMaximumConnectedComponentsImage::dataCheckInternal()
 {
-  Dream3DArraySwitchMacro(this->dataCheck, getSelectedCellArrayPath(), -4);
+  Dream3DArraySwitchMacroOutputType(this->dataCheck, getSelectedCellArrayPath(), -4,uint8_t,0);
 }
 
 // -----------------------------------------------------------------------------
@@ -110,15 +118,17 @@ void ITKSaltAndPepperNoiseImage::dataCheckInternal()
 // -----------------------------------------------------------------------------
 
 template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
-void ITKSaltAndPepperNoiseImage::filter()
+void ITKThresholdMaximumConnectedComponentsImage::filter()
 {
   typedef itk::Dream3DImage<InputPixelType, Dimension> InputImageType;
   typedef itk::Dream3DImage<OutputPixelType, Dimension> OutputImageType;
   //define filter
-  typedef itk::SaltAndPepperNoiseImageFilter<InputImageType, OutputImageType> FilterType;
+  typedef itk::ThresholdMaximumConnectedComponentsImageFilter<InputImageType, OutputImageType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
-  filter->SetProbability(static_cast<double>(m_Probability));
-  if (m_Seed) filter->SetSeed(m_Seed);
+  filter->SetMinimumObjectSizeInPixels(static_cast<uint32_t>(m_MinimumObjectSizeInPixels));
+  filter->SetUpperBoundary( static_cast<typename InputImageType::PixelType> ( std::min<double>( this->m_UpperBoundary, itk::NumericTraits<typename InputImageType::PixelType>::max() ) ) );
+  filter->SetInsideValue(static_cast<uint8_t>(m_InsideValue));
+  filter->SetOutsideValue(static_cast<uint8_t>(m_OutsideValue));
   this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
 
 }
@@ -126,17 +136,17 @@ void ITKSaltAndPepperNoiseImage::filter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ITKSaltAndPepperNoiseImage::filterInternal()
+void ITKThresholdMaximumConnectedComponentsImage::filterInternal()
 {
-    Dream3DArraySwitchMacro(this->filter, getSelectedCellArrayPath(), -4);
+    Dream3DArraySwitchMacroOutputType(this->filter, getSelectedCellArrayPath(), -4,uint8_t,0);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKSaltAndPepperNoiseImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKThresholdMaximumConnectedComponentsImage::newFilterInstance(bool copyFilterParameters)
 {
-  ITKSaltAndPepperNoiseImage::Pointer filter = ITKSaltAndPepperNoiseImage::New();
+  ITKThresholdMaximumConnectedComponentsImage::Pointer filter = ITKThresholdMaximumConnectedComponentsImage::New();
   if(true == copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
@@ -147,13 +157,13 @@ AbstractFilter::Pointer ITKSaltAndPepperNoiseImage::newFilterInstance(bool copyF
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKSaltAndPepperNoiseImage::getHumanLabel()
-{ return "[ITK] Salt And Pepper Noise Image Filter (KW)"; }
+const QString ITKThresholdMaximumConnectedComponentsImage::getHumanLabel()
+{ return "[ITK] Threshold Maximum Connected Components Image Filter (KW)"; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKSaltAndPepperNoiseImage::getSubGroupName()
-{ return "ITKImageNoise"; }
+const QString ITKThresholdMaximumConnectedComponentsImage::getSubGroupName()
+{ return "ITKConnectedComponents"; }
 
 

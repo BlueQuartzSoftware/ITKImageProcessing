@@ -118,7 +118,7 @@ void ITKSpeckleNoiseImage::filter()
   typedef itk::SpeckleNoiseImageFilter<InputImageType, OutputImageType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
   filter->SetStandardDeviation(static_cast<double>(m_StandardDeviation));
-  filter->SetSeed(static_cast<uint32_t>(m_Seed));
+  if (m_Seed) filter->SetSeed(m_Seed);
   this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
 
 }

@@ -118,7 +118,7 @@ void ITKShotNoiseImage::filter()
   typedef itk::ShotNoiseImageFilter<InputImageType, OutputImageType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
   filter->SetScale(static_cast<double>(m_Scale));
-  filter->SetSeed(static_cast<uint32_t>(m_Seed));
+  if (m_Seed) filter->SetSeed(m_Seed);
   this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
 
 }
