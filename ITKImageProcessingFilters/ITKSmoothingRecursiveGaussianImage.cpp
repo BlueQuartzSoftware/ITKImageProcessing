@@ -101,7 +101,7 @@ void ITKSmoothingRecursiveGaussianImage::dataCheck()
 // -----------------------------------------------------------------------------
 void ITKSmoothingRecursiveGaussianImage::dataCheckInternal()
 {
-  Dream3DArraySwitchMacro(this->dataCheck, getSelectedCellArrayPath(), -4);
+  Dream3DArraySwitchMacroOutputType(this->dataCheck, getSelectedCellArrayPath(), -4,typename InputImageType::template Rebind<float>::Type::PixelType,1);
 }
 
 // -----------------------------------------------------------------------------
@@ -127,7 +127,7 @@ void ITKSmoothingRecursiveGaussianImage::filter()
 // -----------------------------------------------------------------------------
 void ITKSmoothingRecursiveGaussianImage::filterInternal()
 {
-    Dream3DArraySwitchMacro(this->filter, getSelectedCellArrayPath(), -4);
+    Dream3DArraySwitchMacroOutputType(this->filter, getSelectedCellArrayPath(), -4,typename InputImageType::template Rebind<float>::Type::PixelType,1);
 }
 
 // -----------------------------------------------------------------------------

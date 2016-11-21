@@ -33,6 +33,7 @@ general={
                {'name':['tests'],'type':list,'required':False},
                {'name':['briefdescription'],'type':str,'required':False},
                {'name':['detaileddescription'],'type':str,'required':False},
+               {'name':['output_image_type'],'type':str,'required':False},  # 37
                {'name':['output_pixel_type'],'type':str,'required':False},  # 60
                {'name':['template_code_filename'], 'type':str, 'required':True},  # 281
                {'name':['template_test_filename'], 'type':str, 'required':True} # 280
@@ -49,7 +50,6 @@ general={
              [
                {'name':['pixel_types'], 'type':str, 'required':True},  # 337 occurences in JSON
                {'name':['filter_type'],'type':str,'required':False},  # 102 occurences
-               {'name':['output_image_type'],'type':str,'required':False},  # 37
                {'name':['vector_pixel_types_by_component'],'type':str,'required':False},  # 42
                {'name':['no_procedure'],'type':str,'required':False},  # 31
                {'name':['no_output_type'],'type':str,'required':False},  # 2
@@ -480,25 +480,22 @@ def ImplementFilter(filter_description, filter_members):
 def TypenameOutputPixelType(output_pixel_type):
     if 'InputImageType::' in output_pixel_type:
         return '1'
+    elif 'TImageType::' in output_pixel_type:
+        return '2'
     else:
         return '0'
 
-
-def ImplementFilterInternal(filter_description):
-    if 'output_pixel_type' in filter_description and filter_description['output_pixel_type'] != '':
-        return '  Dream3DArraySwitchMacroOutputType(this->filter, getSelectedCellArrayPath(), -4,'\
+def ImplementInternal(filter_description, fct):
+    if 'output_image_type' in filter_description and filter_description['output_image_type'] != '':
+        return '  Dream3DArraySwitchMacroOutputType('+fct+', getSelectedCellArrayPath(), -4,'\
+        +filter_description['output_image_type']+'::PixelType,'\
+        +TypenameOutputPixelType(filter_description['output_image_type'])+');'
+    elif 'output_pixel_type' in filter_description and filter_description['output_pixel_type'] != '':
+        return '  Dream3DArraySwitchMacroOutputType('+fct+', getSelectedCellArrayPath(), -4,'\
         +filter_description['output_pixel_type']+','\
         +TypenameOutputPixelType(filter_description['output_pixel_type'])+');'
     else:
-        return '  Dream3DArraySwitchMacro(this->filter, getSelectedCellArrayPath(), -4);'
-
-def ImplementDataCheckInternal(filter_description):
-    if 'output_pixel_type' in filter_description and filter_description['output_pixel_type'] != '':
-        return '  Dream3DArraySwitchMacroOutputType(this->dataCheck, getSelectedCellArrayPath(), -4,'\
-        +filter_description['output_pixel_type']+','\
-        +TypenameOutputPixelType(filter_description['output_pixel_type'])+');'
-    else:
-        return '  Dream3DArraySwitchMacro(this->dataCheck, getSelectedCellArrayPath(), -4);'
+        return '  Dream3DArraySwitchMacro('+fct+', getSelectedCellArrayPath(), -4);'
 
 def ConfigureFiles(ext, template_directory, directory, DREAM3DFilter, rootTemplateName):
     templateFilePath=os.path.join(template_directory, rootTemplateName+'Template')+ext
@@ -847,8 +844,8 @@ def main(argv=None):
             DREAM3DFilter['FilterParameterDescription'] += GetDREAM3DParameterDescription(filter_member) +'\n'
         #filter
         DREAM3DFilter['Filter']=ImplementFilter(filter_description, filter_members)
-        DREAM3DFilter['FilterInternal']=ImplementFilterInternal(filter_description)
-        DREAM3DFilter['DataCheckInternal']=ImplementDataCheckInternal(filter_description)
+        DREAM3DFilter['FilterInternal']=ImplementInternal(filter_description, 'this->filter')
+        DREAM3DFilter['DataCheckInternal']=ImplementInternal(filter_description, 'this->dataCheck')
         #includes
         DREAM3DFilter['IncludeName']=FormatIncludes(include_list)
         # Implement tests

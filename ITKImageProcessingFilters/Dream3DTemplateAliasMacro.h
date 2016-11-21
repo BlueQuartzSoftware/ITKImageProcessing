@@ -74,9 +74,13 @@ TypeOUT_Define_##isTypeOUT(typeOUT)*/
   Dream3DTemplateAliasMacroCaseIf(typeIN, typeIN, call, var_type, dimensions, errorCondition, quotedType, 0)
 #define Dream3DTemplateAliasMacroCase_1_1(typeIN, typeOUT, call, var_type, dimensions, errorCondition, quotedType, typeOUTTypename) \
   Dream3DTemplateAliasMacroCaseIf(typeIN, typeOUT, call, var_type, dimensions, errorCondition, quotedType, typeOUTTypename)
+// 3 possible pixel type: C-type, InputImageType, and TImageType
 #define DefineInputImageType0(typeIN, dimension) // Do nothing, no type to defined
 #define DefineInputImageType1(typeIN, dimension) \
   typedef typename itk::Dream3DImage<typeIN, dimension> InputImageType;
+#define DefineInputImageType2(typeIN, dimension) \
+  typedef typename itk::Dream3DImage<typeIN, dimension> TImageType;
+
 #define Dream3DTemplateAliasMacroCaseIf(typeIN, typeOUT, call, var_type, dimensions, errorCondition, quotedType, typeOUTTypename) \
 if( var_type.compare(quotedType) == 0 )                                                                                           \
   {                                                                                                                               \

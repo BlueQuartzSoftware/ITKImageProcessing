@@ -94,7 +94,7 @@ set(TEST_NAMES
   ITKMeanProjectionImage
   ITKZeroCrossingImage
   ITKThresholdMaximumConnectedComponentsImage
-)
+  )
 
 set( ${PLUGIN_NAME}_TEST_SRCS )
 set(FilterTestIncludes "")

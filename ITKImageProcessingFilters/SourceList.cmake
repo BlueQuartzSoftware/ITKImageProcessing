@@ -86,6 +86,7 @@ set(_PublicFilters
   ITKZeroCrossingImage
   ITKBoundedReciprocalImage
   ITKThresholdMaximumConnectedComponentsImage
+  ITKSmoothingRecursiveGaussianImage
 )
 
 
