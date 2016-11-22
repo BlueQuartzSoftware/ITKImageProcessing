@@ -13,6 +13,11 @@ cmake \
   "-DDREAM3D_EXTRA_PLUGINS:STRING=ITKImageProcessing" \
   -DBUILDNAME:STRING=Plugin-ITKImageProcessing \
   .
+# Builds before running ctest. Running 'ctest -D Experimental'
+# builds the project, but uses all the cores
+# of the CPU that are available and create memory issues
+# on CircleCI.
+ninja -j4
 # EMMPMUnitTest should be removed. See
 # https://github.com/BlueQuartzSoftware/DREAM3D/issues/540
 ctest -VV -D Experimental -E EMMPMUnitTest
