@@ -95,13 +95,14 @@ void ITKBinaryThreshold::readFilterParameters(AbstractFilterParametersReader* re
 template<typename PixelType>
 void ITKBinaryThreshold::CheckLimits(double value, QString name)
 {
-  if (value < static_cast<double>(std::numeric_limits<PixelType>::lowest())
-     || value > static_cast<double>(std::numeric_limits<PixelType>::max()))
+  typedef typename itk::NumericTraits<PixelType>::ValueType ValueType;
+  if (value < static_cast<double>(std::numeric_limits<ValueType>::lowest())
+     || value > static_cast<double>(std::numeric_limits<ValueType>::max()))
   {
     setErrorCondition(-1);
     QString errorMessage = name + QString("must be greater or equal than %1 and lesser or equal than %2");
     notifyErrorMessage(getHumanLabel(), errorMessage.arg(
-        std::numeric_limits<PixelType>::lowest()).arg(std::numeric_limits<PixelType>::max())
+        std::numeric_limits<ValueType>::lowest()).arg(std::numeric_limits<ValueType>::max())
                                                          , getErrorCondition()
                                                          );
     return;

@@ -168,8 +168,10 @@ class ITKImageReader : public AbstractFilter
     /**
     * @brief Does the actual reading of the image with itkImageFileReader.
     */
-    template<typename TPixel>
-	void readImage(unsigned int dimensions, const QString& filename, bool dataCheck);
+    template<typename TComponent>
+    void readImage(itk::ImageIOBase::IOPixelType pixel, unsigned int dimensions, const QString& filename, bool dataCheck);
+    template<typename TComponent, unsigned int dimensions>
+    void readImage(itk::ImageIOBase::IOPixelType pixel, const QString& filename, bool dataCheck);
     template<typename TPixel, unsigned int>
 	void readImage(const QString& filename, bool dataCheck);
 	void readImage(bool dataCheck);

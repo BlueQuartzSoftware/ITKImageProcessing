@@ -45,7 +45,10 @@
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
 #include "ITKImageProcessingPlugin.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
-
+#undef DREAM3D_USE_RGBA
+#define DREAM3D_USE_RGBA 1
+#undef DREAM3D_USE_Vector
+#define DREAM3D_USE_Vector 1
 
 // ITK includes
 #include <itkImageFileWriter.h>
@@ -303,7 +306,7 @@ void ITKImageWriter::execute()
     notifyErrorMessage(getHumanLabel(), errorMessage.arg(path.getDataArrayName()), getErrorCondition());
     return;
   }
-  Dream3DArraySwitchMacro(writeImage, getImageArrayPath(), -4);
+  Dream3DArraySwitchMacro(this->writeImage, getImageArrayPath(), -4);
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
 

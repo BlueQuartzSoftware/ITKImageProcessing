@@ -20,6 +20,8 @@
 
 #include <QString>
 #include "SIMPLib/Common/AbstractFilter.h"
+#include <itkVector.h>
+#include <itkRGBAPixel.h>
 
 
 // Allow individual switching of support for each scalar size/signedness.
@@ -34,46 +36,78 @@
 #define DREAM3D_USE_uint64_t   1
 #define DREAM3D_USE_float      1
 #define DREAM3D_USE_double     1
+#define DREAM3D_USE_Vector     0
+#define DREAM3D_USE_RGBA       0
 //--------------------------------------------------------------------------
 
 // Define helper macros to switch types on and off.
 #define Q(x) #x
 #define QUOTE(x) Q(x)
-/*#define DREAM3D_USE_typename   1 // No error at compile time since it is difficult to know what exact type is used in this case.
-#define TypeOUT_1(type) //empty, does nothing: this output type is "ON"
-#define TypeOUT_0(type)\
-  static_assert(false, "You shouldn't use that."); // Error at compile time. If defined, output type is hardcoded in filter.
-#define TypeOUT_DREAM3D0(var, type)\
-  TypeOUT_DREAM3D1(var, type)
-#define TypeOUT_DREAM3D1(var, type)\
-  TypeOUT_##var(type)
-#define TypeOUT_Define_1(var)\
-  TypeOUT_DREAM3D0(DREAM3D_USE_##var, var)
-#define TypeOUT_Define_0(var) //empty, does nothing: No output type specified, so no need to check anything
-We assume TypeOUT is handled. If not, there will be an error at some point.
-TypeOUT_Define_##isTypeOUT(typeOUT)*/
 
-#define Dream3DTemplateAliasMacroCase(typeIN, typeOUT, call, var_type, dimensions, errorCondition, isTypeOUT, typeOUTTypename) \
-  Dream3DTemplateAliasMacroCase0(typeIN, typeOUT, call, var_type, dimensions, errorCondition, DREAM3D_USE_##typeIN, isTypeOUT, typeOUTTypename)
-#define Dream3DTemplateAliasMacroCase0(typeIN, typeOUT, call, var_type, dimensions, errorCondition, value, isTypeOUT, typeOUTTypename) \
-  Dream3DTemplateAliasMacroCase1(typeIN, typeOUT, call, var_type, dimensions, errorCondition, value, isTypeOUT, typeOUTTypename)
-#define Dream3DTemplateAliasMacroCase1(typeIN, typeOUT, call, var_type, dimensions, errorCondition, value, isTypeOUT, typeOUTTypename) \
-  Dream3DTemplateAliasMacroCase_##value(typeIN, typeOUT, call, var_type, dimensions, errorCondition, QUOTE(typeIN), isTypeOUT, typeOUTTypename)
-#define Dream3DTemplateAliasMacroCase_0(typeIN, typeOUT, call, var_type, dimensions, errorCondition, quotedType, isTypeOUT, typeOUTTypename) \
+// Expand the value of typeIN to be able to concatenate it with 'DREAM3D_USE' to check if the type is accepted by the filter
+#define Dream3DTemplateAliasMacroCase(typeIN, typeOUT, call, var_type, tDims, errorCondition, isTypeOUT, typeOUTTypename)                    \
+  Dream3DTemplateAliasMacroCase0(typeIN, typeOUT, call, var_type, tDims, errorCondition, DREAM3D_USE_##typeIN, isTypeOUT, typeOUTTypename)
+#define Dream3DTemplateAliasMacroCase0(typeIN, typeOUT, call, var_type, tDims, errorCondition, value, isTypeOUT, typeOUTTypename)            \
+  Dream3DTemplateAliasMacroCase1(typeIN, typeOUT, call, var_type, tDims, errorCondition, value, isTypeOUT, typeOUTTypename)
+#define Dream3DTemplateAliasMacroCase1(typeIN, typeOUT, call, var_type, tDims, errorCondition, value, isTypeOUT, typeOUTTypename)            \
+  Dream3DTemplateAliasMacroCase_##value(typeIN, typeOUT, call, var_type, tDims, errorCondition, QUOTE(typeIN), isTypeOUT, typeOUTTypename)
+// Type is not accepted, throw an error message.
+#define Dream3DTemplateAliasMacroCase_0(typeIN, typeOUT, call, var_type, tDims, errorCondition, quotedType, isTypeOUT, typeOUTTypename)      \
   if( var_type.compare(quotedType) == 0 )                                                                                                    \
   {                                                                                                                                          \
     setErrorCondition(errorCondition);                                                                                                       \
     QString errorMessage = QString("Unsupported pixel type: %1.").arg(quotedType);                                                           \
     notifyErrorMessage(getHumanLabel(), errorMessage, getErrorCondition());                                                                  \
   }
+// Type is accepted, select the dimension of the input and output images
+#define Dream3DTemplateAliasMacroCase_1(typeIN, typeOUT, call, var_type, tDims, errorCondition, quotedType, isTypeOUT, typeOUTTypename)      \
+  if( var_type.compare(quotedType) == 0 )                                                                                                    \
+  {                                                                                                                                          \
+    if (tDims[2] == 1)                                                                                                                       \
+    {                                                                                                                                        \
+      /* 2D image */                                                                                                                         \
+      Dream3DTemplateAliasMacroPixelType(typeIN, typeOUT, call, errorCondition, isTypeOUT, typeOUTTypename, 2)                               \
+    }                                                                                                                                        \
+    else                                                                                                                                     \
+    {                                                                                                                                        \
+      /* 3D */                                                                                                                               \
+      Dream3DTemplateAliasMacroPixelType(typeIN, typeOUT, call, errorCondition, isTypeOUT, typeOUTTypename, 3)                               \
+    }                                                                                                                                        \
+  }
+// Handles vector, RGBA, and scalar images
+#define Dream3DTemplateAliasMacroPixelType(typeIN, typeOUT, call, errorCondition, isTypeOUT, typeOUTTypename, dimension)                          \
+    QVector<size_t> cDims = ptr->getComponentDimensions();                                                                                        \
+    if(cDims.size() > 1)                                                                                                                          \
+    {                                                                                                                                             \
+      Dream3DTemplateAliasMacroCaseVectorImage0(typeIN, typeOUT, call, errorCondition, isTypeOUT, typeOUTTypename, dimension, DREAM3D_USE_Vector);\
+    }                                                                                                                                             \
+    else                                                                                                                                          \
+    {                                                                                                                                             \
+      if(cDims[0] == 1)                                                                                                                           \
+      {                                                                                                                                           \
+        Dream3DTemplateAliasMacroCase_1_##isTypeOUT(typeIN, typeOUT, call, typeOUTTypename, dimension);                                           \
+      }                                                                                                                                           \
+      else if(cDims[0] == 4)                                                                                                                      \
+      {                                                                                                                                           \
+        Dream3DTemplateAliasMacroCaseRGBAImage0(typeIN, typeOUT, call, errorCondition, isTypeOUT, typeOUTTypename, dimension, DREAM3D_USE_RGBA);  \
+      }                                                                                                                                           \
+      else                                                                                                                                        \
+      {                                                                                                                                           \
+        setErrorCondition(errorCondition);                                                                                                        \
+        notifyErrorMessage(getHumanLabel(), QString("Size of tuple not handled:%1").arg(cDims[0]), getErrorCondition());                          \
+      }                                                                                                                                           \
+    }
+// Replaces typeOUT by typeIN if no typeOUT is given
+#define Dream3DTemplateAliasMacroCase_1_0(typeIN, typeOUT, call, typeOUTTypename, dimension)                                                 \
+  Dream3DTemplateAliasMacroCaseIf(typeIN, typeIN, call, typeOUTTypename, dimension)
+// Otherwise, just forward the given arguments to the next macro
+#define Dream3DTemplateAliasMacroCase_1_1(typeIN, typeOUT, call, typeOUTTypename, dimension)                                                 \
+  DefineInputImageType##typeOUTTypename(typeIN, dimension)                                                                                   \
+  Dream3DTemplateAliasMacroCaseIf(typeIN, typeOUT, call, typeOUTTypename, dimension)
+// Call the given function, templated with typeIN, typeOUT, and dimension.
+#define Dream3DTemplateAliasMacroCaseIf(typeIN, typeOUT, call, typeOUTTypename, dimension)                                                   \
+  call<typeIN, typeOUT, dimension>();                                                                                                        \
 
-#define Dream3DTemplateAliasMacroCase_1(typeIN, typeOUT, call, var_type, dimensions, errorCondition, quotedType, isTypeOUT, typeOUTTypename) \
-  Dream3DTemplateAliasMacroCase_1_##isTypeOUT(typeIN, typeOUT, call, var_type, dimensions, errorCondition, quotedType, typeOUTTypename)
-
-#define Dream3DTemplateAliasMacroCase_1_0(typeIN, typeOUT, call, var_type, dimensions, errorCondition, quotedType, typeOUTTypename) \
-  Dream3DTemplateAliasMacroCaseIf(typeIN, typeIN, call, var_type, dimensions, errorCondition, quotedType, 0)
-#define Dream3DTemplateAliasMacroCase_1_1(typeIN, typeOUT, call, var_type, dimensions, errorCondition, quotedType, typeOUTTypename) \
-  Dream3DTemplateAliasMacroCaseIf(typeIN, typeOUT, call, var_type, dimensions, errorCondition, quotedType, typeOUTTypename)
 // 3 possible pixel type: C-type, InputImageType, and TImageType
 #define DefineInputImageType0(typeIN, dimension) // Do nothing, no type to defined
 #define DefineInputImageType1(typeIN, dimension) \
@@ -81,36 +115,73 @@ TypeOUT_Define_##isTypeOUT(typeOUT)*/
 #define DefineInputImageType2(typeIN, dimension) \
   typedef typename itk::Dream3DImage<typeIN, dimension> TImageType;
 
-#define Dream3DTemplateAliasMacroCaseIf(typeIN, typeOUT, call, var_type, dimensions, errorCondition, quotedType, typeOUTTypename) \
-if( var_type.compare(quotedType) == 0 )                                                                                           \
-  {                                                                                                                               \
-    if (dimensions[2] == 1)                                                                                                       \
-    {                                                                                                                             \
-      /* 2D image */                                                                                                              \
-      DefineInputImageType##typeOUTTypename(typeIN, 2)                                                                            \
-      call<typeIN, typeOUT, 2>();                                                                                                 \
-    }                                                                                                                             \
-    else                                                                                                                          \
-    {                                                                                                                             \
-      /* 3D */                                                                                                                    \
-      DefineInputImageType##typeOUTTypename(typeIN, 3)                                                                            \
-      call<typeIN, typeOUT, 3>();                                                                                                 \
-    }                                                                                                                             \
-  }
+///////////////////////////////////////////////////////////////////////////////////////////////
+//                                    Handles vector images                                  //
+///////////////////////////////////////////////////////////////////////////////////////////////
+// Define the input and output pixel types, depending on 'isTypeOUT' value. This is required for
+// vectors because it is not possible to pass a macro argument that contains a comma.
+#define DefineVectorPixelTypes_0(typeIN,typeOUT,vDim)  \
+  typedef itk::Vector<typeIN,vDim> InputPixelType;     \
+  typedef itk::Vector<typeIN,vDim> OutputPixelType;
+#define DefineVectorPixelTypes_1(typeIN,typeOUT,vDim)  \
+  typedef itk::Vector<typeIN,vDim> InputPixelType;     \
+  typedef itk::Vector<typeOUT,vDim> OutputPixelType;
+// Expands the value of 'Vector' that is 0 if the filter does not accept 'Vector' images, and '1' if it does.
+#define Dream3DTemplateAliasMacroCaseVectorImage0(typeIN, typeOUT, call, errorCondition, isTypeOUT, typeOUTTypename, dimension, Vector) \
+  Dream3DTemplateAliasMacroCaseVectorImage1(typeIN, typeOUT, call, errorCondition, isTypeOUT, typeOUTTypename, dimension, Vector)
+#define Dream3DTemplateAliasMacroCaseVectorImage1(typeIN, typeOUT, call, errorCondition, isTypeOUT, typeOUTTypename, dimension, Vector) \
+  Dream3DTemplateAliasMacroCaseVectorImage1_##Vector(typeIN, typeOUT, call, errorCondition, isTypeOUT, typeOUTTypename, dimension)
+// Vector images not accepted, throw an error message if a vector image is given.
+#define Dream3DTemplateAliasMacroCaseVectorImage1_0(typeIN, typeOUT, call, errorCondition, isTypeOUT, typeOUTTypename, dimension)       \
+  setErrorCondition(errorCondition);                                                                                                    \
+  notifyErrorMessage(getHumanLabel(), "Vector not supported", getErrorCondition());
+// Vector images: Call the given function with the correct dimension after defining the input and output vector types.
+#define Dream3DTemplateAliasMacroCaseVectorImage1_1(typeIN, typeOUT, call, errorCondition, isTypeOUT, typeOUTTypename, dimension)       \
+      if(cDims.size() == 2)                                                                                                             \
+      {                                                                                                                                 \
+        DefineVectorPixelTypes_##isTypeOUT(typeIN,typeOUT,2);                                                                           \
+        Dream3DTemplateAliasMacroCaseIf(InputPixelType, OutputPixelType, call, typeOUTTypename, dimension);                             \
+      }                                                                                                                                 \
+      else if(cDims.size() == 3)                                                                                                        \
+      {                                                                                                                                 \
+        DefineVectorPixelTypes_##isTypeOUT(typeIN,typeOUT,3);                                                                           \
+        Dream3DTemplateAliasMacroCaseIf(InputPixelType, OutputPixelType, call, typeOUTTypename, dimension);                             \
+      }                                                                                                                                 \
+      else                                                                                                                              \
+      {                                                                                                                                 \
+        setErrorCondition(errorCondition);                                                                                              \
+        notifyErrorMessage(getHumanLabel(), "Vector dimension not supported", getErrorCondition());                                     \
+      }
+//////////////////////////////////////////////////////////////////////////////
+//                          Handles RGBA images                             //
+//////////////////////////////////////////////////////////////////////////////
+// Expand 'RGBA' argument that will be used to call the appropriate macro, depending if the filter accepts 'RGBA' images or not.
+#define  Dream3DTemplateAliasMacroCaseRGBAImage0(typeIN, typeOUT, call, errorCondition, isTypeOUT, typeOUTTypename, dimension, RGBA)    \
+  Dream3DTemplateAliasMacroCaseRGBAImage1(typeIN, typeOUT, call, errorCondition, isTypeOUT, typeOUTTypename, dimension, RGBA)
+#define   Dream3DTemplateAliasMacroCaseRGBAImage1(typeIN, typeOUT, call, errorCondition, isTypeOUT, typeOUTTypename, dimension, RGBA)   \
+  Dream3DTemplateAliasMacroCaseRGBAImage1_##RGBA(typeIN, typeOUT, call, errorCondition, isTypeOUT, typeOUTTypename, dimension)
+// If RGBA not accepted by the current filter, prints an error message
+#define Dream3DTemplateAliasMacroCaseRGBAImage1_0(typeIN, typeOUT, call, errorCondition, isTypeOUT, typeOUTTypename, dimension)         \
+  setErrorCondition(errorCondition);                                                                                                    \
+  notifyErrorMessage(getHumanLabel(), "RGBA not supported", getErrorCondition());
+// If RGBA accepted by current filter, call the macro that will call the given function
+#define Dream3DTemplateAliasMacroCaseRGBAImage1_1(typeIN, typeOUT, call, errorCondition, isTypeOUT, typeOUTTypename, dimension)         \
+  Dream3DTemplateAliasMacroCase_1_##isTypeOUT(itk::RGBAPixel<typeIN>, itk::RGBAPixel<typeOUT>, call, typeOUTTypename, dimension)
+
   
 // Define a macro to dispatch calls to a template instantiated over
 // the aliased scalar types.
-#define Dream3DTemplateAliasMacro(call, var_type, typeOUT, dimensions, errorCondition, isTypeOUT, typeOUTTypename)              \
-  Dream3DTemplateAliasMacroCase(double, typeOUT, call, var_type, dimensions, errorCondition, isTypeOUT, typeOUTTypename)        \
-  else Dream3DTemplateAliasMacroCase(float, typeOUT, call, var_type, dimensions, errorCondition, isTypeOUT, typeOUTTypename)    \
-  else Dream3DTemplateAliasMacroCase(int8_t, typeOUT, call, var_type, dimensions, errorCondition, isTypeOUT, typeOUTTypename)   \
-  else Dream3DTemplateAliasMacroCase(uint8_t, typeOUT, call, var_type, dimensions, errorCondition, isTypeOUT, typeOUTTypename)  \
-  else Dream3DTemplateAliasMacroCase(int16_t, typeOUT, call, var_type, dimensions, errorCondition, isTypeOUT, typeOUTTypename)  \
-  else Dream3DTemplateAliasMacroCase(uint16_t, typeOUT, call, var_type, dimensions, errorCondition, isTypeOUT, typeOUTTypename) \
-  else Dream3DTemplateAliasMacroCase(int32_t, typeOUT, call, var_type, dimensions, errorCondition, isTypeOUT, typeOUTTypename)  \
-  else Dream3DTemplateAliasMacroCase(uint32_t, typeOUT, call, var_type, dimensions, errorCondition, isTypeOUT, typeOUTTypename) \
-  else Dream3DTemplateAliasMacroCase(int64_t, typeOUT, call, var_type, dimensions, errorCondition, isTypeOUT, typeOUTTypename)  \
-  else Dream3DTemplateAliasMacroCase(uint64_t, typeOUT, call, var_type, dimensions, errorCondition, isTypeOUT, typeOUTTypename)
+#define Dream3DTemplateAliasMacro(call, var_type, typeOUT, tDims, errorCondition, isTypeOUT, typeOUTTypename)              \
+  Dream3DTemplateAliasMacroCase(double, typeOUT, call, var_type, tDims, errorCondition, isTypeOUT, typeOUTTypename)        \
+  else Dream3DTemplateAliasMacroCase(float, typeOUT, call, var_type, tDims, errorCondition, isTypeOUT, typeOUTTypename)    \
+  else Dream3DTemplateAliasMacroCase(int8_t, typeOUT, call, var_type, tDims, errorCondition, isTypeOUT, typeOUTTypename)   \
+  else Dream3DTemplateAliasMacroCase(uint8_t, typeOUT, call, var_type, tDims, errorCondition, isTypeOUT, typeOUTTypename)  \
+  else Dream3DTemplateAliasMacroCase(int16_t, typeOUT, call, var_type, tDims, errorCondition, isTypeOUT, typeOUTTypename)  \
+  else Dream3DTemplateAliasMacroCase(uint16_t, typeOUT, call, var_type, tDims, errorCondition, isTypeOUT, typeOUTTypename) \
+  else Dream3DTemplateAliasMacroCase(int32_t, typeOUT, call, var_type, tDims, errorCondition, isTypeOUT, typeOUTTypename)  \
+  else Dream3DTemplateAliasMacroCase(uint32_t, typeOUT, call, var_type, tDims, errorCondition, isTypeOUT, typeOUTTypename) \
+  else Dream3DTemplateAliasMacroCase(int64_t, typeOUT, call, var_type, tDims, errorCondition, isTypeOUT, typeOUTTypename)  \
+  else Dream3DTemplateAliasMacroCase(uint64_t, typeOUT, call, var_type, tDims, errorCondition, isTypeOUT, typeOUTTypename)
 
 // Define a macro that is specific to Dream3D and dispatches calls to a template
 // instantiated over the aliased scalar type based on the type of a data array
@@ -150,7 +221,7 @@ if( var_type.compare(quotedType) == 0 )                                         
 // Define a macro that is specific to Dream3D and dispatches calls to a template
 // instantiated over the aliased scalar type based on the type of a data array
 // which is saved in the filter's data container array.
-#define Dream3DArraySwitchMacroOutputType(call, path, errorCondition, typeOUT, typeOUTTypename) \
+#define Dream3DArraySwitchMacroOutputType(call, path, errorCondition, typeOUT, typeOUTTypename)   \
     Dream3DArraySwitchMacroLongOutputType(call, path, errorCondition, typeOUT, 1, typeOUTTypename)
 // Define a macro that is specific to Dream3D and dispatches calls to a template
 // instantiated over the aliased scalar type based on the type of a data array

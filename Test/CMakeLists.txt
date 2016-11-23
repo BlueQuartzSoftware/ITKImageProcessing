@@ -31,10 +31,11 @@ set(${PLUGIN_NAME}_Link_Libs Qt5::Core H5Support SIMPLib)
 # be directly included in the main test source file. We list them here so that
 # they will show up in IDEs
 set(TEST_NAMES
-  ITKBinaryThreshold
   ITKGaussianBlur
   ITKImageProcessingReader
   ITKImageProcessingWriter
+  ITKImageProcessingImage
+  ITKBinaryThreshold
   ITKAbsImage
   ITKAcosImage
   ITKAtanImage
@@ -50,11 +51,11 @@ set(TEST_NAMES
   ITKLogImage
   ITKRescaleIntensityImage
   ITKLabelContourImage
-  ITKSaltAndPepperNoiseImage
+#  ITKSaltAndPepperNoiseImage
   ITKTanImage
   ITKBinaryContourImage
-  ITKShotNoiseImage
-  ITKSpeckleNoiseImage
+#  ITKShotNoiseImage
+#  ITKSpeckleNoiseImage
   ITKShiftScaleImage
   ITKNotImage
   ITKBinaryProjectionImage
@@ -88,12 +89,12 @@ set(TEST_NAMES
   ITKRegionalMinimaImage
   ITKRegionalMaximaImage
   ITKSignedDanielssonDistanceMapImage
-  ITKNormalizeToConstantImage
   ITKStandardDeviationProjectionImage
   ITKDanielssonDistanceMapImage
   ITKMeanProjectionImage
   ITKZeroCrossingImage
   ITKThresholdMaximumConnectedComponentsImage
+  ITKSmoothingRecursiveGaussianImage
   )
 
 set( ${PLUGIN_NAME}_TEST_SRCS )
@@ -127,6 +128,10 @@ configure_file(${SIMPLProj_SOURCE_DIR}/Test/TestMain.cpp.in
 foreach(f ${${PLUGIN_NAME}_TEST_SRCS})
   set_source_files_properties( ${f} PROPERTIES HEADER_FILE_ONLY TRUE)
 endforeach()
+
+#---------------------
+# Explicit instantiations
+set( ${PLUGIN_NAME}_TEST_SRCS ${${PLUGIN_NAME}_TEST_SRCS} ${${PLUGIN_NAME}_SOURCE_DIR}/${_filterGroupName}/itkInPlaceImageToDream3DDataFilterExplicit.cpp)
 
 AddSIMPLUnitTest(TESTNAME ${PLUGIN_NAME}Test
                     SOURCES ${${PLUGIN_NAME}_BINARY_DIR}/${PLUGIN_NAME}UnitTest.cpp ${${PLUGIN_NAME}_TEST_SRCS}

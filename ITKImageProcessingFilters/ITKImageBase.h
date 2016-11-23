@@ -15,6 +15,9 @@
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkInPlaceImageToDream3DDataFilter.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DFilterInterruption.h"
 
+
+#include <itkNumericTraits.h>
+
 /**
  * @brief The ITKImageBase class. See [Filter documentation](@ref ITKImageBase) for details.
  */
@@ -182,14 +185,16 @@ class ITKImageBase : public AbstractFilter
     template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
     void dataCheck()
     {
+      typedef typename itk::NumericTraits<InputPixelType>::ValueType   InputValueType;
+      typedef typename itk::NumericTraits<InputPixelType>::ValueType   OutputValueType;
       // Check data array
-      typename DataArray<InputPixelType>::WeakPointer selectedCellArrayPtr;
-      InputPixelType* selectedCellArray;
+      typename DataArray<InputValueType>::WeakPointer selectedCellArrayPtr;
+      InputValueType* selectedCellArray;
 
       DataArrayPath tempPath;
 
-      QVector<size_t> dims(1, 1);
-      selectedCellArrayPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<InputPixelType>, AbstractFilter>(this, getSelectedCellArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+      QVector<size_t> dims = itk::InPlaceImageToDream3DDataFilter<InputPixelType,Dimension>::GetComponentsDimensions();
+      selectedCellArrayPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<InputValueType>, AbstractFilter>(this, getSelectedCellArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
       if (nullptr != selectedCellArrayPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
       {
         selectedCellArray = selectedCellArrayPtr.lock()->getPointer(0);
@@ -202,7 +207,7 @@ class ITKImageBase : public AbstractFilter
       if (m_SaveAsNewArray == true)
       {
         tempPath.update(getSelectedCellArrayPath().getDataContainerName(), getSelectedCellArrayPath().getAttributeMatrixName(), getNewCellArrayName());
-        m_NewCellArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<OutputPixelType>, AbstractFilter, OutputPixelType>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+        m_NewCellArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<OutputValueType>, AbstractFilter, OutputValueType>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
         if (nullptr != m_NewCellArrayPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
         {
           m_NewCellArray = m_NewCellArrayPtr.lock()->getVoidPointer(0);
@@ -210,7 +215,7 @@ class ITKImageBase : public AbstractFilter
       }
       else
       {
-        m_NewCellArrayPtr = DataArray<OutputPixelType>::NullPointer();
+        m_NewCellArrayPtr = DataArray<OutputValueType>::NullPointer();
         m_NewCellArray = nullptr;
       }
     }
@@ -292,8 +297,9 @@ class ITKImageBase : public AbstractFilter
     template<typename VarType, typename SubsType>
     void CheckIntegerEntry(SubsType value, QString name, bool)
     {
-      SubsType lowest = static_cast<SubsType>(std::numeric_limits<VarType>::lowest());
-      SubsType max = static_cast<SubsType>(std::numeric_limits<VarType>::max());
+      typedef typename itk::NumericTraits<VarType>::ValueType ValueType;
+      SubsType lowest = static_cast<SubsType>(std::numeric_limits<ValueType>::lowest());
+      SubsType max = static_cast<SubsType>(std::numeric_limits<ValueType>::max());
       if (value < lowest
        || value > max
        || value != floor(value)
@@ -316,8 +322,9 @@ class ITKImageBase : public AbstractFilter
     template<typename VarType, typename SubsType>
     void CheckVectorEntry(SubsType value, QString name, bool integer)
     {
-      float lowest = static_cast<float>(std::numeric_limits<VarType>::lowest());
-      float max = static_cast<float>(std::numeric_limits<VarType>::max());
+      typedef typename itk::NumericTraits<VarType>::ValueType ValueType;
+      float lowest = static_cast<float>(std::numeric_limits<ValueType>::lowest());
+      float max = static_cast<float>(std::numeric_limits<ValueType>::max());
       if (value.x < lowest || value.x > max
          || (integer && value.x != floor(value.x))
          || value.y < lowest || value.y > max

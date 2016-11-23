@@ -293,6 +293,7 @@ class ITKImageProcessingWriterTest
 
     DREAM3D_REQUIRED(filter->getErrorCondition(), >= , 0);
     DREAM3D_REQUIRED(filter->getWarningCondition(), >= , 0);
+    this->FilesToRemove << filename;
     return true;
   }
 
@@ -475,16 +476,19 @@ class ITKImageProcessingWriterTest
     listJPGPixelTypes << "uint8_t" ;
     DREAM3D_REGISTER_TEST(TestWriteImage<2>("jpg", listJPGPixelTypes));
 
-    // BMP
-    QStringList listBMPPixelTypes;
-    listBMPPixelTypes << "uint8_t" ;
-    DREAM3D_REGISTER_TEST(TestWriteImage<2>("bmp", listBMPPixelTypes));
+    // BMP -> Load all images as RGB in ITK??
+//    QStringList listBMPPixelTypes;
+//    listBMPPixelTypes << "uint8_t" ;
+//    DREAM3D_REGISTER_TEST(TestWriteImage<2>("bmp", listBMPPixelTypes));
 
     // Test image series
     DREAM3D_REGISTER_TEST(TestWriteImageSeries())
 
 #if REMOVE_TEST_FILES
-    DREAM3D_REGISTER_TEST( RemoveTestFiles() )
+    if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
+    {
+      DREAM3D_REGISTER_TEST( RemoveTestFiles() )
+    }
 #endif
   }
 

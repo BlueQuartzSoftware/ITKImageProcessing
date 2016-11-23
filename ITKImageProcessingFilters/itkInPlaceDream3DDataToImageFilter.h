@@ -3,6 +3,10 @@
 
 #include "itkDream3DImage.h"
 #include <itkImportImageFilter.h>
+#include <itkNumericTraits.h>
+#include <itkNumericTraitsRGBAPixel.h>
+#include <itkNumericTraitsRGBPixel.h>
+#include <itkNumericTraitsVectorPixel.h>
 
 namespace itk
 {
@@ -15,9 +19,9 @@ namespace itk
     typedef SmartPointer<Self>                                              Pointer;
     typedef typename itk::Dream3DImage<PixelType, VDimension >              ImageType;
     typedef typename ImageType::PixelContainerType                          ImportImageContainerType;
-
     typedef typename ImageType::Pointer                                     ImagePointer;
-    typedef typename ::DataArray<PixelType>                                 DataArrayPixelType;
+    typedef typename itk::NumericTraits<PixelType>::ValueType               ValueType;
+    typedef typename ::DataArray<ValueType>                                 DataArrayPixelType;
     typedef typename itk::ImageSource< ImageType >                          Superclass;
     typedef typename itk::SizeValueType                                     SizeValueType;
 

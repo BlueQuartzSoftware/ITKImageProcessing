@@ -5,6 +5,7 @@
 // -----------------------------------------------------------------------------
 
 #include "ITKTestBase.h"
+#include <SIMPLib/FilterParameters/FloatVec3FilterParameter.h>
 
 class ITKBoxMeanImageTest: public ITKTestBase
 {

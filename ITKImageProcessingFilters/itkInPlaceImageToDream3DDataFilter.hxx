@@ -119,7 +119,7 @@ InPlaceImageToDream3DDataFilter<PixelType, VDimension>
   DataContainer::Pointer dataContainer = outputPtr->Get();
   ImagePointer inputPtr = dynamic_cast<ImageType*>(this->GetInput(0));
   // Create data array
-  QVector<size_t> cDims(1, 1);
+  QVector<size_t> cDims = this->GetComponentsDimensions();
   IGeometry::Pointer geom = dataContainer->getGeometry();
   ImageGeom::Pointer imageGeom = std::dynamic_pointer_cast<ImageGeom>(geom);
   QVector<size_t> tDims(3, 1);
@@ -165,12 +165,13 @@ InPlaceImageToDream3DDataFilter<PixelType, VDimension>
   if( m_InPlace )
   {
     inputPtr->GetPixelContainer()->SetContainerManageMemory( false );
-    data = DataArrayPixelType::WrapPointer( inputPtr->GetBufferPointer(),
+    data = DataArrayPixelType::WrapPointer( reinterpret_cast<ValueType*>(inputPtr->GetBufferPointer()),
               imageGeom->getNumberOfElements(), cDims, this->GetDataArrayName().c_str(), true );
   }
   else
   {
-    data = DataArrayPixelType::FromPointer(inputPtr->GetBufferPointer(),
+      //This code needs to be updated to take into accound the rank and dimensions of the tuples
+    data = DataArrayPixelType::FromPointer(reinterpret_cast<ValueType*>(inputPtr->GetBufferPointer()),
               imageGeom->getNumberOfElements(), m_DataArrayName.c_str(), true);
   }
   attrMat->addAttributeArray(m_DataArrayName.c_str(), data);
