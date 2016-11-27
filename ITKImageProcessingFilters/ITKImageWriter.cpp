@@ -87,7 +87,7 @@ void ITKImageWriter::setupFilterParameters()
 	{
 		DataArraySelectionFilterParameter::RequirementType req =
 			DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize,
-			                                                     AttributeMatrix::Type::Cell, SIMPL::GeometryType::ImageGeometry);
+			                                                     AttributeMatrix::Type::Cell, IGeometry::Type::Image);
 	  parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Image", ImageArrayPath, FilterParameter::RequiredArray, ITKImageWriter, req));
 	}
   setFilterParameters(parameters);
