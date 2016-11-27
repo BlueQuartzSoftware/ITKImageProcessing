@@ -112,7 +112,7 @@ class ITKImageProcessingWriterTest
     AttributeMatrix::Pointer matrixArray =
       container->createAndAddAttributeMatrix(
         dimensions, path.getAttributeMatrixName(),
-        SIMPL::AttributeMatrixType::Cell);
+        AttributeMatrix::Type::Cell);
     typename DataArray<PixelType>::Pointer data =
       DataArray<PixelType>::CreateArray(
         dimensions, arrayDimensions, path.getDataArrayName(), true);
@@ -185,7 +185,7 @@ class ITKImageProcessingWriterTest
       {
           DREAM3D_REQUIRE_EQUAL(baselineTupleDimensions[ii], inputTupleDimensions[ii]);
       }
-      DREAM3D_REQUIRE_EQUAL(baselineMatrix->getType(), inputMatrix->getType());
+      DREAM3D_REQUIRE_EQUAL( static_cast<uint32_t>(baselineMatrix->getType()), static_cast<uint32_t>(inputMatrix->getType()));
       return true;
   }
 

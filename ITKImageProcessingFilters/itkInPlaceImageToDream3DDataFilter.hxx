@@ -129,9 +129,9 @@ InPlaceImageToDream3DDataFilter<PixelType, VDimension>
   {
 	attrMat = dataContainer->getAttributeMatrix(m_AttributeMatrixArrayName.c_str());
 	// Check that attribute matrix type is 'cell'
-	if (attrMat->getType() != SIMPL::AttributeMatrixType::Cell)
+	if (attrMat->getType() != AttributeMatrix::Type::Cell)
 	{
-		itkExceptionMacro("Attribute matrix is not of type SIMPL::AttributeMatrixType::Cell.");
+		itkExceptionMacro("Attribute matrix is not of type AttributeMatrix::Type::Cell.");
 	}
 	// Check that if size does not match, there are no other data array than the one we expect.
 	// That makes it possible to modify the attribute matrix without having to worry.
@@ -144,12 +144,12 @@ InPlaceImageToDream3DDataFilter<PixelType, VDimension>
 			itkExceptionMacro("Tuples dimension of existing matrix array do not match image size and other attribute arrays are contained in this attribute matrix.");
 		}
 		dataContainer->removeAttributeMatrix(m_AttributeMatrixArrayName.c_str());
-		attrMat = dataContainer->createAndAddAttributeMatrix(tDims, m_AttributeMatrixArrayName.c_str(), SIMPL::AttributeMatrixType::Cell);
+		attrMat = dataContainer->createAndAddAttributeMatrix(tDims, m_AttributeMatrixArrayName.c_str(), AttributeMatrix::Type::Cell);
 	}
   }
   else
   {
-    attrMat = dataContainer->createAndAddAttributeMatrix(tDims, m_AttributeMatrixArrayName.c_str(), SIMPL::AttributeMatrixType::Cell);
+    attrMat = dataContainer->createAndAddAttributeMatrix(tDims, m_AttributeMatrixArrayName.c_str(), AttributeMatrix::Type::Cell);
   }
   // Checks if doesAttributeArray exists and remove it if it is the case
   if (attrMat->doesAttributeArrayExist(m_DataArrayName.c_str()))
