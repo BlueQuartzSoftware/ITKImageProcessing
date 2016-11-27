@@ -523,13 +523,13 @@ void ZeissImportFilter::parseImages(QDomElement& root, ZeissTagsXmlSection::Poin
     if(p == 0)
     {
       QVector<size_t> dims = getImageDimensions(photoTagsSection);
-      tileAm = dc->createAndAddAttributeMatrix(dims, getImageAttributeMatrixName(), SIMPL::AttributeMatrixType::Cell);
+      tileAm = dc->createAndAddAttributeMatrix(dims, getImageAttributeMatrixName(), AttributeMatrix::Type::Cell);
       image->setDimensions(dims[0], dims[1], 1);
 
       dims.resize(1);
       dims[0] = imageCount;
       QString metaName = getImageAttributeMatrixName() + SIMPL::StringConstants::MetaData;
-      metaAm = dc->createAndAddAttributeMatrix(dims, metaName, SIMPL::AttributeMatrixType::Generic);
+      metaAm = dc->createAndAddAttributeMatrix(dims, metaName, AttributeMatrix::Type::Generic);
       ZeissTagsXmlSection::MetaDataType tagMap = photoTagsSection->getMetaDataMap();
       QMapIterator<int, AbstractZeissMetaData::Pointer> iter(tagMap);
       while(iter.hasNext())
