@@ -73,7 +73,7 @@ class ITKImageProcessingImageTest
     return EXIT_SUCCESS;
   }
 
-  int TestDimensionsImages()
+  int TestConvertITKToDream3DAndBackToITKImages()
   {
     TestComponentImages<2>();
     TestComponentImages<3>();
@@ -168,6 +168,34 @@ class ITKImageProcessingImageTest
     return EXIT_SUCCESS;
   }
 
+  int GetComponentsDimensions()
+  {
+    const unsigned int dimensions = 3;
+    QVector<size_t> cDims;
+    QString error;
+    cDims = itk::InPlaceImageToDream3DDataFilter<unsigned char,dimensions>::GetComponentsDimensions();
+    if(cDims.size() != 1 || cDims[0] != 1)
+    {
+      error = QString("Scalar images should have a component dimension of [1]. Found components of size %1 with first value %2").arg(cDims.size()).arg(cDims[0]);
+      DREAM3D_TEST_THROW_EXCEPTION( error.toStdString() );
+    }
+    cDims = itk::InPlaceImageToDream3DDataFilter<itk::RGBAPixel<unsigned char>,dimensions>::GetComponentsDimensions();
+    if(cDims.size() != 1 || cDims[0] != 4)
+    {
+      error = QString("RGBA images should have a component dimension of [4]. Found components of size %1 with first value %2").arg(cDims.size()).arg(cDims[0]);
+      DREAM3D_TEST_THROW_EXCEPTION( error.toStdString() );
+    }
+    const unsigned int vecDim = 3;
+    cDims = itk::InPlaceImageToDream3DDataFilter<itk::Vector<unsigned char,vecDim>,dimensions>::GetComponentsDimensions();
+    if(cDims.size() != vecDim || cDims[0] != 1 || cDims[1] != 1 || cDims[2] != 1)
+    {
+      error = QString("Vector images should have a component dimension of (%1,1). Found components of size %2 with first value %3").arg(vecDim).arg(cDims.size()).arg(cDims[0]);
+      DREAM3D_TEST_THROW_EXCEPTION( error.toStdString() );
+    }
+    return EXIT_SUCCESS;
+  }
+
+
   // -----------------------------------------------------------------------------
   //
   // -----------------------------------------------------------------------------
@@ -177,8 +205,8 @@ class ITKImageProcessingImageTest
 
     DREAM3D_REGISTER_TEST(CreateDream3DDataToImageFilters());
     DREAM3D_REGISTER_TEST(CreateImageToDream3DDataFilters());
-    DREAM3D_REGISTER_TEST(TestDimensionsImages());
-
+    DREAM3D_REGISTER_TEST(TestConvertITKToDream3DAndBackToITKImages());
+    DREAM3D_REGISTER_TEST(GetComponentsDimensions());
   }
 
   private:
