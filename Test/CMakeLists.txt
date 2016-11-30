@@ -51,11 +51,9 @@ set(TEST_NAMES
   ITKLogImage
   ITKRescaleIntensityImage
   ITKLabelContourImage
-#  ITKSaltAndPepperNoiseImage
+  ITKSaltAndPepperNoiseImage
   ITKTanImage
   ITKBinaryContourImage
-#  ITKShotNoiseImage
-#  ITKSpeckleNoiseImage
   ITKShiftScaleImage
   ITKNotImage
   ITKBinaryProjectionImage
