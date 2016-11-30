@@ -129,10 +129,6 @@ foreach(f ${${PLUGIN_NAME}_TEST_SRCS})
   set_source_files_properties( ${f} PROPERTIES HEADER_FILE_ONLY TRUE)
 endforeach()
 
-#---------------------
-# Explicit instantiations
-set( ${PLUGIN_NAME}_TEST_SRCS ${${PLUGIN_NAME}_TEST_SRCS} ${${PLUGIN_NAME}_SOURCE_DIR}/${_filterGroupName}/itkInPlaceImageToDream3DDataFilterExplicit.cpp)
-
 AddSIMPLUnitTest(TESTNAME ${PLUGIN_NAME}Test
                     SOURCES ${${PLUGIN_NAME}_BINARY_DIR}/${PLUGIN_NAME}UnitTest.cpp ${${PLUGIN_NAME}_TEST_SRCS}
                     FOLDER "${PLUGIN_NAME}Plugin/Test"

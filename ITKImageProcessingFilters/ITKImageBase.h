@@ -193,7 +193,7 @@ class ITKImageBase : public AbstractFilter
 
       DataArrayPath tempPath;
 
-      QVector<size_t> dims = itk::InPlaceImageToDream3DDataFilter<InputPixelType,Dimension>::GetComponentsDimensions();
+      QVector<size_t> dims = ITKDream3DHelper::GetComponentsDimensions<InputPixelType>();
       selectedCellArrayPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<InputValueType>, AbstractFilter>(this, getSelectedCellArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
       if (nullptr != selectedCellArrayPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
       {

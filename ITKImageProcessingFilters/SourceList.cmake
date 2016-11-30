@@ -134,10 +134,6 @@ ADD_SIMPL_SUPPORT_HEADER(${${PLUGIN_NAME}_SOURCE_DIR} ${_filterGroupName} itkDre
 ADD_SIMPL_SUPPORT_HEADER(${${PLUGIN_NAME}_SOURCE_DIR} ${_filterGroupName} Dream3DTemplateAliasMacro.h)
 
 #---------------------
-# Explicit instantiations
-set( Project_SRCS ${Project_SRCS} ${${PLUGIN_NAME}_SOURCE_DIR}/${_filterGroupName}/itkInPlaceImageToDream3DDataFilterExplicit.cpp)
-
-#---------------------
 # This macro must come last after we are done adding all the filters and support files.
 SIMPL_END_FILTER_GROUP(${${PLUGIN_NAME}_BINARY_DIR} "${_filterGroupName}" "${PLUGIN_NAME}")
 

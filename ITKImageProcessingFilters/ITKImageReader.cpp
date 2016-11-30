@@ -40,6 +40,7 @@
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkInPlaceImageToDream3DDataFilter.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/itkGetComponentsDimensions.h"
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
 #include "ITKImageProcessingPlugin.h"
@@ -238,7 +239,7 @@ void ITKImageReader::readImageOutputInformation(typename itk::ImageFileReader< i
     image->setResolution(tspacing[0], tspacing[1], tspacing[2]);
     container->setGeometry(image);
 
-    QVector<size_t> cDims = itk::InPlaceImageToDream3DDataFilter<TPixel,dimensions>::GetComponentsDimensions();
+    QVector<size_t> cDims = ITKDream3DHelper::GetComponentsDimensions<TPixel>();
     AttributeMatrix::Pointer cellAttrMat = container->createNonPrereqAttributeMatrix<AbstractFilter>(this, m_CellAttributeMatrixName, tDims, AttributeMatrixType::Cell);
     if (getErrorCondition() < 0) { return; }
     DataArrayPath path;

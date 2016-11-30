@@ -44,6 +44,7 @@
 
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkInPlaceDream3DDataToImageFilter.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkInPlaceImageToDream3DDataFilter.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/itkGetComponentsDimensions.h"
 
 #include "ITKImageProcessingTestFileLocations.h"
 
@@ -170,23 +171,22 @@ class ITKImageProcessingImageTest
 
   int GetComponentsDimensions()
   {
-    const unsigned int dimensions = 3;
     QVector<size_t> cDims;
     QString error;
-    cDims = itk::InPlaceImageToDream3DDataFilter<unsigned char,dimensions>::GetComponentsDimensions();
+    cDims = ITKDream3DHelper::GetComponentsDimensions<unsigned char>();
     if(cDims.size() != 1 || cDims[0] != 1)
     {
       error = QString("Scalar images should have a component dimension of [1]. Found components of size %1 with first value %2").arg(cDims.size()).arg(cDims[0]);
       DREAM3D_TEST_THROW_EXCEPTION( error.toStdString() );
     }
-    cDims = itk::InPlaceImageToDream3DDataFilter<itk::RGBAPixel<unsigned char>,dimensions>::GetComponentsDimensions();
+    cDims = ITKDream3DHelper::GetComponentsDimensions<itk::RGBAPixel<unsigned char> >();
     if(cDims.size() != 1 || cDims[0] != 4)
     {
       error = QString("RGBA images should have a component dimension of [4]. Found components of size %1 with first value %2").arg(cDims.size()).arg(cDims[0]);
       DREAM3D_TEST_THROW_EXCEPTION( error.toStdString() );
     }
     const unsigned int vecDim = 3;
-    cDims = itk::InPlaceImageToDream3DDataFilter<itk::Vector<unsigned char,vecDim>,dimensions>::GetComponentsDimensions();
+    cDims = ITKDream3DHelper::GetComponentsDimensions<itk::Vector<unsigned char,vecDim> >();
     if(cDims.size() != vecDim || cDims[0] != 1 || cDims[1] != 1 || cDims[2] != 1)
     {
       error = QString("Vector images should have a component dimension of (%1,1). Found components of size %2 with first value %3").arg(vecDim).arg(cDims.size()).arg(cDims[0]);

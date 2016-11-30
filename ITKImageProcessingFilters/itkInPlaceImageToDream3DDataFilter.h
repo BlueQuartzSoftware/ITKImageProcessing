@@ -1,7 +1,8 @@
 #ifndef _ITKInPlaceImageToDream3DDataFilter_h
 #define _ITKInPlaceImageToDream3DDataFilter_h
 
-#include "itkDream3DImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/itkGetComponentsDimensions.h"
 #include "itkProcessObject.h"
 #include "itkSimpleDataObjectDecorator.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
@@ -9,13 +10,6 @@
 #include <itkNumericTraitsRGBAPixel.h>
 #include <itkNumericTraitsRGBPixel.h>
 #include <itkNumericTraitsVectorPixel.h>
-
-//#include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
-//#include "ITKImageProcessing/ITKImageProcessingFilters/itkInPlaceImageToDream3DDataFilter.h"
-//#include <itkRGBAPixel.h>
-//#include <itkRGBPixel.h>
-//#include <itkVector.h>
-
 
 namespace itk
 {
@@ -49,12 +43,6 @@ namespace itk
     itkSetMacro( InPlace, bool );
     itkGetConstMacro(InPlace, bool);
     itkBooleanMacro(InPlace);
-    QVector<size_t>
-    static GetComponentsDimensions()
-    {
-      QVector<size_t> cDims(1, 1);
-      return cDims;
-    }
   protected:
     virtual void VerifyPreconditions() ITK_OVERRIDE;
     InPlaceImageToDream3DDataFilter();

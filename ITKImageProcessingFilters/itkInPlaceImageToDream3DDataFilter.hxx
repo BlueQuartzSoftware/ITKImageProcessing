@@ -2,12 +2,13 @@
 #define _ITKInPlaceImageToDream3DDataFilter_hxx
 
 #include "itkInPlaceImageToDream3DDataFilter.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/itkGetComponentsDimensions.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include <QString>
 
 namespace itk
 {
-  
+
 template<typename PixelType, unsigned int VDimension>
 InPlaceImageToDream3DDataFilter<PixelType,VDimension>
 ::InPlaceImageToDream3DDataFilter()
@@ -119,7 +120,7 @@ InPlaceImageToDream3DDataFilter<PixelType, VDimension>
   DataContainer::Pointer dataContainer = outputPtr->Get();
   ImagePointer inputPtr = dynamic_cast<ImageType*>(this->GetInput(0));
   // Create data array
-  QVector<size_t> cDims = this->GetComponentsDimensions();
+  QVector<size_t> cDims = ITKDream3DHelper::GetComponentsDimensions<PixelType>();
   IGeometry::Pointer geom = dataContainer->getGeometry();
   ImageGeom::Pointer imageGeom = std::dynamic_pointer_cast<ImageGeom>(geom);
   QVector<size_t> tDims(3, 1);
