@@ -103,7 +103,29 @@ ITKImageProcessingPlugin::~ITKImageProcessingPlugin()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString ITKImageProcessingPlugin::getListSupportedFileExtensions()
+QString ITKImageProcessingPlugin::getListSupportedReadExtensions()
+{
+  QStringList supportedExtensions;
+  std::list< itk::LightObject::Pointer > allobjects = itk::ObjectFactoryBase::CreateAllInstance("itkImageIOBase");
+  if (allobjects.size() > 0)
+  {
+    for (std::list< itk::LightObject::Pointer >::iterator ii = allobjects.begin(); ii != allobjects.end(); ++ii)
+    {
+      itk::ImageIOBase *io = dynamic_cast< itk::ImageIOBase * >(ii->GetPointer());
+      itk::ImageIOBase::ArrayOfExtensionsType currentExtensions = io->GetSupportedReadExtensions();
+      for (size_t jj = 0; jj < currentExtensions.size(); jj++)
+      {
+        supportedExtensions << currentExtensions[jj].c_str();
+      }
+    }
+  }
+  return "*" + supportedExtensions.join(" *");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString ITKImageProcessingPlugin::getListSupportedWriteExtensions()
 {
   QStringList supportedExtensions;
   std::list< itk::LightObject::Pointer > allobjects = itk::ObjectFactoryBase::CreateAllInstance("itkImageIOBase");

@@ -83,7 +83,7 @@ ITKImageWriter::~ITKImageWriter()
 void ITKImageWriter::setupFilterParameters()
 {
 	FilterParameterVector parameters;
-  QString supportedExtensions = ITKImageProcessingPlugin::getListSupportedFileExtensions();
+  QString supportedExtensions = ITKImageProcessingPlugin::getListSupportedWriteExtensions();
 	parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Output File", FileName, FilterParameter::Parameter, ITKImageWriter, supportedExtensions));
 
 	parameters.push_back(SeparatorFilterParameter::New("Image Data", FilterParameter::RequiredArray));
