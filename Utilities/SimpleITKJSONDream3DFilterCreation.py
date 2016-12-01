@@ -541,6 +541,7 @@ def InitializeParsingValues(DREAM3DFilter, filter_description):
     DREAM3DFilter['FilterParameterDescription'] = ''
     DREAM3DFilter['DataCheckInternal'] = ''
     DREAM3DFilter['FilterInternal'] = ''
+    DREAM3DFilter['TestsIncludeName'] = ''
     if 'briefdescription' in filter_description:
         DREAM3DFilter['FilterDescription'] += filter_description['briefdescription']+'\n\n'
     if 'detaileddescription' in filter_description:
@@ -828,6 +829,7 @@ def main(argv=None):
         DREAM3DFilter['ITKModule'] = FindModuleInIncludeFile(itk_include_file, options.itk_dir)
         #####
         include_list=[itk_include_file]+filter_description['include_files']
+        member_include_list=[]
         for filter_member in filter_members:
             # Append Parameters
             DREAM3DFilter['Parameters'] += GetDREAM3DParameters(filter_member)
@@ -835,7 +837,7 @@ def main(argv=None):
             [include, setup, limits] = GetDREAM3DSetupFilterParametersFromMembers(filter_member, DREAM3DFilter['FilterName'])
             DREAM3DFilter['SetupFilterParameters'] += '  '*bool(len(setup))+setup
             DREAM3DFilter['CheckIntegerEntry'] += '  '*bool(len(limits))+limits
-            include_list.append(include)
+            member_include_list.append(include)
             # ReadFilterParameters
             DREAM3DFilter['ReadFilterParameters'] += GetDREAM3DReadFilterParameters(filter_member)
             # initialization
@@ -847,7 +849,8 @@ def main(argv=None):
         DREAM3DFilter['FilterInternal']=ImplementInternal(filter_description, 'this->filter')
         DREAM3DFilter['DataCheckInternal']=ImplementInternal(filter_description, 'this->dataCheck')
         #includes
-        DREAM3DFilter['IncludeName']=FormatIncludes(include_list)
+        DREAM3DFilter['IncludeName']=FormatIncludes(include_list+member_include_list)
+        DREAM3DFilter['TestsIncludeName']=FormatIncludes(member_include_list)
         # Implement tests
         for ii in range(len(filter_tests)):
             if not VerifyFilterParameterTypes(filter_members,filter_test_settings[ii]):

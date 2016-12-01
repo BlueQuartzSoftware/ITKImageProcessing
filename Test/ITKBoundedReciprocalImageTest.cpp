@@ -5,6 +5,8 @@
 // -----------------------------------------------------------------------------
 
 #include "ITKTestBase.h"
+//Auto includes
+
 
 class ITKBoundedReciprocalImageTest: public ITKTestBase
 {

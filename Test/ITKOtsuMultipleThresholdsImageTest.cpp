@@ -5,6 +5,11 @@
 // -----------------------------------------------------------------------------
 
 #include "ITKTestBase.h"
+//Auto includes
+#include <SIMPLib/FilterParameters/BooleanFilterParameter.h>
+#include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
+#include <SIMPLib/FilterParameters/IntFilterParameter.h>
+
 
 class ITKOtsuMultipleThresholdsImageTest: public ITKTestBase
 {

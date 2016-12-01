@@ -5,6 +5,9 @@
 // -----------------------------------------------------------------------------
 
 #include "ITKTestBase.h"
+//Auto includes
+#include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
+
 
 class ITKCurvatureAnisotropicDiffusionImageTest: public ITKTestBase
 {

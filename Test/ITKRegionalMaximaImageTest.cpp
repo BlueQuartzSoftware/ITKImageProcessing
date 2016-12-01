@@ -5,6 +5,10 @@
 // -----------------------------------------------------------------------------
 
 #include "ITKTestBase.h"
+//Auto includes
+#include <SIMPLib/FilterParameters/BooleanFilterParameter.h>
+#include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
+
 
 class ITKRegionalMaximaImageTest: public ITKTestBase
 {

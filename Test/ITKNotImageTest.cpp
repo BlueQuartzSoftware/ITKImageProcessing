@@ -5,6 +5,8 @@
 // -----------------------------------------------------------------------------
 
 #include "ITKTestBase.h"
+//Auto includes
+
 
 class ITKNotImageTest: public ITKTestBase
 {

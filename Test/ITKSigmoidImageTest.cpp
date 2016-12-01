@@ -5,6 +5,9 @@
 // -----------------------------------------------------------------------------
 
 #include "ITKTestBase.h"
+//Auto includes
+#include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
+
 
 class ITKSigmoidImageTest: public ITKTestBase
 {

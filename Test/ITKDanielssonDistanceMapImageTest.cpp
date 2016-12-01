@@ -5,6 +5,9 @@
 // -----------------------------------------------------------------------------
 
 #include "ITKTestBase.h"
+//Auto includes
+#include <SIMPLib/FilterParameters/BooleanFilterParameter.h>
+
 
 class ITKDanielssonDistanceMapImageTest: public ITKTestBase
 {
