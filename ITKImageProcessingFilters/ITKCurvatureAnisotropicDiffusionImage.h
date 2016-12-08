@@ -7,6 +7,9 @@
 #ifndef _ITKCurvatureAnisotropicDiffusionImage_h_
 #define _ITKCurvatureAnisotropicDiffusionImage_h_
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winconsistent-missing-override"
+
 #include "ITKImageBase.h"
 
 #include "SIMPLib/SIMPLib.h"
@@ -101,5 +104,7 @@ class ITKCurvatureAnisotropicDiffusionImage : public ITKImageBase
     ITKCurvatureAnisotropicDiffusionImage(const ITKCurvatureAnisotropicDiffusionImage&); // Copy Constructor Not Implemented
     void operator=(const ITKCurvatureAnisotropicDiffusionImage&); // Operator '=' Not Implemented
 };
+
+#pragma clang diagnostic pop
 
 #endif /* _ITKCurvatureAnisotropicDiffusionImage_H_ */

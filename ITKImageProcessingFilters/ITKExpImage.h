@@ -7,6 +7,9 @@
 #ifndef _ITKExpImage_h_
 #define _ITKExpImage_h_
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winconsistent-missing-override"
+
 #include "ITKImageBase.h"
 
 #include "SIMPLib/SIMPLib.h"
@@ -87,5 +90,7 @@ class ITKExpImage : public ITKImageBase
     ITKExpImage(const ITKExpImage&); // Copy Constructor Not Implemented
     void operator=(const ITKExpImage&); // Operator '=' Not Implemented
 };
+
+#pragma clang diagnostic pop
 
 #endif /* _ITKExpImage_H_ */

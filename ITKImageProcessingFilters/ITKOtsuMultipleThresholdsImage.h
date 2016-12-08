@@ -7,6 +7,9 @@
 #ifndef _ITKOtsuMultipleThresholdsImage_h_
 #define _ITKOtsuMultipleThresholdsImage_h_
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winconsistent-missing-override"
+
 #include "ITKImageBase.h"
 
 #include "SIMPLib/SIMPLib.h"
@@ -102,5 +105,7 @@ class ITKOtsuMultipleThresholdsImage : public ITKImageBase
     ITKOtsuMultipleThresholdsImage(const ITKOtsuMultipleThresholdsImage&); // Copy Constructor Not Implemented
     void operator=(const ITKOtsuMultipleThresholdsImage&); // Operator '=' Not Implemented
 };
+
+#pragma clang diagnostic pop
 
 #endif /* _ITKOtsuMultipleThresholdsImage_H_ */

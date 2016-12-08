@@ -7,6 +7,9 @@
 #ifndef _ITKBilateralImage_h_
 #define _ITKBilateralImage_h_
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winconsistent-missing-override"
+
 #include "ITKImageBase.h"
 
 #include "SIMPLib/SIMPLib.h"
@@ -97,5 +100,7 @@ class ITKBilateralImage : public ITKImageBase
     ITKBilateralImage(const ITKBilateralImage&); // Copy Constructor Not Implemented
     void operator=(const ITKBilateralImage&); // Operator '=' Not Implemented
 };
+
+#pragma clang diagnostic pop
 
 #endif /* _ITKBilateralImage_H_ */

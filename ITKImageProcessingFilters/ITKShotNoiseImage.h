@@ -7,6 +7,9 @@
 #ifndef _ITKShotNoiseImage_h_
 #define _ITKShotNoiseImage_h_
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winconsistent-missing-override"
+
 #include "ITKImageBase.h"
 
 #include "SIMPLib/SIMPLib.h"
@@ -94,5 +97,7 @@ class ITKShotNoiseImage : public ITKImageBase
     ITKShotNoiseImage(const ITKShotNoiseImage&); // Copy Constructor Not Implemented
     void operator=(const ITKShotNoiseImage&); // Operator '=' Not Implemented
 };
+
+#pragma clang diagnostic pop
 
 #endif /* _ITKShotNoiseImage_H_ */

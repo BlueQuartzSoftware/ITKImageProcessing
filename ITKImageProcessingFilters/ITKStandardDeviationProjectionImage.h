@@ -7,6 +7,9 @@
 #ifndef _ITKStandardDeviationProjectionImage_h_
 #define _ITKStandardDeviationProjectionImage_h_
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winconsistent-missing-override"
+
 #include "ITKImageBase.h"
 
 #include "SIMPLib/SIMPLib.h"
@@ -91,5 +94,7 @@ class ITKStandardDeviationProjectionImage : public ITKImageBase
     ITKStandardDeviationProjectionImage(const ITKStandardDeviationProjectionImage&); // Copy Constructor Not Implemented
     void operator=(const ITKStandardDeviationProjectionImage&); // Operator '=' Not Implemented
 };
+
+#pragma clang diagnostic pop
 
 #endif /* _ITKStandardDeviationProjectionImage_H_ */

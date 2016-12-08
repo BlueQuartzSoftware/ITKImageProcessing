@@ -7,6 +7,9 @@
 #ifndef _ITKNormalizeImage_h_
 #define _ITKNormalizeImage_h_
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winconsistent-missing-override"
+
 #include "ITKImageBase.h"
 
 #include "SIMPLib/SIMPLib.h"
@@ -87,5 +90,7 @@ class ITKNormalizeImage : public ITKImageBase
     ITKNormalizeImage(const ITKNormalizeImage&); // Copy Constructor Not Implemented
     void operator=(const ITKNormalizeImage&); // Operator '=' Not Implemented
 };
+
+#pragma clang diagnostic pop
 
 #endif /* _ITKNormalizeImage_H_ */

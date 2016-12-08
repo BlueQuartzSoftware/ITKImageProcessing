@@ -7,6 +7,9 @@
 #ifndef _ITKSqrtImage_h_
 #define _ITKSqrtImage_h_
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winconsistent-missing-override"
+
 #include "ITKImageBase.h"
 
 #include "SIMPLib/SIMPLib.h"
@@ -87,5 +90,7 @@ class ITKSqrtImage : public ITKImageBase
     ITKSqrtImage(const ITKSqrtImage&); // Copy Constructor Not Implemented
     void operator=(const ITKSqrtImage&); // Operator '=' Not Implemented
 };
+
+#pragma clang diagnostic pop
 
 #endif /* _ITKSqrtImage_H_ */

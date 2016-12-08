@@ -7,6 +7,9 @@
 #ifndef _ITKExpNegativeImage_h_
 #define _ITKExpNegativeImage_h_
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winconsistent-missing-override"
+
 #include "ITKImageBase.h"
 
 #include "SIMPLib/SIMPLib.h"
@@ -87,5 +90,7 @@ class ITKExpNegativeImage : public ITKImageBase
     ITKExpNegativeImage(const ITKExpNegativeImage&); // Copy Constructor Not Implemented
     void operator=(const ITKExpNegativeImage&); // Operator '=' Not Implemented
 };
+
+#pragma clang diagnostic pop
 
 #endif /* _ITKExpNegativeImage_H_ */

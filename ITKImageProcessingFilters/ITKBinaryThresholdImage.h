@@ -7,6 +7,9 @@
 #ifndef _ITKBinaryThresholdImage_h_
 #define _ITKBinaryThresholdImage_h_
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winconsistent-missing-override"
+
 #include "ITKImageBase.h"
 
 #include "SIMPLib/SIMPLib.h"
@@ -101,5 +104,7 @@ class ITKBinaryThresholdImage : public ITKImageBase
     ITKBinaryThresholdImage(const ITKBinaryThresholdImage&); // Copy Constructor Not Implemented
     void operator=(const ITKBinaryThresholdImage&); // Operator '=' Not Implemented
 };
+
+#pragma clang diagnostic pop
 
 #endif /* _ITKBinaryThresholdImage_H_ */

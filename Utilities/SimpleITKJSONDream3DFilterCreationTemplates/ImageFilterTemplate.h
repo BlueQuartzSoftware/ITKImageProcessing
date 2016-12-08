@@ -7,6 +7,9 @@
 #ifndef _${FilterName}_h_
 #define _${FilterName}_h_
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winconsistent-missing-override"
+
 #include "ITKImageBase.h"
 
 #include "SIMPLib/SIMPLib.h"
@@ -86,5 +89,7 @@ ${Parameters}
     ${FilterName}(const ${FilterName}&); // Copy Constructor Not Implemented
     void operator=(const ${FilterName}&); // Operator '=' Not Implemented
 };
+
+#pragma clang diagnostic pop
 
 #endif /* _${FilterName}_H_ */

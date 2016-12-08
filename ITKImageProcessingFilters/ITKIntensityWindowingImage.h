@@ -7,6 +7,9 @@
 #ifndef _ITKIntensityWindowingImage_h_
 #define _ITKIntensityWindowingImage_h_
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winconsistent-missing-override"
+
 #include "ITKImageBase.h"
 
 #include "SIMPLib/SIMPLib.h"
@@ -100,5 +103,7 @@ class ITKIntensityWindowingImage : public ITKImageBase
     ITKIntensityWindowingImage(const ITKIntensityWindowingImage&); // Copy Constructor Not Implemented
     void operator=(const ITKIntensityWindowingImage&); // Operator '=' Not Implemented
 };
+
+#pragma clang diagnostic pop
 
 #endif /* _ITKIntensityWindowingImage_H_ */

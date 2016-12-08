@@ -7,6 +7,9 @@
 #ifndef _ITKBinaryContourImage_h_
 #define _ITKBinaryContourImage_h_
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winconsistent-missing-override"
+
 #include "ITKImageBase.h"
 
 #include "SIMPLib/SIMPLib.h"
@@ -98,5 +101,7 @@ class ITKBinaryContourImage : public ITKImageBase
     ITKBinaryContourImage(const ITKBinaryContourImage&); // Copy Constructor Not Implemented
     void operator=(const ITKBinaryContourImage&); // Operator '=' Not Implemented
 };
+
+#pragma clang diagnostic pop
 
 #endif /* _ITKBinaryContourImage_H_ */

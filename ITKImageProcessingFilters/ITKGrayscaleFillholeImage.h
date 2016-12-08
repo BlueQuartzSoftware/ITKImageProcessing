@@ -7,6 +7,9 @@
 #ifndef _ITKGrayscaleFillholeImage_h_
 #define _ITKGrayscaleFillholeImage_h_
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winconsistent-missing-override"
+
 #include "ITKImageBase.h"
 
 #include "SIMPLib/SIMPLib.h"
@@ -91,5 +94,7 @@ class ITKGrayscaleFillholeImage : public ITKImageBase
     ITKGrayscaleFillholeImage(const ITKGrayscaleFillholeImage&); // Copy Constructor Not Implemented
     void operator=(const ITKGrayscaleFillholeImage&); // Operator '=' Not Implemented
 };
+
+#pragma clang diagnostic pop
 
 #endif /* _ITKGrayscaleFillholeImage_H_ */

@@ -7,6 +7,9 @@
 #ifndef _ITKMeanProjectionImage_h_
 #define _ITKMeanProjectionImage_h_
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winconsistent-missing-override"
+
 #include "ITKImageBase.h"
 
 #include "SIMPLib/SIMPLib.h"
@@ -91,5 +94,7 @@ class ITKMeanProjectionImage : public ITKImageBase
     ITKMeanProjectionImage(const ITKMeanProjectionImage&); // Copy Constructor Not Implemented
     void operator=(const ITKMeanProjectionImage&); // Operator '=' Not Implemented
 };
+
+#pragma clang diagnostic pop
 
 #endif /* _ITKMeanProjectionImage_H_ */

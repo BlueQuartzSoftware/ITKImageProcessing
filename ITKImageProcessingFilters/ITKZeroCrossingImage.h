@@ -7,6 +7,9 @@
 #ifndef _ITKZeroCrossingImage_h_
 #define _ITKZeroCrossingImage_h_
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winconsistent-missing-override"
+
 #include "ITKImageBase.h"
 
 #include "SIMPLib/SIMPLib.h"
@@ -94,5 +97,7 @@ class ITKZeroCrossingImage : public ITKImageBase
     ITKZeroCrossingImage(const ITKZeroCrossingImage&); // Copy Constructor Not Implemented
     void operator=(const ITKZeroCrossingImage&); // Operator '=' Not Implemented
 };
+
+#pragma clang diagnostic pop
 
 #endif /* _ITKZeroCrossingImage_H_ */

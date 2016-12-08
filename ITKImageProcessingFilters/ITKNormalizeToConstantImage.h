@@ -7,6 +7,9 @@
 #ifndef _ITKNormalizeToConstantImage_h_
 #define _ITKNormalizeToConstantImage_h_
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winconsistent-missing-override"
+
 #include "ITKImageBase.h"
 
 #include "SIMPLib/SIMPLib.h"
@@ -91,5 +94,7 @@ class ITKNormalizeToConstantImage : public ITKImageBase
     ITKNormalizeToConstantImage(const ITKNormalizeToConstantImage&); // Copy Constructor Not Implemented
     void operator=(const ITKNormalizeToConstantImage&); // Operator '=' Not Implemented
 };
+
+#pragma clang diagnostic pop
 
 #endif /* _ITKNormalizeToConstantImage_H_ */

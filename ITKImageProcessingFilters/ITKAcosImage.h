@@ -7,6 +7,9 @@
 #ifndef _ITKAcosImage_h_
 #define _ITKAcosImage_h_
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winconsistent-missing-override"
+
 #include "ITKImageBase.h"
 
 #include "SIMPLib/SIMPLib.h"
@@ -87,5 +90,7 @@ class ITKAcosImage : public ITKImageBase
     ITKAcosImage(const ITKAcosImage&); // Copy Constructor Not Implemented
     void operator=(const ITKAcosImage&); // Operator '=' Not Implemented
 };
+
+#pragma clang diagnostic pop
 
 #endif /* _ITKAcosImage_H_ */

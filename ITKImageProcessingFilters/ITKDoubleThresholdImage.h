@@ -7,6 +7,9 @@
 #ifndef _ITKDoubleThresholdImage_h_
 #define _ITKDoubleThresholdImage_h_
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winconsistent-missing-override"
+
 #include "ITKImageBase.h"
 
 #include "SIMPLib/SIMPLib.h"
@@ -111,5 +114,7 @@ class ITKDoubleThresholdImage : public ITKImageBase
     ITKDoubleThresholdImage(const ITKDoubleThresholdImage&); // Copy Constructor Not Implemented
     void operator=(const ITKDoubleThresholdImage&); // Operator '=' Not Implemented
 };
+
+#pragma clang diagnostic pop
 
 #endif /* _ITKDoubleThresholdImage_H_ */

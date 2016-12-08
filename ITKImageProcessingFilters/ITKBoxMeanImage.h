@@ -7,6 +7,9 @@
 #ifndef _ITKBoxMeanImage_h_
 #define _ITKBoxMeanImage_h_
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winconsistent-missing-override"
+
 #include "ITKImageBase.h"
 
 #include "SIMPLib/SIMPLib.h"
@@ -91,5 +94,7 @@ class ITKBoxMeanImage : public ITKImageBase
     ITKBoxMeanImage(const ITKBoxMeanImage&); // Copy Constructor Not Implemented
     void operator=(const ITKBoxMeanImage&); // Operator '=' Not Implemented
 };
+
+#pragma clang diagnostic pop
 
 #endif /* _ITKBoxMeanImage_H_ */

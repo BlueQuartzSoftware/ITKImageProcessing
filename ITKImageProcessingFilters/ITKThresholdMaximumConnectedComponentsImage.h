@@ -7,6 +7,9 @@
 #ifndef _ITKThresholdMaximumConnectedComponentsImage_h_
 #define _ITKThresholdMaximumConnectedComponentsImage_h_
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winconsistent-missing-override"
+
 #include "ITKImageBase.h"
 
 #include "SIMPLib/SIMPLib.h"
@@ -101,5 +104,7 @@ class ITKThresholdMaximumConnectedComponentsImage : public ITKImageBase
     ITKThresholdMaximumConnectedComponentsImage(const ITKThresholdMaximumConnectedComponentsImage&); // Copy Constructor Not Implemented
     void operator=(const ITKThresholdMaximumConnectedComponentsImage&); // Operator '=' Not Implemented
 };
+
+#pragma clang diagnostic pop
 
 #endif /* _ITKThresholdMaximumConnectedComponentsImage_H_ */

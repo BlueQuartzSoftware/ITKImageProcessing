@@ -7,6 +7,9 @@
 #ifndef _ITKHMinimaImage_h_
 #define _ITKHMinimaImage_h_
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winconsistent-missing-override"
+
 #include "ITKImageBase.h"
 
 #include "SIMPLib/SIMPLib.h"
@@ -95,5 +98,7 @@ class ITKHMinimaImage : public ITKImageBase
     ITKHMinimaImage(const ITKHMinimaImage&); // Copy Constructor Not Implemented
     void operator=(const ITKHMinimaImage&); // Operator '=' Not Implemented
 };
+
+#pragma clang diagnostic pop
 
 #endif /* _ITKHMinimaImage_H_ */

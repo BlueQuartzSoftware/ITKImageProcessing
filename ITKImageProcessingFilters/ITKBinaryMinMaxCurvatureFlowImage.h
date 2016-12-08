@@ -7,6 +7,9 @@
 #ifndef _ITKBinaryMinMaxCurvatureFlowImage_h_
 #define _ITKBinaryMinMaxCurvatureFlowImage_h_
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winconsistent-missing-override"
+
 #include "ITKImageBase.h"
 
 #include "SIMPLib/SIMPLib.h"
@@ -101,5 +104,7 @@ class ITKBinaryMinMaxCurvatureFlowImage : public ITKImageBase
     ITKBinaryMinMaxCurvatureFlowImage(const ITKBinaryMinMaxCurvatureFlowImage&); // Copy Constructor Not Implemented
     void operator=(const ITKBinaryMinMaxCurvatureFlowImage&); // Operator '=' Not Implemented
 };
+
+#pragma clang diagnostic pop
 
 #endif /* _ITKBinaryMinMaxCurvatureFlowImage_H_ */

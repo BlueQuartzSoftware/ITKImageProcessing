@@ -7,6 +7,9 @@
 #ifndef _ITKInvertIntensityImage_h_
 #define _ITKInvertIntensityImage_h_
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winconsistent-missing-override"
+
 #include "ITKImageBase.h"
 
 #include "SIMPLib/SIMPLib.h"
@@ -91,5 +94,7 @@ class ITKInvertIntensityImage : public ITKImageBase
     ITKInvertIntensityImage(const ITKInvertIntensityImage&); // Copy Constructor Not Implemented
     void operator=(const ITKInvertIntensityImage&); // Operator '=' Not Implemented
 };
+
+#pragma clang diagnostic pop
 
 #endif /* _ITKInvertIntensityImage_H_ */

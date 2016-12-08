@@ -7,6 +7,9 @@
 #ifndef _ITKValuedRegionalMinimaImage_h_
 #define _ITKValuedRegionalMinimaImage_h_
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winconsistent-missing-override"
+
 #include "ITKImageBase.h"
 
 #include "SIMPLib/SIMPLib.h"
@@ -91,5 +94,7 @@ class ITKValuedRegionalMinimaImage : public ITKImageBase
     ITKValuedRegionalMinimaImage(const ITKValuedRegionalMinimaImage&); // Copy Constructor Not Implemented
     void operator=(const ITKValuedRegionalMinimaImage&); // Operator '=' Not Implemented
 };
+
+#pragma clang diagnostic pop
 
 #endif /* _ITKValuedRegionalMinimaImage_H_ */

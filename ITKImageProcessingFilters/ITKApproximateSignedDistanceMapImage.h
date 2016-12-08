@@ -7,6 +7,9 @@
 #ifndef _ITKApproximateSignedDistanceMapImage_h_
 #define _ITKApproximateSignedDistanceMapImage_h_
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winconsistent-missing-override"
+
 #include "ITKImageBase.h"
 
 #include "SIMPLib/SIMPLib.h"
@@ -94,5 +97,7 @@ class ITKApproximateSignedDistanceMapImage : public ITKImageBase
     ITKApproximateSignedDistanceMapImage(const ITKApproximateSignedDistanceMapImage&); // Copy Constructor Not Implemented
     void operator=(const ITKApproximateSignedDistanceMapImage&); // Operator '=' Not Implemented
 };
+
+#pragma clang diagnostic pop
 
 #endif /* _ITKApproximateSignedDistanceMapImage_H_ */

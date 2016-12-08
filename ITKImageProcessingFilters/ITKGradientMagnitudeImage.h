@@ -7,6 +7,9 @@
 #ifndef _ITKGradientMagnitudeImage_h_
 #define _ITKGradientMagnitudeImage_h_
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winconsistent-missing-override"
+
 #include "ITKImageBase.h"
 
 #include "SIMPLib/SIMPLib.h"
@@ -91,5 +94,7 @@ class ITKGradientMagnitudeImage : public ITKImageBase
     ITKGradientMagnitudeImage(const ITKGradientMagnitudeImage&); // Copy Constructor Not Implemented
     void operator=(const ITKGradientMagnitudeImage&); // Operator '=' Not Implemented
 };
+
+#pragma clang diagnostic pop
 
 #endif /* _ITKGradientMagnitudeImage_H_ */

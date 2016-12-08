@@ -7,6 +7,9 @@
 #ifndef _ITKBinomialBlurImage_h_
 #define _ITKBinomialBlurImage_h_
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winconsistent-missing-override"
+
 #include "ITKImageBase.h"
 
 #include "SIMPLib/SIMPLib.h"
@@ -91,5 +94,7 @@ class ITKBinomialBlurImage : public ITKImageBase
     ITKBinomialBlurImage(const ITKBinomialBlurImage&); // Copy Constructor Not Implemented
     void operator=(const ITKBinomialBlurImage&); // Operator '=' Not Implemented
 };
+
+#pragma clang diagnostic pop
 
 #endif /* _ITKBinomialBlurImage_H_ */

@@ -7,6 +7,9 @@
 #ifndef _ITKSobelEdgeDetectionImage_h_
 #define _ITKSobelEdgeDetectionImage_h_
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winconsistent-missing-override"
+
 #include "ITKImageBase.h"
 
 #include "SIMPLib/SIMPLib.h"
@@ -87,5 +90,7 @@ class ITKSobelEdgeDetectionImage : public ITKImageBase
     ITKSobelEdgeDetectionImage(const ITKSobelEdgeDetectionImage&); // Copy Constructor Not Implemented
     void operator=(const ITKSobelEdgeDetectionImage&); // Operator '=' Not Implemented
 };
+
+#pragma clang diagnostic pop
 
 #endif /* _ITKSobelEdgeDetectionImage_H_ */

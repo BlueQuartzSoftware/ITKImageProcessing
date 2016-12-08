@@ -7,6 +7,9 @@
 #ifndef _ITKRescaleIntensityImage_h_
 #define _ITKRescaleIntensityImage_h_
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winconsistent-missing-override"
+
 #include "ITKImageBase.h"
 
 #include "SIMPLib/SIMPLib.h"
@@ -94,5 +97,7 @@ class ITKRescaleIntensityImage : public ITKImageBase
     ITKRescaleIntensityImage(const ITKRescaleIntensityImage&); // Copy Constructor Not Implemented
     void operator=(const ITKRescaleIntensityImage&); // Operator '=' Not Implemented
 };
+
+#pragma clang diagnostic pop
 
 #endif /* _ITKRescaleIntensityImage_H_ */

@@ -7,6 +7,9 @@
 #ifndef _ITKGradientMagnitudeRecursiveGaussianImage_h_
 #define _ITKGradientMagnitudeRecursiveGaussianImage_h_
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winconsistent-missing-override"
+
 #include "ITKImageBase.h"
 
 #include "SIMPLib/SIMPLib.h"
@@ -95,5 +98,7 @@ class ITKGradientMagnitudeRecursiveGaussianImage : public ITKImageBase
     ITKGradientMagnitudeRecursiveGaussianImage(const ITKGradientMagnitudeRecursiveGaussianImage&); // Copy Constructor Not Implemented
     void operator=(const ITKGradientMagnitudeRecursiveGaussianImage&); // Operator '=' Not Implemented
 };
+
+#pragma clang diagnostic pop
 
 #endif /* _ITKGradientMagnitudeRecursiveGaussianImage_H_ */

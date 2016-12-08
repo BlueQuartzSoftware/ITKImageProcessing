@@ -7,6 +7,9 @@
 #ifndef _ITKHMaximaImage_h_
 #define _ITKHMaximaImage_h_
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winconsistent-missing-override"
+
 #include "ITKImageBase.h"
 
 #include "SIMPLib/SIMPLib.h"
@@ -91,5 +94,7 @@ class ITKHMaximaImage : public ITKImageBase
     ITKHMaximaImage(const ITKHMaximaImage&); // Copy Constructor Not Implemented
     void operator=(const ITKHMaximaImage&); // Operator '=' Not Implemented
 };
+
+#pragma clang diagnostic pop
 
 #endif /* _ITKHMaximaImage_H_ */
