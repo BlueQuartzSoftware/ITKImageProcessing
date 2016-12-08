@@ -51,7 +51,6 @@ set(TEST_NAMES
   ITKLogImage
   ITKRescaleIntensityImage
   ITKLabelContourImage
-  ITKSaltAndPepperNoiseImage
   ITKTanImage
   ITKBinaryContourImage
   ITKShiftScaleImage
