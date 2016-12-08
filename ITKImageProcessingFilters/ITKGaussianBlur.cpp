@@ -30,9 +30,9 @@
 // -----------------------------------------------------------------------------
 ITKGaussianBlur::ITKGaussianBlur() :
   ITKImageBase(),
+  m_MaximumKernelWidth(4),
   m_Variance(1),
-  m_MaximumError(0.01),
-  m_MaximumKernelWidth(4)
+  m_MaximumError(0.01)
 {
   setupFilterParameters();
 }
@@ -89,7 +89,7 @@ void ITKGaussianBlur::readFilterParameters(AbstractFilterParametersReader* reade
 //
 // -----------------------------------------------------------------------------
 
-template<typename PixelType, unsigned int Dimension>
+template<typename InPixelType, typename OutPixelType, unsigned int Dimension>
 void ITKGaussianBlur::dataCheck()
 {
   setErrorCondition(0);
@@ -111,7 +111,7 @@ void ITKGaussianBlur::dataCheck()
     notifyErrorMessage(getHumanLabel(), "Maximum error must be >0", getErrorCondition());
     return;
   }
-  ITKImageBase::dataCheck<PixelType, Dimension>();
+  ITKImageBase::dataCheck<InPixelType, OutPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
@@ -127,20 +127,21 @@ void ITKGaussianBlur::dataCheckInternal()
 //
 // -----------------------------------------------------------------------------
 
-template<typename PixelType, unsigned int Dimension>
+template<typename InPixelType, typename OutPixelType, unsigned int Dimension>
 void ITKGaussianBlur::filter()
 {
     DataArrayPath dap = getSelectedCellArrayPath();
     DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(dap.getDataContainerName());
 
-    typedef itk::Dream3DImage<PixelType, Dimension> ImageType;
-    typedef itk::DiscreteGaussianImageFilter<ImageType, ImageType> GaussianFilterType;
+    typedef itk::Dream3DImage<InPixelType, Dimension> InImageType;
+    typedef itk::Dream3DImage<OutPixelType, Dimension> OutImageType;
+    typedef itk::DiscreteGaussianImageFilter<InImageType, OutImageType> GaussianFilterType;
     typename GaussianFilterType::Pointer gaussianFilter = GaussianFilterType::New();
     gaussianFilter->SetVariance(getVariance());
     gaussianFilter->SetMaximumKernelWidth(getMaximumKernelWidth());
     gaussianFilter->SetMaximumError(getMaximumError());
 
-    this->ITKImageBase::filter<PixelType, Dimension, GaussianFilterType>(gaussianFilter);
+    this->ITKImageBase::filter<InPixelType, OutPixelType, Dimension, GaussianFilterType>(gaussianFilter);
 
 }
 
@@ -170,5 +171,11 @@ AbstractFilter::Pointer ITKGaussianBlur::newFilterInstance(bool copyFilterParame
 //
 // -----------------------------------------------------------------------------
 const QString ITKGaussianBlur::getHumanLabel()
-{ return "[ITK] Gaussian Blur (KW)"; }
+{ return "[ITK] GaussianBlur (KW)"; }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ITKGaussianBlur::getSubGroupName()
+{ return "ITKSmoothing"; }
 

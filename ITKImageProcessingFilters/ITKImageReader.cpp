@@ -40,6 +40,7 @@
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkInPlaceImageToDream3DDataFilter.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/itkGetComponentsDimensions.h"
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
 #include "ITKImageProcessingPlugin.h"
@@ -74,7 +75,7 @@ ITKImageReader::~ITKImageReader()
 void ITKImageReader::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  QString supportedExtensions = ITKImageProcessingPlugin::getListSupportedFileExtensions();
+  QString supportedExtensions = ITKImageProcessingPlugin::getListSupportedReadExtensions();
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("File", FileName, FilterParameter::Parameter, ITKImageReader, supportedExtensions, "Image"));
   parameters.push_back(SIMPL_NEW_STRING_FP("Data Container", DataContainerName, FilterParameter::CreatedArray, ITKImageReader));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
@@ -154,28 +155,61 @@ void ITKImageReader::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename TPixel>
-void ITKImageReader::readImage(unsigned int dimensions, const QString& filename, bool dataCheck)
+template<typename TComponent>
+void ITKImageReader::readImage(itk::ImageIOBase::IOPixelType pixel, unsigned int dimensions, const QString& filename, bool dataCheck)
 {
   switch (dimensions)
   {
     case 1:
     {
-      readImage<TPixel, 1>(filename, dataCheck);
+      readImage<TComponent, 1>(pixel, filename, dataCheck);
       break;
     }
     case 2:
     {
-      readImage<TPixel, 2>(filename, dataCheck);
+      readImage<TComponent, 2>(pixel, filename, dataCheck);
       break;
     }
     default:
     {
-      readImage<TPixel, 3>(filename, dataCheck);
+      readImage<TComponent, 3>(pixel, filename, dataCheck);
       break;
     }
   }
 }
+
+template<typename TComponent, unsigned int dimensions>
+void ITKImageReader::readImage(itk::ImageIOBase::IOPixelType pixel, const QString& filename, bool dataCheck)
+{
+    switch (pixel)
+    {
+    case itk::ImageIOBase::SCALAR:
+        readImage<TComponent,dimensions>(filename, dataCheck);
+        break;
+    case itk::ImageIOBase::RGBA:
+    case itk::ImageIOBase::RGB:
+        readImage<itk::RGBAPixel<TComponent>,dimensions >(filename, dataCheck);
+        break;
+    case itk::ImageIOBase::VECTOR:
+        readImage<itk::Vector<TComponent,dimensions>,dimensions>(filename, dataCheck);
+        break;
+    case itk::ImageIOBase::UNKNOWNPIXELTYPE:
+    case itk::ImageIOBase::POINT:
+    case itk::ImageIOBase::COVARIANTVECTOR:
+    case itk::ImageIOBase::SYMMETRICSECONDRANKTENSOR:
+    case itk::ImageIOBase::DIFFUSIONTENSOR3D:
+    case itk::ImageIOBase::COMPLEX:
+    case itk::ImageIOBase::FIXEDARRAY:
+    case itk::ImageIOBase::MATRIX:
+    default:
+        setErrorCondition(-4);
+        QString errorMessage = QString("Unsupported pixel type: %1.").arg(itk::ImageIOBase::GetPixelTypeAsString(pixel).c_str());
+        notifyErrorMessage(getHumanLabel(), errorMessage, getErrorCondition());
+        break;
+    }
+}
+
+
 
 // -----------------------------------------------------------------------------
 //
@@ -184,7 +218,7 @@ template<typename TPixel, unsigned int dimensions>
 void ITKImageReader::readImageOutputInformation(typename itk::ImageFileReader< itk::Dream3DImage<TPixel, dimensions> >::Pointer &reader, DataContainer::Pointer &container)
 {
     typedef itk::Dream3DImage<TPixel, dimensions>   ImageType;
-
+    typedef typename itk::NumericTraits<TPixel>::ValueType   ValueType;
     reader->UpdateOutputInformation();
     const typename ImageType::PointType origin = reader->GetOutput()->GetOrigin();
     const typename ImageType::SizeType size = reader->GetOutput()->GetLargestPossibleRegion().GetSize();
@@ -205,12 +239,12 @@ void ITKImageReader::readImageOutputInformation(typename itk::ImageFileReader< i
     image->setResolution(tspacing[0], tspacing[1], tspacing[2]);
     container->setGeometry(image);
 
-    QVector<size_t> cDims(1, 1);
+    QVector<size_t> cDims = ITKDream3DHelper::GetComponentsDimensions<TPixel>();
     AttributeMatrix::Pointer cellAttrMat = container->createNonPrereqAttributeMatrix<AbstractFilter>(this, m_CellAttributeMatrixName, tDims, AttributeMatrix::Type::Cell);
     if (getErrorCondition() < 0) { return; }
     DataArrayPath path;
     path.update(getDataContainerName(), getCellAttributeMatrixName(), getImageDataArrayName());
-    getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<TPixel>, AbstractFilter, TPixel>(this, path, 0, cDims);
+    getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<ValueType>, AbstractFilter, ValueType>(this, path, 0, cDims);
 }
 
 
@@ -271,44 +305,45 @@ void ITKImageReader::readImage(bool dataCheck)
         imageIO->ReadImageInformation();
 
         typedef itk::ImageIOBase::IOComponentType ComponentType;
-        const ComponentType type = imageIO->GetComponentType();
+        const ComponentType component = imageIO->GetComponentType();
+        typedef itk::ImageIOBase::IOPixelType PixelTypeType;
+        PixelTypeType pixel = imageIO->GetPixelType();
         const unsigned int dimensions = imageIO->GetNumberOfDimensions();
-
-        switch (type)
+        switch (component)
         {
         case itk::ImageIOBase::UCHAR:
-            readImage<unsigned char>(dimensions, filename, dataCheck);
+            readImage<unsigned char>(pixel, dimensions, filename, dataCheck);
             break;
         case itk::ImageIOBase::CHAR:
-            readImage<char>(dimensions, filename, dataCheck);
+            readImage<char>(pixel, dimensions, filename, dataCheck);
             break;
         case itk::ImageIOBase::USHORT:
-            readImage<unsigned short>(dimensions, filename, dataCheck);
+            readImage<unsigned short>(pixel, dimensions, filename, dataCheck);
             break;
         case itk::ImageIOBase::SHORT:
-            readImage<short>(dimensions, filename, dataCheck);
+            readImage<short>(pixel, dimensions, filename, dataCheck);
             break;
         case itk::ImageIOBase::UINT:
-            readImage<unsigned int>(dimensions, filename, dataCheck);
+            readImage<unsigned int>(pixel, dimensions, filename, dataCheck);
             break;
         case itk::ImageIOBase::INT:
-            readImage<int>(dimensions, filename, dataCheck);
+            readImage<int>(pixel, dimensions, filename, dataCheck);
             break;
         case itk::ImageIOBase::ULONG:
-            readImage<unsigned long>(dimensions, filename, dataCheck);
+            readImage<unsigned long>(pixel, dimensions, filename, dataCheck);
             break;
         case itk::ImageIOBase::LONG:
-            readImage<long>(dimensions, filename, dataCheck);
+            readImage<long>(pixel, dimensions, filename, dataCheck);
             break;
         case itk::ImageIOBase::FLOAT:
-            readImage<float>(dimensions, filename, dataCheck);
+            readImage<float>(pixel, dimensions, filename, dataCheck);
             break;
         case itk::ImageIOBase::DOUBLE:
-            readImage<double>(dimensions, filename, dataCheck);
+            readImage<double>(pixel, dimensions, filename, dataCheck);
             break;
         default:
             setErrorCondition(-4);
-            QString errorMessage = QString("Unsupported pixel type: %1.").arg(imageIO->GetComponentTypeAsString(type).c_str());
+            QString errorMessage = QString("Unsupported pixel component: %1.").arg(imageIO->GetComponentTypeAsString(component).c_str());
             notifyErrorMessage(getHumanLabel(), errorMessage, getErrorCondition());
             break;
         }

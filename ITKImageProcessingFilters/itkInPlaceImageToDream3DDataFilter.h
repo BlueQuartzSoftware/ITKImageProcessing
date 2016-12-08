@@ -1,11 +1,15 @@
 #ifndef _ITKInPlaceImageToDream3DDataFilter_h
 #define _ITKInPlaceImageToDream3DDataFilter_h
 
-#include "itkDream3DImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/itkGetComponentsDimensions.h"
 #include "itkProcessObject.h"
 #include "itkSimpleDataObjectDecorator.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
-
+#include <itkNumericTraits.h>
+#include <itkNumericTraitsRGBAPixel.h>
+#include <itkNumericTraitsRGBPixel.h>
+#include <itkNumericTraitsVectorPixel.h>
 
 namespace itk
 {
@@ -17,9 +21,10 @@ namespace itk
     typedef InPlaceImageToDream3DDataFilter                                  Self;
     typedef ProcessObject                                                    Superclass;
     typedef SmartPointer<Self>                                               Pointer;
-    typedef typename itk::Dream3DImage<PixelType, VDimension>               ImageType;
+    typedef typename itk::Dream3DImage<PixelType, VDimension>                ImageType;
     typedef typename ImageType::Pointer                                      ImagePointer;
-    typedef typename ::DataArray<PixelType>                                  DataArrayPixelType;
+    typedef typename itk::NumericTraits<PixelType>::ValueType                ValueType;
+    typedef typename ::DataArray<ValueType>                                  DataArrayPixelType;
     typedef typename itk::SimpleDataObjectDecorator<DataContainer::Pointer>  DecoratorType;
     typedef DecoratorType::Pointer                                           DecoratorPointer;
     /** Method for creation through the object factory. */

@@ -31,11 +31,68 @@ set(${PLUGIN_NAME}_Link_Libs Qt5::Core H5Support SIMPLib)
 # be directly included in the main test source file. We list them here so that
 # they will show up in IDEs
 set(TEST_NAMES
-  ITKBinaryThreshold
   ITKGaussianBlur
   ITKImageProcessingReader
   ITKImageProcessingWriter
-)
+  ITKImageProcessingImage
+  ITKBinaryThreshold
+  ITKAbsImage
+  ITKAcosImage
+  ITKAtanImage
+  ITKSqrtImage
+  ITKMinMaxCurvatureFlowImage
+  ITKSigmoidImage
+  ITKBinaryThinningImage
+  ITKHMaximaImage
+  ITKCurvatureAnisotropicDiffusionImage
+  ITKCosImage
+  ITKHMinimaImage
+  ITKExpImage
+  ITKLogImage
+  ITKRescaleIntensityImage
+  ITKLabelContourImage
+  ITKTanImage
+  ITKBinaryContourImage
+  ITKShiftScaleImage
+  ITKNotImage
+  ITKBinaryProjectionImage
+  ITKBinaryMinMaxCurvatureFlowImage
+  ITKInvertIntensityImage
+  ITKGrayscaleFillholeImage
+  ITKAsinImage
+  ITKHConvexImage
+  ITKIntensityWindowingImage
+  ITKGradientAnisotropicDiffusionImage
+  ITKExpNegativeImage
+  ITKSinImage
+  ITKValuedRegionalMinimaImage
+  ITKLog10Image
+  ITKSquareImage
+  ITKSobelEdgeDetectionImage
+  ITKValuedRegionalMaximaImage
+  ITKRelabelComponentImage
+  ITKGrayscaleGrindPeakImage
+  ITKBinaryThresholdImage
+  ITKGradientMagnitudeImage
+  ITKGradientMagnitudeRecursiveGaussianImage
+  ITKSignedMaurerDistanceMapImage
+  ITKLaplacianRecursiveGaussianImage
+  ITKOtsuMultipleThresholdsImage
+  ITKDoubleThresholdImage
+  ITKSumProjectionImage
+  ITKApproximateSignedDistanceMapImage
+  ITKCurvatureFlowImage
+  ITKIsoContourDistanceImage
+  ITKRegionalMinimaImage
+  ITKRegionalMaximaImage
+  ITKSignedDanielssonDistanceMapImage
+  ITKStandardDeviationProjectionImage
+  ITKDanielssonDistanceMapImage
+  ITKMeanProjectionImage
+  ITKZeroCrossingImage
+  ITKThresholdMaximumConnectedComponentsImage
+  ITKSmoothingRecursiveGaussianImage
+  )
 
 set( ${PLUGIN_NAME}_TEST_SRCS )
 set(FilterTestIncludes "")

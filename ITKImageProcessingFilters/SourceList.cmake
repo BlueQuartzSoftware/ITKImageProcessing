@@ -17,6 +17,76 @@ set(_PublicFilters
   ITKImageWriter
   ITKGaussianBlur
   ITKBinaryThreshold
+  ITKAbsImage
+  ITKBoxMeanImage
+  ITKAcosImage
+  ITKAtanImage
+  ITKSqrtImage
+  ITKMinMaxCurvatureFlowImage
+  ITKSigmoidImage
+  ITKBinaryThinningImage
+  ITKHMaximaImage
+  ITKCurvatureAnisotropicDiffusionImage
+  ITKCosImage
+  ITKHMinimaImage
+  ITKExpImage
+  ITKBinomialBlurImage
+  ITKLogImage
+  ITKRescaleIntensityImage
+  ITKLabelContourImage
+  ITKSaltAndPepperNoiseImage
+  ITKMinimumProjectionImage
+  ITKTanImage
+  ITKBinaryContourImage
+  ITKMedianProjectionImage
+  ITKShotNoiseImage
+  ITKMaximumProjectionImage
+  ITKSpeckleNoiseImage
+  ITKShiftScaleImage
+  ITKNotImage
+  ITKBinaryProjectionImage
+  ITKBinaryMinMaxCurvatureFlowImage
+  ITKInvertIntensityImage
+  ITKGrayscaleFillholeImage
+  ITKAsinImage
+  ITKHConvexImage
+  ITKIntensityWindowingImage
+  ITKGradientAnisotropicDiffusionImage
+  ITKExpNegativeImage
+  ITKSinImage
+  ITKValuedRegionalMinimaImage
+  ITKLog10Image
+  ITKSquareImage
+  ITKSobelEdgeDetectionImage
+  ITKBilateralImage
+  ITKValuedRegionalMaximaImage
+  ITKRelabelComponentImage
+  ITKGrayscaleGrindPeakImage
+  ITKLaplacianSharpeningImage
+  ITKDiscreteGaussianImage
+  ITKBinaryThresholdImage
+  ITKGradientMagnitudeImage
+  ITKSignedMaurerDistanceMapImage
+  ITKLaplacianRecursiveGaussianImage
+  ITKGradientMagnitudeRecursiveGaussianImage
+  ITKOtsuMultipleThresholdsImage
+  ITKDoubleThresholdImage
+  ITKSumProjectionImage
+  ITKNormalizeImage
+  ITKApproximateSignedDistanceMapImage
+  ITKCurvatureFlowImage
+  ITKIsoContourDistanceImage
+  ITKRegionalMinimaImage
+  ITKRegionalMaximaImage
+  ITKSignedDanielssonDistanceMapImage
+  ITKNormalizeToConstantImage
+  ITKStandardDeviationProjectionImage
+  ITKDanielssonDistanceMapImage
+  ITKMeanProjectionImage
+  ITKZeroCrossingImage
+  ITKBoundedReciprocalImage
+  ITKThresholdMaximumConnectedComponentsImage
+  ITKSmoothingRecursiveGaussianImage
 )
 
 

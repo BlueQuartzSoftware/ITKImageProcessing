@@ -135,7 +135,6 @@ class ITKImageProcessingWriterTest
 
   bool CompareImageGeometries(const ImageGeom::Pointer &inputImageGeometry, const ImageGeom::Pointer &baselineImageGeometry)
   {
-      float tol = 1e-6;
       float inputResolution[3];
       float baselineResolution[3];
       inputImageGeometry->getResolution(inputResolution[0], inputResolution[1], inputResolution[2]);
@@ -150,6 +149,7 @@ class ITKImageProcessingWriterTest
       baselineImageGeometry->getDimensions(baselineDimensions[0], baselineDimensions[1], baselineDimensions[2]);
       for (int i = 0; i < 3; i++)
       {
+          // float tol = 1e-6;
           // SCIFIO does not save the spacing correctly. We disable this test until SCIFIO is fixed.
           //DREAM3D_COMPARE_FLOATS(&inputResolution[i], &baselineResolution[i], tol);
           // SCIFIO does not save the origin correctly. We disable this test until SCIFIO is fixed.
@@ -293,6 +293,7 @@ class ITKImageProcessingWriterTest
 
     DREAM3D_REQUIRED(filter->getErrorCondition(), >= , 0);
     DREAM3D_REQUIRED(filter->getWarningCondition(), >= , 0);
+    this->FilesToRemove << filename;
     return true;
   }
 
@@ -475,16 +476,19 @@ class ITKImageProcessingWriterTest
     listJPGPixelTypes << "uint8_t" ;
     DREAM3D_REGISTER_TEST(TestWriteImage<2>("jpg", listJPGPixelTypes));
 
-    // BMP
-    QStringList listBMPPixelTypes;
-    listBMPPixelTypes << "uint8_t" ;
-    DREAM3D_REGISTER_TEST(TestWriteImage<2>("bmp", listBMPPixelTypes));
+    // BMP -> Load all images as RGB in ITK??
+//    QStringList listBMPPixelTypes;
+//    listBMPPixelTypes << "uint8_t" ;
+//    DREAM3D_REGISTER_TEST(TestWriteImage<2>("bmp", listBMPPixelTypes));
 
     // Test image series
     DREAM3D_REGISTER_TEST(TestWriteImageSeries())
 
 #if REMOVE_TEST_FILES
-    DREAM3D_REGISTER_TEST( RemoveTestFiles() )
+    if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
+    {
+      DREAM3D_REGISTER_TEST( RemoveTestFiles() )
+    }
 #endif
   }
 

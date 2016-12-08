@@ -95,13 +95,14 @@ void ITKBinaryThreshold::readFilterParameters(AbstractFilterParametersReader* re
 template<typename PixelType>
 void ITKBinaryThreshold::CheckLimits(double value, QString name)
 {
-  if (value < static_cast<double>(std::numeric_limits<PixelType>::lowest())
-     || value > static_cast<double>(std::numeric_limits<PixelType>::max()))
+  typedef typename itk::NumericTraits<PixelType>::ValueType ValueType;
+  if (value < static_cast<double>(std::numeric_limits<ValueType>::lowest())
+     || value > static_cast<double>(std::numeric_limits<ValueType>::max()))
   {
     setErrorCondition(-1);
     QString errorMessage = name + QString("must be greater or equal than %1 and lesser or equal than %2");
     notifyErrorMessage(getHumanLabel(), errorMessage.arg(
-        std::numeric_limits<PixelType>::lowest()).arg(std::numeric_limits<PixelType>::max())
+        std::numeric_limits<ValueType>::lowest()).arg(std::numeric_limits<ValueType>::max())
                                                          , getErrorCondition()
                                                          );
     return;
@@ -111,15 +112,15 @@ void ITKBinaryThreshold::CheckLimits(double value, QString name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename PixelType, unsigned int Dimension>
+template<typename InPixelType, typename OutPixelType, unsigned int Dimension>
 void ITKBinaryThreshold::dataCheck()
 {
   setErrorCondition(0);
   // Check consistency of parameters
-  CheckLimits<PixelType>(m_InsideValue, "Inside value");
-  CheckLimits<PixelType>(m_OutsideValue, "Outside value");
-  CheckLimits<PixelType>(m_LowerThresholdValue, "Lower threshold value");
-  CheckLimits<PixelType>(m_UpperThresholdValue, "Upper threshold value");
+  CheckLimits<OutPixelType>(m_InsideValue, "Inside value");
+  CheckLimits<OutPixelType>(m_OutsideValue, "Outside value");
+  CheckLimits<InPixelType>(m_LowerThresholdValue, "Lower threshold value");
+  CheckLimits<InPixelType>(m_UpperThresholdValue, "Upper threshold value");
 
   if (m_LowerThresholdValue > m_UpperThresholdValue)
   {
@@ -127,7 +128,7 @@ void ITKBinaryThreshold::dataCheck()
     notifyErrorMessage(getHumanLabel(),"Lower threshold value must be lesser than upper threshold value", getErrorCondition());
     return;
   }
-  ITKImageBase::dataCheck<PixelType, Dimension>();
+  ITKImageBase::dataCheck<InPixelType, OutPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
@@ -142,20 +143,20 @@ void ITKBinaryThreshold::dataCheckInternal()
 //
 // -----------------------------------------------------------------------------
 
-template<typename PixelType, unsigned int Dimension>
+template<typename InPixelType, typename OutPixelType, unsigned int Dimension>
 void ITKBinaryThreshold::filter()
 {
-    typedef itk::Dream3DImage<PixelType, Dimension> ImageType;
+    typedef itk::Dream3DImage<InPixelType, Dimension> InImageType;
+    typedef itk::Dream3DImage<OutPixelType, Dimension> OutImageType;
     //define threshold filters
-    typedef itk::ImageToImageFilter <ImageType, ImageType> ImageToImageFilterType;
-    typedef itk::BinaryThresholdImageFilter <ImageType, ImageType> BinaryThresholdImageFilterType;
+    typedef itk::BinaryThresholdImageFilter <InImageType, OutImageType> BinaryThresholdImageFilterType;
     //create Itk's binary threshold filter object
     typename BinaryThresholdImageFilterType::Pointer thresholdFilter = BinaryThresholdImageFilterType::New();
-    thresholdFilter->SetLowerThreshold(static_cast<PixelType>(m_LowerThresholdValue));
-    thresholdFilter->SetUpperThreshold(static_cast<PixelType>(m_UpperThresholdValue));
-    thresholdFilter->SetInsideValue(static_cast<PixelType>(m_InsideValue));
-    thresholdFilter->SetOutsideValue(static_cast<PixelType>(m_OutsideValue));
-    this->ITKImageBase::filter<PixelType, Dimension, BinaryThresholdImageFilterType>(thresholdFilter);
+    thresholdFilter->SetLowerThreshold(static_cast<InPixelType>(m_LowerThresholdValue));
+    thresholdFilter->SetUpperThreshold(static_cast<InPixelType>(m_UpperThresholdValue));
+    thresholdFilter->SetInsideValue(static_cast<InPixelType>(m_InsideValue));
+    thresholdFilter->SetOutsideValue(static_cast<InPixelType>(m_OutsideValue));
+    this->ITKImageBase::filter<InPixelType, OutPixelType, Dimension, BinaryThresholdImageFilterType>(thresholdFilter);
 }
 
 // -----------------------------------------------------------------------------
@@ -184,4 +185,10 @@ AbstractFilter::Pointer ITKBinaryThreshold::newFilterInstance(bool copyFilterPar
 // -----------------------------------------------------------------------------
 const QString ITKBinaryThreshold::getHumanLabel()
 { return "[ITK] Binary Threshold (KW)"; }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ITKBinaryThreshold::getSubGroupName()
+{ return "ITKThresholding"; }
 

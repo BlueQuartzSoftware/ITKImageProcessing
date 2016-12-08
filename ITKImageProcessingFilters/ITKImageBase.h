@@ -15,6 +15,9 @@
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkInPlaceImageToDream3DDataFilter.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DFilterInterruption.h"
 
+
+#include <itkNumericTraits.h>
+
 /**
  * @brief The ITKImageBase class. See [Filter documentation](@ref ITKImageBase) for details.
  */
@@ -23,8 +26,8 @@ class ITKImageBase : public AbstractFilter
   Q_OBJECT
 
   public:
-    SIMPL_SHARED_POINTERS(ITKImageBase)
-    SIMPL_TYPE_MACRO_SUPER(ITKImageBase, AbstractFilter)
+    //SIMPL_SHARED_POINTERS(ITKImageBase)
+    //SIMPL_TYPE_MACRO_SUPER(ITKImageBase, AbstractFilter)
 
     virtual ~ITKImageBase();
 
@@ -67,11 +70,6 @@ class ITKImageBase : public AbstractFilter
     virtual const QString getGroupName();
 
     /**
-     * @brief getSubGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getSubGroupName();
-
-    /**
      * @brief getHumanLabel Reimplemented from @see AbstractFilter class
      */
     virtual const QString getHumanLabel() = 0;
@@ -95,6 +93,60 @@ class ITKImageBase : public AbstractFilter
     * @brief preflight Reimplemented from @see AbstractFilter class
     */
     virtual void preflight();
+
+    /**
+     * @brief CastVec3ToITK Input type should be FloatVec3_t or IntVec3_t, Output
+       type should be some kind of ITK "array" (itk::Size, itk::Index,...)
+     */
+    template<typename InputType, typename OutputType, typename ComponentType>
+    OutputType CastVec3ToITK(const InputType &inputVec3, unsigned int dimension) const
+    {
+      OutputType output;
+      if (dimension > 0)
+      {
+        output[0] = static_cast<ComponentType>(inputVec3.x);
+        if (dimension > 1)
+        {
+          output[1] = static_cast<ComponentType>(inputVec3.y);
+          if (dimension > 2)
+          {
+            output[2] = static_cast<ComponentType>(inputVec3.z);
+          }
+        }
+      }
+      return output;
+    }
+    /**
+     * @brief StaticCast Performs a static cast on a value. 'unused' type is to match 'CastStdToVec3' template format to simplify template declaration in conversion script.
+     */
+    template<typename InputType, typename OutputType, typename unused>
+    OutputType StaticCastScalar(const InputType &val) const
+    {
+      return static_cast<OutputType>(val);
+    }
+
+    /**
+     * @brief CastStdToVec3 Input type should be std::vector<float> or std::vector<int>
+       and Output type should be FloatVec3_t or IntVec3_t
+     */
+    template<typename InputType, typename OutputType, typename ComponentType>
+    OutputType CastStdToVec3(const InputType &inputVector) const
+    {
+      OutputType outputVec3;
+      if (inputVector.size() > 0)
+      {
+        outputVec3.x = static_cast<ComponentType>(inputVector[0]);
+        if (inputVector.size() > 1)
+        {
+          outputVec3.y = static_cast<ComponentType>(inputVector[1]);
+          if (inputVector.size() > 2)
+          {
+            outputVec3.z = static_cast<ComponentType>(inputVector[2]);
+          }
+        }
+      }
+      return outputVec3;
+    }
 
   signals:
     /**
@@ -130,17 +182,19 @@ class ITKImageBase : public AbstractFilter
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
-    template<typename PixelType, unsigned int Dimension>
+    template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
     void dataCheck()
     {
+      typedef typename itk::NumericTraits<InputPixelType>::ValueType   InputValueType;
+      typedef typename itk::NumericTraits<InputPixelType>::ValueType   OutputValueType;
       // Check data array
-      typename DataArray<PixelType>::WeakPointer selectedCellArrayPtr;
-      PixelType* selectedCellArray;
+      typename DataArray<InputValueType>::WeakPointer selectedCellArrayPtr;
+      InputValueType* selectedCellArray;
 
       DataArrayPath tempPath;
 
-      QVector<size_t> dims(1, 1);
-      selectedCellArrayPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<PixelType>, AbstractFilter>(this, getSelectedCellArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+      QVector<size_t> dims = ITKDream3DHelper::GetComponentsDimensions<InputPixelType>();
+      selectedCellArrayPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<InputValueType>, AbstractFilter>(this, getSelectedCellArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
       if (nullptr != selectedCellArrayPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
       {
         selectedCellArray = selectedCellArrayPtr.lock()->getPointer(0);
@@ -153,7 +207,7 @@ class ITKImageBase : public AbstractFilter
       if (m_SaveAsNewArray == true)
       {
         tempPath.update(getSelectedCellArrayPath().getDataContainerName(), getSelectedCellArrayPath().getAttributeMatrixName(), getNewCellArrayName());
-        m_NewCellArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<PixelType>, AbstractFilter, PixelType>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+        m_NewCellArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<OutputValueType>, AbstractFilter, OutputValueType>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
         if (nullptr != m_NewCellArrayPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
         {
           m_NewCellArray = m_NewCellArrayPtr.lock()->getVoidPointer(0);
@@ -161,7 +215,7 @@ class ITKImageBase : public AbstractFilter
       }
       else
       {
-        m_NewCellArrayPtr = DataArray<PixelType>::NullPointer();
+        m_NewCellArrayPtr = DataArray<OutputValueType>::NullPointer();
         m_NewCellArray = nullptr;
       }
     }
@@ -169,7 +223,7 @@ class ITKImageBase : public AbstractFilter
     /**
     * @brief Applies the filter
     */
-    template<typename PixelType, unsigned int Dimension, typename FilterType>
+    template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension, typename FilterType>
     void filter(FilterType* filter)
     {
       try
@@ -177,8 +231,9 @@ class ITKImageBase : public AbstractFilter
       DataArrayPath dap = getSelectedCellArrayPath();
       DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(dap.getDataContainerName());
 
-      typedef itk::Dream3DImage<PixelType, Dimension> ImageType;
-      typedef itk::InPlaceDream3DDataToImageFilter<PixelType, Dimension> toITKType;
+//      typedef itk::Dream3DImage<InputPixelType, Dimension> InputImageType;
+      typedef itk::Dream3DImage<OutputPixelType, Dimension> OutputImageType;
+      typedef itk::InPlaceDream3DDataToImageFilter<InputPixelType, Dimension> toITKType;
       // Create a Bridge to wrap an existing DREAM.3D array with an ItkImage container
       typename toITKType::Pointer toITK = toITKType::New();
       toITK->SetInput(dc);
@@ -190,11 +245,11 @@ class ITKImageBase : public AbstractFilter
       interruption->SetFilter(this);
 
       // Set up filter
-      filter->SetInput(filter->GetOutput());
+      filter->SetInput(toITK->GetOutput());
       filter->AddObserver(itk::ProgressEvent(), interruption);
       filter->Update();
 
-      typename ImageType::Pointer image = ImageType::New();
+      typename OutputImageType::Pointer image = OutputImageType::New();
       image = filter->GetOutput();
       image->DisconnectPipeline();
       std::string outputArrayName(getNewCellArrayName().toStdString());
@@ -206,8 +261,10 @@ class ITKImageBase : public AbstractFilter
         // Remove the original input data array
         attrMat->removeAttributeArray(getSelectedCellArrayPath().getDataArrayName());
       }
+      
 
-      typename itk::InPlaceImageToDream3DDataFilter<PixelType, Dimension>::Pointer toDream3DFilter = itk::InPlaceImageToDream3DDataFilter<PixelType, Dimension>::New();
+      typedef itk::InPlaceImageToDream3DDataFilter<OutputPixelType, Dimension> toDream3DType;
+      typename toDream3DType::Pointer toDream3DFilter = toDream3DType::New();
       toDream3DFilter->SetInput(image);
       toDream3DFilter->SetInPlace(true);
       toDream3DFilter->SetAttributeMatrixArrayName(getSelectedCellArrayPath().getAttributeMatrixName().toStdString());
@@ -228,6 +285,65 @@ class ITKImageBase : public AbstractFilter
     notifyStatusMessage(getHumanLabel(), "Complete");
 
 }
+
+
+    /**
+    * @brief CheckIntegerEntry: Input types can only be of certain types (float, double, bool, int).
+      For the other type, we have to use one of this primitive type, and verify that the
+      value corresponds to what is expected.
+      The 3rd parameter, 'bool' is given to match the definition of CheckVectorEntry. This allows
+      to use a dictionary in Python to choose between the 2 functions.
+    */
+    template<typename VarType, typename SubsType>
+    void CheckIntegerEntry(SubsType value, QString name, bool)
+    {
+      typedef typename itk::NumericTraits<VarType>::ValueType ValueType;
+      SubsType lowest = static_cast<SubsType>(std::numeric_limits<ValueType>::lowest());
+      SubsType max = static_cast<SubsType>(std::numeric_limits<ValueType>::max());
+      if (value < lowest
+       || value > max
+       || value != floor(value)
+         )
+      {
+        setErrorCondition(-1);
+        QString errorMessage = name + QString(
+          " must be greater or equal than %1 and lesser or equal than %2 and an integer");
+        notifyErrorMessage(getHumanLabel(), errorMessage.arg(lowest).arg(max)
+                                                             , getErrorCondition()
+                                                             );
+      }
+    }
+
+    /**
+    * @brief CheckVectorEntry: Vector input types can only be of certain types (float or int).
+      For the other type, we have to use one of this primitive type, and verify that the
+      value corresponds to what is expected.
+    */
+    template<typename VarType, typename SubsType>
+    void CheckVectorEntry(SubsType value, QString name, bool integer)
+    {
+      typedef typename itk::NumericTraits<VarType>::ValueType ValueType;
+      float lowest = static_cast<float>(std::numeric_limits<ValueType>::lowest());
+      float max = static_cast<float>(std::numeric_limits<ValueType>::max());
+      if (value.x < lowest || value.x > max
+         || (integer && value.x != floor(value.x))
+         || value.y < lowest || value.y > max
+         || (integer && value.y != floor(value.y))
+         || value.z < lowest || value.z > max
+         || (integer && value.z != floor(value.z))
+         )
+      {
+        setErrorCondition(-1);
+        QString errorMessage = name + QString(
+          " values must be greater or equal than %1 and lesser or equal than %2");
+        if(integer)
+        {
+          errorMessage += QString(" and integers");
+        }
+        notifyErrorMessage(getHumanLabel(), errorMessage.arg(lowest).arg(max),
+                           getErrorCondition() );
+      }
+    }
 
     /**
     * @brief Applies the filter

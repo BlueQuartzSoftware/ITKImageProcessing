@@ -45,7 +45,10 @@
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
 #include "ITKImageProcessingPlugin.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
-
+#undef DREAM3D_USE_RGBA
+#define DREAM3D_USE_RGBA 1
+#undef DREAM3D_USE_Vector
+#define DREAM3D_USE_Vector 1
 
 // ITK includes
 #include <itkImageFileWriter.h>
@@ -80,7 +83,7 @@ ITKImageWriter::~ITKImageWriter()
 void ITKImageWriter::setupFilterParameters()
 {
 	FilterParameterVector parameters;
-  QString supportedExtensions = ITKImageProcessingPlugin::getListSupportedFileExtensions();
+  QString supportedExtensions = ITKImageProcessingPlugin::getListSupportedWriteExtensions();
 	parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Output File", FileName, FilterParameter::Parameter, ITKImageWriter, supportedExtensions));
 
 	parameters.push_back(SeparatorFilterParameter::New("Image Data", FilterParameter::RequiredArray));
@@ -222,7 +225,7 @@ void ITKImageWriter::writeAsOneFile(typename itk::Dream3DImage<TPixel, Dimension
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename TPixel, unsigned int Dimensions>
+template<typename TPixel, typename UnusedTPixel, unsigned int Dimensions>
 void ITKImageWriter::writeImage()
 {
   typedef itk::Dream3DImage<TPixel, Dimensions>   ImageType;
@@ -303,7 +306,7 @@ void ITKImageWriter::execute()
     notifyErrorMessage(getHumanLabel(), errorMessage.arg(path.getDataArrayName()), getErrorCondition());
     return;
   }
-  Dream3DArraySwitchMacro(writeImage, getImageArrayPath(), -4);
+  Dream3DArraySwitchMacro(this->writeImage, getImageArrayPath(), -4);
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
