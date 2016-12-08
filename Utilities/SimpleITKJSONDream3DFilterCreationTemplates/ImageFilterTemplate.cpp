@@ -56,7 +56,7 @@ ${SetupFilterParameters}
   {
     DataArraySelectionFilterParameter::RequirementType req =
       DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize,
-      SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
+      AttributeMatrix::Type::Cell, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Attribute Array to filter", SelectedCellArrayPath, FilterParameter::RequiredArray, ${FilterName}, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));

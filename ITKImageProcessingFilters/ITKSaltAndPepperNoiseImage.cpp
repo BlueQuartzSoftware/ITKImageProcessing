@@ -21,7 +21,6 @@
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
 #undef DREAM3D_USE_RGBA
 #define DREAM3D_USE_RGBA 1
-
 // Include the MOC generated file for this class
 #include "moc_ITKSaltAndPepperNoiseImage.cpp"
 
@@ -62,7 +61,7 @@ void ITKSaltAndPepperNoiseImage::setupFilterParameters()
   {
     DataArraySelectionFilterParameter::RequirementType req =
       DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize,
-      SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
+      AttributeMatrix::Type::Cell, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Attribute Array to filter", SelectedCellArrayPath, FilterParameter::RequiredArray, ITKSaltAndPepperNoiseImage, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
