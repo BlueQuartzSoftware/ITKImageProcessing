@@ -7,8 +7,10 @@
 #ifndef _ITKStandardDeviationProjectionImage_h_
 #define _ITKStandardDeviationProjectionImage_h_
 
+#ifdef __clang__
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
+#endif
 
 #include "ITKImageBase.h"
 
@@ -95,6 +97,8 @@ class ITKStandardDeviationProjectionImage : public ITKImageBase
     void operator=(const ITKStandardDeviationProjectionImage&); // Operator '=' Not Implemented
 };
 
+#ifdef __clang__
 #pragma clang diagnostic pop
+#endif
 
 #endif /* _ITKStandardDeviationProjectionImage_H_ */

@@ -7,8 +7,10 @@
 #ifndef _ITKRegionalMaximaImage_h_
 #define _ITKRegionalMaximaImage_h_
 
+#ifdef __clang__
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
+#endif
 
 #include "ITKImageBase.h"
 
@@ -105,6 +107,8 @@ class ITKRegionalMaximaImage : public ITKImageBase
     void operator=(const ITKRegionalMaximaImage&); // Operator '=' Not Implemented
 };
 
+#ifdef __clang__
 #pragma clang diagnostic pop
+#endif
 
 #endif /* _ITKRegionalMaximaImage_H_ */

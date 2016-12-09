@@ -7,8 +7,10 @@
 #ifndef _ITKShotNoiseImage_h_
 #define _ITKShotNoiseImage_h_
 
+#ifdef __clang__
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
+#endif
 
 #include "ITKImageBase.h"
 
@@ -98,6 +100,8 @@ class ITKShotNoiseImage : public ITKImageBase
     void operator=(const ITKShotNoiseImage&); // Operator '=' Not Implemented
 };
 
+#ifdef __clang__
 #pragma clang diagnostic pop
+#endif
 
 #endif /* _ITKShotNoiseImage_H_ */

@@ -7,8 +7,10 @@
 #ifndef _ITKSignedMaurerDistanceMapImage_h_
 #define _ITKSignedMaurerDistanceMapImage_h_
 
+#ifdef __clang__
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
+#endif
 
 #include "ITKImageBase.h"
 
@@ -101,6 +103,8 @@ class ITKSignedMaurerDistanceMapImage : public ITKImageBase
     void operator=(const ITKSignedMaurerDistanceMapImage&); // Operator '=' Not Implemented
 };
 
+#ifdef __clang__
 #pragma clang diagnostic pop
+#endif
 
 #endif /* _ITKSignedMaurerDistanceMapImage_H_ */

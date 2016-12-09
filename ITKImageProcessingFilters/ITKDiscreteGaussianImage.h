@@ -7,8 +7,10 @@
 #ifndef _ITKDiscreteGaussianImage_h_
 #define _ITKDiscreteGaussianImage_h_
 
+#ifdef __clang__
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
+#endif
 
 #include "ITKImageBase.h"
 
@@ -105,6 +107,8 @@ class ITKDiscreteGaussianImage : public ITKImageBase
     void operator=(const ITKDiscreteGaussianImage&); // Operator '=' Not Implemented
 };
 
+#ifdef __clang__
 #pragma clang diagnostic pop
+#endif
 
 #endif /* _ITKDiscreteGaussianImage_H_ */

@@ -7,8 +7,10 @@
 #ifndef _ITKBinaryProjectionImage_h_
 #define _ITKBinaryProjectionImage_h_
 
+#ifdef __clang__
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
+#endif
 
 #include "ITKImageBase.h"
 
@@ -101,6 +103,8 @@ class ITKBinaryProjectionImage : public ITKImageBase
     void operator=(const ITKBinaryProjectionImage&); // Operator '=' Not Implemented
 };
 
+#ifdef __clang__
 #pragma clang diagnostic pop
+#endif
 
 #endif /* _ITKBinaryProjectionImage_H_ */

@@ -7,8 +7,10 @@
 #ifndef _ITKHMinimaImage_h_
 #define _ITKHMinimaImage_h_
 
+#ifdef __clang__
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
+#endif
 
 #include "ITKImageBase.h"
 
@@ -99,6 +101,8 @@ class ITKHMinimaImage : public ITKImageBase
     void operator=(const ITKHMinimaImage&); // Operator '=' Not Implemented
 };
 
+#ifdef __clang__
 #pragma clang diagnostic pop
+#endif
 
 #endif /* _ITKHMinimaImage_H_ */

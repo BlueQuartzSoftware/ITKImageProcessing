@@ -7,8 +7,10 @@
 #ifndef _ITKIsoContourDistanceImage_h_
 #define _ITKIsoContourDistanceImage_h_
 
+#ifdef __clang__
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
+#endif
 
 #include "ITKImageBase.h"
 
@@ -98,6 +100,8 @@ class ITKIsoContourDistanceImage : public ITKImageBase
     void operator=(const ITKIsoContourDistanceImage&); // Operator '=' Not Implemented
 };
 
+#ifdef __clang__
 #pragma clang diagnostic pop
+#endif
 
 #endif /* _ITKIsoContourDistanceImage_H_ */

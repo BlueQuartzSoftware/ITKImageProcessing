@@ -7,8 +7,10 @@
 #ifndef _ITKLabelContourImage_h_
 #define _ITKLabelContourImage_h_
 
+#ifdef __clang__
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
+#endif
 
 #include "ITKImageBase.h"
 
@@ -99,6 +101,8 @@ class ITKLabelContourImage : public ITKImageBase
     void operator=(const ITKLabelContourImage&); // Operator '=' Not Implemented
 };
 
+#ifdef __clang__
 #pragma clang diagnostic pop
+#endif
 
 #endif /* _ITKLabelContourImage_H_ */

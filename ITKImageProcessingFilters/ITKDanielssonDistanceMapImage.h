@@ -7,8 +7,10 @@
 #ifndef _ITKDanielssonDistanceMapImage_h_
 #define _ITKDanielssonDistanceMapImage_h_
 
+#ifdef __clang__
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
+#endif
 
 #include "ITKImageBase.h"
 
@@ -101,6 +103,8 @@ class ITKDanielssonDistanceMapImage : public ITKImageBase
     void operator=(const ITKDanielssonDistanceMapImage&); // Operator '=' Not Implemented
 };
 
+#ifdef __clang__
 #pragma clang diagnostic pop
+#endif
 
 #endif /* _ITKDanielssonDistanceMapImage_H_ */

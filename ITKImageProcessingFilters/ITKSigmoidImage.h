@@ -7,8 +7,10 @@
 #ifndef _ITKSigmoidImage_h_
 #define _ITKSigmoidImage_h_
 
+#ifdef __clang__
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
+#endif
 
 #include "ITKImageBase.h"
 
@@ -104,6 +106,8 @@ class ITKSigmoidImage : public ITKImageBase
     void operator=(const ITKSigmoidImage&); // Operator '=' Not Implemented
 };
 
+#ifdef __clang__
 #pragma clang diagnostic pop
+#endif
 
 #endif /* _ITKSigmoidImage_H_ */

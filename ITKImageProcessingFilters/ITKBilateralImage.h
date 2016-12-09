@@ -7,8 +7,10 @@
 #ifndef _ITKBilateralImage_h_
 #define _ITKBilateralImage_h_
 
+#ifdef __clang__
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
+#endif
 
 #include "ITKImageBase.h"
 
@@ -101,6 +103,8 @@ class ITKBilateralImage : public ITKImageBase
     void operator=(const ITKBilateralImage&); // Operator '=' Not Implemented
 };
 
+#ifdef __clang__
 #pragma clang diagnostic pop
+#endif
 
 #endif /* _ITKBilateralImage_H_ */

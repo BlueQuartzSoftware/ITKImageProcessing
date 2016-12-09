@@ -5,8 +5,10 @@
 #ifndef _ITKGaussianBlur_h_
 #define _ITKGaussianBlur_h_
 
+#ifdef __clang__
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
+#endif
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
@@ -99,6 +101,8 @@ class ITKGaussianBlur : public ITKImageBase
     void operator=(const ITKGaussianBlur&); // Operator '=' Not Implemented
 };
 
+#ifdef __clang__
 #pragma clang diagnostic pop
+#endif
 
 #endif /* _ITKGaussianBlur_H_ */
