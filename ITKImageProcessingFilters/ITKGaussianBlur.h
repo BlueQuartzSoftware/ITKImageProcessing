@@ -5,6 +5,9 @@
 #ifndef _ITKGaussianBlur_h_
 #define _ITKGaussianBlur_h_
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winconsistent-missing-override"
+
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
@@ -95,5 +98,7 @@ class ITKGaussianBlur : public ITKImageBase
     ITKGaussianBlur(const ITKGaussianBlur&); // Copy Constructor Not Implemented
     void operator=(const ITKGaussianBlur&); // Operator '=' Not Implemented
 };
+
+#pragma clang diagnostic pop
 
 #endif /* _ITKGaussianBlur_H_ */
