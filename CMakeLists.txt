@@ -32,6 +32,7 @@ include(${SIMPLProj_SOURCE_DIR}/Source/SIMPLib/SIMPLibMacros.cmake)
 if(DREAM3D_USE_ITK)
   set(DREAM3D_ADDITIONAL_ITK_MODULES
       ITKIOImageBase
+      ITKImageNoise
       SCIFIO
       ITKIOBMP
       ITKIOJPEG
