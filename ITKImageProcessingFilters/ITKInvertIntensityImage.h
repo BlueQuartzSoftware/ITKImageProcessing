@@ -7,8 +7,10 @@
 #ifndef _ITKInvertIntensityImage_h_
 #define _ITKInvertIntensityImage_h_
 
+#ifdef __clang__
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
+#endif
 
 #include "ITKImageBase.h"
 
@@ -95,6 +97,8 @@ class ITKInvertIntensityImage : public ITKImageBase
     void operator=(const ITKInvertIntensityImage&); // Operator '=' Not Implemented
 };
 
+#ifdef __clang__
 #pragma clang diagnostic pop
+#endif
 
 #endif /* _ITKInvertIntensityImage_H_ */

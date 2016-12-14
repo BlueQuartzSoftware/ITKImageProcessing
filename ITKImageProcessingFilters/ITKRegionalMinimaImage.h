@@ -7,8 +7,10 @@
 #ifndef _ITKRegionalMinimaImage_h_
 #define _ITKRegionalMinimaImage_h_
 
+#ifdef __clang__
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
+#endif
 
 #include "ITKImageBase.h"
 
@@ -105,6 +107,8 @@ class ITKRegionalMinimaImage : public ITKImageBase
     void operator=(const ITKRegionalMinimaImage&); // Operator '=' Not Implemented
 };
 
+#ifdef __clang__
 #pragma clang diagnostic pop
+#endif
 
 #endif /* _ITKRegionalMinimaImage_H_ */

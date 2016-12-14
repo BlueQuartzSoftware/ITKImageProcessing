@@ -7,8 +7,10 @@
 #ifndef _ITKGrayscaleFillholeImage_h_
 #define _ITKGrayscaleFillholeImage_h_
 
+#ifdef __clang__
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
+#endif
 
 #include "ITKImageBase.h"
 
@@ -95,6 +97,8 @@ class ITKGrayscaleFillholeImage : public ITKImageBase
     void operator=(const ITKGrayscaleFillholeImage&); // Operator '=' Not Implemented
 };
 
+#ifdef __clang__
 #pragma clang diagnostic pop
+#endif
 
 #endif /* _ITKGrayscaleFillholeImage_H_ */

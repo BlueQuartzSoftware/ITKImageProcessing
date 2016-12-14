@@ -7,8 +7,10 @@
 #ifndef _ITKSumProjectionImage_h_
 #define _ITKSumProjectionImage_h_
 
+#ifdef __clang__
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
+#endif
 
 #include "ITKImageBase.h"
 
@@ -95,6 +97,8 @@ class ITKSumProjectionImage : public ITKImageBase
     void operator=(const ITKSumProjectionImage&); // Operator '=' Not Implemented
 };
 
+#ifdef __clang__
 #pragma clang diagnostic pop
+#endif
 
 #endif /* _ITKSumProjectionImage_H_ */

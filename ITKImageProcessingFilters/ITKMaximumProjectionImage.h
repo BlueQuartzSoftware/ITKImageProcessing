@@ -7,8 +7,10 @@
 #ifndef _ITKMaximumProjectionImage_h_
 #define _ITKMaximumProjectionImage_h_
 
+#ifdef __clang__
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
+#endif
 
 #include "ITKImageBase.h"
 
@@ -95,6 +97,8 @@ class ITKMaximumProjectionImage : public ITKImageBase
     void operator=(const ITKMaximumProjectionImage&); // Operator '=' Not Implemented
 };
 
+#ifdef __clang__
 #pragma clang diagnostic pop
+#endif
 
 #endif /* _ITKMaximumProjectionImage_H_ */

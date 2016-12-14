@@ -7,8 +7,10 @@
 #ifndef _ITKMinMaxCurvatureFlowImage_h_
 #define _ITKMinMaxCurvatureFlowImage_h_
 
+#ifdef __clang__
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
+#endif
 
 #include "ITKImageBase.h"
 
@@ -102,6 +104,8 @@ class ITKMinMaxCurvatureFlowImage : public ITKImageBase
     void operator=(const ITKMinMaxCurvatureFlowImage&); // Operator '=' Not Implemented
 };
 
+#ifdef __clang__
 #pragma clang diagnostic pop
+#endif
 
 #endif /* _ITKMinMaxCurvatureFlowImage_H_ */

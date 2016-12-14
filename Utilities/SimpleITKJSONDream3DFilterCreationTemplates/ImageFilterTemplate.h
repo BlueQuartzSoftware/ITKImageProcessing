@@ -7,8 +7,10 @@
 #ifndef _${FilterName}_h_
 #define _${FilterName}_h_
 
+#ifdef __clang__
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
+#endif
 
 #include "ITKImageBase.h"
 
@@ -90,6 +92,8 @@ ${Parameters}
     void operator=(const ${FilterName}&); // Operator '=' Not Implemented
 };
 
+#ifdef __clang__
 #pragma clang diagnostic pop
+#endif
 
 #endif /* _${FilterName}_H_ */

@@ -7,8 +7,10 @@
 #ifndef _ITKLaplacianSharpeningImage_h_
 #define _ITKLaplacianSharpeningImage_h_
 
+#ifdef __clang__
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
+#endif
 
 #include "ITKImageBase.h"
 
@@ -95,6 +97,8 @@ class ITKLaplacianSharpeningImage : public ITKImageBase
     void operator=(const ITKLaplacianSharpeningImage&); // Operator '=' Not Implemented
 };
 
+#ifdef __clang__
 #pragma clang diagnostic pop
+#endif
 
 #endif /* _ITKLaplacianSharpeningImage_H_ */

@@ -7,8 +7,10 @@
 #ifndef _ITKCurvatureFlowImage_h_
 #define _ITKCurvatureFlowImage_h_
 
+#ifdef __clang__
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
+#endif
 
 #include "ITKImageBase.h"
 
@@ -98,6 +100,8 @@ class ITKCurvatureFlowImage : public ITKImageBase
     void operator=(const ITKCurvatureFlowImage&); // Operator '=' Not Implemented
 };
 
+#ifdef __clang__
 #pragma clang diagnostic pop
+#endif
 
 #endif /* _ITKCurvatureFlowImage_H_ */

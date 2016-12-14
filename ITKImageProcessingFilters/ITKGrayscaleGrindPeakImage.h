@@ -7,8 +7,10 @@
 #ifndef _ITKGrayscaleGrindPeakImage_h_
 #define _ITKGrayscaleGrindPeakImage_h_
 
+#ifdef __clang__
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
+#endif
 
 #include "ITKImageBase.h"
 
@@ -95,6 +97,8 @@ class ITKGrayscaleGrindPeakImage : public ITKImageBase
     void operator=(const ITKGrayscaleGrindPeakImage&); // Operator '=' Not Implemented
 };
 
+#ifdef __clang__
 #pragma clang diagnostic pop
+#endif
 
 #endif /* _ITKGrayscaleGrindPeakImage_H_ */

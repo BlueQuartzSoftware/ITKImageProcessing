@@ -7,8 +7,10 @@
 #ifndef _ITKMedianProjectionImage_h_
 #define _ITKMedianProjectionImage_h_
 
+#ifdef __clang__
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
+#endif
 
 #include "ITKImageBase.h"
 
@@ -95,6 +97,8 @@ class ITKMedianProjectionImage : public ITKImageBase
     void operator=(const ITKMedianProjectionImage&); // Operator '=' Not Implemented
 };
 
+#ifdef __clang__
 #pragma clang diagnostic pop
+#endif
 
 #endif /* _ITKMedianProjectionImage_H_ */

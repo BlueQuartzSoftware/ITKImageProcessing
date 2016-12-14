@@ -7,8 +7,10 @@
 #ifndef _ITKSinImage_h_
 #define _ITKSinImage_h_
 
+#ifdef __clang__
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
+#endif
 
 #include "ITKImageBase.h"
 
@@ -91,6 +93,8 @@ class ITKSinImage : public ITKImageBase
     void operator=(const ITKSinImage&); // Operator '=' Not Implemented
 };
 
+#ifdef __clang__
 #pragma clang diagnostic pop
+#endif
 
 #endif /* _ITKSinImage_H_ */

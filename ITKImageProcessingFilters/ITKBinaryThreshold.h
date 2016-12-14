@@ -5,8 +5,10 @@
 #ifndef _ITKBinaryThreshold_h_
 #define _ITKBinaryThreshold_h_
 
+#ifdef __clang__
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
+#endif
 
 #include "ITKImageBase.h"
 
@@ -101,6 +103,8 @@ class ITKBinaryThreshold : public ITKImageBase
     void operator=(const ITKBinaryThreshold&); // Operator '=' Not Implemented
 };
 
+#ifdef __clang__
 #pragma clang diagnostic pop
+#endif
 
 #endif /* _ITKBinaryThreshold_H_ */

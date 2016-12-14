@@ -7,8 +7,10 @@
 #ifndef _ITKIntensityWindowingImage_h_
 #define _ITKIntensityWindowingImage_h_
 
+#ifdef __clang__
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
+#endif
 
 #include "ITKImageBase.h"
 
@@ -104,6 +106,8 @@ class ITKIntensityWindowingImage : public ITKImageBase
     void operator=(const ITKIntensityWindowingImage&); // Operator '=' Not Implemented
 };
 
+#ifdef __clang__
 #pragma clang diagnostic pop
+#endif
 
 #endif /* _ITKIntensityWindowingImage_H_ */

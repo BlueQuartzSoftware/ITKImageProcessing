@@ -7,8 +7,10 @@
 #ifndef _ITKBinomialBlurImage_h_
 #define _ITKBinomialBlurImage_h_
 
+#ifdef __clang__
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
+#endif
 
 #include "ITKImageBase.h"
 
@@ -95,6 +97,8 @@ class ITKBinomialBlurImage : public ITKImageBase
     void operator=(const ITKBinomialBlurImage&); // Operator '=' Not Implemented
 };
 
+#ifdef __clang__
 #pragma clang diagnostic pop
+#endif
 
 #endif /* _ITKBinomialBlurImage_H_ */

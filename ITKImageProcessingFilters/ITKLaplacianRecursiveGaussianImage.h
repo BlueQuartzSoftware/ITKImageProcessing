@@ -7,8 +7,10 @@
 #ifndef _ITKLaplacianRecursiveGaussianImage_h_
 #define _ITKLaplacianRecursiveGaussianImage_h_
 
+#ifdef __clang__
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
+#endif
 
 #include "ITKImageBase.h"
 
@@ -99,6 +101,8 @@ class ITKLaplacianRecursiveGaussianImage : public ITKImageBase
     void operator=(const ITKLaplacianRecursiveGaussianImage&); // Operator '=' Not Implemented
 };
 
+#ifdef __clang__
 #pragma clang diagnostic pop
+#endif
 
 #endif /* _ITKLaplacianRecursiveGaussianImage_H_ */
