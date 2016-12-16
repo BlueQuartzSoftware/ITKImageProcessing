@@ -111,9 +111,9 @@
 // 3 possible pixel type: C-type, InputImageType, and TImageType
 #define DefineInputImageType0(typeIN, dimension) // Do nothing, no type to defined
 #define DefineInputImageType1(typeIN, dimension) \
-  typedef typename itk::Dream3DImage<typeIN, dimension> InputImageType;
+  typedef itk::Dream3DImage<typeIN, dimension> InputImageType;
 #define DefineInputImageType2(typeIN, dimension) \
-  typedef typename itk::Dream3DImage<typeIN, dimension> TImageType;
+  typedef itk::Dream3DImage<typeIN, dimension> TImageType;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 //                                    Handles vector images                                  //
