@@ -139,12 +139,12 @@ AbstractFilter::Pointer ITKBoundedReciprocalImage::newFilterInstance(bool copyFi
 //
 // -----------------------------------------------------------------------------
 const QString ITKBoundedReciprocalImage::getHumanLabel()
-{ return "[ITK] Bounded Reciprocal Image Filter (KW)"; }
+{ return "ITK::Bounded Reciprocal Image Filter (KW)"; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ITKBoundedReciprocalImage::getSubGroupName()
-{ return "ITKImageIntensity"; }
+{ return "ITK ImageIntensity"; }
 
 

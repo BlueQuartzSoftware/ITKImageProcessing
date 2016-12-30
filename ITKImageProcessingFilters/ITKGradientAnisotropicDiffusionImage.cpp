@@ -157,12 +157,12 @@ AbstractFilter::Pointer ITKGradientAnisotropicDiffusionImage::newFilterInstance(
 //
 // -----------------------------------------------------------------------------
 const QString ITKGradientAnisotropicDiffusionImage::getHumanLabel()
-{ return "[ITK] Gradient Anisotropic Diffusion Image Filter (KW)"; }
+{ return "ITK::Gradient Anisotropic Diffusion Image Filter (KW)"; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ITKGradientAnisotropicDiffusionImage::getSubGroupName()
-{ return "ITKAnisotropicSmoothing"; }
+{ return "ITK AnisotropicSmoothing"; }
 
 

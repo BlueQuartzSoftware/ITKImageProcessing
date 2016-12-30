@@ -155,12 +155,12 @@ AbstractFilter::Pointer ITKRegionalMinimaImage::newFilterInstance(bool copyFilte
 //
 // -----------------------------------------------------------------------------
 const QString ITKRegionalMinimaImage::getHumanLabel()
-{ return "[ITK] Regional Minima Image Filter (KW)"; }
+{ return "ITK::Regional Minima Image Filter (KW)"; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ITKRegionalMinimaImage::getSubGroupName()
-{ return "ITKReview"; }
+{ return "ITK Review"; }
 
 

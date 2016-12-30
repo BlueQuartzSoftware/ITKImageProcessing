@@ -149,12 +149,12 @@ AbstractFilter::Pointer ITKZeroCrossingImage::newFilterInstance(bool copyFilterP
 //
 // -----------------------------------------------------------------------------
 const QString ITKZeroCrossingImage::getHumanLabel()
-{ return "[ITK] Zero Crossing Image Filter (KW)"; }
+{ return "ITK::Zero Crossing Image Filter (KW)"; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ITKZeroCrossingImage::getSubGroupName()
-{ return "ITKImageFeature"; }
+{ return "ITK ImageFeature"; }
 
 

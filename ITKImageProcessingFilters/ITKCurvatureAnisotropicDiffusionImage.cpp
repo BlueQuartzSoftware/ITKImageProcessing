@@ -157,12 +157,12 @@ AbstractFilter::Pointer ITKCurvatureAnisotropicDiffusionImage::newFilterInstance
 //
 // -----------------------------------------------------------------------------
 const QString ITKCurvatureAnisotropicDiffusionImage::getHumanLabel()
-{ return "[ITK] Curvature Anisotropic Diffusion Image Filter (KW)"; }
+{ return "ITK::Curvature Anisotropic Diffusion Image Filter (KW)"; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ITKCurvatureAnisotropicDiffusionImage::getSubGroupName()
-{ return "ITKAnisotropicSmoothing"; }
+{ return "ITK AnisotropicSmoothing"; }
 
 

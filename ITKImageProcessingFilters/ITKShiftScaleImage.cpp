@@ -147,12 +147,12 @@ AbstractFilter::Pointer ITKShiftScaleImage::newFilterInstance(bool copyFilterPar
 //
 // -----------------------------------------------------------------------------
 const QString ITKShiftScaleImage::getHumanLabel()
-{ return "[ITK] Shift Scale Image Filter (KW)"; }
+{ return "ITK::Shift Scale Image Filter (KW)"; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ITKShiftScaleImage::getSubGroupName()
-{ return "ITKImageIntensity"; }
+{ return "ITK ImageIntensity"; }
 
 

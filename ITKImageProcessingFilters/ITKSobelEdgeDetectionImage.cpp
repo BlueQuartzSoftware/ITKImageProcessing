@@ -139,12 +139,12 @@ AbstractFilter::Pointer ITKSobelEdgeDetectionImage::newFilterInstance(bool copyF
 //
 // -----------------------------------------------------------------------------
 const QString ITKSobelEdgeDetectionImage::getHumanLabel()
-{ return "[ITK] Sobel Edge Detection Image Filter (KW)"; }
+{ return "ITK::Sobel Edge Detection Image Filter (KW)"; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ITKSobelEdgeDetectionImage::getSubGroupName()
-{ return "ITKImageFeature"; }
+{ return "ITK ImageFeature"; }
 
 

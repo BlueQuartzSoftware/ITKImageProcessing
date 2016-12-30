@@ -155,12 +155,12 @@ AbstractFilter::Pointer ITKIntensityWindowingImage::newFilterInstance(bool copyF
 //
 // -----------------------------------------------------------------------------
 const QString ITKIntensityWindowingImage::getHumanLabel()
-{ return "[ITK] Intensity Windowing Image Filter (KW)"; }
+{ return "ITK::Intensity Windowing Image Filter (KW)"; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ITKIntensityWindowingImage::getSubGroupName()
-{ return "ITKImageIntensity"; }
+{ return "ITK ImageIntensity"; }
 
 

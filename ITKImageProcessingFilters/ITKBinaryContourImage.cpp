@@ -151,12 +151,12 @@ AbstractFilter::Pointer ITKBinaryContourImage::newFilterInstance(bool copyFilter
 //
 // -----------------------------------------------------------------------------
 const QString ITKBinaryContourImage::getHumanLabel()
-{ return "[ITK] Binary Contour Image Filter (KW)"; }
+{ return "ITK::Binary Contour Image Filter (KW)"; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ITKBinaryContourImage::getSubGroupName()
-{ return "ITKImageLabel"; }
+{ return "ITK ImageLabel"; }
 
 

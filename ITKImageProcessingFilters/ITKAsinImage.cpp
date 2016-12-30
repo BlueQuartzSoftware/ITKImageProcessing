@@ -139,12 +139,12 @@ AbstractFilter::Pointer ITKAsinImage::newFilterInstance(bool copyFilterParameter
 //
 // -----------------------------------------------------------------------------
 const QString ITKAsinImage::getHumanLabel()
-{ return "[ITK] Asin Image Filter (KW)"; }
+{ return "ITK::Asin Image Filter (KW)"; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ITKAsinImage::getSubGroupName()
-{ return "ITKImageIntensity"; }
+{ return "ITK ImageIntensity"; }
 
 

@@ -143,12 +143,12 @@ AbstractFilter::Pointer ITKValuedRegionalMaximaImage::newFilterInstance(bool cop
 //
 // -----------------------------------------------------------------------------
 const QString ITKValuedRegionalMaximaImage::getHumanLabel()
-{ return "[ITK] Valued Regional Maxima Image Filter (KW)"; }
+{ return "ITK::Valued Regional Maxima Image Filter (KW)"; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ITKValuedRegionalMaximaImage::getSubGroupName()
-{ return "ITKReview"; }
+{ return "ITK Review"; }
 
 

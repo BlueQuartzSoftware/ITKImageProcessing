@@ -152,12 +152,12 @@ AbstractFilter::Pointer ITKBilateralImage::newFilterInstance(bool copyFilterPara
 //
 // -----------------------------------------------------------------------------
 const QString ITKBilateralImage::getHumanLabel()
-{ return "[ITK] Bilateral Image Filter (KW)"; }
+{ return "ITK::Bilateral Image Filter (KW)"; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ITKBilateralImage::getSubGroupName()
-{ return "ITKImageFeature"; }
+{ return "ITK ImageFeature"; }
 
 

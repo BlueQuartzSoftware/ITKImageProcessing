@@ -144,12 +144,12 @@ AbstractFilter::Pointer ITKSumProjectionImage::newFilterInstance(bool copyFilter
 //
 // -----------------------------------------------------------------------------
 const QString ITKSumProjectionImage::getHumanLabel()
-{ return "[ITK] Sum Projection Image Filter (KW)"; }
+{ return "ITK::Sum Projection Image Filter (KW)"; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ITKSumProjectionImage::getSubGroupName()
-{ return "ITKImageStatistics"; }
+{ return "ITK ImageStatistics"; }
 
 

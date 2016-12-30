@@ -143,12 +143,12 @@ AbstractFilter::Pointer ITKGradientMagnitudeImage::newFilterInstance(bool copyFi
 //
 // -----------------------------------------------------------------------------
 const QString ITKGradientMagnitudeImage::getHumanLabel()
-{ return "[ITK] Gradient Magnitude Image Filter (KW)"; }
+{ return "ITK::Gradient Magnitude Image Filter (KW)"; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ITKGradientMagnitudeImage::getSubGroupName()
-{ return "ITKImageGradient"; }
+{ return "ITK ImageGradient"; }
 
 

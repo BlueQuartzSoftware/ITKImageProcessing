@@ -147,12 +147,12 @@ AbstractFilter::Pointer ITKHMinimaImage::newFilterInstance(bool copyFilterParame
 //
 // -----------------------------------------------------------------------------
 const QString ITKHMinimaImage::getHumanLabel()
-{ return "[ITK] H Minima Image Filter (KW)"; }
+{ return "ITK::H Minima Image Filter (KW)"; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ITKHMinimaImage::getSubGroupName()
-{ return "ITKMathematicalMorphology"; }
+{ return "ITK MathematicalMorphology"; }
 
 

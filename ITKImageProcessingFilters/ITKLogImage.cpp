@@ -139,12 +139,12 @@ AbstractFilter::Pointer ITKLogImage::newFilterInstance(bool copyFilterParameters
 //
 // -----------------------------------------------------------------------------
 const QString ITKLogImage::getHumanLabel()
-{ return "[ITK] Log Image Filter (KW)"; }
+{ return "ITK::Log Image Filter (KW)"; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ITKLogImage::getSubGroupName()
-{ return "ITKImageIntensity"; }
+{ return "ITK ImageIntensity"; }
 
 

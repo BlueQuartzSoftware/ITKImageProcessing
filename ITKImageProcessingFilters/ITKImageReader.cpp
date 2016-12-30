@@ -426,5 +426,5 @@ const QString ITKImageReader::getSubGroupName()
 //
 // -----------------------------------------------------------------------------
 const QString ITKImageReader::getHumanLabel()
-{ return "[ITK] Image Reader (KW)"; }
+{ return "ITK::Image Reader (KW)"; }
 

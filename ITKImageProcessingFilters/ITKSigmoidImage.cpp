@@ -155,12 +155,12 @@ AbstractFilter::Pointer ITKSigmoidImage::newFilterInstance(bool copyFilterParame
 //
 // -----------------------------------------------------------------------------
 const QString ITKSigmoidImage::getHumanLabel()
-{ return "[ITK] Sigmoid Image Filter (KW)"; }
+{ return "ITK::Sigmoid Image Filter (KW)"; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ITKSigmoidImage::getSubGroupName()
-{ return "ITKImageIntensity"; }
+{ return "ITK ImageIntensity"; }
 
 

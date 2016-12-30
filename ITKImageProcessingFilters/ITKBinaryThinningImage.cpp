@@ -139,12 +139,12 @@ AbstractFilter::Pointer ITKBinaryThinningImage::newFilterInstance(bool copyFilte
 //
 // -----------------------------------------------------------------------------
 const QString ITKBinaryThinningImage::getHumanLabel()
-{ return "[ITK] Binary Thinning Image Filter (KW)"; }
+{ return "ITK::Binary Thinning Image Filter (KW)"; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ITKBinaryThinningImage::getSubGroupName()
-{ return "ITKBinaryMathematicalMorphology"; }
+{ return "ITK BinaryMathematicalMorphology"; }
 
 

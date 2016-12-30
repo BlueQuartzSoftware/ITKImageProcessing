@@ -147,12 +147,12 @@ AbstractFilter::Pointer ITKHConvexImage::newFilterInstance(bool copyFilterParame
 //
 // -----------------------------------------------------------------------------
 const QString ITKHConvexImage::getHumanLabel()
-{ return "[ITK] H Convex Image Filter (KW)"; }
+{ return "ITK::H Convex Image Filter (KW)"; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ITKHConvexImage::getSubGroupName()
-{ return "ITKMathematicalMorphology"; }
+{ return "ITK MathematicalMorphology"; }
 
 

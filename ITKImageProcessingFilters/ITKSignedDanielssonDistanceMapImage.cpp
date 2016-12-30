@@ -151,12 +151,12 @@ AbstractFilter::Pointer ITKSignedDanielssonDistanceMapImage::newFilterInstance(b
 //
 // -----------------------------------------------------------------------------
 const QString ITKSignedDanielssonDistanceMapImage::getHumanLabel()
-{ return "[ITK] Signed Danielsson Distance Map Image Filter (KW)"; }
+{ return "ITK::Signed Danielsson Distance Map Image Filter (KW)"; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ITKSignedDanielssonDistanceMapImage::getSubGroupName()
-{ return "ITKDistanceMap"; }
+{ return "ITK DistanceMap"; }
 
 

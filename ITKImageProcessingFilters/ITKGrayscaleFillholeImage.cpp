@@ -143,12 +143,12 @@ AbstractFilter::Pointer ITKGrayscaleFillholeImage::newFilterInstance(bool copyFi
 //
 // -----------------------------------------------------------------------------
 const QString ITKGrayscaleFillholeImage::getHumanLabel()
-{ return "[ITK] Grayscale Fillhole Image Filter (KW)"; }
+{ return "ITK::Grayscale Fillhole Image Filter (KW)"; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ITKGrayscaleFillholeImage::getSubGroupName()
-{ return "ITKMathematicalMorphology"; }
+{ return "ITK MathematicalMorphology"; }
 
 

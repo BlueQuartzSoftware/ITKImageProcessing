@@ -139,12 +139,12 @@ AbstractFilter::Pointer ITKNormalizeImage::newFilterInstance(bool copyFilterPara
 //
 // -----------------------------------------------------------------------------
 const QString ITKNormalizeImage::getHumanLabel()
-{ return "[ITK] Normalize Image Filter (KW)"; }
+{ return "ITK::Normalize Image Filter (KW)"; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ITKNormalizeImage::getSubGroupName()
-{ return "ITKImageIntensity"; }
+{ return "ITK ImageIntensity"; }
 
 

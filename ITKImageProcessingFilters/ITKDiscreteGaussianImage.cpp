@@ -156,12 +156,12 @@ AbstractFilter::Pointer ITKDiscreteGaussianImage::newFilterInstance(bool copyFil
 //
 // -----------------------------------------------------------------------------
 const QString ITKDiscreteGaussianImage::getHumanLabel()
-{ return "[ITK] Discrete Gaussian Image Filter (KW)"; }
+{ return "ITK::Discrete Gaussian Image Filter (KW)"; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ITKDiscreteGaussianImage::getSubGroupName()
-{ return "ITKSmoothing"; }
+{ return "ITK Smoothing"; }
 
 

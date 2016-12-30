@@ -147,12 +147,12 @@ AbstractFilter::Pointer ITKIsoContourDistanceImage::newFilterInstance(bool copyF
 //
 // -----------------------------------------------------------------------------
 const QString ITKIsoContourDistanceImage::getHumanLabel()
-{ return "[ITK] Iso Contour Distance Image Filter (KW)"; }
+{ return "ITK::Iso Contour Distance Image Filter (KW)"; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ITKIsoContourDistanceImage::getSubGroupName()
-{ return "ITKDistanceMap"; }
+{ return "ITK DistanceMap"; }
 
 

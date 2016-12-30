@@ -143,12 +143,12 @@ AbstractFilter::Pointer ITKNormalizeToConstantImage::newFilterInstance(bool copy
 //
 // -----------------------------------------------------------------------------
 const QString ITKNormalizeToConstantImage::getHumanLabel()
-{ return "[ITK] Normalize To Constant Image Filter (KW)"; }
+{ return "ITK::Normalize To Constant Image Filter (KW)"; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ITKNormalizeToConstantImage::getSubGroupName()
-{ return "ITKImageIntensity"; }
+{ return "ITK ImageIntensity"; }
 
 

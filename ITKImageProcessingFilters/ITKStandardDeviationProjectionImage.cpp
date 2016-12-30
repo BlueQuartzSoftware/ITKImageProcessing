@@ -144,12 +144,12 @@ AbstractFilter::Pointer ITKStandardDeviationProjectionImage::newFilterInstance(b
 //
 // -----------------------------------------------------------------------------
 const QString ITKStandardDeviationProjectionImage::getHumanLabel()
-{ return "[ITK] Standard Deviation Projection Image Filter (KW)"; }
+{ return "ITK::Standard Deviation Projection Image Filter (KW)"; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ITKStandardDeviationProjectionImage::getSubGroupName()
-{ return "ITKImageStatistics"; }
+{ return "ITK ImageStatistics"; }
 
 

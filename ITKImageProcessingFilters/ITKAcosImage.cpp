@@ -139,12 +139,12 @@ AbstractFilter::Pointer ITKAcosImage::newFilterInstance(bool copyFilterParameter
 //
 // -----------------------------------------------------------------------------
 const QString ITKAcosImage::getHumanLabel()
-{ return "[ITK] Acos Image Filter (KW)"; }
+{ return "ITK::Acos Image Filter (KW)"; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ITKAcosImage::getSubGroupName()
-{ return "ITKImageIntensity"; }
+{ return "ITK ImageIntensity"; }
 
 
