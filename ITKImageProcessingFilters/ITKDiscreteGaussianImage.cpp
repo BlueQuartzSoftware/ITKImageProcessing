@@ -51,9 +51,9 @@ void ITKDiscreteGaussianImage::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(SIMPL_NEW_FLOAT_FP("Variance", Variance, FilterParameter::Parameter, ITKDiscreteGaussianImage));
-  parameters.push_back(SIMPL_NEW_FLOAT_FP("MaximumKernelWidth", MaximumKernelWidth, FilterParameter::Parameter, ITKDiscreteGaussianImage));
-  parameters.push_back(SIMPL_NEW_FLOAT_FP("MaximumError", MaximumError, FilterParameter::Parameter, ITKDiscreteGaussianImage));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Variance", Variance, FilterParameter::Parameter, ITKDiscreteGaussianImage));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("MaximumKernelWidth", MaximumKernelWidth, FilterParameter::Parameter, ITKDiscreteGaussianImage));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("MaximumError", MaximumError, FilterParameter::Parameter, ITKDiscreteGaussianImage));
   parameters.push_back(SIMPL_NEW_BOOL_FP("UseImageSpacing", UseImageSpacing, FilterParameter::Parameter, ITKDiscreteGaussianImage));
 
 

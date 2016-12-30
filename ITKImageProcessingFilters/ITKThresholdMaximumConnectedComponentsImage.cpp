@@ -51,8 +51,8 @@ void ITKThresholdMaximumConnectedComponentsImage::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(SIMPL_NEW_FLOAT_FP("MinimumObjectSizeInPixels", MinimumObjectSizeInPixels, FilterParameter::Parameter, ITKThresholdMaximumConnectedComponentsImage));
-  parameters.push_back(SIMPL_NEW_FLOAT_FP("UpperBoundary", UpperBoundary, FilterParameter::Parameter, ITKThresholdMaximumConnectedComponentsImage));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("MinimumObjectSizeInPixels", MinimumObjectSizeInPixels, FilterParameter::Parameter, ITKThresholdMaximumConnectedComponentsImage));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("UpperBoundary", UpperBoundary, FilterParameter::Parameter, ITKThresholdMaximumConnectedComponentsImage));
   parameters.push_back(SIMPL_NEW_INTEGER_FP("InsideValue", InsideValue, FilterParameter::Parameter, ITKThresholdMaximumConnectedComponentsImage));
   parameters.push_back(SIMPL_NEW_INTEGER_FP("OutsideValue", OutsideValue, FilterParameter::Parameter, ITKThresholdMaximumConnectedComponentsImage));
 

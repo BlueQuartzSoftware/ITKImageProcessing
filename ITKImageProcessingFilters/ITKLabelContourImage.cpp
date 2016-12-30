@@ -50,7 +50,7 @@ void ITKLabelContourImage::setupFilterParameters()
   FilterParameterVector parameters;
 
   parameters.push_back(SIMPL_NEW_BOOL_FP("FullyConnected", FullyConnected, FilterParameter::Parameter, ITKLabelContourImage));
-  parameters.push_back(SIMPL_NEW_FLOAT_FP("BackgroundValue", BackgroundValue, FilterParameter::Parameter, ITKLabelContourImage));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("BackgroundValue", BackgroundValue, FilterParameter::Parameter, ITKLabelContourImage));
 
 
   QStringList linkedProps;

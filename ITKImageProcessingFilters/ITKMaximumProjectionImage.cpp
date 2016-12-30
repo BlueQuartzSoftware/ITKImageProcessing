@@ -48,7 +48,7 @@ void ITKMaximumProjectionImage::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(SIMPL_NEW_FLOAT_FP("ProjectionDimension", ProjectionDimension, FilterParameter::Parameter, ITKMaximumProjectionImage));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("ProjectionDimension", ProjectionDimension, FilterParameter::Parameter, ITKMaximumProjectionImage));
 
 
   QStringList linkedProps;

@@ -11,7 +11,7 @@
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
-#include "SIMPLib/FilterParameters/FloatFilterParameter.h"
+#include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
 
 #include "SIMPLib/Geometry/ImageGeom.h"
 
@@ -53,10 +53,10 @@ void ITKBinaryThreshold::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(SIMPL_NEW_FLOAT_FP("Lower Threshold Value", LowerThresholdValue, FilterParameter::Parameter, ITKBinaryThreshold));
-  parameters.push_back(SIMPL_NEW_FLOAT_FP("Upper Threshold Value", UpperThresholdValue, FilterParameter::Parameter, ITKBinaryThreshold));
-  parameters.push_back(SIMPL_NEW_FLOAT_FP("Inside Value", InsideValue, FilterParameter::Parameter, ITKBinaryThreshold));
-  parameters.push_back(SIMPL_NEW_FLOAT_FP("Outisde Value", OutsideValue, FilterParameter::Parameter, ITKBinaryThreshold));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Lower Threshold Value", LowerThresholdValue, FilterParameter::Parameter, ITKBinaryThreshold));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Upper Threshold Value", UpperThresholdValue, FilterParameter::Parameter, ITKBinaryThreshold));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Inside Value", InsideValue, FilterParameter::Parameter, ITKBinaryThreshold));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Outisde Value", OutsideValue, FilterParameter::Parameter, ITKBinaryThreshold));
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Save as New Array", SaveAsNewArray, FilterParameter::Parameter, ITKBinaryThreshold, linkedProps));

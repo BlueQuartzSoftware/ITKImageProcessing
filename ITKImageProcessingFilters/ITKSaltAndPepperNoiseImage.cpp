@@ -50,8 +50,8 @@ void ITKSaltAndPepperNoiseImage::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(SIMPL_NEW_FLOAT_FP("Probability", Probability, FilterParameter::Parameter, ITKSaltAndPepperNoiseImage));
-  parameters.push_back(SIMPL_NEW_FLOAT_FP("Seed", Seed, FilterParameter::Parameter, ITKSaltAndPepperNoiseImage));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Probability", Probability, FilterParameter::Parameter, ITKSaltAndPepperNoiseImage));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Seed", Seed, FilterParameter::Parameter, ITKSaltAndPepperNoiseImage));
 
 
   QStringList linkedProps;

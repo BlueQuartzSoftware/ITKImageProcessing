@@ -49,8 +49,8 @@ void ITKCurvatureFlowImage::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(SIMPL_NEW_FLOAT_FP("TimeStep", TimeStep, FilterParameter::Parameter, ITKCurvatureFlowImage));
-  parameters.push_back(SIMPL_NEW_FLOAT_FP("NumberOfIterations", NumberOfIterations, FilterParameter::Parameter, ITKCurvatureFlowImage));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("TimeStep", TimeStep, FilterParameter::Parameter, ITKCurvatureFlowImage));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("NumberOfIterations", NumberOfIterations, FilterParameter::Parameter, ITKCurvatureFlowImage));
 
 
   QStringList linkedProps;

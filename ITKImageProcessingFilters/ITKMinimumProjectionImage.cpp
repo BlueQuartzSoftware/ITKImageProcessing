@@ -48,7 +48,7 @@ void ITKMinimumProjectionImage::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(SIMPL_NEW_FLOAT_FP("ProjectionDimension", ProjectionDimension, FilterParameter::Parameter, ITKMinimumProjectionImage));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("ProjectionDimension", ProjectionDimension, FilterParameter::Parameter, ITKMinimumProjectionImage));
 
 
   QStringList linkedProps;
