@@ -50,9 +50,9 @@ void ITKBilateralImage::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("DomainSigma", DomainSigma, FilterParameter::Parameter, ITKBilateralImage));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("RangeSigma", RangeSigma, FilterParameter::Parameter, ITKBilateralImage));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("NumberOfRangeGaussianSamples", NumberOfRangeGaussianSamples, FilterParameter::Parameter, ITKBilateralImage));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("DomainSigma", DomainSigma, FilterParameter::Parameter, ITKBilateralImage));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("RangeSigma", RangeSigma, FilterParameter::Parameter, ITKBilateralImage));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("NumberOfRangeGaussianSamples", NumberOfRangeGaussianSamples, FilterParameter::Parameter, ITKBilateralImage));
 
 
   QStringList linkedProps;

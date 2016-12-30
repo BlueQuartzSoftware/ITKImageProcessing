@@ -11,7 +11,7 @@
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
-#include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
+#include "SIMPLib/FilterParameters/FloatFilterParameter.h"
 
 #include "SIMPLib/Geometry/ImageGeom.h"
 
@@ -64,8 +64,8 @@ void ITKGaussianBlur::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Attribute Array to Blur", SelectedCellArrayPath, FilterParameter::RequiredArray, ITKGaussianBlur, req));
   }
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Maximum Kernel Width", MaximumKernelWidth, FilterParameter::Parameter, ITKGaussianBlur));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Variance", Variance, FilterParameter::Parameter, ITKGaussianBlur));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Maximum Error", MaximumError, FilterParameter::Parameter, ITKGaussianBlur));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("Variance", Variance, FilterParameter::Parameter, ITKGaussianBlur));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("Maximum Error", MaximumError, FilterParameter::Parameter, ITKGaussianBlur));
 
   setFilterParameters(parameters);
 }

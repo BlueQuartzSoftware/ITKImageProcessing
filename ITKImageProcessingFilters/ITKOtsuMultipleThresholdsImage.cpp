@@ -53,7 +53,7 @@ void ITKOtsuMultipleThresholdsImage::setupFilterParameters()
 
   parameters.push_back(SIMPL_NEW_INTEGER_FP("NumberOfThresholds", NumberOfThresholds, FilterParameter::Parameter, ITKOtsuMultipleThresholdsImage));
   parameters.push_back(SIMPL_NEW_INTEGER_FP("LabelOffset", LabelOffset, FilterParameter::Parameter, ITKOtsuMultipleThresholdsImage));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("NumberOfHistogramBins", NumberOfHistogramBins, FilterParameter::Parameter, ITKOtsuMultipleThresholdsImage));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("NumberOfHistogramBins", NumberOfHistogramBins, FilterParameter::Parameter, ITKOtsuMultipleThresholdsImage));
   parameters.push_back(SIMPL_NEW_BOOL_FP("ValleyEmphasis", ValleyEmphasis, FilterParameter::Parameter, ITKOtsuMultipleThresholdsImage));
 
 

@@ -48,7 +48,7 @@ void ITKBinomialBlurImage::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Repetitions", Repetitions, FilterParameter::Parameter, ITKBinomialBlurImage));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("Repetitions", Repetitions, FilterParameter::Parameter, ITKBinomialBlurImage));
 
 
   QStringList linkedProps;

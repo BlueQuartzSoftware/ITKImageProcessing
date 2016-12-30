@@ -51,10 +51,10 @@ void ITKIntensityWindowingImage::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("WindowMinimum", WindowMinimum, FilterParameter::Parameter, ITKIntensityWindowingImage));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("WindowMaximum", WindowMaximum, FilterParameter::Parameter, ITKIntensityWindowingImage));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("OutputMinimum", OutputMinimum, FilterParameter::Parameter, ITKIntensityWindowingImage));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("OutputMaximum", OutputMaximum, FilterParameter::Parameter, ITKIntensityWindowingImage));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("WindowMinimum", WindowMinimum, FilterParameter::Parameter, ITKIntensityWindowingImage));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("WindowMaximum", WindowMaximum, FilterParameter::Parameter, ITKIntensityWindowingImage));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("OutputMinimum", OutputMinimum, FilterParameter::Parameter, ITKIntensityWindowingImage));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("OutputMaximum", OutputMaximum, FilterParameter::Parameter, ITKIntensityWindowingImage));
 
 
   QStringList linkedProps;

@@ -51,10 +51,10 @@ void ITKSigmoidImage::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Alpha", Alpha, FilterParameter::Parameter, ITKSigmoidImage));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Beta", Beta, FilterParameter::Parameter, ITKSigmoidImage));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("OutputMaximum", OutputMaximum, FilterParameter::Parameter, ITKSigmoidImage));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("OutputMinimum", OutputMinimum, FilterParameter::Parameter, ITKSigmoidImage));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("Alpha", Alpha, FilterParameter::Parameter, ITKSigmoidImage));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("Beta", Beta, FilterParameter::Parameter, ITKSigmoidImage));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("OutputMaximum", OutputMaximum, FilterParameter::Parameter, ITKSigmoidImage));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("OutputMinimum", OutputMinimum, FilterParameter::Parameter, ITKSigmoidImage));
 
 
   QStringList linkedProps;

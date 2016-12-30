@@ -48,7 +48,7 @@ void ITKHMaximaImage::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Height", Height, FilterParameter::Parameter, ITKHMaximaImage));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("Height", Height, FilterParameter::Parameter, ITKHMaximaImage));
 
 
   QStringList linkedProps;

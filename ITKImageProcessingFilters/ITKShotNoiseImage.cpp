@@ -49,8 +49,8 @@ void ITKShotNoiseImage::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Scale", Scale, FilterParameter::Parameter, ITKShotNoiseImage));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Seed", Seed, FilterParameter::Parameter, ITKShotNoiseImage));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("Scale", Scale, FilterParameter::Parameter, ITKShotNoiseImage));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("Seed", Seed, FilterParameter::Parameter, ITKShotNoiseImage));
 
 
   QStringList linkedProps;

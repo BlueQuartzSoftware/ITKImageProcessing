@@ -51,10 +51,10 @@ void ITKBinaryMinMaxCurvatureFlowImage::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("TimeStep", TimeStep, FilterParameter::Parameter, ITKBinaryMinMaxCurvatureFlowImage));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("NumberOfIterations", NumberOfIterations, FilterParameter::Parameter, ITKBinaryMinMaxCurvatureFlowImage));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("TimeStep", TimeStep, FilterParameter::Parameter, ITKBinaryMinMaxCurvatureFlowImage));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("NumberOfIterations", NumberOfIterations, FilterParameter::Parameter, ITKBinaryMinMaxCurvatureFlowImage));
   parameters.push_back(SIMPL_NEW_INTEGER_FP("StencilRadius", StencilRadius, FilterParameter::Parameter, ITKBinaryMinMaxCurvatureFlowImage));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Threshold", Threshold, FilterParameter::Parameter, ITKBinaryMinMaxCurvatureFlowImage));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("Threshold", Threshold, FilterParameter::Parameter, ITKBinaryMinMaxCurvatureFlowImage));
 
 
   QStringList linkedProps;

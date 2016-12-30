@@ -49,8 +49,8 @@ void ITKSpeckleNoiseImage::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("StandardDeviation", StandardDeviation, FilterParameter::Parameter, ITKSpeckleNoiseImage));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Seed", Seed, FilterParameter::Parameter, ITKSpeckleNoiseImage));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("StandardDeviation", StandardDeviation, FilterParameter::Parameter, ITKSpeckleNoiseImage));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("Seed", Seed, FilterParameter::Parameter, ITKSpeckleNoiseImage));
 
 
   QStringList linkedProps;

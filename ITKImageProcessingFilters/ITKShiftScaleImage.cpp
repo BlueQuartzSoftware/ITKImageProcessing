@@ -49,8 +49,8 @@ void ITKShiftScaleImage::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Shift", Shift, FilterParameter::Parameter, ITKShiftScaleImage));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Scale", Scale, FilterParameter::Parameter, ITKShiftScaleImage));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("Shift", Shift, FilterParameter::Parameter, ITKShiftScaleImage));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("Scale", Scale, FilterParameter::Parameter, ITKShiftScaleImage));
 
 
   QStringList linkedProps;

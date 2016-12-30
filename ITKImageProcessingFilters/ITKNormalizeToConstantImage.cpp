@@ -48,7 +48,7 @@ void ITKNormalizeToConstantImage::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Constant", Constant, FilterParameter::Parameter, ITKNormalizeToConstantImage));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("Constant", Constant, FilterParameter::Parameter, ITKNormalizeToConstantImage));
 
 
   QStringList linkedProps;

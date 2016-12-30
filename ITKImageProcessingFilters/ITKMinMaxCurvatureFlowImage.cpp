@@ -50,8 +50,8 @@ void ITKMinMaxCurvatureFlowImage::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("TimeStep", TimeStep, FilterParameter::Parameter, ITKMinMaxCurvatureFlowImage));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("NumberOfIterations", NumberOfIterations, FilterParameter::Parameter, ITKMinMaxCurvatureFlowImage));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("TimeStep", TimeStep, FilterParameter::Parameter, ITKMinMaxCurvatureFlowImage));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("NumberOfIterations", NumberOfIterations, FilterParameter::Parameter, ITKMinMaxCurvatureFlowImage));
   parameters.push_back(SIMPL_NEW_INTEGER_FP("StencilRadius", StencilRadius, FilterParameter::Parameter, ITKMinMaxCurvatureFlowImage));
 
 

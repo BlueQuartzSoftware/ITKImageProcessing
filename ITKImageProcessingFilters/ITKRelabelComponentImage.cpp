@@ -48,7 +48,7 @@ void ITKRelabelComponentImage::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("MinimumObjectSize", MinimumObjectSize, FilterParameter::Parameter, ITKRelabelComponentImage));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("MinimumObjectSize", MinimumObjectSize, FilterParameter::Parameter, ITKRelabelComponentImage));
 
 
   QStringList linkedProps;

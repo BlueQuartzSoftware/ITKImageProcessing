@@ -50,9 +50,9 @@ void ITKBinaryProjectionImage::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("ProjectionDimension", ProjectionDimension, FilterParameter::Parameter, ITKBinaryProjectionImage));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("ForegroundValue", ForegroundValue, FilterParameter::Parameter, ITKBinaryProjectionImage));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("BackgroundValue", BackgroundValue, FilterParameter::Parameter, ITKBinaryProjectionImage));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("ProjectionDimension", ProjectionDimension, FilterParameter::Parameter, ITKBinaryProjectionImage));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("ForegroundValue", ForegroundValue, FilterParameter::Parameter, ITKBinaryProjectionImage));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("BackgroundValue", BackgroundValue, FilterParameter::Parameter, ITKBinaryProjectionImage));
 
 
   QStringList linkedProps;

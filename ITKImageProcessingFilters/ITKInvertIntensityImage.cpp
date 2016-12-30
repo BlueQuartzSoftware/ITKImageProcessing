@@ -48,7 +48,7 @@ void ITKInvertIntensityImage::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Maximum", Maximum, FilterParameter::Parameter, ITKInvertIntensityImage));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("Maximum", Maximum, FilterParameter::Parameter, ITKInvertIntensityImage));
 
 
   QStringList linkedProps;
