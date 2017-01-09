@@ -33,6 +33,7 @@
 
 #include "ITKImageProcessingPlugin.h"
 
+#include <QtCore/QCoreApplication>
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
 
@@ -45,6 +46,7 @@
 // Include the MOC generated file for this class
 #include "moc_ITKImageProcessingPlugin.cpp"
 
+#include "itksys/SystemTools.hxx"
 #include "itkSCIFIOImageIOFactory.h"
 #include <itkJPEGImageIOFactory.h>
 #include <itkMetaImageIOFactory.h>
@@ -76,6 +78,7 @@ m_Copyright("Copyright"),                               // Initialize ITKImagePr
 m_Filters(QList<QString>()),                        // Initialize ITKImageProcessing's List of Dependencies Here
 m_DidLoad(false)
 {
+  ITKImageProcessingPlugin::setSCIFIOEnvironmentVariables();
   itk::JPEGImageIOFactory::RegisterOneFactory();
   itk::NrrdImageIOFactory::RegisterOneFactory();
   itk::PNGImageIOFactory::RegisterOneFactory();
@@ -98,6 +101,19 @@ m_DidLoad(false)
 // -----------------------------------------------------------------------------
 ITKImageProcessingPlugin::~ITKImageProcessingPlugin()
 {
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ITKImageProcessingPlugin::setSCIFIOEnvironmentVariables()
+{
+  QFileInfo fi = QFileInfo(QCoreApplication::applicationDirPath());
+  QString applicationDir = fi.absolutePath();
+  std::string SCIFIO_PATH = std::string("SCIFIO_PATH=")+applicationDir.toStdString()+"/lib/jars";
+  itksys::SystemTools::PutEnv(SCIFIO_PATH);
+  std::string JAVA_HOME = std::string("JAVA_HOME=")+applicationDir.toStdString()+"/lib/jre";
+  itksys::SystemTools::PutEnv(JAVA_HOME);
 }
 
 // -----------------------------------------------------------------------------

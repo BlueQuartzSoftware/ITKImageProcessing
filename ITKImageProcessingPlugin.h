@@ -67,6 +67,10 @@ class ITKImageProcessingPlugin : public QObject, public ISIMPLibPlugin
     */
     static QStringList getList2DSupportedFileExtensions();
 
+    /**
+    * @brief set environment variables required to find java executable and java packages packaged in DREAM3D
+    */
+    static void setSCIFIOEnvironmentVariables();
 
     /**
      * @brief getPluginName Returns the name of the plugin
