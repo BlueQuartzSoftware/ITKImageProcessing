@@ -29,34 +29,28 @@ include(${SIMPLProj_SOURCE_DIR}/Source/SIMPLib/SIMPLibMacros.cmake)
 ## Then do not forget to add "${ITK_LIBRARIES}" to the target_link_libraries below
 # --------------------------------------------------------------------
 # ITK Include
-if(DREAM3D_USE_ITK)
-  set(DREAM3D_ADDITIONAL_ITK_MODULES
-      ITKIOImageBase
-      ITKImageNoise
-      SCIFIO
-      ITKIOBMP
-      ITKIOJPEG
-      ITKIONRRD
-      ITKIOTIFF
-      ITKIOMeta
-      ITKIOPNG
-      ITKIOIPL
-      ITKIONIFTI
-      ITKIOGIPL
-      ITKIOVTK
-      ITKIOStimulate
-      ITKIOBioRad
-      ITKIOGE
-      ITKTestKernel
-      )
-  set_property(GLOBAL APPEND PROPERTY DREAM3D_ADDITIONAL_ITK_MODULES ${DREAM3D_ADDITIONAL_ITK_MODULES})
+set(DREAM3D_ADDITIONAL_ITK_MODULES
+    ITKIOImageBase
+    ITKImageNoise
+    SCIFIO
+    ITKIOBMP
+    ITKIOJPEG
+    ITKIONRRD
+    ITKIOTIFF
+    ITKIOMeta
+    ITKIOPNG
+    ITKIOIPL
+    ITKIONIFTI
+    ITKIOGIPL
+    ITKIOVTK
+    ITKIOStimulate
+    ITKIOBioRad
+    ITKIOGE
+    ITKTestKernel
+    )
+set_property(GLOBAL APPEND PROPERTY DREAM3D_ADDITIONAL_ITK_MODULES ${DREAM3D_ADDITIONAL_ITK_MODULES})
 
-  include( ${DREAM3D_SUPPORT_DIR}/ITKSupport/IncludeITK.cmake)
-  include_directories(${SimpleITKExplicit_BINARY_DIR}/Common/include)
-  include_directories(${SimpleITKExplicit_SOURCE_DIR}/Explicit/include)
-else()
-  message( FATAL_ERROR "${PLUGIN_NAME} needs ITK. Please turn DREAM3D_USE_ITK ON.")
-endif()
+include( ${DREAM3D_SUPPORT_DIR}/ITKSupport/IncludeITK.cmake)
 
 #-------
 # Start writing this header file
@@ -116,7 +110,6 @@ include_directories( ${HDF5_INCLUDE_DIR} )
 include_directories( ${PROJECT_CODE_DIR} )
 include_directories( ${QtSupportLib_BINARY_DIR} )
 include_directories( ${QtSupportLib_SOURCE_DIR} )
-include_directories( ${SimpleITKExplicit_SOURCE_DIR}/Explicit/include)
 
 get_filename_component(PLUGINS_SOURCE_DIR  ${${PLUGIN_NAME}_SOURCE_DIR} DIRECTORY)
 get_filename_component(PLUGINS_BINARY_DIR  ${${PLUGIN_NAME}_BINARY_DIR} DIRECTORY)
@@ -243,7 +236,7 @@ endif()
 add_library(${PLUGIN_NAME} MODULE ${${PLUGIN_NAME}_MODULE_SRCS})
 target_link_libraries(${PLUGIN_NAME}
                     SVWidgetsLib
-                    SimpleITKExplicit
+                    ${ITK_LIBRARIES}
                     ${SCIFIO_LIBRARIES}
                     )
 SET_TARGET_PROPERTIES(${PLUGIN_NAME} PROPERTIES FOLDER ${PLUGIN_NAME}Plugin)
