@@ -61,10 +61,18 @@ namespace UnitTest
   {
     const QString METAIOInputTestFile("@TEST_TEMP_DIR@/METAIOFile.mha");
     const QString TIFFIOInputTestFile("@TEST_TEMP_DIR@/TIFFIOFile.tif");
-	const QString PNGIOInputTestFile("@TEST_TEMP_DIR@/PNGIOFile.png");
+    const QString PNGIOInputTestFile("@TEST_TEMP_DIR@/PNGIOFile.png");
     const QString NRRDIOInputTestFile("@TEST_TEMP_DIR@/NRRDIOFile.nrrd");
     const QString SCIFIOInputTestFile("@TEST_TEMP_DIR@/SCIFIOFile.tif");
     const QString NonExistentInputTestFile("@TEST_TEMP_DIR@/NotHere.ghost");
+  }
+}
+
+namespace UnitTest
+{
+  namespace ITKImageProcessingImportImageStackTest
+  {
+    const QString StackInputTestDir("@DREAM3D_DATA_DIR@/Data/JSONFilters/Input/DicomSeries/");
   }
 }
 

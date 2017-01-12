@@ -184,7 +184,7 @@ class ITKImportImageStack : public AbstractFilter
     /**
      * @brief Get the ordered list of input files.
      */
-    QVector<QString> getFileList();
+    QVector< QString > getFileList();
 
     /**
      * @brief readImage does the work of reading in the image. If \c dataCheck

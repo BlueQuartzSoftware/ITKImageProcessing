@@ -171,9 +171,6 @@ void ITKImportImageStack::dataCheck()
     return;
   }
 
-  ImageGeom::Pointer image = ImageGeom::CreateGeometry(SIMPL::Geometry::ImageGeometry);
-  m->setGeometry(image);
-
   bool hasMissingFiles = false;
   bool orderAscending = false;
 
@@ -329,6 +326,18 @@ void ITKImportImageStack::readImageWithPixelType(const QVector<QString> & fileLi
     toDream3DFilter->SetDataContainer(container);
     toDream3DFilter->Update();
   }
+
+  ImageGeom::Pointer image = ImageGeom::CreateGeometry(SIMPL::Geometry::ImageGeometry);
+  image->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
+  image->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
+  const typename ImageType::SizeType size = reader->GetOutput()->GetLargestPossibleRegion().GetSize();
+  QVector<size_t> tDims(Dimension, 1);
+  for (unsigned int i = 0; i < Dimension; i++)
+  {
+    tDims[i] = size[i];
+  }
+  image->setDimensions(tDims[0], tDims[1], tDims[2]);
+  container->setGeometry(image);
 }
 
 // -----------------------------------------------------------------------------
@@ -343,16 +352,10 @@ void ITKImportImageStack::readImageOutputInformation( typename itk::ImageSeriesR
   reader->UpdateOutputInformation();
   const typename ImageType::SizeType size = reader->GetOutput()->GetLargestPossibleRegion().GetSize();
   QVector<size_t> tDims(Dimension, 1);
-  // Initialize torigin/tspacing/tDims since arrays are always of size 3 and ITK image may have a different size.
   for (unsigned int i = 0; i < Dimension; i++)
   {
-      tDims[i] = size[i];
+    tDims[i] = size[i];
   }
-  ImageGeom::Pointer image = ImageGeom::CreateGeometry(SIMPL::Geometry::ImageGeometry);
-  image->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
-  image->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
-  image->setDimensions(tDims[0], tDims[1], tDims[2]);
-  container->setGeometry(image);
 
   QVector<size_t> cDims(1, 1);
   AttributeMatrix::Pointer cellAttrMat = container->createNonPrereqAttributeMatrix<AbstractFilter>(this, m_CellAttributeMatrixName, tDims, AttributeMatrix::Type::Cell);
