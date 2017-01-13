@@ -18,8 +18,6 @@
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
 
-#include "sitkExplicitITK.h"
-
 #include <itkDiscreteGaussianImageFilter.h>
 
 // Include the MOC generated file for this class

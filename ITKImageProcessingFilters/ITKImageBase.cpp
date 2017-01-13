@@ -6,8 +6,6 @@
 
 #include "SIMPLib/Geometry/ImageGeom.h"
 
-#include "sitkExplicitITK.h"
-
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
 

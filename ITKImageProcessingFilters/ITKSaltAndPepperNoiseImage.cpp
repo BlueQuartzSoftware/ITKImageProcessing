@@ -15,8 +15,6 @@
 
 #include "SIMPLib/Geometry/ImageGeom.h"
 
-#include "sitkExplicitITK.h"
-
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
 #undef DREAM3D_USE_RGBA
