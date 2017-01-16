@@ -17,6 +17,7 @@ namespace itk
     /** Standard class typedefs. */
     typedef InPlaceDream3DDataToImageFilter                                 Self;
     typedef SmartPointer<Self>                                              Pointer;
+
     typedef typename itk::Dream3DImage<PixelType, VDimension >              ImageType;
     typedef typename ImageType::PixelContainerType                          ImportImageContainerType;
     typedef typename ImageType::Pointer                                     ImagePointer;
@@ -28,20 +29,28 @@ namespace itk
     /** Method for creation through the object factory. */
     itkNewMacro(Self);
     itkTypeMacro(InPlaceDream3DDataToImageFilter, ImportImageFilter);
+
     virtual void SetInput(DataContainer::Pointer &dc);
+
     itkSetMacro(DataArrayName, std::string);
     itkGetMacro(DataArrayName, std::string);
+
     itkSetMacro(AttributeMatrixArrayName, std::string);
     itkGetMacro(AttributeMatrixArrayName, std::string);
+
     itkSetMacro(PixelContainerWillOwnTheBuffer, bool);
     itkGetMacro(PixelContainerWillOwnTheBuffer, bool);
+
     itkSetMacro(InPlace, bool);
     itkGetConstMacro(InPlace, bool);
     itkBooleanMacro(InPlace);
+
   protected:
     InPlaceDream3DDataToImageFilter();
     virtual ~InPlaceDream3DDataToImageFilter();
+
     virtual void VerifyPreconditions() ITK_OVERRIDE;
+
     virtual void GenerateOutputInformation() ITK_OVERRIDE;
     virtual void GenerateData() ITK_OVERRIDE;
     DataContainer::Pointer m_DataContainer;
