@@ -32,10 +32,7 @@ namespace itk
     itkTypeMacro(InPlaceImageToDream3DDataFilter, ProcessObject);
     virtual void SetInput(const ImageType *image);
     void SetDataContainer(DataContainer::Pointer dc);
-    virtual void GenerateData() ITK_OVERRIDE;
-    virtual void GenerateOutputInformation() ITK_OVERRIDE;
     DecoratorType* GetOutput();
-    ProcessObject::DataObjectPointer MakeOutput(ProcessObject::DataObjectPointerArraySizeType) override;
     itkSetMacro(DataArrayName, std::string);
     itkGetMacro(DataArrayName, std::string);
     itkSetMacro(AttributeMatrixArrayName, std::string);
@@ -47,6 +44,12 @@ namespace itk
     virtual void VerifyPreconditions() ITK_OVERRIDE;
     InPlaceImageToDream3DDataFilter();
     virtual ~InPlaceImageToDream3DDataFilter();
+
+    ProcessObject::DataObjectPointer MakeOutput(ProcessObject::DataObjectPointerArraySizeType) override;
+
+    virtual void GenerateData() ITK_OVERRIDE;
+    virtual void GenerateOutputInformation() ITK_OVERRIDE;
+
     void CheckValidArrayPathComponentName(std::string var);
   private:
     using Superclass::SetInput;
