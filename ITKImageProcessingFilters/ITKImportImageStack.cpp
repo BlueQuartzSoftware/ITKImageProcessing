@@ -171,7 +171,6 @@ void ITKImportImageStack::dataCheck()
     return;
   }
 
-  bool hasMissingFiles = false;
   bool orderAscending = false;
 
   if(m_InputFileListInfo.Ordering == 0)
