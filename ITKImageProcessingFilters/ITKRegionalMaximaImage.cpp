@@ -161,6 +161,6 @@ const QString ITKRegionalMaximaImage::getHumanLabel()
 //
 // -----------------------------------------------------------------------------
 const QString ITKRegionalMaximaImage::getSubGroupName()
-{ return "ITK Review"; }
+{ return "ITK MathematicalMorphology"; }
 
 
