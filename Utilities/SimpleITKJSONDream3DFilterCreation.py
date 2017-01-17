@@ -7,14 +7,19 @@ the information found in the JSON file.
 JSON files are taken from [1].
 Documentation about the JSON files is available here [2].
 Test implementation in SimpleITK: [3]
+ITK can be downloaded here: [4]
 
 Usage:
 
-./SimpleITKJSONDream3DFilterCreation.py  -j ~/Devel/SimpleITK/Code/BasicFilters/json/ -d .. -n
+./SimpleITKJSONDream3DFilterCreation.py  -j ~/Devel/SimpleITK/Code/BasicFilters/json/ -d .. -n -o -I ~/Devel/ITK
+
+If errors occur, try creating a folder containing only the JSON descriptions of the filters that are currently
+supported by this script.
 
 [1] https://github.com/SimpleITK/SimpleITK
 [2] https://itk.org/SimpleITKDoxygen/html/FilterTemplatesPage.html
 [3] https://github.com/SimpleITK/SimpleITK/blob/master/Testing/Unit/sitkImageFilterTestTemplate.cxx.in
+[4] https://itk.org/ITK/resources/software.html
 """
 import json
 import argparse
