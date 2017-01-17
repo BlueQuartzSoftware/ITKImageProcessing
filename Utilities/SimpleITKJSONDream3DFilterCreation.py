@@ -702,8 +702,8 @@ def FindModuleInIncludeFile(name, path):
                     split_line=line.split('\ingroup')
                     module_name=split_line[1].strip()
                     if module_name[:3] == 'ITK':
-                        return module_name
-    return "ITKNoModule"
+                        return module_name[3:]
+    return "NoModule"
             
 
 def main(argv=None):
