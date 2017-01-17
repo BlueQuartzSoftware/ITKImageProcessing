@@ -351,7 +351,7 @@ void ITKImageReader::readImage(bool dataCheck)
     catch (itk::ExceptionObject & err)
     {
         setErrorCondition(-6);
-        QString errorMessage = "ITK exception was thrown while processing input file:";
+        QString errorMessage = "ITK exception was thrown while processing input file: %1";
         notifyErrorMessage(getHumanLabel(), errorMessage.arg(err.what()), getErrorCondition());
         return;
     }
