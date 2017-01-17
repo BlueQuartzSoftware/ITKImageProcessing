@@ -170,6 +170,38 @@ class ITKImageProcessingImportImageStackTest
     return EXIT_SUCCESS;
   }
 
+  int TestFileDoesNotExist()
+  {
+    AbstractFilter::Pointer abstractFilter = GetFilterByName("ITKImportImageStack");
+    if (!abstractFilter)
+    {
+      return EXIT_FAILURE;
+    }
+
+    ITKImportImageStack::Pointer reader = std::static_pointer_cast< ITKImportImageStack >( abstractFilter );
+
+    bool propertySet = false;
+    const QString containerName = "TestFileDoesNotExist";
+    propertySet = reader->setProperty("DataContainerName", containerName);
+    DREAM3D_REQUIRE_EQUAL(propertySet, true);
+
+    FileListInfo_t fileListInfo;
+    fileListInfo.InputPath = UnitTest::ITKImageProcessingImportImageStackTest::StackInputTestDir;
+    fileListInfo.StartIndex = 75;
+    fileListInfo.EndIndex = 79;
+    fileListInfo.FileExtension = "dcm";
+    fileListInfo.FilePrefix = "Image";
+    fileListInfo.FileSuffix = "";
+    fileListInfo.PaddingDigits = 4;
+
+    reader->setInputFileListInfo(fileListInfo);
+
+    reader->execute();
+    DREAM3D_REQUIRED(reader->getErrorCondition(), == , -7);
+    DREAM3D_REQUIRED(reader->getWarningCondition(), >= , 0);
+    return EXIT_SUCCESS;
+  }
+
   int TestCompareImage()
   {
     FilterPipeline::Pointer pipeline = FilterPipeline::New();
@@ -275,6 +307,7 @@ class ITKImageProcessingImportImageStackTest
     DREAM3D_REGISTER_TEST(TestNoInput());
     DREAM3D_REGISTER_TEST(TestNoDataContainer());
     DREAM3D_REGISTER_TEST(TestNoFiles());
+    DREAM3D_REGISTER_TEST(TestFileDoesNotExist());
     DREAM3D_REGISTER_TEST(TestCompareImage());
   }
 

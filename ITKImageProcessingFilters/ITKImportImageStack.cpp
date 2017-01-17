@@ -51,6 +51,8 @@
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
 #include "ITKImageProcessingPlugin.h"
 
+#include "itksys/SystemTools.hxx"
+
 // Include the MOC generated file for this class
 #include "moc_ITKImportImageStack.cpp"
 
@@ -213,6 +215,17 @@ void ITKImportImageStack::readImage(const QVector<QString> & fileList, bool data
 {
   try
   {
+    for (size_t fileIndex = 0; fileIndex < fileList.size(); ++fileIndex)
+    {
+      const std::string fileName = fileList[fileIndex].toStdString();
+      if( !itksys::SystemTools::FileExists( fileName ) )
+      {
+        setErrorCondition(-7);
+        QString errorMessage = "File does not exist: %1";
+        notifyErrorMessage(getHumanLabel(), errorMessage.arg(fileName.c_str()), getErrorCondition());
+        return;
+      }
+    }
     const QString filename = fileList[0];
     itk::ImageIOBase::Pointer imageIO = itk::ImageIOFactory::CreateImageIO(filename.toLatin1(), itk::ImageIOFactory::ReadMode);
     if (nullptr == imageIO)
