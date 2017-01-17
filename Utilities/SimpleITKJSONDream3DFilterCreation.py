@@ -519,9 +519,12 @@ def ExpandFilterName(filter_name):
       if x.isupper():
           expanded_name += ' '
       expanded_name += x
-  return expanded_name
+  return expanded_name[1:]  # Remove first space
 
-       
+def RemoveBadSymbolsFromFilterDescription(description):
+    description = description.replace("``","'")
+    description = description.replace("''","'")
+    return description
 
 def InitializeParsingValues(DREAM3DFilter, filter_description):
     DREAM3DFilter['RawFilterName']=filter_description['name']
@@ -546,11 +549,11 @@ def InitializeParsingValues(DREAM3DFilter, filter_description):
         DREAM3DFilter['FilterDescription'] += filter_description['briefdescription']+'\n\n'
     if 'detaileddescription' in filter_description:
         DREAM3DFilter['FilterDescription'] += filter_description['detaileddescription']
+    DREAM3DFilter['FilterDescription'] = RemoveBadSymbolsFromFilterDescription(DREAM3DFilter['FilterDescription'])
     if 'output_pixel_type' in filter_description:
         DREAM3DFilter['FilterOutputType'] = filter_description['output_pixel_type']
     else:
         DREAM3DFilter['FilterOutputType'] = 'N/A'
-    
 
 
 def GetDREAM3DInitializationParameters(filter_member):
