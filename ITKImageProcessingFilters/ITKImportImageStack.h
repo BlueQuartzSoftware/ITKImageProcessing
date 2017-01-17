@@ -27,41 +27,40 @@
 * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *
 * The code contained herein was partially funded by the followig contracts:
+*    United States Air Force Prime Contract FA8650-07-D-5800
 *    United States Air Force Prime Contract FA8650-10-D-5210
+*    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _ITKImageReader_H_
-#define _ITKImageReader_H_
+
+#ifndef _ITKImportImageStack_H_
+#define _ITKImportImageStack_H_
+
+#include <QtCore/QFile>
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
-
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
+#include "SIMPLib/FilterParameters/FileListInfoFilterParameter.h"
 
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 
-#include <itkImageFileReader.h>
-
+#include <itkImageSeriesReader.h>
 
 /**
- * @brief The ITKImageProcessingFilter class. See [Filter documentation](@ref itkimageprocessingfilter) for details.
+ * @brief The ITKImportImageStack class. See [Filter documentation](@ref itkimportimagestack) for details.
  */
-class ITKImageReader : public AbstractFilter
+class ITKImportImageStack : public AbstractFilter
 {
-  Q_OBJECT
-
+    Q_OBJECT
   public:
-    SIMPL_SHARED_POINTERS(ITKImageReader)
-    SIMPL_STATIC_NEW_MACRO(ITKImageReader)
-    SIMPL_TYPE_MACRO_SUPER(ITKImageReader, AbstractFilter)
+    SIMPL_SHARED_POINTERS(ITKImportImageStack)
+    SIMPL_STATIC_NEW_MACRO(ITKImportImageStack)
+    SIMPL_TYPE_MACRO_SUPER(ITKImportImageStack, AbstractFilter)
 
-    virtual ~ITKImageReader();
-
-    SIMPL_FILTER_PARAMETER(QString, FileName)
-    Q_PROPERTY(QString FileName READ getFileName WRITE setFileName)
+    virtual ~ITKImportImageStack();
 
     SIMPL_FILTER_PARAMETER(QString, DataContainerName)
     Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
@@ -69,8 +68,24 @@ class ITKImageReader : public AbstractFilter
     SIMPL_FILTER_PARAMETER(QString, CellAttributeMatrixName)
     Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
+    SIMPL_FILTER_PARAMETER(FloatVec3_t, Origin)
+    Q_PROPERTY(FloatVec3_t Origin READ getOrigin WRITE setOrigin)
+
+    SIMPL_FILTER_PARAMETER(FloatVec3_t, Resolution)
+    Q_PROPERTY(FloatVec3_t Resolution READ getResolution WRITE setResolution)
+
+    SIMPL_FILTER_PARAMETER(QString, BoundsFile)
+    Q_PROPERTY(QString BoundsFile READ getBoundsFile WRITE setBoundsFile)
+
+    SIMPL_FILTER_PARAMETER(FileListInfo_t, InputFileListInfo)
+    Q_PROPERTY(FileListInfo_t InputFileListInfo READ getInputFileListInfo WRITE setInputFileListInfo)
+
+    SIMPL_FILTER_PARAMETER(int, ImageStack)
+    Q_PROPERTY(int ImageStack READ getImageStack WRITE setImageStack)
+
     SIMPL_FILTER_PARAMETER(QString, ImageDataArrayName)
     Q_PROPERTY(QString ImageDataArrayName READ getImageDataArrayName WRITE setImageDataArrayName)
+
     /**
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
      */
@@ -134,7 +149,7 @@ class ITKImageReader : public AbstractFilter
     /**
      * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
      * be pushed from a user-facing control (such as a widget)
-     * @param filter Filter instance pointer 
+     * @param filter Filter instance pointer
      */
     void updateFilterParameters(AbstractFilter* filter);
 
@@ -154,7 +169,7 @@ class ITKImageReader : public AbstractFilter
     void preflightExecuted();
 
   protected:
-    ITKImageReader();
+    ITKImportImageStack();
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
@@ -165,26 +180,31 @@ class ITKImageReader : public AbstractFilter
      */
     void initialize();
 
+  private:
     /**
-    * @brief Does the actual reading of the image with itkImageFileReader.
-    */
-    template<typename TComponent>
-    void readImage(itk::ImageIOBase::IOPixelType pixel, unsigned int dimensions, const QString& filename, bool dataCheck);
-    template<typename TComponent, unsigned int dimensions>
-    void readImage(itk::ImageIOBase::IOPixelType pixel, const QString& filename, bool dataCheck);
-    template<typename TPixel, unsigned int>
-	void readImage(const QString& filename, bool dataCheck);
-	void readImage(bool dataCheck);
+     * @brief Get the ordered list of input files.
+     */
+    QVector< QString > getFileList();
+
+    /**
+     * @brief readImage does the work of reading in the image. If \c dataCheck
+     * is true, only the image information is read -- pixel buffer information
+     * is not read.
+     */
+    void readImage(const QVector<QString> & fileList, bool dataCheck);
+    template< typename TPixel >
+    void readImageWithPixelType(const QVector<QString> & fileList, bool dataCheck);
 
     /**
     * @brief Reads image size, spacing and origin, and updates container information accordingly.
     */
-    template<typename TPixel, unsigned int dimensions>
-    void readImageOutputInformation(typename itk::ImageFileReader<itk::Dream3DImage<TPixel, dimensions> >::Pointer &reader, DataContainer::Pointer &container);
+    template< typename TPixel >
+    void readImageOutputInformation(typename itk::ImageSeriesReader< itk::Dream3DImage< TPixel, 3 > >::Pointer & reader, DataContainer::Pointer & container);
 
-  private:
-	  ITKImageReader(const ITKImageReader&); // Copy Constructor Not Implemented
-	  void operator=(const ITKImageReader&); // Operator '=' Not Implemented
+    DEFINE_DATAARRAY_VARIABLE(uint8_t, ImageData)
+
+    ITKImportImageStack(const ITKImportImageStack&); // Copy Constructor Not Implemented
+    void operator=(const ITKImportImageStack&); // Operator '=' Not Implemented
 };
 
-#endif /* _ITKImageReader_H_ */
+#endif /* ITKImportImageStack_H_ */
