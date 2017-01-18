@@ -64,6 +64,7 @@ namespace UnitTest
     const QString PNGIOInputTestFile("@TEST_TEMP_DIR@/PNGIOFile.png");
     const QString NRRDIOInputTestFile("@TEST_TEMP_DIR@/NRRDIOFile.nrrd");
     const QString SCIFIOInputTestFile("@TEST_TEMP_DIR@/SCIFIOFile.tif");
+    const QString MRCIOInputTestFile("@TEST_TEMP_DIR@/MRCFile.mrc");
     const QString NonExistentInputTestFile("@TEST_TEMP_DIR@/NotHere.ghost");
   }
 }
