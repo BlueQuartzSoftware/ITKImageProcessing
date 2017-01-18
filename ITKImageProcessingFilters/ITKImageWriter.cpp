@@ -352,7 +352,7 @@ const QString ITKImageWriter::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString ITKImageWriter::getGroupName()
-{ return "Image Processing"; }
+{ return "IO"; }
 
 // -----------------------------------------------------------------------------
 //

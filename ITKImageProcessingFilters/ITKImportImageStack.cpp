@@ -471,7 +471,7 @@ const QString ITKImportImageStack::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString ITKImportImageStack::getGroupName()
-{ return "Image Processing"; }
+{ return "IO"; }
 
 // -----------------------------------------------------------------------------
 //
