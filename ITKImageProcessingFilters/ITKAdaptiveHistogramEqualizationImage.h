@@ -19,7 +19,6 @@
 
 //Auto includes
 #include <itkAdaptiveHistogramEqualizationImageFilter.h>
-#include <SIMPLib/FilterParameters/BooleanFilterParameter.h>
 #include <SIMPLib/FilterParameters/FloatVec3FilterParameter.h>
 #include <SIMPLib/FilterParameters/FloatFilterParameter.h>
 
@@ -46,10 +45,6 @@ class ITKAdaptiveHistogramEqualizationImage : public ITKImageBase
 
     SIMPL_FILTER_PARAMETER(float, Beta)
     Q_PROPERTY(float Beta READ getBeta WRITE setBeta)
-
-    SIMPL_FILTER_PARAMETER(bool, UseLookupTable)
-    Q_PROPERTY(bool UseLookupTable READ getUseLookupTable WRITE setUseLookupTable)
-
 
 
     /**

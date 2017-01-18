@@ -32,7 +32,6 @@ ITKAdaptiveHistogramEqualizationImage::ITKAdaptiveHistogramEqualizationImage() :
   m_Radius=CastStdToVec3<std::vector<unsigned int>,FloatVec3_t,float>(std::vector<unsigned int>(3, 5));
   m_Alpha=StaticCastScalar<float,float,float>(0.3f);
   m_Beta=StaticCastScalar<float,float,float>(0.3f);
-  m_UseLookupTable=StaticCastScalar<bool,bool,bool>(false);
 
   setupFilterParameters();
 }
@@ -54,8 +53,6 @@ void ITKAdaptiveHistogramEqualizationImage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Radius", Radius, FilterParameter::Parameter, ITKAdaptiveHistogramEqualizationImage));
   parameters.push_back(SIMPL_NEW_FLOAT_FP("Alpha", Alpha, FilterParameter::Parameter, ITKAdaptiveHistogramEqualizationImage));
   parameters.push_back(SIMPL_NEW_FLOAT_FP("Beta", Beta, FilterParameter::Parameter, ITKAdaptiveHistogramEqualizationImage));
-  parameters.push_back(SIMPL_NEW_BOOL_FP("UseLookupTable", UseLookupTable, FilterParameter::Parameter, ITKAdaptiveHistogramEqualizationImage));
-
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -85,7 +82,6 @@ void ITKAdaptiveHistogramEqualizationImage::readFilterParameters(AbstractFilterP
   setRadius(reader->readFloatVec3("Radius", getRadius()));
   setAlpha(reader->readValue("Alpha", getAlpha()));
   setBeta(reader->readValue("Beta", getBeta()));
-  setUseLookupTable(reader->readValue("UseLookupTable", getUseLookupTable()));
 
   reader->closeFilterGroup();
 }
@@ -125,7 +121,6 @@ void ITKAdaptiveHistogramEqualizationImage::filter()
   filter->SetRadius(CastVec3ToITK<FloatVec3_t,typename FilterType::RadiusType,typename FilterType::RadiusType::SizeValueType>(m_Radius,FilterType::RadiusType::Dimension));
   filter->SetAlpha(static_cast<float>(m_Alpha));
   filter->SetBeta(static_cast<float>(m_Beta));
-  filter->SetUseLookupTable(static_cast<bool>(m_UseLookupTable));
   this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
 }
 
