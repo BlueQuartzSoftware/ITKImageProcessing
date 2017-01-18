@@ -414,7 +414,7 @@ const QString ITKImageReader::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString ITKImageReader::getGroupName()
-{ return "Image Processing"; }
+{ return "IO"; }
 
 // -----------------------------------------------------------------------------
 //
