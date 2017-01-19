@@ -59,7 +59,7 @@ class ITKImageProcessingImportImageStackTest
     ITKImageProcessingImportImageStackTest() {}
     virtual ~ITKImageProcessingImportImageStackTest() {}
 
-    static constexpr unsigned int Dimension = 3;
+    static const unsigned int Dimension = 3;
     typedef short                              PixelType;
     typedef itk::Image< PixelType, Dimension > ImageType;
 
@@ -237,7 +237,7 @@ class ITKImageProcessingImportImageStackTest
 
     reader->setInputFileListInfo(fileListInfo);
 
-    static constexpr unsigned int Dimension = 3;
+    static const unsigned int Dimension = 3;
     FloatVec3_t inputOrigin;
     inputOrigin.x = 1.f;
     inputOrigin.y = 4.f;
