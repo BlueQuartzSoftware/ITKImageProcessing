@@ -61,6 +61,7 @@
 #include <itkBioRadImageIOFactory.h>
 #include <itkGE4ImageIOFactory.h>
 #include <itkGE5ImageIOFactory.h>
+#include <itkMRCImageIOFactory.h>
 
 // -----------------------------------------------------------------------------
 //
@@ -90,6 +91,7 @@ m_DidLoad(false)
   itk::BioRadImageIOFactory::RegisterOneFactory();
   itk::GE4ImageIOFactory::RegisterOneFactory();
   itk::GE5ImageIOFactory::RegisterOneFactory();
+  itk::MRCImageIOFactory::RegisterOneFactory();
   itk::SCIFIOImageIOFactory::RegisterOneFactory();
 }
 

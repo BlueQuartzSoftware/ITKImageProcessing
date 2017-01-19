@@ -56,6 +56,7 @@
 #include <itkSCIFIOImageIO.h>
 #include <itkTIFFImageIO.h>
 #include <itkPNGImageIO.h>
+#include <itkMRCImageIO.h>
 
 class ITKImageProcessingReaderTest
 {
@@ -74,6 +75,7 @@ class ITKImageProcessingReaderTest
   {
 #if REMOVE_TEST_FILES
     QFile::remove(UnitTest::ITKImageProcessingReaderTest::NRRDIOInputTestFile);
+    QFile::remove(UnitTest::ITKImageProcessingReaderTest::MRCIOInputTestFile);
     QFile::remove(UnitTest::ITKImageProcessingReaderTest::METAIOInputTestFile);
     QFile::remove(UnitTest::ITKImageProcessingReaderTest::TIFFIOInputTestFile);
     QFile::remove(UnitTest::ITKImageProcessingReaderTest::PNGIOInputTestFile);
@@ -190,6 +192,17 @@ class ITKImageProcessingReaderTest
 
     return WriteTestFile<DefaultPixelType,3>(
       UnitTest::ITKImageProcessingReaderTest::NRRDIOInputTestFile,
+      io.GetPointer()
+      );
+  }
+
+  itk::Dream3DImage<DefaultPixelType, 3>::Pointer
+  WriteMRCIOTestFile()
+  {
+    itk::MRCImageIO::Pointer io = itk::MRCImageIO::New();
+
+    return WriteTestFile<DefaultPixelType,3>(
+      UnitTest::ITKImageProcessingReaderTest::MRCIOInputTestFile,
       io.GetPointer()
       );
   }
@@ -403,6 +416,13 @@ class ITKImageProcessingReaderTest
     DREAM3D_REGISTER_TEST(
       (TestCompareImage<DefaultPixelType,3>(
       UnitTest::ITKImageProcessingReaderTest::NRRDIOInputTestFile, nrrdioImage))
+      )
+
+    // MRC
+    itk::Dream3DImage<DefaultPixelType, 3>::Pointer mrcioImage = WriteMRCIOTestFile();
+    DREAM3D_REGISTER_TEST(
+      (TestCompareImage<DefaultPixelType,3>(
+      UnitTest::ITKImageProcessingReaderTest::MRCIOInputTestFile, mrcioImage))
       )
 
 
