@@ -158,6 +158,6 @@ const QString ITKBilateralImage::getHumanLabel()
 //
 // -----------------------------------------------------------------------------
 const QString ITKBilateralImage::getSubGroupName()
-{ return "ITK ImageFeature"; }
+{ return "ITK Smoothing"; }
 
 
