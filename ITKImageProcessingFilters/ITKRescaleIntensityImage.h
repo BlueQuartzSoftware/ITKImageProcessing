@@ -42,7 +42,8 @@ class ITKRescaleIntensityImage : public ITKImageBase
     SIMPL_FILTER_PARAMETER(double, OutputMaximum)
     Q_PROPERTY(double OutputMaximum READ getOutputMaximum WRITE setOutputMaximum)
 
-
+    SIMPL_FILTER_PARAMETER(int, OutputType)
+    Q_PROPERTY(int OutputType READ getOutputType WRITE setOutputType)
 
     /**
      * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -93,6 +94,12 @@ class ITKRescaleIntensityImage : public ITKImageBase
     */
     template<typename InputImageType, typename OutputImageType, unsigned int Dimension>
     void filter();
+
+    /**
+    * @brief Checks 'value' can be casted to OutputPixelType.
+    */
+    template<typename OutputPixelType>
+    void CheckEntryBounds(double value, QString name);
 
   private:
 

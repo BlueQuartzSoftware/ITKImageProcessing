@@ -8,6 +8,7 @@
 //Auto includes
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 
+#include <itkImageIOBase.h>
 
 class ITKRescaleIntensityImageTest: public ITKTestBase
 {
@@ -34,6 +35,9 @@ int TestITKRescaleIntensityImage3dTest()
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     var.setValue(false);
     propWasSet = filter->setProperty("SaveAsNewArray", var);
+    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+    var.setValue(itk::ImageIOBase::IOComponentType::FLOAT-1);
+    propWasSet = filter->setProperty("OutputType", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     filter->setDataContainerArray(containerArray);
     filter->execute();
