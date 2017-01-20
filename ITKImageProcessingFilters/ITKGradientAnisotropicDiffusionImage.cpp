@@ -163,6 +163,6 @@ const QString ITKGradientAnisotropicDiffusionImage::getHumanLabel()
 //
 // -----------------------------------------------------------------------------
 const QString ITKGradientAnisotropicDiffusionImage::getSubGroupName()
-{ return "ITK AnisotropicSmoothing"; }
+{ return "ITK Smoothing"; }
 
 
