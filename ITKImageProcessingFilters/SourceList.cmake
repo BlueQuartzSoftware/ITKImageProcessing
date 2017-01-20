@@ -88,6 +88,7 @@ set(_PublicFilters
   ITKBoundedReciprocalImage
   ITKThresholdMaximumConnectedComponentsImage
   ITKSmoothingRecursiveGaussianImage
+  ITKAdaptiveHistogramEqualizationImage
 )
 
 

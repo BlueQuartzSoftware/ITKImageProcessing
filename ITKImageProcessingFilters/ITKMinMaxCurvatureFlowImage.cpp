@@ -158,6 +158,6 @@ const QString ITKMinMaxCurvatureFlowImage::getHumanLabel()
 //
 // -----------------------------------------------------------------------------
 const QString ITKMinMaxCurvatureFlowImage::getSubGroupName()
-{ return "ITK CurvatureFlow"; }
+{ return "ITK Smoothing"; }
 
 

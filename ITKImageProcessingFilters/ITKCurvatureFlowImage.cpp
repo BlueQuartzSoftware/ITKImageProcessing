@@ -154,6 +154,6 @@ const QString ITKCurvatureFlowImage::getHumanLabel()
 //
 // -----------------------------------------------------------------------------
 const QString ITKCurvatureFlowImage::getSubGroupName()
-{ return "ITK CurvatureFlow"; }
+{ return "ITK Smoothing"; }
 
 
