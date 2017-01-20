@@ -80,7 +80,7 @@ class ITKImageProcessingImportImageStackTest
   void WriteTestFile(const QString& filePath, ImageType * image)
   {
     typedef itk::ImageFileWriter<ImageType> WriterType;
-    typename WriterType::Pointer writer = WriterType::New();
+    WriterType::Pointer writer = WriterType::New();
     writer->SetFileName(filePath.toStdString());
     writer->SetInput(image);
     writer->Update();
