@@ -22,7 +22,7 @@
 #include "SIMPLib/Common/AbstractFilter.h"
 #include <itkVector.h>
 #include <itkRGBAPixel.h>
-
+#include <itkImageIOBase.h>
 
 // Allow individual switching of support for each scalar size/signedness.
 // These could be made advanced user options to be configured by CMake.
@@ -229,5 +229,48 @@
 // type as the input data array.
 #define Dream3DArraySwitchMacro(call, path, errorCondition) \
   Dream3DArraySwitchMacroLongOutputType(call, path, errorCondition, "", 0, 0)
+
+// Define macro to select the output image component type.
+// Subtract 1 to enum values because 'type' values are expected to start at 0 while
+// itk::ImageIOBase::IOComponentType '0' value is UNKNOWNCOMPONENTTYPE and therefore
+// should be skipped.
+#define Dream3DArraySwitchOutputComponentMacro(call, type, path, errorCondition) \
+   switch(type)\
+   {\
+     case itk::ImageIOBase::IOComponentType::UCHAR-1:\
+             Dream3DArraySwitchMacroOutputType(call, path, -4,uint8_t,0);\
+             break;\
+     case itk::ImageIOBase::IOComponentType::CHAR-1:\
+             Dream3DArraySwitchMacroOutputType(call, path, -4,int8_t,0);\
+             break;\
+     case itk::ImageIOBase::IOComponentType::USHORT-1:\
+             Dream3DArraySwitchMacroOutputType(call, path, -4,uint16_t,0);\
+             break;\
+     case itk::ImageIOBase::IOComponentType::SHORT-1:\
+             Dream3DArraySwitchMacroOutputType(call, path, -4,int16_t,0);\
+             break;\
+     case itk::ImageIOBase::IOComponentType::UINT-1:\
+             Dream3DArraySwitchMacroOutputType(call, path, -4,uint32_t,0);\
+             break;\
+     case itk::ImageIOBase::IOComponentType::INT-1:\
+             Dream3DArraySwitchMacroOutputType(call, path, -4,int32_t,0);\
+             break;\
+     case itk::ImageIOBase::IOComponentType::ULONG-1:\
+             Dream3DArraySwitchMacroOutputType(call, path, -4,uint64_t,0);\
+             break;\
+     case itk::ImageIOBase::IOComponentType::LONG-1:\
+             Dream3DArraySwitchMacroOutputType(call, path, -4,int64_t,0);\
+             break;\
+     case itk::ImageIOBase::IOComponentType::FLOAT-1:\
+             Dream3DArraySwitchMacroOutputType(call, path, -4,float,0);\
+             break;\
+     case itk::ImageIOBase::IOComponentType::DOUBLE-1:\
+             Dream3DArraySwitchMacroOutputType(call, path, -4,double,0);\
+             break;\
+     default:\
+             setErrorCondition(-4);\
+             notifyErrorMessage(getHumanLabel(), "Unsupported pixel component", errorCondition);\
+             break;\
+   }
 
 #endif

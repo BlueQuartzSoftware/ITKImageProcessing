@@ -94,6 +94,7 @@ set(TEST_NAMES
   ITKThresholdMaximumConnectedComponentsImage
   ITKSmoothingRecursiveGaussianImage
   ITKAdaptiveHistogramEqualizationImage
+  ITKCastImage
   )
 
 set( ${PLUGIN_NAME}_TEST_SRCS )
