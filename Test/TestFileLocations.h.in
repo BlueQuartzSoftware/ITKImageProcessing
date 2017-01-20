@@ -87,24 +87,6 @@ namespace UnitTest
 
 namespace UnitTest
 {
-  namespace ItkGaussianBlurTest
-  {
-   const QString TestFile1("@TEST_TEMP_DIR@/TestFile1.txt");
-   const QString TestFile2("@TEST_TEMP_DIR@/TestFile2.txt");
-  }
-}
-
-namespace UnitTest
-{
-  namespace ITKGaussianBlurTest
-  {
-   const QString TestFile1("@TEST_TEMP_DIR@/TestFile1.txt");
-   const QString TestFile2("@TEST_TEMP_DIR@/TestFile2.txt");
-  }
-}
-
-namespace UnitTest
-{
   namespace ITKBinaryThresholdTest
   {
    const QString TestFile1("@TEST_TEMP_DIR@/TestFile1.txt");
