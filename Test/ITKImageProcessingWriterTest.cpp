@@ -438,6 +438,12 @@ class ITKImageProcessingWriterTest
     listMetaPixelTypes << "uint8_t" << "int8_t" << "uint16_t" << "int16_t" << "uint32_t" << "int32_t" << "uint64_t" << "int64_t" << "float" << "double";
     DREAM3D_REGISTER_TEST(TestWriteImage<3>("mha", listMetaPixelTypes));
     DREAM3D_REGISTER_TEST(TestWriteImage<3>("mhd", listMetaPixelTypes, "zraw"));
+
+    // MRC
+    QStringList listMRCPixelTypes;
+    listMRCPixelTypes  << "uint8_t" << "int16_t" << "uint16_t"<< "float";
+    DREAM3D_REGISTER_TEST(TestWriteImage<3>("mrc", listMRCPixelTypes));
+
     // NRRD
     QStringList listNRRDPixelTypes;
     listNRRDPixelTypes << "uint8_t" << "int8_t" << "uint16_t" << "int16_t" << "uint32_t" << "int32_t" << "uint64_t" << "int64_t" << "float" << "double";

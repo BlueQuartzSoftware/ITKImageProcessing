@@ -161,6 +161,6 @@ const QString ITKRegionalMinimaImage::getHumanLabel()
 //
 // -----------------------------------------------------------------------------
 const QString ITKRegionalMinimaImage::getSubGroupName()
-{ return "ITK Review"; }
+{ return "ITK MathematicalMorphology"; }
 
 

@@ -7,14 +7,19 @@ the information found in the JSON file.
 JSON files are taken from [1].
 Documentation about the JSON files is available here [2].
 Test implementation in SimpleITK: [3]
+ITK can be downloaded here: [4]
 
 Usage:
 
-./SimpleITKJSONDream3DFilterCreation.py  -j ~/Devel/SimpleITK/Code/BasicFilters/json/ -d .. -n
+./SimpleITKJSONDream3DFilterCreation.py  -j ~/Devel/SimpleITK/Code/BasicFilters/json/ -d .. -n -o -I ~/Devel/ITK
+
+If errors occur, try creating a folder containing only the JSON descriptions of the filters that are currently
+supported by this script.
 
 [1] https://github.com/SimpleITK/SimpleITK
 [2] https://itk.org/SimpleITKDoxygen/html/FilterTemplatesPage.html
 [3] https://github.com/SimpleITK/SimpleITK/blob/master/Testing/Unit/sitkImageFilterTestTemplate.cxx.in
+[4] https://itk.org/ITK/resources/software.html
 """
 import json
 import argparse
@@ -167,7 +172,7 @@ tests_settings={
 
 Dream3DTypeToMacro={
   'double':{'include':'SIMPLib/FilterParameters/DoubleFilterParameter.h', 'macro':'SIMPL_NEW_DOUBLE_FP','component':'double','read':'readValue'},
-  'float':{'include':'SIMPLib/FilterParameters/FloatFilterParameter.h','macro':'SIMPL_NEW_INTEGER_FP','component':'float','read':'readValue'},
+  'float':{'include':'SIMPLib/FilterParameters/FloatFilterParameter.h','macro':'SIMPL_NEW_FLOAT_FP','component':'float','read':'readValue'},
   'int':{'include':'SIMPLib/FilterParameters/IntFilterParameter.h','macro':'SIMPL_NEW_INTEGER_FP','component':'int','read':'readValue'},
   'bool':{'include':'SIMPLib/FilterParameters/BooleanFilterParameter.h','macro':'SIMPL_NEW_BOOL_FP','component':'bool','read':'readValue'},
   'FloatVec3_t':{'include':'SIMPLib/FilterParameters/FloatVec3FilterParameter.h','macro':'SIMPL_NEW_FLOAT_VEC3_FP','component':'float','read':'readFloatVec3'},
@@ -519,9 +524,12 @@ def ExpandFilterName(filter_name):
       if x.isupper():
           expanded_name += ' '
       expanded_name += x
-  return expanded_name
+  return expanded_name[1:]  # Remove first space
 
-       
+def RemoveBadSymbolsFromFilterDescription(description):
+    description = description.replace("``","'")
+    description = description.replace("''","'")
+    return description
 
 def InitializeParsingValues(DREAM3DFilter, filter_description):
     DREAM3DFilter['RawFilterName']=filter_description['name']
@@ -546,11 +554,11 @@ def InitializeParsingValues(DREAM3DFilter, filter_description):
         DREAM3DFilter['FilterDescription'] += filter_description['briefdescription']+'\n\n'
     if 'detaileddescription' in filter_description:
         DREAM3DFilter['FilterDescription'] += filter_description['detaileddescription']
+    DREAM3DFilter['FilterDescription'] = RemoveBadSymbolsFromFilterDescription(DREAM3DFilter['FilterDescription'])
     if 'output_pixel_type' in filter_description:
         DREAM3DFilter['FilterOutputType'] = filter_description['output_pixel_type']
     else:
         DREAM3DFilter['FilterOutputType'] = 'N/A'
-    
 
 
 def GetDREAM3DInitializationParameters(filter_member):
@@ -702,8 +710,8 @@ def FindModuleInIncludeFile(name, path):
                     split_line=line.split('\ingroup')
                     module_name=split_line[1].strip()
                     if module_name[:3] == 'ITK':
-                        return module_name
-    return "ITKNoModule"
+                        return module_name[3:]
+    return "NoModule"
             
 
 def main(argv=None):

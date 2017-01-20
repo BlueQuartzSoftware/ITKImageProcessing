@@ -34,6 +34,7 @@ set(TEST_NAMES
   ITKGaussianBlur
   ITKImageProcessingReader
   ITKImageProcessingWriter
+  ITKImageProcessingImportImageStack
   ITKImageProcessingImage
   ITKBinaryThreshold
   ITKAbsImage

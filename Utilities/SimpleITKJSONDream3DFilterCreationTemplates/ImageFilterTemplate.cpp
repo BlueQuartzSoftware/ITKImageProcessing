@@ -15,7 +15,7 @@
 
 #include "SIMPLib/Geometry/ImageGeom.h"
 
-#include "sitkExplicitITK.h"
+
 
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
@@ -136,12 +136,12 @@ AbstractFilter::Pointer ${FilterName}::newFilterInstance(bool copyFilterParamete
 //
 // -----------------------------------------------------------------------------
 const QString ${FilterName}::getHumanLabel()
-{ return "[ITK]${FilterNameExpanded} (KW)"; }
+{ return "ITK::${FilterNameExpanded} (KW)"; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ${FilterName}::getSubGroupName()
-{ return "${ITKModule}"; }
+{ return "ITK ${ITKModule}"; }
 
 
