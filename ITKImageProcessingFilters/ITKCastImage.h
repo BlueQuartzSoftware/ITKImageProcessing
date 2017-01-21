@@ -1,11 +1,9 @@
-// File automatically generated
-
 /*
  * Your License or Copyright can go here
  */
 
-#ifndef _ITKRescaleIntensityImage_h_
-#define _ITKRescaleIntensityImage_h_
+#ifndef _ITKCastImage_h_
+#define _ITKCastImage_h_
 
 #ifdef __clang__
 #pragma clang diagnostic push
@@ -17,33 +15,25 @@
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
-//Auto includes
-#include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
-#include <itkRescaleIntensityImageFilter.h>
-
+#include <SIMPLib/FilterParameters/BooleanFilterParameter.h>
+#include <itkCastImageFilter.h>
 
 /**
- * @brief The ITKRescaleIntensityImage class. See [Filter documentation](@ref ITKRescaleIntensityImage) for details.
+ * @brief The ITKCastImage class. See [Filter documentation](@ref ITKCastImage) for details.
  */
-class ITKRescaleIntensityImage : public ITKImageBase
+class ITKCastImage : public ITKImageBase
 {
   Q_OBJECT
 
   public:
-    SIMPL_SHARED_POINTERS(ITKRescaleIntensityImage)
-    SIMPL_STATIC_NEW_MACRO(ITKRescaleIntensityImage)
-    SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKRescaleIntensityImage, AbstractFilter)
+    SIMPL_SHARED_POINTERS(ITKCastImage)
+    SIMPL_STATIC_NEW_MACRO(ITKCastImage)
+    SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKCastImage, AbstractFilter)
 
-    virtual ~ITKRescaleIntensityImage();
+    SIMPL_FILTER_PARAMETER(int, CastingType)
+    Q_PROPERTY(int CastingType READ getCastingType WRITE setCastingType)
 
-    SIMPL_FILTER_PARAMETER(double, OutputMinimum)
-    Q_PROPERTY(double OutputMinimum READ getOutputMinimum WRITE setOutputMinimum)
-
-    SIMPL_FILTER_PARAMETER(double, OutputMaximum)
-    Q_PROPERTY(double OutputMaximum READ getOutputMaximum WRITE setOutputMaximum)
-
-    SIMPL_FILTER_PARAMETER(int, OutputType)
-    Q_PROPERTY(int OutputType READ getOutputType WRITE setOutputType)
+    virtual ~ITKCastImage();
 
     /**
      * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -71,7 +61,7 @@ class ITKRescaleIntensityImage : public ITKImageBase
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
 
   protected:
-    ITKRescaleIntensityImage();
+    ITKCastImage();
 
     /**
      * @brief dataCheckInternal overloads dataCheckInternal in ITKImageBase and calls templated dataCheck
@@ -95,20 +85,14 @@ class ITKRescaleIntensityImage : public ITKImageBase
     template<typename InputImageType, typename OutputImageType, unsigned int Dimension>
     void filter();
 
-    /**
-    * @brief Checks 'value' can be casted to OutputPixelType.
-    */
-    template<typename OutputPixelType>
-    void CheckEntryBounds(double value, QString name);
-
   private:
 
-    ITKRescaleIntensityImage(const ITKRescaleIntensityImage&); // Copy Constructor Not Implemented
-    void operator=(const ITKRescaleIntensityImage&); // Operator '=' Not Implemented
+    ITKCastImage(const ITKCastImage&); // Copy Constructor Not Implemented
+    void operator=(const ITKCastImage&); // Operator '=' Not Implemented
 };
 
 #ifdef __clang__
 #pragma clang diagnostic pop
 #endif
 
-#endif /* _ITKRescaleIntensityImage_H_ */
+#endif /* _ITKCastImage_H_ */
