@@ -111,9 +111,10 @@ ITKImageProcessingPlugin::~ITKImageProcessingPlugin()
 // -----------------------------------------------------------------------------
 void ITKImageProcessingPlugin::setSCIFIOEnvironmentVariables()
 {
-  QFileInfo fi = QFileInfo(QCoreApplication::applicationDirPath());
+  QString applicationDir = QCoreApplication::applicationDirPath();
   #ifndef WIN32
-  QString applicationDir = fi.absolutePath(); // Goes up one directory (bin/..)
+  QFileInfo fi = QFileInfo(applicationDir);
+  applicationDir = fi.absolutePath(); // Goes up one directory (bin/..)
   #endif
   std::string SCIFIO_PATH = std::string("SCIFIO_PATH=")+applicationDir.toStdString()+"/lib/jars";
   itksys::SystemTools::PutEnv(SCIFIO_PATH);
