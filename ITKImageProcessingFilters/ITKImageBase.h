@@ -185,8 +185,8 @@ class ITKImageBase : public AbstractFilter
     template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
     void dataCheck()
     {
-      typedef typename itk::NumericTraits<InputPixelType>::ValueType   InputValueType;
-      typedef typename itk::NumericTraits<OutputPixelType>::ValueType   OutputValueType;
+      typedef typename itk::NumericTraits<InputPixelType>::ValueType  InputValueType;
+      typedef typename itk::NumericTraits<OutputPixelType>::ValueType OutputValueType;
       // Check data array
       typename DataArray<InputValueType>::WeakPointer selectedCellArrayPtr;
       InputValueType* selectedCellArray;

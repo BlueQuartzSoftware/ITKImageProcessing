@@ -90,6 +90,7 @@ set(_PublicFilters
   ITKAdaptiveHistogramEqualizationImage
   ITKCastImage
   ITKMedianImage
+  ITKRGBToLuminanceImage
 )
 
 
