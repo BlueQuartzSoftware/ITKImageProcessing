@@ -31,7 +31,13 @@
 namespace itk
 {
   /** \class Dream3DImage
-  *  \brief Templated n-dimensional Dream3DImage class.
+  *  \brief Templated n-dimensional Dream3DImage class that uses malloc/free.
+  *
+  * This class differs from itk::Image in its memory allocator. Memory is manage
+  * with malloc and free instead of new and delete, respectively. This is useful
+  * if one needs to import the data container from * or export the data to a
+  * section of code that manages memory with malloc and free. The behavior of
+  * mixing malloc/free and new/delete is undefined and should be avoided.
   *
   * Dream3DImages are templated over a pixel type (modeling the dependent
   * variables), and a dimension (number of independent variables).  The
@@ -60,13 +66,6 @@ namespace itk
   * The data in an image is arranged in a 1D array as [][][][slice][row][col]
   * with the column index varying most rapidly.  The Index type reverses
   * the order so that with Index[0] = col, Index[1] = row, Index[2] = slice,
-  * ...
-  *
-  * Memory is manage with malloc and free instead of respectively new and
-  * delete. This is useful if one needs to import the data container from
-  * or export the data to a section of code that manages memory with malloc
-  * and free. The behavior of mixing malloc/free and new/delete is undefined
-  * and should be avoided. 
   *
   * \sa Image
   * \sa ImageBase
