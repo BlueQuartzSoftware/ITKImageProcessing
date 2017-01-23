@@ -728,6 +728,7 @@ def main(argv=None):
     parser.add_argument('-vv', '--ExtraVerbose', dest='extra_verbose', action='store_true', help="Extra verbose")
     parser.add_argument('-n', '--NotImplemented', dest='not_implemented', action='store_true', help="Hide errors due to not yet implemented")
     parser.add_argument('-o', '--Overwrite', dest='overwrite', action='store_true', help="Overwrite files previously generated automatically")
+    parser.add_argument('-b', '--DisableVerifications', dest='disable_verifications', action='store_true', help="Disable Verifications")
     parser.add_argument('-I', '--ITK_SRC_DIR', dest='itk_dir', required=True, help="ITK source directory")
     parser.set_defaults(verbose=False)
     options = parser.parse_args(argv[1:])
@@ -808,13 +809,14 @@ def main(argv=None):
             print("skipping this filter")
             continue
         # Verifies limitations
-        if not VerifyLimitations(general, [filter_description], options.verbose) or\
-           not VerifyLimitations(inputs, filter_inputs, options.verbose) or\
-           not VerifyLimitations(members, filter_members, options.verbose) or\
-           not VerifyLimitations(tests, filter_tests, options.verbose) or\
-           not VerifyLimitations(tests_settings, filter_test_settings, options.verbose, True):
-            print "VerifyLimitations Failed"
-            continue
+        if not options.disable_verifications:
+            if not VerifyLimitations(general, [filter_description], options.verbose) or\
+               not VerifyLimitations(inputs, filter_inputs, options.verbose) or\
+               not VerifyLimitations(members, filter_members, options.verbose) or\
+               not VerifyLimitations(tests, filter_tests, options.verbose) or\
+               not VerifyLimitations(tests_settings, filter_test_settings, options.verbose, True):
+                print "VerifyLimitations Failed"
+                continue
         # Filter lists in fields
         FilterFields(general, [filter_description])
         FilterFields(inputs, filter_inputs)
