@@ -15,7 +15,7 @@
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkInPlaceImageToDream3DDataFilter.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DFilterInterruption.h"
 
-
+#include <itkCastImageFilter.h>
 #include <itkNumericTraits.h>
 
 /**
@@ -281,6 +281,76 @@ class ITKImageBase : public AbstractFilter
     notifyStatusMessage(getHumanLabel(), "Complete");
     }
 
+
+    /**
+    * @brief Applies the filter, casting the input to float
+    */
+    template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension, typename FilterType, typename FloatImageType>
+    void filterCastToFloat(FilterType* filter)
+    {
+      try
+      {
+        DataArrayPath dap = getSelectedCellArrayPath();
+        DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(dap.getDataContainerName());
+
+        typedef itk::InPlaceDream3DDataToImageFilter<InputPixelType, Dimension> toITKType;
+        // Create a Bridge to wrap an existing DREAM.3D array with an ItkImage container
+        typename toITKType::Pointer toITK = toITKType::New();
+        toITK->SetInput(dc);
+        toITK->SetInPlace(true);
+        toITK->SetAttributeMatrixArrayName(getSelectedCellArrayPath().getAttributeMatrixName().toStdString());
+        toITK->SetDataArrayName(getSelectedCellArrayPath().getDataArrayName().toStdString());
+
+        itk::Dream3DFilterInterruption::Pointer interruption = itk::Dream3DFilterInterruption::New();
+        interruption->SetFilter(this);
+
+        typedef typename toITKType::ImageType                          InputImageType;
+        typedef itk::CastImageFilter< InputImageType, FloatImageType > CasterToType;
+        typename CasterToType::Pointer casterTo = CasterToType::New();
+        casterTo->SetInput(toITK->GetOutput());
+
+        // Set up filter
+        filter->SetInput(casterTo->GetOutput());
+        filter->AddObserver(itk::ProgressEvent(), interruption);
+
+        typedef itk::Dream3DImage<OutputPixelType, Dimension>           OutputImageType;
+        typedef itk::CastImageFilter< FloatImageType, OutputImageType > CasterFromType;
+        typename CasterFromType::Pointer casterFrom = CasterFromType::New();
+        casterFrom->SetInput(filter->GetOutput());
+        casterFrom->Update();
+
+        typename OutputImageType::Pointer image = OutputImageType::New();
+        image = casterFrom->GetOutput();
+        image->DisconnectPipeline();
+        std::string outputArrayName(getNewCellArrayName().toStdString());
+
+        if (getSaveAsNewArray() == false)
+        {
+          outputArrayName = getSelectedCellArrayPath().getDataArrayName().toStdString();
+          AttributeMatrix::Pointer attrMat = dc->getAttributeMatrix(getSelectedCellArrayPath().getAttributeMatrixName());
+          // Remove the original input data array
+          attrMat->removeAttributeArray(getSelectedCellArrayPath().getDataArrayName());
+        }
+
+        typedef itk::InPlaceImageToDream3DDataFilter<OutputPixelType, Dimension> toDream3DType;
+        typename toDream3DType::Pointer toDream3DFilter = toDream3DType::New();
+        toDream3DFilter->SetInput(image);
+        toDream3DFilter->SetInPlace(true);
+        toDream3DFilter->SetAttributeMatrixArrayName(getSelectedCellArrayPath().getAttributeMatrixName().toStdString());
+        toDream3DFilter->SetDataArrayName(outputArrayName);
+        toDream3DFilter->SetDataContainer(dc);
+        toDream3DFilter->Update();
+      }
+      catch (itk::ExceptionObject & err)
+      {
+        setErrorCondition(-5);
+        QString errorMessage = "ITK exception was thrown while filtering input image: %1";
+        notifyErrorMessage(getHumanLabel(), errorMessage.arg(err.GetDescription()), getErrorCondition());
+        return;
+      }
+
+    notifyStatusMessage(getHumanLabel(), "Complete");
+    }
 
     /**
     * @brief CheckIntegerEntry: Input types can only be of certain types (float, double, bool, int).
