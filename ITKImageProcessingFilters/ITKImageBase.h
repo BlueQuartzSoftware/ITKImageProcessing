@@ -152,7 +152,7 @@ class ITKImageBase : public AbstractFilter
     /**
      * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
      * be pushed from a user-facing control (such as a widget)
-     * @param filter Filter instance pointer 
+     * @param filter Filter instance pointer
      */
     void updateFilterParameters(AbstractFilter* filter);
 
@@ -227,64 +227,59 @@ class ITKImageBase : public AbstractFilter
     void filter(FilterType* filter)
     {
       try
-    {
-      DataArrayPath dap = getSelectedCellArrayPath();
-      DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(dap.getDataContainerName());
-
-//      typedef itk::Dream3DImage<InputPixelType, Dimension> InputImageType;
-      typedef itk::Dream3DImage<OutputPixelType, Dimension> OutputImageType;
-      typedef itk::InPlaceDream3DDataToImageFilter<InputPixelType, Dimension> toITKType;
-      // Create a Bridge to wrap an existing DREAM.3D array with an ItkImage container
-      typename toITKType::Pointer toITK = toITKType::New();
-      toITK->SetInput(dc);
-      toITK->SetInPlace(true);
-      toITK->SetAttributeMatrixArrayName(getSelectedCellArrayPath().getAttributeMatrixName().toStdString());
-      toITK->SetDataArrayName(getSelectedCellArrayPath().getDataArrayName().toStdString());
-
-      itk::Dream3DFilterInterruption::Pointer interruption = itk::Dream3DFilterInterruption::New();
-      interruption->SetFilter(this);
-
-      // Set up filter
-      filter->SetInput(toITK->GetOutput());
-      filter->AddObserver(itk::ProgressEvent(), interruption);
-      filter->Update();
-
-      typename OutputImageType::Pointer image = OutputImageType::New();
-      image = filter->GetOutput();
-      image->DisconnectPipeline();
-      std::string outputArrayName(getNewCellArrayName().toStdString());
-
-      if (getSaveAsNewArray() == false)
       {
-        outputArrayName = getSelectedCellArrayPath().getDataArrayName().toStdString();
-        AttributeMatrix::Pointer attrMat = dc->getAttributeMatrix(getSelectedCellArrayPath().getAttributeMatrixName());
-        // Remove the original input data array
-        attrMat->removeAttributeArray(getSelectedCellArrayPath().getDataArrayName());
+        DataArrayPath dap = getSelectedCellArrayPath();
+        DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(dap.getDataContainerName());
+
+        typedef itk::Dream3DImage<OutputPixelType, Dimension> OutputImageType;
+        typedef itk::InPlaceDream3DDataToImageFilter<InputPixelType, Dimension> toITKType;
+        // Create a Bridge to wrap an existing DREAM.3D array with an ItkImage container
+        typename toITKType::Pointer toITK = toITKType::New();
+        toITK->SetInput(dc);
+        toITK->SetInPlace(true);
+        toITK->SetAttributeMatrixArrayName(getSelectedCellArrayPath().getAttributeMatrixName().toStdString());
+        toITK->SetDataArrayName(getSelectedCellArrayPath().getDataArrayName().toStdString());
+
+        itk::Dream3DFilterInterruption::Pointer interruption = itk::Dream3DFilterInterruption::New();
+        interruption->SetFilter(this);
+
+        // Set up filter
+        filter->SetInput(toITK->GetOutput());
+        filter->AddObserver(itk::ProgressEvent(), interruption);
+        filter->Update();
+
+        typename OutputImageType::Pointer image = OutputImageType::New();
+        image = filter->GetOutput();
+        image->DisconnectPipeline();
+        std::string outputArrayName(getNewCellArrayName().toStdString());
+
+        if (getSaveAsNewArray() == false)
+        {
+          outputArrayName = getSelectedCellArrayPath().getDataArrayName().toStdString();
+          AttributeMatrix::Pointer attrMat = dc->getAttributeMatrix(getSelectedCellArrayPath().getAttributeMatrixName());
+          // Remove the original input data array
+          attrMat->removeAttributeArray(getSelectedCellArrayPath().getDataArrayName());
+        }
+
+        typedef itk::InPlaceImageToDream3DDataFilter<OutputPixelType, Dimension> toDream3DType;
+        typename toDream3DType::Pointer toDream3DFilter = toDream3DType::New();
+        toDream3DFilter->SetInput(image);
+        toDream3DFilter->SetInPlace(true);
+        toDream3DFilter->SetAttributeMatrixArrayName(getSelectedCellArrayPath().getAttributeMatrixName().toStdString());
+        toDream3DFilter->SetDataArrayName(outputArrayName);
+        toDream3DFilter->SetDataContainer(dc);
+        toDream3DFilter->Update();
       }
-      
-
-      typedef itk::InPlaceImageToDream3DDataFilter<OutputPixelType, Dimension> toDream3DType;
-      typename toDream3DType::Pointer toDream3DFilter = toDream3DType::New();
-      toDream3DFilter->SetInput(image);
-      toDream3DFilter->SetInPlace(true);
-      toDream3DFilter->SetAttributeMatrixArrayName(getSelectedCellArrayPath().getAttributeMatrixName().toStdString());
-      toDream3DFilter->SetDataArrayName(outputArrayName);
-      toDream3DFilter->SetDataContainer(dc);
-      toDream3DFilter->Update();
-
-
-    }
-    catch (itk::ExceptionObject & err)
-    {
-      setErrorCondition(-5);
-      QString errorMessage = "ITK exception was thrown while filtering input image: %1";
-      notifyErrorMessage(getHumanLabel(), errorMessage.arg(err.GetDescription()), getErrorCondition());
-      return;
-    }
+      catch (itk::ExceptionObject & err)
+      {
+        setErrorCondition(-5);
+        QString errorMessage = "ITK exception was thrown while filtering input image: %1";
+        notifyErrorMessage(getHumanLabel(), errorMessage.arg(err.GetDescription()), getErrorCondition());
+        return;
+      }
 
     notifyStatusMessage(getHumanLabel(), "Complete");
-
-}
+    }
 
 
     /**
