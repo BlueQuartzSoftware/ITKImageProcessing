@@ -131,7 +131,7 @@ void ITKCurvatureAnisotropicDiffusionImage::filter()
   filter->SetConductanceScalingUpdateInterval(static_cast<unsigned int>(m_ConductanceScalingUpdateInterval));
   filter->SetNumberOfIterations(static_cast<uint32_t>(m_NumberOfIterations));
 
-  this->ITKImageBase::filterCastToFloat< InputPixelType, OutputPixelType, Dimension, FilterType, FloatImageType >(filter);
+  this->ITKImageBase::filterCastToFloat< InputPixelType, InputPixelType, Dimension, FilterType, FloatImageType >(filter);
 }
 
 // -----------------------------------------------------------------------------

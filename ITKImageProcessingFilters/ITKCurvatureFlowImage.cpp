@@ -112,15 +112,17 @@ void ITKCurvatureFlowImage::dataCheckInternal()
 template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ITKCurvatureFlowImage::filter()
 {
-  typedef itk::Dream3DImage<InputPixelType, Dimension> InputImageType;
-  typedef itk::Dream3DImage<OutputPixelType, Dimension> OutputImageType;
-  //define filter
-  typedef itk::CurvatureFlowImageFilter<InputImageType, OutputImageType> FilterType;
+  typedef itk::Dream3DImage<InputPixelType, Dimension>                    InputImageType;
+  typedef itk::Dream3DImage<OutputPixelType, Dimension>                   OutputImageType;
+  typedef typename itk::NumericTraits<InputPixelType>::RealType           FloatPixelType;
+  typedef itk::Dream3DImage< FloatPixelType, Dimension >                  FloatImageType;
+  typedef itk::CurvatureFlowImageFilter< FloatImageType, FloatImageType > FilterType;
+
   typename FilterType::Pointer filter = FilterType::New();
   filter->SetTimeStep(static_cast<double>(m_TimeStep));
   filter->SetNumberOfIterations(static_cast<uint32_t>(m_NumberOfIterations));
-  this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
 
+  this->ITKImageBase::filterCastToFloat< InputPixelType, InputPixelType, Dimension, FilterType, FloatImageType >(filter);
 }
 
 // -----------------------------------------------------------------------------

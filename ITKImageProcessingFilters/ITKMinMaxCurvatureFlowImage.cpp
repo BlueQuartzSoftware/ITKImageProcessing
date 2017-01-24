@@ -115,16 +115,18 @@ void ITKMinMaxCurvatureFlowImage::dataCheckInternal()
 template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ITKMinMaxCurvatureFlowImage::filter()
 {
-  typedef itk::Dream3DImage<InputPixelType, Dimension> InputImageType;
-  typedef itk::Dream3DImage<OutputPixelType, Dimension> OutputImageType;
-  //define filter
-  typedef itk::MinMaxCurvatureFlowImageFilter<InputImageType, OutputImageType> FilterType;
+  typedef itk::Dream3DImage<InputPixelType, Dimension>                          InputImageType;
+  typedef itk::Dream3DImage<OutputPixelType, Dimension>                         OutputImageType;
+  typedef typename itk::NumericTraits<InputPixelType>::RealType                 FloatPixelType;
+  typedef itk::Dream3DImage< FloatPixelType, Dimension >                        FloatImageType;
+  typedef itk::MinMaxCurvatureFlowImageFilter< FloatImageType, FloatImageType > FilterType;
+
   typename FilterType::Pointer filter = FilterType::New();
   filter->SetTimeStep(static_cast<double>(m_TimeStep));
   filter->SetNumberOfIterations(static_cast<uint32_t>(m_NumberOfIterations));
   filter->SetStencilRadius(static_cast<int>(m_StencilRadius));
-  this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
 
+  this->ITKImageBase::filterCastToFloat< InputPixelType, InputPixelType, Dimension, FilterType, FloatImageType >(filter);
 }
 
 // -----------------------------------------------------------------------------
