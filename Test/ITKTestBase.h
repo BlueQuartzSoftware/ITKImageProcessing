@@ -236,7 +236,7 @@ int GetDataArray(DataContainerArray::Pointer &containerArray,
     DREAM3D_REQUIRE_VALID_POINTER(imageGeometry.get());
     imageGeometry->getDimensions(tDims[0], tDims[1], tDims[2]);
     type = ptr->getTypeAsString();
-    cDims = ptr->getComponentDimensions();                                                                                        \
+    cDims = ptr->getComponentDimensions();
     return 0;
 }
 
