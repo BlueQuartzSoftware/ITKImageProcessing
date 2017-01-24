@@ -35,7 +35,6 @@ set(TEST_NAMES
   ITKImageProcessingWriter
   ITKImageProcessingImportImageStack
   ITKImageProcessingImage
-  ITKBinaryThreshold
   ITKAbsImage
   ITKAcosImage
   ITKAtanImage
