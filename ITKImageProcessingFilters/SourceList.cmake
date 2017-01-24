@@ -89,6 +89,7 @@ set(_PublicFilters
   ITKSmoothingRecursiveGaussianImage
   ITKAdaptiveHistogramEqualizationImage
   ITKCastImage
+  ITKMedianImage
 )
 
 

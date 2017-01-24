@@ -94,6 +94,7 @@ set(TEST_NAMES
   ITKSmoothingRecursiveGaussianImage
   ITKAdaptiveHistogramEqualizationImage
   ITKCastImage
+  ITKMedianImage
   )
 
 set( ${PLUGIN_NAME}_TEST_SRCS )
