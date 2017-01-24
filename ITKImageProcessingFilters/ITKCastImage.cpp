@@ -107,8 +107,8 @@ void ITKCastImage::dataCheck()
   setErrorCondition(0);
   typedef typename itk::NumericTraits<InputPixelType>::ValueType   InputValueType;
   typedef typename itk::NumericTraits<OutputPixelType>::ValueType   OutputValueType;
-  if(std::numeric_limits<InputValueType>::max() > std::numeric_limits<OutputValueType>::max()
-    || std::numeric_limits<InputValueType>::lowest() < std::numeric_limits<OutputValueType>::lowest()
+  if(static_cast< double >(std::numeric_limits<InputValueType>::max()) > static_cast< double>(std::numeric_limits<OutputValueType>::max())
+    || static_cast< double >(std::numeric_limits<InputValueType>::lowest()) < static_cast< double >(std::numeric_limits<OutputValueType>::lowest())
     )
   {
     setErrorCondition(-5);
