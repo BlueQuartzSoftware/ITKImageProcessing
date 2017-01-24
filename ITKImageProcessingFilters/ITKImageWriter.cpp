@@ -44,11 +44,9 @@
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
 #include "ITKImageProcessingPlugin.h"
-#include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
-#undef DREAM3D_USE_RGBA
 #define DREAM3D_USE_RGBA 1
-#undef DREAM3D_USE_Vector
 #define DREAM3D_USE_Vector 1
+#include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
 
 // ITK includes
 #include <itkImageFileWriter.h>

@@ -2,18 +2,78 @@
 // VTK (www.vtk.org), we create macros that allow to easily
 // choose which template version of a function to run.
 
+// --------------------
+// Content of this file
+// --------------------
 // Dream3DTemplateAliasMacro is used in a switch statement to
-// automatically generate duplicate code for all enabled scalar types.
+// automatically generate duplicate code for all enabled types.
 // The code can be written to create ITK filters in Dream3D.
 //
-// Example usage:
+// This file has 3 entry-point (main macros):
+//    Dream3DArraySwitchMacro(call, type, path, errorCondition)
+//    Dream3DArraySwitchMacroOutputType(call, path, errorCondition, typeOUT, typeOUTTypename)
+//    Dream3DArraySwitchOutputComponentMacro(call, type, path, errorCondition)
 //
-//  Dream3DArraySwitchMacro(dataCheck, getSelectedCellArrayPath(),-4);
+// ---------
+// Rationale
+// ---------
+// Why use a macro instead of implementing functions in a based class that would be derived:
+// If the functionalities implemented in the macros defined in this file were implemented
+// in methods defined in a base class that would be derived to specialize the processing
+// to perform, the templated base class function would have to call the templated derived
+// method that implements the processing. Since it is not possible to overload a templated
+// method, the solution of using macro was chosen.
+//
+// ------------
+// Macros usage
+// ------------
+// Dream3DArraySwitchMacro(...) and Dream3DArraySwitchMacroOutputType(...) correspond to the
+// same macro, but the latter allows to specify an "output type" that is different from the
+// input type.
+//
+//   Dream3DArraySwitchMacro(call, path, errorCondition);
 //  
-//  with:
-//   dataCheck: templated function to be called (one template parameter that specifies the data type).
-//   getSelectedCellArrayPath(): DataArrayPath that specifies the data array to extract the data type from.
-//   -4: errorCondition printed if type is not handled
+//       call : templated function to be called for each supported type
+//           Expected function signature:
+//               template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+//               void functionName()
+//       type : DataArrayPath that specifies the data array to extract the data type from.
+//              Typical value: getSelectedCellArrayPath()
+//       errorCondition : integer value set with setErrorCondition(int) if an error occurs
+//                        (e.g. type is not supported).
+//
+//   Dream3DArraySwitchMacroOutputType(call, path, errorCondition, typeOUT, typeOUTTypename);
+//
+//       call/path/errorCondition: See Dream3DArraySwitchMacro(...) above.
+//       typeOUT: output image component type (e.g. float)
+//       typeOUTTypename: If typeOUT is defined using the keyword "typename", set this to 1,
+//                        otherwise 0.
+//
+//   Dream3DArraySwitchOutputComponentMacro(call, type, path, errorCondition);
+//
+//       It is used instead of Dream3DArraySwitchMacroOutputType(...) if the output image
+//       component type of a filter is independent from the input image component type.
+//       This macro calls Dream3DArraySwitchMacroOutputType(...) for each supported component
+//       type (See ITKCastImage.cpp)
+//
+// --------------------------------
+// Pixel and component type support
+// --------------------------------
+//
+// Pixel Types can be individually activated or deactivated. By default, scalar pixel types are
+// supported while RGBA and Vector pixel types are not.
+// To remove the support of scalar images, copy the following line before including this header
+// file:
+//   #define DREAM3D_USE_Scalar 0
+// To support RGBA pixels and vector pixels, copy the following lines:
+//   #define DREAM3D_USE_Vector 1
+//   #define DREAM3D_USE_RGBA   1
+//
+// You can also individually remove the support for certain component type. By default, all
+// integer and float types are supported.
+// To remove the support of uint8, copy before including this header file:
+//   #define DREAM3D_USE_uint8_t 0
+
 
 #ifndef _Dream3DTemplateAliasMacro_h
 #define _Dream3DTemplateAliasMacro_h
@@ -24,25 +84,71 @@
 #include <itkRGBAPixel.h>
 #include <itkImageIOBase.h>
 
-// Allow individual switching of support for each scalar size/signedness.
+//--------------------------------------------------------------------------
+// Allow individual switching of support for each scalar size/signedness and
+// pixel type.
 // These could be made advanced user options to be configured by CMake.
+#ifndef DREAM3D_USE_int8_t
 #define DREAM3D_USE_int8_t     1
+#endif
+
+#ifndef DREAM3D_USE_uint8_t
 #define DREAM3D_USE_uint8_t    1
+#endif
+
+#ifndef DREAM3D_USE_int16_t
 #define DREAM3D_USE_int16_t    1
+#endif
+
+#ifndef DREAM3D_USE_uint16_t
 #define DREAM3D_USE_uint16_t   1
+#endif
+
+#ifndef DREAM3D_USE_int32_t
 #define DREAM3D_USE_int32_t    1
+#endif
+
+#ifndef DREAM3D_USE_uint32_t
 #define DREAM3D_USE_uint32_t   1
+#endif
+
+#ifndef DREAM3D_USE_int64_t
 #define DREAM3D_USE_int64_t    1
+#endif
+
+#ifndef DREAM3D_USE_uint64_t
 #define DREAM3D_USE_uint64_t   1
+#endif
+
+#ifndef DREAM3D_USE_float
 #define DREAM3D_USE_float      1
+#endif
+
+#ifndef DREAM3D_USE_double
 #define DREAM3D_USE_double     1
+#endif
+
+#ifndef DREAM3D_USE_Scalar
+#define DREAM3D_USE_Scalar     1
+#endif
+
+#ifndef DREAM3D_USE_Vector
 #define DREAM3D_USE_Vector     0
+#endif
+
+#ifndef DREAM3D_USE_RGBA
 #define DREAM3D_USE_RGBA       0
+#endif
 //--------------------------------------------------------------------------
 
 // Define helper macros to switch types on and off.
 #define Q(x) #x
 #define QUOTE(x) Q(x)
+
+
+//////////////////////////////////////////////////////////////////////////////
+//                          Common to scalar, Vector and RGBA               //
+//////////////////////////////////////////////////////////////////////////////
 
 // Expand the value of typeIN to be able to concatenate it with 'DREAM3D_USE' to check if the type is accepted by the filter
 #define Dream3DTemplateAliasMacroCase(typeIN, typeOUT, call, var_type, tDims, errorCondition, isTypeOUT, typeOUTTypename)                    \
@@ -74,29 +180,31 @@
       Dream3DTemplateAliasMacroPixelType(typeIN, typeOUT, call, errorCondition, isTypeOUT, typeOUTTypename, 3)                               \
     }                                                                                                                                        \
   }
-// Handles vector, RGBA, and scalar images
-#define Dream3DTemplateAliasMacroPixelType(typeIN, typeOUT, call, errorCondition, isTypeOUT, typeOUTTypename, dimension)                          \
-    QVector<size_t> cDims = ptr->getComponentDimensions();                                                                                        \
-    if(cDims.size() > 1)                                                                                                                          \
-    {                                                                                                                                             \
-      Dream3DTemplateAliasMacroCaseVectorImage0(typeIN, typeOUT, call, errorCondition, isTypeOUT, typeOUTTypename, dimension, DREAM3D_USE_Vector);\
-    }                                                                                                                                             \
-    else                                                                                                                                          \
-    {                                                                                                                                             \
-      if(cDims[0] == 1)                                                                                                                           \
-      {                                                                                                                                           \
-        Dream3DTemplateAliasMacroCase_1_##isTypeOUT(typeIN, typeOUT, call, typeOUTTypename, dimension);                                           \
-      }                                                                                                                                           \
-      else if(cDims[0] == 4)                                                                                                                      \
-      {                                                                                                                                           \
-        Dream3DTemplateAliasMacroCaseRGBAImage0(typeIN, typeOUT, call, errorCondition, isTypeOUT, typeOUTTypename, dimension, DREAM3D_USE_RGBA);  \
-      }                                                                                                                                           \
-      else                                                                                                                                        \
-      {                                                                                                                                           \
-        setErrorCondition(errorCondition);                                                                                                        \
-        notifyErrorMessage(getHumanLabel(), QString("Size of tuple not handled:%1").arg(cDims[0]), getErrorCondition());                          \
-      }                                                                                                                                           \
+
+// Select vector, RGBA, or scalar images
+#define Dream3DTemplateAliasMacroPixelType(typeIN, typeOUT, call, errorCondition, isTypeOUT, typeOUTTypename, dimension)                             \
+    QVector<size_t> cDims = ptr->getComponentDimensions();                                                                                           \
+    if(cDims.size() > 1)                                                                                                                             \
+    {                                                                                                                                                \
+      Dream3DTemplateAliasMacroCaseVectorImage0(typeIN, typeOUT, call, errorCondition, isTypeOUT, typeOUTTypename, dimension, DREAM3D_USE_Vector);   \
+    }                                                                                                                                                \
+    else                                                                                                                                             \
+    {                                                                                                                                                \
+      if(cDims[0] == 1)                                                                                                                              \
+      {                                                                                                                                              \
+        Dream3DTemplateAliasMacroCaseScalarImage0(typeIN, typeOUT, call, errorCondition, isTypeOUT, typeOUTTypename, dimension, DREAM3D_USE_Scalar); \
+      }                                                                                                                                              \
+      else if(cDims[0] == 4)                                                                                                                         \
+      {                                                                                                                                              \
+        Dream3DTemplateAliasMacroCaseRGBAImage0(typeIN, typeOUT, call, errorCondition, isTypeOUT, typeOUTTypename, dimension, DREAM3D_USE_RGBA);     \
+      }                                                                                                                                              \
+      else                                                                                                                                           \
+      {                                                                                                                                              \
+        setErrorCondition(errorCondition);                                                                                                           \
+        notifyErrorMessage(getHumanLabel(), QString("Size of tuple not handled:%1").arg(cDims[0]), getErrorCondition());                             \
+      }                                                                                                                                              \
     }
+
 // Replaces typeOUT by typeIN if no typeOUT is given
 #define Dream3DTemplateAliasMacroCase_1_0(typeIN, typeOUT, call, typeOUTTypename, dimension)                                                 \
   Dream3DTemplateAliasMacroCaseIf(typeIN, typeIN, call, typeOUTTypename, dimension)
@@ -114,6 +222,21 @@
   typedef itk::Dream3DImage<typeIN, dimension> InputImageType;
 #define DefineInputImageType2(typeIN, dimension) \
   typedef itk::Dream3DImage<typeIN, dimension> TImageType;
+///////////////////////////////////////////////////////////////////////////////////////////////
+//                                    Handles scalar images                                  //
+///////////////////////////////////////////////////////////////////////////////////////////////
+// Expands the value of 'Scalar' that is 0 if the filter does not accept 'Scalar' images, and '1' if it does.
+#define Dream3DTemplateAliasMacroCaseScalarImage0(typeIN, typeOUT, call, errorCondition, isTypeOUT, typeOUTTypename, dimension, Scalar) \
+  Dream3DTemplateAliasMacroCaseScalarImage1(typeIN, typeOUT, call, errorCondition, isTypeOUT, typeOUTTypename, dimension, Scalar)
+#define Dream3DTemplateAliasMacroCaseScalarImage1(typeIN, typeOUT, call, errorCondition, isTypeOUT, typeOUTTypename, dimension, Scalar) \
+  Dream3DTemplateAliasMacroCaseScalarImage1_##Scalar(typeIN, typeOUT, call, errorCondition, isTypeOUT, typeOUTTypename, dimension)
+// Scalar images not accepted, throw an error message if a scalar image is given.
+#define Dream3DTemplateAliasMacroCaseScalarImage1_0(typeIN, typeOUT, call, errorCondition, isTypeOUT, typeOUTTypename, dimension)       \
+  setErrorCondition(errorCondition);                                                                                                    \
+  notifyErrorMessage(getHumanLabel(), "Scalar not supported", getErrorCondition());
+// Scalar images accepted
+#define Dream3DTemplateAliasMacroCaseScalarImage1_1(typeIN, typeOUT, call, errorCondition, isTypeOUT, typeOUTTypename, dimension)       \
+  Dream3DTemplateAliasMacroCase_1_##isTypeOUT(typeIN, typeOUT, call, typeOUTTypename, dimension)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 //                                    Handles vector images                                  //
@@ -152,6 +275,7 @@
         setErrorCondition(errorCondition);                                                                                              \
         notifyErrorMessage(getHumanLabel(), "Vector dimension not supported", getErrorCondition());                                     \
       }
+
 //////////////////////////////////////////////////////////////////////////////
 //                          Handles RGBA images                             //
 //////////////////////////////////////////////////////////////////////////////
@@ -168,7 +292,9 @@
 #define Dream3DTemplateAliasMacroCaseRGBAImage1_1(typeIN, typeOUT, call, errorCondition, isTypeOUT, typeOUTTypename, dimension)         \
   Dream3DTemplateAliasMacroCase_1_##isTypeOUT(itk::RGBAPixel<typeIN>, itk::RGBAPixel<typeOUT>, call, typeOUTTypename, dimension)
 
-  
+//////////////////////////////////////////////////////////////////////////////
+//                "switch case" statements between each type                //
+//////////////////////////////////////////////////////////////////////////////
 // Define a macro to dispatch calls to a template instantiated over
 // the aliased scalar types.
 #define Dream3DTemplateAliasMacro(call, var_type, typeOUT, tDims, errorCondition, isTypeOUT, typeOUTTypename)              \
@@ -218,6 +344,10 @@
     }                                                                                                          \
   }
 
+//////////////////////////////////////////////////////////////////////////////
+//              Main entry points (fixed output component type              //
+//////////////////////////////////////////////////////////////////////////////
+
 // Define a macro that is specific to Dream3D and dispatches calls to a template
 // instantiated over the aliased scalar type based on the type of a data array
 // which is saved in the filter's data container array.
@@ -230,47 +360,52 @@
 #define Dream3DArraySwitchMacro(call, path, errorCondition) \
   Dream3DArraySwitchMacroLongOutputType(call, path, errorCondition, "", 0, 0)
 
-// Define macro to select the output image component type.
+
+///////////////////////////////////////////////////////////////////////////////////////
+//          Entry Point : manually select the output image component type            //
+///////////////////////////////////////////////////////////////////////////////////////
+//
 // Subtract 1 to enum values because 'type' values are expected to start at 0 while
 // itk::ImageIOBase::IOComponentType '0' value is UNKNOWNCOMPONENTTYPE and therefore
 // should be skipped.
-#define Dream3DArraySwitchOutputComponentMacro(call, type, path, errorCondition) \
-   switch(type)\
-   {\
-     case itk::ImageIOBase::IOComponentType::UCHAR-1:\
-             Dream3DArraySwitchMacroOutputType(call, path, -4,uint8_t,0);\
-             break;\
-     case itk::ImageIOBase::IOComponentType::CHAR-1:\
-             Dream3DArraySwitchMacroOutputType(call, path, -4,int8_t,0);\
-             break;\
-     case itk::ImageIOBase::IOComponentType::USHORT-1:\
-             Dream3DArraySwitchMacroOutputType(call, path, -4,uint16_t,0);\
-             break;\
-     case itk::ImageIOBase::IOComponentType::SHORT-1:\
-             Dream3DArraySwitchMacroOutputType(call, path, -4,int16_t,0);\
-             break;\
-     case itk::ImageIOBase::IOComponentType::UINT-1:\
-             Dream3DArraySwitchMacroOutputType(call, path, -4,uint32_t,0);\
-             break;\
-     case itk::ImageIOBase::IOComponentType::INT-1:\
-             Dream3DArraySwitchMacroOutputType(call, path, -4,int32_t,0);\
-             break;\
-     case itk::ImageIOBase::IOComponentType::ULONG-1:\
-             Dream3DArraySwitchMacroOutputType(call, path, -4,uint64_t,0);\
-             break;\
-     case itk::ImageIOBase::IOComponentType::LONG-1:\
-             Dream3DArraySwitchMacroOutputType(call, path, -4,int64_t,0);\
-             break;\
-     case itk::ImageIOBase::IOComponentType::FLOAT-1:\
-             Dream3DArraySwitchMacroOutputType(call, path, -4,float,0);\
-             break;\
-     case itk::ImageIOBase::IOComponentType::DOUBLE-1:\
-             Dream3DArraySwitchMacroOutputType(call, path, -4,double,0);\
-             break;\
-     default:\
-             setErrorCondition(-4);\
-             notifyErrorMessage(getHumanLabel(), "Unsupported pixel component", errorCondition);\
-             break;\
+//
+#define Dream3DArraySwitchOutputComponentMacro(call, type, path, errorCondition)                 \
+   switch(type)                                                                                  \
+   {                                                                                             \
+     case itk::ImageIOBase::IOComponentType::UCHAR-1:                                            \
+             Dream3DArraySwitchMacroOutputType(call, path, -4,uint8_t,0);                        \
+             break;                                                                              \
+     case itk::ImageIOBase::IOComponentType::CHAR-1:                                             \
+             Dream3DArraySwitchMacroOutputType(call, path, -4,int8_t,0);                         \
+             break;                                                                              \
+     case itk::ImageIOBase::IOComponentType::USHORT-1:                                           \
+             Dream3DArraySwitchMacroOutputType(call, path, -4,uint16_t,0);                       \
+             break;                                                                              \
+     case itk::ImageIOBase::IOComponentType::SHORT-1:                                            \
+             Dream3DArraySwitchMacroOutputType(call, path, -4,int16_t,0);                        \
+             break;                                                                              \
+     case itk::ImageIOBase::IOComponentType::UINT-1:                                             \
+             Dream3DArraySwitchMacroOutputType(call, path, -4,uint32_t,0);                       \
+             break;                                                                              \
+     case itk::ImageIOBase::IOComponentType::INT-1:                                              \
+             Dream3DArraySwitchMacroOutputType(call, path, -4,int32_t,0);                        \
+             break;                                                                              \
+     case itk::ImageIOBase::IOComponentType::ULONG-1:                                            \
+             Dream3DArraySwitchMacroOutputType(call, path, -4,uint64_t,0);                       \
+             break;                                                                              \
+     case itk::ImageIOBase::IOComponentType::LONG-1:                                             \
+             Dream3DArraySwitchMacroOutputType(call, path, -4,int64_t,0);                        \
+             break;                                                                              \
+     case itk::ImageIOBase::IOComponentType::FLOAT-1:                                            \
+             Dream3DArraySwitchMacroOutputType(call, path, -4,float,0);                          \
+             break;                                                                              \
+     case itk::ImageIOBase::IOComponentType::DOUBLE-1:                                           \
+             Dream3DArraySwitchMacroOutputType(call, path, -4,double,0);                         \
+             break;                                                                              \
+     default:                                                                                    \
+             setErrorCondition(-4);                                                              \
+             notifyErrorMessage(getHumanLabel(), "Unsupported pixel component", errorCondition); \
+             break;                                                                              \
    }
 
-#endif
+#endif // _Dream3DTemplateAliasMacro_h
