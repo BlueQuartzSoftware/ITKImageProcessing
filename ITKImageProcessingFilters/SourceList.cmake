@@ -16,7 +16,6 @@ set(_PublicFilters
   ITKImageReader
   ITKImageWriter
   ITKImportImageStack
-  ITKBinaryThreshold
   ITKAbsImage
   ITKBoxMeanImage
   ITKAcosImage
