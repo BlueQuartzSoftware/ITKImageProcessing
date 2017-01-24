@@ -95,6 +95,7 @@ set(TEST_NAMES
   ITKAdaptiveHistogramEqualizationImage
   ITKCastImage
   ITKMedianImage
+  ITKRGBToLuminanceImage
   )
 
 set( ${PLUGIN_NAME}_TEST_SRCS )
