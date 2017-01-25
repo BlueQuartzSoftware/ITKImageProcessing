@@ -150,6 +150,6 @@ const QString ITKStandardDeviationProjectionImage::getHumanLabel()
 //
 // -----------------------------------------------------------------------------
 const QString ITKStandardDeviationProjectionImage::getSubGroupName()
-{ return "ITK ImageProjection"; }
+{ return "ITK Projection"; }
 
 
