@@ -104,7 +104,6 @@ void ITKRGBToLuminanceImage::dataCheckInternal()
 template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ITKRGBToLuminanceImage::filter()
 {
-  typedef itk::Dream3DImage<InputPixelType, Dimension>                    InputImageType;
   typedef typename itk::NumericTraits< InputPixelType >::ValueType        ScalarPixelType;
   typedef itk::Dream3DImage< ScalarPixelType, Dimension >                 OutputImageType;
 
