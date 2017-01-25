@@ -90,6 +90,7 @@ set(_PublicFilters
   ITKCastImage
   ITKMedianImage
   ITKRGBToLuminanceImage
+  ITKHistogramMatchingImage
 )
 
 
