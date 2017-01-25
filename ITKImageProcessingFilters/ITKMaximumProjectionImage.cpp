@@ -150,6 +150,6 @@ const QString ITKMaximumProjectionImage::getHumanLabel()
 //
 // -----------------------------------------------------------------------------
 const QString ITKMaximumProjectionImage::getSubGroupName()
-{ return "ITK ImageStatistics"; }
+{ return "ITK ImageProjection"; }
 
 
