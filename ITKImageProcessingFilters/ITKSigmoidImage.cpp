@@ -161,6 +161,6 @@ const QString ITKSigmoidImage::getHumanLabel()
 //
 // -----------------------------------------------------------------------------
 const QString ITKSigmoidImage::getSubGroupName()
-{ return "ITK ImageIntensity"; }
+{ return "ITK IntensityTransformation"; }
 
 

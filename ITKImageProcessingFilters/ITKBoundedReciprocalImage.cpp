@@ -145,6 +145,6 @@ const QString ITKBoundedReciprocalImage::getHumanLabel()
 //
 // -----------------------------------------------------------------------------
 const QString ITKBoundedReciprocalImage::getSubGroupName()
-{ return "ITK ImageIntensity"; }
+{ return "ITK IntensityTransformation"; }
 
 

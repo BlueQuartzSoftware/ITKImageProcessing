@@ -173,6 +173,6 @@ const QString ITKCastImage::getHumanLabel()
 //
 // -----------------------------------------------------------------------------
 const QString ITKCastImage::getSubGroupName()
-{ return "ITK ImageFilterBase"; }
+{ return "ITK IntensityTransformation"; }
 
 

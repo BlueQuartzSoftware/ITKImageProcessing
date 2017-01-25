@@ -161,6 +161,6 @@ const QString ITKIntensityWindowingImage::getHumanLabel()
 //
 // -----------------------------------------------------------------------------
 const QString ITKIntensityWindowingImage::getSubGroupName()
-{ return "ITK ImageIntensity"; }
+{ return "ITK IntensityTransformation"; }
 
 

@@ -145,6 +145,6 @@ const QString ITKTanImage::getHumanLabel()
 //
 // -----------------------------------------------------------------------------
 const QString ITKTanImage::getSubGroupName()
-{ return "ITK ImageIntensity"; }
+{ return "ITK IntensityTransformation"; }
 
 
