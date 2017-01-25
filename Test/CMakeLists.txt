@@ -97,6 +97,7 @@ set(TEST_NAMES
   ITKRGBToLuminanceImage
   ITKHistogramMatchingImage
   ITKMorphologicalWatershedImage
+  ITKMorphologicalWatershedFromMarkersImage
   )
 
 set( ${PLUGIN_NAME}_TEST_SRCS )

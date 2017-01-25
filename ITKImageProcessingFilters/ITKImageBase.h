@@ -411,6 +411,11 @@ class ITKImageBase : public AbstractFilter
     }
 
     /**
+    * @brief Check if image type corresponds to requirements
+    */
+    bool checkImageType(const QVector<QString> &types, const DataArrayPath &path);
+
+    /**
     * @brief Applies the filter
     */
     void virtual filterInternal() = 0 ;
