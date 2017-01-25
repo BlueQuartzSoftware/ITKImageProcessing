@@ -157,6 +157,6 @@ const QString ITKBinaryContourImage::getHumanLabel()
 //
 // -----------------------------------------------------------------------------
 const QString ITKBinaryContourImage::getSubGroupName()
-{ return "ITK ImageLabel"; }
+{ return "ITK SegmentationPostProcessing"; }
 
 

@@ -145,6 +145,6 @@ const QString ITKBinaryThinningImage::getHumanLabel()
 //
 // -----------------------------------------------------------------------------
 const QString ITKBinaryThinningImage::getSubGroupName()
-{ return "ITK BinaryMathematicalMorphology"; }
+{ return "ITK SegmentationPostProcessing"; }
 
 
