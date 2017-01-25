@@ -237,7 +237,7 @@
 // Scalar images not accepted, throw an error message if a scalar image is given.
 #define Dream3DTemplateAliasMacroCaseScalarImage1_0(typeIN, typeOUT, call, errorCondition, isTypeOUT, typeOUTTypename, dimension)       \
   setErrorCondition(errorCondition);                                                                                                    \
-  notifyErrorMessage(getHumanLabel(), "Scalar not supported", getErrorCondition());
+  notifyErrorMessage(getHumanLabel(), "Scalar images not supported. Try RGBA or vector images", getErrorCondition());
 // Scalar images accepted
 #define Dream3DTemplateAliasMacroCaseScalarImage1_1(typeIN, typeOUT, call, errorCondition, isTypeOUT, typeOUTTypename, dimension)       \
   Dream3DTemplateAliasMacroCase_1_##isTypeOUT(typeIN, typeOUT, call, typeOUTTypename, dimension)
@@ -261,7 +261,7 @@
 // Vector images not accepted, throw an error message if a vector image is given.
 #define Dream3DTemplateAliasMacroCaseVectorImage1_0(typeIN, typeOUT, call, errorCondition, isTypeOUT, typeOUTTypename, dimension)       \
   setErrorCondition(errorCondition);                                                                                                    \
-  notifyErrorMessage(getHumanLabel(), "Vector not supported", getErrorCondition());
+  notifyErrorMessage(getHumanLabel(), "Vector not supported. Try converting the selected input image to an image with scalar components using 'ITK::RGB to Luminance ImageFilter' or 'Convert Rgb To GrayScale' filters", getErrorCondition());
 // Vector images: Call the given function with the correct dimension after defining the input and output vector types.
 #define Dream3DTemplateAliasMacroCaseVectorImage1_1(typeIN, typeOUT, call, errorCondition, isTypeOUT, typeOUTTypename, dimension)       \
       if(cDims.size() == 2)                                                                                                             \
@@ -277,7 +277,7 @@
       else                                                                                                                              \
       {                                                                                                                                 \
         setErrorCondition(errorCondition);                                                                                              \
-        notifyErrorMessage(getHumanLabel(), "Vector dimension not supported", getErrorCondition());                                     \
+        notifyErrorMessage(getHumanLabel(), "Vector dimension not supported. Try converting the selected input image to an image with scalar components using 'ITK::RGB to Luminance ImageFilter' or 'Convert Rgb To GrayScale' filters", getErrorCondition());                                     \
       }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -291,7 +291,7 @@
 // If RGBA not accepted by the current filter, prints an error message
 #define Dream3DTemplateAliasMacroCaseRGBAImage1_0(typeIN, typeOUT, call, errorCondition, isTypeOUT, typeOUTTypename, dimension)         \
   setErrorCondition(errorCondition);                                                                                                    \
-  notifyErrorMessage(getHumanLabel(), "RGBA not supported", getErrorCondition());
+  notifyErrorMessage(getHumanLabel(), "RGBA not supported. Try converting the selected input image to an image with scalar components using 'ITK::RGB to Luminance ImageFilter' or 'Convert Rgb To GrayScale' filters", getErrorCondition());
 // If RGBA accepted by current filter, call the macro that will call the given function
 #define Dream3DTemplateAliasMacroCaseRGBAImage1_1(typeIN, typeOUT, call, errorCondition, isTypeOUT, typeOUTTypename, dimension)         \
   Dream3DTemplateAliasMacroCase_1_##isTypeOUT(itk::RGBAPixel<typeIN>, itk::RGBAPixel<typeOUT>, call, typeOUTTypename, dimension)
