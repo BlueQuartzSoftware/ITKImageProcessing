@@ -119,8 +119,6 @@ void ITKCurvatureAnisotropicDiffusionImage::dataCheckInternal()
 template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ITKCurvatureAnisotropicDiffusionImage::filter()
 {
-  typedef itk::Dream3DImage<InputPixelType, Dimension>                                 InputImageType;
-  typedef itk::Dream3DImage<OutputPixelType, Dimension>                                OutputImageType;
   typedef typename itk::NumericTraits<InputPixelType>::RealType                        FloatPixelType;
   typedef itk::Dream3DImage< FloatPixelType, Dimension >                               FloatImageType;
   typedef itk::CurvatureAnisotropicDiffusionImageFilter< FloatImageType, FloatImageType > FilterType;
