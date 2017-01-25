@@ -155,6 +155,6 @@ const QString ITKZeroCrossingImage::getHumanLabel()
 //
 // -----------------------------------------------------------------------------
 const QString ITKZeroCrossingImage::getSubGroupName()
-{ return "ITK ImageFeature"; }
+{ return "ITK ImageEdge"; }
 
 
