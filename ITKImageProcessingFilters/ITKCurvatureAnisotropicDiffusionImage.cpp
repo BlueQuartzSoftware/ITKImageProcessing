@@ -119,17 +119,19 @@ void ITKCurvatureAnisotropicDiffusionImage::dataCheckInternal()
 template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ITKCurvatureAnisotropicDiffusionImage::filter()
 {
-  typedef itk::Dream3DImage<InputPixelType, Dimension> InputImageType;
-  typedef itk::Dream3DImage<OutputPixelType, Dimension> OutputImageType;
-  //define filter
-  typedef itk::CurvatureAnisotropicDiffusionImageFilter<InputImageType, OutputImageType> FilterType;
+  typedef itk::Dream3DImage<InputPixelType, Dimension>                                 InputImageType;
+  typedef itk::Dream3DImage<OutputPixelType, Dimension>                                OutputImageType;
+  typedef typename itk::NumericTraits<InputPixelType>::RealType                        FloatPixelType;
+  typedef itk::Dream3DImage< FloatPixelType, Dimension >                               FloatImageType;
+  typedef itk::CurvatureAnisotropicDiffusionImageFilter< FloatImageType, FloatImageType > FilterType;
+
   typename FilterType::Pointer filter = FilterType::New();
   filter->SetTimeStep(static_cast<double>(m_TimeStep));
   filter->SetConductanceParameter(static_cast<double>(m_ConductanceParameter));
   filter->SetConductanceScalingUpdateInterval(static_cast<unsigned int>(m_ConductanceScalingUpdateInterval));
   filter->SetNumberOfIterations(static_cast<uint32_t>(m_NumberOfIterations));
-  this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
 
+  this->ITKImageBase::filterCastToFloat< InputPixelType, InputPixelType, Dimension, FilterType, FloatImageType >(filter);
 }
 
 // -----------------------------------------------------------------------------
