@@ -149,6 +149,6 @@ const QString ITKNormalizeToConstantImage::getHumanLabel()
 //
 // -----------------------------------------------------------------------------
 const QString ITKNormalizeToConstantImage::getSubGroupName()
-{ return "ITK ImageIntensity"; }
+{ return "ITK IntensityTransformation"; }
 
 

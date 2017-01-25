@@ -153,6 +153,6 @@ const QString ITKShiftScaleImage::getHumanLabel()
 //
 // -----------------------------------------------------------------------------
 const QString ITKShiftScaleImage::getSubGroupName()
-{ return "ITK ImageIntensity"; }
+{ return "ITK IntensityTransformation"; }
 
 

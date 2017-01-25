@@ -145,6 +145,6 @@ const QString ITKSobelEdgeDetectionImage::getHumanLabel()
 //
 // -----------------------------------------------------------------------------
 const QString ITKSobelEdgeDetectionImage::getSubGroupName()
-{ return "ITK ImageFeature"; }
+{ return "ITK Edge"; }
 
 

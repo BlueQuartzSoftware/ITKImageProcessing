@@ -158,6 +158,6 @@ const QString ITKBinaryProjectionImage::getHumanLabel()
 //
 // -----------------------------------------------------------------------------
 const QString ITKBinaryProjectionImage::getSubGroupName()
-{ return "ITK ImageStatistics"; }
+{ return "ITK Projection"; }
 
 

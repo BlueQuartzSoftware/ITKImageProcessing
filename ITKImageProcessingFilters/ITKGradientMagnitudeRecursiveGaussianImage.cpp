@@ -153,6 +153,6 @@ const QString ITKGradientMagnitudeRecursiveGaussianImage::getHumanLabel()
 //
 // -----------------------------------------------------------------------------
 const QString ITKGradientMagnitudeRecursiveGaussianImage::getSubGroupName()
-{ return "ITK ImageGradient"; }
+{ return "ITK Edge"; }
 
 

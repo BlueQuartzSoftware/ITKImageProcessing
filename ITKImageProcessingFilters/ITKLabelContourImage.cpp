@@ -153,6 +153,6 @@ const QString ITKLabelContourImage::getHumanLabel()
 //
 // -----------------------------------------------------------------------------
 const QString ITKLabelContourImage::getSubGroupName()
-{ return "ITK ImageLabel"; }
+{ return "ITK SegmentationPostProcessing"; }
 
 

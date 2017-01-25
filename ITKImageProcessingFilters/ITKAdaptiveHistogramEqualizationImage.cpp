@@ -155,6 +155,6 @@ const QString ITKAdaptiveHistogramEqualizationImage::getHumanLabel()
 //
 // -----------------------------------------------------------------------------
 const QString ITKAdaptiveHistogramEqualizationImage::getSubGroupName()
-{ return "ITK ImageStatistics"; }
+{ return "ITK IntensityTransformation"; }
 
 

@@ -145,6 +145,6 @@ const QString ITKAcosImage::getHumanLabel()
 //
 // -----------------------------------------------------------------------------
 const QString ITKAcosImage::getSubGroupName()
-{ return "ITK ImageIntensity"; }
+{ return "ITK IntensityTransformation"; }
 
 

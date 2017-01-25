@@ -200,6 +200,6 @@ const QString ITKRescaleIntensityImage::getHumanLabel()
 //
 // -----------------------------------------------------------------------------
 const QString ITKRescaleIntensityImage::getSubGroupName()
-{ return "ITK ImageIntensity"; }
+{ return "ITK IntensityTransformation"; }
 
 

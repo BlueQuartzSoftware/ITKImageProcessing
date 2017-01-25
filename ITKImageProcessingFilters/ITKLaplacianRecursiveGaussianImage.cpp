@@ -153,6 +153,6 @@ const QString ITKLaplacianRecursiveGaussianImage::getHumanLabel()
 //
 // -----------------------------------------------------------------------------
 const QString ITKLaplacianRecursiveGaussianImage::getSubGroupName()
-{ return "ITK ImageFeature"; }
+{ return "ITK Edge"; }
 
 

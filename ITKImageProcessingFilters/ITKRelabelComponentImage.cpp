@@ -150,6 +150,6 @@ const QString ITKRelabelComponentImage::getHumanLabel()
 //
 // -----------------------------------------------------------------------------
 const QString ITKRelabelComponentImage::getSubGroupName()
-{ return "ITK ConnectedComponents"; }
+{ return "ITK SegmentationPostProcessing"; }
 
 

@@ -150,6 +150,6 @@ const QString ITKMeanProjectionImage::getHumanLabel()
 //
 // -----------------------------------------------------------------------------
 const QString ITKMeanProjectionImage::getSubGroupName()
-{ return "ITK ImageStatistics"; }
+{ return "ITK Projection"; }
 
 

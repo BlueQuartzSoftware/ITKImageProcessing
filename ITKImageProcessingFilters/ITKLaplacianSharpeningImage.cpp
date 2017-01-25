@@ -149,6 +149,6 @@ const QString ITKLaplacianSharpeningImage::getHumanLabel()
 //
 // -----------------------------------------------------------------------------
 const QString ITKLaplacianSharpeningImage::getSubGroupName()
-{ return "ITK ImageFeature"; }
+{ return "ITK Edge"; }
 
 

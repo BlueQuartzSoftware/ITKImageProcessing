@@ -164,6 +164,6 @@ const QString ITKThresholdMaximumConnectedComponentsImage::getHumanLabel()
 //
 // -----------------------------------------------------------------------------
 const QString ITKThresholdMaximumConnectedComponentsImage::getSubGroupName()
-{ return "ITK ConnectedComponents"; }
+{ return "ITK Thresholding"; }
 
 

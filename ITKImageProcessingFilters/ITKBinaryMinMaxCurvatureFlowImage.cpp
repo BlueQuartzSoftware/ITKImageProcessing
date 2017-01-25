@@ -162,6 +162,6 @@ const QString ITKBinaryMinMaxCurvatureFlowImage::getHumanLabel()
 //
 // -----------------------------------------------------------------------------
 const QString ITKBinaryMinMaxCurvatureFlowImage::getSubGroupName()
-{ return "ITK CurvatureFlow"; }
+{ return "ITK SegmentationPostProcessing"; }
 
 

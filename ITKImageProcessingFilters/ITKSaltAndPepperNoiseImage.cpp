@@ -154,6 +154,6 @@ const QString ITKSaltAndPepperNoiseImage::getHumanLabel()
 //
 // -----------------------------------------------------------------------------
 const QString ITKSaltAndPepperNoiseImage::getSubGroupName()
-{ return "ITK ImageNoise"; }
+{ return "ITK Noise"; }
 
 
