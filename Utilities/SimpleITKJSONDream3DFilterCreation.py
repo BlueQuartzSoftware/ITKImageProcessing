@@ -472,7 +472,7 @@ def GetDREAM3DReadFilterParameters(filter_member):
   return '  set'+filter_member['name']+'(reader->'+Dream3DTypeToMacro[dream3D_type]['read']+'("'+filter_member['name']+'", get'+filter_member['name']+'()));\n'
 
 def ImplementFilter(filter_description, filter_members):
-    if 'filter_type' in filter_description:
+    if 'filter_type' in filter_description and filter_description['filter_type'] != '':
         filt = '  typedef ' + filter_description['filter_type'] + ' FilterType;\n'
     # Code specific for each template
     elif filter_description['template_code_filename'] == "KernelImageFilter":
