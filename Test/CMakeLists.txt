@@ -100,6 +100,7 @@ set(TEST_NAMES
   ITKMorphologicalWatershedFromMarkersImage
   ITKThresholdImage
   ITKBlackTopHatImage
+  ITKWhiteTopHatImage
   )
 
 set( ${PLUGIN_NAME}_TEST_SRCS )
