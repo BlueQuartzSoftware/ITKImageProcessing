@@ -5,6 +5,7 @@
  */
 
 #include "ITKBlackTopHatImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/SimpleITKEnums.h"
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -23,33 +24,6 @@
 
 // Include the MOC generated file for this class
 #include "moc_ITKBlackTopHatImage.cpp"
-
-
-// Copied from sitkKernel.h (SimpleITK)
-namespace itk
-{
-namespace simple
-{
-
-enum KernelEnum {
-  sitkAnnulus,
-  sitkBall,
-  sitkBox,
-  sitkCross,
-  sitkPolygon3,
-  sitkPolygon4,
-  sitkPolygon5,
-  sitkPolygon6,
-  sitkPolygon7,
-  sitkPolygon8,
-  sitkPolygon9
-};
-
-} // end namespace simple
-} // end namespace itk
-
-// end of Copied from sitkKernel.h (SimpleITK)
-
 
 // -----------------------------------------------------------------------------
 //

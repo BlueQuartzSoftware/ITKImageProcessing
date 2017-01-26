@@ -5,33 +5,9 @@
 // -----------------------------------------------------------------------------
 
 #include "ITKTestBase.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/SimpleITKEnums.h"
 //Auto includes
 ${TestsIncludeName}
-
-// Copied from sitkKernel.h (SimpleITK)
-namespace itk
-{
-namespace simple
-{
-
-enum KernelEnum {
-  sitkAnnulus,
-  sitkBall,
-  sitkBox,
-  sitkCross,
-  sitkPolygon3,
-  sitkPolygon4,
-  sitkPolygon5,
-  sitkPolygon6,
-  sitkPolygon7,
-  sitkPolygon8,
-  sitkPolygon9
-};
-
-} // end namespace simple
-} // end namespace itk
-
-// end of Copied from sitkKernel.h (SimpleITK)
 
 class ${FilterName}Test: public ITKTestBase
 {
