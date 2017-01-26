@@ -98,6 +98,7 @@ set(TEST_NAMES
   ITKHistogramMatchingImage
   ITKMorphologicalWatershedImage
   ITKMorphologicalWatershedFromMarkersImage
+  ITKThresholdImage
   )
 
 set( ${PLUGIN_NAME}_TEST_SRCS )
