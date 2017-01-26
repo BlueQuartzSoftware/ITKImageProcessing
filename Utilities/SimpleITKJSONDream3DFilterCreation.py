@@ -85,7 +85,9 @@ members={
            {'name':['detaileddescriptionSet'],'type':str,'required':False},
            {'name':['detaileddescriptionGet'],'type':str,'required':False},  # For some filters, the description is only written in this field, not in the equivalent "Set" field
            {'name':['briefdescriptionGet'],'type':str,'required':False},  # For some filters, the description is only written in this field, not in the equivalent "Set" field
-           {'name':['custom_itk_cast'],'type':str,'required':False}  # 123 (including in inputs)
+           {'name':['custom_itk_cast'],'type':str,'required':False},  # 123 (including in inputs)
+           {'name':['ignore_setup'],'type':str,'required':False}, #  Not in the original JSON file. Adds this information when member should not be automatically added in the setup (e.g. if the template already initializes this member with a specific layout)
+           {'name':['ignore_impl'],'type':str,'required':False} #  Not in the original JSON file. Adds this information when member should not be automatically added in the filter implementation (e.g. when the member is not used to initialize the filter, but another object).
          ],
         'ignored':
          [
@@ -102,6 +104,15 @@ members={
            {'name':['enum'],'type':list,'required':False}  # 29
          ]
       }
+
+DefaultMembers={
+                'ImageFilter':[],
+                'KernelImageFilter':
+                [
+{'name': u'KernelRadius', 'default': u'std::vector<unsigned int>(3, 1)', 'briefdescriptionGet': u'', 'detaileddescriptionGet': u'', 'detaileddescriptionSet': u'', 'dim_vec': 1, 'briefdescriptionSet': u'', 'itk_type': 'typename FilterType::RadiusType','type': u'unsigned int', 'ignore_impl':1},
+{'name': u'KernelType', 'default': u'itk::simple::sitkBall', 'briefdescriptionGet': u'', 'detaileddescriptionGet': u'', 'detaileddescriptionSet': u'', 'dim_vec': 0, 'briefdescriptionSet': u'', 'itk_type': 'typename itk::simple::KernelEnum','type': u'int', 'ignore_setup':1, 'ignore_impl':1}
+                ]
+               }
 
 inputs={
         'name':'inputs',
@@ -413,7 +424,7 @@ def FilterFields(fields, descriptions, isList=False):
         return
     # else: description is not list of list
     for ii in range(0,len(descriptions)):  # Description is expected to be a list
-        for key,val in descriptions[ii].iteritems():        
+        for key,val in descriptions[ii].iteritems():
             field = [x for x in fields['processed'] if key in x['name']][0]  # There should be one and only one element in the list
             if 'Filter' in field:
                 filter_field=field['Filter']  # This field is expect to be a list that needs to be filtered
@@ -446,7 +457,10 @@ def GetDREAM3DSetupFilterParametersFromMembers(filter_member, filter_name):
     dream3D_type = ITKToDream3DType[(filter_member['type'],filter_member['dim_vec'])]['d3d']
     include=Dream3DTypeToMacro[dream3D_type]['include']
     macro=Dream3DTypeToMacro[dream3D_type]['macro']
-    setup='parameters.push_back('+macro+'("'+filter_member['name']+'", '+filter_member['name']+', FilterParameter::Parameter, '+filter_name+'));\n'
+    if 'ignore_setup' in filter_member and filter_member['ignore_setup'] == 1:
+        setup=''
+    else:
+        setup='parameters.push_back('+macro+'("'+filter_member['name']+'", '+filter_member['name']+', FilterParameter::Parameter, '+filter_name+'));\n'
     limits=""
     component_type = Dream3DTypeToMacro[dream3D_type]['component']
     if component_type != filter_member['type']:
@@ -460,10 +474,15 @@ def GetDREAM3DReadFilterParameters(filter_member):
 def ImplementFilter(filter_description, filter_members):
     if 'filter_type' in filter_description:
         filt = '  typedef ' + filter_description['filter_type'] + ' FilterType;\n'
+    # Code specific for each template
+    elif filter_description['template_code_filename'] == "KernelImageFilter":
+        filt = '  typedef itk::'+filter_description['name']+'<InputImageType, OutputImageType, StructuringElementType> FilterType;\n'
     else:
         filt = '  typedef itk::'+filter_description['name']+'<InputImageType, OutputImageType> FilterType;\n'
     filt+= '  typename FilterType::Pointer filter = FilterType::New();\n'
     for filter_member in filter_members:
+        if 'ignore_impl' in filter_member and filter_member['ignore_impl'] == 1:
+            continue  # Skip this member. Do not try to use it to initialize the filter.
         if filter_member['dim_vec'] == 0:
             call = 'static_cast<'+filter_member['type']+'>(m_'+filter_member['name']+')'
         elif filter_member['dim_vec'] == 1:
@@ -482,6 +501,9 @@ def ImplementFilter(filter_description, filter_members):
             filt+='  '+filter_member['custom_itk_cast']+'\n'
         else:
             filt+= '  filter->Set'+filter_member['name']+'('+call+');\n'
+    # Code specific for each template
+    if filter_description['template_code_filename'] == "KernelImageFilter":
+        filt+='  filter->SetKernel(structuringElement);\n'
     filt+='  this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);\n'
     return filt
 
@@ -775,6 +797,8 @@ def main(argv=None):
         if not ExtractDescriptionList(members, filter_description['members'],\
                                       filter_members, options.extra_verbose, options.not_implemented):
             continue
+        # Add default members that are not included in the JSON description file
+        filter_members += DefaultMembers[filter_description['template_code_filename']]
         # Read tests description
         filter_tests=[]
         if not ExtractDescriptionList(tests, filter_description['tests'],\
@@ -874,7 +898,9 @@ def main(argv=None):
         ConfigureFiles('.h', template_directory, filters_output_directory, DREAM3DFilter, filter_description['template_code_filename'])
         ConfigureFiles('.cpp', template_directory, filters_output_directory, DREAM3DFilter, filter_description['template_code_filename'])
         testDirectory = os.path.join(options.root_directory, 'Test')
-        ConfigureFiles('Test.cpp', template_directory, testDirectory, DREAM3DFilter,  filter_description['template_test_filename'])
+        # In SimpleITK, test rely on 'template_test_filename'. In this, we rely on 'template_code_filename'. This allows to include
+        # definitions, enums,... that are included in SimpleITK and that would not be included here otherwise
+        ConfigureFiles('Test.cpp', template_directory, testDirectory, DREAM3DFilter,  filter_description['template_code_filename'])
         ConfigureFiles('.md', template_directory, documentation_directory, DREAM3DFilter, "")  #
         # Append list of filters created
         filter_list.append(DREAM3DFilter['FilterName'])
