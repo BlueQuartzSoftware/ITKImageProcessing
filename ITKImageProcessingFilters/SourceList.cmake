@@ -93,6 +93,7 @@ set(_PublicFilters
   ITKHistogramMatchingImage
   ITKMorphologicalWatershedImage
   ITKMorphologicalWatershedFromMarkersImage
+  ITKThresholdImage
 )
 
 
