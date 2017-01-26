@@ -94,6 +94,7 @@ set(_PublicFilters
   ITKMorphologicalWatershedImage
   ITKMorphologicalWatershedFromMarkersImage
   ITKThresholdImage
+  ITKBlackTopHatImage
 )
 
 
