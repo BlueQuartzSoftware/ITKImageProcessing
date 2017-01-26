@@ -115,7 +115,6 @@ template<typename InputPixelType, typename OutputPixelType, unsigned int Dimensi
 void ITKThresholdImage::filter()
 {
   typedef itk::Dream3DImage<InputPixelType, Dimension> InputImageType;
-  typedef itk::Dream3DImage<OutputPixelType, Dimension> OutputImageType;
   //define filter
   typedef itk::ThresholdImageFilter<InputImageType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
