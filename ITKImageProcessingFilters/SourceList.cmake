@@ -92,6 +92,7 @@ set(_PublicFilters
   ITKRGBToLuminanceImage
   ITKHistogramMatchingImage
   ITKMorphologicalWatershedImage
+  ITKMorphologicalWatershedFromMarkersImage
 )
 
 

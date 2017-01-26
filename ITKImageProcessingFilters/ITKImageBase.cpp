@@ -45,6 +45,27 @@ void ITKImageBase::initialize()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+bool ITKImageBase::checkImageType(const QVector<QString> &types, const DataArrayPath &path)
+{
+  IDataArray::Pointer ptr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, path);
+  if(ptr.get() != nullptr)
+  {
+    if( types.indexOf(ptr->getTypeAsString()) != -1 )
+    {
+      return true;
+    }
+    setErrorCondition(-12);
+    QString errorMessage = "Wrong data type in %1. Expected %2. Try CastImageFilter or RescaleImageFilter to convert input data to a supported type.";
+    QString stringTypes = QStringList(types.toList()).join(",");
+    notifyErrorMessage(getHumanLabel(), errorMessage.arg(path.serialize()).arg(stringTypes), getErrorCondition());
+  }
+  // If no data container, return false, but do not set any error condition.
+  return false;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void ITKImageBase::preflight()
 {
   // These are the REQUIRED lines of CODE to make sure the filter behaves correctly
