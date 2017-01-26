@@ -41,7 +41,8 @@ general={
                {'name':['output_image_type'],'type':str,'required':False},  # 37
                {'name':['output_pixel_type'],'type':str,'required':False},  # 60
                {'name':['template_code_filename'], 'type':str, 'required':True},  # 281
-               {'name':['template_test_filename'], 'type':str, 'required':True} # 280
+               {'name':['template_test_filename'], 'type':str, 'required':True}, # 280
+               {'name':['filter_type'],'type':str,'required':False}  # 102 occurences
              ],
         'ignored':
              [
@@ -54,7 +55,6 @@ general={
          'not_implemented':
              [
                {'name':['pixel_types'], 'type':str, 'required':True},  # 337 occurences in JSON
-               {'name':['filter_type'],'type':str,'required':False},  # 102 occurences
                {'name':['vector_pixel_types_by_component'],'type':str,'required':False},  # 42
                {'name':['no_procedure'],'type':str,'required':False},  # 31
                {'name':['no_output_type'],'type':str,'required':False},  # 2
@@ -458,7 +458,10 @@ def GetDREAM3DReadFilterParameters(filter_member):
   return '  set'+filter_member['name']+'(reader->'+Dream3DTypeToMacro[dream3D_type]['read']+'("'+filter_member['name']+'", get'+filter_member['name']+'()));\n'
 
 def ImplementFilter(filter_description, filter_members):
-    filt = '  typedef itk::'+filter_description['name']+'<InputImageType, OutputImageType> FilterType;\n'
+    if 'filter_type' in filter_description:
+        filt = '  typedef ' + filter_description['filter_type'] + ' FilterType;\n'
+    else:
+        filt = '  typedef itk::'+filter_description['name']+'<InputImageType, OutputImageType> FilterType;\n'
     filt+= '  typename FilterType::Pointer filter = FilterType::New();\n'
     for filter_member in filter_members:
         if filter_member['dim_vec'] == 0:
