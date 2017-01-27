@@ -116,6 +116,7 @@ set(TEST_NAMES
   ITKBinaryMorphologicalClosingImage
   ITKBinaryClosingByReconstructionImage
   ITKGrayscaleDilateImage
+  ITKMultiScaleHessianBasedObjectnessImage
   )
 
 set( ${PLUGIN_NAME}_TEST_SRCS )

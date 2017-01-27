@@ -30,6 +30,13 @@ namespace ITKDream3DHelper
   }
 
   template<class PixelType>
+  QVector<size_t> GetComponentsDimensions_impl(itk::RGBPixel<PixelType>*)
+  {
+    QVector<size_t> cDims(1, 3);
+    return cDims;
+  }
+
+  template<class PixelType>
   QVector<size_t> GetComponentsDimensions_impl(itk::RGBAPixel<PixelType>*)
   {
     QVector<size_t> cDims(1, 4);
