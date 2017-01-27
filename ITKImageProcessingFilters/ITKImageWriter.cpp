@@ -33,6 +33,8 @@
 
 #include "ITKImageWriter.h"
 
+#include <QtCore/QDir>
+
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -80,17 +82,17 @@ ITKImageWriter::~ITKImageWriter()
 // -----------------------------------------------------------------------------
 void ITKImageWriter::setupFilterParameters()
 {
-	FilterParameterVector parameters;
+  FilterParameterVector parameters;
   QString supportedExtensions = ITKImageProcessingPlugin::getListSupportedWriteExtensions();
-	parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Output File", FileName, FilterParameter::Parameter, ITKImageWriter, supportedExtensions));
+  parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Output File", FileName, FilterParameter::Parameter, ITKImageWriter, supportedExtensions));
 
-	parameters.push_back(SeparatorFilterParameter::New("Image Data", FilterParameter::RequiredArray));
-	{
-		DataArraySelectionFilterParameter::RequirementType req =
-			DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize,
-			                                                     AttributeMatrix::Type::Cell, IGeometry::Type::Image);
-	  parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Image", ImageArrayPath, FilterParameter::RequiredArray, ITKImageWriter, req));
-	}
+  parameters.push_back(SeparatorFilterParameter::New("Image Data", FilterParameter::RequiredArray));
+  {
+    DataArraySelectionFilterParameter::RequirementType req =
+      DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize,
+                                                           AttributeMatrix::Type::Cell, IGeometry::Type::Image);
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Image", ImageArrayPath, FilterParameter::RequiredArray, ITKImageWriter, req));
+  }
   setFilterParameters(parameters);
 }
 
@@ -127,10 +129,18 @@ void ITKImageWriter::dataCheck()
     return;
   }
 
+  QFileInfo fi(filename);
+  QDir parentPath(fi.path());
+  if(parentPath.exists() == false)
+  {
+    QString ss = QObject::tr("The directory path for the output file does not exist. The application will attempt to create this path during execution of the filter");
+    notifyWarningMessage(getHumanLabel(), ss, -1;
+  }
+
   DataContainerArray::Pointer containerArray = getDataContainerArray();
   if (!containerArray)
   {
-    setErrorCondition(-2);
+    setErrorCondition(-21002);
     notifyErrorMessage(getHumanLabel(), "No container array.", getErrorCondition());
     return;
   }
@@ -140,10 +150,33 @@ void ITKImageWriter::dataCheck()
       this, getImageArrayPath().getDataContainerName());
   if (!imageGeometry.get())
   {
-    setErrorCondition(-3);
+    setErrorCondition(-21003);
     notifyErrorMessage(getHumanLabel(), "No image geometry.", getErrorCondition());
     return;
   }
+
+#ifdef _WIN32
+  // Turn file permission checking on, if requested
+  #ifdef SIMPLib_NTFS_FILE_CHECK
+  qt_ntfs_permission_lookup++;
+  #endif
+#endif
+
+  QFileInfo dirInfo(fi.path());
+
+  if(dirInfo.isWritable() == false && parentPath.exists() == true)
+  {
+    setErrorCondition(-21015);
+    QString ss = QObject::tr("The user does not have the proper permissions to write to the output file");
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  }
+
+#ifdef _WIN32
+  // Turn file permission checking off, if requested
+  #ifdef SIMPLib_NTFS_FILE_CHECK
+  qt_ntfs_permission_lookup--;
+  #endif
+#endif
 
   // If we got here, that means that there is no error
   setErrorCondition(0);
@@ -245,7 +278,7 @@ void ITKImageWriter::writeImage()
         typename ImageType::SizeType size = toITK->GetOutput()->GetLargestPossibleRegion().GetSize();
         if (size[2] < 2)
         {
-          setErrorCondition(-6);
+          setErrorCondition(-21012);
           notifyErrorMessage(getHumanLabel(), "Image is 2D, not 3D.", getErrorCondition());
           return;
         }
@@ -258,7 +291,7 @@ void ITKImageWriter::writeImage()
   }
   catch (itk::ExceptionObject & err)
   {
-      setErrorCondition(-5);
+      setErrorCondition(-21011);
       QString errorMessage = "ITK exception was thrown while writing output file: %1";
       notifyErrorMessage(getHumanLabel(), errorMessage.arg(err.GetDescription()), getErrorCondition());
       return;
@@ -277,10 +310,24 @@ void ITKImageWriter::execute()
   {
     return;
   }
+
+    // Make sure any directory path is also available as the user may have just typed
+  // in a path without actually creating the full path
+  QFileInfo fi(getFileName());
+  QString parentPath = fi.path();
+  QDir dir;
+  if(!dir.mkpath(parentPath))
+  {
+    QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath);
+    setErrorCondition(-21009);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
+
   DataArrayPath path = getImageArrayPath();
   if (!getDataContainerArray()->doesDataContainerExist(path.getDataContainerName()))
   {
-    setErrorCondition(-6);
+    setErrorCondition(-21006);
     QString errorMessage = "Data container %1 does not exist.";
     notifyErrorMessage(getHumanLabel(), errorMessage.arg(path.getDataContainerName()), getErrorCondition());
     return;
@@ -290,7 +337,7 @@ void ITKImageWriter::execute()
     path.getDataContainerName());
   if (!container->doesAttributeMatrixExist(path.getAttributeMatrixName()))
   {
-    setErrorCondition(-7);
+    setErrorCondition(-21007);
     QString errorMessage = "Attribute matrix %1 does not exist.";
     notifyErrorMessage(getHumanLabel(), errorMessage.arg(path.getAttributeMatrixName()), getErrorCondition());
     return;
@@ -299,12 +346,12 @@ void ITKImageWriter::execute()
     path.getAttributeMatrixName());
   if (!attributeMatrix->doesAttributeArrayExist(path.getDataArrayName()))
   {
-    setErrorCondition(-8);
+    setErrorCondition(-21008);
     QString errorMessage = "Attribute array %1 does not exist.";
     notifyErrorMessage(getHumanLabel(), errorMessage.arg(path.getDataArrayName()), getErrorCondition());
     return;
   }
-  Dream3DArraySwitchMacro(this->writeImage, getImageArrayPath(), -4);
+  Dream3DArraySwitchMacro(this->writeImage, getImageArrayPath(), -21010);
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
