@@ -112,6 +112,7 @@ set(_PublicFilters
   ITKBinaryClosingByReconstructionImage
   ITKGrayscaleDilateImage
   ITKMultiScaleHessianBasedObjectnessImage
+  ITKVectorConnectedComponentImage
 )
 
 

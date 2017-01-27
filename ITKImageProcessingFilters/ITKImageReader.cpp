@@ -156,31 +156,37 @@ void ITKImageReader::preflight()
 //
 // -----------------------------------------------------------------------------
 template<typename TComponent>
-void ITKImageReader::readImage(itk::ImageIOBase::IOPixelType pixel, unsigned int dimensions, const QString& filename, bool dataCheck)
+void ITKImageReader::readImage(const itk::ImageIOBase::Pointer &imageIO,
+                               const QString& filename, bool dataCheck
+                              )
 {
+  const unsigned int dimensions = imageIO->GetNumberOfDimensions();
   switch (dimensions)
   {
     case 1:
     {
-      readImage<TComponent, 1>(pixel, filename, dataCheck);
+      readImage<TComponent, 1>(imageIO, filename, dataCheck);
       break;
     }
     case 2:
     {
-      readImage<TComponent, 2>(pixel, filename, dataCheck);
+      readImage<TComponent, 2>(imageIO, filename, dataCheck);
       break;
     }
     default:
     {
-      readImage<TComponent, 3>(pixel, filename, dataCheck);
+      readImage<TComponent, 3>(imageIO, filename, dataCheck);
       break;
     }
   }
 }
 
 template<typename TComponent, unsigned int dimensions>
-void ITKImageReader::readImage(itk::ImageIOBase::IOPixelType pixel, const QString& filename, bool dataCheck)
+void ITKImageReader::readImage(const itk::ImageIOBase::Pointer &imageIO, const QString& filename, bool dataCheck)
 {
+    typedef itk::ImageIOBase::IOPixelType PixelTypeType;
+    PixelTypeType pixel = imageIO->GetPixelType();
+    const unsigned int nbComponents = imageIO->GetNumberOfComponents();
     switch (pixel)
     {
     case itk::ImageIOBase::SCALAR:
@@ -193,7 +199,21 @@ void ITKImageReader::readImage(itk::ImageIOBase::IOPixelType pixel, const QStrin
         readImage<itk::RGBPixel<TComponent>,dimensions >(filename, dataCheck);
         break;
     case itk::ImageIOBase::VECTOR:
-        readImage<itk::Vector<TComponent,dimensions>,dimensions>(filename, dataCheck);
+        if(nbComponents == 2)
+        {
+          readImage<itk::Vector<TComponent,2>,dimensions>(filename, dataCheck);
+        }
+        else if(nbComponents == 3)
+        {
+          readImage<itk::Vector<TComponent,3>,dimensions>(filename, dataCheck);
+        }
+        else
+        {
+          setErrorCondition(-4);
+          QString errorMessage = QString("Unsupported number of components: %1.").arg(nbComponents);
+          notifyErrorMessage(getHumanLabel(), errorMessage, getErrorCondition());
+          break;
+        }
         break;
     case itk::ImageIOBase::UNKNOWNPIXELTYPE:
     case itk::ImageIOBase::POINT:
@@ -308,40 +328,37 @@ void ITKImageReader::readImage(bool dataCheck)
 
         typedef itk::ImageIOBase::IOComponentType ComponentType;
         const ComponentType component = imageIO->GetComponentType();
-        typedef itk::ImageIOBase::IOPixelType PixelTypeType;
-        PixelTypeType pixel = imageIO->GetPixelType();
-        const unsigned int dimensions = imageIO->GetNumberOfDimensions();
         switch (component)
         {
         case itk::ImageIOBase::UCHAR:
-            readImage<unsigned char>(pixel, dimensions, filename, dataCheck);
+            readImage<unsigned char>(imageIO, filename, dataCheck);
             break;
         case itk::ImageIOBase::CHAR:
-            readImage<char>(pixel, dimensions, filename, dataCheck);
+            readImage<char>(imageIO, filename, dataCheck);
             break;
         case itk::ImageIOBase::USHORT:
-            readImage<unsigned short>(pixel, dimensions, filename, dataCheck);
+            readImage<unsigned short>(imageIO, filename, dataCheck);
             break;
         case itk::ImageIOBase::SHORT:
-            readImage<short>(pixel, dimensions, filename, dataCheck);
+            readImage<short>(imageIO, filename, dataCheck);
             break;
         case itk::ImageIOBase::UINT:
-            readImage<unsigned int>(pixel, dimensions, filename, dataCheck);
+            readImage<unsigned int>(imageIO, filename, dataCheck);
             break;
         case itk::ImageIOBase::INT:
-            readImage<int>(pixel, dimensions, filename, dataCheck);
+            readImage<int>(imageIO, filename, dataCheck);
             break;
         case itk::ImageIOBase::ULONG:
-            readImage<unsigned long>(pixel, dimensions, filename, dataCheck);
+            readImage<unsigned long>(imageIO, filename, dataCheck);
             break;
         case itk::ImageIOBase::LONG:
-            readImage<long>(pixel, dimensions, filename, dataCheck);
+            readImage<long>(imageIO, filename, dataCheck);
             break;
         case itk::ImageIOBase::FLOAT:
-            readImage<float>(pixel, dimensions, filename, dataCheck);
+            readImage<float>(imageIO, filename, dataCheck);
             break;
         case itk::ImageIOBase::DOUBLE:
-            readImage<double>(pixel, dimensions, filename, dataCheck);
+            readImage<double>(imageIO, filename, dataCheck);
             break;
         default:
             setErrorCondition(-4);

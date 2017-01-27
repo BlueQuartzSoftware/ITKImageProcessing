@@ -254,7 +254,7 @@
   typedef itk::Vector<typeIN,vDim> OutputPixelType;
 #define DefineVectorPixelTypes_1(typeIN,typeOUT,vDim)  \
   typedef itk::Vector<typeIN,vDim> InputPixelType;     \
-  typedef itk::Vector<typeOUT,vDim> OutputPixelType;
+  typedef typeOUT                  OutputPixelType;
 // Expands the value of 'Vector' that is 0 if the filter does not accept 'Vector' images, and '1' if it does.
 #define Dream3DTemplateAliasMacroCaseVectorImage0(typeIN, typeOUT, call, errorCondition, isTypeOUT, typeOUTTypename, dimension, Vector) \
   Dream3DTemplateAliasMacroCaseVectorImage1(typeIN, typeOUT, call, errorCondition, isTypeOUT, typeOUTTypename, dimension, Vector)
