@@ -171,9 +171,12 @@ InPlaceImageToDream3DDataFilter<PixelType, VDimension>
   }
   else
   {
-      //This code needs to be updated to take into accound the rank and dimensions of the tuples
-    data = DataArrayPixelType::FromPointer(reinterpret_cast<ValueType*>(inputPtr->GetBufferPointer()),
-              imageGeom->getNumberOfElements(), m_DataArrayName.c_str(), true);
+    data = DataArrayPixelType::CreateArray(imageGeom->getNumberOfElements(), cDims,
+              m_DataArrayName.c_str(), true);
+    if (nullptr != data.get())
+    {
+      ::memcpy(data->getPointer(0), reinterpret_cast<ValueType*>(inputPtr->GetBufferPointer()), imageGeom->getNumberOfElements() * sizeof(ValueType));
+    }
   }
   attrMat->addAttributeArray(m_DataArrayName.c_str(), data);
   outputPtr->Set(dataContainer);
