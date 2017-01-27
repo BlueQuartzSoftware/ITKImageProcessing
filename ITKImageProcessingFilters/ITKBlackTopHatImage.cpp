@@ -203,6 +203,6 @@ const QString ITKBlackTopHatImage::getHumanLabel()
 //
 // -----------------------------------------------------------------------------
 const QString ITKBlackTopHatImage::getSubGroupName()
-{ return "ITK MathematicalMorphology"; }
+{ return "ITK BiasCorrection"; }
 
 
