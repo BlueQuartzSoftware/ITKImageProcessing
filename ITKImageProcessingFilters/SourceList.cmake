@@ -94,6 +94,23 @@ set(_PublicFilters
   ITKMorphologicalWatershedImage
   ITKMorphologicalWatershedFromMarkersImage
   ITKThresholdImage
+  ITKBlackTopHatImage
+  ITKWhiteTopHatImage
+  ITKGrayscaleErodeImage
+  ITKBinaryDilateImage
+  ITKGrayscaleMorphologicalOpeningImage
+  ITKGrayscaleMorphologicalClosingImage
+  ITKErodeObjectMorphologyImage
+  ITKClosingByReconstructionImage
+  ITKDilateObjectMorphologyImage
+  ITKBinaryErodeImage
+  ITKMorphologicalGradientImage
+  ITKOpeningByReconstructionImage
+  ITKBinaryMorphologicalOpeningImage
+  ITKBinaryOpeningByReconstructionImage
+  ITKBinaryMorphologicalClosingImage
+  ITKBinaryClosingByReconstructionImage
+  ITKGrayscaleDilateImage
 )
 
 
