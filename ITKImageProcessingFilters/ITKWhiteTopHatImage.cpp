@@ -205,6 +205,6 @@ const QString ITKWhiteTopHatImage::getHumanLabel()
 //
 // -----------------------------------------------------------------------------
 const QString ITKWhiteTopHatImage::getSubGroupName()
-{ return "ITK MathematicalMorphology"; }
+{ return "ITK BiasCorrection"; }
 
 
