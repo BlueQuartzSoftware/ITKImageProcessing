@@ -157,6 +157,6 @@ const QString ITKMorphologicalWatershedImage::getHumanLabel()
 //
 // -----------------------------------------------------------------------------
 const QString ITKMorphologicalWatershedImage::getSubGroupName()
-{ return "ITK Review"; }
+{ return "ITK Segmentation"; }
 
 
