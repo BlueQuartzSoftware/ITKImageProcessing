@@ -121,7 +121,7 @@ class ITKImageProcessingImageTest
     duplicator->SetInputImage(image);
     duplicator->Update();
     typename ImageType::Pointer clonedImage = duplicator->GetOutput();
-    // Convert RGBA image to DREAM.3D data
+    // Convert image to DREAM.3D data
     DataArrayPath path("DataContainer","AttributeMatrix","DataArray");
     DataContainer::Pointer container = DataContainer::New(path.getDataContainerName());
     typedef typename itk::InPlaceImageToDream3DDataFilter<PixelType,Dimensions> toDream3DType;
@@ -177,6 +177,12 @@ class ITKImageProcessingImageTest
     if(cDims.size() != 1 || cDims[0] != 1)
     {
       error = QString("Scalar images should have a component dimension of [1]. Found components of size %1 with first value %2").arg(cDims.size()).arg(cDims[0]);
+      DREAM3D_TEST_THROW_EXCEPTION( error.toStdString() );
+    }
+    cDims = ITKDream3DHelper::GetComponentsDimensions<itk::RGBPixel<unsigned char> >();
+    if(cDims.size() != 1 || cDims[0] != 3)
+    {
+      error = QString("RGB images should have a component dimension of [3]. Found components of size %1 with first value %2").arg(cDims.size()).arg(cDims[0]);
       DREAM3D_TEST_THROW_EXCEPTION( error.toStdString() );
     }
     cDims = ITKDream3DHelper::GetComponentsDimensions<itk::RGBAPixel<unsigned char> >();

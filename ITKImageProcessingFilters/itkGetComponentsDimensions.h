@@ -1,6 +1,7 @@
 #ifndef _ITKGetComponentsDimensions_h
 #define _ITKGetComponentsDimensions_h
 
+#include <itkRGBPixel.h>
 #include <itkRGBAPixel.h>
 #include <itkVector.h>
 #include <QVector>

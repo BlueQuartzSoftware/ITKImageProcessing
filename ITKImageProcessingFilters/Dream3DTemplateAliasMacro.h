@@ -61,13 +61,13 @@
 // --------------------------------
 //
 // Pixel Types can be individually activated or deactivated. By default, scalar pixel types are
-// supported while RGBA and Vector pixel types are not.
+// supported while RGB/RGBA and Vector pixel types are not.
 // To remove the support of scalar images, copy the following line before including this header
 // file:
 //   #define DREAM3D_USE_Scalar 0
-// To support RGBA pixels and vector pixels, copy the following lines:
+// To support RGB/RGBA pixels and vector pixels, copy the following lines:
 //   #define DREAM3D_USE_Vector 1
-//   #define DREAM3D_USE_RGBA   1
+//   #define DREAM3D_USE_RGB_RGBA   1
 //
 // You can also individually remove the support for certain component type. By default, all
 // integer and float types are supported.
@@ -81,6 +81,7 @@
 #include <QString>
 #include "SIMPLib/Common/AbstractFilter.h"
 #include <itkVector.h>
+#include <itkRGBPixel.h>
 #include <itkRGBAPixel.h>
 #include <itkImageIOBase.h>
 
@@ -136,8 +137,8 @@
 #define DREAM3D_USE_Vector     0
 #endif
 
-#ifndef DREAM3D_USE_RGBA
-#define DREAM3D_USE_RGBA       0
+#ifndef DREAM3D_USE_RGB_RGBA
+#define DREAM3D_USE_RGB_RGBA       0
 #endif
 //--------------------------------------------------------------------------
 
@@ -147,7 +148,7 @@
 
 
 //////////////////////////////////////////////////////////////////////////////
-//                          Common to scalar, Vector and RGBA               //
+//                          Common to scalar, Vector and RGB/RGBA               //
 //////////////////////////////////////////////////////////////////////////////
 
 // Expand the value of typeIN to be able to concatenate it with 'DREAM3D_USE' to check if the type is accepted by the filter
@@ -183,7 +184,7 @@
     }                                                                                                                                        \
   }
 
-// Select vector, RGBA, or scalar images
+// Select vector, RGB/RGBA, or scalar images
 #define Dream3DTemplateAliasMacroPixelType(typeIN, typeOUT, call, errorCondition, isTypeOUT, typeOUTTypename, dimension)                             \
     QVector<size_t> cDims = ptr->getComponentDimensions();                                                                                           \
     if(cDims.size() > 1)                                                                                                                             \
@@ -196,9 +197,10 @@
       {                                                                                                                                              \
         Dream3DTemplateAliasMacroCaseScalarImage0(typeIN, typeOUT, call, errorCondition, isTypeOUT, typeOUTTypename, dimension, DREAM3D_USE_Scalar); \
       }                                                                                                                                              \
-      else if(cDims[0] == 4)                                                                                                                         \
+      else if(cDims[0] == 3 || cDims[0] == 4)                                                                                                        \
       {                                                                                                                                              \
-        Dream3DTemplateAliasMacroCaseRGBAImage0(typeIN, typeOUT, call, errorCondition, isTypeOUT, typeOUTTypename, dimension, DREAM3D_USE_RGBA);     \
+        Dream3DTemplateAliasMacroCaseRGBRGBAImage0(typeIN, typeOUT, call, errorCondition, isTypeOUT,                                                 \
+                                                   typeOUTTypename, dimension, DREAM3D_USE_RGB_RGBA, cDims[0]);                                      \
       }                                                                                                                                              \
       else                                                                                                                                           \
       {                                                                                                                                              \
@@ -237,7 +239,7 @@
 // Scalar images not accepted, throw an error message if a scalar image is given.
 #define Dream3DTemplateAliasMacroCaseScalarImage1_0(typeIN, typeOUT, call, errorCondition, isTypeOUT, typeOUTTypename, dimension)       \
   setErrorCondition(errorCondition);                                                                                                    \
-  notifyErrorMessage(getHumanLabel(), "Scalar images not supported. Try RGBA or vector images", getErrorCondition());
+  notifyErrorMessage(getHumanLabel(), "Scalar images not supported. Try RGB/RGBA or vector images", getErrorCondition());
 // Scalar images accepted
 #define Dream3DTemplateAliasMacroCaseScalarImage1_1(typeIN, typeOUT, call, errorCondition, isTypeOUT, typeOUTTypename, dimension)       \
   Dream3DTemplateAliasMacroCase_1_##isTypeOUT(typeIN, typeOUT, call, typeOUTTypename, dimension)
@@ -281,20 +283,27 @@
       }
 
 //////////////////////////////////////////////////////////////////////////////
-//                          Handles RGBA images                             //
+//                          Handles RGB/RGBA images                         //
 //////////////////////////////////////////////////////////////////////////////
-// Expand 'RGBA' argument that will be used to call the appropriate macro, depending if the filter accepts 'RGBA' images or not.
-#define  Dream3DTemplateAliasMacroCaseRGBAImage0(typeIN, typeOUT, call, errorCondition, isTypeOUT, typeOUTTypename, dimension, RGBA)    \
-  Dream3DTemplateAliasMacroCaseRGBAImage1(typeIN, typeOUT, call, errorCondition, isTypeOUT, typeOUTTypename, dimension, RGBA)
-#define   Dream3DTemplateAliasMacroCaseRGBAImage1(typeIN, typeOUT, call, errorCondition, isTypeOUT, typeOUTTypename, dimension, RGBA)   \
-  Dream3DTemplateAliasMacroCaseRGBAImage1_##RGBA(typeIN, typeOUT, call, errorCondition, isTypeOUT, typeOUTTypename, dimension)
-// If RGBA not accepted by the current filter, prints an error message
-#define Dream3DTemplateAliasMacroCaseRGBAImage1_0(typeIN, typeOUT, call, errorCondition, isTypeOUT, typeOUTTypename, dimension)         \
-  setErrorCondition(errorCondition);                                                                                                    \
-  notifyErrorMessage(getHumanLabel(), "RGBA not supported. Try converting the selected input image to an image with scalar components using 'ITK::RGB to Luminance ImageFilter' or 'Convert Rgb To GrayScale' filters", getErrorCondition());
-// If RGBA accepted by current filter, call the macro that will call the given function
-#define Dream3DTemplateAliasMacroCaseRGBAImage1_1(typeIN, typeOUT, call, errorCondition, isTypeOUT, typeOUTTypename, dimension)         \
-  Dream3DTemplateAliasMacroCase_1_##isTypeOUT(itk::RGBAPixel<typeIN>, itk::RGBAPixel<typeOUT>, call, typeOUTTypename, dimension)
+// Expand 'RGB/RGBA' argument that will be used to call the appropriate macro, depending if the filter accepts 'RGB/RGBA' images or not.
+#define  Dream3DTemplateAliasMacroCaseRGBRGBAImage0(typeIN, typeOUT, call, errorCondition, isTypeOUT, typeOUTTypename, dimension, RGBRGBA, nbComponents) \
+  Dream3DTemplateAliasMacroCaseRGBRGBAImage1(typeIN, typeOUT, call, errorCondition, isTypeOUT, typeOUTTypename, dimension, RGBRGBA, nbComponents)
+#define   Dream3DTemplateAliasMacroCaseRGBRGBAImage1(typeIN, typeOUT, call, errorCondition, isTypeOUT, typeOUTTypename, dimension, RGBRGBA, nbComponents) \
+  Dream3DTemplateAliasMacroCaseRGBRGBAImage1_##RGBRGBA(typeIN, typeOUT, call, errorCondition, isTypeOUT, typeOUTTypename, dimension, nbComponents)
+// If RGB/RGBA not accepted by the current filter, prints an error message
+#define Dream3DTemplateAliasMacroCaseRGBRGBAImage1_0(typeIN, typeOUT, call, errorCondition, isTypeOUT, typeOUTTypename, dimension, nbComponents)    \
+  setErrorCondition(errorCondition);                                                                                                                \
+  notifyErrorMessage(getHumanLabel(), "RGB/RGBA not supported. Try converting the selected input image to an image with scalar components using 'ITK::RGB to Luminance ImageFilter' or 'Convert Rgb To GrayScale' filters", getErrorCondition());
+// If RGB/RGBA accepted by current filter, call the macro that will call the given function
+#define Dream3DTemplateAliasMacroCaseRGBRGBAImage1_1(typeIN, typeOUT, call, errorCondition, isTypeOUT, typeOUTTypename, dimension, nbComponents) \
+  if(nbComponents==3)                                                                                                                            \
+  {                                                                                                                                              \
+  Dream3DTemplateAliasMacroCase_1_##isTypeOUT(itk::RGBPixel<typeIN>, itk::RGBPixel<typeOUT>, call, typeOUTTypename, dimension)                   \
+  }                                                                                                                                              \
+  else /* 4 components = RGBA*/                                                                                                                  \
+  {                                                                                                                                              \
+  Dream3DTemplateAliasMacroCase_1_##isTypeOUT(itk::RGBAPixel<typeIN>, itk::RGBAPixel<typeOUT>, call, typeOUTTypename, dimension)                 \
+  }
 
 //////////////////////////////////////////////////////////////////////////////
 //                "switch case" statements between each type                //
