@@ -140,7 +140,6 @@ void ITKGrayscaleMorphologicalOpeningImage::filter()
   typedef typename StructuringElementType::RadiusType RadiusType;
   RadiusType elementRadius = CastVec3ToITK<FloatVec3_t, RadiusType,typename RadiusType::SizeValueType>(m_KernelRadius,RadiusType::Dimension);
   StructuringElementType structuringElement;
-  std::cout<<"getKernelType():"<<getKernelType()<<std::endl;
   switch(getKernelType())
   {
     case 0:
