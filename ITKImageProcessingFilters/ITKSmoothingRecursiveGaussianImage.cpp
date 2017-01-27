@@ -18,7 +18,7 @@
 
 
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
-#define DREAM3D_USE_RGBA 1
+#define DREAM3D_USE_RGB_RGBA 1
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
 
 // Include the MOC generated file for this class

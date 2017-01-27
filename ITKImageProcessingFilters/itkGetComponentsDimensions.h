@@ -1,6 +1,7 @@
 #ifndef _ITKGetComponentsDimensions_h
 #define _ITKGetComponentsDimensions_h
 
+#include <itkRGBPixel.h>
 #include <itkRGBAPixel.h>
 #include <itkVector.h>
 #include <QVector>
@@ -26,6 +27,13 @@ namespace ITKDream3DHelper
   QVector<size_t> GetComponentsDimensions_impl(itk::Vector<PixelType,2>*)
   {
     QVector<size_t> cDims(2, 1);
+    return cDims;
+  }
+
+  template<class PixelType>
+  QVector<size_t> GetComponentsDimensions_impl(itk::RGBPixel<PixelType>*)
+  {
+    QVector<size_t> cDims(1, 3);
     return cDims;
   }
 

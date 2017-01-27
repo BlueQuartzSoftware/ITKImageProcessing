@@ -187,8 +187,10 @@ void ITKImageReader::readImage(itk::ImageIOBase::IOPixelType pixel, const QStrin
         readImage<TComponent,dimensions>(filename, dataCheck);
         break;
     case itk::ImageIOBase::RGBA:
-    case itk::ImageIOBase::RGB:
         readImage<itk::RGBAPixel<TComponent>,dimensions >(filename, dataCheck);
+        break;
+    case itk::ImageIOBase::RGB:
+        readImage<itk::RGBPixel<TComponent>,dimensions >(filename, dataCheck);
         break;
     case itk::ImageIOBase::VECTOR:
         readImage<itk::Vector<TComponent,dimensions>,dimensions>(filename, dataCheck);

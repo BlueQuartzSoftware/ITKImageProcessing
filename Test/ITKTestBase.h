@@ -85,6 +85,13 @@ double ComputeDiff(itk::RGBAPixel<PixelType> p1, itk::RGBAPixel<PixelType> p2)
 }
 
 template<typename PixelType>
+double ComputeDiff(itk::RGBPixel<PixelType> p1, itk::RGBPixel<PixelType> p2)
+{
+    double diff = static_cast<double>((p1-p2).GetScalarValue()) ;
+    return diff;
+}
+
+template<typename PixelType>
 double ComputeDiff(PixelType p1, PixelType p2)
 {
     return static_cast<double>(p1-p2);
@@ -170,6 +177,11 @@ int CompareImages(QVector<size_t> cDims,
       if(cDims[0] == 1)
       {
           return CompareImages<PixelType, Dimensions>(input_container, input_path, baseline_container, baseline_path, tolerance);
+      }
+      // RGB images
+      else if(cDims[0] == 3)
+      {
+          return CompareImages<itk::RGBPixel<PixelType>, Dimensions>(input_container, input_path, baseline_container, baseline_path, tolerance);
       }
       // RGBA images
       else if(cDims[0] == 4)
@@ -444,6 +456,11 @@ int GetMD5FromDataContainer(QVector<size_t> cDims,
       if(cDims[0] == 1)
       {
           return GetMD5FromDataContainer<PixelType, Dimensions>(container, path, md5);
+      }
+      // RGB images
+      else if(cDims[0] == 3)
+      {
+          return GetMD5FromDataContainer<itk::RGBPixel<PixelType>, Dimensions>(container, path, md5);
       }
       // RGBA images
       else if(cDims[0] == 4)

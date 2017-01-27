@@ -13,7 +13,7 @@
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 
-#define DREAM3D_USE_RGBA 1
+#define DREAM3D_USE_RGB_RGBA 1
 #define DREAM3D_USE_Scalar 0
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
