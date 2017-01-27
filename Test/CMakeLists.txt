@@ -119,6 +119,7 @@ set(TEST_NAMES
   ITKMultiScaleHessianBasedObjectnessImage
   ITKVectorConnectedComponentImage
   ITKConnectedComponentImage
+  ITKMaskImage
   )
 
 set( ${PLUGIN_NAME}_TEST_SRCS )

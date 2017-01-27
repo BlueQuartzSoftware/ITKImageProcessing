@@ -114,6 +114,7 @@ set(_PublicFilters
   ITKMultiScaleHessianBasedObjectnessImage
   ITKVectorConnectedComponentImage
   ITKConnectedComponentImage
+  ITKMaskImage
 )
 
 
