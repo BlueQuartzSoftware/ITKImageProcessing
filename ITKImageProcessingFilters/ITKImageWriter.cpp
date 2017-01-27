@@ -50,6 +50,11 @@
 #define DREAM3D_USE_Vector 1
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
 
+#ifdef _WIN32
+extern Q_CORE_EXPORT int qt_ntfs_permission_lookup;
+#endif
+
+
 // ITK includes
 #include <itkImageFileWriter.h>
 #include <itkImageSeriesWriter.h>
