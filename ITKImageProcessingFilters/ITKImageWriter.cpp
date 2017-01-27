@@ -279,7 +279,7 @@ void ITKImageWriter::writeImage()
         typename ImageType::SizeType size = toITK->GetOutput()->GetLargestPossibleRegion().GetSize();
         if (size[2] < 2)
         {
-          setErrorCondition(-6);
+          setErrorCondition(-21012);
           notifyErrorMessage(getHumanLabel(), "Image is 2D, not 3D.", getErrorCondition());
           return;
         }
@@ -292,7 +292,7 @@ void ITKImageWriter::writeImage()
   }
   catch (itk::ExceptionObject & err)
   {
-      setErrorCondition(-5);
+      setErrorCondition(-21011);
       QString errorMessage = "ITK exception was thrown while writing output file: %1";
       notifyErrorMessage(getHumanLabel(), errorMessage.arg(err.GetDescription()), getErrorCondition());
       return;
@@ -352,7 +352,7 @@ void ITKImageWriter::execute()
     notifyErrorMessage(getHumanLabel(), errorMessage.arg(path.getDataArrayName()), getErrorCondition());
     return;
   }
-  Dream3DArraySwitchMacro(this->writeImage, getImageArrayPath(), -4);
+  Dream3DArraySwitchMacro(this->writeImage, getImageArrayPath(), -21010);
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
