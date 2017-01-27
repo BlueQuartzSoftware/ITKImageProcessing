@@ -14,6 +14,7 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 
 #define DREAM3D_USE_RGBA 1
+#define DREAM3D_USE_Scalar 0
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
 
@@ -44,7 +45,6 @@ void ITKRGBToLuminanceImage::setupFilterParameters()
   FilterParameterVector parameters;
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
-  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Save as New Array", SaveAsNewArray, FilterParameter::Parameter, ITKRGBToLuminanceImage, linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
@@ -86,7 +86,8 @@ void ITKRGBToLuminanceImage::dataCheck()
     notifyErrorMessage(getHumanLabel(), "Input image pixels should have three (RGB) or four (RGBA) components.", getErrorCondition());
     return;
   }
-  ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
+  typedef typename itk::NumericTraits< InputPixelType >::ValueType        ScalarPixelType;
+  ITKImageBase::dataCheck<InputPixelType, ScalarPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
