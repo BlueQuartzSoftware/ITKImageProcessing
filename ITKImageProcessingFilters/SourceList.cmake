@@ -116,6 +116,7 @@ set(_PublicFilters
   ITKConnectedComponentImage
   ITKMaskImage
   ITKFFTNormalizedCorrelationImage
+  ITKVectorRescaleIntensityImage
 )
 
 
