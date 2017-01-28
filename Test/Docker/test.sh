@@ -8,7 +8,7 @@
 set -e
 set -x
 
-cd /usr/src/DREAM3D/DREAM3D-build-Release
+cd /usr/src/DREAM3D/DREAM3D-build-MinSizeRel
 cmake \
   "-DDREAM3D_EXTRA_PLUGINS:STRING=ITKImageProcessing" \
   -DBUILDNAME:STRING=Plugin-ITKImageProcessing \
