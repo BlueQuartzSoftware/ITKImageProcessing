@@ -120,6 +120,7 @@ set(TEST_NAMES
   ITKVectorConnectedComponentImage
   ITKConnectedComponentImage
   ITKMaskImage
+  ITKFFTNormalizedCorrelationImage
   )
 
 set( ${PLUGIN_NAME}_TEST_SRCS )
