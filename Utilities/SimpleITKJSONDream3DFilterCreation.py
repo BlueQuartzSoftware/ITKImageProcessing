@@ -42,7 +42,8 @@ general={
                {'name':['output_pixel_type'],'type':str,'required':False},  # 60
                {'name':['template_code_filename'], 'type':str, 'required':True},  # 281
                {'name':['template_test_filename'], 'type':str, 'required':True}, # 280
-               {'name':['filter_type'],'type':str,'required':False}  # 102 occurences
+               {'name':['filter_type'],'type':str,'required':False},  # 102 occurences
+               {'name':['measurements'],'type':str,'required':False}  # 109
              ],
         'ignored':
              [
@@ -58,7 +59,6 @@ general={
                {'name':['vector_pixel_types_by_component'],'type':str,'required':False},  # 42
                {'name':['no_procedure'],'type':str,'required':False},  # 31
                {'name':['no_output_type'],'type':str,'required':False},  # 2
-               {'name':['measurements'],'type':str,'required':False},  # 109
                {'name':['constant_type'],'type':str,'required':False},  # 23
                {'name':['pixel_types2'],'type':str,'required':False},  # 14
                {'name':['vector_pixel_types_by_component2'],'type':str,'required':False},  # 1
@@ -72,6 +72,7 @@ general={
          
        }
 
+# 'member' structure is used both for 'members' data and 'measurements' data
 members={
         'name':'members',
         'processed':
@@ -139,7 +140,8 @@ tests={
           {'name':['md5hash'], 'type':str, 'required':False},  # 329 occurences
           {'name':['settings'], 'type':list,'required':False},  # 621 occurences
           {'name':['inputs'],'type':list,'required':True,'limitations':{'len_maximum':1, 'len_minimum':1}},  # 816 (not limited to tests)
-          {'name':['tolerance'],'type':float,'required':False}  # 249 occurences
+          {'name':['tolerance'],'type':float,'required':False},  # 249 occurences
+          {'name':['measurements_results'],'type':list,'required':False} # 65 occurences
         ],
         'ignored':
         [
@@ -156,11 +158,12 @@ tests={
         ]
 }
 
+# Used both for test settings and test measurements
 tests_settings={
        'name':'tests_settings',
        'processed':
         [
-          {'name':['parameter'],'type':str,'required':True},
+          {'name':['parameter','name'],'type':str,'required':True},
           {'name':['value'], 'type':str, 'required':True},
           {'name':['dim_vec'], 'type':int, 'required':False},
           {'name':['type'], 'type':str, 'required':False}
@@ -221,6 +224,17 @@ ITKToDream3DType={
   ('uint32_t',1):{'d3d':'FloatVec3_t','std':'std::vector<uint32_t>'},
   ('int32_t',1):{'d3d':'FloatVec3_t','std':'std::vector<int32_t>'},
   ('bool',1):{'d3d':'IntVec3_t','std':'std::vector<bool>'}
+}
+
+VariantToType={
+  'double':'toDouble()',
+  'float':'toFloat()',
+  'int':'toInt()',
+  'int32_t':'toInt()',
+  'unsigned int':'toUInt()',
+  'uint64_t':'toULongLong()',
+  'uint32_t':'toUInt()',
+  'bool':'toBool()'
 }
 
 # Used in filter implementation
@@ -453,6 +467,12 @@ def GetDREAM3DParameters(filter_member):
     parameter+='    Q_PROPERTY('+dream3D_type+' '+filter_member['name']+' READ get'+filter_member['name']+' WRITE set'+filter_member['name']+')\n\n'
     return parameter
 
+def GetDREAM3DMeasurementParameters(filter_measurement):
+    dream3D_type = ITKToDream3DType[(filter_measurement['type'],filter_measurement['dim_vec'])]['d3d']
+    parameter='    SIMPL_FILTER_PARAMETER('+dream3D_type+', '+filter_measurement['name']+')\n'
+    parameter+='    Q_PROPERTY('+dream3D_type+' '+filter_measurement['name']+' READ get'+filter_measurement['name']+')\n\n'
+    return parameter
+
 def GetDREAM3DSetupFilterParametersFromMembers(filter_member, filter_name):
     dream3D_type = ITKToDream3DType[(filter_member['type'],filter_member['dim_vec'])]['d3d']
     include=Dream3DTypeToMacro[dream3D_type]['include']
@@ -471,7 +491,7 @@ def GetDREAM3DReadFilterParameters(filter_member):
   dream3D_type = ITKToDream3DType[(filter_member['type'],filter_member['dim_vec'])]['d3d']
   return '  set'+filter_member['name']+'(reader->'+Dream3DTypeToMacro[dream3D_type]['read']+'("'+filter_member['name']+'", get'+filter_member['name']+'()));\n'
 
-def ImplementFilter(filter_description, filter_members):
+def ImplementFilter(filter_description, filter_members, filter_measurements):
     if 'filter_type' in filter_description and filter_description['filter_type'] != '':
         filt = '  typedef ' + filter_description['filter_type'] + ' FilterType;\n'
     # Code specific for each template
@@ -505,6 +525,11 @@ def ImplementFilter(filter_description, filter_members):
     if filter_description['template_code_filename'] == "KernelImageFilter":
         filt+='  filter->SetKernel(structuringElement);\n'
     filt+='  this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);\n'
+    # Post processing (e.g. Print measurements)
+    for filter_measurement in filter_measurements:
+        filt+='  QString outputVal = "'+filter_measurement['name']+' :%1";\n'
+        filt+='  m_'+filter_measurement['name'] + ' = filter->Get'+filter_measurement['name'] + '();\n'
+        filt+='  notifyWarningMessage(getHumanLabel(),outputVal.arg(m_'+filter_measurement['name']+'),0);\n'
     return filt
 
 def TypenameOutputPixelType(output_pixel_type):
@@ -616,7 +641,7 @@ def GetDream3DTestName(filter_description, test):
     testName=test['tag']
     return 'Test'+filterName+testName+'Test()'
 
-def GetDream3DFilterTests(filter_description, test, test_settings):
+def GetDream3DFilterTests(filter_description, test, test_settings, filter_test_measurements_results):
     testFunctionCode = 'int ' + GetDream3DTestName(filter_description, test) + '\n'
     testFunctionCode += '{\n'
     # Create and initialized necessary variables
@@ -657,7 +682,7 @@ def GetDream3DFilterTests(filter_description, test, test_settings):
         testFunctionCode += '        var.setValue(d3d_var);\n'
         testFunctionCode += '        propWasSet = filter->setProperty("'+settings['parameter']+'", var);\n'
         testFunctionCode += '        DREAM3D_REQUIRE_EQUAL(propWasSet, true);\n'
-        testFunctionCode += '        }\n'
+        testFunctionCode += '    }\n'
     testFunctionCode += '    filter->setDataContainerArray(containerArray);\n'
     testFunctionCode += '    filter->execute();\n'
     testFunctionCode += '    DREAM3D_REQUIRED(filter->getErrorCondition(), >= , 0);\n'
@@ -678,7 +703,10 @@ def GetDream3DFilterTests(filter_description, test, test_settings):
         testFunctionCode += '    this->ReadImage(baseline_filename, containerArray, baseline_path);\n'
         testFunctionCode += '    int res = this->CompareImages(containerArray, input_path, baseline_path, '+str(test['tolerance'])+');\n'
         testFunctionCode += '    DREAM3D_REQUIRE_EQUAL(res,0);\n'
-
+    for measurement in filter_test_measurements_results:
+        if measurement != {}:
+            testFunctionCode += '    var = filter->property("'+measurement['parameter']+'");\n'
+            testFunctionCode += '    DREAM3D_REQUIRE_EQUAL(var.'+VariantToType[measurement['type']]+','+measurement['value']+');\n'
     testFunctionCode += '    return 0;\n'
     testFunctionCode += '}\n\n'
     return testFunctionCode
@@ -799,6 +827,12 @@ def main(argv=None):
             continue
         # Add default members that are not included in the JSON description file
         filter_members += DefaultMembers[filter_description['template_code_filename']]
+        # Extract measurements information
+        filter_measurements=[]
+        # Using "members" as a data structure example as 'measurements' and 'members' shoud contain the same data type
+        if not ExtractDescriptionList(members, filter_description['measurements'],\
+                                      filter_measurements, options.extra_verbose, options.not_implemented):
+            continue
         # Read tests description
         filter_tests=[]
         if not ExtractDescriptionList(tests, filter_description['tests'],\
@@ -811,20 +845,29 @@ def main(argv=None):
         # but most functions in this script used on the data containers expect
         # to work on lists.
         filter_test_settings=[]
+        filter_test_measurements_results=[]
         for ii in range(len(filter_tests)):
+            # Get test settings
             test_settings_description=[]
             current_settings = filter_tests[ii]['settings']
             if current_settings == []:
-                filter_test_settings.append([{}])
-                continue
-            if not ExtractDescriptionList(tests_settings, current_settings, test_settings_description,
+                test_settings_description = [{}]
+            elif not ExtractDescriptionList(tests_settings, current_settings, test_settings_description,
                                           options.extra_verbose, options.not_implemented):
                 filter_tests[ii]['error']=True
-                continue
+            # Get test measurements
+            test_measurements_description=[]
+            current_measurements = filter_tests[ii]['measurements_results']
+            if current_measurements == []:
+                test_measurements_description = [{}]
+            elif not ExtractDescriptionList(tests_settings, current_measurements, test_measurements_description,
+                                          options.extra_verbose, options.not_implemented):
+                filter_tests[ii]['error']=True
             # Only append list of test settings if no error found in settings
             # The tests with errors in settings will be removed in the next step
             if 'error' not in filter_tests[ii]:
                 filter_test_settings.append(test_settings_description)
+                filter_test_measurements_results.append(test_measurements_description)
         # Remove tests that had errors in their settings
         filter_tests[:] = [x for x in filter_tests if 'error' not in x]
         # Since bad settings are not save, there should be the same number
@@ -835,11 +878,18 @@ def main(argv=None):
             print("filter_test_settings:%s"%(str(filter_test_settings)))
             print("skipping this filter")
             continue
+        # Since bad measurements are not save, there should be the same number
+        # of tests and test measurements
+        if len(filter_tests) != len(filter_test_measurements_results):
+            print("Different number of tests and measurements.")
+            print("skipping this filter")
+            continue
         # Verifies limitations
         if not options.disable_verifications:
             if not VerifyLimitations(general, [filter_description], options.verbose) or\
                not VerifyLimitations(inputs, filter_inputs, options.verbose) or\
                not VerifyLimitations(members, filter_members, options.verbose) or\
+               not VerifyLimitations(members, filter_measurements, options.verbose) or\
                not VerifyLimitations(tests, filter_tests, options.verbose) or\
                not VerifyLimitations(tests_settings, filter_test_settings, options.verbose, True):
                 print "VerifyLimitations Failed"
@@ -848,8 +898,10 @@ def main(argv=None):
         FilterFields(general, [filter_description])
         FilterFields(inputs, filter_inputs)
         FilterFields(members, filter_members)
+        FilterFields(members, filter_measurements)
         FilterFields(tests, filter_tests)
         FilterFields(tests_settings, filter_test_settings, True)
+        FilterFields(tests_settings, filter_test_measurements_results, True)
         # Check filter members type
         if not CheckTypeSupport(filter_members):
             print "CheckTypeSupport Failed"
@@ -882,7 +934,7 @@ def main(argv=None):
             # Description
             DREAM3DFilter['FilterParameterDescription'] += GetDREAM3DParameterDescription(filter_member) +'\n'
         #filter
-        DREAM3DFilter['Filter']=ImplementFilter(filter_description, filter_members)
+        DREAM3DFilter['Filter']=ImplementFilter(filter_description, filter_members, filter_measurements)
         DREAM3DFilter['FilterInternal']=ImplementInternal(filter_description, 'this->filter')
         DREAM3DFilter['DataCheckInternal']=ImplementInternal(filter_description, 'this->dataCheck')
         #includes
@@ -892,8 +944,14 @@ def main(argv=None):
         for ii in range(len(filter_tests)):
             if not VerifyFilterParameterTypes(filter_members,filter_test_settings[ii]):
               print("Could not find all parameters types for tests_settings. This script will likely crash.")
-            DREAM3DFilter['FilterTests'] += GetDream3DFilterTests(filter_description, filter_tests[ii], filter_test_settings[ii])
+            if not VerifyFilterParameterTypes(filter_measurements,filter_test_measurements_results[ii]):
+              print("Could not find all parameters types for tests_measurements. This script will likely crash.")
+            DREAM3DFilter['FilterTests'] += GetDream3DFilterTests(filter_description, filter_tests[ii], filter_test_settings[ii],filter_test_measurements_results[ii])
             DREAM3DFilter['RegisterTests'] += GetDream3DRegisterTests(filter_description, filter_tests[ii], filter_test_settings[ii])
+        # Implement measurements get functions in header/${Parameters}
+        for filter_measurement in filter_measurements:
+            # Append Parameters
+            DREAM3DFilter['Parameters'] += GetDREAM3DMeasurementParameters(filter_measurement)
         # Replace variables in template files
         ConfigureFiles('.h', template_directory, filters_output_directory, DREAM3DFilter, filter_description['template_code_filename'])
         ConfigureFiles('.cpp', template_directory, filters_output_directory, DREAM3DFilter, filter_description['template_code_filename'])

@@ -113,6 +113,7 @@ set(_PublicFilters
   ITKGrayscaleDilateImage
   ITKMultiScaleHessianBasedObjectnessImage
   ITKVectorConnectedComponentImage
+  ITKConnectedComponentImage
 )
 
 
