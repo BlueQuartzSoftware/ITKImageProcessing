@@ -257,7 +257,7 @@ int CompareImages(DataContainerArray::Pointer &containerArray,
     QString baseline_type;
     QVector<size_t> baseline_cDims;
     int res_b = GetDataArray(containerArray, baseline_path, baseline_container, baseline_tDims, baseline_type, baseline_cDims);
-    DREAM3D_REQUIRE_EQUAL(res_b, 0);    
+    DREAM3D_REQUIRE_EQUAL(res_b, 0);
     DREAM3D_REQUIRE_EQUAL(input_type, baseline_type);
     DREAM3D_REQUIRE_EQUAL(input_cDims.size(), baseline_cDims.size());
     for(int ii = 0; ii < input_cDims.size() ; ii++)
