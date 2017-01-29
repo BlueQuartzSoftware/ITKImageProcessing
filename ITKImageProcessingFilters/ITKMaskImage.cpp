@@ -181,63 +181,6 @@ ITKMaskImage::convertDataContainerType()
   }
 }
 
-//template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
-//typename itk::DisableIfC<itk::NumericTraits< InputPixelType >::IsInteger>::Type
-//ITKMaskImage::convertDataContainerType()
-//{
-//}
-
-//template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
-//typename itk::EnableIfC<itk::NumericTraits< InputPixelType >::IsInteger>::Type
-//ITKMaskImage::convertDataContainerType()
-//{
-//  typedef itk::Dream3DImage<InputPixelType,Dimension> InputImageType;
-//  typedef itk::Dream3DImage<OutputPixelType,Dimension> OutputImageType;
-//  typedef itk::InPlaceDream3DDataToImageFilter<InputPixelType, Dimension> toITKType;
-//  typedef itk::InPlaceImageToDream3DDataFilter<OutputPixelType, Dimension> toDream3DType;
-//  typedef itk::CastImageFilter<InputImageType, OutputImageType> CastType;
-//  DataArrayPath dap = getMaskCellArrayPath();
-//  DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(dap.getDataContainerName());
-//  try
-//  {
-//    // Create a bridge to wrap an existing DREAM.3D array with an ItkImage container
-//    typename toITKType::Pointer toITK = toITKType::New();
-//    toITK->SetInput(dc);
-//    toITK->SetInPlace(true);
-//    toITK->SetAttributeMatrixArrayName(dap.getAttributeMatrixName().toStdString());
-//    toITK->SetDataArrayName(dap.getDataArrayName().toStdString());
-//    toITK->Update();
-//    typename CastType::Pointer cast = CastType::New();
-//    cast->SetInput(toITK->GetOutput());
-//    cast->Update();
-//    // Convert back to dream3D array
-//    DataContainer::Pointer container =
-//    getMaskContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, dap.getDataContainerName());
-//    if (!container.get())
-//    {
-//      setErrorCondition(-3);
-//      notifyErrorMessage(getHumanLabel(), "No container.", getErrorCondition());
-//      return;
-//    }
-//    QVector<size_t> dims = ITKDream3DHelper::GetComponentsDimensions<OutputPixelType>();
-//    DataContainer::Pointer dcMask = getMaskContainerArray()->getDataContainer(dap.getDataContainerName());
-//    typename toDream3DType::Pointer toDream3D = toDream3DType::New();
-//    toDream3D->SetInput(cast->GetOutput());
-//    toDream3D->SetInPlace(true);
-//    toDream3D->SetAttributeMatrixArrayName(dap.getAttributeMatrixName().toStdString());
-//    toDream3D->SetDataArrayName(dap.getDataArrayName().toStdString());
-//    toDream3D->SetDataContainer(dcMask);
-//    toDream3D->Update();
-//  }
-//  catch (itk::ExceptionObject & err)
-//  {
-//    setErrorCondition(-17);
-//    QString errorMessage = "ITK exception was thrown while converting mask image: %1";
-//    notifyErrorMessage(getHumanLabel(), errorMessage.arg(err.GetDescription()), getErrorCondition());
-//    return;
-//  }
-//}
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
