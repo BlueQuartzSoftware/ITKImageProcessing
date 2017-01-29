@@ -130,7 +130,8 @@ class ITKImageProcessingReaderTest
       size[i] = 42 + i * 3;
       spacing[i] = 10.3 + float(i)*.2;
     }
-    typename  ImageType::Pointer image = CreateITKImageForTests<ImageType>(origin, size, spacing, 3);
+    PixelType value = static_cast<PixelType>(3);
+    typename  ImageType::Pointer image = CreateITKImageForTests<ImageType>(origin, size, spacing, value);
 
     typedef itk::ImageFileWriter<ImageType> WriterType;
     typename WriterType::Pointer writer = WriterType::New();
@@ -185,12 +186,13 @@ class ITKImageProcessingReaderTest
       );
   }
 
-  itk::Dream3DImage<DefaultPixelType, 3>::Pointer
+  template<typename PixelType>
+  typename itk::Dream3DImage<PixelType, 3>::Pointer
   WriteNRRDIOTestFile()
   {
     itk::NrrdImageIO::Pointer io = itk::NrrdImageIO::New();
 
-    return WriteTestFile<DefaultPixelType,3>(
+    return WriteTestFile<PixelType,3>(
       UnitTest::ITKImageProcessingReaderTest::NRRDIOInputTestFile,
       io.GetPointer()
       );
@@ -354,11 +356,18 @@ class ITKImageProcessingReaderTest
     DREAM3D_REQUIRE_EQUAL(attributeMatrix->doesAttributeArrayExist(attributeArrayName),true);
     IDataArray::Pointer dataArray = attributeMatrix->getAttributeArray(attributeArrayName);
 
-    for (size_t i = 0; i < dataArray->getSize(); i++)
+    typedef typename itk::NumericTraits<PixelType>::ValueType ComponentType;
+    unsigned int PixelSize = itk::NumericTraits<PixelType>::GetLength();
+    for (size_t i = 0; i < expectedImage->GetLargestPossibleRegion().GetNumberOfPixels(); i++)
     {
-      float value = static_cast<PixelType*>(dataArray->getVoidPointer(0))[i];
-      float expectedValue = expectedImage->GetBufferPointer()[i];
-      DREAM3D_COMPARE_FLOATS(&value, &expectedValue, tol);
+      ComponentType* valuePtr = static_cast<ComponentType*>(dataArray->getVoidPointer(0));
+      ComponentType* expectedValuePtr = reinterpret_cast<ComponentType*>(expectedImage->GetBufferPointer());
+      for(unsigned int ii = 0 ; ii < PixelSize; ii++)
+      {
+        float value = static_cast<float>(valuePtr[i*PixelSize+ii]);
+        float expectedValue = static_cast<float>(expectedValuePtr[i*PixelSize+ii]);
+        DREAM3D_COMPARE_FLOATS(&value, &expectedValue, tol);
+      }
     }
     return EXIT_SUCCESS;
   }
@@ -412,7 +421,7 @@ class ITKImageProcessingReaderTest
       )
 
     // NrrdIO
-    itk::Dream3DImage<DefaultPixelType, 3>::Pointer nrrdioImage = WriteNRRDIOTestFile();
+    itk::Dream3DImage<DefaultPixelType, 3>::Pointer nrrdioImage = WriteNRRDIOTestFile<DefaultPixelType>();
     DREAM3D_REGISTER_TEST(
       (TestCompareImage<DefaultPixelType,3>(
       UnitTest::ITKImageProcessingReaderTest::NRRDIOInputTestFile, nrrdioImage))
@@ -425,7 +434,39 @@ class ITKImageProcessingReaderTest
       UnitTest::ITKImageProcessingReaderTest::MRCIOInputTestFile, mrcioImage))
       )
 
-
+    //Vector images
+    typedef itk::Vector<DefaultPixelType,2> Vector2Type;
+    itk::Dream3DImage<Vector2Type, 3>::Pointer vector2Image = WriteNRRDIOTestFile<Vector2Type>();
+    DREAM3D_REGISTER_TEST(
+      (TestCompareImage<Vector2Type,3>(
+      UnitTest::ITKImageProcessingReaderTest::NRRDIOInputTestFile, vector2Image))
+      )
+    typedef itk::Vector<DefaultPixelType,3> Vector3Type;
+    itk::Dream3DImage<Vector3Type, 3>::Pointer vector3Image = WriteNRRDIOTestFile<Vector3Type>();
+    DREAM3D_REGISTER_TEST(
+      (TestCompareImage<Vector3Type,3>(
+      UnitTest::ITKImageProcessingReaderTest::NRRDIOInputTestFile, vector3Image))
+      )
+    typedef itk::Vector<DefaultPixelType,36> Vector36Type;
+    itk::Dream3DImage<Vector36Type, 3>::Pointer vector36Image = WriteNRRDIOTestFile<Vector36Type>();
+    DREAM3D_REGISTER_TEST(
+      (TestCompareImage<Vector36Type,3>(
+      UnitTest::ITKImageProcessingReaderTest::NRRDIOInputTestFile, vector36Image))
+      )
+    // RGB images
+    typedef itk::RGBPixel<DefaultPixelType> RGBPixelType;
+    itk::Dream3DImage<RGBPixelType, 3>::Pointer rgbImage = WriteNRRDIOTestFile<RGBPixelType>();
+    DREAM3D_REGISTER_TEST(
+      (TestCompareImage<RGBPixelType,3>(
+      UnitTest::ITKImageProcessingReaderTest::NRRDIOInputTestFile, rgbImage))
+      )
+    // RGBA images
+    typedef itk::Vector<DefaultPixelType,3> RGBAPixelType;
+    itk::Dream3DImage<RGBAPixelType, 3>::Pointer rgbaImage = WriteNRRDIOTestFile<RGBAPixelType>();
+    DREAM3D_REGISTER_TEST(
+      (TestCompareImage<RGBAPixelType,3>(
+      UnitTest::ITKImageProcessingReaderTest::NRRDIOInputTestFile, rgbaImage))
+      )
     DREAM3D_REGISTER_TEST( RemoveTestFiles() )
   }
 

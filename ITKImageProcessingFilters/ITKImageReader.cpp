@@ -207,6 +207,10 @@ void ITKImageReader::readImage(const itk::ImageIOBase::Pointer &imageIO, const Q
         {
           readImage<itk::Vector<TComponent,3>,dimensions>(filename, dataCheck);
         }
+        else if(nbComponents == 36)
+        {
+          readImage<itk::Vector<TComponent,36>,dimensions>(filename, dataCheck);
+        }
         else
         {
           setErrorCondition(-4);
