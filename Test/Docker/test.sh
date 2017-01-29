@@ -17,7 +17,7 @@ cmake \
 # builds the project, but uses all the cores
 # of the CPU that are available and create memory issues
 # on CircleCI.
-ninja -j8
+ninja -j5
 # EMMPMUnitTest should be removed. See
 # https://github.com/BlueQuartzSoftware/DREAM3D/issues/540
 ctest -VV -D Experimental -E EMMPMUnitTest
