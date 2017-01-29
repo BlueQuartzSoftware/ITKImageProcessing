@@ -25,7 +25,7 @@ int TestITKVectorRescaleIntensityImage3dTest()
     // Copied from ITK
     // (Modules/Filtering/ImageIntensity/test/itkVectorRescaleIntensityImageFilterTest.cxx)
     const unsigned int VectorDimension = 3;
-    
+
     typedef itk::Vector< int,   VectorDimension > InputPixelType;
     typedef itk::Vector< float, VectorDimension > OutputPixelType;
 
@@ -53,7 +53,7 @@ int TestITKVectorRescaleIntensityImage3dTest()
     inputImage->SetRegions( region );
     inputImage->Allocate();
     inputImage->FillBuffer( pixelValue );
-    
+
     const double desiredMaximum = 2.0;
     ////////////////////////////
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
@@ -66,7 +66,7 @@ int TestITKVectorRescaleIntensityImage3dTest()
     DREAM3D_REQUIRED(container.get(), != , 0);
     QVector<size_t> dims = ITKDream3DHelper::GetComponentsDimensions<OutputPixelType>();
     DataContainer::Pointer dc = containerArray->getDataContainer(input_path.getDataContainerName());
-    typename toDream3DType::Pointer toDream3D = toDream3DType::New();
+    toDream3DType::Pointer toDream3D = toDream3DType::New();
     toDream3D->SetInput(inputImage);
     toDream3D->SetInPlace(true);
     toDream3D->SetAttributeMatrixArrayName(input_path.getAttributeMatrixName().toStdString());
@@ -100,7 +100,7 @@ int TestITKVectorRescaleIntensityImage3dTest()
     WriteImage("ITKVectorRescaleIntensityImage3d.nrrd", containerArray, input_path);
     // Convert filter output to ITK image
     typedef itk::InPlaceDream3DDataToImageFilter<OutputPixelType, ImageDimension> toITKType;
-    typename toITKType::Pointer toITK = toITKType::New();
+    toITKType::Pointer toITK = toITKType::New();
     toITK->SetInput(dc);
     toITK->SetInPlace(true);
     toITK->SetAttributeMatrixArrayName(input_path.getAttributeMatrixName().toStdString());
