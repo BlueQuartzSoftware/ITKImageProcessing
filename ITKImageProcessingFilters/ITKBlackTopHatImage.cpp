@@ -32,7 +32,7 @@ ITKBlackTopHatImage::ITKBlackTopHatImage() :
   ITKImageBase()
 {
   m_SafeBorder=StaticCastScalar<bool,bool,bool>(true);
-  m_KernelRadius=1;
+  m_KernelRadius=CastStdToVec3<std::vector<unsigned int>,FloatVec3_t,float>(std::vector<unsigned int>(3, 1));
   m_KernelType=StaticCastScalar<int,int,int>(itk::simple::sitkBall);
 
   setupFilterParameters();
@@ -70,7 +70,7 @@ void ITKBlackTopHatImage::setupFilterParameters()
     parameters.push_back(parameter);
   }
   // Other parameters
-  parameters.push_back(SIMPL_NEW_INTEGER_FP("KernelRadius", KernelRadius, FilterParameter::Parameter, ITKBlackTopHatImage));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("KernelRadius", KernelRadius, FilterParameter::Parameter, ITKBlackTopHatImage));
 
 
   QStringList linkedProps;
@@ -99,7 +99,7 @@ void ITKBlackTopHatImage::readFilterParameters(AbstractFilterParametersReader* r
   setNewCellArrayName( reader->readString( "NewCellArrayName", getNewCellArrayName() ) );
   setSaveAsNewArray( reader->readValue( "SaveAsNewArray", getSaveAsNewArray() ) );
   setSafeBorder(reader->readValue("SafeBorder", getSafeBorder()));
-  setKernelRadius(reader->readValue("KernelRadius", getKernelRadius()));
+  setKernelRadius(reader->readFloatVec3("KernelRadius", getKernelRadius()));
   setKernelType(reader->readValue("KernelType", getKernelType()));
 
   reader->closeFilterGroup();
@@ -112,13 +112,8 @@ template<typename InputPixelType, typename OutputPixelType, unsigned int Dimensi
 void ITKBlackTopHatImage::dataCheck()
 {
   // Check consistency of parameters
-  if(m_KernelRadius < 1)
-  {
-     setErrorCondition(-1);
-     QString errorMessage = QString(
-          "KernelRadius values must be greater or equal than 1");
-     notifyErrorMessage(getHumanLabel(), errorMessage, getErrorCondition() );
-  }
+  this->CheckVectorEntry<unsigned int,FloatVec3_t>(m_KernelRadius, "KernelRadius",1);
+
   setErrorCondition(0);
   ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
@@ -142,8 +137,7 @@ void ITKBlackTopHatImage::filter()
   typedef itk::Dream3DImage<OutputPixelType, Dimension> OutputImageType;
   typedef itk::FlatStructuringElement< Dimension > StructuringElementType;
   typedef typename StructuringElementType::RadiusType RadiusType;
-  RadiusType elementRadius;
-  elementRadius.Fill(m_KernelRadius);
+  RadiusType elementRadius = CastVec3ToITK<FloatVec3_t, RadiusType,typename RadiusType::SizeValueType>(m_KernelRadius,RadiusType::Dimension);
   StructuringElementType structuringElement;
   switch(getKernelType())
   {

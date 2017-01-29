@@ -41,8 +41,8 @@ class ITKWhiteTopHatImage : public ITKImageBase
     SIMPL_FILTER_PARAMETER(bool, SafeBorder)
     Q_PROPERTY(bool SafeBorder READ getSafeBorder WRITE setSafeBorder)
 
-    SIMPL_FILTER_PARAMETER(int, KernelRadius)
-    Q_PROPERTY(int KernelRadius READ getKernelRadius WRITE setKernelRadius)
+    SIMPL_FILTER_PARAMETER(FloatVec3_t, KernelRadius)
+    Q_PROPERTY(FloatVec3_t KernelRadius READ getKernelRadius WRITE setKernelRadius)
 
     SIMPL_FILTER_PARAMETER(int, KernelType)
     Q_PROPERTY(int KernelType READ getKernelType WRITE setKernelType)
