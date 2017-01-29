@@ -267,6 +267,6 @@ const QString ITKMaskImage::getHumanLabel()
 //
 // -----------------------------------------------------------------------------
 const QString ITKMaskImage::getSubGroupName()
-{ return "ITK ImageIntensity"; }
+{ return "ITK IntensityTransformation"; }
 
 
