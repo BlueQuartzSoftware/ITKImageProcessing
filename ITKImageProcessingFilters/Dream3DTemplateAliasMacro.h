@@ -276,6 +276,11 @@
         DefineVectorPixelTypes_##isTypeOUT(typeIN,typeOUT,3);                                                                           \
         Dream3DTemplateAliasMacroCaseIf(InputPixelType, OutputPixelType, call, typeOUTTypename, dimension);                             \
       }                                                                                                                                 \
+      else if(cDims.size() == 36)                                                                                                       \
+      {                                                                                                                                 \
+        DefineVectorPixelTypes_##isTypeOUT(typeIN,typeOUT,36);                                                                          \
+        Dream3DTemplateAliasMacroCaseIf(InputPixelType, OutputPixelType, call, typeOUTTypename, dimension);                             \
+      }                                                                                                                                 \
       else                                                                                                                              \
       {                                                                                                                                 \
         setErrorCondition(errorCondition);                                                                                              \
