@@ -98,26 +98,6 @@ class ITKMaskImage : public ITKImageBase
     /**
     * @brief Converts data container MarkerCellArrayPath to uint16
     */
-//    template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
-//    typename itk::EnableIfC<
-//    itk::NumericTraits< InputPixelType >::IsInteger>::Type
-//    convertDataContainerType();
-
-//    template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
-//    typename itk::DisableIfC<
-//    itk::NumericTraits< InputPixelType >::IsInteger>::Type
-//    convertDataContainerType();
-
-//    template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
-//    typename itk::EnableIfC<
-//    itk::NumericTraits< InputPixelType >::GetLength() == 1>::Type
-//    convertDataContainerType(){};
-
-//    template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
-//    typename itk::DisableIfC<
-//    itk::NumericTraits< InputPixelType >::GetLength() == 1>::Type
-//    convertDataContainerType(){};
-
 
     template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
     typename std::enable_if<
@@ -128,16 +108,6 @@ class ITKMaskImage : public ITKImageBase
     typename std::enable_if<
     !std::is_scalar<InputPixelType>::value>::type
     convertDataContainerType();
-/*
-  template <typename UComponentType>
-  static typename DisableIfC<
-    NumericTraits< UComponentType >::IsInteger, UComponentType>::Type
-  DefaultAlphaValue( void );
-
-  template <typename UComponentType>
-  static typename EnableIfC<
-    NumericTraits< UComponentType >::IsInteger, UComponentType>::Type
-  DefaultAlphaValue( void );*/
 
   private:
 
