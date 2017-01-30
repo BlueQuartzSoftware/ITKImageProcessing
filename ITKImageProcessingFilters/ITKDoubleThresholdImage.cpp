@@ -175,6 +175,4 @@ const QString ITKDoubleThresholdImage::getHumanLabel()
 //
 // -----------------------------------------------------------------------------
 const QString ITKDoubleThresholdImage::getSubGroupName()
-{ return "ITK MathematicalMorphology"; }
-
-
+{ return "ITK Thresholding"; }
