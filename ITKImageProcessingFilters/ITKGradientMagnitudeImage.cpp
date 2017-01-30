@@ -150,5 +150,3 @@ const QString ITKGradientMagnitudeImage::getHumanLabel()
 // -----------------------------------------------------------------------------
 const QString ITKGradientMagnitudeImage::getSubGroupName()
 { return "ITK Edge"; }
-
-

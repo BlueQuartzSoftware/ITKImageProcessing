@@ -195,6 +195,4 @@ const QString ITKMorphologicalGradientImage::getHumanLabel()
 //
 // -----------------------------------------------------------------------------
 const QString ITKMorphologicalGradientImage::getSubGroupName()
-{ return "ITK MathematicalMorphology"; }
-
-
+{ return "ITK Edge"; }
