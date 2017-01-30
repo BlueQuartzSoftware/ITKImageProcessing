@@ -167,6 +167,4 @@ const QString ITKVectorConnectedComponentImage::getHumanLabel()
 //
 // -----------------------------------------------------------------------------
 const QString ITKVectorConnectedComponentImage::getSubGroupName()
-{ return "ITK ConnectedComponents"; }
-
-
+{ return "ITK Segmentation"; }
