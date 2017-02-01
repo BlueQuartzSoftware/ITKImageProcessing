@@ -151,7 +151,7 @@ void ITKPatchBasedDenoisingImage::dataCheck()
 // -----------------------------------------------------------------------------
 void ITKPatchBasedDenoisingImage::dataCheckInternal()
 {
-  Dream3DArraySwitchMacro(this->dataCheck, getSelectedCellArrayPath(), -4);
+  Dream3DArraySwitchMacroOutputType(this->dataCheck, getSelectedCellArrayPath(), -4, double, 0);
 }
 
 // -----------------------------------------------------------------------------
@@ -161,10 +161,9 @@ void ITKPatchBasedDenoisingImage::dataCheckInternal()
 template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ITKPatchBasedDenoisingImage::filter()
 {
-  typedef itk::Dream3DImage<InputPixelType, Dimension> InputImageType;
-  typedef itk::Dream3DImage<OutputPixelType, Dimension> OutputImageType;
+  typedef itk::Dream3DImage< OutputPixelType, Dimension > RealImageType;
   //define filter
-  typedef itk::PatchBasedDenoisingImageFilter<InputImageType, OutputImageType> FilterType;
+  typedef itk::PatchBasedDenoisingImageFilter<RealImageType, RealImageType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
   typedef itk::InPlaceDream3DDataToImageFilter<InputPixelType, Dimension> toITKType;
   DataArrayPath dap = getSelectedCellArrayPath();
@@ -186,19 +185,19 @@ void ITKPatchBasedDenoisingImage::filter()
   filter->SetKernelBandwidthMultiplicationFactor(static_cast<double>(m_KernelBandwidthMultiplicationFactor));
   filter->SetKernelBandwidthUpdateFrequency(static_cast<uint32_t>(m_KernelBandwidthUpdateFrequency));
   filter->SetKernelBandwidthFractionPixelsForEstimation(static_cast<double>(m_KernelBandwidthFractionPixelsForEstimation));
-
+  filter->SetNumberOfThreads(this->getNumberOfThreads());
   typedef itk::Statistics::GaussianRandomSpatialNeighborSubsampler<
-          typename FilterType::PatchSampleType, typename InputImageType::RegionType> SamplerType;
+          typename FilterType::PatchSampleType, typename RealImageType::RegionType> SamplerType;
   typename SamplerType::Pointer sampler = SamplerType::New();
   sampler->SetVariance(m_SampleVariance);
   sampler->SetRadius(itk::Math::Floor<unsigned int>(std::sqrt(m_SampleVariance)*2.5));
   sampler->SetNumberOfResultsRequested(m_NumberOfSamplePatches);
   filter->SetSampler(sampler);
-  typedef typename itk::PatchBasedDenoisingBaseImageFilter<InputImageType,OutputImageType>::NoiseModelType NoiseModelType;
+  typedef typename itk::PatchBasedDenoisingBaseImageFilter<RealImageType,RealImageType>::NoiseModelType NoiseModelType;
   NoiseModelType noiseModel = static_cast<NoiseModelType>(m_NoiseModel);
   filter->SetNoiseModel(noiseModel);
 
-  this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+  this->ITKImageBase::filterCastToFloat<InputPixelType, OutputPixelType, Dimension, FilterType, RealImageType>(filter);
 
 }
 
@@ -207,7 +206,7 @@ void ITKPatchBasedDenoisingImage::filter()
 // -----------------------------------------------------------------------------
 void ITKPatchBasedDenoisingImage::filterInternal()
 {
-    Dream3DArraySwitchMacro(this->filter, getSelectedCellArrayPath(), -4);
+    Dream3DArraySwitchMacroOutputType(this->filter, getSelectedCellArrayPath(), -4, double, 0);
 }
 
 // -----------------------------------------------------------------------------

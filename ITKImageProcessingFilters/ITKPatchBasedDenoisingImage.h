@@ -75,6 +75,9 @@ class ITKPatchBasedDenoisingImage : public ITKImageBase
     SIMPL_FILTER_PARAMETER(int, NoiseModel)
     Q_PROPERTY(int NoiseModel READ getNoiseModel WRITE setNoiseModel)
 
+    SIMPL_FILTER_PARAMETER(int, NumberOfThreads)
+    Q_PROPERTY(int NumberOfThreads READ getNumberOfThreads WRITE setNumberOfThreads)
+
     /**
      * @brief newFilterInstance Reimplemented from @see AbstractFilter class
      */

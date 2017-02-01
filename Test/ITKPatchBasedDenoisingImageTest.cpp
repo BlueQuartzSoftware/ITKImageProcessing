@@ -36,6 +36,9 @@ int TestITKPatchBasedDenoisingImagedefaultTest()
     var.setValue(false);
     propWasSet = filter->setProperty("SaveAsNewArray", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+    var.setValue(1);//Reference image was generated using 1 thread
+    propWasSet = filter->setProperty("NumberOfThreads", var);
+    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     filter->setDataContainerArray(containerArray);
     filter->execute();
     DREAM3D_REQUIRED(filter->getErrorCondition(), >= , 0);
