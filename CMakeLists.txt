@@ -262,7 +262,7 @@ if(NOT MSVC)
 endif()
 
 if(BUILD_TESTING)
-  include(${${PLUGIN_NAME}_SOURCE_DIR}/Test/CMakeLists.txt)
+  #include(${${PLUGIN_NAME}_SOURCE_DIR}/Test/CMakeLists.txt)
 endif()
 
 
