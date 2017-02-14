@@ -122,6 +122,7 @@ set(TEST_NAMES
   ITKMaskImage
   ITKFFTNormalizedCorrelationImage
   ITKVectorRescaleIntensityImage
+  ITKPatchBasedDenoisingImage
   )
 
 set( ${PLUGIN_NAME}_TEST_SRCS )

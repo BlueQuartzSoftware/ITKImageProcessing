@@ -117,6 +117,7 @@ set(_PublicFilters
   ITKMaskImage
   ITKFFTNormalizedCorrelationImage
   ITKVectorRescaleIntensityImage
+  ITKPatchBasedDenoisingImage
 )
 
 
