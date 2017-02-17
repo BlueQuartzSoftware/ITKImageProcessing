@@ -40,7 +40,7 @@ namespace itk
 
     void Execute(ProcessObject * object)
     {
-      object->AbortGenerateDataOff();
+      object->AbortGenerateDataOn();
     }
 
     void Execute(const Object *, const EventObject &) override // has to be implemented
