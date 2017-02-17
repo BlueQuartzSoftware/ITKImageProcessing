@@ -157,11 +157,17 @@ foreach(f ${${PLUGIN_NAME}_TEST_SRCS})
   set_source_files_properties( ${f} PROPERTIES HEADER_FILE_ONLY TRUE)
 endforeach()
 
-AddSIMPLUnitTest(TESTNAME ${PLUGIN_NAME}Test
+AddSIMPLUnitTest(TESTNAME ${PLUGIN_NAME}UnitTest
                     SOURCES ${${PLUGIN_NAME}_BINARY_DIR}/${PLUGIN_NAME}UnitTest.cpp ${${PLUGIN_NAME}_TEST_SRCS}
                     FOLDER "${PLUGIN_NAME}Plugin/Test"
                     LINK_LIBRARIES ${${PLUGIN_NAME}_Link_Libs} ${ITK_LIBRARIES})
+
+target_include_directories(${PLUGIN_NAME}UnitTest
+                          PUBLIC ${PLUGINS_SOURCE_DIR}
+                          PUBLIC ${PLUGINS_BINARY_DIR}
+                          PUBLIC ${PLUGINS_BINARY_DIR}/${PLUGIN_NAME}/Test
+)
+
 if(MSVC)
-  set_source_files_properties(${${PLUGIN_NAME}_BINARY_DIR}/${PLUGIN_NAME}UnitTest.cpp 
-                              PROPERTIES COMPILE_FLAGS /bigobj)
+  set_source_files_properties(${${PLUGIN_NAME}Test_BINARY_DIR}/${PLUGIN_NAME}UnitTest.cpp PROPERTIES COMPILE_FLAGS /bigobj)
 endif()
