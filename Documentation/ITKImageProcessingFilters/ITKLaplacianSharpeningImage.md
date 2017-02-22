@@ -29,8 +29,9 @@ The input to this filter is a scalar-valued itk::Image of arbitrary dimension. T
 \li Sharpen an image
 
 ## Parameters ##
+
 | Name | Type | Description |
-|------|------|------|
+|------|------|-------------|
 | UseImageSpacing | bool| Set/Get whether or not the filter will use the spacing of the input image in its calculations |
 
 
@@ -38,13 +39,15 @@ The input to this filter is a scalar-valued itk::Image of arbitrary dimension. T
 Image
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | None | N/A | (1)  | Array containing input image
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | None |  | (1)  | Array containing filtered image
 
 ## References ##

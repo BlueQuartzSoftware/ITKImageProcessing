@@ -32,8 +32,9 @@ There are two parameters for this filter. ForegroundValue is the value that mark
 \li Find zero crossings in a signed image
 
 ## Parameters ##
+
 | Name | Type | Description |
-|------|------|------|
+|------|------|-------------|
 | ForegroundValue | int| Set/Get the label value for zero-crossing pixels. |
 | BackgroundValue | int| Set/Get the label value for non-zero-crossing pixels. |
 
@@ -42,13 +43,15 @@ There are two parameters for this filter. ForegroundValue is the value that mark
 Image
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | None | N/A | (1)  | Array containing input image
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | None | uint8_t | (1)  | Array containing filtered image
 
 ## References ##

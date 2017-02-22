@@ -29,8 +29,9 @@ Enhancement using Generalizations of Histogram Equalization." J.Alex Stark. IEEE
 \li Adaptive histogram equalization
 
 ## Parameters ##
+
 | Name | Type | Description |
-|------|------|------|
+|------|------|-------------|
 | Radius | FloatVec3_t| N/A |
 | Alpha | float| Set/Get the value of alpha. Alpha=0 produces the adaptive histogram equalization (provided beta=0). Alpha=1 produces an unsharp mask. Default is 0.3. |
 | Beta | float| Set/Get the value of beta. If beta=1 (and alpha=1), then the output image matches the input image. As beta approaches 0, the filter behaves as an unsharp mask. Default is 0.3. |
@@ -41,13 +42,15 @@ Enhancement using Generalizations of Histogram Equalization." J.Alex Stark. IEEE
 Image
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | None | N/A | (1)  | Array containing input image
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | None |  | (1)  | Array containing filtered image
 
 ## References ##

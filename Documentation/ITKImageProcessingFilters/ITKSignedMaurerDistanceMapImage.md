@@ -18,8 +18,9 @@ Set/GetBackgroundValue specifies the background of the value of the input binary
 Reference: C. R. Maurer, Jr., R. Qi, and V. Raghavan, "A Linear Time Algorithm for Computing Exact Euclidean Distance Transforms of Binary Images in Arbitrary Dimensions", IEEE - Transactions on Pattern Analysis and Machine Intelligence, 25(2): 265-270, 2003.
 
 ## Parameters ##
+
 | Name | Type | Description |
-|------|------|------|
+|------|------|-------------|
 | InsideIsPositive | bool| Set if the inside represents positive values in the signed distance map. By convention ON pixels are treated as inside pixels. |
 | SquaredDistance | bool| Set if the distance should be squared. |
 | UseImageSpacing | bool| Set if image spacing should be used in computing distances. |
@@ -29,13 +30,15 @@ Reference: C. R. Maurer, Jr., R. Qi, and V. Raghavan, "A Linear Time Algorithm f
 Image
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | None | N/A | (1)  | Array containing input image
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | None | float | (1)  | Array containing filtered image
 
 ## References ##

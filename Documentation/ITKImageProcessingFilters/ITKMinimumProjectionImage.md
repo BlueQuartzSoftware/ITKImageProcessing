@@ -24,8 +24,9 @@ This class was contributed to the Insight Journal by Gaetan Lehmann. The origina
 \see MeanProjectionImageFilter
 
 ## Parameters ##
+
 | Name | Type | Description |
-|------|------|------|
+|------|------|-------------|
 | ProjectionDimension | double| N/A |
 
 
@@ -33,13 +34,15 @@ This class was contributed to the Insight Journal by Gaetan Lehmann. The origina
 Image
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | None | N/A | (1)  | Array containing input image
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | None |  | (1)  | Array containing filtered image
 
 ## References ##

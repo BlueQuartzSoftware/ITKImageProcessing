@@ -25,8 +25,9 @@ https://hdl.handle.net/1926/1352
 \li Extract the inner and outer boundaries of blobs in a binary image
 
 ## Parameters ##
+
 | Name | Type | Description |
-|------|------|------|
+|------|------|-------------|
 | FullyConnected | bool| Set/Get whether the connected components are defined strictly by face connectivity or by face+edge+vertex connectivity. Default is FullyConnectedOff. For objects that are 1 pixel wide, use FullyConnectedOn. |
 | BackgroundValue | double| Set/Get the background value used to mark the pixels not on the border of the objects. |
 | ForegroundValue | double| Set/Get the foreground value used to identify the objects in the input and output images. |
@@ -36,13 +37,15 @@ https://hdl.handle.net/1926/1352
 Image
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | None | N/A | (1)  | Array containing input image
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | None |  | (1)  | Array containing filtered image
 
 ## References ##

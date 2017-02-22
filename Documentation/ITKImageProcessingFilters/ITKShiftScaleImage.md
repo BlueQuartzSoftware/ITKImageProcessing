@@ -10,8 +10,9 @@ Shift and scale the pixels in an image.
 ShiftScaleImageFilter shifts the input pixel by Shift (default 0.0) and then scales the pixel by Scale (default 1.0). All computattions are performed in the precison of the input pixel's RealType. Before assigning the computed value to the output pixel, the value is clamped at the NonpositiveMin and max of the pixel type.
 
 ## Parameters ##
+
 | Name | Type | Description |
-|------|------|------|
+|------|------|-------------|
 | Shift | double| Set/Get the amount to Shift each Pixel. The shift is followed by a Scale. |
 | Scale | double| Set/Get the amount to Scale each Pixel. The Scale is applied after the Shift. |
 
@@ -20,13 +21,15 @@ ShiftScaleImageFilter shifts the input pixel by Shift (default 0.0) and then sca
 Image
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | None | N/A | (1)  | Array containing input image
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | None |  | (1)  | Array containing filtered image
 
 ## References ##

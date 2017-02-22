@@ -14,8 +14,9 @@ This class implements the denoising algorithm using a Gaussian kernel function f
 \see PatchBasedDenoisingBaseImageFilter
 
 ## Parameters ##
+
 | Name | Type | Description |
-|------|------|------|
+|------|------|-------------|
 | KernelBandwidthSigma | double| Set/Get initial kernel bandwidth estimate. To prevent the class from automatically modifying this estimate, set KernelBandwidthEstimation to false in the base class. |
 | PatchRadius | double| Set/Get the patch radius specified in physical coordinates. Patch radius is preferably set to an even number. Currently, only isotropic patches in physical space are allowed; patches can be anisotropic in voxel space.
  |
@@ -42,13 +43,15 @@ This class implements the denoising algorithm using a Gaussian kernel function f
 Image
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | None | N/A | (1)  | Array containing input image
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | None |  | (1)  | Array containing filtered image
 
 ## References ##

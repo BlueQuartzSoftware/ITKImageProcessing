@@ -37,8 +37,9 @@ This filter uses the FastChamferDistanceImageFilter and the IsoContourDistanceIm
 \li Compute a distance map from objects in a binary image
 
 ## Parameters ##
+
 | Name | Type | Description |
-|------|------|------|
+|------|------|-------------|
 | InsideValue | double| Set/Get intensity value representing the interior of objects in the mask |
 | OutsideValue | double| Set/Get intensity value representing non-objects in the mask |
 
@@ -47,13 +48,15 @@ This filter uses the FastChamferDistanceImageFilter and the IsoContourDistanceIm
 Image
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | None | N/A | (1)  | Array containing input image
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | None | float | (1)  | Array containing filtered image
 
 ## References ##

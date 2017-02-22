@@ -16,8 +16,9 @@ If the pixel covered by the center of the kernel has the pixel value ObjectValue
 \see BinaryErodeImageFilter
 
 ## Parameters ##
+
 | Name | Type | Description |
-|------|------|------|
+|------|------|-------------|
 | ObjectValue | double| N/A |
 | BackgroundValue | double| Set the value to be assigned to eroded pixels |
 | KernelRadius | FloatVec3_t| N/A |
@@ -28,13 +29,15 @@ If the pixel covered by the center of the kernel has the pixel value ObjectValue
 Image
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | None | N/A | (1)  | Array containing input image
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | None |  | (1)  | Array containing filtered image
 
 ## References ##

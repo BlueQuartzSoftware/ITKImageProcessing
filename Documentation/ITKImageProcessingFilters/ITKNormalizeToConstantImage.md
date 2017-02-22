@@ -28,8 +28,9 @@ convolution" by Lehmann G. https://hdl.handle.net/10380/3154
 \li Scale all pixels so that their sum is a specified constant
 
 ## Parameters ##
+
 | Name | Type | Description |
-|------|------|------|
+|------|------|-------------|
 | Constant | double| Set/get the normalization constant. |
 
 
@@ -37,13 +38,15 @@ convolution" by Lehmann G. https://hdl.handle.net/10380/3154
 Image
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | None | N/A | (1)  | Array containing input image
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | None | typename itk::NumericTraits<typename InputImageType::PixelType>::RealType | (1)  | Array containing filtered image
 
 ## References ##

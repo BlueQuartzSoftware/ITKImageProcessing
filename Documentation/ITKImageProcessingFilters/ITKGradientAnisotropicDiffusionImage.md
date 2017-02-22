@@ -22,8 +22,9 @@ Please see the description of parameters given in itkAnisotropicDiffusionImageFi
 \see GradientAnisotropicDiffusionFunction
 
 ## Parameters ##
+
 | Name | Type | Description |
-|------|------|------|
+|------|------|-------------|
 | TimeStep | double| N/A |
 | ConductanceParameter | double| N/A |
 | ConductanceScalingUpdateInterval | double| N/A |
@@ -34,13 +35,15 @@ Please see the description of parameters given in itkAnisotropicDiffusionImageFi
 Image
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | None | N/A | (1)  | Array containing input image
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | None |  | (1)  | Array containing filtered image
 
 ## References ##

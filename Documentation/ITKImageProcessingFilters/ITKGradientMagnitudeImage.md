@@ -21,8 +21,9 @@ Computes the gradient magnitude of an image region at each pixel.
 \li Compute the gradient magnitude image
 
 ## Parameters ##
+
 | Name | Type | Description |
-|------|------|------|
+|------|------|-------------|
 | UseImageSpacing | bool| Set/Get whether or not the filter will use the spacing of the input image in its calculations |
 
 
@@ -30,13 +31,15 @@ Computes the gradient magnitude of an image region at each pixel.
 Image
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | None | N/A | (1)  | Array containing input image
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | None | float | (1)  | Array containing filtered image
 
 ## References ##

@@ -24,8 +24,9 @@ The default time step for this filter is set to the maximum theoretically stable
 \see CurvatureNDAnisotropicDiffusionFunction
 
 ## Parameters ##
+
 | Name | Type | Description |
-|------|------|------|
+|------|------|-------------|
 | TimeStep | double| N/A |
 | ConductanceParameter | double| N/A |
 | ConductanceScalingUpdateInterval | double| N/A |
@@ -36,13 +37,15 @@ The default time step for this filter is set to the maximum theoretically stable
 Image
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | None | N/A | (1)  | Array containing input image
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | None |  | (1)  | Array containing filtered image
 
 ## References ##

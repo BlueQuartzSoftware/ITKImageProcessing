@@ -24,6 +24,7 @@ in physical space and resolution (uniform physical size of the resulting **Cells
 None
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|------|----------------------|-------------|
 | **Data Container** | ImageDataContainer | N/A | N/A | Created **Data Container** name **Image Geometry** |

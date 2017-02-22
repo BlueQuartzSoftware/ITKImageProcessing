@@ -37,8 +37,9 @@ Reference: "Level Set Methods and Fast Marching Methods", J.A. Sethian, Cambridg
 Input/Output Restrictions: TInputImage and TOutputImage must have the same dimension. TOutputImage's pixel type must be a real number type.
 
 ## Parameters ##
+
 | Name | Type | Description |
-|------|------|------|
+|------|------|-------------|
 | TimeStep | double| Set the timestep parameter. |
 | NumberOfIterations | double| N/A |
 
@@ -47,13 +48,15 @@ Input/Output Restrictions: TInputImage and TOutputImage must have the same dimen
 Image
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | None | N/A | (1)  | Array containing input image
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | None | typename itk::NumericTraits<typename InputImageType::PixelType>::RealType | (1)  | Array containing filtered image
 
 ## References ##

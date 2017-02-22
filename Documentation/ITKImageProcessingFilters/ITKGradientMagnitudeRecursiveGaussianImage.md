@@ -16,8 +16,9 @@ This filter is implemented using the recursive gaussian filters
 \li Find the gradient magnitude of the image first smoothed with a Gaussian kernel
 
 ## Parameters ##
+
 | Name | Type | Description |
-|------|------|------|
+|------|------|-------------|
 | Sigma | double| Set Sigma value. Sigma is measured in the units of image spacing. |
 | NormalizeAcrossScale | bool| Define which normalization factor will be used for the Gaussian\see RecursiveGaussianImageFilter::SetNormalizeAcrossScale |
 
@@ -26,13 +27,15 @@ This filter is implemented using the recursive gaussian filters
 Image
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | None | N/A | (1)  | Array containing input image
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | None | float | (1)  | Array containing filtered image
 
 ## References ##

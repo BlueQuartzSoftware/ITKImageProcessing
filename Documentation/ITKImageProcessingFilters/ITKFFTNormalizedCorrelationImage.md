@@ -37,8 +37,9 @@ images and its values range from -1.0 to 1.0. The size of this NCC image is, by
 definition, size(fixedImage) + size(movingImage) - 1.
 
 ## Parameters ##
+
 | Name | Type | Description |
-|------|------|------|
+|------|------|-------------|
 | RequiredNumberOfOverlappingPixels | size_t| See Description |
 | RequiredFractionOfOverlappingPixels | double| See Description |
 
@@ -47,13 +48,15 @@ definition, size(fixedImage) + size(movingImage) - 1.
 Image
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | None | N/A | (1)  | Array containing input image
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | None | float | (1)  | Array containing filtered image
 
 ## References ##

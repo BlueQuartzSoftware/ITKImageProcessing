@@ -14,8 +14,9 @@ The structuring element is assumed to be composed of binary values (zero or one)
 \see MorphologyImageFilter , GrayscaleFunctionDilateImageFilter , BinaryDilateImageFilter
 
 ## Parameters ##
+
 | Name | Type | Description |
-|------|------|------|
+|------|------|-------------|
 | SafeBorder | bool| A safe border is added to input image to avoid borders effects and remove it once the closing is done |
 | KernelRadius | FloatVec3_t| N/A |
 | KernelType | int| N/A |
@@ -25,13 +26,15 @@ The structuring element is assumed to be composed of binary values (zero or one)
 Image
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | None | N/A | (1)  | Array containing input image
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | None |  | (1)  | Array containing filtered image
 
 ## References ##

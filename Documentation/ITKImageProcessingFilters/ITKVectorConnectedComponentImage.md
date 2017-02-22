@@ -10,8 +10,9 @@ A connected components filter that labels the objects in a vector image. Two vec
 
 
 ## Parameters ##
+
 | Name | Type | Description |
-|------|------|------|
+|------|------|-------------|
 | DistanceThreshold | double| N/A |
 | FullyConnected | bool| N/A |
 
@@ -20,13 +21,15 @@ A connected components filter that labels the objects in a vector image. Two vec
 Image
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | None | N/A | (1)  | Array containing input image
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | None | uint32_t | (1)  | Array containing filtered image
 
 ## References ##

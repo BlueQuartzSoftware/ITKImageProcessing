@@ -24,8 +24,9 @@ The default values for LowerThreshold and UpperThreshold are: LowerThreshold = N
 \li Threshold an image
 
 ## Parameters ##
+
 | Name | Type | Description |
-|------|------|------|
+|------|------|-------------|
 | LowerThreshold | double| N/A |
 | UpperThreshold | double| Set the thresholds. The default lower threshold is NumericTraits<InputPixelType>::NonpositiveMin() . The default upper threshold is NumericTraits<InputPixelType>::max . An execption is thrown if the lower threshold is greater than the upper threshold. |
 | InsideValue | int| Set the "inside" pixel value. The default value NumericTraits<OutputPixelType>::max() |
@@ -36,13 +37,15 @@ The default values for LowerThreshold and UpperThreshold are: LowerThreshold = N
 Image
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | None | N/A | (1)  | Array containing input image
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | None | uint8_t | (1)  | Array containing filtered image
 
 ## References ##

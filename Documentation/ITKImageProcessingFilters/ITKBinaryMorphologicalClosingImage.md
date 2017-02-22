@@ -18,8 +18,9 @@ This code was contributed in the Insight Journal paper: "Binary morphological cl
 \see MorphologyImageFilter , GrayscaleDilateImageFilter , GrayscaleErodeImageFilter
 
 ## Parameters ##
+
 | Name | Type | Description |
-|------|------|------|
+|------|------|-------------|
 | ForegroundValue | double| Set the value in the image to consider as "foreground". Defaults to maximum value of InputPixelType. |
 | SafeBorder | bool| A safe border is added to input image to avoid borders effects and remove it once the closing is done |
 | KernelRadius | FloatVec3_t| N/A |
@@ -30,13 +31,15 @@ This code was contributed in the Insight Journal paper: "Binary morphological cl
 Image
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | None | N/A | (1)  | Array containing input image
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | None |  | (1)  | Array containing filtered image
 
 ## References ##

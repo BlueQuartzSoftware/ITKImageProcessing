@@ -37,8 +37,9 @@ Support vector images
 \li Bilateral filter an image
 
 ## Parameters ##
+
 | Name | Type | Description |
-|------|------|------|
+|------|------|-------------|
 | DomainSigma | double| Convenience get/set methods for setting all domain parameters to the same values. |
 | RangeSigma | double| Standard get/set macros for filter parameters. DomainSigma is specified in the same units as the Image spacing. RangeSigma is specified in the units of intensity. |
 | NumberOfRangeGaussianSamples | double| Set/Get the number of samples in the approximation to the Gaussian used for the range smoothing. Samples are only generated in the range of [0, 4*m_RangeSigma]. Default is 100. |
@@ -48,13 +49,15 @@ Support vector images
 Image
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | None | N/A | (1)  | Array containing input image
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | None |  | (1)  | Array containing filtered image
 
 ## References ##

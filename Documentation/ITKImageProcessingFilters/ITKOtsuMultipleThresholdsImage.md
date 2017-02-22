@@ -18,8 +18,9 @@ This filter also includes an option to use the valley emphasis algorithm from H.
 \see ThresholdLabelerImageFilter
 
 ## Parameters ##
+
 | Name | Type | Description |
-|------|------|------|
+|------|------|-------------|
 | NumberOfThresholds | int| Set/Get the number of thresholds. Default is 1. |
 | LabelOffset | int| Set/Get the offset which labels have to start from. Default is 0. |
 | NumberOfHistogramBins | double| Set/Get the number of histogram bins. Default is 128. |
@@ -30,13 +31,15 @@ This filter also includes an option to use the valley emphasis algorithm from H.
 Image
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | None | N/A | (1)  | Array containing input image
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | None | uint8_t | (1)  | Array containing filtered image
 
 ## References ##

@@ -26,8 +26,9 @@ NOTE: In this filter the minimum and maximum values of the input image are compu
 \li Rescale the intensity values of an image to a specified range
 
 ## Parameters ##
+
 | Name | Type | Description |
-|------|------|------|
+|------|------|-------------|
 | OutputMinimum | double| N/A |
 | OutputMaximum | double| N/A |
 
@@ -36,13 +37,15 @@ NOTE: In this filter the minimum and maximum values of the input image are compu
 Image
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | None | N/A | (1)  | Array containing input image
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | None |  | (1)  | Array containing filtered image
 
 ## References ##

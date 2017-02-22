@@ -15,8 +15,9 @@ Reads images through ITK
 ## Required Objects ##
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Data Container** | Data Container Name | N/A | N/A | Description of object... |
 
 ## License & Copyright ##

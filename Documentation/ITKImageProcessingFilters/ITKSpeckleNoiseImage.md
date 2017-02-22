@@ -15,8 +15,9 @@ This code was contributed in the Insight Journal paper "Noise
 Simulation". https://hdl.handle.net/10380/3158
 
 ## Parameters ##
+
 | Name | Type | Description |
-|------|------|------|
+|------|------|-------------|
 | StandardDeviation | double| N/A |
 | Seed | double| N/A |
 
@@ -25,13 +26,15 @@ Simulation". https://hdl.handle.net/10380/3158
 Image
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | None | N/A | (1)  | Array containing input image
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | None |  | (1)  | Array containing filtered image
 
 ## References ##

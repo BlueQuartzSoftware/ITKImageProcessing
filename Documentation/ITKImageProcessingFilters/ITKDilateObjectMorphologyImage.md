@@ -16,8 +16,9 @@ If a pixel's value is equal to the object value and the pixel is adjacent to a n
 \see BinaryDilateImageFilter
 
 ## Parameters ##
+
 | Name | Type | Description |
-|------|------|------|
+|------|------|-------------|
 | ObjectValue | double| N/A |
 | KernelRadius | FloatVec3_t| N/A |
 | KernelType | int| N/A |
@@ -27,13 +28,15 @@ If a pixel's value is equal to the object value and the pixel is adjacent to a n
 Image
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | None | N/A | (1)  | Array containing input image
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | None |  | (1)  | Array containing filtered image
 
 ## References ##

@@ -22,8 +22,9 @@ Laszlo G. Nyul, Jayaram K. Udupa, and Xuan Zhang, "New Variants of a Method
 of MRI Scale Standardization", IEEE Transactions on Medical Imaging, 19(2):143-150, 2000.
 
 ## Parameters ##
+
 | Name | Type | Description |
-|------|------|------|
+|------|------|-------------|
 | NumberOfHistogramLevels | double| Set/Get the number of histogram levels used. |
 | NumberOfMatchPoints | double| Set/Get the number of match points used. |
 | ThresholdAtMeanIntensity | bool| Set/Get the threshold at mean intensity flag. If true, only source (reference) pixels which are greater than the mean source (reference) intensity is used in the histogram matching. If false, all pixels are used. |
@@ -33,13 +34,15 @@ of MRI Scale Standardization", IEEE Transactions on Medical Imaging, 19(2):143-1
 Image
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | None | N/A | (1)  | Array containing input image
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | None |  | (1)  | Array containing filtered image
 
 ## References ##

@@ -27,8 +27,9 @@ This class was contributed to the Insight Journal by author Gaetan Lehmann. Biol
 \li RegionalMaximaImageFilter
 
 ## Parameters ##
+
 | Name | Type | Description |
-|------|------|------|
+|------|------|-------------|
 | BackgroundValue | double| Set/Get the value used as "background" in the output image. Defaults to NumericTraits<PixelType>::NonpositiveMin() . |
 | ForegroundValue | double| Set/Get the value in the output image to consider as "foreground". Defaults to maximum value of PixelType. |
 | FullyConnected | bool| Set/Get whether the connected components are defined strictly by face connectivity or by face+edge+vertex connectivity. Default is FullyConnectedOff. For objects that are 1 pixel wide, use FullyConnectedOn. |
@@ -39,13 +40,15 @@ This class was contributed to the Insight Journal by author Gaetan Lehmann. Biol
 Image
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | None | N/A | (1)  | Array containing input image
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | None | uint32_t | (1)  | Array containing filtered image
 
 ## References ##

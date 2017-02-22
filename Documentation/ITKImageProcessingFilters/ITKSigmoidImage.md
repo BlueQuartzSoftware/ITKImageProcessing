@@ -20,8 +20,9 @@ Every output pixel is equal to f(x). Where x is the intensity of the homologous 
 \li Pass image pixels through a sigmoid function
 
 ## Parameters ##
+
 | Name | Type | Description |
-|------|------|------|
+|------|------|-------------|
 | Alpha | double| N/A |
 | Beta | double| N/A |
 | OutputMaximum | double| N/A |
@@ -32,13 +33,15 @@ Every output pixel is equal to f(x). Where x is the intensity of the homologous 
 Image
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | None | N/A | (1)  | Array containing input image
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | None |  | (1)  | Array containing filtered image
 
 ## References ##

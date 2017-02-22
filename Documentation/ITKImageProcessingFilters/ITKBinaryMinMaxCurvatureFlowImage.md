@@ -30,8 +30,9 @@ Reference: "Level Set Methods and Fast Marching Methods", J.A. Sethian, Cambridg
 \see MinMaxCurvatureFlowImageFilter
 
 ## Parameters ##
+
 | Name | Type | Description |
-|------|------|------|
+|------|------|-------------|
 | TimeStep | double| N/A |
 | NumberOfIterations | double| N/A |
 | StencilRadius | int| N/A |
@@ -42,13 +43,15 @@ Reference: "Level Set Methods and Fast Marching Methods", J.A. Sethian, Cambridg
 Image
 
 ## Required Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | None | N/A | (1)  | Array containing input image
 
 ## Created Objects ##
+
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
+|------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | None |  | (1)  | Array containing filtered image
 
 ## References ##
