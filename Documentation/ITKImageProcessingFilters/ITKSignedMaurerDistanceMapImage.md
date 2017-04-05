@@ -1,4 +1,4 @@
-ITKSignedMaurerDistanceMapImage {#itksignedmaurerdistancemapimage}
+ITK::Signed Maurer Distance Map Image Filter (KW) {#itksignedmaurerdistancemapimage}
 ===============================
 
 ## Group (Subgroup) ##

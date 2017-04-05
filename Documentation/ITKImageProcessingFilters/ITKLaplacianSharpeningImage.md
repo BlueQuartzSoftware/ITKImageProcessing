@@ -1,4 +1,4 @@
-ITKLaplacianSharpeningImage {#itklaplaciansharpeningimage}
+ITK::Laplacian Sharpening Image Filter (KW) {#itklaplaciansharpeningimage}
 ===========================
 
 ## Group (Subgroup) ##

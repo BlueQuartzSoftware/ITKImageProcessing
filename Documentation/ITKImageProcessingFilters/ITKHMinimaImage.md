@@ -1,4 +1,4 @@
-ITKHMinimaImage {#itkhminimaimage}
+ITK::H Minima Image Filter (KW) {#itkhminimaimage}
 ===============
 
 ## Group (Subgroup) ##

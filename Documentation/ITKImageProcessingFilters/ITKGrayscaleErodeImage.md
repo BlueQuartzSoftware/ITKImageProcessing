@@ -1,4 +1,4 @@
-ITKGrayscaleErodeImage {#itkgrayscaleerodeimage}
+ITK::Grayscale Erode Image Filter (KW) {#itkgrayscaleerodeimage}
 ======================
 
 ## Group (Subgroup) ##

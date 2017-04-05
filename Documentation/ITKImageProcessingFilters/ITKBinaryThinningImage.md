@@ -1,4 +1,4 @@
-ITKBinaryThinningImage {#itkbinarythinningimage}
+ITK::Binary Thinning Image Filter (KW) {#itkbinarythinningimage}
 ======================
 
 ## Group (Subgroup) ##

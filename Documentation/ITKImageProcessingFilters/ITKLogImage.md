@@ -1,4 +1,4 @@
-ITKLogImage {#itklogimage}
+ITK::Log Image Filter (KW) {#itklogimage}
 ===========
 
 ## Group (Subgroup) ##

@@ -1,4 +1,4 @@
-ITKExpImage {#itkexpimage}
+ITK::Exp Image Filter (KW) {#itkexpimage}
 ===========
 
 ## Group (Subgroup) ##

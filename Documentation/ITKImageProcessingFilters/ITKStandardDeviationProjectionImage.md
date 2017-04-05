@@ -1,4 +1,4 @@
-ITKStandardDeviationProjectionImage {#itkstandarddeviationprojectionimage}
+ITK::Standard Deviation Projection Image Filter (KW) {#itkstandarddeviationprojectionimage}
 ===================================
 
 ## Group (Subgroup) ##

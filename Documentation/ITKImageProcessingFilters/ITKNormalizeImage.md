@@ -1,4 +1,4 @@
-ITKNormalizeImage {#itknormalizeimage}
+ITK::Normalize Image Filter (KW) {#itknormalizeimage}
 =================
 
 ## Group (Subgroup) ##

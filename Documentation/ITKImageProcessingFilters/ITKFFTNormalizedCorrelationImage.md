@@ -1,4 +1,4 @@
-ITKFFTNormalizedCorrelationImage {#itkfftnormalizedcorrelationimage}
+ITK::FFT Normalized Correlation Image Filter (KW) {#itkfftnormalizedcorrelationimage}
 ==================================
 
 ## Group (Subgroup) ##

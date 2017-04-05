@@ -1,4 +1,4 @@
-ITKBinaryMorphologicalOpeningImage {#itkbinarymorphologicalopeningimage}
+ITK::Binary Morphological Opening Image Filter (KW) {#itkbinarymorphologicalopeningimage}
 ==================================
 
 ## Group (Subgroup) ##

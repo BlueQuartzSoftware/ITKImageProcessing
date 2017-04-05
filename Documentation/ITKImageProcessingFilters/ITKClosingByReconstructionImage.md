@@ -1,4 +1,4 @@
-ITKClosingByReconstructionImage {#itkclosingbyreconstructionimage}
+ITK::Closing By Reconstruction Image Filter (KW) {#itkclosingbyreconstructionimage}
 ===============================
 
 ## Group (Subgroup) ##

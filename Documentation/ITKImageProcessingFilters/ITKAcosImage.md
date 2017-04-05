@@ -1,4 +1,4 @@
-ITKAcosImage {#itkacosimage}
+ITK::Acos Image Filter (KW) {#itkacosimage}
 ============
 
 ## Group (Subgroup) ##

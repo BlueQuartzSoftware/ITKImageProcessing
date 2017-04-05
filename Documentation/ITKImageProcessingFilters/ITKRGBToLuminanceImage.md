@@ -1,4 +1,4 @@
-ITKRGBToLuminanceImage {#itkrgbtoluminanceimage}
+ITK::RGB To Luminance Image Filter (KW) {#itkrgbtoluminanceimage}
 =============
 
 ## Group (Subgroup) ##

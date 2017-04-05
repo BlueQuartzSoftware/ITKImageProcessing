@@ -1,4 +1,4 @@
-ITKMinimumProjectionImage {#itkminimumprojectionimage}
+ITK::Minimum Projection Image Filter (KW) {#itkminimumprojectionimage}
 =========================
 
 ## Group (Subgroup) ##

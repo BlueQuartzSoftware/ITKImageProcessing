@@ -1,4 +1,4 @@
-ITKBlackTopHatImage {#itkblacktophatimage}
+ITK::Black Top Hat Image Filter (KW) {#itkblacktophatimage}
 ===================
 
 ## Group (Subgroup) ##

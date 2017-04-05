@@ -1,4 +1,4 @@
-ITKInvertIntensityImage {#itkinvertintensityimage}
+ITK::Invert Intensity Image Filter (KW) {#itkinvertintensityimage}
 =======================
 
 ## Group (Subgroup) ##

@@ -1,4 +1,4 @@
-ITKGrayscaleMorphologicalClosingImage {#itkgrayscalemorphologicalclosingimage}
+ITK::Grayscale Morphological Closing Image Filter (KW) {#itkgrayscalemorphologicalclosingimage}
 =====================================
 
 ## Group (Subgroup) ##

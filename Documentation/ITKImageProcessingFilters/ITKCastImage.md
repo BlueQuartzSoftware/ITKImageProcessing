@@ -1,4 +1,4 @@
-ITKCastImage {#itkcastimage}
+ITK::Cast Image Filter (KW) {#itkcastimage}
 =============
 
 ## Group (Subgroup) ##

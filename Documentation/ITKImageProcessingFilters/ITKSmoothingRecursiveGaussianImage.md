@@ -1,4 +1,4 @@
-ITKSmoothingRecursiveGaussianImage {#itksmoothingrecursivegaussianimage}
+ITK::Smoothing Recursive Gaussian Image Filter (KW) {#itksmoothingrecursivegaussianimage}
 ==================================
 
 ## Group (Subgroup) ##

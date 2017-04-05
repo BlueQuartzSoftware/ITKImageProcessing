@@ -1,4 +1,4 @@
-ITKAdaptiveHistogramEqualizationImage {#itkadaptivehistogramequalizationimage}
+ITK::Adaptive Histogram Equalization Image Filter (KW) {#itkadaptivehistogramequalizationimage}
 =====================================
 
 ## Group (Subgroup) ##

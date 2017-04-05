@@ -1,4 +1,4 @@
-ITKBinaryMinMaxCurvatureFlowImage {#itkbinaryminmaxcurvatureflowimage}
+ITK::Binary Min Max Curvature Flow Image Filter (KW) {#itkbinaryminmaxcurvatureflowimage}
 =================================
 
 ## Group (Subgroup) ##

@@ -1,4 +1,4 @@
-ITKIntensityWindowingImage {#itkintensitywindowingimage}
+ITK::Intensity Windowing Image Filter (KW) {#itkintensitywindowingimage}
 ==========================
 
 ## Group (Subgroup) ##

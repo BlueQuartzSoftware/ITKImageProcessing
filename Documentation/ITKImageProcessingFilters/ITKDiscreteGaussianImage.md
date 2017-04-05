@@ -1,4 +1,4 @@
-ITKDiscreteGaussianImage {#itkdiscretegaussianimage}
+ITK::Discrete Gaussian Image Filter (KW) {#itkdiscretegaussianimage}
 ========================
 
 ## Group (Subgroup) ##

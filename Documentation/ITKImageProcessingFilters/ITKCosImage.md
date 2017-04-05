@@ -1,4 +1,4 @@
-ITKCosImage {#itkcosimage}
+ITK::Cos Image Filter (KW) {#itkcosimage}
 ===========
 
 ## Group (Subgroup) ##

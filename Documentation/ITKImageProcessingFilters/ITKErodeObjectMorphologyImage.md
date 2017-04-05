@@ -1,4 +1,4 @@
-ITKErodeObjectMorphologyImage {#itkerodeobjectmorphologyimage}
+ITK::Erode Object Morphology Image Filter (KW) {#itkerodeobjectmorphologyimage}
 =============================
 
 ## Group (Subgroup) ##

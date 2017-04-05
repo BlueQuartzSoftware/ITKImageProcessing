@@ -1,4 +1,4 @@
-ITKSobelEdgeDetectionImage {#itksobeledgedetectionimage}
+ITK::Sobel Edge Detection Image Filter (KW) {#itksobeledgedetectionimage}
 ==========================
 
 ## Group (Subgroup) ##

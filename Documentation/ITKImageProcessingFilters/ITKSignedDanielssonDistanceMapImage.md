@@ -1,4 +1,4 @@
-ITKSignedDanielssonDistanceMapImage {#itksigneddanielssondistancemapimage}
+ITK::Signed Danielsson Distance Map Image Filter (KW) {#itksigneddanielssondistancemapimage}
 ===================================
 
 ## Group (Subgroup) ##

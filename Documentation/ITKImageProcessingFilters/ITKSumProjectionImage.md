@@ -1,4 +1,4 @@
-ITKSumProjectionImage {#itksumprojectionimage}
+ITK::Sum Projection Image Filter (KW) {#itksumprojectionimage}
 =====================
 
 ## Group (Subgroup) ##

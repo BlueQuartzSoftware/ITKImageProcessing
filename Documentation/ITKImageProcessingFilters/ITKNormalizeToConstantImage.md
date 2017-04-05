@@ -1,4 +1,4 @@
-ITKNormalizeToConstantImage {#itknormalizetoconstantimage}
+ITK::Normalize To Constant Image Filter (KW) {#itknormalizetoconstantimage}
 ===========================
 
 ## Group (Subgroup) ##

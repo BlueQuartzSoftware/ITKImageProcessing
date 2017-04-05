@@ -1,4 +1,4 @@
-ITKValuedRegionalMaximaImage {#itkvaluedregionalmaximaimage}
+ITK::Valued Regional Maxima Image Filter (KW) {#itkvaluedregionalmaximaimage}
 ============================
 
 ## Group (Subgroup) ##

@@ -1,4 +1,4 @@
-ITKSpeckleNoiseImage {#itkspecklenoiseimage}
+ITK::Speckle Noise Image Filter (KW) {#itkspecklenoiseimage}
 ====================
 
 ## Group (Subgroup) ##

@@ -1,4 +1,4 @@
-ITKNotImage {#itknotimage}
+ITK::Not Image Filter (KW) {#itknotimage}
 ===========
 
 ## Group (Subgroup) ##

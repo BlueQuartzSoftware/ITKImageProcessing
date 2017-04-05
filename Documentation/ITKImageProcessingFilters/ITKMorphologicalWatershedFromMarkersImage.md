@@ -1,4 +1,4 @@
-ITKMorphologicalWatershedFromMarkersImage {#itkmorphologicalwatershedfrommarkersimage}
+ITK::Morphological Watershed From Markers Image Filter (KW) {#itkmorphologicalwatershedfrommarkersimage}
 =========================================
 
 ## Group (Subgroup) ##

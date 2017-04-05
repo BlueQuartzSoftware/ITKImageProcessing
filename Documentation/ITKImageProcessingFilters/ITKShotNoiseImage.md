@@ -1,4 +1,4 @@
-ITKShotNoiseImage {#itkshotnoiseimage}
+ITK::Shot Noise Image Filter (KW) {#itkshotnoiseimage}
 =================
 
 ## Group (Subgroup) ##

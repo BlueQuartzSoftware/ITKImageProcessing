@@ -1,4 +1,4 @@
-ITKOtsuMultipleThresholdsImage {#itkotsumultiplethresholdsimage}
+ITK::Otsu Multiple Thresholds Image Filter (KW) {#itkotsumultiplethresholdsimage}
 ==============================
 
 ## Group (Subgroup) ##

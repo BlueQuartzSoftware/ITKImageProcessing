@@ -1,4 +1,4 @@
-ITKImageWriter {#itkimagewriter}
+ITK::Image Writer (KW) {#itkimagewriter}
 =====
 
 ## Group (Subgroup) ##

@@ -1,4 +1,4 @@
-ITKGrayscaleGrindPeakImage {#itkgrayscalegrindpeakimage}
+ITK::Grayscale Grind Peak Image Filter (KW) {#itkgrayscalegrindpeakimage}
 ==========================
 
 ## Group (Subgroup) ##

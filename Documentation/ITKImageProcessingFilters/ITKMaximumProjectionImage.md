@@ -1,4 +1,4 @@
-ITKMaximumProjectionImage {#itkmaximumprojectionimage}
+ITK::Maximum Projection Image Filter (KW) {#itkmaximumprojectionimage}
 =========================
 
 ## Group (Subgroup) ##

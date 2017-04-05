@@ -1,4 +1,4 @@
-ITKSinImage {#itksinimage}
+ITK::Sin Image Filter (KW) {#itksinimage}
 ===========
 
 ## Group (Subgroup) ##

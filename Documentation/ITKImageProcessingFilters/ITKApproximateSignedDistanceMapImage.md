@@ -1,4 +1,4 @@
-ITKApproximateSignedDistanceMapImage {#itkapproximatesigneddistancemapimage}
+ITK::Approximate Signed Distance Map Image Filter (KW) {#itkapproximatesigneddistancemapimage}
 ====================================
 
 ## Group (Subgroup) ##

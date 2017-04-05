@@ -1,4 +1,4 @@
-ITKMorphologicalGradientImage {#itkmorphologicalgradientimage}
+ITK::Morphological Gradient Image Filter (KW) {#itkmorphologicalgradientimage}
 =============================
 
 ## Group (Subgroup) ##

@@ -1,4 +1,4 @@
-ITKThresholdMaximumConnectedComponentsImage {#itkthresholdmaximumconnectedcomponentsimage}
+ITK::Threshold Maximum Connected Components Image Filter (KW) {#itkthresholdmaximumconnectedcomponentsimage}
 ===========================================
 
 ## Group (Subgroup) ##

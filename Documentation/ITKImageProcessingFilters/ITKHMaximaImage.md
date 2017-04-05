@@ -1,4 +1,4 @@
-ITKHMaximaImage {#itkhmaximaimage}
+ITK::H Maxima Image Filter (KW) {#itkhmaximaimage}
 ===============
 
 ## Group (Subgroup) ##

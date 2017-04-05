@@ -1,4 +1,4 @@
-ITKBinaryDilateImage {#itkbinarydilateimage}
+ITK::Binary Dilate Image Filter (KW) {#itkbinarydilateimage}
 ====================
 
 ## Group (Subgroup) ##

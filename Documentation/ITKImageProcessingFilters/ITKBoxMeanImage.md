@@ -1,4 +1,4 @@
-ITKBoxMeanImage {#itkboxmeanimage}
+ITK::Box Mean Image Filter (KW) {#itkboxmeanimage}
 ===============
 
 ## Group (Subgroup) ##

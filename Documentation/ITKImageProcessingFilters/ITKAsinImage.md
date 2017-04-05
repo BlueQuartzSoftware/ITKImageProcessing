@@ -1,4 +1,4 @@
-ITKAsinImage {#itkasinimage}
+ITK::Asin Image Filter (KW) {#itkasinimage}
 ============
 
 ## Group (Subgroup) ##

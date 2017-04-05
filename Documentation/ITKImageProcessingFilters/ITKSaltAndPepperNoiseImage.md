@@ -1,4 +1,4 @@
-ITKSaltAndPepperNoiseImage {#itksaltandpeppernoiseimage}
+ITK::Salt And Pepper Noise Image Filter (KW) {#itksaltandpeppernoiseimage}
 ==========================
 
 ## Group (Subgroup) ##

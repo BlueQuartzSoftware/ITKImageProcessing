@@ -1,4 +1,4 @@
-ITKBinaryErodeImage {#itkbinaryerodeimage}
+ITK::Binary Erode Image Filter (KW) {#itkbinaryerodeimage}
 ===================
 
 ## Group (Subgroup) ##

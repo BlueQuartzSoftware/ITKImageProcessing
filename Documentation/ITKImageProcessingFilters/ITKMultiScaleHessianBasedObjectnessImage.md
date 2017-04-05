@@ -1,4 +1,4 @@
-ITKMultiScaleHessianBasedObjectnessImage {#itkmultiscalehessianbasedobjectnessimage}
+ITK::Multi-Scale Hessian Based Objectness Image Filter (KW) {#itkmultiscalehessianbasedobjectnessimage}
 =========================
 
 ## Group (Subgroup) ##

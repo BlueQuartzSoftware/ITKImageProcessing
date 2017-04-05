@@ -1,4 +1,4 @@
-ITKBinaryMorphologicalClosingImage {#itkbinarymorphologicalclosingimage}
+ITK::Binary Morphological Closing Image Filter (KW) {#itkbinarymorphologicalclosingimage}
 ==================================
 
 ## Group (Subgroup) ##

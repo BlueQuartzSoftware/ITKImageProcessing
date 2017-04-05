@@ -1,4 +1,4 @@
-ITKGradientAnisotropicDiffusionImage {#itkgradientanisotropicdiffusionimage}
+ITK::Gradient Anisotropic Diffusion Image Filter (KW) {#itkgradientanisotropicdiffusionimage}
 ====================================
 
 ## Group (Subgroup) ##

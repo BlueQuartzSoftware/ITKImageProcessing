@@ -1,4 +1,4 @@
-ITKGradientMagnitudeRecursiveGaussianImage {#itkgradientmagnituderecursivegaussianimage}
+ITK::Gradient Magnitude Recursive Gaussian Image Filter (KW) {#itkgradientmagnituderecursivegaussianimage}
 ==========================================
 
 ## Group (Subgroup) ##

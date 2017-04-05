@@ -1,4 +1,4 @@
-ITKIsoContourDistanceImage {#itkisocontourdistanceimage}
+ITK::Iso Contour Distance Image Filter (KW) {#itkisocontourdistanceimage}
 ==========================
 
 ## Group (Subgroup) ##

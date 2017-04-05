@@ -1,4 +1,4 @@
-ITKRescaleIntensityImage {#itkrescaleintensityimage}
+ITK::Rescale Intensity Image Filter (KW) {#itkrescaleintensityimage}
 ========================
 
 ## Group (Subgroup) ##

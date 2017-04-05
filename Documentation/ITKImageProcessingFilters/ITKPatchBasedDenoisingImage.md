@@ -1,4 +1,4 @@
-ITKPatchBasedDenoisingImage {#itkpatchbaseddenoisingimage}
+ITK::Patch Based Denoising Image Filter (KW) {#itkpatchbaseddenoisingimage}
 ===========================
 
 ## Group (Subgroup) ##
