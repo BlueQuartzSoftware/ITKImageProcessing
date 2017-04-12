@@ -72,11 +72,11 @@
 ITKImageProcessingPlugin::ITKImageProcessingPlugin() :
 m_Version("0.1.0"),                            // Initialize ITKImageProcessing's Version Number Here
 m_CompatibilityVersion("0.1.0"), // Initialize ITKImageProcessing's Compatibility Version Number Here
-m_Vendor("Vendor Name"),                                // Initialize ITKImageProcessing's Vendor Name Here
-m_URL("URL"),                                           // Initialize Company URL Here
-m_Location("Location"),                                 // Initialize ITKImageProcessing library Location Here
-m_Description("Description"),                           // Initialize ITKImageProcessing's Description Here
-m_Copyright("Copyright"),                               // Initialize ITKImageProcessing's Copyright Here
+m_Vendor("BlueQuartz Software"),                                // Initialize ITKImageProcessing's Vendor Name Here
+m_URL("http://www.github.com/bluequartzsoftware/ITKImageProcessing"),                                           // Initialize Company URL Here
+m_Location(""),                                 // Initialize ITKImageProcessing library Location Here
+m_Description(""),                           // Initialize ITKImageProcessing's Description Here
+m_Copyright(""),                               // Initialize ITKImageProcessing's Copyright Here
 m_Filters(QList<QString>()),                        // Initialize ITKImageProcessing's List of Dependencies Here
 m_DidLoad(false)
 {
