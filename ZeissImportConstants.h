@@ -40,8 +40,11 @@ namespace ZeissImportConstants
   namespace ImageProcessingFilters
   {
 
-    static const QString k_ReadImageFilterClassName("ItkReadImage");
-    static const QString k_RgbToGrayFilterClassName("ItkRGBToGray");
+    // This is from the ItkImageProcessing Plugin
+    static const QString k_ReadImageFilterClassName("ITKImageReader");
+
+    // This is from the Processing Plugin
+    static const QString k_RgbToGrayFilterClassName("ConvertColorToGrayScale");
   }
 }
 
