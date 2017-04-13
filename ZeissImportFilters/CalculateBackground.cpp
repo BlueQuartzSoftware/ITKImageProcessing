@@ -137,7 +137,7 @@ void CalculateBackground::dataCheck()
   if (am.get() == nullptr)
   {
     setErrorCondition(-76000);
-    notifyErrorMessage(getHumanLabel(), "The attribute matrix has not been selected properly", -76000);
+    notifyErrorMessage(getHumanLabel(), "The Attribute Matrix for property 'Input AttributeMatrix Name' has not been selected properly", -76000);
     return;
   }
 
