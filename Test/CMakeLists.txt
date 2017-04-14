@@ -31,98 +31,98 @@ set(${PLUGIN_NAME}_Link_Libs Qt5::Core H5Support SIMPLib)
 # be directly included in the main test source file. We list them here so that
 # they will show up in IDEs
 set(TEST_NAMES
-  ITKImageProcessingReader
-  ITKImageProcessingWriter
-  ITKImageProcessingImportImageStack
-  ITKImageProcessingImage
-  ITKAbsImage
-  ITKAcosImage
-  ITKAtanImage
-  ITKSqrtImage
-  ITKMinMaxCurvatureFlowImage
-  ITKSigmoidImage
-  ITKBinaryThinningImage
-  ITKHMaximaImage
-  ITKCurvatureAnisotropicDiffusionImage
-  ITKCosImage
-  ITKHMinimaImage
-  ITKExpImage
-  ITKLogImage
-  ITKRescaleIntensityImage
-  ITKLabelContourImage
-  ITKTanImage
-  ITKBinaryContourImage
-  ITKShiftScaleImage
-  ITKNotImage
-  ITKBinaryProjectionImage
-  ITKBinaryMinMaxCurvatureFlowImage
-  ITKInvertIntensityImage
-  ITKGrayscaleFillholeImage
-  ITKAsinImage
-  ITKHConvexImage
-  ITKIntensityWindowingImage
-  ITKGradientAnisotropicDiffusionImage
-  ITKExpNegativeImage
-  ITKSinImage
-  ITKValuedRegionalMinimaImage
-  ITKLog10Image
-  ITKSquareImage
-  ITKSobelEdgeDetectionImage
-  ITKValuedRegionalMaximaImage
-  ITKRelabelComponentImage
-  ITKGrayscaleGrindPeakImage
-  ITKBinaryThresholdImage
-  ITKGradientMagnitudeImage
-  ITKGradientMagnitudeRecursiveGaussianImage
-  ITKSignedMaurerDistanceMapImage
-  ITKLaplacianRecursiveGaussianImage
-  ITKOtsuMultipleThresholdsImage
-  ITKDoubleThresholdImage
-  ITKSumProjectionImage
-  ITKApproximateSignedDistanceMapImage
-  ITKCurvatureFlowImage
-  ITKIsoContourDistanceImage
-  ITKRegionalMinimaImage
-  ITKRegionalMaximaImage
-  ITKSignedDanielssonDistanceMapImage
-  ITKStandardDeviationProjectionImage
-  ITKDanielssonDistanceMapImage
-  ITKMeanProjectionImage
-  ITKZeroCrossingImage
-  ITKThresholdMaximumConnectedComponentsImage
+  # ITKImageProcessingReader
+  # ITKImageProcessingWriter
+  # ITKImageProcessingImportImageStack
+  # ITKImageProcessingImage
+  # ITKAbsImage
+  # ITKAcosImage
+  # ITKAtanImage
+  # ITKSqrtImage
+  # ITKMinMaxCurvatureFlowImage
+  # ITKSigmoidImage
+  # ITKBinaryThinningImage
+  # ITKHMaximaImage
+  # ITKCurvatureAnisotropicDiffusionImage
+  # ITKCosImage
+  # ITKHMinimaImage
+  # ITKExpImage
+  # ITKLogImage
+  # ITKRescaleIntensityImage
+  # ITKLabelContourImage
+  # ITKTanImage
+  # ITKBinaryContourImage
+  # ITKShiftScaleImage
+  # ITKNotImage
+  # ITKBinaryProjectionImage
+  # ITKBinaryMinMaxCurvatureFlowImage
+  # ITKInvertIntensityImage
+  # ITKGrayscaleFillholeImage
+  # ITKAsinImage
+  # ITKHConvexImage
+  # ITKIntensityWindowingImage
+  # ITKGradientAnisotropicDiffusionImage
+  # ITKExpNegativeImage
+  # ITKSinImage
+  # ITKValuedRegionalMinimaImage
+  # ITKLog10Image
+  # ITKSquareImage
+  # ITKSobelEdgeDetectionImage
+  # ITKValuedRegionalMaximaImage
+  # ITKRelabelComponentImage
+  # ITKGrayscaleGrindPeakImage
+  # ITKBinaryThresholdImage
+  # ITKGradientMagnitudeImage
+  # ITKGradientMagnitudeRecursiveGaussianImage
+  # ITKSignedMaurerDistanceMapImage
+  # ITKLaplacianRecursiveGaussianImage
+  # ITKOtsuMultipleThresholdsImage
+  # ITKDoubleThresholdImage
+  # ITKSumProjectionImage
+  # ITKApproximateSignedDistanceMapImage
+  # ITKCurvatureFlowImage
+  # ITKIsoContourDistanceImage
+  # ITKRegionalMinimaImage
+  # ITKRegionalMaximaImage
+  # ITKSignedDanielssonDistanceMapImage
+  # ITKStandardDeviationProjectionImage
+  # ITKDanielssonDistanceMapImage
+  # ITKMeanProjectionImage
+  # ITKZeroCrossingImage
+  # ITKThresholdMaximumConnectedComponentsImage
   ITKSmoothingRecursiveGaussianImage
-  ITKAdaptiveHistogramEqualizationImage
-  ITKCastImage
-  ITKMedianImage
-  ITKRGBToLuminanceImage
-  ITKHistogramMatchingImage
-  ITKMorphologicalWatershedImage
-  ITKMorphologicalWatershedFromMarkersImage
-  ITKThresholdImage
-  ITKBlackTopHatImage
-  ITKWhiteTopHatImage
-  ITKGrayscaleErodeImage
-  ITKBinaryDilateImage
-  ITKGrayscaleMorphologicalOpeningImage
-  ITKGrayscaleMorphologicalClosingImage
-  ITKErodeObjectMorphologyImage
-  ITKClosingByReconstructionImage
-  ITKDilateObjectMorphologyImage
-  ITKBinaryErodeImage
-  ITKMorphologicalGradientImage
-  ITKOpeningByReconstructionImage
-  ITKBinaryMorphologicalOpeningImage
-  ITKBinaryOpeningByReconstructionImage
-  ITKBinaryMorphologicalClosingImage
-  ITKBinaryClosingByReconstructionImage
-  ITKGrayscaleDilateImage
-  ITKMultiScaleHessianBasedObjectnessImage
-  ITKVectorConnectedComponentImage
-  ITKConnectedComponentImage
-  ITKMaskImage
-  ITKFFTNormalizedCorrelationImage
-  ITKVectorRescaleIntensityImage
-  ITKPatchBasedDenoisingImage
+  # ITKAdaptiveHistogramEqualizationImage
+  # ITKCastImage
+  # ITKMedianImage
+  # ITKRGBToLuminanceImage
+  # ITKHistogramMatchingImage
+  # ITKMorphologicalWatershedImage
+  # ITKMorphologicalWatershedFromMarkersImage
+  # ITKThresholdImage
+  # ITKBlackTopHatImage
+  # ITKWhiteTopHatImage
+  # ITKGrayscaleErodeImage
+  # ITKBinaryDilateImage
+  # ITKGrayscaleMorphologicalOpeningImage
+  # ITKGrayscaleMorphologicalClosingImage
+  # ITKErodeObjectMorphologyImage
+  # ITKClosingByReconstructionImage
+  # ITKDilateObjectMorphologyImage
+  # ITKBinaryErodeImage
+  # ITKMorphologicalGradientImage
+  # ITKOpeningByReconstructionImage
+  # ITKBinaryMorphologicalOpeningImage
+  # ITKBinaryOpeningByReconstructionImage
+  # ITKBinaryMorphologicalClosingImage
+  # ITKBinaryClosingByReconstructionImage
+  # ITKGrayscaleDilateImage
+  # ITKMultiScaleHessianBasedObjectnessImage
+  # ITKVectorConnectedComponentImage
+  # ITKConnectedComponentImage
+  # ITKMaskImage
+  # ITKFFTNormalizedCorrelationImage
+  # ITKVectorRescaleIntensityImage
+  # ITKPatchBasedDenoisingImage
   )
 
 set( ${PLUGIN_NAME}_TEST_SRCS )
@@ -160,7 +160,7 @@ endforeach()
 AddSIMPLUnitTest(TESTNAME ${PLUGIN_NAME}UnitTest
                     SOURCES ${${PLUGIN_NAME}_BINARY_DIR}/${PLUGIN_NAME}UnitTest.cpp ${${PLUGIN_NAME}_TEST_SRCS}
                     FOLDER "${PLUGIN_NAME}Plugin/Test"
-                    LINK_LIBRARIES ${${PLUGIN_NAME}_Link_Libs} ${ITK_LIBRARIES})
+                    LINK_LIBRARIES ${${PLUGIN_NAME}_Link_Libs} SimpleITKExplicit)
 
 target_include_directories(${PLUGIN_NAME}UnitTest
                           PUBLIC ${PLUGINS_SOURCE_DIR}

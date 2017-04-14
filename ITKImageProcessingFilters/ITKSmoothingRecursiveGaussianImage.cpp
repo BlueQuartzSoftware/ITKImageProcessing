@@ -11,11 +11,11 @@
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
+#include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "SIMPLib/Geometry/ImageGeom.h"
-
-
 
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 #define DREAM3D_USE_RGB_RGBA 1

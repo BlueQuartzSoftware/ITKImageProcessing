@@ -177,7 +177,7 @@ void ITKFFTNormalizedCorrelationImage::filter()
   }
   catch (itk::ExceptionObject & err)
   {
-    setErrorCondition(-5);
+    setErrorCondition(-55558);
     QString errorMessage = "ITK exception was thrown while filtering input image: %1";
     notifyErrorMessage(getHumanLabel(), errorMessage.arg(err.GetDescription()), getErrorCondition());
     return;

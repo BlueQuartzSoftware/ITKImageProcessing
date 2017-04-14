@@ -21,21 +21,60 @@ int TestITKSmoothingRecursiveGaussianImagedefaultTest()
 {
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/RA-Float.nrrd");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
-    DataContainerArray::Pointer containerArray = DataContainerArray::New();
-    this->ReadImage(input_filename, containerArray, input_path);
-    QString filtName = "ITKSmoothingRecursiveGaussianImage";
+
+
+    FilterPipeline::Pointer pipeline = FilterPipeline::New();
+    QString filtName = "ITKImageReader";
     FilterManager* fm = FilterManager::Instance();
     IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+
+    DREAM3D_REQUIRE_VALID_POINTER(filterFactory.get());
+
+    AbstractFilter::Pointer reader = filterFactory->create();
+    DREAM3D_REQUIRE_VALID_POINTER(reader.get());
+    bool propWasSet = false;
+    //reader->setDataContainerArray(containerArray);
+    propWasSet = reader->setProperty("DataContainerName", input_path.getDataContainerName());
+    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+    propWasSet = reader->setProperty("CellAttributeMatrixName", input_path.getAttributeMatrixName());
+    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+    propWasSet = reader->setProperty("ImageDataArrayName", input_path.getDataArrayName());
+    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+
+    propWasSet = reader->setProperty("FileName", input_filename);
+    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+
+    pipeline->pushBack(reader);
+
+
+    //DataContainerArray::Pointer containerArray = DataContainerArray::New();
+    //this->ReadImage(input_filename, containerArray, input_path);
+    filtName = "ITKSmoothingRecursiveGaussianImage";
+//    FilterManager* fm = FilterManager::Instance();
+    filterFactory = fm->getFactoryForFilter(filtName);
     DREAM3D_REQUIRE_NE(filterFactory.get(),0);
     AbstractFilter::Pointer filter = filterFactory->create();
     QVariant var;
-    bool propWasSet;
+    // bool propWasSet;
     var.setValue(input_path);
     propWasSet = filter->setProperty("SelectedCellArrayPath", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     var.setValue(false);
     propWasSet = filter->setProperty("SaveAsNewArray", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+
+    pipeline->pushBack(filter);
+
+    pipeline->preflightPipeline();
+    int err = pipeline->getErrorCondition();
+    DREAM3D_REQUIRED(err, >=, 0);
+
+    pipeline->execute();
+    err = pipeline->getErrorCondition();
+    DREAM3D_REQUIRED(err, >=, 0);
+
+
+#if 0
     filter->setDataContainerArray(containerArray);
     filter->execute();
     DREAM3D_REQUIRED(filter->getErrorCondition(), >= , 0);
@@ -46,6 +85,8 @@ int TestITKSmoothingRecursiveGaussianImagedefaultTest()
     this->ReadImage(baseline_filename, containerArray, baseline_path);
     int res = this->CompareImages(containerArray, input_path, baseline_path, 0.0001);
     DREAM3D_REQUIRE_EQUAL(res,0);
+
+#endif
     return 0;
 }
 

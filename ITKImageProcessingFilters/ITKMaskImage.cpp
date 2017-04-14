@@ -174,7 +174,7 @@ ITKMaskImage::convertDataContainerType()
   }
   catch (itk::ExceptionObject & err)
   {
-    setErrorCondition(-17);
+    setErrorCondition(-55560);
     QString errorMessage = "ITK exception was thrown while converting mask image: %1";
     notifyErrorMessage(getHumanLabel(), errorMessage.arg(err.GetDescription()), getErrorCondition());
     return;
@@ -210,7 +210,7 @@ void ITKMaskImage::filter()
   }
   catch (itk::ExceptionObject & err)
   {
-    setErrorCondition(-18);
+    setErrorCondition(-55561);
     QString errorMessage = "ITK exception was thrown while converting mask image: %1";
     notifyErrorMessage(getHumanLabel(), errorMessage.arg(err.GetDescription()), getErrorCondition());
     return;

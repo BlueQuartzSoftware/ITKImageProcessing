@@ -9,6 +9,9 @@
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
+#include "sitkExplicitITK.h"
+
+
 #include "itkImageToImageFilter.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkInPlaceDream3DDataToImageFilter.h"
@@ -272,7 +275,7 @@ class ITKImageBase : public AbstractFilter
       }
       catch (itk::ExceptionObject & err)
       {
-        setErrorCondition(-5);
+        setErrorCondition(-55555);
         QString errorMessage = "ITK exception was thrown while filtering input image: %1";
         notifyErrorMessage(getHumanLabel(), errorMessage.arg(err.GetDescription()), getErrorCondition());
         return;
@@ -343,7 +346,7 @@ class ITKImageBase : public AbstractFilter
       }
       catch (itk::ExceptionObject & err)
       {
-        setErrorCondition(-5);
+        setErrorCondition(-55556);
         QString errorMessage = "ITK exception was thrown while filtering input image: %1";
         notifyErrorMessage(getHumanLabel(), errorMessage.arg(err.GetDescription()), getErrorCondition());
         return;

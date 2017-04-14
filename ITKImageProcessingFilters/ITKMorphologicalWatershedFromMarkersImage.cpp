@@ -154,7 +154,7 @@ void ITKMorphologicalWatershedFromMarkersImage::convertDataContainerType()
   }
   catch (itk::ExceptionObject & err)
   {
-    setErrorCondition(-17);
+    setErrorCondition(-55562);
     QString errorMessage = "ITK exception was thrown while converting marker image: %1";
     notifyErrorMessage(getHumanLabel(), errorMessage.arg(err.GetDescription()), getErrorCondition());
     return;
@@ -190,7 +190,7 @@ void ITKMorphologicalWatershedFromMarkersImage::filter()
   }
   catch (itk::ExceptionObject & err)
   {
-    setErrorCondition(-18);
+    setErrorCondition(-55563);
     QString errorMessage = "ITK exception was thrown while converting marker image: %1";
     notifyErrorMessage(getHumanLabel(), errorMessage.arg(err.GetDescription()), getErrorCondition());
     return;
