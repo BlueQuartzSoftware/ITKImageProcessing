@@ -25,14 +25,6 @@ cmpRevisionString( GENERATED_HEADER_FILE_PATH "${VERSION_HEADER_FILE_NAME}"
                     PROJECT_NAME "${PLUGIN_NAME}"
                     EXPORT_MACRO "")
 
-## YOU MUST INCLUDE THIS FILE TO USE ITK !!!
-## Then do not forget to add "${ITK_LIBRARIES}" to the target_link_libraries below
-if(DREAM3D_USE_ITK)
-  include( ${DREAM3D_SUPPORT_DIR}/ITKSupport/IncludeITK.cmake)
-  include_directories(${SimpleITKExplicit_BINARY_DIR}/Common/include)
-  include_directories(${SimpleITKExplicit_SOURCE_DIR}/Explicit/include)
-endif()
-
 set(${PLUGIN_NAME}_Project_SRCS "")
 
 include(${SIMPLProj_SOURCE_DIR}/Source/SIMPLib/SIMPLibMacros.cmake)
