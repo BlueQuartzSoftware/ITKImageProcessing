@@ -9,9 +9,6 @@
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
-#include "sitkExplicitITK.h"
-
-
 #include "itkImageToImageFilter.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkInPlaceDream3DDataToImageFilter.h"
@@ -20,6 +17,15 @@
 
 #include <itkCastImageFilter.h>
 #include <itkNumericTraits.h>
+
+// The sitkExplicitITK.h header must be AFTER any ITK includes above or
+// the code will not compile on Windows. Further, windows does not seem
+// to have the symbol loading issues that macOS has so lets just #define
+// around it for macOS systems only.
+#if defined(__APPLE__)
+#include "sitkExplicitITK.h"
+#endif
+
 
 /**
  * @brief The ITKImageBase class. See [Filter documentation](@ref ITKImageBase) for details.
