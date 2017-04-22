@@ -57,7 +57,14 @@ set(DREAM3D_ADDITIONAL_INSTALL_ITK_DIRECTORIES
     )
 set_property(GLOBAL APPEND PROPERTY DREAM3D_ADDITIONAL_INSTALL_ITK_DIRECTORIES ${DREAM3D_ADDITIONAL_INSTALL_ITK_DIRECTORIES})
 
-include( ${DREAM3D_SUPPORT_DIR}/ITKSupport/IncludeITK.cmake)
+if(SIMPL_USE_ITK)
+  include( ${DREAM3D_SUPPORT_DIR}/ITKSupport/IncludeITK.cmake)
+endif()
+if(APPLE)
+  include_directories(${SimpleITKExplicit_BINARY_DIR}/Common/include)
+  include_directories(${SimpleITKExplicit_SOURCE_DIR}/Explicit/include)
+endif()
+
 
 #-------
 # Start writing this header file
