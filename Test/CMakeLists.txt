@@ -24,8 +24,6 @@ file(MAKE_DIRECTORY ${TEST_TEMP_DIR})
 configure_file(${${PLUGIN_NAME}_SOURCE_DIR}/Test/TestFileLocations.h.in
                ${${PLUGIN_NAME}_BINARY_DIR}/Test/${PLUGIN_NAME}TestFileLocations.h @ONLY IMMEDIATE)
 
-set(${PLUGIN_NAME}_Link_Libs Qt5::Core H5Support SIMPLib)
-
 #------------------------------------------------------------------------------
 # List all the source files here. They will NOT be compiled but instead
 # be directly included in the main test source file. We list them here so that
@@ -157,10 +155,19 @@ foreach(f ${${PLUGIN_NAME}_TEST_SRCS})
   set_source_files_properties( ${f} PROPERTIES HEADER_FILE_ONLY TRUE)
 endforeach()
 
+
+list(APPEND ${PLUGIN_NAME}_LINK_LIBS Qt5::Core H5Support SIMPLib)
+
+if(APPLE)
+ list(APPEND ${PLUGIN_NAME}_LINK_LIBS SimpleITKExplicit)
+else()
+  list(APPEND ${PLUGIN_NAME}_LINK_LIBS ${ITK_LIBRARIES})
+endif()
+
 AddSIMPLUnitTest(TESTNAME ${PLUGIN_NAME}UnitTest
                     SOURCES ${${PLUGIN_NAME}_BINARY_DIR}/${PLUGIN_NAME}UnitTest.cpp ${${PLUGIN_NAME}_TEST_SRCS}
                     FOLDER "${PLUGIN_NAME}Plugin/Test"
-                    LINK_LIBRARIES ${${PLUGIN_NAME}_Link_Libs} SimpleITKExplicit)
+                    LINK_LIBRARIES ${${PLUGIN_NAME}_LINK_LIBS} )
 
 target_include_directories(${PLUGIN_NAME}UnitTest
                           PUBLIC ${PLUGINS_SOURCE_DIR}

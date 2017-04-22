@@ -23,7 +23,7 @@
 // to have the symbol loading issues that macOS has so lets just #define
 // around it for macOS systems only.
 #if defined(__APPLE__)
-#include "sitkExplicitITK.h"
+//  #include "sitkExplicitITK.h"
 #endif
 
 

@@ -124,9 +124,10 @@ include_directories( ${HDF5_INCLUDE_DIR} )
 include_directories( ${PROJECT_CODE_DIR} )
 include_directories( ${SIMPLViewProj_SOURCE_DIR}/Source)
 include_directories( ${SIMPLViewProj_BINARY_DIR})
-include_directories( ${SIMPLProj_SOURCE_DIR}/Source/SimpleITKExplicit/Explicit/include)
-include_directories( ${SIMPLProj_BINARY_DIR}/SimpleITKExplicit/Common/include)
-
+if(APPLE)
+	include_directories( ${SIMPLProj_SOURCE_DIR}/Source/SimpleITKExplicit/Explicit/include)
+	include_directories( ${SIMPLProj_BINARY_DIR}/SimpleITKExplicit/Common/include)
+endif()
 set(FILTER_HEADERS "#include \"${AllFiltersHeaderFile}\"")
 set(FILTER_WIDGETS_TEMP_DIR ${${PLUGIN_NAME}_BINARY_DIR}/Temp)
 set(FILTER_WIDGETS_BINARY_DIR ${${PLUGIN_NAME}_BINARY_DIR})
@@ -233,8 +234,7 @@ endif()
 add_library(${PLUGIN_NAME} MODULE ${${PLUGIN_NAME}_MODULE_SRCS})
 target_link_libraries(${PLUGIN_NAME}
                     SVWidgetsLib
-                    SimpleITKExplicit
-                    #${SCIFIO_LIBRARIES}
+                    ${ITK_LIBRARIES}
                     )
 SET_TARGET_PROPERTIES(${PLUGIN_NAME} PROPERTIES FOLDER ${PLUGIN_NAME}Plugin)
 target_include_directories(${PLUGIN_NAME}
