@@ -10,7 +10,7 @@ include_directories(${SIMPLProj_SOURCE_DIR}/Source)
 include_directories(${SIMPLProj_BINARY_DIR})
 
 
-include( ${DREAM3D_SUPPORT_DIR}/ITKSupport/IncludeITK.cmake)
+include( ${CMP_SOURCE_DIR}/ITKSupport/IncludeITK.cmake)
 
 #------------------------------------------------------------------------------
 # Set any additional include directories here
