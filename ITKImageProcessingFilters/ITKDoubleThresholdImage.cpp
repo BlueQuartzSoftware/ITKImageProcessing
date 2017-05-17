@@ -169,7 +169,7 @@ AbstractFilter::Pointer ITKDoubleThresholdImage::newFilterInstance(bool copyFilt
 //
 // -----------------------------------------------------------------------------
 const QString ITKDoubleThresholdImage::getHumanLabel()
-{ return "ITK::Double Threshold Image Filter (KW)"; }
+{ return "ITK::Double Threshold Image Filter"; }
 
 // -----------------------------------------------------------------------------
 //

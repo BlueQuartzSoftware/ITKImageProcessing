@@ -211,7 +211,7 @@ AbstractFilter::Pointer ITKFFTNormalizedCorrelationImage::newFilterInstance(bool
 //
 // -----------------------------------------------------------------------------
 const QString ITKFFTNormalizedCorrelationImage::getHumanLabel()
-{ return "ITK::FFT Normalized Correlation Image (KW)"; }
+{ return "ITK::FFT Normalized Correlation Image"; }
 
 // -----------------------------------------------------------------------------
 //

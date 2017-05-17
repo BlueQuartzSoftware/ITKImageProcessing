@@ -189,7 +189,7 @@ AbstractFilter::Pointer ITKGrayscaleDilateImage::newFilterInstance(bool copyFilt
 //
 // -----------------------------------------------------------------------------
 const QString ITKGrayscaleDilateImage::getHumanLabel()
-{ return "ITK::Grayscale Dilate Image Filter (KW)"; }
+{ return "ITK::Grayscale Dilate Image Filter"; }
 
 // -----------------------------------------------------------------------------
 //

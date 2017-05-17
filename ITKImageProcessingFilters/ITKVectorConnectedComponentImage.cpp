@@ -161,7 +161,7 @@ AbstractFilter::Pointer ITKVectorConnectedComponentImage::newFilterInstance(bool
 //
 // -----------------------------------------------------------------------------
 const QString ITKVectorConnectedComponentImage::getHumanLabel()
-{ return "ITK::Vector Connected Component Image Filter (KW)"; }
+{ return "ITK::Vector Connected Component Image Filter"; }
 
 // -----------------------------------------------------------------------------
 //

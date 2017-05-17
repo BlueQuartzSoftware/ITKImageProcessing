@@ -150,7 +150,7 @@ AbstractFilter::Pointer ITKThresholdImage::newFilterInstance(bool copyFilterPara
 //
 // -----------------------------------------------------------------------------
 const QString ITKThresholdImage::getHumanLabel()
-{ return "ITK::Threshold Image Filter (KW)"; }
+{ return "ITK::Threshold Image Filter"; }
 
 // -----------------------------------------------------------------------------
 //

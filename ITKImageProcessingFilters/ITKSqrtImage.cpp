@@ -139,7 +139,7 @@ AbstractFilter::Pointer ITKSqrtImage::newFilterInstance(bool copyFilterParameter
 //
 // -----------------------------------------------------------------------------
 const QString ITKSqrtImage::getHumanLabel()
-{ return "ITK::Sqrt Image Filter (KW)"; }
+{ return "ITK::Sqrt Image Filter"; }
 
 // -----------------------------------------------------------------------------
 //

@@ -158,7 +158,7 @@ AbstractFilter::Pointer ITKOtsuMultipleThresholdsImage::newFilterInstance(bool c
 //
 // -----------------------------------------------------------------------------
 const QString ITKOtsuMultipleThresholdsImage::getHumanLabel()
-{ return "ITK::Otsu Multiple Thresholds Image Filter (KW)"; }
+{ return "ITK::Otsu Multiple Thresholds Image Filter"; }
 
 // -----------------------------------------------------------------------------
 //

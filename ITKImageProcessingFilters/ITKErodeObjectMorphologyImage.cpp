@@ -197,7 +197,7 @@ AbstractFilter::Pointer ITKErodeObjectMorphologyImage::newFilterInstance(bool co
 //
 // -----------------------------------------------------------------------------
 const QString ITKErodeObjectMorphologyImage::getHumanLabel()
-{ return "ITK::Erode Object Morphology Image Filter (KW)"; }
+{ return "ITK::Erode Object Morphology Image Filter"; }
 
 // -----------------------------------------------------------------------------
 //

@@ -277,7 +277,7 @@ AbstractFilter::Pointer ITKHistogramMatchingImage::newFilterInstance(bool copyFi
 //
 // -----------------------------------------------------------------------------
 const QString ITKHistogramMatchingImage::getHumanLabel()
-{ return "ITK::Histogram Matching Image Filter (KW)"; }
+{ return "ITK::Histogram Matching Image Filter"; }
 
 // -----------------------------------------------------------------------------
 //

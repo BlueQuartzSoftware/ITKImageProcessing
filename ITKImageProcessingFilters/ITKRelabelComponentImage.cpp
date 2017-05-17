@@ -144,7 +144,7 @@ AbstractFilter::Pointer ITKRelabelComponentImage::newFilterInstance(bool copyFil
 //
 // -----------------------------------------------------------------------------
 const QString ITKRelabelComponentImage::getHumanLabel()
-{ return "ITK::Relabel Component Image Filter (KW)"; }
+{ return "ITK::Relabel Component Image Filter"; }
 
 // -----------------------------------------------------------------------------
 //

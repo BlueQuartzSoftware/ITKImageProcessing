@@ -202,7 +202,7 @@ AbstractFilter::Pointer ITKBinaryMorphologicalOpeningImage::newFilterInstance(bo
 //
 // -----------------------------------------------------------------------------
 const QString ITKBinaryMorphologicalOpeningImage::getHumanLabel()
-{ return "ITK::Binary Morphological Opening Image Filter (KW)"; }
+{ return "ITK::Binary Morphological Opening Image Filter"; }
 
 // -----------------------------------------------------------------------------
 //

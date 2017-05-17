@@ -156,7 +156,7 @@ AbstractFilter::Pointer ITKBinaryMinMaxCurvatureFlowImage::newFilterInstance(boo
 //
 // -----------------------------------------------------------------------------
 const QString ITKBinaryMinMaxCurvatureFlowImage::getHumanLabel()
-{ return "ITK::Binary Min Max Curvature Flow Image Filter (KW)"; }
+{ return "ITK::Binary Min Max Curvature Flow Image Filter"; }
 
 // -----------------------------------------------------------------------------
 //

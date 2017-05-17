@@ -148,7 +148,7 @@ AbstractFilter::Pointer ITKCurvatureFlowImage::newFilterInstance(bool copyFilter
 //
 // -----------------------------------------------------------------------------
 const QString ITKCurvatureFlowImage::getHumanLabel()
-{ return "ITK::Curvature Flow Image Filter (KW)"; }
+{ return "ITK::Curvature Flow Image Filter"; }
 
 // -----------------------------------------------------------------------------
 //

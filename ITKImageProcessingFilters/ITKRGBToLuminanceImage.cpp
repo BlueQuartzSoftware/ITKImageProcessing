@@ -159,7 +159,7 @@ AbstractFilter::Pointer ITKRGBToLuminanceImage::newFilterInstance(bool copyFilte
 //
 // -----------------------------------------------------------------------------
 const QString ITKRGBToLuminanceImage::getHumanLabel()
-{ return "ITK::RGB to Luminance Image Filter (KW)"; }
+{ return "ITK::RGB to Luminance Image Filter"; }
 
 // -----------------------------------------------------------------------------
 //

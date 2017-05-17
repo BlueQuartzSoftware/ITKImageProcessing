@@ -205,7 +205,7 @@ AbstractFilter::Pointer ITKBinaryOpeningByReconstructionImage::newFilterInstance
 //
 // -----------------------------------------------------------------------------
 const QString ITKBinaryOpeningByReconstructionImage::getHumanLabel()
-{ return "ITK::Binary Opening By Reconstruction Image Filter (KW)"; }
+{ return "ITK::Binary Opening By Reconstruction Image Filter"; }
 
 // -----------------------------------------------------------------------------
 //

@@ -206,7 +206,7 @@ AbstractFilter::Pointer ITKBinaryDilateImage::newFilterInstance(bool copyFilterP
 //
 // -----------------------------------------------------------------------------
 const QString ITKBinaryDilateImage::getHumanLabel()
-{ return "ITK::Binary Dilate Image Filter (KW)"; }
+{ return "ITK::Binary Dilate Image Filter"; }
 
 // -----------------------------------------------------------------------------
 //

@@ -151,7 +151,7 @@ AbstractFilter::Pointer ITKDanielssonDistanceMapImage::newFilterInstance(bool co
 //
 // -----------------------------------------------------------------------------
 const QString ITKDanielssonDistanceMapImage::getHumanLabel()
-{ return "ITK::Danielsson Distance Map Image Filter (KW)"; }
+{ return "ITK::Danielsson Distance Map Image Filter"; }
 
 // -----------------------------------------------------------------------------
 //

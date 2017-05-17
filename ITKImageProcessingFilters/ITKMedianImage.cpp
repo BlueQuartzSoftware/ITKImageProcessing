@@ -144,7 +144,7 @@ AbstractFilter::Pointer ITKMedianImage::newFilterInstance(bool copyFilterParamet
 //
 // -----------------------------------------------------------------------------
 const QString ITKMedianImage::getHumanLabel()
-{ return "ITK::Median Image Filter (KW)"; }
+{ return "ITK::Median Image Filter"; }
 
 // -----------------------------------------------------------------------------
 //

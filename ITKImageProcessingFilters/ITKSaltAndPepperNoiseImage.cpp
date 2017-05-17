@@ -148,7 +148,7 @@ AbstractFilter::Pointer ITKSaltAndPepperNoiseImage::newFilterInstance(bool copyF
 //
 // -----------------------------------------------------------------------------
 const QString ITKSaltAndPepperNoiseImage::getHumanLabel()
-{ return "ITK::Salt And Pepper Noise Image Filter (KW)"; }
+{ return "ITK::Salt And Pepper Noise Image Filter"; }
 
 // -----------------------------------------------------------------------------
 //

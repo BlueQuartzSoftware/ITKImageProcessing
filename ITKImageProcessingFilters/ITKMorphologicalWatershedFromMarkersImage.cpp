@@ -229,7 +229,7 @@ AbstractFilter::Pointer ITKMorphologicalWatershedFromMarkersImage::newFilterInst
 //
 // -----------------------------------------------------------------------------
 const QString ITKMorphologicalWatershedFromMarkersImage::getHumanLabel()
-{ return "ITK::Morphological Watershed From Markers Image Filter (KW)"; }
+{ return "ITK::Morphological Watershed From Markers Image Filter"; }
 
 // -----------------------------------------------------------------------------
 //

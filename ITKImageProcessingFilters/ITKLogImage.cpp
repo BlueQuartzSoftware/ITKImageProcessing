@@ -139,7 +139,7 @@ AbstractFilter::Pointer ITKLogImage::newFilterInstance(bool copyFilterParameters
 //
 // -----------------------------------------------------------------------------
 const QString ITKLogImage::getHumanLabel()
-{ return "ITK::Log Image Filter (KW)"; }
+{ return "ITK::Log Image Filter"; }
 
 // -----------------------------------------------------------------------------
 //

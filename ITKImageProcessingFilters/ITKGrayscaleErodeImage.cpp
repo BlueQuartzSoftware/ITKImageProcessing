@@ -189,7 +189,7 @@ AbstractFilter::Pointer ITKGrayscaleErodeImage::newFilterInstance(bool copyFilte
 //
 // -----------------------------------------------------------------------------
 const QString ITKGrayscaleErodeImage::getHumanLabel()
-{ return "ITK::Grayscale Erode Image Filter (KW)"; }
+{ return "ITK::Grayscale Erode Image Filter"; }
 
 // -----------------------------------------------------------------------------
 //

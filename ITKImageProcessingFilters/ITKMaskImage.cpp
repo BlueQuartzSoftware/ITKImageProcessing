@@ -261,7 +261,7 @@ AbstractFilter::Pointer ITKMaskImage::newFilterInstance(bool copyFilterParameter
 //
 // -----------------------------------------------------------------------------
 const QString ITKMaskImage::getHumanLabel()
-{ return "ITK::Mask Image Filter (KW)"; }
+{ return "ITK::Mask Image Filter"; }
 
 // -----------------------------------------------------------------------------
 //

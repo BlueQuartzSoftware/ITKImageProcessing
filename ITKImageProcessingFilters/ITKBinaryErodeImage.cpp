@@ -206,7 +206,7 @@ AbstractFilter::Pointer ITKBinaryErodeImage::newFilterInstance(bool copyFilterPa
 //
 // -----------------------------------------------------------------------------
 const QString ITKBinaryErodeImage::getHumanLabel()
-{ return "ITK::Binary Erode Image Filter (KW)"; }
+{ return "ITK::Binary Erode Image Filter"; }
 
 // -----------------------------------------------------------------------------
 //

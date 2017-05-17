@@ -143,7 +143,7 @@ AbstractFilter::Pointer ITKGrayscaleGrindPeakImage::newFilterInstance(bool copyF
 //
 // -----------------------------------------------------------------------------
 const QString ITKGrayscaleGrindPeakImage::getHumanLabel()
-{ return "ITK::Grayscale Grind Peak Image Filter (KW)"; }
+{ return "ITK::Grayscale Grind Peak Image Filter"; }
 
 // -----------------------------------------------------------------------------
 //

@@ -484,5 +484,5 @@ const QString ITKImportImageStack::getSubGroupName()
 // -----------------------------------------------------------------------------
 const QString ITKImportImageStack::getHumanLabel()
 {
-  return "ITK::Import Images (3D Stack) (KW)";
+  return "ITK::Import Images (3D Stack)";
 }

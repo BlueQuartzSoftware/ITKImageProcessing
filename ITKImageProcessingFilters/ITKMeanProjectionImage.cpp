@@ -144,7 +144,7 @@ AbstractFilter::Pointer ITKMeanProjectionImage::newFilterInstance(bool copyFilte
 //
 // -----------------------------------------------------------------------------
 const QString ITKMeanProjectionImage::getHumanLabel()
-{ return "ITK::Mean Projection Image Filter (KW)"; }
+{ return "ITK::Mean Projection Image Filter"; }
 
 // -----------------------------------------------------------------------------
 //

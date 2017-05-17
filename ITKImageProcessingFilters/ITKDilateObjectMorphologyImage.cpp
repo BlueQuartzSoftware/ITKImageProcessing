@@ -193,7 +193,7 @@ AbstractFilter::Pointer ITKDilateObjectMorphologyImage::newFilterInstance(bool c
 //
 // -----------------------------------------------------------------------------
 const QString ITKDilateObjectMorphologyImage::getHumanLabel()
-{ return "ITK::Dilate Object Morphology Image Filter (KW)"; }
+{ return "ITK::Dilate Object Morphology Image Filter"; }
 
 // -----------------------------------------------------------------------------
 //

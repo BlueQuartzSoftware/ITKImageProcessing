@@ -149,7 +149,7 @@ AbstractFilter::Pointer ITKAdaptiveHistogramEqualizationImage::newFilterInstance
 //
 // -----------------------------------------------------------------------------
 const QString ITKAdaptiveHistogramEqualizationImage::getHumanLabel()
-{ return "ITK::Adaptive Histogram Equalization Image Filter (KW)"; }
+{ return "ITK::Adaptive Histogram Equalization Image Filter"; }
 
 // -----------------------------------------------------------------------------
 //

@@ -194,7 +194,7 @@ AbstractFilter::Pointer ITKRescaleIntensityImage::newFilterInstance(bool copyFil
 //
 // -----------------------------------------------------------------------------
 const QString ITKRescaleIntensityImage::getHumanLabel()
-{ return "ITK::Rescale Intensity Image Filter (KW)"; }
+{ return "ITK::Rescale Intensity Image Filter"; }
 
 // -----------------------------------------------------------------------------
 //

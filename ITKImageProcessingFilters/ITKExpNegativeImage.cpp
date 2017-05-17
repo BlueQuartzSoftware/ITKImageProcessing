@@ -139,7 +139,7 @@ AbstractFilter::Pointer ITKExpNegativeImage::newFilterInstance(bool copyFilterPa
 //
 // -----------------------------------------------------------------------------
 const QString ITKExpNegativeImage::getHumanLabel()
-{ return "ITK::Exp Negative Image Filter (KW)"; }
+{ return "ITK::Exp Negative Image Filter"; }
 
 // -----------------------------------------------------------------------------
 //

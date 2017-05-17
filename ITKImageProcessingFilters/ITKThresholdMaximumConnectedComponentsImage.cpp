@@ -158,7 +158,7 @@ AbstractFilter::Pointer ITKThresholdMaximumConnectedComponentsImage::newFilterIn
 //
 // -----------------------------------------------------------------------------
 const QString ITKThresholdMaximumConnectedComponentsImage::getHumanLabel()
-{ return "ITK::Threshold Maximum Connected Components Image Filter (KW)"; }
+{ return "ITK::Threshold Maximum Connected Components Image Filter"; }
 
 // -----------------------------------------------------------------------------
 //

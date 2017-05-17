@@ -191,7 +191,7 @@ AbstractFilter::Pointer ITKMultiScaleHessianBasedObjectnessImage::newFilterInsta
 //
 // -----------------------------------------------------------------------------
 const QString ITKMultiScaleHessianBasedObjectnessImage::getHumanLabel()
-{ return "ITK::Multi-scale Hessian Based Objectness Filter (KW)"; }
+{ return "ITK::Multi-scale Hessian Based Objectness Filter"; }
 
 // -----------------------------------------------------------------------------
 //

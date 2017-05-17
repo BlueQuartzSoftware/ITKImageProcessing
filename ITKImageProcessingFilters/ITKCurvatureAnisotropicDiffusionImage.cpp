@@ -157,7 +157,7 @@ AbstractFilter::Pointer ITKCurvatureAnisotropicDiffusionImage::newFilterInstance
 //
 // -----------------------------------------------------------------------------
 const QString ITKCurvatureAnisotropicDiffusionImage::getHumanLabel()
-{ return "ITK::Curvature Anisotropic Diffusion Image Filter (KW)"; }
+{ return "ITK::Curvature Anisotropic Diffusion Image Filter"; }
 
 // -----------------------------------------------------------------------------
 //

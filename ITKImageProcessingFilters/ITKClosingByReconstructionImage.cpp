@@ -197,7 +197,7 @@ AbstractFilter::Pointer ITKClosingByReconstructionImage::newFilterInstance(bool 
 //
 // -----------------------------------------------------------------------------
 const QString ITKClosingByReconstructionImage::getHumanLabel()
-{ return "ITK::Closing By Reconstruction Image Filter (KW)"; }
+{ return "ITK::Closing By Reconstruction Image Filter"; }
 
 // -----------------------------------------------------------------------------
 //

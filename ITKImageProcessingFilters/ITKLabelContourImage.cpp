@@ -147,7 +147,7 @@ AbstractFilter::Pointer ITKLabelContourImage::newFilterInstance(bool copyFilterP
 //
 // -----------------------------------------------------------------------------
 const QString ITKLabelContourImage::getHumanLabel()
-{ return "ITK::Label Contour Image Filter (KW)"; }
+{ return "ITK::Label Contour Image Filter"; }
 
 // -----------------------------------------------------------------------------
 //

@@ -155,7 +155,7 @@ AbstractFilter::Pointer ITKRegionalMaximaImage::newFilterInstance(bool copyFilte
 //
 // -----------------------------------------------------------------------------
 const QString ITKRegionalMaximaImage::getHumanLabel()
-{ return "ITK::Regional Maxima Image Filter (KW)"; }
+{ return "ITK::Regional Maxima Image Filter"; }
 
 // -----------------------------------------------------------------------------
 //

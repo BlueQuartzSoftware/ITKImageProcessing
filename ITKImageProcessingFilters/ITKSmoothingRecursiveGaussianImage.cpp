@@ -148,7 +148,7 @@ AbstractFilter::Pointer ITKSmoothingRecursiveGaussianImage::newFilterInstance(bo
 //
 // -----------------------------------------------------------------------------
 const QString ITKSmoothingRecursiveGaussianImage::getHumanLabel()
-{ return "ITK::Smoothing Recursive Gaussian Image Filter (KW)"; }
+{ return "ITK::Smoothing Recursive Gaussian Image Filter"; }
 
 // -----------------------------------------------------------------------------
 //

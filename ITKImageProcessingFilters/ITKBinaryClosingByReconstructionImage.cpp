@@ -201,7 +201,7 @@ AbstractFilter::Pointer ITKBinaryClosingByReconstructionImage::newFilterInstance
 //
 // -----------------------------------------------------------------------------
 const QString ITKBinaryClosingByReconstructionImage::getHumanLabel()
-{ return "ITK::Binary Closing By Reconstruction Image Filter (KW)"; }
+{ return "ITK::Binary Closing By Reconstruction Image Filter"; }
 
 // -----------------------------------------------------------------------------
 //

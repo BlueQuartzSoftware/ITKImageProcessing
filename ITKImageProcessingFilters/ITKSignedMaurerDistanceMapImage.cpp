@@ -151,7 +151,7 @@ AbstractFilter::Pointer ITKSignedMaurerDistanceMapImage::newFilterInstance(bool 
 //
 // -----------------------------------------------------------------------------
 const QString ITKSignedMaurerDistanceMapImage::getHumanLabel()
-{ return "ITK::Signed Maurer Distance Map Image Filter (KW)"; }
+{ return "ITK::Signed Maurer Distance Map Image Filter"; }
 
 // -----------------------------------------------------------------------------
 //

@@ -157,7 +157,7 @@ AbstractFilter::Pointer ITKBinaryThresholdImage::newFilterInstance(bool copyFilt
 //
 // -----------------------------------------------------------------------------
 const QString ITKBinaryThresholdImage::getHumanLabel()
-{ return "ITK::Binary Threshold Image Filter (KW)"; }
+{ return "ITK::Binary Threshold Image Filter"; }
 
 // -----------------------------------------------------------------------------
 //

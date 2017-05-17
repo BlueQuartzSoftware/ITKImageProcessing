@@ -143,7 +143,7 @@ AbstractFilter::Pointer ITKValuedRegionalMinimaImage::newFilterInstance(bool cop
 //
 // -----------------------------------------------------------------------------
 const QString ITKValuedRegionalMinimaImage::getHumanLabel()
-{ return "ITK::Valued Regional Minima Image Filter (KW)"; }
+{ return "ITK::Valued Regional Minima Image Filter"; }
 
 // -----------------------------------------------------------------------------
 //

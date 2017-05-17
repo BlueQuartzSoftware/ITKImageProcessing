@@ -139,7 +139,7 @@ AbstractFilter::Pointer ITKAbsImage::newFilterInstance(bool copyFilterParameters
 //
 // -----------------------------------------------------------------------------
 const QString ITKAbsImage::getHumanLabel()
-{ return "ITK::Abs Image Filter (KW)"; }
+{ return "ITK::Abs Image Filter"; }
 
 // -----------------------------------------------------------------------------
 //

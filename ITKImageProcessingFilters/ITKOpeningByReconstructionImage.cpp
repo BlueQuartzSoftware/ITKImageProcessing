@@ -197,7 +197,7 @@ AbstractFilter::Pointer ITKOpeningByReconstructionImage::newFilterInstance(bool 
 //
 // -----------------------------------------------------------------------------
 const QString ITKOpeningByReconstructionImage::getHumanLabel()
-{ return "ITK::Opening By Reconstruction Image Filter (KW)"; }
+{ return "ITK::Opening By Reconstruction Image Filter"; }
 
 // -----------------------------------------------------------------------------
 //

@@ -226,7 +226,7 @@ AbstractFilter::Pointer ITKPatchBasedDenoisingImage::newFilterInstance(bool copy
 //
 // -----------------------------------------------------------------------------
 const QString ITKPatchBasedDenoisingImage::getHumanLabel()
-{ return "ITK::Patch Based Denoising Image Filter (KW)"; }
+{ return "ITK::Patch Based Denoising Image Filter"; }
 
 // -----------------------------------------------------------------------------
 //

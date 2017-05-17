@@ -147,7 +147,7 @@ AbstractFilter::Pointer ITKApproximateSignedDistanceMapImage::newFilterInstance(
 //
 // -----------------------------------------------------------------------------
 const QString ITKApproximateSignedDistanceMapImage::getHumanLabel()
-{ return "ITK::Approximate Signed Distance Map Image Filter (KW)"; }
+{ return "ITK::Approximate Signed Distance Map Image Filter"; }
 
 // -----------------------------------------------------------------------------
 //

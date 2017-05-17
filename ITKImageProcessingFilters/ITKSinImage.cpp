@@ -139,7 +139,7 @@ AbstractFilter::Pointer ITKSinImage::newFilterInstance(bool copyFilterParameters
 //
 // -----------------------------------------------------------------------------
 const QString ITKSinImage::getHumanLabel()
-{ return "ITK::Sin Image Filter (KW)"; }
+{ return "ITK::Sin Image Filter"; }
 
 // -----------------------------------------------------------------------------
 //

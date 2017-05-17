@@ -193,7 +193,7 @@ AbstractFilter::Pointer ITKGrayscaleMorphologicalOpeningImage::newFilterInstance
 //
 // -----------------------------------------------------------------------------
 const QString ITKGrayscaleMorphologicalOpeningImage::getHumanLabel()
-{ return "ITK::Grayscale Morphological Opening Image Filter (KW)"; }
+{ return "ITK::Grayscale Morphological Opening Image Filter"; }
 
 // -----------------------------------------------------------------------------
 //

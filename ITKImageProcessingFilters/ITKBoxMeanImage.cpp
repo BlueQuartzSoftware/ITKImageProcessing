@@ -144,7 +144,7 @@ AbstractFilter::Pointer ITKBoxMeanImage::newFilterInstance(bool copyFilterParame
 //
 // -----------------------------------------------------------------------------
 const QString ITKBoxMeanImage::getHumanLabel()
-{ return "ITK::Box Mean Image Filter (KW)"; }
+{ return "ITK::Box Mean Image Filter"; }
 
 // -----------------------------------------------------------------------------
 //

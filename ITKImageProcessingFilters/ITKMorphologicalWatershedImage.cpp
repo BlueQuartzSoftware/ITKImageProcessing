@@ -151,7 +151,7 @@ AbstractFilter::Pointer ITKMorphologicalWatershedImage::newFilterInstance(bool c
 //
 // -----------------------------------------------------------------------------
 const QString ITKMorphologicalWatershedImage::getHumanLabel()
-{ return "ITK::Morphological Watershed Image Filter (KW)"; }
+{ return "ITK::Morphological Watershed Image Filter"; }
 
 // -----------------------------------------------------------------------------
 //

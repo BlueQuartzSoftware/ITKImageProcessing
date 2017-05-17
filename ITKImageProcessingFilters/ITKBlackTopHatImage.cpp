@@ -191,7 +191,7 @@ AbstractFilter::Pointer ITKBlackTopHatImage::newFilterInstance(bool copyFilterPa
 //
 // -----------------------------------------------------------------------------
 const QString ITKBlackTopHatImage::getHumanLabel()
-{ return "ITK::Black Top Hat Image Filter (KW)"; }
+{ return "ITK::Black Top Hat Image Filter"; }
 
 // -----------------------------------------------------------------------------
 //

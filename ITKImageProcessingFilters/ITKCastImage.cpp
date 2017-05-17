@@ -167,7 +167,7 @@ AbstractFilter::Pointer ITKCastImage::newFilterInstance(bool copyFilterParameter
 //
 // -----------------------------------------------------------------------------
 const QString ITKCastImage::getHumanLabel()
-{ return "ITK::Cast Image Filter (KW)"; }
+{ return "ITK::Cast Image Filter"; }
 
 // -----------------------------------------------------------------------------
 //

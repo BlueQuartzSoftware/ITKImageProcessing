@@ -189,7 +189,7 @@ AbstractFilter::Pointer ITKMorphologicalGradientImage::newFilterInstance(bool co
 //
 // -----------------------------------------------------------------------------
 const QString ITKMorphologicalGradientImage::getHumanLabel()
-{ return "ITK::Morphological Gradient Image Filter (KW)"; }
+{ return "ITK::Morphological Gradient Image Filter"; }
 
 // -----------------------------------------------------------------------------
 //

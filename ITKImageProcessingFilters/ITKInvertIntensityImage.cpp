@@ -143,7 +143,7 @@ AbstractFilter::Pointer ITKInvertIntensityImage::newFilterInstance(bool copyFilt
 //
 // -----------------------------------------------------------------------------
 const QString ITKInvertIntensityImage::getHumanLabel()
-{ return "ITK::Invert Intensity Image Filter (KW)"; }
+{ return "ITK::Invert Intensity Image Filter"; }
 
 // -----------------------------------------------------------------------------
 //
