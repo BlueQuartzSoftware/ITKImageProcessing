@@ -14,13 +14,12 @@
 
 #include "ITKImageBase.h"
 
-#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
 
-//Auto includes
+// Auto includes
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 #include <itkVectorRescaleIntensityImageFilter.h>
-
 
 /**
  * @brief The ITKVectorRescaleIntensityImage class. See [Filter documentation](@ref ITKVectorRescaleIntensityImage) for details.
@@ -29,79 +28,75 @@ class ITKVectorRescaleIntensityImage : public ITKImageBase
 {
   Q_OBJECT
 
-  public:
-    SIMPL_SHARED_POINTERS(ITKVectorRescaleIntensityImage)
-    SIMPL_STATIC_NEW_MACRO(ITKVectorRescaleIntensityImage)
-    SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKVectorRescaleIntensityImage, AbstractFilter)
+public:
+  SIMPL_SHARED_POINTERS(ITKVectorRescaleIntensityImage)
+  SIMPL_STATIC_NEW_MACRO(ITKVectorRescaleIntensityImage)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKVectorRescaleIntensityImage, AbstractFilter)
 
-    virtual ~ITKVectorRescaleIntensityImage();
+  virtual ~ITKVectorRescaleIntensityImage();
 
-    SIMPL_FILTER_PARAMETER(double, OutputMaximumMagnitude )
-    Q_PROPERTY(double OutputMaximumMagnitude  READ getOutputMaximumMagnitude  WRITE setOutputMaximumMagnitude )
+  SIMPL_FILTER_PARAMETER(double, OutputMaximumMagnitude)
+  Q_PROPERTY(double OutputMaximumMagnitude READ getOutputMaximumMagnitude WRITE setOutputMaximumMagnitude)
 
-    SIMPL_FILTER_PARAMETER(int, OutputType)
-    Q_PROPERTY(int OutputType READ getOutputType WRITE setOutputType)
+  SIMPL_FILTER_PARAMETER(int, OutputType)
+  Q_PROPERTY(int OutputType READ getOutputType WRITE setOutputType)
 
-    /**
-     * @brief newFilterInstance Reimplemented from @see AbstractFilter class
-     */
-    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) override;
+  /**
+   * @brief newFilterInstance Reimplemented from @see AbstractFilter class
+   */
+  virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) override;
 
-    /**
-     * @brief getHumanLabel Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getHumanLabel() override;
+  /**
+   * @brief getHumanLabel Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getHumanLabel() override;
 
-    /**
-     * @brief getSubGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getSubGroupName() override;
-    
-    /**
-     * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void setupFilterParameters() override;
+  /**
+   * @brief getSubGroupName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getSubGroupName() override;
 
-    /**
-     * @brief readFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
+  /**
+   * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  virtual void setupFilterParameters() override;
 
-  protected:
-    ITKVectorRescaleIntensityImage();
+  /**
+   * @brief readFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
 
-    /**
-     * @brief dataCheckInternal overloads dataCheckInternal in ITKImageBase and calls templated dataCheck
-     */
-    void virtual dataCheckInternal() override;
+protected:
+  ITKVectorRescaleIntensityImage();
 
-    /**
-     * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
-     */
-    template<typename InputImageType, typename OutputImageType, unsigned int Dimension>
-    void dataCheck();
+  /**
+   * @brief dataCheckInternal overloads dataCheckInternal in ITKImageBase and calls templated dataCheck
+   */
+  void virtual dataCheckInternal() override;
 
-    /**
-    * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
-    */
-    void virtual filterInternal() override;
+  /**
+   * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+   */
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void dataCheck();
 
-    /**
-    * @brief Applies the filter
-    */
-    template<typename InputImageType, typename OutputImageType, unsigned int Dimension>
-    void filter();
+  /**
+  * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
+  */
+  void virtual filterInternal() override;
 
-    /**
-    * @brief Checks 'value' can be casted to OutputPixelType.
-    */
-    template<typename OutputPixelType>
-    void CheckEntryBounds(double value, QString name);
+  /**
+  * @brief Applies the filter
+  */
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
-  private:
+  /**
+  * @brief Checks 'value' can be casted to OutputPixelType.
+  */
+  template <typename OutputPixelType> void CheckEntryBounds(double value, QString name);
 
-    ITKVectorRescaleIntensityImage(const ITKVectorRescaleIntensityImage&); // Copy Constructor Not Implemented
-    void operator=(const ITKVectorRescaleIntensityImage&); // Operator '=' Not Implemented
+private:
+  ITKVectorRescaleIntensityImage(const ITKVectorRescaleIntensityImage&); // Copy Constructor Not Implemented
+  void operator=(const ITKVectorRescaleIntensityImage&);                 // Operator '=' Not Implemented
 };
 
 #ifdef __clang__

@@ -7,48 +7,47 @@
 namespace itk
 {
 
-  class Dream3DFilterInterruption : public Command
+class Dream3DFilterInterruption : public Command
+{
+public:
+  /** Standard class typedefs. */
+  typedef Dream3DFilterInterruption Self;
+  typedef Command Superclass;
+  typedef SmartPointer<Self> Pointer;
+  typedef SmartPointer<const Self> ConstPointer;
+  itkNewMacro(Dream3DFilterInterruption);
+  itkSetObjectMacro(Filter, AbstractFilter);
+
+private:
+  AbstractFilter* m_Filter;
+  Dream3DFilterInterruption()
   {
-  public:
-    /** Standard class typedefs. */
-    typedef Dream3DFilterInterruption    Self;
-    typedef Command                    Superclass;
-    typedef SmartPointer< Self >       Pointer;
-    typedef SmartPointer< const Self > ConstPointer;
-    itkNewMacro(Dream3DFilterInterruption);
-    itkSetObjectMacro(Filter, AbstractFilter);
-  private:
-    AbstractFilter* m_Filter;
-    Dream3DFilterInterruption()
-    {
-      m_Filter = ITK_NULLPTR;
-    }
+    m_Filter = ITK_NULLPTR;
+  }
 
-  public:
-
-    void Execute(Object *caller, const EventObject & event) override
+public:
+  void Execute(Object* caller, const EventObject& event) override
+  {
+    if(m_Filter && m_Filter->getCancel())
     {
-      if (m_Filter && m_Filter->getCancel())
+      ProcessObject* po = dynamic_cast<ProcessObject*>(caller);
+      if(po)
       {
-        ProcessObject *po = dynamic_cast<ProcessObject*>(caller);
-        if (po)
-        {
-          Execute(po);
-        }
+        Execute(po);
       }
     }
+  }
 
-    void Execute(ProcessObject * object)
-    {
-      object->AbortGenerateDataOn();
-    }
+  void Execute(ProcessObject* object)
+  {
+    object->AbortGenerateDataOn();
+  }
 
-    void Execute(const Object *, const EventObject &) override // has to be implemented
-    {
-    }
+  void Execute(const Object*, const EventObject&) override // has to be implemented
+  {
+  }
+};
 
-  };
-
-}// end of itk namespace
+} // end of itk namespace
 
 #endif

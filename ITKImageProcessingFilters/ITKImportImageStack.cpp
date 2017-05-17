@@ -46,8 +46,8 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Utilities/FilePathGenerator.h"
 
-#include "ITKImageProcessing/ITKImageProcessingFilters/itkInPlaceImageToDream3DDataFilter.h"
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/itkInPlaceImageToDream3DDataFilter.h"
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
 #include "ITKImageProcessingPlugin.h"
 
@@ -146,7 +146,7 @@ QVector<QString> ITKImportImageStack::getFileList()
 
   // Now generate all the file names the user is asking for and populate the table
   return FilePathGenerator::GenerateFileList(m_InputFileListInfo.StartIndex, m_InputFileListInfo.EndIndex, hasMissingFiles, orderAscending, m_InputFileListInfo.InputPath,
-                                                                  m_InputFileListInfo.FilePrefix, m_InputFileListInfo.FileSuffix, m_InputFileListInfo.FileExtension, m_InputFileListInfo.PaddingDigits);
+                                             m_InputFileListInfo.FilePrefix, m_InputFileListInfo.FileSuffix, m_InputFileListInfo.FileExtension, m_InputFileListInfo.PaddingDigits);
 }
 
 // -----------------------------------------------------------------------------
@@ -211,14 +211,14 @@ void ITKImportImageStack::dataCheck()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ITKImportImageStack::readImage(const QVector<QString> & fileList, bool dataCheck)
+void ITKImportImageStack::readImage(const QVector<QString>& fileList, bool dataCheck)
 {
   try
   {
-    for (size_t fileIndex = 0; fileIndex < fileList.size(); ++fileIndex)
+    for(size_t fileIndex = 0; fileIndex < fileList.size(); ++fileIndex)
     {
       const std::string fileName = fileList[fileIndex].toStdString();
-      if( !itksys::SystemTools::FileExists( fileName ) )
+      if(!itksys::SystemTools::FileExists(fileName))
       {
         setErrorCondition(-7);
         QString errorMessage = "File does not exist: %1";
@@ -228,7 +228,7 @@ void ITKImportImageStack::readImage(const QVector<QString> & fileList, bool data
     }
     const QString filename = fileList[0];
     itk::ImageIOBase::Pointer imageIO = itk::ImageIOFactory::CreateImageIO(filename.toLatin1(), itk::ImageIOFactory::ReadMode);
-    if (nullptr == imageIO)
+    if(nullptr == imageIO)
     {
       setErrorCondition(-5);
       QString errorMessage = "ITK could not read the given file \"%1\". Format is likely unsupported.";
@@ -241,7 +241,7 @@ void ITKImportImageStack::readImage(const QVector<QString> & fileList, bool data
     typedef itk::ImageIOBase::IOComponentType ComponentType;
     const ComponentType type = imageIO->GetComponentType();
     const unsigned int dimensions = imageIO->GetNumberOfDimensions();
-    if (dimensions != 2)
+    if(dimensions != 2)
     {
       setErrorCondition(-1);
       const QString errorMessage = "Slice image dimensions do not equal 2";
@@ -249,46 +249,45 @@ void ITKImportImageStack::readImage(const QVector<QString> & fileList, bool data
       return;
     }
 
-    switch (type)
+    switch(type)
     {
     case itk::ImageIOBase::UCHAR:
-        readImageWithPixelType<unsigned char>(fileList, dataCheck);
-        break;
+      readImageWithPixelType<unsigned char>(fileList, dataCheck);
+      break;
     case itk::ImageIOBase::CHAR:
-        readImageWithPixelType<char>(fileList, dataCheck);
-        break;
+      readImageWithPixelType<char>(fileList, dataCheck);
+      break;
     case itk::ImageIOBase::USHORT:
-        readImageWithPixelType<unsigned short>(fileList, dataCheck);
-        break;
+      readImageWithPixelType<unsigned short>(fileList, dataCheck);
+      break;
     case itk::ImageIOBase::SHORT:
-        readImageWithPixelType<short>(fileList, dataCheck);
-        break;
+      readImageWithPixelType<short>(fileList, dataCheck);
+      break;
     case itk::ImageIOBase::UINT:
-        readImageWithPixelType<unsigned int>(fileList, dataCheck);
-        break;
+      readImageWithPixelType<unsigned int>(fileList, dataCheck);
+      break;
     case itk::ImageIOBase::INT:
-        readImageWithPixelType<int>(fileList, dataCheck);
-        break;
+      readImageWithPixelType<int>(fileList, dataCheck);
+      break;
     case itk::ImageIOBase::ULONG:
-        readImageWithPixelType<unsigned long>(fileList, dataCheck);
-        break;
+      readImageWithPixelType<unsigned long>(fileList, dataCheck);
+      break;
     case itk::ImageIOBase::LONG:
-        readImageWithPixelType<long>(fileList, dataCheck);
-        break;
+      readImageWithPixelType<long>(fileList, dataCheck);
+      break;
     case itk::ImageIOBase::FLOAT:
-        readImageWithPixelType<float>(fileList, dataCheck);
-        break;
+      readImageWithPixelType<float>(fileList, dataCheck);
+      break;
     case itk::ImageIOBase::DOUBLE:
-        readImageWithPixelType<double>(fileList, dataCheck);
-        break;
+      readImageWithPixelType<double>(fileList, dataCheck);
+      break;
     default:
-        setErrorCondition(-4);
-        QString errorMessage = QString("Unsupported pixel type: %1.").arg(imageIO->GetComponentTypeAsString(type).c_str());
-        notifyErrorMessage(getHumanLabel(), errorMessage, getErrorCondition());
-        break;
+      setErrorCondition(-4);
+      QString errorMessage = QString("Unsupported pixel type: %1.").arg(imageIO->GetComponentTypeAsString(type).c_str());
+      notifyErrorMessage(getHumanLabel(), errorMessage, getErrorCondition());
+      break;
     }
-  }
-  catch (itk::ExceptionObject & err)
+  } catch(itk::ExceptionObject& err)
   {
     setErrorCondition(-55559);
     QString errorMessage = "ITK exception was thrown while processing input file: %1";
@@ -300,11 +299,10 @@ void ITKImportImageStack::readImage(const QVector<QString> & fileList, bool data
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template< typename TPixel >
-void ITKImportImageStack::readImageWithPixelType(const QVector<QString> & fileList, bool dataCheck)
+template <typename TPixel> void ITKImportImageStack::readImageWithPixelType(const QVector<QString>& fileList, bool dataCheck)
 {
   DataContainer::Pointer container = getDataContainerArray()->getDataContainer(getDataContainerName());
-  if (nullptr == container.get())
+  if(nullptr == container.get())
   {
     setErrorCondition(-4);
     notifyErrorMessage(getHumanLabel(), "Container not found.", getErrorCondition());
@@ -312,21 +310,21 @@ void ITKImportImageStack::readImageWithPixelType(const QVector<QString> & fileLi
   }
 
   const unsigned int Dimension = 3;
-  typedef itk::Dream3DImage< TPixel, Dimension >                    ImageType;
-  typedef itk::ImageSeriesReader< ImageType >                       ReaderType;
-  typedef itk::InPlaceImageToDream3DDataFilter< TPixel, Dimension > ToDream3DType;
+  typedef itk::Dream3DImage<TPixel, Dimension> ImageType;
+  typedef itk::ImageSeriesReader<ImageType> ReaderType;
+  typedef itk::InPlaceImageToDream3DDataFilter<TPixel, Dimension> ToDream3DType;
 
   typename ReaderType::Pointer reader = ReaderType::New();
-  typename ReaderType::FileNamesContainer fileNames( fileList.size() );
-  for (size_t fileIndex = 0; fileIndex < fileList.size(); ++fileIndex)
+  typename ReaderType::FileNamesContainer fileNames(fileList.size());
+  for(size_t fileIndex = 0; fileIndex < fileList.size(); ++fileIndex)
   {
     fileNames[fileIndex] = fileList[fileIndex].toStdString();
   }
   reader->SetFileNames(fileNames);
 
-  if (dataCheck)
+  if(dataCheck)
   {
-    readImageOutputInformation< TPixel >(reader, container);
+    readImageOutputInformation<TPixel>(reader, container);
   }
   else
   {
@@ -344,7 +342,7 @@ void ITKImportImageStack::readImageWithPixelType(const QVector<QString> & fileLi
   image->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
   const typename ImageType::SizeType size = reader->GetOutput()->GetLargestPossibleRegion().GetSize();
   QVector<size_t> tDims(Dimension, 1);
-  for (unsigned int i = 0; i < Dimension; i++)
+  for(unsigned int i = 0; i < Dimension; i++)
   {
     tDims[i] = size[i];
   }
@@ -355,23 +353,25 @@ void ITKImportImageStack::readImageWithPixelType(const QVector<QString> & fileLi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template< typename TPixel >
-void ITKImportImageStack::readImageOutputInformation( typename itk::ImageSeriesReader< itk::Dream3DImage< TPixel, 3 > >::Pointer & reader, DataContainer::Pointer & container)
+template <typename TPixel> void ITKImportImageStack::readImageOutputInformation(typename itk::ImageSeriesReader<itk::Dream3DImage<TPixel, 3>>::Pointer& reader, DataContainer::Pointer& container)
 {
   const unsigned int Dimension = 3;
-  typedef itk::Dream3DImage< TPixel, Dimension >   ImageType;
+  typedef itk::Dream3DImage<TPixel, Dimension> ImageType;
 
   reader->UpdateOutputInformation();
   const typename ImageType::SizeType size = reader->GetOutput()->GetLargestPossibleRegion().GetSize();
   QVector<size_t> tDims(Dimension, 1);
-  for (unsigned int i = 0; i < Dimension; i++)
+  for(unsigned int i = 0; i < Dimension; i++)
   {
     tDims[i] = size[i];
   }
 
   QVector<size_t> cDims(1, 1);
   AttributeMatrix::Pointer cellAttrMat = container->createNonPrereqAttributeMatrix<AbstractFilter>(this, m_CellAttributeMatrixName, tDims, AttributeMatrix::Type::Cell);
-  if (getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
   DataArrayPath path;
   path.update(getDataContainerName(), getCellAttributeMatrixName(), getImageDataArrayName());
   getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<TPixel>, AbstractFilter, TPixel>(this, path, 0, cDims);
@@ -447,7 +447,9 @@ AbstractFilter::Pointer ITKImportImageStack::newFilterInstance(bool copyFilterPa
 //
 // -----------------------------------------------------------------------------
 const QString ITKImportImageStack::getCompiledLibraryName()
-{ return ITKImageProcessingConstants::ITKImageProcessingBaseName; }
+{
+  return ITKImageProcessingConstants::ITKImageProcessingBaseName;
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -464,20 +466,24 @@ const QString ITKImportImageStack::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  ITKImageProcessing::Version::Major() << "." << ITKImageProcessing::Version::Minor() << "." << ITKImageProcessing::Version::Patch();
+  vStream << ITKImageProcessing::Version::Major() << "." << ITKImageProcessing::Version::Minor() << "." << ITKImageProcessing::Version::Patch();
   return version;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ITKImportImageStack::getGroupName()
-{ return "IO"; }
+{
+  return "IO";
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ITKImportImageStack::getSubGroupName()
-{ return "Input"; }
+{
+  return "Input";
+}
 
 // -----------------------------------------------------------------------------
 //

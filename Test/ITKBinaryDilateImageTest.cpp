@@ -4,24 +4,27 @@
 // Insert your license & copyright information here
 // -----------------------------------------------------------------------------
 
-#include "ITKTestBase.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/SimpleITKEnums.h"
-//Auto includes
+#include "ITKTestBase.h"
+// Auto includes
 #include <SIMPLib/FilterParameters/BooleanFilterParameter.h>
-#include <SIMPLib/FilterParameters/FloatVec3FilterParameter.h>
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
+#include <SIMPLib/FilterParameters/FloatVec3FilterParameter.h>
 #include <SIMPLib/FilterParameters/IntFilterParameter.h>
 
-
-class ITKBinaryDilateImageTest: public ITKTestBase
+class ITKBinaryDilateImageTest : public ITKTestBase
 {
 
-  public:
-    ITKBinaryDilateImageTest() {}
-    virtual ~ITKBinaryDilateImageTest() {}
+public:
+  ITKBinaryDilateImageTest()
+  {
+  }
+  virtual ~ITKBinaryDilateImageTest()
+  {
+  }
 
-int TestITKBinaryDilateImageBinaryDilateTest()
-{
+  int TestITKBinaryDilateImageBinaryDilateTest()
+  {
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/STAPLE1.png");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -29,7 +32,7 @@ int TestITKBinaryDilateImageBinaryDilateTest()
     QString filtName = "ITKBinaryDilateImage";
     FilterManager* fm = FilterManager::Instance();
     IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
-    DREAM3D_REQUIRE_NE(filterFactory.get(),0);
+    DREAM3D_REQUIRE_NE(filterFactory.get(), 0);
     AbstractFilter::Pointer filter = filterFactory->create();
     QVariant var;
     bool propWasSet;
@@ -40,41 +43,41 @@ int TestITKBinaryDilateImageBinaryDilateTest()
     propWasSet = filter->setProperty("SaveAsNewArray", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     {
-        FloatVec3_t d3d_var;
-        d3d_var.x = 1;
-        d3d_var.y = 1;
-        d3d_var.z = 1;
-        var.setValue(d3d_var);
-        propWasSet = filter->setProperty("KernelRadius", var);
-        DREAM3D_REQUIRE_EQUAL(propWasSet, true);
-        }
+      FloatVec3_t d3d_var;
+      d3d_var.x = 1;
+      d3d_var.y = 1;
+      d3d_var.z = 1;
+      var.setValue(d3d_var);
+      propWasSet = filter->setProperty("KernelRadius", var);
+      DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+    }
     {
-        int d3d_var;
-        d3d_var = itk::simple::sitkBall;
-        var.setValue(d3d_var);
-        propWasSet = filter->setProperty("KernelType", var);
-        DREAM3D_REQUIRE_EQUAL(propWasSet, true);
-        }
+      int d3d_var;
+      d3d_var = itk::simple::sitkBall;
+      var.setValue(d3d_var);
+      propWasSet = filter->setProperty("KernelType", var);
+      DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+    }
     {
-        double d3d_var;
-        d3d_var = 255.0;
-        var.setValue(d3d_var);
-        propWasSet = filter->setProperty("ForegroundValue", var);
-        DREAM3D_REQUIRE_EQUAL(propWasSet, true);
-        }
+      double d3d_var;
+      d3d_var = 255.0;
+      var.setValue(d3d_var);
+      propWasSet = filter->setProperty("ForegroundValue", var);
+      DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+    }
     filter->setDataContainerArray(containerArray);
     filter->execute();
-    DREAM3D_REQUIRED(filter->getErrorCondition(), >= , 0);
-    DREAM3D_REQUIRED(filter->getWarningCondition(), >= , 0);
+    DREAM3D_REQUIRED(filter->getErrorCondition(), >=, 0);
+    DREAM3D_REQUIRED(filter->getWarningCondition(), >=, 0);
     WriteImage("ITKBinaryDilateImageBinaryDilate.nrrd", containerArray, input_path);
     QString md5Output;
     GetMD5FromDataContainer(containerArray, input_path, md5Output);
     DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("9eef659f21dab5eb49e0f715a5d9a21b"));
     return 0;
-}
+  }
 
-int TestITKBinaryDilateImageBinaryDilateVectorRadiusTest()
-{
+  int TestITKBinaryDilateImageBinaryDilateVectorRadiusTest()
+  {
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/STAPLE1.png");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -82,7 +85,7 @@ int TestITKBinaryDilateImageBinaryDilateVectorRadiusTest()
     QString filtName = "ITKBinaryDilateImage";
     FilterManager* fm = FilterManager::Instance();
     IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
-    DREAM3D_REQUIRE_NE(filterFactory.get(),0);
+    DREAM3D_REQUIRE_NE(filterFactory.get(), 0);
     AbstractFilter::Pointer filter = filterFactory->create();
     QVariant var;
     bool propWasSet;
@@ -93,41 +96,38 @@ int TestITKBinaryDilateImageBinaryDilateVectorRadiusTest()
     propWasSet = filter->setProperty("SaveAsNewArray", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     {
-        FloatVec3_t d3d_var;
-        d3d_var.y = 1;
-        d3d_var.x = 20;
-        d3d_var.z = 0; // should not be taken into account. Dim <
-        var.setValue(d3d_var);
-        propWasSet = filter->setProperty("KernelRadius", var);
-        DREAM3D_REQUIRE_EQUAL(propWasSet, true);
-        }
+      FloatVec3_t d3d_var;
+      d3d_var.y = 1;
+      d3d_var.x = 20;
+      d3d_var.z = 0; // should not be taken into account. Dim <
+      var.setValue(d3d_var);
+      propWasSet = filter->setProperty("KernelRadius", var);
+      DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+    }
     {
-        int d3d_var;
-        d3d_var = itk::simple::sitkBox;
-        var.setValue(d3d_var);
-        propWasSet = filter->setProperty("KernelType", var);
-        DREAM3D_REQUIRE_EQUAL(propWasSet, true);
-        }
+      int d3d_var;
+      d3d_var = itk::simple::sitkBox;
+      var.setValue(d3d_var);
+      propWasSet = filter->setProperty("KernelType", var);
+      DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+    }
     {
-        double d3d_var;
-        d3d_var = 255;
-        var.setValue(d3d_var);
-        propWasSet = filter->setProperty("ForegroundValue", var);
-        DREAM3D_REQUIRE_EQUAL(propWasSet, true);
-        }
+      double d3d_var;
+      d3d_var = 255;
+      var.setValue(d3d_var);
+      propWasSet = filter->setProperty("ForegroundValue", var);
+      DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+    }
     filter->setDataContainerArray(containerArray);
     filter->execute();
-    DREAM3D_REQUIRED(filter->getErrorCondition(), >= , 0);
-    DREAM3D_REQUIRED(filter->getWarningCondition(), >= , 0);
+    DREAM3D_REQUIRED(filter->getErrorCondition(), >=, 0);
+    DREAM3D_REQUIRED(filter->getWarningCondition(), >=, 0);
     WriteImage("ITKBinaryDilateImageBinaryDilateVectorRadius.nrrd", containerArray, input_path);
     QString md5Output;
     GetMD5FromDataContainer(containerArray, input_path, md5Output);
     DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("99108c735fe9727bca09ca28a42827d3"));
     return 0;
-}
-
-
-
+  }
 
   // -----------------------------------------------------------------------------
   //
@@ -136,19 +136,18 @@ int TestITKBinaryDilateImageBinaryDilateVectorRadiusTest()
   {
     int err = EXIT_SUCCESS;
 
-    DREAM3D_REGISTER_TEST( this->TestFilterAvailability("ITKBinaryDilateImage") );
+    DREAM3D_REGISTER_TEST(this->TestFilterAvailability("ITKBinaryDilateImage"));
 
-    DREAM3D_REGISTER_TEST( TestITKBinaryDilateImageBinaryDilateTest());
-    DREAM3D_REGISTER_TEST( TestITKBinaryDilateImageBinaryDilateVectorRadiusTest());
+    DREAM3D_REGISTER_TEST(TestITKBinaryDilateImageBinaryDilateTest());
+    DREAM3D_REGISTER_TEST(TestITKBinaryDilateImageBinaryDilateVectorRadiusTest());
 
     if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
     {
-      DREAM3D_REGISTER_TEST( this->RemoveTestFiles() )
+      DREAM3D_REGISTER_TEST(this->RemoveTestFiles())
     }
   }
 
-  private:
-    ITKBinaryDilateImageTest(const ITKBinaryDilateImageTest&); // Copy Constructor Not Implemented
-    void operator=(const ITKBinaryDilateImageTest&); // Operator '=' Not Implemented
+private:
+  ITKBinaryDilateImageTest(const ITKBinaryDilateImageTest&); // Copy Constructor Not Implemented
+  void operator=(const ITKBinaryDilateImageTest&);           // Operator '=' Not Implemented
 };
-

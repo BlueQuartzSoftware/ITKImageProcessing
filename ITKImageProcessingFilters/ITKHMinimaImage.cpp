@@ -9,16 +9,14 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 
 #include "SIMPLib/Geometry/ImageGeom.h"
 
-
-
-#include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 
 // Include the MOC generated file for this class
 #include "moc_ITKHMinimaImage.cpp"
@@ -26,11 +24,11 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKHMinimaImage::ITKHMinimaImage() :
-  ITKImageBase()
+ITKHMinimaImage::ITKHMinimaImage()
+: ITKImageBase()
 {
-  m_Height=StaticCastScalar<double,double,double>(2.0);
-  m_FullyConnected=StaticCastScalar<bool,bool,bool>(false);
+  m_Height = StaticCastScalar<double, double, double>(2.0);
+  m_FullyConnected = StaticCastScalar<bool, bool, bool>(false);
 
   setupFilterParameters();
 }
@@ -52,15 +50,13 @@ void ITKHMinimaImage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Height", Height, FilterParameter::Parameter, ITKHMinimaImage));
   parameters.push_back(SIMPL_NEW_BOOL_FP("FullyConnected", FullyConnected, FilterParameter::Parameter, ITKHMinimaImage));
 
-
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Save as New Array", SaveAsNewArray, FilterParameter::Parameter, ITKHMinimaImage, linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
-      DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize,
-      AttributeMatrix::Type::Cell, IGeometry::Type::Image);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Attribute Array to filter", SelectedCellArrayPath, FilterParameter::RequiredArray, ITKHMinimaImage, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
@@ -75,9 +71,9 @@ void ITKHMinimaImage::setupFilterParameters()
 void ITKHMinimaImage::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setSelectedCellArrayPath( reader->readDataArrayPath( "SelectedCellArrayPath", getSelectedCellArrayPath() ) );
-  setNewCellArrayName( reader->readString( "NewCellArrayName", getNewCellArrayName() ) );
-  setSaveAsNewArray( reader->readValue( "SaveAsNewArray", getSaveAsNewArray() ) );
+  setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
+  setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
+  setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
   setHeight(reader->readValue("Height", getHeight()));
   setFullyConnected(reader->readValue("FullyConnected", getFullyConnected()));
 
@@ -87,8 +83,7 @@ void ITKHMinimaImage::readFilterParameters(AbstractFilterParametersReader* reade
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
-void ITKHMinimaImage::dataCheck()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKHMinimaImage::dataCheck()
 {
   // Check consistency of parameters
 
@@ -108,18 +103,16 @@ void ITKHMinimaImage::dataCheckInternal()
 //
 // -----------------------------------------------------------------------------
 
-template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
-void ITKHMinimaImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKHMinimaImage::filter()
 {
   typedef itk::Dream3DImage<InputPixelType, Dimension> InputImageType;
   typedef itk::Dream3DImage<OutputPixelType, Dimension> OutputImageType;
-  //define filter
+  // define filter
   typedef itk::HMinimaImageFilter<InputImageType, OutputImageType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
   filter->SetHeight(static_cast<double>(m_Height));
   filter->SetFullyConnected(static_cast<bool>(m_FullyConnected));
   this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -127,7 +120,7 @@ void ITKHMinimaImage::filter()
 // -----------------------------------------------------------------------------
 void ITKHMinimaImage::filterInternal()
 {
-    Dream3DArraySwitchMacro(this->filter, getSelectedCellArrayPath(), -4);
+  Dream3DArraySwitchMacro(this->filter, getSelectedCellArrayPath(), -4);
 }
 
 // -----------------------------------------------------------------------------
@@ -147,12 +140,14 @@ AbstractFilter::Pointer ITKHMinimaImage::newFilterInstance(bool copyFilterParame
 //
 // -----------------------------------------------------------------------------
 const QString ITKHMinimaImage::getHumanLabel()
-{ return "ITK::H Minima Image Filter"; }
+{
+  return "ITK::H Minima Image Filter";
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ITKHMinimaImage::getSubGroupName()
-{ return "ITK MathematicalMorphology"; }
-
-
+{
+  return "ITK MathematicalMorphology";
+}

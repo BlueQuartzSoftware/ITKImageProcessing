@@ -5,16 +5,19 @@
 // -----------------------------------------------------------------------------
 
 #include "ITKTestBase.h"
-//Auto includes
+// Auto includes
 #include <SIMPLib/FilterParameters/BooleanFilterParameter.h>
 
-
-class ITKMultiScaleHessianBasedObjectnessImageTest: public ITKTestBase
+class ITKMultiScaleHessianBasedObjectnessImageTest : public ITKTestBase
 {
 
-  public:
-    ITKMultiScaleHessianBasedObjectnessImageTest() {}
-    virtual ~ITKMultiScaleHessianBasedObjectnessImageTest() {}
+public:
+  ITKMultiScaleHessianBasedObjectnessImageTest()
+  {
+  }
+  virtual ~ITKMultiScaleHessianBasedObjectnessImageTest()
+  {
+  }
 
   int TestITKMultiScaleHessianBasedObjectnessImagedefaultTest()
   {
@@ -26,7 +29,7 @@ class ITKMultiScaleHessianBasedObjectnessImageTest: public ITKTestBase
     QString filtName = "ITKMultiScaleHessianBasedObjectnessImage";
     FilterManager* fm = FilterManager::Instance();
     IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
-    DREAM3D_REQUIRE_NE(filterFactory.get(),0);
+    DREAM3D_REQUIRE_NE(filterFactory.get(), 0);
     AbstractFilter::Pointer filter = filterFactory->create();
 
     QVariant var;
@@ -49,17 +52,16 @@ class ITKMultiScaleHessianBasedObjectnessImageTest: public ITKTestBase
 
     filter->setDataContainerArray(containerArray);
     filter->execute();
-    DREAM3D_REQUIRED(filter->getErrorCondition(), >= , 0);
-    DREAM3D_REQUIRED(filter->getWarningCondition(), >= , 0);
+    DREAM3D_REQUIRED(filter->getErrorCondition(), >=, 0);
+    DREAM3D_REQUIRED(filter->getWarningCondition(), >=, 0);
     WriteImage("ITKMultiScaleHessianBasedObjectnessImagedefault.nrrd", containerArray, input_path);
     QString baseline_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Baseline/BasicFilters_MultiScaleHessianBasedObjectnessImageFilter_default.nrrd");
     DataArrayPath baseline_path("BContainer", "BAttributeMatrixName", "BAttributeArrayName");
     this->ReadImage(baseline_filename, containerArray, baseline_path);
     int res = this->CompareImages(containerArray, input_path, baseline_path, 3);
-    DREAM3D_REQUIRE_EQUAL(res,0);
+    DREAM3D_REQUIRE_EQUAL(res, 0);
     return 0;
   }
-
 
   // -----------------------------------------------------------------------------
   //
@@ -68,17 +70,17 @@ class ITKMultiScaleHessianBasedObjectnessImageTest: public ITKTestBase
   {
     int err = EXIT_SUCCESS;
 
-    DREAM3D_REGISTER_TEST( this->TestFilterAvailability("ITKMultiScaleHessianBasedObjectnessImage") );
+    DREAM3D_REGISTER_TEST(this->TestFilterAvailability("ITKMultiScaleHessianBasedObjectnessImage"));
 
-    DREAM3D_REGISTER_TEST( TestITKMultiScaleHessianBasedObjectnessImagedefaultTest());
+    DREAM3D_REGISTER_TEST(TestITKMultiScaleHessianBasedObjectnessImagedefaultTest());
 
     if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
     {
-      DREAM3D_REGISTER_TEST( this->RemoveTestFiles() )
+      DREAM3D_REGISTER_TEST(this->RemoveTestFiles())
     }
   }
 
-  private:
-    ITKMultiScaleHessianBasedObjectnessImageTest(const ITKMultiScaleHessianBasedObjectnessImageTest&); // Copy Constructor Not Implemented
-    void operator=(const ITKMultiScaleHessianBasedObjectnessImageTest&); // Operator '=' Not Implemented
+private:
+  ITKMultiScaleHessianBasedObjectnessImageTest(const ITKMultiScaleHessianBasedObjectnessImageTest&); // Copy Constructor Not Implemented
+  void operator=(const ITKMultiScaleHessianBasedObjectnessImageTest&);                               // Operator '=' Not Implemented
 };

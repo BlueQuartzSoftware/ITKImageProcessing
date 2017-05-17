@@ -9,16 +9,14 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 
 #include "SIMPLib/Geometry/ImageGeom.h"
 
-
-
-#include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 
 // Include the MOC generated file for this class
 #include "moc_ITKRegionalMaximaImage.cpp"
@@ -26,13 +24,13 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKRegionalMaximaImage::ITKRegionalMaximaImage() :
-  ITKImageBase()
+ITKRegionalMaximaImage::ITKRegionalMaximaImage()
+: ITKImageBase()
 {
-  m_BackgroundValue=StaticCastScalar<double,double,double>(0.0);
-  m_ForegroundValue=StaticCastScalar<double,double,double>(1.0);
-  m_FullyConnected=StaticCastScalar<bool,bool,bool>(false);
-  m_FlatIsMaxima=StaticCastScalar<bool,bool,bool>(true);
+  m_BackgroundValue = StaticCastScalar<double, double, double>(0.0);
+  m_ForegroundValue = StaticCastScalar<double, double, double>(1.0);
+  m_FullyConnected = StaticCastScalar<bool, bool, bool>(false);
+  m_FlatIsMaxima = StaticCastScalar<bool, bool, bool>(true);
 
   setupFilterParameters();
 }
@@ -56,15 +54,13 @@ void ITKRegionalMaximaImage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_BOOL_FP("FullyConnected", FullyConnected, FilterParameter::Parameter, ITKRegionalMaximaImage));
   parameters.push_back(SIMPL_NEW_BOOL_FP("FlatIsMaxima", FlatIsMaxima, FilterParameter::Parameter, ITKRegionalMaximaImage));
 
-
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Save as New Array", SaveAsNewArray, FilterParameter::Parameter, ITKRegionalMaximaImage, linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
-      DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize,
-      AttributeMatrix::Type::Cell, IGeometry::Type::Image);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Attribute Array to filter", SelectedCellArrayPath, FilterParameter::RequiredArray, ITKRegionalMaximaImage, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
@@ -79,9 +75,9 @@ void ITKRegionalMaximaImage::setupFilterParameters()
 void ITKRegionalMaximaImage::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setSelectedCellArrayPath( reader->readDataArrayPath( "SelectedCellArrayPath", getSelectedCellArrayPath() ) );
-  setNewCellArrayName( reader->readString( "NewCellArrayName", getNewCellArrayName() ) );
-  setSaveAsNewArray( reader->readValue( "SaveAsNewArray", getSaveAsNewArray() ) );
+  setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
+  setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
+  setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
   setBackgroundValue(reader->readValue("BackgroundValue", getBackgroundValue()));
   setForegroundValue(reader->readValue("ForegroundValue", getForegroundValue()));
   setFullyConnected(reader->readValue("FullyConnected", getFullyConnected()));
@@ -93,8 +89,7 @@ void ITKRegionalMaximaImage::readFilterParameters(AbstractFilterParametersReader
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
-void ITKRegionalMaximaImage::dataCheck()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKRegionalMaximaImage::dataCheck()
 {
   // Check consistency of parameters
 
@@ -107,19 +102,18 @@ void ITKRegionalMaximaImage::dataCheck()
 // -----------------------------------------------------------------------------
 void ITKRegionalMaximaImage::dataCheckInternal()
 {
-  Dream3DArraySwitchMacroOutputType(this->dataCheck, getSelectedCellArrayPath(), -4,uint32_t,0);
+  Dream3DArraySwitchMacroOutputType(this->dataCheck, getSelectedCellArrayPath(), -4, uint32_t, 0);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 
-template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
-void ITKRegionalMaximaImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKRegionalMaximaImage::filter()
 {
   typedef itk::Dream3DImage<InputPixelType, Dimension> InputImageType;
   typedef itk::Dream3DImage<OutputPixelType, Dimension> OutputImageType;
-  //define filter
+  // define filter
   typedef itk::RegionalMaximaImageFilter<InputImageType, OutputImageType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
   filter->SetBackgroundValue(static_cast<double>(m_BackgroundValue));
@@ -127,7 +121,6 @@ void ITKRegionalMaximaImage::filter()
   filter->SetFullyConnected(static_cast<bool>(m_FullyConnected));
   filter->SetFlatIsMaxima(static_cast<bool>(m_FlatIsMaxima));
   this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -135,7 +128,7 @@ void ITKRegionalMaximaImage::filter()
 // -----------------------------------------------------------------------------
 void ITKRegionalMaximaImage::filterInternal()
 {
-    Dream3DArraySwitchMacroOutputType(this->filter, getSelectedCellArrayPath(), -4,uint32_t,0);
+  Dream3DArraySwitchMacroOutputType(this->filter, getSelectedCellArrayPath(), -4, uint32_t, 0);
 }
 
 // -----------------------------------------------------------------------------
@@ -155,12 +148,14 @@ AbstractFilter::Pointer ITKRegionalMaximaImage::newFilterInstance(bool copyFilte
 //
 // -----------------------------------------------------------------------------
 const QString ITKRegionalMaximaImage::getHumanLabel()
-{ return "ITK::Regional Maxima Image Filter"; }
+{
+  return "ITK::Regional Maxima Image Filter";
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ITKRegionalMaximaImage::getSubGroupName()
-{ return "ITK MathematicalMorphology"; }
-
-
+{
+  return "ITK MathematicalMorphology";
+}

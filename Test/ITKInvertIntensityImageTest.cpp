@@ -5,19 +5,22 @@
 // -----------------------------------------------------------------------------
 
 #include "ITKTestBase.h"
-//Auto includes
+// Auto includes
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 
-
-class ITKInvertIntensityImageTest: public ITKTestBase
+class ITKInvertIntensityImageTest : public ITKTestBase
 {
 
-  public:
-    ITKInvertIntensityImageTest() {}
-    virtual ~ITKInvertIntensityImageTest() {}
+public:
+  ITKInvertIntensityImageTest()
+  {
+  }
+  virtual ~ITKInvertIntensityImageTest()
+  {
+  }
 
-int TestITKInvertIntensityImage3dTest()
-{
+  int TestITKInvertIntensityImage3dTest()
+  {
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/RA-Short.nrrd");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -25,7 +28,7 @@ int TestITKInvertIntensityImage3dTest()
     QString filtName = "ITKInvertIntensityImage";
     FilterManager* fm = FilterManager::Instance();
     IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
-    DREAM3D_REQUIRE_NE(filterFactory.get(),0);
+    DREAM3D_REQUIRE_NE(filterFactory.get(), 0);
     AbstractFilter::Pointer filter = filterFactory->create();
     QVariant var;
     bool propWasSet;
@@ -37,17 +40,14 @@ int TestITKInvertIntensityImage3dTest()
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     filter->setDataContainerArray(containerArray);
     filter->execute();
-    DREAM3D_REQUIRED(filter->getErrorCondition(), >= , 0);
-    DREAM3D_REQUIRED(filter->getWarningCondition(), >= , 0);
+    DREAM3D_REQUIRED(filter->getErrorCondition(), >=, 0);
+    DREAM3D_REQUIRED(filter->getWarningCondition(), >=, 0);
     WriteImage("ITKInvertIntensityImage3d.nrrd", containerArray, input_path);
     QString md5Output;
     GetMD5FromDataContainer(containerArray, input_path, md5Output);
     DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("76765a57f26a7979f33efc8ed9801a55"));
     return 0;
-}
-
-
-
+  }
 
   // -----------------------------------------------------------------------------
   //
@@ -56,18 +56,17 @@ int TestITKInvertIntensityImage3dTest()
   {
     int err = EXIT_SUCCESS;
 
-    DREAM3D_REGISTER_TEST( this->TestFilterAvailability("ITKInvertIntensityImage") );
+    DREAM3D_REGISTER_TEST(this->TestFilterAvailability("ITKInvertIntensityImage"));
 
-    DREAM3D_REGISTER_TEST( TestITKInvertIntensityImage3dTest());
+    DREAM3D_REGISTER_TEST(TestITKInvertIntensityImage3dTest());
 
     if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
     {
-      DREAM3D_REGISTER_TEST( this->RemoveTestFiles() )
+      DREAM3D_REGISTER_TEST(this->RemoveTestFiles())
     }
   }
 
-  private:
-    ITKInvertIntensityImageTest(const ITKInvertIntensityImageTest&); // Copy Constructor Not Implemented
-    void operator=(const ITKInvertIntensityImageTest&); // Operator '=' Not Implemented
+private:
+  ITKInvertIntensityImageTest(const ITKInvertIntensityImageTest&); // Copy Constructor Not Implemented
+  void operator=(const ITKInvertIntensityImageTest&);              // Operator '=' Not Implemented
 };
-

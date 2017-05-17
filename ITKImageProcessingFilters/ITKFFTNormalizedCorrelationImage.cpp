@@ -9,16 +9,16 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 
 #include "SIMPLib/Geometry/ImageGeom.h"
 
 #include <itkCastImageFilter.h>
 
-#include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 
 // Include the MOC generated file for this class
 #include "moc_ITKFFTNormalizedCorrelationImage.cpp"
@@ -26,11 +26,11 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKFFTNormalizedCorrelationImage::ITKFFTNormalizedCorrelationImage() :
-  ITKImageBase()
+ITKFFTNormalizedCorrelationImage::ITKFFTNormalizedCorrelationImage()
+: ITKImageBase()
 {
-  m_RequiredNumberOfOverlappingPixels=StaticCastScalar<double,double,double>(0);
-  m_RequiredFractionOfOverlappingPixels=StaticCastScalar<double,double,double>(0.0);
+  m_RequiredNumberOfOverlappingPixels = StaticCastScalar<double, double, double>(0);
+  m_RequiredFractionOfOverlappingPixels = StaticCastScalar<double, double, double>(0.0);
 
   setupFilterParameters();
 }
@@ -52,14 +52,12 @@ void ITKFFTNormalizedCorrelationImage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("RequiredNumberOfOverlappingPixels", RequiredNumberOfOverlappingPixels, FilterParameter::Parameter, ITKFFTNormalizedCorrelationImage));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("RequiredFractionOfOverlappingPixels", RequiredFractionOfOverlappingPixels, FilterParameter::Parameter, ITKFFTNormalizedCorrelationImage));
 
-
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
-      DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize,
-      AttributeMatrix::Type::Cell, IGeometry::Type::Image);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Fixed Attribute Array to filter", SelectedCellArrayPath, FilterParameter::RequiredArray, ITKFFTNormalizedCorrelationImage, req));
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Moving Attribute Array to filter", MovingCellArrayPath, FilterParameter::RequiredArray, ITKFFTNormalizedCorrelationImage, req));
   }
@@ -75,10 +73,10 @@ void ITKFFTNormalizedCorrelationImage::setupFilterParameters()
 void ITKFFTNormalizedCorrelationImage::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setSelectedCellArrayPath( reader->readDataArrayPath( "SelectedCellArrayPath", getSelectedCellArrayPath() ) );
-  setSelectedCellArrayPath( reader->readDataArrayPath( "MovingCellArrayPath", getSelectedCellArrayPath() ) );
-  setNewCellArrayName( reader->readString( "NewCellArrayName", getNewCellArrayName() ) );
-  setSaveAsNewArray( reader->readValue( "SaveAsNewArray", getSaveAsNewArray() ) );
+  setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
+  setSelectedCellArrayPath(reader->readDataArrayPath("MovingCellArrayPath", getSelectedCellArrayPath()));
+  setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
+  setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
   setRequiredNumberOfOverlappingPixels(reader->readValue("RequiredNumberOfOverlappingPixels", getRequiredNumberOfOverlappingPixels()));
   setRequiredFractionOfOverlappingPixels(reader->readValue("RequiredFractionOfOverlappingPixels", getRequiredFractionOfOverlappingPixels()));
 
@@ -88,13 +86,12 @@ void ITKFFTNormalizedCorrelationImage::readFilterParameters(AbstractFilterParame
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
-void ITKFFTNormalizedCorrelationImage::dataCheck()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKFFTNormalizedCorrelationImage::dataCheck()
 {
   setErrorCondition(0);
 
   // Check consistency of parameters
-  this->CheckIntegerEntry<uint64_t,double>(m_RequiredNumberOfOverlappingPixels, "RequiredNumberOfOverlappingPixels",1);
+  this->CheckIntegerEntry<uint64_t, double>(m_RequiredNumberOfOverlappingPixels, "RequiredNumberOfOverlappingPixels", 1);
 
   ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
@@ -104,18 +101,17 @@ void ITKFFTNormalizedCorrelationImage::dataCheck()
 // -----------------------------------------------------------------------------
 void ITKFFTNormalizedCorrelationImage::dataCheckInternal()
 {
-  Dream3DArraySwitchMacroOutputType(this->dataCheck, getSelectedCellArrayPath(), -4,float,0);
+  Dream3DArraySwitchMacroOutputType(this->dataCheck, getSelectedCellArrayPath(), -4, float, 0);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 
-template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
-void ITKFFTNormalizedCorrelationImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKFFTNormalizedCorrelationImage::filter()
 {
-  typedef itk::Dream3DImage<InputPixelType, Dimension>  InputImageType;
-  typedef itk::Image< OutputPixelType, Dimension>       IntermediateImageType;
+  typedef itk::Dream3DImage<InputPixelType, Dimension> InputImageType;
+  typedef itk::Image<OutputPixelType, Dimension> IntermediateImageType;
   typedef itk::Dream3DImage<OutputPixelType, Dimension> OutputImageType;
 
   typedef itk::FFTNormalizedCorrelationImageFilter<InputImageType, IntermediateImageType> FilterType;
@@ -156,9 +152,9 @@ void ITKFFTNormalizedCorrelationImage::filter()
     filter->SetFixedImage(toITK->GetOutput());
     filter->AddObserver(itk::ProgressEvent(), interruption);
 
-    typedef itk::CastImageFilter< IntermediateImageType, OutputImageType > CasterType;
+    typedef itk::CastImageFilter<IntermediateImageType, OutputImageType> CasterType;
     typename CasterType::Pointer caster = CasterType::New();
-    caster->SetInput( filter->GetOutput() );
+    caster->SetInput(filter->GetOutput());
     caster->Update();
 
     typename OutputImageType::Pointer image = OutputImageType::New();
@@ -174,8 +170,7 @@ void ITKFFTNormalizedCorrelationImage::filter()
     toDream3DFilter->SetDataArrayName(outputArrayName);
     toDream3DFilter->SetDataContainer(dc);
     toDream3DFilter->Update();
-  }
-  catch (itk::ExceptionObject & err)
+  } catch(itk::ExceptionObject& err)
   {
     setErrorCondition(-55558);
     QString errorMessage = "ITK exception was thrown while filtering input image: %1";
@@ -191,7 +186,7 @@ void ITKFFTNormalizedCorrelationImage::filter()
 // -----------------------------------------------------------------------------
 void ITKFFTNormalizedCorrelationImage::filterInternal()
 {
-    Dream3DArraySwitchMacroOutputType(this->filter, getSelectedCellArrayPath(), -4,float,0);
+  Dream3DArraySwitchMacroOutputType(this->filter, getSelectedCellArrayPath(), -4, float, 0);
 }
 
 // -----------------------------------------------------------------------------
@@ -211,10 +206,14 @@ AbstractFilter::Pointer ITKFFTNormalizedCorrelationImage::newFilterInstance(bool
 //
 // -----------------------------------------------------------------------------
 const QString ITKFFTNormalizedCorrelationImage::getHumanLabel()
-{ return "ITK::FFT Normalized Correlation Image"; }
+{
+  return "ITK::FFT Normalized Correlation Image";
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ITKFFTNormalizedCorrelationImage::getSubGroupName()
-{ return "ITK Registration"; }
+{
+  return "ITK Registration";
+}

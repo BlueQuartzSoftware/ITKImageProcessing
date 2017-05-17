@@ -42,8 +42,8 @@
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 
-#include "ITKImageProcessing/ITKImageProcessingFilters/itkInPlaceDream3DDataToImageFilter.h"
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/itkInPlaceDream3DDataToImageFilter.h"
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
 #include "ITKImageProcessingPlugin.h"
 #define DREAM3D_USE_RGB_RGBA 1
@@ -53,7 +53,6 @@
 #ifdef _WIN32
 extern Q_CORE_EXPORT int qt_ntfs_permission_lookup;
 #endif
-
 
 // ITK includes
 #include <itkImageFileWriter.h>
@@ -67,10 +66,10 @@ extern Q_CORE_EXPORT int qt_ntfs_permission_lookup;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKImageWriter::ITKImageWriter() :
-  AbstractFilter(),
-  m_FileName(""),
-  m_ImageArrayPath("", "", "")
+ITKImageWriter::ITKImageWriter()
+: AbstractFilter()
+, m_FileName("")
+, m_ImageArrayPath("", "", "")
 {
   setupFilterParameters();
 }
@@ -94,8 +93,7 @@ void ITKImageWriter::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Image Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
-      DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize,
-                                                           AttributeMatrix::Type::Cell, IGeometry::Type::Image);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Image", ImageArrayPath, FilterParameter::RequiredArray, ITKImageWriter, req));
   }
   setFilterParameters(parameters);
@@ -117,7 +115,6 @@ void ITKImageWriter::readFilterParameters(AbstractFilterParametersReader* reader
 // -----------------------------------------------------------------------------
 void ITKImageWriter::initialize()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -125,9 +122,9 @@ void ITKImageWriter::initialize()
 // -----------------------------------------------------------------------------
 void ITKImageWriter::dataCheck()
 {
-  //check file name exists
+  // check file name exists
   QString filename = getFileName();
-  if (filename.isEmpty())
+  if(filename.isEmpty())
   {
     setErrorCondition(-1);
     notifyErrorMessage(getHumanLabel(), "Invalid filename.", getErrorCondition());
@@ -143,17 +140,15 @@ void ITKImageWriter::dataCheck()
   }
 
   DataContainerArray::Pointer containerArray = getDataContainerArray();
-  if (!containerArray)
+  if(!containerArray)
   {
     setErrorCondition(-21002);
     notifyErrorMessage(getHumanLabel(), "No container array.", getErrorCondition());
     return;
   }
 
-  ImageGeom::Pointer imageGeometry =
-    getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(
-      this, getImageArrayPath().getDataContainerName());
-  if (!imageGeometry.get())
+  ImageGeom::Pointer imageGeometry = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getImageArrayPath().getDataContainerName());
+  if(!imageGeometry.get())
   {
     setErrorCondition(-21003);
     notifyErrorMessage(getHumanLabel(), "No image geometry.", getErrorCondition());
@@ -161,10 +156,10 @@ void ITKImageWriter::dataCheck()
   }
 
 #ifdef _WIN32
-  // Turn file permission checking on, if requested
-  #ifdef SIMPLib_NTFS_FILE_CHECK
+// Turn file permission checking on, if requested
+#ifdef SIMPLib_NTFS_FILE_CHECK
   qt_ntfs_permission_lookup++;
-  #endif
+#endif
 #endif
 
   QFileInfo dirInfo(fi.path());
@@ -177,10 +172,10 @@ void ITKImageWriter::dataCheck()
   }
 
 #ifdef _WIN32
-  // Turn file permission checking off, if requested
-  #ifdef SIMPLib_NTFS_FILE_CHECK
+// Turn file permission checking off, if requested
+#ifdef SIMPLib_NTFS_FILE_CHECK
   qt_ntfs_permission_lookup--;
-  #endif
+#endif
 #endif
 
   // If we got here, that means that there is no error
@@ -194,12 +189,12 @@ void ITKImageWriter::dataCheck()
 void ITKImageWriter::preflight()
 {
   // These are the REQUIRED lines of CODE to make sure the filter behaves correctly
-  setInPreflight(true); // Set the fact that we are preflighting.
-  emit preflightAboutToExecute(); // Emit this signal so that other widgets can do one file update
+  setInPreflight(true);              // Set the fact that we are preflighting.
+  emit preflightAboutToExecute();    // Emit this signal so that other widgets can do one file update
   emit updateFilterParameters(this); // Emit this signal to have the widgets push their values down to the filter
-  dataCheck(); // Run our DataCheck to make sure everthing is setup correctly
-  emit preflightExecuted(); // We are done preflighting this filter
-  setInPreflight(false); // Inform the system this filter is NOT in preflight mode anymore.
+  dataCheck();                       // Run our DataCheck to make sure everthing is setup correctly
+  emit preflightExecuted();          // We are done preflighting this filter
+  setInPreflight(false);             // Inform the system this filter is NOT in preflight mode anymore.
 }
 
 // -----------------------------------------------------------------------------
@@ -210,7 +205,7 @@ bool ITKImageWriter::is2DFormat()
   QString Ext = itksys::SystemTools::LowerCase(itksys::SystemTools::GetFilenameExtension(getFileName().toStdString())).c_str();
   QStringList supported2DExtensions = ITKImageProcessingPlugin::getList2DSupportedFileExtensions();
   int index = supported2DExtensions.indexOf(QRegExp(".*" + Ext));
-  if (index != -1)
+  if(index != -1)
   {
     return true;
   }
@@ -220,8 +215,7 @@ bool ITKImageWriter::is2DFormat()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename TPixel, unsigned int Dimensions>
-void ITKImageWriter::writeAs2DStack(typename itk::Dream3DImage<TPixel, Dimensions> *image, unsigned long z_size)
+template <typename TPixel, unsigned int Dimensions> void ITKImageWriter::writeAs2DStack(typename itk::Dream3DImage<TPixel, Dimensions>* image, unsigned long z_size)
 {
   typedef itk::NumericSeriesFileNames NamesGeneratorType;
   NamesGeneratorType::Pointer namesGenerator = NamesGeneratorType::New();
@@ -232,8 +226,8 @@ void ITKImageWriter::writeAs2DStack(typename itk::Dream3DImage<TPixel, Dimension
   namesGenerator->SetSeriesFormat(format);
   namesGenerator->SetIncrementIndex(1);
   namesGenerator->SetStartIndex(0);
-  namesGenerator->SetEndIndex(z_size-1);
-  typedef itk::Dream3DImage<TPixel, Dimensions>   InputImageType;
+  namesGenerator->SetEndIndex(z_size - 1);
+  typedef itk::Dream3DImage<TPixel, Dimensions> InputImageType;
   typedef itk::Dream3DImage<TPixel, Dimensions - 1> OutputImageType;
   typedef itk::ImageSeriesWriter<InputImageType, OutputImageType> SeriesWriterType;
   typename SeriesWriterType::Pointer writer = SeriesWriterType::New();
@@ -246,10 +240,9 @@ void ITKImageWriter::writeAs2DStack(typename itk::Dream3DImage<TPixel, Dimension
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename TPixel, unsigned int Dimensions>
-void ITKImageWriter::writeAsOneFile(typename itk::Dream3DImage<TPixel, Dimensions>* image)
+template <typename TPixel, unsigned int Dimensions> void ITKImageWriter::writeAsOneFile(typename itk::Dream3DImage<TPixel, Dimensions>* image)
 {
-  typedef itk::Dream3DImage<TPixel, Dimensions>   ImageType;
+  typedef itk::Dream3DImage<TPixel, Dimensions> ImageType;
   typedef itk::ImageFileWriter<ImageType> FileWriterType;
   typename FileWriterType::Pointer writer = FileWriterType::New();
   writer->SetInput(image);
@@ -261,45 +254,41 @@ void ITKImageWriter::writeAsOneFile(typename itk::Dream3DImage<TPixel, Dimension
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename TPixel, typename UnusedTPixel, unsigned int Dimensions>
-void ITKImageWriter::writeImage()
+template <typename TPixel, typename UnusedTPixel, unsigned int Dimensions> void ITKImageWriter::writeImage()
 {
-  typedef itk::Dream3DImage<TPixel, Dimensions>   ImageType;
+  typedef itk::Dream3DImage<TPixel, Dimensions> ImageType;
   typedef itk::InPlaceDream3DDataToImageFilter<TPixel, Dimensions> ToITKType;
   DataArrayPath path = getImageArrayPath();
-  DataContainer::Pointer container =
-    getDataContainerArray()->getDataContainer(
-    path.getDataContainerName());
+  DataContainer::Pointer container = getDataContainerArray()->getDataContainer(path.getDataContainerName());
   try
   {
-      typename ToITKType::Pointer toITK = ToITKType::New();
-      toITK->SetInput(container);
-      toITK->SetAttributeMatrixArrayName(path.getAttributeMatrixName().toStdString());
-      toITK->SetDataArrayName(path.getDataArrayName().toStdString());
-      toITK->SetInPlace(true);
-      toITK->Update();
-      if (this->is2DFormat() && Dimensions == 3)
+    typename ToITKType::Pointer toITK = ToITKType::New();
+    toITK->SetInput(container);
+    toITK->SetAttributeMatrixArrayName(path.getAttributeMatrixName().toStdString());
+    toITK->SetDataArrayName(path.getDataArrayName().toStdString());
+    toITK->SetInPlace(true);
+    toITK->Update();
+    if(this->is2DFormat() && Dimensions == 3)
+    {
+      typename ImageType::SizeType size = toITK->GetOutput()->GetLargestPossibleRegion().GetSize();
+      if(size[2] < 2)
       {
-        typename ImageType::SizeType size = toITK->GetOutput()->GetLargestPossibleRegion().GetSize();
-        if (size[2] < 2)
-        {
-          setErrorCondition(-21012);
-          notifyErrorMessage(getHumanLabel(), "Image is 2D, not 3D.", getErrorCondition());
-          return;
-        }
-        this->writeAs2DStack<TPixel,Dimensions>(toITK->GetOutput(), size[2]);
+        setErrorCondition(-21012);
+        notifyErrorMessage(getHumanLabel(), "Image is 2D, not 3D.", getErrorCondition());
+        return;
       }
-      else
-      {
-        this->writeAsOneFile<TPixel, Dimensions>(toITK->GetOutput());
-      }
-  }
-  catch (itk::ExceptionObject & err)
+      this->writeAs2DStack<TPixel, Dimensions>(toITK->GetOutput(), size[2]);
+    }
+    else
+    {
+      this->writeAsOneFile<TPixel, Dimensions>(toITK->GetOutput());
+    }
+  } catch(itk::ExceptionObject& err)
   {
-      setErrorCondition(-21011);
-      QString errorMessage = "ITK exception was thrown while writing output file: %1";
-      notifyErrorMessage(getHumanLabel(), errorMessage.arg(err.GetDescription()), getErrorCondition());
-      return;
+    setErrorCondition(-21011);
+    QString errorMessage = "ITK exception was thrown while writing output file: %1";
+    notifyErrorMessage(getHumanLabel(), errorMessage.arg(err.GetDescription()), getErrorCondition());
+    return;
   }
 }
 
@@ -311,12 +300,12 @@ void ITKImageWriter::execute()
   setErrorCondition(0);
   setWarningCondition(0);
   dataCheck();
-  if (getErrorCondition() < 0)
+  if(getErrorCondition() < 0)
   {
     return;
   }
 
-    // Make sure any directory path is also available as the user may have just typed
+  // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
   QFileInfo fi(getFileName());
   QString parentPath = fi.path();
@@ -330,26 +319,23 @@ void ITKImageWriter::execute()
   }
 
   DataArrayPath path = getImageArrayPath();
-  if (!getDataContainerArray()->doesDataContainerExist(path.getDataContainerName()))
+  if(!getDataContainerArray()->doesDataContainerExist(path.getDataContainerName()))
   {
     setErrorCondition(-21006);
     QString errorMessage = "Data container %1 does not exist.";
     notifyErrorMessage(getHumanLabel(), errorMessage.arg(path.getDataContainerName()), getErrorCondition());
     return;
   }
-  DataContainer::Pointer container =
-    getDataContainerArray()->getDataContainer(
-    path.getDataContainerName());
-  if (!container->doesAttributeMatrixExist(path.getAttributeMatrixName()))
+  DataContainer::Pointer container = getDataContainerArray()->getDataContainer(path.getDataContainerName());
+  if(!container->doesAttributeMatrixExist(path.getAttributeMatrixName()))
   {
     setErrorCondition(-21007);
     QString errorMessage = "Attribute matrix %1 does not exist.";
     notifyErrorMessage(getHumanLabel(), errorMessage.arg(path.getAttributeMatrixName()), getErrorCondition());
     return;
   }
-  AttributeMatrix::Pointer attributeMatrix = container->getAttributeMatrix(
-    path.getAttributeMatrixName());
-  if (!attributeMatrix->doesAttributeArrayExist(path.getDataArrayName()))
+  AttributeMatrix::Pointer attributeMatrix = container->getAttributeMatrix(path.getAttributeMatrixName());
+  if(!attributeMatrix->doesAttributeArrayExist(path.getDataArrayName()))
   {
     setErrorCondition(-21008);
     QString errorMessage = "Attribute array %1 does not exist.";
@@ -377,7 +363,9 @@ AbstractFilter::Pointer ITKImageWriter::newFilterInstance(bool copyFilterParamet
 //
 // -----------------------------------------------------------------------------
 const QString ITKImageWriter::getCompiledLibraryName()
-{ return ITKImageProcessingConstants::ITKImageProcessingBaseName; }
+{
+  return ITKImageProcessingConstants::ITKImageProcessingBaseName;
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -394,7 +382,7 @@ const QString ITKImageWriter::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  ITKImageProcessing::Version::Major() << "." << ITKImageProcessing::Version::Minor() << "." << ITKImageProcessing::Version::Patch();
+  vStream << ITKImageProcessing::Version::Major() << "." << ITKImageProcessing::Version::Minor() << "." << ITKImageProcessing::Version::Patch();
   return version;
 }
 
@@ -402,17 +390,22 @@ const QString ITKImageWriter::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString ITKImageWriter::getGroupName()
-{ return "IO"; }
+{
+  return "IO";
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ITKImageWriter::getSubGroupName()
-{ return "Output"; }
+{
+  return "Output";
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ITKImageWriter::getHumanLabel()
-{ return "ITK::Image Writer"; }
-
+{
+  return "ITK::Image Writer";
+}

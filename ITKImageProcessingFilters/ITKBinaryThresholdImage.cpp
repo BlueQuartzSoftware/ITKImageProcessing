@@ -9,16 +9,14 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 
 #include "SIMPLib/Geometry/ImageGeom.h"
 
-
-
-#include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 
 // Include the MOC generated file for this class
 #include "moc_ITKBinaryThresholdImage.cpp"
@@ -26,13 +24,13 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKBinaryThresholdImage::ITKBinaryThresholdImage() :
-  ITKImageBase()
+ITKBinaryThresholdImage::ITKBinaryThresholdImage()
+: ITKImageBase()
 {
-  m_LowerThreshold=StaticCastScalar<double,double,double>(0.0);
-  m_UpperThreshold=StaticCastScalar<double,double,double>(255.0);
-  m_InsideValue=StaticCastScalar<int,int,int>(1u);
-  m_OutsideValue=StaticCastScalar<int,int,int>(0u);
+  m_LowerThreshold = StaticCastScalar<double, double, double>(0.0);
+  m_UpperThreshold = StaticCastScalar<double, double, double>(255.0);
+  m_InsideValue = StaticCastScalar<int, int, int>(1u);
+  m_OutsideValue = StaticCastScalar<int, int, int>(0u);
 
   setupFilterParameters();
 }
@@ -56,15 +54,13 @@ void ITKBinaryThresholdImage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_INTEGER_FP("InsideValue", InsideValue, FilterParameter::Parameter, ITKBinaryThresholdImage));
   parameters.push_back(SIMPL_NEW_INTEGER_FP("OutsideValue", OutsideValue, FilterParameter::Parameter, ITKBinaryThresholdImage));
 
-
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Save as New Array", SaveAsNewArray, FilterParameter::Parameter, ITKBinaryThresholdImage, linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
-      DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize,
-      AttributeMatrix::Type::Cell, IGeometry::Type::Image);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Attribute Array to filter", SelectedCellArrayPath, FilterParameter::RequiredArray, ITKBinaryThresholdImage, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
@@ -79,9 +75,9 @@ void ITKBinaryThresholdImage::setupFilterParameters()
 void ITKBinaryThresholdImage::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setSelectedCellArrayPath( reader->readDataArrayPath( "SelectedCellArrayPath", getSelectedCellArrayPath() ) );
-  setNewCellArrayName( reader->readString( "NewCellArrayName", getNewCellArrayName() ) );
-  setSaveAsNewArray( reader->readValue( "SaveAsNewArray", getSaveAsNewArray() ) );
+  setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
+  setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
+  setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
   setLowerThreshold(reader->readValue("LowerThreshold", getLowerThreshold()));
   setUpperThreshold(reader->readValue("UpperThreshold", getUpperThreshold()));
   setInsideValue(reader->readValue("InsideValue", getInsideValue()));
@@ -93,12 +89,11 @@ void ITKBinaryThresholdImage::readFilterParameters(AbstractFilterParametersReade
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
-void ITKBinaryThresholdImage::dataCheck()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKBinaryThresholdImage::dataCheck()
 {
   // Check consistency of parameters
-  this->CheckIntegerEntry<uint8_t,int>(m_InsideValue, "InsideValue",1);
-  this->CheckIntegerEntry<uint8_t,int>(m_OutsideValue, "OutsideValue",1);
+  this->CheckIntegerEntry<uint8_t, int>(m_InsideValue, "InsideValue", 1);
+  this->CheckIntegerEntry<uint8_t, int>(m_OutsideValue, "OutsideValue", 1);
 
   setErrorCondition(0);
   ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
@@ -109,19 +104,18 @@ void ITKBinaryThresholdImage::dataCheck()
 // -----------------------------------------------------------------------------
 void ITKBinaryThresholdImage::dataCheckInternal()
 {
-  Dream3DArraySwitchMacroOutputType(this->dataCheck, getSelectedCellArrayPath(), -4,uint8_t,0);
+  Dream3DArraySwitchMacroOutputType(this->dataCheck, getSelectedCellArrayPath(), -4, uint8_t, 0);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 
-template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
-void ITKBinaryThresholdImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKBinaryThresholdImage::filter()
 {
   typedef itk::Dream3DImage<InputPixelType, Dimension> InputImageType;
   typedef itk::Dream3DImage<OutputPixelType, Dimension> OutputImageType;
-  //define filter
+  // define filter
   typedef itk::BinaryThresholdImageFilter<InputImageType, OutputImageType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
   filter->SetLowerThreshold(static_cast<double>(m_LowerThreshold));
@@ -129,7 +123,6 @@ void ITKBinaryThresholdImage::filter()
   filter->SetInsideValue(static_cast<uint8_t>(m_InsideValue));
   filter->SetOutsideValue(static_cast<uint8_t>(m_OutsideValue));
   this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -137,7 +130,7 @@ void ITKBinaryThresholdImage::filter()
 // -----------------------------------------------------------------------------
 void ITKBinaryThresholdImage::filterInternal()
 {
-    Dream3DArraySwitchMacroOutputType(this->filter, getSelectedCellArrayPath(), -4,uint8_t,0);
+  Dream3DArraySwitchMacroOutputType(this->filter, getSelectedCellArrayPath(), -4, uint8_t, 0);
 }
 
 // -----------------------------------------------------------------------------
@@ -157,12 +150,14 @@ AbstractFilter::Pointer ITKBinaryThresholdImage::newFilterInstance(bool copyFilt
 //
 // -----------------------------------------------------------------------------
 const QString ITKBinaryThresholdImage::getHumanLabel()
-{ return "ITK::Binary Threshold Image Filter"; }
+{
+  return "ITK::Binary Threshold Image Filter";
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ITKBinaryThresholdImage::getSubGroupName()
-{ return "ITK Thresholding"; }
-
-
+{
+  return "ITK Thresholding";
+}

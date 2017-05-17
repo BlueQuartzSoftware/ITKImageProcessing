@@ -6,18 +6,18 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
-#include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 
 #include "SIMPLib/Geometry/ImageGeom.h"
 
 #include <itkGaussianRandomSpatialNeighborSubsampler.h>
 
-#include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 
 // Include the MOC generated file for this class
 #include "moc_ITKPatchBasedDenoisingImage.cpp"
@@ -25,21 +25,21 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKPatchBasedDenoisingImage::ITKPatchBasedDenoisingImage() :
-  ITKImageBase()
+ITKPatchBasedDenoisingImage::ITKPatchBasedDenoisingImage()
+: ITKImageBase()
 {
-  m_KernelBandwidthSigma=StaticCastScalar<double,double,double>(400.0);
-  m_PatchRadius=StaticCastScalar<double,double,double>(4u);
-  m_NumberOfIterations=StaticCastScalar<double,double,double>(1u);
-  m_NumberOfSamplePatches=StaticCastScalar<double,double,double>(200u);
-  m_SampleVariance=StaticCastScalar<double,double,double>(400.0);
-  m_NoiseSigma=StaticCastScalar<double,double,double>(0.0);
-  m_NoiseModelFidelityWeight=StaticCastScalar<double,double,double>(0.0);
-  m_AlwaysTreatComponentsAsEuclidean=StaticCastScalar<bool,bool,bool>(false);
-  m_KernelBandwidthEstimation=StaticCastScalar<bool,bool,bool>(false);
-  m_KernelBandwidthMultiplicationFactor=StaticCastScalar<double,double,double>(1.0);
-  m_KernelBandwidthUpdateFrequency=StaticCastScalar<double,double,double>(3u);
-  m_KernelBandwidthFractionPixelsForEstimation=StaticCastScalar<double,double,double>(0.2);
+  m_KernelBandwidthSigma = StaticCastScalar<double, double, double>(400.0);
+  m_PatchRadius = StaticCastScalar<double, double, double>(4u);
+  m_NumberOfIterations = StaticCastScalar<double, double, double>(1u);
+  m_NumberOfSamplePatches = StaticCastScalar<double, double, double>(200u);
+  m_SampleVariance = StaticCastScalar<double, double, double>(400.0);
+  m_NoiseSigma = StaticCastScalar<double, double, double>(0.0);
+  m_NoiseModelFidelityWeight = StaticCastScalar<double, double, double>(0.0);
+  m_AlwaysTreatComponentsAsEuclidean = StaticCastScalar<bool, bool, bool>(false);
+  m_KernelBandwidthEstimation = StaticCastScalar<bool, bool, bool>(false);
+  m_KernelBandwidthMultiplicationFactor = StaticCastScalar<double, double, double>(1.0);
+  m_KernelBandwidthUpdateFrequency = StaticCastScalar<double, double, double>(3u);
+  m_KernelBandwidthFractionPixelsForEstimation = StaticCastScalar<double, double, double>(0.2);
   m_NoiseModel = 0; //  NOMODEL
   setupFilterParameters();
 }
@@ -88,15 +88,13 @@ void ITKPatchBasedDenoisingImage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("KernelBandwidthUpdateFrequency", KernelBandwidthUpdateFrequency, FilterParameter::Parameter, ITKPatchBasedDenoisingImage));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("KernelBandwidthFractionPixelsForEstimation", KernelBandwidthFractionPixelsForEstimation, FilterParameter::Parameter, ITKPatchBasedDenoisingImage));
 
-
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Save as New Array", SaveAsNewArray, FilterParameter::Parameter, ITKPatchBasedDenoisingImage, linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
-      DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize,
-      AttributeMatrix::Type::Cell, IGeometry::Type::Image);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Attribute Array to filter", SelectedCellArrayPath, FilterParameter::RequiredArray, ITKPatchBasedDenoisingImage, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
@@ -111,9 +109,9 @@ void ITKPatchBasedDenoisingImage::setupFilterParameters()
 void ITKPatchBasedDenoisingImage::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setSelectedCellArrayPath( reader->readDataArrayPath( "SelectedCellArrayPath", getSelectedCellArrayPath() ) );
-  setNewCellArrayName( reader->readString( "NewCellArrayName", getNewCellArrayName() ) );
-  setSaveAsNewArray( reader->readValue( "SaveAsNewArray", getSaveAsNewArray() ) );
+  setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
+  setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
+  setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
   setKernelBandwidthSigma(reader->readValue("KernelBandwidthSigma", getKernelBandwidthSigma()));
   setPatchRadius(reader->readValue("PatchRadius", getPatchRadius()));
   setNumberOfIterations(reader->readValue("NumberOfIterations", getNumberOfIterations()));
@@ -133,14 +131,13 @@ void ITKPatchBasedDenoisingImage::readFilterParameters(AbstractFilterParametersR
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
-void ITKPatchBasedDenoisingImage::dataCheck()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKPatchBasedDenoisingImage::dataCheck()
 {
   // Check consistency of parameters
-  this->CheckIntegerEntry<uint32_t,double>(m_PatchRadius, "PatchRadius",1);
-  this->CheckIntegerEntry<uint32_t,double>(m_NumberOfIterations, "NumberOfIterations",1);
-  this->CheckIntegerEntry<uint32_t,double>(m_NumberOfSamplePatches, "NumberOfSamplePatches",1);
-  this->CheckIntegerEntry<uint32_t,double>(m_KernelBandwidthUpdateFrequency, "KernelBandwidthUpdateFrequency",1);
+  this->CheckIntegerEntry<uint32_t, double>(m_PatchRadius, "PatchRadius", 1);
+  this->CheckIntegerEntry<uint32_t, double>(m_NumberOfIterations, "NumberOfIterations", 1);
+  this->CheckIntegerEntry<uint32_t, double>(m_NumberOfSamplePatches, "NumberOfSamplePatches", 1);
+  this->CheckIntegerEntry<uint32_t, double>(m_KernelBandwidthUpdateFrequency, "KernelBandwidthUpdateFrequency", 1);
 
   setErrorCondition(0);
   ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
@@ -158,11 +155,10 @@ void ITKPatchBasedDenoisingImage::dataCheckInternal()
 //
 // -----------------------------------------------------------------------------
 
-template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
-void ITKPatchBasedDenoisingImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKPatchBasedDenoisingImage::filter()
 {
-  typedef itk::Dream3DImage< OutputPixelType, Dimension > RealImageType;
-  //define filter
+  typedef itk::Dream3DImage<OutputPixelType, Dimension> RealImageType;
+  // define filter
   typedef itk::PatchBasedDenoisingImageFilter<RealImageType, RealImageType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
   typedef itk::InPlaceDream3DDataToImageFilter<InputPixelType, Dimension> toITKType;
@@ -178,7 +174,8 @@ void ITKPatchBasedDenoisingImage::filter()
   filter->SetKernelBandwidthSigma(a);
   filter->SetPatchRadius(static_cast<uint32_t>(m_PatchRadius));
   filter->SetNumberOfIterations(static_cast<uint32_t>(m_NumberOfIterations));
-  if (this->m_NoiseSigma != 0.0) filter->SetNoiseSigma(this->m_NoiseSigma);
+  if(this->m_NoiseSigma != 0.0)
+    filter->SetNoiseSigma(this->m_NoiseSigma);
   filter->SetNoiseModelFidelityWeight(static_cast<double>(m_NoiseModelFidelityWeight));
   filter->SetAlwaysTreatComponentsAsEuclidean(static_cast<bool>(m_AlwaysTreatComponentsAsEuclidean));
   filter->SetKernelBandwidthEstimation(static_cast<bool>(m_KernelBandwidthEstimation));
@@ -186,19 +183,17 @@ void ITKPatchBasedDenoisingImage::filter()
   filter->SetKernelBandwidthUpdateFrequency(static_cast<uint32_t>(m_KernelBandwidthUpdateFrequency));
   filter->SetKernelBandwidthFractionPixelsForEstimation(static_cast<double>(m_KernelBandwidthFractionPixelsForEstimation));
   filter->SetNumberOfThreads(this->getNumberOfThreads());
-  typedef itk::Statistics::GaussianRandomSpatialNeighborSubsampler<
-          typename FilterType::PatchSampleType, typename RealImageType::RegionType> SamplerType;
+  typedef itk::Statistics::GaussianRandomSpatialNeighborSubsampler<typename FilterType::PatchSampleType, typename RealImageType::RegionType> SamplerType;
   typename SamplerType::Pointer sampler = SamplerType::New();
   sampler->SetVariance(m_SampleVariance);
-  sampler->SetRadius(itk::Math::Floor<unsigned int>(std::sqrt(m_SampleVariance)*2.5));
+  sampler->SetRadius(itk::Math::Floor<unsigned int>(std::sqrt(m_SampleVariance) * 2.5));
   sampler->SetNumberOfResultsRequested(m_NumberOfSamplePatches);
   filter->SetSampler(sampler);
-  typedef typename itk::PatchBasedDenoisingBaseImageFilter<RealImageType,RealImageType>::NoiseModelType NoiseModelType;
+  typedef typename itk::PatchBasedDenoisingBaseImageFilter<RealImageType, RealImageType>::NoiseModelType NoiseModelType;
   NoiseModelType noiseModel = static_cast<NoiseModelType>(m_NoiseModel);
   filter->SetNoiseModel(noiseModel);
 
   this->ITKImageBase::filterCastToFloat<InputPixelType, OutputPixelType, Dimension, FilterType, RealImageType>(filter);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -206,7 +201,7 @@ void ITKPatchBasedDenoisingImage::filter()
 // -----------------------------------------------------------------------------
 void ITKPatchBasedDenoisingImage::filterInternal()
 {
-    Dream3DArraySwitchMacroOutputType(this->filter, getSelectedCellArrayPath(), -4, double, 0);
+  Dream3DArraySwitchMacroOutputType(this->filter, getSelectedCellArrayPath(), -4, double, 0);
 }
 
 // -----------------------------------------------------------------------------
@@ -226,12 +221,14 @@ AbstractFilter::Pointer ITKPatchBasedDenoisingImage::newFilterInstance(bool copy
 //
 // -----------------------------------------------------------------------------
 const QString ITKPatchBasedDenoisingImage::getHumanLabel()
-{ return "ITK::Patch Based Denoising Image Filter"; }
+{
+  return "ITK::Patch Based Denoising Image Filter";
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ITKPatchBasedDenoisingImage::getSubGroupName()
-{ return "ITK Denoising"; }
-
-
+{
+  return "ITK Denoising";
+}

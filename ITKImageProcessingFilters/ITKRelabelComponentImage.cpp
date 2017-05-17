@@ -9,16 +9,14 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 
 #include "SIMPLib/Geometry/ImageGeom.h"
 
-
-
-#include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 
 // Include the MOC generated file for this class
 #include "moc_ITKRelabelComponentImage.cpp"
@@ -26,10 +24,10 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKRelabelComponentImage::ITKRelabelComponentImage() :
-  ITKImageBase()
+ITKRelabelComponentImage::ITKRelabelComponentImage()
+: ITKImageBase()
 {
-  m_MinimumObjectSize=StaticCastScalar<double,double,double>(0u);
+  m_MinimumObjectSize = StaticCastScalar<double, double, double>(0u);
 
   setupFilterParameters();
 }
@@ -50,15 +48,13 @@ void ITKRelabelComponentImage::setupFilterParameters()
 
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("MinimumObjectSize", MinimumObjectSize, FilterParameter::Parameter, ITKRelabelComponentImage));
 
-
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Save as New Array", SaveAsNewArray, FilterParameter::Parameter, ITKRelabelComponentImage, linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
-      DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize,
-      AttributeMatrix::Type::Cell, IGeometry::Type::Image);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Attribute Array to filter", SelectedCellArrayPath, FilterParameter::RequiredArray, ITKRelabelComponentImage, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
@@ -73,9 +69,9 @@ void ITKRelabelComponentImage::setupFilterParameters()
 void ITKRelabelComponentImage::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setSelectedCellArrayPath( reader->readDataArrayPath( "SelectedCellArrayPath", getSelectedCellArrayPath() ) );
-  setNewCellArrayName( reader->readString( "NewCellArrayName", getNewCellArrayName() ) );
-  setSaveAsNewArray( reader->readValue( "SaveAsNewArray", getSaveAsNewArray() ) );
+  setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
+  setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
+  setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
   setMinimumObjectSize(reader->readValue("MinimumObjectSize", getMinimumObjectSize()));
 
   reader->closeFilterGroup();
@@ -84,11 +80,10 @@ void ITKRelabelComponentImage::readFilterParameters(AbstractFilterParametersRead
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
-void ITKRelabelComponentImage::dataCheck()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKRelabelComponentImage::dataCheck()
 {
   // Check consistency of parameters
-  this->CheckIntegerEntry<uint64_t,double>(m_MinimumObjectSize, "MinimumObjectSize",1);
+  this->CheckIntegerEntry<uint64_t, double>(m_MinimumObjectSize, "MinimumObjectSize", 1);
 
   setErrorCondition(0);
   ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
@@ -106,17 +101,15 @@ void ITKRelabelComponentImage::dataCheckInternal()
 //
 // -----------------------------------------------------------------------------
 
-template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
-void ITKRelabelComponentImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKRelabelComponentImage::filter()
 {
   typedef itk::Dream3DImage<InputPixelType, Dimension> InputImageType;
   typedef itk::Dream3DImage<OutputPixelType, Dimension> OutputImageType;
-  //define filter
+  // define filter
   typedef itk::RelabelComponentImageFilter<InputImageType, OutputImageType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
   filter->SetMinimumObjectSize(static_cast<uint64_t>(m_MinimumObjectSize));
   this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -124,7 +117,7 @@ void ITKRelabelComponentImage::filter()
 // -----------------------------------------------------------------------------
 void ITKRelabelComponentImage::filterInternal()
 {
-    Dream3DArraySwitchMacro(this->filter, getSelectedCellArrayPath(), -4);
+  Dream3DArraySwitchMacro(this->filter, getSelectedCellArrayPath(), -4);
 }
 
 // -----------------------------------------------------------------------------
@@ -144,12 +137,14 @@ AbstractFilter::Pointer ITKRelabelComponentImage::newFilterInstance(bool copyFil
 //
 // -----------------------------------------------------------------------------
 const QString ITKRelabelComponentImage::getHumanLabel()
-{ return "ITK::Relabel Component Image Filter"; }
+{
+  return "ITK::Relabel Component Image Filter";
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ITKRelabelComponentImage::getSubGroupName()
-{ return "ITK SegmentationPostProcessing"; }
-
-
+{
+  return "ITK SegmentationPostProcessing";
+}

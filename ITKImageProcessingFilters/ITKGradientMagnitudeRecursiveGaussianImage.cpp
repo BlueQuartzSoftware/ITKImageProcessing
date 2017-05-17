@@ -9,16 +9,14 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 
 #include "SIMPLib/Geometry/ImageGeom.h"
 
-
-
-#include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 
 // Include the MOC generated file for this class
 #include "moc_ITKGradientMagnitudeRecursiveGaussianImage.cpp"
@@ -26,11 +24,11 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKGradientMagnitudeRecursiveGaussianImage::ITKGradientMagnitudeRecursiveGaussianImage() :
-  ITKImageBase()
+ITKGradientMagnitudeRecursiveGaussianImage::ITKGradientMagnitudeRecursiveGaussianImage()
+: ITKImageBase()
 {
-  m_Sigma=StaticCastScalar<double,double,double>(1.0);
-  m_NormalizeAcrossScale=StaticCastScalar<bool,bool,bool>(false);
+  m_Sigma = StaticCastScalar<double, double, double>(1.0);
+  m_NormalizeAcrossScale = StaticCastScalar<bool, bool, bool>(false);
 
   setupFilterParameters();
 }
@@ -52,15 +50,13 @@ void ITKGradientMagnitudeRecursiveGaussianImage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Sigma", Sigma, FilterParameter::Parameter, ITKGradientMagnitudeRecursiveGaussianImage));
   parameters.push_back(SIMPL_NEW_BOOL_FP("NormalizeAcrossScale", NormalizeAcrossScale, FilterParameter::Parameter, ITKGradientMagnitudeRecursiveGaussianImage));
 
-
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Save as New Array", SaveAsNewArray, FilterParameter::Parameter, ITKGradientMagnitudeRecursiveGaussianImage, linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
-      DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize,
-      AttributeMatrix::Type::Cell, IGeometry::Type::Image);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Attribute Array to filter", SelectedCellArrayPath, FilterParameter::RequiredArray, ITKGradientMagnitudeRecursiveGaussianImage, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
@@ -75,9 +71,9 @@ void ITKGradientMagnitudeRecursiveGaussianImage::setupFilterParameters()
 void ITKGradientMagnitudeRecursiveGaussianImage::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setSelectedCellArrayPath( reader->readDataArrayPath( "SelectedCellArrayPath", getSelectedCellArrayPath() ) );
-  setNewCellArrayName( reader->readString( "NewCellArrayName", getNewCellArrayName() ) );
-  setSaveAsNewArray( reader->readValue( "SaveAsNewArray", getSaveAsNewArray() ) );
+  setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
+  setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
+  setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
   setSigma(reader->readValue("Sigma", getSigma()));
   setNormalizeAcrossScale(reader->readValue("NormalizeAcrossScale", getNormalizeAcrossScale()));
 
@@ -87,8 +83,7 @@ void ITKGradientMagnitudeRecursiveGaussianImage::readFilterParameters(AbstractFi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
-void ITKGradientMagnitudeRecursiveGaussianImage::dataCheck()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKGradientMagnitudeRecursiveGaussianImage::dataCheck()
 {
   // Check consistency of parameters
 
@@ -101,25 +96,23 @@ void ITKGradientMagnitudeRecursiveGaussianImage::dataCheck()
 // -----------------------------------------------------------------------------
 void ITKGradientMagnitudeRecursiveGaussianImage::dataCheckInternal()
 {
-  Dream3DArraySwitchMacroOutputType(this->dataCheck, getSelectedCellArrayPath(), -4,float,0);
+  Dream3DArraySwitchMacroOutputType(this->dataCheck, getSelectedCellArrayPath(), -4, float, 0);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 
-template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
-void ITKGradientMagnitudeRecursiveGaussianImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKGradientMagnitudeRecursiveGaussianImage::filter()
 {
   typedef itk::Dream3DImage<InputPixelType, Dimension> InputImageType;
   typedef itk::Dream3DImage<OutputPixelType, Dimension> OutputImageType;
-  //define filter
+  // define filter
   typedef itk::GradientMagnitudeRecursiveGaussianImageFilter<InputImageType, OutputImageType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
   filter->SetSigma(static_cast<double>(m_Sigma));
   filter->SetNormalizeAcrossScale(static_cast<bool>(m_NormalizeAcrossScale));
   this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -127,7 +120,7 @@ void ITKGradientMagnitudeRecursiveGaussianImage::filter()
 // -----------------------------------------------------------------------------
 void ITKGradientMagnitudeRecursiveGaussianImage::filterInternal()
 {
-    Dream3DArraySwitchMacroOutputType(this->filter, getSelectedCellArrayPath(), -4,float,0);
+  Dream3DArraySwitchMacroOutputType(this->filter, getSelectedCellArrayPath(), -4, float, 0);
 }
 
 // -----------------------------------------------------------------------------
@@ -147,12 +140,14 @@ AbstractFilter::Pointer ITKGradientMagnitudeRecursiveGaussianImage::newFilterIns
 //
 // -----------------------------------------------------------------------------
 const QString ITKGradientMagnitudeRecursiveGaussianImage::getHumanLabel()
-{ return "ITK::Gradient Magnitude Recursive Gaussian Image Filter"; }
+{
+  return "ITK::Gradient Magnitude Recursive Gaussian Image Filter";
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ITKGradientMagnitudeRecursiveGaussianImage::getSubGroupName()
-{ return "ITK Edge"; }
-
-
+{
+  return "ITK Edge";
+}

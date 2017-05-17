@@ -5,18 +5,21 @@
 // -----------------------------------------------------------------------------
 
 #include "ITKTestBase.h"
-//Auto includes
+// Auto includes
 
-
-class ITKBinaryThinningImageTest: public ITKTestBase
+class ITKBinaryThinningImageTest : public ITKTestBase
 {
 
-  public:
-    ITKBinaryThinningImageTest() {}
-    virtual ~ITKBinaryThinningImageTest() {}
+public:
+  ITKBinaryThinningImageTest()
+  {
+  }
+  virtual ~ITKBinaryThinningImageTest()
+  {
+  }
 
-int TestITKBinaryThinningImageBinaryThinningTest()
-{
+  int TestITKBinaryThinningImageBinaryThinningTest()
+  {
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/BlackDots.png");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -24,7 +27,7 @@ int TestITKBinaryThinningImageBinaryThinningTest()
     QString filtName = "ITKBinaryThinningImage";
     FilterManager* fm = FilterManager::Instance();
     IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
-    DREAM3D_REQUIRE_NE(filterFactory.get(),0);
+    DREAM3D_REQUIRE_NE(filterFactory.get(), 0);
     AbstractFilter::Pointer filter = filterFactory->create();
     QVariant var;
     bool propWasSet;
@@ -36,17 +39,14 @@ int TestITKBinaryThinningImageBinaryThinningTest()
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     filter->setDataContainerArray(containerArray);
     filter->execute();
-    DREAM3D_REQUIRED(filter->getErrorCondition(), >= , 0);
-    DREAM3D_REQUIRED(filter->getWarningCondition(), >= , 0);
+    DREAM3D_REQUIRED(filter->getErrorCondition(), >=, 0);
+    DREAM3D_REQUIRED(filter->getWarningCondition(), >=, 0);
     WriteImage("ITKBinaryThinningImageBinaryThinning.nrrd", containerArray, input_path);
     QString md5Output;
     GetMD5FromDataContainer(containerArray, input_path, md5Output);
     DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("153ad0b2f3658dee3b14ad93d0cfe550"));
     return 0;
-}
-
-
-
+  }
 
   // -----------------------------------------------------------------------------
   //
@@ -55,18 +55,17 @@ int TestITKBinaryThinningImageBinaryThinningTest()
   {
     int err = EXIT_SUCCESS;
 
-    DREAM3D_REGISTER_TEST( this->TestFilterAvailability("ITKBinaryThinningImage") );
+    DREAM3D_REGISTER_TEST(this->TestFilterAvailability("ITKBinaryThinningImage"));
 
-    DREAM3D_REGISTER_TEST( TestITKBinaryThinningImageBinaryThinningTest());
+    DREAM3D_REGISTER_TEST(TestITKBinaryThinningImageBinaryThinningTest());
 
     if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
     {
-      DREAM3D_REGISTER_TEST( this->RemoveTestFiles() )
+      DREAM3D_REGISTER_TEST(this->RemoveTestFiles())
     }
   }
 
-  private:
-    ITKBinaryThinningImageTest(const ITKBinaryThinningImageTest&); // Copy Constructor Not Implemented
-    void operator=(const ITKBinaryThinningImageTest&); // Operator '=' Not Implemented
+private:
+  ITKBinaryThinningImageTest(const ITKBinaryThinningImageTest&); // Copy Constructor Not Implemented
+  void operator=(const ITKBinaryThinningImageTest&);             // Operator '=' Not Implemented
 };
-

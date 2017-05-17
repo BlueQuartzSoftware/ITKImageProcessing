@@ -9,16 +9,14 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 
 #include "SIMPLib/Geometry/ImageGeom.h"
 
-
-
-#include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 
 // Include the MOC generated file for this class
 #include "moc_ITKLabelContourImage.cpp"
@@ -26,11 +24,11 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKLabelContourImage::ITKLabelContourImage() :
-  ITKImageBase()
+ITKLabelContourImage::ITKLabelContourImage()
+: ITKImageBase()
 {
-  m_FullyConnected=StaticCastScalar<bool,bool,bool>(false);
-  m_BackgroundValue=StaticCastScalar<double,double,double>(0);
+  m_FullyConnected = StaticCastScalar<bool, bool, bool>(false);
+  m_BackgroundValue = StaticCastScalar<double, double, double>(0);
 
   setupFilterParameters();
 }
@@ -52,15 +50,13 @@ void ITKLabelContourImage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_BOOL_FP("FullyConnected", FullyConnected, FilterParameter::Parameter, ITKLabelContourImage));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("BackgroundValue", BackgroundValue, FilterParameter::Parameter, ITKLabelContourImage));
 
-
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Save as New Array", SaveAsNewArray, FilterParameter::Parameter, ITKLabelContourImage, linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
-      DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize,
-      AttributeMatrix::Type::Cell, IGeometry::Type::Image);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Attribute Array to filter", SelectedCellArrayPath, FilterParameter::RequiredArray, ITKLabelContourImage, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
@@ -75,9 +71,9 @@ void ITKLabelContourImage::setupFilterParameters()
 void ITKLabelContourImage::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setSelectedCellArrayPath( reader->readDataArrayPath( "SelectedCellArrayPath", getSelectedCellArrayPath() ) );
-  setNewCellArrayName( reader->readString( "NewCellArrayName", getNewCellArrayName() ) );
-  setSaveAsNewArray( reader->readValue( "SaveAsNewArray", getSaveAsNewArray() ) );
+  setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
+  setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
+  setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
   setFullyConnected(reader->readValue("FullyConnected", getFullyConnected()));
   setBackgroundValue(reader->readValue("BackgroundValue", getBackgroundValue()));
 
@@ -87,8 +83,7 @@ void ITKLabelContourImage::readFilterParameters(AbstractFilterParametersReader* 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
-void ITKLabelContourImage::dataCheck()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKLabelContourImage::dataCheck()
 {
   // Check consistency of parameters
 
@@ -108,18 +103,16 @@ void ITKLabelContourImage::dataCheckInternal()
 //
 // -----------------------------------------------------------------------------
 
-template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
-void ITKLabelContourImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKLabelContourImage::filter()
 {
   typedef itk::Dream3DImage<InputPixelType, Dimension> InputImageType;
   typedef itk::Dream3DImage<OutputPixelType, Dimension> OutputImageType;
-  //define filter
+  // define filter
   typedef itk::LabelContourImageFilter<InputImageType, OutputImageType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
   filter->SetFullyConnected(static_cast<bool>(m_FullyConnected));
   filter->SetBackgroundValue(static_cast<double>(m_BackgroundValue));
   this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -127,7 +120,7 @@ void ITKLabelContourImage::filter()
 // -----------------------------------------------------------------------------
 void ITKLabelContourImage::filterInternal()
 {
-    Dream3DArraySwitchMacro(this->filter, getSelectedCellArrayPath(), -4);
+  Dream3DArraySwitchMacro(this->filter, getSelectedCellArrayPath(), -4);
 }
 
 // -----------------------------------------------------------------------------
@@ -147,12 +140,14 @@ AbstractFilter::Pointer ITKLabelContourImage::newFilterInstance(bool copyFilterP
 //
 // -----------------------------------------------------------------------------
 const QString ITKLabelContourImage::getHumanLabel()
-{ return "ITK::Label Contour Image Filter"; }
+{
+  return "ITK::Label Contour Image Filter";
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ITKLabelContourImage::getSubGroupName()
-{ return "ITK SegmentationPostProcessing"; }
-
-
+{
+  return "ITK SegmentationPostProcessing";
+}

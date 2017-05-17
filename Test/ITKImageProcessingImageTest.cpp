@@ -33,18 +33,18 @@
 #include <QtCore/QCoreApplication>
 #include <QtCore/QFile>
 
-#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
+#include "SIMPLib/SIMPLib.h"
 
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
-#include "SIMPLib/Utilities/UnitTestSupport.hpp"
 #include "SIMPLib/Utilities/QMetaObjectUtilities.h"
+#include "SIMPLib/Utilities/UnitTestSupport.hpp"
 
+#include "ITKImageProcessing/ITKImageProcessingFilters/itkGetComponentsDimensions.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkInPlaceDream3DDataToImageFilter.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkInPlaceImageToDream3DDataFilter.h"
-#include "ITKImageProcessing/ITKImageProcessingFilters/itkGetComponentsDimensions.h"
 
 #include "ITKImageProcessingTestFileLocations.h"
 
@@ -54,22 +54,26 @@
 class ITKImageProcessingImageTest
 {
 
-  public:
-    ITKImageProcessingImageTest() {}
-    virtual ~ITKImageProcessingImageTest() {}
+public:
+  ITKImageProcessingImageTest()
+  {
+  }
+  virtual ~ITKImageProcessingImageTest()
+  {
+  }
 
   // -----------------------------------------------------------------------------
   //  Test methods
   // -----------------------------------------------------------------------------
   int CreateDream3DDataToImageFilters()
   {
-    typedef itk::InPlaceDream3DDataToImageFilter<float,3> ToITK_float_3_Type;
+    typedef itk::InPlaceDream3DDataToImageFilter<float, 3> ToITK_float_3_Type;
     ToITK_float_3_Type::Pointer toITK_float_3 = ToITK_float_3_Type::New();
-    typedef itk::InPlaceDream3DDataToImageFilter<itk::RGBAPixel<float>,3> ToITK_rgba_float_3_Type;
+    typedef itk::InPlaceDream3DDataToImageFilter<itk::RGBAPixel<float>, 3> ToITK_rgba_float_3_Type;
     ToITK_rgba_float_3_Type::Pointer toITK_rgba_float_3 = ToITK_rgba_float_3_Type::New();
-    typedef itk::InPlaceDream3DDataToImageFilter<itk::RGBAPixel<unsigned char>,3> ToITK_rgba_uchar_3_Type;
+    typedef itk::InPlaceDream3DDataToImageFilter<itk::RGBAPixel<unsigned char>, 3> ToITK_rgba_uchar_3_Type;
     ToITK_rgba_uchar_3_Type::Pointer toITK_rgba_uchar_3 = ToITK_rgba_uchar_3_Type::New();
-    typedef itk::InPlaceDream3DDataToImageFilter<itk::RGBPixel<float>,3> ToITK_rgb_float_3_Type;
+    typedef itk::InPlaceDream3DDataToImageFilter<itk::RGBPixel<float>, 3> ToITK_rgb_float_3_Type;
     ToITK_rgb_float_3_Type::Pointer toITK_rgb_float_3 = ToITK_rgb_float_3_Type::New();
     return EXIT_SUCCESS;
   }
@@ -81,34 +85,30 @@ class ITKImageProcessingImageTest
     return EXIT_SUCCESS;
   }
 
-
-  template<unsigned int Dimensions>
-  void TestComponentImages()
+  template <unsigned int Dimensions> void TestComponentImages()
   {
-    TestPixelTypeImages<uint8_t,Dimensions>();
-    TestPixelTypeImages<int8_t,Dimensions>();
-    TestPixelTypeImages<float,Dimensions>();
-    TestPixelTypeImages<double,Dimensions>();
-    TestPixelTypeImages<uint32_t,Dimensions>();
-    TestPixelTypeImages<int32_t,Dimensions>();
+    TestPixelTypeImages<uint8_t, Dimensions>();
+    TestPixelTypeImages<int8_t, Dimensions>();
+    TestPixelTypeImages<float, Dimensions>();
+    TestPixelTypeImages<double, Dimensions>();
+    TestPixelTypeImages<uint32_t, Dimensions>();
+    TestPixelTypeImages<int32_t, Dimensions>();
   }
 
-  template<typename ComponentType, unsigned int Dimensions>
-  void TestPixelTypeImages()
+  template <typename ComponentType, unsigned int Dimensions> void TestPixelTypeImages()
   {
     typedef typename itk::RGBAPixel<ComponentType> RGBAType;
-    TestImages<RGBAType, Dimensions >();
+    TestImages<RGBAType, Dimensions>();
     typedef typename itk::RGBPixel<ComponentType> RGBType;
-    TestImages<RGBType, Dimensions >();
-    typedef typename itk::Vector<ComponentType,Dimensions> VectorType;
-    TestImages<VectorType, Dimensions >();
+    TestImages<RGBType, Dimensions>();
+    typedef typename itk::Vector<ComponentType, Dimensions> VectorType;
+    TestImages<VectorType, Dimensions>();
   }
 
-  template<typename PixelType, unsigned int Dimensions>
-  void TestImages()
+  template <typename PixelType, unsigned int Dimensions> void TestImages()
   {
     // Create image
-    typedef typename itk::Dream3DImage<PixelType,Dimensions> ImageType;
+    typedef typename itk::Dream3DImage<PixelType, Dimensions> ImageType;
     typename ImageType::Pointer image = ImageType::New();
     typename ImageType::SizeType size;
     size.Fill(10);
@@ -116,15 +116,15 @@ class ITKImageProcessingImageTest
     image->Allocate();
     image->FillBuffer(itk::NumericTraits<PixelType>::max());
     // Copy image to save it as baseline
-    typedef typename itk::ImageDuplicator< ImageType > DuplicatorType;
+    typedef typename itk::ImageDuplicator<ImageType> DuplicatorType;
     typename DuplicatorType::Pointer duplicator = DuplicatorType::New();
     duplicator->SetInputImage(image);
     duplicator->Update();
     typename ImageType::Pointer clonedImage = duplicator->GetOutput();
     // Convert image to DREAM.3D data
-    DataArrayPath path("DataContainer","AttributeMatrix","DataArray");
+    DataArrayPath path("DataContainer", "AttributeMatrix", "DataArray");
     DataContainer::Pointer container = DataContainer::New(path.getDataContainerName());
-    typedef typename itk::InPlaceImageToDream3DDataFilter<PixelType,Dimensions> toDream3DType;
+    typedef typename itk::InPlaceImageToDream3DDataFilter<PixelType, Dimensions> toDream3DType;
     typename toDream3DType::Pointer toDream3D = toDream3DType::New();
     toDream3D->SetInput(image);
     toDream3D->SetInPlace(true);
@@ -142,28 +142,28 @@ class ITKImageProcessingImageTest
     toITK->Update();
     // Compare baseline and output
     typedef typename itk::ImageRegionIterator<ImageType> IteratorType;
-    IteratorType it(toITK->GetOutput(),toITK->GetOutput()->GetLargestPossibleRegion());
+    IteratorType it(toITK->GetOutput(), toITK->GetOutput()->GetLargestPossibleRegion());
     IteratorType itb(clonedImage, clonedImage->GetLargestPossibleRegion());
-    for( it.GoToBegin(), itb.GoToBegin(); !it.IsAtEnd() && !itb.IsAtEnd(); ++it, ++itb)
+    for(it.GoToBegin(), itb.GoToBegin(); !it.IsAtEnd() && !itb.IsAtEnd(); ++it, ++itb)
     {
       if(it.Get() != itb.Get())
       {
         std::string s("Values not equal");
-        DREAM3D_TEST_THROW_EXCEPTION( s )
+        DREAM3D_TEST_THROW_EXCEPTION(s)
       }
     }
   }
 
   int CreateImageToDream3DDataFilters()
   {
-    typedef itk::InPlaceImageToDream3DDataFilter<float,3> toDream3D_float_3_Type;
+    typedef itk::InPlaceImageToDream3DDataFilter<float, 3> toDream3D_float_3_Type;
     toDream3D_float_3_Type::Pointer toDream3D_float_3 = toDream3D_float_3_Type::New();
-    typedef itk::InPlaceImageToDream3DDataFilter<itk::RGBAPixel<float>,3> toDream3D_rgba_float_3_Type;
+    typedef itk::InPlaceImageToDream3DDataFilter<itk::RGBAPixel<float>, 3> toDream3D_rgba_float_3_Type;
     toDream3D_rgba_float_3_Type::Pointer toDream3D_rgba_float_3 = toDream3D_rgba_float_3_Type::New();
-    typedef itk::InPlaceImageToDream3DDataFilter<itk::RGBAPixel<unsigned char>,3> toDream3D_rgba_uchar_3_Type;
+    typedef itk::InPlaceImageToDream3DDataFilter<itk::RGBAPixel<unsigned char>, 3> toDream3D_rgba_uchar_3_Type;
     toDream3D_rgba_uchar_3_Type::Pointer toDream3D_rgba_uchar_3 = toDream3D_rgba_uchar_3_Type::New();
 
-    typedef itk::InPlaceImageToDream3DDataFilter<itk::RGBPixel<float>,3> toDream3D_rgb_float_3_Type;
+    typedef itk::InPlaceImageToDream3DDataFilter<itk::RGBPixel<float>, 3> toDream3D_rgb_float_3_Type;
     toDream3D_rgb_float_3_Type::Pointer toDream3D_rgb_float_3 = toDream3D_rgb_float_3_Type::New();
 
     return EXIT_SUCCESS;
@@ -177,30 +177,29 @@ class ITKImageProcessingImageTest
     if(cDims.size() != 1 || cDims[0] != 1)
     {
       error = QString("Scalar images should have a component dimension of [1]. Found components of size %1 with first value %2").arg(cDims.size()).arg(cDims[0]);
-      DREAM3D_TEST_THROW_EXCEPTION( error.toStdString() );
+      DREAM3D_TEST_THROW_EXCEPTION(error.toStdString());
     }
-    cDims = ITKDream3DHelper::GetComponentsDimensions<itk::RGBPixel<unsigned char> >();
+    cDims = ITKDream3DHelper::GetComponentsDimensions<itk::RGBPixel<unsigned char>>();
     if(cDims.size() != 1 || cDims[0] != 3)
     {
       error = QString("RGB images should have a component dimension of [3]. Found components of size %1 with first value %2").arg(cDims.size()).arg(cDims[0]);
-      DREAM3D_TEST_THROW_EXCEPTION( error.toStdString() );
+      DREAM3D_TEST_THROW_EXCEPTION(error.toStdString());
     }
-    cDims = ITKDream3DHelper::GetComponentsDimensions<itk::RGBAPixel<unsigned char> >();
+    cDims = ITKDream3DHelper::GetComponentsDimensions<itk::RGBAPixel<unsigned char>>();
     if(cDims.size() != 1 || cDims[0] != 4)
     {
       error = QString("RGBA images should have a component dimension of [4]. Found components of size %1 with first value %2").arg(cDims.size()).arg(cDims[0]);
-      DREAM3D_TEST_THROW_EXCEPTION( error.toStdString() );
+      DREAM3D_TEST_THROW_EXCEPTION(error.toStdString());
     }
     const unsigned int vecDim = 3;
-    cDims = ITKDream3DHelper::GetComponentsDimensions<itk::Vector<unsigned char,vecDim> >();
+    cDims = ITKDream3DHelper::GetComponentsDimensions<itk::Vector<unsigned char, vecDim>>();
     if(cDims.size() != vecDim || cDims[0] != 1 || cDims[1] != 1 || cDims[2] != 1)
     {
       error = QString("Vector images should have a component dimension of (%1,1). Found components of size %2 with first value %3").arg(vecDim).arg(cDims.size()).arg(cDims[0]);
-      DREAM3D_TEST_THROW_EXCEPTION( error.toStdString() );
+      DREAM3D_TEST_THROW_EXCEPTION(error.toStdString());
     }
     return EXIT_SUCCESS;
   }
-
 
   // -----------------------------------------------------------------------------
   //
@@ -215,7 +214,7 @@ class ITKImageProcessingImageTest
     DREAM3D_REGISTER_TEST(GetComponentsDimensions());
   }
 
-  private:
-    ITKImageProcessingImageTest(const ITKImageProcessingImageTest&); // Copy Constructor Not Implemented
-    void operator=(const ITKImageProcessingImageTest&); // Operator '=' Not Implemented
+private:
+  ITKImageProcessingImageTest(const ITKImageProcessingImageTest&); // Copy Constructor Not Implemented
+  void operator=(const ITKImageProcessingImageTest&);              // Operator '=' Not Implemented
 };

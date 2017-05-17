@@ -9,16 +9,16 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 
 #include "SIMPLib/Geometry/ImageGeom.h"
 
 #define DREAM3D_USE_Vector 1
-#define DREAM3D_USE_RGB_RGBA   1
-#include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
+#define DREAM3D_USE_RGB_RGBA 1
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 
 // Include the MOC generated file for this class
 #include "moc_ITKMaskImage.cpp"
@@ -26,10 +26,10 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKMaskImage::ITKMaskImage() :
-  ITKImageBase()
+ITKMaskImage::ITKMaskImage()
+: ITKImageBase()
 {
-  m_OutsideValue=StaticCastScalar<double,double,double>(0);
+  m_OutsideValue = StaticCastScalar<double, double, double>(0);
 
   setupFilterParameters();
 }
@@ -50,17 +50,15 @@ void ITKMaskImage::setupFilterParameters()
 
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("OutsideValue", OutsideValue, FilterParameter::Parameter, ITKMaskImage));
 
-
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Save as New Array", SaveAsNewArray, FilterParameter::Parameter, ITKMaskImage, linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
-      DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize,
-      AttributeMatrix::Type::Cell, IGeometry::Type::Image);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Attribute Array to filter", SelectedCellArrayPath, FilterParameter::RequiredArray, ITKMaskImage, req));
-      parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Mask Array", MaskCellArrayPath, FilterParameter::RequiredArray, ITKMaskImage, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Mask Array", MaskCellArrayPath, FilterParameter::RequiredArray, ITKMaskImage, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
   parameters.push_back(SIMPL_NEW_STRING_FP("Filtered Array", NewCellArrayName, FilterParameter::CreatedArray, ITKMaskImage));
@@ -74,10 +72,10 @@ void ITKMaskImage::setupFilterParameters()
 void ITKMaskImage::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setSelectedCellArrayPath( reader->readDataArrayPath( "SelectedCellArrayPath", getSelectedCellArrayPath() ) );
-  setSelectedCellArrayPath( reader->readDataArrayPath( "MaskCellArrayPath", getMaskCellArrayPath() ) );
-  setNewCellArrayName( reader->readString( "NewCellArrayName", getNewCellArrayName() ) );
-  setSaveAsNewArray( reader->readValue( "SaveAsNewArray", getSaveAsNewArray() ) );
+  setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
+  setSelectedCellArrayPath(reader->readDataArrayPath("MaskCellArrayPath", getMaskCellArrayPath()));
+  setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
+  setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
   setOutsideValue(reader->readValue("OutsideValue", getOutsideValue()));
 
   reader->closeFilterGroup();
@@ -86,14 +84,15 @@ void ITKMaskImage::readFilterParameters(AbstractFilterParametersReader* reader, 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
-void ITKMaskImage::dataCheck()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKMaskImage::dataCheck()
 {
   // Check consistency of parameters
 
   setErrorCondition(0);
   QVector<QString> supportedTypes;
-  supportedTypes << "uint8_t" << "uint16_t" << "uint32_t";
+  supportedTypes << "uint8_t"
+                 << "uint16_t"
+                 << "uint32_t";
   checkImageType(supportedTypes, getMaskCellArrayPath());
   ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
@@ -110,32 +109,26 @@ void ITKMaskImage::dataCheckInternal()
 //
 // -----------------------------------------------------------------------------
 
-template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
-typename std::enable_if<
-!std::is_scalar<InputPixelType>::value>::type
-ITKMaskImage::convertDataContainerType()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> typename std::enable_if<!std::is_scalar<InputPixelType>::value>::type ITKMaskImage::convertDataContainerType()
 {
-// This should never happened as masks should be scalar images, not RGBA or vector images.
-// We need this function because vector and RGBA images are supported as input images
-// #define DREAM3D_USE_Vector 1
-// #define DREAM3D_USE_RGB_RGBA   1
-// This function is only needed for compilation purposes, but should never be called
-// at runtime.
-// checkImageType() is called before this function and limits the types of
-// supported mask images.
-// Just in case, an error is returned if this function is called.
-    setErrorCondition(-20);
-    QString errorMessage = "Mask images are required to be scalar images.";
-    notifyErrorMessage(getHumanLabel(), errorMessage, getErrorCondition());
+  // This should never happened as masks should be scalar images, not RGBA or vector images.
+  // We need this function because vector and RGBA images are supported as input images
+  // #define DREAM3D_USE_Vector 1
+  // #define DREAM3D_USE_RGB_RGBA   1
+  // This function is only needed for compilation purposes, but should never be called
+  // at runtime.
+  // checkImageType() is called before this function and limits the types of
+  // supported mask images.
+  // Just in case, an error is returned if this function is called.
+  setErrorCondition(-20);
+  QString errorMessage = "Mask images are required to be scalar images.";
+  notifyErrorMessage(getHumanLabel(), errorMessage, getErrorCondition());
 }
 
-template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
-typename std::enable_if<
-std::is_scalar<InputPixelType>::value>::type
-ITKMaskImage::convertDataContainerType()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> typename std::enable_if<std::is_scalar<InputPixelType>::value>::type ITKMaskImage::convertDataContainerType()
 {
-  typedef itk::Dream3DImage<InputPixelType,Dimension> InputImageType;
-  typedef itk::Dream3DImage<OutputPixelType,Dimension> OutputImageType;
+  typedef itk::Dream3DImage<InputPixelType, Dimension> InputImageType;
+  typedef itk::Dream3DImage<OutputPixelType, Dimension> OutputImageType;
   typedef itk::InPlaceDream3DDataToImageFilter<InputPixelType, Dimension> toITKType;
   typedef itk::InPlaceImageToDream3DDataFilter<OutputPixelType, Dimension> toDream3DType;
   typedef itk::CastImageFilter<InputImageType, OutputImageType> CastType;
@@ -154,9 +147,8 @@ ITKMaskImage::convertDataContainerType()
     cast->SetInput(toITK->GetOutput());
     cast->Update();
     // Convert back to dream3D array
-    DataContainer::Pointer container =
-    getMaskContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, dap.getDataContainerName());
-    if (!container.get())
+    DataContainer::Pointer container = getMaskContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, dap.getDataContainerName());
+    if(!container.get())
     {
       setErrorCondition(-3);
       notifyErrorMessage(getHumanLabel(), "No container.", getErrorCondition());
@@ -171,8 +163,7 @@ ITKMaskImage::convertDataContainerType()
     toDream3D->SetDataArrayName(dap.getDataArrayName().toStdString());
     toDream3D->SetDataContainer(dcMask);
     toDream3D->Update();
-  }
-  catch (itk::ExceptionObject & err)
+  } catch(itk::ExceptionObject& err)
   {
     setErrorCondition(-55560);
     QString errorMessage = "ITK exception was thrown while converting mask image: %1";
@@ -185,14 +176,13 @@ ITKMaskImage::convertDataContainerType()
 //
 // -----------------------------------------------------------------------------
 
-template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
-void ITKMaskImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKMaskImage::filter()
 {
   typedef itk::Dream3DImage<InputPixelType, Dimension> InputImageType;
   typedef itk::Dream3DImage<uint32_t, Dimension> MaskImageType;
   typedef itk::Dream3DImage<OutputPixelType, Dimension> OutputImageType;
-  //define filter
-  typedef  itk::MaskImageFilter< InputImageType, MaskImageType, OutputImageType > FilterType;
+  // define filter
+  typedef itk::MaskImageFilter<InputImageType, MaskImageType, OutputImageType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
   // Set mask image.
   try
@@ -207,8 +197,7 @@ void ITKMaskImage::filter()
     toITK->SetDataArrayName(dap.getDataArrayName().toStdString());
     toITK->Update();
     filter->SetMaskImage(toITK->GetOutput());
-  }
-  catch (itk::ExceptionObject & err)
+  } catch(itk::ExceptionObject& err)
   {
     setErrorCondition(-55561);
     QString errorMessage = "ITK exception was thrown while converting mask image: %1";
@@ -218,13 +207,13 @@ void ITKMaskImage::filter()
   typename OutputImageType::PixelType v;
   size_t NumberOfComponents = 1;
   QVector<size_t> cDims = ITKDream3DHelper::GetComponentsDimensions<InputPixelType>();
-  for( int ii = 0 ; ii < cDims.size() ; ii++)
+  for(int ii = 0; ii < cDims.size(); ii++)
   {
     NumberOfComponents *= cDims[ii];
   }
-  itk::NumericTraits<typename OutputImageType::PixelType>::SetLength( v, NumberOfComponents );
-  v = static_cast<OutputPixelType>( m_OutsideValue );
-  filter->SetOutsideValue( v );
+  itk::NumericTraits<typename OutputImageType::PixelType>::SetLength(v, NumberOfComponents);
+  v = static_cast<OutputPixelType>(m_OutsideValue);
+  filter->SetOutsideValue(v);
   this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
 }
 
@@ -238,7 +227,7 @@ void ITKMaskImage::filterInternal()
   Dream3DArraySwitchMacroOutputType(this->convertDataContainerType, getMaskCellArrayPath(), -4, uint32_t, 0);
   if(getErrorCondition() != 0)
   {
-      return; // This should never happen thanks to the preflight checks.
+    return; // This should never happen thanks to the preflight checks.
   }
   Dream3DArraySwitchMacro(this->filter, getSelectedCellArrayPath(), -4);
   m_MaskContainerArray = nullptr; // Free the memory used by the casted mask image
@@ -261,12 +250,14 @@ AbstractFilter::Pointer ITKMaskImage::newFilterInstance(bool copyFilterParameter
 //
 // -----------------------------------------------------------------------------
 const QString ITKMaskImage::getHumanLabel()
-{ return "ITK::Mask Image Filter"; }
+{
+  return "ITK::Mask Image Filter";
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ITKMaskImage::getSubGroupName()
-{ return "ITK IntensityTransformation"; }
-
-
+{
+  return "ITK IntensityTransformation";
+}

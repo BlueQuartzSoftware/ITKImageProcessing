@@ -9,16 +9,14 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 
 #include "SIMPLib/Geometry/ImageGeom.h"
 
-
-
-#include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 
 // Include the MOC generated file for this class
 #include "moc_ITKMorphologicalWatershedFromMarkersImage.cpp"
@@ -26,11 +24,11 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKMorphologicalWatershedFromMarkersImage::ITKMorphologicalWatershedFromMarkersImage() :
-  ITKImageBase()
+ITKMorphologicalWatershedFromMarkersImage::ITKMorphologicalWatershedFromMarkersImage()
+: ITKImageBase()
 {
-  m_MarkWatershedLine=StaticCastScalar<bool,bool,bool>(true);
-  m_FullyConnected=StaticCastScalar<bool,bool,bool>(false);
+  m_MarkWatershedLine = StaticCastScalar<bool, bool, bool>(true);
+  m_FullyConnected = StaticCastScalar<bool, bool, bool>(false);
   setupFilterParameters();
 }
 
@@ -51,15 +49,13 @@ void ITKMorphologicalWatershedFromMarkersImage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_BOOL_FP("MarkWatershedLine", MarkWatershedLine, FilterParameter::Parameter, ITKMorphologicalWatershedFromMarkersImage));
   parameters.push_back(SIMPL_NEW_BOOL_FP("FullyConnected", FullyConnected, FilterParameter::Parameter, ITKMorphologicalWatershedFromMarkersImage));
 
-
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Save as New Array", SaveAsNewArray, FilterParameter::Parameter, ITKMorphologicalWatershedFromMarkersImage, linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
-      DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize,
-      AttributeMatrix::Type::Cell, IGeometry::Type::Image);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Attribute Array to filter", SelectedCellArrayPath, FilterParameter::RequiredArray, ITKMorphologicalWatershedFromMarkersImage, req));
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Marker Array", MarkerCellArrayPath, FilterParameter::RequiredArray, ITKMorphologicalWatershedFromMarkersImage, req));
   }
@@ -75,10 +71,10 @@ void ITKMorphologicalWatershedFromMarkersImage::setupFilterParameters()
 void ITKMorphologicalWatershedFromMarkersImage::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setSelectedCellArrayPath( reader->readDataArrayPath( "SelectedCellArrayPath", getSelectedCellArrayPath() ) );
-  setSelectedCellArrayPath( reader->readDataArrayPath( "MarkerCellArrayPath", getMarkerCellArrayPath() ) );
-  setNewCellArrayName( reader->readString( "NewCellArrayName", getNewCellArrayName() ) );
-  setSaveAsNewArray( reader->readValue( "SaveAsNewArray", getSaveAsNewArray() ) );
+  setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
+  setSelectedCellArrayPath(reader->readDataArrayPath("MarkerCellArrayPath", getMarkerCellArrayPath()));
+  setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
+  setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
   setMarkWatershedLine(reader->readValue("MarkWatershedLine", getMarkWatershedLine()));
   setFullyConnected(reader->readValue("FullyConnected", getFullyConnected()));
 
@@ -88,13 +84,13 @@ void ITKMorphologicalWatershedFromMarkersImage::readFilterParameters(AbstractFil
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
-void ITKMorphologicalWatershedFromMarkersImage::dataCheck()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKMorphologicalWatershedFromMarkersImage::dataCheck()
 {
   // Check consistency of parameters
   setErrorCondition(0);
   QVector<QString> supportedTypes;
-  supportedTypes << "uint8_t"<< "uint16_t";
+  supportedTypes << "uint8_t"
+                 << "uint16_t";
   checkImageType(supportedTypes, getMarkerCellArrayPath());
   ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
@@ -110,11 +106,10 @@ void ITKMorphologicalWatershedFromMarkersImage::dataCheckInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
-void ITKMorphologicalWatershedFromMarkersImage::convertDataContainerType()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKMorphologicalWatershedFromMarkersImage::convertDataContainerType()
 {
-  typedef itk::Dream3DImage<InputPixelType,Dimension> InputImageType;
-  typedef itk::Dream3DImage<OutputPixelType,Dimension> OutputImageType;
+  typedef itk::Dream3DImage<InputPixelType, Dimension> InputImageType;
+  typedef itk::Dream3DImage<OutputPixelType, Dimension> OutputImageType;
   typedef itk::InPlaceDream3DDataToImageFilter<InputPixelType, Dimension> toITKType;
   typedef itk::InPlaceImageToDream3DDataFilter<OutputPixelType, Dimension> toDream3DType;
   typedef itk::CastImageFilter<InputImageType, OutputImageType> CastType;
@@ -133,16 +128,15 @@ void ITKMorphologicalWatershedFromMarkersImage::convertDataContainerType()
     cast->SetInput(toITK->GetOutput());
     cast->Update();
     // Convert back to dream3D array
-    DataContainer::Pointer container =
-    getMarkerContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, dap.getDataContainerName());
-    if (!container.get())
+    DataContainer::Pointer container = getMarkerContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, dap.getDataContainerName());
+    if(!container.get())
     {
       setErrorCondition(-3);
       notifyErrorMessage(getHumanLabel(), "No container.", getErrorCondition());
       return;
     }
     QVector<size_t> dims = ITKDream3DHelper::GetComponentsDimensions<OutputPixelType>();
-    //getMarkerContainerArray()->createNonPrereqArrayFromPath<DataArray<OutputPixelType>, AbstractFilter, OutputPixelType>(this, dap, 0, dims);
+    // getMarkerContainerArray()->createNonPrereqArrayFromPath<DataArray<OutputPixelType>, AbstractFilter, OutputPixelType>(this, dap, 0, dims);
     DataContainer::Pointer dcMarker = getMarkerContainerArray()->getDataContainer(dap.getDataContainerName());
     typename toDream3DType::Pointer toDream3D = toDream3DType::New();
     toDream3D->SetInput(cast->GetOutput());
@@ -151,8 +145,7 @@ void ITKMorphologicalWatershedFromMarkersImage::convertDataContainerType()
     toDream3D->SetDataArrayName(dap.getDataArrayName().toStdString());
     toDream3D->SetDataContainer(dcMarker);
     toDream3D->Update();
-  }
-  catch (itk::ExceptionObject & err)
+  } catch(itk::ExceptionObject& err)
   {
     setErrorCondition(-55562);
     QString errorMessage = "ITK exception was thrown while converting marker image: %1";
@@ -164,12 +157,11 @@ void ITKMorphologicalWatershedFromMarkersImage::convertDataContainerType()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
-void ITKMorphologicalWatershedFromMarkersImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKMorphologicalWatershedFromMarkersImage::filter()
 {
   typedef itk::Dream3DImage<InputPixelType, Dimension> InputImageType;
   typedef itk::Dream3DImage<OutputPixelType, Dimension> OutputImageType;
-  //define filter
+  // define filter
   typedef itk::MorphologicalWatershedFromMarkersImageFilter<InputImageType, OutputImageType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
   filter->SetMarkWatershedLine(static_cast<bool>(m_MarkWatershedLine));
@@ -187,8 +179,7 @@ void ITKMorphologicalWatershedFromMarkersImage::filter()
     toITK->SetDataArrayName(dap.getDataArrayName().toStdString());
     toITK->Update();
     filter->SetMarkerImage(toITK->GetOutput());
-  }
-  catch (itk::ExceptionObject & err)
+  } catch(itk::ExceptionObject& err)
   {
     setErrorCondition(-55563);
     QString errorMessage = "ITK exception was thrown while converting marker image: %1";
@@ -229,12 +220,14 @@ AbstractFilter::Pointer ITKMorphologicalWatershedFromMarkersImage::newFilterInst
 //
 // -----------------------------------------------------------------------------
 const QString ITKMorphologicalWatershedFromMarkersImage::getHumanLabel()
-{ return "ITK::Morphological Watershed From Markers Image Filter"; }
+{
+  return "ITK::Morphological Watershed From Markers Image Filter";
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ITKMorphologicalWatershedFromMarkersImage::getSubGroupName()
-{ return "ITK Segmentation"; }
-
-
+{
+  return "ITK Segmentation";
+}

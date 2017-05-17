@@ -9,16 +9,14 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 
 #include "SIMPLib/Geometry/ImageGeom.h"
 
-
-
-#include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 
 // Include the MOC generated file for this class
 #include "moc_ITKIntensityWindowingImage.cpp"
@@ -26,13 +24,13 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKIntensityWindowingImage::ITKIntensityWindowingImage() :
-  ITKImageBase()
+ITKIntensityWindowingImage::ITKIntensityWindowingImage()
+: ITKImageBase()
 {
-  m_WindowMinimum=StaticCastScalar<double,double,double>(0.0);
-  m_WindowMaximum=StaticCastScalar<double,double,double>(255.0);
-  m_OutputMinimum=StaticCastScalar<double,double,double>(0.0);
-  m_OutputMaximum=StaticCastScalar<double,double,double>(255.0);
+  m_WindowMinimum = StaticCastScalar<double, double, double>(0.0);
+  m_WindowMaximum = StaticCastScalar<double, double, double>(255.0);
+  m_OutputMinimum = StaticCastScalar<double, double, double>(0.0);
+  m_OutputMaximum = StaticCastScalar<double, double, double>(255.0);
 
   setupFilterParameters();
 }
@@ -56,15 +54,13 @@ void ITKIntensityWindowingImage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("OutputMinimum", OutputMinimum, FilterParameter::Parameter, ITKIntensityWindowingImage));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("OutputMaximum", OutputMaximum, FilterParameter::Parameter, ITKIntensityWindowingImage));
 
-
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Save as New Array", SaveAsNewArray, FilterParameter::Parameter, ITKIntensityWindowingImage, linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
-      DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize,
-      AttributeMatrix::Type::Cell, IGeometry::Type::Image);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Attribute Array to filter", SelectedCellArrayPath, FilterParameter::RequiredArray, ITKIntensityWindowingImage, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
@@ -79,9 +75,9 @@ void ITKIntensityWindowingImage::setupFilterParameters()
 void ITKIntensityWindowingImage::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setSelectedCellArrayPath( reader->readDataArrayPath( "SelectedCellArrayPath", getSelectedCellArrayPath() ) );
-  setNewCellArrayName( reader->readString( "NewCellArrayName", getNewCellArrayName() ) );
-  setSaveAsNewArray( reader->readValue( "SaveAsNewArray", getSaveAsNewArray() ) );
+  setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
+  setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
+  setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
   setWindowMinimum(reader->readValue("WindowMinimum", getWindowMinimum()));
   setWindowMaximum(reader->readValue("WindowMaximum", getWindowMaximum()));
   setOutputMinimum(reader->readValue("OutputMinimum", getOutputMinimum()));
@@ -93,8 +89,7 @@ void ITKIntensityWindowingImage::readFilterParameters(AbstractFilterParametersRe
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
-void ITKIntensityWindowingImage::dataCheck()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKIntensityWindowingImage::dataCheck()
 {
   // Check consistency of parameters
 
@@ -114,12 +109,11 @@ void ITKIntensityWindowingImage::dataCheckInternal()
 //
 // -----------------------------------------------------------------------------
 
-template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
-void ITKIntensityWindowingImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKIntensityWindowingImage::filter()
 {
   typedef itk::Dream3DImage<InputPixelType, Dimension> InputImageType;
   typedef itk::Dream3DImage<OutputPixelType, Dimension> OutputImageType;
-  //define filter
+  // define filter
   typedef itk::IntensityWindowingImageFilter<InputImageType, OutputImageType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
   filter->SetWindowMinimum(static_cast<double>(m_WindowMinimum));
@@ -127,7 +121,6 @@ void ITKIntensityWindowingImage::filter()
   filter->SetOutputMinimum(static_cast<double>(m_OutputMinimum));
   filter->SetOutputMaximum(static_cast<double>(m_OutputMaximum));
   this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -135,7 +128,7 @@ void ITKIntensityWindowingImage::filter()
 // -----------------------------------------------------------------------------
 void ITKIntensityWindowingImage::filterInternal()
 {
-    Dream3DArraySwitchMacro(this->filter, getSelectedCellArrayPath(), -4);
+  Dream3DArraySwitchMacro(this->filter, getSelectedCellArrayPath(), -4);
 }
 
 // -----------------------------------------------------------------------------
@@ -155,12 +148,14 @@ AbstractFilter::Pointer ITKIntensityWindowingImage::newFilterInstance(bool copyF
 //
 // -----------------------------------------------------------------------------
 const QString ITKIntensityWindowingImage::getHumanLabel()
-{ return "ITK::Intensity Windowing Image Filter"; }
+{
+  return "ITK::Intensity Windowing Image Filter";
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ITKIntensityWindowingImage::getSubGroupName()
-{ return "ITK IntensityTransformation"; }
-
-
+{
+  return "ITK IntensityTransformation";
+}

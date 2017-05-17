@@ -6,16 +6,15 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
-#include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 
-
-#include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 
 // Include the MOC generated file for this class
 #include "moc_ITKCastImage.cpp"
@@ -23,9 +22,9 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKCastImage::ITKCastImage() :
-  ITKImageBase()
-  , m_CastingType(itk::ImageIOBase::IOComponentType::UCHAR-1)
+ITKCastImage::ITKCastImage()
+: ITKImageBase()
+, m_CastingType(itk::ImageIOBase::IOComponentType::UCHAR - 1)
 {
   setupFilterParameters();
 }
@@ -73,8 +72,7 @@ void ITKCastImage::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
-      DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize,
-      AttributeMatrix::Type::Cell, IGeometry::Type::Image);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Attribute Array to filter", SelectedCellArrayPath, FilterParameter::RequiredArray, ITKCastImage, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
@@ -89,9 +87,9 @@ void ITKCastImage::setupFilterParameters()
 void ITKCastImage::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setSelectedCellArrayPath( reader->readDataArrayPath( "SelectedCellArrayPath", getSelectedCellArrayPath() ) );
-  setNewCellArrayName( reader->readString( "NewCellArrayName", getNewCellArrayName() ) );
-  setSaveAsNewArray( reader->readValue( "SaveAsNewArray", getSaveAsNewArray() ) );
+  setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
+  setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
+  setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
   setCastingType(reader->readValue("CastingType", getCastingType()));
 
   reader->closeFilterGroup();
@@ -100,16 +98,14 @@ void ITKCastImage::readFilterParameters(AbstractFilterParametersReader* reader, 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
-void ITKCastImage::dataCheck()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKCastImage::dataCheck()
 {
   // Check consistency of parameters
   setErrorCondition(0);
-  typedef typename itk::NumericTraits<InputPixelType>::ValueType   InputValueType;
-  typedef typename itk::NumericTraits<OutputPixelType>::ValueType   OutputValueType;
-  if(static_cast< double >(std::numeric_limits<InputValueType>::max()) > static_cast< double>(std::numeric_limits<OutputValueType>::max())
-    || static_cast< double >(std::numeric_limits<InputValueType>::lowest()) < static_cast< double >(std::numeric_limits<OutputValueType>::lowest())
-    )
+  typedef typename itk::NumericTraits<InputPixelType>::ValueType InputValueType;
+  typedef typename itk::NumericTraits<OutputPixelType>::ValueType OutputValueType;
+  if(static_cast<double>(std::numeric_limits<InputValueType>::max()) > static_cast<double>(std::numeric_limits<OutputValueType>::max()) ||
+     static_cast<double>(std::numeric_limits<InputValueType>::lowest()) < static_cast<double>(std::numeric_limits<OutputValueType>::lowest()))
   {
     setErrorCondition(-5);
     notifyErrorMessage(getHumanLabel(), "Boundaries values of output component type inside boundaries of input component type. Use ITK::Rescale Intensity Image Filter instead.", getErrorCondition());
@@ -123,23 +119,21 @@ void ITKCastImage::dataCheck()
 // -----------------------------------------------------------------------------
 void ITKCastImage::dataCheckInternal()
 {
-   Dream3DArraySwitchOutputComponentMacro(this->dataCheck, m_CastingType, getSelectedCellArrayPath(), -4);
+  Dream3DArraySwitchOutputComponentMacro(this->dataCheck, m_CastingType, getSelectedCellArrayPath(), -4);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 
-template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
-void ITKCastImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKCastImage::filter()
 {
   typedef itk::Dream3DImage<InputPixelType, Dimension> InputImageType;
   typedef itk::Dream3DImage<OutputPixelType, Dimension> OutputImageType;
-  //define filter
+  // define filter
   typedef itk::CastImageFilter<InputImageType, OutputImageType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
   this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -147,7 +141,7 @@ void ITKCastImage::filter()
 // -----------------------------------------------------------------------------
 void ITKCastImage::filterInternal()
 {
-   Dream3DArraySwitchOutputComponentMacro(this->filter, m_CastingType, getSelectedCellArrayPath(), -4);
+  Dream3DArraySwitchOutputComponentMacro(this->filter, m_CastingType, getSelectedCellArrayPath(), -4);
 }
 
 // -----------------------------------------------------------------------------
@@ -167,12 +161,14 @@ AbstractFilter::Pointer ITKCastImage::newFilterInstance(bool copyFilterParameter
 //
 // -----------------------------------------------------------------------------
 const QString ITKCastImage::getHumanLabel()
-{ return "ITK::Cast Image Filter"; }
+{
+  return "ITK::Cast Image Filter";
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ITKCastImage::getSubGroupName()
-{ return "ITK IntensityTransformation"; }
-
-
+{
+  return "ITK IntensityTransformation";
+}

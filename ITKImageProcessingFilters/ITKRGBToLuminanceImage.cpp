@@ -6,17 +6,17 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
-#include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 
 #define DREAM3D_USE_RGB_RGBA 1
 #define DREAM3D_USE_Scalar 0
-#include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 
 // Include the MOC generated file for this class
 #include "moc_ITKRGBToLuminanceImage.cpp"
@@ -24,8 +24,8 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKRGBToLuminanceImage::ITKRGBToLuminanceImage() :
-  ITKImageBase()
+ITKRGBToLuminanceImage::ITKRGBToLuminanceImage()
+: ITKImageBase()
 {
   setupFilterParameters();
 }
@@ -48,8 +48,7 @@ void ITKRGBToLuminanceImage::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
-      DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize,
-      AttributeMatrix::Type::Cell, IGeometry::Type::Image);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Attribute Array to filter", SelectedCellArrayPath, FilterParameter::RequiredArray, ITKRGBToLuminanceImage, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
@@ -64,9 +63,9 @@ void ITKRGBToLuminanceImage::setupFilterParameters()
 void ITKRGBToLuminanceImage::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setSelectedCellArrayPath( reader->readDataArrayPath( "SelectedCellArrayPath", getSelectedCellArrayPath() ) );
-  setNewCellArrayName( reader->readString( "NewCellArrayName", getNewCellArrayName() ) );
-  setSaveAsNewArray( reader->readValue( "SaveAsNewArray", getSaveAsNewArray() ) );
+  setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
+  setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
+  setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
 
   reader->closeFilterGroup();
 }
@@ -74,19 +73,18 @@ void ITKRGBToLuminanceImage::readFilterParameters(AbstractFilterParametersReader
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
-void ITKRGBToLuminanceImage::dataCheck()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKRGBToLuminanceImage::dataCheck()
 {
   // Check consistency of parameters
   setErrorCondition(0);
-  const unsigned int length = itk::NumericTraits< InputPixelType >::GetLength();
+  const unsigned int length = itk::NumericTraits<InputPixelType>::GetLength();
   if(length < 3 || length > 4)
   {
     setErrorCondition(-5);
     notifyErrorMessage(getHumanLabel(), "Input image pixels should have three (RGB) or four (RGBA) components.", getErrorCondition());
     return;
   }
-  typedef typename itk::NumericTraits< InputPixelType >::ValueType        ScalarPixelType;
+  typedef typename itk::NumericTraits<InputPixelType>::ValueType ScalarPixelType;
   ITKImageBase::dataCheck<InputPixelType, ScalarPixelType, Dimension>();
 }
 
@@ -102,36 +100,35 @@ void ITKRGBToLuminanceImage::dataCheckInternal()
 //
 // -----------------------------------------------------------------------------
 
-template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
-void ITKRGBToLuminanceImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKRGBToLuminanceImage::filter()
 {
-  typedef typename itk::NumericTraits< InputPixelType >::ValueType        ScalarPixelType;
-  typedef itk::Dream3DImage< ScalarPixelType, Dimension >                 OutputImageType;
+  typedef typename itk::NumericTraits<InputPixelType>::ValueType ScalarPixelType;
+  typedef itk::Dream3DImage<ScalarPixelType, Dimension> OutputImageType;
 
-  typedef itk::RGBPixel< ScalarPixelType >                                RGBPixelType;
-  typedef itk::Dream3DImage< RGBPixelType, Dimension >                    RGBImageType;
-  typedef itk::RGBToLuminanceImageFilter< RGBImageType, OutputImageType > RGBFilterType;
+  typedef itk::RGBPixel<ScalarPixelType> RGBPixelType;
+  typedef itk::Dream3DImage<RGBPixelType, Dimension> RGBImageType;
+  typedef itk::RGBToLuminanceImageFilter<RGBImageType, OutputImageType> RGBFilterType;
   typename RGBFilterType::Pointer rgbFilter = RGBFilterType::New();
 
-  typedef itk::RGBAPixel< ScalarPixelType >                                RGBAPixelType;
-  typedef itk::Dream3DImage< RGBAPixelType, Dimension >                    RGBAImageType;
-  typedef itk::RGBToLuminanceImageFilter< RGBAImageType, OutputImageType > RGBAFilterType;
+  typedef itk::RGBAPixel<ScalarPixelType> RGBAPixelType;
+  typedef itk::Dream3DImage<RGBAPixelType, Dimension> RGBAImageType;
+  typedef itk::RGBToLuminanceImageFilter<RGBAImageType, OutputImageType> RGBAFilterType;
   typename RGBAFilterType::Pointer rgbaFilter = RGBAFilterType::New();
 
-  const unsigned int length = itk::NumericTraits< InputPixelType >::GetLength();
+  const unsigned int length = itk::NumericTraits<InputPixelType>::GetLength();
   switch(length)
-    {
+  {
   case 3:
-    this->ITKImageBase::filter< RGBPixelType, ScalarPixelType, Dimension, RGBFilterType >(rgbFilter);
+    this->ITKImageBase::filter<RGBPixelType, ScalarPixelType, Dimension, RGBFilterType>(rgbFilter);
     break;
   case 4:
-    this->ITKImageBase::filter< RGBAPixelType, ScalarPixelType, Dimension, RGBAFilterType >(rgbaFilter);
+    this->ITKImageBase::filter<RGBAPixelType, ScalarPixelType, Dimension, RGBAFilterType>(rgbaFilter);
     break;
   default:
     setErrorCondition(-7);
     notifyErrorMessage(getHumanLabel(), "Input image pixels should have three (RGB) or four (RGBA) components.", getErrorCondition());
     return;
-    }
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -159,10 +156,14 @@ AbstractFilter::Pointer ITKRGBToLuminanceImage::newFilterInstance(bool copyFilte
 //
 // -----------------------------------------------------------------------------
 const QString ITKRGBToLuminanceImage::getHumanLabel()
-{ return "ITK::RGB to Luminance Image Filter"; }
+{
+  return "ITK::RGB to Luminance Image Filter";
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ITKRGBToLuminanceImage::getSubGroupName()
-{ return "ITK IntensityTransformation"; }
+{
+  return "ITK IntensityTransformation";
+}

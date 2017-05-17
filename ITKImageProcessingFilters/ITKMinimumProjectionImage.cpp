@@ -9,16 +9,14 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 
 #include "SIMPLib/Geometry/ImageGeom.h"
 
-
-
-#include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 
 // Include the MOC generated file for this class
 #include "moc_ITKMinimumProjectionImage.cpp"
@@ -26,10 +24,10 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKMinimumProjectionImage::ITKMinimumProjectionImage() :
-  ITKImageBase()
+ITKMinimumProjectionImage::ITKMinimumProjectionImage()
+: ITKImageBase()
 {
-  m_ProjectionDimension=StaticCastScalar<double,double,double>(0u);
+  m_ProjectionDimension = StaticCastScalar<double, double, double>(0u);
 
   setupFilterParameters();
 }
@@ -50,15 +48,13 @@ void ITKMinimumProjectionImage::setupFilterParameters()
 
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("ProjectionDimension", ProjectionDimension, FilterParameter::Parameter, ITKMinimumProjectionImage));
 
-
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Save as New Array", SaveAsNewArray, FilterParameter::Parameter, ITKMinimumProjectionImage, linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
-      DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize,
-      AttributeMatrix::Type::Cell, IGeometry::Type::Image);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Attribute Array to filter", SelectedCellArrayPath, FilterParameter::RequiredArray, ITKMinimumProjectionImage, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
@@ -73,9 +69,9 @@ void ITKMinimumProjectionImage::setupFilterParameters()
 void ITKMinimumProjectionImage::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setSelectedCellArrayPath( reader->readDataArrayPath( "SelectedCellArrayPath", getSelectedCellArrayPath() ) );
-  setNewCellArrayName( reader->readString( "NewCellArrayName", getNewCellArrayName() ) );
-  setSaveAsNewArray( reader->readValue( "SaveAsNewArray", getSaveAsNewArray() ) );
+  setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
+  setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
+  setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
   setProjectionDimension(reader->readValue("ProjectionDimension", getProjectionDimension()));
 
   reader->closeFilterGroup();
@@ -84,11 +80,10 @@ void ITKMinimumProjectionImage::readFilterParameters(AbstractFilterParametersRea
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
-void ITKMinimumProjectionImage::dataCheck()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKMinimumProjectionImage::dataCheck()
 {
   // Check consistency of parameters
-  this->CheckIntegerEntry<unsigned int,double>(m_ProjectionDimension, "ProjectionDimension",1);
+  this->CheckIntegerEntry<unsigned int, double>(m_ProjectionDimension, "ProjectionDimension", 1);
 
   setErrorCondition(0);
   ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
@@ -106,17 +101,15 @@ void ITKMinimumProjectionImage::dataCheckInternal()
 //
 // -----------------------------------------------------------------------------
 
-template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
-void ITKMinimumProjectionImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKMinimumProjectionImage::filter()
 {
   typedef itk::Dream3DImage<InputPixelType, Dimension> InputImageType;
   typedef itk::Dream3DImage<OutputPixelType, Dimension> OutputImageType;
-  //define filter
+  // define filter
   typedef itk::MinimumProjectionImageFilter<InputImageType, OutputImageType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
   filter->SetProjectionDimension(static_cast<unsigned int>(m_ProjectionDimension));
   this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -124,7 +117,7 @@ void ITKMinimumProjectionImage::filter()
 // -----------------------------------------------------------------------------
 void ITKMinimumProjectionImage::filterInternal()
 {
-    Dream3DArraySwitchMacro(this->filter, getSelectedCellArrayPath(), -4);
+  Dream3DArraySwitchMacro(this->filter, getSelectedCellArrayPath(), -4);
 }
 
 // -----------------------------------------------------------------------------
@@ -144,12 +137,14 @@ AbstractFilter::Pointer ITKMinimumProjectionImage::newFilterInstance(bool copyFi
 //
 // -----------------------------------------------------------------------------
 const QString ITKMinimumProjectionImage::getHumanLabel()
-{ return "ITK::Minimum Projection Image Filter"; }
+{
+  return "ITK::Minimum Projection Image Filter";
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ITKMinimumProjectionImage::getSubGroupName()
-{ return "ITK Projection"; }
-
-
+{
+  return "ITK Projection";
+}

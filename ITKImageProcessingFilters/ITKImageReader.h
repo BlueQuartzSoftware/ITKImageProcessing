@@ -34,17 +34,16 @@
 #ifndef _ITKImageReader_H_
 #define _ITKImageReader_H_
 
-#include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/SIMPLib.h"
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 
 #include <itkImageFileReader.h>
-
 
 /**
  * @brief The ITKImageProcessingFilter class. See [Filter documentation](@ref itkimageprocessingfilter) for details.
@@ -53,138 +52,135 @@ class ITKImageReader : public AbstractFilter
 {
   Q_OBJECT
 
-  public:
-    SIMPL_SHARED_POINTERS(ITKImageReader)
-    SIMPL_STATIC_NEW_MACRO(ITKImageReader)
-    SIMPL_TYPE_MACRO_SUPER(ITKImageReader, AbstractFilter)
+public:
+  SIMPL_SHARED_POINTERS(ITKImageReader)
+  SIMPL_STATIC_NEW_MACRO(ITKImageReader)
+  SIMPL_TYPE_MACRO_SUPER(ITKImageReader, AbstractFilter)
 
-    virtual ~ITKImageReader();
+  virtual ~ITKImageReader();
 
-    SIMPL_FILTER_PARAMETER(QString, FileName)
-    Q_PROPERTY(QString FileName READ getFileName WRITE setFileName)
+  SIMPL_FILTER_PARAMETER(QString, FileName)
+  Q_PROPERTY(QString FileName READ getFileName WRITE setFileName)
 
-    SIMPL_FILTER_PARAMETER(QString, DataContainerName)
-    Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
+  SIMPL_FILTER_PARAMETER(QString, DataContainerName)
+  Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
 
-    SIMPL_FILTER_PARAMETER(QString, CellAttributeMatrixName)
-    Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
+  SIMPL_FILTER_PARAMETER(QString, CellAttributeMatrixName)
+  Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
-    SIMPL_FILTER_PARAMETER(QString, ImageDataArrayName)
-    Q_PROPERTY(QString ImageDataArrayName READ getImageDataArrayName WRITE setImageDataArrayName)
-    /**
-     * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getCompiledLibraryName();
+  SIMPL_FILTER_PARAMETER(QString, ImageDataArrayName)
+  Q_PROPERTY(QString ImageDataArrayName READ getImageDataArrayName WRITE setImageDataArrayName)
+  /**
+   * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getCompiledLibraryName();
 
-    /**
-     * @brief getBrandingString Returns the branding string for the filter, which is a tag
-     * used to denote the filter's association with specific plugins
-     * @return Branding string
-    */
-    virtual const QString getBrandingString();
+  /**
+   * @brief getBrandingString Returns the branding string for the filter, which is a tag
+   * used to denote the filter's association with specific plugins
+   * @return Branding string
+  */
+  virtual const QString getBrandingString();
 
-    /**
-     * @brief getFilterVersion Returns a version string for this filter. Default
-     * value is an empty string.
-     * @return
-     */
-    virtual const QString getFilterVersion();
+  /**
+   * @brief getFilterVersion Returns a version string for this filter. Default
+   * value is an empty string.
+   * @return
+   */
+  virtual const QString getFilterVersion();
 
-    /**
-     * @brief newFilterInstance Reimplemented from @see AbstractFilter class
-     */
-    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
+  /**
+   * @brief newFilterInstance Reimplemented from @see AbstractFilter class
+   */
+  virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
 
-    /**
-     * @brief getGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getGroupName();
+  /**
+   * @brief getGroupName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getGroupName();
 
-    /**
-     * @brief getSubGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getSubGroupName();
+  /**
+   * @brief getSubGroupName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getSubGroupName();
 
-    /**
-     * @brief getHumanLabel Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getHumanLabel();
+  /**
+   * @brief getHumanLabel Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getHumanLabel();
 
-    /**
-     * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void setupFilterParameters();
+  /**
+   * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  virtual void setupFilterParameters();
 
-    /**
-     * @brief readFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
+  /**
+   * @brief readFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-    /**
-     * @brief execute Reimplemented from @see AbstractFilter class
-     */
-    virtual void execute();
+  /**
+   * @brief execute Reimplemented from @see AbstractFilter class
+   */
+  virtual void execute();
 
-    /**
-    * @brief preflight Reimplemented from @see AbstractFilter class
-    */
-    virtual void preflight();
+  /**
+  * @brief preflight Reimplemented from @see AbstractFilter class
+  */
+  virtual void preflight();
 
-  signals:
-    /**
-     * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
-     * be pushed from a user-facing control (such as a widget)
-     * @param filter Filter instance pointer 
-     */
-    void updateFilterParameters(AbstractFilter* filter);
+signals:
+  /**
+   * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
+   * be pushed from a user-facing control (such as a widget)
+   * @param filter Filter instance pointer
+   */
+  void updateFilterParameters(AbstractFilter* filter);
 
-    /**
-     * @brief parametersChanged Emitted when any Filter parameter is changed internally
-     */
-    void parametersChanged();
+  /**
+   * @brief parametersChanged Emitted when any Filter parameter is changed internally
+   */
+  void parametersChanged();
 
-    /**
-     * @brief preflightAboutToExecute Emitted just before calling dataCheck()
-     */
-    void preflightAboutToExecute();
+  /**
+   * @brief preflightAboutToExecute Emitted just before calling dataCheck()
+   */
+  void preflightAboutToExecute();
 
-    /**
-     * @brief preflightExecuted Emitted just after calling dataCheck()
-     */
-    void preflightExecuted();
+  /**
+   * @brief preflightExecuted Emitted just after calling dataCheck()
+   */
+  void preflightExecuted();
 
-  protected:
-    ITKImageReader();
-    /**
-     * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
-     */
-    void dataCheck();
+protected:
+  ITKImageReader();
+  /**
+   * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+   */
+  void dataCheck();
 
-    /**
-     * @brief Initializes all the private instance variables.
-     */
-    void initialize();
+  /**
+   * @brief Initializes all the private instance variables.
+   */
+  void initialize();
 
-    /**
-    * @brief Does the actual reading of the image with itkImageFileReader.
-    */
-    template<typename TComponent>
-    void readImage(const itk::ImageIOBase::Pointer &imageIO, const QString& filename, bool dataCheck);
-    template<typename TComponent, unsigned int dimensions>
-    void readImage(const itk::ImageIOBase::Pointer &imageIO, const QString& filename, bool dataCheck);
-    template<typename TPixel, unsigned int>
-	void readImage(const QString& filename, bool dataCheck);
-	void readImage(bool dataCheck);
+  /**
+  * @brief Does the actual reading of the image with itkImageFileReader.
+  */
+  template <typename TComponent> void readImage(const itk::ImageIOBase::Pointer& imageIO, const QString& filename, bool dataCheck);
+  template <typename TComponent, unsigned int dimensions> void readImage(const itk::ImageIOBase::Pointer& imageIO, const QString& filename, bool dataCheck);
+  template <typename TPixel, unsigned int> void readImage(const QString& filename, bool dataCheck);
+  void readImage(bool dataCheck);
 
-    /**
-    * @brief Reads image size, spacing and origin, and updates container information accordingly.
-    */
-    template<typename TPixel, unsigned int dimensions>
-    void readImageOutputInformation(typename itk::ImageFileReader<itk::Dream3DImage<TPixel, dimensions> >::Pointer &reader, DataContainer::Pointer &container);
+  /**
+  * @brief Reads image size, spacing and origin, and updates container information accordingly.
+  */
+  template <typename TPixel, unsigned int dimensions>
+  void readImageOutputInformation(typename itk::ImageFileReader<itk::Dream3DImage<TPixel, dimensions>>::Pointer& reader, DataContainer::Pointer& container);
 
-  private:
-	  ITKImageReader(const ITKImageReader&); // Copy Constructor Not Implemented
-	  void operator=(const ITKImageReader&); // Operator '=' Not Implemented
+private:
+  ITKImageReader(const ITKImageReader&); // Copy Constructor Not Implemented
+  void operator=(const ITKImageReader&); // Operator '=' Not Implemented
 };
 
 #endif /* _ITKImageReader_H_ */

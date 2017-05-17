@@ -9,16 +9,14 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 
 #include "SIMPLib/Geometry/ImageGeom.h"
 
-
-
-#include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 
 // Include the MOC generated file for this class
 #include "moc_ITKDoubleThresholdImage.cpp"
@@ -26,16 +24,16 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKDoubleThresholdImage::ITKDoubleThresholdImage() :
-  ITKImageBase()
+ITKDoubleThresholdImage::ITKDoubleThresholdImage()
+: ITKImageBase()
 {
-  m_Threshold1=StaticCastScalar<double,double,double>(0.0);
-  m_Threshold2=StaticCastScalar<double,double,double>(1.0);
-  m_Threshold3=StaticCastScalar<double,double,double>(254.0);
-  m_Threshold4=StaticCastScalar<double,double,double>(255.0);
-  m_InsideValue=StaticCastScalar<int,int,int>(1u);
-  m_OutsideValue=StaticCastScalar<int,int,int>(0u);
-  m_FullyConnected=StaticCastScalar<bool,bool,bool>(false);
+  m_Threshold1 = StaticCastScalar<double, double, double>(0.0);
+  m_Threshold2 = StaticCastScalar<double, double, double>(1.0);
+  m_Threshold3 = StaticCastScalar<double, double, double>(254.0);
+  m_Threshold4 = StaticCastScalar<double, double, double>(255.0);
+  m_InsideValue = StaticCastScalar<int, int, int>(1u);
+  m_OutsideValue = StaticCastScalar<int, int, int>(0u);
+  m_FullyConnected = StaticCastScalar<bool, bool, bool>(false);
 
   setupFilterParameters();
 }
@@ -62,15 +60,13 @@ void ITKDoubleThresholdImage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_INTEGER_FP("OutsideValue", OutsideValue, FilterParameter::Parameter, ITKDoubleThresholdImage));
   parameters.push_back(SIMPL_NEW_BOOL_FP("FullyConnected", FullyConnected, FilterParameter::Parameter, ITKDoubleThresholdImage));
 
-
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Save as New Array", SaveAsNewArray, FilterParameter::Parameter, ITKDoubleThresholdImage, linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
-      DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize,
-      AttributeMatrix::Type::Cell, IGeometry::Type::Image);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Attribute Array to filter", SelectedCellArrayPath, FilterParameter::RequiredArray, ITKDoubleThresholdImage, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
@@ -85,9 +81,9 @@ void ITKDoubleThresholdImage::setupFilterParameters()
 void ITKDoubleThresholdImage::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setSelectedCellArrayPath( reader->readDataArrayPath( "SelectedCellArrayPath", getSelectedCellArrayPath() ) );
-  setNewCellArrayName( reader->readString( "NewCellArrayName", getNewCellArrayName() ) );
-  setSaveAsNewArray( reader->readValue( "SaveAsNewArray", getSaveAsNewArray() ) );
+  setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
+  setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
+  setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
   setThreshold1(reader->readValue("Threshold1", getThreshold1()));
   setThreshold2(reader->readValue("Threshold2", getThreshold2()));
   setThreshold3(reader->readValue("Threshold3", getThreshold3()));
@@ -102,12 +98,11 @@ void ITKDoubleThresholdImage::readFilterParameters(AbstractFilterParametersReade
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
-void ITKDoubleThresholdImage::dataCheck()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKDoubleThresholdImage::dataCheck()
 {
   // Check consistency of parameters
-  this->CheckIntegerEntry<uint8_t,int>(m_InsideValue, "InsideValue",1);
-  this->CheckIntegerEntry<uint8_t,int>(m_OutsideValue, "OutsideValue",1);
+  this->CheckIntegerEntry<uint8_t, int>(m_InsideValue, "InsideValue", 1);
+  this->CheckIntegerEntry<uint8_t, int>(m_OutsideValue, "OutsideValue", 1);
 
   setErrorCondition(0);
   ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
@@ -118,19 +113,18 @@ void ITKDoubleThresholdImage::dataCheck()
 // -----------------------------------------------------------------------------
 void ITKDoubleThresholdImage::dataCheckInternal()
 {
-  Dream3DArraySwitchMacroOutputType(this->dataCheck, getSelectedCellArrayPath(), -4,uint8_t,0);
+  Dream3DArraySwitchMacroOutputType(this->dataCheck, getSelectedCellArrayPath(), -4, uint8_t, 0);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 
-template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
-void ITKDoubleThresholdImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKDoubleThresholdImage::filter()
 {
   typedef itk::Dream3DImage<InputPixelType, Dimension> InputImageType;
   typedef itk::Dream3DImage<OutputPixelType, Dimension> OutputImageType;
-  //define filter
+  // define filter
   typedef itk::DoubleThresholdImageFilter<InputImageType, OutputImageType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
   filter->SetThreshold1(static_cast<double>(m_Threshold1));
@@ -141,7 +135,6 @@ void ITKDoubleThresholdImage::filter()
   filter->SetOutsideValue(static_cast<uint8_t>(m_OutsideValue));
   filter->SetFullyConnected(static_cast<bool>(m_FullyConnected));
   this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -149,7 +142,7 @@ void ITKDoubleThresholdImage::filter()
 // -----------------------------------------------------------------------------
 void ITKDoubleThresholdImage::filterInternal()
 {
-    Dream3DArraySwitchMacroOutputType(this->filter, getSelectedCellArrayPath(), -4,uint8_t,0);
+  Dream3DArraySwitchMacroOutputType(this->filter, getSelectedCellArrayPath(), -4, uint8_t, 0);
 }
 
 // -----------------------------------------------------------------------------
@@ -169,10 +162,14 @@ AbstractFilter::Pointer ITKDoubleThresholdImage::newFilterInstance(bool copyFilt
 //
 // -----------------------------------------------------------------------------
 const QString ITKDoubleThresholdImage::getHumanLabel()
-{ return "ITK::Double Threshold Image Filter"; }
+{
+  return "ITK::Double Threshold Image Filter";
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ITKDoubleThresholdImage::getSubGroupName()
-{ return "ITK Thresholding"; }
+{
+  return "ITK Thresholding";
+}

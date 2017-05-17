@@ -5,18 +5,21 @@
 // -----------------------------------------------------------------------------
 
 #include "ITKTestBase.h"
-//Auto includes
+// Auto includes
 
-
-class ITKLog10ImageTest: public ITKTestBase
+class ITKLog10ImageTest : public ITKTestBase
 {
 
-  public:
-    ITKLog10ImageTest() {}
-    virtual ~ITKLog10ImageTest() {}
+public:
+  ITKLog10ImageTest()
+  {
+  }
+  virtual ~ITKLog10ImageTest()
+  {
+  }
 
-int TestITKLog10ImagedefaultsTest()
-{
+  int TestITKLog10ImagedefaultsTest()
+  {
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/Ramp-Zero-One-Float.nrrd");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -24,7 +27,7 @@ int TestITKLog10ImagedefaultsTest()
     QString filtName = "ITKLog10Image";
     FilterManager* fm = FilterManager::Instance();
     IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
-    DREAM3D_REQUIRE_NE(filterFactory.get(),0);
+    DREAM3D_REQUIRE_NE(filterFactory.get(), 0);
     AbstractFilter::Pointer filter = filterFactory->create();
     QVariant var;
     bool propWasSet;
@@ -36,19 +39,16 @@ int TestITKLog10ImagedefaultsTest()
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     filter->setDataContainerArray(containerArray);
     filter->execute();
-    DREAM3D_REQUIRED(filter->getErrorCondition(), >= , 0);
-    DREAM3D_REQUIRED(filter->getWarningCondition(), >= , 0);
+    DREAM3D_REQUIRED(filter->getErrorCondition(), >=, 0);
+    DREAM3D_REQUIRED(filter->getWarningCondition(), >=, 0);
     WriteImage("ITKLog10Imagedefaults.nrrd", containerArray, input_path);
     QString baseline_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Baseline/BasicFilters_Log10ImageFilter_defaults.nrrd");
     DataArrayPath baseline_path("BContainer", "BAttributeMatrixName", "BAttributeArrayName");
     this->ReadImage(baseline_filename, containerArray, baseline_path);
     int res = this->CompareImages(containerArray, input_path, baseline_path, 0.01);
-    DREAM3D_REQUIRE_EQUAL(res,0);
+    DREAM3D_REQUIRE_EQUAL(res, 0);
     return 0;
-}
-
-
-
+  }
 
   // -----------------------------------------------------------------------------
   //
@@ -57,18 +57,17 @@ int TestITKLog10ImagedefaultsTest()
   {
     int err = EXIT_SUCCESS;
 
-    DREAM3D_REGISTER_TEST( this->TestFilterAvailability("ITKLog10Image") );
+    DREAM3D_REGISTER_TEST(this->TestFilterAvailability("ITKLog10Image"));
 
-    DREAM3D_REGISTER_TEST( TestITKLog10ImagedefaultsTest());
+    DREAM3D_REGISTER_TEST(TestITKLog10ImagedefaultsTest());
 
     if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
     {
-      DREAM3D_REGISTER_TEST( this->RemoveTestFiles() )
+      DREAM3D_REGISTER_TEST(this->RemoveTestFiles())
     }
   }
 
-  private:
-    ITKLog10ImageTest(const ITKLog10ImageTest&); // Copy Constructor Not Implemented
-    void operator=(const ITKLog10ImageTest&); // Operator '=' Not Implemented
+private:
+  ITKLog10ImageTest(const ITKLog10ImageTest&); // Copy Constructor Not Implemented
+  void operator=(const ITKLog10ImageTest&);    // Operator '=' Not Implemented
 };
-

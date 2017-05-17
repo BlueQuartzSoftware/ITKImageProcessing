@@ -9,16 +9,14 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 
 #include "SIMPLib/Geometry/ImageGeom.h"
 
-
-
-#include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 
 // Include the MOC generated file for this class
 #include "moc_ITKShotNoiseImage.cpp"
@@ -26,11 +24,11 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKShotNoiseImage::ITKShotNoiseImage() :
-  ITKImageBase()
+ITKShotNoiseImage::ITKShotNoiseImage()
+: ITKImageBase()
 {
-  m_Scale=StaticCastScalar<double,double,double>(1.0);
-  m_Seed=StaticCastScalar<double,double,double>(0u);
+  m_Scale = StaticCastScalar<double, double, double>(1.0);
+  m_Seed = StaticCastScalar<double, double, double>(0u);
 
   setupFilterParameters();
 }
@@ -52,15 +50,13 @@ void ITKShotNoiseImage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Scale", Scale, FilterParameter::Parameter, ITKShotNoiseImage));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Seed", Seed, FilterParameter::Parameter, ITKShotNoiseImage));
 
-
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Save as New Array", SaveAsNewArray, FilterParameter::Parameter, ITKShotNoiseImage, linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
-      DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize,
-      AttributeMatrix::Type::Cell, IGeometry::Type::Image);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Attribute Array to filter", SelectedCellArrayPath, FilterParameter::RequiredArray, ITKShotNoiseImage, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
@@ -75,9 +71,9 @@ void ITKShotNoiseImage::setupFilterParameters()
 void ITKShotNoiseImage::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setSelectedCellArrayPath( reader->readDataArrayPath( "SelectedCellArrayPath", getSelectedCellArrayPath() ) );
-  setNewCellArrayName( reader->readString( "NewCellArrayName", getNewCellArrayName() ) );
-  setSaveAsNewArray( reader->readValue( "SaveAsNewArray", getSaveAsNewArray() ) );
+  setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
+  setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
+  setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
   setScale(reader->readValue("Scale", getScale()));
   setSeed(reader->readValue("Seed", getSeed()));
 
@@ -87,11 +83,10 @@ void ITKShotNoiseImage::readFilterParameters(AbstractFilterParametersReader* rea
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
-void ITKShotNoiseImage::dataCheck()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKShotNoiseImage::dataCheck()
 {
   // Check consistency of parameters
-  this->CheckIntegerEntry<uint32_t,double>(m_Seed, "Seed",1);
+  this->CheckIntegerEntry<uint32_t, double>(m_Seed, "Seed", 1);
 
   setErrorCondition(0);
   ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
@@ -109,18 +104,17 @@ void ITKShotNoiseImage::dataCheckInternal()
 //
 // -----------------------------------------------------------------------------
 
-template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
-void ITKShotNoiseImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKShotNoiseImage::filter()
 {
   typedef itk::Dream3DImage<InputPixelType, Dimension> InputImageType;
   typedef itk::Dream3DImage<OutputPixelType, Dimension> OutputImageType;
-  //define filter
+  // define filter
   typedef itk::ShotNoiseImageFilter<InputImageType, OutputImageType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
   filter->SetScale(static_cast<double>(m_Scale));
-  if (m_Seed) filter->SetSeed(m_Seed);
+  if(m_Seed)
+    filter->SetSeed(m_Seed);
   this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -128,7 +122,7 @@ void ITKShotNoiseImage::filter()
 // -----------------------------------------------------------------------------
 void ITKShotNoiseImage::filterInternal()
 {
-    Dream3DArraySwitchMacro(this->filter, getSelectedCellArrayPath(), -4);
+  Dream3DArraySwitchMacro(this->filter, getSelectedCellArrayPath(), -4);
 }
 
 // -----------------------------------------------------------------------------
@@ -148,12 +142,14 @@ AbstractFilter::Pointer ITKShotNoiseImage::newFilterInstance(bool copyFilterPara
 //
 // -----------------------------------------------------------------------------
 const QString ITKShotNoiseImage::getHumanLabel()
-{ return "ITK::Shot Noise Image Filter"; }
+{
+  return "ITK::Shot Noise Image Filter";
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ITKShotNoiseImage::getSubGroupName()
-{ return "ITK Noise"; }
-
-
+{
+  return "ITK Noise";
+}

@@ -5,19 +5,22 @@
 // -----------------------------------------------------------------------------
 
 #include "ITKTestBase.h"
-//Auto includes
+// Auto includes
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 
-
-class ITKStandardDeviationProjectionImageTest: public ITKTestBase
+class ITKStandardDeviationProjectionImageTest : public ITKTestBase
 {
 
-  public:
-    ITKStandardDeviationProjectionImageTest() {}
-    virtual ~ITKStandardDeviationProjectionImageTest() {}
+public:
+  ITKStandardDeviationProjectionImageTest()
+  {
+  }
+  virtual ~ITKStandardDeviationProjectionImageTest()
+  {
+  }
 
-int TestITKStandardDeviationProjectionImagez_projectionTest()
-{
+  int TestITKStandardDeviationProjectionImagez_projectionTest()
+  {
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/RA-Float.nrrd");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -25,7 +28,7 @@ int TestITKStandardDeviationProjectionImagez_projectionTest()
     QString filtName = "ITKStandardDeviationProjectionImage";
     FilterManager* fm = FilterManager::Instance();
     IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
-    DREAM3D_REQUIRE_NE(filterFactory.get(),0);
+    DREAM3D_REQUIRE_NE(filterFactory.get(), 0);
     AbstractFilter::Pointer filter = filterFactory->create();
     QVariant var;
     bool propWasSet;
@@ -36,27 +39,24 @@ int TestITKStandardDeviationProjectionImagez_projectionTest()
     propWasSet = filter->setProperty("SaveAsNewArray", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     {
-        double d3d_var;
-        d3d_var = 2;
-        var.setValue(d3d_var);
-        propWasSet = filter->setProperty("ProjectionDimension", var);
-        DREAM3D_REQUIRE_EQUAL(propWasSet, true);
-        }
+      double d3d_var;
+      d3d_var = 2;
+      var.setValue(d3d_var);
+      propWasSet = filter->setProperty("ProjectionDimension", var);
+      DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+    }
     filter->setDataContainerArray(containerArray);
     filter->execute();
-    DREAM3D_REQUIRED(filter->getErrorCondition(), >= , 0);
-    DREAM3D_REQUIRED(filter->getWarningCondition(), >= , 0);
+    DREAM3D_REQUIRED(filter->getErrorCondition(), >=, 0);
+    DREAM3D_REQUIRED(filter->getWarningCondition(), >=, 0);
     WriteImage("ITKStandardDeviationProjectionImagez_projection.nrrd", containerArray, input_path);
     QString baseline_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Baseline/BasicFilters_StandardDeviationProjectionImageFilter_z_projection.nrrd");
     DataArrayPath baseline_path("BContainer", "BAttributeMatrixName", "BAttributeArrayName");
     this->ReadImage(baseline_filename, containerArray, baseline_path);
     int res = this->CompareImages(containerArray, input_path, baseline_path, 0.0001);
-    DREAM3D_REQUIRE_EQUAL(res,0);
+    DREAM3D_REQUIRE_EQUAL(res, 0);
     return 0;
-}
-
-
-
+  }
 
   // -----------------------------------------------------------------------------
   //
@@ -65,18 +65,17 @@ int TestITKStandardDeviationProjectionImagez_projectionTest()
   {
     int err = EXIT_SUCCESS;
 
-    DREAM3D_REGISTER_TEST( this->TestFilterAvailability("ITKStandardDeviationProjectionImage") );
+    DREAM3D_REGISTER_TEST(this->TestFilterAvailability("ITKStandardDeviationProjectionImage"));
 
-    DREAM3D_REGISTER_TEST( TestITKStandardDeviationProjectionImagez_projectionTest());
+    DREAM3D_REGISTER_TEST(TestITKStandardDeviationProjectionImagez_projectionTest());
 
     if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
     {
-      DREAM3D_REGISTER_TEST( this->RemoveTestFiles() )
+      DREAM3D_REGISTER_TEST(this->RemoveTestFiles())
     }
   }
 
-  private:
-    ITKStandardDeviationProjectionImageTest(const ITKStandardDeviationProjectionImageTest&); // Copy Constructor Not Implemented
-    void operator=(const ITKStandardDeviationProjectionImageTest&); // Operator '=' Not Implemented
+private:
+  ITKStandardDeviationProjectionImageTest(const ITKStandardDeviationProjectionImageTest&); // Copy Constructor Not Implemented
+  void operator=(const ITKStandardDeviationProjectionImageTest&);                          // Operator '=' Not Implemented
 };
-

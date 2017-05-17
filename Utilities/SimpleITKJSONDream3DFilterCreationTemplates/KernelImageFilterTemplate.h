@@ -4,8 +4,12 @@
  * Your License or Copyright can go here
  */
 
-#ifndef _${FilterName}_h_
-#define _${FilterName}_h_
+#ifndef _${FilterName } _h_
+#define _$                                                                                                                                                                                             \
+  {                                                                                                                                                                                                    \
+    FilterName                                                                                                                                                                                         \
+  }                                                                                                                                                                                                    \
+  _h_
 
 #ifdef __clang__
 #pragma clang diagnostic push
@@ -14,82 +18,88 @@
 
 #include "ITKImageBase.h"
 
-#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
 
-//Auto includes
-${IncludeName}
+// Auto includes
+$
+{
+  IncludeName
+}
 
 /**
  * @brief The ${FilterName} class. See [Filter documentation](@ref ${FilterName}) for details.
  */
-class ${FilterName} : public ITKImageBase
+class $
+{
+  FilterName
+} : public ITKImageBase
 {
   Q_OBJECT
 
-  public:
-    SIMPL_SHARED_POINTERS(${FilterName})
-    SIMPL_STATIC_NEW_MACRO(${FilterName})
-    SIMPL_TYPE_MACRO_SUPER_OVERRIDE(${FilterName}, AbstractFilter)
-    
-    virtual ~${FilterName}();
+public:
+  SIMPL_SHARED_POINTERS(${FilterName})
+  SIMPL_STATIC_NEW_MACRO(${FilterName})
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(${FilterName}, AbstractFilter)
 
-${Parameters}
+  virtual ~${FilterName}();
 
-    /**
-     * @brief newFilterInstance Reimplemented from @see AbstractFilter class
-     */
-    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) override;
+  $
+  {
+    Parameters
+  }
 
-    /**
-     * @brief getHumanLabel Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getHumanLabel() override;
+  /**
+   * @brief newFilterInstance Reimplemented from @see AbstractFilter class
+   */
+  virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) override;
 
-    /**
-     * @brief getSubGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getSubGroupName() override;
-    
-    /**
-     * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void setupFilterParameters() override;
+  /**
+   * @brief getHumanLabel Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getHumanLabel() override;
 
-    /**
-     * @brief readFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
+  /**
+   * @brief getSubGroupName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getSubGroupName() override;
 
-  protected:
-    ${FilterName}();
+  /**
+   * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  virtual void setupFilterParameters() override;
 
-    /**
-     * @brief dataCheckInternal overloads dataCheckInternal in ITKImageBase and calls templated dataCheck
-     */
-    void virtual dataCheckInternal() override;
+  /**
+   * @brief readFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  virtual void readFilterParameters(AbstractFilterParametersReader * reader, int index) override;
 
-    /**
-     * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
-     */
-    template<typename InputImageType, typename OutputImageType, unsigned int Dimension>
-    void dataCheck();
+protected:
+  ${FilterName}();
 
-    /**
-    * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
-    */
-    void virtual filterInternal() override;
+  /**
+   * @brief dataCheckInternal overloads dataCheckInternal in ITKImageBase and calls templated dataCheck
+   */
+  void virtual dataCheckInternal() override;
 
-    /**
-    * @brief Applies the filter
-    */
-    template<typename InputImageType, typename OutputImageType, unsigned int Dimension>
-    void filter();
+  /**
+   * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+   */
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void dataCheck();
 
-  private:
+  /**
+  * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
+  */
+  void virtual filterInternal() override;
 
-    ${FilterName}(const ${FilterName}&); // Copy Constructor Not Implemented
-    void operator=(const ${FilterName}&); // Operator '=' Not Implemented
+  /**
+  * @brief Applies the filter
+  */
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
+
+private:
+  ${FilterName}(const ${FilterName}&);  // Copy Constructor Not Implemented
+  void operator=(const ${FilterName}&); // Operator '=' Not Implemented
 };
 
 #ifdef __clang__

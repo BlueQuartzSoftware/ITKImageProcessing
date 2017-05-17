@@ -9,16 +9,14 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 
 #include "SIMPLib/Geometry/ImageGeom.h"
 
-
-
-#include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 
 // Include the MOC generated file for this class
 #include "moc_ITKValuedRegionalMinimaImage.cpp"
@@ -26,10 +24,10 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKValuedRegionalMinimaImage::ITKValuedRegionalMinimaImage() :
-  ITKImageBase()
+ITKValuedRegionalMinimaImage::ITKValuedRegionalMinimaImage()
+: ITKImageBase()
 {
-  m_FullyConnected=StaticCastScalar<bool,bool,bool>(false);
+  m_FullyConnected = StaticCastScalar<bool, bool, bool>(false);
 
   setupFilterParameters();
 }
@@ -50,15 +48,13 @@ void ITKValuedRegionalMinimaImage::setupFilterParameters()
 
   parameters.push_back(SIMPL_NEW_BOOL_FP("FullyConnected", FullyConnected, FilterParameter::Parameter, ITKValuedRegionalMinimaImage));
 
-
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Save as New Array", SaveAsNewArray, FilterParameter::Parameter, ITKValuedRegionalMinimaImage, linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
-      DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize,
-      AttributeMatrix::Type::Cell, IGeometry::Type::Image);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Attribute Array to filter", SelectedCellArrayPath, FilterParameter::RequiredArray, ITKValuedRegionalMinimaImage, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
@@ -73,9 +69,9 @@ void ITKValuedRegionalMinimaImage::setupFilterParameters()
 void ITKValuedRegionalMinimaImage::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setSelectedCellArrayPath( reader->readDataArrayPath( "SelectedCellArrayPath", getSelectedCellArrayPath() ) );
-  setNewCellArrayName( reader->readString( "NewCellArrayName", getNewCellArrayName() ) );
-  setSaveAsNewArray( reader->readValue( "SaveAsNewArray", getSaveAsNewArray() ) );
+  setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
+  setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
+  setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
   setFullyConnected(reader->readValue("FullyConnected", getFullyConnected()));
 
   reader->closeFilterGroup();
@@ -84,8 +80,7 @@ void ITKValuedRegionalMinimaImage::readFilterParameters(AbstractFilterParameters
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
-void ITKValuedRegionalMinimaImage::dataCheck()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKValuedRegionalMinimaImage::dataCheck()
 {
   // Check consistency of parameters
 
@@ -105,17 +100,15 @@ void ITKValuedRegionalMinimaImage::dataCheckInternal()
 //
 // -----------------------------------------------------------------------------
 
-template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
-void ITKValuedRegionalMinimaImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKValuedRegionalMinimaImage::filter()
 {
   typedef itk::Dream3DImage<InputPixelType, Dimension> InputImageType;
   typedef itk::Dream3DImage<OutputPixelType, Dimension> OutputImageType;
-  //define filter
+  // define filter
   typedef itk::ValuedRegionalMinimaImageFilter<InputImageType, OutputImageType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
   filter->SetFullyConnected(static_cast<bool>(m_FullyConnected));
   this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -123,7 +116,7 @@ void ITKValuedRegionalMinimaImage::filter()
 // -----------------------------------------------------------------------------
 void ITKValuedRegionalMinimaImage::filterInternal()
 {
-    Dream3DArraySwitchMacro(this->filter, getSelectedCellArrayPath(), -4);
+  Dream3DArraySwitchMacro(this->filter, getSelectedCellArrayPath(), -4);
 }
 
 // -----------------------------------------------------------------------------
@@ -143,12 +136,14 @@ AbstractFilter::Pointer ITKValuedRegionalMinimaImage::newFilterInstance(bool cop
 //
 // -----------------------------------------------------------------------------
 const QString ITKValuedRegionalMinimaImage::getHumanLabel()
-{ return "ITK::Valued Regional Minima Image Filter"; }
+{
+  return "ITK::Valued Regional Minima Image Filter";
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ITKValuedRegionalMinimaImage::getSubGroupName()
-{ return "ITK MathematicalMorphology"; }
-
-
+{
+  return "ITK MathematicalMorphology";
+}

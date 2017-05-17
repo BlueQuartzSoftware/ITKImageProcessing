@@ -14,13 +14,12 @@
 
 #include "ITKImageBase.h"
 
-#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
 
-//Auto includes
-#include <itkMaskImageFilter.h>
+// Auto includes
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
-
+#include <itkMaskImageFilter.h>
 
 /**
  * @brief The ITKMaskImage class. See [Filter documentation](@ref ITKMaskImage) for details.
@@ -29,90 +28,80 @@ class ITKMaskImage : public ITKImageBase
 {
   Q_OBJECT
 
-  public:
-    SIMPL_SHARED_POINTERS(ITKMaskImage)
-    SIMPL_STATIC_NEW_MACRO(ITKMaskImage)
-    SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKMaskImage, AbstractFilter)
+public:
+  SIMPL_SHARED_POINTERS(ITKMaskImage)
+  SIMPL_STATIC_NEW_MACRO(ITKMaskImage)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKMaskImage, AbstractFilter)
 
-    virtual ~ITKMaskImage();
+  virtual ~ITKMaskImage();
 
-    SIMPL_FILTER_PARAMETER(double, OutsideValue)
-    Q_PROPERTY(double OutsideValue READ getOutsideValue WRITE setOutsideValue)
+  SIMPL_FILTER_PARAMETER(double, OutsideValue)
+  Q_PROPERTY(double OutsideValue READ getOutsideValue WRITE setOutsideValue)
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, MaskCellArrayPath)
-    Q_PROPERTY(DataArrayPath MaskCellArrayPath READ getMaskCellArrayPath WRITE setMaskCellArrayPath)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, MaskCellArrayPath)
+  Q_PROPERTY(DataArrayPath MaskCellArrayPath READ getMaskCellArrayPath WRITE setMaskCellArrayPath)
 
-    /**
-     * @brief newFilterInstance Reimplemented from @see AbstractFilter class
-     */
-    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) override;
+  /**
+   * @brief newFilterInstance Reimplemented from @see AbstractFilter class
+   */
+  virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) override;
 
-    /**
-     * @brief getHumanLabel Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getHumanLabel() override;
+  /**
+   * @brief getHumanLabel Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getHumanLabel() override;
 
-    /**
-     * @brief getSubGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getSubGroupName() override;
-    
-    /**
-     * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void setupFilterParameters() override;
+  /**
+   * @brief getSubGroupName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getSubGroupName() override;
 
-    /**
-     * @brief readFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
+  /**
+   * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  virtual void setupFilterParameters() override;
 
-  protected:
-   
-    SIMPL_INSTANCE_PROPERTY(DataContainerArray::Pointer, MaskContainerArray)
-  
-    ITKMaskImage();
+  /**
+   * @brief readFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
 
-    /**
-     * @brief dataCheckInternal overloads dataCheckInternal in ITKImageBase and calls templated dataCheck
-     */
-    void virtual dataCheckInternal() override;
+protected:
+  SIMPL_INSTANCE_PROPERTY(DataContainerArray::Pointer, MaskContainerArray)
 
-    /**
-     * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
-     */
-    template<typename InputImageType, typename OutputImageType, unsigned int Dimension>
-    void dataCheck();
+  ITKMaskImage();
 
-    /**
-    * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
-    */
-    void virtual filterInternal() override;
+  /**
+   * @brief dataCheckInternal overloads dataCheckInternal in ITKImageBase and calls templated dataCheck
+   */
+  void virtual dataCheckInternal() override;
 
-    /**
-    * @brief Applies the filter
-    */
-    template<typename InputImageType, typename OutputImageType, unsigned int Dimension>
-    void filter();
+  /**
+   * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+   */
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void dataCheck();
 
-    /**
-    * @brief Converts data container MarkerCellArrayPath to uint16
-    */
+  /**
+  * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
+  */
+  void virtual filterInternal() override;
 
-    template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
-    typename std::enable_if<
-    std::is_scalar<InputPixelType>::value>::type
-    convertDataContainerType();
+  /**
+  * @brief Applies the filter
+  */
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
-    template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
-    typename std::enable_if<
-    !std::is_scalar<InputPixelType>::value>::type
-    convertDataContainerType();
+  /**
+  * @brief Converts data container MarkerCellArrayPath to uint16
+  */
 
-  private:
+  template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> typename std::enable_if<std::is_scalar<InputPixelType>::value>::type convertDataContainerType();
 
-    ITKMaskImage(const ITKMaskImage&); // Copy Constructor Not Implemented
-    void operator=(const ITKMaskImage&); // Operator '=' Not Implemented
+  template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> typename std::enable_if<!std::is_scalar<InputPixelType>::value>::type convertDataContainerType();
+
+private:
+  ITKMaskImage(const ITKMaskImage&);   // Copy Constructor Not Implemented
+  void operator=(const ITKMaskImage&); // Operator '=' Not Implemented
 };
 
 #ifdef __clang__

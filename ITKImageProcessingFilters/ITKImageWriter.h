@@ -34,9 +34,9 @@
 #ifndef _ITKImageWriter_H_
 #define _ITKImageWriter_H_
 
-#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
 
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 
@@ -47,141 +47,133 @@ class ITKImageWriter : public AbstractFilter
 {
   Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
 
-  public:
-	  SIMPL_SHARED_POINTERS(ITKImageWriter)
-	  SIMPL_STATIC_NEW_MACRO(ITKImageWriter)
-	  SIMPL_TYPE_MACRO_SUPER(ITKImageWriter, AbstractFilter)
+      public : SIMPL_SHARED_POINTERS(ITKImageWriter) SIMPL_STATIC_NEW_MACRO(ITKImageWriter) SIMPL_TYPE_MACRO_SUPER(ITKImageWriter, AbstractFilter)
 
-	  virtual ~ITKImageWriter();
+                   virtual ~ITKImageWriter();
 
-    SIMPL_FILTER_PARAMETER(QString, FileName)
-    Q_PROPERTY(QString FileName READ getFileName WRITE setFileName)
+  SIMPL_FILTER_PARAMETER(QString, FileName)
+  Q_PROPERTY(QString FileName READ getFileName WRITE setFileName)
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, ImageArrayPath)
-    Q_PROPERTY(DataArrayPath ImageArrayPath READ getImageArrayPath WRITE setImageArrayPath)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, ImageArrayPath)
+  Q_PROPERTY(DataArrayPath ImageArrayPath READ getImageArrayPath WRITE setImageArrayPath)
 
+  /**
+   * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getCompiledLibraryName();
 
-    /**
-     * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getCompiledLibraryName();
+  /**
+   * @brief getBrandingString Returns the branding string for the filter, which is a tag
+   * used to denote the filter's association with specific plugins
+   * @return Branding string
+  */
+  virtual const QString getBrandingString();
 
-    /**
-     * @brief getBrandingString Returns the branding string for the filter, which is a tag
-     * used to denote the filter's association with specific plugins
-     * @return Branding string
-    */
-    virtual const QString getBrandingString();
+  /**
+   * @brief getFilterVersion Returns a version string for this filter. Default
+   * value is an empty string.
+   * @return
+   */
+  virtual const QString getFilterVersion();
 
-    /**
-     * @brief getFilterVersion Returns a version string for this filter. Default
-     * value is an empty string.
-     * @return
-     */
-    virtual const QString getFilterVersion();
+  /**
+   * @brief newFilterInstance Reimplemented from @see AbstractFilter class
+   */
+  virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
 
-    /**
-     * @brief newFilterInstance Reimplemented from @see AbstractFilter class
-     */
-    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
+  /**
+   * @brief getGroupName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getGroupName();
 
-    /**
-     * @brief getGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getGroupName();
+  /**
+   * @brief getSubGroupName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getSubGroupName();
 
-    /**
-     * @brief getSubGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getSubGroupName();
+  /**
+   * @brief getHumanLabel Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getHumanLabel();
 
-    /**
-     * @brief getHumanLabel Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getHumanLabel();
+  /**
+   * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  virtual void setupFilterParameters();
 
-    /**
-     * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void setupFilterParameters();
+  /**
+   * @brief readFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-    /**
-     * @brief readFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
+  /**
+   * @brief execute Reimplemented from @see AbstractFilter class
+   */
+  virtual void execute();
 
-    /**
-     * @brief execute Reimplemented from @see AbstractFilter class
-     */
-    virtual void execute();
+  /**
+  * @brief is2DFormat returns true if file name extension corresponds to a 2D image format
+  */
+  bool is2DFormat();
 
-    /**
-    * @brief is2DFormat returns true if file name extension corresponds to a 2D image format
-    */
-    bool is2DFormat();
+  /**
+  * @brief preflight Reimplemented from @see AbstractFilter class
+  */
+  virtual void preflight();
 
+signals:
+  /**
+   * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
+   * be pushed from a user-facing control (such as a widget)
+   * @param filter Filter instance pointer
+   */
+  void updateFilterParameters(AbstractFilter* filter);
 
-    /**
-    * @brief preflight Reimplemented from @see AbstractFilter class
-    */
-    virtual void preflight();
+  /**
+   * @brief parametersChanged Emitted when any Filter parameter is changed internally
+   */
+  void parametersChanged();
 
-  signals:
-    /**
-     * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
-     * be pushed from a user-facing control (such as a widget)
-     * @param filter Filter instance pointer 
-     */
-    void updateFilterParameters(AbstractFilter* filter);
+  /**
+   * @brief preflightAboutToExecute Emitted just before calling dataCheck()
+   */
+  void preflightAboutToExecute();
 
-    /**
-     * @brief parametersChanged Emitted when any Filter parameter is changed internally
-     */
-    void parametersChanged();
+  /**
+   * @brief preflightExecuted Emitted just after calling dataCheck()
+   */
+  void preflightExecuted();
 
-    /**
-     * @brief preflightAboutToExecute Emitted just before calling dataCheck()
-     */
-    void preflightAboutToExecute();
+protected:
+  ITKImageWriter();
+  /**
+   * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+   */
+  void dataCheck();
 
-    /**
-     * @brief preflightExecuted Emitted just after calling dataCheck()
-     */
-    void preflightExecuted();
+  /**
+   * @brief Initializes all the private instance variables.
+   */
+  void initialize();
 
-  protected:
-    ITKImageWriter();
-    /**
-     * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
-     */
-    void dataCheck();
+  /**
+  * @brief Converts Dream3D data to an ITK image and calls the actual writer.
+  */
+  template <typename TPixel, typename UnusedTPixel, unsigned int Dimension> void writeImage();
 
-    /**
-     * @brief Initializes all the private instance variables.
-     */
-    void initialize();
+  /**
+  * @brief writeAs2DStack Writes 3D images as a stack of 2D images.
+  */
+  template <typename TPixel, unsigned int Dimensions> void writeAs2DStack(typename itk::Dream3DImage<TPixel, Dimensions>* image, unsigned long z_size);
 
-    /**
-    * @brief Converts Dream3D data to an ITK image and calls the actual writer.
-    */
-    template<typename TPixel, typename UnusedTPixel, unsigned int Dimension>
-    void writeImage();
+  /**
+  * @brief writeAsOneFile Writes images as one file.
+  */
+  template <typename TPixel, unsigned int Dimensions> void writeAsOneFile(typename itk::Dream3DImage<TPixel, Dimensions>* image);
 
-    /**
-    * @brief writeAs2DStack Writes 3D images as a stack of 2D images.
-    */
-    template<typename TPixel, unsigned int Dimensions>
-    void writeAs2DStack(typename itk::Dream3DImage<TPixel, Dimensions> *image, unsigned long z_size);
-
-    /**
-    * @brief writeAsOneFile Writes images as one file.
-    */
-    template<typename TPixel, unsigned int Dimensions>
-    void writeAsOneFile(typename itk::Dream3DImage<TPixel, Dimensions> *image);
-
-  private:
-	  ITKImageWriter(const ITKImageWriter&); // Copy Constructor Not Implemented
-	  void operator=(const ITKImageWriter&); // Operator '=' Not Implemented
+private:
+  ITKImageWriter(const ITKImageWriter&); // Copy Constructor Not Implemented
+  void operator=(const ITKImageWriter&); // Operator '=' Not Implemented
 };
 
 #endif /* _ITKImageWriter_H_ */

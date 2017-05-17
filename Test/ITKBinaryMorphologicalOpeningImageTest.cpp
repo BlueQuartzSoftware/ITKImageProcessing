@@ -4,23 +4,26 @@
 // Insert your license & copyright information here
 // -----------------------------------------------------------------------------
 
-#include "ITKTestBase.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/SimpleITKEnums.h"
-//Auto includes
-#include <SIMPLib/FilterParameters/FloatVec3FilterParameter.h>
+#include "ITKTestBase.h"
+// Auto includes
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
+#include <SIMPLib/FilterParameters/FloatVec3FilterParameter.h>
 #include <SIMPLib/FilterParameters/IntFilterParameter.h>
 
-
-class ITKBinaryMorphologicalOpeningImageTest: public ITKTestBase
+class ITKBinaryMorphologicalOpeningImageTest : public ITKTestBase
 {
 
-  public:
-    ITKBinaryMorphologicalOpeningImageTest() {}
-    virtual ~ITKBinaryMorphologicalOpeningImageTest() {}
+public:
+  ITKBinaryMorphologicalOpeningImageTest()
+  {
+  }
+  virtual ~ITKBinaryMorphologicalOpeningImageTest()
+  {
+  }
 
-int TestITKBinaryMorphologicalOpeningImageBinaryMorphologicalOpeningTest()
-{
+  int TestITKBinaryMorphologicalOpeningImageBinaryMorphologicalOpeningTest()
+  {
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/STAPLE1.png");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -28,7 +31,7 @@ int TestITKBinaryMorphologicalOpeningImageBinaryMorphologicalOpeningTest()
     QString filtName = "ITKBinaryMorphologicalOpeningImage";
     FilterManager* fm = FilterManager::Instance();
     IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
-    DREAM3D_REQUIRE_NE(filterFactory.get(),0);
+    DREAM3D_REQUIRE_NE(filterFactory.get(), 0);
     AbstractFilter::Pointer filter = filterFactory->create();
     QVariant var;
     bool propWasSet;
@@ -39,41 +42,38 @@ int TestITKBinaryMorphologicalOpeningImageBinaryMorphologicalOpeningTest()
     propWasSet = filter->setProperty("SaveAsNewArray", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     {
-        FloatVec3_t d3d_var;
-        d3d_var.x = 1;
-        d3d_var.y = 1;
-        d3d_var.z = 1;
-        var.setValue(d3d_var);
-        propWasSet = filter->setProperty("KernelRadius", var);
-        DREAM3D_REQUIRE_EQUAL(propWasSet, true);
-        }
+      FloatVec3_t d3d_var;
+      d3d_var.x = 1;
+      d3d_var.y = 1;
+      d3d_var.z = 1;
+      var.setValue(d3d_var);
+      propWasSet = filter->setProperty("KernelRadius", var);
+      DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+    }
     {
-        int d3d_var;
-        d3d_var = itk::simple::sitkBall;
-        var.setValue(d3d_var);
-        propWasSet = filter->setProperty("KernelType", var);
-        DREAM3D_REQUIRE_EQUAL(propWasSet, true);
-        }
+      int d3d_var;
+      d3d_var = itk::simple::sitkBall;
+      var.setValue(d3d_var);
+      propWasSet = filter->setProperty("KernelType", var);
+      DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+    }
     {
-        double d3d_var;
-        d3d_var = 255;
-        var.setValue(d3d_var);
-        propWasSet = filter->setProperty("ForegroundValue", var);
-        DREAM3D_REQUIRE_EQUAL(propWasSet, true);
-        }
+      double d3d_var;
+      d3d_var = 255;
+      var.setValue(d3d_var);
+      propWasSet = filter->setProperty("ForegroundValue", var);
+      DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+    }
     filter->setDataContainerArray(containerArray);
     filter->execute();
-    DREAM3D_REQUIRED(filter->getErrorCondition(), >= , 0);
-    DREAM3D_REQUIRED(filter->getWarningCondition(), >= , 0);
+    DREAM3D_REQUIRED(filter->getErrorCondition(), >=, 0);
+    DREAM3D_REQUIRED(filter->getWarningCondition(), >=, 0);
     WriteImage("ITKBinaryMorphologicalOpeningImageBinaryMorphologicalOpening.nrrd", containerArray, input_path);
     QString md5Output;
     GetMD5FromDataContainer(containerArray, input_path, md5Output);
     DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("bc97d7cbf9d3779070373f7a28b932a2"));
     return 0;
-}
-
-
-
+  }
 
   // -----------------------------------------------------------------------------
   //
@@ -82,18 +82,17 @@ int TestITKBinaryMorphologicalOpeningImageBinaryMorphologicalOpeningTest()
   {
     int err = EXIT_SUCCESS;
 
-    DREAM3D_REGISTER_TEST( this->TestFilterAvailability("ITKBinaryMorphologicalOpeningImage") );
+    DREAM3D_REGISTER_TEST(this->TestFilterAvailability("ITKBinaryMorphologicalOpeningImage"));
 
-    DREAM3D_REGISTER_TEST( TestITKBinaryMorphologicalOpeningImageBinaryMorphologicalOpeningTest());
+    DREAM3D_REGISTER_TEST(TestITKBinaryMorphologicalOpeningImageBinaryMorphologicalOpeningTest());
 
     if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
     {
-      DREAM3D_REGISTER_TEST( this->RemoveTestFiles() )
+      DREAM3D_REGISTER_TEST(this->RemoveTestFiles())
     }
   }
 
-  private:
-    ITKBinaryMorphologicalOpeningImageTest(const ITKBinaryMorphologicalOpeningImageTest&); // Copy Constructor Not Implemented
-    void operator=(const ITKBinaryMorphologicalOpeningImageTest&); // Operator '=' Not Implemented
+private:
+  ITKBinaryMorphologicalOpeningImageTest(const ITKBinaryMorphologicalOpeningImageTest&); // Copy Constructor Not Implemented
+  void operator=(const ITKBinaryMorphologicalOpeningImageTest&);                         // Operator '=' Not Implemented
 };
-

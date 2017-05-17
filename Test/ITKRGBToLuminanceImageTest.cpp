@@ -6,12 +6,16 @@
 
 #include <itkImageIOBase.h>
 
-class ITKRGBToLuminanceImageTest: public ITKTestBase
+class ITKRGBToLuminanceImageTest : public ITKTestBase
 {
 
-  public:
-    ITKRGBToLuminanceImageTest() {}
-    virtual ~ITKRGBToLuminanceImageTest() {}
+public:
+  ITKRGBToLuminanceImageTest()
+  {
+  }
+  virtual ~ITKRGBToLuminanceImageTest()
+  {
+  }
 
   int TestITKRGBToLuminanceImageInputTest()
   {
@@ -37,8 +41,8 @@ class ITKRGBToLuminanceImageTest: public ITKTestBase
     filter->setDataContainerArray(containerArray);
 
     filter->execute();
-    DREAM3D_REQUIRED(filter->getErrorCondition(), >= , 0);
-    DREAM3D_REQUIRED(filter->getWarningCondition(), >= , 0);
+    DREAM3D_REQUIRED(filter->getErrorCondition(), >=, 0);
+    DREAM3D_REQUIRED(filter->getWarningCondition(), >=, 0);
 
     WriteImage("ITKRGBToLuminanceImageInput.nrrd", containerArray, inputPath);
     QString baselineFilename = UnitTest::DataDir + QString("/Data/JSONFilters/Baseline/BasicFilters_RGBToLuminanceImageFilter_Input.nrrd");
@@ -50,8 +54,6 @@ class ITKRGBToLuminanceImageTest: public ITKTestBase
     return 0;
   }
 
-
-
   // -----------------------------------------------------------------------------
   //
   // -----------------------------------------------------------------------------
@@ -59,17 +61,17 @@ class ITKRGBToLuminanceImageTest: public ITKTestBase
   {
     int err = EXIT_SUCCESS;
 
-    DREAM3D_REGISTER_TEST( this->TestFilterAvailability("ITKRGBToLuminanceImage") );
+    DREAM3D_REGISTER_TEST(this->TestFilterAvailability("ITKRGBToLuminanceImage"));
 
-    DREAM3D_REGISTER_TEST( TestITKRGBToLuminanceImageInputTest());
+    DREAM3D_REGISTER_TEST(TestITKRGBToLuminanceImageInputTest());
 
     if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
     {
-      DREAM3D_REGISTER_TEST( this->RemoveTestFiles() )
+      DREAM3D_REGISTER_TEST(this->RemoveTestFiles())
     }
   }
 
-  private:
-    ITKRGBToLuminanceImageTest(const ITKRGBToLuminanceImageTest&); // Copy Constructor Not Implemented
-    void operator=(const ITKRGBToLuminanceImageTest&); // Operator '=' Not Implemented
+private:
+  ITKRGBToLuminanceImageTest(const ITKRGBToLuminanceImageTest&); // Copy Constructor Not Implemented
+  void operator=(const ITKRGBToLuminanceImageTest&);             // Operator '=' Not Implemented
 };

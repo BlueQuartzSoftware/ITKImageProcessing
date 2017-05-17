@@ -7,7 +7,8 @@ namespace itk
 namespace simple
 {
 
-enum KernelEnum {
+enum KernelEnum
+{
   sitkAnnulus = 0,
   sitkBall = 1,
   sitkBox = 2,

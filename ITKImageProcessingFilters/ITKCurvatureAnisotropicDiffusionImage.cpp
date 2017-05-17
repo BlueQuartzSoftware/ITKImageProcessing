@@ -9,16 +9,14 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 
 #include "SIMPLib/Geometry/ImageGeom.h"
 
-
-
-#include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 
 // Include the MOC generated file for this class
 #include "moc_ITKCurvatureAnisotropicDiffusionImage.cpp"
@@ -26,13 +24,13 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKCurvatureAnisotropicDiffusionImage::ITKCurvatureAnisotropicDiffusionImage() :
-  ITKImageBase()
+ITKCurvatureAnisotropicDiffusionImage::ITKCurvatureAnisotropicDiffusionImage()
+: ITKImageBase()
 {
-  m_TimeStep=StaticCastScalar<double,double,double>(0.0625);
-  m_ConductanceParameter=StaticCastScalar<double,double,double>(3.0);
-  m_ConductanceScalingUpdateInterval=StaticCastScalar<double,double,double>(1u);
-  m_NumberOfIterations=StaticCastScalar<double,double,double>(5u);
+  m_TimeStep = StaticCastScalar<double, double, double>(0.0625);
+  m_ConductanceParameter = StaticCastScalar<double, double, double>(3.0);
+  m_ConductanceScalingUpdateInterval = StaticCastScalar<double, double, double>(1u);
+  m_NumberOfIterations = StaticCastScalar<double, double, double>(5u);
 
   setupFilterParameters();
 }
@@ -56,15 +54,13 @@ void ITKCurvatureAnisotropicDiffusionImage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("ConductanceScalingUpdateInterval", ConductanceScalingUpdateInterval, FilterParameter::Parameter, ITKCurvatureAnisotropicDiffusionImage));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("NumberOfIterations", NumberOfIterations, FilterParameter::Parameter, ITKCurvatureAnisotropicDiffusionImage));
 
-
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Save as New Array", SaveAsNewArray, FilterParameter::Parameter, ITKCurvatureAnisotropicDiffusionImage, linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
-      DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize,
-      AttributeMatrix::Type::Cell, IGeometry::Type::Image);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Attribute Array to filter", SelectedCellArrayPath, FilterParameter::RequiredArray, ITKCurvatureAnisotropicDiffusionImage, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
@@ -79,9 +75,9 @@ void ITKCurvatureAnisotropicDiffusionImage::setupFilterParameters()
 void ITKCurvatureAnisotropicDiffusionImage::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setSelectedCellArrayPath( reader->readDataArrayPath( "SelectedCellArrayPath", getSelectedCellArrayPath() ) );
-  setNewCellArrayName( reader->readString( "NewCellArrayName", getNewCellArrayName() ) );
-  setSaveAsNewArray( reader->readValue( "SaveAsNewArray", getSaveAsNewArray() ) );
+  setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
+  setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
+  setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
   setTimeStep(reader->readValue("TimeStep", getTimeStep()));
   setConductanceParameter(reader->readValue("ConductanceParameter", getConductanceParameter()));
   setConductanceScalingUpdateInterval(reader->readValue("ConductanceScalingUpdateInterval", getConductanceScalingUpdateInterval()));
@@ -93,12 +89,11 @@ void ITKCurvatureAnisotropicDiffusionImage::readFilterParameters(AbstractFilterP
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
-void ITKCurvatureAnisotropicDiffusionImage::dataCheck()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKCurvatureAnisotropicDiffusionImage::dataCheck()
 {
   // Check consistency of parameters
-  this->CheckIntegerEntry<unsigned int,double>(m_ConductanceScalingUpdateInterval, "ConductanceScalingUpdateInterval",1);
-  this->CheckIntegerEntry<uint32_t,double>(m_NumberOfIterations, "NumberOfIterations",1);
+  this->CheckIntegerEntry<unsigned int, double>(m_ConductanceScalingUpdateInterval, "ConductanceScalingUpdateInterval", 1);
+  this->CheckIntegerEntry<uint32_t, double>(m_NumberOfIterations, "NumberOfIterations", 1);
 
   setErrorCondition(0);
   ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
@@ -116,12 +111,11 @@ void ITKCurvatureAnisotropicDiffusionImage::dataCheckInternal()
 //
 // -----------------------------------------------------------------------------
 
-template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
-void ITKCurvatureAnisotropicDiffusionImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKCurvatureAnisotropicDiffusionImage::filter()
 {
-  typedef typename itk::NumericTraits<InputPixelType>::RealType                        FloatPixelType;
-  typedef itk::Dream3DImage< FloatPixelType, Dimension >                               FloatImageType;
-  typedef itk::CurvatureAnisotropicDiffusionImageFilter< FloatImageType, FloatImageType > FilterType;
+  typedef typename itk::NumericTraits<InputPixelType>::RealType FloatPixelType;
+  typedef itk::Dream3DImage<FloatPixelType, Dimension> FloatImageType;
+  typedef itk::CurvatureAnisotropicDiffusionImageFilter<FloatImageType, FloatImageType> FilterType;
 
   typename FilterType::Pointer filter = FilterType::New();
   filter->SetTimeStep(static_cast<double>(m_TimeStep));
@@ -129,7 +123,7 @@ void ITKCurvatureAnisotropicDiffusionImage::filter()
   filter->SetConductanceScalingUpdateInterval(static_cast<unsigned int>(m_ConductanceScalingUpdateInterval));
   filter->SetNumberOfIterations(static_cast<uint32_t>(m_NumberOfIterations));
 
-  this->ITKImageBase::filterCastToFloat< InputPixelType, InputPixelType, Dimension, FilterType, FloatImageType >(filter);
+  this->ITKImageBase::filterCastToFloat<InputPixelType, InputPixelType, Dimension, FilterType, FloatImageType>(filter);
 }
 
 // -----------------------------------------------------------------------------
@@ -137,7 +131,7 @@ void ITKCurvatureAnisotropicDiffusionImage::filter()
 // -----------------------------------------------------------------------------
 void ITKCurvatureAnisotropicDiffusionImage::filterInternal()
 {
-    Dream3DArraySwitchMacro(this->filter, getSelectedCellArrayPath(), -4);
+  Dream3DArraySwitchMacro(this->filter, getSelectedCellArrayPath(), -4);
 }
 
 // -----------------------------------------------------------------------------
@@ -157,12 +151,14 @@ AbstractFilter::Pointer ITKCurvatureAnisotropicDiffusionImage::newFilterInstance
 //
 // -----------------------------------------------------------------------------
 const QString ITKCurvatureAnisotropicDiffusionImage::getHumanLabel()
-{ return "ITK::Curvature Anisotropic Diffusion Image Filter"; }
+{
+  return "ITK::Curvature Anisotropic Diffusion Image Filter";
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ITKCurvatureAnisotropicDiffusionImage::getSubGroupName()
-{ return "ITK Smoothing"; }
-
-
+{
+  return "ITK Smoothing";
+}

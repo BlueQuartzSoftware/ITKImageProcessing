@@ -8,19 +8,18 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
-#include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 
 #include "SIMPLib/Geometry/ImageGeom.h"
 
-
-#define DREAM3D_USE_Scalar     0
-#define DREAM3D_USE_Vector     1
-#include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
+#define DREAM3D_USE_Scalar 0
+#define DREAM3D_USE_Vector 1
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 
 // Include the MOC generated file for this class
 #include "moc_ITKVectorRescaleIntensityImage.cpp"
@@ -28,11 +27,11 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKVectorRescaleIntensityImage::ITKVectorRescaleIntensityImage() :
-  ITKImageBase()
-, m_OutputType(itk::ImageIOBase::IOComponentType::UCHAR-1)
+ITKVectorRescaleIntensityImage::ITKVectorRescaleIntensityImage()
+: ITKImageBase()
+, m_OutputType(itk::ImageIOBase::IOComponentType::UCHAR - 1)
 {
-  m_OutputMaximumMagnitude =StaticCastScalar<double,double,double>(255);
+  m_OutputMaximumMagnitude = StaticCastScalar<double, double, double>(255);
 
   setupFilterParameters();
 }
@@ -82,8 +81,7 @@ void ITKVectorRescaleIntensityImage::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
-      DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize,
-      AttributeMatrix::Type::Cell, IGeometry::Type::Image);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Attribute Array to filter", SelectedCellArrayPath, FilterParameter::RequiredArray, ITKVectorRescaleIntensityImage, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
@@ -98,40 +96,33 @@ void ITKVectorRescaleIntensityImage::setupFilterParameters()
 void ITKVectorRescaleIntensityImage::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setSelectedCellArrayPath( reader->readDataArrayPath( "SelectedCellArrayPath", getSelectedCellArrayPath() ) );
-  setNewCellArrayName( reader->readString( "NewCellArrayName", getNewCellArrayName() ) );
-  setSaveAsNewArray( reader->readValue( "SaveAsNewArray", getSaveAsNewArray() ) );
+  setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
+  setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
+  setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
   setOutputMaximumMagnitude(reader->readValue("OutputMaximumMagnitude", getOutputMaximumMagnitude()));
 
   reader->closeFilterGroup();
 }
 
-template<typename OutputPixelType>
-void ITKVectorRescaleIntensityImage::CheckEntryBounds(double value, QString name)
+template <typename OutputPixelType> void ITKVectorRescaleIntensityImage::CheckEntryBounds(double value, QString name)
 {
   double lowest = static_cast<double>(std::numeric_limits<OutputPixelType>::lowest());
   double max = static_cast<double>(std::numeric_limits<OutputPixelType>::max());
-  if (value < lowest
-   || value > max
-     )
+  if(value < lowest || value > max)
   {
     setErrorCondition(-1);
-    QString errorMessage = name + QString(
-      " must be greater or equal than %1 and lesser or equal than %2 and an integer");
-    notifyErrorMessage(getHumanLabel(), errorMessage.arg(lowest).arg(max)
-                                                         , getErrorCondition()
-                                                         );
+    QString errorMessage = name + QString(" must be greater or equal than %1 and lesser or equal than %2 and an integer");
+    notifyErrorMessage(getHumanLabel(), errorMessage.arg(lowest).arg(max), getErrorCondition());
   }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
-void ITKVectorRescaleIntensityImage::dataCheck()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKVectorRescaleIntensityImage::dataCheck()
 {
   // Check consistency of parameters
-  CheckEntryBounds<OutputPixelType>(m_OutputMaximumMagnitude,"OutputMaximumMagnitude");
+  CheckEntryBounds<OutputPixelType>(m_OutputMaximumMagnitude, "OutputMaximumMagnitude");
   if(getErrorCondition())
   {
     return;
@@ -154,19 +145,17 @@ void ITKVectorRescaleIntensityImage::dataCheckInternal()
 //
 // -----------------------------------------------------------------------------
 
-template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
-void ITKVectorRescaleIntensityImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKVectorRescaleIntensityImage::filter()
 {
   typedef itk::Dream3DImage<InputPixelType, Dimension> InputImageType;
   // OutputPixelType is based on scalar types. Create corresponding vector pixel type.
   typedef itk::Vector<OutputPixelType, InputPixelType::Dimension> VectorOutputPixelType;
   typedef itk::Dream3DImage<VectorOutputPixelType, Dimension> OutputImageType;
-  //define filter
+  // define filter
   typedef itk::VectorRescaleIntensityImageFilter<InputImageType, OutputImageType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
   filter->SetOutputMaximumMagnitude(static_cast<double>(m_OutputMaximumMagnitude));
   this->ITKImageBase::filter<InputPixelType, VectorOutputPixelType, Dimension, FilterType>(filter);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -174,7 +163,7 @@ void ITKVectorRescaleIntensityImage::filter()
 // -----------------------------------------------------------------------------
 void ITKVectorRescaleIntensityImage::filterInternal()
 {
-   Dream3DArraySwitchOutputComponentMacro(this->filter, m_OutputType, getSelectedCellArrayPath(), -4);
+  Dream3DArraySwitchOutputComponentMacro(this->filter, m_OutputType, getSelectedCellArrayPath(), -4);
 }
 
 // -----------------------------------------------------------------------------
@@ -194,12 +183,14 @@ AbstractFilter::Pointer ITKVectorRescaleIntensityImage::newFilterInstance(bool c
 //
 // -----------------------------------------------------------------------------
 const QString ITKVectorRescaleIntensityImage::getHumanLabel()
-{ return "ITK::Vector Rescale Intensity Image Filter"; }
+{
+  return "ITK::Vector Rescale Intensity Image Filter";
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ITKVectorRescaleIntensityImage::getSubGroupName()
-{ return "ITK IntensityTransformation"; }
-
-
+{
+  return "ITK IntensityTransformation";
+}

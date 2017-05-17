@@ -6,8 +6,6 @@
 
 #include "SIMPLib/Geometry/ImageGeom.h"
 
-
-
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
 
@@ -16,12 +14,12 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKImageBase::ITKImageBase() :
-  AbstractFilter(),
-  m_SelectedCellArrayPath("", "", ""),
-  m_NewCellArrayName(""),
-  m_SaveAsNewArray(true),
-  m_NewCellArray(nullptr)
+ITKImageBase::ITKImageBase()
+: AbstractFilter()
+, m_SelectedCellArrayPath("", "", "")
+, m_NewCellArrayName("")
+, m_SaveAsNewArray(true)
+, m_NewCellArray(nullptr)
 {
   initialize();
 }
@@ -45,12 +43,12 @@ void ITKImageBase::initialize()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool ITKImageBase::checkImageType(const QVector<QString> &types, const DataArrayPath &path)
+bool ITKImageBase::checkImageType(const QVector<QString>& types, const DataArrayPath& path)
 {
   IDataArray::Pointer ptr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, path);
   if(ptr.get() != nullptr)
   {
-    if( types.indexOf(ptr->getTypeAsString()) != -1 )
+    if(types.indexOf(ptr->getTypeAsString()) != -1)
     {
       return true;
     }
@@ -69,12 +67,12 @@ bool ITKImageBase::checkImageType(const QVector<QString> &types, const DataArray
 void ITKImageBase::preflight()
 {
   // These are the REQUIRED lines of CODE to make sure the filter behaves correctly
-  setInPreflight(true); // Set the fact that we are preflighting.
-  emit preflightAboutToExecute(); // Emit this signal so that other widgets can do one file update
+  setInPreflight(true);              // Set the fact that we are preflighting.
+  emit preflightAboutToExecute();    // Emit this signal so that other widgets can do one file update
   emit updateFilterParameters(this); // Emit this signal to have the widgets push their values down to the filter
   this->dataCheckInternal();
   emit preflightExecuted(); // We are done preflighting this filter
-  setInPreflight(false); // Inform the system this filter is NOT in preflight mode anymore.
+  setInPreflight(false);    // Inform the system this filter is NOT in preflight mode anymore.
 }
 
 // -----------------------------------------------------------------------------
@@ -84,8 +82,14 @@ void ITKImageBase::execute()
 {
   initialize();
   this->dataCheckInternal();
-  if (getErrorCondition() < 0) { return; }
-  if (getCancel() == true) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
+  if(getCancel() == true)
+  {
+    return;
+  }
   this->filterInternal();
 }
 
@@ -93,7 +97,9 @@ void ITKImageBase::execute()
 //
 // -----------------------------------------------------------------------------
 const QString ITKImageBase::getCompiledLibraryName()
-{ return ITKImageProcessingConstants::ITKImageProcessingBaseName; }
+{
+  return ITKImageProcessingConstants::ITKImageProcessingBaseName;
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -110,7 +116,7 @@ const QString ITKImageBase::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  ITKImageProcessing::Version::Major() << "." << ITKImageProcessing::Version::Minor() << "." << ITKImageProcessing::Version::Patch();
+  vStream << ITKImageProcessing::Version::Major() << "." << ITKImageProcessing::Version::Minor() << "." << ITKImageProcessing::Version::Patch();
   return version;
 }
 
@@ -118,4 +124,6 @@ const QString ITKImageBase::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString ITKImageBase::getGroupName()
-{ return "Image Processing"; }
+{
+  return "Image Processing";
+}

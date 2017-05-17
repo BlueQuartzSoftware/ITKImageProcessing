@@ -8,22 +8,21 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/StringFilterParameter.h"
-#include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 
 #include "SIMPLib/Geometry/ImageGeom.h"
 
-
-#include <itkMultiScaleHessianBasedMeasureImageFilter.h>
 #include <itkHessianToObjectnessMeasureImageFilter.h>
+#include <itkMultiScaleHessianBasedMeasureImageFilter.h>
 
-#include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 
 // Include the MOC generated file for this class
 #include "moc_ITKMultiScaleHessianBasedObjectnessImage.cpp"
@@ -31,19 +30,19 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKMultiScaleHessianBasedObjectnessImage::ITKMultiScaleHessianBasedObjectnessImage() :
-  ITKImageBase()
+ITKMultiScaleHessianBasedObjectnessImage::ITKMultiScaleHessianBasedObjectnessImage()
+: ITKImageBase()
 {
-  m_ObjectDimension = StaticCastScalar<int,int,int>(1u);
-  m_Alpha = StaticCastScalar<double,double,double>(0.5);
-  m_Beta = StaticCastScalar<double,double,double>(0.5);
-  m_Gamma = StaticCastScalar<double,double,double>(5.0);
-  m_BrightObject = StaticCastScalar<bool,bool,bool>(true);
-  m_ScaleObjectnessMeasure = StaticCastScalar<bool,bool,bool>(true);
+  m_ObjectDimension = StaticCastScalar<int, int, int>(1u);
+  m_Alpha = StaticCastScalar<double, double, double>(0.5);
+  m_Beta = StaticCastScalar<double, double, double>(0.5);
+  m_Gamma = StaticCastScalar<double, double, double>(5.0);
+  m_BrightObject = StaticCastScalar<bool, bool, bool>(true);
+  m_ScaleObjectnessMeasure = StaticCastScalar<bool, bool, bool>(true);
 
-  m_SigmaMinimum = StaticCastScalar<double,double,double>(0.2);
-  m_SigmaMaximum = StaticCastScalar<double,double,double>(2.0);
-  m_NumberOfSigmaSteps = StaticCastScalar<double,double,double>(10);
+  m_SigmaMinimum = StaticCastScalar<double, double, double>(0.2);
+  m_SigmaMaximum = StaticCastScalar<double, double, double>(2.0);
+  m_NumberOfSigmaSteps = StaticCastScalar<double, double, double>(10);
 
   setupFilterParameters();
 }
@@ -72,15 +71,13 @@ void ITKMultiScaleHessianBasedObjectnessImage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("SigmaMaximum", SigmaMaximum, FilterParameter::Parameter, ITKMultiScaleHessianBasedObjectnessImage));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("NumberOfSigmaSteps", NumberOfSigmaSteps, FilterParameter::Parameter, ITKMultiScaleHessianBasedObjectnessImage));
 
-
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Save as New Array", SaveAsNewArray, FilterParameter::Parameter, ITKMultiScaleHessianBasedObjectnessImage, linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
-      DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize,
-      AttributeMatrix::Type::Cell, IGeometry::Type::Image);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Attribute Array to filter", SelectedCellArrayPath, FilterParameter::RequiredArray, ITKMultiScaleHessianBasedObjectnessImage, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
@@ -95,9 +92,9 @@ void ITKMultiScaleHessianBasedObjectnessImage::setupFilterParameters()
 void ITKMultiScaleHessianBasedObjectnessImage::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setSelectedCellArrayPath( reader->readDataArrayPath( "SelectedCellArrayPath", getSelectedCellArrayPath() ) );
-  setNewCellArrayName( reader->readString( "NewCellArrayName", getNewCellArrayName() ) );
-  setSaveAsNewArray( reader->readValue( "SaveAsNewArray", getSaveAsNewArray() ) );
+  setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
+  setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
+  setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
   setObjectDimension(reader->readValue("ObjectDimension", getObjectDimension()));
   setAlpha(reader->readValue("Alpha", getAlpha()));
   setBeta(reader->readValue("Beta", getBeta()));
@@ -114,11 +111,10 @@ void ITKMultiScaleHessianBasedObjectnessImage::readFilterParameters(AbstractFilt
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
-void ITKMultiScaleHessianBasedObjectnessImage::dataCheck()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKMultiScaleHessianBasedObjectnessImage::dataCheck()
 {
   // Check consistency of parameters
-  this->CheckIntegerEntry<uint32_t,double>(m_NumberOfSigmaSteps, "NumberOfSigmaSteps",1);
+  this->CheckIntegerEntry<uint32_t, double>(m_NumberOfSigmaSteps, "NumberOfSigmaSteps", 1);
 
   setErrorCondition(0);
   ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
@@ -136,17 +132,16 @@ void ITKMultiScaleHessianBasedObjectnessImage::dataCheckInternal()
 //
 // -----------------------------------------------------------------------------
 
-template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
-void ITKMultiScaleHessianBasedObjectnessImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKMultiScaleHessianBasedObjectnessImage::filter()
 {
-  typedef itk::Dream3DImage<InputPixelType, Dimension>  InputImageType;
+  typedef itk::Dream3DImage<InputPixelType, Dimension> InputImageType;
   typedef itk::Dream3DImage<OutputPixelType, Dimension> OutputImageType;
 
-  typedef typename itk::NumericTraits< InputPixelType >::RealType RealType;
-  typedef itk::SymmetricSecondRankTensor< RealType, Dimension > HessianPixelType;
-  typedef itk::Image< HessianPixelType, Dimension > HessianImageType;
+  typedef typename itk::NumericTraits<InputPixelType>::RealType RealType;
+  typedef itk::SymmetricSecondRankTensor<RealType, Dimension> HessianPixelType;
+  typedef itk::Image<HessianPixelType, Dimension> HessianImageType;
 
-  typedef itk::HessianToObjectnessMeasureImageFilter< HessianImageType, OutputImageType > ObjectnessFilterType;
+  typedef itk::HessianToObjectnessMeasureImageFilter<HessianImageType, OutputImageType> ObjectnessFilterType;
   typename ObjectnessFilterType::Pointer objectnessFilter = ObjectnessFilterType::New();
   objectnessFilter->SetObjectDimension(static_cast<unsigned int>(m_ObjectDimension));
   objectnessFilter->SetAlpha(static_cast<double>(m_Alpha));
@@ -155,7 +150,7 @@ void ITKMultiScaleHessianBasedObjectnessImage::filter()
   objectnessFilter->SetBrightObject(static_cast<bool>(m_BrightObject));
   objectnessFilter->SetScaleObjectnessMeasure(static_cast<bool>(m_ScaleObjectnessMeasure));
 
-  typedef itk::MultiScaleHessianBasedMeasureImageFilter< InputImageType, HessianImageType, OutputImageType > FilterType;
+  typedef itk::MultiScaleHessianBasedMeasureImageFilter<InputImageType, HessianImageType, OutputImageType> FilterType;
 
   typename FilterType::Pointer filter = FilterType::New();
   filter->SetSigmaMinimum(static_cast<double>(m_SigmaMinimum));
@@ -171,7 +166,7 @@ void ITKMultiScaleHessianBasedObjectnessImage::filter()
 // -----------------------------------------------------------------------------
 void ITKMultiScaleHessianBasedObjectnessImage::filterInternal()
 {
-    Dream3DArraySwitchMacro(this->filter, getSelectedCellArrayPath(), -4);
+  Dream3DArraySwitchMacro(this->filter, getSelectedCellArrayPath(), -4);
 }
 
 // -----------------------------------------------------------------------------
@@ -191,10 +186,14 @@ AbstractFilter::Pointer ITKMultiScaleHessianBasedObjectnessImage::newFilterInsta
 //
 // -----------------------------------------------------------------------------
 const QString ITKMultiScaleHessianBasedObjectnessImage::getHumanLabel()
-{ return "ITK::Multi-scale Hessian Based Objectness Filter"; }
+{
+  return "ITK::Multi-scale Hessian Based Objectness Filter";
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ITKMultiScaleHessianBasedObjectnessImage::getSubGroupName()
-{ return "ITK Edge"; }
+{
+  return "ITK Edge";
+}

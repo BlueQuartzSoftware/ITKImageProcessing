@@ -9,16 +9,14 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 
 #include "SIMPLib/Geometry/ImageGeom.h"
 
-
-
-#include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 
 // Include the MOC generated file for this class
 #include "moc_ITKLaplacianSharpeningImage.cpp"
@@ -26,10 +24,10 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKLaplacianSharpeningImage::ITKLaplacianSharpeningImage() :
-  ITKImageBase()
+ITKLaplacianSharpeningImage::ITKLaplacianSharpeningImage()
+: ITKImageBase()
 {
-  m_UseImageSpacing=StaticCastScalar<bool,bool,bool>(true);
+  m_UseImageSpacing = StaticCastScalar<bool, bool, bool>(true);
 
   setupFilterParameters();
 }
@@ -50,15 +48,13 @@ void ITKLaplacianSharpeningImage::setupFilterParameters()
 
   parameters.push_back(SIMPL_NEW_BOOL_FP("UseImageSpacing", UseImageSpacing, FilterParameter::Parameter, ITKLaplacianSharpeningImage));
 
-
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Save as New Array", SaveAsNewArray, FilterParameter::Parameter, ITKLaplacianSharpeningImage, linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
-      DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize,
-      AttributeMatrix::Type::Cell, IGeometry::Type::Image);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Attribute Array to filter", SelectedCellArrayPath, FilterParameter::RequiredArray, ITKLaplacianSharpeningImage, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
@@ -73,9 +69,9 @@ void ITKLaplacianSharpeningImage::setupFilterParameters()
 void ITKLaplacianSharpeningImage::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setSelectedCellArrayPath( reader->readDataArrayPath( "SelectedCellArrayPath", getSelectedCellArrayPath() ) );
-  setNewCellArrayName( reader->readString( "NewCellArrayName", getNewCellArrayName() ) );
-  setSaveAsNewArray( reader->readValue( "SaveAsNewArray", getSaveAsNewArray() ) );
+  setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
+  setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
+  setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
   setUseImageSpacing(reader->readValue("UseImageSpacing", getUseImageSpacing()));
 
   reader->closeFilterGroup();
@@ -84,8 +80,7 @@ void ITKLaplacianSharpeningImage::readFilterParameters(AbstractFilterParametersR
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
-void ITKLaplacianSharpeningImage::dataCheck()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKLaplacianSharpeningImage::dataCheck()
 {
   // Check consistency of parameters
 
@@ -105,17 +100,15 @@ void ITKLaplacianSharpeningImage::dataCheckInternal()
 //
 // -----------------------------------------------------------------------------
 
-template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
-void ITKLaplacianSharpeningImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKLaplacianSharpeningImage::filter()
 {
   typedef itk::Dream3DImage<InputPixelType, Dimension> InputImageType;
   typedef itk::Dream3DImage<OutputPixelType, Dimension> OutputImageType;
-  //define filter
+  // define filter
   typedef itk::LaplacianSharpeningImageFilter<InputImageType, OutputImageType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
   filter->SetUseImageSpacing(static_cast<bool>(m_UseImageSpacing));
   this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -123,7 +116,7 @@ void ITKLaplacianSharpeningImage::filter()
 // -----------------------------------------------------------------------------
 void ITKLaplacianSharpeningImage::filterInternal()
 {
-    Dream3DArraySwitchMacro(this->filter, getSelectedCellArrayPath(), -4);
+  Dream3DArraySwitchMacro(this->filter, getSelectedCellArrayPath(), -4);
 }
 
 // -----------------------------------------------------------------------------
@@ -143,12 +136,14 @@ AbstractFilter::Pointer ITKLaplacianSharpeningImage::newFilterInstance(bool copy
 //
 // -----------------------------------------------------------------------------
 const QString ITKLaplacianSharpeningImage::getHumanLabel()
-{ return "ITK::Laplacian Sharpening Image Filter"; }
+{
+  return "ITK::Laplacian Sharpening Image Filter";
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ITKLaplacianSharpeningImage::getSubGroupName()
-{ return "ITK Edge"; }
-
-
+{
+  return "ITK Edge";
+}

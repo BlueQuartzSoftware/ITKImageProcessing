@@ -9,16 +9,14 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 
 #include "SIMPLib/Geometry/ImageGeom.h"
 
-
-
-#include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 
 // Include the MOC generated file for this class
 #include "moc_ITKIsoContourDistanceImage.cpp"
@@ -26,11 +24,11 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKIsoContourDistanceImage::ITKIsoContourDistanceImage() :
-  ITKImageBase()
+ITKIsoContourDistanceImage::ITKIsoContourDistanceImage()
+: ITKImageBase()
 {
-  m_LevelSetValue=StaticCastScalar<double,double,double>(0);
-  m_FarValue=StaticCastScalar<double,double,double>(10);
+  m_LevelSetValue = StaticCastScalar<double, double, double>(0);
+  m_FarValue = StaticCastScalar<double, double, double>(10);
 
   setupFilterParameters();
 }
@@ -52,15 +50,13 @@ void ITKIsoContourDistanceImage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("LevelSetValue", LevelSetValue, FilterParameter::Parameter, ITKIsoContourDistanceImage));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("FarValue", FarValue, FilterParameter::Parameter, ITKIsoContourDistanceImage));
 
-
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Save as New Array", SaveAsNewArray, FilterParameter::Parameter, ITKIsoContourDistanceImage, linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
-      DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize,
-      AttributeMatrix::Type::Cell, IGeometry::Type::Image);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Attribute Array to filter", SelectedCellArrayPath, FilterParameter::RequiredArray, ITKIsoContourDistanceImage, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
@@ -75,9 +71,9 @@ void ITKIsoContourDistanceImage::setupFilterParameters()
 void ITKIsoContourDistanceImage::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setSelectedCellArrayPath( reader->readDataArrayPath( "SelectedCellArrayPath", getSelectedCellArrayPath() ) );
-  setNewCellArrayName( reader->readString( "NewCellArrayName", getNewCellArrayName() ) );
-  setSaveAsNewArray( reader->readValue( "SaveAsNewArray", getSaveAsNewArray() ) );
+  setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
+  setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
+  setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
   setLevelSetValue(reader->readValue("LevelSetValue", getLevelSetValue()));
   setFarValue(reader->readValue("FarValue", getFarValue()));
 
@@ -87,8 +83,7 @@ void ITKIsoContourDistanceImage::readFilterParameters(AbstractFilterParametersRe
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
-void ITKIsoContourDistanceImage::dataCheck()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKIsoContourDistanceImage::dataCheck()
 {
   // Check consistency of parameters
 
@@ -101,25 +96,23 @@ void ITKIsoContourDistanceImage::dataCheck()
 // -----------------------------------------------------------------------------
 void ITKIsoContourDistanceImage::dataCheckInternal()
 {
-  Dream3DArraySwitchMacroOutputType(this->dataCheck, getSelectedCellArrayPath(), -4,float,0);
+  Dream3DArraySwitchMacroOutputType(this->dataCheck, getSelectedCellArrayPath(), -4, float, 0);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 
-template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
-void ITKIsoContourDistanceImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKIsoContourDistanceImage::filter()
 {
   typedef itk::Dream3DImage<InputPixelType, Dimension> InputImageType;
   typedef itk::Dream3DImage<OutputPixelType, Dimension> OutputImageType;
-  //define filter
+  // define filter
   typedef itk::IsoContourDistanceImageFilter<InputImageType, OutputImageType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
   filter->SetLevelSetValue(static_cast<double>(m_LevelSetValue));
   filter->SetFarValue(static_cast<double>(m_FarValue));
   this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -127,7 +120,7 @@ void ITKIsoContourDistanceImage::filter()
 // -----------------------------------------------------------------------------
 void ITKIsoContourDistanceImage::filterInternal()
 {
-    Dream3DArraySwitchMacroOutputType(this->filter, getSelectedCellArrayPath(), -4,float,0);
+  Dream3DArraySwitchMacroOutputType(this->filter, getSelectedCellArrayPath(), -4, float, 0);
 }
 
 // -----------------------------------------------------------------------------
@@ -147,12 +140,14 @@ AbstractFilter::Pointer ITKIsoContourDistanceImage::newFilterInstance(bool copyF
 //
 // -----------------------------------------------------------------------------
 const QString ITKIsoContourDistanceImage::getHumanLabel()
-{ return "ITK::Iso Contour Distance Image Filter"; }
+{
+  return "ITK::Iso Contour Distance Image Filter";
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ITKIsoContourDistanceImage::getSubGroupName()
-{ return "ITK DistanceMap"; }
-
-
+{
+  return "ITK DistanceMap";
+}

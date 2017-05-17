@@ -5,19 +5,22 @@
 // -----------------------------------------------------------------------------
 
 #include "ITKTestBase.h"
-//Auto includes
+// Auto includes
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 
-
-class ITKCurvatureFlowImageTest: public ITKTestBase
+class ITKCurvatureFlowImageTest : public ITKTestBase
 {
 
-  public:
-    ITKCurvatureFlowImageTest() {}
-    virtual ~ITKCurvatureFlowImageTest() {}
+public:
+  ITKCurvatureFlowImageTest()
+  {
+  }
+  virtual ~ITKCurvatureFlowImageTest()
+  {
+  }
 
-int TestITKCurvatureFlowImagedefaultsTest()
-{
+  int TestITKCurvatureFlowImagedefaultsTest()
+  {
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/RA-Float.nrrd");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -25,7 +28,7 @@ int TestITKCurvatureFlowImagedefaultsTest()
     QString filtName = "ITKCurvatureFlowImage";
     FilterManager* fm = FilterManager::Instance();
     IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
-    DREAM3D_REQUIRE_NE(filterFactory.get(),0);
+    DREAM3D_REQUIRE_NE(filterFactory.get(), 0);
     AbstractFilter::Pointer filter = filterFactory->create();
     QVariant var;
     bool propWasSet;
@@ -37,19 +40,19 @@ int TestITKCurvatureFlowImagedefaultsTest()
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     filter->setDataContainerArray(containerArray);
     filter->execute();
-    DREAM3D_REQUIRED(filter->getErrorCondition(), >= , 0);
-    DREAM3D_REQUIRED(filter->getWarningCondition(), >= , 0);
+    DREAM3D_REQUIRED(filter->getErrorCondition(), >=, 0);
+    DREAM3D_REQUIRED(filter->getWarningCondition(), >=, 0);
     WriteImage("ITKCurvatureFlowImagedefaults.nrrd", containerArray, input_path);
     QString baseline_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Baseline/BasicFilters_CurvatureFlowImageFilter_defaults.nrrd");
     DataArrayPath baseline_path("BContainer", "BAttributeMatrixName", "BAttributeArrayName");
     this->ReadImage(baseline_filename, containerArray, baseline_path);
     int res = this->CompareImages(containerArray, input_path, baseline_path, 0.0001);
-    DREAM3D_REQUIRE_EQUAL(res,0);
+    DREAM3D_REQUIRE_EQUAL(res, 0);
     return 0;
-}
+  }
 
-int TestITKCurvatureFlowImagelongerTest()
-{
+  int TestITKCurvatureFlowImagelongerTest()
+  {
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/RA-Float.nrrd");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -57,7 +60,7 @@ int TestITKCurvatureFlowImagelongerTest()
     QString filtName = "ITKCurvatureFlowImage";
     FilterManager* fm = FilterManager::Instance();
     IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
-    DREAM3D_REQUIRE_NE(filterFactory.get(),0);
+    DREAM3D_REQUIRE_NE(filterFactory.get(), 0);
     AbstractFilter::Pointer filter = filterFactory->create();
     QVariant var;
     bool propWasSet;
@@ -68,34 +71,31 @@ int TestITKCurvatureFlowImagelongerTest()
     propWasSet = filter->setProperty("SaveAsNewArray", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     {
-        double d3d_var;
-        d3d_var = 0.1;
-        var.setValue(d3d_var);
-        propWasSet = filter->setProperty("TimeStep", var);
-        DREAM3D_REQUIRE_EQUAL(propWasSet, true);
-        }
+      double d3d_var;
+      d3d_var = 0.1;
+      var.setValue(d3d_var);
+      propWasSet = filter->setProperty("TimeStep", var);
+      DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+    }
     {
-        double d3d_var;
-        d3d_var = 10;
-        var.setValue(d3d_var);
-        propWasSet = filter->setProperty("NumberOfIterations", var);
-        DREAM3D_REQUIRE_EQUAL(propWasSet, true);
-        }
+      double d3d_var;
+      d3d_var = 10;
+      var.setValue(d3d_var);
+      propWasSet = filter->setProperty("NumberOfIterations", var);
+      DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+    }
     filter->setDataContainerArray(containerArray);
     filter->execute();
-    DREAM3D_REQUIRED(filter->getErrorCondition(), >= , 0);
-    DREAM3D_REQUIRED(filter->getWarningCondition(), >= , 0);
+    DREAM3D_REQUIRED(filter->getErrorCondition(), >=, 0);
+    DREAM3D_REQUIRED(filter->getWarningCondition(), >=, 0);
     WriteImage("ITKCurvatureFlowImagelonger.nrrd", containerArray, input_path);
     QString baseline_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Baseline/BasicFilters_CurvatureFlowImageFilter_longer.nrrd");
     DataArrayPath baseline_path("BContainer", "BAttributeMatrixName", "BAttributeArrayName");
     this->ReadImage(baseline_filename, containerArray, baseline_path);
     int res = this->CompareImages(containerArray, input_path, baseline_path, 0.0001);
-    DREAM3D_REQUIRE_EQUAL(res,0);
+    DREAM3D_REQUIRE_EQUAL(res, 0);
     return 0;
-}
-
-
-
+  }
 
   // -----------------------------------------------------------------------------
   //
@@ -104,19 +104,18 @@ int TestITKCurvatureFlowImagelongerTest()
   {
     int err = EXIT_SUCCESS;
 
-    DREAM3D_REGISTER_TEST( this->TestFilterAvailability("ITKCurvatureFlowImage") );
+    DREAM3D_REGISTER_TEST(this->TestFilterAvailability("ITKCurvatureFlowImage"));
 
-    DREAM3D_REGISTER_TEST( TestITKCurvatureFlowImagedefaultsTest());
-    DREAM3D_REGISTER_TEST( TestITKCurvatureFlowImagelongerTest());
+    DREAM3D_REGISTER_TEST(TestITKCurvatureFlowImagedefaultsTest());
+    DREAM3D_REGISTER_TEST(TestITKCurvatureFlowImagelongerTest());
 
     if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
     {
-      DREAM3D_REGISTER_TEST( this->RemoveTestFiles() )
+      DREAM3D_REGISTER_TEST(this->RemoveTestFiles())
     }
   }
 
-  private:
-    ITKCurvatureFlowImageTest(const ITKCurvatureFlowImageTest&); // Copy Constructor Not Implemented
-    void operator=(const ITKCurvatureFlowImageTest&); // Operator '=' Not Implemented
+private:
+  ITKCurvatureFlowImageTest(const ITKCurvatureFlowImageTest&); // Copy Constructor Not Implemented
+  void operator=(const ITKCurvatureFlowImageTest&);            // Operator '=' Not Implemented
 };
-

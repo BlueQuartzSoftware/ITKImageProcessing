@@ -5,18 +5,21 @@
 // -----------------------------------------------------------------------------
 
 #include "ITKTestBase.h"
-//Auto includes
+// Auto includes
 
-
-class ITKAcosImageTest: public ITKTestBase
+class ITKAcosImageTest : public ITKTestBase
 {
 
-  public:
-    ITKAcosImageTest() {}
-    virtual ~ITKAcosImageTest() {}
+public:
+  ITKAcosImageTest()
+  {
+  }
+  virtual ~ITKAcosImageTest()
+  {
+  }
 
-int TestITKAcosImagedefaultsTest()
-{
+  int TestITKAcosImagedefaultsTest()
+  {
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/Ramp-Zero-One-Float.nrrd");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -24,7 +27,7 @@ int TestITKAcosImagedefaultsTest()
     QString filtName = "ITKAcosImage";
     FilterManager* fm = FilterManager::Instance();
     IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
-    DREAM3D_REQUIRE_NE(filterFactory.get(),0);
+    DREAM3D_REQUIRE_NE(filterFactory.get(), 0);
     AbstractFilter::Pointer filter = filterFactory->create();
     QVariant var;
     bool propWasSet;
@@ -36,19 +39,16 @@ int TestITKAcosImagedefaultsTest()
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     filter->setDataContainerArray(containerArray);
     filter->execute();
-    DREAM3D_REQUIRED(filter->getErrorCondition(), >= , 0);
-    DREAM3D_REQUIRED(filter->getWarningCondition(), >= , 0);
+    DREAM3D_REQUIRED(filter->getErrorCondition(), >=, 0);
+    DREAM3D_REQUIRED(filter->getWarningCondition(), >=, 0);
     WriteImage("ITKAcosImagedefaults.nrrd", containerArray, input_path);
     QString baseline_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Baseline/BasicFilters_AcosImageFilter_defaults.nrrd");
     DataArrayPath baseline_path("BContainer", "BAttributeMatrixName", "BAttributeArrayName");
     this->ReadImage(baseline_filename, containerArray, baseline_path);
     int res = this->CompareImages(containerArray, input_path, baseline_path, 0.01);
-    DREAM3D_REQUIRE_EQUAL(res,0);
+    DREAM3D_REQUIRE_EQUAL(res, 0);
     return 0;
-}
-
-
-
+  }
 
   // -----------------------------------------------------------------------------
   //
@@ -57,18 +57,17 @@ int TestITKAcosImagedefaultsTest()
   {
     int err = EXIT_SUCCESS;
 
-    DREAM3D_REGISTER_TEST( this->TestFilterAvailability("ITKAcosImage") );
+    DREAM3D_REGISTER_TEST(this->TestFilterAvailability("ITKAcosImage"));
 
-    DREAM3D_REGISTER_TEST( TestITKAcosImagedefaultsTest());
+    DREAM3D_REGISTER_TEST(TestITKAcosImagedefaultsTest());
 
     if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
     {
-      DREAM3D_REGISTER_TEST( this->RemoveTestFiles() )
+      DREAM3D_REGISTER_TEST(this->RemoveTestFiles())
     }
   }
 
-  private:
-    ITKAcosImageTest(const ITKAcosImageTest&); // Copy Constructor Not Implemented
-    void operator=(const ITKAcosImageTest&); // Operator '=' Not Implemented
+private:
+  ITKAcosImageTest(const ITKAcosImageTest&); // Copy Constructor Not Implemented
+  void operator=(const ITKAcosImageTest&);   // Operator '=' Not Implemented
 };
-

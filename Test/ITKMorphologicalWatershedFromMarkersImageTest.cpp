@@ -5,19 +5,22 @@
 // -----------------------------------------------------------------------------
 
 #include "ITKTestBase.h"
-//Auto includes
+// Auto includes
 #include <SIMPLib/FilterParameters/BooleanFilterParameter.h>
 
-
-class ITKMorphologicalWatershedFromMarkersImageTest: public ITKTestBase
+class ITKMorphologicalWatershedFromMarkersImageTest : public ITKTestBase
 {
 
-  public:
-    ITKMorphologicalWatershedFromMarkersImageTest() {}
-    virtual ~ITKMorphologicalWatershedFromMarkersImageTest() {}
+public:
+  ITKMorphologicalWatershedFromMarkersImageTest()
+  {
+  }
+  virtual ~ITKMorphologicalWatershedFromMarkersImageTest()
+  {
+  }
 
-int TestITKMorphologicalWatershedFromMarkersImagedefaultsTest()
-{
+  int TestITKMorphologicalWatershedFromMarkersImagedefaultsTest()
+  {
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/cthead1-grad-mag.nrrd");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -28,7 +31,7 @@ int TestITKMorphologicalWatershedFromMarkersImagedefaultsTest()
     QString filtName = "ITKMorphologicalWatershedFromMarkersImage";
     FilterManager* fm = FilterManager::Instance();
     IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
-    DREAM3D_REQUIRE_NE(filterFactory.get(),0);
+    DREAM3D_REQUIRE_NE(filterFactory.get(), 0);
     AbstractFilter::Pointer filter = filterFactory->create();
     QVariant var;
     bool propWasSet;
@@ -43,17 +46,14 @@ int TestITKMorphologicalWatershedFromMarkersImagedefaultsTest()
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     filter->setDataContainerArray(containerArray);
     filter->execute();
-    DREAM3D_REQUIRED(filter->getErrorCondition(), >= , 0);
-    DREAM3D_REQUIRED(filter->getWarningCondition(), >= , 0);
+    DREAM3D_REQUIRED(filter->getErrorCondition(), >=, 0);
+    DREAM3D_REQUIRED(filter->getWarningCondition(), >=, 0);
     WriteImage("ITKMorphologicalWatershedFromMarkersImagedefaults.nrrd", containerArray, input_path);
     QString md5Output;
     GetMD5FromDataContainer(containerArray, input_path, md5Output);
     DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("9de771247c8cac2272854dcc932ca2be"));
     return 0;
-}
-
-
-
+  }
 
   // -----------------------------------------------------------------------------
   //
@@ -62,18 +62,17 @@ int TestITKMorphologicalWatershedFromMarkersImagedefaultsTest()
   {
     int err = EXIT_SUCCESS;
 
-    DREAM3D_REGISTER_TEST( this->TestFilterAvailability("ITKMorphologicalWatershedFromMarkersImage") );
+    DREAM3D_REGISTER_TEST(this->TestFilterAvailability("ITKMorphologicalWatershedFromMarkersImage"));
 
-    DREAM3D_REGISTER_TEST( TestITKMorphologicalWatershedFromMarkersImagedefaultsTest());
+    DREAM3D_REGISTER_TEST(TestITKMorphologicalWatershedFromMarkersImagedefaultsTest());
 
-//    if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
-//    {
-//      DREAM3D_REGISTER_TEST( this->RemoveTestFiles() )
-//    }
+    //    if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
+    //    {
+    //      DREAM3D_REGISTER_TEST( this->RemoveTestFiles() )
+    //    }
   }
 
-  private:
-    ITKMorphologicalWatershedFromMarkersImageTest(const ITKMorphologicalWatershedFromMarkersImageTest&); // Copy Constructor Not Implemented
-    void operator=(const ITKMorphologicalWatershedFromMarkersImageTest&); // Operator '=' Not Implemented
+private:
+  ITKMorphologicalWatershedFromMarkersImageTest(const ITKMorphologicalWatershedFromMarkersImageTest&); // Copy Constructor Not Implemented
+  void operator=(const ITKMorphologicalWatershedFromMarkersImageTest&);                                // Operator '=' Not Implemented
 };
-

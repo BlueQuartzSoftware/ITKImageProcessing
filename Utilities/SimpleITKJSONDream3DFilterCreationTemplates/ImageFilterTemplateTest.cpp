@@ -5,18 +5,38 @@
 // -----------------------------------------------------------------------------
 
 #include "ITKTestBase.h"
-//Auto includes
-${TestsIncludeName}
+// Auto includes
+$
+{
+  TestsIncludeName
+}
 
-class ${FilterName}Test: public ITKTestBase
+class $
+{
+  FilterName
+} Test : public ITKTestBase
 {
 
-  public:
-    ${FilterName}Test() {}
-    virtual ~${FilterName}Test() {}
+public:
+  $
+  {
+    FilterName
+  }
+  Test()
+  {
+  }
+  virtual ~$
+  {
+    FilterName
+  }
+  Test()
+  {
+  }
 
-${FilterTests}
-
+  $
+  {
+    FilterTests
+  }
 
   // -----------------------------------------------------------------------------
   //
@@ -25,17 +45,23 @@ ${FilterTests}
   {
     int err = EXIT_SUCCESS;
 
-    DREAM3D_REGISTER_TEST( this->TestFilterAvailability("${FilterName}") );
+    DREAM3D_REGISTER_TEST(this->TestFilterAvailability("${FilterName}"));
 
-${RegisterTests}
+    $
+    {
+      RegisterTests
+    }
     if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
     {
-      DREAM3D_REGISTER_TEST( this->RemoveTestFiles() )
+      DREAM3D_REGISTER_TEST(this->RemoveTestFiles())
     }
   }
 
-  private:
-    ${FilterName}Test(const ${FilterName}Test&); // Copy Constructor Not Implemented
-    void operator=(const ${FilterName}Test&); // Operator '=' Not Implemented
+private:
+  $
+  {
+    FilterName
+  }
+  Test(const $ { FilterName } Test&);           // Copy Constructor Not Implemented
+  void operator=(const $ { FilterName } Test&); // Operator '=' Not Implemented
 };
-

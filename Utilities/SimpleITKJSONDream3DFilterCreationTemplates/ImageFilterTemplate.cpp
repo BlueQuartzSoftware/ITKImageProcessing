@@ -9,16 +9,14 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 
 #include "SIMPLib/Geometry/ImageGeom.h"
 
-
-
-#include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 
 // Include the MOC generated file for this class
 #include "moc_${FilterName}.cpp"
@@ -26,28 +24,46 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-${FilterName}::${FilterName}() :
-  ITKImageBase()
+$
 {
-${InitializationParameters}
+  FilterName
+}
+::${FilterName}()
+: ITKImageBase()
+{
+  $
+  {
+    InitializationParameters
+  }
   setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-${FilterName}::~${FilterName}()
+$
+{
+  FilterName
+}
+::~${FilterName}()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ${FilterName}::setupFilterParameters()
+void $
+{
+  FilterName
+}
+::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-${SetupFilterParameters}
+  $
+  {
+    SetupFilterParameters
+  }
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -55,8 +71,7 @@ ${SetupFilterParameters}
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
-      DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize,
-      AttributeMatrix::Type::Cell, IGeometry::Type::Image);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Attribute Array to filter", SelectedCellArrayPath, FilterParameter::RequiredArray, ${FilterName}, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
@@ -68,24 +83,37 @@ ${SetupFilterParameters}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ${FilterName}::readFilterParameters(AbstractFilterParametersReader* reader, int index)
+void $
+{
+  FilterName
+}
+::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setSelectedCellArrayPath( reader->readDataArrayPath( "SelectedCellArrayPath", getSelectedCellArrayPath() ) );
-  setNewCellArrayName( reader->readString( "NewCellArrayName", getNewCellArrayName() ) );
-  setSaveAsNewArray( reader->readValue( "SaveAsNewArray", getSaveAsNewArray() ) );
-${ReadFilterParameters}
+  setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
+  setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
+  setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
+  $
+  {
+    ReadFilterParameters
+  }
   reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
-void ${FilterName}::dataCheck()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void $
+{
+  FilterName
+}
+::dataCheck()
 {
   // Check consistency of parameters
-${CheckIntegerEntry}
+  $
+  {
+    CheckIntegerEntry
+  }
   setErrorCondition(0);
   ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
@@ -93,38 +121,70 @@ ${CheckIntegerEntry}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ${FilterName}::dataCheckInternal()
+void $
 {
-${DataCheckInternal}
+  FilterName
+}
+::dataCheckInternal()
+{
+  $
+  {
+    DataCheckInternal
+  }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 
-template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
-void ${FilterName}::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void $
+{
+  FilterName
+}
+::filter()
 {
   typedef itk::Dream3DImage<InputPixelType, Dimension> InputImageType;
   typedef itk::Dream3DImage<OutputPixelType, Dimension> OutputImageType;
-  //define filter
-${Filter}
+  // define filter
+  $
+  {
+    Filter
+  }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ${FilterName}::filterInternal()
+void $
 {
-  ${FilterInternal}
+  FilterName
+}
+::filterInternal()
+{
+  $
+  {
+    FilterInternal
+  }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ${FilterName}::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer $
 {
-  ${FilterName}::Pointer filter = ${FilterName}::New();
+  FilterName
+}
+::newFilterInstance(bool copyFilterParameters)
+{
+  $
+  {
+    FilterName
+  }
+  ::Pointer filter = $
+  {
+    FilterName
+  }
+  ::New();
   if(true == copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
@@ -135,13 +195,23 @@ AbstractFilter::Pointer ${FilterName}::newFilterInstance(bool copyFilterParamete
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ${FilterName}::getHumanLabel()
-{ return "ITK::${FilterNameExpanded}"; }
+const QString $
+{
+  FilterName
+}
+::getHumanLabel()
+{
+  return "ITK::${FilterNameExpanded}";
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ${FilterName}::getSubGroupName()
-{ return "ITK ${ITKModule}"; }
-
-
+const QString $
+{
+  FilterName
+}
+::getSubGroupName()
+{
+  return "ITK ${ITKModule}";
+}

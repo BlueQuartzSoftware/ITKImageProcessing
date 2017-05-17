@@ -40,43 +40,41 @@
 */
 namespace ITKImageProcessingConstants
 {
-  const QString ITKImageProcessingPluginFile("ITKImageProcessingPlugin");
-  const QString ITKImageProcessingPluginDisplayName("ITKImageProcessingPlugin");
-  const QString ITKImageProcessingBaseName("ITKImageProcessingPlugin");
+const QString ITKImageProcessingPluginFile("ITKImageProcessingPlugin");
+const QString ITKImageProcessingPluginDisplayName("ITKImageProcessingPlugin");
+const QString ITKImageProcessingBaseName("ITKImageProcessingPlugin");
 
-  namespace FilterGroups
-  {
-  	const QString ITKImageProcessingFilters("ITKImageProcessing");
-  }
+namespace FilterGroups
+{
+const QString ITKImageProcessingFilters("ITKImageProcessing");
+}
 
-  //define pixels for dream3d variable types
-  typedef int8_t Int8PixelType;
-  typedef uint8_t UInt8PixelType;
-  typedef int16_t Int16PixelType;
-  typedef uint16_t UInt16PixelType;
-  typedef int32_t Int32PixelType;
-  typedef uint32_t UInt32PixelType;
-  typedef int64_t Int64PixelType;
-  typedef uint64_t UInt64PixelType;
-  typedef float FloatPixelType;
-  typedef double DoublePixelType;
+// define pixels for dream3d variable types
+typedef int8_t Int8PixelType;
+typedef uint8_t UInt8PixelType;
+typedef int16_t Int16PixelType;
+typedef uint16_t UInt16PixelType;
+typedef int32_t Int32PixelType;
+typedef uint32_t UInt32PixelType;
+typedef int64_t Int64PixelType;
+typedef uint64_t UInt64PixelType;
+typedef float FloatPixelType;
+typedef double DoublePixelType;
 
-  //define default pixel type
+// define default pixel type
 #if ImageProcessing_BitDepth == 8
-  typedef UInt8PixelType                     DefaultPixelType;
-  typedef DataArray<DefaultPixelType>        DefaultArrayType;
+typedef UInt8PixelType DefaultPixelType;
+typedef DataArray<DefaultPixelType> DefaultArrayType;
 #elif ImageProcessing_BitDepth == 16
-  typedef UInt16PixelType DefaultPixelType;
-  typedef UInt16ArrayType DefaultArrayType;
+typedef UInt16PixelType DefaultPixelType;
+typedef UInt16ArrayType DefaultArrayType;
 #elif ImageProcessing_BitDepth == 32
-  typedef FloatPixelType DefaultPixelType;
-  typedef FloatArrayType DefaultArrayType;
+typedef FloatPixelType DefaultPixelType;
+typedef FloatArrayType DefaultArrayType;
 #else
-  typedef UInt8PixelType DefaultPixelType;
-  typedef UInt8ArrayType DefaultArrayType;
+typedef UInt8PixelType DefaultPixelType;
+typedef UInt8ArrayType DefaultArrayType;
 #endif
-
-
 }
 
 /**

@@ -14,13 +14,12 @@
 
 #include "ITKImageBase.h"
 
-#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
 
-//Auto includes
-#include <itkApproximateSignedDistanceMapImageFilter.h>
+// Auto includes
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
-
+#include <itkApproximateSignedDistanceMapImageFilter.h>
 
 /**
  * @brief The ITKApproximateSignedDistanceMapImage class. See [Filter documentation](@ref ITKApproximateSignedDistanceMapImage) for details.
@@ -29,75 +28,70 @@ class ITKApproximateSignedDistanceMapImage : public ITKImageBase
 {
   Q_OBJECT
 
-  public:
-    SIMPL_SHARED_POINTERS(ITKApproximateSignedDistanceMapImage)
-    SIMPL_STATIC_NEW_MACRO(ITKApproximateSignedDistanceMapImage)
-    SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKApproximateSignedDistanceMapImage, AbstractFilter)
+public:
+  SIMPL_SHARED_POINTERS(ITKApproximateSignedDistanceMapImage)
+  SIMPL_STATIC_NEW_MACRO(ITKApproximateSignedDistanceMapImage)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKApproximateSignedDistanceMapImage, AbstractFilter)
 
-    virtual ~ITKApproximateSignedDistanceMapImage();
+  virtual ~ITKApproximateSignedDistanceMapImage();
 
-    SIMPL_FILTER_PARAMETER(double, InsideValue)
-    Q_PROPERTY(double InsideValue READ getInsideValue WRITE setInsideValue)
+  SIMPL_FILTER_PARAMETER(double, InsideValue)
+  Q_PROPERTY(double InsideValue READ getInsideValue WRITE setInsideValue)
 
-    SIMPL_FILTER_PARAMETER(double, OutsideValue)
-    Q_PROPERTY(double OutsideValue READ getOutsideValue WRITE setOutsideValue)
+  SIMPL_FILTER_PARAMETER(double, OutsideValue)
+  Q_PROPERTY(double OutsideValue READ getOutsideValue WRITE setOutsideValue)
 
+  /**
+   * @brief newFilterInstance Reimplemented from @see AbstractFilter class
+   */
+  virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) override;
 
+  /**
+   * @brief getHumanLabel Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getHumanLabel() override;
 
-    /**
-     * @brief newFilterInstance Reimplemented from @see AbstractFilter class
-     */
-    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) override;
+  /**
+   * @brief getSubGroupName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getSubGroupName() override;
 
-    /**
-     * @brief getHumanLabel Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getHumanLabel() override;
+  /**
+   * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  virtual void setupFilterParameters() override;
 
-    /**
-     * @brief getSubGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getSubGroupName() override;
-    
-    /**
-     * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void setupFilterParameters() override;
+  /**
+   * @brief readFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
 
-    /**
-     * @brief readFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
+protected:
+  ITKApproximateSignedDistanceMapImage();
 
-  protected:
-    ITKApproximateSignedDistanceMapImage();
+  /**
+   * @brief dataCheckInternal overloads dataCheckInternal in ITKImageBase and calls templated dataCheck
+   */
+  void virtual dataCheckInternal() override;
 
-    /**
-     * @brief dataCheckInternal overloads dataCheckInternal in ITKImageBase and calls templated dataCheck
-     */
-    void virtual dataCheckInternal() override;
+  /**
+   * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+   */
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void dataCheck();
 
-    /**
-     * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
-     */
-    template<typename InputImageType, typename OutputImageType, unsigned int Dimension>
-    void dataCheck();
+  /**
+  * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
+  */
+  void virtual filterInternal() override;
 
-    /**
-    * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
-    */
-    void virtual filterInternal() override;
+  /**
+  * @brief Applies the filter
+  */
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
-    /**
-    * @brief Applies the filter
-    */
-    template<typename InputImageType, typename OutputImageType, unsigned int Dimension>
-    void filter();
-
-  private:
-
-    ITKApproximateSignedDistanceMapImage(const ITKApproximateSignedDistanceMapImage&); // Copy Constructor Not Implemented
-    void operator=(const ITKApproximateSignedDistanceMapImage&); // Operator '=' Not Implemented
+private:
+  ITKApproximateSignedDistanceMapImage(const ITKApproximateSignedDistanceMapImage&); // Copy Constructor Not Implemented
+  void operator=(const ITKApproximateSignedDistanceMapImage&);                       // Operator '=' Not Implemented
 };
 
 #ifdef __clang__

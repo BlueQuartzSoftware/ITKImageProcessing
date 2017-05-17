@@ -9,16 +9,14 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 
 #include "SIMPLib/Geometry/ImageGeom.h"
 
-
-
-#include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 
 // Include the MOC generated file for this class
 #include "moc_ITKSigmoidImage.cpp"
@@ -26,13 +24,13 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKSigmoidImage::ITKSigmoidImage() :
-  ITKImageBase()
+ITKSigmoidImage::ITKSigmoidImage()
+: ITKImageBase()
 {
-  m_Alpha=StaticCastScalar<double,double,double>(1);
-  m_Beta=StaticCastScalar<double,double,double>(0);
-  m_OutputMaximum=StaticCastScalar<double,double,double>(255);
-  m_OutputMinimum=StaticCastScalar<double,double,double>(0);
+  m_Alpha = StaticCastScalar<double, double, double>(1);
+  m_Beta = StaticCastScalar<double, double, double>(0);
+  m_OutputMaximum = StaticCastScalar<double, double, double>(255);
+  m_OutputMinimum = StaticCastScalar<double, double, double>(0);
 
   setupFilterParameters();
 }
@@ -56,15 +54,13 @@ void ITKSigmoidImage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("OutputMaximum", OutputMaximum, FilterParameter::Parameter, ITKSigmoidImage));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("OutputMinimum", OutputMinimum, FilterParameter::Parameter, ITKSigmoidImage));
 
-
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Save as New Array", SaveAsNewArray, FilterParameter::Parameter, ITKSigmoidImage, linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
-      DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize,
-      AttributeMatrix::Type::Cell, IGeometry::Type::Image);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Attribute Array to filter", SelectedCellArrayPath, FilterParameter::RequiredArray, ITKSigmoidImage, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
@@ -79,9 +75,9 @@ void ITKSigmoidImage::setupFilterParameters()
 void ITKSigmoidImage::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setSelectedCellArrayPath( reader->readDataArrayPath( "SelectedCellArrayPath", getSelectedCellArrayPath() ) );
-  setNewCellArrayName( reader->readString( "NewCellArrayName", getNewCellArrayName() ) );
-  setSaveAsNewArray( reader->readValue( "SaveAsNewArray", getSaveAsNewArray() ) );
+  setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
+  setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
+  setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
   setAlpha(reader->readValue("Alpha", getAlpha()));
   setBeta(reader->readValue("Beta", getBeta()));
   setOutputMaximum(reader->readValue("OutputMaximum", getOutputMaximum()));
@@ -93,8 +89,7 @@ void ITKSigmoidImage::readFilterParameters(AbstractFilterParametersReader* reade
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
-void ITKSigmoidImage::dataCheck()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKSigmoidImage::dataCheck()
 {
   // Check consistency of parameters
 
@@ -114,12 +109,11 @@ void ITKSigmoidImage::dataCheckInternal()
 //
 // -----------------------------------------------------------------------------
 
-template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
-void ITKSigmoidImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKSigmoidImage::filter()
 {
   typedef itk::Dream3DImage<InputPixelType, Dimension> InputImageType;
   typedef itk::Dream3DImage<OutputPixelType, Dimension> OutputImageType;
-  //define filter
+  // define filter
   typedef itk::SigmoidImageFilter<InputImageType, OutputImageType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
   filter->SetAlpha(static_cast<double>(m_Alpha));
@@ -127,7 +121,6 @@ void ITKSigmoidImage::filter()
   filter->SetOutputMaximum(static_cast<double>(m_OutputMaximum));
   filter->SetOutputMinimum(static_cast<double>(m_OutputMinimum));
   this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -135,7 +128,7 @@ void ITKSigmoidImage::filter()
 // -----------------------------------------------------------------------------
 void ITKSigmoidImage::filterInternal()
 {
-    Dream3DArraySwitchMacro(this->filter, getSelectedCellArrayPath(), -4);
+  Dream3DArraySwitchMacro(this->filter, getSelectedCellArrayPath(), -4);
 }
 
 // -----------------------------------------------------------------------------
@@ -155,12 +148,14 @@ AbstractFilter::Pointer ITKSigmoidImage::newFilterInstance(bool copyFilterParame
 //
 // -----------------------------------------------------------------------------
 const QString ITKSigmoidImage::getHumanLabel()
-{ return "ITK::Sigmoid Image Filter"; }
+{
+  return "ITK::Sigmoid Image Filter";
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ITKSigmoidImage::getSubGroupName()
-{ return "ITK IntensityTransformation"; }
-
-
+{
+  return "ITK IntensityTransformation";
+}

@@ -7,16 +7,14 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 
 #include "SIMPLib/Geometry/ImageGeom.h"
 
-
-
-#include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 
 // Include the MOC generated file for this class
 #include "moc_ITKHistogramMatchingImage.cpp"
@@ -24,12 +22,12 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKHistogramMatchingImage::ITKHistogramMatchingImage() :
-  ITKImageBase()
+ITKHistogramMatchingImage::ITKHistogramMatchingImage()
+: ITKImageBase()
 {
-  m_NumberOfHistogramLevels=StaticCastScalar<double,double,double>(256u);
-  m_NumberOfMatchPoints=StaticCastScalar<double,double,double>(1u);
-  m_ThresholdAtMeanIntensity=StaticCastScalar<bool,bool,bool>(true);
+  m_NumberOfHistogramLevels = StaticCastScalar<double, double, double>(256u);
+  m_NumberOfMatchPoints = StaticCastScalar<double, double, double>(1u);
+  m_ThresholdAtMeanIntensity = StaticCastScalar<bool, bool, bool>(true);
 
   setupFilterParameters();
 }
@@ -52,19 +50,17 @@ void ITKHistogramMatchingImage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("NumberOfMatchPoints", NumberOfMatchPoints, FilterParameter::Parameter, ITKHistogramMatchingImage));
   parameters.push_back(SIMPL_NEW_BOOL_FP("ThresholdAtMeanIntensity", ThresholdAtMeanIntensity, FilterParameter::Parameter, ITKHistogramMatchingImage));
 
-
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Save as New Array", SaveAsNewArray, FilterParameter::Parameter, ITKHistogramMatchingImage, linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req =
-      DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize,
-      // Source image
-      AttributeMatrix::Type::Cell, IGeometry::Type::Image);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize,
+                                                                                                                  // Source image
+                                                                                                                  AttributeMatrix::Type::Cell, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Input Attribute Array to filter", SelectedCellArrayPath, FilterParameter::RequiredArray, ITKHistogramMatchingImage, req));
-      // Reference image
-      parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Reference Attribute Array to filter", ReferenceCellArrayPath, FilterParameter::RequiredArray, ITKHistogramMatchingImage, req));
+    // Reference image
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Reference Attribute Array to filter", ReferenceCellArrayPath, FilterParameter::RequiredArray, ITKHistogramMatchingImage, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
   parameters.push_back(SIMPL_NEW_STRING_FP("Filtered Array", NewCellArrayName, FilterParameter::CreatedArray, ITKHistogramMatchingImage));
@@ -78,10 +74,10 @@ void ITKHistogramMatchingImage::setupFilterParameters()
 void ITKHistogramMatchingImage::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setSelectedCellArrayPath( reader->readDataArrayPath( "SelectedCellArrayPath", getSelectedCellArrayPath() ) );
-  setReferenceCellArrayPath( reader->readDataArrayPath( "ReferenceCellArrayPath", getReferenceCellArrayPath() ) );
-  setNewCellArrayName( reader->readString( "NewCellArrayName", getNewCellArrayName() ) );
-  setSaveAsNewArray( reader->readValue( "SaveAsNewArray", getSaveAsNewArray() ) );
+  setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
+  setReferenceCellArrayPath(reader->readDataArrayPath("ReferenceCellArrayPath", getReferenceCellArrayPath()));
+  setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
+  setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
   setNumberOfHistogramLevels(reader->readValue("NumberOfHistogramLevels", getNumberOfHistogramLevels()));
   setNumberOfMatchPoints(reader->readValue("NumberOfMatchPoints", getNumberOfMatchPoints()));
   setThresholdAtMeanIntensity(reader->readValue("ThresholdAtMeanIntensity", getThresholdAtMeanIntensity()));
@@ -92,14 +88,12 @@ void ITKHistogramMatchingImage::readFilterParameters(AbstractFilterParametersRea
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-size_t ITKHistogramMatchingImage::getImageDimension(const DataArrayPath &path)
+size_t ITKHistogramMatchingImage::getImageDimension(const DataArrayPath& path)
 {
   QVector<size_t> tDims(3, -1);
   QString errorMessage;
-  ImageGeom::Pointer imageGeometry = 
-  getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(
-      this, path.getDataContainerName());
-  if (imageGeometry.get() != nullptr)
+  ImageGeom::Pointer imageGeometry = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, path.getDataContainerName());
+  if(imageGeometry.get() != nullptr)
   {
     imageGeometry->getDimensions(tDims[0], tDims[1], tDims[2]);
   }
@@ -107,7 +101,7 @@ size_t ITKHistogramMatchingImage::getImageDimension(const DataArrayPath &path)
   {
     setErrorCondition(-10);
     errorMessage = "Geometry not found (%1)";
-    notifyErrorMessage(getHumanLabel(), errorMessage.arg(path.serialize()) , getErrorCondition());
+    notifyErrorMessage(getHumanLabel(), errorMessage.arg(path.serialize()), getErrorCondition());
     return 0;
   }
   // Geometry is always 3D, but assume image is 2D if
@@ -122,14 +116,14 @@ size_t ITKHistogramMatchingImage::getImageDimension(const DataArrayPath &path)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int ITKHistogramMatchingImage::CheckArrayExists(const DataArrayPath &path)
+int ITKHistogramMatchingImage::CheckArrayExists(const DataArrayPath& path)
 {
   IDataArray::Pointer ptr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, path);
   if(ptr.get() == nullptr)
   {
     setErrorCondition(-6);
     QString errorMessage("Data Array %1 does not exist");
-    notifyErrorMessage(getHumanLabel(), errorMessage.arg(path.serialize()) , getErrorCondition());
+    notifyErrorMessage(getHumanLabel(), errorMessage.arg(path.serialize()), getErrorCondition());
     return 1;
   }
   return 0;
@@ -138,7 +132,7 @@ int ITKHistogramMatchingImage::CheckArrayExists(const DataArrayPath &path)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ITKHistogramMatchingImage::CompareImagePixelTypes(const DataArrayPath &path1, const DataArrayPath &path2)
+void ITKHistogramMatchingImage::CompareImagePixelTypes(const DataArrayPath& path1, const DataArrayPath& path2)
 {
   // Verify that both images have same data type
   IDataArray::Pointer ptr1 = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, path1);
@@ -160,7 +154,7 @@ void ITKHistogramMatchingImage::CompareImagePixelTypes(const DataArrayPath &path
     notifyErrorMessage(getHumanLabel(), errorMessage.arg(cDims1.size()).arg(cDims2.size()), getErrorCondition());
     return;
   }
-  for(int ii = 0 ; ii < cDims1.size() ; ii++)
+  for(int ii = 0; ii < cDims1.size(); ii++)
   {
     if(cDims1[ii] != cDims2[ii])
     {
@@ -175,37 +169,36 @@ void ITKHistogramMatchingImage::CompareImagePixelTypes(const DataArrayPath &path
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ITKHistogramMatchingImage::CompareImageTypes(const DataArrayPath &path1, const DataArrayPath &path2)
+void ITKHistogramMatchingImage::CompareImageTypes(const DataArrayPath& path1, const DataArrayPath& path2)
 {
   // Does data array exist
-  if( CheckArrayExists(path1) || CheckArrayExists(path2))
+  if(CheckArrayExists(path1) || CheckArrayExists(path2))
   {
     return;
   }
   // Compare image1(path1) and image2 (path2) image dimension
   size_t dimension1 = getImageDimension(getSelectedCellArrayPath());
   size_t dimension2 = getImageDimension(getReferenceCellArrayPath());
-  if( dimension1 != dimension2 )
+  if(dimension1 != dimension2)
   {
     setErrorCondition(-7);
     QString errorMessage("Images have a different number of dimensions:\n %1 != %2");
     notifyErrorMessage(getHumanLabel(), errorMessage.arg(dimension1).arg(dimension2), getErrorCondition());
     return;
   }
-  //image pixeltype+image component
-  CompareImagePixelTypes(path1,path2);
+  // image pixeltype+image component
+  CompareImagePixelTypes(path1, path2);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
-void ITKHistogramMatchingImage::dataCheck()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKHistogramMatchingImage::dataCheck()
 {
   setErrorCondition(0);
   // Check consistency of parameters
-  this->CheckIntegerEntry<uint32_t,double>(m_NumberOfHistogramLevels, "NumberOfHistogramLevels",1);
-  this->CheckIntegerEntry<uint32_t,double>(m_NumberOfMatchPoints, "NumberOfMatchPoints",1);
+  this->CheckIntegerEntry<uint32_t, double>(m_NumberOfHistogramLevels, "NumberOfHistogramLevels", 1);
+  this->CheckIntegerEntry<uint32_t, double>(m_NumberOfMatchPoints, "NumberOfMatchPoints", 1);
 
   // Compare source and reference image type
   CompareImageTypes(getSelectedCellArrayPath(), getReferenceCellArrayPath());
@@ -224,12 +217,11 @@ void ITKHistogramMatchingImage::dataCheckInternal()
 //
 // -----------------------------------------------------------------------------
 
-template<typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
-void ITKHistogramMatchingImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKHistogramMatchingImage::filter()
 {
   typedef itk::Dream3DImage<InputPixelType, Dimension> InputImageType;
   typedef itk::Dream3DImage<OutputPixelType, Dimension> OutputImageType;
-  //define filter
+  // define filter
   typedef itk::HistogramMatchingImageFilter<InputImageType, OutputImageType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
   filter->SetNumberOfHistogramLevels(static_cast<uint32_t>(m_NumberOfHistogramLevels));
@@ -249,7 +241,6 @@ void ITKHistogramMatchingImage::filter()
   filter->SetReferenceImage(toITK->GetOutput());
   // Run filter
   this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -257,7 +248,7 @@ void ITKHistogramMatchingImage::filter()
 // -----------------------------------------------------------------------------
 void ITKHistogramMatchingImage::filterInternal()
 {
-    Dream3DArraySwitchMacro(this->filter, getSelectedCellArrayPath(), -4);
+  Dream3DArraySwitchMacro(this->filter, getSelectedCellArrayPath(), -4);
 }
 
 // -----------------------------------------------------------------------------
@@ -277,12 +268,14 @@ AbstractFilter::Pointer ITKHistogramMatchingImage::newFilterInstance(bool copyFi
 //
 // -----------------------------------------------------------------------------
 const QString ITKHistogramMatchingImage::getHumanLabel()
-{ return "ITK::Histogram Matching Image Filter"; }
+{
+  return "ITK::Histogram Matching Image Filter";
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ITKHistogramMatchingImage::getSubGroupName()
-{ return "ITK IntensityTransformation"; }
-
-
+{
+  return "ITK IntensityTransformation";
+}

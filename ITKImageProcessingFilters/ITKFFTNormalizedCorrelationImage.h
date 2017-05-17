@@ -14,14 +14,13 @@
 
 #include "ITKImageBase.h"
 
-#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
 
-//Auto includes
+// Auto includes
 #include <SIMPLib/FilterParameters/BooleanFilterParameter.h>
-#include <itkFFTNormalizedCorrelationImageFilter.h>
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
-
+#include <itkFFTNormalizedCorrelationImageFilter.h>
 
 /**
  * @brief The ITKFFTNormalizedCorrelationImage class. See [Filter documentation](@ref ITKFFTNormalizedCorrelationImage) for details.
@@ -30,78 +29,73 @@ class ITKFFTNormalizedCorrelationImage : public ITKImageBase
 {
   Q_OBJECT
 
-  public:
-    SIMPL_SHARED_POINTERS(ITKFFTNormalizedCorrelationImage)
-    SIMPL_STATIC_NEW_MACRO(ITKFFTNormalizedCorrelationImage)
-    SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKFFTNormalizedCorrelationImage, AbstractFilter)
+public:
+  SIMPL_SHARED_POINTERS(ITKFFTNormalizedCorrelationImage)
+  SIMPL_STATIC_NEW_MACRO(ITKFFTNormalizedCorrelationImage)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKFFTNormalizedCorrelationImage, AbstractFilter)
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, MovingCellArrayPath)
-    Q_PROPERTY(DataArrayPath MovingCellArrayPath READ getMovingCellArrayPath WRITE setMovingCellArrayPath)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, MovingCellArrayPath)
+  Q_PROPERTY(DataArrayPath MovingCellArrayPath READ getMovingCellArrayPath WRITE setMovingCellArrayPath)
 
-    virtual ~ITKFFTNormalizedCorrelationImage();
+  virtual ~ITKFFTNormalizedCorrelationImage();
 
-    SIMPL_FILTER_PARAMETER(double, RequiredNumberOfOverlappingPixels)
-    Q_PROPERTY(double RequiredNumberOfOverlappingPixels READ getRequiredNumberOfOverlappingPixels WRITE setRequiredNumberOfOverlappingPixels)
+  SIMPL_FILTER_PARAMETER(double, RequiredNumberOfOverlappingPixels)
+  Q_PROPERTY(double RequiredNumberOfOverlappingPixels READ getRequiredNumberOfOverlappingPixels WRITE setRequiredNumberOfOverlappingPixels)
 
-    SIMPL_FILTER_PARAMETER(double, RequiredFractionOfOverlappingPixels)
-    Q_PROPERTY(double RequiredFractionOfOverlappingPixels READ getRequiredFractionOfOverlappingPixels WRITE setRequiredFractionOfOverlappingPixels)
+  SIMPL_FILTER_PARAMETER(double, RequiredFractionOfOverlappingPixels)
+  Q_PROPERTY(double RequiredFractionOfOverlappingPixels READ getRequiredFractionOfOverlappingPixels WRITE setRequiredFractionOfOverlappingPixels)
 
+  /**
+   * @brief newFilterInstance Reimplemented from @see AbstractFilter class
+   */
+  virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) override;
 
+  /**
+   * @brief getHumanLabel Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getHumanLabel() override;
 
-    /**
-     * @brief newFilterInstance Reimplemented from @see AbstractFilter class
-     */
-    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) override;
+  /**
+   * @brief getSubGroupName Reimplemented from @see AbstractFilter class
+   */
+  virtual const QString getSubGroupName() override;
 
-    /**
-     * @brief getHumanLabel Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getHumanLabel() override;
+  /**
+   * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  virtual void setupFilterParameters() override;
 
-    /**
-     * @brief getSubGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getSubGroupName() override;
+  /**
+   * @brief readFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
 
-    /**
-     * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void setupFilterParameters() override;
+protected:
+  ITKFFTNormalizedCorrelationImage();
 
-    /**
-     * @brief readFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
+  /**
+   * @brief dataCheckInternal overloads dataCheckInternal in ITKImageBase and calls templated dataCheck
+   */
+  void virtual dataCheckInternal() override;
 
-  protected:
-    ITKFFTNormalizedCorrelationImage();
+  /**
+   * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+   */
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void dataCheck();
 
-    /**
-     * @brief dataCheckInternal overloads dataCheckInternal in ITKImageBase and calls templated dataCheck
-     */
-    void virtual dataCheckInternal() override;
+  /**
+  * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
+  */
+  void virtual filterInternal() override;
 
-    /**
-     * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
-     */
-    template<typename InputImageType, typename OutputImageType, unsigned int Dimension>
-    void dataCheck();
+  /**
+  * @brief Applies the filter
+  */
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
-    /**
-    * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
-    */
-    void virtual filterInternal() override;
-
-    /**
-    * @brief Applies the filter
-    */
-    template<typename InputImageType, typename OutputImageType, unsigned int Dimension>
-    void filter();
-
-  private:
-
-    ITKFFTNormalizedCorrelationImage(const ITKFFTNormalizedCorrelationImage&); // Copy Constructor Not Implemented
-    void operator=(const ITKFFTNormalizedCorrelationImage&); // Operator '=' Not Implemented
+private:
+  ITKFFTNormalizedCorrelationImage(const ITKFFTNormalizedCorrelationImage&); // Copy Constructor Not Implemented
+  void operator=(const ITKFFTNormalizedCorrelationImage&);                   // Operator '=' Not Implemented
 };
 
 #ifdef __clang__

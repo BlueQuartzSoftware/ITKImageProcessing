@@ -38,47 +38,55 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QString>
 
+#include "SIMPLib/Common/FilterFactory.hpp"
 #include "SIMPLib/Common/FilterManager.h"
 #include "SIMPLib/Common/IFilterFactory.hpp"
-#include "SIMPLib/Common/FilterFactory.hpp"
 
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
 
 // Include the MOC generated file for this class
 #include "moc_ITKImageProcessingPlugin.cpp"
 
-#include "itksys/SystemTools.hxx"
 #include "itkSCIFIOImageIOFactory.h"
-#include <itkJPEGImageIOFactory.h>
-#include <itkMetaImageIOFactory.h>
-#include <itkNrrdImageIOFactory.h>
-#include <itkPNGImageIOFactory.h>
+#include "itksys/SystemTools.hxx"
 #include <itkBMPImageIOFactory.h>
-#include <itkJPEGImageIOFactory.h>
-#include <itkTIFFImageIOFactory.h>
-#include <itkNiftiImageIOFactory.h>
-#include <itkPNGImageIOFactory.h>
-#include <itkGiplImageIOFactory.h>
-#include <itkVTKImageIOFactory.h>
-#include <itkStimulateImageIOFactory.h>
 #include <itkBioRadImageIOFactory.h>
 #include <itkGE4ImageIOFactory.h>
 #include <itkGE5ImageIOFactory.h>
+#include <itkGiplImageIOFactory.h>
+#include <itkJPEGImageIOFactory.h>
+#include <itkJPEGImageIOFactory.h>
 #include <itkMRCImageIOFactory.h>
+#include <itkMetaImageIOFactory.h>
+#include <itkNiftiImageIOFactory.h>
+#include <itkNrrdImageIOFactory.h>
+#include <itkPNGImageIOFactory.h>
+#include <itkPNGImageIOFactory.h>
+#include <itkStimulateImageIOFactory.h>
+#include <itkTIFFImageIOFactory.h>
+#include <itkVTKImageIOFactory.h>
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKImageProcessingPlugin::ITKImageProcessingPlugin() :
-m_Version("0.1.0"),                            // Initialize ITKImageProcessing's Version Number Here
-m_CompatibilityVersion("0.1.0"), // Initialize ITKImageProcessing's Compatibility Version Number Here
-m_Vendor("BlueQuartz Software"),                                // Initialize ITKImageProcessing's Vendor Name Here
-m_URL("http://www.github.com/bluequartzsoftware/ITKImageProcessing"),                                           // Initialize Company URL Here
-m_Location(""),                                 // Initialize ITKImageProcessing library Location Here
-m_Description(""),                           // Initialize ITKImageProcessing's Description Here
-m_Copyright(""),                               // Initialize ITKImageProcessing's Copyright Here
-m_Filters(QList<QString>()),                        // Initialize ITKImageProcessing's List of Dependencies Here
-m_DidLoad(false)
+ITKImageProcessingPlugin::ITKImageProcessingPlugin()
+: m_Version("0.1.0")
+, // Initialize ITKImageProcessing's Version Number Here
+    m_CompatibilityVersion("0.1.0")
+, // Initialize ITKImageProcessing's Compatibility Version Number Here
+    m_Vendor("BlueQuartz Software")
+, // Initialize ITKImageProcessing's Vendor Name Here
+    m_URL("http://www.github.com/bluequartzsoftware/ITKImageProcessing")
+, // Initialize Company URL Here
+    m_Location("")
+, // Initialize ITKImageProcessing library Location Here
+    m_Description("")
+, // Initialize ITKImageProcessing's Description Here
+    m_Copyright("")
+, // Initialize ITKImageProcessing's Copyright Here
+    m_Filters(QList<QString>())
+, // Initialize ITKImageProcessing's List of Dependencies Here
+    m_DidLoad(false)
 {
   ITKImageProcessingPlugin::setSCIFIOEnvironmentVariables();
   itk::JPEGImageIOFactory::RegisterOneFactory();
@@ -112,13 +120,13 @@ ITKImageProcessingPlugin::~ITKImageProcessingPlugin()
 void ITKImageProcessingPlugin::setSCIFIOEnvironmentVariables()
 {
   QString applicationDir = QCoreApplication::applicationDirPath();
-  #ifndef WIN32
+#ifndef WIN32
   QFileInfo fi = QFileInfo(applicationDir);
   applicationDir = fi.absolutePath(); // Goes up one directory (bin/..)
-  #endif
-  std::string SCIFIO_PATH = std::string("SCIFIO_PATH=")+applicationDir.toStdString()+"/lib/jars";
+#endif
+  std::string SCIFIO_PATH = std::string("SCIFIO_PATH=") + applicationDir.toStdString() + "/lib/jars";
   itksys::SystemTools::PutEnv(SCIFIO_PATH);
-  std::string JAVA_HOME = std::string("JAVA_HOME=")+applicationDir.toStdString()+"/lib/jre";
+  std::string JAVA_HOME = std::string("JAVA_HOME=") + applicationDir.toStdString() + "/lib/jre";
   itksys::SystemTools::PutEnv(JAVA_HOME);
 }
 
@@ -128,14 +136,14 @@ void ITKImageProcessingPlugin::setSCIFIOEnvironmentVariables()
 QString ITKImageProcessingPlugin::getListSupportedReadExtensions()
 {
   QStringList supportedExtensions;
-  std::list< itk::LightObject::Pointer > allobjects = itk::ObjectFactoryBase::CreateAllInstance("itkImageIOBase");
-  if (allobjects.size() > 0)
+  std::list<itk::LightObject::Pointer> allobjects = itk::ObjectFactoryBase::CreateAllInstance("itkImageIOBase");
+  if(allobjects.size() > 0)
   {
-    for (std::list< itk::LightObject::Pointer >::iterator ii = allobjects.begin(); ii != allobjects.end(); ++ii)
+    for(std::list<itk::LightObject::Pointer>::iterator ii = allobjects.begin(); ii != allobjects.end(); ++ii)
     {
-      itk::ImageIOBase *io = dynamic_cast< itk::ImageIOBase * >(ii->GetPointer());
+      itk::ImageIOBase* io = dynamic_cast<itk::ImageIOBase*>(ii->GetPointer());
       itk::ImageIOBase::ArrayOfExtensionsType currentExtensions = io->GetSupportedReadExtensions();
-      for (size_t jj = 0; jj < currentExtensions.size(); jj++)
+      for(size_t jj = 0; jj < currentExtensions.size(); jj++)
       {
         supportedExtensions << currentExtensions[jj].c_str();
       }
@@ -150,14 +158,14 @@ QString ITKImageProcessingPlugin::getListSupportedReadExtensions()
 QString ITKImageProcessingPlugin::getListSupportedWriteExtensions()
 {
   QStringList supportedExtensions;
-  std::list< itk::LightObject::Pointer > allobjects = itk::ObjectFactoryBase::CreateAllInstance("itkImageIOBase");
-  if (allobjects.size() > 0)
+  std::list<itk::LightObject::Pointer> allobjects = itk::ObjectFactoryBase::CreateAllInstance("itkImageIOBase");
+  if(allobjects.size() > 0)
   {
-    for (std::list< itk::LightObject::Pointer >::iterator ii = allobjects.begin(); ii != allobjects.end(); ++ii)
+    for(std::list<itk::LightObject::Pointer>::iterator ii = allobjects.begin(); ii != allobjects.end(); ++ii)
     {
-      itk::ImageIOBase *io = dynamic_cast< itk::ImageIOBase * >(ii->GetPointer());
+      itk::ImageIOBase* io = dynamic_cast<itk::ImageIOBase*>(ii->GetPointer());
       itk::ImageIOBase::ArrayOfExtensionsType currentExtensions = io->GetSupportedWriteExtensions();
-      for (size_t jj = 0; jj < currentExtensions.size(); jj++)
+      for(size_t jj = 0; jj < currentExtensions.size(); jj++)
       {
         supportedExtensions << currentExtensions[jj].c_str();
       }
@@ -172,7 +180,11 @@ QString ITKImageProcessingPlugin::getListSupportedWriteExtensions()
 QStringList ITKImageProcessingPlugin::getList2DSupportedFileExtensions()
 {
   QStringList supportedExtensions;
-  supportedExtensions << ".png" << ".tif" << ".jpg" << ".jpeg" << ".bmp";
+  supportedExtensions << ".png"
+                      << ".tif"
+                      << ".jpg"
+                      << ".jpeg"
+                      << ".bmp";
   return supportedExtensions;
 }
 
@@ -236,9 +248,9 @@ QString ITKImageProcessingPlugin::getDescription()
   QFileInfo licenseFileInfo(licenseFile);
   QString text = "<<--Description was not read-->>";
 
-  if ( licenseFileInfo.exists() )
+  if(licenseFileInfo.exists())
   {
-    if ( licenseFile.open(QIODevice::ReadOnly | QIODevice::Text) )
+    if(licenseFile.open(QIODevice::ReadOnly | QIODevice::Text))
     {
       QTextStream in(&licenseFile);
       text = in.readAll();
@@ -267,9 +279,9 @@ QString ITKImageProcessingPlugin::getLicense()
   QFileInfo licenseFileInfo(licenseFile);
   QString text = "<<--License was not read-->>";
 
-  if ( licenseFileInfo.exists() )
+  if(licenseFileInfo.exists())
   {
-    if ( licenseFile.open(QIODevice::ReadOnly | QIODevice::Text) )
+    if(licenseFile.open(QIODevice::ReadOnly | QIODevice::Text))
     {
       QTextStream in(&licenseFile);
       text = in.readAll();
@@ -290,14 +302,14 @@ QMap<QString, QString> ITKImageProcessingPlugin::getThirdPartyLicenses()
   fileStrList.push_back(":/ThirdParty/Qt.txt");
   fileStrList.push_back(":/ThirdParty/Qwt.txt");
 
-  for (QList<QString>::iterator iter = fileStrList.begin(); iter != fileStrList.end(); iter++)
+  for(QList<QString>::iterator iter = fileStrList.begin(); iter != fileStrList.end(); iter++)
   {
     QFile file(*iter);
     QFileInfo licenseFileInfo(file);
 
-    if ( licenseFileInfo.exists() )
+    if(licenseFileInfo.exists())
     {
-      if ( file.open(QIODevice::ReadOnly | QIODevice::Text) )
+      if(file.open(QIODevice::ReadOnly | QIODevice::Text))
       {
         QTextStream in(&file);
         licenseMap.insert(licenseFileInfo.baseName(), in.readAll());
@@ -349,4 +361,3 @@ void ITKImageProcessingPlugin::readSettings(QSettings& prefs)
 #include "ITKImageProcessingFilters/RegisterKnownFilters.cpp"
 
 #include "FilterParameterWidgets/RegisterKnownFilterParameterWidgets.cpp"
-
