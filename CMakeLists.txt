@@ -244,6 +244,9 @@ target_link_libraries(${PLUGIN_NAME}
                     ${ITK_LIBRARIES}
                     )
 SET_TARGET_PROPERTIES(${PLUGIN_NAME} PROPERTIES FOLDER ${PLUGIN_NAME}Plugin)
+if(MSVC)
+  SET_TARGET_PROPERTIES(${PLUGIN_NAME} PROPERTIES LINK_FLAGS_DEBUG "/INCREMENTAL:NO" )
+endif()
 target_include_directories(${PLUGIN_NAME}
                       PUBLIC ${${PLUGIN_NAME}_BINARY_DIR}
                       PUBLIC ${${PLUGIN_NAME}_SOURCE_DIR}
