@@ -111,7 +111,8 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
   QString outputVal = "ObjectCount :%1";
   m_ObjectCount = filter->GetObjectCount();
-  notifyWarningMessage(getHumanLabel(), outputVal.arg(m_ObjectCount), 0);
+  setWarningCondition(-1);
+  notifyWarningMessage(getHumanLabel(), outputVal.arg(m_ObjectCount), getWarningCondition());
 }
 
 // -----------------------------------------------------------------------------
