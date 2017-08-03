@@ -133,6 +133,7 @@ void ITKImageReader::dataCheck()
   // If we got here, that means that there is no error
   setErrorCondition(0);
   setWarningCondition(0);
+  setWarningCondition(0);
 }
 
 // -----------------------------------------------------------------------------
@@ -376,6 +377,7 @@ void ITKImageReader::readImage(bool dataCheck)
 void ITKImageReader::execute()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   setWarningCondition(0);
   dataCheck();
   if(getErrorCondition() < 0)

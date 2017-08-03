@@ -115,6 +115,7 @@ void ITKBinaryDilateImage::readFilterParameters(AbstractFilterParametersReader* 
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKBinaryDilateImage::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   // Check consistency of parameters
   this->CheckVectorEntry<unsigned int, FloatVec3_t>(m_KernelRadius, "KernelRadius", 1);
   QVector<QString> supportedTypes;

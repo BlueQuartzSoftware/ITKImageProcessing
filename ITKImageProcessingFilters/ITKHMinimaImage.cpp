@@ -88,6 +88,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   // Check consistency of parameters
 
   setErrorCondition(0);
+  setWarningCondition(0);
   ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
 

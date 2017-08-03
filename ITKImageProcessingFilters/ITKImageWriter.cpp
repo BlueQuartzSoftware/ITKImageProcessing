@@ -182,6 +182,7 @@ void ITKImageWriter::dataCheck()
   // If we got here, that means that there is no error
   setErrorCondition(0);
   setWarningCondition(0);
+  setWarningCondition(0);
 }
 
 // -----------------------------------------------------------------------------
@@ -299,6 +300,7 @@ template <typename TPixel, typename UnusedTPixel, unsigned int Dimensions> void 
 void ITKImageWriter::execute()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   setWarningCondition(0);
   dataCheck();
   if(getErrorCondition() < 0)

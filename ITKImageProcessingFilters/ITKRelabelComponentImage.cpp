@@ -86,6 +86,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   this->CheckIntegerEntry<uint64_t, double>(m_MinimumObjectSize, "MinimumObjectSize", 1);
 
   setErrorCondition(0);
+  setWarningCondition(0);
   ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
 

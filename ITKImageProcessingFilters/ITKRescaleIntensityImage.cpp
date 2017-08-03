@@ -130,6 +130,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
     return;
   }
   setErrorCondition(0);
+  setWarningCondition(0);
   ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
 

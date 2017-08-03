@@ -136,6 +136,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
     CheckIntegerEntry
   }
   setErrorCondition(0);
+  setWarningCondition(0);
   ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
 

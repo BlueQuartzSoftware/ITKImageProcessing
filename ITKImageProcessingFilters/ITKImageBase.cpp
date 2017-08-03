@@ -37,6 +37,7 @@ ITKImageBase::~ITKImageBase()
 void ITKImageBase::initialize()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   setCancel(false);
 }
 

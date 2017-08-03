@@ -105,6 +105,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
                  << "double";
   checkImageType(supportedTypes, getSelectedCellArrayPath());
   setErrorCondition(0);
+  setWarningCondition(0);
   ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
 

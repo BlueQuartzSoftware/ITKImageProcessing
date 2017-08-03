@@ -77,6 +77,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
 {
   // Check consistency of parameters
   setErrorCondition(0);
+  setWarningCondition(0);
   const unsigned int length = itk::NumericTraits<InputPixelType>::GetLength();
   if(length < 3 || length > 4)
   {

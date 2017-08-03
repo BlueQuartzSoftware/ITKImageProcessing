@@ -109,6 +109,7 @@ void ITKGrayscaleMorphologicalClosingImage::readFilterParameters(AbstractFilterP
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKGrayscaleMorphologicalClosingImage::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   // Check consistency of parameters
   this->CheckVectorEntry<unsigned int, FloatVec3_t>(m_KernelRadius, "KernelRadius", 1);
   ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();

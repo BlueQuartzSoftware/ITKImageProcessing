@@ -140,6 +140,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   this->CheckIntegerEntry<uint32_t, double>(m_KernelBandwidthUpdateFrequency, "KernelBandwidthUpdateFrequency", 1);
 
   setErrorCondition(0);
+  setWarningCondition(0);
   ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
 

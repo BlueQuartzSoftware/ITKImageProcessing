@@ -105,6 +105,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   this->CheckIntegerEntry<uint8_t, int>(m_OutsideValue, "OutsideValue", 1);
 
   setErrorCondition(0);
+  setWarningCondition(0);
   ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
 

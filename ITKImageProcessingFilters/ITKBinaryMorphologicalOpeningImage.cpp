@@ -112,6 +112,7 @@ void ITKBinaryMorphologicalOpeningImage::readFilterParameters(AbstractFilterPara
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKBinaryMorphologicalOpeningImage::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
   // Check consistency of parameters
   this->CheckVectorEntry<unsigned int, FloatVec3_t>(m_KernelRadius, "KernelRadius", 1);
   QVector<QString> supportedTypes;

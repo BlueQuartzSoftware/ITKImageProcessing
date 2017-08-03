@@ -95,6 +95,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   this->CheckIntegerEntry<unsigned int, double>(m_MaximumKernelWidth, "MaximumKernelWidth", 1);
 
   setErrorCondition(0);
+  setWarningCondition(0);
   ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
 

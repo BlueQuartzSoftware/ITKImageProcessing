@@ -89,6 +89,7 @@ void ITKFFTNormalizedCorrelationImage::readFilterParameters(AbstractFilterParame
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKFFTNormalizedCorrelationImage::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
 
   // Check consistency of parameters
   this->CheckIntegerEntry<uint64_t, double>(m_RequiredNumberOfOverlappingPixels, "RequiredNumberOfOverlappingPixels", 1);
