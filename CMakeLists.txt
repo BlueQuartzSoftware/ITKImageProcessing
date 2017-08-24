@@ -6,6 +6,15 @@ get_filename_component(${PLUGIN_NAME}_SOURCE_DIR "${CMAKE_CURRENT_LIST_DIR}" ABS
 set(ITKImageProcessing_BINARY_DIR "${DREAM3DProj_BINARY_DIR}/Plugins/${PLUGIN_NAME}")
 
 # --------------------------------------------------------------------
+# Look for ITK as it is required.
+if(NOT SIMPL_USE_ITK)
+  set(PluginNumFilters "-100")
+  set(DREAM3D_BUILD_PLUGIN_${PLUGIN_NAME} "OFF")
+  message(STATUS "${PLUGIN_NAME}: SIMPL_USE_ITK=OFF, ${PLUGIN_NAME} is disabled.")
+  return()
+endif()
+
+# --------------------------------------------------------------------
 # Look for Qt 5 as we need it for the plugin GUI to be generated
 if(NOT Qt5Core_FOUND)
     message(FATAL_ERROR "Qt 5 is Needed for plugin ${PLUGIN_NAME}Plugin.")
@@ -57,9 +66,8 @@ set(DREAM3D_ADDITIONAL_INSTALL_ITK_DIRECTORIES
     )
 set_property(GLOBAL APPEND PROPERTY DREAM3D_ADDITIONAL_INSTALL_ITK_DIRECTORIES ${DREAM3D_ADDITIONAL_INSTALL_ITK_DIRECTORIES})
 
-if(SIMPL_USE_ITK)
-  include( ${CMP_SOURCE_DIR}/ITKSupport/IncludeITK.cmake)
-endif()
+include(${CMP_SOURCE_DIR}/ITKSupport/IncludeITK.cmake)
+
 if(APPLE)
   include_directories(${SimpleITKExplicit_BINARY_DIR}/Common/include)
   include_directories(${SimpleITKExplicit_SOURCE_DIR}/Explicit/include)
