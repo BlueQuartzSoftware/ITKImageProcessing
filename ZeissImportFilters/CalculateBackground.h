@@ -9,9 +9,9 @@
 #include <QtCore/QString>
 #include <QtXml/QDomDocument>
 
-#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
-#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/SIMPLib.h"
 
 #include "ZeissImport/ZeissXml/ZeissTagsXmlSection.h"
 
