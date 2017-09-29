@@ -2,7 +2,7 @@ set(PLUGIN_NAME "ITKImageProcessing")
 set(${PLUGIN_NAME}Test_SOURCE_DIR ${${PLUGIN_NAME}_SOURCE_DIR}/Test)
 set(${PLUGIN_NAME}Test_BINARY_DIR ${${PLUGIN_NAME}_BINARY_DIR}/Test)
 
-include(${SIMPLProj_SOURCE_DIR}/Test/SIMPLTestFunctions.cmake)
+include(${SIMPLProj_SOURCE_DIR}/Source/SIMPLib/Testing/SIMPLTestFunctions.cmake)
 
 include_directories(${${PLUGIN_NAME}_SOURCE_DIR}/Test)
 include_directories(${${PLUGIN_NAME}_BINARY_DIR})
@@ -33,94 +33,94 @@ set(TEST_NAMES
   ITKImageProcessingWriter
   ITKImageProcessingImportImageStack
   ITKImageProcessingImage
-  ITKAbsImage
-  ITKAcosImage
-  ITKAtanImage
-  ITKSqrtImage
-  ITKMinMaxCurvatureFlowImage
-  ITKSigmoidImage
-  ITKBinaryThinningImage
-  ITKHMaximaImage
-  ITKCurvatureAnisotropicDiffusionImage
-  ITKCosImage
-  ITKHMinimaImage
-  ITKExpImage
-  ITKLogImage
-  ITKRescaleIntensityImage
-  ITKLabelContourImage
-  ITKTanImage
-  ITKBinaryContourImage
-  ITKShiftScaleImage
-  ITKNotImage
-  ITKBinaryProjectionImage
-  ITKBinaryMinMaxCurvatureFlowImage
-  ITKInvertIntensityImage
-  ITKGrayscaleFillholeImage
-  ITKAsinImage
-  ITKHConvexImage
-  ITKIntensityWindowingImage
-  ITKGradientAnisotropicDiffusionImage
-  ITKExpNegativeImage
-  ITKSinImage
-  ITKValuedRegionalMinimaImage
-  ITKLog10Image
-  ITKSquareImage
-  ITKSobelEdgeDetectionImage
-  ITKValuedRegionalMaximaImage
-  ITKRelabelComponentImage
-  ITKGrayscaleGrindPeakImage
-  ITKBinaryThresholdImage
-  ITKGradientMagnitudeImage
-  ITKGradientMagnitudeRecursiveGaussianImage
-  ITKSignedMaurerDistanceMapImage
-  ITKLaplacianRecursiveGaussianImage
-  ITKOtsuMultipleThresholdsImage
-  ITKDoubleThresholdImage
-  ITKSumProjectionImage
+#  ITKAbsImage
+#  ITKAcosImage
+#  ITKAtanImage
+#  ITKSqrtImage
+#  ITKMinMaxCurvatureFlowImage
+#  ITKSigmoidImage
+#  ITKBinaryThinningImage
+#  ITKHMaximaImage
+#  ITKCurvatureAnisotropicDiffusionImage
+#  ITKCosImage
+#  ITKHMinimaImage
+#  ITKExpImage
+#  ITKLogImage
+#  ITKRescaleIntensityImage
+#  ITKLabelContourImage
+#  ITKTanImage
+#  ITKBinaryContourImage
+#  ITKShiftScaleImage
+#  ITKNotImage
+#  ITKBinaryProjectionImage
+#  ITKBinaryMinMaxCurvatureFlowImage
+#  ITKInvertIntensityImage
+#  ITKGrayscaleFillholeImage
+#  ITKAsinImage
+#  ITKHConvexImage
+#  ITKIntensityWindowingImage
+#  ITKGradientAnisotropicDiffusionImage
+#  ITKExpNegativeImage
+#  ITKSinImage
+#  ITKValuedRegionalMinimaImage
+#  ITKLog10Image
+#  ITKSquareImage
+#  ITKSobelEdgeDetectionImage
+#  ITKValuedRegionalMaximaImage
+#  ITKRelabelComponentImage
+#  ITKGrayscaleGrindPeakImage
+#  ITKBinaryThresholdImage
+#  ITKGradientMagnitudeImage
+#  ITKGradientMagnitudeRecursiveGaussianImage
+#  ITKSignedMaurerDistanceMapImage
+#  ITKLaplacianRecursiveGaussianImage
+#  ITKOtsuMultipleThresholdsImage
+#  ITKDoubleThresholdImage
+#  ITKSumProjectionImage
   ITKApproximateSignedDistanceMapImage
-  ITKCurvatureFlowImage
-  ITKIsoContourDistanceImage
-  ITKRegionalMinimaImage
-  ITKRegionalMaximaImage
-  ITKSignedDanielssonDistanceMapImage
-  ITKStandardDeviationProjectionImage
-  ITKDanielssonDistanceMapImage
-  ITKMeanProjectionImage
-  ITKZeroCrossingImage
-  ITKThresholdMaximumConnectedComponentsImage
-  ITKSmoothingRecursiveGaussianImage
-  ITKAdaptiveHistogramEqualizationImage
-  ITKCastImage
-  ITKMedianImage
-  ITKRGBToLuminanceImage
-  ITKHistogramMatchingImage
-  ITKMorphologicalWatershedImage
-  ITKMorphologicalWatershedFromMarkersImage
-  ITKThresholdImage
-  ITKBlackTopHatImage
-  ITKWhiteTopHatImage
-  ITKGrayscaleErodeImage
-  ITKBinaryDilateImage
-  ITKGrayscaleMorphologicalOpeningImage
-  ITKGrayscaleMorphologicalClosingImage
-  ITKErodeObjectMorphologyImage
-  ITKClosingByReconstructionImage
-  ITKDilateObjectMorphologyImage
-  ITKBinaryErodeImage
-  ITKMorphologicalGradientImage
-  ITKOpeningByReconstructionImage
-  ITKBinaryMorphologicalOpeningImage
-  ITKBinaryOpeningByReconstructionImage
-  ITKBinaryMorphologicalClosingImage
-  ITKBinaryClosingByReconstructionImage
-  ITKGrayscaleDilateImage
-  ITKMultiScaleHessianBasedObjectnessImage
-  ITKVectorConnectedComponentImage
-  ITKConnectedComponentImage
-  ITKMaskImage
-  ITKFFTNormalizedCorrelationImage
-  ITKVectorRescaleIntensityImage
-  ITKPatchBasedDenoisingImage
+#  ITKCurvatureFlowImage
+#  ITKIsoContourDistanceImage
+#  ITKRegionalMinimaImage
+#  ITKRegionalMaximaImage
+#  ITKSignedDanielssonDistanceMapImage
+#  ITKStandardDeviationProjectionImage
+#  ITKDanielssonDistanceMapImage
+#  ITKMeanProjectionImage
+#  ITKZeroCrossingImage
+#  ITKThresholdMaximumConnectedComponentsImage
+#  ITKSmoothingRecursiveGaussianImage
+#  ITKAdaptiveHistogramEqualizationImage
+#  ITKCastImage
+#  ITKMedianImage
+#  ITKRGBToLuminanceImage
+#  ITKHistogramMatchingImage
+#  ITKMorphologicalWatershedImage
+#  ITKMorphologicalWatershedFromMarkersImage
+#  ITKThresholdImage
+#  ITKBlackTopHatImage
+#  ITKWhiteTopHatImage
+#  ITKGrayscaleErodeImage
+#  ITKBinaryDilateImage
+#  ITKGrayscaleMorphologicalOpeningImage
+#  ITKGrayscaleMorphologicalClosingImage
+#  ITKErodeObjectMorphologyImage
+#  ITKClosingByReconstructionImage
+#  ITKDilateObjectMorphologyImage
+#  ITKBinaryErodeImage
+#  ITKMorphologicalGradientImage
+#  ITKOpeningByReconstructionImage
+#  ITKBinaryMorphologicalOpeningImage
+#  ITKBinaryOpeningByReconstructionImage
+#  ITKBinaryMorphologicalClosingImage
+#  ITKBinaryClosingByReconstructionImage
+#  ITKGrayscaleDilateImage
+#  ITKMultiScaleHessianBasedObjectnessImage
+#  ITKVectorConnectedComponentImage
+#  ITKConnectedComponentImage
+#  ITKMaskImage
+#  ITKFFTNormalizedCorrelationImage
+#  ITKVectorRescaleIntensityImage
+#  ITKPatchBasedDenoisingImage
   )
 
 set( ${PLUGIN_NAME}_TEST_SRCS )
@@ -146,7 +146,7 @@ endforeach()
 
 STRING(REPLACE "|" ";" TestMainFunctors ${TestMainFunctors}   )
 
-configure_file(${SIMPLProj_SOURCE_DIR}/Test/TestMain.cpp.in
+configure_file(${SIMPLProj_SOURCE_DIR}/Source/SIMPLib/Testing/TestMain.cpp.in
                ${${PLUGIN_NAME}_BINARY_DIR}/${PLUGIN_NAME}UnitTest.cpp @ONLY)
 
 

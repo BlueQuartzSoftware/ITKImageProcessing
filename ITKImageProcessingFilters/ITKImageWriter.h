@@ -34,8 +34,8 @@
 #ifndef _ITKImageWriter_H_
 #define _ITKImageWriter_H_
 
-#include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"

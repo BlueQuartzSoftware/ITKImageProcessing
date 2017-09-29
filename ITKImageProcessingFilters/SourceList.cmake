@@ -16,108 +16,108 @@ set(_PublicFilters
   ITKImageReader
   ITKImageWriter
   ITKImportImageStack
-  ITKAbsImage
-  ITKBoxMeanImage
-  ITKAcosImage
-  ITKAtanImage
-  ITKSqrtImage
-  ITKMinMaxCurvatureFlowImage
-  ITKSigmoidImage
-  ITKBinaryThinningImage
-  ITKHMaximaImage
-  ITKCurvatureAnisotropicDiffusionImage
-  ITKCosImage
-  ITKHMinimaImage
-  ITKExpImage
-  ITKBinomialBlurImage
-  ITKLogImage
-  ITKRescaleIntensityImage
-  ITKLabelContourImage
-  ITKSaltAndPepperNoiseImage
-  ITKMinimumProjectionImage
-  ITKTanImage
-  ITKBinaryContourImage
-  ITKMedianProjectionImage
-  ITKShotNoiseImage
-  ITKMaximumProjectionImage
-  ITKSpeckleNoiseImage
-  ITKShiftScaleImage
-  ITKNotImage
-  ITKBinaryProjectionImage
-  ITKBinaryMinMaxCurvatureFlowImage
-  ITKInvertIntensityImage
-  ITKGrayscaleFillholeImage
-  ITKAsinImage
-  ITKHConvexImage
-  ITKIntensityWindowingImage
-  ITKGradientAnisotropicDiffusionImage
-  ITKExpNegativeImage
-  ITKSinImage
-  ITKValuedRegionalMinimaImage
-  ITKLog10Image
-  ITKSquareImage
-  ITKSobelEdgeDetectionImage
-  ITKBilateralImage
-  ITKValuedRegionalMaximaImage
-  ITKRelabelComponentImage
-  ITKGrayscaleGrindPeakImage
-  ITKLaplacianSharpeningImage
-  ITKDiscreteGaussianImage
-  ITKBinaryThresholdImage
-  ITKGradientMagnitudeImage
-  ITKSignedMaurerDistanceMapImage
-  ITKLaplacianRecursiveGaussianImage
-  ITKGradientMagnitudeRecursiveGaussianImage
-  ITKOtsuMultipleThresholdsImage
-  ITKDoubleThresholdImage
-  ITKSumProjectionImage
-  ITKNormalizeImage
-  ITKApproximateSignedDistanceMapImage
-  ITKCurvatureFlowImage
-  ITKIsoContourDistanceImage
-  ITKRegionalMinimaImage
-  ITKRegionalMaximaImage
-  ITKSignedDanielssonDistanceMapImage
-  ITKNormalizeToConstantImage
-  ITKStandardDeviationProjectionImage
-  ITKDanielssonDistanceMapImage
-  ITKMeanProjectionImage
-  ITKZeroCrossingImage
-  ITKBoundedReciprocalImage
-  ITKThresholdMaximumConnectedComponentsImage
-  ITKSmoothingRecursiveGaussianImage
-  ITKAdaptiveHistogramEqualizationImage
-  ITKCastImage
-  ITKMedianImage
-  ITKRGBToLuminanceImage
-  ITKHistogramMatchingImage
-  ITKMorphologicalWatershedImage
-  ITKMorphologicalWatershedFromMarkersImage
-  ITKThresholdImage
-  ITKBlackTopHatImage
-  ITKWhiteTopHatImage
-  ITKGrayscaleErodeImage
-  ITKBinaryDilateImage
-  ITKGrayscaleMorphologicalOpeningImage
-  ITKGrayscaleMorphologicalClosingImage
-  ITKErodeObjectMorphologyImage
-  ITKClosingByReconstructionImage
-  ITKDilateObjectMorphologyImage
-  ITKBinaryErodeImage
-  ITKMorphologicalGradientImage
-  ITKOpeningByReconstructionImage
-  ITKBinaryMorphologicalOpeningImage
-  ITKBinaryOpeningByReconstructionImage
-  ITKBinaryMorphologicalClosingImage
-  ITKBinaryClosingByReconstructionImage
-  ITKGrayscaleDilateImage
-  ITKMultiScaleHessianBasedObjectnessImage
-  ITKVectorConnectedComponentImage
-  ITKConnectedComponentImage
-  ITKMaskImage
-  ITKFFTNormalizedCorrelationImage
-  ITKVectorRescaleIntensityImage
-  ITKPatchBasedDenoisingImage
+  # ITKAbsImage
+  # ITKBoxMeanImage
+  # ITKAcosImage
+  # ITKAtanImage
+  # ITKSqrtImage
+  # ITKMinMaxCurvatureFlowImage
+  # ITKSigmoidImage
+  # ITKBinaryThinningImage
+  # ITKHMaximaImage
+  # ITKCurvatureAnisotropicDiffusionImage
+  # ITKCosImage
+  # ITKHMinimaImage
+  # ITKExpImage
+  # ITKBinomialBlurImage
+  # ITKLogImage
+  # ITKRescaleIntensityImage
+  # ITKLabelContourImage
+  # ITKSaltAndPepperNoiseImage
+  # ITKMinimumProjectionImage
+  # ITKTanImage
+  # ITKBinaryContourImage
+  # ITKMedianProjectionImage
+  # ITKShotNoiseImage
+  # ITKMaximumProjectionImage
+  # ITKSpeckleNoiseImage
+  # ITKShiftScaleImage
+  # ITKNotImage
+  # ITKBinaryProjectionImage
+  # ITKBinaryMinMaxCurvatureFlowImage
+  # ITKInvertIntensityImage
+  # ITKGrayscaleFillholeImage
+  # ITKAsinImage
+  # ITKHConvexImage
+  # ITKIntensityWindowingImage
+  # ITKGradientAnisotropicDiffusionImage
+  # ITKExpNegativeImage
+  # ITKSinImage
+  # ITKValuedRegionalMinimaImage
+  # ITKLog10Image
+  # ITKSquareImage
+  # ITKSobelEdgeDetectionImage
+  # ITKBilateralImage
+  # ITKValuedRegionalMaximaImage
+  # ITKRelabelComponentImage
+  # ITKGrayscaleGrindPeakImage
+  # ITKLaplacianSharpeningImage
+  # ITKDiscreteGaussianImage
+  # ITKBinaryThresholdImage
+  # ITKGradientMagnitudeImage
+  # ITKSignedMaurerDistanceMapImage
+  # ITKLaplacianRecursiveGaussianImage
+  # ITKGradientMagnitudeRecursiveGaussianImage
+  # ITKOtsuMultipleThresholdsImage
+  # ITKDoubleThresholdImage
+  # ITKSumProjectionImage
+  # ITKNormalizeImage
+   ITKApproximateSignedDistanceMapImage
+  # ITKCurvatureFlowImage
+  # ITKIsoContourDistanceImage
+  # ITKRegionalMinimaImage
+  # ITKRegionalMaximaImage
+  # ITKSignedDanielssonDistanceMapImage
+  # ITKNormalizeToConstantImage
+  # ITKStandardDeviationProjectionImage
+  # ITKDanielssonDistanceMapImage
+  # ITKMeanProjectionImage
+  # ITKZeroCrossingImage
+  # ITKBoundedReciprocalImage
+  # ITKThresholdMaximumConnectedComponentsImage
+  # ITKSmoothingRecursiveGaussianImage
+  # ITKAdaptiveHistogramEqualizationImage
+  # ITKCastImage
+  # ITKMedianImage
+  # ITKRGBToLuminanceImage
+  # ITKHistogramMatchingImage
+  # ITKMorphologicalWatershedImage
+  # ITKMorphologicalWatershedFromMarkersImage
+  # ITKThresholdImage
+  # ITKBlackTopHatImage
+  # ITKWhiteTopHatImage
+  # ITKGrayscaleErodeImage
+  # ITKBinaryDilateImage
+  # ITKGrayscaleMorphologicalOpeningImage
+  # ITKGrayscaleMorphologicalClosingImage
+  # ITKErodeObjectMorphologyImage
+  # ITKClosingByReconstructionImage
+  # ITKDilateObjectMorphologyImage
+  # ITKBinaryErodeImage
+  # ITKMorphologicalGradientImage
+  # ITKOpeningByReconstructionImage
+  # ITKBinaryMorphologicalOpeningImage
+  # ITKBinaryOpeningByReconstructionImage
+  # ITKBinaryMorphologicalClosingImage
+  # ITKBinaryClosingByReconstructionImage
+  # ITKGrayscaleDilateImage
+  # ITKMultiScaleHessianBasedObjectnessImage
+  # ITKVectorConnectedComponentImage
+  # ITKConnectedComponentImage
+  # ITKMaskImage
+  # ITKFFTNormalizedCorrelationImage
+  # ITKVectorRescaleIntensityImage
+  # ITKPatchBasedDenoisingImage
 )
 
 

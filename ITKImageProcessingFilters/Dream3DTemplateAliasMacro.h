@@ -77,7 +77,7 @@
 #ifndef _Dream3DTemplateAliasMacro_h
 #define _Dream3DTemplateAliasMacro_h
 
-#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Filtering/AbstractFilter.h"
 #include <QString>
 #include <itkImageIOBase.h>
 #include <itkRGBAPixel.h>

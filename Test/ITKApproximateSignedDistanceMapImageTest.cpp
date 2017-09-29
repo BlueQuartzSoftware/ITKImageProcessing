@@ -6,6 +6,7 @@
 
 #include "ITKTestBase.h"
 // Auto includes
+#include <SIMPLib/CoreFilters/DataContainerWriter.h>
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 
 class ITKApproximateSignedDistanceMapImageTest : public ITKTestBase
@@ -46,6 +47,12 @@ public:
     QString baseline_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Baseline/BasicFilters_ApproximateSignedDistanceMapImageFilter_default.nrrd");
     DataArrayPath baseline_path("BContainer", "BAttributeMatrixName", "BAttributeArrayName");
     this->ReadImage(baseline_filename, containerArray, baseline_path);
+
+    DataContainerWriter::Pointer dcWriter = DataContainerWriter::New();
+    dcWriter->setOutputFile("/tmp/ITKApproximateSignedDistanceMapImageTest.dream3d");
+    dcWriter->setDataContainerArray(containerArray);
+    dcWriter->execute();
+
     int res = this->CompareImages(containerArray, input_path, baseline_path, 0.01);
     DREAM3D_REQUIRE_EQUAL(res, 0);
     return 0;
