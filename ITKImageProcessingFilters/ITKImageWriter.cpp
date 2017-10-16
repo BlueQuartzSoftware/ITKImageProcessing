@@ -122,6 +122,9 @@ void ITKImageWriter::initialize()
 // -----------------------------------------------------------------------------
 void ITKImageWriter::dataCheck()
 {
+  setErrorCondition(0);
+  setWarningCondition(0);
+  
   // check file name exists
   QString filename = getFileName();
   if(filename.isEmpty())
@@ -179,10 +182,13 @@ void ITKImageWriter::dataCheck()
 #endif
 #endif
 
-  // If we got here, that means that there is no error
-  setErrorCondition(0);
-  setWarningCondition(0);
-  setWarningCondition(0);
+  IDataArray::Pointer imageDataArrayPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, getImageArrayPath());
+  if(getErrorCondition() < 0)
+  {
+    QString ss = QObject::tr("The data array path '%1' was invalid for the property ImageArrayPath. Please check the input value.").arg(getImageArrayPath().serialize("/"));
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  }
+
 }
 
 // -----------------------------------------------------------------------------
