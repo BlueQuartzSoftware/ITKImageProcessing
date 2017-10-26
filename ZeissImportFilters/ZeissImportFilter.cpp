@@ -168,6 +168,7 @@ void ZeissImportFilter::initialize()
 void ZeissImportFilter::dataCheck()
 {
   setErrorCondition(0);
+  setWarningCondition(0);
 
   QString ss;
   QFileInfo fi(getInputFile());
@@ -271,6 +272,7 @@ void ZeissImportFilter::execute()
   // happens to fail in the dataCheck() then we simply return
   if(getErrorCondition() < 0) { return; }
   setErrorCondition(0);
+  setWarningCondition(0);
 
   /* If some error occurs this code snippet can report the error up the call chain*/
   if (err < 0)
