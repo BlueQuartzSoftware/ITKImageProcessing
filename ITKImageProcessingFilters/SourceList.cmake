@@ -72,7 +72,7 @@ set(_PublicFilters
   # ITKDoubleThresholdImage
   # ITKSumProjectionImage
   # ITKNormalizeImage
-   ITKApproximateSignedDistanceMapImage
+  # ITKApproximateSignedDistanceMapImage
   # ITKCurvatureFlowImage
   # ITKIsoContourDistanceImage
   # ITKRegionalMinimaImage

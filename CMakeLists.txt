@@ -76,12 +76,6 @@ set_property(GLOBAL APPEND PROPERTY DREAM3D_ADDITIONAL_INSTALL_ITK_DIRECTORIES $
 
 include(${CMP_SOURCE_DIR}/ITKSupport/IncludeITK.cmake)
 
-if(APPLE)
-  include_directories(${SimpleITKExplicit_BINARY_DIR}/Common/include)
-  include_directories(${SimpleITKExplicit_SOURCE_DIR}/Explicit/include)
-endif()
-
-
 #-------
 # Start writing this header file
 set(AllFiltersHeaderFile ${${PLUGIN_NAME}_BINARY_DIR}/${PLUGIN_NAME}Filters/${PLUGIN_NAME}Filters.h_tmp)
@@ -138,19 +132,7 @@ set(RegisterKnownFiltersFile ${${PLUGIN_NAME}_BINARY_DIR}/${PLUGIN_NAME}Filters/
 #-- Compute some directories
 get_filename_component(PLUGINS_SOURCE_DIR  ${${PLUGIN_NAME}_SOURCE_DIR} DIRECTORY)
 get_filename_component(PLUGINS_BINARY_DIR  ${${PLUGIN_NAME}_BINARY_DIR} DIRECTORY)
-#--------------------------
-include_directories( ${SIMPLProj_SOURCE_DIR}/Source)
-include_directories( ${SIMPLProj_BINARY_DIR})
-include_directories( ${SIMPLProj_SOURCE_DIR}/Source/SVWidgetsLib/Widgets)
-include_directories( ${SIMPLProj_SOURCE_DIR}/Source/SVWidgetsLib/QtSupport)
-include_directories( ${HDF5_INCLUDE_DIR} )
-include_directories( ${PROJECT_CODE_DIR} )
-include_directories( ${SIMPLViewProj_SOURCE_DIR}/Source)
-include_directories( ${SIMPLViewProj_BINARY_DIR})
-if(APPLE)
-	include_directories( ${SIMPLProj_SOURCE_DIR}/Source/SimpleITKExplicit/Explicit/include)
-	include_directories( ${SIMPLProj_BINARY_DIR}/SimpleITKExplicit/Common/include)
-endif()
+
 set(FILTER_HEADERS "#include \"${AllFiltersHeaderFile}\"")
 set(FILTER_WIDGETS_TEMP_DIR ${${PLUGIN_NAME}_BINARY_DIR}/Temp)
 set(FILTER_WIDGETS_BINARY_DIR ${${PLUGIN_NAME}_BINARY_DIR})
@@ -196,7 +178,7 @@ set(${PLUGIN_NAME}_GEN_HDRS
 
 # --------------------------------------------------------------------
 # and finally this will run moc:
-QT5_WRAP_CPP( ${PLUGIN_NAME}_Generated_MOC_SRCS ${${PLUGIN_NAME}_MOC_HDRS} )
+QT5_WRAP_CPP( ${PLUGIN_NAME}_Generated_MOC_SRCS ${${PLUGIN_NAME}_MOC_HDRS} OPTIONS -I ${SIMPLProj_SOURCE_DIR}/Source)
 set_source_files_properties( ${${PLUGIN_NAME}_Generated_MOC_SRCS} PROPERTIES HEADER_FILE_ONLY TRUE)
 set_source_files_properties( ${${PLUGIN_NAME}_Generated_MOC_SRCS} PROPERTIES GENERATED TRUE)
 
@@ -255,31 +237,49 @@ endif()
 
 
 add_library(${PLUGIN_NAME} MODULE ${${PLUGIN_NAME}_MODULE_SRCS})
-target_link_libraries(${PLUGIN_NAME}
-                    SVWidgetsLib
-                    ${ITK_LIBRARIES}
-                    )
-SET_TARGET_PROPERTIES(${PLUGIN_NAME} PROPERTIES FOLDER ${PLUGIN_NAME}Plugin)
+
+set_target_properties(${PLUGIN_NAME} PROPERTIES FOLDER ${PLUGIN_NAME}Plugin)
 if(MSVC)
-  SET_TARGET_PROPERTIES(${PLUGIN_NAME} PROPERTIES LINK_FLAGS_DEBUG "/INCREMENTAL:NO" )
+  set_target_properties(${PLUGIN_NAME} PROPERTIES LINK_FLAGS_DEBUG "/INCREMENTAL:NO" )
 endif()
+#-------------------------------
+#
 target_include_directories(${PLUGIN_NAME}
-                      PUBLIC ${${PLUGIN_NAME}_BINARY_DIR}
-                      PUBLIC ${${PLUGIN_NAME}_SOURCE_DIR}
-                      PUBLIC ${PLUGINS_SOURCE_DIR}
-                      PUBLIC ${PLUGINS_BINARY_DIR}
-                      PUBLIC ${PLUGINS_BINARY_DIR}/${PLUGIN_NAME}
-                      PUBLIC ${PLUGINS_BINARY_DIR}/${PLUGIN_NAME}/${PLUGIN_NAME}Filters
-                      PUBLIC ${PLUGINS_BINARY_DIR}/${PLUGIN_NAME}/FilterParameterWidgets
-                      PUBLIC ${PLUGINS_BINARY_DIR}/${PLUGIN_NAME}/Test
+                            PUBLIC
+                              ${${PLUGIN_NAME}_BINARY_DIR}
+                              ${${PLUGIN_NAME}_SOURCE_DIR}
+                              ${PLUGINS_SOURCE_DIR}
+                              ${PLUGINS_BINARY_DIR}
+                              ${${PLUGIN_NAME}_BINARY_DIR}/${PLUGIN_NAME}Filters
 )
-qt5_use_modules(${PLUGIN_NAME} Core Gui Widgets)
+#-------------------------------
+#
+target_include_directories(${PLUGIN_NAME}
+                          PUBLIC
+                            ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets
+                            ${${PLUGIN_NAME}_SOURCE_DIR}/FilterParameterWidgets
+                            ${${PLUGIN_NAME}_BINARY_DIR}/Widgets
+                            ${${PLUGIN_NAME}_BINARY_DIR}/FilterParameterWidgets
+)
+
+if(APPLE)
+  target_include_directories(${PLUGIN_NAME}
+                              PUBLIC
+                                ${SimpleITKExplicit_BINARY_DIR}/Common/include
+                                ${SimpleITKExplicit_SOURCE_DIR}/Explicit/include
+                                ${SIMPLProj_SOURCE_DIR}/Source/SimpleITKExplicit/Explicit/include
+                                ${SIMPLProj_BINARY_DIR}/SimpleITKExplicit/Common/include
+  )
+endif()
 
 # --------------------------------------------------------------------
 # Set some additional properties of the plugin like its output name
 PluginProperties(${PLUGIN_NAME} "_debug" "${DREAM3D_VERSION}"
                 "${DREAM3D_BINARY_DIR}" "${CMP_PLUGIN_LIST_FILE}")
-
+target_link_libraries(${PLUGIN_NAME}
+                    SVWidgetsLib
+                    ${ITK_LIBRARIES}
+                    )
 
 # --------------------------------------------------------------------
 # Put back the output directory
