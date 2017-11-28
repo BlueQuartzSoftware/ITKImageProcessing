@@ -38,7 +38,7 @@ include(${SIMPLProj_SOURCE_DIR}/Source/SIMPLib/SIMPLibMacros.cmake)
 ## Then do not forget to add "${ITK_LIBRARIES}" to the target_link_libraries below
 # --------------------------------------------------------------------
 # ITK Include
-option(${PLUGIN_NAME}_ENALBE_SCIFIO "Enable SCIFIO ITK Modules" ON)
+option(${PLUGIN_NAME}_ENABLE_SCIFIO "Enable SCIFIO ITK Modules" OFF)
 
 set(DREAM3D_ADDITIONAL_ITK_MODULES
     ITKIOImageBase
@@ -59,7 +59,7 @@ set(DREAM3D_ADDITIONAL_ITK_MODULES
     ITKIOMRC
     ITKTestKernel
     )
-if(${${PLUGIN_NAME}_ENALBE_SCIFIO})
+if(${${PLUGIN_NAME}_ENABLE_SCIFIO})
   message(STATUS "${PLUGIN_NAME} Enabling SCIFIO Module")
   set( DREAM3D_ADDITIONAL_ITK_MODULES
       ${DREAM3D_ADDITIONAL_ITK_MODULES}
