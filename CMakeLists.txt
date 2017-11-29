@@ -292,3 +292,33 @@ if(BUILD_TESTING)
 endif()
 
 
+
+#-------------------------------------------------------------------------------
+#- This installs all the prebuilt pipeline files.
+if(EXISTS ${${PLUGIN_NAME}_SOURCE_DIR}/ExamplePipelines/${PLUGIN_NAME})
+  if(APPLE)
+    set(INSTALL_DESTINATION "${DREAM3D_PACKAGE_DEST_PREFIX}/Resources/PrebuiltPipelines/Examples")
+  else()
+    set(INSTALL_DESTINATION "${DREAM3D_PACKAGE_DEST_PREFIX}/PrebuiltPipelines/Examples")
+  endif()
+
+  install(DIRECTORY ${${PLUGIN_NAME}_SOURCE_DIR}/ExamplePipelines/${PLUGIN_NAME}
+          DESTINATION ${INSTALL_DESTINATION}
+          COMPONENT Applications )
+endif()
+
+
+#-------------------------------------------------------------------------------
+#- This installs all the Data files.
+if(EXISTS ${${PLUGIN_NAME}_SOURCE_DIR}/Data/${PLUGIN_NAME})
+  if(APPLE)
+    set(INSTALL_DESTINATION "${DREAM3D_PACKAGE_DEST_PREFIX}/Resources/Data")
+  else()
+    set(INSTALL_DESTINATION "${DREAM3D_PACKAGE_DEST_PREFIX}")
+  endif()
+
+  install(DIRECTORY ${${PLUGIN_NAME}_SOURCE_DIR}/Data/${PLUGIN_NAME}
+          DESTINATION ${INSTALL_DESTINATION}
+          COMPONENT Applications )
+endif()
+
