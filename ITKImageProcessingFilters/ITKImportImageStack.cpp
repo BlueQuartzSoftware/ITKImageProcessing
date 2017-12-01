@@ -53,9 +53,6 @@
 
 #include "itksys/SystemTools.hxx"
 
-// Include the MOC generated file for this class
-#include "moc_ITKImportImageStack.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -85,9 +82,7 @@ ITKImportImageStack::ITKImportImageStack()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKImportImageStack::~ITKImportImageStack()
-{
-}
+ITKImportImageStack::~ITKImportImageStack() = default;
 
 // -----------------------------------------------------------------------------
 //

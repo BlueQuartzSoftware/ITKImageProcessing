@@ -18,9 +18,6 @@
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 
-// Include the MOC generated file for this class
-#include "moc_ITKLaplacianSharpeningImage.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -35,9 +32,7 @@ ITKLaplacianSharpeningImage::ITKLaplacianSharpeningImage()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKLaplacianSharpeningImage::~ITKLaplacianSharpeningImage()
-{
-}
+ITKLaplacianSharpeningImage::~ITKLaplacianSharpeningImage() = default;
 
 // -----------------------------------------------------------------------------
 //

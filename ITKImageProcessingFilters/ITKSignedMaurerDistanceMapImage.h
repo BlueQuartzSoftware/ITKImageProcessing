@@ -93,7 +93,7 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKSignedMaurerDistanceMapImage(const ITKSignedMaurerDistanceMapImage&); // Copy Constructor Not Implemented
+  ITKSignedMaurerDistanceMapImage(const ITKSignedMaurerDistanceMapImage&) = delete; // Copy Constructor Not Implemented
   void operator=(const ITKSignedMaurerDistanceMapImage&);                  // Operator '=' Not Implemented
 };
 

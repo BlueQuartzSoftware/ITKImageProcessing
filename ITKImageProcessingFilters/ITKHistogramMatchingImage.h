@@ -116,7 +116,7 @@ protected:
   void CompareImagePixelTypes(const DataArrayPath& path1, const DataArrayPath& path2);
 
 private:
-  ITKHistogramMatchingImage(const ITKHistogramMatchingImage&); // Copy Constructor Not Implemented
+  ITKHistogramMatchingImage(const ITKHistogramMatchingImage&) = delete; // Copy Constructor Not Implemented
   void operator=(const ITKHistogramMatchingImage&);            // Operator '=' Not Implemented
 };
 

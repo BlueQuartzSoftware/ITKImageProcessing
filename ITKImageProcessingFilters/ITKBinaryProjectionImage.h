@@ -93,7 +93,7 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKBinaryProjectionImage(const ITKBinaryProjectionImage&); // Copy Constructor Not Implemented
+  ITKBinaryProjectionImage(const ITKBinaryProjectionImage&) = delete; // Copy Constructor Not Implemented
   void operator=(const ITKBinaryProjectionImage&);           // Operator '=' Not Implemented
 };
 

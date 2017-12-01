@@ -87,7 +87,7 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKValuedRegionalMaximaImage(const ITKValuedRegionalMaximaImage&); // Copy Constructor Not Implemented
+  ITKValuedRegionalMaximaImage(const ITKValuedRegionalMaximaImage&) = delete; // Copy Constructor Not Implemented
   void operator=(const ITKValuedRegionalMaximaImage&);               // Operator '=' Not Implemented
 };
 

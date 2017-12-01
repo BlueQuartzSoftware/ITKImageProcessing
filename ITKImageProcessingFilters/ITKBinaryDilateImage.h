@@ -102,7 +102,7 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKBinaryDilateImage(const ITKBinaryDilateImage&); // Copy Constructor Not Implemented
+  ITKBinaryDilateImage(const ITKBinaryDilateImage&) = delete; // Copy Constructor Not Implemented
   void operator=(const ITKBinaryDilateImage&);       // Operator '=' Not Implemented
 };
 

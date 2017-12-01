@@ -21,9 +21,6 @@
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 #include <itkFlatStructuringElement.h>
 
-// Include the MOC generated file for this class
-#include "moc_ITKBinaryClosingByReconstructionImage.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -41,9 +38,7 @@ ITKBinaryClosingByReconstructionImage::ITKBinaryClosingByReconstructionImage()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKBinaryClosingByReconstructionImage::~ITKBinaryClosingByReconstructionImage()
-{
-}
+ITKBinaryClosingByReconstructionImage::~ITKBinaryClosingByReconstructionImage() = default;
 
 // -----------------------------------------------------------------------------
 //

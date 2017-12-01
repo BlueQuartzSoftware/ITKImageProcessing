@@ -96,7 +96,7 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKIntensityWindowingImage(const ITKIntensityWindowingImage&); // Copy Constructor Not Implemented
+  ITKIntensityWindowingImage(const ITKIntensityWindowingImage&) = delete; // Copy Constructor Not Implemented
   void operator=(const ITKIntensityWindowingImage&);             // Operator '=' Not Implemented
 };
 

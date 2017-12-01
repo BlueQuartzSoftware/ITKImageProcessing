@@ -172,8 +172,8 @@ protected:
   template <typename TPixel, unsigned int Dimensions> void writeAsOneFile(typename itk::Dream3DImage<TPixel, Dimensions>* image);
 
 private:
-  ITKImageWriter(const ITKImageWriter&); // Copy Constructor Not Implemented
-  void operator=(const ITKImageWriter&); // Operator '=' Not Implemented
+  ITKImageWriter(const ITKImageWriter&) = delete; // Copy Constructor Not Implemented
+  void operator=(const ITKImageWriter&) = delete; // Operator '=' Not Implemented
 };
 
 #endif /* _ITKImageWriter_H_ */

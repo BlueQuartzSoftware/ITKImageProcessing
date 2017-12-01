@@ -21,9 +21,6 @@
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 #include <itkFlatStructuringElement.h>
 
-// Include the MOC generated file for this class
-#include "moc_ITKBlackTopHatImage.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -40,9 +37,7 @@ ITKBlackTopHatImage::ITKBlackTopHatImage()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKBlackTopHatImage::~ITKBlackTopHatImage()
-{
-}
+ITKBlackTopHatImage::~ITKBlackTopHatImage() = default;
 
 // -----------------------------------------------------------------------------
 //

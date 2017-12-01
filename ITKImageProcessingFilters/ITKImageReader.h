@@ -179,8 +179,8 @@ protected:
   void readImageOutputInformation(typename itk::ImageFileReader<itk::Dream3DImage<TPixel, dimensions>>::Pointer& reader, DataContainer::Pointer& container);
 
 private:
-  ITKImageReader(const ITKImageReader&); // Copy Constructor Not Implemented
-  void operator=(const ITKImageReader&); // Operator '=' Not Implemented
+  ITKImageReader(const ITKImageReader&) = delete; // Copy Constructor Not Implemented
+  void operator=(const ITKImageReader&) = delete; // Operator '=' Not Implemented
 };
 
 #endif /* _ITKImageReader_H_ */

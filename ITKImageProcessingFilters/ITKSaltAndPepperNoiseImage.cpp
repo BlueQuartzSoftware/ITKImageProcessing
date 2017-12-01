@@ -18,8 +18,6 @@
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 #define DREAM3D_USE_RGB_RGBA 1
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
-// Include the MOC generated file for this class
-#include "moc_ITKSaltAndPepperNoiseImage.cpp"
 
 // -----------------------------------------------------------------------------
 //
@@ -36,9 +34,7 @@ ITKSaltAndPepperNoiseImage::ITKSaltAndPepperNoiseImage()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKSaltAndPepperNoiseImage::~ITKSaltAndPepperNoiseImage()
-{
-}
+ITKSaltAndPepperNoiseImage::~ITKSaltAndPepperNoiseImage() = default;
 
 // -----------------------------------------------------------------------------
 //

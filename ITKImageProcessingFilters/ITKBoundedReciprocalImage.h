@@ -83,7 +83,7 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKBoundedReciprocalImage(const ITKBoundedReciprocalImage&); // Copy Constructor Not Implemented
+  ITKBoundedReciprocalImage(const ITKBoundedReciprocalImage&) = delete; // Copy Constructor Not Implemented
   void operator=(const ITKBoundedReciprocalImage&);            // Operator '=' Not Implemented
 };
 

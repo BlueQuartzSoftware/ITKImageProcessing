@@ -91,7 +91,7 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKGradientMagnitudeRecursiveGaussianImage(const ITKGradientMagnitudeRecursiveGaussianImage&); // Copy Constructor Not Implemented
+  ITKGradientMagnitudeRecursiveGaussianImage(const ITKGradientMagnitudeRecursiveGaussianImage&) = delete; // Copy Constructor Not Implemented
   void operator=(const ITKGradientMagnitudeRecursiveGaussianImage&);                             // Operator '=' Not Implemented
 };
 

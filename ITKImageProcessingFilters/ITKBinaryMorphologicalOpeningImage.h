@@ -98,7 +98,7 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKBinaryMorphologicalOpeningImage(const ITKBinaryMorphologicalOpeningImage&); // Copy Constructor Not Implemented
+  ITKBinaryMorphologicalOpeningImage(const ITKBinaryMorphologicalOpeningImage&) = delete; // Copy Constructor Not Implemented
   void operator=(const ITKBinaryMorphologicalOpeningImage&);                     // Operator '=' Not Implemented
 };
 

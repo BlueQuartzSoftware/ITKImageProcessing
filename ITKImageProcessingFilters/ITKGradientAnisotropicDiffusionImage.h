@@ -97,7 +97,7 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKGradientAnisotropicDiffusionImage(const ITKGradientAnisotropicDiffusionImage&); // Copy Constructor Not Implemented
+  ITKGradientAnisotropicDiffusionImage(const ITKGradientAnisotropicDiffusionImage&) = delete; // Copy Constructor Not Implemented
   void operator=(const ITKGradientAnisotropicDiffusionImage&);                       // Operator '=' Not Implemented
 };
 

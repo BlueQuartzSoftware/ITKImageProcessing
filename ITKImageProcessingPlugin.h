@@ -186,7 +186,7 @@ private:
   QList<QString> m_Filters;
   bool m_DidLoad;
 
-  ITKImageProcessingPlugin(const ITKImageProcessingPlugin&); // Copy Constructor Not Implemented
+  ITKImageProcessingPlugin(const ITKImageProcessingPlugin&) = delete; // Copy Constructor Not Implemented
   void operator=(const ITKImageProcessingPlugin&);           // Operator '=' Not Implemented
 };
 

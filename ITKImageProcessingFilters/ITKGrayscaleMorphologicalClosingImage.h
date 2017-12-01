@@ -95,7 +95,7 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKGrayscaleMorphologicalClosingImage(const ITKGrayscaleMorphologicalClosingImage&); // Copy Constructor Not Implemented
+  ITKGrayscaleMorphologicalClosingImage(const ITKGrayscaleMorphologicalClosingImage&) = delete; // Copy Constructor Not Implemented
   void operator=(const ITKGrayscaleMorphologicalClosingImage&);                        // Operator '=' Not Implemented
 };
 

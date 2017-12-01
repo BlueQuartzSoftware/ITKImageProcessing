@@ -95,7 +95,7 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKBlackTopHatImage(const ITKBlackTopHatImage&); // Copy Constructor Not Implemented
+  ITKBlackTopHatImage(const ITKBlackTopHatImage&) = delete; // Copy Constructor Not Implemented
   void operator=(const ITKBlackTopHatImage&);      // Operator '=' Not Implemented
 };
 

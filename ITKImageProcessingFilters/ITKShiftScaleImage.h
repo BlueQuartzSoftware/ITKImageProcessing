@@ -90,7 +90,7 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKShiftScaleImage(const ITKShiftScaleImage&); // Copy Constructor Not Implemented
+  ITKShiftScaleImage(const ITKShiftScaleImage&) = delete; // Copy Constructor Not Implemented
   void operator=(const ITKShiftScaleImage&);     // Operator '=' Not Implemented
 };
 

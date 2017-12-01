@@ -107,7 +107,7 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKDoubleThresholdImage(const ITKDoubleThresholdImage&); // Copy Constructor Not Implemented
+  ITKDoubleThresholdImage(const ITKDoubleThresholdImage&) = delete; // Copy Constructor Not Implemented
   void operator=(const ITKDoubleThresholdImage&);          // Operator '=' Not Implemented
 };
 

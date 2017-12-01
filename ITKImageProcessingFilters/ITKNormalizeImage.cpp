@@ -18,9 +18,6 @@
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 
-// Include the MOC generated file for this class
-#include "moc_ITKNormalizeImage.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -34,9 +31,7 @@ ITKNormalizeImage::ITKNormalizeImage()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKNormalizeImage::~ITKNormalizeImage()
-{
-}
+ITKNormalizeImage::~ITKNormalizeImage() = default;
 
 // -----------------------------------------------------------------------------
 //

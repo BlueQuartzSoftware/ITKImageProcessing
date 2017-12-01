@@ -102,7 +102,7 @@ protected:
   template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void convertDataContainerType();
 
 private:
-  ITKMorphologicalWatershedFromMarkersImage(const ITKMorphologicalWatershedFromMarkersImage&); // Copy Constructor Not Implemented
+  ITKMorphologicalWatershedFromMarkersImage(const ITKMorphologicalWatershedFromMarkersImage&) = delete; // Copy Constructor Not Implemented
   void operator=(const ITKMorphologicalWatershedFromMarkersImage&);                            // Operator '=' Not Implemented
 };
 

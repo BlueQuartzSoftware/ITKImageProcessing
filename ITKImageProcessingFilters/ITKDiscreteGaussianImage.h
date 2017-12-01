@@ -97,7 +97,7 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKDiscreteGaussianImage(const ITKDiscreteGaussianImage&); // Copy Constructor Not Implemented
+  ITKDiscreteGaussianImage(const ITKDiscreteGaussianImage&) = delete; // Copy Constructor Not Implemented
   void operator=(const ITKDiscreteGaussianImage&);           // Operator '=' Not Implemented
 };
 

@@ -99,7 +99,7 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKBinaryClosingByReconstructionImage(const ITKBinaryClosingByReconstructionImage&); // Copy Constructor Not Implemented
+  ITKBinaryClosingByReconstructionImage(const ITKBinaryClosingByReconstructionImage&) = delete; // Copy Constructor Not Implemented
   void operator=(const ITKBinaryClosingByReconstructionImage&);                        // Operator '=' Not Implemented
 };
 

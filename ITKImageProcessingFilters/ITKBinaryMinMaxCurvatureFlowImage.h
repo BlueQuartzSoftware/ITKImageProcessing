@@ -97,7 +97,7 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKBinaryMinMaxCurvatureFlowImage(const ITKBinaryMinMaxCurvatureFlowImage&); // Copy Constructor Not Implemented
+  ITKBinaryMinMaxCurvatureFlowImage(const ITKBinaryMinMaxCurvatureFlowImage&) = delete; // Copy Constructor Not Implemented
   void operator=(const ITKBinaryMinMaxCurvatureFlowImage&);                    // Operator '=' Not Implemented
 };
 

@@ -83,7 +83,7 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKSobelEdgeDetectionImage(const ITKSobelEdgeDetectionImage&); // Copy Constructor Not Implemented
+  ITKSobelEdgeDetectionImage(const ITKSobelEdgeDetectionImage&) = delete; // Copy Constructor Not Implemented
   void operator=(const ITKSobelEdgeDetectionImage&);             // Operator '=' Not Implemented
 };
 

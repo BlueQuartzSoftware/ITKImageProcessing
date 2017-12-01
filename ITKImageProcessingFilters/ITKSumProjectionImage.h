@@ -87,7 +87,7 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKSumProjectionImage(const ITKSumProjectionImage&); // Copy Constructor Not Implemented
+  ITKSumProjectionImage(const ITKSumProjectionImage&) = delete; // Copy Constructor Not Implemented
   void operator=(const ITKSumProjectionImage&);        // Operator '=' Not Implemented
 };
 

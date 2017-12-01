@@ -87,7 +87,7 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKStandardDeviationProjectionImage(const ITKStandardDeviationProjectionImage&); // Copy Constructor Not Implemented
+  ITKStandardDeviationProjectionImage(const ITKStandardDeviationProjectionImage&) = delete; // Copy Constructor Not Implemented
   void operator=(const ITKStandardDeviationProjectionImage&);                      // Operator '=' Not Implemented
 };
 

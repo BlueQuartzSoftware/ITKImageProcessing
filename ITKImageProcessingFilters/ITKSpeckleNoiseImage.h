@@ -90,7 +90,7 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKSpeckleNoiseImage(const ITKSpeckleNoiseImage&); // Copy Constructor Not Implemented
+  ITKSpeckleNoiseImage(const ITKSpeckleNoiseImage&) = delete; // Copy Constructor Not Implemented
   void operator=(const ITKSpeckleNoiseImage&);       // Operator '=' Not Implemented
 };
 

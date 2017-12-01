@@ -43,9 +43,6 @@
 
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
 
-// Include the MOC generated file for this class
-#include "moc_ITKImageProcessingPlugin.cpp"
-
 #include "itkSCIFIOImageIOFactory.h"
 #include "itksys/SystemTools.hxx"
 #include <itkBMPImageIOFactory.h>
@@ -109,9 +106,7 @@ ITKImageProcessingPlugin::ITKImageProcessingPlugin()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKImageProcessingPlugin::~ITKImageProcessingPlugin()
-{
-}
+ITKImageProcessingPlugin::~ITKImageProcessingPlugin() = default;
 
 // -----------------------------------------------------------------------------
 //

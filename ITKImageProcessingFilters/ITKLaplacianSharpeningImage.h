@@ -87,7 +87,7 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKLaplacianSharpeningImage(const ITKLaplacianSharpeningImage&); // Copy Constructor Not Implemented
+  ITKLaplacianSharpeningImage(const ITKLaplacianSharpeningImage&) = delete; // Copy Constructor Not Implemented
   void operator=(const ITKLaplacianSharpeningImage&);              // Operator '=' Not Implemented
 };
 

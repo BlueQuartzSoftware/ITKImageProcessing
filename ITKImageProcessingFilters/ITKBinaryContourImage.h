@@ -94,7 +94,7 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKBinaryContourImage(const ITKBinaryContourImage&); // Copy Constructor Not Implemented
+  ITKBinaryContourImage(const ITKBinaryContourImage&) = delete; // Copy Constructor Not Implemented
   void operator=(const ITKBinaryContourImage&);        // Operator '=' Not Implemented
 };
 

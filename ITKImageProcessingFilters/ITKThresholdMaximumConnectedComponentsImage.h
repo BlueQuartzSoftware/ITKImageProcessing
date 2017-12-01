@@ -97,7 +97,7 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKThresholdMaximumConnectedComponentsImage(const ITKThresholdMaximumConnectedComponentsImage&); // Copy Constructor Not Implemented
+  ITKThresholdMaximumConnectedComponentsImage(const ITKThresholdMaximumConnectedComponentsImage&) = delete; // Copy Constructor Not Implemented
   void operator=(const ITKThresholdMaximumConnectedComponentsImage&);                              // Operator '=' Not Implemented
 };
 

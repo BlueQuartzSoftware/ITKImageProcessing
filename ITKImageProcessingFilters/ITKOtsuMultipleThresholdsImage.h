@@ -98,7 +98,7 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKOtsuMultipleThresholdsImage(const ITKOtsuMultipleThresholdsImage&); // Copy Constructor Not Implemented
+  ITKOtsuMultipleThresholdsImage(const ITKOtsuMultipleThresholdsImage&) = delete; // Copy Constructor Not Implemented
   void operator=(const ITKOtsuMultipleThresholdsImage&);                 // Operator '=' Not Implemented
 };
 

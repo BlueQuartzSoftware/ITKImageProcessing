@@ -90,7 +90,7 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKZeroCrossingImage(const ITKZeroCrossingImage&); // Copy Constructor Not Implemented
+  ITKZeroCrossingImage(const ITKZeroCrossingImage&) = delete; // Copy Constructor Not Implemented
   void operator=(const ITKZeroCrossingImage&);       // Operator '=' Not Implemented
 };
 

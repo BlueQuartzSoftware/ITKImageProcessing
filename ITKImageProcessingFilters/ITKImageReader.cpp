@@ -45,9 +45,6 @@
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
 #include "ITKImageProcessingPlugin.h"
 
-// Include the MOC generated file for this class
-#include "moc_ITKImageReader.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -64,9 +61,7 @@ ITKImageReader::ITKImageReader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKImageReader::~ITKImageReader()
-{
-}
+ITKImageReader::~ITKImageReader() = default;
 
 // -----------------------------------------------------------------------------
 //

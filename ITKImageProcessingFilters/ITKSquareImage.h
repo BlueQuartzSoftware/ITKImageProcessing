@@ -83,8 +83,8 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKSquareImage(const ITKSquareImage&); // Copy Constructor Not Implemented
-  void operator=(const ITKSquareImage&); // Operator '=' Not Implemented
+  ITKSquareImage(const ITKSquareImage&) = delete; // Copy Constructor Not Implemented
+  void operator=(const ITKSquareImage&) = delete; // Operator '=' Not Implemented
 };
 
 #ifdef __clang__

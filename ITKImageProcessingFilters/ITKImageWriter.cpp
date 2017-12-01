@@ -60,9 +60,6 @@ extern Q_CORE_EXPORT int qt_ntfs_permission_lookup;
 #include <itkNumericSeriesFileNames.h>
 #include <itksys/SystemTools.hxx>
 
-// Include the MOC generated file for this class
-#include "moc_ITKImageWriter.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -77,9 +74,7 @@ ITKImageWriter::ITKImageWriter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKImageWriter::~ITKImageWriter()
-{
-}
+ITKImageWriter::~ITKImageWriter() = default;
 
 // -----------------------------------------------------------------------------
 //

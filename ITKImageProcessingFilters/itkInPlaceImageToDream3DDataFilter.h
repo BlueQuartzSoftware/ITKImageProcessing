@@ -62,7 +62,7 @@ protected:
 
 private:
   using Superclass::SetInput;
-  InPlaceImageToDream3DDataFilter(const InPlaceImageToDream3DDataFilter&); // Copy Constructor Not Implemented
+  InPlaceImageToDream3DDataFilter(const InPlaceImageToDream3DDataFilter&) = delete; // Copy Constructor Not Implemented
   void operator=(const InPlaceImageToDream3DDataFilter&);                  // Operator '=' Not Implemented
   std::string m_DataArrayName;
   std::string m_AttributeMatrixArrayName;

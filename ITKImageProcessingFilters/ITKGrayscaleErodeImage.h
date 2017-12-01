@@ -91,7 +91,7 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKGrayscaleErodeImage(const ITKGrayscaleErodeImage&); // Copy Constructor Not Implemented
+  ITKGrayscaleErodeImage(const ITKGrayscaleErodeImage&) = delete; // Copy Constructor Not Implemented
   void operator=(const ITKGrayscaleErodeImage&);         // Operator '=' Not Implemented
 };
 

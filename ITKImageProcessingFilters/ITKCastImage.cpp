@@ -16,9 +16,6 @@
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 
-// Include the MOC generated file for this class
-#include "moc_ITKCastImage.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -32,9 +29,7 @@ ITKCastImage::ITKCastImage()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKCastImage::~ITKCastImage()
-{
-}
+ITKCastImage::~ITKCastImage() = default;
 
 // -----------------------------------------------------------------------------
 //

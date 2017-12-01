@@ -90,7 +90,7 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKApproximateSignedDistanceMapImage(const ITKApproximateSignedDistanceMapImage&); // Copy Constructor Not Implemented
+  ITKApproximateSignedDistanceMapImage(const ITKApproximateSignedDistanceMapImage&) = delete; // Copy Constructor Not Implemented
   void operator=(const ITKApproximateSignedDistanceMapImage&);                       // Operator '=' Not Implemented
 };
 

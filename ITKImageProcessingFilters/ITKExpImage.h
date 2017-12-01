@@ -84,7 +84,7 @@ protected:
 
 private:
   ITKExpImage(const ITKExpImage&);    // Copy Constructor Not Implemented
-  void operator=(const ITKExpImage&); // Operator '=' Not Implemented
+  void operator=(const ITKExpImage&) = delete; // Operator '=' Not Implemented
 };
 
 #ifdef __clang__

@@ -21,9 +21,6 @@
 #define DREAM3D_USE_RGB_RGBA 1
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
 
-// Include the MOC generated file for this class
-#include "moc_ITKSmoothingRecursiveGaussianImage.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -39,9 +36,7 @@ ITKSmoothingRecursiveGaussianImage::ITKSmoothingRecursiveGaussianImage()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKSmoothingRecursiveGaussianImage::~ITKSmoothingRecursiveGaussianImage()
-{
-}
+ITKSmoothingRecursiveGaussianImage::~ITKSmoothingRecursiveGaussianImage() = default;
 
 // -----------------------------------------------------------------------------
 //

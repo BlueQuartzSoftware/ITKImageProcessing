@@ -87,7 +87,7 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKGradientMagnitudeImage(const ITKGradientMagnitudeImage&); // Copy Constructor Not Implemented
+  ITKGradientMagnitudeImage(const ITKGradientMagnitudeImage&) = delete; // Copy Constructor Not Implemented
   void operator=(const ITKGradientMagnitudeImage&);            // Operator '=' Not Implemented
 };
 

@@ -83,7 +83,7 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKBinaryThinningImage(const ITKBinaryThinningImage&); // Copy Constructor Not Implemented
+  ITKBinaryThinningImage(const ITKBinaryThinningImage&) = delete; // Copy Constructor Not Implemented
   void operator=(const ITKBinaryThinningImage&);         // Operator '=' Not Implemented
 };
 

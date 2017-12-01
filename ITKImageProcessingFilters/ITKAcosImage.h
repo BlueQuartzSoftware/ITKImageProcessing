@@ -84,7 +84,7 @@ protected:
 
 private:
   ITKAcosImage(const ITKAcosImage&);   // Copy Constructor Not Implemented
-  void operator=(const ITKAcosImage&); // Operator '=' Not Implemented
+  void operator=(const ITKAcosImage&) = delete; // Operator '=' Not Implemented
 };
 
 #ifdef __clang__

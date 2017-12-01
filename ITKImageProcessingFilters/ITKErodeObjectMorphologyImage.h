@@ -98,7 +98,7 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKErodeObjectMorphologyImage(const ITKErodeObjectMorphologyImage&); // Copy Constructor Not Implemented
+  ITKErodeObjectMorphologyImage(const ITKErodeObjectMorphologyImage&) = delete; // Copy Constructor Not Implemented
   void operator=(const ITKErodeObjectMorphologyImage&);                // Operator '=' Not Implemented
 };
 

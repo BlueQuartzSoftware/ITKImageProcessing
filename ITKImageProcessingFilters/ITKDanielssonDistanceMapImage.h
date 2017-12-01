@@ -93,7 +93,7 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKDanielssonDistanceMapImage(const ITKDanielssonDistanceMapImage&); // Copy Constructor Not Implemented
+  ITKDanielssonDistanceMapImage(const ITKDanielssonDistanceMapImage&) = delete; // Copy Constructor Not Implemented
   void operator=(const ITKDanielssonDistanceMapImage&);                // Operator '=' Not Implemented
 };
 

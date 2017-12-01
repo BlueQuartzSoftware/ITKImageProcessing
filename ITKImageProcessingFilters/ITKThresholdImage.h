@@ -93,7 +93,7 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKThresholdImage(const ITKThresholdImage&); // Copy Constructor Not Implemented
+  ITKThresholdImage(const ITKThresholdImage&) = delete; // Copy Constructor Not Implemented
   void operator=(const ITKThresholdImage&);    // Operator '=' Not Implemented
 };
 

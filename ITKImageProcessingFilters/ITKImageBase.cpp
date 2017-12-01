@@ -9,8 +9,6 @@
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
 
-#include "moc_ITKImageBase.cpp"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -27,9 +25,7 @@ ITKImageBase::ITKImageBase()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKImageBase::~ITKImageBase()
-{
-}
+ITKImageBase::~ITKImageBase() = default;
 
 // -----------------------------------------------------------------------------
 //

@@ -101,7 +101,7 @@ protected:
 
 private:
   ITKMaskImage(const ITKMaskImage&);   // Copy Constructor Not Implemented
-  void operator=(const ITKMaskImage&); // Operator '=' Not Implemented
+  void operator=(const ITKMaskImage&) = delete; // Operator '=' Not Implemented
 };
 
 #ifdef __clang__

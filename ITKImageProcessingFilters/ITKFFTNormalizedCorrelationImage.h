@@ -94,7 +94,7 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKFFTNormalizedCorrelationImage(const ITKFFTNormalizedCorrelationImage&); // Copy Constructor Not Implemented
+  ITKFFTNormalizedCorrelationImage(const ITKFFTNormalizedCorrelationImage&) = delete; // Copy Constructor Not Implemented
   void operator=(const ITKFFTNormalizedCorrelationImage&);                   // Operator '=' Not Implemented
 };
 

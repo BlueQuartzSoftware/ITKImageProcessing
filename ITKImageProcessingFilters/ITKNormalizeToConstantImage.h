@@ -87,7 +87,7 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKNormalizeToConstantImage(const ITKNormalizeToConstantImage&); // Copy Constructor Not Implemented
+  ITKNormalizeToConstantImage(const ITKNormalizeToConstantImage&) = delete; // Copy Constructor Not Implemented
   void operator=(const ITKNormalizeToConstantImage&);              // Operator '=' Not Implemented
 };
 

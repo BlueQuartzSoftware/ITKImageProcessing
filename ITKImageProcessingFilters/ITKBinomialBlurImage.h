@@ -87,7 +87,7 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKBinomialBlurImage(const ITKBinomialBlurImage&); // Copy Constructor Not Implemented
+  ITKBinomialBlurImage(const ITKBinomialBlurImage&) = delete; // Copy Constructor Not Implemented
   void operator=(const ITKBinomialBlurImage&);       // Operator '=' Not Implemented
 };
 

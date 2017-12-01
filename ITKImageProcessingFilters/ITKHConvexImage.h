@@ -91,7 +91,7 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKHConvexImage(const ITKHConvexImage&); // Copy Constructor Not Implemented
+  ITKHConvexImage(const ITKHConvexImage&) = delete; // Copy Constructor Not Implemented
   void operator=(const ITKHConvexImage&);  // Operator '=' Not Implemented
 };
 

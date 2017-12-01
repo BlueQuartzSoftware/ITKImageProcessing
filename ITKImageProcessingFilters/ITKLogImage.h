@@ -84,7 +84,7 @@ protected:
 
 private:
   ITKLogImage(const ITKLogImage&);    // Copy Constructor Not Implemented
-  void operator=(const ITKLogImage&); // Operator '=' Not Implemented
+  void operator=(const ITKLogImage&) = delete; // Operator '=' Not Implemented
 };
 
 #ifdef __clang__

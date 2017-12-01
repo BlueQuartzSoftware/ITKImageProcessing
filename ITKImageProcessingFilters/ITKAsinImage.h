@@ -84,7 +84,7 @@ protected:
 
 private:
   ITKAsinImage(const ITKAsinImage&);   // Copy Constructor Not Implemented
-  void operator=(const ITKAsinImage&); // Operator '=' Not Implemented
+  void operator=(const ITKAsinImage&) = delete; // Operator '=' Not Implemented
 };
 
 #ifdef __clang__

@@ -91,7 +91,7 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKMorphologicalGradientImage(const ITKMorphologicalGradientImage&); // Copy Constructor Not Implemented
+  ITKMorphologicalGradientImage(const ITKMorphologicalGradientImage&) = delete; // Copy Constructor Not Implemented
   void operator=(const ITKMorphologicalGradientImage&);                // Operator '=' Not Implemented
 };
 

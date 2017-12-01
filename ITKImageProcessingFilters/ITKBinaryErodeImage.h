@@ -102,7 +102,7 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKBinaryErodeImage(const ITKBinaryErodeImage&); // Copy Constructor Not Implemented
+  ITKBinaryErodeImage(const ITKBinaryErodeImage&) = delete; // Copy Constructor Not Implemented
   void operator=(const ITKBinaryErodeImage&);      // Operator '=' Not Implemented
 };
 

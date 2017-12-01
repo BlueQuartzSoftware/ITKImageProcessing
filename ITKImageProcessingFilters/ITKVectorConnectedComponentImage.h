@@ -91,7 +91,7 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKVectorConnectedComponentImage(const ITKVectorConnectedComponentImage&); // Copy Constructor Not Implemented
+  ITKVectorConnectedComponentImage(const ITKVectorConnectedComponentImage&) = delete; // Copy Constructor Not Implemented
   void operator=(const ITKVectorConnectedComponentImage&);                   // Operator '=' Not Implemented
 };
 

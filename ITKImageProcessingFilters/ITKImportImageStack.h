@@ -200,7 +200,7 @@ private:
 
   DEFINE_DATAARRAY_VARIABLE(uint8_t, ImageData)
 
-  ITKImportImageStack(const ITKImportImageStack&); // Copy Constructor Not Implemented
+  ITKImportImageStack(const ITKImportImageStack&) = delete; // Copy Constructor Not Implemented
   void operator=(const ITKImportImageStack&);      // Operator '=' Not Implemented
 };
 

@@ -87,7 +87,7 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKGrayscaleGrindPeakImage(const ITKGrayscaleGrindPeakImage&); // Copy Constructor Not Implemented
+  ITKGrayscaleGrindPeakImage(const ITKGrayscaleGrindPeakImage&) = delete; // Copy Constructor Not Implemented
   void operator=(const ITKGrayscaleGrindPeakImage&);             // Operator '=' Not Implemented
 };
 

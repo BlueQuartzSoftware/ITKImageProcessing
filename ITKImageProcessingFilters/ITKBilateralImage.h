@@ -93,7 +93,7 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKBilateralImage(const ITKBilateralImage&); // Copy Constructor Not Implemented
+  ITKBilateralImage(const ITKBilateralImage&) = delete; // Copy Constructor Not Implemented
   void operator=(const ITKBilateralImage&);    // Operator '=' Not Implemented
 };
 

@@ -90,7 +90,7 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKCurvatureFlowImage(const ITKCurvatureFlowImage&); // Copy Constructor Not Implemented
+  ITKCurvatureFlowImage(const ITKCurvatureFlowImage&) = delete; // Copy Constructor Not Implemented
   void operator=(const ITKCurvatureFlowImage&);        // Operator '=' Not Implemented
 };
 

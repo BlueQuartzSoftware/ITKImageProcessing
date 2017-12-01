@@ -55,7 +55,7 @@ protected:
   DataContainer::Pointer m_DataContainer;
 
 private:
-  InPlaceDream3DDataToImageFilter(const InPlaceDream3DDataToImageFilter&); // Copy Constructor Not Implemented
+  InPlaceDream3DDataToImageFilter(const InPlaceDream3DDataToImageFilter&) = delete; // Copy Constructor Not Implemented
   void operator=(const InPlaceDream3DDataToImageFilter&);                  // Operator '=' Not Implemented
   using Superclass::SetInput;
   std::string m_DataArrayName;

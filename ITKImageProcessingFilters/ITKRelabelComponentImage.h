@@ -87,7 +87,7 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKRelabelComponentImage(const ITKRelabelComponentImage&); // Copy Constructor Not Implemented
+  ITKRelabelComponentImage(const ITKRelabelComponentImage&) = delete; // Copy Constructor Not Implemented
   void operator=(const ITKRelabelComponentImage&);           // Operator '=' Not Implemented
 };
 

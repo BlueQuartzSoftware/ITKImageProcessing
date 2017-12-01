@@ -97,7 +97,7 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKCurvatureAnisotropicDiffusionImage(const ITKCurvatureAnisotropicDiffusionImage&); // Copy Constructor Not Implemented
+  ITKCurvatureAnisotropicDiffusionImage(const ITKCurvatureAnisotropicDiffusionImage&) = delete; // Copy Constructor Not Implemented
   void operator=(const ITKCurvatureAnisotropicDiffusionImage&);                        // Operator '=' Not Implemented
 };
 

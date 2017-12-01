@@ -87,7 +87,7 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKMedianProjectionImage(const ITKMedianProjectionImage&); // Copy Constructor Not Implemented
+  ITKMedianProjectionImage(const ITKMedianProjectionImage&) = delete; // Copy Constructor Not Implemented
   void operator=(const ITKMedianProjectionImage&);           // Operator '=' Not Implemented
 };
 

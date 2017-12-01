@@ -94,7 +94,7 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKMorphologicalWatershedImage(const ITKMorphologicalWatershedImage&); // Copy Constructor Not Implemented
+  ITKMorphologicalWatershedImage(const ITKMorphologicalWatershedImage&) = delete; // Copy Constructor Not Implemented
   void operator=(const ITKMorphologicalWatershedImage&);                 // Operator '=' Not Implemented
 };
 

@@ -87,7 +87,7 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKMinimumProjectionImage(const ITKMinimumProjectionImage&); // Copy Constructor Not Implemented
+  ITKMinimumProjectionImage(const ITKMinimumProjectionImage&) = delete; // Copy Constructor Not Implemented
   void operator=(const ITKMinimumProjectionImage&);            // Operator '=' Not Implemented
 };
 

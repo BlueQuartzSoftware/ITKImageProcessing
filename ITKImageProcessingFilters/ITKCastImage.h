@@ -85,7 +85,7 @@ protected:
 
 private:
   ITKCastImage(const ITKCastImage&);   // Copy Constructor Not Implemented
-  void operator=(const ITKCastImage&); // Operator '=' Not Implemented
+  void operator=(const ITKCastImage&) = delete; // Operator '=' Not Implemented
 };
 
 #ifdef __clang__

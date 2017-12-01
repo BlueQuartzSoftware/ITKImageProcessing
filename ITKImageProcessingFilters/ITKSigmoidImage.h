@@ -96,7 +96,7 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKSigmoidImage(const ITKSigmoidImage&); // Copy Constructor Not Implemented
+  ITKSigmoidImage(const ITKSigmoidImage&) = delete; // Copy Constructor Not Implemented
   void operator=(const ITKSigmoidImage&);  // Operator '=' Not Implemented
 };
 

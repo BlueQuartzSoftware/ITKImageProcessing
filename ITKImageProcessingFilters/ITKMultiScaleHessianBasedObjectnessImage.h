@@ -110,7 +110,7 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKMultiScaleHessianBasedObjectnessImage(const ITKMultiScaleHessianBasedObjectnessImage&); // Copy Constructor Not Implemented
+  ITKMultiScaleHessianBasedObjectnessImage(const ITKMultiScaleHessianBasedObjectnessImage&) = delete; // Copy Constructor Not Implemented
   void operator=(const ITKMultiScaleHessianBasedObjectnessImage&);                           // Operator '=' Not Implemented
 };
 

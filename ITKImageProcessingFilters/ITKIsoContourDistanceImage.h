@@ -90,7 +90,7 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKIsoContourDistanceImage(const ITKIsoContourDistanceImage&); // Copy Constructor Not Implemented
+  ITKIsoContourDistanceImage(const ITKIsoContourDistanceImage&) = delete; // Copy Constructor Not Implemented
   void operator=(const ITKIsoContourDistanceImage&);             // Operator '=' Not Implemented
 };
 

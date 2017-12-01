@@ -87,7 +87,7 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKHMaximaImage(const ITKHMaximaImage&); // Copy Constructor Not Implemented
+  ITKHMaximaImage(const ITKHMaximaImage&) = delete; // Copy Constructor Not Implemented
   void operator=(const ITKHMaximaImage&);  // Operator '=' Not Implemented
 };
 
