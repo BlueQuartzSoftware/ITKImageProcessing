@@ -66,11 +66,6 @@ ZeissImportFilterPrivate::ZeissImportFilterPrivate(ZeissImportFilter* ptr) :
 
 }
 
-// Include the MOC generated file for this class
-#include "moc_ZeissImportFilter.cpp"
-
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -92,9 +87,7 @@ ZeissImportFilter::ZeissImportFilter() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ZeissImportFilter::~ZeissImportFilter()
-{
-}
+ZeissImportFilter::~ZeissImportFilter() = default;
 
 SIMPL_PIMPL_PROPERTY_DEF(ZeissImportFilter, QString, InputFile_Cache)
 SIMPL_PIMPL_PROPERTY_DEF(ZeissImportFilter, QDateTime, LastRead)

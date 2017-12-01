@@ -112,9 +112,7 @@ ZeissXMLReader::ZeissXMLReader(const std::string& xmlFile) :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ZeissXMLReader::~ZeissXMLReader()
-{
-}
+ZeissXMLReader::~ZeissXMLReader() = default;
 
 // -----------------------------------------------------------------------------
 // Call back struct to sort Commands and properties based on their name

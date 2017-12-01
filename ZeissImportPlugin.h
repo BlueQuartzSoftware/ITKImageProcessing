@@ -134,8 +134,8 @@ class ZeissImportPlugin : public QObject, public ISIMPLibPlugin
     QString             m_Copyright;
     bool                m_DidLoad;
 
-    ZeissImportPlugin(const ZeissImportPlugin&); // Copy Constructor Not Implemented
-    void operator=(const ZeissImportPlugin&); // Operator '=' Not Implemented
+    ZeissImportPlugin(const ZeissImportPlugin&) = delete; // Copy Constructor Not Implemented
+    void operator=(const ZeissImportPlugin&) = delete;    // Operator '=' Not Implemented
 };
 
 #endif /* _ZeissImport_H_ */

@@ -46,9 +46,7 @@ ZeissTagsXmlSection::ZeissTagsXmlSection()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ZeissTagsXmlSection::~ZeissTagsXmlSection()
-{
-}
+ZeissTagsXmlSection::~ZeissTagsXmlSection() = default;
 
 // -----------------------------------------------------------------------------
 //

@@ -34,13 +34,6 @@
 
 #define ZIF_PRINT_DBG_MSGS 0
 
-
-
-// Include the MOC generated file for this class
-#include "moc_CalculateBackground.cpp"
-
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -64,9 +57,7 @@ CalculateBackground::CalculateBackground() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-CalculateBackground::~CalculateBackground()
-{
-}
+CalculateBackground::~CalculateBackground() = default;
 
 // -----------------------------------------------------------------------------
 //

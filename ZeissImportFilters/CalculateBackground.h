@@ -170,8 +170,8 @@ class CalculateBackground : public AbstractFilter
 
     DEFINE_DATAARRAY_VARIABLE(double, BackgroundImage)
 
-    CalculateBackground(const CalculateBackground&); // Copy Constructor Not Implemented
-    void operator=(const CalculateBackground&); // Operator '=' Not Implemented
+    CalculateBackground(const CalculateBackground&) = delete; // Copy Constructor Not Implemented
+    void operator=(const CalculateBackground&) = delete;      // Operator '=' Not Implemented
 };
 
 #endif /* _CalculateBackground_H_ */

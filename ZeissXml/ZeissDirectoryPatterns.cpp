@@ -50,9 +50,7 @@ ZeissDirectoryPatterns::ZeissDirectoryPatterns()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ZeissDirectoryPatterns::~ZeissDirectoryPatterns()
-{
-}
+ZeissDirectoryPatterns::~ZeissDirectoryPatterns() = default;
 
 // -----------------------------------------------------------------------------
 //

@@ -240,9 +240,8 @@ class ZeissImportFilter : public AbstractFilter
   private:
     QScopedPointer<ZeissImportFilterPrivate> const d_ptr;
 
-
-    ZeissImportFilter(const ZeissImportFilter&); // Copy Constructor Not Implemented
-    void operator=(const ZeissImportFilter&); // Operator '=' Not Implemented
+    ZeissImportFilter(const ZeissImportFilter&) = delete; // Copy Constructor Not Implemented
+    void operator=(const ZeissImportFilter&) = delete;    // Operator '=' Not Implemented
 };
 
 #endif /* _ZeissImportFilter_H_ */
