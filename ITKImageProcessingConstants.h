@@ -42,7 +42,7 @@ namespace ITKImageProcessingConstants
 {
 const QString ITKImageProcessingPluginFile("ITKImageProcessingPlugin");
 const QString ITKImageProcessingPluginDisplayName("ITKImageProcessingPlugin");
-const QString ITKImageProcessingBaseName("ITKImageProcessingPlugin");
+const QString ITKImageProcessingBaseName("ITKImageProcessing");
 
 namespace FilterGroups
 {
