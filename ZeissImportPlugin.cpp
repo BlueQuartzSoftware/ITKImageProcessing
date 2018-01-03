@@ -142,7 +142,7 @@ QMap<QString, QString> ZeissImportPlugin::getThirdPartyLicenses()
   QMap<QString, QString> licenseMap;
   QList<QString> fileStrList;
   fileStrList.push_back(":/ThirdParty/HDF5.txt");
-  fileStrList.push_back(":/ThirdParty/Boost.txt");
+  
   fileStrList.push_back(":/ThirdParty/Qt.txt");
   fileStrList.push_back(":/ThirdParty/Qwt.txt");
 
