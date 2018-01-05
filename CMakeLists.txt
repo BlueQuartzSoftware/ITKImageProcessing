@@ -5,6 +5,8 @@ set(${PLUGIN_NAME}_VERSION_MINOR "0")
 get_filename_component(${PLUGIN_NAME}_SOURCE_DIR "${CMAKE_CURRENT_LIST_DIR}" ABSOLUTE)
 set(ITKImageProcessing_BINARY_DIR "${DREAM3DProj_BINARY_DIR}/Plugins/${PLUGIN_NAME}")
 
+option(ITKImageProcessingLeanAndMean "Only compile the Reader and Writers, All other filters are disabled" OFF)
+
 # --------------------------------------------------------------------
 # Look for ITK as it is required.
 if(NOT SIMPL_USE_ITK)
@@ -296,6 +298,15 @@ endif()
 #-------------------------------------------------------------------------------
 #- This installs all the prebuilt pipeline files.
 if(EXISTS ${${PLUGIN_NAME}_SOURCE_DIR}/ExamplePipelines/${PLUGIN_NAME})
+  #-------------------------------------------------------------------------------
+  #- This copies all the Prebuilt Pipeline files into the Build directory so the help
+  #- works from the Build Tree
+  add_custom_target(${PLUGIN_NAME}ExamplePipelinesCopy ALL
+              COMMAND ${CMAKE_COMMAND} -E copy_directory ${${PLUGIN_NAME}_SOURCE_DIR}/ExamplePipelines/${PLUGIN_NAME}
+              ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/${CMAKE_CFG_INTDIR}/PrebuiltPipelines/Examples/${PLUGIN_NAME}
+              COMMENT "Copying ${PLUGIN_NAME} Example Pipelines into Binary Directory")
+  set_target_properties(${PLUGIN_NAME}ExamplePipelinesCopy PROPERTIES FOLDER ZZ_COPY_FILES)
+
   if(APPLE)
     set(INSTALL_DESTINATION "${DREAM3D_PACKAGE_DEST_PREFIX}/Resources/PrebuiltPipelines/Examples")
   else()
@@ -311,6 +322,14 @@ endif()
 #-------------------------------------------------------------------------------
 #- This installs all the Data files.
 if(EXISTS ${${PLUGIN_NAME}_SOURCE_DIR}/Data/${PLUGIN_NAME})
+  #-------------------------------------------------------------------------------
+  # Copy the Data Folder to the build directory
+  add_custom_target(${PLUGIN_NAME}DataFolderCopy ALL
+              COMMAND ${CMAKE_COMMAND} -E copy_directory ${${PLUGIN_NAME}_SOURCE_DIR}/Data
+              ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/${CMAKE_CFG_INTDIR}/Data
+              COMMENT "Copying ${PLUGIN_NAME} Data Folder into Binary Directory")
+  set_target_properties(${PLUGIN_NAME}DataFolderCopy PROPERTIES FOLDER ZZ_COPY_FILES)
+
   if(APPLE)
     set(INSTALL_DESTINATION "${DREAM3D_PACKAGE_DEST_PREFIX}/Resources/Data")
   else()
