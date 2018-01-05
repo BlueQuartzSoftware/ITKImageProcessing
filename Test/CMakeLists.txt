@@ -2,156 +2,105 @@ set(PLUGIN_NAME "ITKImageProcessing")
 set(${PLUGIN_NAME}Test_SOURCE_DIR ${${PLUGIN_NAME}_SOURCE_DIR}/Test)
 set(${PLUGIN_NAME}Test_BINARY_DIR ${${PLUGIN_NAME}_BINARY_DIR}/Test)
 
-include(${CMP_SOURCE_DIR}/cmpCMakeMacros.cmake)
-
-include( ${CMP_SOURCE_DIR}/ITKSupport/IncludeITK.cmake)
-
-#------------------------------------------------------------------------------
-# Set any additional include directories here
-
-set(TEST_TEMP_DIR ${${PLUGIN_NAME}Test_BINARY_DIR}/Test/Temp)
-
-# Make sure the directory is created during CMake time
-file(MAKE_DIRECTORY ${TEST_TEMP_DIR})
-
-
-configure_file(${${PLUGIN_NAME}Test_SOURCE_DIR}/TestFileLocations.h.in
-               ${${PLUGIN_NAME}Test_BINARY_DIR}/${PLUGIN_NAME}TestFileLocations.h @ONLY IMMEDIATE)
-
-configure_file(${SIMPLProj_SOURCE_DIR}/Resources/UnitTestSupport.hpp
-               ${${PLUGIN_NAME}Test_BINARY_DIR}/UnitTestSupport.hpp COPYONLY IMMEDIATE)
-
-
 #------------------------------------------------------------------------------
 # List all the source files here. They will NOT be compiled but instead
 # be directly included in the main test source file. We list them here so that
 # they will show up in IDEs
 set(TEST_NAMES
-  ITKImageProcessingReader
-  ITKImageProcessingWriter
-  ITKImageProcessingImportImageStack
-  ITKImageProcessingImage
-#  ITKAbsImage
-#  ITKAcosImage
-#  ITKAtanImage
-#  ITKSqrtImage
-#  ITKMinMaxCurvatureFlowImage
-#  ITKSigmoidImage
-#  ITKBinaryThinningImage
-#  ITKHMaximaImage
-#  ITKCurvatureAnisotropicDiffusionImage
-#  ITKCosImage
-#  ITKHMinimaImage
-#  ITKExpImage
-#  ITKLogImage
-#  ITKRescaleIntensityImage
-#  ITKLabelContourImage
-#  ITKTanImage
-#  ITKBinaryContourImage
-#  ITKShiftScaleImage
-#  ITKNotImage
-#  ITKBinaryProjectionImage
-#  ITKBinaryMinMaxCurvatureFlowImage
-#  ITKInvertIntensityImage
-#  ITKGrayscaleFillholeImage
-#  ITKAsinImage
-#  ITKHConvexImage
-#  ITKIntensityWindowingImage
-#  ITKGradientAnisotropicDiffusionImage
-#  ITKExpNegativeImage
-#  ITKSinImage
-#  ITKValuedRegionalMinimaImage
-#  ITKLog10Image
-#  ITKSquareImage
-#  ITKSobelEdgeDetectionImage
-#  ITKValuedRegionalMaximaImage
-#  ITKRelabelComponentImage
-#  ITKGrayscaleGrindPeakImage
-#  ITKBinaryThresholdImage
-#  ITKGradientMagnitudeImage
-#  ITKGradientMagnitudeRecursiveGaussianImage
-#  ITKSignedMaurerDistanceMapImage
-#  ITKLaplacianRecursiveGaussianImage
-#  ITKOtsuMultipleThresholdsImage
-#  ITKDoubleThresholdImage
-#  ITKSumProjectionImage
-  ITKApproximateSignedDistanceMapImage
-#  ITKCurvatureFlowImage
-#  ITKIsoContourDistanceImage
-#  ITKRegionalMinimaImage
-#  ITKRegionalMaximaImage
-#  ITKSignedDanielssonDistanceMapImage
-#  ITKStandardDeviationProjectionImage
-#  ITKDanielssonDistanceMapImage
-#  ITKMeanProjectionImage
-#  ITKZeroCrossingImage
-#  ITKThresholdMaximumConnectedComponentsImage
-#  ITKSmoothingRecursiveGaussianImage
-#  ITKAdaptiveHistogramEqualizationImage
-#  ITKCastImage
-#  ITKMedianImage
-#  ITKRGBToLuminanceImage
-#  ITKHistogramMatchingImage
-#  ITKMorphologicalWatershedImage
-#  ITKMorphologicalWatershedFromMarkersImage
-#  ITKThresholdImage
-#  ITKBlackTopHatImage
-#  ITKWhiteTopHatImage
-#  ITKGrayscaleErodeImage
-#  ITKBinaryDilateImage
-#  ITKGrayscaleMorphologicalOpeningImage
-#  ITKGrayscaleMorphologicalClosingImage
-#  ITKErodeObjectMorphologyImage
-#  ITKClosingByReconstructionImage
-#  ITKDilateObjectMorphologyImage
-#  ITKBinaryErodeImage
-#  ITKMorphologicalGradientImage
-#  ITKOpeningByReconstructionImage
-#  ITKBinaryMorphologicalOpeningImage
-#  ITKBinaryOpeningByReconstructionImage
-#  ITKBinaryMorphologicalClosingImage
-#  ITKBinaryClosingByReconstructionImage
-#  ITKGrayscaleDilateImage
-#  ITKMultiScaleHessianBasedObjectnessImage
-#  ITKVectorConnectedComponentImage
-#  ITKConnectedComponentImage
-#  ITKMaskImage
-#  ITKFFTNormalizedCorrelationImage
-#  ITKVectorRescaleIntensityImage
-#  ITKPatchBasedDenoisingImage
+  ITKImageProcessingReaderTest
+  ITKImageProcessingWriterTest
+  ITKImageProcessingImportImageStackTest
+  ITKImageProcessingImageTest
+  ITKAbsImageTest
+  ITKAcosImageTest
+  ITKAtanImageTest
+  ITKSqrtImageTest
+  ITKMinMaxCurvatureFlowImageTest
+  ITKSigmoidImageTest
+  ITKBinaryThinningImageTest
+  ITKHMaximaImageTest
+  ITKCurvatureAnisotropicDiffusionImageTest
+  ITKCosImageTest
+  ITKHMinimaImageTest
+  ITKExpImageTest
+  ITKLogImageTest
+  ITKRescaleIntensityImageTest
+  ITKLabelContourImageTest
+  ITKTanImageTest
+  ITKBinaryContourImageTest
+  ITKShiftScaleImageTest
+  ITKNotImageTest
+  ITKBinaryProjectionImageTest
+  ITKBinaryMinMaxCurvatureFlowImageTest
+  ITKInvertIntensityImageTest
+  ITKGrayscaleFillholeImageTest
+  ITKAsinImageTest
+  ITKHConvexImageTest
+  ITKIntensityWindowingImageTest
+  ITKGradientAnisotropicDiffusionImageTest
+  ITKExpNegativeImageTest
+  ITKSinImageTest
+  ITKValuedRegionalMinimaImageTest
+  ITKLog10ImageTest
+  ITKSquareImageTest
+  ITKSobelEdgeDetectionImageTest
+  ITKValuedRegionalMaximaImageTest
+  ITKRelabelComponentImageTest
+  ITKGrayscaleGrindPeakImageTest
+  ITKBinaryThresholdImageTest
+  ITKGradientMagnitudeImageTest
+  ITKGradientMagnitudeRecursiveGaussianImageTest
+  ITKSignedMaurerDistanceMapImageTest
+  ITKLaplacianRecursiveGaussianImageTest
+  ITKOtsuMultipleThresholdsImageTest
+  ITKDoubleThresholdImageTest
+  ITKSumProjectionImageTest
+  ITKApproximateSignedDistanceMapImageTest
+  ITKCurvatureFlowImageTest
+  ITKIsoContourDistanceImageTest
+  ITKRegionalMinimaImageTest
+  ITKRegionalMaximaImageTest
+  ITKSignedDanielssonDistanceMapImageTest
+  ITKStandardDeviationProjectionImageTest
+  ITKDanielssonDistanceMapImageTest
+  ITKMeanProjectionImageTest
+  ITKZeroCrossingImageTest
+  ITKThresholdMaximumConnectedComponentsImageTest
+  ITKSmoothingRecursiveGaussianImageTest
+  ITKAdaptiveHistogramEqualizationImageTest
+  ITKCastImageTest
+  ITKMedianImageTest
+  ITKRGBToLuminanceImageTest
+  ITKHistogramMatchingImageTest
+  ITKMorphologicalWatershedImageTest
+  ITKMorphologicalWatershedFromMarkersImageTest
+  ITKThresholdImageTest
+  ITKBlackTopHatImageTest
+  ITKWhiteTopHatImageTest
+  ITKGrayscaleErodeImageTest
+  ITKBinaryDilateImageTest
+  ITKGrayscaleMorphologicalOpeningImageTest
+  ITKGrayscaleMorphologicalClosingImageTest
+  ITKErodeObjectMorphologyImageTest
+  ITKClosingByReconstructionImageTest
+  ITKDilateObjectMorphologyImageTest
+  ITKBinaryErodeImageTest
+  ITKMorphologicalGradientImageTest
+  ITKOpeningByReconstructionImageTest
+  ITKBinaryMorphologicalOpeningImageTest
+  ITKBinaryOpeningByReconstructionImageTest
+  ITKBinaryMorphologicalClosingImageTest
+  ITKBinaryClosingByReconstructionImageTest
+  ITKGrayscaleDilateImageTest
+  ITKMultiScaleHessianBasedObjectnessImageTest
+  ITKVectorConnectedComponentImageTest
+  ITKConnectedComponentImageTest
+  ITKMaskImageTest
+  ITKFFTNormalizedCorrelationImageTest
+  ITKVectorRescaleIntensityImageTest
+  ITKPatchBasedDenoisingImageTest
   )
-
-set( ${PLUGIN_NAME}_TEST_SRCS )
-set(FilterTestIncludes "")
-set(TestMainFunctors "")
-
-foreach(name  ${TEST_NAMES})
-  set( ${PLUGIN_NAME}_TEST_SRCS
-    ${${PLUGIN_NAME}_TEST_SRCS}
-    "${${PLUGIN_NAME}Test_SOURCE_DIR}/${name}Test.cpp"
-    )
-  string(CONCAT
-    FilterTestIncludes
-    ${FilterTestIncludes}
-    "#include \"${${PLUGIN_NAME}Test_SOURCE_DIR}/${name}Test.cpp\"\n"
-    )
-
-    string(CONCAT
-      TestMainFunctors
-     ${TestMainFunctors}
-     "  ${name}Test()()|\n")
-endforeach()
-
-STRING(REPLACE "|" ";" TestMainFunctors ${TestMainFunctors}   )
-
-configure_file(${SIMPLProj_SOURCE_DIR}/Source/SIMPLib/Testing/TestMain.cpp.in
-               ${${PLUGIN_NAME}Test_BINARY_DIR}/${PLUGIN_NAME}UnitTest.cpp @ONLY)
-
-
-# Set the source files properties on each source file.
-foreach(f ${${PLUGIN_NAME}_TEST_SRCS})
-  set_source_files_properties( ${f} PROPERTIES HEADER_FILE_ONLY TRUE)
-endforeach()
+include( ${CMP_SOURCE_DIR}/ITKSupport/IncludeITK.cmake)
 
 
 list(APPEND ${PLUGIN_NAME}_LINK_LIBS Qt5::Core H5Support SIMPLib)
@@ -162,16 +111,24 @@ else()
   list(APPEND ${PLUGIN_NAME}_LINK_LIBS ${ITK_LIBRARIES})
 endif()
 
-AddSIMPLUnitTest(TESTNAME ${PLUGIN_NAME}UnitTest
-                    SOURCES ${${PLUGIN_NAME}Test_BINARY_DIR}/${PLUGIN_NAME}UnitTest.cpp ${${PLUGIN_NAME}_TEST_SRCS}
-                    FOLDER "${PLUGIN_NAME}Plugin/Test"
-                    LINK_LIBRARIES ${${PLUGIN_NAME}_LINK_LIBS}
-                    INCLUDE_DIRS 
-                    	${${PLUGIN_NAME}Test_SOURCE_DIR}
-                    	${${PLUGIN_NAME}Test_BINARY_DIR} )
+
+#------------------------------------------------------------------------------
+# Include this file from the CMP Project
+include(${CMP_SOURCE_DIR}/cmpCMakeMacros.cmake)
+include(${SIMPLProj_SOURCE_DIR}/Source/SIMPLib/SIMPLibMacros.cmake)
 
 
+get_filename_component(${PLUGIN_NAME}_PARENT_SOURCE_DIR "${${PLUGIN_NAME}_SOURCE_DIR}" DIRECTORY)
+get_filename_component(${PLUGIN_NAME}_PARENT_BINARY_DIR "${${PLUGIN_NAME}_BINARY_DIR}" DIRECTORY)
 
-if(MSVC)
-  set_source_files_properties(${${PLUGIN_NAME}Test_BINARY_DIR}/${PLUGIN_NAME}UnitTest.cpp PROPERTIES COMPILE_FLAGS /bigobj)
-endif()
+SIMPL_GenerateUnitTestFile(PLUGIN_NAME ${PLUGIN_NAME}
+                           TEST_DATA_DIR ${${PLUGIN_NAME}_SOURCE_DIR}/Test/Data
+                           SOURCES ${TEST_NAMES}
+                           LINK_LIBRARIES ${${PLUGIN_NAME}_LINK_LIBS}
+                           INCLUDE_DIRS ${${PLUGIN_NAME}_PARENT_SOURCE_DIR}
+                                        ${${PLUGIN_NAME}Test_SOURCE_DIR}
+                                        ${${PLUGIN_NAME}Test_BINARY_DIR}
+                                        ${${PLUGIN_NAME}_PARENT_BINARY_DIR}
+)
+
+
