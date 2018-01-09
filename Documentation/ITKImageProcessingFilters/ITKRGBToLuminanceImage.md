@@ -2,13 +2,16 @@ ITK::RGB To Luminance Image Filter (KW) {#itkrgbtoluminanceimage}
 =============
 
 ## Group (Subgroup) ##
+
 ImageProcessing (ITK IntensityTransformation)
 
 ## Description ##
+
 This **Filter** transforms RGB or RGBA images to scalar images by computing
 their luminance.
 
 ## Required Geometry ##
+
 Image
 
 ## Required Objects ##

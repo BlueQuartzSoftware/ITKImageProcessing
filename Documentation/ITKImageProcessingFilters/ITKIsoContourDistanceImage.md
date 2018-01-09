@@ -2,9 +2,11 @@ ITK::Iso Contour Distance Image Filter (KW) {#itkisocontourdistanceimage}
 ==========================
 
 ## Group (Subgroup) ##
+
 ITKImageProcessing (ITKImageProcessing)
 
 ## Description ##
+
 Compute an approximate distance from an interpolated isocontour to the close grid points.
 
 For standard level set algorithms, it is useful to periodically reinitialize the evolving image to prevent numerical accuracy problems in computing derivatives. This reinitialization is done by computing a signed distance map to the current level set. This class provides the first step in this reinitialization by computing an estimate of the distance from the interpolated isocontour to the pixels (or voxels) that are close to it, i.e. for which the isocontour crosses a segment between them and one of their direct neighbors. This class supports narrowbanding. If the input narrowband is provided, the algorithm will only locate the level set within the input narrowband.
@@ -20,6 +22,7 @@ Implementation of this class is based on Fast and Accurate Redistancing for Leve
 
 
 ## Required Geometry ##
+
 Image
 
 ## Required Objects ##
@@ -35,6 +38,7 @@ Image
 | **Cell Attribute Array** | None | float | (1)  | Array containing filtered image
 
 ## References ##
+
 [1] T.S. Yoo, M. J. Ackerman, W. E. Lorensen, W. Schroeder, V. Chalana, S. Aylward, D. Metaxas, R. Whitaker. Engineering and Algorithm Design for an Image Processing API: A Technical Report on ITK - The Insight Toolkit. In Proc. of Medicine Meets Virtual Reality, J. Westwood, ed., IOS Press Amsterdam pp 586-592 (2002). 
 [2] H. Johnson, M. McCormick, L. Ibanez. The ITK Software Guide: Design and Functionality. Fourth Edition. Published by Kitware Inc. 2015 ISBN: 9781-930934-28-3
 [3] H. Johnson, M. McCormick, L. Ibanez. The ITK Software Guide: Introduction and Development Guidelines. Fourth Edition. Published by Kitware Inc. 2015 ISBN: 9781-930934-27-6

@@ -2,12 +2,15 @@ ITK::Image Writer (KW) {#itkimagewriter}
 =====
 
 ## Group (Subgroup) ##
+
 ITKImageProcessing (ITKImageProcessing)
 
 ## Description ##
+
 Reads images through ITK
 
 ## Parameters ##
+
 | Name             | Type |
 |------------------|------|
 | Input File | String | Path to the output file to write. |

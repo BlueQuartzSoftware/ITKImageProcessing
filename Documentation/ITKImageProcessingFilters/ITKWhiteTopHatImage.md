@@ -2,9 +2,11 @@ ITK::White Top Hat Image Filter (KW) {#itkwhitetophatimage}
 ===================
 
 ## Group (Subgroup) ##
+
 ITKImageProcessing (ITKImageProcessing)
 
 ## Description ##
+
 White top hat extract local maxima that are larger than the structuring element.
 
 Top-hats are described in Chapter 4.5 of Pierre Soille's book "Morphological Image Analysis: Principles and Applications", Second Edition, Springer, 2003.
@@ -21,6 +23,7 @@ Top-hats are described in Chapter 4.5 of Pierre Soille's book "Morphological Ima
 
 
 ## Required Geometry ##
+
 Image
 
 ## Required Objects ##
@@ -36,6 +39,7 @@ Image
 | **Cell Attribute Array** | None |  | (1)  | Array containing filtered image
 
 ## References ##
+
 [1] T.S. Yoo, M. J. Ackerman, W. E. Lorensen, W. Schroeder, V. Chalana, S. Aylward, D. Metaxas, R. Whitaker. Engineering and Algorithm Design for an Image Processing API: A Technical Report on ITK - The Insight Toolkit. In Proc. of Medicine Meets Virtual Reality, J. Westwood, ed., IOS Press Amsterdam pp 586-592 (2002). 
 [2] H. Johnson, M. McCormick, L. Ibanez. The ITK Software Guide: Design and Functionality. Fourth Edition. Published by Kitware Inc. 2015 ISBN: 9781-930934-28-3
 [3] H. Johnson, M. McCormick, L. Ibanez. The ITK Software Guide: Introduction and Development Guidelines. Fourth Edition. Published by Kitware Inc. 2015 ISBN: 9781-930934-27-6

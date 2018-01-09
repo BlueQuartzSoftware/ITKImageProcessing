@@ -2,9 +2,11 @@ ITK::Minimum Projection Image Filter (KW) {#itkminimumprojectionimage}
 =========================
 
 ## Group (Subgroup) ##
+
 ITKImageProcessing (ITKImageProcessing)
 
 ## Description ##
+
 Minimum projection.
 
 This class was contributed to the Insight Journal by Gaetan Lehmann. The original paper can be found at https://hdl.handle.net/1926/164 
@@ -31,6 +33,7 @@ This class was contributed to the Insight Journal by Gaetan Lehmann. The origina
 
 
 ## Required Geometry ##
+
 Image
 
 ## Required Objects ##
@@ -46,6 +49,7 @@ Image
 | **Cell Attribute Array** | None |  | (1)  | Array containing filtered image
 
 ## References ##
+
 [1] T.S. Yoo, M. J. Ackerman, W. E. Lorensen, W. Schroeder, V. Chalana, S. Aylward, D. Metaxas, R. Whitaker. Engineering and Algorithm Design for an Image Processing API: A Technical Report on ITK - The Insight Toolkit. In Proc. of Medicine Meets Virtual Reality, J. Westwood, ed., IOS Press Amsterdam pp 586-592 (2002). 
 [2] H. Johnson, M. McCormick, L. Ibanez. The ITK Software Guide: Design and Functionality. Fourth Edition. Published by Kitware Inc. 2015 ISBN: 9781-930934-28-3
 [3] H. Johnson, M. McCormick, L. Ibanez. The ITK Software Guide: Introduction and Development Guidelines. Fourth Edition. Published by Kitware Inc. 2015 ISBN: 9781-930934-27-6

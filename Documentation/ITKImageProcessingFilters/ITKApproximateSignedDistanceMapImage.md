@@ -2,9 +2,11 @@ ITK::Approximate Signed Distance Map Image Filter (KW) {#itkapproximatesigneddis
 ====================================
 
 ## Group (Subgroup) ##
+
 ITKImageProcessing (ITKImageProcessing)
 
 ## Description ##
+
 Create a map of the approximate signed distance from the boundaries of a binary image.
 
 The ApproximateSignedDistanceMapImageFilter takes as input a binary image and produces a signed distance map. Each pixel value in the output contains the approximate distance from that pixel to the nearest "object" in the binary image. This filter differs from the DanielssonDistanceMapImageFilter in that it calculates the distance to the "object edge" for pixels within the object.
@@ -45,6 +47,7 @@ This filter uses the FastChamferDistanceImageFilter and the IsoContourDistanceIm
 
 
 ## Required Geometry ##
+
 Image
 
 ## Required Objects ##
@@ -60,6 +63,7 @@ Image
 | **Cell Attribute Array** | None | float | (1)  | Array containing filtered image
 
 ## References ##
+
 [1] T.S. Yoo, M. J. Ackerman, W. E. Lorensen, W. Schroeder, V. Chalana, S. Aylward, D. Metaxas, R. Whitaker. Engineering and Algorithm Design for an Image Processing API: A Technical Report on ITK - The Insight Toolkit. In Proc. of Medicine Meets Virtual Reality, J. Westwood, ed., IOS Press Amsterdam pp 586-592 (2002). 
 [2] H. Johnson, M. McCormick, L. Ibanez. The ITK Software Guide: Design and Functionality. Fourth Edition. Published by Kitware Inc. 2015 ISBN: 9781-930934-28-3
 [3] H. Johnson, M. McCormick, L. Ibanez. The ITK Software Guide: Introduction and Development Guidelines. Fourth Edition. Published by Kitware Inc. 2015 ISBN: 9781-930934-27-6

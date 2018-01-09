@@ -2,12 +2,15 @@ ITK::Cast Image Filter (KW) {#itkcastimage}
 =============
 
 ## Group (Subgroup) ##
+
 ITKImageFilterBase (ITKImageFilterBase)
 
 ## Description ##
+
 This **Filter** casts input pixels to output pixel type. 
 
 ## Required Geometry ##
+
 Image
 
 ## Required Objects ##

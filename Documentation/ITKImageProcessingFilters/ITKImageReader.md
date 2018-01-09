@@ -2,12 +2,15 @@ ITK::Image Reader (KW) {#itkimagereader}
 =====
 
 ## Group (Subgroup) ##
+
 ITKImageProcessing (ITKImageProcessing)
 
 ## Description ##
+
 Reads images through ITK
 
 ## Parameters ##
+
 | Name             | Type |
 |------------------|------|
 | Input File | String | Path to the input file to read. |

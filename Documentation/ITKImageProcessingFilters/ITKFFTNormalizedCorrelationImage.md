@@ -2,9 +2,11 @@ ITK::FFT Normalized Correlation Image Filter (KW) {#itkfftnormalizedcorrelationi
 ==================================
 
 ## Group (Subgroup) ##
+
 ITKImageProcessing (ITKImageProcessing)
 
 ## Description ##
+
 Calculate normalized cross correlation using FFTs.
 
 This filter calculates the normalized cross correlation (NCC) of two images
@@ -45,6 +47,7 @@ definition, size(fixedImage) + size(movingImage) - 1.
 
 
 ## Required Geometry ##
+
 Image
 
 ## Required Objects ##
@@ -60,6 +63,7 @@ Image
 | **Cell Attribute Array** | None | float | (1)  | Array containing filtered image
 
 ## References ##
+
 [1] T.S. Yoo, M. J. Ackerman, W. E. Lorensen, W. Schroeder, V. Chalana, S. Aylward, D. Metaxas, R. Whitaker. Engineering and Algorithm Design for an Image Processing API: A Technical Report on ITK - The Insight Toolkit. In Proc. of Medicine Meets Virtual Reality, J. Westwood, ed., IOS Press Amsterdam pp 586-592 (2002).
 [2] H. Johnson, M. McCormick, L. Ibanez. The ITK Software Guide: Design and Functionality. Fourth Edition. Published by Kitware Inc. 2015 ISBN: 9781-930934-28-3
 [3] H. Johnson, M. McCormick, L. Ibanez. The ITK Software Guide: Introduction and Development Guidelines. Fourth Edition. Published by Kitware Inc. 2015 ISBN: 9781-930934-27-6
