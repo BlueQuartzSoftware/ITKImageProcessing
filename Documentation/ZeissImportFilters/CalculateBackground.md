@@ -2,15 +2,18 @@ Calculate Background {#calculatebackground}
 =====
 
 ## Group (Subgroup) ##
+
 ZeissImport (ZeissImport)
 
 
 ## Description ##
+
 This filter takes a series of grayscale images in a given attribute matrix and averages them. The image content only contributes to the average if the value at a given pixel is between the lowest and highest allowed image value set by the user. The background is then fit to a second-order polynomial, and the resulting fit background is calculated and stored in a new array. 
 
 If the user selects Subtract Background from Current Images, the background will be subtracted, and the new images will overwrite the original images in the attribute matrix. 
 
 ## Parameters ##
+
 | Name             | Type |
 |------------------|------|
 | Lowest Allowed Image Value | int |
