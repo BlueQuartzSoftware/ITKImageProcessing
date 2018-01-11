@@ -81,7 +81,7 @@ public:
   AbstractFilter::Pointer GetFilterByName(const QString& filterName)
   {
     FilterManager* fm = FilterManager::Instance();
-    IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filterName);
+    IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filterName);
     if(nullptr == filterFactory.get())
     {
       return nullptr;
@@ -225,7 +225,7 @@ public:
     // Load container for input
     // Use ITKImageReader filter to avoid re-writing filter here
     FilterManager* fm = FilterManager::Instance();
-    IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter("ITKImageReader");
+    IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(QString("ITKImageReader"));
     DREAM3D_REQUIRE_NE(filterFactory.get(), 0);
     AbstractFilter::Pointer filter = filterFactory->create();
     QVariant var;
@@ -254,7 +254,7 @@ public:
   {
     QString filtName = "ITKImageWriter";
     FilterManager* fm = FilterManager::Instance();
-    IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+    IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filtName);
 
     DREAM3D_REQUIRE_NE(filterFactory.get(), 0);
     // If we get this far, the Factory is good so creating the filter should not fail unless something has

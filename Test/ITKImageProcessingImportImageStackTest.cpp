@@ -73,7 +73,7 @@ public:
   AbstractFilter::Pointer GetFilterByName(const QString& filterName)
   {
     FilterManager* fm = FilterManager::Instance();
-    IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filterName);
+    IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filterName);
     if(nullptr == filterFactory.get())
     {
       return nullptr;
@@ -212,7 +212,7 @@ public:
 
     QString filtName = "ITKImportImageStack";
     FilterManager* fm = FilterManager::Instance();
-    IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+    IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filtName);
 
     DREAM3D_REQUIRE_NE(0, filterFactory.get());
 
