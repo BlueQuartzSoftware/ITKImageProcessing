@@ -181,7 +181,7 @@ void ZeissImportFilter::dataCheck()
 
   QString filtName = ZeissImportConstants::ImageProcessingFilters::k_ReadImageFilterClassName;
   FilterManager* fm = FilterManager::Instance();
-  IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+  IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filtName);
   if (nullptr != filterFactory.get() )
   {
     // If we get this far, the Factory is good so creating the filter should not fail unless something has
@@ -199,7 +199,7 @@ void ZeissImportFilter::dataCheck()
   {
     QString filtName = ZeissImportConstants::ImageProcessingFilters::k_RgbToGrayFilterClassName;
     FilterManager* fm = FilterManager::Instance();
-    IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+    IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filtName);
     if (nullptr != filterFactory.get() )
     {
       // If we get this far, the Factory is good so creating the filter should not fail unless something has
@@ -639,7 +639,7 @@ void ZeissImportFilter::importImage(const QString& imageName, const QString& pTa
 
   QString filtName = ZeissImportConstants::ImageProcessingFilters::k_ReadImageFilterClassName;
   FilterManager* fm = FilterManager::Instance();
-  IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+  IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filtName);
   if (nullptr != filterFactory.get() )
   {
     // If we get this far, the Factory is good so creating the filter should not fail unless something has
@@ -734,7 +734,7 @@ void ZeissImportFilter::convertToGrayScale(const QString& imageName, const QStri
 
   QString filtName = ZeissImportConstants::ImageProcessingFilters::k_RgbToGrayFilterClassName;
   FilterManager* fm = FilterManager::Instance();
-  IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+  IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filtName);
   if (nullptr != filterFactory.get() )
   {
     // If we get this far, the Factory is good so creating the filter should not fail unless something has

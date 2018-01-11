@@ -69,7 +69,7 @@ void TestFilterAvailability()
   // Now instantiate the PhWriter Filter from the FilterManager
   QString filtName = ZeissImportConstants::ImageProcessingFilters::k_ReadImageFilterClassName;
   FilterManager* fm = FilterManager::Instance();
-  IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+  IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filtName);
   if (nullptr == filterFactory.get() )
   {
     std::stringstream ss;
@@ -79,7 +79,7 @@ void TestFilterAvailability()
 
   filtName = ZeissImportConstants::ImageProcessingFilters::k_RgbToGrayFilterClassName;
   fm = FilterManager::Instance();
-  filterFactory = fm->getFactoryForFilter(filtName);
+  filterFactory = fm->getFactoryFromClassName(filtName);
   if (nullptr == filterFactory.get() )
   {
     std::stringstream ss;
