@@ -25,7 +25,10 @@ Reads images through ITK
 
 ## Example Pipelines ##
 
-
++ INL Export
++ TxCopper_Exposed
++ TxCopper_Unexposed
++ Edax IPF Colors
 
 ## License & Copyright ##
 

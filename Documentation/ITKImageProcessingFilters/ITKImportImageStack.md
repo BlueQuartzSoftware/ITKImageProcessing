@@ -33,7 +33,8 @@ None
 
 ## Example Pipelines ##
 
-
++ (08) Image Initial Visualization
++ (09) Image Segmentation
 
 ## License & Copyright ##
 

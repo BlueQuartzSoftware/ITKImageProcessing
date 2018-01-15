@@ -25,7 +25,7 @@ Reads images through ITK
 
 ## Example Pipelines ##
 
-
++ Image Histogram
 
 ## License & Copyright ##
 
