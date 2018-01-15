@@ -41,10 +41,27 @@ ZeissImportPlugin::~ZeissImportPlugin() = default;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString ZeissImportPlugin::getPluginName()
+QString ZeissImportPlugin::getPluginFileName()
 {
-  return (ZeissImportConstants::ZeissImportPluginDisplayName);
+  return ZeissImportConstants::ZeissImportPluginFile;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString ZeissImportPlugin::getPluginDisplayName()
+{
+  return ZeissImportConstants::ZeissImportPluginDisplayName;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString ZeissImportPlugin::getPluginBaseName()
+{
+  return ZeissImportConstants::ZeissImportBaseName;
+}
+
 
 // -----------------------------------------------------------------------------
 //
