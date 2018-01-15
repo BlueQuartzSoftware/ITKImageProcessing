@@ -185,10 +185,27 @@ QStringList ITKImageProcessingPlugin::getList2DSupportedFileExtensions()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString ITKImageProcessingPlugin::getPluginName()
+QString ITKImageProcessingPlugin::getPluginFileName()
 {
-  return (ITKImageProcessingConstants::ITKImageProcessingPluginDisplayName);
+  return ITKImageProcessingConstants::ITKImageProcessingPluginFile;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString ITKImageProcessingPlugin::getPluginDisplayName()
+{
+  return ITKImageProcessingConstants::ITKImageProcessingPluginDisplayName;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString ITKImageProcessingPlugin::getPluginBaseName()
+{
+  return ITKImageProcessingConstants::ITKImageProcessingBaseName;
+}
+
 
 // -----------------------------------------------------------------------------
 //
