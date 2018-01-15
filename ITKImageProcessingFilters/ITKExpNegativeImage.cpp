@@ -134,6 +134,14 @@ const QString ITKExpNegativeImage::getHumanLabel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid ITKExpNegativeImage::getUuid()
+{
+  return QUuid("{634c2306-c1ee-5a45-a55c-f8286e36999a}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString ITKExpNegativeImage::getSubGroupName()
 {
   return "ITK IntensityTransformation";

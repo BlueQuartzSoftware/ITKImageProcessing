@@ -147,6 +147,14 @@ const QString ITKBinaryContourImage::getHumanLabel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid ITKBinaryContourImage::getUuid()
+{
+  return QUuid("{3c451ac9-bfef-5e41-bae9-3957a0fc26a1}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString ITKBinaryContourImage::getSubGroupName()
 {
   return "ITK SegmentationPostProcessing";

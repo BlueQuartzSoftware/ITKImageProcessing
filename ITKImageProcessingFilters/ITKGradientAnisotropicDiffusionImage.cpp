@@ -154,6 +154,14 @@ const QString ITKGradientAnisotropicDiffusionImage::getHumanLabel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid ITKGradientAnisotropicDiffusionImage::getUuid()
+{
+  return QUuid("{98d0b50b-9639-53a0-9e30-2fae6f7ab869}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString ITKGradientAnisotropicDiffusionImage::getSubGroupName()
 {
   return "ITK Smoothing";

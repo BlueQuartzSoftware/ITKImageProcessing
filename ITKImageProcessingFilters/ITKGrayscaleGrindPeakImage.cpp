@@ -139,6 +139,14 @@ const QString ITKGrayscaleGrindPeakImage::getHumanLabel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid ITKGrayscaleGrindPeakImage::getUuid()
+{
+  return QUuid("{d910551f-4eec-55c9-b0ce-69c2277e61bd}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString ITKGrayscaleGrindPeakImage::getSubGroupName()
 {
   return "ITK MathematicalMorphology";

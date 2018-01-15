@@ -147,6 +147,14 @@ const QString ITKSignedMaurerDistanceMapImage::getHumanLabel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid ITKSignedMaurerDistanceMapImage::getUuid()
+{
+  return QUuid("{bb15d42a-3077-582a-be1a-76b2bae172e9}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString ITKSignedMaurerDistanceMapImage::getSubGroupName()
 {
   return "ITK DistanceMap";

@@ -139,6 +139,14 @@ const QString ITKHMaximaImage::getHumanLabel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid ITKHMaximaImage::getUuid()
+{
+  return QUuid("{932a6df4-212e-53a1-a2ab-c29bd376bb7b}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString ITKHMaximaImage::getSubGroupName()
 {
   return "ITK MathematicalMorphology";

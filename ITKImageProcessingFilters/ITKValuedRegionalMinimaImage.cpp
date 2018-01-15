@@ -139,6 +139,14 @@ const QString ITKValuedRegionalMinimaImage::getHumanLabel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid ITKValuedRegionalMinimaImage::getUuid()
+{
+  return QUuid("{739a0908-cb60-50f7-a484-b2157d023093}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString ITKValuedRegionalMinimaImage::getSubGroupName()
 {
   return "ITK MathematicalMorphology";

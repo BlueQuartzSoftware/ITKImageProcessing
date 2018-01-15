@@ -159,6 +159,14 @@ const QString ITKRGBToLuminanceImage::getHumanLabel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid ITKRGBToLuminanceImage::getUuid()
+{
+  return QUuid("{bae507d6-4d0a-5ad2-8279-c674f1c90db8}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString ITKRGBToLuminanceImage::getSubGroupName()
 {
   return "ITK IntensityTransformation";

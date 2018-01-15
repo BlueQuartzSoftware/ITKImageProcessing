@@ -152,6 +152,14 @@ const QString ITKDiscreteGaussianImage::getHumanLabel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid ITKDiscreteGaussianImage::getUuid()
+{
+  return QUuid("{53df5340-f632-598f-8a9b-802296b3a95c}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString ITKDiscreteGaussianImage::getSubGroupName()
 {
   return "ITK Smoothing";

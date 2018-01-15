@@ -140,6 +140,14 @@ const QString ITKBinomialBlurImage::getHumanLabel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid ITKBinomialBlurImage::getUuid()
+{
+  return QUuid("{4f51765f-ee36-52d0-96b6-f2aca3c24e7c}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString ITKBinomialBlurImage::getSubGroupName()
 {
   return "ITK Smoothing";

@@ -185,6 +185,14 @@ const QString ITKGrayscaleErodeImage::getHumanLabel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid ITKGrayscaleErodeImage::getUuid()
+{
+  return QUuid("{aef4e804-3f7a-5dc0-911c-b1f16a393a69}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString ITKGrayscaleErodeImage::getSubGroupName()
 {
   return "ITK MathematicalMorphology";

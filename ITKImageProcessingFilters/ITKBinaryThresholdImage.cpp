@@ -153,6 +153,14 @@ const QString ITKBinaryThresholdImage::getHumanLabel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid ITKBinaryThresholdImage::getUuid()
+{
+  return QUuid("{ba8a3f2e-3963-57c0-a8da-239e25de0526}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString ITKBinaryThresholdImage::getSubGroupName()
 {
   return "ITK Thresholding";

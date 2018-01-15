@@ -134,6 +134,14 @@ const QString ITKBinaryThinningImage::getHumanLabel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid ITKBinaryThinningImage::getUuid()
+{
+  return QUuid("{dcceeb50-5924-5eae-88ea-34793cf545a9}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString ITKBinaryThinningImage::getSubGroupName()
 {
   return "ITK SegmentationPostProcessing";

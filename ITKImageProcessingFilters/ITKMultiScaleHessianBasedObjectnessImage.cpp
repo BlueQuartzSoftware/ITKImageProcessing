@@ -189,6 +189,14 @@ const QString ITKMultiScaleHessianBasedObjectnessImage::getHumanLabel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid ITKMultiScaleHessianBasedObjectnessImage::getUuid()
+{
+  return QUuid("{c080e143-1895-5f71-9799-06b8c2d58faf}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString ITKMultiScaleHessianBasedObjectnessImage::getSubGroupName()
 {
   return "ITK Edge";

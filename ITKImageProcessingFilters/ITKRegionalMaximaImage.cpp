@@ -151,6 +151,14 @@ const QString ITKRegionalMaximaImage::getHumanLabel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid ITKRegionalMaximaImage::getUuid()
+{
+  return QUuid("{9af89118-2d15-54ca-9590-75df8be33317}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString ITKRegionalMaximaImage::getSubGroupName()
 {
   return "ITK MathematicalMorphology";

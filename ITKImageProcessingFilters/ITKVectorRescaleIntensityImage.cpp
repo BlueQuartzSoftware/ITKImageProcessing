@@ -186,6 +186,14 @@ const QString ITKVectorRescaleIntensityImage::getHumanLabel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid ITKVectorRescaleIntensityImage::getUuid()
+{
+  return QUuid("{bc1051ba-6c67-5391-809b-48627ed47fa7}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString ITKVectorRescaleIntensityImage::getSubGroupName()
 {
   return "ITK IntensityTransformation";

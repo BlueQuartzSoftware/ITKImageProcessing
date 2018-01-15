@@ -145,6 +145,14 @@ const QString ITKCurvatureFlowImage::getHumanLabel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid ITKCurvatureFlowImage::getUuid()
+{
+  return QUuid("{653f26dd-a5ef-5c75-b6f6-bc096268f25e}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString ITKCurvatureFlowImage::getSubGroupName()
 {
   return "ITK Smoothing";

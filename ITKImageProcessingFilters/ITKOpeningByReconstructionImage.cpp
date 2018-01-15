@@ -193,6 +193,14 @@ const QString ITKOpeningByReconstructionImage::getHumanLabel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid ITKOpeningByReconstructionImage::getUuid()
+{
+  return QUuid("{ca04004f-fb11-588d-9f77-d00b3ee9ad2a}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString ITKOpeningByReconstructionImage::getSubGroupName()
 {
   return "ITK MathematicalMorphology";

@@ -146,6 +146,14 @@ const QString ITKSmoothingRecursiveGaussianImage::getHumanLabel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid ITKSmoothingRecursiveGaussianImage::getUuid()
+{
+  return QUuid("{0fd06492-06b1-5044-964c-e0555c556327}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString ITKSmoothingRecursiveGaussianImage::getSubGroupName()
 {
   return "ITK Smoothing";

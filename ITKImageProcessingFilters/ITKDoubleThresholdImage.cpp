@@ -165,6 +165,14 @@ const QString ITKDoubleThresholdImage::getHumanLabel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid ITKDoubleThresholdImage::getUuid()
+{
+  return QUuid("{7fcfa231-519e-58da-bf8f-ad0f728bf0fe}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString ITKDoubleThresholdImage::getSubGroupName()
 {
   return "ITK Thresholding";

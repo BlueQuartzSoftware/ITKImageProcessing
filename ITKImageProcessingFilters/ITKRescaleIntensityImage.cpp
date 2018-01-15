@@ -185,6 +185,14 @@ const QString ITKRescaleIntensityImage::getHumanLabel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid ITKRescaleIntensityImage::getUuid()
+{
+  return QUuid("{77bf2192-851d-5127-9add-634c1ef4f67f}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString ITKRescaleIntensityImage::getSubGroupName()
 {
   return "ITK IntensityTransformation";

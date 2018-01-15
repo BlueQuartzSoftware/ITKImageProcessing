@@ -223,6 +223,14 @@ const QString ITKMorphologicalWatershedFromMarkersImage::getHumanLabel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid ITKMorphologicalWatershedFromMarkersImage::getUuid()
+{
+  return QUuid("{81308863-094b-511d-9aa9-865e02e2b8d5}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString ITKMorphologicalWatershedFromMarkersImage::getSubGroupName()
 {
   return "ITK Segmentation";

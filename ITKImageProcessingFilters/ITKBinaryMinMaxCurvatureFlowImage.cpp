@@ -152,6 +152,14 @@ const QString ITKBinaryMinMaxCurvatureFlowImage::getHumanLabel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid ITKBinaryMinMaxCurvatureFlowImage::getUuid()
+{
+  return QUuid("{bf3d443b-27b4-53b1-8950-a83bca5374ec}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString ITKBinaryMinMaxCurvatureFlowImage::getSubGroupName()
 {
   return "ITK SegmentationPostProcessing";

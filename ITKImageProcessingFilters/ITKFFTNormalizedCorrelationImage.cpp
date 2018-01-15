@@ -209,6 +209,14 @@ const QString ITKFFTNormalizedCorrelationImage::getHumanLabel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid ITKFFTNormalizedCorrelationImage::getUuid()
+{
+  return QUuid("{a0d962b7-9d5c-5abc-a078-1fe795df4663}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString ITKFFTNormalizedCorrelationImage::getSubGroupName()
 {
   return "ITK Registration";

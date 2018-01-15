@@ -139,6 +139,14 @@ const QString ITKGrayscaleFillholeImage::getHumanLabel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid ITKGrayscaleFillholeImage::getUuid()
+{
+  return QUuid("{54c8dd45-88c4-5d4b-8a39-e3cc595e1cf8}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString ITKGrayscaleFillholeImage::getSubGroupName()
 {
   return "ITK MathematicalMorphology";

@@ -139,6 +139,14 @@ const QString ITKInvertIntensityImage::getHumanLabel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid ITKInvertIntensityImage::getUuid()
+{
+  return QUuid("{c6e10fa5-5462-546b-b34b-0f0ea75a7e43}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString ITKInvertIntensityImage::getSubGroupName()
 {
   return "ITK IntensityTransformation";

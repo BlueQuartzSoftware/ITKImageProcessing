@@ -208,6 +208,14 @@ const QString ITKBinaryErodeImage::getHumanLabel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid ITKBinaryErodeImage::getUuid()
+{
+  return QUuid("{522c5249-c048-579a-98dd-f7aadafc5578}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString ITKBinaryErodeImage::getSubGroupName()
 {
   return "ITK BinaryMathematicalMorphology";

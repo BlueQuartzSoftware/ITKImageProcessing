@@ -271,6 +271,14 @@ const QString ITKHistogramMatchingImage::getHumanLabel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid ITKHistogramMatchingImage::getUuid()
+{
+  return QUuid("{33ca886c-42b9-524a-984a-dab24f8bb74c}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString ITKHistogramMatchingImage::getSubGroupName()
 {
   return "ITK IntensityTransformation";

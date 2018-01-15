@@ -134,6 +134,14 @@ const QString ITKBoundedReciprocalImage::getHumanLabel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid ITKBoundedReciprocalImage::getUuid()
+{
+  return QUuid("{17f60a64-de93-59aa-a5e2-063e0aadafb7}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString ITKBoundedReciprocalImage::getSubGroupName()
 {
   return "ITK IntensityTransformation";

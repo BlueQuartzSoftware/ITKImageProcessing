@@ -147,6 +147,14 @@ const QString ITKAdaptiveHistogramEqualizationImage::getHumanLabel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid ITKAdaptiveHistogramEqualizationImage::getUuid()
+{
+  return QUuid("{2d5a7599-5e01-5489-a107-23b704d2b5eb}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString ITKAdaptiveHistogramEqualizationImage::getSubGroupName()
 {
   return "ITK BiasCorrection";

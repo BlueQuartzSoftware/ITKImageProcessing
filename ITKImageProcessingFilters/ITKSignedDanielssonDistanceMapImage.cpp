@@ -147,6 +147,14 @@ const QString ITKSignedDanielssonDistanceMapImage::getHumanLabel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid ITKSignedDanielssonDistanceMapImage::getUuid()
+{
+  return QUuid("{fc192fa8-b6b7-539c-9763-f683724da626}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString ITKSignedDanielssonDistanceMapImage::getSubGroupName()
 {
   return "ITK DistanceMap";

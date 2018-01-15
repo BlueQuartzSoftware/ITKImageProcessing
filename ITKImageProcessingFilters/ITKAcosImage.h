@@ -30,7 +30,7 @@ class ITKAcosImage : public ITKImageBase
 public:
   SIMPL_SHARED_POINTERS(ITKAcosImage)
   SIMPL_STATIC_NEW_MACRO(ITKAcosImage)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKAcosImage, AbstractFilter)
+   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKAcosImage, AbstractFilter)
 
   virtual ~ITKAcosImage();
 
@@ -48,6 +48,12 @@ public:
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
   virtual const QString getSubGroupName() override;
+
+  /**
+   * @brief getUuid Return the unique identifier for this filter.
+   * @return A QUuid object.
+   */
+  virtual const QUuid getUuid() override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class

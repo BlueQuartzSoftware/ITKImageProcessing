@@ -140,6 +140,14 @@ const QString ITKMaximumProjectionImage::getHumanLabel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid ITKMaximumProjectionImage::getUuid()
+{
+  return QUuid("{b2cb7ad7-6f62-51c4-943d-54d19c64e7be}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString ITKMaximumProjectionImage::getSubGroupName()
 {
   return "ITK Projection";

@@ -143,6 +143,14 @@ const QString ITKLabelContourImage::getHumanLabel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid ITKLabelContourImage::getUuid()
+{
+  return QUuid("{668f0b90-b504-5fba-b648-7c9677e1f452}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString ITKLabelContourImage::getSubGroupName()
 {
   return "ITK SegmentationPostProcessing";

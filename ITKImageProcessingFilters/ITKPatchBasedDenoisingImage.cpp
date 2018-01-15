@@ -224,6 +224,14 @@ const QString ITKPatchBasedDenoisingImage::getHumanLabel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid ITKPatchBasedDenoisingImage::getUuid()
+{
+  return QUuid("{ed61aebd-3a47-5ee1-8c9e-4ce205111b76}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString ITKPatchBasedDenoisingImage::getSubGroupName()
 {
   return "ITK Denoising";

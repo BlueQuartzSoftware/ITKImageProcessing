@@ -208,6 +208,14 @@ const QString ITKBinaryDilateImage::getHumanLabel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid ITKBinaryDilateImage::getUuid()
+{
+  return QUuid("{f86167ad-a1a1-557b-97ea-92a3618baa8f}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString ITKBinaryDilateImage::getSubGroupName()
 {
   return "ITK BinaryMathematicalMorphology";

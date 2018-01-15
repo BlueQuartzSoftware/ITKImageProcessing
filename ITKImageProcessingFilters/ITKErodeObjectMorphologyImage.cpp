@@ -193,6 +193,14 @@ const QString ITKErodeObjectMorphologyImage::getHumanLabel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid ITKErodeObjectMorphologyImage::getUuid()
+{
+  return QUuid("{caea0698-4253-518b-ab3f-8ebc140d92ea}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString ITKErodeObjectMorphologyImage::getSubGroupName()
 {
   return "ITK BinaryMathematicalMorphology";

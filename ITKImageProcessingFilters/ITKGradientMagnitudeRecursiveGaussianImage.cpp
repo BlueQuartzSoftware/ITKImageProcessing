@@ -143,6 +143,14 @@ const QString ITKGradientMagnitudeRecursiveGaussianImage::getHumanLabel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid ITKGradientMagnitudeRecursiveGaussianImage::getUuid()
+{
+  return QUuid("{fd688b32-d90e-5945-905b-2b7187b46265}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString ITKGradientMagnitudeRecursiveGaussianImage::getSubGroupName()
 {
   return "ITK Edge";

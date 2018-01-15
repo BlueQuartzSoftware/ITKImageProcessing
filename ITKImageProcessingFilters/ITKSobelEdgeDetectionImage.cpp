@@ -134,6 +134,14 @@ const QString ITKSobelEdgeDetectionImage::getHumanLabel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid ITKSobelEdgeDetectionImage::getUuid()
+{
+  return QUuid("{f7d7493c-05e5-5ff0-8ac8-51bf8ece83fe}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString ITKSobelEdgeDetectionImage::getSubGroupName()
 {
   return "ITK Edge";

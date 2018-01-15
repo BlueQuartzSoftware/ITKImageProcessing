@@ -139,6 +139,14 @@ const QString ITKLaplacianSharpeningImage::getHumanLabel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid ITKLaplacianSharpeningImage::getUuid()
+{
+  return QUuid("{c4963181-c788-5efc-8560-d005a5e01eea}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString ITKLaplacianSharpeningImage::getSubGroupName()
 {
   return "ITK Edge";

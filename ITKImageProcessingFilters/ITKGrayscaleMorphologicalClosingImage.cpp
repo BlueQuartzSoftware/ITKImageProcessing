@@ -189,6 +189,14 @@ const QString ITKGrayscaleMorphologicalClosingImage::getHumanLabel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid ITKGrayscaleMorphologicalClosingImage::getUuid()
+{
+  return QUuid("{849a1903-5595-5029-bbde-6f4b68b2a25c}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString ITKGrayscaleMorphologicalClosingImage::getSubGroupName()
 {
   return "ITK MathematicalMorphology";

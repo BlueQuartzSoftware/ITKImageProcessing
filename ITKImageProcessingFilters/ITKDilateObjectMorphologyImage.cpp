@@ -189,6 +189,14 @@ const QString ITKDilateObjectMorphologyImage::getHumanLabel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid ITKDilateObjectMorphologyImage::getUuid()
+{
+  return QUuid("{dbf29c6d-461c-55e7-a6c4-56477d9da55b}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString ITKDilateObjectMorphologyImage::getSubGroupName()
 {
   return "ITK BinaryMathematicalMorphology";

@@ -31,7 +31,7 @@ class ITKMedianProjectionImage : public ITKImageBase
 public:
   SIMPL_SHARED_POINTERS(ITKMedianProjectionImage)
   SIMPL_STATIC_NEW_MACRO(ITKMedianProjectionImage)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKMedianProjectionImage, AbstractFilter)
+   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKMedianProjectionImage, AbstractFilter)
 
   virtual ~ITKMedianProjectionImage();
 
@@ -52,6 +52,12 @@ public:
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
   virtual const QString getSubGroupName() override;
+
+  /**
+   * @brief getUuid Return the unique identifier for this filter.
+   * @return A QUuid object.
+   */
+  virtual const QUuid getUuid() override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class

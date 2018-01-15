@@ -154,6 +154,14 @@ const QString ITKThresholdMaximumConnectedComponentsImage::getHumanLabel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid ITKThresholdMaximumConnectedComponentsImage::getUuid()
+{
+  return QUuid("{2a531add-79fd-5c07-98a6-f875d2ecef4e}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString ITKThresholdMaximumConnectedComponentsImage::getSubGroupName()
 {
   return "ITK Thresholding";

@@ -140,6 +140,14 @@ const QString ITKRelabelComponentImage::getHumanLabel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid ITKRelabelComponentImage::getUuid()
+{
+  return QUuid("{4398d76d-c9aa-5161-bb48-92dd9daaa352}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString ITKRelabelComponentImage::getSubGroupName()
 {
   return "ITK SegmentationPostProcessing";

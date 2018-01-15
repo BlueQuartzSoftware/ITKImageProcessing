@@ -32,7 +32,7 @@ class ITKMinMaxCurvatureFlowImage : public ITKImageBase
 public:
   SIMPL_SHARED_POINTERS(ITKMinMaxCurvatureFlowImage)
   SIMPL_STATIC_NEW_MACRO(ITKMinMaxCurvatureFlowImage)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKMinMaxCurvatureFlowImage, AbstractFilter)
+   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKMinMaxCurvatureFlowImage, AbstractFilter)
 
   virtual ~ITKMinMaxCurvatureFlowImage();
 
@@ -59,6 +59,12 @@ public:
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
   virtual const QString getSubGroupName() override;
+
+  /**
+   * @brief getUuid Return the unique identifier for this filter.
+   * @return A QUuid object.
+   */
+  virtual const QUuid getUuid() override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class

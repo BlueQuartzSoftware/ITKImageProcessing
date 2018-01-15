@@ -134,6 +134,14 @@ const QString ITKNormalizeImage::getHumanLabel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid ITKNormalizeImage::getUuid()
+{
+  return QUuid("{5b905619-c46b-5690-b6fa-8e97cf4537b8}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString ITKNormalizeImage::getSubGroupName()
 {
   return "ITK IntensityTransformation";

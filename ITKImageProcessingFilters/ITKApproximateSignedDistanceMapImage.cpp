@@ -143,6 +143,14 @@ const QString ITKApproximateSignedDistanceMapImage::getHumanLabel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid ITKApproximateSignedDistanceMapImage::getUuid()
+{
+  return QUuid("{066712e3-0378-566e-8236-1796c88d5e02}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString ITKApproximateSignedDistanceMapImage::getSubGroupName()
 {
   return "ITK DistanceMap";

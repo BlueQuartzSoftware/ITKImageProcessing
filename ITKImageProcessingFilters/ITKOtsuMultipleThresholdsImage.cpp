@@ -154,6 +154,14 @@ const QString ITKOtsuMultipleThresholdsImage::getHumanLabel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid ITKOtsuMultipleThresholdsImage::getUuid()
+{
+  return QUuid("{6e66563a-edcf-5e11-bc1d-ceed36d8493f}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString ITKOtsuMultipleThresholdsImage::getSubGroupName()
 {
   return "ITK Thresholding";

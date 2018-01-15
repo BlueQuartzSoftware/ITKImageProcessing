@@ -30,7 +30,7 @@ class ITKLog10Image : public ITKImageBase
 public:
   SIMPL_SHARED_POINTERS(ITKLog10Image)
   SIMPL_STATIC_NEW_MACRO(ITKLog10Image)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKLog10Image, AbstractFilter)
+   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKLog10Image, AbstractFilter)
 
   virtual ~ITKLog10Image();
 
@@ -48,6 +48,12 @@ public:
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
   virtual const QString getSubGroupName() override;
+
+  /**
+   * @brief getUuid Return the unique identifier for this filter.
+   * @return A QUuid object.
+   */
+  virtual const QUuid getUuid() override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class

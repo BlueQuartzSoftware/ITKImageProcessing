@@ -143,6 +143,14 @@ const QString ITKShiftScaleImage::getHumanLabel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid ITKShiftScaleImage::getUuid()
+{
+  return QUuid("{31d325fa-e605-5415-85ab-ab93e8cbf32f}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString ITKShiftScaleImage::getSubGroupName()
 {
   return "ITK IntensityTransformation";

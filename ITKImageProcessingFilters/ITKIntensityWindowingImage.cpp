@@ -151,6 +151,14 @@ const QString ITKIntensityWindowingImage::getHumanLabel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid ITKIntensityWindowingImage::getUuid()
+{
+  return QUuid("{4faf4c59-6f29-53af-bc78-5aecffce0e37}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString ITKIntensityWindowingImage::getSubGroupName()
 {
   return "ITK IntensityTransformation";

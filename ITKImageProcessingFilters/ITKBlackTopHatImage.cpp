@@ -188,6 +188,14 @@ const QString ITKBlackTopHatImage::getHumanLabel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid ITKBlackTopHatImage::getUuid()
+{
+  return QUuid("{e26e7359-f72c-5924-b42e-dd5dd454a794}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString ITKBlackTopHatImage::getSubGroupName()
 {
   return "ITK BiasCorrection";

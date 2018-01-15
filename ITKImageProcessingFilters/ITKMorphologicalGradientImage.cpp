@@ -185,6 +185,14 @@ const QString ITKMorphologicalGradientImage::getHumanLabel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid ITKMorphologicalGradientImage::getUuid()
+{
+  return QUuid("{12c83608-c4c5-5c72-b22f-a7696e3f5448}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString ITKMorphologicalGradientImage::getSubGroupName()
 {
   return "ITK Edge";

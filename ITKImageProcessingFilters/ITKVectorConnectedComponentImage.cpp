@@ -160,6 +160,14 @@ const QString ITKVectorConnectedComponentImage::getHumanLabel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid ITKVectorConnectedComponentImage::getUuid()
+{
+  return QUuid("{9d42ede4-fd4b-57fe-9595-50c16deaa3a2}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString ITKVectorConnectedComponentImage::getSubGroupName()
 {
   return "ITK Segmentation";

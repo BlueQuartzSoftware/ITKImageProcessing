@@ -40,7 +40,7 @@ class $
 public:
   SIMPL_SHARED_POINTERS(${FilterName})
   SIMPL_STATIC_NEW_MACRO(${FilterName})
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(${FilterName}, AbstractFilter)
+   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(${FilterName}, AbstractFilter)
 
   virtual ~${FilterName}();
 
@@ -63,6 +63,12 @@ public:
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
   virtual const QString getSubGroupName() override;
+
+  /**
+   * @brief getUuid Return the unique identifier for this filter.
+   * @return A QUuid object.
+   */
+  virtual const QUuid getUuid() override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class

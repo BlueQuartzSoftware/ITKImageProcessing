@@ -32,7 +32,7 @@ class ITKSmoothingRecursiveGaussianImage : public ITKImageBase
 public:
   SIMPL_SHARED_POINTERS(ITKSmoothingRecursiveGaussianImage)
   SIMPL_STATIC_NEW_MACRO(ITKSmoothingRecursiveGaussianImage)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKSmoothingRecursiveGaussianImage, AbstractFilter)
+   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKSmoothingRecursiveGaussianImage, AbstractFilter)
 
   virtual ~ITKSmoothingRecursiveGaussianImage();
 
@@ -56,6 +56,12 @@ public:
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
   virtual const QString getSubGroupName() override;
+
+  /**
+   * @brief getUuid Return the unique identifier for this filter.
+   * @return A QUuid object.
+   */
+  virtual const QUuid getUuid() override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class

@@ -210,6 +210,14 @@ const QString $
 {
   FilterName
 }
+const QUuid ImageFilterTemplate::getUuid()
+{
+  return QUuid("{c2435bc0-b80b-54e2-936b-4bd10ac8f103}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 ::getSubGroupName()
 {
   return "ITK ${ITKModule}";

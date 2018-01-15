@@ -207,6 +207,14 @@ const QString ITKBinaryOpeningByReconstructionImage::getHumanLabel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid ITKBinaryOpeningByReconstructionImage::getUuid()
+{
+  return QUuid("{bd1c2353-0a39-52c0-902b-ee64721994c7}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString ITKBinaryOpeningByReconstructionImage::getSubGroupName()
 {
   return "ITK BinaryMathematicalMorphology";

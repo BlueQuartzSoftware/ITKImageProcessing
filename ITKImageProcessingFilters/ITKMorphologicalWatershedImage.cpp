@@ -147,6 +147,14 @@ const QString ITKMorphologicalWatershedImage::getHumanLabel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid ITKMorphologicalWatershedImage::getUuid()
+{
+  return QUuid("{b2248340-a371-5899-90a2-86047950f0a2}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString ITKMorphologicalWatershedImage::getSubGroupName()
 {
   return "ITK Segmentation";

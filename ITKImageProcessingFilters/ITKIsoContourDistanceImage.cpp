@@ -143,6 +143,14 @@ const QString ITKIsoContourDistanceImage::getHumanLabel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid ITKIsoContourDistanceImage::getUuid()
+{
+  return QUuid("{e9952e0e-97e4-53aa-8c6c-115fd18f0b89}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString ITKIsoContourDistanceImage::getSubGroupName()
 {
   return "ITK DistanceMap";

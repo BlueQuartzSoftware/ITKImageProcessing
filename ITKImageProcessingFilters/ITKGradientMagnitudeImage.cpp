@@ -139,6 +139,14 @@ const QString ITKGradientMagnitudeImage::getHumanLabel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid ITKGradientMagnitudeImage::getUuid()
+{
+  return QUuid("{3aa99151-e722-51a0-90ba-71e93347ab09}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString ITKGradientMagnitudeImage::getSubGroupName()
 {
   return "ITK Edge";

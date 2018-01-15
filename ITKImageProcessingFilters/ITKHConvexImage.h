@@ -32,7 +32,7 @@ class ITKHConvexImage : public ITKImageBase
 public:
   SIMPL_SHARED_POINTERS(ITKHConvexImage)
   SIMPL_STATIC_NEW_MACRO(ITKHConvexImage)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKHConvexImage, AbstractFilter)
+   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKHConvexImage, AbstractFilter)
 
   virtual ~ITKHConvexImage();
 
@@ -56,6 +56,12 @@ public:
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
   virtual const QString getSubGroupName() override;
+
+  /**
+   * @brief getUuid Return the unique identifier for this filter.
+   * @return A QUuid object.
+   */
+  virtual const QUuid getUuid() override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class

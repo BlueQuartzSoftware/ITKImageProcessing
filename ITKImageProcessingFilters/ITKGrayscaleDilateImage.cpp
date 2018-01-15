@@ -185,6 +185,14 @@ const QString ITKGrayscaleDilateImage::getHumanLabel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid ITKGrayscaleDilateImage::getUuid()
+{
+  return QUuid("{66cec151-2950-51f8-8a02-47d3516d8721}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString ITKGrayscaleDilateImage::getSubGroupName()
 {
   return "ITK MathematicalMorphology";

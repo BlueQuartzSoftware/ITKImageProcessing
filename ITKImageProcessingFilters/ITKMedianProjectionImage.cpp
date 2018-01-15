@@ -140,6 +140,14 @@ const QString ITKMedianProjectionImage::getHumanLabel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid ITKMedianProjectionImage::getUuid()
+{
+  return QUuid("{1a7e8483-5838-585c-8d71-e79f836133c4}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString ITKMedianProjectionImage::getSubGroupName()
 {
   return "ITK Projection";

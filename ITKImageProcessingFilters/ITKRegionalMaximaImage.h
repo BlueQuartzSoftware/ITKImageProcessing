@@ -32,7 +32,7 @@ class ITKRegionalMaximaImage : public ITKImageBase
 public:
   SIMPL_SHARED_POINTERS(ITKRegionalMaximaImage)
   SIMPL_STATIC_NEW_MACRO(ITKRegionalMaximaImage)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKRegionalMaximaImage, AbstractFilter)
+   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKRegionalMaximaImage, AbstractFilter)
 
   virtual ~ITKRegionalMaximaImage();
 
@@ -62,6 +62,12 @@ public:
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
   virtual const QString getSubGroupName() override;
+
+  /**
+   * @brief getUuid Return the unique identifier for this filter.
+   * @return A QUuid object.
+   */
+  virtual const QUuid getUuid() override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class

@@ -254,6 +254,14 @@ const QString $
 {
   FilterName
 }
+const QUuid KernelImageFilterTemplate::getUuid()
+{
+  return QUuid("{d3856d4c-5651-5eab-8740-489a87fa8bdd}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 ::getSubGroupName()
 {
   return "ITK ${ITKModule}";

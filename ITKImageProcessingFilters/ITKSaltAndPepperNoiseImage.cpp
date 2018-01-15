@@ -146,6 +146,14 @@ const QString ITKSaltAndPepperNoiseImage::getHumanLabel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid ITKSaltAndPepperNoiseImage::getUuid()
+{
+  return QUuid("{602c270d-ec55-580c-9108-785ba8530964}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString ITKSaltAndPepperNoiseImage::getSubGroupName()
 {
   return "ITK Noise";

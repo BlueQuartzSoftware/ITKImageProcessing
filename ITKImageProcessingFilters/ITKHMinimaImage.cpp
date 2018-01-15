@@ -143,6 +143,14 @@ const QString ITKHMinimaImage::getHumanLabel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QUuid ITKHMinimaImage::getUuid()
+{
+  return QUuid("{f1d7cf59-9b7c-53cb-b71a-76cf91c86e8f}");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString ITKHMinimaImage::getSubGroupName()
 {
   return "ITK MathematicalMorphology";
