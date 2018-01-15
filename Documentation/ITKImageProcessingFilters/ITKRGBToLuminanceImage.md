@@ -26,6 +26,10 @@ Image
 |------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | None | N/A | N/A  | Array containing transformed image
 
+## Example Pipelines ##
+
+
+
 ## License & Copyright ##
 
 Please see the description file distributed with this plugin.

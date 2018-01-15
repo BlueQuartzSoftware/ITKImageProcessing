@@ -70,6 +70,10 @@ Image
 [4] D. Padfield. "Masked object registration in the Fourier domain." Transactions on Image Processing.
 [5] D. Padfield. "Masked FFT registration". In Proc. Computer Vision and Pattern Recognition, 2010.
 
+## Example Pipelines ##
+
+
+
 ## License & Copyright ##
 
 Please see the description file distributed with this plugin.

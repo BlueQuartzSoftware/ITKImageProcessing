@@ -23,6 +23,10 @@ Reads images through ITK
 |------|--------------|------|----------------------|-------------|
 | **Data Container** | Data Container Name | N/A | N/A | Description of object... |
 
+## Example Pipelines ##
+
+
+
 ## License & Copyright ##
 
 Please see the description file distributed with this plugin.
