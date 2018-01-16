@@ -12,7 +12,7 @@ set(TEST_NAMES
   ITKImageProcessingImportImageStackTest
   )
 
-if(NOT ITKImageProcessingLeanAndMean)
+if(NOT ITKImageProcessing_LeanAndMean)
   set(TEST_NAMES
     ${TEST_NAMES}
     ITKImageProcessingImageTest

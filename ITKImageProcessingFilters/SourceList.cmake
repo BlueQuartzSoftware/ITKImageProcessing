@@ -19,7 +19,7 @@ set(_PublicFilters
   ITKImportImageStack
 )
 
-if(NOT ITKImageProcessingLeanAndMean)
+if(NOT ITKImageProcessing_LeanAndMean)
   set(_PublicFilters
     ${_PublicFilters}
     ITKAbsImage

@@ -5,7 +5,7 @@ set(${PLUGIN_NAME}_VERSION_MINOR "0")
 get_filename_component(${PLUGIN_NAME}_SOURCE_DIR "${CMAKE_CURRENT_LIST_DIR}" ABSOLUTE)
 set(ITKImageProcessing_BINARY_DIR "${DREAM3DProj_BINARY_DIR}/Plugins/${PLUGIN_NAME}")
 
-option(ITKImageProcessingLeanAndMean "Only compile the Reader and Writers, All other filters are disabled" OFF)
+option(ITKImageProcessing_LeanAndMean "Only compile the Reader and Writers, All other filters are disabled" OFF)
 
 # --------------------------------------------------------------------
 # Look for ITK as it is required.
