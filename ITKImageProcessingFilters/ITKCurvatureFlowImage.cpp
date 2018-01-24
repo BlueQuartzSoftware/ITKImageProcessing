@@ -124,7 +124,7 @@ void ITKCurvatureFlowImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKCurvatureFlowImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKCurvatureFlowImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKCurvatureFlowImage::Pointer filter = ITKCurvatureFlowImage::New();
   if(true == copyFilterParameters)
@@ -137,7 +137,7 @@ AbstractFilter::Pointer ITKCurvatureFlowImage::newFilterInstance(bool copyFilter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKCurvatureFlowImage::getHumanLabel()
+const QString ITKCurvatureFlowImage::getHumanLabel() const
 {
   return "ITK::Curvature Flow Image Filter";
 }
@@ -153,7 +153,7 @@ const QUuid ITKCurvatureFlowImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKCurvatureFlowImage::getSubGroupName()
+const QString ITKCurvatureFlowImage::getSubGroupName() const
 {
   return "ITK Smoothing";
 }

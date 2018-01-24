@@ -113,7 +113,7 @@ void ITKBinaryThinningImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKBinaryThinningImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKBinaryThinningImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKBinaryThinningImage::Pointer filter = ITKBinaryThinningImage::New();
   if(true == copyFilterParameters)
@@ -126,7 +126,7 @@ AbstractFilter::Pointer ITKBinaryThinningImage::newFilterInstance(bool copyFilte
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKBinaryThinningImage::getHumanLabel()
+const QString ITKBinaryThinningImage::getHumanLabel() const
 {
   return "ITK::Binary Thinning Image Filter";
 }
@@ -142,7 +142,7 @@ const QUuid ITKBinaryThinningImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKBinaryThinningImage::getSubGroupName()
+const QString ITKBinaryThinningImage::getSubGroupName() const
 {
   return "ITK SegmentationPostProcessing";
 }

@@ -133,7 +133,7 @@ void ITKOtsuMultipleThresholdsImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKOtsuMultipleThresholdsImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKOtsuMultipleThresholdsImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKOtsuMultipleThresholdsImage::Pointer filter = ITKOtsuMultipleThresholdsImage::New();
   if(true == copyFilterParameters)
@@ -146,7 +146,7 @@ AbstractFilter::Pointer ITKOtsuMultipleThresholdsImage::newFilterInstance(bool c
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKOtsuMultipleThresholdsImage::getHumanLabel()
+const QString ITKOtsuMultipleThresholdsImage::getHumanLabel() const
 {
   return "ITK::Otsu Multiple Thresholds Image Filter";
 }
@@ -162,7 +162,7 @@ const QUuid ITKOtsuMultipleThresholdsImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKOtsuMultipleThresholdsImage::getSubGroupName()
+const QString ITKOtsuMultipleThresholdsImage::getSubGroupName() const
 {
   return "ITK Thresholding";
 }

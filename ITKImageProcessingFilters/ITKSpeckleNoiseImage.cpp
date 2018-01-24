@@ -124,7 +124,7 @@ void ITKSpeckleNoiseImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKSpeckleNoiseImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKSpeckleNoiseImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKSpeckleNoiseImage::Pointer filter = ITKSpeckleNoiseImage::New();
   if(true == copyFilterParameters)
@@ -137,7 +137,7 @@ AbstractFilter::Pointer ITKSpeckleNoiseImage::newFilterInstance(bool copyFilterP
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKSpeckleNoiseImage::getHumanLabel()
+const QString ITKSpeckleNoiseImage::getHumanLabel() const
 {
   return "ITK::Speckle Noise Image Filter";
 }
@@ -153,7 +153,7 @@ const QUuid ITKSpeckleNoiseImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKSpeckleNoiseImage::getSubGroupName()
+const QString ITKSpeckleNoiseImage::getSubGroupName() const
 {
   return "ITK Noise";
 }

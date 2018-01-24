@@ -133,7 +133,7 @@ void ITKThresholdMaximumConnectedComponentsImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKThresholdMaximumConnectedComponentsImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKThresholdMaximumConnectedComponentsImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKThresholdMaximumConnectedComponentsImage::Pointer filter = ITKThresholdMaximumConnectedComponentsImage::New();
   if(true == copyFilterParameters)
@@ -146,7 +146,7 @@ AbstractFilter::Pointer ITKThresholdMaximumConnectedComponentsImage::newFilterIn
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKThresholdMaximumConnectedComponentsImage::getHumanLabel()
+const QString ITKThresholdMaximumConnectedComponentsImage::getHumanLabel() const
 {
   return "ITK::Threshold Maximum Connected Components Image Filter";
 }
@@ -162,7 +162,7 @@ const QUuid ITKThresholdMaximumConnectedComponentsImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKThresholdMaximumConnectedComponentsImage::getSubGroupName()
+const QString ITKThresholdMaximumConnectedComponentsImage::getSubGroupName() const
 {
   return "ITK Thresholding";
 }

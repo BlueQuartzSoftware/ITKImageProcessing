@@ -131,7 +131,7 @@ void ITKBinaryMinMaxCurvatureFlowImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKBinaryMinMaxCurvatureFlowImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKBinaryMinMaxCurvatureFlowImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKBinaryMinMaxCurvatureFlowImage::Pointer filter = ITKBinaryMinMaxCurvatureFlowImage::New();
   if(true == copyFilterParameters)
@@ -144,7 +144,7 @@ AbstractFilter::Pointer ITKBinaryMinMaxCurvatureFlowImage::newFilterInstance(boo
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKBinaryMinMaxCurvatureFlowImage::getHumanLabel()
+const QString ITKBinaryMinMaxCurvatureFlowImage::getHumanLabel() const
 {
   return "ITK::Binary Min Max Curvature Flow Image Filter";
 }
@@ -160,7 +160,7 @@ const QUuid ITKBinaryMinMaxCurvatureFlowImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKBinaryMinMaxCurvatureFlowImage::getSubGroupName()
+const QString ITKBinaryMinMaxCurvatureFlowImage::getSubGroupName() const
 {
   return "ITK SegmentationPostProcessing";
 }

@@ -125,7 +125,7 @@ void ITKSaltAndPepperNoiseImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKSaltAndPepperNoiseImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKSaltAndPepperNoiseImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKSaltAndPepperNoiseImage::Pointer filter = ITKSaltAndPepperNoiseImage::New();
   if(true == copyFilterParameters)
@@ -138,7 +138,7 @@ AbstractFilter::Pointer ITKSaltAndPepperNoiseImage::newFilterInstance(bool copyF
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKSaltAndPepperNoiseImage::getHumanLabel()
+const QString ITKSaltAndPepperNoiseImage::getHumanLabel() const
 {
   return "ITK::Salt And Pepper Noise Image Filter";
 }
@@ -154,7 +154,7 @@ const QUuid ITKSaltAndPepperNoiseImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKSaltAndPepperNoiseImage::getSubGroupName()
+const QString ITKSaltAndPepperNoiseImage::getSubGroupName() const
 {
   return "ITK Noise";
 }

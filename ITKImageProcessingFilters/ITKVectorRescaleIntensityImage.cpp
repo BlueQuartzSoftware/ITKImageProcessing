@@ -165,7 +165,7 @@ void ITKVectorRescaleIntensityImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKVectorRescaleIntensityImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKVectorRescaleIntensityImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKVectorRescaleIntensityImage::Pointer filter = ITKVectorRescaleIntensityImage::New();
   if(true == copyFilterParameters)
@@ -178,7 +178,7 @@ AbstractFilter::Pointer ITKVectorRescaleIntensityImage::newFilterInstance(bool c
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKVectorRescaleIntensityImage::getHumanLabel()
+const QString ITKVectorRescaleIntensityImage::getHumanLabel() const
 {
   return "ITK::Vector Rescale Intensity Image Filter";
 }
@@ -194,7 +194,7 @@ const QUuid ITKVectorRescaleIntensityImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKVectorRescaleIntensityImage::getSubGroupName()
+const QString ITKVectorRescaleIntensityImage::getSubGroupName() const
 {
   return "ITK IntensityTransformation";
 }

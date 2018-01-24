@@ -127,7 +127,7 @@ void ITKBilateralImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKBilateralImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKBilateralImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKBilateralImage::Pointer filter = ITKBilateralImage::New();
   if(true == copyFilterParameters)
@@ -140,7 +140,7 @@ AbstractFilter::Pointer ITKBilateralImage::newFilterInstance(bool copyFilterPara
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKBilateralImage::getHumanLabel()
+const QString ITKBilateralImage::getHumanLabel() const
 {
   return "ITK::Bilateral Image Filter";
 }
@@ -156,7 +156,7 @@ const QUuid ITKBilateralImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKBilateralImage::getSubGroupName()
+const QString ITKBilateralImage::getSubGroupName() const
 {
   return "ITK Smoothing";
 }

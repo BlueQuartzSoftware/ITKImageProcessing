@@ -113,7 +113,7 @@ void ITKNormalizeImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKNormalizeImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKNormalizeImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKNormalizeImage::Pointer filter = ITKNormalizeImage::New();
   if(true == copyFilterParameters)
@@ -126,7 +126,7 @@ AbstractFilter::Pointer ITKNormalizeImage::newFilterInstance(bool copyFilterPara
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKNormalizeImage::getHumanLabel()
+const QString ITKNormalizeImage::getHumanLabel() const
 {
   return "ITK::Normalize Image Filter";
 }
@@ -142,7 +142,7 @@ const QUuid ITKNormalizeImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKNormalizeImage::getSubGroupName()
+const QString ITKNormalizeImage::getSubGroupName() const
 {
   return "ITK IntensityTransformation";
 }

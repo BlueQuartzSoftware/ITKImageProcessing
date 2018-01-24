@@ -125,7 +125,7 @@ void ITKThresholdImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKThresholdImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKThresholdImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKThresholdImage::Pointer filter = ITKThresholdImage::New();
   if(true == copyFilterParameters)
@@ -138,7 +138,7 @@ AbstractFilter::Pointer ITKThresholdImage::newFilterInstance(bool copyFilterPara
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKThresholdImage::getHumanLabel()
+const QString ITKThresholdImage::getHumanLabel() const
 {
   return "ITK::Threshold Image Filter";
 }
@@ -154,7 +154,7 @@ const QUuid ITKThresholdImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKThresholdImage::getSubGroupName()
+const QString ITKThresholdImage::getSubGroupName() const
 {
   return "ITK Thresholding";
 }

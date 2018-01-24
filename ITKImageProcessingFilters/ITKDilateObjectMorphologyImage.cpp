@@ -168,7 +168,7 @@ void ITKDilateObjectMorphologyImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKDilateObjectMorphologyImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKDilateObjectMorphologyImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKDilateObjectMorphologyImage::Pointer filter = ITKDilateObjectMorphologyImage::New();
   if(true == copyFilterParameters)
@@ -181,7 +181,7 @@ AbstractFilter::Pointer ITKDilateObjectMorphologyImage::newFilterInstance(bool c
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKDilateObjectMorphologyImage::getHumanLabel()
+const QString ITKDilateObjectMorphologyImage::getHumanLabel() const
 {
   return "ITK::Dilate Object Morphology Image Filter";
 }
@@ -197,7 +197,7 @@ const QUuid ITKDilateObjectMorphologyImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKDilateObjectMorphologyImage::getSubGroupName()
+const QString ITKDilateObjectMorphologyImage::getSubGroupName() const
 {
   return "ITK BinaryMathematicalMorphology";
 }

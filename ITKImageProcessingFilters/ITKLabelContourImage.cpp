@@ -122,7 +122,7 @@ void ITKLabelContourImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKLabelContourImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKLabelContourImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKLabelContourImage::Pointer filter = ITKLabelContourImage::New();
   if(true == copyFilterParameters)
@@ -135,7 +135,7 @@ AbstractFilter::Pointer ITKLabelContourImage::newFilterInstance(bool copyFilterP
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKLabelContourImage::getHumanLabel()
+const QString ITKLabelContourImage::getHumanLabel() const
 {
   return "ITK::Label Contour Image Filter";
 }
@@ -151,7 +151,7 @@ const QUuid ITKLabelContourImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKLabelContourImage::getSubGroupName()
+const QString ITKLabelContourImage::getSubGroupName() const
 {
   return "ITK SegmentationPostProcessing";
 }

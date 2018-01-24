@@ -122,7 +122,7 @@ void ITKConnectedComponentImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKConnectedComponentImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKConnectedComponentImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKConnectedComponentImage::Pointer filter = ITKConnectedComponentImage::New();
   if(true == copyFilterParameters)
@@ -135,7 +135,7 @@ AbstractFilter::Pointer ITKConnectedComponentImage::newFilterInstance(bool copyF
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKConnectedComponentImage::getHumanLabel()
+const QString ITKConnectedComponentImage::getHumanLabel() const
 {
   return "ITK::Connected Component Image Filter";
 }
@@ -151,7 +151,7 @@ const QUuid ITKConnectedComponentImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKConnectedComponentImage::getSubGroupName()
+const QString ITKConnectedComponentImage::getSubGroupName() const
 {
   return "ITK SegmentationPostProcessing";
 }

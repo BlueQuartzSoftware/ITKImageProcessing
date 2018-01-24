@@ -164,7 +164,7 @@ void ITKGrayscaleDilateImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKGrayscaleDilateImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKGrayscaleDilateImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKGrayscaleDilateImage::Pointer filter = ITKGrayscaleDilateImage::New();
   if(true == copyFilterParameters)
@@ -177,7 +177,7 @@ AbstractFilter::Pointer ITKGrayscaleDilateImage::newFilterInstance(bool copyFilt
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKGrayscaleDilateImage::getHumanLabel()
+const QString ITKGrayscaleDilateImage::getHumanLabel() const
 {
   return "ITK::Grayscale Dilate Image Filter";
 }
@@ -193,7 +193,7 @@ const QUuid ITKGrayscaleDilateImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKGrayscaleDilateImage::getSubGroupName()
+const QString ITKGrayscaleDilateImage::getSubGroupName() const
 {
   return "ITK MathematicalMorphology";
 }

@@ -119,7 +119,7 @@ void ITKSumProjectionImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKSumProjectionImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKSumProjectionImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKSumProjectionImage::Pointer filter = ITKSumProjectionImage::New();
   if(true == copyFilterParameters)
@@ -132,7 +132,7 @@ AbstractFilter::Pointer ITKSumProjectionImage::newFilterInstance(bool copyFilter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKSumProjectionImage::getHumanLabel()
+const QString ITKSumProjectionImage::getHumanLabel() const
 {
   return "ITK::Sum Projection Image Filter";
 }
@@ -148,7 +148,7 @@ const QUuid ITKSumProjectionImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKSumProjectionImage::getSubGroupName()
+const QString ITKSumProjectionImage::getSubGroupName() const
 {
   return "ITK Projection";
 }

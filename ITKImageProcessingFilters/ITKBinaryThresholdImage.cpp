@@ -132,7 +132,7 @@ void ITKBinaryThresholdImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKBinaryThresholdImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKBinaryThresholdImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKBinaryThresholdImage::Pointer filter = ITKBinaryThresholdImage::New();
   if(true == copyFilterParameters)
@@ -145,7 +145,7 @@ AbstractFilter::Pointer ITKBinaryThresholdImage::newFilterInstance(bool copyFilt
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKBinaryThresholdImage::getHumanLabel()
+const QString ITKBinaryThresholdImage::getHumanLabel() const
 {
   return "ITK::Binary Threshold Image Filter";
 }
@@ -161,7 +161,7 @@ const QUuid ITKBinaryThresholdImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKBinaryThresholdImage::getSubGroupName()
+const QString ITKBinaryThresholdImage::getSubGroupName() const
 {
   return "ITK Thresholding";
 }

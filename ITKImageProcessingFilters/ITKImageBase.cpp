@@ -93,7 +93,7 @@ void ITKImageBase::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKImageBase::getCompiledLibraryName()
+const QString ITKImageBase::getCompiledLibraryName() const
 {
   return ITKImageProcessingConstants::ITKImageProcessingBaseName;
 }
@@ -101,7 +101,7 @@ const QString ITKImageBase::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKImageBase::getBrandingString()
+const QString ITKImageBase::getBrandingString() const
 {
   return "ITKImageProcessing";
 }
@@ -109,7 +109,7 @@ const QString ITKImageBase::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKImageBase::getFilterVersion()
+const QString ITKImageBase::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -120,7 +120,7 @@ const QString ITKImageBase::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKImageBase::getGroupName()
+const QString ITKImageBase::getGroupName() const
 {
   return "Image Processing";
 }

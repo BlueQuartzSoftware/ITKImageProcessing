@@ -113,7 +113,7 @@ void ITKSqrtImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKSqrtImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKSqrtImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKSqrtImage::Pointer filter = ITKSqrtImage::New();
   if(true == copyFilterParameters)
@@ -126,7 +126,7 @@ AbstractFilter::Pointer ITKSqrtImage::newFilterInstance(bool copyFilterParameter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKSqrtImage::getHumanLabel()
+const QString ITKSqrtImage::getHumanLabel() const
 {
   return "ITK::Sqrt Image Filter";
 }
@@ -142,7 +142,7 @@ const QUuid ITKSqrtImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKSqrtImage::getSubGroupName()
+const QString ITKSqrtImage::getSubGroupName() const
 {
   return "ITK IntensityTransformation";
 }

@@ -41,17 +41,17 @@ public:
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
    */
-  virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) override;
+  virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  virtual const QString getHumanLabel() override;
+  virtual const QString getHumanLabel() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  virtual const QString getSubGroupName() override;
+  virtual const QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.

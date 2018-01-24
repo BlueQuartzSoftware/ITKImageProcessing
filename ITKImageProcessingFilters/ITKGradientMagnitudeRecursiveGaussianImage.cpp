@@ -122,7 +122,7 @@ void ITKGradientMagnitudeRecursiveGaussianImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKGradientMagnitudeRecursiveGaussianImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKGradientMagnitudeRecursiveGaussianImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKGradientMagnitudeRecursiveGaussianImage::Pointer filter = ITKGradientMagnitudeRecursiveGaussianImage::New();
   if(true == copyFilterParameters)
@@ -135,7 +135,7 @@ AbstractFilter::Pointer ITKGradientMagnitudeRecursiveGaussianImage::newFilterIns
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKGradientMagnitudeRecursiveGaussianImage::getHumanLabel()
+const QString ITKGradientMagnitudeRecursiveGaussianImage::getHumanLabel() const
 {
   return "ITK::Gradient Magnitude Recursive Gaussian Image Filter";
 }
@@ -151,7 +151,7 @@ const QUuid ITKGradientMagnitudeRecursiveGaussianImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKGradientMagnitudeRecursiveGaussianImage::getSubGroupName()
+const QString ITKGradientMagnitudeRecursiveGaussianImage::getSubGroupName() const
 {
   return "ITK Edge";
 }

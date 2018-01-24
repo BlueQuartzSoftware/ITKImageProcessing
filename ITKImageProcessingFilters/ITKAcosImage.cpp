@@ -113,7 +113,7 @@ void ITKAcosImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKAcosImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKAcosImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKAcosImage::Pointer filter = ITKAcosImage::New();
   if(true == copyFilterParameters)
@@ -126,7 +126,7 @@ AbstractFilter::Pointer ITKAcosImage::newFilterInstance(bool copyFilterParameter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKAcosImage::getHumanLabel()
+const QString ITKAcosImage::getHumanLabel() const
 {
   return "ITK::Acos Image Filter";
 }
@@ -142,7 +142,7 @@ const QUuid ITKAcosImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKAcosImage::getSubGroupName()
+const QString ITKAcosImage::getSubGroupName() const
 {
   return "ITK IntensityTransformation";
 }

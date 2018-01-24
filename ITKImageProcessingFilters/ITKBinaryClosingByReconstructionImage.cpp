@@ -182,7 +182,7 @@ void ITKBinaryClosingByReconstructionImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKBinaryClosingByReconstructionImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKBinaryClosingByReconstructionImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKBinaryClosingByReconstructionImage::Pointer filter = ITKBinaryClosingByReconstructionImage::New();
   if(true == copyFilterParameters)
@@ -195,7 +195,7 @@ AbstractFilter::Pointer ITKBinaryClosingByReconstructionImage::newFilterInstance
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKBinaryClosingByReconstructionImage::getHumanLabel()
+const QString ITKBinaryClosingByReconstructionImage::getHumanLabel() const
 {
   return "ITK::Binary Closing By Reconstruction Image Filter";
 }
@@ -211,7 +211,7 @@ const QUuid ITKBinaryClosingByReconstructionImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKBinaryClosingByReconstructionImage::getSubGroupName()
+const QString ITKBinaryClosingByReconstructionImage::getSubGroupName() const
 {
   return "ITK BinaryMathematicalMorphology";
 }

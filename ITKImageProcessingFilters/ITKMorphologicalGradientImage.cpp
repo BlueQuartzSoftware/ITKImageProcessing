@@ -164,7 +164,7 @@ void ITKMorphologicalGradientImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKMorphologicalGradientImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKMorphologicalGradientImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKMorphologicalGradientImage::Pointer filter = ITKMorphologicalGradientImage::New();
   if(true == copyFilterParameters)
@@ -177,7 +177,7 @@ AbstractFilter::Pointer ITKMorphologicalGradientImage::newFilterInstance(bool co
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKMorphologicalGradientImage::getHumanLabel()
+const QString ITKMorphologicalGradientImage::getHumanLabel() const
 {
   return "ITK::Morphological Gradient Image Filter";
 }
@@ -193,7 +193,7 @@ const QUuid ITKMorphologicalGradientImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKMorphologicalGradientImage::getSubGroupName()
+const QString ITKMorphologicalGradientImage::getSubGroupName() const
 {
   return "ITK Edge";
 }

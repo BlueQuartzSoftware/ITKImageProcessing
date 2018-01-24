@@ -172,7 +172,7 @@ void ITKErodeObjectMorphologyImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKErodeObjectMorphologyImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKErodeObjectMorphologyImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKErodeObjectMorphologyImage::Pointer filter = ITKErodeObjectMorphologyImage::New();
   if(true == copyFilterParameters)
@@ -185,7 +185,7 @@ AbstractFilter::Pointer ITKErodeObjectMorphologyImage::newFilterInstance(bool co
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKErodeObjectMorphologyImage::getHumanLabel()
+const QString ITKErodeObjectMorphologyImage::getHumanLabel() const
 {
   return "ITK::Erode Object Morphology Image Filter";
 }
@@ -201,7 +201,7 @@ const QUuid ITKErodeObjectMorphologyImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKErodeObjectMorphologyImage::getSubGroupName()
+const QString ITKErodeObjectMorphologyImage::getSubGroupName() const
 {
   return "ITK BinaryMathematicalMorphology";
 }

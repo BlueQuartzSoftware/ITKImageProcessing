@@ -118,7 +118,7 @@ void ITKGrayscaleGrindPeakImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKGrayscaleGrindPeakImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKGrayscaleGrindPeakImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKGrayscaleGrindPeakImage::Pointer filter = ITKGrayscaleGrindPeakImage::New();
   if(true == copyFilterParameters)
@@ -131,7 +131,7 @@ AbstractFilter::Pointer ITKGrayscaleGrindPeakImage::newFilterInstance(bool copyF
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKGrayscaleGrindPeakImage::getHumanLabel()
+const QString ITKGrayscaleGrindPeakImage::getHumanLabel() const
 {
   return "ITK::Grayscale Grind Peak Image Filter";
 }
@@ -147,7 +147,7 @@ const QUuid ITKGrayscaleGrindPeakImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKGrayscaleGrindPeakImage::getSubGroupName()
+const QString ITKGrayscaleGrindPeakImage::getSubGroupName() const
 {
   return "ITK MathematicalMorphology";
 }

@@ -113,7 +113,7 @@ void ITKLog10Image::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKLog10Image::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKLog10Image::newFilterInstance(bool copyFilterParameters) const
 {
   ITKLog10Image::Pointer filter = ITKLog10Image::New();
   if(true == copyFilterParameters)
@@ -126,7 +126,7 @@ AbstractFilter::Pointer ITKLog10Image::newFilterInstance(bool copyFilterParamete
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKLog10Image::getHumanLabel()
+const QString ITKLog10Image::getHumanLabel() const
 {
   return "ITK::Log10 Image Filter";
 }
@@ -142,7 +142,7 @@ const QUuid ITKLog10Image::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKLog10Image::getSubGroupName()
+const QString ITKLog10Image::getSubGroupName() const
 {
   return "ITK IntensityTransformation";
 }

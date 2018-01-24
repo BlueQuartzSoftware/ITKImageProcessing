@@ -172,7 +172,7 @@ void ITKClosingByReconstructionImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKClosingByReconstructionImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKClosingByReconstructionImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKClosingByReconstructionImage::Pointer filter = ITKClosingByReconstructionImage::New();
   if(true == copyFilterParameters)
@@ -185,7 +185,7 @@ AbstractFilter::Pointer ITKClosingByReconstructionImage::newFilterInstance(bool 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKClosingByReconstructionImage::getHumanLabel()
+const QString ITKClosingByReconstructionImage::getHumanLabel() const
 {
   return "ITK::Closing By Reconstruction Image Filter";
 }
@@ -201,7 +201,7 @@ const QUuid ITKClosingByReconstructionImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKClosingByReconstructionImage::getSubGroupName()
+const QString ITKClosingByReconstructionImage::getSubGroupName() const
 {
   return "ITK MathematicalMorphology";
 }

@@ -118,7 +118,7 @@ void ITKInvertIntensityImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKInvertIntensityImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKInvertIntensityImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKInvertIntensityImage::Pointer filter = ITKInvertIntensityImage::New();
   if(true == copyFilterParameters)
@@ -131,7 +131,7 @@ AbstractFilter::Pointer ITKInvertIntensityImage::newFilterInstance(bool copyFilt
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKInvertIntensityImage::getHumanLabel()
+const QString ITKInvertIntensityImage::getHumanLabel() const
 {
   return "ITK::Invert Intensity Image Filter";
 }
@@ -147,7 +147,7 @@ const QUuid ITKInvertIntensityImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKInvertIntensityImage::getSubGroupName()
+const QString ITKInvertIntensityImage::getSubGroupName() const
 {
   return "ITK IntensityTransformation";
 }

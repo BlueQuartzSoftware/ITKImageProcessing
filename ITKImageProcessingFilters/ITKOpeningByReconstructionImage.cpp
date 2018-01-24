@@ -172,7 +172,7 @@ void ITKOpeningByReconstructionImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKOpeningByReconstructionImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKOpeningByReconstructionImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKOpeningByReconstructionImage::Pointer filter = ITKOpeningByReconstructionImage::New();
   if(true == copyFilterParameters)
@@ -185,7 +185,7 @@ AbstractFilter::Pointer ITKOpeningByReconstructionImage::newFilterInstance(bool 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKOpeningByReconstructionImage::getHumanLabel()
+const QString ITKOpeningByReconstructionImage::getHumanLabel() const
 {
   return "ITK::Opening By Reconstruction Image Filter";
 }
@@ -201,7 +201,7 @@ const QUuid ITKOpeningByReconstructionImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKOpeningByReconstructionImage::getSubGroupName()
+const QString ITKOpeningByReconstructionImage::getSubGroupName() const
 {
   return "ITK MathematicalMorphology";
 }

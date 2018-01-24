@@ -166,7 +166,7 @@ void ITKWhiteTopHatImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKWhiteTopHatImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKWhiteTopHatImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKWhiteTopHatImage::Pointer filter = ITKWhiteTopHatImage::New();
   if(true == copyFilterParameters)
@@ -179,7 +179,7 @@ AbstractFilter::Pointer ITKWhiteTopHatImage::newFilterInstance(bool copyFilterPa
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKWhiteTopHatImage::getHumanLabel()
+const QString ITKWhiteTopHatImage::getHumanLabel() const
 {
   return "ITK::White Top Hat Image Filter";
 }
@@ -195,7 +195,7 @@ const QUuid ITKWhiteTopHatImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKWhiteTopHatImage::getSubGroupName()
+const QString ITKWhiteTopHatImage::getSubGroupName() const
 {
   return "ITK BiasCorrection";
 }

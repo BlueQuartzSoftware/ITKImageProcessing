@@ -126,7 +126,7 @@ void ITKAdaptiveHistogramEqualizationImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKAdaptiveHistogramEqualizationImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKAdaptiveHistogramEqualizationImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKAdaptiveHistogramEqualizationImage::Pointer filter = ITKAdaptiveHistogramEqualizationImage::New();
   if(true == copyFilterParameters)
@@ -139,7 +139,7 @@ AbstractFilter::Pointer ITKAdaptiveHistogramEqualizationImage::newFilterInstance
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKAdaptiveHistogramEqualizationImage::getHumanLabel()
+const QString ITKAdaptiveHistogramEqualizationImage::getHumanLabel() const
 {
   return "ITK::Adaptive Histogram Equalization Image Filter";
 }
@@ -155,7 +155,7 @@ const QUuid ITKAdaptiveHistogramEqualizationImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKAdaptiveHistogramEqualizationImage::getSubGroupName()
+const QString ITKAdaptiveHistogramEqualizationImage::getSubGroupName() const
 {
   return "ITK BiasCorrection";
 }

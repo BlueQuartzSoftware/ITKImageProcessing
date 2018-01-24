@@ -119,7 +119,7 @@ void ITKMeanProjectionImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKMeanProjectionImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKMeanProjectionImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKMeanProjectionImage::Pointer filter = ITKMeanProjectionImage::New();
   if(true == copyFilterParameters)
@@ -132,7 +132,7 @@ AbstractFilter::Pointer ITKMeanProjectionImage::newFilterInstance(bool copyFilte
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKMeanProjectionImage::getHumanLabel()
+const QString ITKMeanProjectionImage::getHumanLabel() const
 {
   return "ITK::Mean Projection Image Filter";
 }
@@ -148,7 +148,7 @@ const QUuid ITKMeanProjectionImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKMeanProjectionImage::getSubGroupName()
+const QString ITKMeanProjectionImage::getSubGroupName() const
 {
   return "ITK Projection";
 }

@@ -119,7 +119,7 @@ void ITKRelabelComponentImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKRelabelComponentImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKRelabelComponentImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKRelabelComponentImage::Pointer filter = ITKRelabelComponentImage::New();
   if(true == copyFilterParameters)
@@ -132,7 +132,7 @@ AbstractFilter::Pointer ITKRelabelComponentImage::newFilterInstance(bool copyFil
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKRelabelComponentImage::getHumanLabel()
+const QString ITKRelabelComponentImage::getHumanLabel() const
 {
   return "ITK::Relabel Component Image Filter";
 }
@@ -148,7 +148,7 @@ const QUuid ITKRelabelComponentImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKRelabelComponentImage::getSubGroupName()
+const QString ITKRelabelComponentImage::getSubGroupName() const
 {
   return "ITK SegmentationPostProcessing";
 }

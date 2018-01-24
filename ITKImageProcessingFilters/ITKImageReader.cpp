@@ -386,7 +386,7 @@ void ITKImageReader::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKImageReader::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKImageReader::newFilterInstance(bool copyFilterParameters) const
 {
   ITKImageReader::Pointer filter = ITKImageReader::New();
   if(true == copyFilterParameters)
@@ -399,7 +399,7 @@ AbstractFilter::Pointer ITKImageReader::newFilterInstance(bool copyFilterParamet
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKImageReader::getCompiledLibraryName()
+const QString ITKImageReader::getCompiledLibraryName() const
 {
   return ITKImageProcessingConstants::ITKImageProcessingBaseName;
 }
@@ -407,7 +407,7 @@ const QString ITKImageReader::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKImageReader::getBrandingString()
+const QString ITKImageReader::getBrandingString() const
 {
   return "ITKImageProcessing";
 }
@@ -415,7 +415,7 @@ const QString ITKImageReader::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKImageReader::getFilterVersion()
+const QString ITKImageReader::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -426,7 +426,7 @@ const QString ITKImageReader::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKImageReader::getGroupName()
+const QString ITKImageReader::getGroupName() const
 {
   return "IO";
 }
@@ -442,7 +442,7 @@ const QUuid ITKImageReader::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKImageReader::getSubGroupName()
+const QString ITKImageReader::getSubGroupName() const
 {
   return "Input";
 }
@@ -450,7 +450,7 @@ const QString ITKImageReader::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKImageReader::getHumanLabel()
+const QString ITKImageReader::getHumanLabel() const
 {
   return "ITK::Image Reader";
 }

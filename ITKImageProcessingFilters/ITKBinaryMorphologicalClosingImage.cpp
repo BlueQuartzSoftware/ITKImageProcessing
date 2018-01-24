@@ -183,7 +183,7 @@ void ITKBinaryMorphologicalClosingImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKBinaryMorphologicalClosingImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKBinaryMorphologicalClosingImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKBinaryMorphologicalClosingImage::Pointer filter = ITKBinaryMorphologicalClosingImage::New();
   if(true == copyFilterParameters)
@@ -196,7 +196,7 @@ AbstractFilter::Pointer ITKBinaryMorphologicalClosingImage::newFilterInstance(bo
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKBinaryMorphologicalClosingImage::getHumanLabel()
+const QString ITKBinaryMorphologicalClosingImage::getHumanLabel() const
 {
   return "ITK::Binary Morphological Closing Image Filter";
 }
@@ -212,7 +212,7 @@ const QUuid ITKBinaryMorphologicalClosingImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKBinaryMorphologicalClosingImage::getSubGroupName()
+const QString ITKBinaryMorphologicalClosingImage::getSubGroupName() const
 {
   return "ITK BinaryMathematicalMorphology";
 }

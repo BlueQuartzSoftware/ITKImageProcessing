@@ -411,7 +411,7 @@ void ITKImportImageStack::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKImportImageStack::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKImportImageStack::newFilterInstance(bool copyFilterParameters) const
 {
   ITKImportImageStack::Pointer filter = ITKImportImageStack::New();
   if(true == copyFilterParameters)
@@ -443,7 +443,7 @@ AbstractFilter::Pointer ITKImportImageStack::newFilterInstance(bool copyFilterPa
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKImportImageStack::getCompiledLibraryName()
+const QString ITKImportImageStack::getCompiledLibraryName() const
 {
   return ITKImageProcessingConstants::ITKImageProcessingBaseName;
 }
@@ -451,7 +451,7 @@ const QString ITKImportImageStack::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKImportImageStack::getBrandingString()
+const QString ITKImportImageStack::getBrandingString() const
 {
   return "ITKImageProcessing";
 }
@@ -459,7 +459,7 @@ const QString ITKImportImageStack::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKImportImageStack::getFilterVersion()
+const QString ITKImportImageStack::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -469,7 +469,7 @@ const QString ITKImportImageStack::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKImportImageStack::getGroupName()
+const QString ITKImportImageStack::getGroupName() const
 {
   return "IO";
 }
@@ -485,7 +485,7 @@ const QUuid ITKImportImageStack::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKImportImageStack::getSubGroupName()
+const QString ITKImportImageStack::getSubGroupName() const
 {
   return "Input";
 }
@@ -493,7 +493,7 @@ const QString ITKImportImageStack::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKImportImageStack::getHumanLabel()
+const QString ITKImportImageStack::getHumanLabel() const
 {
   return "ITK::Import Images (3D Stack)";
 }

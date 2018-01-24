@@ -113,7 +113,7 @@ void ITKAbsImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKAbsImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKAbsImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKAbsImage::Pointer filter = ITKAbsImage::New();
   if(true == copyFilterParameters)
@@ -126,7 +126,7 @@ AbstractFilter::Pointer ITKAbsImage::newFilterInstance(bool copyFilterParameters
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKAbsImage::getHumanLabel()
+const QString ITKAbsImage::getHumanLabel() const
 {
   return "ITK::Abs Image Filter";
 }
@@ -142,7 +142,7 @@ const QUuid ITKAbsImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKAbsImage::getSubGroupName()
+const QString ITKAbsImage::getSubGroupName() const
 {
   return "ITK IntensityTransformation";
 }

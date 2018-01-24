@@ -186,7 +186,7 @@ void ITKBinaryOpeningByReconstructionImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKBinaryOpeningByReconstructionImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKBinaryOpeningByReconstructionImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKBinaryOpeningByReconstructionImage::Pointer filter = ITKBinaryOpeningByReconstructionImage::New();
   if(true == copyFilterParameters)
@@ -199,7 +199,7 @@ AbstractFilter::Pointer ITKBinaryOpeningByReconstructionImage::newFilterInstance
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKBinaryOpeningByReconstructionImage::getHumanLabel()
+const QString ITKBinaryOpeningByReconstructionImage::getHumanLabel() const
 {
   return "ITK::Binary Opening By Reconstruction Image Filter";
 }
@@ -215,7 +215,7 @@ const QUuid ITKBinaryOpeningByReconstructionImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKBinaryOpeningByReconstructionImage::getSubGroupName()
+const QString ITKBinaryOpeningByReconstructionImage::getSubGroupName() const
 {
   return "ITK BinaryMathematicalMorphology";
 }

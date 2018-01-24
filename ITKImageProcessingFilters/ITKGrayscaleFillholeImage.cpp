@@ -118,7 +118,7 @@ void ITKGrayscaleFillholeImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKGrayscaleFillholeImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKGrayscaleFillholeImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKGrayscaleFillholeImage::Pointer filter = ITKGrayscaleFillholeImage::New();
   if(true == copyFilterParameters)
@@ -131,7 +131,7 @@ AbstractFilter::Pointer ITKGrayscaleFillholeImage::newFilterInstance(bool copyFi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKGrayscaleFillholeImage::getHumanLabel()
+const QString ITKGrayscaleFillholeImage::getHumanLabel() const
 {
   return "ITK::Grayscale Fillhole Image Filter";
 }
@@ -147,7 +147,7 @@ const QUuid ITKGrayscaleFillholeImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKGrayscaleFillholeImage::getSubGroupName()
+const QString ITKGrayscaleFillholeImage::getSubGroupName() const
 {
   return "ITK MathematicalMorphology";
 }

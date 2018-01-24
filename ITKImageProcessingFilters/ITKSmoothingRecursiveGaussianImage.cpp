@@ -125,7 +125,7 @@ void ITKSmoothingRecursiveGaussianImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKSmoothingRecursiveGaussianImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKSmoothingRecursiveGaussianImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKSmoothingRecursiveGaussianImage::Pointer filter = ITKSmoothingRecursiveGaussianImage::New();
   if(true == copyFilterParameters)
@@ -138,7 +138,7 @@ AbstractFilter::Pointer ITKSmoothingRecursiveGaussianImage::newFilterInstance(bo
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKSmoothingRecursiveGaussianImage::getHumanLabel()
+const QString ITKSmoothingRecursiveGaussianImage::getHumanLabel() const
 {
   return "ITK::Smoothing Recursive Gaussian Image Filter";
 }
@@ -154,7 +154,7 @@ const QUuid ITKSmoothingRecursiveGaussianImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKSmoothingRecursiveGaussianImage::getSubGroupName()
+const QString ITKSmoothingRecursiveGaussianImage::getSubGroupName() const
 {
   return "ITK Smoothing";
 }

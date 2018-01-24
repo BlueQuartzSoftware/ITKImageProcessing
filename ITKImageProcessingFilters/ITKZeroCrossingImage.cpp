@@ -124,7 +124,7 @@ void ITKZeroCrossingImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKZeroCrossingImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKZeroCrossingImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKZeroCrossingImage::Pointer filter = ITKZeroCrossingImage::New();
   if(true == copyFilterParameters)
@@ -137,7 +137,7 @@ AbstractFilter::Pointer ITKZeroCrossingImage::newFilterInstance(bool copyFilterP
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKZeroCrossingImage::getHumanLabel()
+const QString ITKZeroCrossingImage::getHumanLabel() const
 {
   return "ITK::Zero Crossing Image Filter";
 }
@@ -153,7 +153,7 @@ const QUuid ITKZeroCrossingImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKZeroCrossingImage::getSubGroupName()
+const QString ITKZeroCrossingImage::getSubGroupName() const
 {
   return "ITK Edge";
 }

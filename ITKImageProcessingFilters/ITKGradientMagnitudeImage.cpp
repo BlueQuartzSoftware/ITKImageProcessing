@@ -118,7 +118,7 @@ void ITKGradientMagnitudeImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKGradientMagnitudeImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKGradientMagnitudeImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKGradientMagnitudeImage::Pointer filter = ITKGradientMagnitudeImage::New();
   if(true == copyFilterParameters)
@@ -131,7 +131,7 @@ AbstractFilter::Pointer ITKGradientMagnitudeImage::newFilterInstance(bool copyFi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKGradientMagnitudeImage::getHumanLabel()
+const QString ITKGradientMagnitudeImage::getHumanLabel() const
 {
   return "ITK::Gradient Magnitude Image Filter";
 }
@@ -147,7 +147,7 @@ const QUuid ITKGradientMagnitudeImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKGradientMagnitudeImage::getSubGroupName()
+const QString ITKGradientMagnitudeImage::getSubGroupName() const
 {
   return "ITK Edge";
 }

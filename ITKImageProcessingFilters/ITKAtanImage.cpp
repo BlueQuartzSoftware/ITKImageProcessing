@@ -113,7 +113,7 @@ void ITKAtanImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKAtanImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKAtanImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKAtanImage::Pointer filter = ITKAtanImage::New();
   if(true == copyFilterParameters)
@@ -126,7 +126,7 @@ AbstractFilter::Pointer ITKAtanImage::newFilterInstance(bool copyFilterParameter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKAtanImage::getHumanLabel()
+const QString ITKAtanImage::getHumanLabel() const
 {
   return "ITK::Atan Image Filter";
 }
@@ -142,7 +142,7 @@ const QUuid ITKAtanImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKAtanImage::getSubGroupName()
+const QString ITKAtanImage::getSubGroupName() const
 {
   return "ITK IntensityTransformation";
 }

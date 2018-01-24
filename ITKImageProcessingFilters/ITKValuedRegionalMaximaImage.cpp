@@ -118,7 +118,7 @@ void ITKValuedRegionalMaximaImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKValuedRegionalMaximaImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKValuedRegionalMaximaImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKValuedRegionalMaximaImage::Pointer filter = ITKValuedRegionalMaximaImage::New();
   if(true == copyFilterParameters)
@@ -131,7 +131,7 @@ AbstractFilter::Pointer ITKValuedRegionalMaximaImage::newFilterInstance(bool cop
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKValuedRegionalMaximaImage::getHumanLabel()
+const QString ITKValuedRegionalMaximaImage::getHumanLabel() const
 {
   return "ITK::Valued Regional Maxima Image Filter";
 }
@@ -147,7 +147,7 @@ const QUuid ITKValuedRegionalMaximaImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKValuedRegionalMaximaImage::getSubGroupName()
+const QString ITKValuedRegionalMaximaImage::getSubGroupName() const
 {
   return "ITK MathematicalMorphology";
 }

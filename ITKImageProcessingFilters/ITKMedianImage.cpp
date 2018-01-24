@@ -119,7 +119,7 @@ void ITKMedianImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKMedianImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKMedianImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKMedianImage::Pointer filter = ITKMedianImage::New();
   if(true == copyFilterParameters)
@@ -132,7 +132,7 @@ AbstractFilter::Pointer ITKMedianImage::newFilterInstance(bool copyFilterParamet
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKMedianImage::getHumanLabel()
+const QString ITKMedianImage::getHumanLabel() const
 {
   return "ITK::Median Image Filter";
 }
@@ -148,7 +148,7 @@ const QUuid ITKMedianImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKMedianImage::getSubGroupName()
+const QString ITKMedianImage::getSubGroupName() const
 {
   return "ITK Smoothing";
 }

@@ -232,7 +232,7 @@ void ITKMaskImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKMaskImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKMaskImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKMaskImage::Pointer filter = ITKMaskImage::New();
   if(true == copyFilterParameters)
@@ -245,7 +245,7 @@ AbstractFilter::Pointer ITKMaskImage::newFilterInstance(bool copyFilterParameter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKMaskImage::getHumanLabel()
+const QString ITKMaskImage::getHumanLabel() const
 {
   return "ITK::Mask Image Filter";
 }
@@ -261,7 +261,7 @@ const QUuid ITKMaskImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKMaskImage::getSubGroupName()
+const QString ITKMaskImage::getSubGroupName() const
 {
   return "ITK IntensityTransformation";
 }

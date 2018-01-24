@@ -183,7 +183,7 @@ void ITKBinaryMorphologicalOpeningImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKBinaryMorphologicalOpeningImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKBinaryMorphologicalOpeningImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKBinaryMorphologicalOpeningImage::Pointer filter = ITKBinaryMorphologicalOpeningImage::New();
   if(true == copyFilterParameters)
@@ -196,7 +196,7 @@ AbstractFilter::Pointer ITKBinaryMorphologicalOpeningImage::newFilterInstance(bo
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKBinaryMorphologicalOpeningImage::getHumanLabel()
+const QString ITKBinaryMorphologicalOpeningImage::getHumanLabel() const
 {
   return "ITK::Binary Morphological Opening Image Filter";
 }
@@ -212,7 +212,7 @@ const QUuid ITKBinaryMorphologicalOpeningImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKBinaryMorphologicalOpeningImage::getSubGroupName()
+const QString ITKBinaryMorphologicalOpeningImage::getSubGroupName() const
 {
   return "ITK BinaryMathematicalMorphology";
 }

@@ -353,7 +353,7 @@ void ITKImageWriter::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKImageWriter::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKImageWriter::newFilterInstance(bool copyFilterParameters) const
 {
   ITKImageWriter::Pointer filter = ITKImageWriter::New();
   if(true == copyFilterParameters)
@@ -366,7 +366,7 @@ AbstractFilter::Pointer ITKImageWriter::newFilterInstance(bool copyFilterParamet
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKImageWriter::getCompiledLibraryName()
+const QString ITKImageWriter::getCompiledLibraryName() const
 {
   return ITKImageProcessingConstants::ITKImageProcessingBaseName;
 }
@@ -374,7 +374,7 @@ const QString ITKImageWriter::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKImageWriter::getBrandingString()
+const QString ITKImageWriter::getBrandingString() const
 {
   return "ITKImageProcessing";
 }
@@ -382,7 +382,7 @@ const QString ITKImageWriter::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKImageWriter::getFilterVersion()
+const QString ITKImageWriter::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -393,7 +393,7 @@ const QString ITKImageWriter::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKImageWriter::getGroupName()
+const QString ITKImageWriter::getGroupName() const
 {
   return "IO";
 }
@@ -409,7 +409,7 @@ const QUuid ITKImageWriter::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKImageWriter::getSubGroupName()
+const QString ITKImageWriter::getSubGroupName() const
 {
   return "Output";
 }
@@ -417,7 +417,7 @@ const QString ITKImageWriter::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKImageWriter::getHumanLabel()
+const QString ITKImageWriter::getHumanLabel() const
 {
   return "ITK::Image Writer";
 }

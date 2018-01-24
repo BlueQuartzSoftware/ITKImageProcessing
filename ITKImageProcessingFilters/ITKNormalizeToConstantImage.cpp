@@ -118,7 +118,7 @@ void ITKNormalizeToConstantImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKNormalizeToConstantImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKNormalizeToConstantImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKNormalizeToConstantImage::Pointer filter = ITKNormalizeToConstantImage::New();
   if(true == copyFilterParameters)
@@ -131,7 +131,7 @@ AbstractFilter::Pointer ITKNormalizeToConstantImage::newFilterInstance(bool copy
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKNormalizeToConstantImage::getHumanLabel()
+const QString ITKNormalizeToConstantImage::getHumanLabel() const
 {
   return "ITK::Normalize To Constant Image Filter";
 }
@@ -147,7 +147,7 @@ const QUuid ITKNormalizeToConstantImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKNormalizeToConstantImage::getSubGroupName()
+const QString ITKNormalizeToConstantImage::getSubGroupName() const
 {
   return "ITK IntensityTransformation";
 }

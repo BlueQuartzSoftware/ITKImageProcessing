@@ -113,7 +113,7 @@ void ITKSinImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKSinImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKSinImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKSinImage::Pointer filter = ITKSinImage::New();
   if(true == copyFilterParameters)
@@ -126,7 +126,7 @@ AbstractFilter::Pointer ITKSinImage::newFilterInstance(bool copyFilterParameters
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKSinImage::getHumanLabel()
+const QString ITKSinImage::getHumanLabel() const
 {
   return "ITK::Sin Image Filter";
 }
@@ -142,7 +142,7 @@ const QUuid ITKSinImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKSinImage::getSubGroupName()
+const QString ITKSinImage::getSubGroupName() const
 {
   return "ITK IntensityTransformation";
 }

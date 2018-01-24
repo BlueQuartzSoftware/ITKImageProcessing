@@ -131,7 +131,7 @@ void ITKDiscreteGaussianImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKDiscreteGaussianImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKDiscreteGaussianImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKDiscreteGaussianImage::Pointer filter = ITKDiscreteGaussianImage::New();
   if(true == copyFilterParameters)
@@ -144,7 +144,7 @@ AbstractFilter::Pointer ITKDiscreteGaussianImage::newFilterInstance(bool copyFil
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKDiscreteGaussianImage::getHumanLabel()
+const QString ITKDiscreteGaussianImage::getHumanLabel() const
 {
   return "ITK::Discrete Gaussian Image Filter";
 }
@@ -160,7 +160,7 @@ const QUuid ITKDiscreteGaussianImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKDiscreteGaussianImage::getSubGroupName()
+const QString ITKDiscreteGaussianImage::getSubGroupName() const
 {
   return "ITK Smoothing";
 }

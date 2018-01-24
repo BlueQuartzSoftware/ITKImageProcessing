@@ -119,7 +119,7 @@ void ITKStandardDeviationProjectionImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKStandardDeviationProjectionImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKStandardDeviationProjectionImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKStandardDeviationProjectionImage::Pointer filter = ITKStandardDeviationProjectionImage::New();
   if(true == copyFilterParameters)
@@ -132,7 +132,7 @@ AbstractFilter::Pointer ITKStandardDeviationProjectionImage::newFilterInstance(b
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKStandardDeviationProjectionImage::getHumanLabel()
+const QString ITKStandardDeviationProjectionImage::getHumanLabel() const
 {
   return "ITK::Standard Deviation Projection Image Filter";
 }
@@ -148,7 +148,7 @@ const QUuid ITKStandardDeviationProjectionImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKStandardDeviationProjectionImage::getSubGroupName()
+const QString ITKStandardDeviationProjectionImage::getSubGroupName() const
 {
   return "ITK Projection";
 }

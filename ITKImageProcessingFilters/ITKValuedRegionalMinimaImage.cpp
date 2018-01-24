@@ -118,7 +118,7 @@ void ITKValuedRegionalMinimaImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKValuedRegionalMinimaImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKValuedRegionalMinimaImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKValuedRegionalMinimaImage::Pointer filter = ITKValuedRegionalMinimaImage::New();
   if(true == copyFilterParameters)
@@ -131,7 +131,7 @@ AbstractFilter::Pointer ITKValuedRegionalMinimaImage::newFilterInstance(bool cop
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKValuedRegionalMinimaImage::getHumanLabel()
+const QString ITKValuedRegionalMinimaImage::getHumanLabel() const
 {
   return "ITK::Valued Regional Minima Image Filter";
 }
@@ -147,7 +147,7 @@ const QUuid ITKValuedRegionalMinimaImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKValuedRegionalMinimaImage::getSubGroupName()
+const QString ITKValuedRegionalMinimaImage::getSubGroupName() const
 {
   return "ITK MathematicalMorphology";
 }

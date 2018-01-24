@@ -113,7 +113,7 @@ void ITKSobelEdgeDetectionImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKSobelEdgeDetectionImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKSobelEdgeDetectionImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKSobelEdgeDetectionImage::Pointer filter = ITKSobelEdgeDetectionImage::New();
   if(true == copyFilterParameters)
@@ -126,7 +126,7 @@ AbstractFilter::Pointer ITKSobelEdgeDetectionImage::newFilterInstance(bool copyF
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKSobelEdgeDetectionImage::getHumanLabel()
+const QString ITKSobelEdgeDetectionImage::getHumanLabel() const
 {
   return "ITK::Sobel Edge Detection Image Filter";
 }
@@ -142,7 +142,7 @@ const QUuid ITKSobelEdgeDetectionImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKSobelEdgeDetectionImage::getSubGroupName()
+const QString ITKSobelEdgeDetectionImage::getSubGroupName() const
 {
   return "ITK Edge";
 }

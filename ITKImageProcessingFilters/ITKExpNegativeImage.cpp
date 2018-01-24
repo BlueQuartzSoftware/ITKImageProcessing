@@ -113,7 +113,7 @@ void ITKExpNegativeImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKExpNegativeImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKExpNegativeImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKExpNegativeImage::Pointer filter = ITKExpNegativeImage::New();
   if(true == copyFilterParameters)
@@ -126,7 +126,7 @@ AbstractFilter::Pointer ITKExpNegativeImage::newFilterInstance(bool copyFilterPa
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKExpNegativeImage::getHumanLabel()
+const QString ITKExpNegativeImage::getHumanLabel() const
 {
   return "ITK::Exp Negative Image Filter";
 }
@@ -142,7 +142,7 @@ const QUuid ITKExpNegativeImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKExpNegativeImage::getSubGroupName()
+const QString ITKExpNegativeImage::getSubGroupName() const
 {
   return "ITK IntensityTransformation";
 }

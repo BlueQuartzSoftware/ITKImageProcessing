@@ -122,7 +122,7 @@ void ITKIsoContourDistanceImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKIsoContourDistanceImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKIsoContourDistanceImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKIsoContourDistanceImage::Pointer filter = ITKIsoContourDistanceImage::New();
   if(true == copyFilterParameters)
@@ -135,7 +135,7 @@ AbstractFilter::Pointer ITKIsoContourDistanceImage::newFilterInstance(bool copyF
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKIsoContourDistanceImage::getHumanLabel()
+const QString ITKIsoContourDistanceImage::getHumanLabel() const
 {
   return "ITK::Iso Contour Distance Image Filter";
 }
@@ -151,7 +151,7 @@ const QUuid ITKIsoContourDistanceImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKIsoContourDistanceImage::getSubGroupName()
+const QString ITKIsoContourDistanceImage::getSubGroupName() const
 {
   return "ITK DistanceMap";
 }

@@ -164,7 +164,7 @@ void ITKGrayscaleErodeImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKGrayscaleErodeImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKGrayscaleErodeImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKGrayscaleErodeImage::Pointer filter = ITKGrayscaleErodeImage::New();
   if(true == copyFilterParameters)
@@ -177,7 +177,7 @@ AbstractFilter::Pointer ITKGrayscaleErodeImage::newFilterInstance(bool copyFilte
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKGrayscaleErodeImage::getHumanLabel()
+const QString ITKGrayscaleErodeImage::getHumanLabel() const
 {
   return "ITK::Grayscale Erode Image Filter";
 }
@@ -193,7 +193,7 @@ const QUuid ITKGrayscaleErodeImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKGrayscaleErodeImage::getSubGroupName()
+const QString ITKGrayscaleErodeImage::getSubGroupName() const
 {
   return "ITK MathematicalMorphology";
 }

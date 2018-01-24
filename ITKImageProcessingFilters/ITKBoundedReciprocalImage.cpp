@@ -113,7 +113,7 @@ void ITKBoundedReciprocalImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKBoundedReciprocalImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKBoundedReciprocalImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKBoundedReciprocalImage::Pointer filter = ITKBoundedReciprocalImage::New();
   if(true == copyFilterParameters)
@@ -126,7 +126,7 @@ AbstractFilter::Pointer ITKBoundedReciprocalImage::newFilterInstance(bool copyFi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKBoundedReciprocalImage::getHumanLabel()
+const QString ITKBoundedReciprocalImage::getHumanLabel() const
 {
   return "ITK::Bounded Reciprocal Image Filter";
 }
@@ -142,7 +142,7 @@ const QUuid ITKBoundedReciprocalImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKBoundedReciprocalImage::getSubGroupName()
+const QString ITKBoundedReciprocalImage::getSubGroupName() const
 {
   return "ITK IntensityTransformation";
 }

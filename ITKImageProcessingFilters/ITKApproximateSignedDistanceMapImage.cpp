@@ -122,7 +122,7 @@ void ITKApproximateSignedDistanceMapImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKApproximateSignedDistanceMapImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKApproximateSignedDistanceMapImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKApproximateSignedDistanceMapImage::Pointer filter = ITKApproximateSignedDistanceMapImage::New();
   if(true == copyFilterParameters)
@@ -135,7 +135,7 @@ AbstractFilter::Pointer ITKApproximateSignedDistanceMapImage::newFilterInstance(
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKApproximateSignedDistanceMapImage::getHumanLabel()
+const QString ITKApproximateSignedDistanceMapImage::getHumanLabel() const
 {
   return "ITK::Approximate Signed Distance Map Image Filter";
 }
@@ -151,7 +151,7 @@ const QUuid ITKApproximateSignedDistanceMapImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKApproximateSignedDistanceMapImage::getSubGroupName()
+const QString ITKApproximateSignedDistanceMapImage::getSubGroupName() const
 {
   return "ITK DistanceMap";
 }

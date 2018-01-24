@@ -133,7 +133,7 @@ void ITKCurvatureAnisotropicDiffusionImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKCurvatureAnisotropicDiffusionImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKCurvatureAnisotropicDiffusionImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKCurvatureAnisotropicDiffusionImage::Pointer filter = ITKCurvatureAnisotropicDiffusionImage::New();
   if(true == copyFilterParameters)
@@ -146,7 +146,7 @@ AbstractFilter::Pointer ITKCurvatureAnisotropicDiffusionImage::newFilterInstance
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKCurvatureAnisotropicDiffusionImage::getHumanLabel()
+const QString ITKCurvatureAnisotropicDiffusionImage::getHumanLabel() const
 {
   return "ITK::Curvature Anisotropic Diffusion Image Filter";
 }
@@ -162,7 +162,7 @@ const QUuid ITKCurvatureAnisotropicDiffusionImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKCurvatureAnisotropicDiffusionImage::getSubGroupName()
+const QString ITKCurvatureAnisotropicDiffusionImage::getSubGroupName() const
 {
   return "ITK Smoothing";
 }

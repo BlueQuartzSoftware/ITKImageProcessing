@@ -119,7 +119,7 @@ void ITKBoxMeanImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKBoxMeanImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKBoxMeanImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKBoxMeanImage::Pointer filter = ITKBoxMeanImage::New();
   if(true == copyFilterParameters)
@@ -132,7 +132,7 @@ AbstractFilter::Pointer ITKBoxMeanImage::newFilterInstance(bool copyFilterParame
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKBoxMeanImage::getHumanLabel()
+const QString ITKBoxMeanImage::getHumanLabel() const
 {
   return "ITK::Box Mean Image Filter";
 }
@@ -148,7 +148,7 @@ const QUuid ITKBoxMeanImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKBoxMeanImage::getSubGroupName()
+const QString ITKBoxMeanImage::getSubGroupName() const
 {
   return "ITK Smoothing";
 }

@@ -168,7 +168,7 @@ void ITKGrayscaleMorphologicalClosingImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKGrayscaleMorphologicalClosingImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKGrayscaleMorphologicalClosingImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKGrayscaleMorphologicalClosingImage::Pointer filter = ITKGrayscaleMorphologicalClosingImage::New();
   if(true == copyFilterParameters)
@@ -181,7 +181,7 @@ AbstractFilter::Pointer ITKGrayscaleMorphologicalClosingImage::newFilterInstance
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKGrayscaleMorphologicalClosingImage::getHumanLabel()
+const QString ITKGrayscaleMorphologicalClosingImage::getHumanLabel() const
 {
   return "ITK::Grayscale Morphological Closing Image Filter";
 }
@@ -197,7 +197,7 @@ const QUuid ITKGrayscaleMorphologicalClosingImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKGrayscaleMorphologicalClosingImage::getSubGroupName()
+const QString ITKGrayscaleMorphologicalClosingImage::getSubGroupName() const
 {
   return "ITK MathematicalMorphology";
 }

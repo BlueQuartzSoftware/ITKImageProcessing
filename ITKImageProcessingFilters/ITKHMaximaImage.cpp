@@ -118,7 +118,7 @@ void ITKHMaximaImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKHMaximaImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKHMaximaImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKHMaximaImage::Pointer filter = ITKHMaximaImage::New();
   if(true == copyFilterParameters)
@@ -131,7 +131,7 @@ AbstractFilter::Pointer ITKHMaximaImage::newFilterInstance(bool copyFilterParame
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKHMaximaImage::getHumanLabel()
+const QString ITKHMaximaImage::getHumanLabel() const
 {
   return "ITK::H Maxima Image Filter";
 }
@@ -147,7 +147,7 @@ const QUuid ITKHMaximaImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKHMaximaImage::getSubGroupName()
+const QString ITKHMaximaImage::getSubGroupName() const
 {
   return "ITK MathematicalMorphology";
 }

@@ -124,7 +124,7 @@ void ITKShotNoiseImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKShotNoiseImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKShotNoiseImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKShotNoiseImage::Pointer filter = ITKShotNoiseImage::New();
   if(true == copyFilterParameters)
@@ -137,7 +137,7 @@ AbstractFilter::Pointer ITKShotNoiseImage::newFilterInstance(bool copyFilterPara
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKShotNoiseImage::getHumanLabel()
+const QString ITKShotNoiseImage::getHumanLabel() const
 {
   return "ITK::Shot Noise Image Filter";
 }
@@ -153,7 +153,7 @@ const QUuid ITKShotNoiseImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKShotNoiseImage::getSubGroupName()
+const QString ITKShotNoiseImage::getSubGroupName() const
 {
   return "ITK Noise";
 }

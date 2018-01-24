@@ -203,7 +203,7 @@ void ITKPatchBasedDenoisingImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKPatchBasedDenoisingImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKPatchBasedDenoisingImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKPatchBasedDenoisingImage::Pointer filter = ITKPatchBasedDenoisingImage::New();
   if(true == copyFilterParameters)
@@ -216,7 +216,7 @@ AbstractFilter::Pointer ITKPatchBasedDenoisingImage::newFilterInstance(bool copy
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKPatchBasedDenoisingImage::getHumanLabel()
+const QString ITKPatchBasedDenoisingImage::getHumanLabel() const
 {
   return "ITK::Patch Based Denoising Image Filter";
 }
@@ -232,7 +232,7 @@ const QUuid ITKPatchBasedDenoisingImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKPatchBasedDenoisingImage::getSubGroupName()
+const QString ITKPatchBasedDenoisingImage::getSubGroupName() const
 {
   return "ITK Denoising";
 }

@@ -128,7 +128,7 @@ void ITKMinMaxCurvatureFlowImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKMinMaxCurvatureFlowImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKMinMaxCurvatureFlowImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKMinMaxCurvatureFlowImage::Pointer filter = ITKMinMaxCurvatureFlowImage::New();
   if(true == copyFilterParameters)
@@ -141,7 +141,7 @@ AbstractFilter::Pointer ITKMinMaxCurvatureFlowImage::newFilterInstance(bool copy
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKMinMaxCurvatureFlowImage::getHumanLabel()
+const QString ITKMinMaxCurvatureFlowImage::getHumanLabel() const
 {
   return "ITK::Min Max Curvature Flow Image Filter";
 }
@@ -157,7 +157,7 @@ const QUuid ITKMinMaxCurvatureFlowImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKMinMaxCurvatureFlowImage::getSubGroupName()
+const QString ITKMinMaxCurvatureFlowImage::getSubGroupName() const
 {
   return "ITK Smoothing";
 }

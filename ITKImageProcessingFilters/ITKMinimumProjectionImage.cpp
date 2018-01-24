@@ -119,7 +119,7 @@ void ITKMinimumProjectionImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKMinimumProjectionImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKMinimumProjectionImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKMinimumProjectionImage::Pointer filter = ITKMinimumProjectionImage::New();
   if(true == copyFilterParameters)
@@ -132,7 +132,7 @@ AbstractFilter::Pointer ITKMinimumProjectionImage::newFilterInstance(bool copyFi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKMinimumProjectionImage::getHumanLabel()
+const QString ITKMinimumProjectionImage::getHumanLabel() const
 {
   return "ITK::Minimum Projection Image Filter";
 }
@@ -148,7 +148,7 @@ const QUuid ITKMinimumProjectionImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKMinimumProjectionImage::getSubGroupName()
+const QString ITKMinimumProjectionImage::getSubGroupName() const
 {
   return "ITK Projection";
 }

@@ -202,7 +202,7 @@ void ITKMorphologicalWatershedFromMarkersImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKMorphologicalWatershedFromMarkersImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKMorphologicalWatershedFromMarkersImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKMorphologicalWatershedFromMarkersImage::Pointer filter = ITKMorphologicalWatershedFromMarkersImage::New();
   if(true == copyFilterParameters)
@@ -215,7 +215,7 @@ AbstractFilter::Pointer ITKMorphologicalWatershedFromMarkersImage::newFilterInst
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKMorphologicalWatershedFromMarkersImage::getHumanLabel()
+const QString ITKMorphologicalWatershedFromMarkersImage::getHumanLabel() const
 {
   return "ITK::Morphological Watershed From Markers Image Filter";
 }
@@ -231,7 +231,7 @@ const QUuid ITKMorphologicalWatershedFromMarkersImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKMorphologicalWatershedFromMarkersImage::getSubGroupName()
+const QString ITKMorphologicalWatershedFromMarkersImage::getSubGroupName() const
 {
   return "ITK Segmentation";
 }

@@ -138,7 +138,7 @@ void ITKRGBToLuminanceImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKRGBToLuminanceImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKRGBToLuminanceImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKRGBToLuminanceImage::Pointer filter = ITKRGBToLuminanceImage::New();
   if(true == copyFilterParameters)
@@ -151,7 +151,7 @@ AbstractFilter::Pointer ITKRGBToLuminanceImage::newFilterInstance(bool copyFilte
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKRGBToLuminanceImage::getHumanLabel()
+const QString ITKRGBToLuminanceImage::getHumanLabel() const
 {
   return "ITK::RGB to Luminance Image Filter";
 }
@@ -167,7 +167,7 @@ const QUuid ITKRGBToLuminanceImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKRGBToLuminanceImage::getSubGroupName()
+const QString ITKRGBToLuminanceImage::getSubGroupName() const
 {
   return "ITK IntensityTransformation";
 }

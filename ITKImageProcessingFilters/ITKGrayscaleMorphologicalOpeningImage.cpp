@@ -168,7 +168,7 @@ void ITKGrayscaleMorphologicalOpeningImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKGrayscaleMorphologicalOpeningImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKGrayscaleMorphologicalOpeningImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKGrayscaleMorphologicalOpeningImage::Pointer filter = ITKGrayscaleMorphologicalOpeningImage::New();
   if(true == copyFilterParameters)
@@ -181,7 +181,7 @@ AbstractFilter::Pointer ITKGrayscaleMorphologicalOpeningImage::newFilterInstance
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKGrayscaleMorphologicalOpeningImage::getHumanLabel()
+const QString ITKGrayscaleMorphologicalOpeningImage::getHumanLabel() const
 {
   return "ITK::Grayscale Morphological Opening Image Filter";
 }
@@ -197,7 +197,7 @@ const QUuid ITKGrayscaleMorphologicalOpeningImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKGrayscaleMorphologicalOpeningImage::getSubGroupName()
+const QString ITKGrayscaleMorphologicalOpeningImage::getSubGroupName() const
 {
   return "ITK MathematicalMorphology";
 }

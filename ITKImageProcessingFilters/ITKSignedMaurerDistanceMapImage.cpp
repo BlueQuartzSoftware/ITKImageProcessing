@@ -126,7 +126,7 @@ void ITKSignedMaurerDistanceMapImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKSignedMaurerDistanceMapImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKSignedMaurerDistanceMapImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKSignedMaurerDistanceMapImage::Pointer filter = ITKSignedMaurerDistanceMapImage::New();
   if(true == copyFilterParameters)
@@ -139,7 +139,7 @@ AbstractFilter::Pointer ITKSignedMaurerDistanceMapImage::newFilterInstance(bool 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKSignedMaurerDistanceMapImage::getHumanLabel()
+const QString ITKSignedMaurerDistanceMapImage::getHumanLabel() const
 {
   return "ITK::Signed Maurer Distance Map Image Filter";
 }
@@ -155,7 +155,7 @@ const QUuid ITKSignedMaurerDistanceMapImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKSignedMaurerDistanceMapImage::getSubGroupName()
+const QString ITKSignedMaurerDistanceMapImage::getSubGroupName() const
 {
   return "ITK DistanceMap";
 }

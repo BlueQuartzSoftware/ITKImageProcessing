@@ -118,7 +118,7 @@ void ITKLaplacianSharpeningImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKLaplacianSharpeningImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKLaplacianSharpeningImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKLaplacianSharpeningImage::Pointer filter = ITKLaplacianSharpeningImage::New();
   if(true == copyFilterParameters)
@@ -131,7 +131,7 @@ AbstractFilter::Pointer ITKLaplacianSharpeningImage::newFilterInstance(bool copy
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKLaplacianSharpeningImage::getHumanLabel()
+const QString ITKLaplacianSharpeningImage::getHumanLabel() const
 {
   return "ITK::Laplacian Sharpening Image Filter";
 }
@@ -147,7 +147,7 @@ const QUuid ITKLaplacianSharpeningImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKLaplacianSharpeningImage::getSubGroupName()
+const QString ITKLaplacianSharpeningImage::getSubGroupName() const
 {
   return "ITK Edge";
 }

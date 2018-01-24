@@ -143,7 +143,7 @@ void ITKCastImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKCastImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKCastImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKCastImage::Pointer filter = ITKCastImage::New();
   if(true == copyFilterParameters)
@@ -156,7 +156,7 @@ AbstractFilter::Pointer ITKCastImage::newFilterInstance(bool copyFilterParameter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKCastImage::getHumanLabel()
+const QString ITKCastImage::getHumanLabel() const
 {
   return "ITK::Cast Image Filter";
 }
@@ -172,7 +172,7 @@ const QUuid ITKCastImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKCastImage::getSubGroupName()
+const QString ITKCastImage::getSubGroupName() const
 {
   return "ITK IntensityTransformation";
 }

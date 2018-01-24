@@ -122,7 +122,7 @@ void ITKShiftScaleImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKShiftScaleImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKShiftScaleImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKShiftScaleImage::Pointer filter = ITKShiftScaleImage::New();
   if(true == copyFilterParameters)
@@ -135,7 +135,7 @@ AbstractFilter::Pointer ITKShiftScaleImage::newFilterInstance(bool copyFilterPar
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKShiftScaleImage::getHumanLabel()
+const QString ITKShiftScaleImage::getHumanLabel() const
 {
   return "ITK::Shift Scale Image Filter";
 }
@@ -151,7 +151,7 @@ const QUuid ITKShiftScaleImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKShiftScaleImage::getSubGroupName()
+const QString ITKShiftScaleImage::getSubGroupName() const
 {
   return "ITK IntensityTransformation";
 }

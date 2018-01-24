@@ -122,7 +122,7 @@ void ITKHMinimaImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKHMinimaImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKHMinimaImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKHMinimaImage::Pointer filter = ITKHMinimaImage::New();
   if(true == copyFilterParameters)
@@ -135,7 +135,7 @@ AbstractFilter::Pointer ITKHMinimaImage::newFilterInstance(bool copyFilterParame
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKHMinimaImage::getHumanLabel()
+const QString ITKHMinimaImage::getHumanLabel() const
 {
   return "ITK::H Minima Image Filter";
 }
@@ -151,7 +151,7 @@ const QUuid ITKHMinimaImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKHMinimaImage::getSubGroupName()
+const QString ITKHMinimaImage::getSubGroupName() const
 {
   return "ITK MathematicalMorphology";
 }

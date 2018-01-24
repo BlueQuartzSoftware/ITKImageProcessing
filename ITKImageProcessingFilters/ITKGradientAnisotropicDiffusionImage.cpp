@@ -133,7 +133,7 @@ void ITKGradientAnisotropicDiffusionImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKGradientAnisotropicDiffusionImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKGradientAnisotropicDiffusionImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKGradientAnisotropicDiffusionImage::Pointer filter = ITKGradientAnisotropicDiffusionImage::New();
   if(true == copyFilterParameters)
@@ -146,7 +146,7 @@ AbstractFilter::Pointer ITKGradientAnisotropicDiffusionImage::newFilterInstance(
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKGradientAnisotropicDiffusionImage::getHumanLabel()
+const QString ITKGradientAnisotropicDiffusionImage::getHumanLabel() const
 {
   return "ITK::Gradient Anisotropic Diffusion Image Filter";
 }
@@ -162,7 +162,7 @@ const QUuid ITKGradientAnisotropicDiffusionImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKGradientAnisotropicDiffusionImage::getSubGroupName()
+const QString ITKGradientAnisotropicDiffusionImage::getSubGroupName() const
 {
   return "ITK Smoothing";
 }

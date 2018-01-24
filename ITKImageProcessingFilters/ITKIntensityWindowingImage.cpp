@@ -130,7 +130,7 @@ void ITKIntensityWindowingImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKIntensityWindowingImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKIntensityWindowingImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKIntensityWindowingImage::Pointer filter = ITKIntensityWindowingImage::New();
   if(true == copyFilterParameters)
@@ -143,7 +143,7 @@ AbstractFilter::Pointer ITKIntensityWindowingImage::newFilterInstance(bool copyF
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKIntensityWindowingImage::getHumanLabel()
+const QString ITKIntensityWindowingImage::getHumanLabel() const
 {
   return "ITK::Intensity Windowing Image Filter";
 }
@@ -159,7 +159,7 @@ const QUuid ITKIntensityWindowingImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKIntensityWindowingImage::getSubGroupName()
+const QString ITKIntensityWindowingImage::getSubGroupName() const
 {
   return "ITK IntensityTransformation";
 }

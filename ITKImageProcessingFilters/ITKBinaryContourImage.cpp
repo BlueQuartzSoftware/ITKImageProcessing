@@ -126,7 +126,7 @@ void ITKBinaryContourImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKBinaryContourImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKBinaryContourImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKBinaryContourImage::Pointer filter = ITKBinaryContourImage::New();
   if(true == copyFilterParameters)
@@ -139,7 +139,7 @@ AbstractFilter::Pointer ITKBinaryContourImage::newFilterInstance(bool copyFilter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKBinaryContourImage::getHumanLabel()
+const QString ITKBinaryContourImage::getHumanLabel() const
 {
   return "ITK::Binary Contour Image Filter";
 }
@@ -155,7 +155,7 @@ const QUuid ITKBinaryContourImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKBinaryContourImage::getSubGroupName()
+const QString ITKBinaryContourImage::getSubGroupName() const
 {
   return "ITK SegmentationPostProcessing";
 }

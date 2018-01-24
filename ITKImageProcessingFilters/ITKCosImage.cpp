@@ -113,7 +113,7 @@ void ITKCosImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKCosImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKCosImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKCosImage::Pointer filter = ITKCosImage::New();
   if(true == copyFilterParameters)
@@ -126,7 +126,7 @@ AbstractFilter::Pointer ITKCosImage::newFilterInstance(bool copyFilterParameters
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKCosImage::getHumanLabel()
+const QString ITKCosImage::getHumanLabel() const
 {
   return "ITK::Cos Image Filter";
 }
@@ -142,7 +142,7 @@ const QUuid ITKCosImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKCosImage::getSubGroupName()
+const QString ITKCosImage::getSubGroupName() const
 {
   return "ITK IntensityTransformation";
 }

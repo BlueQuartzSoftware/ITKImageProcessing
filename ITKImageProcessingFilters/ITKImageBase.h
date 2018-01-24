@@ -51,46 +51,46 @@ public:
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
-  virtual const QString getCompiledLibraryName() override;
+  virtual const QString getCompiledLibraryName() const override;
 
   /**
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
   */
-  virtual const QString getBrandingString() override;
+  virtual const QString getBrandingString() const override;
 
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
    * @return
    */
-  virtual const QString getFilterVersion() override;
+  virtual const QString getFilterVersion() const override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
    */
-  virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) = 0;
+  virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) const override = 0;
 
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
-  virtual const QString getGroupName() override;
+  virtual const QString getGroupName() const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  virtual const QString getHumanLabel() = 0;
+  virtual const QString getHumanLabel() const override = 0;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
    */
-  virtual void setupFilterParameters() = 0;
+  virtual void setupFilterParameters() override = 0;
 
   /**
    * @brief readFilterParameters Reimplemented from @see AbstractFilter class
    */
-  virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index) = 0;
+  virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index) override = 0;
 
   /**
    * @brief execute Reimplemented from @see AbstractFilter class

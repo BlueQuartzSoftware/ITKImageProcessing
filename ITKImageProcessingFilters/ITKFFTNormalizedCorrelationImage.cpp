@@ -188,7 +188,7 @@ void ITKFFTNormalizedCorrelationImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKFFTNormalizedCorrelationImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKFFTNormalizedCorrelationImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKFFTNormalizedCorrelationImage::Pointer filter = ITKFFTNormalizedCorrelationImage::New();
   if(true == copyFilterParameters)
@@ -201,7 +201,7 @@ AbstractFilter::Pointer ITKFFTNormalizedCorrelationImage::newFilterInstance(bool
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKFFTNormalizedCorrelationImage::getHumanLabel()
+const QString ITKFFTNormalizedCorrelationImage::getHumanLabel() const
 {
   return "ITK::FFT Normalized Correlation Image";
 }
@@ -217,7 +217,7 @@ const QUuid ITKFFTNormalizedCorrelationImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKFFTNormalizedCorrelationImage::getSubGroupName()
+const QString ITKFFTNormalizedCorrelationImage::getSubGroupName() const
 {
   return "ITK Registration";
 }

@@ -250,7 +250,7 @@ void ITKHistogramMatchingImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKHistogramMatchingImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKHistogramMatchingImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKHistogramMatchingImage::Pointer filter = ITKHistogramMatchingImage::New();
   if(true == copyFilterParameters)
@@ -263,7 +263,7 @@ AbstractFilter::Pointer ITKHistogramMatchingImage::newFilterInstance(bool copyFi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKHistogramMatchingImage::getHumanLabel()
+const QString ITKHistogramMatchingImage::getHumanLabel() const
 {
   return "ITK::Histogram Matching Image Filter";
 }
@@ -279,7 +279,7 @@ const QUuid ITKHistogramMatchingImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKHistogramMatchingImage::getSubGroupName()
+const QString ITKHistogramMatchingImage::getSubGroupName() const
 {
   return "ITK IntensityTransformation";
 }

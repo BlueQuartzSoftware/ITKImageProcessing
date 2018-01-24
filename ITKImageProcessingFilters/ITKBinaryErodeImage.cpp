@@ -187,7 +187,7 @@ void ITKBinaryErodeImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKBinaryErodeImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKBinaryErodeImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKBinaryErodeImage::Pointer filter = ITKBinaryErodeImage::New();
   if(true == copyFilterParameters)
@@ -200,7 +200,7 @@ AbstractFilter::Pointer ITKBinaryErodeImage::newFilterInstance(bool copyFilterPa
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKBinaryErodeImage::getHumanLabel()
+const QString ITKBinaryErodeImage::getHumanLabel() const
 {
   return "ITK::Binary Erode Image Filter";
 }
@@ -216,7 +216,7 @@ const QUuid ITKBinaryErodeImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKBinaryErodeImage::getSubGroupName()
+const QString ITKBinaryErodeImage::getSubGroupName() const
 {
   return "ITK BinaryMathematicalMorphology";
 }

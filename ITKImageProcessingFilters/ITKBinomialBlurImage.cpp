@@ -119,7 +119,7 @@ void ITKBinomialBlurImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKBinomialBlurImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKBinomialBlurImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKBinomialBlurImage::Pointer filter = ITKBinomialBlurImage::New();
   if(true == copyFilterParameters)
@@ -132,7 +132,7 @@ AbstractFilter::Pointer ITKBinomialBlurImage::newFilterInstance(bool copyFilterP
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKBinomialBlurImage::getHumanLabel()
+const QString ITKBinomialBlurImage::getHumanLabel() const
 {
   return "ITK::Binomial Blur Image Filter";
 }
@@ -148,7 +148,7 @@ const QUuid ITKBinomialBlurImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKBinomialBlurImage::getSubGroupName()
+const QString ITKBinomialBlurImage::getSubGroupName() const
 {
   return "ITK Smoothing";
 }

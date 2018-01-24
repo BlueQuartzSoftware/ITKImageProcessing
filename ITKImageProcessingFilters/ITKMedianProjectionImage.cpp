@@ -119,7 +119,7 @@ void ITKMedianProjectionImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKMedianProjectionImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKMedianProjectionImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKMedianProjectionImage::Pointer filter = ITKMedianProjectionImage::New();
   if(true == copyFilterParameters)
@@ -132,7 +132,7 @@ AbstractFilter::Pointer ITKMedianProjectionImage::newFilterInstance(bool copyFil
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKMedianProjectionImage::getHumanLabel()
+const QString ITKMedianProjectionImage::getHumanLabel() const
 {
   return "ITK::Median Projection Image Filter";
 }
@@ -148,7 +148,7 @@ const QUuid ITKMedianProjectionImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKMedianProjectionImage::getSubGroupName()
+const QString ITKMedianProjectionImage::getSubGroupName() const
 {
   return "ITK Projection";
 }

@@ -122,7 +122,7 @@ void ITKLaplacianRecursiveGaussianImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKLaplacianRecursiveGaussianImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKLaplacianRecursiveGaussianImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKLaplacianRecursiveGaussianImage::Pointer filter = ITKLaplacianRecursiveGaussianImage::New();
   if(true == copyFilterParameters)
@@ -135,7 +135,7 @@ AbstractFilter::Pointer ITKLaplacianRecursiveGaussianImage::newFilterInstance(bo
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKLaplacianRecursiveGaussianImage::getHumanLabel()
+const QString ITKLaplacianRecursiveGaussianImage::getHumanLabel() const
 {
   return "ITK::Laplacian Recursive Gaussian Image Filter";
 }
@@ -151,7 +151,7 @@ const QUuid ITKLaplacianRecursiveGaussianImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKLaplacianRecursiveGaussianImage::getSubGroupName()
+const QString ITKLaplacianRecursiveGaussianImage::getSubGroupName() const
 {
   return "ITK Edge";
 }

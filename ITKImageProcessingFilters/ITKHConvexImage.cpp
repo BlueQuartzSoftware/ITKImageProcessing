@@ -122,7 +122,7 @@ void ITKHConvexImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKHConvexImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKHConvexImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKHConvexImage::Pointer filter = ITKHConvexImage::New();
   if(true == copyFilterParameters)
@@ -135,7 +135,7 @@ AbstractFilter::Pointer ITKHConvexImage::newFilterInstance(bool copyFilterParame
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKHConvexImage::getHumanLabel()
+const QString ITKHConvexImage::getHumanLabel() const
 {
   return "ITK::H Convex Image Filter";
 }
@@ -151,7 +151,7 @@ const QUuid ITKHConvexImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKHConvexImage::getSubGroupName()
+const QString ITKHConvexImage::getSubGroupName() const
 {
   return "ITK MathematicalMorphology";
 }

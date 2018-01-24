@@ -144,7 +144,7 @@ void ITKDoubleThresholdImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKDoubleThresholdImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKDoubleThresholdImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKDoubleThresholdImage::Pointer filter = ITKDoubleThresholdImage::New();
   if(true == copyFilterParameters)
@@ -157,7 +157,7 @@ AbstractFilter::Pointer ITKDoubleThresholdImage::newFilterInstance(bool copyFilt
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKDoubleThresholdImage::getHumanLabel()
+const QString ITKDoubleThresholdImage::getHumanLabel() const
 {
   return "ITK::Double Threshold Image Filter";
 }
@@ -173,7 +173,7 @@ const QUuid ITKDoubleThresholdImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKDoubleThresholdImage::getSubGroupName()
+const QString ITKDoubleThresholdImage::getSubGroupName() const
 {
   return "ITK Thresholding";
 }

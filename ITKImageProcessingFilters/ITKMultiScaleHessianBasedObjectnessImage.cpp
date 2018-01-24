@@ -168,7 +168,7 @@ void ITKMultiScaleHessianBasedObjectnessImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKMultiScaleHessianBasedObjectnessImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKMultiScaleHessianBasedObjectnessImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKMultiScaleHessianBasedObjectnessImage::Pointer filter = ITKMultiScaleHessianBasedObjectnessImage::New();
   if(true == copyFilterParameters)
@@ -181,7 +181,7 @@ AbstractFilter::Pointer ITKMultiScaleHessianBasedObjectnessImage::newFilterInsta
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKMultiScaleHessianBasedObjectnessImage::getHumanLabel()
+const QString ITKMultiScaleHessianBasedObjectnessImage::getHumanLabel() const
 {
   return "ITK::Multi-scale Hessian Based Objectness Filter";
 }
@@ -197,7 +197,7 @@ const QUuid ITKMultiScaleHessianBasedObjectnessImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKMultiScaleHessianBasedObjectnessImage::getSubGroupName()
+const QString ITKMultiScaleHessianBasedObjectnessImage::getSubGroupName() const
 {
   return "ITK Edge";
 }

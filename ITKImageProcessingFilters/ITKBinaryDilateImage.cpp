@@ -187,7 +187,7 @@ void ITKBinaryDilateImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKBinaryDilateImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKBinaryDilateImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKBinaryDilateImage::Pointer filter = ITKBinaryDilateImage::New();
   if(true == copyFilterParameters)
@@ -200,7 +200,7 @@ AbstractFilter::Pointer ITKBinaryDilateImage::newFilterInstance(bool copyFilterP
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKBinaryDilateImage::getHumanLabel()
+const QString ITKBinaryDilateImage::getHumanLabel() const
 {
   return "ITK::Binary Dilate Image Filter";
 }
@@ -216,7 +216,7 @@ const QUuid ITKBinaryDilateImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKBinaryDilateImage::getSubGroupName()
+const QString ITKBinaryDilateImage::getSubGroupName() const
 {
   return "ITK BinaryMathematicalMorphology";
 }

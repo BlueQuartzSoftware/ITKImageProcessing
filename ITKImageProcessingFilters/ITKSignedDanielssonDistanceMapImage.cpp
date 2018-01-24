@@ -126,7 +126,7 @@ void ITKSignedDanielssonDistanceMapImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKSignedDanielssonDistanceMapImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKSignedDanielssonDistanceMapImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKSignedDanielssonDistanceMapImage::Pointer filter = ITKSignedDanielssonDistanceMapImage::New();
   if(true == copyFilterParameters)
@@ -139,7 +139,7 @@ AbstractFilter::Pointer ITKSignedDanielssonDistanceMapImage::newFilterInstance(b
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKSignedDanielssonDistanceMapImage::getHumanLabel()
+const QString ITKSignedDanielssonDistanceMapImage::getHumanLabel() const
 {
   return "ITK::Signed Danielsson Distance Map Image Filter";
 }
@@ -155,7 +155,7 @@ const QUuid ITKSignedDanielssonDistanceMapImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKSignedDanielssonDistanceMapImage::getSubGroupName()
+const QString ITKSignedDanielssonDistanceMapImage::getSubGroupName() const
 {
   return "ITK DistanceMap";
 }

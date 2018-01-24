@@ -130,7 +130,7 @@ void ITKSigmoidImage::filterInternal()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKSigmoidImage::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ITKSigmoidImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKSigmoidImage::Pointer filter = ITKSigmoidImage::New();
   if(true == copyFilterParameters)
@@ -143,7 +143,7 @@ AbstractFilter::Pointer ITKSigmoidImage::newFilterInstance(bool copyFilterParame
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKSigmoidImage::getHumanLabel()
+const QString ITKSigmoidImage::getHumanLabel() const
 {
   return "ITK::Sigmoid Image Filter";
 }
@@ -159,7 +159,7 @@ const QUuid ITKSigmoidImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKSigmoidImage::getSubGroupName()
+const QString ITKSigmoidImage::getSubGroupName() const
 {
   return "ITK IntensityTransformation";
 }
