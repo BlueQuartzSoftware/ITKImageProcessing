@@ -873,7 +873,7 @@ QVector<size_t> ZeissImportFilter::getImageDimensions(ZeissTagsXmlSection::Point
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ZeissImportFilter::getCompiledLibraryName()
+const QString ZeissImportFilter::getCompiledLibraryName() const
 {
   return ZeissImportConstants::ZeissImportBaseName;
 }
@@ -881,7 +881,7 @@ const QString ZeissImportFilter::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ZeissImportFilter::getBrandingString()
+const QString ZeissImportFilter::getBrandingString() const
 {
   return "ZeissImport";
 }
@@ -889,7 +889,7 @@ const QString ZeissImportFilter::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ZeissImportFilter::getFilterVersion()
+const QString ZeissImportFilter::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -900,7 +900,7 @@ const QString ZeissImportFilter::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ZeissImportFilter::getGroupName()
+const QString ZeissImportFilter::getGroupName() const
 {
   return SIMPL::FilterGroups::Unsupported;
 }
@@ -908,7 +908,7 @@ const QString ZeissImportFilter::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ZeissImportFilter::getHumanLabel()
+const QString ZeissImportFilter::getHumanLabel() const
 {
   return "Zeiss AxioVision Import";
 }
@@ -924,7 +924,7 @@ const QUuid ZeissImportFilter::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ZeissImportFilter::getSubGroupName()
+const QString ZeissImportFilter::getSubGroupName() const
 {
   return "IO";
 }
@@ -932,7 +932,7 @@ const QString ZeissImportFilter::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ZeissImportFilter::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ZeissImportFilter::newFilterInstance(bool copyFilterParameters) const
 {
   /*
   * write code to optionally copy the filter parameters from the current filter into the new instance

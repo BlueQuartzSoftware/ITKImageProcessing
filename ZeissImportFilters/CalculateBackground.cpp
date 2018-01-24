@@ -394,7 +394,7 @@ void CalculateBackground::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CalculateBackground::getCompiledLibraryName()
+const QString CalculateBackground::getCompiledLibraryName() const
 {
   return ZeissImportConstants::ZeissImportBaseName;
 }
@@ -402,7 +402,7 @@ const QString CalculateBackground::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CalculateBackground::getBrandingString()
+const QString CalculateBackground::getBrandingString() const
 {
   return "ZeissImport";
 }
@@ -410,7 +410,7 @@ const QString CalculateBackground::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CalculateBackground::getFilterVersion()
+const QString CalculateBackground::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -421,7 +421,7 @@ const QString CalculateBackground::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CalculateBackground::getGroupName()
+const QString CalculateBackground::getGroupName() const
 {
   return SIMPL::FilterGroups::Unsupported;
 }
@@ -429,7 +429,7 @@ const QString CalculateBackground::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CalculateBackground::getHumanLabel()
+const QString CalculateBackground::getHumanLabel() const
 {
   return "Calculate Background";
 }
@@ -445,7 +445,7 @@ const QUuid CalculateBackground::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CalculateBackground::getSubGroupName()
+const QString CalculateBackground::getSubGroupName() const
 {
   return "Misc";
 }
@@ -453,7 +453,7 @@ const QString CalculateBackground::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer CalculateBackground::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer CalculateBackground::newFilterInstance(bool copyFilterParameters) const
 {
   /*
   * write code to optionally copy the filter parameters from the current filter into the new instance
