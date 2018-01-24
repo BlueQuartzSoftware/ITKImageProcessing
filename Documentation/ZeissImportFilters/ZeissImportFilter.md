@@ -1,4 +1,4 @@
-Zeiss AxioVision Import {#zeissimportfilter}
+Zeiss AxioVision Import 
 =====
 
 ## Group (Subgroup) ##

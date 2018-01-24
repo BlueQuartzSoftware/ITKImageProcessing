@@ -1,4 +1,4 @@
-Calculate Background {#calculatebackground}
+Calculate Background 
 =====
 
 ## Group (Subgroup) ##
