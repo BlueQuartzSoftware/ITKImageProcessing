@@ -12,7 +12,7 @@
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
-#include "ITKImageBase.h"
+#include "ITKImageProcessingBase.h"
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
@@ -25,7 +25,7 @@
 /**
  * @brief The ITKDiscreteGaussianImage class. See [Filter documentation](@ref ITKDiscreteGaussianImage) for details.
  */
-class ITKDiscreteGaussianImage : public ITKImageBase
+class ITKDiscreteGaussianImage : public ITKImageProcessingBase
 {
   Q_OBJECT
 

@@ -10,7 +10,7 @@
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
-#include "ITKImageBase.h"
+#include "ITKImageProcessingBase.h"
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
@@ -24,7 +24,7 @@
 /**
  * @brief The ITKPatchBasedDenoisingImage class. See [Filter documentation](@ref ITKPatchBasedDenoisingImage) for details.
  */
-class ITKPatchBasedDenoisingImage : public ITKImageBase
+class ITKPatchBasedDenoisingImage : public ITKImageProcessingBase
 {
   Q_OBJECT
 

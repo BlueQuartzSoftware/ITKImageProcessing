@@ -524,7 +524,7 @@ def ImplementFilter(filter_description, filter_members, filter_measurements):
     # Code specific for each template
     if filter_description['template_code_filename'] == "KernelImageFilter":
         filt+='  filter->SetKernel(structuringElement);\n'
-    filt+='  this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);\n'
+    filt+='  this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter, getNewCellArrayName().toStdString(), getSaveAsNewArray(), getSelectedCellArrayPath());\n'
     # Post processing (e.g. Print measurements)
     for filter_measurement in filter_measurements:
         filt+='  QString outputVal = "'+filter_measurement['name']+' :%1";\n'

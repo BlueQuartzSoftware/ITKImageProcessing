@@ -12,7 +12,7 @@
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
-#include "ITKImageBase.h"
+#include "ITKImageProcessingBase.h"
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
@@ -25,7 +25,7 @@
 /**
  * @brief The ITKLaplacianRecursiveGaussianImage class. See [Filter documentation](@ref ITKLaplacianRecursiveGaussianImage) for details.
  */
-class ITKLaplacianRecursiveGaussianImage : public ITKImageBase
+class ITKLaplacianRecursiveGaussianImage : public ITKImageProcessingBase
 {
   Q_OBJECT
 

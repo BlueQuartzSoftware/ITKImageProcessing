@@ -12,7 +12,7 @@
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
-#include "ITKImageBase.h"
+#include "ITKImageProcessingBase.h"
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
@@ -24,7 +24,7 @@
 /**
  * @brief The ITKSignedDanielssonDistanceMapImage class. See [Filter documentation](@ref ITKSignedDanielssonDistanceMapImage) for details.
  */
-class ITKSignedDanielssonDistanceMapImage : public ITKImageBase
+class ITKSignedDanielssonDistanceMapImage : public ITKImageProcessingBase
 {
   Q_OBJECT
 

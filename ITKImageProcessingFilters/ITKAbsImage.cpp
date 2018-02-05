@@ -99,7 +99,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   // define filter
   typedef itk::AbsImageFilter<InputImageType, OutputImageType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
-  this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+  this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter, getNewCellArrayName().toStdString(), getSaveAsNewArray(), getSelectedCellArrayPath());
 }
 
 // -----------------------------------------------------------------------------

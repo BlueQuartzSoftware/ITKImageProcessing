@@ -12,7 +12,7 @@
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
-#include "ITKImageBase.h"
+#include "ITKImageProcessingBase.h"
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
@@ -25,7 +25,7 @@
 /**
  * @brief The ITKFFTNormalizedCorrelationImage class. See [Filter documentation](@ref ITKFFTNormalizedCorrelationImage) for details.
  */
-class ITKFFTNormalizedCorrelationImage : public ITKImageBase
+class ITKFFTNormalizedCorrelationImage : public ITKImageProcessingBase
 {
   Q_OBJECT
 

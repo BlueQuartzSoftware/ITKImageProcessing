@@ -12,7 +12,7 @@
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
-#include "ITKImageBase.h"
+#include "ITKImageProcessingBase.h"
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
@@ -23,7 +23,7 @@
 /**
  * @brief The ITKAcosImage class. See [Filter documentation](@ref ITKAcosImage) for details.
  */
-class ITKAcosImage : public ITKImageBase
+class ITKAcosImage : public ITKImageProcessingBase
 {
   Q_OBJECT
 

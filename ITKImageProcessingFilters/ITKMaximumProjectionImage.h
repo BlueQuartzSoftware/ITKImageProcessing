@@ -12,7 +12,7 @@
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
-#include "ITKImageBase.h"
+#include "ITKImageProcessingBase.h"
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
@@ -24,7 +24,7 @@
 /**
  * @brief The ITKMaximumProjectionImage class. See [Filter documentation](@ref ITKMaximumProjectionImage) for details.
  */
-class ITKMaximumProjectionImage : public ITKImageBase
+class ITKMaximumProjectionImage : public ITKImageProcessingBase
 {
   Q_OBJECT
 

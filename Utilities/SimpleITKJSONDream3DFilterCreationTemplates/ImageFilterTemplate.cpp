@@ -27,7 +27,7 @@ $
   FilterName
 }
 ::${FilterName}()
-: ITKImageBase()
+: ITKImageProcessingBase()
 {
   $
   {

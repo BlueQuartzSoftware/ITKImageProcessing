@@ -12,7 +12,7 @@
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
-#include "ITKImageBase.h"
+#include "ITKImageProcessingBase.h"
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
@@ -26,7 +26,7 @@
 /**
  * @brief The ITKClosingByReconstructionImage class. See [Filter documentation](@ref ITKClosingByReconstructionImage) for details.
  */
-class ITKClosingByReconstructionImage : public ITKImageBase
+class ITKClosingByReconstructionImage : public ITKImageProcessingBase
 {
   Q_OBJECT
 
