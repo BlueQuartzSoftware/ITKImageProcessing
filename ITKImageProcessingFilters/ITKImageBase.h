@@ -155,7 +155,38 @@ protected:
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
    */
+
   void virtual dataCheckInternal() = 0;
+
+  /**
+   * @brief imageCheck checks if data array contains an image.
+   */
+  template <typename PixelType, unsigned int Dimension> void imageCheck(const DataArrayPath &array_path)
+  {
+    typedef typename itk::NumericTraits<PixelType>::ValueType ValueType;
+    // Check data array
+    typename DataArray<ValueType>::WeakPointer cellArrayPtr;
+    ValueType* cellArray;
+
+    QVector<size_t> dims = ITKDream3DHelper::GetComponentsDimensions<PixelType>();
+    cellArrayPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<ValueType>, AbstractFilter>(
+        this, array_path, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if(nullptr != cellArrayPtr.lock().get())  /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+    {
+      cellArray = cellArrayPtr.lock()->getPointer(0);
+    } /* Now assign the raw pointer to data from the DataArray<T> object */
+    if(getErrorCondition() < 0)
+    {
+      return;
+    }
+
+    ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(array_path.getDataContainerName())->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
+    if(nullptr == image.get())
+    {
+      setErrorCondition(-1);
+      notifyErrorMessage(getHumanLabel(), "Array path does not contain image geometry.", getErrorCondition());
+    }
+  }
 
   /**
   * @brief Applies the filter

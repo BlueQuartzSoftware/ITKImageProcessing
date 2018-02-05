@@ -433,4 +433,43 @@
     break;                                                                                                                                                                                             \
   }
 
+////////////////////////////////////////////////////////////////////////////////////////
+// Entry Point : Switch case to select output template type based on given data array //
+////////////////////////////////////////////////////////////////////////////////////////
+//
+// Given a data array, extract component type as a string, convert it a an integer
+// corresponding to an ITK ImageIO component type, and call
+// `Dream3DArraySwitchOutputComponentMacro()`
+//
+#define Dream3DArrayOutputComponentFromDataMacro(call, input2_path, input1_path, errorCondition) \
+  {                                                                                                                                                                                                    \
+    IDataArray::Pointer ptr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, input2_path);                                                                     \
+    if(ptr.get() != nullptr)                                                                                                                                                                           \
+    {                                                                                                                                                                                                  \
+      ImageGeom::Pointer imageGeometry = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, input2_path.getDataContainerName());                             \
+      if(imageGeometry.get() != nullptr)                                                                                                                                                               \
+      {                                                                                                                                                                                                \
+        QVector<size_t> tDims(3, 0);                                                                                                                                                                   \
+        imageGeometry->getDimensions(tDims[0], tDims[1], tDims[2]);                                                                                                                                    \
+        if(getErrorCondition() >= 0)                                                                                                                                                                   \
+        {                                                                                                                                                                                              \
+          QString str_type = ptr->getTypeAsString();                                                                                                                                                   \
+          itk::ImageIOBase::IOComponentType type = itk::ImageIOBase::GetComponentTypeFromString(str_type.toStdString()    );                                                                           \
+          Dream3DArraySwitchOutputComponentMacro(call, type, input1_path, errorCondition)                                                                                                              \
+        }                                                                                                                                                                                              \
+      }                                                                                                                                                                                                \
+      else                                                                                                                                                                                             \
+      {                                                                                                                                                                                                \
+        setErrorCondition(errorCondition);                                                                                                                                                             \
+        notifyErrorMessage(getHumanLabel(), "Geometry not found", getErrorCondition());                                                                                                                \
+      }                                                                                                                                                                                                \
+    }                                                                                                                                                                                                  \
+    else                                                                                                                                                                                               \
+    {                                                                                                                                                                                                  \
+      setErrorCondition(errorCondition);                                                                                                                                                               \
+      notifyErrorMessage(getHumanLabel(), "Array not found", getErrorCondition());                                                                                                                     \
+    }                                                                                                                                                                                                  \
+  }
+
+
 #endif // _Dream3DTemplateAliasMacro_h

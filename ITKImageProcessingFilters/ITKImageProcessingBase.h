@@ -87,31 +87,16 @@ protected:
     typedef typename itk::NumericTraits<InputPixelType>::ValueType InputValueType;
     typedef typename itk::NumericTraits<OutputPixelType>::ValueType OutputValueType;
     // Check data array
-    typename DataArray<InputValueType>::WeakPointer selectedCellArrayPtr;
-    InputValueType* selectedCellArray;
+    imageCheck<InputPixelType, Dimension>(getSelectedCellArrayPath());
 
-    DataArrayPath tempPath;
-
-    QVector<size_t> inputDims = ITKDream3DHelper::GetComponentsDimensions<InputPixelType>();
-    selectedCellArrayPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<InputValueType>, AbstractFilter>(
-        this, getSelectedCellArrayPath(), inputDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if(nullptr != selectedCellArrayPtr.lock().get())  /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-    {
-      selectedCellArray = selectedCellArrayPtr.lock()->getPointer(0);
-    } /* Now assign the raw pointer to data from the DataArray<T> object */
     if(getErrorCondition() < 0)
-    {
-      return;
-    }
-
-    ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(getSelectedCellArrayPath().getDataContainerName())->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
-    if(getErrorCondition() < 0 || nullptr == image.get())
     {
       return;
     }
     QVector<size_t> outputDims = ITKDream3DHelper::GetComponentsDimensions<OutputPixelType>();
     if(m_SaveAsNewArray == true)
     {
+      DataArrayPath tempPath;
       tempPath.update(getSelectedCellArrayPath().getDataContainerName(), getSelectedCellArrayPath().getAttributeMatrixName(), getNewCellArrayName());
       m_NewCellArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<OutputValueType>, AbstractFilter, OutputValueType>(
           this, tempPath, 0, outputDims);           /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
