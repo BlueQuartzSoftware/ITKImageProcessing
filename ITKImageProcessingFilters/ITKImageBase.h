@@ -47,7 +47,7 @@ public:
 
   SIMPL_FILTER_PARAMETER(bool, SaveAsNewArray)
   Q_PROPERTY(bool SaveAsNewArray READ getSaveAsNewArray WRITE setSaveAsNewArray)
-
+#ifndef STAND_ALONE
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
@@ -59,24 +59,21 @@ public:
    * @return Branding string
   */
   virtual const QString getBrandingString() const override;
-
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
    * @return
    */
   virtual const QString getFilterVersion() const override;
-
-  /**
-   * @brief newFilterInstance Reimplemented from @see AbstractFilter class
-   */
-  virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) const override = 0;
-
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
   virtual const QString getGroupName() const override;
-
+#endif
+  /**
+   * @brief newFilterInstance Reimplemented from @see AbstractFilter class
+   */
+  virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) const override = 0;
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
