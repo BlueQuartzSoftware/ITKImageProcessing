@@ -1,4 +1,4 @@
-ITK::Binary Opening By Reconstruction Image Filter (KW) {#itkbinaryopeningbyreconstructionimage}
+ITK::Binary Opening By Reconstruction Image Filter (KW) 
 =====================================
 
 ## Group (Subgroup) ##

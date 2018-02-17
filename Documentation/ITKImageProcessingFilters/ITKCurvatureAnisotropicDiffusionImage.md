@@ -1,4 +1,4 @@
-ITK::Curvature Anisotropic Diffusion Image Filter (KW) {#itkcurvatureanisotropicdiffusionimage}
+ITK::Curvature Anisotropic Diffusion Image Filter (KW) 
 =====================================
 
 ## Group (Subgroup) ##

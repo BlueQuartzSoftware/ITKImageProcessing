@@ -1,4 +1,4 @@
-ITK::Atan Image Filter (KW) {#itkatanimage}
+ITK::Atan Image Filter (KW) 
 ============
 
 ## Group (Subgroup) ##

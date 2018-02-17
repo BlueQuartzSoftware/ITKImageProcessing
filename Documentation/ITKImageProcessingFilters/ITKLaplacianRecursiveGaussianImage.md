@@ -1,4 +1,4 @@
-ITK::Laplacian Recursive Gaussian Image Filter (KW) {#itklaplacianrecursivegaussianimage}
+ITK::Laplacian Recursive Gaussian Image Filter (KW) 
 ==================================
 
 ## Group (Subgroup) ##

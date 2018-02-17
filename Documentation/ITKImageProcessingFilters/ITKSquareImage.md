@@ -1,4 +1,4 @@
-ITK::Square Image Filter (KW) {#itksquareimage}
+ITK::Square Image Filter (KW) 
 ==============
 
 ## Group (Subgroup) ##

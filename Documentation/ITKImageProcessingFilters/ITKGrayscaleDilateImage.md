@@ -1,4 +1,4 @@
-ITK::Grayscale Dilate Image Filter (KW) {#itkgrayscaledilateimage}
+ITK::Grayscale Dilate Image Filter (KW) 
 =======================
 
 ## Group (Subgroup) ##

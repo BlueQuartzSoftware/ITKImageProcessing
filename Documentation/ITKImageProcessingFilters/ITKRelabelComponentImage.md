@@ -1,4 +1,4 @@
-ITK::Relabel Component Image Filter (KW) {#itkrelabelcomponentimage}
+ITK::Relabel Component Image Filter (KW) 
 ========================
 
 ## Group (Subgroup) ##

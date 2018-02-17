@@ -1,4 +1,4 @@
-ITK::Mask Image Filter (KW) {#itkmaskimage}
+ITK::Mask Image Filter (KW) 
 ============
 
 ## Group (Subgroup) ##

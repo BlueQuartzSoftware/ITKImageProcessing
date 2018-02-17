@@ -1,4 +1,4 @@
-ITK::Gradient Magnitude Image Filter (KW) {#itkgradientmagnitudeimage}
+ITK::Gradient Magnitude Image Filter (KW) 
 =========================
 
 ## Group (Subgroup) ##

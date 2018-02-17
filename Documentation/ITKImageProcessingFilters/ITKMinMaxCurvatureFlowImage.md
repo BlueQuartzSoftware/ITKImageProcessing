@@ -1,4 +1,4 @@
-ITK::Min Max Curvature Flow Image Filter (KW) {#itkminmaxcurvatureflowimage}
+ITK::Min Max Curvature Flow Image Filter (KW) 
 ===========================
 
 ## Group (Subgroup) ##

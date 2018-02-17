@@ -1,4 +1,4 @@
-ITK::Grayscale Morphological Opening Image Filter (KW) {#itkgrayscalemorphologicalopeningimage}
+ITK::Grayscale Morphological Opening Image Filter (KW) 
 =====================================
 
 ## Group (Subgroup) ##

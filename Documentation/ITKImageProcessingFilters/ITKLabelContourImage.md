@@ -1,4 +1,4 @@
-ITK::Label Contour Image Filter (KW) {#itklabelcontourimage}
+ITK::Label Contour Image Filter (KW) 
 ====================
 
 ## Group (Subgroup) ##

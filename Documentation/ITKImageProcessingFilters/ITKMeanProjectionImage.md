@@ -1,4 +1,4 @@
-ITK::Mean Projection Image Filter (KW) {#itkmeanprojectionimage}
+ITK::Mean Projection Image Filter (KW) 
 ======================
 
 ## Group (Subgroup) ##

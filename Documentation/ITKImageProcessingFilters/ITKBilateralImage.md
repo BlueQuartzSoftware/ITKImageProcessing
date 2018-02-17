@@ -1,4 +1,4 @@
-ITK::Bilateral Image Filter (KW) {#itkbilateralimage}
+ITK::Bilateral Image Filter (KW) 
 =================
 
 ## Group (Subgroup) ##

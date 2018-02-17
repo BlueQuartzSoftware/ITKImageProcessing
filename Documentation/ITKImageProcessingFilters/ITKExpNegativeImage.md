@@ -1,4 +1,4 @@
-ITK::Exp Negative Image Filter (KW) {#itkexpnegativeimage}
+ITK::Exp Negative Image Filter (KW) 
 ===================
 
 ## Group (Subgroup) ##

@@ -1,4 +1,4 @@
-ITK::Import Images (3D Stack) (KW) {#itkimportimagestack}
+ITK::Import Images (3D Stack) (KW) 
 =====
 
 ## Group (Subgroup) ##

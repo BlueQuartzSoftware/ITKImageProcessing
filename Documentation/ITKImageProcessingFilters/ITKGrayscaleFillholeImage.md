@@ -1,4 +1,4 @@
-ITK::Grayscale Fillhole Image Filter (KW) {#itkgrayscalefillholeimage}
+ITK::Grayscale Fillhole Image Filter (KW) 
 =========================
 
 ## Group (Subgroup) ##

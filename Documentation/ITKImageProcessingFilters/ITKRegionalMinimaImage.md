@@ -1,4 +1,4 @@
-ITK::Regional Minima Image Filter (KW) {#itkregionalminimaimage}
+ITK::Regional Minima Image Filter (KW) 
 ======================
 
 ## Group (Subgroup) ##

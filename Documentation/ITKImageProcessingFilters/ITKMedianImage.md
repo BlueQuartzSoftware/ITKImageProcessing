@@ -1,4 +1,4 @@
-ITK::Median Image Filter (KW) {#itkmedianimage}
+ITK::Median Image Filter (KW) 
 ==============
 
 ## Group (Subgroup) ##

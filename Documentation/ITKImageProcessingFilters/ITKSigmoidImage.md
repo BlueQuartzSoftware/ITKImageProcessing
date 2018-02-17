@@ -1,4 +1,4 @@
-ITK::Sigmoid Image Filter (KW) {#itksigmoidimage}
+ITK::Sigmoid Image Filter (KW) 
 ===============
 
 ## Group (Subgroup) ##

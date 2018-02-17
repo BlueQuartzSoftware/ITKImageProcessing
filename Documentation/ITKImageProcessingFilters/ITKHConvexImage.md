@@ -1,4 +1,4 @@
-ITK::H Convex Image Filter (KW) {#itkhconveximage}
+ITK::H Convex Image Filter (KW) 
 ===============
 
 ## Group (Subgroup) ##

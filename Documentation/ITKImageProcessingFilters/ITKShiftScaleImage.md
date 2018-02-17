@@ -1,4 +1,4 @@
-ITK::Shift Scale Image Filter (KW) {#itkshiftscaleimage}
+ITK::Shift Scale Image Filter (KW) 
 ==================
 
 ## Group (Subgroup) ##

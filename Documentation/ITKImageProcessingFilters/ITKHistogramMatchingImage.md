@@ -1,4 +1,4 @@
-ITK::Histogram Matching Image Filter (KW) {#itkhistogrammatchingimage}
+ITK::Histogram Matching Image Filter (KW) 
 =========================
 
 ## Group (Subgroup) ##

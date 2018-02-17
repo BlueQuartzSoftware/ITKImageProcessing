@@ -1,4 +1,4 @@
-ITK::Danielsson Distance Map Image Filter (KW) {#itkdanielssondistancemapimage}
+ITK::Danielsson Distance Map Image Filter (KW) 
 =============================
 
 ## Group (Subgroup) ##

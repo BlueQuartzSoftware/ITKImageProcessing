@@ -1,4 +1,4 @@
-ITK::Bounded Reciprocal Image Filter (KW) {#itkboundedreciprocalimage}
+ITK::Bounded Reciprocal Image Filter (KW) 
 =========================
 
 ## Group (Subgroup) ##

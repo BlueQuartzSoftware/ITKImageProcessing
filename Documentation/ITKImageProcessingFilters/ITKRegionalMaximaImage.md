@@ -1,4 +1,4 @@
-ITK::Regional Maxima Image Filter (KW) {#itkregionalmaximaimage}
+ITK::Regional Maxima Image Filter (KW) 
 ======================
 
 ## Group (Subgroup) ##

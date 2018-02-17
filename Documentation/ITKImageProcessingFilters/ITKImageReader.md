@@ -1,4 +1,4 @@
-ITK::Image Reader (KW) {#itkimagereader}
+ITK::Image Reader (KW) 
 =====
 
 ## Group (Subgroup) ##

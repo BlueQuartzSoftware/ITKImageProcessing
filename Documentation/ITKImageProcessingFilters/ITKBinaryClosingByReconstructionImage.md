@@ -1,4 +1,4 @@
-ITK::Binary Closing By Reconstruction Image Filter (KW) {#itkbinaryclosingbyreconstructionimage}
+ITK::Binary Closing By Reconstruction Image Filter (KW) 
 =====================================
 
 ## Group (Subgroup) ##

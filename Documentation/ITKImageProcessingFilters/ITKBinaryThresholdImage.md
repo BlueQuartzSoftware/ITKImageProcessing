@@ -1,4 +1,4 @@
-ITK::Binary Threshold Image Filter (KW) {#itkbinarythresholdimage}
+ITK::Binary Threshold Image Filter (KW) 
 =======================
 
 ## Group (Subgroup) ##

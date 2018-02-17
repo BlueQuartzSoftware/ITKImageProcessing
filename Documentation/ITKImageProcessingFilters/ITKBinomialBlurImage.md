@@ -1,4 +1,4 @@
-ITK::Binomial Blur Image Filter (KW) {#itkbinomialblurimage}
+ITK::Binomial Blur Image Filter (KW) 
 ====================
 
 ## Group (Subgroup) ##

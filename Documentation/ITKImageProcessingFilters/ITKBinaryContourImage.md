@@ -1,4 +1,4 @@
-ITK::Binary Contour Image Filter (KW) {#itkbinarycontourimage}
+ITK::Binary Contour Image Filter (KW) 
 =====================
 
 ## Group (Subgroup) ##

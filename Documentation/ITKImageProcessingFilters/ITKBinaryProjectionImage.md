@@ -1,4 +1,4 @@
-ITK::Binary Projection Image Filter (KW) {#itkbinaryprojectionimage}
+ITK::Binary Projection Image Filter (KW) 
 ========================
 
 ## Group (Subgroup) ##

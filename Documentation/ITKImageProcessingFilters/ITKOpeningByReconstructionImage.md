@@ -1,4 +1,4 @@
-ITK::Opening By Reconstruction Image Filter (KW) {#itkopeningbyreconstructionimage}
+ITK::Opening By Reconstruction Image Filter (KW) 
 ===============================
 
 ## Group (Subgroup) ##

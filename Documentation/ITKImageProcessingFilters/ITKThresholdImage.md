@@ -1,4 +1,4 @@
-ITK::Threshold Image Filter (KW) {#itkthresholdimage}
+ITK::Threshold Image Filter (KW) 
 =================
 
 ## Group (Subgroup) ##

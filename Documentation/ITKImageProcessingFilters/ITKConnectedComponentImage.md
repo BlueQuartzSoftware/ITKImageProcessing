@@ -1,4 +1,4 @@
-ITK::Connected Component Image Filter (KW) {#itkconnectedcomponentimage}
+ITK::Connected Component Image Filter (KW) 
 ==========================
 
 ## Group (Subgroup) ##

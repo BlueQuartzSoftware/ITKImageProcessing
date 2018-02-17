@@ -1,4 +1,4 @@
-ITK::Abs Image Filter (KW) {#itkabsimage}
+ITK::Abs Image Filter (KW) 
 ===========
 
 ## Group (Subgroup) ##
