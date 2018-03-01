@@ -45,6 +45,7 @@ option(${PLUGIN_NAME}_ENABLE_SCIFIO "Enable SCIFIO ITK Modules" OFF)
 set(DREAM3D_ADDITIONAL_ITK_MODULES
     ITKIOImageBase
     ITKImageNoise
+    SCIFIO
     ITKIOBMP
     ITKIOJPEG
     ITKIONRRD
@@ -263,16 +264,6 @@ target_include_directories(${PLUGIN_NAME}
                             ${${PLUGIN_NAME}_BINARY_DIR}/Widgets
                             ${${PLUGIN_NAME}_BINARY_DIR}/FilterParameterWidgets
 )
-
-if(APPLE)
-  target_include_directories(${PLUGIN_NAME}
-                              PUBLIC
-                                ${SimpleITKExplicit_BINARY_DIR}/Common/include
-                                ${SimpleITKExplicit_SOURCE_DIR}/Explicit/include
-                                ${SIMPLProj_SOURCE_DIR}/Source/SimpleITKExplicit/Explicit/include
-                                ${SIMPLProj_BINARY_DIR}/SimpleITKExplicit/Common/include
-  )
-endif()
 
 # --------------------------------------------------------------------
 # Set some additional properties of the plugin like its output name
