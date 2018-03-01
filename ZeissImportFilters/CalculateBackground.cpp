@@ -173,11 +173,11 @@ void CalculateBackground::dataCheck()
   m_TotalPoints = imagePtr->getNumberOfTuples();
 
   setDataContainerName(getAttributeMatrixName().getDataContainerName());
-  DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getDataContainerName(), false);
+  DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer(this, getDataContainerName(), false);
   if(getErrorCondition() < 0 || nullptr == m) { return; }
 
   QVector<size_t> tDims(1, 0);
-  AttributeMatrix::Pointer backgroundAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getBackgroundAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell);
+  AttributeMatrix::Pointer backgroundAttrMat = m->createNonPrereqAttributeMatrix(this, getBackgroundAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell);
   if(getErrorCondition() < 0) { return; }
 
 
