@@ -5,8 +5,7 @@
 #ifndef _ITKImageProcessingBase_h_
 #define _ITKImageProcessingBase_h_
 
-#include "ITKImageProcessing/ITKImageProcessingFilters/ITKImageBase.h"
-#include "ITKImageProcessing/ITKImageProcessingFilters/ITKImageProcessingFilters.h"
+#include "ITKImageBase.h"
 
 // The sitkExplicitITK.h header must be AFTER any ITK includes above or
 // the code will not compile on Windows. Further, windows does not seem
@@ -25,9 +24,12 @@ class ITKImageProcessingBase : public ITKImageBase
 
 public:
   // SIMPL_SHARED_POINTERS(ITKImageProcessingBase)
-  //  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKImageProcessingBase, AbstractFilter)
+  // SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKImageProcessingBase, AbstractFilter)
 
   virtual ~ITKImageProcessingBase();
+
+  SIMPL_FILTER_PARAMETER(DataArrayPath, SelectedCellArrayPath)
+  Q_PROPERTY(DataArrayPath SelectedCellArrayPath READ getSelectedCellArrayPath WRITE setSelectedCellArrayPath)
 
   SIMPL_FILTER_PARAMETER(QString, NewCellArrayName)
   Q_PROPERTY(QString NewCellArrayName READ getNewCellArrayName WRITE setNewCellArrayName)
@@ -80,11 +82,6 @@ protected:
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
    */
-  void virtual dataCheckInternal() = 0;
-
-  /**
-   * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
-   */
   template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void dataCheck()
   {
     typedef typename itk::NumericTraits<InputPixelType>::ValueType InputValueType;
@@ -133,7 +130,11 @@ protected:
   /**
   * @brief Applies the filter
   */
-  void virtual filterInternal() = 0;
+  template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension, typename FilterType> void filter(FilterType* filter)
+  {
+    std::string outputArrayName = getSelectedCellArrayPath().getDataArrayName().toStdString();
+    ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter, outputArrayName, getSaveAsNewArray(), getSelectedCellArrayPath());
+  }
 
   /**
    * @brief Initializes all the private instance variables.

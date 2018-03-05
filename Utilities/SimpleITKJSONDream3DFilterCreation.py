@@ -21,9 +21,10 @@ supported by this script.
 [3] https://github.com/SimpleITK/SimpleITK/blob/master/Testing/Unit/sitkImageFilterTestTemplate.cxx.in
 [4] https://itk.org/ITK/resources/software.html
 """
-import json
 import argparse
+import json
 import os
+import re
 import sys
 
 general={
@@ -51,7 +52,9 @@ general={
                {'name':['custom_methods']},  # Dream3D does not require to add methods to the filter
                {'name':['doc']},  # Dream3D does not require doc
                {'name':['additional_template_types'],'type':str,'required':False},  # 0 occurences in JSON
-               {'name':['custom_set_intput'],'type':str,'required':False}  # 0 occurences in JSON
+               {'name':['custom_set_intput'],'type':str,'required':False},  # 0 occurences in JSON
+               {'name':['itk_module'], 'type':str,'required':False},
+               {'name':['itk_group'], 'type':str,'required':False}
              ],
          'not_implemented':
              [
@@ -203,7 +206,10 @@ TypeIsInt={
 'int64_t':1,
 'uint32_t':1,
 'int32_t':1,
-'bool':1
+'bool':1,
+'std::vector<float>':0,
+'std::vector<uint64_t>':1,
+'std::vector<double>':0
 }
 
 ITKToDream3DType={
@@ -223,7 +229,10 @@ ITKToDream3DType={
   ('int64_t',1):{'d3d':'FloatVec3_t','std':'std::vector<int64_t>'},
   ('uint32_t',1):{'d3d':'FloatVec3_t','std':'std::vector<uint32_t>'},
   ('int32_t',1):{'d3d':'FloatVec3_t','std':'std::vector<int32_t>'},
-  ('bool',1):{'d3d':'IntVec3_t','std':'std::vector<bool>'}
+  ('bool',1):{'d3d':'IntVec3_t','std':'std::vector<bool>'},
+  ('std::vector<float>',1):{'d3d':'FloatVec3_t','std':'std::vector<float>'},
+  ('std::vector<uint64_t>',1):{'d3d':'FloatVec3_t','std':'std::vector<uint64_t>'},
+  ('std::vector<double>',1):{'d3d':'FloatVec3_t','std':'std::vector<double>'}
 }
 
 VariantToType={
@@ -254,6 +263,7 @@ CastStdToDream3D=['StaticCastScalar','CastStdToVec3']
 # typename FilterType::OrderEnumType
 
 itkVectorTypes={
+'typename FilterType::SigmaArrayType':{'type':'Array','namespace':'FilterType::SigmaArrayType'},
 'typename FilterType::SizeType':{'type':'Size','namespace':'FilterType::SizeType'},
 'typename FilterType::ArrayType':{'type':'Array','namespace':'FilterType::ArrayType'},
 'typename FilterType::PointType':{'type':'Point','namespace':'FilterType::PointType'},
@@ -334,6 +344,8 @@ def FormatIncludes(include_files):
     if type(include_files) == list:  # There are multiple include files
       include_string=""
       clean_list=list(set(include_files))
+      # Alphabetical ordering
+      clean_list.sort()
       for include_file in clean_list:
           include_string +='#include <'+include_file+'>\n'
     else:  # There is only one include file
@@ -363,10 +375,10 @@ def FilterFilesAlreadyExist(filter_name, directory, overwrite):
     exists={}
     automatic={}
     for ext in ['.h','.cpp']:
-        filename=GetDREAM3DFilterFilePathNoExt(filter_name, directory)+ext
-        exists[ext]=CheckFileExists(filename)
-        automatic[ext]=CheckAutomaticallyGenerated(filename)
-    test_Filename=os.path.join(os.path.join(directory,"Test"),filter_name+"Test.cpp")
+        filename = GetDREAM3DFilterFilePathNoExt(filter_name, GetOutputDirectory(directory))+ext
+        exists[ext] = CheckFileExists(filename)
+        automatic[ext] = CheckAutomaticallyGenerated(filename)
+    test_Filename = GetDREAM3DFilterFilePathNoExt(filter_name, os.path.join(directory,"Test"))+"Test.cpp"
     exists['test'] = CheckFileExists(test_Filename)
     automatic['test'] = CheckAutomaticallyGenerated(test_Filename)
     error = False
@@ -374,18 +386,27 @@ def FilterFilesAlreadyExist(filter_name, directory, overwrite):
        or exists['.h'] != exists['test'] or automatic['.h'] != automatic['test']:
         print("Error checking filter files. Check them manually.")
         return False
+    # Set uid to a default value.
+    uuid = "d3856d4c-5651-5eab-8740-489a87fa8bdd"
     if exists['.h']:
-        print("%s already exist."%filter_name)
+        # Get UUID that is used in existing file.
+        uuid_list = [re.findall(r'return QUuid\("{(.*)}"\);', line)
+            for line in open(GetDREAM3DFilterFilePathNoExt(filter_name, GetOutputDirectory(directory))+'.cpp')]
+        uuid = [ x for x in uuid_list if x != [] ][0][0]
+        if not uuid:
+            print('UUID not found in existing cpp source file! There must be a problem. Check manually. Skipping.')
+            return False
+        print("%s already exist. UUID: %s"%(filter_name, uuid))
         if automatic['.h']:
             if overwrite:
                 print('Overwriting file')
             else:
-                print('Select "--overwrite" to overwrite existing filters.')
+                print('Select "--Overwrite" to overwrite existing filters.')
                 return False
         if not automatic['.h']:
             print("Existing filter was not automatically generated. Skipping.")
             return False
-    return True
+    return uuid
 
 def ReplaceVariablesInTemplate(lines,DREAM3DFilter):
     for ii in range(0,len(lines)):
@@ -438,6 +459,8 @@ def FilterFields(fields, descriptions, isList=False):
         return
     # else: description is not list of list
     for ii in range(0,len(descriptions)):  # Description is expected to be a list
+        if 'type' in descriptions[ii] and 'std::vector' in descriptions[ii]['type']:
+            descriptions[ii]['dim_vec'] = 1
         for key,val in descriptions[ii].iteritems():
             field = [x for x in fields['processed'] if key in x['name']][0]  # There should be one and only one element in the list
             if 'Filter' in field:
@@ -463,14 +486,14 @@ def CheckITKTypeSupport(filter_members):
 
 def GetDREAM3DParameters(filter_member):
     dream3D_type = ITKToDream3DType[(filter_member['type'],filter_member['dim_vec'])]['d3d']
-    parameter='    SIMPL_FILTER_PARAMETER('+dream3D_type+', '+filter_member['name']+')\n'
-    parameter+='    Q_PROPERTY('+dream3D_type+' '+filter_member['name']+' READ get'+filter_member['name']+' WRITE set'+filter_member['name']+')\n\n'
+    parameter='  SIMPL_FILTER_PARAMETER('+dream3D_type+', '+filter_member['name']+')\n'
+    parameter+='  Q_PROPERTY('+dream3D_type+' '+filter_member['name']+' READ get'+filter_member['name']+' WRITE set'+filter_member['name']+')\n\n'
     return parameter
 
 def GetDREAM3DMeasurementParameters(filter_measurement):
     dream3D_type = ITKToDream3DType[(filter_measurement['type'],filter_measurement['dim_vec'])]['d3d']
-    parameter='    SIMPL_FILTER_PARAMETER('+dream3D_type+', '+filter_measurement['name']+')\n'
-    parameter+='    Q_PROPERTY('+dream3D_type+' '+filter_measurement['name']+' READ get'+filter_measurement['name']+')\n\n'
+    parameter='  SIMPL_FILTER_PARAMETER('+dream3D_type+', '+filter_measurement['name']+')\n'
+    parameter+='  Q_PROPERTY('+dream3D_type+' '+filter_measurement['name']+' READ get'+filter_measurement['name']+')\n\n'
     return parameter
 
 def GetDREAM3DSetupFilterParametersFromMembers(filter_member, filter_name):
@@ -484,7 +507,7 @@ def GetDREAM3DSetupFilterParametersFromMembers(filter_member, filter_name):
     limits=""
     component_type = Dream3DTypeToMacro[dream3D_type]['component']
     if component_type != filter_member['type']:
-        limits='this->'+CheckEntry[filter_member['dim_vec']]+'<'+filter_member['type']+','+dream3D_type+'>(m_'+filter_member['name']+', "'+filter_member['name']+'",'+str(TypeIsInt[filter_member['type']])+');\n'
+        limits='this->'+CheckEntry[filter_member['dim_vec']]+'<'+filter_member['type']+', '+dream3D_type+'>(m_'+filter_member['name']+', "'+filter_member['name']+'", '+str(TypeIsInt[filter_member['type']])+');\n'
     return [include, setup, limits]
 
 def GetDREAM3DReadFilterParameters(filter_member):
@@ -512,24 +535,30 @@ def ImplementFilter(filter_description, filter_members, filter_measurements):
                 itk_type_namespace = itkVectorTypes[filter_member['itk_type']]['namespace']
                 itk_type_dimension = itk_type_namespace+"::"+ValueAndDimensionTypes[itk_type]['dim']
                 itk_type_component = "typename "+itk_type_namespace+"::"+ValueAndDimensionTypes[itk_type]['vtype']
-                call = 'CastVec3ToITK<'+d3d_type+','+filter_member['itk_type']+','+itk_type_component+'>(m_'+filter_member['name']+','+itk_type_dimension+')'
+                call = 'CastVec3ToITK<'+d3d_type+', '+filter_member['itk_type']+', '+itk_type_component+'>(m_'+filter_member['name']+', '+itk_type_dimension+')'
             else:
                 raise Exception("Vector with no itk_type - %s"%filter_member)
         else:
             raise Exception("dim_vec = % - %s"%(filter_member['dim_vec'],filter_member))
         if 'custom_itk_cast' in filter_member and filter_member['custom_itk_cast'] != '':
+            # In ITK, Get/Set start with an uppercase. In DREAM3D, they start with a lowercase.
+            if 'this->Get' in filter_member['custom_itk_cast']:
+                filter_member['custom_itk_cast'] = filter_member['custom_itk_cast'].replace('this->Get', 'this->get')
             filt+='  '+filter_member['custom_itk_cast']+'\n'
         else:
             filt+= '  filter->Set'+filter_member['name']+'('+call+');\n'
     # Code specific for each template
     if filter_description['template_code_filename'] == "KernelImageFilter":
         filt+='  filter->SetKernel(structuringElement);\n'
-    filt+='  this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter, getNewCellArrayName().toStdString(), getSaveAsNewArray(), getSelectedCellArrayPath());\n'
+    filt+='  this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);\n'
     # Post processing (e.g. Print measurements)
     for filter_measurement in filter_measurements:
+        filt+='{\n'
         filt+='  QString outputVal = "'+filter_measurement['name']+' :%1";\n'
         filt+='  m_'+filter_measurement['name'] + ' = filter->Get'+filter_measurement['name'] + '();\n'
-        filt+='  notifyWarningMessage(getHumanLabel(),outputVal.arg(m_'+filter_measurement['name']+'),0);\n'
+        if filter_measurement['dim_vec'] == 0:
+            filt+='  notifyWarningMessage(getHumanLabel(),outputVal.arg(m_'+filter_measurement['name']+'),0);\n'
+        filt+='}\n'
     return filt
 
 def TypenameOutputPixelType(output_pixel_type):
@@ -543,11 +572,11 @@ def TypenameOutputPixelType(output_pixel_type):
 def ImplementInternal(filter_description, fct):
     if 'output_image_type' in filter_description and filter_description['output_image_type'] != '':
         return '  Dream3DArraySwitchMacroOutputType('+fct+', getSelectedCellArrayPath(), -4,'\
-        +filter_description['output_image_type']+'::PixelType,'\
+        +filter_description['output_image_type']+'::PixelType, '\
         +TypenameOutputPixelType(filter_description['output_image_type'])+');'
     elif 'output_pixel_type' in filter_description and filter_description['output_pixel_type'] != '':
         return '  Dream3DArraySwitchMacroOutputType('+fct+', getSelectedCellArrayPath(), -4,'\
-        +filter_description['output_pixel_type']+','\
+        +filter_description['output_pixel_type']+', '\
         +TypenameOutputPixelType(filter_description['output_pixel_type'])+');'
     else:
         return '  Dream3DArraySwitchMacro('+fct+', getSelectedCellArrayPath(), -4);'
@@ -579,6 +608,8 @@ def ExpandFilterName(filter_name):
 def RemoveBadSymbolsFromFilterDescription(description):
     description = description.replace("``","'")
     description = description.replace("''","'")
+    # Remove end of line whitespaces
+    description = description.replace(' \n', '\n')
     return description
 
 def InitializeParsingValues(DREAM3DFilter, filter_description):
@@ -598,6 +629,7 @@ def InitializeParsingValues(DREAM3DFilter, filter_description):
     DREAM3DFilter['FilterDescription'] = ''
     DREAM3DFilter['FilterParameterDescription'] = ''
     DREAM3DFilter['DataCheckInternal'] = ''
+    DREAM3DFilter['UUID'] = ''
     DREAM3DFilter['FilterInternal'] = ''
     DREAM3DFilter['TestsIncludeName'] = ''
     if 'briefdescription' in filter_description:
@@ -616,14 +648,14 @@ def GetDREAM3DInitializationParameters(filter_member):
     input_type = type_conversion_dict['std']
     output_type = type_conversion_dict['d3d']
     component_type = Dream3DTypeToMacro[output_type]['component']
-    return '  m_'+filter_member['name']+'='+CastStdToDream3D[filter_member['dim_vec']]+'<'+input_type+','+output_type+','+component_type+'>('+str(filter_member['default'])+');\n'
+    return '  m_'+filter_member['name']+' = '+CastStdToDream3D[filter_member['dim_vec']]+'<'+input_type+', '+output_type+', '+component_type+'>('+str(filter_member['default'])+');\n'
 
 def GetOutputDirectory(directory):
     return os.path.join(directory, 'ITKImageProcessingFilters')
 
 def ExtractDescriptionList(fields, description, filter_fields, verbose, not_implemented):
     """ ExtractDescriptionList
-    fields: description of the expected fields (gloabal variable)
+    fields: description of the expected fields (global variable)
     description: list containing input to be read and filtered
     filter_fields: output filtered dictionary
     verbose: boolean to print extra information
@@ -653,8 +685,8 @@ def GetDream3DFilterTests(filter_description, test, test_settings, filter_test_m
     # Filter image
     testFunctionCode += '    QString filtName = "'+GetDREAM3DFilterName(filter_description['name'])+'";\n'
     testFunctionCode += '    FilterManager* fm = FilterManager::Instance();\n'
-    testFunctionCode += '    IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);\n'
-    testFunctionCode += '    DREAM3D_REQUIRE_NE(filterFactory.get(),0);\n'
+    testFunctionCode += '    IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filtName);\n'
+    testFunctionCode += '    DREAM3D_REQUIRE_NE(filterFactory.get(), 0);\n'
     testFunctionCode += '    AbstractFilter::Pointer filter = filterFactory->create();\n'
     testFunctionCode += '    QVariant var;\n'
     testFunctionCode += '    bool propWasSet;\n'
@@ -685,8 +717,8 @@ def GetDream3DFilterTests(filter_description, test, test_settings, filter_test_m
         testFunctionCode += '    }\n'
     testFunctionCode += '    filter->setDataContainerArray(containerArray);\n'
     testFunctionCode += '    filter->execute();\n'
-    testFunctionCode += '    DREAM3D_REQUIRED(filter->getErrorCondition(), >= , 0);\n'
-    testFunctionCode += '    DREAM3D_REQUIRED(filter->getWarningCondition(), >= , 0);\n'
+    testFunctionCode += '    DREAM3D_REQUIRED(filter->getErrorCondition(), >=, 0);\n'
+    testFunctionCode += '    DREAM3D_REQUIRED(filter->getWarningCondition(), >=, 0);\n'
     # Save filtered image for debugging purposes
     testFunctionCode += '    WriteImage("'+GetDREAM3DFilterName(filter_description['name'])+test['tag']+'.nrrd", containerArray, input_path);\n'
     if 'md5hash' in test and test['md5hash'] != '' and test['md5hash'] != None:
@@ -702,11 +734,11 @@ def GetDream3DFilterTests(filter_description, test, test_settings, filter_test_m
         testFunctionCode += '    DataArrayPath baseline_path("BContainer", "BAttributeMatrixName", "BAttributeArrayName");\n'
         testFunctionCode += '    this->ReadImage(baseline_filename, containerArray, baseline_path);\n'
         testFunctionCode += '    int res = this->CompareImages(containerArray, input_path, baseline_path, '+str(test['tolerance'])+');\n'
-        testFunctionCode += '    DREAM3D_REQUIRE_EQUAL(res,0);\n'
+        testFunctionCode += '    DREAM3D_REQUIRE_EQUAL(res, 0);\n'
     for measurement in filter_test_measurements_results:
         if measurement != {}:
             testFunctionCode += '    var = filter->property("'+measurement['parameter']+'");\n'
-            testFunctionCode += '    DREAM3D_REQUIRE_EQUAL(var.'+VariantToType[measurement['type']]+','+measurement['value']+');\n'
+            testFunctionCode += '    DREAM3D_REQUIRE_EQUAL(var.'+VariantToType[measurement['type']]+', '+measurement['value']+');\n'
     testFunctionCode += '    return 0;\n'
     testFunctionCode += '}\n\n'
     return testFunctionCode
@@ -765,7 +797,6 @@ def FindModuleInIncludeFile(name, path):
                     if module_name[:3] == 'ITK':
                         return module_name[3:]
     return "NoModule"
-            
 
 def main(argv=None):
     # Parse arguments
@@ -803,165 +834,182 @@ def main(argv=None):
                 if os.path.isfile(os.path.join(options.json_directory, f)) and os.path.splitext(f)[1] == '.json']
     filter_list=[]
     for current_json in all_json:
-        print("Current JSON file: %s"%current_json)
-        with open(current_json) as file_json:
-            data_json = json.load(file_json)
-        filter_description={}
-        if not ExtractDescritpion(data_json, general, filter_description, options.extra_verbose, options.not_implemented):
-            continue
-        # Does filter already exist and has it been generated automatically
-        if not FilterFilesAlreadyExist(filter_description['name'], options.root_directory, options.overwrite):
-            continue
-        # Read JSON sub fields
-        filter_inputs=[]
-        if not ExtractDescriptionList(inputs, filter_description['inputs'],\
-                                      filter_inputs, options.extra_verbose, options.not_implemented):
-            continue
-        # if 'inputs' specified, update 'number_of_input' with that value
-        # if 'inputs' is specified, 'number_of_inputs' is typically initialized with '0'
-        if len(filter_inputs):
-            filter_description['number_of_inputs'] = len(filter_inputs)
-        filter_members=[]
-        if not ExtractDescriptionList(members, filter_description['members'],\
-                                      filter_members, options.extra_verbose, options.not_implemented):
-            continue
-        # Add default members that are not included in the JSON description file
-        filter_members += DefaultMembers[filter_description['template_code_filename']]
-        # Extract measurements information
-        filter_measurements=[]
-        # Using "members" as a data structure example as 'measurements' and 'members' shoud contain the same data type
-        if not ExtractDescriptionList(members, filter_description['measurements'],\
-                                      filter_measurements, options.extra_verbose, options.not_implemented):
-            continue
-        # Read tests description
-        filter_tests=[]
-        if not ExtractDescriptionList(tests, filter_description['tests'],\
-                                      filter_tests, options.extra_verbose, options.not_implemented):
-            continue
-        # Read tests settings
-        # tests and settings are in the same order:
-        # filter_tests[0]->filter_tests_settings[0]
-        # A dictionary could have been used to contain filter_tests_settings
-        # but most functions in this script used on the data containers expect
-        # to work on lists.
-        filter_test_settings=[]
-        filter_test_measurements_results=[]
-        for ii in range(len(filter_tests)):
-            # Get test settings
-            test_settings_description=[]
-            current_settings = filter_tests[ii]['settings']
-            if current_settings == []:
-                test_settings_description = [{}]
-            elif not ExtractDescriptionList(tests_settings, current_settings, test_settings_description,
-                                          options.extra_verbose, options.not_implemented):
-                filter_tests[ii]['error']=True
-            # Get test measurements
-            test_measurements_description=[]
-            current_measurements = filter_tests[ii]['measurements_results']
-            if current_measurements == []:
-                test_measurements_description = [{}]
-            elif not ExtractDescriptionList(tests_settings, current_measurements, test_measurements_description,
-                                          options.extra_verbose, options.not_implemented):
-                filter_tests[ii]['error']=True
-            # Only append list of test settings if no error found in settings
-            # The tests with errors in settings will be removed in the next step
-            if 'error' not in filter_tests[ii]:
-                filter_test_settings.append(test_settings_description)
-                filter_test_measurements_results.append(test_measurements_description)
-        # Remove tests that had errors in their settings
-        filter_tests[:] = [x for x in filter_tests if 'error' not in x]
-        # Since bad settings are not save, there should be the same number
-        # of tests and test settings
-        if len(filter_tests) != len(filter_test_settings):
-            print("Different number of tests and settings.")
-            print("filter_tests:%s"%(str(filter_tests)))
-            print("filter_test_settings:%s"%(str(filter_test_settings)))
-            print("skipping this filter")
-            continue
-        # Since bad measurements are not save, there should be the same number
-        # of tests and test measurements
-        if len(filter_tests) != len(filter_test_measurements_results):
-            print("Different number of tests and measurements.")
-            print("skipping this filter")
-            continue
-        # Verifies limitations
-        if not options.disable_verifications:
-            if not VerifyLimitations(general, [filter_description], options.verbose) or\
-               not VerifyLimitations(inputs, filter_inputs, options.verbose) or\
-               not VerifyLimitations(members, filter_members, options.verbose) or\
-               not VerifyLimitations(members, filter_measurements, options.verbose) or\
-               not VerifyLimitations(tests, filter_tests, options.verbose) or\
-               not VerifyLimitations(tests_settings, filter_test_settings, options.verbose, True):
-                print "VerifyLimitations Failed"
+        try:
+            print("Current JSON file: %s"%current_json)
+            with open(current_json) as file_json:
+                data_json = json.load(file_json)
+            filter_description={}
+            if not ExtractDescritpion(data_json, general, filter_description, options.extra_verbose, options.not_implemented):
                 continue
-        # Filter lists in fields
-        FilterFields(general, [filter_description])
-        FilterFields(inputs, filter_inputs)
-        FilterFields(members, filter_members)
-        FilterFields(members, filter_measurements)
-        FilterFields(tests, filter_tests)
-        FilterFields(tests_settings, filter_test_settings, True)
-        FilterFields(tests_settings, filter_test_measurements_results, True)
-        # Check filter members type
-        if not CheckTypeSupport(filter_members):
-            print "CheckTypeSupport Failed"
+            # Does filter already exist and has it been generated automatically
+            uuid = FilterFilesAlreadyExist(filter_description['name'], options.root_directory, options.overwrite)
+            if not uuid:
+                continue
+            # Read JSON sub fields
+            filter_inputs=[]
+            if not ExtractDescriptionList(inputs, filter_description['inputs'],\
+                                          filter_inputs, options.extra_verbose, options.not_implemented):
+                continue
+            # if 'inputs' specified, update 'number_of_input' with that value
+            # if 'inputs' is specified, 'number_of_inputs' is typically initialized with '0'
+            if len(filter_inputs):
+                filter_description['number_of_inputs'] = len(filter_inputs)
+            filter_members=[]
+            print filter_members
+            if not ExtractDescriptionList(members, filter_description['members'],\
+                                          filter_members, options.extra_verbose, options.not_implemented):
+                continue
+            # Add default members that are not included in the JSON description file
+            filter_members += DefaultMembers[filter_description['template_code_filename']]
+            # Extract measurements information
+            filter_measurements=[]
+            # Using "members" as a data structure example as 'measurements' and 'members' shoud contain the same data type
+            if not ExtractDescriptionList(members, filter_description['measurements'],\
+                                          filter_measurements, options.extra_verbose, options.not_implemented):
+                continue
+            # Read tests description
+            filter_tests=[]
+            if not ExtractDescriptionList(tests, filter_description['tests'],\
+                                          filter_tests, options.extra_verbose, options.not_implemented):
+                continue
+            # Read tests settings
+            # tests and settings are in the same order:
+            # filter_tests[0]->filter_tests_settings[0]
+            # A dictionary could have been used to contain filter_tests_settings
+            # but most functions in this script used on the data containers expect
+            # to work on lists.
+            filter_test_settings=[]
+            filter_test_measurements_results=[]
+            for ii in range(len(filter_tests)):
+                # Get test settings
+                test_settings_description=[]
+                current_settings = filter_tests[ii]['settings']
+                if current_settings == []:
+                    test_settings_description = [{}]
+                elif not ExtractDescriptionList(tests_settings, current_settings, test_settings_description,
+                                              options.extra_verbose, options.not_implemented):
+                    filter_tests[ii]['error']=True
+                # Get test measurements
+                test_measurements_description=[]
+                current_measurements = filter_tests[ii]['measurements_results']
+                if current_measurements == []:
+                    test_measurements_description = [{}]
+                elif not ExtractDescriptionList(tests_settings, current_measurements, test_measurements_description,
+                                              options.extra_verbose, options.not_implemented):
+                    filter_tests[ii]['error']=True
+                # Only append list of test settings if no error found in settings
+                # The tests with errors in settings will be removed in the next step
+                if 'error' not in filter_tests[ii]:
+                    filter_test_settings.append(test_settings_description)
+                    filter_test_measurements_results.append(test_measurements_description)
+            # Remove tests that had errors in their settings
+            filter_tests[:] = [x for x in filter_tests if 'error' not in x]
+            # Since bad settings are not save, there should be the same number
+            # of tests and test settings
+            if len(filter_tests) != len(filter_test_settings):
+                print("Different number of tests and settings.")
+                print("filter_tests:%s"%(str(filter_tests)))
+                print("filter_test_settings:%s"%(str(filter_test_settings)))
+                print("skipping this filter")
+                continue
+            # Since bad measurements are not save, there should be the same number
+            # of tests and test measurements
+            if len(filter_tests) != len(filter_test_measurements_results):
+                print("Different number of tests and measurements.")
+                print("skipping this filter")
+                continue
+            # Verifies limitations
+            if not options.disable_verifications:
+                if not VerifyLimitations(general, [filter_description], options.verbose) or\
+                   not VerifyLimitations(inputs, filter_inputs, options.verbose) or\
+                   not VerifyLimitations(members, filter_members, options.verbose) or\
+                   not VerifyLimitations(members, filter_measurements, options.verbose) or\
+                   not VerifyLimitations(tests, filter_tests, options.verbose) or\
+                   not VerifyLimitations(tests_settings, filter_test_settings, options.verbose, True):
+                    print "VerifyLimitations Failed"
+                    continue
+            # Filter lists in fields
+            FilterFields(general, [filter_description])
+            FilterFields(inputs, filter_inputs)
+            FilterFields(members, filter_members)
+            FilterFields(members, filter_measurements)
+            FilterFields(tests, filter_tests)
+            FilterFields(tests_settings, filter_test_settings, True)
+            FilterFields(tests_settings, filter_test_measurements_results, True)
+            # Check filter members type
+            if not CheckTypeSupport(filter_members):
+                print "CheckTypeSupport Failed"
+                continue
+            if not CheckITKTypeSupport(filter_members):
+                print "CheckITKTypeSupport Failed"
+                continue
+            # Create Filter content
+            # Initialization of replacement strings
+            DREAM3DFilter={}
+            InitializeParsingValues(DREAM3DFilter, filter_description)
+            itk_include_file=GetDREAM3DITKInclude(filter_description['name'])
+            # Find Module name in ITK_DIR
+            DREAM3DFilter['ITKModule'] = FindModuleInIncludeFile(itk_include_file, options.itk_dir)
+            #####
+            include_list=[itk_include_file]+filter_description['include_files']
+            member_include_list=[]
+            for filter_member in filter_members:
+                # Append Parameters
+                DREAM3DFilter['Parameters'] += GetDREAM3DParameters(filter_member)
+                # SetupFilterParameters
+                [include, setup, limits] = GetDREAM3DSetupFilterParametersFromMembers(filter_member, DREAM3DFilter['FilterName'])
+                DREAM3DFilter['SetupFilterParameters'] += '  '*bool(len(setup))+setup
+                DREAM3DFilter['CheckIntegerEntry'] += '  '*bool(len(limits))+limits
+                member_include_list.append(include)
+                # ReadFilterParameters
+                DREAM3DFilter['ReadFilterParameters'] += GetDREAM3DReadFilterParameters(filter_member)
+                # initialization
+                DREAM3DFilter['InitializationParameters'] += GetDREAM3DInitializationParameters(filter_member)
+                # Description
+                DREAM3DFilter['FilterParameterDescription'] += GetDREAM3DParameterDescription(filter_member) +'\n'
+            #set UUID
+            DREAM3DFilter['UUID'] = '  return QUuid("{' + uuid + '}");'
+            #filter
+            DREAM3DFilter['Filter']=ImplementFilter(filter_description, filter_members, filter_measurements)
+            DREAM3DFilter['FilterInternal']=ImplementInternal(filter_description, 'this->filter')
+            DREAM3DFilter['DataCheckInternal']=ImplementInternal(filter_description, 'this->dataCheck')
+            # Implement measurements get functions in header/${Parameters}
+            for filter_measurement in filter_measurements:
+                # Append Parameters
+                DREAM3DFilter['Parameters'] += GetDREAM3DMeasurementParameters(filter_measurement)
+                # SetupFilterParameters
+                [include, _, _] = GetDREAM3DSetupFilterParametersFromMembers(filter_measurement, DREAM3DFilter['FilterName'])
+                member_include_list.append(include)
+                # Description
+                DREAM3DFilter['FilterParameterDescription'] += GetDREAM3DParameterDescription(filter_measurement) +'\n'
+            #includes
+            DREAM3DFilter['IncludeName']=FormatIncludes(include_list+member_include_list)
+            DREAM3DFilter['TestsIncludeName']=FormatIncludes(member_include_list)
+            # Implement tests
+            for ii in range(len(filter_tests)):
+                if not VerifyFilterParameterTypes(filter_members,filter_test_settings[ii]):
+                  print("Could not find all parameters types for tests_settings. This script will likely crash.")
+                if not VerifyFilterParameterTypes(filter_measurements,filter_test_measurements_results[ii]):
+                  print("Could not find all parameters types for tests_measurements. This script will likely crash.")
+                DREAM3DFilter['FilterTests'] += GetDream3DFilterTests(filter_description, filter_tests[ii], filter_test_settings[ii],filter_test_measurements_results[ii])
+                DREAM3DFilter['RegisterTests'] += GetDream3DRegisterTests(filter_description, filter_tests[ii], filter_test_settings[ii])
+            # Replace variables in template files
+            ConfigureFiles('.h', template_directory, filters_output_directory, DREAM3DFilter, filter_description['template_code_filename'])
+            ConfigureFiles('.cpp', template_directory, filters_output_directory, DREAM3DFilter, filter_description['template_code_filename'])
+            testDirectory = os.path.join(options.root_directory, 'Test')
+            # In SimpleITK, test rely on 'template_test_filename'. In this, we rely on 'template_code_filename'. This allows to include
+            # definitions, enums,... that are included in SimpleITK and that would not be included here otherwise
+            ConfigureFiles('Test.cpp', template_directory, testDirectory, DREAM3DFilter,  filter_description['template_code_filename'])
+            ConfigureFiles('.md', template_directory, documentation_directory, DREAM3DFilter, "")  #
+            # Append list of filters created
+            filter_list.append(DREAM3DFilter['FilterName'])
+        except KeyError as e:
+            print('KeyError exception processing %s'%current_json)
+            print e
             continue
-        if not CheckITKTypeSupport(filter_members):
-            print "CheckITKTypeSupport Failed"
+        except:
+            print('Exception processing %s'%current_json)
             continue
-        # Create Filter content
-        # Initialization of replacement strings
-        DREAM3DFilter={}
-        InitializeParsingValues(DREAM3DFilter, filter_description)
-        itk_include_file=GetDREAM3DITKInclude(filter_description['name'])
-        # Find Module name in ITK_DIR
-        DREAM3DFilter['ITKModule'] = FindModuleInIncludeFile(itk_include_file, options.itk_dir)
-        #####
-        include_list=[itk_include_file]+filter_description['include_files']
-        member_include_list=[]
-        for filter_member in filter_members:
-            # Append Parameters
-            DREAM3DFilter['Parameters'] += GetDREAM3DParameters(filter_member)
-            # SetupFilterParameters
-            [include, setup, limits] = GetDREAM3DSetupFilterParametersFromMembers(filter_member, DREAM3DFilter['FilterName'])
-            DREAM3DFilter['SetupFilterParameters'] += '  '*bool(len(setup))+setup
-            DREAM3DFilter['CheckIntegerEntry'] += '  '*bool(len(limits))+limits
-            member_include_list.append(include)
-            # ReadFilterParameters
-            DREAM3DFilter['ReadFilterParameters'] += GetDREAM3DReadFilterParameters(filter_member)
-            # initialization
-            DREAM3DFilter['InitializationParameters'] += GetDREAM3DInitializationParameters(filter_member)
-            # Description
-            DREAM3DFilter['FilterParameterDescription'] += GetDREAM3DParameterDescription(filter_member) +'\n'
-        #filter
-        DREAM3DFilter['Filter']=ImplementFilter(filter_description, filter_members, filter_measurements)
-        DREAM3DFilter['FilterInternal']=ImplementInternal(filter_description, 'this->filter')
-        DREAM3DFilter['DataCheckInternal']=ImplementInternal(filter_description, 'this->dataCheck')
-        #includes
-        DREAM3DFilter['IncludeName']=FormatIncludes(include_list+member_include_list)
-        DREAM3DFilter['TestsIncludeName']=FormatIncludes(member_include_list)
-        # Implement tests
-        for ii in range(len(filter_tests)):
-            if not VerifyFilterParameterTypes(filter_members,filter_test_settings[ii]):
-              print("Could not find all parameters types for tests_settings. This script will likely crash.")
-            if not VerifyFilterParameterTypes(filter_measurements,filter_test_measurements_results[ii]):
-              print("Could not find all parameters types for tests_measurements. This script will likely crash.")
-            DREAM3DFilter['FilterTests'] += GetDream3DFilterTests(filter_description, filter_tests[ii], filter_test_settings[ii],filter_test_measurements_results[ii])
-            DREAM3DFilter['RegisterTests'] += GetDream3DRegisterTests(filter_description, filter_tests[ii], filter_test_settings[ii])
-        # Implement measurements get functions in header/${Parameters}
-        for filter_measurement in filter_measurements:
-            # Append Parameters
-            DREAM3DFilter['Parameters'] += GetDREAM3DMeasurementParameters(filter_measurement)
-        # Replace variables in template files
-        ConfigureFiles('.h', template_directory, filters_output_directory, DREAM3DFilter, filter_description['template_code_filename'])
-        ConfigureFiles('.cpp', template_directory, filters_output_directory, DREAM3DFilter, filter_description['template_code_filename'])
-        testDirectory = os.path.join(options.root_directory, 'Test')
-        # In SimpleITK, test rely on 'template_test_filename'. In this, we rely on 'template_code_filename'. This allows to include
-        # definitions, enums,... that are included in SimpleITK and that would not be included here otherwise
-        ConfigureFiles('Test.cpp', template_directory, testDirectory, DREAM3DFilter,  filter_description['template_code_filename'])
-        ConfigureFiles('.md', template_directory, documentation_directory, DREAM3DFilter, "")  #
-        # Append list of filters created
-        filter_list.append(DREAM3DFilter['FilterName'])
     # Print manual step: Add created filters to CMakeLists
     print("Add these filters to  ITKImageProcessingFilters/SourceList.cmake and Test/CMakeLists.txt:")
     for filt in filter_list:

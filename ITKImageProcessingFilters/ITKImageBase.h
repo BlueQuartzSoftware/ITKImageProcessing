@@ -35,12 +35,9 @@ class ITKImageBase : public AbstractFilter
 
 public:
   // SIMPL_SHARED_POINTERS(ITKImageBase)
-  //  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKImageBase, AbstractFilter)
+  // SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKImageBase, AbstractFilter)
 
   virtual ~ITKImageBase() = default;
-
-  SIMPL_FILTER_PARAMETER(DataArrayPath, SelectedCellArrayPath)
-  Q_PROPERTY(DataArrayPath SelectedCellArrayPath READ getSelectedCellArrayPath WRITE setSelectedCellArrayPath)
 
   /**
    * @brief execute Reimplemented from @see AbstractFilter class
@@ -150,7 +147,6 @@ signals:
 
 protected:
   ITKImageBase() : AbstractFilter()
-  , m_SelectedCellArrayPath("", "", "")
   {
     initialize();
   }
@@ -160,38 +156,6 @@ protected:
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
    */
   void virtual dataCheckInternal() = 0;
-
-  /**
-   * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
-   */
-  template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void dataCheck()
-  {
-    typedef typename itk::NumericTraits<InputPixelType>::ValueType InputValueType;
-    typedef typename itk::NumericTraits<OutputPixelType>::ValueType OutputValueType;
-    // Check data array
-    typename DataArray<InputValueType>::WeakPointer selectedCellArrayPtr;
-    InputValueType* selectedCellArray;
-
-    DataArrayPath tempPath;
-
-    QVector<size_t> inputDims = ITKDream3DHelper::GetComponentsDimensions<InputPixelType>();
-    selectedCellArrayPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<InputValueType>, AbstractFilter>(
-        this, getSelectedCellArrayPath(), inputDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if(nullptr != selectedCellArrayPtr.lock().get())  /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-    {
-      selectedCellArray = selectedCellArrayPtr.lock()->getPointer(0);
-    } /* Now assign the raw pointer to data from the DataArray<T> object */
-    if(getErrorCondition() < 0)
-    {
-      return;
-    }
-
-    ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(getSelectedCellArrayPath().getDataContainerName())->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
-    if(getErrorCondition() < 0 || nullptr == image.get())
-    {
-      return;
-    }
-  }
 
   /**
   * @brief Applies the filter
@@ -253,20 +217,19 @@ protected:
   /**
   * @brief Applies the filter, casting the input to float
   */
-  template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension, typename FilterType, typename FloatImageType> void filterCastToFloat(FilterType* filter)
+  template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension, typename FilterType, typename FloatImageType> void filterCastToFloat(FilterType* filter, std::string outputArrayName, bool saveAsNewArray, DataArrayPath selectedArray)
   {
     try
     {
-      DataArrayPath dap = getSelectedCellArrayPath();
-      DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(dap.getDataContainerName());
+      DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(selectedArray.getDataContainerName());
 
       typedef itk::InPlaceDream3DDataToImageFilter<InputPixelType, Dimension> toITKType;
       // Create a Bridge to wrap an existing DREAM.3D array with an ItkImage container
       typename toITKType::Pointer toITK = toITKType::New();
       toITK->SetInput(dc);
       toITK->SetInPlace(true);
-      toITK->SetAttributeMatrixArrayName(getSelectedCellArrayPath().getAttributeMatrixName().toStdString());
-      toITK->SetDataArrayName(getSelectedCellArrayPath().getDataArrayName().toStdString());
+      toITK->SetAttributeMatrixArrayName(selectedArray.getAttributeMatrixName().toStdString());
+      toITK->SetDataArrayName(selectedArray.getDataArrayName().toStdString());
 
       itk::Dream3DFilterInterruption::Pointer interruption = itk::Dream3DFilterInterruption::New();
       interruption->SetFilter(this);
@@ -289,21 +252,20 @@ protected:
       typename OutputImageType::Pointer image = OutputImageType::New();
       image = casterFrom->GetOutput();
       image->DisconnectPipeline();
-      std::string outputArrayName(getNewCellArrayName().toStdString());
 
-      if(getSaveAsNewArray() == false)
+      if(saveAsNewArray == false)
       {
-        outputArrayName = getSelectedCellArrayPath().getDataArrayName().toStdString();
-        AttributeMatrix::Pointer attrMat = dc->getAttributeMatrix(getSelectedCellArrayPath().getAttributeMatrixName());
+        outputArrayName = selectedArray.getDataArrayName().toStdString();
+        AttributeMatrix::Pointer attrMat = dc->getAttributeMatrix(selectedArray.getAttributeMatrixName());
         // Remove the original input data array
-        attrMat->removeAttributeArray(getSelectedCellArrayPath().getDataArrayName());
+        attrMat->removeAttributeArray(selectedArray.getDataArrayName());
       }
 
       typedef itk::InPlaceImageToDream3DDataFilter<OutputPixelType, Dimension> toDream3DType;
       typename toDream3DType::Pointer toDream3DFilter = toDream3DType::New();
       toDream3DFilter->SetInput(image);
       toDream3DFilter->SetInPlace(true);
-      toDream3DFilter->SetAttributeMatrixArrayName(getSelectedCellArrayPath().getAttributeMatrixName().toStdString());
+      toDream3DFilter->SetAttributeMatrixArrayName(selectedArray.getAttributeMatrixName().toStdString());
       toDream3DFilter->SetDataArrayName(outputArrayName);
       toDream3DFilter->SetDataContainer(dc);
       toDream3DFilter->Update();

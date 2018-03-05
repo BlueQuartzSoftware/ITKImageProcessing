@@ -4,12 +4,8 @@
  * Your License or Copyright can go here
  */
 
-#ifndef _${FilterName } _h_
-#define _$                                                                                                                                                                                             \
-  {                                                                                                                                                                                                    \
-    FilterName                                                                                                                                                                                         \
-  }                                                                                                                                                                                                    \
-  _h_
+#ifndef _${FilterName}_h_
+#define _${FilterName}_h_
 
 #ifdef __clang__
 #pragma clang diagnostic push
@@ -22,18 +18,12 @@
 #include "SIMPLib/SIMPLib.h"
 
 // Auto includes
-$
-{
-  IncludeName
-}
+${IncludeName}
 
 /**
  * @brief The ${FilterName} class. See [Filter documentation](@ref ${FilterName}) for details.
  */
-class $
-{
-  FilterName
-} : public ITKImageProcessingBase
+class ${FilterName} : public ITKImageProcessingBase
 {
   Q_OBJECT
 
@@ -44,11 +34,7 @@ public:
 
   virtual ~${FilterName}();
 
-  $
-  {
-    Parameters
-  }
-
+${Parameters}
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
    */
@@ -78,7 +64,7 @@ public:
   /**
    * @brief readFilterParameters Reimplemented from @see AbstractFilter class
    */
-  virtual void readFilterParameters(AbstractFilterParametersReader * reader, int index) override;
+  virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
 
 protected:
   ${FilterName}();
@@ -104,8 +90,8 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ${FilterName}(const ${FilterName}&);  // Copy Constructor Not Implemented
-  void operator=(const ${FilterName}&); // Operator '=' Not Implemented
+  ${FilterName}(const ${FilterName}&) = delete;    // Copy Constructor Not Implemented
+  void operator=(const ${FilterName}&) = delete; // Operator '=' Not Implemented
 };
 
 #ifdef __clang__

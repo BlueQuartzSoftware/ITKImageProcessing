@@ -4,7 +4,8 @@
  * Your License or Copyright can go here
  */
 
-#include "${FilterName}.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/${FilterName}.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/SimpleITKEnums.h"
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -22,46 +23,26 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-$
-{
-  FilterName
-}
-::${FilterName}()
+${FilterName}::${FilterName}()
 : ITKImageProcessingBase()
 {
-  $
-  {
-    InitializationParameters
-  }
+${InitializationParameters}
   setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-$
-{
-  FilterName
-}
-::~${FilterName}()
-{
-}
+${FilterName}::~${FilterName}() = default;
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void $
-{
-  FilterName
-}
-::setupFilterParameters()
+void ${FilterName}::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  $
-  {
-    SetupFilterParameters
-  }
+${SetupFilterParameters}
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -81,109 +62,63 @@ void $
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void $
-{
-  FilterName
-}
-::readFilterParameters(AbstractFilterParametersReader* reader, int index)
+void ${FilterName}::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
   setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
   setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
   setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
-  $
-  {
-    ReadFilterParameters
-  }
+${ReadFilterParameters}
   reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void $
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ${FilterName}::dataCheck()
 {
-  FilterName
-}
-::dataCheck()
-{
-  // Check consistency of parameters
-  $
-  {
-    CheckIntegerEntry
-  }
   setErrorCondition(0);
   setWarningCondition(0);
-  ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
+
+  // Check consistency of parameters
+${CheckIntegerEntry}
+  ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void $
+void ${FilterName}::dataCheckInternal()
 {
-  FilterName
-}
-::dataCheckInternal()
-{
-  $
-  {
-    DataCheckInternal
-  }
+${DataCheckInternal}
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void $
-{
-  FilterName
-}
-::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ${FilterName}::filter()
 {
   typedef itk::Dream3DImage<InputPixelType, Dimension> InputImageType;
   typedef itk::Dream3DImage<OutputPixelType, Dimension> OutputImageType;
   // define filter
-  $
-  {
-    Filter
-  }
+${Filter}
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void $
+void ${FilterName}::filterInternal()
 {
-  FilterName
-}
-::filterInternal()
-{
-  $
-  {
-    FilterInternal
-  }
+${FilterInternal}
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer $
+AbstractFilter::Pointer ${FilterName}::newFilterInstance(bool copyFilterParameters) const
 {
-  FilterName
-}
-::newFilterInstance(bool copyFilterParameters)
-{
-  $
-  {
-    FilterName
-  }
-  ::Pointer filter = $
-  {
-    FilterName
-  }
-  ::New();
+  ${FilterName}::Pointer filter = ${FilterName}::New();
   if(true == copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
@@ -194,11 +129,7 @@ AbstractFilter::Pointer $
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString $
-{
-  FilterName
-}
-::getHumanLabel()
+const QString ${FilterName}::getHumanLabel() const
 {
   return "ITK::${FilterNameExpanded}";
 }
@@ -206,19 +137,15 @@ const QString $
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString $
+const QUuid ${FilterName}::getUuid()
 {
-  FilterName
-}
-const QUuid ImageFilterTemplate::getUuid()
-{
-  return QUuid("{c2435bc0-b80b-54e2-936b-4bd10ac8f103}");
+${UUID}
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-::getSubGroupName()
+const QString ${FilterName}::getSubGroupName() const
 {
   return "ITK ${ITKModule}";
 }

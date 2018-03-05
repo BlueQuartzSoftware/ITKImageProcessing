@@ -15,6 +15,12 @@ enum KernelEnum
   sitkCross = 3
 };
 
+enum SeedEnum {
+  /// A sentinel value used for "seed" parameters to indicate it
+  /// should be initialized by the wall clock for pseudo-random behavior.
+  sitkWallClock = 0
+};
+
 } // end namespace simple
 } // end namespace itk
 
