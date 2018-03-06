@@ -227,7 +227,7 @@ void SeparateDataSets::execute()
 
     // Create the new attribute matrix for this data set
     DataArrayPath newDataSetAMPath = DataArrayPath(newDCPtr->getName(), origDataSetAM->getName(), "");
-    AttributeMatrix::Pointer newDataSetAM = newDCPtr->createNonPrereqAttributeMatrix<AbstractFilter>(this, newDataSetAMPath, origDataSetAM->getTupleDimensions(), origDataSetAM->getType());
+    AttributeMatrix::Pointer newDataSetAM = newDCPtr->createNonPrereqAttributeMatrix(this, newDataSetAMPath, origDataSetAM->getTupleDimensions(), origDataSetAM->getType());
 
     // Move the data set to the new attribute matrix
     IDataArray::Pointer newDataSetPtr = origDataSetAM->removeAttributeArray(origDataSetPtr->getName());
