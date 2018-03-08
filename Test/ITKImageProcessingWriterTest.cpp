@@ -97,15 +97,15 @@ public:
     QVector<float> origin(3, 0);
     QVector<float> spacing(3, 1);
     QVector<size_t> dimensions(3, 1);
-    for(size_t i = 0; i < Dimension; i++)
+    for(int32_t i = 0; i < Dimension; i++)
     {
-      origin[i] = 1.23 + float(i);
-      spacing[i] = .45 + float(i) * .2;
+      origin[i] = 1.23f + static_cast<float>(i);
+      spacing[i] = 0.45f + static_cast<float>(i) * 0.2f;
       dimensions[i] = 90 + i * 3;
     }
-    imageGeometry->setResolution(spacing[0], spacing[1], spacing[2]);
-    imageGeometry->setOrigin(origin[0], origin[1], origin[2]);
-    imageGeometry->setDimensions(dimensions[0], dimensions[1], dimensions[2]);
+    imageGeometry->setResolution(spacing.data());
+    imageGeometry->setOrigin(origin.data());
+    imageGeometry->setDimensions(dimensions.data());
     container->setGeometry(imageGeometry);
     QVector<size_t> arrayDimensions(1, 0);
     arrayDimensions[0] = 1;
@@ -132,16 +132,16 @@ public:
   {
     float inputResolution[3];
     float baselineResolution[3];
-    inputImageGeometry->getResolution(inputResolution[0], inputResolution[1], inputResolution[2]);
-    baselineImageGeometry->getResolution(baselineResolution[0], baselineResolution[1], baselineResolution[2]);
+    inputImageGeometry->getResolution(inputResolution);
+    baselineImageGeometry->getResolution(baselineResolution);
     float inputOrigin[3];
     float baselineOrigin[3];
-    inputImageGeometry->getOrigin(inputOrigin[0], inputOrigin[1], inputOrigin[2]);
-    baselineImageGeometry->getOrigin(baselineOrigin[0], baselineOrigin[1], baselineOrigin[2]);
+    inputImageGeometry->getOrigin(inputOrigin);
+    baselineImageGeometry->getOrigin(baselineOrigin);
     size_t inputDimensions[3];
     size_t baselineDimensions[3];
-    inputImageGeometry->getDimensions(inputDimensions[0], inputDimensions[1], inputDimensions[2]);
-    baselineImageGeometry->getDimensions(baselineDimensions[0], baselineDimensions[1], baselineDimensions[2]);
+    inputImageGeometry->getDimensions(inputDimensions);
+    baselineImageGeometry->getDimensions(baselineDimensions);
     for(int i = 0; i < 3; i++)
     {
       // float tol = 1e-6;

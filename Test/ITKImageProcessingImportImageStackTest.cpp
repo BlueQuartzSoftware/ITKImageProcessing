@@ -275,9 +275,9 @@ public:
 
     float tol = 1e-6;
     float resolution[Dimension];
-    imageGeometry->getResolution(resolution[0], resolution[1], resolution[2]);
+    imageGeometry->getResolution(resolution);
     float origin[Dimension];
-    imageGeometry->getOrigin(origin[0], origin[1], origin[2]);
+    imageGeometry->getOrigin(origin);
 
     DREAM3D_COMPARE_FLOATS(&origin[0], &inputOrigin.x, tol);
     DREAM3D_COMPARE_FLOATS(&origin[1], &inputOrigin.y, tol);
@@ -292,7 +292,7 @@ public:
     expectedDimensions[0] = 256;
     expectedDimensions[1] = 256;
     expectedDimensions[2] = 3;
-    imageGeometry->getDimensions(dimensions[0], dimensions[1], dimensions[2]);
+    imageGeometry->getDimensions(dimensions);
     for(size_t i = 0; i < Dimension; ++i)
     {
       DREAM3D_REQUIRE_EQUAL(dimensions[i], expectedDimensions[i]);

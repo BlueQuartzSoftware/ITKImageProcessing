@@ -301,11 +301,11 @@ public:
 
     float tol = 1e-6;
     float resolution[3];
-    imageGeometry->getResolution(resolution[0], resolution[1], resolution[2]);
+    imageGeometry->getResolution(resolution);
     float origin[3];
-    imageGeometry->getOrigin(origin[0], origin[1], origin[2]);
+    imageGeometry->getOrigin(origin);
     size_t dimensions[3];
-    imageGeometry->getDimensions(dimensions[0], dimensions[1], dimensions[2]);
+    imageGeometry->getDimensions(dimensions);
     for(int i = 0; i < Dimension; i++)
     {
       float imageSpacing = expectedImage->GetSpacing()[i];
