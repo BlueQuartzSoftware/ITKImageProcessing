@@ -215,7 +215,7 @@ void SeparateDataSets::execute()
     ImageGeom::Pointer originalGeom = origDCPtr->getGeometryAs<ImageGeom>();
     ImageGeom::Pointer newGeom = ImageGeom::New();
     size_t dims[3] = {0, 0, 0};
-    originalGeom->getDimensions(dims);
+    std::tie(dims[0], dims[1], dims[2]) = originalGeom->getDimensions();
     newGeom->setDimensions(dims);
     float res[3] = {0.0f, 0.0f, 0.0f};
     originalGeom->getResolution(res);
