@@ -304,9 +304,9 @@ public:
     imageGeometry->getResolution(resolution);
     float origin[3];
     imageGeometry->getOrigin(origin);
-    size_t dimensions[3];
-    imageGeometry->getDimensions(dimensions);
-    for(int i = 0; i < Dimension; i++)
+    size_t dimensions[3] = {0, 0, 0};
+    std::tie(dimensions[0], dimensions[1], dimensions[2]) = imageGeometry->getDimensions();
+    for(size_t i = 0; i < Dimension; i++)
     {
       float imageSpacing = expectedImage->GetSpacing()[i];
       DREAM3D_COMPARE_FLOATS(&resolution[i], &imageSpacing, tol);

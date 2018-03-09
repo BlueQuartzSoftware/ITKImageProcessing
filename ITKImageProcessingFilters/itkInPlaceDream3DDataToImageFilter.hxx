@@ -86,7 +86,7 @@ InPlaceDream3DDataToImageFilter< PixelType, VDimension >
   QVector<size_t> tDims(3, 1);
   imageGeom->getOrigin(torigin[0], torigin[1], torigin[2]);
   imageGeom->getResolution(tspacing[0], tspacing[1], tspacing[2]);
-  imageGeom->getDimensions(tDims[0], tDims[1], tDims[2]);
+  std::tie(tDims[0], tDims[1], tDims[2]) = imageGeom->getDimensions();
   typename ImageType::PointType origin;
   typename ImageType::SizeType size;
   typename ImageType::SpacingType spacing;

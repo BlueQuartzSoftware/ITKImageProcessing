@@ -292,7 +292,7 @@ public:
     expectedDimensions[0] = 256;
     expectedDimensions[1] = 256;
     expectedDimensions[2] = 3;
-    imageGeometry->getDimensions(dimensions);
+    std::tie(dimensions[0], dimensions[1], dimensions[2]) = imageGeometry->getDimensions();
     for(size_t i = 0; i < Dimension; ++i)
     {
       DREAM3D_REQUIRE_EQUAL(dimensions[i], expectedDimensions[i]);
