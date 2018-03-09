@@ -214,7 +214,7 @@ public:
     ImageGeom::Pointer imageGeometry = ImageGeom::New();
     imageGeometry = container->getGeometryAs<ImageGeom>();
     DREAM3D_REQUIRE_VALID_POINTER(imageGeometry.get());
-    imageGeometry->getDimensions(tDims[0], tDims[1], tDims[2]);
+    std::tie(tDims[0], tDims[1], tDims[2]) = imageGeometry->getDimensions();
     type = ptr->getTypeAsString();
     cDims = ptr->getComponentDimensions();
     return 0;

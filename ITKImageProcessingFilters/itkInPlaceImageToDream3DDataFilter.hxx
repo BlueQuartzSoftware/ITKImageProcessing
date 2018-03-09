@@ -124,7 +124,7 @@ InPlaceImageToDream3DDataFilter<PixelType, VDimension>
   IGeometry::Pointer geom = dataContainer->getGeometry();
   ImageGeom::Pointer imageGeom = std::dynamic_pointer_cast<ImageGeom>(geom);
   QVector<size_t> tDims(3, 1);
-  imageGeom->getDimensions(tDims[0], tDims[1], tDims[2]);
+  std::tie(tDims[0], tDims[1], tDims[2]) = imageGeom->getDimensions();
   AttributeMatrix::Pointer attrMat;
   if( dataContainer->doesAttributeMatrixExist(m_AttributeMatrixArrayName.c_str()))
   {
