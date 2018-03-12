@@ -6,9 +6,10 @@
 
 #include "SIMPLib/Geometry/ImageGeom.h"
 
+#ifndef STAND_ALONE
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
-
+#endif
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -90,6 +91,7 @@ void ITKImageBase::execute()
   this->filterInternal();
 }
 
+#ifndef STAND_ALONE
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -124,3 +126,4 @@ const QString ITKImageBase::getGroupName() const
 {
   return "Image Processing";
 }
+#endif

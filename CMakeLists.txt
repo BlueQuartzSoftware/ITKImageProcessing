@@ -275,6 +275,22 @@ target_link_libraries(${PLUGIN_NAME}
                     )
 
 # --------------------------------------------------------------------
+# Create a library that can be used in other plugins to use ITK/DREAM3D filters
+add_library(ITKImageBase STATIC ITKImageProcessingFilters/ITKImageBase.cpp)
+target_link_libraries(ITKImageBase
+                     SVWidgetsLib
+                     ${ITK_LIBRARIES}
+                     )
+
+target_include_directories(ITKImageBase
+                          PUBLIC
+                          ${PLUGINS_BINARY_DIR}
+                          ${${PLUGIN_NAME}_SOURCE_DIR}
+                          ${PLUGINS_SOURCE_DIR}
+                          )
+
+target_compile_definitions(ITKImageBase PUBLIC STAND_ALONE=1)
+# --------------------------------------------------------------------
 # Put back the output directory
 if(NOT MSVC)
   set(CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${CMAKE_LIBRARY_OUTPUT_DIRECTORY_SAVE}  )
