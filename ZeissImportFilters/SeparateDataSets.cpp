@@ -223,6 +223,7 @@ void SeparateDataSets::execute()
     float origin[3] = {0.0f, 0.0f, 0.0f};
     originalGeom->getOrigin(origin);
     newGeom->setOrigin(stagePositionX, stagePositionY, origin[2]);
+    newGeom->setName(originalGeom->getName());
     newDCPtr->setGeometry(newGeom);
 
     // Create the new attribute matrix for this data set
@@ -249,6 +250,7 @@ void SeparateDataSets::execute()
       newMetaDataPtr->copyTuple(i, 0);
       newMetaDataPtr->resize(1);
     }
+    newMetaDataAM->setTupleDimensions(QVector<size_t>(1, 1));
 
     newDCPtr->addAttributeMatrix(newMetaDataAM->getName(), newMetaDataAM);
     newDCPtr->addAttributeMatrix(newDataSetAM->getName(), newDataSetAM);
