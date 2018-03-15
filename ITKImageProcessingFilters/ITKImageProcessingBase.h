@@ -137,6 +137,15 @@ protected:
   }
 
   /**
+  * @brief Applies the filter, casting the input to float
+  */
+  template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension, typename FilterType, typename FloatImageType> void filterCastToFloat(FilterType* filter)
+  {
+    std::string outputArrayName = getSelectedCellArrayPath().getDataArrayName().toStdString();
+    ITKImageBase::filterCastToFloat<InputPixelType, OutputPixelType, Dimension, FilterType, FloatImageType>(filter, outputArrayName, getSaveAsNewArray(), getSelectedCellArrayPath());
+  }
+
+  /**
    * @brief Initializes all the private instance variables.
    */
   void initialize();

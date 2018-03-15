@@ -9,7 +9,7 @@ ITKImageProcessing (ITKImageProcessing)
 
 Finds the threshold value of an image based on maximizing the number of objects in the image that are larger than a given minimal size.
 
-\par 
+\par
 This method is based on Topological Stable State Thresholding to calculate the threshold set point. This method is particularly effective when there are a large number of objects in a microscopy image. Compiling in Debug mode and enable the debug flag for this filter to print debug information to see how the filter focuses in on a threshold value. Please see the Insight Journal's MICCAI 2005 workshop for a complete description. References are below.
 
 \par Parameters
@@ -23,7 +23,7 @@ There are multiple methods to automatically calculate the threshold intensity va
 counting in immunoflourescent images". Insight Journal. ISC/NA-MIC/MICCAI Workshop on Open-Source Software (2005) Dspace handle: https://hdl.handle.net/1926/48 2) Pikaz A, Averbuch, A. "Digital image thresholding based on topological
 stable-state". Pattern Recognition, 29(5): 829-843, 1996.
 
-\par 
+\par
 Questions: email Ken Urish at ken.urish(at)gmail.com Please cc the itk list serve for archival purposes.
 
 ## Parameters ##

@@ -21,6 +21,7 @@
 #include <SIMPLib/FilterParameters/BooleanFilterParameter.h>
 #include <itkGradientMagnitudeImageFilter.h>
 
+
 /**
  * @brief The ITKGradientMagnitudeImage class. See [Filter documentation](@ref ITKGradientMagnitudeImage) for details.
  */
@@ -37,6 +38,7 @@ public:
 
   SIMPL_FILTER_PARAMETER(bool, UseImageSpacing)
   Q_PROPERTY(bool UseImageSpacing READ getUseImageSpacing WRITE setUseImageSpacing)
+
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -93,8 +95,8 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKGradientMagnitudeImage(const ITKGradientMagnitudeImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKGradientMagnitudeImage&);            // Operator '=' Not Implemented
+  ITKGradientMagnitudeImage(const ITKGradientMagnitudeImage&) = delete;    // Copy Constructor Not Implemented
+  void operator=(const ITKGradientMagnitudeImage&) = delete; // Operator '=' Not Implemented
 };
 
 #ifdef __clang__

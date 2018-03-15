@@ -4,7 +4,8 @@
  * Your License or Copyright can go here
  */
 
-#include "ITKBinaryMinMaxCurvatureFlowImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/ITKBinaryMinMaxCurvatureFlowImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/SimpleITKEnums.h"
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -18,11 +19,12 @@
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 ITKBinaryMinMaxCurvatureFlowImage::ITKBinaryMinMaxCurvatureFlowImage()
-: ITKImageBase()
+: ITKImageProcessingBase()
 {
   m_TimeStep = StaticCastScalar<double, double, double>(0.05);
   m_NumberOfIterations = StaticCastScalar<double, double, double>(5u);
@@ -48,6 +50,7 @@ void ITKBinaryMinMaxCurvatureFlowImage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("NumberOfIterations", NumberOfIterations, FilterParameter::Parameter, ITKBinaryMinMaxCurvatureFlowImage));
   parameters.push_back(SIMPL_NEW_INTEGER_FP("StencilRadius", StencilRadius, FilterParameter::Parameter, ITKBinaryMinMaxCurvatureFlowImage));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Threshold", Threshold, FilterParameter::Parameter, ITKBinaryMinMaxCurvatureFlowImage));
+
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -86,12 +89,13 @@ void ITKBinaryMinMaxCurvatureFlowImage::readFilterParameters(AbstractFilterParam
 // -----------------------------------------------------------------------------
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKBinaryMinMaxCurvatureFlowImage::dataCheck()
 {
+  setErrorCondition(0);
+  setWarningCondition(0);
+
   // Check consistency of parameters
   this->CheckIntegerEntry<uint32_t, double>(m_NumberOfIterations, "NumberOfIterations", 1);
 
-  setErrorCondition(0);
-  setWarningCondition(0);
-  ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
+  ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
@@ -117,7 +121,8 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   filter->SetNumberOfIterations(static_cast<uint32_t>(m_NumberOfIterations));
   filter->SetStencilRadius(static_cast<int>(m_StencilRadius));
   filter->SetThreshold(static_cast<double>(m_Threshold));
-  this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+  this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+
 }
 
 // -----------------------------------------------------------------------------
@@ -162,5 +167,5 @@ const QUuid ITKBinaryMinMaxCurvatureFlowImage::getUuid()
 // -----------------------------------------------------------------------------
 const QString ITKBinaryMinMaxCurvatureFlowImage::getSubGroupName() const
 {
-  return "ITK SegmentationPostProcessing";
+  return "ITK CurvatureFlow";
 }

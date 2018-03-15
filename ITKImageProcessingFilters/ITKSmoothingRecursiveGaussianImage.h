@@ -19,8 +19,9 @@
 
 // Auto includes
 #include <SIMPLib/FilterParameters/BooleanFilterParameter.h>
-#include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
+#include <SIMPLib/FilterParameters/FloatVec3FilterParameter.h>
 #include <itkSmoothingRecursiveGaussianImageFilter.h>
+
 
 /**
  * @brief The ITKSmoothingRecursiveGaussianImage class. See [Filter documentation](@ref ITKSmoothingRecursiveGaussianImage) for details.
@@ -36,11 +37,12 @@ public:
 
   virtual ~ITKSmoothingRecursiveGaussianImage();
 
-  SIMPL_FILTER_PARAMETER(double, Sigma)
-  Q_PROPERTY(double Sigma READ getSigma WRITE setSigma)
+  SIMPL_FILTER_PARAMETER(FloatVec3_t, Sigma)
+  Q_PROPERTY(FloatVec3_t Sigma READ getSigma WRITE setSigma)
 
   SIMPL_FILTER_PARAMETER(bool, NormalizeAcrossScale)
   Q_PROPERTY(bool NormalizeAcrossScale READ getNormalizeAcrossScale WRITE setNormalizeAcrossScale)
+
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -97,8 +99,8 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKSmoothingRecursiveGaussianImage(const ITKSmoothingRecursiveGaussianImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKSmoothingRecursiveGaussianImage&);                     // Operator '=' Not Implemented
+  ITKSmoothingRecursiveGaussianImage(const ITKSmoothingRecursiveGaussianImage&) = delete;    // Copy Constructor Not Implemented
+  void operator=(const ITKSmoothingRecursiveGaussianImage&) = delete; // Operator '=' Not Implemented
 };
 
 #ifdef __clang__

@@ -21,6 +21,7 @@
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 #include <itkHMaximaImageFilter.h>
 
+
 /**
  * @brief The ITKHMaximaImage class. See [Filter documentation](@ref ITKHMaximaImage) for details.
  */
@@ -37,6 +38,7 @@ public:
 
   SIMPL_FILTER_PARAMETER(double, Height)
   Q_PROPERTY(double Height READ getHeight WRITE setHeight)
+
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -93,8 +95,8 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKHMaximaImage(const ITKHMaximaImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKHMaximaImage&);  // Operator '=' Not Implemented
+  ITKHMaximaImage(const ITKHMaximaImage&) = delete;    // Copy Constructor Not Implemented
+  void operator=(const ITKHMaximaImage&) = delete; // Operator '=' Not Implemented
 };
 
 #ifdef __clang__

@@ -21,6 +21,7 @@
 #include <SIMPLib/FilterParameters/IntFilterParameter.h>
 #include <itkZeroCrossingImageFilter.h>
 
+
 /**
  * @brief The ITKZeroCrossingImage class. See [Filter documentation](@ref ITKZeroCrossingImage) for details.
  */
@@ -40,6 +41,7 @@ public:
 
   SIMPL_FILTER_PARAMETER(int, BackgroundValue)
   Q_PROPERTY(int BackgroundValue READ getBackgroundValue WRITE setBackgroundValue)
+
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -96,8 +98,8 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKZeroCrossingImage(const ITKZeroCrossingImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKZeroCrossingImage&);       // Operator '=' Not Implemented
+  ITKZeroCrossingImage(const ITKZeroCrossingImage&) = delete;    // Copy Constructor Not Implemented
+  void operator=(const ITKZeroCrossingImage&) = delete; // Operator '=' Not Implemented
 };
 
 #ifdef __clang__

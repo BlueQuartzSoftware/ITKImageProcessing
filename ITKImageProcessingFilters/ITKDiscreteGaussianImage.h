@@ -20,7 +20,9 @@
 // Auto includes
 #include <SIMPLib/FilterParameters/BooleanFilterParameter.h>
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
+#include <SIMPLib/FilterParameters/FloatVec3FilterParameter.h>
 #include <itkDiscreteGaussianImageFilter.h>
+
 
 /**
  * @brief The ITKDiscreteGaussianImage class. See [Filter documentation](@ref ITKDiscreteGaussianImage) for details.
@@ -36,17 +38,18 @@ public:
 
   virtual ~ITKDiscreteGaussianImage();
 
-  SIMPL_FILTER_PARAMETER(double, Variance)
-  Q_PROPERTY(double Variance READ getVariance WRITE setVariance)
+  SIMPL_FILTER_PARAMETER(FloatVec3_t, Variance)
+  Q_PROPERTY(FloatVec3_t Variance READ getVariance WRITE setVariance)
 
   SIMPL_FILTER_PARAMETER(double, MaximumKernelWidth)
   Q_PROPERTY(double MaximumKernelWidth READ getMaximumKernelWidth WRITE setMaximumKernelWidth)
 
-  SIMPL_FILTER_PARAMETER(double, MaximumError)
-  Q_PROPERTY(double MaximumError READ getMaximumError WRITE setMaximumError)
+  SIMPL_FILTER_PARAMETER(FloatVec3_t, MaximumError)
+  Q_PROPERTY(FloatVec3_t MaximumError READ getMaximumError WRITE setMaximumError)
 
   SIMPL_FILTER_PARAMETER(bool, UseImageSpacing)
   Q_PROPERTY(bool UseImageSpacing READ getUseImageSpacing WRITE setUseImageSpacing)
+
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -103,8 +106,8 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKDiscreteGaussianImage(const ITKDiscreteGaussianImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKDiscreteGaussianImage&);           // Operator '=' Not Implemented
+  ITKDiscreteGaussianImage(const ITKDiscreteGaussianImage&) = delete;    // Copy Constructor Not Implemented
+  void operator=(const ITKDiscreteGaussianImage&) = delete; // Operator '=' Not Implemented
 };
 
 #ifdef __clang__

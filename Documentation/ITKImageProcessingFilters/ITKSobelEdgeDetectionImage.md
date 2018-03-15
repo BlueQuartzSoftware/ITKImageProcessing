@@ -11,18 +11,19 @@ A 2D or 3D edge detection using the Sobel operator.
 
 This filter uses the Sobel operator to calculate the image gradient and then finds the magnitude of this gradient vector. The Sobel gradient magnitude (square-root sum of squares) is an indication of edge strength.
 
-\see ImageToImageFilter 
-\see 
-\see SobelOperator 
-\see 
-\see Neighborhood 
-\see 
-\see NeighborhoodOperator 
-\see 
-\see NeighborhoodIterator 
+\see ImageToImageFilter
+
+\see SobelOperator
+
+\see Neighborhood
+
+\see NeighborhoodOperator
+
+\see NeighborhoodIterator
+
 \par Wiki Examples:
 
-\li All Examples 
+\li All Examples
 
 \li SobelEdgeDetectionImageFilter
 

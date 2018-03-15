@@ -20,8 +20,10 @@
 // Auto includes
 #include <SIMPLib/FilterParameters/BooleanFilterParameter.h>
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
+#include <SIMPLib/FilterParameters/FloatVec3FilterParameter.h>
 #include <SIMPLib/FilterParameters/IntFilterParameter.h>
 #include <itkOtsuMultipleThresholdsImageFilter.h>
+
 
 /**
  * @brief The ITKOtsuMultipleThresholdsImage class. See [Filter documentation](@ref ITKOtsuMultipleThresholdsImage) for details.
@@ -48,6 +50,10 @@ public:
 
   SIMPL_FILTER_PARAMETER(bool, ValleyEmphasis)
   Q_PROPERTY(bool ValleyEmphasis READ getValleyEmphasis WRITE setValleyEmphasis)
+
+  SIMPL_FILTER_PARAMETER(FloatVec3_t, Thresholds)
+  Q_PROPERTY(FloatVec3_t Thresholds READ getThresholds)
+
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -104,8 +110,8 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKOtsuMultipleThresholdsImage(const ITKOtsuMultipleThresholdsImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKOtsuMultipleThresholdsImage&);                 // Operator '=' Not Implemented
+  ITKOtsuMultipleThresholdsImage(const ITKOtsuMultipleThresholdsImage&) = delete;    // Copy Constructor Not Implemented
+  void operator=(const ITKOtsuMultipleThresholdsImage&) = delete; // Operator '=' Not Implemented
 };
 
 #ifdef __clang__

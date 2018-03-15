@@ -24,6 +24,7 @@
 #include <SIMPLib/FilterParameters/IntFilterParameter.h>
 #include <itkBinaryErodeImageFilter.h>
 
+
 /**
  * @brief The ITKBinaryErodeImage class. See [Filter documentation](@ref ITKBinaryErodeImage) for details.
  */
@@ -34,7 +35,7 @@ class ITKBinaryErodeImage : public ITKImageProcessingBase
 public:
   SIMPL_SHARED_POINTERS(ITKBinaryErodeImage)
   SIMPL_STATIC_NEW_MACRO(ITKBinaryErodeImage)
-   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKBinaryErodeImage, AbstractFilter)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKBinaryErodeImage, AbstractFilter)
 
   virtual ~ITKBinaryErodeImage();
 
@@ -52,6 +53,7 @@ public:
 
   SIMPL_FILTER_PARAMETER(int, KernelType)
   Q_PROPERTY(int KernelType READ getKernelType WRITE setKernelType)
+
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -108,8 +110,8 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKBinaryErodeImage(const ITKBinaryErodeImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKBinaryErodeImage&);      // Operator '=' Not Implemented
+  ITKBinaryErodeImage(const ITKBinaryErodeImage&) = delete;    // Copy Constructor Not Implemented
+  void operator=(const ITKBinaryErodeImage&) = delete; // Operator '=' Not Implemented
 };
 
 #ifdef __clang__

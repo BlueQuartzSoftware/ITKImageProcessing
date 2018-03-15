@@ -15,16 +15,17 @@ If the input image is constant, the entire image can be considered as a maxima o
 
 \author Gaetan Lehmann
 
-This class was contributed to the Insight Journal by author Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA de Jouy-en-Josas, France. The paper can be found at https://hdl.handle.net/1926/153 
+This class was contributed to the Insight Journal by author Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA de Jouy-en-Josas, France. The paper can be found at https://hdl.handle.net/1926/153
 
-\see ValuedRegionalMaximaImageFilter 
-\see 
-\see HConvexImageFilter 
-\see 
-\see RegionalMinimaImageFilter 
+\see ValuedRegionalMaximaImageFilter
+
+\see HConvexImageFilter
+
+\see RegionalMinimaImageFilter
+
 \par Wiki Examples:
 
-\li All Examples 
+\li All Examples
 
 \li RegionalMaximaImageFilter
 

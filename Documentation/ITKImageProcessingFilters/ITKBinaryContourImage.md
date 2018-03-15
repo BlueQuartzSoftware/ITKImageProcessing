@@ -13,16 +13,17 @@ BinaryContourImageFilter takes a binary image as input, where the pixels in the 
 
 The connectivity can be changed to minimum or maximum connectivity with SetFullyConnected() . Full connectivity produces thicker contours.
 
-https://hdl.handle.net/1926/1352 
+https://hdl.handle.net/1926/1352
 
 \author Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA de Jouy-en-Josas, France.
 
-\see LabelContourImageFilter BinaryErodeImageFilter SimpleContourExtractorImageFilter 
+\see LabelContourImageFilter BinaryErodeImageFilter SimpleContourExtractorImageFilter
+
 \par Wiki Examples:
 
-\li All Examples 
+\li All Examples
 
-\li Extract the boundaries of connected regions in a binary image 
+\li Extract the boundaries of connected regions in a binary image
 
 \li Extract the inner and outer boundaries of blobs in a binary image
 

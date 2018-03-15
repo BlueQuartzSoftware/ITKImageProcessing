@@ -21,6 +21,7 @@
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 #include <itkInvertIntensityImageFilter.h>
 
+
 /**
  * @brief The ITKInvertIntensityImage class. See [Filter documentation](@ref ITKInvertIntensityImage) for details.
  */
@@ -37,6 +38,7 @@ public:
 
   SIMPL_FILTER_PARAMETER(double, Maximum)
   Q_PROPERTY(double Maximum READ getMaximum WRITE setMaximum)
+
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -93,8 +95,8 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKInvertIntensityImage(const ITKInvertIntensityImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKInvertIntensityImage&);          // Operator '=' Not Implemented
+  ITKInvertIntensityImage(const ITKInvertIntensityImage&) = delete;    // Copy Constructor Not Implemented
+  void operator=(const ITKInvertIntensityImage&) = delete; // Operator '=' Not Implemented
 };
 
 #ifdef __clang__

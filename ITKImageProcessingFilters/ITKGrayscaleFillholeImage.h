@@ -21,6 +21,7 @@
 #include <SIMPLib/FilterParameters/BooleanFilterParameter.h>
 #include <itkGrayscaleFillholeImageFilter.h>
 
+
 /**
  * @brief The ITKGrayscaleFillholeImage class. See [Filter documentation](@ref ITKGrayscaleFillholeImage) for details.
  */
@@ -37,6 +38,7 @@ public:
 
   SIMPL_FILTER_PARAMETER(bool, FullyConnected)
   Q_PROPERTY(bool FullyConnected READ getFullyConnected WRITE setFullyConnected)
+
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -93,8 +95,8 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKGrayscaleFillholeImage(const ITKGrayscaleFillholeImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKGrayscaleFillholeImage&);            // Operator '=' Not Implemented
+  ITKGrayscaleFillholeImage(const ITKGrayscaleFillholeImage&) = delete;    // Copy Constructor Not Implemented
+  void operator=(const ITKGrayscaleFillholeImage&) = delete; // Operator '=' Not Implemented
 };
 
 #ifdef __clang__

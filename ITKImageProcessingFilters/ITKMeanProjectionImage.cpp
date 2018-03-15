@@ -4,7 +4,8 @@
  * Your License or Copyright can go here
  */
 
-#include "ITKMeanProjectionImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/ITKMeanProjectionImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/SimpleITKEnums.h"
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -18,11 +19,12 @@
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 ITKMeanProjectionImage::ITKMeanProjectionImage()
-: ITKImageBase()
+: ITKImageProcessingBase()
 {
   m_ProjectionDimension = StaticCastScalar<double, double, double>(0u);
 
@@ -42,6 +44,7 @@ void ITKMeanProjectionImage::setupFilterParameters()
   FilterParameterVector parameters;
 
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("ProjectionDimension", ProjectionDimension, FilterParameter::Parameter, ITKMeanProjectionImage));
+
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -77,12 +80,13 @@ void ITKMeanProjectionImage::readFilterParameters(AbstractFilterParametersReader
 // -----------------------------------------------------------------------------
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKMeanProjectionImage::dataCheck()
 {
+  setErrorCondition(0);
+  setWarningCondition(0);
+
   // Check consistency of parameters
   this->CheckIntegerEntry<unsigned int, double>(m_ProjectionDimension, "ProjectionDimension", 1);
 
-  setErrorCondition(0);
-  setWarningCondition(0);
-  ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
+  ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
@@ -90,7 +94,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
 // -----------------------------------------------------------------------------
 void ITKMeanProjectionImage::dataCheckInternal()
 {
-  Dream3DArraySwitchMacroOutputType(this->dataCheck, getSelectedCellArrayPath(), -4, typename itk::NumericTraits<typename InputImageType::PixelType>::RealType, 1);
+  Dream3DArraySwitchMacroOutputType(this->dataCheck, getSelectedCellArrayPath(), -4,typename itk::NumericTraits<typename InputImageType::PixelType>::RealType, 1);
 }
 
 // -----------------------------------------------------------------------------
@@ -105,7 +109,8 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   typedef itk::MeanProjectionImageFilter<InputImageType, OutputImageType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
   filter->SetProjectionDimension(static_cast<unsigned int>(m_ProjectionDimension));
-  this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+  this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+
 }
 
 // -----------------------------------------------------------------------------
@@ -113,7 +118,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
 // -----------------------------------------------------------------------------
 void ITKMeanProjectionImage::filterInternal()
 {
-  Dream3DArraySwitchMacroOutputType(this->filter, getSelectedCellArrayPath(), -4, typename itk::NumericTraits<typename InputImageType::PixelType>::RealType, 1);
+  Dream3DArraySwitchMacroOutputType(this->filter, getSelectedCellArrayPath(), -4,typename itk::NumericTraits<typename InputImageType::PixelType>::RealType, 1);
 }
 
 // -----------------------------------------------------------------------------
@@ -150,5 +155,5 @@ const QUuid ITKMeanProjectionImage::getUuid()
 // -----------------------------------------------------------------------------
 const QString ITKMeanProjectionImage::getSubGroupName() const
 {
-  return "ITK Projection";
+  return "ITK ImageStatistics";
 }

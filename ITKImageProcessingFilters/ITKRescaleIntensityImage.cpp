@@ -4,7 +4,8 @@
  * Your License or Copyright can go here
  */
 
-#include "ITKRescaleIntensityImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/ITKRescaleIntensityImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/SimpleITKEnums.h"
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -19,11 +20,12 @@
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 ITKRescaleIntensityImage::ITKRescaleIntensityImage()
-: ITKImageBase()
+: ITKImageProcessingBase()
 , m_OutputType(itk::ImageIOBase::IOComponentType::UCHAR - 1)
 {
   m_OutputMinimum = StaticCastScalar<double, double, double>(0);
@@ -67,8 +69,10 @@ void ITKRescaleIntensityImage::setupFilterParameters()
     parameters.push_back(parameter);
   }
 
+
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("OutputMinimum", OutputMinimum, FilterParameter::Parameter, ITKRescaleIntensityImage));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("OutputMaximum", OutputMaximum, FilterParameter::Parameter, ITKRescaleIntensityImage));
+
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -100,6 +104,9 @@ void ITKRescaleIntensityImage::readFilterParameters(AbstractFilterParametersRead
   reader->closeFilterGroup();
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 template <typename OutputPixelType> void ITKRescaleIntensityImage::CheckEntryBounds(double value, QString name)
 {
   double lowest = static_cast<double>(std::numeric_limits<OutputPixelType>::lowest());
@@ -112,21 +119,20 @@ template <typename OutputPixelType> void ITKRescaleIntensityImage::CheckEntryBou
   }
 }
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKRescaleIntensityImage::dataCheck()
 {
+  setErrorCondition(0);
+  setWarningCondition(0);
+
   // Check consistency of parameters
   CheckEntryBounds<OutputPixelType>(m_OutputMaximum, "OutputMaximum");
   CheckEntryBounds<OutputPixelType>(m_OutputMinimum, "OutputMinimum");
-  if(getErrorCondition())
-  {
-    return;
-  }
-  setErrorCondition(0);
-  setWarningCondition(0);
-  ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
+
+  ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
@@ -134,7 +140,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
 // -----------------------------------------------------------------------------
 void ITKRescaleIntensityImage::dataCheckInternal()
 {
-  Dream3DArraySwitchOutputComponentMacro(this->dataCheck, m_OutputType, getSelectedCellArrayPath(), -4);
+  Dream3DArraySwitchMacro(this->dataCheck, getSelectedCellArrayPath(), -4);
 }
 
 // -----------------------------------------------------------------------------
@@ -150,7 +156,8 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   typename FilterType::Pointer filter = FilterType::New();
   filter->SetOutputMinimum(static_cast<double>(m_OutputMinimum));
   filter->SetOutputMaximum(static_cast<double>(m_OutputMaximum));
-  this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+  this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+
 }
 
 // -----------------------------------------------------------------------------
@@ -158,7 +165,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
 // -----------------------------------------------------------------------------
 void ITKRescaleIntensityImage::filterInternal()
 {
-  Dream3DArraySwitchOutputComponentMacro(this->filter, m_OutputType, getSelectedCellArrayPath(), -4);
+  Dream3DArraySwitchMacro(this->filter, getSelectedCellArrayPath(), -4);
 }
 
 // -----------------------------------------------------------------------------

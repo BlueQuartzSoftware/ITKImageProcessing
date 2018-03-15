@@ -21,6 +21,7 @@
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 #include <itkStandardDeviationProjectionImageFilter.h>
 
+
 /**
  * @brief The ITKStandardDeviationProjectionImage class. See [Filter documentation](@ref ITKStandardDeviationProjectionImage) for details.
  */
@@ -37,6 +38,7 @@ public:
 
   SIMPL_FILTER_PARAMETER(double, ProjectionDimension)
   Q_PROPERTY(double ProjectionDimension READ getProjectionDimension WRITE setProjectionDimension)
+
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -93,8 +95,8 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKStandardDeviationProjectionImage(const ITKStandardDeviationProjectionImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKStandardDeviationProjectionImage&);                      // Operator '=' Not Implemented
+  ITKStandardDeviationProjectionImage(const ITKStandardDeviationProjectionImage&) = delete;    // Copy Constructor Not Implemented
+  void operator=(const ITKStandardDeviationProjectionImage&) = delete; // Operator '=' Not Implemented
 };
 
 #ifdef __clang__

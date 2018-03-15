@@ -21,6 +21,7 @@
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 #include <itkSpeckleNoiseImageFilter.h>
 
+
 /**
  * @brief The ITKSpeckleNoiseImage class. See [Filter documentation](@ref ITKSpeckleNoiseImage) for details.
  */
@@ -40,6 +41,7 @@ public:
 
   SIMPL_FILTER_PARAMETER(double, Seed)
   Q_PROPERTY(double Seed READ getSeed WRITE setSeed)
+
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -96,8 +98,8 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKSpeckleNoiseImage(const ITKSpeckleNoiseImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKSpeckleNoiseImage&);       // Operator '=' Not Implemented
+  ITKSpeckleNoiseImage(const ITKSpeckleNoiseImage&) = delete;    // Copy Constructor Not Implemented
+  void operator=(const ITKSpeckleNoiseImage&) = delete; // Operator '=' Not Implemented
 };
 
 #ifdef __clang__

@@ -20,6 +20,7 @@
 // Auto includes
 #include <itkSobelEdgeDetectionImageFilter.h>
 
+
 /**
  * @brief The ITKSobelEdgeDetectionImage class. See [Filter documentation](@ref ITKSobelEdgeDetectionImage) for details.
  */
@@ -33,6 +34,7 @@ public:
    SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKSobelEdgeDetectionImage, AbstractFilter)
 
   virtual ~ITKSobelEdgeDetectionImage();
+
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -89,8 +91,8 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKSobelEdgeDetectionImage(const ITKSobelEdgeDetectionImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKSobelEdgeDetectionImage&);             // Operator '=' Not Implemented
+  ITKSobelEdgeDetectionImage(const ITKSobelEdgeDetectionImage&) = delete;    // Copy Constructor Not Implemented
+  void operator=(const ITKSobelEdgeDetectionImage&) = delete; // Operator '=' Not Implemented
 };
 
 #ifdef __clang__

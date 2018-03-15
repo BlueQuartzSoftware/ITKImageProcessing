@@ -18,8 +18,8 @@ This filter uses the ReconstructionByErosionImageFilter . It provides its own in
 Geodesic morphology and the Fillhole algorithm is described in Chapter 6 of Pierre Soille's book "Morphological Image Analysis:
 Principles and Applications", Second Edition, Springer, 2003.
 
-\see ReconstructionByErosionImageFilter 
-\see 
+\see ReconstructionByErosionImageFilter
+
 \see MorphologyImageFilter , GrayscaleErodeImageFilter , GrayscaleFunctionErodeImageFilter , BinaryErodeImageFilter
 
 ## Parameters ##

@@ -22,6 +22,7 @@
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 #include <itkRegionalMinimaImageFilter.h>
 
+
 /**
  * @brief The ITKRegionalMinimaImage class. See [Filter documentation](@ref ITKRegionalMinimaImage) for details.
  */
@@ -47,6 +48,7 @@ public:
 
   SIMPL_FILTER_PARAMETER(bool, FlatIsMinima)
   Q_PROPERTY(bool FlatIsMinima READ getFlatIsMinima WRITE setFlatIsMinima)
+
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -103,8 +105,8 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKRegionalMinimaImage(const ITKRegionalMinimaImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKRegionalMinimaImage&);         // Operator '=' Not Implemented
+  ITKRegionalMinimaImage(const ITKRegionalMinimaImage&) = delete;    // Copy Constructor Not Implemented
+  void operator=(const ITKRegionalMinimaImage&) = delete; // Operator '=' Not Implemented
 };
 
 #ifdef __clang__

@@ -24,7 +24,6 @@
 //
 // -----------------------------------------------------------------------------
 ITKMaskImage::ITKMaskImage()
-: ITKImageBase()
 {
   m_OutsideValue = StaticCastScalar<double, double, double>(0);
 
@@ -90,7 +89,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
                  << "uint16_t"
                  << "uint32_t";
   checkImageType(supportedTypes, getMaskCellArrayPath());
-  ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
+  ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
@@ -210,7 +209,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   itk::NumericTraits<typename OutputImageType::PixelType>::SetLength(v, NumberOfComponents);
   v = static_cast<OutputPixelType>(m_OutsideValue);
   filter->SetOutsideValue(v);
-  this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+  this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
 }
 
 // -----------------------------------------------------------------------------

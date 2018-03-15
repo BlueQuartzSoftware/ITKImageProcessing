@@ -7,7 +7,7 @@ ITKImageProcessing (ITKImageProcessing)
 
 ## Description ##
 
-White top hat extract local maxima that are larger than the structuring element.
+White top hat extracts local maxima that are larger than the structuring element.
 
 Top-hats are described in Chapter 4.5 of Pierre Soille's book "Morphological Image Analysis: Principles and Applications", Second Edition, Springer, 2003.
 

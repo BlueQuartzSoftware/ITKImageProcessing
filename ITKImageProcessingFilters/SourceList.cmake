@@ -136,10 +136,10 @@ set_property(GLOBAL PROPERTY PluginNumFilters ${PluginNumFilters})
 # interface in DREAM3D. If you want to have the filter compiled but NOT exposed to the user then use the next loop
 foreach(f ${_PublicFilters} )
   ADD_SIMPL_FILTER(  "${PLUGIN_NAME}" "${PLUGIN_NAME}"
-                        ${_filterGroupName} ${f}
-                        ${${PLUGIN_NAME}_SOURCE_DIR}/Documentation/${_filterGroupName}/${f}.md 
-                        TRUE
-                        ${${PLUGIN_NAME}_BINARY_DIR})
+                    ${_filterGroupName} ${f}
+                    ${${PLUGIN_NAME}_SOURCE_DIR}/Documentation/${_filterGroupName}/${f}.md 
+                    TRUE
+                    ${${PLUGIN_NAME}_BINARY_DIR})
 endforeach()
 
 
@@ -154,8 +154,8 @@ set(_PrivateFilters
 # Loop on the Private Filters adding each one to the DREAM3DLib project so that it gets compiled.
 foreach(f ${_PrivateFilters} )
   ADD_SIMPL_FILTER(  "${PLUGIN_NAME}" "${PLUGIN_NAME}"
-                        ${_filterGroupName} ${f}
-                        ${${PLUGIN_NAME}_SOURCE_DIR}/Documentation/${_filterGroupName}/${f}.md FALSE ${${PLUGIN_NAME}_BINARY_DIR})
+                    ${_filterGroupName} ${f}
+                    ${${PLUGIN_NAME}_SOURCE_DIR}/Documentation/${_filterGroupName}/${f}.md FALSE ${${PLUGIN_NAME}_BINARY_DIR})
 endforeach()
 
 #-------------

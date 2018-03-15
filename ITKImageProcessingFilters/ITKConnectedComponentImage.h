@@ -19,7 +19,9 @@
 
 // Auto includes
 #include <SIMPLib/FilterParameters/BooleanFilterParameter.h>
+#include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 #include <itkConnectedComponentImageFilter.h>
+
 
 /**
  * @brief The ITKConnectedComponentImage class. See [Filter documentation](@ref ITKConnectedComponentImage) for details.
@@ -40,6 +42,7 @@ public:
 
   SIMPL_FILTER_PARAMETER(double, ObjectCount)
   Q_PROPERTY(double ObjectCount READ getObjectCount)
+
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -96,8 +99,8 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKConnectedComponentImage(const ITKConnectedComponentImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKConnectedComponentImage&);             // Operator '=' Not Implemented
+  ITKConnectedComponentImage(const ITKConnectedComponentImage&) = delete;    // Copy Constructor Not Implemented
+  void operator=(const ITKConnectedComponentImage&) = delete; // Operator '=' Not Implemented
 };
 
 #ifdef __clang__

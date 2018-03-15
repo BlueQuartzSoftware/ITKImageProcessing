@@ -21,6 +21,7 @@
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 #include <itkSaltAndPepperNoiseImageFilter.h>
 
+
 /**
  * @brief The ITKSaltAndPepperNoiseImage class. See [Filter documentation](@ref ITKSaltAndPepperNoiseImage) for details.
  */
@@ -40,6 +41,7 @@ public:
 
   SIMPL_FILTER_PARAMETER(double, Seed)
   Q_PROPERTY(double Seed READ getSeed WRITE setSeed)
+
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -96,8 +98,8 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKSaltAndPepperNoiseImage(const ITKSaltAndPepperNoiseImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKSaltAndPepperNoiseImage&);             // Operator '=' Not Implemented
+  ITKSaltAndPepperNoiseImage(const ITKSaltAndPepperNoiseImage&) = delete;    // Copy Constructor Not Implemented
+  void operator=(const ITKSaltAndPepperNoiseImage&) = delete; // Operator '=' Not Implemented
 };
 
 #ifdef __clang__

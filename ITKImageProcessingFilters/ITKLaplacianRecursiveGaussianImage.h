@@ -22,6 +22,7 @@
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 #include <itkLaplacianRecursiveGaussianImageFilter.h>
 
+
 /**
  * @brief The ITKLaplacianRecursiveGaussianImage class. See [Filter documentation](@ref ITKLaplacianRecursiveGaussianImage) for details.
  */
@@ -41,6 +42,7 @@ public:
 
   SIMPL_FILTER_PARAMETER(bool, NormalizeAcrossScale)
   Q_PROPERTY(bool NormalizeAcrossScale READ getNormalizeAcrossScale WRITE setNormalizeAcrossScale)
+
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -97,8 +99,8 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKLaplacianRecursiveGaussianImage(const ITKLaplacianRecursiveGaussianImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKLaplacianRecursiveGaussianImage&);                     // Operator '=' Not Implemented
+  ITKLaplacianRecursiveGaussianImage(const ITKLaplacianRecursiveGaussianImage&) = delete;    // Copy Constructor Not Implemented
+  void operator=(const ITKLaplacianRecursiveGaussianImage&) = delete; // Operator '=' Not Implemented
 };
 
 #ifdef __clang__

@@ -13,7 +13,7 @@ The computations are performed using std::sin(x).
 
 \par Wiki Examples:
 
-\li All Examples 
+\li All Examples
 
 \li Compute the sine of each pixel.
 

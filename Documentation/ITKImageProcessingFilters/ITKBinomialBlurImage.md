@@ -13,7 +13,7 @@ The binomial blur consists of a nearest neighbor average along each image dimens
 
 \par Wiki Examples:
 
-\li All Examples 
+\li All Examples
 
 \li Blur an image
 

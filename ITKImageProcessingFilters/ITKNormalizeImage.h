@@ -20,6 +20,7 @@
 // Auto includes
 #include <itkNormalizeImageFilter.h>
 
+
 /**
  * @brief The ITKNormalizeImage class. See [Filter documentation](@ref ITKNormalizeImage) for details.
  */
@@ -33,6 +34,7 @@ public:
    SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKNormalizeImage, AbstractFilter)
 
   virtual ~ITKNormalizeImage();
+
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -89,8 +91,8 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKNormalizeImage(const ITKNormalizeImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKNormalizeImage&);    // Operator '=' Not Implemented
+  ITKNormalizeImage(const ITKNormalizeImage&) = delete;    // Copy Constructor Not Implemented
+  void operator=(const ITKNormalizeImage&) = delete; // Operator '=' Not Implemented
 };
 
 #ifdef __clang__

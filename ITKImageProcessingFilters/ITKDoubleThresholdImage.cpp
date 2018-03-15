@@ -4,7 +4,8 @@
  * Your License or Copyright can go here
  */
 
-#include "ITKDoubleThresholdImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/ITKDoubleThresholdImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/SimpleITKEnums.h"
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -18,11 +19,12 @@
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 ITKDoubleThresholdImage::ITKDoubleThresholdImage()
-: ITKImageBase()
+: ITKImageProcessingBase()
 {
   m_Threshold1 = StaticCastScalar<double, double, double>(0.0);
   m_Threshold2 = StaticCastScalar<double, double, double>(1.0);
@@ -54,6 +56,7 @@ void ITKDoubleThresholdImage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_INTEGER_FP("InsideValue", InsideValue, FilterParameter::Parameter, ITKDoubleThresholdImage));
   parameters.push_back(SIMPL_NEW_INTEGER_FP("OutsideValue", OutsideValue, FilterParameter::Parameter, ITKDoubleThresholdImage));
   parameters.push_back(SIMPL_NEW_BOOL_FP("FullyConnected", FullyConnected, FilterParameter::Parameter, ITKDoubleThresholdImage));
+
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -95,13 +98,14 @@ void ITKDoubleThresholdImage::readFilterParameters(AbstractFilterParametersReade
 // -----------------------------------------------------------------------------
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKDoubleThresholdImage::dataCheck()
 {
+  setErrorCondition(0);
+  setWarningCondition(0);
+
   // Check consistency of parameters
   this->CheckIntegerEntry<uint8_t, int>(m_InsideValue, "InsideValue", 1);
   this->CheckIntegerEntry<uint8_t, int>(m_OutsideValue, "OutsideValue", 1);
 
-  setErrorCondition(0);
-  setWarningCondition(0);
-  ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
+  ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
@@ -109,7 +113,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
 // -----------------------------------------------------------------------------
 void ITKDoubleThresholdImage::dataCheckInternal()
 {
-  Dream3DArraySwitchMacroOutputType(this->dataCheck, getSelectedCellArrayPath(), -4, uint8_t, 0);
+  Dream3DArraySwitchMacroOutputType(this->dataCheck, getSelectedCellArrayPath(), -4,uint8_t, 0);
 }
 
 // -----------------------------------------------------------------------------
@@ -130,7 +134,8 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   filter->SetInsideValue(static_cast<uint8_t>(m_InsideValue));
   filter->SetOutsideValue(static_cast<uint8_t>(m_OutsideValue));
   filter->SetFullyConnected(static_cast<bool>(m_FullyConnected));
-  this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+  this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+
 }
 
 // -----------------------------------------------------------------------------
@@ -138,7 +143,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
 // -----------------------------------------------------------------------------
 void ITKDoubleThresholdImage::filterInternal()
 {
-  Dream3DArraySwitchMacroOutputType(this->filter, getSelectedCellArrayPath(), -4, uint8_t, 0);
+  Dream3DArraySwitchMacroOutputType(this->filter, getSelectedCellArrayPath(), -4,uint8_t, 0);
 }
 
 // -----------------------------------------------------------------------------
@@ -175,5 +180,5 @@ const QUuid ITKDoubleThresholdImage::getUuid()
 // -----------------------------------------------------------------------------
 const QString ITKDoubleThresholdImage::getSubGroupName() const
 {
-  return "ITK Thresholding";
+  return "ITK BiasCorrection";
 }

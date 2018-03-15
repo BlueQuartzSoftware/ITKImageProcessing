@@ -20,6 +20,7 @@
 // Auto includes
 #include <itkAcosImageFilter.h>
 
+
 /**
  * @brief The ITKAcosImage class. See [Filter documentation](@ref ITKAcosImage) for details.
  */
@@ -33,6 +34,7 @@ public:
    SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKAcosImage, AbstractFilter)
 
   virtual ~ITKAcosImage();
+
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -89,7 +91,7 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKAcosImage(const ITKAcosImage&);   // Copy Constructor Not Implemented
+  ITKAcosImage(const ITKAcosImage&) = delete;    // Copy Constructor Not Implemented
   void operator=(const ITKAcosImage&) = delete; // Operator '=' Not Implemented
 };
 

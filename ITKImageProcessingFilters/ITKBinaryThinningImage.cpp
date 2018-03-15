@@ -4,7 +4,8 @@
  * Your License or Copyright can go here
  */
 
-#include "ITKBinaryThinningImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/ITKBinaryThinningImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/SimpleITKEnums.h"
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -18,11 +19,12 @@
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 ITKBinaryThinningImage::ITKBinaryThinningImage()
-: ITKImageBase()
+: ITKImageProcessingBase()
 {
 
   setupFilterParameters();
@@ -39,6 +41,8 @@ ITKBinaryThinningImage::~ITKBinaryThinningImage() = default;
 void ITKBinaryThinningImage::setupFilterParameters()
 {
   FilterParameterVector parameters;
+
+
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -73,11 +77,12 @@ void ITKBinaryThinningImage::readFilterParameters(AbstractFilterParametersReader
 // -----------------------------------------------------------------------------
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKBinaryThinningImage::dataCheck()
 {
-  // Check consistency of parameters
-
   setErrorCondition(0);
   setWarningCondition(0);
-  ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
+
+  // Check consistency of parameters
+
+  ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
@@ -99,7 +104,8 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   // define filter
   typedef itk::BinaryThinningImageFilter<InputImageType, OutputImageType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
-  this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+  this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+
 }
 
 // -----------------------------------------------------------------------------
@@ -144,5 +150,5 @@ const QUuid ITKBinaryThinningImage::getUuid()
 // -----------------------------------------------------------------------------
 const QString ITKBinaryThinningImage::getSubGroupName() const
 {
-  return "ITK SegmentationPostProcessing";
+  return "ITK BinaryMathematicalMorphology";
 }

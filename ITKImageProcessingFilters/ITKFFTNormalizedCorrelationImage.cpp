@@ -24,7 +24,6 @@
 //
 // -----------------------------------------------------------------------------
 ITKFFTNormalizedCorrelationImage::ITKFFTNormalizedCorrelationImage()
-: ITKImageBase()
 {
   m_RequiredNumberOfOverlappingPixels = StaticCastScalar<double, double, double>(0);
   m_RequiredFractionOfOverlappingPixels = StaticCastScalar<double, double, double>(0.0);
@@ -89,7 +88,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   // Check consistency of parameters
   this->CheckIntegerEntry<uint64_t, double>(m_RequiredNumberOfOverlappingPixels, "RequiredNumberOfOverlappingPixels", 1);
 
-  ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
+  ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------

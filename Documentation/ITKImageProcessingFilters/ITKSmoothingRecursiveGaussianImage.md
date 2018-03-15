@@ -15,7 +15,7 @@ For this filter to be able to run in-place the input and output image types need
 
 \par Wiki Examples:
 
-\li All Examples 
+\li All Examples
 
 \li Gaussian smoothing that works with image adaptors
 
@@ -23,8 +23,8 @@ For this filter to be able to run in-place the input and output image types need
 
 | Name | Type | Description |
 |------|------|-------------|
-| Sigma | double| Set Sigma value. Sigma is measured in the units of image spacing. You may use the method SetSigma to set the same value across each axis or use the method SetSigmaArray if you need different values along each axis. |
-| NormalizeAcrossScale | bool| This method does not effect the output of this filter.\sa  RecursiveGaussianImageFilter::SetNormalizeAcrossScale |
+| Sigma | FloatVec3_t| Set Sigma value. Sigma is measured in the units of image spacing. You may use the method SetSigma to set the same value across each axis or use the method SetSigmaArray if you need different values along each axis. |
+| NormalizeAcrossScale | bool| This method does not effect the output of this filter. \sa RecursiveGaussianImageFilter::SetNormalizeAcrossScale |
 
 
 ## Required Geometry ##

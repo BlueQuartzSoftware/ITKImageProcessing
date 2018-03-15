@@ -22,6 +22,7 @@
 #include <SIMPLib/FilterParameters/IntFilterParameter.h>
 #include <itkGrayscaleErodeImageFilter.h>
 
+
 /**
  * @brief The ITKGrayscaleErodeImage class. See [Filter documentation](@ref ITKGrayscaleErodeImage) for details.
  */
@@ -32,7 +33,7 @@ class ITKGrayscaleErodeImage : public ITKImageProcessingBase
 public:
   SIMPL_SHARED_POINTERS(ITKGrayscaleErodeImage)
   SIMPL_STATIC_NEW_MACRO(ITKGrayscaleErodeImage)
-   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKGrayscaleErodeImage, AbstractFilter)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKGrayscaleErodeImage, AbstractFilter)
 
   virtual ~ITKGrayscaleErodeImage();
 
@@ -41,6 +42,7 @@ public:
 
   SIMPL_FILTER_PARAMETER(int, KernelType)
   Q_PROPERTY(int KernelType READ getKernelType WRITE setKernelType)
+
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -97,8 +99,8 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKGrayscaleErodeImage(const ITKGrayscaleErodeImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKGrayscaleErodeImage&);         // Operator '=' Not Implemented
+  ITKGrayscaleErodeImage(const ITKGrayscaleErodeImage&) = delete;    // Copy Constructor Not Implemented
+  void operator=(const ITKGrayscaleErodeImage&) = delete; // Operator '=' Not Implemented
 };
 
 #ifdef __clang__

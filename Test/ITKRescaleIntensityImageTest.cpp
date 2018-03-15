@@ -8,7 +8,6 @@
 // Auto includes
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 
-#include <itkImageIOBase.h>
 
 class ITKRescaleIntensityImageTest : public ITKTestBase
 {
@@ -22,7 +21,7 @@ public:
   }
 
   int TestITKRescaleIntensityImage3dTest()
-  {
+{
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/RA-Float.nrrd");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -40,9 +39,6 @@ public:
     var.setValue(false);
     propWasSet = filter->setProperty("SaveAsNewArray", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
-    var.setValue(itk::ImageIOBase::IOComponentType::FLOAT - 1);
-    propWasSet = filter->setProperty("OutputType", var);
-    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     filter->setDataContainerArray(containerArray);
     filter->execute();
     DREAM3D_REQUIRED(filter->getErrorCondition(), >=, 0);
@@ -54,7 +50,9 @@ public:
     int res = this->CompareImages(containerArray, input_path, baseline_path, 1e-8);
     DREAM3D_REQUIRE_EQUAL(res, 0);
     return 0;
-  }
+}
+
+
 
   // -----------------------------------------------------------------------------
   //
@@ -65,7 +63,7 @@ public:
 
     DREAM3D_REGISTER_TEST(this->TestFilterAvailability("ITKRescaleIntensityImage"));
 
-    DREAM3D_REGISTER_TEST(TestITKRescaleIntensityImage3dTest());
+    DREAM3D_REGISTER_TEST( TestITKRescaleIntensityImage3dTest());
 
     if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
     {
@@ -75,5 +73,5 @@ public:
 
 private:
   ITKRescaleIntensityImageTest(const ITKRescaleIntensityImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKRescaleIntensityImageTest&);               // Operator '=' Not Implemented
+  void operator=(const ITKRescaleIntensityImageTest&);  // Operator '=' Not Implemented
 };

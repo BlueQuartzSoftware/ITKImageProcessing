@@ -4,7 +4,8 @@
  * Your License or Copyright can go here
  */
 
-#include "ITKBoundedReciprocalImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/ITKBoundedReciprocalImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/SimpleITKEnums.h"
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -18,11 +19,12 @@
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 ITKBoundedReciprocalImage::ITKBoundedReciprocalImage()
-: ITKImageBase()
+: ITKImageProcessingBase()
 {
 
   setupFilterParameters();
@@ -39,6 +41,8 @@ ITKBoundedReciprocalImage::~ITKBoundedReciprocalImage() = default;
 void ITKBoundedReciprocalImage::setupFilterParameters()
 {
   FilterParameterVector parameters;
+
+
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -73,11 +77,12 @@ void ITKBoundedReciprocalImage::readFilterParameters(AbstractFilterParametersRea
 // -----------------------------------------------------------------------------
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKBoundedReciprocalImage::dataCheck()
 {
-  // Check consistency of parameters
-
   setErrorCondition(0);
   setWarningCondition(0);
-  ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
+
+  // Check consistency of parameters
+
+  ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
@@ -85,7 +90,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
 // -----------------------------------------------------------------------------
 void ITKBoundedReciprocalImage::dataCheckInternal()
 {
-  Dream3DArraySwitchMacroOutputType(this->dataCheck, getSelectedCellArrayPath(), -4, typename itk::NumericTraits<typename InputImageType::PixelType>::RealType, 1);
+  Dream3DArraySwitchMacroOutputType(this->dataCheck, getSelectedCellArrayPath(), -4,typename itk::NumericTraits<typename InputImageType::PixelType>::RealType, 1);
 }
 
 // -----------------------------------------------------------------------------
@@ -99,7 +104,8 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   // define filter
   typedef itk::BoundedReciprocalImageFilter<InputImageType, OutputImageType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
-  this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+  this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+
 }
 
 // -----------------------------------------------------------------------------
@@ -107,7 +113,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
 // -----------------------------------------------------------------------------
 void ITKBoundedReciprocalImage::filterInternal()
 {
-  Dream3DArraySwitchMacroOutputType(this->filter, getSelectedCellArrayPath(), -4, typename itk::NumericTraits<typename InputImageType::PixelType>::RealType, 1);
+  Dream3DArraySwitchMacroOutputType(this->filter, getSelectedCellArrayPath(), -4,typename itk::NumericTraits<typename InputImageType::PixelType>::RealType, 1);
 }
 
 // -----------------------------------------------------------------------------

@@ -8,6 +8,7 @@
 // Auto includes
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 
+
 class ITKThresholdImageTest : public ITKTestBase
 {
 
@@ -20,7 +21,7 @@ public:
   }
 
   int TestITKThresholdImageDefaultTest()
-  {
+{
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/RA-Short.nrrd");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -47,10 +48,10 @@ public:
     GetMD5FromDataContainer(containerArray, input_path, md5Output);
     DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("59071590099d21dd439896592338bf95"));
     return 0;
-  }
+}
 
-  int TestITKThresholdImageThreshold1Test()
-  {
+int TestITKThresholdImageThreshold1Test()
+{
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/RA-Slice-Short.png");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -69,18 +70,18 @@ public:
     propWasSet = filter->setProperty("SaveAsNewArray", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     {
-      double d3d_var;
-      d3d_var = 25000;
-      var.setValue(d3d_var);
-      propWasSet = filter->setProperty("Lower", var);
-      DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+        double d3d_var;
+        d3d_var = 25000;
+        var.setValue(d3d_var);
+        propWasSet = filter->setProperty("Lower", var);
+        DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     }
     {
-      double d3d_var;
-      d3d_var = 65535;
-      var.setValue(d3d_var);
-      propWasSet = filter->setProperty("Upper", var);
-      DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+        double d3d_var;
+        d3d_var = 65535;
+        var.setValue(d3d_var);
+        propWasSet = filter->setProperty("Upper", var);
+        DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     }
     filter->setDataContainerArray(containerArray);
     filter->execute();
@@ -91,10 +92,10 @@ public:
     GetMD5FromDataContainer(containerArray, input_path, md5Output);
     DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("f70a31938657e0163b82521af4f8e3b0"));
     return 0;
-  }
+}
 
-  int TestITKThresholdImageThreshold2Test()
-  {
+int TestITKThresholdImageThreshold2Test()
+{
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/RA-Slice-Short.png");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -113,25 +114,25 @@ public:
     propWasSet = filter->setProperty("SaveAsNewArray", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     {
-      double d3d_var;
-      d3d_var = 0;
-      var.setValue(d3d_var);
-      propWasSet = filter->setProperty("Lower", var);
-      DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+        double d3d_var;
+        d3d_var = 0;
+        var.setValue(d3d_var);
+        propWasSet = filter->setProperty("Lower", var);
+        DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     }
     {
-      double d3d_var;
-      d3d_var = 25000;
-      var.setValue(d3d_var);
-      propWasSet = filter->setProperty("Upper", var);
-      DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+        double d3d_var;
+        d3d_var = 25000;
+        var.setValue(d3d_var);
+        propWasSet = filter->setProperty("Upper", var);
+        DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     }
     {
-      double d3d_var;
-      d3d_var = 25000;
-      var.setValue(d3d_var);
-      propWasSet = filter->setProperty("OutsideValue", var);
-      DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+        double d3d_var;
+        d3d_var = 25000;
+        var.setValue(d3d_var);
+        propWasSet = filter->setProperty("OutsideValue", var);
+        DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     }
     filter->setDataContainerArray(containerArray);
     filter->execute();
@@ -142,7 +143,9 @@ public:
     GetMD5FromDataContainer(containerArray, input_path, md5Output);
     DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("898743e4ec2e75c0169d025fb29b7ead"));
     return 0;
-  }
+}
+
+
 
   // -----------------------------------------------------------------------------
   //
@@ -153,9 +156,9 @@ public:
 
     DREAM3D_REGISTER_TEST(this->TestFilterAvailability("ITKThresholdImage"));
 
-    DREAM3D_REGISTER_TEST(TestITKThresholdImageDefaultTest());
-    DREAM3D_REGISTER_TEST(TestITKThresholdImageThreshold1Test());
-    DREAM3D_REGISTER_TEST(TestITKThresholdImageThreshold2Test());
+    DREAM3D_REGISTER_TEST( TestITKThresholdImageDefaultTest());
+    DREAM3D_REGISTER_TEST( TestITKThresholdImageThreshold1Test());
+    DREAM3D_REGISTER_TEST( TestITKThresholdImageThreshold2Test());
 
     if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
     {
@@ -165,5 +168,5 @@ public:
 
 private:
   ITKThresholdImageTest(const ITKThresholdImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKThresholdImageTest&);        // Operator '=' Not Implemented
+  void operator=(const ITKThresholdImageTest&);  // Operator '=' Not Implemented
 };

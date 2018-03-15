@@ -7,6 +7,7 @@
 #include "ITKTestBase.h"
 // Auto includes
 
+
 class ITKNormalizeImageTest : public ITKTestBase
 {
 
@@ -19,7 +20,7 @@ public:
   }
 
   int TestITKNormalizeImagedefaultsTest()
-  {
+{
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/Ramp-Up-Short.nrrd");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -48,10 +49,10 @@ public:
     int res = this->CompareImages(containerArray, input_path, baseline_path, 0.0001);
     DREAM3D_REQUIRE_EQUAL(res, 0);
     return 0;
-  }
+}
 
-  int TestITKNormalizeImagevectorTest()
-  {
+int TestITKNormalizeImagevectorTest()
+{
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/VM1111Shrink-RGB.png");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -80,7 +81,9 @@ public:
     int res = this->CompareImages(containerArray, input_path, baseline_path, 0.0001);
     DREAM3D_REQUIRE_EQUAL(res, 0);
     return 0;
-  }
+}
+
+
 
   // -----------------------------------------------------------------------------
   //
@@ -91,8 +94,8 @@ public:
 
     DREAM3D_REGISTER_TEST(this->TestFilterAvailability("ITKNormalizeImage"));
 
-    DREAM3D_REGISTER_TEST(TestITKNormalizeImagedefaultsTest());
-    DREAM3D_REGISTER_TEST(TestITKNormalizeImagevectorTest());
+    DREAM3D_REGISTER_TEST( TestITKNormalizeImagedefaultsTest());
+    DREAM3D_REGISTER_TEST( TestITKNormalizeImagevectorTest());
 
     if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
     {
@@ -102,5 +105,5 @@ public:
 
 private:
   ITKNormalizeImageTest(const ITKNormalizeImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKNormalizeImageTest&);        // Operator '=' Not Implemented
+  void operator=(const ITKNormalizeImageTest&);  // Operator '=' Not Implemented
 };

@@ -28,7 +28,6 @@
 //
 // -----------------------------------------------------------------------------
 ITKMultiScaleHessianBasedObjectnessImage::ITKMultiScaleHessianBasedObjectnessImage()
-: ITKImageBase()
 {
   m_ObjectDimension = StaticCastScalar<int, int, int>(1u);
   m_Alpha = StaticCastScalar<double, double, double>(0.5);
@@ -113,7 +112,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
 
   setErrorCondition(0);
   setWarningCondition(0);
-  ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
+  ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
@@ -154,7 +153,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   filter->SetNumberOfSigmaSteps(static_cast<double>(m_NumberOfSigmaSteps));
   filter->SetHessianToMeasureFilter(objectnessFilter);
 
-  this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+  this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
 }
 
 // -----------------------------------------------------------------------------

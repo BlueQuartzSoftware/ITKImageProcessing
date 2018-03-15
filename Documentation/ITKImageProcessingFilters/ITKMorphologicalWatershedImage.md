@@ -3,16 +3,18 @@ ITK::Morphological Watershed Image Filter (KW) {#itkmorphologicalwatershedimage}
 
 ## Group (Subgroup) ##
 
-ImageProcessing (ITK ImageProcessing)
+ITKImageProcessing (ITKImageProcessing)
 
 ## Description ##
+
+Watershed segmentation implementation with morphogical operators.
 
 Watershed pixel are labeled 0. TOutputImage should be an integer type. Labels of output image are in no particular order. You can reorder the labels such that object labels are consecutive and sorted based on object size by passing the output of this filter to a RelabelComponentImageFilter .
 
 The morphological watershed transform algorithm is described in Chapter 9.2 of Pierre Soille's book "Morphological Image Analysis:
 Principles and Applications", Second Edition, Springer, 2003.
 
-This code was contributed in the Insight Journal paper: "The watershed transform in ITK - discussion and new developments" by Beare R., Lehmann G. https://hdl.handle.net/1926/202 http://www.insight-journal.org/browse/publication/92 
+This code was contributed in the Insight Journal paper: "The watershed transform in ITK - discussion and new developments" by Beare R., Lehmann G. https://hdl.handle.net/1926/202 http://www.insight-journal.org/browse/publication/92
 
 \author Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA de Jouy-en-Josas, France.
 

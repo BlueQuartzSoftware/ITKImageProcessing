@@ -4,7 +4,8 @@
  * Your License or Copyright can go here
  */
 
-#include "ITKIntensityWindowingImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/ITKIntensityWindowingImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/SimpleITKEnums.h"
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -18,11 +19,12 @@
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 ITKIntensityWindowingImage::ITKIntensityWindowingImage()
-: ITKImageBase()
+: ITKImageProcessingBase()
 {
   m_WindowMinimum = StaticCastScalar<double, double, double>(0.0);
   m_WindowMaximum = StaticCastScalar<double, double, double>(255.0);
@@ -48,6 +50,7 @@ void ITKIntensityWindowingImage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("WindowMaximum", WindowMaximum, FilterParameter::Parameter, ITKIntensityWindowingImage));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("OutputMinimum", OutputMinimum, FilterParameter::Parameter, ITKIntensityWindowingImage));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("OutputMaximum", OutputMaximum, FilterParameter::Parameter, ITKIntensityWindowingImage));
+
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -86,11 +89,12 @@ void ITKIntensityWindowingImage::readFilterParameters(AbstractFilterParametersRe
 // -----------------------------------------------------------------------------
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKIntensityWindowingImage::dataCheck()
 {
-  // Check consistency of parameters
-
   setErrorCondition(0);
   setWarningCondition(0);
-  ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
+
+  // Check consistency of parameters
+
+  ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
@@ -116,7 +120,8 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   filter->SetWindowMaximum(static_cast<double>(m_WindowMaximum));
   filter->SetOutputMinimum(static_cast<double>(m_OutputMinimum));
   filter->SetOutputMaximum(static_cast<double>(m_OutputMaximum));
-  this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+  this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+
 }
 
 // -----------------------------------------------------------------------------

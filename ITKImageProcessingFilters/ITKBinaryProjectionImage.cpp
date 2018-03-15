@@ -4,7 +4,8 @@
  * Your License or Copyright can go here
  */
 
-#include "ITKBinaryProjectionImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/ITKBinaryProjectionImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/SimpleITKEnums.h"
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -18,11 +19,12 @@
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 ITKBinaryProjectionImage::ITKBinaryProjectionImage()
-: ITKImageBase()
+: ITKImageProcessingBase()
 {
   m_ProjectionDimension = StaticCastScalar<double, double, double>(0u);
   m_ForegroundValue = StaticCastScalar<double, double, double>(1.0);
@@ -46,6 +48,7 @@ void ITKBinaryProjectionImage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("ProjectionDimension", ProjectionDimension, FilterParameter::Parameter, ITKBinaryProjectionImage));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("ForegroundValue", ForegroundValue, FilterParameter::Parameter, ITKBinaryProjectionImage));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("BackgroundValue", BackgroundValue, FilterParameter::Parameter, ITKBinaryProjectionImage));
+
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -83,12 +86,13 @@ void ITKBinaryProjectionImage::readFilterParameters(AbstractFilterParametersRead
 // -----------------------------------------------------------------------------
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKBinaryProjectionImage::dataCheck()
 {
+  setErrorCondition(0);
+  setWarningCondition(0);
+
   // Check consistency of parameters
   this->CheckIntegerEntry<unsigned int, double>(m_ProjectionDimension, "ProjectionDimension", 1);
 
-  setErrorCondition(0);
-  setWarningCondition(0);
-  ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
+  ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
@@ -113,7 +117,8 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   filter->SetProjectionDimension(static_cast<unsigned int>(m_ProjectionDimension));
   filter->SetForegroundValue(static_cast<double>(m_ForegroundValue));
   filter->SetBackgroundValue(static_cast<double>(m_BackgroundValue));
-  this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+  this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+
 }
 
 // -----------------------------------------------------------------------------
@@ -158,5 +163,5 @@ const QUuid ITKBinaryProjectionImage::getUuid()
 // -----------------------------------------------------------------------------
 const QString ITKBinaryProjectionImage::getSubGroupName() const
 {
-  return "ITK Projection";
+  return "ITK ImageStatistics";
 }

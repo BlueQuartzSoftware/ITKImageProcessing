@@ -20,10 +20,11 @@ Gray scale images can be processed as binary images by selecting a "DilateValue"
 
 The structuring element is assumed to be composed of binary values (zero or one). Only elements of the structuring element having values > 0 are candidates for affecting the center pixel. A reasonable choice of structuring element is itk::BinaryBallStructuringElement .
 
-\see ImageToImageFilter BinaryErodeImageFilter BinaryMorphologyImageFilter 
+\see ImageToImageFilter BinaryErodeImageFilter BinaryMorphologyImageFilter
+
 \par Wiki Examples:
 
-\li All Examples 
+\li All Examples
 
 \li Dilate a binary image
 

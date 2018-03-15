@@ -23,6 +23,7 @@
 #include <SIMPLib/FilterParameters/IntFilterParameter.h>
 #include <itkBinaryMorphologicalOpeningImageFilter.h>
 
+
 /**
  * @brief The ITKBinaryMorphologicalOpeningImage class. See [Filter documentation](@ref ITKBinaryMorphologicalOpeningImage) for details.
  */
@@ -33,7 +34,7 @@ class ITKBinaryMorphologicalOpeningImage : public ITKImageProcessingBase
 public:
   SIMPL_SHARED_POINTERS(ITKBinaryMorphologicalOpeningImage)
   SIMPL_STATIC_NEW_MACRO(ITKBinaryMorphologicalOpeningImage)
-   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKBinaryMorphologicalOpeningImage, AbstractFilter)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKBinaryMorphologicalOpeningImage, AbstractFilter)
 
   virtual ~ITKBinaryMorphologicalOpeningImage();
 
@@ -48,6 +49,7 @@ public:
 
   SIMPL_FILTER_PARAMETER(int, KernelType)
   Q_PROPERTY(int KernelType READ getKernelType WRITE setKernelType)
+
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -104,8 +106,8 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKBinaryMorphologicalOpeningImage(const ITKBinaryMorphologicalOpeningImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKBinaryMorphologicalOpeningImage&);                     // Operator '=' Not Implemented
+  ITKBinaryMorphologicalOpeningImage(const ITKBinaryMorphologicalOpeningImage&) = delete;    // Copy Constructor Not Implemented
+  void operator=(const ITKBinaryMorphologicalOpeningImage&) = delete; // Operator '=' Not Implemented
 };
 
 #ifdef __clang__

@@ -20,8 +20,8 @@ Principles and Applications", Second Edition, Springer, 2003.
 
 The height parameter is set using SetHeight.
 
-\see ReconstructionByDilationImageFilter , HMinimaImageFilter , HConvexImageFilter 
-\see 
+\see ReconstructionByDilationImageFilter , HMinimaImageFilter , HConvexImageFilter
+
 \see MorphologyImageFilter , GrayscaleDilateImageFilter , GrayscaleFunctionDilateImageFilter , BinaryDilateImageFilter
 
 ## Parameters ##

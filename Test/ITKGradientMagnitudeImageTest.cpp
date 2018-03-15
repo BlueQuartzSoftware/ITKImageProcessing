@@ -8,6 +8,7 @@
 // Auto includes
 #include <SIMPLib/FilterParameters/BooleanFilterParameter.h>
 
+
 class ITKGradientMagnitudeImageTest : public ITKTestBase
 {
 
@@ -20,7 +21,7 @@ public:
   }
 
   int TestITKGradientMagnitudeImagedefaultTest()
-  {
+{
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/RA-Float.nrrd");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -49,7 +50,9 @@ public:
     int res = this->CompareImages(containerArray, input_path, baseline_path, 1e-05);
     DREAM3D_REQUIRE_EQUAL(res, 0);
     return 0;
-  }
+}
+
+
 
   // -----------------------------------------------------------------------------
   //
@@ -60,7 +63,7 @@ public:
 
     DREAM3D_REGISTER_TEST(this->TestFilterAvailability("ITKGradientMagnitudeImage"));
 
-    DREAM3D_REGISTER_TEST(TestITKGradientMagnitudeImagedefaultTest());
+    DREAM3D_REGISTER_TEST( TestITKGradientMagnitudeImagedefaultTest());
 
     if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
     {
@@ -70,5 +73,5 @@ public:
 
 private:
   ITKGradientMagnitudeImageTest(const ITKGradientMagnitudeImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKGradientMagnitudeImageTest&);                // Operator '=' Not Implemented
+  void operator=(const ITKGradientMagnitudeImageTest&);  // Operator '=' Not Implemented
 };

@@ -4,7 +4,7 @@
  * Your License or Copyright can go here
  */
 
-#include "ITKGrayscaleDilateImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/ITKGrayscaleDilateImage.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/SimpleITKEnums.h"
 
 #include "SIMPLib/Common/Constants.h"
@@ -21,11 +21,12 @@
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 #include <itkFlatStructuringElement.h>
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 ITKGrayscaleDilateImage::ITKGrayscaleDilateImage()
-: ITKImageBase()
+: ITKImageProcessingBase()
 {
   m_KernelRadius = CastStdToVec3<std::vector<unsigned int>, FloatVec3_t, float>(std::vector<unsigned int>(3, 1));
   m_KernelType = StaticCastScalar<int, int, int>(itk::simple::sitkBall);
@@ -65,6 +66,7 @@ void ITKGrayscaleDilateImage::setupFilterParameters()
   // Other parameters
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("KernelRadius", KernelRadius, FilterParameter::Parameter, ITKGrayscaleDilateImage));
 
+
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Save as New Array", SaveAsNewArray, FilterParameter::Parameter, ITKGrayscaleDilateImage, linkedProps));
@@ -102,9 +104,11 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
 {
   setErrorCondition(0);
   setWarningCondition(0);
+
   // Check consistency of parameters
   this->CheckVectorEntry<unsigned int, FloatVec3_t>(m_KernelRadius, "KernelRadius", 1);
-  ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
+
+  ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
@@ -150,7 +154,8 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   typedef itk::GrayscaleDilateImageFilter<InputImageType, OutputImageType, StructuringElementType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
   filter->SetKernel(structuringElement);
-  this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+  this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+
 }
 
 // -----------------------------------------------------------------------------
@@ -195,5 +200,5 @@ const QUuid ITKGrayscaleDilateImage::getUuid()
 // -----------------------------------------------------------------------------
 const QString ITKGrayscaleDilateImage::getSubGroupName() const
 {
-  return "ITK MathematicalMorphology";
+  return "ITK BiasCorrection";
 }

@@ -22,6 +22,7 @@
 #include <algorithm>
 #include <itkCurvatureAnisotropicDiffusionImageFilter.h>
 
+
 /**
  * @brief The ITKCurvatureAnisotropicDiffusionImage class. See [Filter documentation](@ref ITKCurvatureAnisotropicDiffusionImage) for details.
  */
@@ -47,6 +48,7 @@ public:
 
   SIMPL_FILTER_PARAMETER(double, NumberOfIterations)
   Q_PROPERTY(double NumberOfIterations READ getNumberOfIterations WRITE setNumberOfIterations)
+
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -103,8 +105,8 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKCurvatureAnisotropicDiffusionImage(const ITKCurvatureAnisotropicDiffusionImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKCurvatureAnisotropicDiffusionImage&);                        // Operator '=' Not Implemented
+  ITKCurvatureAnisotropicDiffusionImage(const ITKCurvatureAnisotropicDiffusionImage&) = delete;    // Copy Constructor Not Implemented
+  void operator=(const ITKCurvatureAnisotropicDiffusionImage&) = delete; // Operator '=' Not Implemented
 };
 
 #ifdef __clang__

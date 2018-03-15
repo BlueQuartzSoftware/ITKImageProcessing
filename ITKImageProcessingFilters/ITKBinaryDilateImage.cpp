@@ -4,7 +4,7 @@
  * Your License or Copyright can go here
  */
 
-#include "ITKBinaryDilateImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/ITKBinaryDilateImage.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/SimpleITKEnums.h"
 
 #include "SIMPLib/Common/Constants.h"
@@ -21,11 +21,12 @@
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 #include <itkFlatStructuringElement.h>
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 ITKBinaryDilateImage::ITKBinaryDilateImage()
-: ITKImageBase()
+: ITKImageProcessingBase()
 {
   m_BackgroundValue = StaticCastScalar<double, double, double>(0.0);
   m_ForegroundValue = StaticCastScalar<double, double, double>(1.0);
@@ -71,6 +72,7 @@ void ITKBinaryDilateImage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_BOOL_FP("BoundaryToForeground", BoundaryToForeground, FilterParameter::Parameter, ITKBinaryDilateImage));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("KernelRadius", KernelRadius, FilterParameter::Parameter, ITKBinaryDilateImage));
 
+
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Save as New Array", SaveAsNewArray, FilterParameter::Parameter, ITKBinaryDilateImage, linkedProps));
@@ -111,6 +113,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
 {
   setErrorCondition(0);
   setWarningCondition(0);
+
   // Check consistency of parameters
   this->CheckVectorEntry<unsigned int, FloatVec3_t>(m_KernelRadius, "KernelRadius", 1);
   QVector<QString> supportedTypes;
@@ -124,7 +127,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
                  << "uint64_t"
                  << "int64_t";
   checkImageType(supportedTypes, getSelectedCellArrayPath());
-  ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
+  ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
@@ -173,7 +176,8 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   filter->SetForegroundValue(static_cast<double>(m_ForegroundValue));
   filter->SetBoundaryToForeground(static_cast<bool>(m_BoundaryToForeground));
   filter->SetKernel(structuringElement);
-  this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+  this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+
 }
 
 // -----------------------------------------------------------------------------

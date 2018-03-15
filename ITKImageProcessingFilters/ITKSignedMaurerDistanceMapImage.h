@@ -19,7 +19,9 @@
 
 // Auto includes
 #include <SIMPLib/FilterParameters/BooleanFilterParameter.h>
+#include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 #include <itkSignedMaurerDistanceMapImageFilter.h>
+
 
 /**
  * @brief The ITKSignedMaurerDistanceMapImage class. See [Filter documentation](@ref ITKSignedMaurerDistanceMapImage) for details.
@@ -43,6 +45,10 @@ public:
 
   SIMPL_FILTER_PARAMETER(bool, UseImageSpacing)
   Q_PROPERTY(bool UseImageSpacing READ getUseImageSpacing WRITE setUseImageSpacing)
+
+  SIMPL_FILTER_PARAMETER(double, BackgroundValue)
+  Q_PROPERTY(double BackgroundValue READ getBackgroundValue WRITE setBackgroundValue)
+
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -99,8 +105,8 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKSignedMaurerDistanceMapImage(const ITKSignedMaurerDistanceMapImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKSignedMaurerDistanceMapImage&);                  // Operator '=' Not Implemented
+  ITKSignedMaurerDistanceMapImage(const ITKSignedMaurerDistanceMapImage&) = delete;    // Copy Constructor Not Implemented
+  void operator=(const ITKSignedMaurerDistanceMapImage&) = delete; // Operator '=' Not Implemented
 };
 
 #ifdef __clang__

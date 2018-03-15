@@ -13,16 +13,17 @@ Regional minima are flat zones surrounded by pixels of greater value.
 
 If the input image is constant, the entire image can be considered as a minima or not. The SetFlatIsMinima() method let the user choose which behavior to use.
 
-This class was contribtued to the Insight Journal by\author Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA de Jouy-en-Josas, France. https://hdl.handle.net/1926/153 
+This class was contribtued to the Insight Journal by \author Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA de Jouy-en-Josas, France. https://hdl.handle.net/1926/153
 
- RegionalMaximaImageFilter MathematicalMorphologyImageFilters
+\see RegionalMaximaImageFilter
 
-\see ValuedRegionalMinimaImageFilter 
-\see 
-\see HConcaveImageFilter 
+\see ValuedRegionalMinimaImageFilter
+
+\see HConcaveImageFilter
+
 \par Wiki Examples:
 
-\li All Examples 
+\li All Examples
 
 \li RegionalMinimaImageFilter
 

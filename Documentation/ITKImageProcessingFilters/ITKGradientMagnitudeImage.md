@@ -9,16 +9,17 @@ ITKImageProcessing (ITKImageProcessing)
 
 Computes the gradient magnitude of an image region at each pixel.
 
-\see Image 
-\see 
-\see Neighborhood 
-\see 
-\see NeighborhoodOperator 
-\see 
-\see NeighborhoodIterator 
+\see Image
+
+\see Neighborhood
+
+\see NeighborhoodOperator
+
+\see NeighborhoodIterator
+
 \par Wiki Examples:
 
-\li All Examples 
+\li All Examples
 
 \li Compute the gradient magnitude image
 

@@ -4,7 +4,8 @@
  * Your License or Copyright can go here
  */
 
-#include "ITKSaltAndPepperNoiseImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/ITKSaltAndPepperNoiseImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/SimpleITKEnums.h"
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -19,14 +20,16 @@
 #define DREAM3D_USE_RGB_RGBA 1
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
 
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 ITKSaltAndPepperNoiseImage::ITKSaltAndPepperNoiseImage()
-: ITKImageBase()
+: ITKImageProcessingBase()
 {
   m_Probability = StaticCastScalar<double, double, double>(0.01);
-  m_Seed = StaticCastScalar<double, double, double>(0u);
+  m_Seed = StaticCastScalar<double, double, double>((uint32_t) itk::simple::sitkWallClock);
 
   setupFilterParameters();
 }
@@ -45,6 +48,7 @@ void ITKSaltAndPepperNoiseImage::setupFilterParameters()
 
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Probability", Probability, FilterParameter::Parameter, ITKSaltAndPepperNoiseImage));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Seed", Seed, FilterParameter::Parameter, ITKSaltAndPepperNoiseImage));
+
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -81,12 +85,13 @@ void ITKSaltAndPepperNoiseImage::readFilterParameters(AbstractFilterParametersRe
 // -----------------------------------------------------------------------------
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKSaltAndPepperNoiseImage::dataCheck()
 {
+  setErrorCondition(0);
+  setWarningCondition(0);
+
   // Check consistency of parameters
   this->CheckIntegerEntry<uint32_t, double>(m_Seed, "Seed", 1);
 
-  setErrorCondition(0);
-  setWarningCondition(0);
-  ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
+  ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
@@ -109,9 +114,10 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   typedef itk::SaltAndPepperNoiseImageFilter<InputImageType, OutputImageType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
   filter->SetProbability(static_cast<double>(m_Probability));
-  if(m_Seed)
+  if (m_Seed)
     filter->SetSeed(m_Seed);
-  this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+  this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+
 }
 
 // -----------------------------------------------------------------------------
@@ -156,5 +162,5 @@ const QUuid ITKSaltAndPepperNoiseImage::getUuid()
 // -----------------------------------------------------------------------------
 const QString ITKSaltAndPepperNoiseImage::getSubGroupName() const
 {
-  return "ITK Noise";
+  return "ITK ImageNoise";
 }

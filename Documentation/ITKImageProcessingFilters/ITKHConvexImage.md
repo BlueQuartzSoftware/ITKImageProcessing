@@ -16,8 +16,8 @@ This filter uses the HMaximaImageFilter .
 Geodesic morphology and the H-Convex algorithm is described in Chapter 6 of Pierre Soille's book "Morphological Image Analysis:
 Principles and Applications", Second Edition, Springer, 2003.
 
-\see GrayscaleGeodesicDilateImageFilter , HMinimaImageFilter 
-\see 
+\see GrayscaleGeodesicDilateImageFilter , HMinimaImageFilter
+
 \see MorphologyImageFilter , GrayscaleDilateImageFilter , GrayscaleFunctionDilateImageFilter , BinaryDilateImageFilter
 
 ## Parameters ##

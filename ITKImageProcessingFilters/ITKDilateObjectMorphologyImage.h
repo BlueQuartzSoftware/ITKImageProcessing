@@ -23,6 +23,7 @@
 #include <SIMPLib/FilterParameters/IntFilterParameter.h>
 #include <itkDilateObjectMorphologyImageFilter.h>
 
+
 /**
  * @brief The ITKDilateObjectMorphologyImage class. See [Filter documentation](@ref ITKDilateObjectMorphologyImage) for details.
  */
@@ -33,7 +34,7 @@ class ITKDilateObjectMorphologyImage : public ITKImageProcessingBase
 public:
   SIMPL_SHARED_POINTERS(ITKDilateObjectMorphologyImage)
   SIMPL_STATIC_NEW_MACRO(ITKDilateObjectMorphologyImage)
-   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKDilateObjectMorphologyImage, AbstractFilter)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKDilateObjectMorphologyImage, AbstractFilter)
 
   virtual ~ITKDilateObjectMorphologyImage();
 
@@ -45,6 +46,7 @@ public:
 
   SIMPL_FILTER_PARAMETER(int, KernelType)
   Q_PROPERTY(int KernelType READ getKernelType WRITE setKernelType)
+
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -101,8 +103,8 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKDilateObjectMorphologyImage(const ITKDilateObjectMorphologyImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKDilateObjectMorphologyImage&);                 // Operator '=' Not Implemented
+  ITKDilateObjectMorphologyImage(const ITKDilateObjectMorphologyImage&) = delete;    // Copy Constructor Not Implemented
+  void operator=(const ITKDilateObjectMorphologyImage&) = delete; // Operator '=' Not Implemented
 };
 
 #ifdef __clang__

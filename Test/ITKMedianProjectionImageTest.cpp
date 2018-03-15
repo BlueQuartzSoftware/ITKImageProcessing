@@ -8,6 +8,7 @@
 // Auto includes
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 
+
 class ITKMedianProjectionImageTest : public ITKTestBase
 {
 
@@ -20,7 +21,7 @@ public:
   }
 
   int TestITKMedianProjectionImagedefaultsTest()
-  {
+{
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/RA-Float.nrrd");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -47,10 +48,10 @@ public:
     GetMD5FromDataContainer(containerArray, input_path, md5Output);
     DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("86de48c070480cb9809e28715f6e70e1"));
     return 0;
-  }
+}
 
-  int TestITKMedianProjectionImageanother_dimensionTest()
-  {
+int TestITKMedianProjectionImageanother_dimensionTest()
+{
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/RA-Float.nrrd");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -69,11 +70,11 @@ public:
     propWasSet = filter->setProperty("SaveAsNewArray", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     {
-      double d3d_var;
-      d3d_var = 2;
-      var.setValue(d3d_var);
-      propWasSet = filter->setProperty("ProjectionDimension", var);
-      DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+        double d3d_var;
+        d3d_var = 2;
+        var.setValue(d3d_var);
+        propWasSet = filter->setProperty("ProjectionDimension", var);
+        DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     }
     filter->setDataContainerArray(containerArray);
     filter->execute();
@@ -84,10 +85,10 @@ public:
     GetMD5FromDataContainer(containerArray, input_path, md5Output);
     DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("0990f0f6c63ea9d63b701ed7c2467de7"));
     return 0;
-  }
+}
 
-  int TestITKMedianProjectionImageshort_imageTest()
-  {
+int TestITKMedianProjectionImageshort_imageTest()
+{
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/Ramp-Up-Short.nrrd");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -106,11 +107,11 @@ public:
     propWasSet = filter->setProperty("SaveAsNewArray", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     {
-      double d3d_var;
-      d3d_var = 1;
-      var.setValue(d3d_var);
-      propWasSet = filter->setProperty("ProjectionDimension", var);
-      DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+        double d3d_var;
+        d3d_var = 1;
+        var.setValue(d3d_var);
+        propWasSet = filter->setProperty("ProjectionDimension", var);
+        DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     }
     filter->setDataContainerArray(containerArray);
     filter->execute();
@@ -121,10 +122,10 @@ public:
     GetMD5FromDataContainer(containerArray, input_path, md5Output);
     DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("9fcc7164f3294811cbf2d875b0e494d1"));
     return 0;
-  }
+}
 
-  int TestITKMedianProjectionImagergb_imageTest()
-  {
+int TestITKMedianProjectionImagergb_imageTest()
+{
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/VM1111Shrink-RGB.png");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -151,7 +152,9 @@ public:
     GetMD5FromDataContainer(containerArray, input_path, md5Output);
     DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("b66bc7e92a21a33c46d9a334d2292845"));
     return 0;
-  }
+}
+
+
 
   // -----------------------------------------------------------------------------
   //
@@ -162,10 +165,10 @@ public:
 
     DREAM3D_REGISTER_TEST(this->TestFilterAvailability("ITKMedianProjectionImage"));
 
-    DREAM3D_REGISTER_TEST(TestITKMedianProjectionImagedefaultsTest());
-    DREAM3D_REGISTER_TEST(TestITKMedianProjectionImageanother_dimensionTest());
-    DREAM3D_REGISTER_TEST(TestITKMedianProjectionImageshort_imageTest());
-    DREAM3D_REGISTER_TEST(TestITKMedianProjectionImagergb_imageTest());
+    DREAM3D_REGISTER_TEST( TestITKMedianProjectionImagedefaultsTest());
+    DREAM3D_REGISTER_TEST( TestITKMedianProjectionImageanother_dimensionTest());
+    DREAM3D_REGISTER_TEST( TestITKMedianProjectionImageshort_imageTest());
+    DREAM3D_REGISTER_TEST( TestITKMedianProjectionImagergb_imageTest());
 
     if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
     {
@@ -175,5 +178,5 @@ public:
 
 private:
   ITKMedianProjectionImageTest(const ITKMedianProjectionImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKMedianProjectionImageTest&);               // Operator '=' Not Implemented
+  void operator=(const ITKMedianProjectionImageTest&);  // Operator '=' Not Implemented
 };

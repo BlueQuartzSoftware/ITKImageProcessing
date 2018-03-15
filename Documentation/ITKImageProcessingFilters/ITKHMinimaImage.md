@@ -18,8 +18,8 @@ This filter uses the GrayscaleGeodesicErodeImageFilter . It provides its own inp
 Geodesic morphology and the H-Minima algorithm is described in Chapter 6 of Pierre Soille's book "Morphological Image Analysis:
 Principles and Applications", Second Edition, Springer, 2003.
 
-\see GrayscaleGeodesicDilateImageFilter , HMinimaImageFilter , HConvexImageFilter 
-\see 
+\see GrayscaleGeodesicDilateImageFilter , HMinimaImageFilter , HConvexImageFilter
+
 \see MorphologyImageFilter , GrayscaleDilateImageFilter , GrayscaleFunctionDilateImageFilter , BinaryDilateImageFilter
 
 ## Parameters ##

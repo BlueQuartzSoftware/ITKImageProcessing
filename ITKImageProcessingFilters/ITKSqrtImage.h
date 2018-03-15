@@ -20,6 +20,7 @@
 // Auto includes
 #include <itkSqrtImageFilter.h>
 
+
 /**
  * @brief The ITKSqrtImage class. See [Filter documentation](@ref ITKSqrtImage) for details.
  */
@@ -33,6 +34,7 @@ public:
    SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKSqrtImage, AbstractFilter)
 
   virtual ~ITKSqrtImage();
+
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -89,7 +91,7 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKSqrtImage(const ITKSqrtImage&);   // Copy Constructor Not Implemented
+  ITKSqrtImage(const ITKSqrtImage&) = delete;    // Copy Constructor Not Implemented
   void operator=(const ITKSqrtImage&) = delete; // Operator '=' Not Implemented
 };
 

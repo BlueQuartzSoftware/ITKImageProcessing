@@ -21,6 +21,7 @@
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 #include <itkShiftScaleImageFilter.h>
 
+
 /**
  * @brief The ITKShiftScaleImage class. See [Filter documentation](@ref ITKShiftScaleImage) for details.
  */
@@ -40,6 +41,7 @@ public:
 
   SIMPL_FILTER_PARAMETER(double, Scale)
   Q_PROPERTY(double Scale READ getScale WRITE setScale)
+
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -96,8 +98,8 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKShiftScaleImage(const ITKShiftScaleImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKShiftScaleImage&);     // Operator '=' Not Implemented
+  ITKShiftScaleImage(const ITKShiftScaleImage&) = delete;    // Copy Constructor Not Implemented
+  void operator=(const ITKShiftScaleImage&) = delete; // Operator '=' Not Implemented
 };
 
 #ifdef __clang__

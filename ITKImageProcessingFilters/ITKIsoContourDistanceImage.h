@@ -21,6 +21,7 @@
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 #include <itkIsoContourDistanceImageFilter.h>
 
+
 /**
  * @brief The ITKIsoContourDistanceImage class. See [Filter documentation](@ref ITKIsoContourDistanceImage) for details.
  */
@@ -40,6 +41,7 @@ public:
 
   SIMPL_FILTER_PARAMETER(double, FarValue)
   Q_PROPERTY(double FarValue READ getFarValue WRITE setFarValue)
+
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -96,8 +98,8 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKIsoContourDistanceImage(const ITKIsoContourDistanceImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKIsoContourDistanceImage&);             // Operator '=' Not Implemented
+  ITKIsoContourDistanceImage(const ITKIsoContourDistanceImage&) = delete;    // Copy Constructor Not Implemented
+  void operator=(const ITKIsoContourDistanceImage&) = delete; // Operator '=' Not Implemented
 };
 
 #ifdef __clang__

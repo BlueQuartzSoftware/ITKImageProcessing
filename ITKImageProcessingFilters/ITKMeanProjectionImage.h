@@ -21,6 +21,7 @@
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 #include <itkMeanProjectionImageFilter.h>
 
+
 /**
  * @brief The ITKMeanProjectionImage class. See [Filter documentation](@ref ITKMeanProjectionImage) for details.
  */
@@ -37,6 +38,7 @@ public:
 
   SIMPL_FILTER_PARAMETER(double, ProjectionDimension)
   Q_PROPERTY(double ProjectionDimension READ getProjectionDimension WRITE setProjectionDimension)
+
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -93,8 +95,8 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKMeanProjectionImage(const ITKMeanProjectionImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKMeanProjectionImage&);         // Operator '=' Not Implemented
+  ITKMeanProjectionImage(const ITKMeanProjectionImage&) = delete;    // Copy Constructor Not Implemented
+  void operator=(const ITKMeanProjectionImage&) = delete; // Operator '=' Not Implemented
 };
 
 #ifdef __clang__

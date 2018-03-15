@@ -22,6 +22,7 @@
 #include <SIMPLib/FilterParameters/IntFilterParameter.h>
 #include <itkBinaryMinMaxCurvatureFlowImageFilter.h>
 
+
 /**
  * @brief The ITKBinaryMinMaxCurvatureFlowImage class. See [Filter documentation](@ref ITKBinaryMinMaxCurvatureFlowImage) for details.
  */
@@ -47,6 +48,7 @@ public:
 
   SIMPL_FILTER_PARAMETER(double, Threshold)
   Q_PROPERTY(double Threshold READ getThreshold WRITE setThreshold)
+
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -103,8 +105,8 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKBinaryMinMaxCurvatureFlowImage(const ITKBinaryMinMaxCurvatureFlowImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKBinaryMinMaxCurvatureFlowImage&);                    // Operator '=' Not Implemented
+  ITKBinaryMinMaxCurvatureFlowImage(const ITKBinaryMinMaxCurvatureFlowImage&) = delete;    // Copy Constructor Not Implemented
+  void operator=(const ITKBinaryMinMaxCurvatureFlowImage&) = delete; // Operator '=' Not Implemented
 };
 
 #ifdef __clang__

@@ -4,7 +4,8 @@
  * Your License or Copyright can go here
  */
 
-#include "ITKValuedRegionalMaximaImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/ITKValuedRegionalMaximaImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/SimpleITKEnums.h"
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -18,11 +19,12 @@
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 ITKValuedRegionalMaximaImage::ITKValuedRegionalMaximaImage()
-: ITKImageBase()
+: ITKImageProcessingBase()
 {
   m_FullyConnected = StaticCastScalar<bool, bool, bool>(false);
 
@@ -42,6 +44,7 @@ void ITKValuedRegionalMaximaImage::setupFilterParameters()
   FilterParameterVector parameters;
 
   parameters.push_back(SIMPL_NEW_BOOL_FP("FullyConnected", FullyConnected, FilterParameter::Parameter, ITKValuedRegionalMaximaImage));
+
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -77,11 +80,12 @@ void ITKValuedRegionalMaximaImage::readFilterParameters(AbstractFilterParameters
 // -----------------------------------------------------------------------------
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKValuedRegionalMaximaImage::dataCheck()
 {
-  // Check consistency of parameters
-
   setErrorCondition(0);
   setWarningCondition(0);
-  ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
+
+  // Check consistency of parameters
+
+  ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
@@ -104,7 +108,13 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   typedef itk::ValuedRegionalMaximaImageFilter<InputImageType, OutputImageType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
   filter->SetFullyConnected(static_cast<bool>(m_FullyConnected));
-  this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+  this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+{
+  QString outputVal = "Flat :%1";
+  m_Flat = filter->GetFlat();
+  notifyWarningMessage(getHumanLabel(),outputVal.arg(m_Flat),0);
+}
+
 }
 
 // -----------------------------------------------------------------------------
@@ -149,5 +159,5 @@ const QUuid ITKValuedRegionalMaximaImage::getUuid()
 // -----------------------------------------------------------------------------
 const QString ITKValuedRegionalMaximaImage::getSubGroupName() const
 {
-  return "ITK MathematicalMorphology";
+  return "ITK ITKMathematicalMorphology";
 }

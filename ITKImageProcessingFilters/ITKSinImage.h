@@ -20,6 +20,7 @@
 // Auto includes
 #include <itkSinImageFilter.h>
 
+
 /**
  * @brief The ITKSinImage class. See [Filter documentation](@ref ITKSinImage) for details.
  */
@@ -33,6 +34,7 @@ public:
    SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKSinImage, AbstractFilter)
 
   virtual ~ITKSinImage();
+
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -89,7 +91,7 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKSinImage(const ITKSinImage&);    // Copy Constructor Not Implemented
+  ITKSinImage(const ITKSinImage&) = delete;    // Copy Constructor Not Implemented
   void operator=(const ITKSinImage&) = delete; // Operator '=' Not Implemented
 };
 

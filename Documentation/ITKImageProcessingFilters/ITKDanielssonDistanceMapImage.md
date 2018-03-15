@@ -9,20 +9,33 @@ ITKImageProcessing (ITKImageProcessing)
 
 This filter computes the distance map of the input image as an approximation with pixel accuracy to the Euclidean distance.
 
-TInputImageInput Image Type
+TInputImage
 
-TOutputImageOutput Image Type
+Input Image Type
 
-TVoronoiImageVoronoi Image Type. Note the default value is TInputImage.
+
+
+TOutputImage
+
+Output Image Type
+
+
+
+TVoronoiImage
+
+Voronoi Image Type. Note the default value is TInputImage.
+
+
 
 The input is assumed to contain numeric codes defining objects. The filter will produce as output the following images:
 
 
-\li AVoronoi partitionusing the same numeric codes as the input.
+\li A Voronoi partition using the same numeric codes as the input.
 
-\li Adistance mapwith the approximation to the euclidean distance. from a particular pixel to the nearest object to this pixel in the input image.
+\li A distance map with the approximation to the euclidean distance. from a particular pixel to the nearest object to this pixel in the input image.
 
-\li Avector mapcontaining the component of the vector relating the current pixel with the closest point of the closest object to this pixel. Given that the components of the distance are computed in "pixels", the vector is represented by an itk::Offset . That is, physical coordinates are not used.
+\li A vector map containing the component of the vector relating the current pixel with the closest point of the closest object to this pixel. Given that the components of the distance are computed in "pixels", the vector is represented by an itk::Offset . That is, physical coordinates are not used.
+
 
 This filter is N-dimensional and known to be efficient in computational time. The algorithm is the N-dimensional version of the 4SED algorithm given for two dimensions in:
 

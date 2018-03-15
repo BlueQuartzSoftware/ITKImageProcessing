@@ -20,6 +20,7 @@
 // Auto includes
 #include <itkBinaryThinningImageFilter.h>
 
+
 /**
  * @brief The ITKBinaryThinningImage class. See [Filter documentation](@ref ITKBinaryThinningImage) for details.
  */
@@ -33,6 +34,7 @@ public:
    SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKBinaryThinningImage, AbstractFilter)
 
   virtual ~ITKBinaryThinningImage();
+
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -89,8 +91,8 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKBinaryThinningImage(const ITKBinaryThinningImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKBinaryThinningImage&);         // Operator '=' Not Implemented
+  ITKBinaryThinningImage(const ITKBinaryThinningImage&) = delete;    // Copy Constructor Not Implemented
+  void operator=(const ITKBinaryThinningImage&) = delete; // Operator '=' Not Implemented
 };
 
 #ifdef __clang__

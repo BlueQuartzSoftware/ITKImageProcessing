@@ -13,7 +13,7 @@ Computes the Laplacian of Gaussian (LoG) of an image by convolution with the sec
 
 \par Wiki Examples:
 
-\li All Examples 
+\li All Examples
 
 \li Compute the Laplacian of Gaussian (LoG) of an image
 
@@ -22,7 +22,7 @@ Computes the Laplacian of Gaussian (LoG) of an image by convolution with the sec
 | Name | Type | Description |
 |------|------|-------------|
 | Sigma | double| Set Sigma value. Sigma is measured in the units of image spacing. |
-| NormalizeAcrossScale | bool| Define which normalization factor will be used for the Gaussian\see RecursiveGaussianImageFilter::SetNormalizeAcrossScale |
+| NormalizeAcrossScale | bool| Define which normalization factor will be used for the Gaussian \see RecursiveGaussianImageFilter::SetNormalizeAcrossScale |
 
 
 ## Required Geometry ##

@@ -21,6 +21,7 @@
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 #include <itkShotNoiseImageFilter.h>
 
+
 /**
  * @brief The ITKShotNoiseImage class. See [Filter documentation](@ref ITKShotNoiseImage) for details.
  */
@@ -40,6 +41,7 @@ public:
 
   SIMPL_FILTER_PARAMETER(double, Seed)
   Q_PROPERTY(double Seed READ getSeed WRITE setSeed)
+
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -96,8 +98,8 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKShotNoiseImage(const ITKShotNoiseImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKShotNoiseImage&);    // Operator '=' Not Implemented
+  ITKShotNoiseImage(const ITKShotNoiseImage&) = delete;    // Copy Constructor Not Implemented
+  void operator=(const ITKShotNoiseImage&) = delete; // Operator '=' Not Implemented
 };
 
 #ifdef __clang__

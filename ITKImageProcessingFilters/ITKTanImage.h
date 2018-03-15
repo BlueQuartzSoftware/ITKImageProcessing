@@ -20,6 +20,7 @@
 // Auto includes
 #include <itkTanImageFilter.h>
 
+
 /**
  * @brief The ITKTanImage class. See [Filter documentation](@ref ITKTanImage) for details.
  */
@@ -33,6 +34,7 @@ public:
    SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKTanImage, AbstractFilter)
 
   virtual ~ITKTanImage();
+
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -89,7 +91,7 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKTanImage(const ITKTanImage&);    // Copy Constructor Not Implemented
+  ITKTanImage(const ITKTanImage&) = delete;    // Copy Constructor Not Implemented
   void operator=(const ITKTanImage&) = delete; // Operator '=' Not Implemented
 };
 

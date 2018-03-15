@@ -21,6 +21,7 @@
 #include <SIMPLib/FilterParameters/FloatVec3FilterParameter.h>
 #include <itkMedianImageFilter.h>
 
+
 /**
  * @brief The ITKMedianImage class. See [Filter documentation](@ref ITKMedianImage) for details.
  */
@@ -37,6 +38,7 @@ public:
 
   SIMPL_FILTER_PARAMETER(FloatVec3_t, Radius)
   Q_PROPERTY(FloatVec3_t Radius READ getRadius WRITE setRadius)
+
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -93,7 +95,7 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKMedianImage(const ITKMedianImage&) = delete; // Copy Constructor Not Implemented
+  ITKMedianImage(const ITKMedianImage&) = delete;    // Copy Constructor Not Implemented
   void operator=(const ITKMedianImage&) = delete; // Operator '=' Not Implemented
 };
 

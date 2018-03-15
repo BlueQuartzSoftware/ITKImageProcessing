@@ -21,6 +21,7 @@
 #include <SIMPLib/FilterParameters/BooleanFilterParameter.h>
 #include <itkDanielssonDistanceMapImageFilter.h>
 
+
 /**
  * @brief The ITKDanielssonDistanceMapImage class. See [Filter documentation](@ref ITKDanielssonDistanceMapImage) for details.
  */
@@ -43,6 +44,7 @@ public:
 
   SIMPL_FILTER_PARAMETER(bool, UseImageSpacing)
   Q_PROPERTY(bool UseImageSpacing READ getUseImageSpacing WRITE setUseImageSpacing)
+
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -99,8 +101,8 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKDanielssonDistanceMapImage(const ITKDanielssonDistanceMapImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKDanielssonDistanceMapImage&);                // Operator '=' Not Implemented
+  ITKDanielssonDistanceMapImage(const ITKDanielssonDistanceMapImage&) = delete;    // Copy Constructor Not Implemented
+  void operator=(const ITKDanielssonDistanceMapImage&) = delete; // Operator '=' Not Implemented
 };
 
 #ifdef __clang__

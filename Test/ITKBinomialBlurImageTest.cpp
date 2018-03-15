@@ -8,6 +8,7 @@
 // Auto includes
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 
+
 class ITKBinomialBlurImageTest : public ITKTestBase
 {
 
@@ -20,7 +21,7 @@ public:
   }
 
   int TestITKBinomialBlurImagedefaultsTest()
-  {
+{
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/VM1111Shrink-RGBFloat.nrrd");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -47,7 +48,9 @@ public:
     GetMD5FromDataContainer(containerArray, input_path, md5Output);
     DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("ccd2e6e83817056f586e37f59e43bfff"));
     return 0;
-  }
+}
+
+
 
   // -----------------------------------------------------------------------------
   //
@@ -58,7 +61,7 @@ public:
 
     DREAM3D_REGISTER_TEST(this->TestFilterAvailability("ITKBinomialBlurImage"));
 
-    DREAM3D_REGISTER_TEST(TestITKBinomialBlurImagedefaultsTest());
+    DREAM3D_REGISTER_TEST( TestITKBinomialBlurImagedefaultsTest());
 
     if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
     {
@@ -68,5 +71,5 @@ public:
 
 private:
   ITKBinomialBlurImageTest(const ITKBinomialBlurImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKBinomialBlurImageTest&);           // Operator '=' Not Implemented
+  void operator=(const ITKBinomialBlurImageTest&);  // Operator '=' Not Implemented
 };

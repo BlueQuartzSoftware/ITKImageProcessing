@@ -23,6 +23,7 @@
 #include <SIMPLib/FilterParameters/IntFilterParameter.h>
 #include <itkGrayscaleMorphologicalOpeningImageFilter.h>
 
+
 /**
  * @brief The ITKGrayscaleMorphologicalOpeningImage class. See [Filter documentation](@ref ITKGrayscaleMorphologicalOpeningImage) for details.
  */
@@ -33,7 +34,7 @@ class ITKGrayscaleMorphologicalOpeningImage : public ITKImageProcessingBase
 public:
   SIMPL_SHARED_POINTERS(ITKGrayscaleMorphologicalOpeningImage)
   SIMPL_STATIC_NEW_MACRO(ITKGrayscaleMorphologicalOpeningImage)
-   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKGrayscaleMorphologicalOpeningImage, AbstractFilter)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKGrayscaleMorphologicalOpeningImage, AbstractFilter)
 
   virtual ~ITKGrayscaleMorphologicalOpeningImage();
 
@@ -45,6 +46,7 @@ public:
 
   SIMPL_FILTER_PARAMETER(int, KernelType)
   Q_PROPERTY(int KernelType READ getKernelType WRITE setKernelType)
+
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -101,8 +103,8 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKGrayscaleMorphologicalOpeningImage(const ITKGrayscaleMorphologicalOpeningImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKGrayscaleMorphologicalOpeningImage&);                        // Operator '=' Not Implemented
+  ITKGrayscaleMorphologicalOpeningImage(const ITKGrayscaleMorphologicalOpeningImage&) = delete;    // Copy Constructor Not Implemented
+  void operator=(const ITKGrayscaleMorphologicalOpeningImage&) = delete; // Operator '=' Not Implemented
 };
 
 #ifdef __clang__

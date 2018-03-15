@@ -4,7 +4,8 @@
  * Your License or Copyright can go here
  */
 
-#include "ITKThresholdMaximumConnectedComponentsImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/ITKThresholdMaximumConnectedComponentsImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/SimpleITKEnums.h"
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -18,11 +19,12 @@
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 ITKThresholdMaximumConnectedComponentsImage::ITKThresholdMaximumConnectedComponentsImage()
-: ITKImageBase()
+: ITKImageProcessingBase()
 {
   m_MinimumObjectSizeInPixels = StaticCastScalar<double, double, double>(0u);
   m_UpperBoundary = StaticCastScalar<double, double, double>(std::numeric_limits<double>::max());
@@ -48,6 +50,7 @@ void ITKThresholdMaximumConnectedComponentsImage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("UpperBoundary", UpperBoundary, FilterParameter::Parameter, ITKThresholdMaximumConnectedComponentsImage));
   parameters.push_back(SIMPL_NEW_INTEGER_FP("InsideValue", InsideValue, FilterParameter::Parameter, ITKThresholdMaximumConnectedComponentsImage));
   parameters.push_back(SIMPL_NEW_INTEGER_FP("OutsideValue", OutsideValue, FilterParameter::Parameter, ITKThresholdMaximumConnectedComponentsImage));
+
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -86,14 +89,15 @@ void ITKThresholdMaximumConnectedComponentsImage::readFilterParameters(AbstractF
 // -----------------------------------------------------------------------------
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKThresholdMaximumConnectedComponentsImage::dataCheck()
 {
+  setErrorCondition(0);
+  setWarningCondition(0);
+
   // Check consistency of parameters
   this->CheckIntegerEntry<uint32_t, double>(m_MinimumObjectSizeInPixels, "MinimumObjectSizeInPixels", 1);
   this->CheckIntegerEntry<uint8_t, int>(m_InsideValue, "InsideValue", 1);
   this->CheckIntegerEntry<uint8_t, int>(m_OutsideValue, "OutsideValue", 1);
 
-  setErrorCondition(0);
-  setWarningCondition(0);
-  ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
+  ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
@@ -119,7 +123,8 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   filter->SetUpperBoundary(static_cast<typename InputImageType::PixelType>(std::min<double>(this->m_UpperBoundary, itk::NumericTraits<typename InputImageType::PixelType>::max())));
   filter->SetInsideValue(static_cast<uint8_t>(m_InsideValue));
   filter->SetOutsideValue(static_cast<uint8_t>(m_OutsideValue));
-  this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+  this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+
 }
 
 // -----------------------------------------------------------------------------
@@ -164,5 +169,5 @@ const QUuid ITKThresholdMaximumConnectedComponentsImage::getUuid()
 // -----------------------------------------------------------------------------
 const QString ITKThresholdMaximumConnectedComponentsImage::getSubGroupName() const
 {
-  return "ITK Thresholding";
+  return "ITK SegmentationPostProcessing";
 }

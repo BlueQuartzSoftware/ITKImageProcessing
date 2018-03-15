@@ -11,7 +11,7 @@ Binarize an input image by thresholding.
 
 This filter produces an output image whose pixels are either one of two values ( OutsideValue or InsideValue ), depending on whether the corresponding input image pixels lie between the two thresholds ( LowerThreshold and UpperThreshold ). Values equal to either threshold is considered to be between the thresholds.
 
-More precisely \f[ Output(x_i) = \begin{cases} InsideValue & \text{if \f$LowerThreshold \leq x_i \leq UpperThreshold\f$} \\ OutsideValue & \text{otherwise} \end{cases} \f]  
+More precisely \f[ Output(x_i) = \begin{cases} InsideValue & \text{if \f$LowerThreshold \leq x_i \leq UpperThreshold\f$} \\ OutsideValue & \text{otherwise} \end{cases} \f]
 
 This filter is templated over the input image type and the output image type.
 
@@ -21,7 +21,7 @@ The default values for LowerThreshold and UpperThreshold are: LowerThreshold = N
 
 \par Wiki Examples:
 
-\li All Examples 
+\li All Examples
 
 \li Threshold an image
 

@@ -9,15 +9,15 @@ ITKImageProcessing (ITKImageProcessing)
 
 Computes the sigmoid function pixel-wise.
 
-A linear transformation is applied first on the argument of the sigmoid fuction. The resulting total transfrom is given by
+A linear transformation is applied first on the argument of the sigmoid function. The resulting total transform is given by
 
- \f[ f(x) = (Max-Min) \cdot \frac{1}{\left(1+e^{- \frac{ x - \beta }{\alpha}}\right)} + Min \f]  
+ \f[ f(x) = (Max-Min) \cdot \frac{1}{\left(1+e^{- \frac{ x - \beta }{\alpha}}\right)} + Min \f]
 
 Every output pixel is equal to f(x). Where x is the intensity of the homologous input pixel, and alpha and beta are user-provided constants.
 
 \par Wiki Examples:
 
-\li All Examples 
+\li All Examples
 
 \li Pass image pixels through a sigmoid function
 

@@ -24,6 +24,7 @@
 #include <SIMPLib/FilterParameters/IntFilterParameter.h>
 #include <itkBinaryDilateImageFilter.h>
 
+
 /**
  * @brief The ITKBinaryDilateImage class. See [Filter documentation](@ref ITKBinaryDilateImage) for details.
  */
@@ -34,7 +35,7 @@ class ITKBinaryDilateImage : public ITKImageProcessingBase
 public:
   SIMPL_SHARED_POINTERS(ITKBinaryDilateImage)
   SIMPL_STATIC_NEW_MACRO(ITKBinaryDilateImage)
-   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKBinaryDilateImage, AbstractFilter)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKBinaryDilateImage, AbstractFilter)
 
   virtual ~ITKBinaryDilateImage();
 
@@ -52,6 +53,7 @@ public:
 
   SIMPL_FILTER_PARAMETER(int, KernelType)
   Q_PROPERTY(int KernelType READ getKernelType WRITE setKernelType)
+
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -108,8 +110,8 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKBinaryDilateImage(const ITKBinaryDilateImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKBinaryDilateImage&);       // Operator '=' Not Implemented
+  ITKBinaryDilateImage(const ITKBinaryDilateImage&) = delete;    // Copy Constructor Not Implemented
+  void operator=(const ITKBinaryDilateImage&) = delete; // Operator '=' Not Implemented
 };
 
 #ifdef __clang__

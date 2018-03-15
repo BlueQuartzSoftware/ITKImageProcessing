@@ -4,7 +4,8 @@
  * Your License or Copyright can go here
  */
 
-#include "ITKMorphologicalWatershedImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/ITKMorphologicalWatershedImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/SimpleITKEnums.h"
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -18,11 +19,12 @@
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 ITKMorphologicalWatershedImage::ITKMorphologicalWatershedImage()
-: ITKImageBase()
+: ITKImageProcessingBase()
 {
   m_Level = StaticCastScalar<double, double, double>(0.0);
   m_MarkWatershedLine = StaticCastScalar<bool, bool, bool>(true);
@@ -46,6 +48,7 @@ void ITKMorphologicalWatershedImage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Level", Level, FilterParameter::Parameter, ITKMorphologicalWatershedImage));
   parameters.push_back(SIMPL_NEW_BOOL_FP("MarkWatershedLine", MarkWatershedLine, FilterParameter::Parameter, ITKMorphologicalWatershedImage));
   parameters.push_back(SIMPL_NEW_BOOL_FP("FullyConnected", FullyConnected, FilterParameter::Parameter, ITKMorphologicalWatershedImage));
+
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -83,11 +86,12 @@ void ITKMorphologicalWatershedImage::readFilterParameters(AbstractFilterParamete
 // -----------------------------------------------------------------------------
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKMorphologicalWatershedImage::dataCheck()
 {
-  // Check consistency of parameters
-
   setErrorCondition(0);
   setWarningCondition(0);
-  ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
+
+  // Check consistency of parameters
+
+  ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
@@ -95,7 +99,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
 // -----------------------------------------------------------------------------
 void ITKMorphologicalWatershedImage::dataCheckInternal()
 {
-  Dream3DArraySwitchMacroOutputType(this->dataCheck, getSelectedCellArrayPath(), -4, uint32_t, 0);
+  Dream3DArraySwitchMacroOutputType(this->dataCheck, getSelectedCellArrayPath(), -4,uint32_t, 0);
 }
 
 // -----------------------------------------------------------------------------
@@ -112,7 +116,8 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   filter->SetLevel(static_cast<double>(m_Level));
   filter->SetMarkWatershedLine(static_cast<bool>(m_MarkWatershedLine));
   filter->SetFullyConnected(static_cast<bool>(m_FullyConnected));
-  this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+  this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+
 }
 
 // -----------------------------------------------------------------------------
@@ -120,7 +125,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
 // -----------------------------------------------------------------------------
 void ITKMorphologicalWatershedImage::filterInternal()
 {
-  Dream3DArraySwitchMacroOutputType(this->filter, getSelectedCellArrayPath(), -4, uint32_t, 0);
+  Dream3DArraySwitchMacroOutputType(this->filter, getSelectedCellArrayPath(), -4,uint32_t, 0);
 }
 
 // -----------------------------------------------------------------------------
@@ -157,5 +162,5 @@ const QUuid ITKMorphologicalWatershedImage::getUuid()
 // -----------------------------------------------------------------------------
 const QString ITKMorphologicalWatershedImage::getSubGroupName() const
 {
-  return "ITK Segmentation";
+  return "ITK Watersheds";
 }

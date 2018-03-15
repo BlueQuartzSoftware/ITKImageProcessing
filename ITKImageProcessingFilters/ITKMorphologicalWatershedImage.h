@@ -22,6 +22,7 @@
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 #include <itkMorphologicalWatershedImageFilter.h>
 
+
 /**
  * @brief The ITKMorphologicalWatershedImage class. See [Filter documentation](@ref ITKMorphologicalWatershedImage) for details.
  */
@@ -44,6 +45,7 @@ public:
 
   SIMPL_FILTER_PARAMETER(bool, FullyConnected)
   Q_PROPERTY(bool FullyConnected READ getFullyConnected WRITE setFullyConnected)
+
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -100,8 +102,8 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKMorphologicalWatershedImage(const ITKMorphologicalWatershedImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKMorphologicalWatershedImage&);                 // Operator '=' Not Implemented
+  ITKMorphologicalWatershedImage(const ITKMorphologicalWatershedImage&) = delete;    // Copy Constructor Not Implemented
+  void operator=(const ITKMorphologicalWatershedImage&) = delete; // Operator '=' Not Implemented
 };
 
 #ifdef __clang__

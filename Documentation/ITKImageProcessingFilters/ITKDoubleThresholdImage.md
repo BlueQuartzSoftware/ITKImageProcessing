@@ -13,8 +13,8 @@ Double threshold addresses the difficulty in selecting a threshold that will sel
 
 Double threshold uses the narrow threshold image as a marker image and the wide threshold image as a mask image in the geodesic dilation. Essentially, the marker image (narrow threshold) is dilated but constrained to lie within the mask image (wide threshold). Thus, only the objects of interest (those pixels that survived the narrow threshold) are extracted but the those objects appear in the final image as they would have if the wide threshold was used.
 
-\see GrayscaleGeodesicDilateImageFilter 
-\see 
+\see GrayscaleGeodesicDilateImageFilter
+
 \see MorphologyImageFilter , GrayscaleDilateImageFilter , GrayscaleFunctionDilateImageFilter , BinaryDilateImageFilter
 
 ## Parameters ##

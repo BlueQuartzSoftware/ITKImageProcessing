@@ -11,18 +11,19 @@ Transforms the image so that any pixel that is not a regional maxima is set to t
 
 Regional maxima are flat zones surrounded by pixels of lower value. A completely flat image will be marked as a regional maxima by this filter.
 
-This code was contributed in the Insight Journal paper: "Finding regional extrema - methods and performance" by Beare R., Lehmann G. https://hdl.handle.net/1926/153 http://www.insight-journal.org/browse/publication/65 
+This code was contributed in the Insight Journal paper: "Finding regional extrema - methods and performance" by Beare R., Lehmann G. https://hdl.handle.net/1926/153 http://www.insight-journal.org/browse/publication/65
 
 \author Richard Beare. Department of Medicine, Monash University, Melbourne, Australia.
 
-\see ValuedRegionalMinimaImageFilter 
-\see 
-\see ValuedRegionalExtremaImageFilter 
-\see 
-\see HMinimaImageFilter 
+\see ValuedRegionalMinimaImageFilter
+
+\see ValuedRegionalExtremaImageFilter
+
+\see HMinimaImageFilter
+
 \par Wiki Examples:
 
-\li All Examples 
+\li All Examples
 
 \li ValuedRegionalMaximaImageFilter
 
@@ -31,6 +32,7 @@ This code was contributed in the Insight Journal paper: "Finding regional extrem
 | Name | Type | Description |
 |------|------|-------------|
 | FullyConnected | bool| N/A |
+| Flat | bool| N/A |
 
 
 ## Required Geometry ##

@@ -4,7 +4,7 @@
  * Your License or Copyright can go here
  */
 
-#include "ITKErodeObjectMorphologyImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/ITKErodeObjectMorphologyImage.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/SimpleITKEnums.h"
 
 #include "SIMPLib/Common/Constants.h"
@@ -21,11 +21,12 @@
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 #include <itkFlatStructuringElement.h>
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 ITKErodeObjectMorphologyImage::ITKErodeObjectMorphologyImage()
-: ITKImageBase()
+: ITKImageProcessingBase()
 {
   m_ObjectValue = StaticCastScalar<double, double, double>(1);
   m_BackgroundValue = StaticCastScalar<double, double, double>(0);
@@ -69,6 +70,7 @@ void ITKErodeObjectMorphologyImage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("BackgroundValue", BackgroundValue, FilterParameter::Parameter, ITKErodeObjectMorphologyImage));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("KernelRadius", KernelRadius, FilterParameter::Parameter, ITKErodeObjectMorphologyImage));
 
+
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Save as New Array", SaveAsNewArray, FilterParameter::Parameter, ITKErodeObjectMorphologyImage, linkedProps));
@@ -108,9 +110,11 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
 {
   setErrorCondition(0);
   setWarningCondition(0);
+
   // Check consistency of parameters
   this->CheckVectorEntry<unsigned int, FloatVec3_t>(m_KernelRadius, "KernelRadius", 1);
-  ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
+
+  ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
@@ -155,10 +159,11 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   // define filter
   typedef itk::ErodeObjectMorphologyImageFilter<InputImageType, OutputImageType, StructuringElementType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
-  filter->SetObjectValue(static_cast<typename FilterType::PixelType>(this->getObjectValue()));
+  filter->SetObjectValue(static_cast<typename FilterType::PixelType>(this->getObjectValue()) );
   filter->SetBackgroundValue(static_cast<double>(m_BackgroundValue));
   filter->SetKernel(structuringElement);
-  this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+  this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+
 }
 
 // -----------------------------------------------------------------------------

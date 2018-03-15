@@ -4,7 +4,8 @@
  * Your License or Copyright can go here
  */
 
-#include "ITKRelabelComponentImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/ITKRelabelComponentImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/SimpleITKEnums.h"
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -18,13 +19,15 @@
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 ITKRelabelComponentImage::ITKRelabelComponentImage()
-: ITKImageBase()
+: ITKImageProcessingBase()
 {
   m_MinimumObjectSize = StaticCastScalar<double, double, double>(0u);
+  m_SortByObjectSize = StaticCastScalar<bool, bool, bool>(true);
 
   setupFilterParameters();
 }
@@ -42,6 +45,8 @@ void ITKRelabelComponentImage::setupFilterParameters()
   FilterParameterVector parameters;
 
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("MinimumObjectSize", MinimumObjectSize, FilterParameter::Parameter, ITKRelabelComponentImage));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("SortByObjectSize", SortByObjectSize, FilterParameter::Parameter, ITKRelabelComponentImage));
+
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -68,6 +73,7 @@ void ITKRelabelComponentImage::readFilterParameters(AbstractFilterParametersRead
   setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
   setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
   setMinimumObjectSize(reader->readValue("MinimumObjectSize", getMinimumObjectSize()));
+  setSortByObjectSize(reader->readValue("SortByObjectSize", getSortByObjectSize()));
 
   reader->closeFilterGroup();
 }
@@ -77,12 +83,13 @@ void ITKRelabelComponentImage::readFilterParameters(AbstractFilterParametersRead
 // -----------------------------------------------------------------------------
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKRelabelComponentImage::dataCheck()
 {
+  setErrorCondition(0);
+  setWarningCondition(0);
+
   // Check consistency of parameters
   this->CheckIntegerEntry<uint64_t, double>(m_MinimumObjectSize, "MinimumObjectSize", 1);
 
-  setErrorCondition(0);
-  setWarningCondition(0);
-  ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
+  ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
@@ -105,7 +112,27 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   typedef itk::RelabelComponentImageFilter<InputImageType, OutputImageType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
   filter->SetMinimumObjectSize(static_cast<uint64_t>(m_MinimumObjectSize));
-  this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+  filter->SetSortByObjectSize(static_cast<bool>(m_SortByObjectSize));
+  this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+{
+  QString outputVal = "NumberOfObjects :%1";
+  m_NumberOfObjects = filter->GetNumberOfObjects();
+  notifyWarningMessage(getHumanLabel(),outputVal.arg(m_NumberOfObjects),0);
+}
+{
+  QString outputVal = "OriginalNumberOfObjects :%1";
+  m_OriginalNumberOfObjects = filter->GetOriginalNumberOfObjects();
+  notifyWarningMessage(getHumanLabel(),outputVal.arg(m_OriginalNumberOfObjects),0);
+}
+//{
+//  QString outputVal = "SizeOfObjectsInPhysicalUnits :%1";
+//  m_SizeOfObjectsInPhysicalUnits = filter->GetSizeOfObjectsInPhysicalUnits();
+//}
+//{
+//  QString outputVal = "SizeOfObjectsInPixels :%1";
+//  m_SizeOfObjectsInPixels = filter->GetSizeOfObjectsInPixels();
+//}
+
 }
 
 // -----------------------------------------------------------------------------

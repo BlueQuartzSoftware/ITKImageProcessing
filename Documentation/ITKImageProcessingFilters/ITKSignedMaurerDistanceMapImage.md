@@ -26,6 +26,7 @@ Reference: C. R. Maurer, Jr., R. Qi, and V. Raghavan, "A Linear Time Algorithm f
 | InsideIsPositive | bool| Set if the inside represents positive values in the signed distance map. By convention ON pixels are treated as inside pixels. |
 | SquaredDistance | bool| Set if the distance should be squared. |
 | UseImageSpacing | bool| Set if image spacing should be used in computing distances. |
+| BackgroundValue | double| Set the background value which defines the object. Usually this value is = 0. |
 
 
 ## Required Geometry ##

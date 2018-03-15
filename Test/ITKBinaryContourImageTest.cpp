@@ -9,6 +9,7 @@
 #include <SIMPLib/FilterParameters/BooleanFilterParameter.h>
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 
+
 class ITKBinaryContourImageTest : public ITKTestBase
 {
 
@@ -21,7 +22,7 @@ public:
   }
 
   int TestITKBinaryContourImagedefaultTest()
-  {
+{
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/WhiteDots.png");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -40,11 +41,11 @@ public:
     propWasSet = filter->setProperty("SaveAsNewArray", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     {
-      double d3d_var;
-      d3d_var = 255.0;
-      var.setValue(d3d_var);
-      propWasSet = filter->setProperty("ForegroundValue", var);
-      DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+        double d3d_var;
+        d3d_var = 255.0;
+        var.setValue(d3d_var);
+        propWasSet = filter->setProperty("ForegroundValue", var);
+        DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     }
     filter->setDataContainerArray(containerArray);
     filter->execute();
@@ -55,10 +56,10 @@ public:
     GetMD5FromDataContainer(containerArray, input_path, md5Output);
     DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("3921141f21fcb41e6d4af197e48ffbb5"));
     return 0;
-  }
+}
 
-  int TestITKBinaryContourImagecustomTest()
-  {
+int TestITKBinaryContourImagecustomTest()
+{
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/2th_cthead1.png");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -77,18 +78,18 @@ public:
     propWasSet = filter->setProperty("SaveAsNewArray", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     {
-      double d3d_var;
-      d3d_var = 100;
-      var.setValue(d3d_var);
-      propWasSet = filter->setProperty("ForegroundValue", var);
-      DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+        double d3d_var;
+        d3d_var = 100;
+        var.setValue(d3d_var);
+        propWasSet = filter->setProperty("ForegroundValue", var);
+        DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     }
     {
-      bool d3d_var;
-      d3d_var = true;
-      var.setValue(d3d_var);
-      propWasSet = filter->setProperty("FullyConnected", var);
-      DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+        bool d3d_var;
+        d3d_var = true;
+        var.setValue(d3d_var);
+        propWasSet = filter->setProperty("FullyConnected", var);
+        DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     }
     filter->setDataContainerArray(containerArray);
     filter->execute();
@@ -99,7 +100,9 @@ public:
     GetMD5FromDataContainer(containerArray, input_path, md5Output);
     DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("09212e4d204a0ed90a445dc832047b22"));
     return 0;
-  }
+}
+
+
 
   // -----------------------------------------------------------------------------
   //
@@ -110,8 +113,8 @@ public:
 
     DREAM3D_REGISTER_TEST(this->TestFilterAvailability("ITKBinaryContourImage"));
 
-    DREAM3D_REGISTER_TEST(TestITKBinaryContourImagedefaultTest());
-    DREAM3D_REGISTER_TEST(TestITKBinaryContourImagecustomTest());
+    DREAM3D_REGISTER_TEST( TestITKBinaryContourImagedefaultTest());
+    DREAM3D_REGISTER_TEST( TestITKBinaryContourImagecustomTest());
 
     if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
     {
@@ -121,5 +124,5 @@ public:
 
 private:
   ITKBinaryContourImageTest(const ITKBinaryContourImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKBinaryContourImageTest&);            // Operator '=' Not Implemented
+  void operator=(const ITKBinaryContourImageTest&);  // Operator '=' Not Implemented
 };

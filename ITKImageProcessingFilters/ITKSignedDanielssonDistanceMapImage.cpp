@@ -4,7 +4,8 @@
  * Your License or Copyright can go here
  */
 
-#include "ITKSignedDanielssonDistanceMapImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/ITKSignedDanielssonDistanceMapImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/SimpleITKEnums.h"
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -18,11 +19,12 @@
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 ITKSignedDanielssonDistanceMapImage::ITKSignedDanielssonDistanceMapImage()
-: ITKImageBase()
+: ITKImageProcessingBase()
 {
   m_InsideIsPositive = StaticCastScalar<bool, bool, bool>(false);
   m_SquaredDistance = StaticCastScalar<bool, bool, bool>(false);
@@ -46,6 +48,7 @@ void ITKSignedDanielssonDistanceMapImage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_BOOL_FP("InsideIsPositive", InsideIsPositive, FilterParameter::Parameter, ITKSignedDanielssonDistanceMapImage));
   parameters.push_back(SIMPL_NEW_BOOL_FP("SquaredDistance", SquaredDistance, FilterParameter::Parameter, ITKSignedDanielssonDistanceMapImage));
   parameters.push_back(SIMPL_NEW_BOOL_FP("UseImageSpacing", UseImageSpacing, FilterParameter::Parameter, ITKSignedDanielssonDistanceMapImage));
+
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -83,11 +86,12 @@ void ITKSignedDanielssonDistanceMapImage::readFilterParameters(AbstractFilterPar
 // -----------------------------------------------------------------------------
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKSignedDanielssonDistanceMapImage::dataCheck()
 {
-  // Check consistency of parameters
-
   setErrorCondition(0);
   setWarningCondition(0);
-  ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
+
+  // Check consistency of parameters
+
+  ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
@@ -112,7 +116,8 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   filter->SetInsideIsPositive(static_cast<bool>(m_InsideIsPositive));
   filter->SetSquaredDistance(static_cast<bool>(m_SquaredDistance));
   filter->SetUseImageSpacing(static_cast<bool>(m_UseImageSpacing));
-  this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+  this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+
 }
 
 // -----------------------------------------------------------------------------

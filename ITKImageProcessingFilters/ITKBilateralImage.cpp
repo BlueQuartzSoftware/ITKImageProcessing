@@ -4,7 +4,8 @@
  * Your License or Copyright can go here
  */
 
-#include "ITKBilateralImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/ITKBilateralImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/SimpleITKEnums.h"
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -18,11 +19,12 @@
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 ITKBilateralImage::ITKBilateralImage()
-: ITKImageBase()
+: ITKImageProcessingBase()
 {
   m_DomainSigma = StaticCastScalar<double, double, double>(4.0);
   m_RangeSigma = StaticCastScalar<double, double, double>(50.0);
@@ -46,6 +48,7 @@ void ITKBilateralImage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("DomainSigma", DomainSigma, FilterParameter::Parameter, ITKBilateralImage));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("RangeSigma", RangeSigma, FilterParameter::Parameter, ITKBilateralImage));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("NumberOfRangeGaussianSamples", NumberOfRangeGaussianSamples, FilterParameter::Parameter, ITKBilateralImage));
+
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -83,12 +86,13 @@ void ITKBilateralImage::readFilterParameters(AbstractFilterParametersReader* rea
 // -----------------------------------------------------------------------------
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKBilateralImage::dataCheck()
 {
+  setErrorCondition(0);
+  setWarningCondition(0);
+
   // Check consistency of parameters
   this->CheckIntegerEntry<unsigned int, double>(m_NumberOfRangeGaussianSamples, "NumberOfRangeGaussianSamples", 1);
 
-  setErrorCondition(0);
-  setWarningCondition(0);
-  ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
+  ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
@@ -113,7 +117,8 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   filter->SetDomainSigma(static_cast<double>(m_DomainSigma));
   filter->SetRangeSigma(static_cast<double>(m_RangeSigma));
   filter->SetNumberOfRangeGaussianSamples(static_cast<unsigned int>(m_NumberOfRangeGaussianSamples));
-  this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+  this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+
 }
 
 // -----------------------------------------------------------------------------

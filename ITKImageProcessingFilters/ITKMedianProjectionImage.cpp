@@ -4,7 +4,8 @@
  * Your License or Copyright can go here
  */
 
-#include "ITKMedianProjectionImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/ITKMedianProjectionImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/SimpleITKEnums.h"
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -18,11 +19,12 @@
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 ITKMedianProjectionImage::ITKMedianProjectionImage()
-: ITKImageBase()
+: ITKImageProcessingBase()
 {
   m_ProjectionDimension = StaticCastScalar<double, double, double>(0u);
 
@@ -42,6 +44,7 @@ void ITKMedianProjectionImage::setupFilterParameters()
   FilterParameterVector parameters;
 
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("ProjectionDimension", ProjectionDimension, FilterParameter::Parameter, ITKMedianProjectionImage));
+
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -77,12 +80,13 @@ void ITKMedianProjectionImage::readFilterParameters(AbstractFilterParametersRead
 // -----------------------------------------------------------------------------
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKMedianProjectionImage::dataCheck()
 {
+  setErrorCondition(0);
+  setWarningCondition(0);
+
   // Check consistency of parameters
   this->CheckIntegerEntry<unsigned int, double>(m_ProjectionDimension, "ProjectionDimension", 1);
 
-  setErrorCondition(0);
-  setWarningCondition(0);
-  ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
+  ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
@@ -105,7 +109,8 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   typedef itk::MedianProjectionImageFilter<InputImageType, OutputImageType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
   filter->SetProjectionDimension(static_cast<unsigned int>(m_ProjectionDimension));
-  this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+  this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+
 }
 
 // -----------------------------------------------------------------------------
@@ -150,5 +155,5 @@ const QUuid ITKMedianProjectionImage::getUuid()
 // -----------------------------------------------------------------------------
 const QString ITKMedianProjectionImage::getSubGroupName() const
 {
-  return "ITK Projection";
+  return "ITK ImageStatistics";
 }

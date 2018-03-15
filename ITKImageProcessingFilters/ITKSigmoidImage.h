@@ -21,6 +21,7 @@
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 #include <itkSigmoidImageFilter.h>
 
+
 /**
  * @brief The ITKSigmoidImage class. See [Filter documentation](@ref ITKSigmoidImage) for details.
  */
@@ -46,6 +47,7 @@ public:
 
   SIMPL_FILTER_PARAMETER(double, OutputMinimum)
   Q_PROPERTY(double OutputMinimum READ getOutputMinimum WRITE setOutputMinimum)
+
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -102,8 +104,8 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKSigmoidImage(const ITKSigmoidImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKSigmoidImage&);  // Operator '=' Not Implemented
+  ITKSigmoidImage(const ITKSigmoidImage&) = delete;    // Copy Constructor Not Implemented
+  void operator=(const ITKSigmoidImage&) = delete; // Operator '=' Not Implemented
 };
 
 #ifdef __clang__
