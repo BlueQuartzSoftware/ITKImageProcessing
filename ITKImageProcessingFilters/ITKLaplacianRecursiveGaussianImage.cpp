@@ -4,7 +4,8 @@
  * Your License or Copyright can go here
  */
 
-#include "ITKLaplacianRecursiveGaussianImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/ITKLaplacianRecursiveGaussianImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/SimpleITKEnums.h"
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -18,11 +19,12 @@
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 ITKLaplacianRecursiveGaussianImage::ITKLaplacianRecursiveGaussianImage()
-: ITKImageBase()
+: ITKImageProcessingBase()
 {
   m_Sigma = StaticCastScalar<double, double, double>(1.0);
   m_NormalizeAcrossScale = StaticCastScalar<bool, bool, bool>(false);
@@ -44,6 +46,7 @@ void ITKLaplacianRecursiveGaussianImage::setupFilterParameters()
 
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Sigma", Sigma, FilterParameter::Parameter, ITKLaplacianRecursiveGaussianImage));
   parameters.push_back(SIMPL_NEW_BOOL_FP("NormalizeAcrossScale", NormalizeAcrossScale, FilterParameter::Parameter, ITKLaplacianRecursiveGaussianImage));
+
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -80,11 +83,12 @@ void ITKLaplacianRecursiveGaussianImage::readFilterParameters(AbstractFilterPara
 // -----------------------------------------------------------------------------
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKLaplacianRecursiveGaussianImage::dataCheck()
 {
-  // Check consistency of parameters
-
   setErrorCondition(0);
   setWarningCondition(0);
-  ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
+
+  // Check consistency of parameters
+
+  ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
@@ -92,7 +96,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
 // -----------------------------------------------------------------------------
 void ITKLaplacianRecursiveGaussianImage::dataCheckInternal()
 {
-  Dream3DArraySwitchMacroOutputType(this->dataCheck, getSelectedCellArrayPath(), -4, float, 0);
+  Dream3DArraySwitchMacroOutputType(this->dataCheck, getSelectedCellArrayPath(), -4,float, 0);
 }
 
 // -----------------------------------------------------------------------------
@@ -108,7 +112,8 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   typename FilterType::Pointer filter = FilterType::New();
   filter->SetSigma(static_cast<double>(m_Sigma));
   filter->SetNormalizeAcrossScale(static_cast<bool>(m_NormalizeAcrossScale));
-  this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+  this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+
 }
 
 // -----------------------------------------------------------------------------
@@ -116,7 +121,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
 // -----------------------------------------------------------------------------
 void ITKLaplacianRecursiveGaussianImage::filterInternal()
 {
-  Dream3DArraySwitchMacroOutputType(this->filter, getSelectedCellArrayPath(), -4, float, 0);
+  Dream3DArraySwitchMacroOutputType(this->filter, getSelectedCellArrayPath(), -4,float, 0);
 }
 
 // -----------------------------------------------------------------------------
@@ -153,5 +158,5 @@ const QUuid ITKLaplacianRecursiveGaussianImage::getUuid()
 // -----------------------------------------------------------------------------
 const QString ITKLaplacianRecursiveGaussianImage::getSubGroupName() const
 {
-  return "ITK Edge";
+  return "ITK Smoothing";
 }

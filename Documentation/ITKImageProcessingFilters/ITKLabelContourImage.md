@@ -13,14 +13,15 @@ LabelContourImageFilter takes a labeled image as input, where the pixels in the 
 
 The connectivity can be changed to minimum or maximum connectivity with SetFullyConnected() . Full connectivity produces thicker contours.
 
-https://hdl.handle.net/1926/1352 
+https://hdl.handle.net/1926/1352
 
 \author Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA de Jouy-en-Josas, France.
 
-\see BinaryContourImageFilter 
+\see BinaryContourImageFilter
+
 \par Wiki Examples:
 
-\li All Examples 
+\li All Examples
 
 \li Label the contours of connected components
 
@@ -28,7 +29,7 @@ https://hdl.handle.net/1926/1352
 
 | Name | Type | Description |
 |------|------|-------------|
-| FullyConnected | bool| Set/Get whether the connected components are defined strictly by face connectivity or by face+edge+vertex connectivity. Default is FullyConnectedOff.\note For objects that are 1 pixel wide, use FullyConnectedOn. |
+| FullyConnected | bool| Set/Get whether the connected components are defined strictly by face connectivity or by face+edge+vertex connectivity. Default is FullyConnectedOff. \note For objects that are 1 pixel wide, use FullyConnectedOn. |
 | BackgroundValue | double| Set/Get the background value used to identify the objects and mark the pixels not on the border of the objects. |
 
 

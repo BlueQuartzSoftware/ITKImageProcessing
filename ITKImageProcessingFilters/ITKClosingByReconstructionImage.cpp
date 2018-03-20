@@ -4,7 +4,7 @@
  * Your License or Copyright can go here
  */
 
-#include "ITKClosingByReconstructionImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/ITKClosingByReconstructionImage.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/SimpleITKEnums.h"
 
 #include "SIMPLib/Common/Constants.h"
@@ -21,11 +21,12 @@
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 #include <itkFlatStructuringElement.h>
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 ITKClosingByReconstructionImage::ITKClosingByReconstructionImage()
-: ITKImageBase()
+: ITKImageProcessingBase()
 {
   m_FullyConnected = StaticCastScalar<bool, bool, bool>(false);
   m_PreserveIntensities = StaticCastScalar<bool, bool, bool>(false);
@@ -69,6 +70,7 @@ void ITKClosingByReconstructionImage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_BOOL_FP("PreserveIntensities", PreserveIntensities, FilterParameter::Parameter, ITKClosingByReconstructionImage));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("KernelRadius", KernelRadius, FilterParameter::Parameter, ITKClosingByReconstructionImage));
 
+
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Save as New Array", SaveAsNewArray, FilterParameter::Parameter, ITKClosingByReconstructionImage, linkedProps));
@@ -108,9 +110,11 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
 {
   setErrorCondition(0);
   setWarningCondition(0);
+
   // Check consistency of parameters
   this->CheckVectorEntry<unsigned int, FloatVec3_t>(m_KernelRadius, "KernelRadius", 1);
-  ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
+
+  ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
@@ -158,7 +162,8 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   filter->SetFullyConnected(static_cast<bool>(m_FullyConnected));
   filter->SetPreserveIntensities(static_cast<bool>(m_PreserveIntensities));
   filter->SetKernel(structuringElement);
-  this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+  this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+
 }
 
 // -----------------------------------------------------------------------------
@@ -203,5 +208,5 @@ const QUuid ITKClosingByReconstructionImage::getUuid()
 // -----------------------------------------------------------------------------
 const QString ITKClosingByReconstructionImage::getSubGroupName() const
 {
-  return "ITK MathematicalMorphology";
+  return "ITK BiasCorrection";
 }

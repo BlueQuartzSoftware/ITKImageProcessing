@@ -14,18 +14,19 @@ The default value of the constant is 1. It can be changed with SetConstant() .
 This transform is especially useful for normalizing a convolution kernel.
 
 This code was contributed in the Insight Journal paper: "FFT based
-convolution" by Lehmann G. https://hdl.handle.net/10380/3154 
+convolution" by Lehmann G. https://hdl.handle.net/10380/3154
 
 \author Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA de Jouy-en-Josas, France.
 
-\see NormalizeImageFilter 
-\see 
-\see StatisticsImageFilter 
-\see 
-\see DivideImageFilter 
+\see NormalizeImageFilter
+
+\see StatisticsImageFilter
+
+\see DivideImageFilter
+
 \par Wiki Examples:
 
-\li All Examples 
+\li All Examples
 
 \li Scale all pixels so that their sum is a specified constant
 

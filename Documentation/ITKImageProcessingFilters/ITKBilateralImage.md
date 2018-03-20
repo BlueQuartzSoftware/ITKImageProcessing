@@ -15,26 +15,27 @@ Bilateral filtering is capable of reducing the noise in an image by an order of 
 
 The bilateral operator used here was described by Tomasi and Manduchi (Bilateral Filtering for Gray and ColorImages. IEEE ICCV. 1998.)
 
-\see GaussianOperator 
-\see 
-\see RecursiveGaussianImageFilter 
-\see 
-\see DiscreteGaussianImageFilter 
-\see 
-\see AnisotropicDiffusionImageFilter 
-\see 
-\see Image 
-\see 
-\see Neighborhood 
-\see 
-\see NeighborhoodOperator 
+\see GaussianOperator
+
+\see RecursiveGaussianImageFilter
+
+\see DiscreteGaussianImageFilter
+
+\see AnisotropicDiffusionImageFilter
+
+\see Image
+
+\see Neighborhood
+
+\see NeighborhoodOperator
+
 TodoSupport color images
 
 Support vector images
 
 \par Wiki Examples:
 
-\li All Examples 
+\li All Examples
 
 \li Bilateral filter an image
 

@@ -12,19 +12,22 @@
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
-#include "ITKImageBase.h"
+#include "ITKImageProcessingBase.h"
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
 
 // Auto includes
+#include <SIMPLib/FilterParameters/BooleanFilterParameter.h>
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
+#include <SIMPLib/FilterParameters/FloatVec3FilterParameter.h>
 #include <itkRelabelComponentImageFilter.h>
+
 
 /**
  * @brief The ITKRelabelComponentImage class. See [Filter documentation](@ref ITKRelabelComponentImage) for details.
  */
-class ITKRelabelComponentImage : public ITKImageBase
+class ITKRelabelComponentImage : public ITKImageProcessingBase
 {
   Q_OBJECT
 
@@ -37,6 +40,22 @@ public:
 
   SIMPL_FILTER_PARAMETER(double, MinimumObjectSize)
   Q_PROPERTY(double MinimumObjectSize READ getMinimumObjectSize WRITE setMinimumObjectSize)
+
+  SIMPL_FILTER_PARAMETER(bool, SortByObjectSize)
+  Q_PROPERTY(bool SortByObjectSize READ getSortByObjectSize WRITE setSortByObjectSize)
+
+  SIMPL_FILTER_PARAMETER(double, NumberOfObjects)
+  Q_PROPERTY(double NumberOfObjects READ getNumberOfObjects)
+
+  SIMPL_FILTER_PARAMETER(double, OriginalNumberOfObjects)
+  Q_PROPERTY(double OriginalNumberOfObjects READ getOriginalNumberOfObjects)
+
+  SIMPL_FILTER_PARAMETER(FloatVec3_t, SizeOfObjectsInPhysicalUnits)
+  Q_PROPERTY(FloatVec3_t SizeOfObjectsInPhysicalUnits READ getSizeOfObjectsInPhysicalUnits)
+
+  SIMPL_FILTER_PARAMETER(FloatVec3_t, SizeOfObjectsInPixels)
+  Q_PROPERTY(FloatVec3_t SizeOfObjectsInPixels READ getSizeOfObjectsInPixels)
+
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -93,8 +112,8 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKRelabelComponentImage(const ITKRelabelComponentImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKRelabelComponentImage&);           // Operator '=' Not Implemented
+  ITKRelabelComponentImage(const ITKRelabelComponentImage&) = delete;    // Copy Constructor Not Implemented
+  void operator=(const ITKRelabelComponentImage&) = delete; // Operator '=' Not Implemented
 };
 
 #ifdef __clang__

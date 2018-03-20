@@ -7,37 +7,20 @@
 #include "ITKImageProcessing/ITKImageProcessingFilters/SimpleITKEnums.h"
 #include "ITKTestBase.h"
 // Auto includes
-$
-{
-  TestsIncludeName
-}
+${TestsIncludeName}
 
-class $
-{
-  FilterName
-} Test : public ITKTestBase
+class ${FilterName}Test : public ITKTestBase
 {
 
 public:
-  $
-  {
-    FilterName
-  }
-  Test()
+  ${FilterName}Test()
   {
   }
-  virtual ~$
-  {
-    FilterName
-  }
-  Test()
+  virtual ~${FilterName}Test()
   {
   }
 
-  $
-  {
-    FilterTests
-  }
+  ${FilterTests}
 
   // -----------------------------------------------------------------------------
   //
@@ -48,10 +31,7 @@ public:
 
     DREAM3D_REGISTER_TEST(this->TestFilterAvailability("${FilterName}"));
 
-    $
-    {
-      RegisterTests
-    }
+${RegisterTests}
     if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
     {
       DREAM3D_REGISTER_TEST(this->RemoveTestFiles())
@@ -59,10 +39,6 @@ public:
   }
 
 private:
-  $
-  {
-    FilterName
-  }
-  Test(const $ { FilterName } Test&);           // Copy Constructor Not Implemented
-  void operator=(const $ { FilterName } Test&); // Operator '=' Not Implemented
+  ${FilterName}Test(const ${FilterName}Test&);  // Copy Constructor Not Implemented
+  void operator=(const ${FilterName}Test&);  // Operator '=' Not Implemented
 };

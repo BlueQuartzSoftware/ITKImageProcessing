@@ -12,7 +12,7 @@
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
-#include "ITKImageBase.h"
+#include "ITKImageProcessingBase.h"
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
@@ -20,10 +20,11 @@
 // Auto includes
 #include <itkExpImageFilter.h>
 
+
 /**
  * @brief The ITKExpImage class. See [Filter documentation](@ref ITKExpImage) for details.
  */
-class ITKExpImage : public ITKImageBase
+class ITKExpImage : public ITKImageProcessingBase
 {
   Q_OBJECT
 
@@ -33,6 +34,7 @@ public:
    SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKExpImage, AbstractFilter)
 
   virtual ~ITKExpImage();
+
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -89,7 +91,7 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKExpImage(const ITKExpImage&);    // Copy Constructor Not Implemented
+  ITKExpImage(const ITKExpImage&) = delete;    // Copy Constructor Not Implemented
   void operator=(const ITKExpImage&) = delete; // Operator '=' Not Implemented
 };
 

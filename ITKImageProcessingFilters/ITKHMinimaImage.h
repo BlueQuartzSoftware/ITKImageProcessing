@@ -12,7 +12,7 @@
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
-#include "ITKImageBase.h"
+#include "ITKImageProcessingBase.h"
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
@@ -22,10 +22,11 @@
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 #include <itkHMinimaImageFilter.h>
 
+
 /**
  * @brief The ITKHMinimaImage class. See [Filter documentation](@ref ITKHMinimaImage) for details.
  */
-class ITKHMinimaImage : public ITKImageBase
+class ITKHMinimaImage : public ITKImageProcessingBase
 {
   Q_OBJECT
 
@@ -41,6 +42,7 @@ public:
 
   SIMPL_FILTER_PARAMETER(bool, FullyConnected)
   Q_PROPERTY(bool FullyConnected READ getFullyConnected WRITE setFullyConnected)
+
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -97,8 +99,8 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKHMinimaImage(const ITKHMinimaImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKHMinimaImage&);  // Operator '=' Not Implemented
+  ITKHMinimaImage(const ITKHMinimaImage&) = delete;    // Copy Constructor Not Implemented
+  void operator=(const ITKHMinimaImage&) = delete; // Operator '=' Not Implemented
 };
 
 #ifdef __clang__

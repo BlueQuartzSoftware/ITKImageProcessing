@@ -12,7 +12,7 @@
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
-#include "ITKImageBase.h"
+#include "ITKImageProcessingBase.h"
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
@@ -22,10 +22,11 @@
 #include <SIMPLib/FilterParameters/IntFilterParameter.h>
 #include <itkMinMaxCurvatureFlowImageFilter.h>
 
+
 /**
  * @brief The ITKMinMaxCurvatureFlowImage class. See [Filter documentation](@ref ITKMinMaxCurvatureFlowImage) for details.
  */
-class ITKMinMaxCurvatureFlowImage : public ITKImageBase
+class ITKMinMaxCurvatureFlowImage : public ITKImageProcessingBase
 {
   Q_OBJECT
 
@@ -44,6 +45,7 @@ public:
 
   SIMPL_FILTER_PARAMETER(int, StencilRadius)
   Q_PROPERTY(int StencilRadius READ getStencilRadius WRITE setStencilRadius)
+
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -100,8 +102,8 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKMinMaxCurvatureFlowImage(const ITKMinMaxCurvatureFlowImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKMinMaxCurvatureFlowImage&);              // Operator '=' Not Implemented
+  ITKMinMaxCurvatureFlowImage(const ITKMinMaxCurvatureFlowImage&) = delete;    // Copy Constructor Not Implemented
+  void operator=(const ITKMinMaxCurvatureFlowImage&) = delete; // Operator '=' Not Implemented
 };
 
 #ifdef __clang__

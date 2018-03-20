@@ -4,7 +4,8 @@
  * Your License or Copyright can go here
  */
 
-#include "ITKShiftScaleImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/ITKShiftScaleImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/SimpleITKEnums.h"
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -18,11 +19,12 @@
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 ITKShiftScaleImage::ITKShiftScaleImage()
-: ITKImageBase()
+: ITKImageProcessingBase()
 {
   m_Shift = StaticCastScalar<double, double, double>(0);
   m_Scale = StaticCastScalar<double, double, double>(1.0);
@@ -44,6 +46,7 @@ void ITKShiftScaleImage::setupFilterParameters()
 
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Shift", Shift, FilterParameter::Parameter, ITKShiftScaleImage));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Scale", Scale, FilterParameter::Parameter, ITKShiftScaleImage));
+
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -80,11 +83,12 @@ void ITKShiftScaleImage::readFilterParameters(AbstractFilterParametersReader* re
 // -----------------------------------------------------------------------------
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKShiftScaleImage::dataCheck()
 {
-  // Check consistency of parameters
-
   setErrorCondition(0);
   setWarningCondition(0);
-  ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
+
+  // Check consistency of parameters
+
+  ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
@@ -108,7 +112,8 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   typename FilterType::Pointer filter = FilterType::New();
   filter->SetShift(static_cast<double>(m_Shift));
   filter->SetScale(static_cast<double>(m_Scale));
-  this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+  this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+
 }
 
 // -----------------------------------------------------------------------------

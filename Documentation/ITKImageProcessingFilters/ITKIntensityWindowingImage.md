@@ -11,13 +11,14 @@ Applies a linear transformation to the intensity levels of the input Image that 
 
 IntensityWindowingImageFilter applies pixel-wise a linear transformation to the intensity values of input image pixels. The linear transformation is defined by the user in terms of the minimum and maximum values that the output image should have and the lower and upper limits of the intensity window of the input image. This operation is very common in visualization, and can also be applied as a convenient preprocessing operation for image segmentation.
 
-All computations are performed in the precison of the input pixel's RealType. Before assigning the computed value to the output pixel.
+All computations are performed in the precision of the input pixel's RealType. Before assigning the computed value to the output pixel.
 
 \par Wiki Examples:
 
-\li All Examples 
+\li All Examples
 
-\li IntensityWindowingImageFilter 
+\li IntensityWindowingImageFilter
+
 
 
 
@@ -27,10 +28,10 @@ All computations are performed in the precison of the input pixel's RealType. Be
 
 | Name | Type | Description |
 |------|------|-------------|
-| WindowMinimum | double| Set/Get the values of the maximum and minimum intensities of the input intensity window |
-| WindowMaximum | double| Set/Get the values of the maximum and minimum intensities of the input intensity window |
-| OutputMinimum | double| Set/Get the values of the maximum and minimum intensities of the outputimage |
-| OutputMaximum | double| Set/Get the values of the maximum and minimum intensities of the outputimage |
+| WindowMinimum | double| Set/Get the values of the maximum and minimum intensities of the input intensity window. |
+| WindowMaximum | double| Set/Get the values of the maximum and minimum intensities of the input intensity window. |
+| OutputMinimum | double| Set/Get the values of the maximum and minimum intensities of the output image. |
+| OutputMaximum | double| Set/Get the values of the maximum and minimum intensities of the output image. |
 
 
 ## Required Geometry ##

@@ -12,7 +12,7 @@
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
-#include "ITKImageBase.h"
+#include "ITKImageProcessingBase.h"
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
@@ -21,10 +21,11 @@
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 #include <itkApproximateSignedDistanceMapImageFilter.h>
 
+
 /**
  * @brief The ITKApproximateSignedDistanceMapImage class. See [Filter documentation](@ref ITKApproximateSignedDistanceMapImage) for details.
  */
-class ITKApproximateSignedDistanceMapImage : public ITKImageBase
+class ITKApproximateSignedDistanceMapImage : public ITKImageProcessingBase
 {
   Q_OBJECT
 
@@ -40,6 +41,7 @@ public:
 
   SIMPL_FILTER_PARAMETER(double, OutsideValue)
   Q_PROPERTY(double OutsideValue READ getOutsideValue WRITE setOutsideValue)
+
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -96,8 +98,8 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKApproximateSignedDistanceMapImage(const ITKApproximateSignedDistanceMapImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKApproximateSignedDistanceMapImage&);                       // Operator '=' Not Implemented
+  ITKApproximateSignedDistanceMapImage(const ITKApproximateSignedDistanceMapImage&) = delete;    // Copy Constructor Not Implemented
+  void operator=(const ITKApproximateSignedDistanceMapImage&) = delete; // Operator '=' Not Implemented
 };
 
 #ifdef __clang__

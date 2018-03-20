@@ -12,7 +12,7 @@
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
-#include "ITKImageBase.h"
+#include "ITKImageProcessingBase.h"
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
@@ -21,10 +21,11 @@
 #include <SIMPLib/FilterParameters/FloatVec3FilterParameter.h>
 #include <itkBoxMeanImageFilter.h>
 
+
 /**
  * @brief The ITKBoxMeanImage class. See [Filter documentation](@ref ITKBoxMeanImage) for details.
  */
-class ITKBoxMeanImage : public ITKImageBase
+class ITKBoxMeanImage : public ITKImageProcessingBase
 {
   Q_OBJECT
 
@@ -37,6 +38,7 @@ public:
 
   SIMPL_FILTER_PARAMETER(FloatVec3_t, Radius)
   Q_PROPERTY(FloatVec3_t Radius READ getRadius WRITE setRadius)
+
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -93,8 +95,8 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKBoxMeanImage(const ITKBoxMeanImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKBoxMeanImage&);  // Operator '=' Not Implemented
+  ITKBoxMeanImage(const ITKBoxMeanImage&) = delete;    // Copy Constructor Not Implemented
+  void operator=(const ITKBoxMeanImage&) = delete; // Operator '=' Not Implemented
 };
 
 #ifdef __clang__

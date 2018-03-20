@@ -4,7 +4,7 @@
  * Your License or Copyright can go here
  */
 
-#include "ITKMorphologicalGradientImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/ITKMorphologicalGradientImage.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/SimpleITKEnums.h"
 
 #include "SIMPLib/Common/Constants.h"
@@ -21,11 +21,12 @@
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 #include <itkFlatStructuringElement.h>
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 ITKMorphologicalGradientImage::ITKMorphologicalGradientImage()
-: ITKImageBase()
+: ITKImageProcessingBase()
 {
   m_KernelRadius = CastStdToVec3<std::vector<unsigned int>, FloatVec3_t, float>(std::vector<unsigned int>(3, 1));
   m_KernelType = StaticCastScalar<int, int, int>(itk::simple::sitkBall);
@@ -65,6 +66,7 @@ void ITKMorphologicalGradientImage::setupFilterParameters()
   // Other parameters
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("KernelRadius", KernelRadius, FilterParameter::Parameter, ITKMorphologicalGradientImage));
 
+
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Save as New Array", SaveAsNewArray, FilterParameter::Parameter, ITKMorphologicalGradientImage, linkedProps));
@@ -102,9 +104,11 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
 {
   setErrorCondition(0);
   setWarningCondition(0);
+
   // Check consistency of parameters
   this->CheckVectorEntry<unsigned int, FloatVec3_t>(m_KernelRadius, "KernelRadius", 1);
-  ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
+
+  ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
@@ -150,7 +154,8 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   typedef itk::MorphologicalGradientImageFilter<InputImageType, OutputImageType, StructuringElementType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
   filter->SetKernel(structuringElement);
-  this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+  this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+
 }
 
 // -----------------------------------------------------------------------------
@@ -195,5 +200,5 @@ const QUuid ITKMorphologicalGradientImage::getUuid()
 // -----------------------------------------------------------------------------
 const QString ITKMorphologicalGradientImage::getSubGroupName() const
 {
-  return "ITK Edge";
+  return "ITK BiasCorrection";
 }

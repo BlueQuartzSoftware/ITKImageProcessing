@@ -26,7 +26,7 @@ Enhancement using Generalizations of Histogram Equalization." J.Alex Stark. IEEE
 
 \par Wiki Examples:
 
-\li All Examples 
+\li All Examples
 
 \li Adaptive histogram equalization
 
@@ -35,9 +35,9 @@ Enhancement using Generalizations of Histogram Equalization." J.Alex Stark. IEEE
 | Name | Type | Description |
 |------|------|-------------|
 | Radius | FloatVec3_t| N/A |
-| Alpha | float| Set/Get the value of alpha. Alpha=0 produces the adaptive histogram equalization (provided beta=0). Alpha=1 produces an unsharp mask. Default is 0.3. |
-| Beta | float| Set/Get the value of beta. If beta=1 (and alpha=1), then the output image matches the input image. As beta approaches 0, the filter behaves as an unsharp mask. Default is 0.3. |
-| UseLookupTable | bool| Set/Get whether an optimized lookup table for the intensity mapping function is used. Default is off.Deprecated |
+| Alpha | float| Set/Get the value of alpha. Alpha = 0 produces the adaptive histogram equalization (provided beta=0). Alpha = 1 produces an unsharp mask. Default is 0.3. |
+| Beta | float| Set/Get the value of beta. If beta = 1 (and alpha = 1), then the output image matches the input image. As beta approaches 0, the filter behaves as an unsharp mask. Default is 0.3. |
+| UseLookupTable | bool| Set/Get whether an optimized lookup table for the intensity mapping function is used. Default is off. Deprecated |
 
 
 ## Required Geometry ##

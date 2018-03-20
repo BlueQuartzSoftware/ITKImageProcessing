@@ -12,7 +12,7 @@
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
-#include "ITKImageBase.h"
+#include "ITKImageProcessingBase.h"
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
@@ -21,10 +21,11 @@
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 #include <itkSaltAndPepperNoiseImageFilter.h>
 
+
 /**
  * @brief The ITKSaltAndPepperNoiseImage class. See [Filter documentation](@ref ITKSaltAndPepperNoiseImage) for details.
  */
-class ITKSaltAndPepperNoiseImage : public ITKImageBase
+class ITKSaltAndPepperNoiseImage : public ITKImageProcessingBase
 {
   Q_OBJECT
 
@@ -40,6 +41,7 @@ public:
 
   SIMPL_FILTER_PARAMETER(double, Seed)
   Q_PROPERTY(double Seed READ getSeed WRITE setSeed)
+
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -96,8 +98,8 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKSaltAndPepperNoiseImage(const ITKSaltAndPepperNoiseImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKSaltAndPepperNoiseImage&);             // Operator '=' Not Implemented
+  ITKSaltAndPepperNoiseImage(const ITKSaltAndPepperNoiseImage&) = delete;    // Copy Constructor Not Implemented
+  void operator=(const ITKSaltAndPepperNoiseImage&) = delete; // Operator '=' Not Implemented
 };
 
 #ifdef __clang__

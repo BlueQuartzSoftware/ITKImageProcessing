@@ -7,6 +7,7 @@
 #include "ITKTestBase.h"
 // Auto includes
 
+
 class ITKLog10ImageTest : public ITKTestBase
 {
 
@@ -19,7 +20,7 @@ public:
   }
 
   int TestITKLog10ImagedefaultsTest()
-  {
+{
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/Ramp-Zero-One-Float.nrrd");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -48,7 +49,9 @@ public:
     int res = this->CompareImages(containerArray, input_path, baseline_path, 0.01);
     DREAM3D_REQUIRE_EQUAL(res, 0);
     return 0;
-  }
+}
+
+
 
   // -----------------------------------------------------------------------------
   //
@@ -59,7 +62,7 @@ public:
 
     DREAM3D_REGISTER_TEST(this->TestFilterAvailability("ITKLog10Image"));
 
-    DREAM3D_REGISTER_TEST(TestITKLog10ImagedefaultsTest());
+    DREAM3D_REGISTER_TEST( TestITKLog10ImagedefaultsTest());
 
     if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
     {
@@ -69,5 +72,5 @@ public:
 
 private:
   ITKLog10ImageTest(const ITKLog10ImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKLog10ImageTest&);    // Operator '=' Not Implemented
+  void operator=(const ITKLog10ImageTest&);  // Operator '=' Not Implemented
 };

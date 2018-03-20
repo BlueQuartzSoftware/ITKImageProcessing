@@ -4,7 +4,8 @@
  * Your License or Copyright can go here
  */
 
-#include "ITKCurvatureFlowImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/ITKCurvatureFlowImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/SimpleITKEnums.h"
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -18,11 +19,12 @@
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 ITKCurvatureFlowImage::ITKCurvatureFlowImage()
-: ITKImageBase()
+: ITKImageProcessingBase()
 {
   m_TimeStep = StaticCastScalar<double, double, double>(0.05);
   m_NumberOfIterations = StaticCastScalar<double, double, double>(5u);
@@ -44,6 +46,7 @@ void ITKCurvatureFlowImage::setupFilterParameters()
 
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("TimeStep", TimeStep, FilterParameter::Parameter, ITKCurvatureFlowImage));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("NumberOfIterations", NumberOfIterations, FilterParameter::Parameter, ITKCurvatureFlowImage));
+
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -80,12 +83,13 @@ void ITKCurvatureFlowImage::readFilterParameters(AbstractFilterParametersReader*
 // -----------------------------------------------------------------------------
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKCurvatureFlowImage::dataCheck()
 {
+  setErrorCondition(0);
+  setWarningCondition(0);
+
   // Check consistency of parameters
   this->CheckIntegerEntry<uint32_t, double>(m_NumberOfIterations, "NumberOfIterations", 1);
 
-  setErrorCondition(0);
-  setWarningCondition(0);
-  ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
+  ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
@@ -93,7 +97,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
 // -----------------------------------------------------------------------------
 void ITKCurvatureFlowImage::dataCheckInternal()
 {
-  Dream3DArraySwitchMacroOutputType(this->dataCheck, getSelectedCellArrayPath(), -4, typename itk::NumericTraits<typename InputImageType::PixelType>::RealType, 1);
+  Dream3DArraySwitchMacroOutputType(this->dataCheck, getSelectedCellArrayPath(), -4,typename itk::NumericTraits<typename InputImageType::PixelType>::RealType, 1);
 }
 
 // -----------------------------------------------------------------------------
@@ -109,8 +113,8 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   typename FilterType::Pointer filter = FilterType::New();
   filter->SetTimeStep(static_cast<double>(m_TimeStep));
   filter->SetNumberOfIterations(static_cast<uint32_t>(m_NumberOfIterations));
+  this->ITKImageProcessingBase::filterCastToFloat<InputPixelType, InputPixelType, Dimension, FilterType, FloatImageType>(filter);
 
-  this->ITKImageBase::filterCastToFloat<InputPixelType, InputPixelType, Dimension, FilterType, FloatImageType>(filter);
 }
 
 // -----------------------------------------------------------------------------
@@ -118,7 +122,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
 // -----------------------------------------------------------------------------
 void ITKCurvatureFlowImage::filterInternal()
 {
-  Dream3DArraySwitchMacroOutputType(this->filter, getSelectedCellArrayPath(), -4, typename itk::NumericTraits<typename InputImageType::PixelType>::RealType, 1);
+  Dream3DArraySwitchMacroOutputType(this->filter, getSelectedCellArrayPath(), -4,typename itk::NumericTraits<typename InputImageType::PixelType>::RealType, 1);
 }
 
 // -----------------------------------------------------------------------------
@@ -155,5 +159,5 @@ const QUuid ITKCurvatureFlowImage::getUuid()
 // -----------------------------------------------------------------------------
 const QString ITKCurvatureFlowImage::getSubGroupName() const
 {
-  return "ITK Smoothing";
+  return "ITK CurvatureFlow";
 }

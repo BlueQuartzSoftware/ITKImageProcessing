@@ -12,7 +12,7 @@
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
-#include "ITKImageBase.h"
+#include "ITKImageProcessingBase.h"
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
@@ -22,17 +22,18 @@
 #include <SIMPLib/FilterParameters/IntFilterParameter.h>
 #include <itkGrayscaleDilateImageFilter.h>
 
+
 /**
  * @brief The ITKGrayscaleDilateImage class. See [Filter documentation](@ref ITKGrayscaleDilateImage) for details.
  */
-class ITKGrayscaleDilateImage : public ITKImageBase
+class ITKGrayscaleDilateImage : public ITKImageProcessingBase
 {
   Q_OBJECT
 
 public:
   SIMPL_SHARED_POINTERS(ITKGrayscaleDilateImage)
   SIMPL_STATIC_NEW_MACRO(ITKGrayscaleDilateImage)
-   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKGrayscaleDilateImage, AbstractFilter)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKGrayscaleDilateImage, AbstractFilter)
 
   virtual ~ITKGrayscaleDilateImage();
 
@@ -41,6 +42,7 @@ public:
 
   SIMPL_FILTER_PARAMETER(int, KernelType)
   Q_PROPERTY(int KernelType READ getKernelType WRITE setKernelType)
+
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -97,8 +99,8 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKGrayscaleDilateImage(const ITKGrayscaleDilateImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKGrayscaleDilateImage&);          // Operator '=' Not Implemented
+  ITKGrayscaleDilateImage(const ITKGrayscaleDilateImage&) = delete;    // Copy Constructor Not Implemented
+  void operator=(const ITKGrayscaleDilateImage&) = delete; // Operator '=' Not Implemented
 };
 
 #ifdef __clang__

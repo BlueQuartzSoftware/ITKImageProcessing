@@ -4,7 +4,8 @@
  * Your License or Copyright can go here
  */
 
-#include "ITKHConvexImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/ITKHConvexImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/SimpleITKEnums.h"
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -18,11 +19,12 @@
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 ITKHConvexImage::ITKHConvexImage()
-: ITKImageBase()
+: ITKImageProcessingBase()
 {
   m_Height = StaticCastScalar<double, double, double>(2.0);
   m_FullyConnected = StaticCastScalar<bool, bool, bool>(false);
@@ -44,6 +46,7 @@ void ITKHConvexImage::setupFilterParameters()
 
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Height", Height, FilterParameter::Parameter, ITKHConvexImage));
   parameters.push_back(SIMPL_NEW_BOOL_FP("FullyConnected", FullyConnected, FilterParameter::Parameter, ITKHConvexImage));
+
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -80,11 +83,12 @@ void ITKHConvexImage::readFilterParameters(AbstractFilterParametersReader* reade
 // -----------------------------------------------------------------------------
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKHConvexImage::dataCheck()
 {
-  // Check consistency of parameters
-
   setErrorCondition(0);
   setWarningCondition(0);
-  ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
+
+  // Check consistency of parameters
+
+  ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
@@ -108,7 +112,8 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   typename FilterType::Pointer filter = FilterType::New();
   filter->SetHeight(static_cast<double>(m_Height));
   filter->SetFullyConnected(static_cast<bool>(m_FullyConnected));
-  this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+  this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+
 }
 
 // -----------------------------------------------------------------------------
@@ -153,5 +158,5 @@ const QUuid ITKHConvexImage::getUuid()
 // -----------------------------------------------------------------------------
 const QString ITKHConvexImage::getSubGroupName() const
 {
-  return "ITK MathematicalMorphology";
+  return "ITK BiasCorrection";
 }

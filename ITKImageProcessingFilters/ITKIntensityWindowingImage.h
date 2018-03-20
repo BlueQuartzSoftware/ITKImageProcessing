@@ -12,7 +12,7 @@
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
-#include "ITKImageBase.h"
+#include "ITKImageProcessingBase.h"
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
@@ -21,10 +21,11 @@
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 #include <itkIntensityWindowingImageFilter.h>
 
+
 /**
  * @brief The ITKIntensityWindowingImage class. See [Filter documentation](@ref ITKIntensityWindowingImage) for details.
  */
-class ITKIntensityWindowingImage : public ITKImageBase
+class ITKIntensityWindowingImage : public ITKImageProcessingBase
 {
   Q_OBJECT
 
@@ -46,6 +47,7 @@ public:
 
   SIMPL_FILTER_PARAMETER(double, OutputMaximum)
   Q_PROPERTY(double OutputMaximum READ getOutputMaximum WRITE setOutputMaximum)
+
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -102,8 +104,8 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKIntensityWindowingImage(const ITKIntensityWindowingImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKIntensityWindowingImage&);             // Operator '=' Not Implemented
+  ITKIntensityWindowingImage(const ITKIntensityWindowingImage&) = delete;    // Copy Constructor Not Implemented
+  void operator=(const ITKIntensityWindowingImage&) = delete; // Operator '=' Not Implemented
 };
 
 #ifdef __clang__

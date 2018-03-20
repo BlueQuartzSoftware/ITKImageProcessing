@@ -10,7 +10,7 @@
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
-#include "ITKImageBase.h"
+#include "ITKImageProcessingBase.h"
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
@@ -21,7 +21,7 @@
 /**
  * @brief The ITKRGBToLuminanceImage class. See [Filter documentation](@ref ITKRGBToLuminanceImage) for details.
  */
-class ITKRGBToLuminanceImage : public ITKImageBase
+class ITKRGBToLuminanceImage : public ITKImageProcessingBase
 {
   Q_OBJECT
 

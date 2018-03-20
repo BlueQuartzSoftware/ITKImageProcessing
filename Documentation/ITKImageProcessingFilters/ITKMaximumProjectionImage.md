@@ -9,22 +9,22 @@ ITKImageProcessing (ITKImageProcessing)
 
 Maximum projection.
 
-This class was contributed to the insight journal by Gaetan Lehmann. The original paper can be found at https://hdl.handle.net/1926/164 
+This class was contributed to the insight journal by Gaetan Lehmann. The original paper can be found at https://hdl.handle.net/1926/164
 
 \author Gaetan Lehmann. Biologie du Developpement et de la reproduction, inra de jouy-en-josas, France.
 
-\see ProjectionImageFilter 
-\see 
-\see MedianProjectionImageFilter 
-\see 
-\see MeanProjectionImageFilter 
-\see 
-\see MinimumProjectionImageFilter 
-\see 
-\see StandardDeviationProjectionImageFilter 
-\see 
-\see SumProjectionImageFilter 
-\see 
+\see ProjectionImageFilter
+
+\see MedianProjectionImageFilter
+
+\see MeanProjectionImageFilter
+
+\see MinimumProjectionImageFilter
+
+\see StandardDeviationProjectionImageFilter
+
+\see SumProjectionImageFilter
+
 \see BinaryProjectionImageFilter
 
 ## Parameters ##

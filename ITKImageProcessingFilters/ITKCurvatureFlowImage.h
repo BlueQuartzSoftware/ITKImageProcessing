@@ -12,7 +12,7 @@
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
-#include "ITKImageBase.h"
+#include "ITKImageProcessingBase.h"
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
@@ -21,10 +21,11 @@
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 #include <itkCurvatureFlowImageFilter.h>
 
+
 /**
  * @brief The ITKCurvatureFlowImage class. See [Filter documentation](@ref ITKCurvatureFlowImage) for details.
  */
-class ITKCurvatureFlowImage : public ITKImageBase
+class ITKCurvatureFlowImage : public ITKImageProcessingBase
 {
   Q_OBJECT
 
@@ -40,6 +41,7 @@ public:
 
   SIMPL_FILTER_PARAMETER(double, NumberOfIterations)
   Q_PROPERTY(double NumberOfIterations READ getNumberOfIterations WRITE setNumberOfIterations)
+
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -96,8 +98,8 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKCurvatureFlowImage(const ITKCurvatureFlowImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKCurvatureFlowImage&);        // Operator '=' Not Implemented
+  ITKCurvatureFlowImage(const ITKCurvatureFlowImage&) = delete;    // Copy Constructor Not Implemented
+  void operator=(const ITKCurvatureFlowImage&) = delete; // Operator '=' Not Implemented
 };
 
 #ifdef __clang__

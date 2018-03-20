@@ -12,7 +12,7 @@
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
-#include "ITKImageBase.h"
+#include "ITKImageProcessingBase.h"
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
@@ -22,10 +22,11 @@
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 #include <itkBinaryContourImageFilter.h>
 
+
 /**
  * @brief The ITKBinaryContourImage class. See [Filter documentation](@ref ITKBinaryContourImage) for details.
  */
-class ITKBinaryContourImage : public ITKImageBase
+class ITKBinaryContourImage : public ITKImageProcessingBase
 {
   Q_OBJECT
 
@@ -44,6 +45,7 @@ public:
 
   SIMPL_FILTER_PARAMETER(double, ForegroundValue)
   Q_PROPERTY(double ForegroundValue READ getForegroundValue WRITE setForegroundValue)
+
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -100,8 +102,8 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKBinaryContourImage(const ITKBinaryContourImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKBinaryContourImage&);        // Operator '=' Not Implemented
+  ITKBinaryContourImage(const ITKBinaryContourImage&) = delete;    // Copy Constructor Not Implemented
+  void operator=(const ITKBinaryContourImage&) = delete; // Operator '=' Not Implemented
 };
 
 #ifdef __clang__

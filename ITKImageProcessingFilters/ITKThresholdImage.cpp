@@ -4,7 +4,8 @@
  * Your License or Copyright can go here
  */
 
-#include "ITKThresholdImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/ITKThresholdImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/SimpleITKEnums.h"
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -18,11 +19,12 @@
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 ITKThresholdImage::ITKThresholdImage()
-: ITKImageBase()
+: ITKImageProcessingBase()
 {
   m_Lower = StaticCastScalar<double, double, double>(0.0);
   m_Upper = StaticCastScalar<double, double, double>(1.0);
@@ -46,6 +48,7 @@ void ITKThresholdImage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Lower", Lower, FilterParameter::Parameter, ITKThresholdImage));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Upper", Upper, FilterParameter::Parameter, ITKThresholdImage));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("OutsideValue", OutsideValue, FilterParameter::Parameter, ITKThresholdImage));
+
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -83,11 +86,12 @@ void ITKThresholdImage::readFilterParameters(AbstractFilterParametersReader* rea
 // -----------------------------------------------------------------------------
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKThresholdImage::dataCheck()
 {
-  // Check consistency of parameters
-
   setErrorCondition(0);
   setWarningCondition(0);
-  ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
+
+  // Check consistency of parameters
+
+  ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
@@ -105,13 +109,15 @@ void ITKThresholdImage::dataCheckInternal()
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKThresholdImage::filter()
 {
   typedef itk::Dream3DImage<InputPixelType, Dimension> InputImageType;
+  typedef itk::Dream3DImage<OutputPixelType, Dimension> OutputImageType;
   // define filter
   typedef itk::ThresholdImageFilter<InputImageType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
   filter->SetLower(static_cast<double>(m_Lower));
   filter->SetUpper(static_cast<double>(m_Upper));
   filter->SetOutsideValue(static_cast<double>(m_OutsideValue));
-  this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+  this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+
 }
 
 // -----------------------------------------------------------------------------

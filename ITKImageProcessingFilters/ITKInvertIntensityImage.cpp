@@ -4,7 +4,8 @@
  * Your License or Copyright can go here
  */
 
-#include "ITKInvertIntensityImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/ITKInvertIntensityImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/SimpleITKEnums.h"
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -18,11 +19,12 @@
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 ITKInvertIntensityImage::ITKInvertIntensityImage()
-: ITKImageBase()
+: ITKImageProcessingBase()
 {
   m_Maximum = StaticCastScalar<double, double, double>(255);
 
@@ -42,6 +44,7 @@ void ITKInvertIntensityImage::setupFilterParameters()
   FilterParameterVector parameters;
 
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Maximum", Maximum, FilterParameter::Parameter, ITKInvertIntensityImage));
+
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -77,11 +80,12 @@ void ITKInvertIntensityImage::readFilterParameters(AbstractFilterParametersReade
 // -----------------------------------------------------------------------------
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKInvertIntensityImage::dataCheck()
 {
-  // Check consistency of parameters
-
   setErrorCondition(0);
   setWarningCondition(0);
-  ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
+
+  // Check consistency of parameters
+
+  ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
@@ -104,7 +108,8 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   typedef itk::InvertIntensityImageFilter<InputImageType, OutputImageType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
   filter->SetMaximum(static_cast<double>(m_Maximum));
-  this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+  this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+
 }
 
 // -----------------------------------------------------------------------------

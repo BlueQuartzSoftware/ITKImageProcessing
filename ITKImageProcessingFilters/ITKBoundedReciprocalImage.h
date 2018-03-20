@@ -12,7 +12,7 @@
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
-#include "ITKImageBase.h"
+#include "ITKImageProcessingBase.h"
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
@@ -20,10 +20,11 @@
 // Auto includes
 #include <itkBoundedReciprocalImageFilter.h>
 
+
 /**
  * @brief The ITKBoundedReciprocalImage class. See [Filter documentation](@ref ITKBoundedReciprocalImage) for details.
  */
-class ITKBoundedReciprocalImage : public ITKImageBase
+class ITKBoundedReciprocalImage : public ITKImageProcessingBase
 {
   Q_OBJECT
 
@@ -33,6 +34,7 @@ public:
    SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKBoundedReciprocalImage, AbstractFilter)
 
   virtual ~ITKBoundedReciprocalImage();
+
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -89,8 +91,8 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKBoundedReciprocalImage(const ITKBoundedReciprocalImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKBoundedReciprocalImage&);            // Operator '=' Not Implemented
+  ITKBoundedReciprocalImage(const ITKBoundedReciprocalImage&) = delete;    // Copy Constructor Not Implemented
+  void operator=(const ITKBoundedReciprocalImage&) = delete; // Operator '=' Not Implemented
 };
 
 #ifdef __clang__

@@ -12,7 +12,7 @@
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
-#include "ITKImageBase.h"
+#include "ITKImageProcessingBase.h"
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
@@ -24,17 +24,18 @@
 #include <SIMPLib/FilterParameters/IntFilterParameter.h>
 #include <itkBinaryOpeningByReconstructionImageFilter.h>
 
+
 /**
  * @brief The ITKBinaryOpeningByReconstructionImage class. See [Filter documentation](@ref ITKBinaryOpeningByReconstructionImage) for details.
  */
-class ITKBinaryOpeningByReconstructionImage : public ITKImageBase
+class ITKBinaryOpeningByReconstructionImage : public ITKImageProcessingBase
 {
   Q_OBJECT
 
 public:
   SIMPL_SHARED_POINTERS(ITKBinaryOpeningByReconstructionImage)
   SIMPL_STATIC_NEW_MACRO(ITKBinaryOpeningByReconstructionImage)
-   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKBinaryOpeningByReconstructionImage, AbstractFilter)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKBinaryOpeningByReconstructionImage, AbstractFilter)
 
   virtual ~ITKBinaryOpeningByReconstructionImage();
 
@@ -52,6 +53,7 @@ public:
 
   SIMPL_FILTER_PARAMETER(int, KernelType)
   Q_PROPERTY(int KernelType READ getKernelType WRITE setKernelType)
+
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -108,8 +110,8 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKBinaryOpeningByReconstructionImage(const ITKBinaryOpeningByReconstructionImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKBinaryOpeningByReconstructionImage&);                        // Operator '=' Not Implemented
+  ITKBinaryOpeningByReconstructionImage(const ITKBinaryOpeningByReconstructionImage&) = delete;    // Copy Constructor Not Implemented
+  void operator=(const ITKBinaryOpeningByReconstructionImage&) = delete; // Operator '=' Not Implemented
 };
 
 #ifdef __clang__

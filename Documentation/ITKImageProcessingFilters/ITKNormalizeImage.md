@@ -13,10 +13,11 @@ NormalizeImageFilter shifts and scales an image so that the pixels in the image 
 
 NB: since this filter normalizes the data to lie within -1 to 1, integral types will produce an image that DOES NOT HAVE a unit variance.
 
-\see NormalizeToConstantImageFilter 
+\see NormalizeToConstantImageFilter
+
 \par Wiki Examples:
 
-\li All Examples 
+\li All Examples
 
 \li Normalize an image
 

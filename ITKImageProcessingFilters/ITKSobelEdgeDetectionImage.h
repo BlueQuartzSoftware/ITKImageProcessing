@@ -12,7 +12,7 @@
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
-#include "ITKImageBase.h"
+#include "ITKImageProcessingBase.h"
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
@@ -20,10 +20,11 @@
 // Auto includes
 #include <itkSobelEdgeDetectionImageFilter.h>
 
+
 /**
  * @brief The ITKSobelEdgeDetectionImage class. See [Filter documentation](@ref ITKSobelEdgeDetectionImage) for details.
  */
-class ITKSobelEdgeDetectionImage : public ITKImageBase
+class ITKSobelEdgeDetectionImage : public ITKImageProcessingBase
 {
   Q_OBJECT
 
@@ -33,6 +34,7 @@ public:
    SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKSobelEdgeDetectionImage, AbstractFilter)
 
   virtual ~ITKSobelEdgeDetectionImage();
+
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -89,8 +91,8 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKSobelEdgeDetectionImage(const ITKSobelEdgeDetectionImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKSobelEdgeDetectionImage&);             // Operator '=' Not Implemented
+  ITKSobelEdgeDetectionImage(const ITKSobelEdgeDetectionImage&) = delete;    // Copy Constructor Not Implemented
+  void operator=(const ITKSobelEdgeDetectionImage&) = delete; // Operator '=' Not Implemented
 };
 
 #ifdef __clang__

@@ -12,7 +12,7 @@
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
-#include "ITKImageBase.h"
+#include "ITKImageProcessingBase.h"
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
@@ -21,10 +21,11 @@
 #include <SIMPLib/FilterParameters/BooleanFilterParameter.h>
 #include <itkGrayscaleFillholeImageFilter.h>
 
+
 /**
  * @brief The ITKGrayscaleFillholeImage class. See [Filter documentation](@ref ITKGrayscaleFillholeImage) for details.
  */
-class ITKGrayscaleFillholeImage : public ITKImageBase
+class ITKGrayscaleFillholeImage : public ITKImageProcessingBase
 {
   Q_OBJECT
 
@@ -37,6 +38,7 @@ public:
 
   SIMPL_FILTER_PARAMETER(bool, FullyConnected)
   Q_PROPERTY(bool FullyConnected READ getFullyConnected WRITE setFullyConnected)
+
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -93,8 +95,8 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKGrayscaleFillholeImage(const ITKGrayscaleFillholeImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKGrayscaleFillholeImage&);            // Operator '=' Not Implemented
+  ITKGrayscaleFillholeImage(const ITKGrayscaleFillholeImage&) = delete;    // Copy Constructor Not Implemented
+  void operator=(const ITKGrayscaleFillholeImage&) = delete; // Operator '=' Not Implemented
 };
 
 #ifdef __clang__

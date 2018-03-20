@@ -15,18 +15,19 @@ The variance or standard deviation (sigma) will be evaluated as pixel units if S
 
 When the Gaussian kernel is small, this filter tends to run faster than itk::RecursiveGaussianImageFilter .
 
-\see GaussianOperator 
-\see 
-\see Image 
-\see 
-\see Neighborhood 
-\see 
-\see NeighborhoodOperator 
-\see 
-\see RecursiveGaussianImageFilter 
+\see GaussianOperator
+
+\see Image
+
+\see Neighborhood
+
+\see NeighborhoodOperator
+
+\see RecursiveGaussianImageFilter
+
 \par Wiki Examples:
 
-\li All Examples 
+\li All Examples
 
 \li Smooth an image with a discrete Gaussian filter
 
@@ -34,9 +35,9 @@ When the Gaussian kernel is small, this filter tends to run faster than itk::Rec
 
 | Name | Type | Description |
 |------|------|-------------|
-| Variance | double| The variance for the discrete Gaussian kernel. Sets the variance independently for each dimension, but see also SetVariance(const double v) . The default is 0.0 in each dimension. If UseImageSpacing is true, the units are the physical units of your image. If UseImageSpacing is false then the units are pixels. |
+| Variance | FloatVec3_t| The variance for the discrete Gaussian kernel. Sets the variance independently for each dimension, but see also SetVariance(const double v) . The default is 0.0 in each dimension. If UseImageSpacing is true, the units are the physical units of your image. If UseImageSpacing is false then the units are pixels. |
 | MaximumKernelWidth | double| Set the kernel to be no wider than MaximumKernelWidth pixels, even if MaximumError demands it. The default is 32 pixels. |
-| MaximumError | double| The algorithm will size the discrete kernel so that the error resulting from truncation of the kernel is no greater than MaximumError. The default is 0.01 in each dimension. |
+| MaximumError | FloatVec3_t| The algorithm will size the discrete kernel so that the error resulting from truncation of the kernel is no greater than MaximumError. The default is 0.01 in each dimension. |
 | UseImageSpacing | bool| Set/Get whether or not the filter will use the spacing of the input image in its calculations |
 
 

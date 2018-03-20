@@ -12,7 +12,7 @@
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
-#include "ITKImageBase.h"
+#include "ITKImageProcessingBase.h"
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
@@ -23,10 +23,11 @@
 #include <SIMPLib/FilterParameters/IntFilterParameter.h>
 #include <itkDoubleThresholdImageFilter.h>
 
+
 /**
  * @brief The ITKDoubleThresholdImage class. See [Filter documentation](@ref ITKDoubleThresholdImage) for details.
  */
-class ITKDoubleThresholdImage : public ITKImageBase
+class ITKDoubleThresholdImage : public ITKImageProcessingBase
 {
   Q_OBJECT
 
@@ -57,6 +58,7 @@ public:
 
   SIMPL_FILTER_PARAMETER(bool, FullyConnected)
   Q_PROPERTY(bool FullyConnected READ getFullyConnected WRITE setFullyConnected)
+
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -113,8 +115,8 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKDoubleThresholdImage(const ITKDoubleThresholdImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKDoubleThresholdImage&);          // Operator '=' Not Implemented
+  ITKDoubleThresholdImage(const ITKDoubleThresholdImage&) = delete;    // Copy Constructor Not Implemented
+  void operator=(const ITKDoubleThresholdImage&) = delete; // Operator '=' Not Implemented
 };
 
 #ifdef __clang__

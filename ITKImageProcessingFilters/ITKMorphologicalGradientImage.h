@@ -12,7 +12,7 @@
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
-#include "ITKImageBase.h"
+#include "ITKImageProcessingBase.h"
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
@@ -22,17 +22,18 @@
 #include <SIMPLib/FilterParameters/IntFilterParameter.h>
 #include <itkMorphologicalGradientImageFilter.h>
 
+
 /**
  * @brief The ITKMorphologicalGradientImage class. See [Filter documentation](@ref ITKMorphologicalGradientImage) for details.
  */
-class ITKMorphologicalGradientImage : public ITKImageBase
+class ITKMorphologicalGradientImage : public ITKImageProcessingBase
 {
   Q_OBJECT
 
 public:
   SIMPL_SHARED_POINTERS(ITKMorphologicalGradientImage)
   SIMPL_STATIC_NEW_MACRO(ITKMorphologicalGradientImage)
-   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKMorphologicalGradientImage, AbstractFilter)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKMorphologicalGradientImage, AbstractFilter)
 
   virtual ~ITKMorphologicalGradientImage();
 
@@ -41,6 +42,7 @@ public:
 
   SIMPL_FILTER_PARAMETER(int, KernelType)
   Q_PROPERTY(int KernelType READ getKernelType WRITE setKernelType)
+
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -97,8 +99,8 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKMorphologicalGradientImage(const ITKMorphologicalGradientImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKMorphologicalGradientImage&);                // Operator '=' Not Implemented
+  ITKMorphologicalGradientImage(const ITKMorphologicalGradientImage&) = delete;    // Copy Constructor Not Implemented
+  void operator=(const ITKMorphologicalGradientImage&) = delete; // Operator '=' Not Implemented
 };
 
 #ifdef __clang__

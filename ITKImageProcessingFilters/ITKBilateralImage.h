@@ -12,7 +12,7 @@
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
-#include "ITKImageBase.h"
+#include "ITKImageProcessingBase.h"
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
@@ -21,10 +21,11 @@
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 #include <itkBilateralImageFilter.h>
 
+
 /**
  * @brief The ITKBilateralImage class. See [Filter documentation](@ref ITKBilateralImage) for details.
  */
-class ITKBilateralImage : public ITKImageBase
+class ITKBilateralImage : public ITKImageProcessingBase
 {
   Q_OBJECT
 
@@ -43,6 +44,7 @@ public:
 
   SIMPL_FILTER_PARAMETER(double, NumberOfRangeGaussianSamples)
   Q_PROPERTY(double NumberOfRangeGaussianSamples READ getNumberOfRangeGaussianSamples WRITE setNumberOfRangeGaussianSamples)
+
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -99,8 +101,8 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKBilateralImage(const ITKBilateralImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKBilateralImage&);    // Operator '=' Not Implemented
+  ITKBilateralImage(const ITKBilateralImage&) = delete;    // Copy Constructor Not Implemented
+  void operator=(const ITKBilateralImage&) = delete; // Operator '=' Not Implemented
 };
 
 #ifdef __clang__

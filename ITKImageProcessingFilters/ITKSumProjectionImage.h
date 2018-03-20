@@ -12,7 +12,7 @@
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
-#include "ITKImageBase.h"
+#include "ITKImageProcessingBase.h"
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
@@ -21,10 +21,11 @@
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 #include <itkSumProjectionImageFilter.h>
 
+
 /**
  * @brief The ITKSumProjectionImage class. See [Filter documentation](@ref ITKSumProjectionImage) for details.
  */
-class ITKSumProjectionImage : public ITKImageBase
+class ITKSumProjectionImage : public ITKImageProcessingBase
 {
   Q_OBJECT
 
@@ -37,6 +38,7 @@ public:
 
   SIMPL_FILTER_PARAMETER(double, ProjectionDimension)
   Q_PROPERTY(double ProjectionDimension READ getProjectionDimension WRITE setProjectionDimension)
+
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -93,8 +95,8 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKSumProjectionImage(const ITKSumProjectionImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKSumProjectionImage&);        // Operator '=' Not Implemented
+  ITKSumProjectionImage(const ITKSumProjectionImage&) = delete;    // Copy Constructor Not Implemented
+  void operator=(const ITKSumProjectionImage&) = delete; // Operator '=' Not Implemented
 };
 
 #ifdef __clang__

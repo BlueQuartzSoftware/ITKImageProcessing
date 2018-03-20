@@ -12,7 +12,7 @@
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
-#include "ITKImageBase.h"
+#include "ITKImageProcessingBase.h"
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
@@ -22,10 +22,11 @@
 #include <algorithm>
 #include <itkGradientAnisotropicDiffusionImageFilter.h>
 
+
 /**
  * @brief The ITKGradientAnisotropicDiffusionImage class. See [Filter documentation](@ref ITKGradientAnisotropicDiffusionImage) for details.
  */
-class ITKGradientAnisotropicDiffusionImage : public ITKImageBase
+class ITKGradientAnisotropicDiffusionImage : public ITKImageProcessingBase
 {
   Q_OBJECT
 
@@ -47,6 +48,7 @@ public:
 
   SIMPL_FILTER_PARAMETER(double, NumberOfIterations)
   Q_PROPERTY(double NumberOfIterations READ getNumberOfIterations WRITE setNumberOfIterations)
+
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -103,8 +105,8 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKGradientAnisotropicDiffusionImage(const ITKGradientAnisotropicDiffusionImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKGradientAnisotropicDiffusionImage&);                       // Operator '=' Not Implemented
+  ITKGradientAnisotropicDiffusionImage(const ITKGradientAnisotropicDiffusionImage&) = delete;    // Copy Constructor Not Implemented
+  void operator=(const ITKGradientAnisotropicDiffusionImage&) = delete; // Operator '=' Not Implemented
 };
 
 #ifdef __clang__

@@ -9,6 +9,7 @@
 #include <SIMPLib/FilterParameters/BooleanFilterParameter.h>
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 
+
 class ITKHConvexImageTest : public ITKTestBase
 {
 
@@ -21,7 +22,7 @@ public:
   }
 
   int TestITKHConvexImageHConvexTest()
-  {
+{
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/RA-Short.nrrd");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -40,11 +41,11 @@ public:
     propWasSet = filter->setProperty("SaveAsNewArray", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     {
-      double d3d_var;
-      d3d_var = 10000;
-      var.setValue(d3d_var);
-      propWasSet = filter->setProperty("Height", var);
-      DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+        double d3d_var;
+        d3d_var = 10000;
+        var.setValue(d3d_var);
+        propWasSet = filter->setProperty("Height", var);
+        DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     }
     filter->setDataContainerArray(containerArray);
     filter->execute();
@@ -55,7 +56,9 @@ public:
     GetMD5FromDataContainer(containerArray, input_path, md5Output);
     DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("f3a7b95a51710d51b3b73e0eb77eb1eb"));
     return 0;
-  }
+}
+
+
 
   // -----------------------------------------------------------------------------
   //
@@ -66,7 +69,7 @@ public:
 
     DREAM3D_REGISTER_TEST(this->TestFilterAvailability("ITKHConvexImage"));
 
-    DREAM3D_REGISTER_TEST(TestITKHConvexImageHConvexTest());
+    DREAM3D_REGISTER_TEST( TestITKHConvexImageHConvexTest());
 
     if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
     {
@@ -76,5 +79,5 @@ public:
 
 private:
   ITKHConvexImageTest(const ITKHConvexImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKHConvexImageTest&);      // Operator '=' Not Implemented
+  void operator=(const ITKHConvexImageTest&);  // Operator '=' Not Implemented
 };

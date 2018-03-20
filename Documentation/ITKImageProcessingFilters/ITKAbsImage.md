@@ -13,7 +13,7 @@ itk::Math::abs() is used to perform the computation.
 
 \par Wiki Examples:
 
-\li All Examples 
+\li All Examples
 
 \li Compute the absolute value of an image
 

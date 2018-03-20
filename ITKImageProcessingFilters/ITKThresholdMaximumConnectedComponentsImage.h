@@ -12,7 +12,7 @@
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
-#include "ITKImageBase.h"
+#include "ITKImageProcessingBase.h"
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
@@ -22,10 +22,11 @@
 #include <SIMPLib/FilterParameters/IntFilterParameter.h>
 #include <itkThresholdMaximumConnectedComponentsImageFilter.h>
 
+
 /**
  * @brief The ITKThresholdMaximumConnectedComponentsImage class. See [Filter documentation](@ref ITKThresholdMaximumConnectedComponentsImage) for details.
  */
-class ITKThresholdMaximumConnectedComponentsImage : public ITKImageBase
+class ITKThresholdMaximumConnectedComponentsImage : public ITKImageProcessingBase
 {
   Q_OBJECT
 
@@ -47,6 +48,7 @@ public:
 
   SIMPL_FILTER_PARAMETER(int, OutsideValue)
   Q_PROPERTY(int OutsideValue READ getOutsideValue WRITE setOutsideValue)
+
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -103,8 +105,8 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKThresholdMaximumConnectedComponentsImage(const ITKThresholdMaximumConnectedComponentsImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKThresholdMaximumConnectedComponentsImage&);                              // Operator '=' Not Implemented
+  ITKThresholdMaximumConnectedComponentsImage(const ITKThresholdMaximumConnectedComponentsImage&) = delete;    // Copy Constructor Not Implemented
+  void operator=(const ITKThresholdMaximumConnectedComponentsImage&) = delete; // Operator '=' Not Implemented
 };
 
 #ifdef __clang__

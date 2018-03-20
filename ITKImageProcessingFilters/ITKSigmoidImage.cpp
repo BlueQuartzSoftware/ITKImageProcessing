@@ -4,7 +4,8 @@
  * Your License or Copyright can go here
  */
 
-#include "ITKSigmoidImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/ITKSigmoidImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/SimpleITKEnums.h"
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -18,11 +19,12 @@
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 ITKSigmoidImage::ITKSigmoidImage()
-: ITKImageBase()
+: ITKImageProcessingBase()
 {
   m_Alpha = StaticCastScalar<double, double, double>(1);
   m_Beta = StaticCastScalar<double, double, double>(0);
@@ -48,6 +50,7 @@ void ITKSigmoidImage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Beta", Beta, FilterParameter::Parameter, ITKSigmoidImage));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("OutputMaximum", OutputMaximum, FilterParameter::Parameter, ITKSigmoidImage));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("OutputMinimum", OutputMinimum, FilterParameter::Parameter, ITKSigmoidImage));
+
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -86,11 +89,12 @@ void ITKSigmoidImage::readFilterParameters(AbstractFilterParametersReader* reade
 // -----------------------------------------------------------------------------
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKSigmoidImage::dataCheck()
 {
-  // Check consistency of parameters
-
   setErrorCondition(0);
   setWarningCondition(0);
-  ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
+
+  // Check consistency of parameters
+
+  ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
@@ -116,7 +120,8 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   filter->SetBeta(static_cast<double>(m_Beta));
   filter->SetOutputMaximum(static_cast<double>(m_OutputMaximum));
   filter->SetOutputMinimum(static_cast<double>(m_OutputMinimum));
-  this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+  this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+
 }
 
 // -----------------------------------------------------------------------------

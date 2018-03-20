@@ -12,7 +12,7 @@
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
-#include "ITKImageBase.h"
+#include "ITKImageProcessingBase.h"
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
@@ -26,7 +26,7 @@
 
  WARNING: This filter is not thread safe. It uses a member variable to cast the marker image into the expected pixel type (uint16).
  */
-class ITKMorphologicalWatershedFromMarkersImage : public ITKImageBase
+class ITKMorphologicalWatershedFromMarkersImage : public ITKImageProcessingBase
 {
   Q_OBJECT
 

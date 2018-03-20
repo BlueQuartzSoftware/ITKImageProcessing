@@ -8,6 +8,7 @@
 // Auto includes
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 
+
 class ITKShiftScaleImageTest : public ITKTestBase
 {
 
@@ -20,7 +21,7 @@ public:
   }
 
   int TestITKShiftScaleImagedefaultTest()
-  {
+{
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/RA-Short.nrrd");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -47,10 +48,10 @@ public:
     GetMD5FromDataContainer(containerArray, input_path, md5Output);
     DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("a963bd6a755b853103a2d195e01a50d3"));
     return 0;
-  }
+}
 
-  int TestITKShiftScaleImageparamsTest()
-  {
+int TestITKShiftScaleImageparamsTest()
+{
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/RA-Short.nrrd");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -69,18 +70,18 @@ public:
     propWasSet = filter->setProperty("SaveAsNewArray", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     {
-      double d3d_var;
-      d3d_var = 100;
-      var.setValue(d3d_var);
-      propWasSet = filter->setProperty("Shift", var);
-      DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+        double d3d_var;
+        d3d_var = 100;
+        var.setValue(d3d_var);
+        propWasSet = filter->setProperty("Shift", var);
+        DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     }
     {
-      double d3d_var;
-      d3d_var = 0.5;
-      var.setValue(d3d_var);
-      propWasSet = filter->setProperty("Scale", var);
-      DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+        double d3d_var;
+        d3d_var = 0.5;
+        var.setValue(d3d_var);
+        propWasSet = filter->setProperty("Scale", var);
+        DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     }
     filter->setDataContainerArray(containerArray);
     filter->execute();
@@ -91,7 +92,9 @@ public:
     GetMD5FromDataContainer(containerArray, input_path, md5Output);
     DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("e3bee902dc9339d28359ebfb96a70186"));
     return 0;
-  }
+}
+
+
 
   // -----------------------------------------------------------------------------
   //
@@ -102,8 +105,8 @@ public:
 
     DREAM3D_REGISTER_TEST(this->TestFilterAvailability("ITKShiftScaleImage"));
 
-    DREAM3D_REGISTER_TEST(TestITKShiftScaleImagedefaultTest());
-    DREAM3D_REGISTER_TEST(TestITKShiftScaleImageparamsTest());
+    DREAM3D_REGISTER_TEST( TestITKShiftScaleImagedefaultTest());
+    DREAM3D_REGISTER_TEST( TestITKShiftScaleImageparamsTest());
 
     if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
     {
@@ -113,5 +116,5 @@ public:
 
 private:
   ITKShiftScaleImageTest(const ITKShiftScaleImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKShiftScaleImageTest&);         // Operator '=' Not Implemented
+  void operator=(const ITKShiftScaleImageTest&);  // Operator '=' Not Implemented
 };

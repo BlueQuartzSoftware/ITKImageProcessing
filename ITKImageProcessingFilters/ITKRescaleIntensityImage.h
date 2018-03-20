@@ -12,7 +12,7 @@
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
-#include "ITKImageBase.h"
+#include "ITKImageProcessingBase.h"
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
@@ -21,10 +21,11 @@
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 #include <itkRescaleIntensityImageFilter.h>
 
+
 /**
  * @brief The ITKRescaleIntensityImage class. See [Filter documentation](@ref ITKRescaleIntensityImage) for details.
  */
-class ITKRescaleIntensityImage : public ITKImageBase
+class ITKRescaleIntensityImage : public ITKImageProcessingBase
 {
   Q_OBJECT
 
@@ -104,8 +105,8 @@ protected:
   template <typename OutputPixelType> void CheckEntryBounds(double value, QString name);
 
 private:
-  ITKRescaleIntensityImage(const ITKRescaleIntensityImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKRescaleIntensityImage&);           // Operator '=' Not Implemented
+  ITKRescaleIntensityImage(const ITKRescaleIntensityImage&) = delete;    // Copy Constructor Not Implemented
+  void operator=(const ITKRescaleIntensityImage&) = delete; // Operator '=' Not Implemented
 };
 
 #ifdef __clang__

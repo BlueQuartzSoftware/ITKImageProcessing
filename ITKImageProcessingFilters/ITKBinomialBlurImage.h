@@ -12,7 +12,7 @@
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
-#include "ITKImageBase.h"
+#include "ITKImageProcessingBase.h"
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
@@ -21,10 +21,11 @@
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 #include <itkBinomialBlurImageFilter.h>
 
+
 /**
  * @brief The ITKBinomialBlurImage class. See [Filter documentation](@ref ITKBinomialBlurImage) for details.
  */
-class ITKBinomialBlurImage : public ITKImageBase
+class ITKBinomialBlurImage : public ITKImageProcessingBase
 {
   Q_OBJECT
 
@@ -37,6 +38,7 @@ public:
 
   SIMPL_FILTER_PARAMETER(double, Repetitions)
   Q_PROPERTY(double Repetitions READ getRepetitions WRITE setRepetitions)
+
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -93,8 +95,8 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKBinomialBlurImage(const ITKBinomialBlurImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKBinomialBlurImage&);       // Operator '=' Not Implemented
+  ITKBinomialBlurImage(const ITKBinomialBlurImage&) = delete;    // Copy Constructor Not Implemented
+  void operator=(const ITKBinomialBlurImage&) = delete; // Operator '=' Not Implemented
 };
 
 #ifdef __clang__

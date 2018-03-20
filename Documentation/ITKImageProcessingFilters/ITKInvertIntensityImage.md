@@ -13,10 +13,11 @@ InvertIntensityImageFilter inverts intensity of pixels by subtracting pixel valu
 
 \author Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA de Jouy-en-Josas, France.
 
-\see IntensityWindowingImageFilter ShiftScaleImageFilter 
+\see IntensityWindowingImageFilter ShiftScaleImageFilter
+
 \par Wiki Examples:
 
-\li All Examples 
+\li All Examples
 
 \li Invert an image
 
@@ -24,7 +25,7 @@ InvertIntensityImageFilter inverts intensity of pixels by subtracting pixel valu
 
 | Name | Type | Description |
 |------|------|-------------|
-| Maximum | double| N/A |
+| Maximum | double| Set/Get the maximum intensity value for the inversion. |
 
 
 ## Required Geometry ##

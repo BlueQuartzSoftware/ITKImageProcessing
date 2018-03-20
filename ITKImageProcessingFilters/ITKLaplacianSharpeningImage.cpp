@@ -4,7 +4,8 @@
  * Your License or Copyright can go here
  */
 
-#include "ITKLaplacianSharpeningImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/ITKLaplacianSharpeningImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/SimpleITKEnums.h"
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -18,11 +19,12 @@
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 ITKLaplacianSharpeningImage::ITKLaplacianSharpeningImage()
-: ITKImageBase()
+: ITKImageProcessingBase()
 {
   m_UseImageSpacing = StaticCastScalar<bool, bool, bool>(true);
 
@@ -42,6 +44,7 @@ void ITKLaplacianSharpeningImage::setupFilterParameters()
   FilterParameterVector parameters;
 
   parameters.push_back(SIMPL_NEW_BOOL_FP("UseImageSpacing", UseImageSpacing, FilterParameter::Parameter, ITKLaplacianSharpeningImage));
+
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -77,11 +80,12 @@ void ITKLaplacianSharpeningImage::readFilterParameters(AbstractFilterParametersR
 // -----------------------------------------------------------------------------
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKLaplacianSharpeningImage::dataCheck()
 {
-  // Check consistency of parameters
-
   setErrorCondition(0);
   setWarningCondition(0);
-  ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
+
+  // Check consistency of parameters
+
+  ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
@@ -104,7 +108,8 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   typedef itk::LaplacianSharpeningImageFilter<InputImageType, OutputImageType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
   filter->SetUseImageSpacing(static_cast<bool>(m_UseImageSpacing));
-  this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+  this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+
 }
 
 // -----------------------------------------------------------------------------
@@ -149,5 +154,5 @@ const QUuid ITKLaplacianSharpeningImage::getUuid()
 // -----------------------------------------------------------------------------
 const QString ITKLaplacianSharpeningImage::getSubGroupName() const
 {
-  return "ITK Edge";
+  return "ITK Smoothing";
 }

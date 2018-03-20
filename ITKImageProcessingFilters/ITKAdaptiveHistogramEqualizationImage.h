@@ -12,20 +12,22 @@
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
-#include "ITKImageBase.h"
+#include "ITKImageProcessingBase.h"
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
 
 // Auto includes
+#include <SIMPLib/FilterParameters/BooleanFilterParameter.h>
 #include <SIMPLib/FilterParameters/FloatFilterParameter.h>
 #include <SIMPLib/FilterParameters/FloatVec3FilterParameter.h>
 #include <itkAdaptiveHistogramEqualizationImageFilter.h>
 
+
 /**
  * @brief The ITKAdaptiveHistogramEqualizationImage class. See [Filter documentation](@ref ITKAdaptiveHistogramEqualizationImage) for details.
  */
-class ITKAdaptiveHistogramEqualizationImage : public ITKImageBase
+class ITKAdaptiveHistogramEqualizationImage : public ITKImageProcessingBase
 {
   Q_OBJECT
 
@@ -100,8 +102,8 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKAdaptiveHistogramEqualizationImage(const ITKAdaptiveHistogramEqualizationImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKAdaptiveHistogramEqualizationImage&);                        // Operator '=' Not Implemented
+  ITKAdaptiveHistogramEqualizationImage(const ITKAdaptiveHistogramEqualizationImage&) = delete;    // Copy Constructor Not Implemented
+  void operator=(const ITKAdaptiveHistogramEqualizationImage&) = delete; // Operator '=' Not Implemented
 };
 
 #ifdef __clang__

@@ -8,6 +8,7 @@ ITKImageProcessing (ITKImageProcessing)
 ## Description ##
 
 
+
 This class is parametrized over the type of the input image and the type of the output image.
 
 This filter computes the distance map of the input image as an approximation with pixel accuracy to the Euclidean distance.
@@ -19,6 +20,7 @@ The inside is considered as having negative distances. Outside is treated as hav
 As a convention, the distance is evaluated from the boundary of the ON pixels.
 
 The filter returns
+
 \li A signed distance map with the approximation to the euclidean distance.
 
 \li A voronoi partition. (See itkDanielssonDistanceMapImageFilter)

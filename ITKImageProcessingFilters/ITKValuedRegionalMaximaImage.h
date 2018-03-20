@@ -12,7 +12,7 @@
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
-#include "ITKImageBase.h"
+#include "ITKImageProcessingBase.h"
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
@@ -21,10 +21,11 @@
 #include <SIMPLib/FilterParameters/BooleanFilterParameter.h>
 #include <itkValuedRegionalMaximaImageFilter.h>
 
+
 /**
  * @brief The ITKValuedRegionalMaximaImage class. See [Filter documentation](@ref ITKValuedRegionalMaximaImage) for details.
  */
-class ITKValuedRegionalMaximaImage : public ITKImageBase
+class ITKValuedRegionalMaximaImage : public ITKImageProcessingBase
 {
   Q_OBJECT
 
@@ -37,6 +38,10 @@ public:
 
   SIMPL_FILTER_PARAMETER(bool, FullyConnected)
   Q_PROPERTY(bool FullyConnected READ getFullyConnected WRITE setFullyConnected)
+
+  SIMPL_FILTER_PARAMETER(bool, Flat)
+  Q_PROPERTY(bool Flat READ getFlat)
+
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -93,8 +98,8 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKValuedRegionalMaximaImage(const ITKValuedRegionalMaximaImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKValuedRegionalMaximaImage&);               // Operator '=' Not Implemented
+  ITKValuedRegionalMaximaImage(const ITKValuedRegionalMaximaImage&) = delete;    // Copy Constructor Not Implemented
+  void operator=(const ITKValuedRegionalMaximaImage&) = delete; // Operator '=' Not Implemented
 };
 
 #ifdef __clang__

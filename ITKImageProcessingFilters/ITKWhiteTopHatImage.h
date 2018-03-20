@@ -12,7 +12,7 @@
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
-#include "ITKImageBase.h"
+#include "ITKImageProcessingBase.h"
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
@@ -23,17 +23,18 @@
 #include <SIMPLib/FilterParameters/IntFilterParameter.h>
 #include <itkWhiteTopHatImageFilter.h>
 
+
 /**
  * @brief The ITKWhiteTopHatImage class. See [Filter documentation](@ref ITKWhiteTopHatImage) for details.
  */
-class ITKWhiteTopHatImage : public ITKImageBase
+class ITKWhiteTopHatImage : public ITKImageProcessingBase
 {
   Q_OBJECT
 
 public:
   SIMPL_SHARED_POINTERS(ITKWhiteTopHatImage)
   SIMPL_STATIC_NEW_MACRO(ITKWhiteTopHatImage)
-   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKWhiteTopHatImage, AbstractFilter)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKWhiteTopHatImage, AbstractFilter)
 
   virtual ~ITKWhiteTopHatImage();
 
@@ -45,6 +46,7 @@ public:
 
   SIMPL_FILTER_PARAMETER(int, KernelType)
   Q_PROPERTY(int KernelType READ getKernelType WRITE setKernelType)
+
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -101,8 +103,8 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKWhiteTopHatImage(const ITKWhiteTopHatImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKWhiteTopHatImage&);      // Operator '=' Not Implemented
+  ITKWhiteTopHatImage(const ITKWhiteTopHatImage&) = delete;    // Copy Constructor Not Implemented
+  void operator=(const ITKWhiteTopHatImage&) = delete; // Operator '=' Not Implemented
 };
 
 #ifdef __clang__

@@ -12,7 +12,7 @@
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
-#include "ITKImageBase.h"
+#include "ITKImageProcessingBase.h"
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
@@ -21,10 +21,11 @@
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 #include <itkNormalizeToConstantImageFilter.h>
 
+
 /**
  * @brief The ITKNormalizeToConstantImage class. See [Filter documentation](@ref ITKNormalizeToConstantImage) for details.
  */
-class ITKNormalizeToConstantImage : public ITKImageBase
+class ITKNormalizeToConstantImage : public ITKImageProcessingBase
 {
   Q_OBJECT
 
@@ -37,6 +38,7 @@ public:
 
   SIMPL_FILTER_PARAMETER(double, Constant)
   Q_PROPERTY(double Constant READ getConstant WRITE setConstant)
+
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -93,8 +95,8 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKNormalizeToConstantImage(const ITKNormalizeToConstantImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKNormalizeToConstantImage&);              // Operator '=' Not Implemented
+  ITKNormalizeToConstantImage(const ITKNormalizeToConstantImage&) = delete;    // Copy Constructor Not Implemented
+  void operator=(const ITKNormalizeToConstantImage&) = delete; // Operator '=' Not Implemented
 };
 
 #ifdef __clang__

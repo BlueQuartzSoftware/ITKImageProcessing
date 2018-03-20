@@ -7,6 +7,7 @@
 #include "ITKTestBase.h"
 // Auto includes
 
+
 class ITKSquareImageTest : public ITKTestBase
 {
 
@@ -19,7 +20,7 @@ public:
   }
 
   int TestITKSquareImagedefaultsTest()
-  {
+{
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/Ramp-Zero-One-Float.nrrd");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -46,7 +47,9 @@ public:
     GetMD5FromDataContainer(containerArray, input_path, md5Output);
     DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("314065b457b66e102b9cafd7c49be6b3"));
     return 0;
-  }
+}
+
+
 
   // -----------------------------------------------------------------------------
   //
@@ -57,7 +60,7 @@ public:
 
     DREAM3D_REGISTER_TEST(this->TestFilterAvailability("ITKSquareImage"));
 
-    DREAM3D_REGISTER_TEST(TestITKSquareImagedefaultsTest());
+    DREAM3D_REGISTER_TEST( TestITKSquareImagedefaultsTest());
 
     if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
     {
@@ -67,5 +70,5 @@ public:
 
 private:
   ITKSquareImageTest(const ITKSquareImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKSquareImageTest&);     // Operator '=' Not Implemented
+  void operator=(const ITKSquareImageTest&);  // Operator '=' Not Implemented
 };
