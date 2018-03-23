@@ -43,7 +43,10 @@
 
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
 
+#ifdef ITK_IMAGE_PROCESSING_HAVE_SCIFIO
 #include "itkSCIFIOImageIOFactory.h"
+#endif
+
 #include "itksys/SystemTools.hxx"
 #include <itkBMPImageIOFactory.h>
 #include <itkBioRadImageIOFactory.h>
@@ -84,7 +87,9 @@ ITKImageProcessingPlugin::ITKImageProcessingPlugin()
 , // Initialize ITKImageProcessing's List of Dependencies Here
     m_DidLoad(false)
 {
+#ifdef ITK_IMAGE_PROCESSING_HAVE_SCIFIO
   ITKImageProcessingPlugin::setSCIFIOEnvironmentVariables();
+#endif
   itk::JPEGImageIOFactory::RegisterOneFactory();
   itk::NrrdImageIOFactory::RegisterOneFactory();
   itk::PNGImageIOFactory::RegisterOneFactory();
@@ -100,7 +105,9 @@ ITKImageProcessingPlugin::ITKImageProcessingPlugin()
   itk::GE4ImageIOFactory::RegisterOneFactory();
   itk::GE5ImageIOFactory::RegisterOneFactory();
   itk::MRCImageIOFactory::RegisterOneFactory();
+#ifdef ITK_IMAGE_PROCESSING_HAVE_SCIFIO
   itk::SCIFIOImageIOFactory::RegisterOneFactory();
+#endif
 }
 
 // -----------------------------------------------------------------------------

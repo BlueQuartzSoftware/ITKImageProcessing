@@ -45,7 +45,6 @@ option(${PLUGIN_NAME}_ENABLE_SCIFIO "Enable SCIFIO ITK Modules" OFF)
 set(DREAM3D_ADDITIONAL_ITK_MODULES
     ITKIOImageBase
     ITKImageNoise
-    SCIFIO
     ITKIOBMP
     ITKIOJPEG
     ITKIONRRD
@@ -271,6 +270,11 @@ target_link_libraries(${PLUGIN_NAME}
                     SVWidgetsLib
                     ${ITK_LIBRARIES}
                     )
+
+if(${${PLUGIN_NAME}_ENABLE_SCIFIO})
+  target_compile_definitions(${PLUGIN_NAME} PUBLIC "ITK_IMAGE_PROCESSING_HAVE_SCIFIO")
+endif()
+
 
 # --------------------------------------------------------------------
 # Put back the output directory
