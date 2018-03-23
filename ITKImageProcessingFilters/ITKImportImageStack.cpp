@@ -240,7 +240,7 @@ void ITKImportImageStack::readImage(const QVector<QString>& fileList, bool dataC
     if(dimensions != 2)
     {
       setErrorCondition(-1);
-      const QString errorMessage = "Slice image dimensions do not equal 2";
+      const QString errorMessage = QString("Slice image dimensions do not equal 2. Dimension of current image is %1").arg(dimensions);
       notifyErrorMessage(getHumanLabel(), errorMessage, getErrorCondition());
       return;
     }

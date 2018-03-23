@@ -73,7 +73,7 @@ namespace UnitTest
 {
   namespace ITKImageProcessingImportImageStackTest
   {
-    const QString StackInputTestDir("@DREAM3D_DATA_DIR@/Data/JSONFilters/Input/DicomSeries/");
+    const QString StackInputTestDir("@DREAM3D_DATA_DIR@/Data/Image");
   }
 }
 
