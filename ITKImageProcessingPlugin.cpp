@@ -62,7 +62,6 @@
 #include <itkPNGImageIOFactory.h>
 #include <itkPNGImageIOFactory.h>
 #include <itkStimulateImageIOFactory.h>
-#include <itkGDCMImageIOFactory.h>
 #include <itkTIFFImageIOFactory.h>
 #include <itkVTKImageIOFactory.h>
 
@@ -106,7 +105,6 @@ ITKImageProcessingPlugin::ITKImageProcessingPlugin()
   itk::GE4ImageIOFactory::RegisterOneFactory();
   itk::GE5ImageIOFactory::RegisterOneFactory();
   itk::MRCImageIOFactory::RegisterOneFactory();
-  itk::GDCMImageIOFactory::RegisterOneFactory();
 #ifdef ITK_IMAGE_PROCESSING_HAVE_SCIFIO
   itk::SCIFIOImageIOFactory::RegisterOneFactory();
 #endif
