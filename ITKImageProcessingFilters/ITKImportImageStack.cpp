@@ -57,8 +57,7 @@
 //
 // -----------------------------------------------------------------------------
 ITKImportImageStack::ITKImportImageStack()
-: AbstractFilter()
-, m_DataContainerName(SIMPL::Defaults::ImageDataContainerName)
+: m_DataContainerName(SIMPL::Defaults::ImageDataContainerName)
 , m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName)
 , m_BoundsFile("")
 , m_ImageDataArrayName(SIMPL::CellData::ImageData)

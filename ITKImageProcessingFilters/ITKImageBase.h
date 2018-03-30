@@ -146,7 +146,7 @@ signals:
   void preflightExecuted();
 
 protected:
-  ITKImageBase() : AbstractFilter()
+  ITKImageBase()
   {
     initialize();
   }
@@ -171,7 +171,7 @@ protected:
     QVector<size_t> dims = ITKDream3DHelper::GetComponentsDimensions<PixelType>();
     cellArrayPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<ValueType>, AbstractFilter>(
         this, array_path, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if(nullptr != cellArrayPtr.lock().get())  /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+    if(nullptr != cellArrayPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     {
       cellArray = cellArrayPtr.lock()->getPointer(0);
     } /* Now assign the raw pointer to data from the DataArray<T> object */

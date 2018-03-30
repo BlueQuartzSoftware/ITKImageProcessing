@@ -74,8 +74,8 @@
 // To remove the support of uint8, copy before including this header file:
 //   #define DREAM3D_USE_uint8_t 0
 
-#ifndef _Dream3DTemplateAliasMacro_h
-#define _Dream3DTemplateAliasMacro_h
+#ifndef _dream3DTemplateAliasMacro_h
+#define _dream3DTemplateAliasMacro_h
 
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include <QString>
@@ -345,10 +345,10 @@
 #define Dream3DArraySwitchMacroLongOutputType(call, path, errorCondition, typeOUT, isTypeOUT, typeOUTTypename)                                                                                         \
   {                                                                                                                                                                                                    \
     IDataArray::Pointer ptr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, path);                                                                            \
-    if(ptr.get() != nullptr)                                                                                                                                                                           \
+    if(nullptr != ptr)                                                                                                                                                                                 \
     {                                                                                                                                                                                                  \
       ImageGeom::Pointer imageGeometry = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, path.getDataContainerName());                                    \
-      if(imageGeometry.get() != nullptr)                                                                                                                                                               \
+      if(nullptr != imageGeometry)                                                                                                                                                                     \
       {                                                                                                                                                                                                \
         QVector<size_t> tDims(3, 0);                                                                                                                                                                   \
         std::tie(tDims[0], tDims[1], tDims[2]) = imageGeometry->getDimensions();                                                                                                                       \

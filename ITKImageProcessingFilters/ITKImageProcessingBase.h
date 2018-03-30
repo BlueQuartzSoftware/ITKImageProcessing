@@ -100,7 +100,7 @@ protected:
       tempPath.update(getSelectedCellArrayPath().getDataContainerName(), getSelectedCellArrayPath().getAttributeMatrixName(), getNewCellArrayName());
       m_NewCellArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<OutputValueType>, AbstractFilter, OutputValueType>(
           this, tempPath, 0, outputDims);           /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-      if(nullptr != m_NewCellArrayPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+      if(nullptr != m_NewCellArrayPtr.lock())       /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
       {
         m_NewCellArray = m_NewCellArrayPtr.lock()->getVoidPointer(0);
       } /* Now assign the raw pointer to data from the DataArray<T> object */

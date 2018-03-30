@@ -49,8 +49,7 @@
 //
 // -----------------------------------------------------------------------------
 ITKImageReader::ITKImageReader()
-: AbstractFilter()
-, m_FileName("")
+: m_FileName("")
 , m_DataContainerName(SIMPL::Defaults::ImageDataContainerName)
 , m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName)
 , m_ImageDataArrayName(SIMPL::CellData::ImageData)
