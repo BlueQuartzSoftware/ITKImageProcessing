@@ -35,10 +35,10 @@ class ZeissImportFilter : public AbstractFilter
 
   public:
     SIMPL_SHARED_POINTERS(ZeissImportFilter)
-    SIMPL_STATIC_NEW_MACRO(ZeissImportFilter)
-     SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ZeissImportFilter, AbstractFilter)
+    SIMPL_FILTER_NEW_MACRO(ZeissImportFilter)
+    SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ZeissImportFilter, AbstractFilter)
 
-    virtual ~ZeissImportFilter();
+    ~ZeissImportFilter() override;
 
     SIMPL_FILTER_PARAMETER(QString, InputFile)
     Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
@@ -245,8 +245,11 @@ class ZeissImportFilter : public AbstractFilter
   private:
     QScopedPointer<ZeissImportFilterPrivate> const d_ptr;
 
+  public:
     ZeissImportFilter(const ZeissImportFilter&) = delete; // Copy Constructor Not Implemented
-    void operator=(const ZeissImportFilter&) = delete;    // Operator '=' Not Implemented
+    ZeissImportFilter(ZeissImportFilter&&) = delete;      // Move Constructor
+    ZeissImportFilter& operator=(const ZeissImportFilter&) = delete; // Copy Assignment
+    ZeissImportFilter& operator=(ZeissImportFilter&&) = delete;      // Move Assignment
 };
 
 #endif /* _ZeissImportFilter_H_ */

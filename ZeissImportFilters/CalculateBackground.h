@@ -28,10 +28,10 @@ class CalculateBackground : public AbstractFilter
 
   public:
     SIMPL_SHARED_POINTERS(CalculateBackground)
-    SIMPL_STATIC_NEW_MACRO(CalculateBackground)
-     SIMPL_TYPE_MACRO_SUPER_OVERRIDE(CalculateBackground, AbstractFilter)
+    SIMPL_FILTER_NEW_MACRO(CalculateBackground)
+    SIMPL_TYPE_MACRO_SUPER_OVERRIDE(CalculateBackground, AbstractFilter)
 
-    virtual ~CalculateBackground();
+    ~CalculateBackground() override;
 
     SIMPL_INSTANCE_STRING_PROPERTY(DataContainerName)
 
@@ -175,8 +175,11 @@ class CalculateBackground : public AbstractFilter
 
     DEFINE_DATAARRAY_VARIABLE(double, BackgroundImage)
 
+  public:
     CalculateBackground(const CalculateBackground&) = delete; // Copy Constructor Not Implemented
-    void operator=(const CalculateBackground&) = delete;      // Operator '=' Not Implemented
+    CalculateBackground(CalculateBackground&&) = delete;      // Move Constructor
+    CalculateBackground& operator=(const CalculateBackground&) = delete; // Copy Assignment
+    CalculateBackground& operator=(CalculateBackground&&) = delete;      // Move Assignment
 };
 
 #endif /* _CalculateBackground_H_ */

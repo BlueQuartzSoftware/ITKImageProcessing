@@ -37,21 +37,19 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-CalculateBackground::CalculateBackground() :
-  AbstractFilter(),
-  m_VolumeDataContainerName(""),
-  m_BackgroundAttributeMatrixName(""),
-  m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName),
-  m_ImageDataArrayPath("", "", ""),
-  m_AttributeMatrixName(SIMPL::Defaults::DataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, ""),
-  m_DataContainerBundleName(""),
-  m_BackgroundImageArrayName(getDataContainerBundleName() + "BackgroundImage"),
-  m_lowThresh(0),
-  m_highThresh(255),
-  m_SubtractBackground(false),
-  m_DivideBackground(false)
+CalculateBackground::CalculateBackground()
+: m_VolumeDataContainerName("")
+, m_BackgroundAttributeMatrixName("")
+, m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName)
+, m_ImageDataArrayPath("", "", "")
+, m_AttributeMatrixName(SIMPL::Defaults::DataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, "")
+, m_DataContainerBundleName("")
+, m_BackgroundImageArrayName(getDataContainerBundleName() + "BackgroundImage")
+, m_lowThresh(0)
+, m_highThresh(255)
+, m_SubtractBackground(false)
+, m_DivideBackground(false)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

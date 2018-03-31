@@ -48,7 +48,6 @@ SeparateDataSets::SeparateDataSets() :
   AbstractFilter()
 {
   initialize();
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

@@ -69,19 +69,17 @@ ZeissImportFilterPrivate::ZeissImportFilterPrivate(ZeissImportFilter* ptr) :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ZeissImportFilter::ZeissImportFilter() :
-  AbstractFilter(),
-  m_InputFile(""),
-  m_DataContainerName(k_DataContaineNameDefaultName),
-  m_ImageAttributeMatrixName(k_TileAttributeMatrixDefaultName),
-  m_ImageDataArrayPrefix(SIMPL::CellData::ImageData),
-  m_FileWasRead(false),
-  d_ptr(new ZeissImportFilterPrivate(this))
+ZeissImportFilter::ZeissImportFilter()
+: m_InputFile("")
+, m_DataContainerName(k_DataContaineNameDefaultName)
+, m_ImageAttributeMatrixName(k_TileAttributeMatrixDefaultName)
+, m_ImageDataArrayPrefix(SIMPL::CellData::ImageData)
+, m_FileWasRead(false)
+, d_ptr(new ZeissImportFilterPrivate(this))
 {
   m_ColorWeights.x = 0.2125f;
   m_ColorWeights.y = 0.7154f;
   m_ColorWeights.z = 0.0721f;
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

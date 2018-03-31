@@ -45,10 +45,10 @@ class SeparateDataSets : public AbstractFilter
 
   public:
     SIMPL_SHARED_POINTERS(SeparateDataSets)
-    SIMPL_STATIC_NEW_MACRO(SeparateDataSets)
+    SIMPL_FILTER_NEW_MACRO(SeparateDataSets)
     SIMPL_TYPE_MACRO_SUPER(SeparateDataSets, AbstractFilter)
 
-    virtual ~SeparateDataSets();
+    ~SeparateDataSets() override;
 
     SIMPL_INSTANCE_PROPERTY(DataArrayPath, DatasetAMPath)
     Q_PROPERTY(DataArrayPath DatasetAMPath READ getDatasetAMPath WRITE setDatasetAMPath)
