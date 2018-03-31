@@ -40,7 +40,6 @@ ITKMultiScaleHessianBasedObjectnessImage::ITKMultiScaleHessianBasedObjectnessIma
   m_SigmaMaximum = StaticCastScalar<double, double, double>(2.0);
   m_NumberOfSigmaSteps = StaticCastScalar<double, double, double>(10);
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

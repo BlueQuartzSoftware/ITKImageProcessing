@@ -24,12 +24,10 @@
 //
 // -----------------------------------------------------------------------------
 ITKShotNoiseImage::ITKShotNoiseImage()
-: ITKImageProcessingBase()
 {
   m_Scale = StaticCastScalar<double, double, double>(1.0);
   m_Seed = StaticCastScalar<double, double, double>((uint32_t) itk::simple::sitkWallClock);
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

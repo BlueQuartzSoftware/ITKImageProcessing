@@ -25,12 +25,10 @@
 //
 // -----------------------------------------------------------------------------
 ITKSmoothingRecursiveGaussianImage::ITKSmoothingRecursiveGaussianImage()
-: ITKImageProcessingBase()
 {
   m_Sigma = CastStdToVec3<std::vector<double>, FloatVec3_t, float>(std::vector<double>(3,1.0));
   m_NormalizeAcrossScale = StaticCastScalar<bool, bool, bool>(false);
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

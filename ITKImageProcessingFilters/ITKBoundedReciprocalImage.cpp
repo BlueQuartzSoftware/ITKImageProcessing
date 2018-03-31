@@ -24,10 +24,8 @@
 //
 // -----------------------------------------------------------------------------
 ITKBoundedReciprocalImage::ITKBoundedReciprocalImage()
-: ITKImageProcessingBase()
 {
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

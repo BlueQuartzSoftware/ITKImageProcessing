@@ -75,7 +75,6 @@ ITKImportImageStack::ITKImportImageStack()
   m_InputFileListInfo.EndIndex = 0;
   m_InputFileListInfo.PaddingDigits = 0;
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

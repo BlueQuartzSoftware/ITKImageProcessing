@@ -24,14 +24,12 @@
 //
 // -----------------------------------------------------------------------------
 ITKRegionalMinimaImage::ITKRegionalMinimaImage()
-: ITKImageProcessingBase()
 {
   m_BackgroundValue = StaticCastScalar<double, double, double>(0.0);
   m_ForegroundValue = StaticCastScalar<double, double, double>(1.0);
   m_FullyConnected = StaticCastScalar<bool, bool, bool>(false);
   m_FlatIsMinima = StaticCastScalar<bool, bool, bool>(true);
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

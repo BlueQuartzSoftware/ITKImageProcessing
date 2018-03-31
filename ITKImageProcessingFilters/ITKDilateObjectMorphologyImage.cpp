@@ -26,13 +26,11 @@
 //
 // -----------------------------------------------------------------------------
 ITKDilateObjectMorphologyImage::ITKDilateObjectMorphologyImage()
-: ITKImageProcessingBase()
 {
   m_ObjectValue = StaticCastScalar<double, double, double>(1);
   m_KernelRadius = CastStdToVec3<std::vector<unsigned int>, FloatVec3_t, float>(std::vector<unsigned int>(3, 1));
   m_KernelType = StaticCastScalar<int, int, int>(itk::simple::sitkBall);
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

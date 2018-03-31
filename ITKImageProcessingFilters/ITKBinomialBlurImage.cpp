@@ -24,11 +24,9 @@
 //
 // -----------------------------------------------------------------------------
 ITKBinomialBlurImage::ITKBinomialBlurImage()
-: ITKImageProcessingBase()
 {
   m_Repetitions = StaticCastScalar<double, double, double>(1u);
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

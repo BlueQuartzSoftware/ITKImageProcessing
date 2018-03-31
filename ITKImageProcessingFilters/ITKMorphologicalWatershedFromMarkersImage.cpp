@@ -25,7 +25,6 @@ ITKMorphologicalWatershedFromMarkersImage::ITKMorphologicalWatershedFromMarkersI
 {
   m_MarkWatershedLine = StaticCastScalar<bool, bool, bool>(true);
   m_FullyConnected = StaticCastScalar<bool, bool, bool>(false);
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

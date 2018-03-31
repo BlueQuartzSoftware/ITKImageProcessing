@@ -24,14 +24,12 @@
 //
 // -----------------------------------------------------------------------------
 ITKIntensityWindowingImage::ITKIntensityWindowingImage()
-: ITKImageProcessingBase()
 {
   m_WindowMinimum = StaticCastScalar<double, double, double>(0.0);
   m_WindowMaximum = StaticCastScalar<double, double, double>(255.0);
   m_OutputMinimum = StaticCastScalar<double, double, double>(0.0);
   m_OutputMaximum = StaticCastScalar<double, double, double>(255.0);
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

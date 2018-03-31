@@ -22,7 +22,6 @@
 ITKCastImage::ITKCastImage()
 : m_CastingType(itk::ImageIOBase::IOComponentType::UCHAR - 1)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

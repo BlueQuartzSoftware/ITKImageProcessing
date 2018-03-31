@@ -24,12 +24,10 @@
 //
 // -----------------------------------------------------------------------------
 ITKApproximateSignedDistanceMapImage::ITKApproximateSignedDistanceMapImage()
-: ITKImageProcessingBase()
 {
   m_InsideValue = StaticCastScalar<double, double, double>(1u);
   m_OutsideValue = StaticCastScalar<double, double, double>(0u);
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

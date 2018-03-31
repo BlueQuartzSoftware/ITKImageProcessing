@@ -24,12 +24,10 @@
 //
 // -----------------------------------------------------------------------------
 ITKCurvatureFlowImage::ITKCurvatureFlowImage()
-: ITKImageProcessingBase()
 {
   m_TimeStep = StaticCastScalar<double, double, double>(0.05);
   m_NumberOfIterations = StaticCastScalar<double, double, double>(5u);
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

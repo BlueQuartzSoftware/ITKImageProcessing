@@ -24,14 +24,12 @@
 //
 // -----------------------------------------------------------------------------
 ITKDiscreteGaussianImage::ITKDiscreteGaussianImage()
-: ITKImageProcessingBase()
 {
   m_Variance = CastStdToVec3<std::vector<double>, FloatVec3_t, float>(std::vector<double>(3,1.0));
   m_MaximumKernelWidth = StaticCastScalar<double, double, double>(32u);
   m_MaximumError = CastStdToVec3<std::vector<double>, FloatVec3_t, float>(std::vector<double>(3, 0.01));
   m_UseImageSpacing = StaticCastScalar<bool, bool, bool>(true);
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

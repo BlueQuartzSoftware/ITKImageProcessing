@@ -24,12 +24,10 @@
 //
 // -----------------------------------------------------------------------------
 ITKZeroCrossingImage::ITKZeroCrossingImage()
-: ITKImageProcessingBase()
 {
   m_ForegroundValue = StaticCastScalar<int, int, int>(1u);
   m_BackgroundValue = StaticCastScalar<int, int, int>(0u);
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

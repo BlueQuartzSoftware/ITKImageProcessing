@@ -24,13 +24,11 @@
 //
 // -----------------------------------------------------------------------------
 ITKBilateralImage::ITKBilateralImage()
-: ITKImageProcessingBase()
 {
   m_DomainSigma = StaticCastScalar<double, double, double>(4.0);
   m_RangeSigma = StaticCastScalar<double, double, double>(50.0);
   m_NumberOfRangeGaussianSamples = StaticCastScalar<double, double, double>(100u);
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

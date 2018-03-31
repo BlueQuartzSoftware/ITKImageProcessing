@@ -26,14 +26,12 @@
 //
 // -----------------------------------------------------------------------------
 ITKBinaryMorphologicalClosingImage::ITKBinaryMorphologicalClosingImage()
-: ITKImageProcessingBase()
 {
   m_ForegroundValue = StaticCastScalar<double, double, double>(1.0);
   m_SafeBorder = StaticCastScalar<bool, bool, bool>(true);
   m_KernelRadius = CastStdToVec3<std::vector<unsigned int>, FloatVec3_t, float>(std::vector<unsigned int>(3, 1));
   m_KernelType = StaticCastScalar<int, int, int>(itk::simple::sitkBall);
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

@@ -24,13 +24,11 @@
 //
 // -----------------------------------------------------------------------------
 ITKSignedDanielssonDistanceMapImage::ITKSignedDanielssonDistanceMapImage()
-: ITKImageProcessingBase()
 {
   m_InsideIsPositive = StaticCastScalar<bool, bool, bool>(false);
   m_SquaredDistance = StaticCastScalar<bool, bool, bool>(false);
   m_UseImageSpacing = StaticCastScalar<bool, bool, bool>(false);
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

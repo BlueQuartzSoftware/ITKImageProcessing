@@ -24,12 +24,10 @@
 //
 // -----------------------------------------------------------------------------
 ITKShiftScaleImage::ITKShiftScaleImage()
-: ITKImageProcessingBase()
 {
   m_Shift = StaticCastScalar<double, double, double>(0);
   m_Scale = StaticCastScalar<double, double, double>(1.0);
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

@@ -24,12 +24,10 @@
 //
 // -----------------------------------------------------------------------------
 ITKLabelContourImage::ITKLabelContourImage()
-: ITKImageProcessingBase()
 {
   m_FullyConnected = StaticCastScalar<bool, bool, bool>(false);
   m_BackgroundValue = StaticCastScalar<double, double, double>(0);
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

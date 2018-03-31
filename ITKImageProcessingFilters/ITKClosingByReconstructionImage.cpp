@@ -26,14 +26,12 @@
 //
 // -----------------------------------------------------------------------------
 ITKClosingByReconstructionImage::ITKClosingByReconstructionImage()
-: ITKImageProcessingBase()
 {
   m_FullyConnected = StaticCastScalar<bool, bool, bool>(false);
   m_PreserveIntensities = StaticCastScalar<bool, bool, bool>(false);
   m_KernelRadius = CastStdToVec3<std::vector<unsigned int>, FloatVec3_t, float>(std::vector<unsigned int>(3, 1));
   m_KernelType = StaticCastScalar<int, int, int>(itk::simple::sitkBall);
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

@@ -24,12 +24,10 @@
 //
 // -----------------------------------------------------------------------------
 ITKRelabelComponentImage::ITKRelabelComponentImage()
-: ITKImageProcessingBase()
 {
   m_MinimumObjectSize = StaticCastScalar<double, double, double>(0u);
   m_SortByObjectSize = StaticCastScalar<bool, bool, bool>(true);
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

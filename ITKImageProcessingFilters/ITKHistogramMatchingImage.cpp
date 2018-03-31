@@ -25,7 +25,6 @@ ITKHistogramMatchingImage::ITKHistogramMatchingImage()
   m_NumberOfMatchPoints = StaticCastScalar<double, double, double>(1u);
   m_ThresholdAtMeanIntensity = StaticCastScalar<bool, bool, bool>(true);
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

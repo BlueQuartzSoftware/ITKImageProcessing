@@ -24,12 +24,10 @@
 //
 // -----------------------------------------------------------------------------
 ITKIsoContourDistanceImage::ITKIsoContourDistanceImage()
-: ITKImageProcessingBase()
 {
   m_LevelSetValue = StaticCastScalar<double, double, double>(0.0);
   m_FarValue = StaticCastScalar<double, double, double>(10);
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

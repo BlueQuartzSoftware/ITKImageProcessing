@@ -24,13 +24,11 @@
 //
 // -----------------------------------------------------------------------------
 ITKBinaryProjectionImage::ITKBinaryProjectionImage()
-: ITKImageProcessingBase()
 {
   m_ProjectionDimension = StaticCastScalar<double, double, double>(0u);
   m_ForegroundValue = StaticCastScalar<double, double, double>(1.0);
   m_BackgroundValue = StaticCastScalar<double, double, double>(0.0);
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

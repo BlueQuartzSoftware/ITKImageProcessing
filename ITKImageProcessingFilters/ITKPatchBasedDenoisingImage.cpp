@@ -37,7 +37,6 @@ ITKPatchBasedDenoisingImage::ITKPatchBasedDenoisingImage()
   m_KernelBandwidthUpdateFrequency = StaticCastScalar<double, double, double>(3u);
   m_KernelBandwidthFractionPixelsForEstimation = StaticCastScalar<double, double, double>(0.2);
   m_NoiseModel = 0; //  NOMODEL
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

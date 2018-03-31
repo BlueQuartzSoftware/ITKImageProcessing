@@ -28,7 +28,6 @@ ITKFFTNormalizedCorrelationImage::ITKFFTNormalizedCorrelationImage()
   m_RequiredNumberOfOverlappingPixels = StaticCastScalar<double, double, double>(0);
   m_RequiredFractionOfOverlappingPixels = StaticCastScalar<double, double, double>(0.0);
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

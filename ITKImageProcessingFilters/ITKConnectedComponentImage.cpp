@@ -24,11 +24,9 @@
 //
 // -----------------------------------------------------------------------------
 ITKConnectedComponentImage::ITKConnectedComponentImage()
-: ITKImageProcessingBase()
 {
   m_FullyConnected = StaticCastScalar<bool, bool, bool>(false);
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

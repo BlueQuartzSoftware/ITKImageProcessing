@@ -26,13 +26,11 @@
 //
 // -----------------------------------------------------------------------------
 ITKBlackTopHatImage::ITKBlackTopHatImage()
-: ITKImageProcessingBase()
 {
   m_SafeBorder = StaticCastScalar<bool, bool, bool>(true);
   m_KernelRadius = CastStdToVec3<std::vector<unsigned int>, FloatVec3_t, float>(std::vector<unsigned int>(3, 1));
   m_KernelType = StaticCastScalar<int, int, int>(itk::simple::sitkBall);
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

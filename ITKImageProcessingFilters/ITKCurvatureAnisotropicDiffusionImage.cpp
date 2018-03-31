@@ -24,14 +24,12 @@
 //
 // -----------------------------------------------------------------------------
 ITKCurvatureAnisotropicDiffusionImage::ITKCurvatureAnisotropicDiffusionImage()
-: ITKImageProcessingBase()
 {
   m_TimeStep = StaticCastScalar<double, double, double>(0.0625);
   m_ConductanceParameter = StaticCastScalar<double, double, double>(3.0);
   m_ConductanceScalingUpdateInterval = StaticCastScalar<double, double, double>(1u);
   m_NumberOfIterations = StaticCastScalar<double, double, double>(5u);
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

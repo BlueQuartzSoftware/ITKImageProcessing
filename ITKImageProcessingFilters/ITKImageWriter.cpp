@@ -67,7 +67,6 @@ ITKImageWriter::ITKImageWriter()
 : m_FileName("")
 , m_ImageArrayPath("", "", "")
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

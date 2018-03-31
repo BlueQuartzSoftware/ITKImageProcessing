@@ -24,13 +24,11 @@
 //
 // -----------------------------------------------------------------------------
 ITKMorphologicalWatershedImage::ITKMorphologicalWatershedImage()
-: ITKImageProcessingBase()
 {
   m_Level = StaticCastScalar<double, double, double>(0.0);
   m_MarkWatershedLine = StaticCastScalar<bool, bool, bool>(true);
   m_FullyConnected = StaticCastScalar<bool, bool, bool>(false);
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

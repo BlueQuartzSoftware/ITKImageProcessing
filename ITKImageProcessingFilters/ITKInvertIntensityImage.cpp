@@ -24,11 +24,9 @@
 //
 // -----------------------------------------------------------------------------
 ITKInvertIntensityImage::ITKInvertIntensityImage()
-: ITKImageProcessingBase()
 {
   m_Maximum = StaticCastScalar<double, double, double>(255);
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

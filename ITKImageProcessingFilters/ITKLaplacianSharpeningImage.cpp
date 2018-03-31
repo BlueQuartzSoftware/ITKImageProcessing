@@ -24,11 +24,9 @@
 //
 // -----------------------------------------------------------------------------
 ITKLaplacianSharpeningImage::ITKLaplacianSharpeningImage()
-: ITKImageProcessingBase()
 {
   m_UseImageSpacing = StaticCastScalar<bool, bool, bool>(true);
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

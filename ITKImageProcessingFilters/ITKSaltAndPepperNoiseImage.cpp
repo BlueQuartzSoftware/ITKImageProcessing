@@ -26,12 +26,10 @@
 //
 // -----------------------------------------------------------------------------
 ITKSaltAndPepperNoiseImage::ITKSaltAndPepperNoiseImage()
-: ITKImageProcessingBase()
 {
   m_Probability = StaticCastScalar<double, double, double>(0.01);
   m_Seed = StaticCastScalar<double, double, double>((uint32_t) itk::simple::sitkWallClock);
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

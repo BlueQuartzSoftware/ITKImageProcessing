@@ -24,14 +24,12 @@
 //
 // -----------------------------------------------------------------------------
 ITKThresholdMaximumConnectedComponentsImage::ITKThresholdMaximumConnectedComponentsImage()
-: ITKImageProcessingBase()
 {
   m_MinimumObjectSizeInPixels = StaticCastScalar<double, double, double>(0u);
   m_UpperBoundary = StaticCastScalar<double, double, double>(std::numeric_limits<double>::max());
   m_InsideValue = StaticCastScalar<int, int, int>(1u);
   m_OutsideValue = StaticCastScalar<int, int, int>(0u);
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

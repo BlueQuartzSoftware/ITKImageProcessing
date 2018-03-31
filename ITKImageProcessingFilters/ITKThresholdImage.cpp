@@ -24,13 +24,11 @@
 //
 // -----------------------------------------------------------------------------
 ITKThresholdImage::ITKThresholdImage()
-: ITKImageProcessingBase()
 {
   m_Lower = StaticCastScalar<double, double, double>(0.0);
   m_Upper = StaticCastScalar<double, double, double>(1.0);
   m_OutsideValue = StaticCastScalar<double, double, double>(0.0);
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

@@ -24,7 +24,6 @@
 //
 // -----------------------------------------------------------------------------
 ${FilterName}::${FilterName}()
-: ITKImageProcessingBase()
 {
 ${InitializationParameters}
   setupFilterParameters();

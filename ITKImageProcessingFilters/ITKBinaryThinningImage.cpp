@@ -24,10 +24,8 @@
 //
 // -----------------------------------------------------------------------------
 ITKBinaryThinningImage::ITKBinaryThinningImage()
-: ITKImageProcessingBase()
 {
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

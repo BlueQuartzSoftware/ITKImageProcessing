@@ -24,12 +24,10 @@
 //
 // -----------------------------------------------------------------------------
 ITKLaplacianRecursiveGaussianImage::ITKLaplacianRecursiveGaussianImage()
-: ITKImageProcessingBase()
 {
   m_Sigma = StaticCastScalar<double, double, double>(1.0);
   m_NormalizeAcrossScale = StaticCastScalar<bool, bool, bool>(false);
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

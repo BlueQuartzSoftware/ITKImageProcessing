@@ -37,7 +37,7 @@ public:
   // SIMPL_SHARED_POINTERS(ITKImageBase)
   // SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKImageBase, AbstractFilter)
 
-  virtual ~ITKImageBase() = default;
+  ~ITKImageBase() override = default;
 
   /**
    * @brief execute Reimplemented from @see AbstractFilter class
@@ -393,7 +393,8 @@ protected:
 private:
 
   ITKImageBase(const ITKImageBase&);   // Copy Constructor Not Implemented
-  void operator=(const ITKImageBase&) = delete; // Operator '=' Not Implemented
+  ITKImageBase& operator=(const ITKImageBase&) = delete; // Copy Assignment
+  ITKImageBase& operator=(ITKImageBase&&) = delete;      // Move Assignment
 };
 
 #endif /* _ITKImageBase_H_ */

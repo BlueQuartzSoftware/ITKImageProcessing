@@ -24,14 +24,12 @@
 //
 // -----------------------------------------------------------------------------
 ITKBinaryThresholdImage::ITKBinaryThresholdImage()
-: ITKImageProcessingBase()
 {
   m_LowerThreshold = StaticCastScalar<double, double, double>(0.0);
   m_UpperThreshold = StaticCastScalar<double, double, double>(255.0);
   m_InsideValue = StaticCastScalar<int, int, int>(1u);
   m_OutsideValue = StaticCastScalar<int, int, int>(0u);
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

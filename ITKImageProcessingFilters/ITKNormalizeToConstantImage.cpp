@@ -24,11 +24,9 @@
 //
 // -----------------------------------------------------------------------------
 ITKNormalizeToConstantImage::ITKNormalizeToConstantImage()
-: ITKImageProcessingBase()
 {
   m_Constant = StaticCastScalar<double, double, double>(1.0);
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

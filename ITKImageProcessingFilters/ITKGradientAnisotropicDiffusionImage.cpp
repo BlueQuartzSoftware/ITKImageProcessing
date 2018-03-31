@@ -24,14 +24,12 @@
 //
 // -----------------------------------------------------------------------------
 ITKGradientAnisotropicDiffusionImage::ITKGradientAnisotropicDiffusionImage()
-: ITKImageProcessingBase()
 {
   m_TimeStep = StaticCastScalar<double, double, double>(0.125);
   m_ConductanceParameter = StaticCastScalar<double, double, double>(3);
   m_ConductanceScalingUpdateInterval = StaticCastScalar<double, double, double>(1u);
   m_NumberOfIterations = StaticCastScalar<double, double, double>(5u);
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

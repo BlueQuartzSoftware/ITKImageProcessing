@@ -54,7 +54,6 @@ ITKImageReader::ITKImageReader()
 , m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName)
 , m_ImageDataArrayName(SIMPL::CellData::ImageData)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

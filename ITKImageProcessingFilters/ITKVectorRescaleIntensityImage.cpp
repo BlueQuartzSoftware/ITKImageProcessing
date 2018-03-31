@@ -29,7 +29,6 @@ ITKVectorRescaleIntensityImage::ITKVectorRescaleIntensityImage()
 {
   m_OutputMaximumMagnitude = StaticCastScalar<double, double, double>(255);
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

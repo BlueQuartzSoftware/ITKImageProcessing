@@ -24,11 +24,9 @@
 //
 // -----------------------------------------------------------------------------
 ITKHMaximaImage::ITKHMaximaImage()
-: ITKImageProcessingBase()
 {
   m_Height = StaticCastScalar<double, double, double>(2.0);
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

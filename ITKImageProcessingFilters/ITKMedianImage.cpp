@@ -24,11 +24,9 @@
 //
 // -----------------------------------------------------------------------------
 ITKMedianImage::ITKMedianImage()
-: ITKImageProcessingBase()
 {
   m_Radius = CastStdToVec3<std::vector<unsigned int>, FloatVec3_t, float>(std::vector<unsigned int>(3, 1));
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

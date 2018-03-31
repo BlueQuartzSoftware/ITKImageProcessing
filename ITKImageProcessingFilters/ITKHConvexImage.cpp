@@ -24,12 +24,10 @@
 //
 // -----------------------------------------------------------------------------
 ITKHConvexImage::ITKHConvexImage()
-: ITKImageProcessingBase()
 {
   m_Height = StaticCastScalar<double, double, double>(2.0);
   m_FullyConnected = StaticCastScalar<bool, bool, bool>(false);
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

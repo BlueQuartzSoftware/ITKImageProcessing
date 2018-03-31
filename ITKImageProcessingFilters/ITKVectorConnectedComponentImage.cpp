@@ -38,12 +38,10 @@
 //
 // -----------------------------------------------------------------------------
 ITKVectorConnectedComponentImage::ITKVectorConnectedComponentImage()
-: ITKImageProcessingBase()
 {
   m_DistanceThreshold = StaticCastScalar<double, double, double>(1.0);
   m_FullyConnected = StaticCastScalar<bool, bool, bool>(false);
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

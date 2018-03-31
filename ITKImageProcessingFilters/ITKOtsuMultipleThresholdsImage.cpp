@@ -24,14 +24,12 @@
 //
 // -----------------------------------------------------------------------------
 ITKOtsuMultipleThresholdsImage::ITKOtsuMultipleThresholdsImage()
-: ITKImageProcessingBase()
 {
   m_NumberOfThresholds = StaticCastScalar<int, int, int>(1u);
   m_LabelOffset = StaticCastScalar<int, int, int>(0u);
   m_NumberOfHistogramBins = StaticCastScalar<double, double, double>(128u);
   m_ValleyEmphasis = StaticCastScalar<bool, bool, bool>(false);
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

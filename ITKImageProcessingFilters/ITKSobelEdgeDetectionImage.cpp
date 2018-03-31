@@ -24,10 +24,8 @@
 //
 // -----------------------------------------------------------------------------
 ITKSobelEdgeDetectionImage::ITKSobelEdgeDetectionImage()
-: ITKImageProcessingBase()
 {
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

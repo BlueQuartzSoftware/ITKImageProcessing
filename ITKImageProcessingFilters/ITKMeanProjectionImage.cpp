@@ -24,11 +24,9 @@
 //
 // -----------------------------------------------------------------------------
 ITKMeanProjectionImage::ITKMeanProjectionImage()
-: ITKImageProcessingBase()
 {
   m_ProjectionDimension = StaticCastScalar<double, double, double>(0u);
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

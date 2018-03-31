@@ -24,13 +24,11 @@
 //
 // -----------------------------------------------------------------------------
 ITKMinMaxCurvatureFlowImage::ITKMinMaxCurvatureFlowImage()
-: ITKImageProcessingBase()
 {
   m_TimeStep = StaticCastScalar<double, double, double>(0.05);
   m_NumberOfIterations = StaticCastScalar<double, double, double>(5u);
   m_StencilRadius = StaticCastScalar<int, int, int>(2);
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

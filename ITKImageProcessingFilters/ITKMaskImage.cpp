@@ -27,7 +27,6 @@ ITKMaskImage::ITKMaskImage()
 {
   m_OutsideValue = StaticCastScalar<double, double, double>(0);
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

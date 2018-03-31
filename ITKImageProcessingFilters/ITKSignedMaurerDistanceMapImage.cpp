@@ -24,14 +24,12 @@
 //
 // -----------------------------------------------------------------------------
 ITKSignedMaurerDistanceMapImage::ITKSignedMaurerDistanceMapImage()
-: ITKImageProcessingBase()
 {
   m_InsideIsPositive = StaticCastScalar<bool, bool, bool>(false);
   m_SquaredDistance = StaticCastScalar<bool, bool, bool>(true);
   m_UseImageSpacing = StaticCastScalar<bool, bool, bool>(false);
   m_BackgroundValue = StaticCastScalar<double, double, double>(0.0);
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

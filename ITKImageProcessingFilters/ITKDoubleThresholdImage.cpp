@@ -24,7 +24,6 @@
 //
 // -----------------------------------------------------------------------------
 ITKDoubleThresholdImage::ITKDoubleThresholdImage()
-: ITKImageProcessingBase()
 {
   m_Threshold1 = StaticCastScalar<double, double, double>(0.0);
   m_Threshold2 = StaticCastScalar<double, double, double>(1.0);
@@ -34,7 +33,6 @@ ITKDoubleThresholdImage::ITKDoubleThresholdImage()
   m_OutsideValue = StaticCastScalar<int, int, int>(0u);
   m_FullyConnected = StaticCastScalar<bool, bool, bool>(false);
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
