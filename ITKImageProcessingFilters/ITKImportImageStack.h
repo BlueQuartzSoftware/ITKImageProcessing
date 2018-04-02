@@ -209,7 +209,8 @@ private:
 public:
   ITKImportImageStack(const ITKImportImageStack&) = delete; // Copy Constructor Not Implemented
   ITKImportImageStack(ITKImportImageStack&&) = delete;      // Move Constructor
-  void operator=(const ITKImportImageStack&);               // Move assignment Not Implemented
+  ITKImportImageStack& operator=(const ITKImportImageStack&) = delete; // Copy Assignment Not Implemented
+  ITKImportImageStack& operator=(ITKImportImageStack&&) = delete;      // Move Assignment Not Implemented
 };
 
 #endif /* ITKImportImageStack_H_ */
