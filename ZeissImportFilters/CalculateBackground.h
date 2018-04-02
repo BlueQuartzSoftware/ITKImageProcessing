@@ -178,7 +178,7 @@ class CalculateBackground : public AbstractFilter
   public:
     CalculateBackground(const CalculateBackground&) = delete; // Copy Constructor Not Implemented
     CalculateBackground(CalculateBackground&&) = delete;      // Move Constructor
-    CalculateBackground& operator=(const CalculateBackground&) = delete; // Copy Assignment
+    CalculateBackground& operator=(const CalculateBackground&) = delete; // Copy Assignment Not Implemented
     CalculateBackground& operator=(CalculateBackground&&) = delete;      // Move Assignment
 };
 

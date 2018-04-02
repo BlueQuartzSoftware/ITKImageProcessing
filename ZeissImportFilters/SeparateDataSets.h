@@ -154,5 +154,5 @@ class SeparateDataSets : public AbstractFilter
 
   private:
     SeparateDataSets(const SeparateDataSets&); // Copy Constructor Not Implemented
-    void operator=(const SeparateDataSets&); // Operator '=' Not Implemented
+    void operator=(const SeparateDataSets&);   // Move assignment Not Implemented
 };

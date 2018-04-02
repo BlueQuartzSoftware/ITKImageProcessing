@@ -153,7 +153,7 @@ class ZeissImportPlugin : public QObject, public ISIMPLibPlugin
     bool                m_DidLoad;
 
     ZeissImportPlugin(const ZeissImportPlugin&) = delete; // Copy Constructor Not Implemented
-    void operator=(const ZeissImportPlugin&) = delete;    // Operator '=' Not Implemented
+    void operator=(const ZeissImportPlugin&) = delete;    // Move assignment Not Implemented
 };
 
 #endif /* _ZeissImport_H_ */

@@ -248,7 +248,7 @@ class ZeissImportFilter : public AbstractFilter
   public:
     ZeissImportFilter(const ZeissImportFilter&) = delete; // Copy Constructor Not Implemented
     ZeissImportFilter(ZeissImportFilter&&) = delete;      // Move Constructor
-    ZeissImportFilter& operator=(const ZeissImportFilter&) = delete; // Copy Assignment
+    ZeissImportFilter& operator=(const ZeissImportFilter&) = delete; // Copy Assignment Not Implemented
     ZeissImportFilter& operator=(ZeissImportFilter&&) = delete;      // Move Assignment
 };
 
