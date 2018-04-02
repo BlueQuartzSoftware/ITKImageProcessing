@@ -102,5 +102,5 @@ int TestITKGrayscaleFillholeImageGrayscaleFillhole2Test()
 
 private:
   ITKGrayscaleFillholeImageTest(const ITKGrayscaleFillholeImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKGrayscaleFillholeImageTest&);  // Operator '=' Not Implemented
+  void operator=(const ITKGrayscaleFillholeImageTest&);                // Move assignment Not Implemented
 };

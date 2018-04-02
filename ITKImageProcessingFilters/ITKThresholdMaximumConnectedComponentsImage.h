@@ -106,7 +106,7 @@ protected:
 
 private:
   ITKThresholdMaximumConnectedComponentsImage(const ITKThresholdMaximumConnectedComponentsImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKThresholdMaximumConnectedComponentsImage&) = delete; // Operator '=' Not Implemented
+  void operator=(const ITKThresholdMaximumConnectedComponentsImage&) = delete;                                 // Move assignment Not Implemented
 };
 
 #ifdef __clang__

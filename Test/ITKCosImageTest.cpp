@@ -105,5 +105,5 @@ int TestITKCosImageshortTest()
 
 private:
   ITKCosImageTest(const ITKCosImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKCosImageTest&);  // Operator '=' Not Implemented
+  void operator=(const ITKCosImageTest&);  // Move assignment Not Implemented
 };

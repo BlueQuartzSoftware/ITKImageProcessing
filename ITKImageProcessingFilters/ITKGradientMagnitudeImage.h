@@ -96,7 +96,7 @@ protected:
 
 private:
   ITKGradientMagnitudeImage(const ITKGradientMagnitudeImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKGradientMagnitudeImage&) = delete; // Operator '=' Not Implemented
+  void operator=(const ITKGradientMagnitudeImage&) = delete;               // Move assignment Not Implemented
 };
 
 #ifdef __clang__

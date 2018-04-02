@@ -107,7 +107,7 @@ protected:
 
 private:
   ITKOpeningByReconstructionImage(const ITKOpeningByReconstructionImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKOpeningByReconstructionImage&) = delete; // Operator '=' Not Implemented
+  void operator=(const ITKOpeningByReconstructionImage&) = delete;                     // Move assignment Not Implemented
 };
 
 #ifdef __clang__

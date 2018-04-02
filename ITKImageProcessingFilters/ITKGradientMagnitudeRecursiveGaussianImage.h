@@ -100,7 +100,7 @@ protected:
 
 private:
   ITKGradientMagnitudeRecursiveGaussianImage(const ITKGradientMagnitudeRecursiveGaussianImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKGradientMagnitudeRecursiveGaussianImage&) = delete; // Operator '=' Not Implemented
+  void operator=(const ITKGradientMagnitudeRecursiveGaussianImage&) = delete;                                // Move assignment Not Implemented
 };
 
 #ifdef __clang__

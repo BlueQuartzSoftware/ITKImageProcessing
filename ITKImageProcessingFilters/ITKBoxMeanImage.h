@@ -96,7 +96,7 @@ protected:
 
 private:
   ITKBoxMeanImage(const ITKBoxMeanImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKBoxMeanImage&) = delete; // Operator '=' Not Implemented
+  void operator=(const ITKBoxMeanImage&) = delete;     // Move assignment Not Implemented
 };
 
 #ifdef __clang__

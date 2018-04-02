@@ -73,5 +73,5 @@ public:
 
 private:
   ITKGradientMagnitudeImageTest(const ITKGradientMagnitudeImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKGradientMagnitudeImageTest&);  // Operator '=' Not Implemented
+  void operator=(const ITKGradientMagnitudeImageTest&);                // Move assignment Not Implemented
 };

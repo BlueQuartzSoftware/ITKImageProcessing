@@ -111,7 +111,7 @@ protected:
 
 private:
   ITKBinaryOpeningByReconstructionImage(const ITKBinaryOpeningByReconstructionImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKBinaryOpeningByReconstructionImage&) = delete; // Operator '=' Not Implemented
+  void operator=(const ITKBinaryOpeningByReconstructionImage&) = delete;                           // Move assignment Not Implemented
 };
 
 #ifdef __clang__

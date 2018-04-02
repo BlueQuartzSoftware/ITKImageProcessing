@@ -102,7 +102,7 @@ protected:
 
 private:
   ITKSignedDanielssonDistanceMapImage(const ITKSignedDanielssonDistanceMapImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKSignedDanielssonDistanceMapImage&) = delete; // Operator '=' Not Implemented
+  void operator=(const ITKSignedDanielssonDistanceMapImage&) = delete;                         // Move assignment Not Implemented
 };
 
 #ifdef __clang__

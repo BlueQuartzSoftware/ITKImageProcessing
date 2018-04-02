@@ -104,7 +104,7 @@ protected:
 
 private:
   ITKDilateObjectMorphologyImage(const ITKDilateObjectMorphologyImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKDilateObjectMorphologyImage&) = delete; // Operator '=' Not Implemented
+  void operator=(const ITKDilateObjectMorphologyImage&) = delete;                    // Move assignment Not Implemented
 };
 
 #ifdef __clang__

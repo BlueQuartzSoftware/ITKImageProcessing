@@ -99,7 +99,7 @@ protected:
 
 private:
   ITKValuedRegionalMaximaImage(const ITKValuedRegionalMaximaImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKValuedRegionalMaximaImage&) = delete; // Operator '=' Not Implemented
+  void operator=(const ITKValuedRegionalMaximaImage&) = delete;                  // Move assignment Not Implemented
 };
 
 #ifdef __clang__

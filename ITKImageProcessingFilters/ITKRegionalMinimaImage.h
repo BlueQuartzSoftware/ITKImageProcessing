@@ -106,7 +106,7 @@ protected:
 
 private:
   ITKRegionalMinimaImage(const ITKRegionalMinimaImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKRegionalMinimaImage&) = delete; // Operator '=' Not Implemented
+  void operator=(const ITKRegionalMinimaImage&) = delete;            // Move assignment Not Implemented
 };
 
 #ifdef __clang__

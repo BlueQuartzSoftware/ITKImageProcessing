@@ -133,5 +133,5 @@ int TestITKIntensityWindowingImage3dShortTest()
 
 private:
   ITKIntensityWindowingImageTest(const ITKIntensityWindowingImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKIntensityWindowingImageTest&);  // Operator '=' Not Implemented
+  void operator=(const ITKIntensityWindowingImageTest&);                 // Move assignment Not Implemented
 };

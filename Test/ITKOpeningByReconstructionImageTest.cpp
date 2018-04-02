@@ -87,5 +87,5 @@ public:
 
 private:
   ITKOpeningByReconstructionImageTest(const ITKOpeningByReconstructionImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKOpeningByReconstructionImageTest&);                      // Operator '=' Not Implemented
+  void operator=(const ITKOpeningByReconstructionImageTest&);                      // Move assignment Not Implemented
 };

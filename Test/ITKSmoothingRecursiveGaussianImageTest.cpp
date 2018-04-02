@@ -116,5 +116,5 @@ int TestITKSmoothingRecursiveGaussianImagergb_imageTest()
 
 private:
   ITKSmoothingRecursiveGaussianImageTest(const ITKSmoothingRecursiveGaussianImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKSmoothingRecursiveGaussianImageTest&);  // Operator '=' Not Implemented
+  void operator=(const ITKSmoothingRecursiveGaussianImageTest&);                         // Move assignment Not Implemented
 };

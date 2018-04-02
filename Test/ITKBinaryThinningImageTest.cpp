@@ -70,5 +70,5 @@ public:
 
 private:
   ITKBinaryThinningImageTest(const ITKBinaryThinningImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKBinaryThinningImageTest&);  // Operator '=' Not Implemented
+  void operator=(const ITKBinaryThinningImageTest&);             // Move assignment Not Implemented
 };

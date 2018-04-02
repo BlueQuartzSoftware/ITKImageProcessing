@@ -116,7 +116,7 @@ protected:
 
 private:
   ITKDoubleThresholdImage(const ITKDoubleThresholdImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKDoubleThresholdImage&) = delete; // Operator '=' Not Implemented
+  void operator=(const ITKDoubleThresholdImage&) = delete;             // Move assignment Not Implemented
 };
 
 #ifdef __clang__

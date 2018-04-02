@@ -523,7 +523,7 @@ protected:
 
 private:
   ITKTestBase(const ITKTestBase&);    // Copy Constructor Not Implemented
-  void operator=(const ITKTestBase&) = delete; // Operator '=' Not Implemented
+  void operator=(const ITKTestBase&) = delete; // Move assignment Not Implemented
 };
 
 #endif

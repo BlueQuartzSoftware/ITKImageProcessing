@@ -100,7 +100,7 @@ protected:
 
 private:
   ITKGrayscaleErodeImage(const ITKGrayscaleErodeImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKGrayscaleErodeImage&) = delete; // Operator '=' Not Implemented
+  void operator=(const ITKGrayscaleErodeImage&) = delete;            // Move assignment Not Implemented
 };
 
 #ifdef __clang__

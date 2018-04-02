@@ -112,5 +112,5 @@ int TestITKConnectedComponentImagefullyconnectedTest()
 
 private:
   ITKConnectedComponentImageTest(const ITKConnectedComponentImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKConnectedComponentImageTest&);  // Operator '=' Not Implemented
+  void operator=(const ITKConnectedComponentImageTest&);                 // Move assignment Not Implemented
 };

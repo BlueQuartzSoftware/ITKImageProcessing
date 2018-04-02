@@ -79,5 +79,5 @@ public:
 
 private:
   ITKHConvexImageTest(const ITKHConvexImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKHConvexImageTest&);  // Operator '=' Not Implemented
+  void operator=(const ITKHConvexImageTest&);      // Move assignment Not Implemented
 };

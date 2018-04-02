@@ -96,7 +96,7 @@ protected:
 
 private:
   ITKNormalizeToConstantImage(const ITKNormalizeToConstantImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKNormalizeToConstantImage&) = delete; // Operator '=' Not Implemented
+  void operator=(const ITKNormalizeToConstantImage&) = delete;                 // Move assignment Not Implemented
 };
 
 #ifdef __clang__

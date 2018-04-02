@@ -103,7 +103,7 @@ protected:
 
 private:
   ITKMinMaxCurvatureFlowImage(const ITKMinMaxCurvatureFlowImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKMinMaxCurvatureFlowImage&) = delete; // Operator '=' Not Implemented
+  void operator=(const ITKMinMaxCurvatureFlowImage&) = delete;                 // Move assignment Not Implemented
 };
 
 #ifdef __clang__

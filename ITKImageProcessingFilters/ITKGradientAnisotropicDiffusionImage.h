@@ -106,7 +106,7 @@ protected:
 
 private:
   ITKGradientAnisotropicDiffusionImage(const ITKGradientAnisotropicDiffusionImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKGradientAnisotropicDiffusionImage&) = delete; // Operator '=' Not Implemented
+  void operator=(const ITKGradientAnisotropicDiffusionImage&) = delete;                          // Move assignment Not Implemented
 };
 
 #ifdef __clang__

@@ -111,7 +111,7 @@ protected:
 
 private:
   ITKBinaryDilateImage(const ITKBinaryDilateImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKBinaryDilateImage&) = delete; // Operator '=' Not Implemented
+  void operator=(const ITKBinaryDilateImage&) = delete;          // Move assignment Not Implemented
 };
 
 #ifdef __clang__

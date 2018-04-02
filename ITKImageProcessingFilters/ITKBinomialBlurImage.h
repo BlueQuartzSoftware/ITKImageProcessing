@@ -96,7 +96,7 @@ protected:
 
 private:
   ITKBinomialBlurImage(const ITKBinomialBlurImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKBinomialBlurImage&) = delete; // Operator '=' Not Implemented
+  void operator=(const ITKBinomialBlurImage&) = delete;          // Move assignment Not Implemented
 };
 
 #ifdef __clang__

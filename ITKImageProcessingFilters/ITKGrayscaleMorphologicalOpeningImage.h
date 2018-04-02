@@ -104,7 +104,7 @@ protected:
 
 private:
   ITKGrayscaleMorphologicalOpeningImage(const ITKGrayscaleMorphologicalOpeningImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKGrayscaleMorphologicalOpeningImage&) = delete; // Operator '=' Not Implemented
+  void operator=(const ITKGrayscaleMorphologicalOpeningImage&) = delete;                           // Move assignment Not Implemented
 };
 
 #ifdef __clang__

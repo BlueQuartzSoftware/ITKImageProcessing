@@ -168,5 +168,5 @@ int TestITKThresholdImageThreshold2Test()
 
 private:
   ITKThresholdImageTest(const ITKThresholdImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKThresholdImageTest&);  // Operator '=' Not Implemented
+  void operator=(const ITKThresholdImageTest&);        // Move assignment Not Implemented
 };

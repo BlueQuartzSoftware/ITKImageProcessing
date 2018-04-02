@@ -99,7 +99,7 @@ protected:
 
 private:
   ITKSaltAndPepperNoiseImage(const ITKSaltAndPepperNoiseImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKSaltAndPepperNoiseImage&) = delete; // Operator '=' Not Implemented
+  void operator=(const ITKSaltAndPepperNoiseImage&) = delete;                // Move assignment Not Implemented
 };
 
 #ifdef __clang__

@@ -92,7 +92,7 @@ protected:
 
 private:
   ITKBinaryThinningImage(const ITKBinaryThinningImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKBinaryThinningImage&) = delete; // Operator '=' Not Implemented
+  void operator=(const ITKBinaryThinningImage&) = delete;            // Move assignment Not Implemented
 };
 
 #ifdef __clang__

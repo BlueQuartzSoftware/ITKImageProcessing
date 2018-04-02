@@ -148,5 +148,5 @@ int TestITKThresholdMaximumConnectedComponentsImagefloatTest()
 
 private:
   ITKThresholdMaximumConnectedComponentsImageTest(const ITKThresholdMaximumConnectedComponentsImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKThresholdMaximumConnectedComponentsImageTest&);  // Operator '=' Not Implemented
+  void operator=(const ITKThresholdMaximumConnectedComponentsImageTest&);                                  // Move assignment Not Implemented
 };

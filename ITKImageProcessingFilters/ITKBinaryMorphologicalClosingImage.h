@@ -108,7 +108,7 @@ protected:
 
 private:
   ITKBinaryMorphologicalClosingImage(const ITKBinaryMorphologicalClosingImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKBinaryMorphologicalClosingImage&) = delete; // Operator '=' Not Implemented
+  void operator=(const ITKBinaryMorphologicalClosingImage&) = delete;                        // Move assignment Not Implemented
 };
 
 #ifdef __clang__

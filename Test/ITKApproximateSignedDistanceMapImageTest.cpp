@@ -126,5 +126,5 @@ int TestITKApproximateSignedDistanceMapImagemodified_parmsTest()
 
 private:
   ITKApproximateSignedDistanceMapImageTest(const ITKApproximateSignedDistanceMapImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKApproximateSignedDistanceMapImageTest&);  // Operator '=' Not Implemented
+  void operator=(const ITKApproximateSignedDistanceMapImageTest&);                           // Move assignment Not Implemented
 };

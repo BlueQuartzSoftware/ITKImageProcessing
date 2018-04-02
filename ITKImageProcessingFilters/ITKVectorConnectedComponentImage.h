@@ -100,7 +100,7 @@ protected:
 
 private:
   ITKVectorConnectedComponentImage(const ITKVectorConnectedComponentImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKVectorConnectedComponentImage&) = delete; // Operator '=' Not Implemented
+  void operator=(const ITKVectorConnectedComponentImage&) = delete;                      // Move assignment Not Implemented
 };
 
 #ifdef __clang__

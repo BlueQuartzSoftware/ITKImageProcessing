@@ -122,5 +122,5 @@ int TestITKAdaptiveHistogramEqualizationImagehistoTest()
 
 private:
   ITKAdaptiveHistogramEqualizationImageTest(const ITKAdaptiveHistogramEqualizationImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKAdaptiveHistogramEqualizationImageTest&);  // Operator '=' Not Implemented
+  void operator=(const ITKAdaptiveHistogramEqualizationImageTest&);                            // Move assignment Not Implemented
 };

@@ -116,5 +116,5 @@ int TestITKShiftScaleImageparamsTest()
 
 private:
   ITKShiftScaleImageTest(const ITKShiftScaleImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKShiftScaleImageTest&);  // Operator '=' Not Implemented
+  void operator=(const ITKShiftScaleImageTest&);         // Move assignment Not Implemented
 };

@@ -106,7 +106,7 @@ protected:
 
 private:
   ITKSignedMaurerDistanceMapImage(const ITKSignedMaurerDistanceMapImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKSignedMaurerDistanceMapImage&) = delete; // Operator '=' Not Implemented
+  void operator=(const ITKSignedMaurerDistanceMapImage&) = delete;                     // Move assignment Not Implemented
 };
 
 #ifdef __clang__

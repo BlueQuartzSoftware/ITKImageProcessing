@@ -56,7 +56,7 @@ protected:
 
 private:
   InPlaceDream3DDataToImageFilter(const InPlaceDream3DDataToImageFilter&) = delete; // Copy Constructor Not Implemented
-  void operator=(const InPlaceDream3DDataToImageFilter&);                  // Operator '=' Not Implemented
+  void operator=(const InPlaceDream3DDataToImageFilter&);                           // Move assignment Not Implemented
   using Superclass::SetInput;
   std::string m_DataArrayName;
   std::string m_AttributeMatrixArrayName;

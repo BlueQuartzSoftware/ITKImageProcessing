@@ -100,7 +100,7 @@ protected:
 
 private:
   ITKMorphologicalGradientImage(const ITKMorphologicalGradientImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKMorphologicalGradientImage&) = delete; // Operator '=' Not Implemented
+  void operator=(const ITKMorphologicalGradientImage&) = delete;                   // Move assignment Not Implemented
 };
 
 #ifdef __clang__

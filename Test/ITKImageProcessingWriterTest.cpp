@@ -528,5 +528,5 @@ public:
 
 private:
   ITKImageProcessingWriterTest(const ITKImageProcessingWriterTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKImageProcessingWriterTest&);               // Operator '=' Not Implemented
+  void operator=(const ITKImageProcessingWriterTest&);               // Move assignment Not Implemented
 };

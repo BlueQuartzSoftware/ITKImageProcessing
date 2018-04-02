@@ -80,5 +80,5 @@ public:
 
 private:
   ITKIsoContourDistanceImageTest(const ITKIsoContourDistanceImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKIsoContourDistanceImageTest&);  // Operator '=' Not Implemented
+  void operator=(const ITKIsoContourDistanceImageTest&);                 // Move assignment Not Implemented
 };

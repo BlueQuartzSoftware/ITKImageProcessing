@@ -92,7 +92,7 @@ protected:
 
 private:
   ITKSqrtImage(const ITKSqrtImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKSqrtImage&) = delete; // Operator '=' Not Implemented
+  void operator=(const ITKSqrtImage&) = delete;  // Move assignment Not Implemented
 };
 
 #ifdef __clang__

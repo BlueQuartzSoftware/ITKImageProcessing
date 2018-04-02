@@ -117,5 +117,5 @@ int TestITKMorphologicalWatershedImagelevel_1Test()
 
 private:
   ITKMorphologicalWatershedImageTest(const ITKMorphologicalWatershedImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKMorphologicalWatershedImageTest&);  // Operator '=' Not Implemented
+  void operator=(const ITKMorphologicalWatershedImageTest&);                     // Move assignment Not Implemented
 };

@@ -102,7 +102,7 @@ protected:
 
 private:
   ITKThresholdImage(const ITKThresholdImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKThresholdImage&) = delete; // Operator '=' Not Implemented
+  void operator=(const ITKThresholdImage&) = delete;       // Move assignment Not Implemented
 };
 
 #ifdef __clang__

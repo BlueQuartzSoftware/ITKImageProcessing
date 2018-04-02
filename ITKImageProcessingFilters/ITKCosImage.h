@@ -92,7 +92,7 @@ protected:
 
 private:
   ITKCosImage(const ITKCosImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKCosImage&) = delete; // Operator '=' Not Implemented
+  void operator=(const ITKCosImage&) = delete; // Move assignment Not Implemented
 };
 
 #ifdef __clang__

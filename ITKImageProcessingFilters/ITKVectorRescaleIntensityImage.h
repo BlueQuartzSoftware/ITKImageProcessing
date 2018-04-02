@@ -102,7 +102,7 @@ protected:
 
 private:
   ITKVectorRescaleIntensityImage(const ITKVectorRescaleIntensityImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKVectorRescaleIntensityImage&);                 // Operator '=' Not Implemented
+  void operator=(const ITKVectorRescaleIntensityImage&);                          // Move assignment Not Implemented
 };
 
 #ifdef __clang__

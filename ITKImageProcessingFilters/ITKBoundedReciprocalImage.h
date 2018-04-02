@@ -92,7 +92,7 @@ protected:
 
 private:
   ITKBoundedReciprocalImage(const ITKBoundedReciprocalImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKBoundedReciprocalImage&) = delete; // Operator '=' Not Implemented
+  void operator=(const ITKBoundedReciprocalImage&) = delete;               // Move assignment Not Implemented
 };
 
 #ifdef __clang__

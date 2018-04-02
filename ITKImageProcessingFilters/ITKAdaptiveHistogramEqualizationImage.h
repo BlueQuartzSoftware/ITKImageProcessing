@@ -103,7 +103,7 @@ protected:
 
 private:
   ITKAdaptiveHistogramEqualizationImage(const ITKAdaptiveHistogramEqualizationImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKAdaptiveHistogramEqualizationImage&) = delete; // Operator '=' Not Implemented
+  void operator=(const ITKAdaptiveHistogramEqualizationImage&) = delete;                           // Move assignment Not Implemented
 };
 
 #ifdef __clang__

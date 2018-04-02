@@ -96,7 +96,7 @@ protected:
 
 private:
   ITKMinimumProjectionImage(const ITKMinimumProjectionImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKMinimumProjectionImage&) = delete; // Operator '=' Not Implemented
+  void operator=(const ITKMinimumProjectionImage&) = delete;               // Move assignment Not Implemented
 };
 
 #ifdef __clang__

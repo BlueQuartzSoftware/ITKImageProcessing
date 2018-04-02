@@ -99,7 +99,7 @@ protected:
 
 private:
   ITKValuedRegionalMinimaImage(const ITKValuedRegionalMinimaImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKValuedRegionalMinimaImage&) = delete; // Operator '=' Not Implemented
+  void operator=(const ITKValuedRegionalMinimaImage&) = delete;                  // Move assignment Not Implemented
 };
 
 #ifdef __clang__

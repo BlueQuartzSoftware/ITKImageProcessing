@@ -102,7 +102,7 @@ protected:
 
 private:
   ITKBinaryProjectionImage(const ITKBinaryProjectionImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKBinaryProjectionImage&) = delete; // Operator '=' Not Implemented
+  void operator=(const ITKBinaryProjectionImage&) = delete;              // Move assignment Not Implemented
 };
 
 #ifdef __clang__

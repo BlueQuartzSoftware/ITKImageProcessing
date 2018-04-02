@@ -202,5 +202,5 @@ int TestITKOtsuMultipleThresholdsImagevalley_emphasisTest()
 
 private:
   ITKOtsuMultipleThresholdsImageTest(const ITKOtsuMultipleThresholdsImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKOtsuMultipleThresholdsImageTest&);  // Operator '=' Not Implemented
+  void operator=(const ITKOtsuMultipleThresholdsImageTest&);                     // Move assignment Not Implemented
 };

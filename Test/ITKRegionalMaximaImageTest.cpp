@@ -72,5 +72,5 @@ public:
 
 private:
   ITKRegionalMaximaImageTest(const ITKRegionalMaximaImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKRegionalMaximaImageTest&);  // Operator '=' Not Implemented
+  void operator=(const ITKRegionalMaximaImageTest&);             // Move assignment Not Implemented
 };

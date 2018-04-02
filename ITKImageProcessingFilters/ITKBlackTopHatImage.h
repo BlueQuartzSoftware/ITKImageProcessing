@@ -104,7 +104,7 @@ protected:
 
 private:
   ITKBlackTopHatImage(const ITKBlackTopHatImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKBlackTopHatImage&) = delete; // Operator '=' Not Implemented
+  void operator=(const ITKBlackTopHatImage&) = delete;         // Move assignment Not Implemented
 };
 
 #ifdef __clang__

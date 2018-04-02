@@ -181,7 +181,7 @@ private:
 public:
   ITKImageWriter(const ITKImageWriter&) = delete; // Copy Constructor Not Implemented
   ITKImageWriter(ITKImageWriter&&) = delete;      // Move Constructor
-  ITKImageWriter& operator=(const ITKImageWriter&) = delete; // Copy Assignment
+  ITKImageWriter& operator=(const ITKImageWriter&) = delete; // Copy Assignment Not Implemented
   ITKImageWriter& operator=(ITKImageWriter&&) = delete;      // Move Assignment
 };
 

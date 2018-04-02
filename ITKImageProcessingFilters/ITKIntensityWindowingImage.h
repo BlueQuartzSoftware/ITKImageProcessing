@@ -105,7 +105,7 @@ protected:
 
 private:
   ITKIntensityWindowingImage(const ITKIntensityWindowingImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKIntensityWindowingImage&) = delete; // Operator '=' Not Implemented
+  void operator=(const ITKIntensityWindowingImage&) = delete;                // Move assignment Not Implemented
 };
 
 #ifdef __clang__

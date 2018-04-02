@@ -96,7 +96,7 @@ protected:
 
 private:
   ITKInvertIntensityImage(const ITKInvertIntensityImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKInvertIntensityImage&) = delete; // Operator '=' Not Implemented
+  void operator=(const ITKInvertIntensityImage&) = delete;             // Move assignment Not Implemented
 };
 
 #ifdef __clang__

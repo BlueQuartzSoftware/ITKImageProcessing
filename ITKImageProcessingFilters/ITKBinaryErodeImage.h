@@ -111,7 +111,7 @@ protected:
 
 private:
   ITKBinaryErodeImage(const ITKBinaryErodeImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKBinaryErodeImage&) = delete; // Operator '=' Not Implemented
+  void operator=(const ITKBinaryErodeImage&) = delete;         // Move assignment Not Implemented
 };
 
 #ifdef __clang__

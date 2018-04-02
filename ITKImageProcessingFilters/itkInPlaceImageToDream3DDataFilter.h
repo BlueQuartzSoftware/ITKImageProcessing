@@ -63,7 +63,7 @@ protected:
 private:
   using Superclass::SetInput;
   InPlaceImageToDream3DDataFilter(const InPlaceImageToDream3DDataFilter&) = delete; // Copy Constructor Not Implemented
-  void operator=(const InPlaceImageToDream3DDataFilter&);                  // Operator '=' Not Implemented
+  void operator=(const InPlaceImageToDream3DDataFilter&);                           // Move assignment Not Implemented
   std::string m_DataArrayName;
   std::string m_AttributeMatrixArrayName;
   bool m_InPlace; // enable the possibility of in-place

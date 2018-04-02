@@ -188,7 +188,7 @@ private:
 public:
   ITKImageReader(const ITKImageReader&) = delete; // Copy Constructor Not Implemented
   ITKImageReader(ITKImageReader&&) = delete;      // Move Constructor
-  ITKImageReader& operator=(const ITKImageReader&) = delete; // Copy Assignment
+  ITKImageReader& operator=(const ITKImageReader&) = delete; // Copy Assignment Not Implemented
   ITKImageReader& operator=(ITKImageReader&&) = delete;      // Move Assignment
 };
 

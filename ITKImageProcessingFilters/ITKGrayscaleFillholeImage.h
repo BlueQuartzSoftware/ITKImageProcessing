@@ -96,7 +96,7 @@ protected:
 
 private:
   ITKGrayscaleFillholeImage(const ITKGrayscaleFillholeImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKGrayscaleFillholeImage&) = delete; // Operator '=' Not Implemented
+  void operator=(const ITKGrayscaleFillholeImage&) = delete;               // Move assignment Not Implemented
 };
 
 #ifdef __clang__

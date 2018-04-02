@@ -95,5 +95,5 @@ public:
 
 private:
   ITKBinaryOpeningByReconstructionImageTest(const ITKBinaryOpeningByReconstructionImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKBinaryOpeningByReconstructionImageTest&);                            // Operator '=' Not Implemented
+  void operator=(const ITKBinaryOpeningByReconstructionImageTest&);                            // Move assignment Not Implemented
 };

@@ -124,5 +124,5 @@ int TestITKBinaryContourImagecustomTest()
 
 private:
   ITKBinaryContourImageTest(const ITKBinaryContourImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKBinaryContourImageTest&);  // Operator '=' Not Implemented
+  void operator=(const ITKBinaryContourImageTest&);            // Move assignment Not Implemented
 };

@@ -100,7 +100,7 @@ protected:
 
 private:
   ITKLabelContourImage(const ITKLabelContourImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKLabelContourImage&) = delete; // Operator '=' Not Implemented
+  void operator=(const ITKLabelContourImage&) = delete;          // Move assignment Not Implemented
 };
 
 #ifdef __clang__

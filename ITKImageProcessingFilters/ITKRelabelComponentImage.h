@@ -113,7 +113,7 @@ protected:
 
 private:
   ITKRelabelComponentImage(const ITKRelabelComponentImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKRelabelComponentImage&) = delete; // Operator '=' Not Implemented
+  void operator=(const ITKRelabelComponentImage&) = delete;              // Move assignment Not Implemented
 };
 
 #ifdef __clang__

@@ -74,5 +74,5 @@ public:
 
 private:
   ITKPatchBasedDenoisingImageTest(const ITKPatchBasedDenoisingImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKPatchBasedDenoisingImageTest&);                  // Operator '=' Not Implemented
+  void operator=(const ITKPatchBasedDenoisingImageTest&);                  // Move assignment Not Implemented
 };

@@ -92,7 +92,7 @@ protected:
 
 private:
   ITKSobelEdgeDetectionImage(const ITKSobelEdgeDetectionImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKSobelEdgeDetectionImage&) = delete; // Operator '=' Not Implemented
+  void operator=(const ITKSobelEdgeDetectionImage&) = delete;                // Move assignment Not Implemented
 };
 
 #ifdef __clang__

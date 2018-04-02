@@ -72,5 +72,5 @@ public:
 
 private:
   ITKSqrtImageTest(const ITKSqrtImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKSqrtImageTest&);  // Operator '=' Not Implemented
+  void operator=(const ITKSqrtImageTest&);   // Move assignment Not Implemented
 };

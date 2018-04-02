@@ -91,7 +91,7 @@ protected:
 
 private:
   ${FilterName}(const ${FilterName}&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ${FilterName}&) = delete; // Operator '=' Not Implemented
+  void operator=(const ${FilterName}&) = delete;   // Move assignment Not Implemented
 };
 
 #ifdef __clang__

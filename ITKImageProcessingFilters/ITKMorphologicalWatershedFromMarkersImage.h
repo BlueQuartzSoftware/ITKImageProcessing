@@ -109,7 +109,7 @@ protected:
 
 private:
   ITKMorphologicalWatershedFromMarkersImage(const ITKMorphologicalWatershedFromMarkersImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKMorphologicalWatershedFromMarkersImage&);                            // Operator '=' Not Implemented
+  void operator=(const ITKMorphologicalWatershedFromMarkersImage&);                                     // Move assignment Not Implemented
 };
 
 #ifdef __clang__

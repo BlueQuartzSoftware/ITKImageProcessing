@@ -123,7 +123,7 @@ protected:
 
 private:
   ITKHistogramMatchingImage(const ITKHistogramMatchingImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKHistogramMatchingImage&);            // Operator '=' Not Implemented
+  void operator=(const ITKHistogramMatchingImage&);                     // Move assignment Not Implemented
 };
 
 #ifdef __clang__

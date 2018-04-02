@@ -78,5 +78,5 @@ public:
 
 private:
   ITKHMaximaImageTest(const ITKHMaximaImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKHMaximaImageTest&);  // Operator '=' Not Implemented
+  void operator=(const ITKHMaximaImageTest&);      // Move assignment Not Implemented
 };

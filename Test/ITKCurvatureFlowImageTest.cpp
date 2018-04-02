@@ -120,5 +120,5 @@ int TestITKCurvatureFlowImagelongerTest()
 
 private:
   ITKCurvatureFlowImageTest(const ITKCurvatureFlowImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKCurvatureFlowImageTest&);  // Operator '=' Not Implemented
+  void operator=(const ITKCurvatureFlowImageTest&);            // Move assignment Not Implemented
 };

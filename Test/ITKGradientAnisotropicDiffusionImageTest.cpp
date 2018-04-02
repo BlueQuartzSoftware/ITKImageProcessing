@@ -127,5 +127,5 @@ int TestITKGradientAnisotropicDiffusionImagelongerTest()
 
 private:
   ITKGradientAnisotropicDiffusionImageTest(const ITKGradientAnisotropicDiffusionImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKGradientAnisotropicDiffusionImageTest&);  // Operator '=' Not Implemented
+  void operator=(const ITKGradientAnisotropicDiffusionImageTest&);                           // Move assignment Not Implemented
 };

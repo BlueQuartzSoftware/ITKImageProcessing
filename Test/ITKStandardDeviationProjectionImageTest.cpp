@@ -80,5 +80,5 @@ public:
 
 private:
   ITKStandardDeviationProjectionImageTest(const ITKStandardDeviationProjectionImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKStandardDeviationProjectionImageTest&);  // Operator '=' Not Implemented
+  void operator=(const ITKStandardDeviationProjectionImageTest&);                          // Move assignment Not Implemented
 };

@@ -108,7 +108,7 @@ protected:
 
 private:
   ITKBinaryClosingByReconstructionImage(const ITKBinaryClosingByReconstructionImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKBinaryClosingByReconstructionImage&) = delete; // Operator '=' Not Implemented
+  void operator=(const ITKBinaryClosingByReconstructionImage&) = delete;                           // Move assignment Not Implemented
 };
 
 #ifdef __clang__

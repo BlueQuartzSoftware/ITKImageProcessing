@@ -121,5 +121,5 @@ int TestITKBinaryMinMaxCurvatureFlowImagelongerTest()
 
 private:
   ITKBinaryMinMaxCurvatureFlowImageTest(const ITKBinaryMinMaxCurvatureFlowImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKBinaryMinMaxCurvatureFlowImageTest&);  // Operator '=' Not Implemented
+  void operator=(const ITKBinaryMinMaxCurvatureFlowImageTest&);                        // Move assignment Not Implemented
 };

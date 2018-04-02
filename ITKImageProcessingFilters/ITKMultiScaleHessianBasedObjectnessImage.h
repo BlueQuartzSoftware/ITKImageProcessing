@@ -117,7 +117,7 @@ protected:
 
 private:
   ITKMultiScaleHessianBasedObjectnessImage(const ITKMultiScaleHessianBasedObjectnessImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKMultiScaleHessianBasedObjectnessImage&);                           // Operator '=' Not Implemented
+  void operator=(const ITKMultiScaleHessianBasedObjectnessImage&);                                    // Move assignment Not Implemented
 };
 
 #ifdef __clang__

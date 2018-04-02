@@ -103,7 +103,7 @@ protected:
 
 private:
   ITKBinaryContourImage(const ITKBinaryContourImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKBinaryContourImage&) = delete; // Operator '=' Not Implemented
+  void operator=(const ITKBinaryContourImage&) = delete;           // Move assignment Not Implemented
 };
 
 #ifdef __clang__

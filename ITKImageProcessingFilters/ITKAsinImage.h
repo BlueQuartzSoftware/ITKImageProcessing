@@ -92,7 +92,7 @@ protected:
 
 private:
   ITKAsinImage(const ITKAsinImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKAsinImage&) = delete; // Operator '=' Not Implemented
+  void operator=(const ITKAsinImage&) = delete;  // Move assignment Not Implemented
 };
 
 #ifdef __clang__

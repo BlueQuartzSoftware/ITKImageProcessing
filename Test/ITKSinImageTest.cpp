@@ -72,5 +72,5 @@ public:
 
 private:
   ITKSinImageTest(const ITKSinImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKSinImageTest&);  // Operator '=' Not Implemented
+  void operator=(const ITKSinImageTest&);  // Move assignment Not Implemented
 };

@@ -107,7 +107,7 @@ protected:
 
 private:
   ITKDiscreteGaussianImage(const ITKDiscreteGaussianImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKDiscreteGaussianImage&) = delete; // Operator '=' Not Implemented
+  void operator=(const ITKDiscreteGaussianImage&) = delete;              // Move assignment Not Implemented
 };
 
 #ifdef __clang__

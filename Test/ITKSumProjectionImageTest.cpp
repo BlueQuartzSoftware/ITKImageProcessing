@@ -80,5 +80,5 @@ public:
 
 private:
   ITKSumProjectionImageTest(const ITKSumProjectionImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKSumProjectionImageTest&);  // Operator '=' Not Implemented
+  void operator=(const ITKSumProjectionImageTest&);            // Move assignment Not Implemented
 };

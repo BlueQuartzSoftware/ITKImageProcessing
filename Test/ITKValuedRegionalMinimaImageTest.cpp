@@ -71,5 +71,5 @@ public:
 
 private:
   ITKValuedRegionalMinimaImageTest(const ITKValuedRegionalMinimaImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKValuedRegionalMinimaImageTest&);  // Operator '=' Not Implemented
+  void operator=(const ITKValuedRegionalMinimaImageTest&);                   // Move assignment Not Implemented
 };

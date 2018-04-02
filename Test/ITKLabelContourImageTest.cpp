@@ -72,5 +72,5 @@ public:
 
 private:
   ITKLabelContourImageTest(const ITKLabelContourImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKLabelContourImageTest&);  // Operator '=' Not Implemented
+  void operator=(const ITKLabelContourImageTest&);           // Move assignment Not Implemented
 };

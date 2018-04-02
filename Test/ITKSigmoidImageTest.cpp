@@ -71,5 +71,5 @@ public:
 
 private:
   ITKSigmoidImageTest(const ITKSigmoidImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKSigmoidImageTest&);  // Operator '=' Not Implemented
+  void operator=(const ITKSigmoidImageTest&);      // Move assignment Not Implemented
 };

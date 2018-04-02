@@ -74,5 +74,5 @@ public:
 
 private:
   ITKSignedMaurerDistanceMapImageTest(const ITKSignedMaurerDistanceMapImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKSignedMaurerDistanceMapImageTest&);  // Operator '=' Not Implemented
+  void operator=(const ITKSignedMaurerDistanceMapImageTest&);                      // Move assignment Not Implemented
 };

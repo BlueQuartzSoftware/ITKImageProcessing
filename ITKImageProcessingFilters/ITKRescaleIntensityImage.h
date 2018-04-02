@@ -106,7 +106,7 @@ protected:
 
 private:
   ITKRescaleIntensityImage(const ITKRescaleIntensityImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKRescaleIntensityImage&) = delete; // Operator '=' Not Implemented
+  void operator=(const ITKRescaleIntensityImage&) = delete;              // Move assignment Not Implemented
 };
 
 #ifdef __clang__

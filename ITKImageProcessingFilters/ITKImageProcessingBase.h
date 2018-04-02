@@ -139,7 +139,7 @@ private:
   DEFINE_IDATAARRAY_VARIABLE(NewCellArray)
 
   ITKImageProcessingBase(const ITKImageProcessingBase&);   // Copy Constructor Not Implemented
-  void operator=(const ITKImageProcessingBase&) = delete; // Operator '=' Not Implemented
+  void operator=(const ITKImageProcessingBase&) = delete;  // Move assignment Not Implemented
 };
 
 #endif /* _ITKImageProcessingBase_H_ */

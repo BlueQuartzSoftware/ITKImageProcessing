@@ -96,7 +96,7 @@ protected:
 
 private:
   ITKGrayscaleGrindPeakImage(const ITKGrayscaleGrindPeakImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKGrayscaleGrindPeakImage&) = delete; // Operator '=' Not Implemented
+  void operator=(const ITKGrayscaleGrindPeakImage&) = delete;                // Move assignment Not Implemented
 };
 
 #ifdef __clang__

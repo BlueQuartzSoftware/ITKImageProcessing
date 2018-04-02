@@ -99,7 +99,7 @@ protected:
 
 private:
   ITKShotNoiseImage(const ITKShotNoiseImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKShotNoiseImage&) = delete; // Operator '=' Not Implemented
+  void operator=(const ITKShotNoiseImage&) = delete;       // Move assignment Not Implemented
 };
 
 #ifdef __clang__

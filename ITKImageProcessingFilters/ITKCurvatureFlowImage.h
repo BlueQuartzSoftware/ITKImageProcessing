@@ -99,7 +99,7 @@ protected:
 
 private:
   ITKCurvatureFlowImage(const ITKCurvatureFlowImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKCurvatureFlowImage&) = delete; // Operator '=' Not Implemented
+  void operator=(const ITKCurvatureFlowImage&) = delete;           // Move assignment Not Implemented
 };
 
 #ifdef __clang__

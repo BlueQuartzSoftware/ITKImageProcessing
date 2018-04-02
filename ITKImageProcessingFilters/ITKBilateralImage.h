@@ -102,7 +102,7 @@ protected:
 
 private:
   ITKBilateralImage(const ITKBilateralImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKBilateralImage&) = delete; // Operator '=' Not Implemented
+  void operator=(const ITKBilateralImage&) = delete;       // Move assignment Not Implemented
 };
 
 #ifdef __clang__

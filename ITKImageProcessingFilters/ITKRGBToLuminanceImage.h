@@ -88,7 +88,7 @@ protected:
 
 private:
   ITKRGBToLuminanceImage(const ITKRGBToLuminanceImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKRGBToLuminanceImage&);         // Operator '=' Not Implemented
+  void operator=(const ITKRGBToLuminanceImage&);                  // Move assignment Not Implemented
 };
 
 #ifdef __clang__

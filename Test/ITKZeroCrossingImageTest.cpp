@@ -116,5 +116,5 @@ int TestITKZeroCrossingImageinvertedTest()
 
 private:
   ITKZeroCrossingImageTest(const ITKZeroCrossingImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKZeroCrossingImageTest&);  // Operator '=' Not Implemented
+  void operator=(const ITKZeroCrossingImageTest&);           // Move assignment Not Implemented
 };

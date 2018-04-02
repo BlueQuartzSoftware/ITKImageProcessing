@@ -99,7 +99,7 @@ protected:
 
 private:
   ITKZeroCrossingImage(const ITKZeroCrossingImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKZeroCrossingImage&) = delete; // Operator '=' Not Implemented
+  void operator=(const ITKZeroCrossingImage&) = delete;          // Move assignment Not Implemented
 };
 
 #ifdef __clang__

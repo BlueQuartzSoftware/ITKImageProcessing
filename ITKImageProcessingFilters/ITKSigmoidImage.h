@@ -105,7 +105,7 @@ protected:
 
 private:
   ITKSigmoidImage(const ITKSigmoidImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKSigmoidImage&) = delete; // Operator '=' Not Implemented
+  void operator=(const ITKSigmoidImage&) = delete;     // Move assignment Not Implemented
 };
 
 #ifdef __clang__

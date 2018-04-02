@@ -105,5 +105,5 @@ int TestITKAbsImageshortTest()
 
 private:
   ITKAbsImageTest(const ITKAbsImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKAbsImageTest&);  // Operator '=' Not Implemented
+  void operator=(const ITKAbsImageTest&);  // Move assignment Not Implemented
 };

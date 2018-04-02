@@ -79,5 +79,5 @@ public:
 
 private:
   ITKHMinimaImageTest(const ITKHMinimaImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKHMinimaImageTest&);  // Operator '=' Not Implemented
+  void operator=(const ITKHMinimaImageTest&);      // Move assignment Not Implemented
 };

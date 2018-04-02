@@ -133,7 +133,7 @@ protected:
 
 private:
   ITKPatchBasedDenoisingImage(const ITKPatchBasedDenoisingImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKPatchBasedDenoisingImage&);              // Operator '=' Not Implemented
+  void operator=(const ITKPatchBasedDenoisingImage&);                       // Move assignment Not Implemented
 };
 
 #ifdef __clang__

@@ -100,7 +100,7 @@ protected:
 
 private:
   ITKLaplacianRecursiveGaussianImage(const ITKLaplacianRecursiveGaussianImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKLaplacianRecursiveGaussianImage&) = delete; // Operator '=' Not Implemented
+  void operator=(const ITKLaplacianRecursiveGaussianImage&) = delete;                        // Move assignment Not Implemented
 };
 
 #ifdef __clang__

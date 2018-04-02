@@ -127,5 +127,5 @@ int TestITKCurvatureAnisotropicDiffusionImagelongerTest()
 
 private:
   ITKCurvatureAnisotropicDiffusionImageTest(const ITKCurvatureAnisotropicDiffusionImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKCurvatureAnisotropicDiffusionImageTest&);  // Operator '=' Not Implemented
+  void operator=(const ITKCurvatureAnisotropicDiffusionImageTest&);                            // Move assignment Not Implemented
 };

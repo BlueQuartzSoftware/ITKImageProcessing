@@ -100,7 +100,7 @@ protected:
 
 private:
   ITKConnectedComponentImage(const ITKConnectedComponentImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKConnectedComponentImage&) = delete; // Operator '=' Not Implemented
+  void operator=(const ITKConnectedComponentImage&) = delete;                // Move assignment Not Implemented
 };
 
 #ifdef __clang__

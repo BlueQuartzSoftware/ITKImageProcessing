@@ -99,7 +99,7 @@ protected:
 
 private:
   ITKShiftScaleImage(const ITKShiftScaleImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKShiftScaleImage&) = delete; // Operator '=' Not Implemented
+  void operator=(const ITKShiftScaleImage&) = delete;        // Move assignment Not Implemented
 };
 
 #ifdef __clang__

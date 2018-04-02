@@ -116,5 +116,5 @@ int TestITKBinaryProjectionImageanother_dimensionTest()
 
 private:
   ITKBinaryProjectionImageTest(const ITKBinaryProjectionImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKBinaryProjectionImageTest&);  // Operator '=' Not Implemented
+  void operator=(const ITKBinaryProjectionImageTest&);               // Move assignment Not Implemented
 };

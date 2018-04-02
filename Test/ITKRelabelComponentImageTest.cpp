@@ -119,5 +119,5 @@ int TestITKRelabelComponentImageno_sortingTest()
 
 private:
   ITKRelabelComponentImageTest(const ITKRelabelComponentImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKRelabelComponentImageTest&);  // Operator '=' Not Implemented
+  void operator=(const ITKRelabelComponentImageTest&);               // Move assignment Not Implemented
 };

@@ -100,7 +100,7 @@ protected:
 
 private:
   ITKHConvexImage(const ITKHConvexImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKHConvexImage&) = delete; // Operator '=' Not Implemented
+  void operator=(const ITKHConvexImage&) = delete;     // Move assignment Not Implemented
 };
 
 #ifdef __clang__

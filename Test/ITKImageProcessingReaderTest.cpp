@@ -417,5 +417,5 @@ public:
 
 private:
   ITKImageProcessingReaderTest(const ITKImageProcessingReaderTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKImageProcessingReaderTest&);               // Operator '=' Not Implemented
+  void operator=(const ITKImageProcessingReaderTest&);               // Move assignment Not Implemented
 };

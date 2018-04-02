@@ -100,7 +100,7 @@ protected:
 
 private:
   ITKGrayscaleDilateImage(const ITKGrayscaleDilateImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKGrayscaleDilateImage&) = delete; // Operator '=' Not Implemented
+  void operator=(const ITKGrayscaleDilateImage&) = delete;             // Move assignment Not Implemented
 };
 
 #ifdef __clang__

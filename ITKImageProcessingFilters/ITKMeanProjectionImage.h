@@ -96,7 +96,7 @@ protected:
 
 private:
   ITKMeanProjectionImage(const ITKMeanProjectionImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKMeanProjectionImage&) = delete; // Operator '=' Not Implemented
+  void operator=(const ITKMeanProjectionImage&) = delete;            // Move assignment Not Implemented
 };
 
 #ifdef __clang__

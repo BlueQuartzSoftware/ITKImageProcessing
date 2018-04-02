@@ -72,5 +72,5 @@ public:
 
 private:
   ITKAcosImageTest(const ITKAcosImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKAcosImageTest&);  // Operator '=' Not Implemented
+  void operator=(const ITKAcosImageTest&);   // Move assignment Not Implemented
 };

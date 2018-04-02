@@ -96,7 +96,7 @@ protected:
 
 private:
   ITKHMaximaImage(const ITKHMaximaImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKHMaximaImage&) = delete; // Operator '=' Not Implemented
+  void operator=(const ITKHMaximaImage&) = delete;     // Move assignment Not Implemented
 };
 
 #ifdef __clang__

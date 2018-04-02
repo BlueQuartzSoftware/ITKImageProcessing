@@ -316,5 +316,5 @@ public:
 
 private:
   ITKImageProcessingImportImageStackTest(const ITKImageProcessingImportImageStackTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKImageProcessingImportImageStackTest&);                         // Operator '=' Not Implemented
+  void operator=(const ITKImageProcessingImportImageStackTest&);                         // Move assignment Not Implemented
 };

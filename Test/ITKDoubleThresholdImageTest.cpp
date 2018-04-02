@@ -132,5 +132,5 @@ int TestITKDoubleThresholdImageDoubleThreshold2Test()
 
 private:
   ITKDoubleThresholdImageTest(const ITKDoubleThresholdImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKDoubleThresholdImageTest&);  // Operator '=' Not Implemented
+  void operator=(const ITKDoubleThresholdImageTest&);              // Move assignment Not Implemented
 };

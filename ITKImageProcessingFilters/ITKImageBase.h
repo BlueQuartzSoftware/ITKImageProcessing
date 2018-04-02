@@ -393,7 +393,7 @@ protected:
 private:
 
   ITKImageBase(const ITKImageBase&);   // Copy Constructor Not Implemented
-  ITKImageBase& operator=(const ITKImageBase&) = delete; // Copy Assignment
+  ITKImageBase& operator=(const ITKImageBase&) = delete; // Copy Assignment Not Implemented
   ITKImageBase& operator=(ITKImageBase&&) = delete;      // Move Assignment
 };
 

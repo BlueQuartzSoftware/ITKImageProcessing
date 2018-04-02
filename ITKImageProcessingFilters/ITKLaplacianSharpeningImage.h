@@ -96,7 +96,7 @@ protected:
 
 private:
   ITKLaplacianSharpeningImage(const ITKLaplacianSharpeningImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKLaplacianSharpeningImage&) = delete; // Operator '=' Not Implemented
+  void operator=(const ITKLaplacianSharpeningImage&) = delete;                 // Move assignment Not Implemented
 };
 
 #ifdef __clang__

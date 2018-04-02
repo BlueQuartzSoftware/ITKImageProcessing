@@ -72,5 +72,5 @@ public:
 
 private:
   ITKExpNegativeImageTest(const ITKExpNegativeImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKExpNegativeImageTest&);  // Operator '=' Not Implemented
+  void operator=(const ITKExpNegativeImageTest&);          // Move assignment Not Implemented
 };

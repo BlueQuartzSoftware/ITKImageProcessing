@@ -131,5 +131,5 @@ int TestITKBinaryThresholdImageNarrowThresholdTest()
 
 private:
   ITKBinaryThresholdImageTest(const ITKBinaryThresholdImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKBinaryThresholdImageTest&);  // Operator '=' Not Implemented
+  void operator=(const ITKBinaryThresholdImageTest&);              // Move assignment Not Implemented
 };

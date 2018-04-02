@@ -101,7 +101,7 @@ protected:
 
 private:
   ITKFFTNormalizedCorrelationImage(const ITKFFTNormalizedCorrelationImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKFFTNormalizedCorrelationImage&);                   // Operator '=' Not Implemented
+  void operator=(const ITKFFTNormalizedCorrelationImage&);                            // Move assignment Not Implemented
 };
 
 #ifdef __clang__

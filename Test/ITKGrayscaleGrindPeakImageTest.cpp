@@ -102,5 +102,5 @@ int TestITKGrayscaleGrindPeakImageGrayscaleGrindPeak2Test()
 
 private:
   ITKGrayscaleGrindPeakImageTest(const ITKGrayscaleGrindPeakImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKGrayscaleGrindPeakImageTest&);  // Operator '=' Not Implemented
+  void operator=(const ITKGrayscaleGrindPeakImageTest&);                 // Move assignment Not Implemented
 };
