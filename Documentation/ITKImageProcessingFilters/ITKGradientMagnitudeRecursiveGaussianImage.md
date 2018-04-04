@@ -13,7 +13,7 @@ This filter is implemented using the recursive gaussian filters
 
 \par Wiki Examples:
 
-\li All Examples 
+\li All Examples
 
 \li Find the gradient magnitude of the image first smoothed with a Gaussian kernel
 
@@ -22,7 +22,7 @@ This filter is implemented using the recursive gaussian filters
 | Name | Type | Description |
 |------|------|-------------|
 | Sigma | double| Set Sigma value. Sigma is measured in the units of image spacing. |
-| NormalizeAcrossScale | bool| Define which normalization factor will be used for the Gaussian\see RecursiveGaussianImageFilter::SetNormalizeAcrossScale |
+| NormalizeAcrossScale | bool| Define which normalization factor will be used for the Gaussian \see RecursiveGaussianImageFilter::SetNormalizeAcrossScale |
 
 
 ## Required Geometry ##

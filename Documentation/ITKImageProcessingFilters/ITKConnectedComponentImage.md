@@ -13,10 +13,11 @@ ConnectedComponentImageFilter labels the objects in a binary image (non-zero pix
 
 After the filter is executed, ObjectCount holds the number of connected components.
 
-\see ImageToImageFilter 
+\see ImageToImageFilter
+
 \par Wiki Examples:
 
-\li All Examples 
+\li All Examples
 
 \li Label connected components in a binary image
 
@@ -25,6 +26,7 @@ After the filter is executed, ObjectCount holds the number of connected componen
 | Name | Type | Description |
 |------|------|-------------|
 | FullyConnected | bool| Set/Get whether the connected components are defined strictly by face connectivity or by face+edge+vertex connectivity. Default is FullyConnectedOff. For objects that are 1 pixel wide, use FullyConnectedOn. |
+| ObjectCount | double| N/A |
 
 
 ## Required Geometry ##

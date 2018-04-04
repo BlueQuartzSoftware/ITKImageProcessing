@@ -10,6 +10,7 @@
 #include <SIMPLib/FilterParameters/FloatFilterParameter.h>
 #include <SIMPLib/FilterParameters/FloatVec3FilterParameter.h>
 
+
 class ITKAdaptiveHistogramEqualizationImageTest : public ITKTestBase
 {
 
@@ -22,7 +23,7 @@ public:
   }
 
   int TestITKAdaptiveHistogramEqualizationImagedefaultsTest()
-  {
+{
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/RA-Slice-Float.nrrd");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -51,10 +52,10 @@ public:
     int res = this->CompareImages(containerArray, input_path, baseline_path, 2e-3);
     DREAM3D_REQUIRE_EQUAL(res, 0);
     return 0;
-  }
+}
 
-  int TestITKAdaptiveHistogramEqualizationImagehistoTest()
-  {
+int TestITKAdaptiveHistogramEqualizationImagehistoTest()
+{
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/cthead1.png");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -73,18 +74,18 @@ public:
     propWasSet = filter->setProperty("SaveAsNewArray", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     {
-      float d3d_var;
-      d3d_var = 0.0;
-      var.setValue(d3d_var);
-      propWasSet = filter->setProperty("Alpha", var);
-      DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+        float d3d_var;
+        d3d_var = 0.0;
+        var.setValue(d3d_var);
+        propWasSet = filter->setProperty("Alpha", var);
+        DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     }
     {
-      float d3d_var;
-      d3d_var = 0.0;
-      var.setValue(d3d_var);
-      propWasSet = filter->setProperty("Beta", var);
-      DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+        float d3d_var;
+        d3d_var = 0.0;
+        var.setValue(d3d_var);
+        propWasSet = filter->setProperty("Beta", var);
+        DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     }
     filter->setDataContainerArray(containerArray);
     filter->execute();
@@ -97,7 +98,9 @@ public:
     int res = this->CompareImages(containerArray, input_path, baseline_path, 1e-5);
     DREAM3D_REQUIRE_EQUAL(res, 0);
     return 0;
-  }
+}
+
+
 
   // -----------------------------------------------------------------------------
   //
@@ -108,8 +111,8 @@ public:
 
     DREAM3D_REGISTER_TEST(this->TestFilterAvailability("ITKAdaptiveHistogramEqualizationImage"));
 
-    DREAM3D_REGISTER_TEST(TestITKAdaptiveHistogramEqualizationImagedefaultsTest());
-    DREAM3D_REGISTER_TEST(TestITKAdaptiveHistogramEqualizationImagehistoTest());
+    DREAM3D_REGISTER_TEST( TestITKAdaptiveHistogramEqualizationImagedefaultsTest());
+    DREAM3D_REGISTER_TEST( TestITKAdaptiveHistogramEqualizationImagehistoTest());
 
     if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
     {
@@ -119,5 +122,5 @@ public:
 
 private:
   ITKAdaptiveHistogramEqualizationImageTest(const ITKAdaptiveHistogramEqualizationImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKAdaptiveHistogramEqualizationImageTest&);                            // Operator '=' Not Implemented
+  void operator=(const ITKAdaptiveHistogramEqualizationImageTest&);                            // Move assignment Not Implemented
 };

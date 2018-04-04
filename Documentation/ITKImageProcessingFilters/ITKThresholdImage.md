@@ -25,7 +25,7 @@ The pixels must support the operators >= and <=.
 
 \par Wiki Examples:
 
-\li All Examples 
+\li All Examples
 
 \li Threshold an image
 
@@ -33,8 +33,8 @@ The pixels must support the operators >= and <=.
 
 | Name | Type | Description |
 |------|------|-------------|
-| Lower | double| Set/Get methods to set the lower threshold |
-| Upper | double| Set/Get methods to set the upper threshold |
+| Lower | double| Set/Get methods to set the lower threshold. |
+| Upper | double| Set/Get methods to set the upper threshold. |
 | OutsideValue | double| The pixel type must support comparison operators. Set the "outside" pixel value. The default value NumericTraits<PixelType>::ZeroValue() . |
 
 

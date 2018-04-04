@@ -4,7 +4,8 @@
  * Your License or Copyright can go here
  */
 
-#include "ITKOtsuMultipleThresholdsImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/ITKOtsuMultipleThresholdsImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/SimpleITKEnums.h"
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -18,18 +19,17 @@
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 ITKOtsuMultipleThresholdsImage::ITKOtsuMultipleThresholdsImage()
-: ITKImageBase()
 {
   m_NumberOfThresholds = StaticCastScalar<int, int, int>(1u);
   m_LabelOffset = StaticCastScalar<int, int, int>(0u);
   m_NumberOfHistogramBins = StaticCastScalar<double, double, double>(128u);
   m_ValleyEmphasis = StaticCastScalar<bool, bool, bool>(false);
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -48,6 +48,7 @@ void ITKOtsuMultipleThresholdsImage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_INTEGER_FP("LabelOffset", LabelOffset, FilterParameter::Parameter, ITKOtsuMultipleThresholdsImage));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("NumberOfHistogramBins", NumberOfHistogramBins, FilterParameter::Parameter, ITKOtsuMultipleThresholdsImage));
   parameters.push_back(SIMPL_NEW_BOOL_FP("ValleyEmphasis", ValleyEmphasis, FilterParameter::Parameter, ITKOtsuMultipleThresholdsImage));
+
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -86,14 +87,15 @@ void ITKOtsuMultipleThresholdsImage::readFilterParameters(AbstractFilterParamete
 // -----------------------------------------------------------------------------
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKOtsuMultipleThresholdsImage::dataCheck()
 {
+  setErrorCondition(0);
+  setWarningCondition(0);
+
   // Check consistency of parameters
   this->CheckIntegerEntry<uint8_t, int>(m_NumberOfThresholds, "NumberOfThresholds", 1);
   this->CheckIntegerEntry<uint8_t, int>(m_LabelOffset, "LabelOffset", 1);
   this->CheckIntegerEntry<uint32_t, double>(m_NumberOfHistogramBins, "NumberOfHistogramBins", 1);
 
-  setErrorCondition(0);
-  setWarningCondition(0);
-  ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
+  ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
@@ -101,7 +103,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
 // -----------------------------------------------------------------------------
 void ITKOtsuMultipleThresholdsImage::dataCheckInternal()
 {
-  Dream3DArraySwitchMacroOutputType(this->dataCheck, getSelectedCellArrayPath(), -4, uint8_t, 0);
+  Dream3DArraySwitchMacroOutputType(this->dataCheck, getSelectedCellArrayPath(), -4,uint8_t, 0);
 }
 
 // -----------------------------------------------------------------------------
@@ -119,7 +121,12 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   filter->SetLabelOffset(static_cast<uint8_t>(m_LabelOffset));
   filter->SetNumberOfHistogramBins(static_cast<uint32_t>(m_NumberOfHistogramBins));
   filter->SetValleyEmphasis(static_cast<bool>(m_ValleyEmphasis));
-  this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+  this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+//{
+//  QString outputVal = "Thresholds :%1";
+//  m_Thresholds = filter->GetThresholds();
+//}
+
 }
 
 // -----------------------------------------------------------------------------
@@ -127,7 +134,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
 // -----------------------------------------------------------------------------
 void ITKOtsuMultipleThresholdsImage::filterInternal()
 {
-  Dream3DArraySwitchMacroOutputType(this->filter, getSelectedCellArrayPath(), -4, uint8_t, 0);
+  Dream3DArraySwitchMacroOutputType(this->filter, getSelectedCellArrayPath(), -4,uint8_t, 0);
 }
 
 // -----------------------------------------------------------------------------

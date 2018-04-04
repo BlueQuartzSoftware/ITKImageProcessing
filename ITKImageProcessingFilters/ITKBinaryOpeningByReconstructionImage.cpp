@@ -4,7 +4,7 @@
  * Your License or Copyright can go here
  */
 
-#include "ITKBinaryOpeningByReconstructionImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/ITKBinaryOpeningByReconstructionImage.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/SimpleITKEnums.h"
 
 #include "SIMPLib/Common/Constants.h"
@@ -21,11 +21,11 @@
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 #include <itkFlatStructuringElement.h>
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 ITKBinaryOpeningByReconstructionImage::ITKBinaryOpeningByReconstructionImage()
-: ITKImageBase()
 {
   m_ForegroundValue = StaticCastScalar<double, double, double>(1.0);
   m_BackgroundValue = StaticCastScalar<double, double, double>(0.0);
@@ -33,7 +33,6 @@ ITKBinaryOpeningByReconstructionImage::ITKBinaryOpeningByReconstructionImage()
   m_KernelRadius = CastStdToVec3<std::vector<unsigned int>, FloatVec3_t, float>(std::vector<unsigned int>(3, 1));
   m_KernelType = StaticCastScalar<int, int, int>(itk::simple::sitkBall);
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -70,6 +69,7 @@ void ITKBinaryOpeningByReconstructionImage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("BackgroundValue", BackgroundValue, FilterParameter::Parameter, ITKBinaryOpeningByReconstructionImage));
   parameters.push_back(SIMPL_NEW_BOOL_FP("FullyConnected", FullyConnected, FilterParameter::Parameter, ITKBinaryOpeningByReconstructionImage));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("KernelRadius", KernelRadius, FilterParameter::Parameter, ITKBinaryOpeningByReconstructionImage));
+
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -111,6 +111,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
 {
   setErrorCondition(0);
   setWarningCondition(0);
+
   // Check consistency of parameters
   this->CheckVectorEntry<unsigned int, FloatVec3_t>(m_KernelRadius, "KernelRadius", 1);
   QVector<QString> supportedTypes;
@@ -124,7 +125,8 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
                  << "uint64_t"
                  << "int64_t";
   checkImageType(supportedTypes, getSelectedCellArrayPath());
-  ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
+
+  ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
@@ -142,6 +144,7 @@ void ITKBinaryOpeningByReconstructionImage::dataCheckInternal()
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKBinaryOpeningByReconstructionImage::filter()
 {
   typedef itk::Dream3DImage<InputPixelType, Dimension> InputImageType;
+  //typedef itk::Dream3DImage<OutputPixelType, Dimension> OutputImageType;
   typedef itk::FlatStructuringElement<Dimension> StructuringElementType;
   typedef typename StructuringElementType::RadiusType RadiusType;
   RadiusType elementRadius = CastVec3ToITK<FloatVec3_t, RadiusType, typename RadiusType::SizeValueType>(m_KernelRadius, RadiusType::Dimension);
@@ -172,7 +175,8 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   filter->SetBackgroundValue(static_cast<double>(m_BackgroundValue));
   filter->SetFullyConnected(static_cast<bool>(m_FullyConnected));
   filter->SetKernel(structuringElement);
-  this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+  this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+
 }
 
 // -----------------------------------------------------------------------------

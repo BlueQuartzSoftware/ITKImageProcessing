@@ -4,7 +4,8 @@
  * Your License or Copyright can go here
  */
 
-#include "ITKGradientAnisotropicDiffusionImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/ITKGradientAnisotropicDiffusionImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/SimpleITKEnums.h"
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -18,18 +19,17 @@
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 ITKGradientAnisotropicDiffusionImage::ITKGradientAnisotropicDiffusionImage()
-: ITKImageBase()
 {
   m_TimeStep = StaticCastScalar<double, double, double>(0.125);
   m_ConductanceParameter = StaticCastScalar<double, double, double>(3);
   m_ConductanceScalingUpdateInterval = StaticCastScalar<double, double, double>(1u);
   m_NumberOfIterations = StaticCastScalar<double, double, double>(5u);
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -48,6 +48,7 @@ void ITKGradientAnisotropicDiffusionImage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("ConductanceParameter", ConductanceParameter, FilterParameter::Parameter, ITKGradientAnisotropicDiffusionImage));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("ConductanceScalingUpdateInterval", ConductanceScalingUpdateInterval, FilterParameter::Parameter, ITKGradientAnisotropicDiffusionImage));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("NumberOfIterations", NumberOfIterations, FilterParameter::Parameter, ITKGradientAnisotropicDiffusionImage));
+
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -86,13 +87,14 @@ void ITKGradientAnisotropicDiffusionImage::readFilterParameters(AbstractFilterPa
 // -----------------------------------------------------------------------------
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKGradientAnisotropicDiffusionImage::dataCheck()
 {
+  setErrorCondition(0);
+  setWarningCondition(0);
+
   // Check consistency of parameters
   this->CheckIntegerEntry<unsigned int, double>(m_ConductanceScalingUpdateInterval, "ConductanceScalingUpdateInterval", 1);
   this->CheckIntegerEntry<uint32_t, double>(m_NumberOfIterations, "NumberOfIterations", 1);
 
-  setErrorCondition(0);
-  setWarningCondition(0);
-  ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
+  ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
@@ -118,8 +120,8 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   filter->SetConductanceParameter(static_cast<double>(m_ConductanceParameter));
   filter->SetConductanceScalingUpdateInterval(static_cast<unsigned int>(m_ConductanceScalingUpdateInterval));
   filter->SetNumberOfIterations(static_cast<uint32_t>(m_NumberOfIterations));
+  this->ITKImageProcessingBase::filterCastToFloat<InputPixelType, OutputPixelType, Dimension, FilterType, FloatImageType>(filter);
 
-  this->ITKImageBase::filterCastToFloat<InputPixelType, OutputPixelType, Dimension, FilterType, FloatImageType>(filter);
 }
 
 // -----------------------------------------------------------------------------
@@ -164,5 +166,5 @@ const QUuid ITKGradientAnisotropicDiffusionImage::getUuid()
 // -----------------------------------------------------------------------------
 const QString ITKGradientAnisotropicDiffusionImage::getSubGroupName() const
 {
-  return "ITK Smoothing";
+  return "ITK AnisotropicSmoothing";
 }

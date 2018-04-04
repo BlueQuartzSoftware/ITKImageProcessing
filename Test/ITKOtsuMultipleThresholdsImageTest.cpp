@@ -8,7 +8,9 @@
 // Auto includes
 #include <SIMPLib/FilterParameters/BooleanFilterParameter.h>
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
+#include <SIMPLib/FilterParameters/FloatVec3FilterParameter.h>
 #include <SIMPLib/FilterParameters/IntFilterParameter.h>
+
 
 class ITKOtsuMultipleThresholdsImageTest : public ITKTestBase
 {
@@ -22,7 +24,7 @@ public:
   }
 
   int TestITKOtsuMultipleThresholdsImagedefaultTest()
-  {
+{
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/RA-Short.nrrd");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -49,10 +51,10 @@ public:
     GetMD5FromDataContainer(containerArray, input_path, md5Output);
     DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("94d62a813f969dadf22b7e3ae0b20178"));
     return 0;
-  }
+}
 
-  int TestITKOtsuMultipleThresholdsImagetwo_on_floatTest()
-  {
+int TestITKOtsuMultipleThresholdsImagetwo_on_floatTest()
+{
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/Ramp-Zero-One-Float.nrrd");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -71,11 +73,11 @@ public:
     propWasSet = filter->setProperty("SaveAsNewArray", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     {
-      int d3d_var;
-      d3d_var = 2;
-      var.setValue(d3d_var);
-      propWasSet = filter->setProperty("NumberOfThresholds", var);
-      DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+        int d3d_var;
+        d3d_var = 2;
+        var.setValue(d3d_var);
+        propWasSet = filter->setProperty("NumberOfThresholds", var);
+        DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     }
     filter->setDataContainerArray(containerArray);
     filter->execute();
@@ -86,10 +88,10 @@ public:
     GetMD5FromDataContainer(containerArray, input_path, md5Output);
     DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("1ab20d3cd9a354b45ac07ec59c0413b3"));
     return 0;
-  }
+}
 
-  int TestITKOtsuMultipleThresholdsImagethree_onTest()
-  {
+int TestITKOtsuMultipleThresholdsImagethree_onTest()
+{
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/cthead1.png");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -108,18 +110,18 @@ public:
     propWasSet = filter->setProperty("SaveAsNewArray", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     {
-      int d3d_var;
-      d3d_var = 3;
-      var.setValue(d3d_var);
-      propWasSet = filter->setProperty("NumberOfThresholds", var);
-      DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+        int d3d_var;
+        d3d_var = 3;
+        var.setValue(d3d_var);
+        propWasSet = filter->setProperty("NumberOfThresholds", var);
+        DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     }
     {
-      double d3d_var;
-      d3d_var = 256;
-      var.setValue(d3d_var);
-      propWasSet = filter->setProperty("NumberOfHistogramBins", var);
-      DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+        double d3d_var;
+        d3d_var = 256;
+        var.setValue(d3d_var);
+        propWasSet = filter->setProperty("NumberOfHistogramBins", var);
+        DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     }
     filter->setDataContainerArray(containerArray);
     filter->execute();
@@ -130,10 +132,10 @@ public:
     GetMD5FromDataContainer(containerArray, input_path, md5Output);
     DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("b61c3f4e063fcdd24dba76227129ae34"));
     return 0;
-  }
+}
 
-  int TestITKOtsuMultipleThresholdsImagevalley_emphasisTest()
-  {
+int TestITKOtsuMultipleThresholdsImagevalley_emphasisTest()
+{
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/cthead1.png");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -152,18 +154,18 @@ public:
     propWasSet = filter->setProperty("SaveAsNewArray", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     {
-      int d3d_var;
-      d3d_var = 3;
-      var.setValue(d3d_var);
-      propWasSet = filter->setProperty("NumberOfThresholds", var);
-      DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+        int d3d_var;
+        d3d_var = 3;
+        var.setValue(d3d_var);
+        propWasSet = filter->setProperty("NumberOfThresholds", var);
+        DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     }
     {
-      bool d3d_var;
-      d3d_var = true;
-      var.setValue(d3d_var);
-      propWasSet = filter->setProperty("ValleyEmphasis", var);
-      DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+        bool d3d_var;
+        d3d_var = true;
+        var.setValue(d3d_var);
+        propWasSet = filter->setProperty("ValleyEmphasis", var);
+        DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     }
     filter->setDataContainerArray(containerArray);
     filter->execute();
@@ -174,7 +176,9 @@ public:
     GetMD5FromDataContainer(containerArray, input_path, md5Output);
     DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("fb65e730472c8001185f355fb626ca3f"));
     return 0;
-  }
+}
+
+
 
   // -----------------------------------------------------------------------------
   //
@@ -185,10 +189,10 @@ public:
 
     DREAM3D_REGISTER_TEST(this->TestFilterAvailability("ITKOtsuMultipleThresholdsImage"));
 
-    DREAM3D_REGISTER_TEST(TestITKOtsuMultipleThresholdsImagedefaultTest());
-    DREAM3D_REGISTER_TEST(TestITKOtsuMultipleThresholdsImagetwo_on_floatTest());
-    DREAM3D_REGISTER_TEST(TestITKOtsuMultipleThresholdsImagethree_onTest());
-    DREAM3D_REGISTER_TEST(TestITKOtsuMultipleThresholdsImagevalley_emphasisTest());
+    DREAM3D_REGISTER_TEST( TestITKOtsuMultipleThresholdsImagedefaultTest());
+    DREAM3D_REGISTER_TEST( TestITKOtsuMultipleThresholdsImagetwo_on_floatTest());
+    DREAM3D_REGISTER_TEST( TestITKOtsuMultipleThresholdsImagethree_onTest());
+    DREAM3D_REGISTER_TEST( TestITKOtsuMultipleThresholdsImagevalley_emphasisTest());
 
     if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
     {
@@ -198,5 +202,5 @@ public:
 
 private:
   ITKOtsuMultipleThresholdsImageTest(const ITKOtsuMultipleThresholdsImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKOtsuMultipleThresholdsImageTest&);                     // Operator '=' Not Implemented
+  void operator=(const ITKOtsuMultipleThresholdsImageTest&);                     // Move assignment Not Implemented
 };

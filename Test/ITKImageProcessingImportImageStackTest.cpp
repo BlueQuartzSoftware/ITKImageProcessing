@@ -221,9 +221,9 @@ public:
     {
       return EXIT_FAILURE;
     }
-
+    
     ITKImportImageStack::Pointer reader = std::static_pointer_cast<ITKImportImageStack>(abstractFilter);
-
+     
     bool propertySet = false;
 
     const QString containerName = "TestCompareImage";
@@ -232,13 +232,13 @@ public:
 
     FileListInfo_t fileListInfo;
     fileListInfo.InputPath = UnitTest::ITKImageProcessingImportImageStackTest::StackInputTestDir;
-    fileListInfo.StartIndex = 75;
-    fileListInfo.EndIndex = 77;
-    fileListInfo.FileExtension = "dcm";
-    fileListInfo.FilePrefix = "Image";
+    fileListInfo.StartIndex = 11;
+    fileListInfo.EndIndex = 13;
+    fileListInfo.FileExtension = "tif";
+    fileListInfo.FilePrefix = "slice_";
     fileListInfo.FileSuffix = "";
-    fileListInfo.PaddingDigits = 4;
-
+    fileListInfo.PaddingDigits = 2;
+    fileListInfo.Ordering = 0;
     reader->setInputFileListInfo(fileListInfo);
 
     static const unsigned int Dimension = 3;
@@ -273,24 +273,23 @@ public:
     ImageGeom::Pointer imageGeometry = std::dynamic_pointer_cast<ImageGeom>(geometry);
     DREAM3D_REQUIRE_NE(imageGeometry.get(), 0);
 
-    float tol = 1e-6;
     float resolution[Dimension];
     imageGeometry->getResolution(resolution);
     float origin[Dimension];
     imageGeometry->getOrigin(origin);
 
-    DREAM3D_COMPARE_FLOATS(&origin[0], &inputOrigin.x, tol);
-    DREAM3D_COMPARE_FLOATS(&origin[1], &inputOrigin.y, tol);
-    DREAM3D_COMPARE_FLOATS(&origin[2], &inputOrigin.z, tol);
+    DREAM3D_COMPARE_FLOATS(&origin[0], &inputOrigin.x, 5);
+    DREAM3D_COMPARE_FLOATS(&origin[1], &inputOrigin.y, 5);
+    DREAM3D_COMPARE_FLOATS(&origin[2], &inputOrigin.z, 5);
 
-    DREAM3D_COMPARE_FLOATS(&resolution[0], &inputResolution.x, tol);
-    DREAM3D_COMPARE_FLOATS(&resolution[1], &inputResolution.y, tol);
-    DREAM3D_COMPARE_FLOATS(&resolution[2], &inputResolution.z, tol);
+    DREAM3D_COMPARE_FLOATS(&resolution[0], &inputResolution.x, 5);
+    DREAM3D_COMPARE_FLOATS(&resolution[1], &inputResolution.y, 5);
+    DREAM3D_COMPARE_FLOATS(&resolution[2], &inputResolution.z, 5);
 
     size_t dimensions[Dimension];
     size_t expectedDimensions[Dimension];
-    expectedDimensions[0] = 256;
-    expectedDimensions[1] = 256;
+    expectedDimensions[0] = 524;
+    expectedDimensions[1] = 390;
     expectedDimensions[2] = 3;
     std::tie(dimensions[0], dimensions[1], dimensions[2]) = imageGeometry->getDimensions();
     for(size_t i = 0; i < Dimension; ++i)
@@ -317,5 +316,5 @@ public:
 
 private:
   ITKImageProcessingImportImageStackTest(const ITKImageProcessingImportImageStackTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKImageProcessingImportImageStackTest&);                         // Operator '=' Not Implemented
+  void operator=(const ITKImageProcessingImportImageStackTest&);                         // Move assignment Not Implemented
 };

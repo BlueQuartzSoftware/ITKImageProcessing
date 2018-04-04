@@ -11,7 +11,7 @@ Denoise an image using curvature driven flow.
 
 CurvatureFlowImageFilter implements a curvature driven image denoising algorithm. Iso-brightness contours in the grayscale input image are viewed as a level set. The level set is then evolved using a curvature-based speed function:
 
- \f[ I_t = \kappa |\nabla I| \f]  where\f$ \kappa \f$ is the curvature.
+ \f[ I_t = \kappa |\nabla I| \f] where \f$ \kappa \f$ is the curvature.
 
 The advantage of this approach is that sharp boundaries are preserved with smoothing occurring only within a region. However, it should be noted that continuous application of this scheme will result in the eventual removal of all information as each contour shrinks to zero and disappear.
 
@@ -29,14 +29,13 @@ This filter may be streamed. To support streaming this filter produces a padded 
 
 Reference: "Level Set Methods and Fast Marching Methods", J.A. Sethian, Cambridge Press, Chapter 16, Second edition, 1999.
 
-\see DenseFiniteDifferenceImageFilter 
-\see 
-\see CurvatureFlowFunction 
-\see 
-\see MinMaxCurvatureFlowImageFilter 
-\see 
-\see BinaryMinMaxCurvatureFlowImageFilter 
-Input/Output Restrictions: TInputImage and TOutputImage must have the same dimension. TOutputImage's pixel type must be a real number type.
+\see DenseFiniteDifferenceImageFilter
+
+\see CurvatureFlowFunction
+
+\see MinMaxCurvatureFlowImageFilter
+
+\see BinaryMinMaxCurvatureFlowImageFilter
 
 ## Parameters ##
 

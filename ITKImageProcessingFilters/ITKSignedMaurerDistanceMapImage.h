@@ -12,26 +12,28 @@
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
-#include "ITKImageBase.h"
+#include "ITKImageProcessingBase.h"
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
 
 // Auto includes
 #include <SIMPLib/FilterParameters/BooleanFilterParameter.h>
+#include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 #include <itkSignedMaurerDistanceMapImageFilter.h>
+
 
 /**
  * @brief The ITKSignedMaurerDistanceMapImage class. See [Filter documentation](@ref ITKSignedMaurerDistanceMapImage) for details.
  */
-class ITKSignedMaurerDistanceMapImage : public ITKImageBase
+class ITKSignedMaurerDistanceMapImage : public ITKImageProcessingBase
 {
   Q_OBJECT
 
 public:
   SIMPL_SHARED_POINTERS(ITKSignedMaurerDistanceMapImage)
-  SIMPL_STATIC_NEW_MACRO(ITKSignedMaurerDistanceMapImage)
-   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKSignedMaurerDistanceMapImage, AbstractFilter)
+  SIMPL_FILTER_NEW_MACRO(ITKSignedMaurerDistanceMapImage)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKSignedMaurerDistanceMapImage, AbstractFilter)
 
   virtual ~ITKSignedMaurerDistanceMapImage();
 
@@ -44,36 +46,40 @@ public:
   SIMPL_FILTER_PARAMETER(bool, UseImageSpacing)
   Q_PROPERTY(bool UseImageSpacing READ getUseImageSpacing WRITE setUseImageSpacing)
 
+  SIMPL_FILTER_PARAMETER(double, BackgroundValue)
+  Q_PROPERTY(double BackgroundValue READ getBackgroundValue WRITE setBackgroundValue)
+
+
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
    */
-  virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) const override;
+  AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  virtual const QString getHumanLabel() const override;
+  const QString getHumanLabel() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  virtual const QString getSubGroupName() const override;
+  const QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  virtual const QUuid getUuid() override;
+  const QUuid getUuid() override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
    */
-  virtual void setupFilterParameters() override;
+  void setupFilterParameters() override;
 
   /**
    * @brief readFilterParameters Reimplemented from @see AbstractFilter class
    */
-  virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
+  void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
 
 protected:
   ITKSignedMaurerDistanceMapImage();
@@ -99,8 +105,8 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKSignedMaurerDistanceMapImage(const ITKSignedMaurerDistanceMapImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKSignedMaurerDistanceMapImage&);                  // Operator '=' Not Implemented
+  ITKSignedMaurerDistanceMapImage(const ITKSignedMaurerDistanceMapImage&) = delete;    // Copy Constructor Not Implemented
+  void operator=(const ITKSignedMaurerDistanceMapImage&) = delete;                     // Move assignment Not Implemented
 };
 
 #ifdef __clang__

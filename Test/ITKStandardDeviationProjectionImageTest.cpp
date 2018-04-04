@@ -8,6 +8,7 @@
 // Auto includes
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 
+
 class ITKStandardDeviationProjectionImageTest : public ITKTestBase
 {
 
@@ -20,7 +21,7 @@ public:
   }
 
   int TestITKStandardDeviationProjectionImagez_projectionTest()
-  {
+{
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/RA-Float.nrrd");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -39,11 +40,11 @@ public:
     propWasSet = filter->setProperty("SaveAsNewArray", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     {
-      double d3d_var;
-      d3d_var = 2;
-      var.setValue(d3d_var);
-      propWasSet = filter->setProperty("ProjectionDimension", var);
-      DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+        double d3d_var;
+        d3d_var = 2;
+        var.setValue(d3d_var);
+        propWasSet = filter->setProperty("ProjectionDimension", var);
+        DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     }
     filter->setDataContainerArray(containerArray);
     filter->execute();
@@ -56,7 +57,9 @@ public:
     int res = this->CompareImages(containerArray, input_path, baseline_path, 0.0001);
     DREAM3D_REQUIRE_EQUAL(res, 0);
     return 0;
-  }
+}
+
+
 
   // -----------------------------------------------------------------------------
   //
@@ -67,7 +70,7 @@ public:
 
     DREAM3D_REGISTER_TEST(this->TestFilterAvailability("ITKStandardDeviationProjectionImage"));
 
-    DREAM3D_REGISTER_TEST(TestITKStandardDeviationProjectionImagez_projectionTest());
+    DREAM3D_REGISTER_TEST( TestITKStandardDeviationProjectionImagez_projectionTest());
 
     if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
     {
@@ -77,5 +80,5 @@ public:
 
 private:
   ITKStandardDeviationProjectionImageTest(const ITKStandardDeviationProjectionImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKStandardDeviationProjectionImageTest&);                          // Operator '=' Not Implemented
+  void operator=(const ITKStandardDeviationProjectionImageTest&);                          // Move assignment Not Implemented
 };

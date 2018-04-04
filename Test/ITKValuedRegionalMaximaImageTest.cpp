@@ -8,6 +8,7 @@
 // Auto includes
 #include <SIMPLib/FilterParameters/BooleanFilterParameter.h>
 
+
 class ITKValuedRegionalMaximaImageTest : public ITKTestBase
 {
 
@@ -20,7 +21,7 @@ public:
   }
 
   int TestITKValuedRegionalMaximaImagedefaultsTest()
-  {
+{
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/cthead1.png");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -47,7 +48,9 @@ public:
     GetMD5FromDataContainer(containerArray, input_path, md5Output);
     DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("c94b3702844c508818e4718a75102472"));
     return 0;
-  }
+}
+
+
 
   // -----------------------------------------------------------------------------
   //
@@ -58,7 +61,7 @@ public:
 
     DREAM3D_REGISTER_TEST(this->TestFilterAvailability("ITKValuedRegionalMaximaImage"));
 
-    DREAM3D_REGISTER_TEST(TestITKValuedRegionalMaximaImagedefaultsTest());
+    DREAM3D_REGISTER_TEST( TestITKValuedRegionalMaximaImagedefaultsTest());
 
     if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
     {
@@ -68,5 +71,5 @@ public:
 
 private:
   ITKValuedRegionalMaximaImageTest(const ITKValuedRegionalMaximaImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKValuedRegionalMaximaImageTest&);                   // Operator '=' Not Implemented
+  void operator=(const ITKValuedRegionalMaximaImageTest&);                   // Move assignment Not Implemented
 };

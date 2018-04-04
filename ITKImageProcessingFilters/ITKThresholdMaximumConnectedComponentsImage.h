@@ -12,7 +12,7 @@
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
-#include "ITKImageBase.h"
+#include "ITKImageProcessingBase.h"
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
@@ -22,17 +22,18 @@
 #include <SIMPLib/FilterParameters/IntFilterParameter.h>
 #include <itkThresholdMaximumConnectedComponentsImageFilter.h>
 
+
 /**
  * @brief The ITKThresholdMaximumConnectedComponentsImage class. See [Filter documentation](@ref ITKThresholdMaximumConnectedComponentsImage) for details.
  */
-class ITKThresholdMaximumConnectedComponentsImage : public ITKImageBase
+class ITKThresholdMaximumConnectedComponentsImage : public ITKImageProcessingBase
 {
   Q_OBJECT
 
 public:
   SIMPL_SHARED_POINTERS(ITKThresholdMaximumConnectedComponentsImage)
-  SIMPL_STATIC_NEW_MACRO(ITKThresholdMaximumConnectedComponentsImage)
-   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKThresholdMaximumConnectedComponentsImage, AbstractFilter)
+  SIMPL_FILTER_NEW_MACRO(ITKThresholdMaximumConnectedComponentsImage)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKThresholdMaximumConnectedComponentsImage, AbstractFilter)
 
   virtual ~ITKThresholdMaximumConnectedComponentsImage();
 
@@ -48,36 +49,37 @@ public:
   SIMPL_FILTER_PARAMETER(int, OutsideValue)
   Q_PROPERTY(int OutsideValue READ getOutsideValue WRITE setOutsideValue)
 
+
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
    */
-  virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) const override;
+  AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  virtual const QString getHumanLabel() const override;
+  const QString getHumanLabel() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  virtual const QString getSubGroupName() const override;
+  const QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  virtual const QUuid getUuid() override;
+  const QUuid getUuid() override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
    */
-  virtual void setupFilterParameters() override;
+  void setupFilterParameters() override;
 
   /**
    * @brief readFilterParameters Reimplemented from @see AbstractFilter class
    */
-  virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
+  void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
 
 protected:
   ITKThresholdMaximumConnectedComponentsImage();
@@ -103,8 +105,8 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKThresholdMaximumConnectedComponentsImage(const ITKThresholdMaximumConnectedComponentsImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKThresholdMaximumConnectedComponentsImage&);                              // Operator '=' Not Implemented
+  ITKThresholdMaximumConnectedComponentsImage(const ITKThresholdMaximumConnectedComponentsImage&) = delete;    // Copy Constructor Not Implemented
+  void operator=(const ITKThresholdMaximumConnectedComponentsImage&) = delete;                                 // Move assignment Not Implemented
 };
 
 #ifdef __clang__

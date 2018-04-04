@@ -22,6 +22,7 @@ The filter walks over all the pixels in the input image, and for each pixel does
 
 \li store the casted value into the output image.
 
+
 The filter expects both images to have the same dimension (e.g. both 2D, or both 3D, or both ND).
 
 ## Parameters ##

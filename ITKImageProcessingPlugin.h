@@ -31,8 +31,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _ITKImageProcessing_H_
-#define _ITKImageProcessing_H_
+#ifndef _iTKImageProcessing_H_
+#define _iTKImageProcessing_H_
 
 #include <QtCore/QObject>
 #include <QtCore/QSettings>
@@ -205,7 +205,7 @@ private:
   bool m_DidLoad;
 
   ITKImageProcessingPlugin(const ITKImageProcessingPlugin&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKImageProcessingPlugin&);           // Operator '=' Not Implemented
+  void operator=(const ITKImageProcessingPlugin&);                    // Move assignment Not Implemented
 };
 
-#endif /* _ITKImageProcessing_H_ */
+#endif /* _iTKImageProcessing_H_ */

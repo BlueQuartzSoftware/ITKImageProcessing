@@ -20,10 +20,8 @@
 //
 // -----------------------------------------------------------------------------
 ITKCastImage::ITKCastImage()
-: ITKImageBase()
-, m_CastingType(itk::ImageIOBase::IOComponentType::UCHAR - 1)
+: m_CastingType(itk::ImageIOBase::IOComponentType::UCHAR - 1)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -107,7 +105,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
     notifyErrorMessage(getHumanLabel(), "Boundaries values of output component type inside boundaries of input component type. Use ITK::Rescale Intensity Image Filter instead.", getErrorCondition());
     return;
   }
-  ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
+  ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
@@ -129,7 +127,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   // define filter
   typedef itk::CastImageFilter<InputImageType, OutputImageType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
-  this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+  this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
 }
 
 // -----------------------------------------------------------------------------

@@ -170,5 +170,5 @@ public:
 
 private:
   ITKVectorRescaleIntensityImageTest(const ITKVectorRescaleIntensityImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKVectorRescaleIntensityImageTest&);                     // Operator '=' Not Implemented
+  void operator=(const ITKVectorRescaleIntensityImageTest&);                     // Move assignment Not Implemented
 };

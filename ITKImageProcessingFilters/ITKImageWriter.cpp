@@ -64,11 +64,9 @@ extern Q_CORE_EXPORT int qt_ntfs_permission_lookup;
 //
 // -----------------------------------------------------------------------------
 ITKImageWriter::ITKImageWriter()
-: AbstractFilter()
-, m_FileName("")
+: m_FileName("")
 , m_ImageArrayPath("", "", "")
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

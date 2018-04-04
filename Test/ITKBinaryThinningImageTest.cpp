@@ -7,6 +7,7 @@
 #include "ITKTestBase.h"
 // Auto includes
 
+
 class ITKBinaryThinningImageTest : public ITKTestBase
 {
 
@@ -19,7 +20,7 @@ public:
   }
 
   int TestITKBinaryThinningImageBinaryThinningTest()
-  {
+{
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/BlackDots.png");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -46,7 +47,9 @@ public:
     GetMD5FromDataContainer(containerArray, input_path, md5Output);
     DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("153ad0b2f3658dee3b14ad93d0cfe550"));
     return 0;
-  }
+}
+
+
 
   // -----------------------------------------------------------------------------
   //
@@ -57,7 +60,7 @@ public:
 
     DREAM3D_REGISTER_TEST(this->TestFilterAvailability("ITKBinaryThinningImage"));
 
-    DREAM3D_REGISTER_TEST(TestITKBinaryThinningImageBinaryThinningTest());
+    DREAM3D_REGISTER_TEST( TestITKBinaryThinningImageBinaryThinningTest());
 
     if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
     {
@@ -67,5 +70,5 @@ public:
 
 private:
   ITKBinaryThinningImageTest(const ITKBinaryThinningImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKBinaryThinningImageTest&);             // Operator '=' Not Implemented
+  void operator=(const ITKBinaryThinningImageTest&);             // Move assignment Not Implemented
 };

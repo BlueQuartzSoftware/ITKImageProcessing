@@ -9,6 +9,7 @@
 #include <SIMPLib/FilterParameters/BooleanFilterParameter.h>
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 
+
 class ITKVectorConnectedComponentImageTest : public ITKTestBase
 {
 
@@ -21,7 +22,7 @@ public:
   }
 
   int TestITKVectorConnectedComponentImagewDistanceTest()
-  {
+{
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/noisy-vector-grid.nrrd");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -40,11 +41,11 @@ public:
     propWasSet = filter->setProperty("SaveAsNewArray", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     {
-      double d3d_var;
-      d3d_var = 0.01;
-      var.setValue(d3d_var);
-      propWasSet = filter->setProperty("DistanceThreshold", var);
-      DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+        double d3d_var;
+        d3d_var = 0.01;
+        var.setValue(d3d_var);
+        propWasSet = filter->setProperty("DistanceThreshold", var);
+        DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     }
     filter->setDataContainerArray(containerArray);
     filter->execute();
@@ -55,7 +56,9 @@ public:
     GetMD5FromDataContainer(containerArray, input_path, md5Output);
     DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("0dbaaa98c1da2d8e1865c95e53a542de"));
     return 0;
-  }
+}
+
+
 
   // -----------------------------------------------------------------------------
   //
@@ -66,7 +69,7 @@ public:
 
     DREAM3D_REGISTER_TEST(this->TestFilterAvailability("ITKVectorConnectedComponentImage"));
 
-    DREAM3D_REGISTER_TEST(TestITKVectorConnectedComponentImagewDistanceTest());
+    DREAM3D_REGISTER_TEST( TestITKVectorConnectedComponentImagewDistanceTest());
 
     if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
     {
@@ -76,5 +79,5 @@ public:
 
 private:
   ITKVectorConnectedComponentImageTest(const ITKVectorConnectedComponentImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKVectorConnectedComponentImageTest&);                       // Operator '=' Not Implemented
+  void operator=(const ITKVectorConnectedComponentImageTest&);                       // Move assignment Not Implemented
 };

@@ -87,5 +87,5 @@ public:
 
 private:
   ITKClosingByReconstructionImageTest(const ITKClosingByReconstructionImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKClosingByReconstructionImageTest&);                      // Operator '=' Not Implemented
+  void operator=(const ITKClosingByReconstructionImageTest&);                      // Move assignment Not Implemented
 };

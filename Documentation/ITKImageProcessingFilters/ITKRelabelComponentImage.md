@@ -21,10 +21,11 @@ If user sets a minimum object size, all objects with fewer pixels than the minim
 
 RelabelComponentImageFilter can be run as an "in place" filter, where it will overwrite its output. The default is run out of place (or generate a separate output). "In place" operation can be controlled via methods in the superclass, InPlaceImageFilter::InPlaceOn() and InPlaceImageFilter::InPlaceOff() .
 
-\see ConnectedComponentImageFilter , BinaryThresholdImageFilter , ThresholdImageFilter 
+\see ConnectedComponentImageFilter , BinaryThresholdImageFilter , ThresholdImageFilter
+
 \par Wiki Examples:
 
-\li All Examples 
+\li All Examples
 
 \li Assign contiguous labels to connected regions of an image
 
@@ -33,6 +34,11 @@ RelabelComponentImageFilter can be run as an "in place" filter, where it will ov
 | Name | Type | Description |
 |------|------|-------------|
 | MinimumObjectSize | double| Set the minimum size in pixels for an object. All objects smaller than this size will be discarded and will not appear in the output label map. NumberOfObjects will count only the objects whose pixel counts are greater than or equal to the minimum size. Call GetOriginalNumberOfObjects to find out how many objects were present in the original label map. |
+| SortByObjectSize | bool| Controls whether the object labels are sorted by size. If false, initial order of labels is kept. |
+| NumberOfObjects | double| Get the number of objects in the image. This information is only valid after the filter has executed. |
+| OriginalNumberOfObjects | double| Get the original number of objects in the image before small objects were discarded. This information is only valid after the filter has executed. If the caller has not specified a minimum object size, OriginalNumberOfObjects is the same as NumberOfObjects. |
+| SizeOfObjectsInPhysicalUnits | FloatVec3_t| Get the size of each object in physical space (in units of pixel size). This information is only valid after the filter has executed. Size of the background is not calculated. Size of object #1 is GetSizeOfObjectsInPhysicalUnits() [0]. Size of object #2 is GetSizeOfObjectsInPhysicalUnits() [1]. Etc. |
+| SizeOfObjectsInPixels | FloatVec3_t| Get the size of each object in pixels. This information is only valid after the filter has executed. Size of the background is not calculated. Size of object #1 is GetSizeOfObjectsInPixels() [0]. Size of object #2 is GetSizeOfObjectsInPixels() [1]. Etc. |
 
 
 ## Required Geometry ##

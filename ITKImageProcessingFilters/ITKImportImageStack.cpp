@@ -57,8 +57,7 @@
 //
 // -----------------------------------------------------------------------------
 ITKImportImageStack::ITKImportImageStack()
-: AbstractFilter()
-, m_DataContainerName(SIMPL::Defaults::ImageDataContainerName)
+: m_DataContainerName(SIMPL::Defaults::ImageDataContainerName)
 , m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName)
 , m_BoundsFile("")
 , m_ImageDataArrayName(SIMPL::CellData::ImageData)
@@ -76,7 +75,6 @@ ITKImportImageStack::ITKImportImageStack()
   m_InputFileListInfo.EndIndex = 0;
   m_InputFileListInfo.PaddingDigits = 0;
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -240,7 +238,7 @@ void ITKImportImageStack::readImage(const QVector<QString>& fileList, bool dataC
     if(dimensions != 2)
     {
       setErrorCondition(-1);
-      const QString errorMessage = "Slice image dimensions do not equal 2";
+      const QString errorMessage = QString("Slice image dimensions do not equal 2. Dimension of current image is %1").arg(dimensions);
       notifyErrorMessage(getHumanLabel(), errorMessage, getErrorCondition());
       return;
     }

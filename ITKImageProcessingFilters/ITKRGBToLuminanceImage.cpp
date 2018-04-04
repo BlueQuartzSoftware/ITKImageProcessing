@@ -22,9 +22,7 @@
 //
 // -----------------------------------------------------------------------------
 ITKRGBToLuminanceImage::ITKRGBToLuminanceImage()
-: ITKImageBase()
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -81,7 +79,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
     return;
   }
   typedef typename itk::NumericTraits<InputPixelType>::ValueType ScalarPixelType;
-  ITKImageBase::dataCheck<InputPixelType, ScalarPixelType, Dimension>();
+  ITKImageProcessingBase::dataCheck<InputPixelType, ScalarPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
@@ -115,10 +113,10 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   switch(length)
   {
   case 3:
-    this->ITKImageBase::filter<RGBPixelType, ScalarPixelType, Dimension, RGBFilterType>(rgbFilter);
+    this->ITKImageProcessingBase::filter<RGBPixelType, ScalarPixelType, Dimension, RGBFilterType>(rgbFilter);
     break;
   case 4:
-    this->ITKImageBase::filter<RGBAPixelType, ScalarPixelType, Dimension, RGBAFilterType>(rgbaFilter);
+    this->ITKImageProcessingBase::filter<RGBAPixelType, ScalarPixelType, Dimension, RGBAFilterType>(rgbaFilter);
     break;
   default:
     setErrorCondition(-7);

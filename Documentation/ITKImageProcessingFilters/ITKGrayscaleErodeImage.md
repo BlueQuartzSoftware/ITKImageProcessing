@@ -7,16 +7,17 @@ ITKImageProcessing (ITKImageProcessing)
 
 ## Description ##
 
-gray scale dilation of an image
+Grayscale erosion of an image.
 
-Erode an image using grayscale morphology. Dilation takes the maximum of all the pixels identified by the structuring element.
+Erode an image using grayscale morphology. Erosion takes the maximum of all the pixels identified by the structuring element.
 
 The structuring element is assumed to be composed of binary values (zero or one). Only elements of the structuring element having values > 0 are candidates for affecting the center pixel.
 
-\see MorphologyImageFilter , GrayscaleFunctionErodeImageFilter , BinaryErodeImageFilter 
+\see MorphologyImageFilter , GrayscaleFunctionErodeImageFilter , BinaryErodeImageFilter
+
 \par Wiki Examples:
 
-\li All Examples 
+\li All Examples
 
 \li Erode a grayscale image
 

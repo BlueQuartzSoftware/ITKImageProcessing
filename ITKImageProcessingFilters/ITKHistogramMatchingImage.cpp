@@ -20,13 +20,11 @@
 //
 // -----------------------------------------------------------------------------
 ITKHistogramMatchingImage::ITKHistogramMatchingImage()
-: ITKImageBase()
 {
   m_NumberOfHistogramLevels = StaticCastScalar<double, double, double>(256u);
   m_NumberOfMatchPoints = StaticCastScalar<double, double, double>(1u);
   m_ThresholdAtMeanIntensity = StaticCastScalar<bool, bool, bool>(true);
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -198,7 +196,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
 
   // Compare source and reference image type
   CompareImageTypes(getSelectedCellArrayPath(), getReferenceCellArrayPath());
-  ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
+  ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
@@ -236,7 +234,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   toITK->SetDataArrayName(getReferenceCellArrayPath().getDataArrayName().toStdString());
   filter->SetReferenceImage(toITK->GetOutput());
   // Run filter
-  this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+  this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
 }
 
 // -----------------------------------------------------------------------------

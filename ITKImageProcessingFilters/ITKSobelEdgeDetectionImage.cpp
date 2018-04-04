@@ -4,7 +4,8 @@
  * Your License or Copyright can go here
  */
 
-#include "ITKSobelEdgeDetectionImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/ITKSobelEdgeDetectionImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/SimpleITKEnums.h"
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -18,14 +19,13 @@
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 ITKSobelEdgeDetectionImage::ITKSobelEdgeDetectionImage()
-: ITKImageBase()
 {
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -39,6 +39,8 @@ ITKSobelEdgeDetectionImage::~ITKSobelEdgeDetectionImage() = default;
 void ITKSobelEdgeDetectionImage::setupFilterParameters()
 {
   FilterParameterVector parameters;
+
+
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -73,11 +75,12 @@ void ITKSobelEdgeDetectionImage::readFilterParameters(AbstractFilterParametersRe
 // -----------------------------------------------------------------------------
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKSobelEdgeDetectionImage::dataCheck()
 {
-  // Check consistency of parameters
-
   setErrorCondition(0);
   setWarningCondition(0);
-  ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
+
+  // Check consistency of parameters
+
+  ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
@@ -99,7 +102,8 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   // define filter
   typedef itk::SobelEdgeDetectionImageFilter<InputImageType, OutputImageType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
-  this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+  this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+
 }
 
 // -----------------------------------------------------------------------------
@@ -144,5 +148,5 @@ const QUuid ITKSobelEdgeDetectionImage::getUuid()
 // -----------------------------------------------------------------------------
 const QString ITKSobelEdgeDetectionImage::getSubGroupName() const
 {
-  return "ITK Edge";
+  return "ITK Smoothing";
 }

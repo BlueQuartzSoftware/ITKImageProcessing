@@ -138,5 +138,5 @@ public:
 
 private:
   ITKErodeObjectMorphologyImageTest(const ITKErodeObjectMorphologyImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKErodeObjectMorphologyImageTest&);                    // Operator '=' Not Implemented
+  void operator=(const ITKErodeObjectMorphologyImageTest&);                    // Move assignment Not Implemented
 };

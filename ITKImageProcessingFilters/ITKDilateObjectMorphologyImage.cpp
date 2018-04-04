@@ -4,7 +4,7 @@
  * Your License or Copyright can go here
  */
 
-#include "ITKDilateObjectMorphologyImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/ITKDilateObjectMorphologyImage.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/SimpleITKEnums.h"
 
 #include "SIMPLib/Common/Constants.h"
@@ -21,17 +21,16 @@
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 #include <itkFlatStructuringElement.h>
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 ITKDilateObjectMorphologyImage::ITKDilateObjectMorphologyImage()
-: ITKImageBase()
 {
   m_ObjectValue = StaticCastScalar<double, double, double>(1);
   m_KernelRadius = CastStdToVec3<std::vector<unsigned int>, FloatVec3_t, float>(std::vector<unsigned int>(3, 1));
   m_KernelType = StaticCastScalar<int, int, int>(itk::simple::sitkBall);
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -66,6 +65,7 @@ void ITKDilateObjectMorphologyImage::setupFilterParameters()
   // Other parameters
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("ObjectValue", ObjectValue, FilterParameter::Parameter, ITKDilateObjectMorphologyImage));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("KernelRadius", KernelRadius, FilterParameter::Parameter, ITKDilateObjectMorphologyImage));
+
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -105,9 +105,11 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
 {
   setErrorCondition(0);
   setWarningCondition(0);
+
   // Check consistency of parameters
   this->CheckVectorEntry<unsigned int, FloatVec3_t>(m_KernelRadius, "KernelRadius", 1);
-  ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
+
+  ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
@@ -152,9 +154,10 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   // define filter
   typedef itk::DilateObjectMorphologyImageFilter<InputImageType, OutputImageType, StructuringElementType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
-  filter->SetObjectValue(static_cast<typename FilterType::PixelType>(this->getObjectValue()));
+  filter->SetObjectValue(static_cast<typename FilterType::PixelType>(this->getObjectValue()) );
   filter->SetKernel(structuringElement);
-  this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+  this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+
 }
 
 // -----------------------------------------------------------------------------

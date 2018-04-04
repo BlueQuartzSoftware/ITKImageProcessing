@@ -73,5 +73,5 @@ public:
 
 private:
   ITKRGBToLuminanceImageTest(const ITKRGBToLuminanceImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKRGBToLuminanceImageTest&);             // Operator '=' Not Implemented
+  void operator=(const ITKRGBToLuminanceImageTest&);             // Move assignment Not Implemented
 };

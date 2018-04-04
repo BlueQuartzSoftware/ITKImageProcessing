@@ -9,6 +9,7 @@
 #include <SIMPLib/FilterParameters/BooleanFilterParameter.h>
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 
+
 class ITKRegionalMinimaImageTest : public ITKTestBase
 {
 
@@ -21,7 +22,7 @@ public:
   }
 
   int TestITKRegionalMinimaImagedefaultsTest()
-  {
+{
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/cthead1.png");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -48,7 +49,9 @@ public:
     GetMD5FromDataContainer(containerArray, input_path, md5Output);
     DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("3be99cf6b3116f16f6663cd2c4edb5b4"));
     return 0;
-  }
+}
+
+
 
   // -----------------------------------------------------------------------------
   //
@@ -59,7 +62,7 @@ public:
 
     DREAM3D_REGISTER_TEST(this->TestFilterAvailability("ITKRegionalMinimaImage"));
 
-    DREAM3D_REGISTER_TEST(TestITKRegionalMinimaImagedefaultsTest());
+    DREAM3D_REGISTER_TEST( TestITKRegionalMinimaImagedefaultsTest());
 
     if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
     {
@@ -69,5 +72,5 @@ public:
 
 private:
   ITKRegionalMinimaImageTest(const ITKRegionalMinimaImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKRegionalMinimaImageTest&);             // Operator '=' Not Implemented
+  void operator=(const ITKRegionalMinimaImageTest&);             // Move assignment Not Implemented
 };

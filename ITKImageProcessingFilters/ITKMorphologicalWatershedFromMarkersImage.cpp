@@ -22,11 +22,9 @@
 //
 // -----------------------------------------------------------------------------
 ITKMorphologicalWatershedFromMarkersImage::ITKMorphologicalWatershedFromMarkersImage()
-: ITKImageBase()
 {
   m_MarkWatershedLine = StaticCastScalar<bool, bool, bool>(true);
   m_FullyConnected = StaticCastScalar<bool, bool, bool>(false);
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -88,7 +86,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   supportedTypes << "uint8_t"
                  << "uint16_t";
   checkImageType(supportedTypes, getMarkerCellArrayPath());
-  ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
+  ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
@@ -183,7 +181,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
     return;
   }
   // Run filter
-  this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+  this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
   m_MarkerContainerArray = nullptr; // Free the memory used by the casted marker image
 }
 

@@ -11,7 +11,7 @@ Computes the square of the intensity values pixel-wise.
 
 \par Wiki Examples:
 
-\li All Examples 
+\li All Examples
 
 \li Square every pixel in an image
 

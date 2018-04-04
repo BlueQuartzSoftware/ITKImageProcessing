@@ -1,4 +1,4 @@
-${FilterName} {#${FilterNameLowerCase}}
+ITK::${FilterNameExpanded} (KW) {#${FilterNameLowerCase}}
 ${mdunderline}
 
 ## Group (Subgroup) ##

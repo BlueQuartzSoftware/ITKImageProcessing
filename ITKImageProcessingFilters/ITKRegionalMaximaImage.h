@@ -12,7 +12,7 @@
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
-#include "ITKImageBase.h"
+#include "ITKImageProcessingBase.h"
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
@@ -22,17 +22,18 @@
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 #include <itkRegionalMaximaImageFilter.h>
 
+
 /**
  * @brief The ITKRegionalMaximaImage class. See [Filter documentation](@ref ITKRegionalMaximaImage) for details.
  */
-class ITKRegionalMaximaImage : public ITKImageBase
+class ITKRegionalMaximaImage : public ITKImageProcessingBase
 {
   Q_OBJECT
 
 public:
   SIMPL_SHARED_POINTERS(ITKRegionalMaximaImage)
-  SIMPL_STATIC_NEW_MACRO(ITKRegionalMaximaImage)
-   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKRegionalMaximaImage, AbstractFilter)
+  SIMPL_FILTER_NEW_MACRO(ITKRegionalMaximaImage)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKRegionalMaximaImage, AbstractFilter)
 
   virtual ~ITKRegionalMaximaImage();
 
@@ -48,36 +49,37 @@ public:
   SIMPL_FILTER_PARAMETER(bool, FlatIsMaxima)
   Q_PROPERTY(bool FlatIsMaxima READ getFlatIsMaxima WRITE setFlatIsMaxima)
 
+
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
    */
-  virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) const override;
+  AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  virtual const QString getHumanLabel() const override;
+  const QString getHumanLabel() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  virtual const QString getSubGroupName() const override;
+  const QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  virtual const QUuid getUuid() override;
+  const QUuid getUuid() override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
    */
-  virtual void setupFilterParameters() override;
+  void setupFilterParameters() override;
 
   /**
    * @brief readFilterParameters Reimplemented from @see AbstractFilter class
    */
-  virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
+  void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
 
 protected:
   ITKRegionalMaximaImage();
@@ -103,8 +105,8 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKRegionalMaximaImage(const ITKRegionalMaximaImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKRegionalMaximaImage&);         // Operator '=' Not Implemented
+  ITKRegionalMaximaImage(const ITKRegionalMaximaImage&) = delete;    // Copy Constructor Not Implemented
+  void operator=(const ITKRegionalMaximaImage&) = delete;            // Move assignment Not Implemented
 };
 
 #ifdef __clang__

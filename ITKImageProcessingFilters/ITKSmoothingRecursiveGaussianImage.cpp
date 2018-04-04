@@ -4,33 +4,31 @@
  * Your License or Copyright can go here
  */
 
-#include "ITKSmoothingRecursiveGaussianImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/ITKSmoothingRecursiveGaussianImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/SimpleITKEnums.h"
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 
 #include "SIMPLib/Geometry/ImageGeom.h"
 
-#include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 #define DREAM3D_USE_RGB_RGBA 1
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
+
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 ITKSmoothingRecursiveGaussianImage::ITKSmoothingRecursiveGaussianImage()
-: ITKImageBase()
 {
-  m_Sigma = StaticCastScalar<double, double, double>(1.0);
+  m_Sigma = CastStdToVec3<std::vector<double>, FloatVec3_t, float>(std::vector<double>(3,1.0));
   m_NormalizeAcrossScale = StaticCastScalar<bool, bool, bool>(false);
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -45,8 +43,9 @@ void ITKSmoothingRecursiveGaussianImage::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Sigma", Sigma, FilterParameter::Parameter, ITKSmoothingRecursiveGaussianImage));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Sigma", Sigma, FilterParameter::Parameter, ITKSmoothingRecursiveGaussianImage));
   parameters.push_back(SIMPL_NEW_BOOL_FP("NormalizeAcrossScale", NormalizeAcrossScale, FilterParameter::Parameter, ITKSmoothingRecursiveGaussianImage));
+
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -72,7 +71,7 @@ void ITKSmoothingRecursiveGaussianImage::readFilterParameters(AbstractFilterPara
   setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
   setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
   setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
-  setSigma(reader->readValue("Sigma", getSigma()));
+  setSigma(reader->readFloatVec3("Sigma", getSigma()));
   setNormalizeAcrossScale(reader->readValue("NormalizeAcrossScale", getNormalizeAcrossScale()));
 
   reader->closeFilterGroup();
@@ -83,11 +82,13 @@ void ITKSmoothingRecursiveGaussianImage::readFilterParameters(AbstractFilterPara
 // -----------------------------------------------------------------------------
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKSmoothingRecursiveGaussianImage::dataCheck()
 {
-  // Check consistency of parameters
-
   setErrorCondition(0);
   setWarningCondition(0);
-  ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
+
+  // Check consistency of parameters
+  this->CheckVectorEntry<double, FloatVec3_t>(m_Sigma, "Sigma", 0);
+
+  ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
@@ -95,7 +96,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
 // -----------------------------------------------------------------------------
 void ITKSmoothingRecursiveGaussianImage::dataCheckInternal()
 {
-  Dream3DArraySwitchMacroOutputType(this->dataCheck, getSelectedCellArrayPath(), -4, typename InputImageType::template Rebind<float>::Type::PixelType, 1);
+  Dream3DArraySwitchMacroOutputType(this->dataCheck, getSelectedCellArrayPath(), -4, typename InputImageType::template Rebind<float>::Type::PixelType,1);
 }
 
 // -----------------------------------------------------------------------------
@@ -109,9 +110,11 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   // define filter
   typedef itk::SmoothingRecursiveGaussianImageFilter<InputImageType, OutputImageType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
-  filter->SetSigma(static_cast<double>(m_Sigma));
+  typename FilterType::SigmaArrayType itkVecSigma = CastVec3ToITK<FloatVec3_t, typename FilterType::SigmaArrayType, typename FilterType::SigmaArrayType::ValueType>( this->getSigma(), FilterType::SigmaArrayType::Dimension);
+  filter->SetSigmaArray( itkVecSigma );
   filter->SetNormalizeAcrossScale(static_cast<bool>(m_NormalizeAcrossScale));
-  this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+  this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+
 }
 
 // -----------------------------------------------------------------------------
@@ -119,7 +122,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
 // -----------------------------------------------------------------------------
 void ITKSmoothingRecursiveGaussianImage::filterInternal()
 {
-  Dream3DArraySwitchMacroOutputType(this->filter, getSelectedCellArrayPath(), -4, typename InputImageType::template Rebind<float>::Type::PixelType, 1);
+  Dream3DArraySwitchMacroOutputType(this->filter, getSelectedCellArrayPath(), -4, typename InputImageType::template Rebind<float>::Type::PixelType,1);
 }
 
 // -----------------------------------------------------------------------------

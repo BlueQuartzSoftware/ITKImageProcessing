@@ -25,12 +25,10 @@
 //
 // -----------------------------------------------------------------------------
 ITKVectorRescaleIntensityImage::ITKVectorRescaleIntensityImage()
-: ITKImageBase()
-, m_OutputType(itk::ImageIOBase::IOComponentType::UCHAR - 1)
+: m_OutputType(itk::ImageIOBase::IOComponentType::UCHAR - 1)
 {
   m_OutputMaximumMagnitude = StaticCastScalar<double, double, double>(255);
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -126,7 +124,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   setWarningCondition(0);
   // OutputPixelType is based on scalar types. Create corresponding vector pixel type.
   typedef itk::Vector<OutputPixelType, InputPixelType::Dimension> VectorOutputPixelType;
-  ITKImageBase::dataCheck<InputPixelType, VectorOutputPixelType, Dimension>();
+  ITKImageProcessingBase::dataCheck<InputPixelType, VectorOutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
@@ -151,7 +149,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   typedef itk::VectorRescaleIntensityImageFilter<InputImageType, OutputImageType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
   filter->SetOutputMaximumMagnitude(static_cast<double>(m_OutputMaximumMagnitude));
-  this->ITKImageBase::filter<InputPixelType, VectorOutputPixelType, Dimension, FilterType>(filter);
+  this->ITKImageProcessingBase::filter<InputPixelType, VectorOutputPixelType, Dimension, FilterType>(filter);
 }
 
 // -----------------------------------------------------------------------------

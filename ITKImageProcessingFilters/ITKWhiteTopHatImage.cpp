@@ -4,7 +4,7 @@
  * Your License or Copyright can go here
  */
 
-#include "ITKWhiteTopHatImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/ITKWhiteTopHatImage.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/SimpleITKEnums.h"
 
 #include "SIMPLib/Common/Constants.h"
@@ -21,17 +21,16 @@
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 #include <itkFlatStructuringElement.h>
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 ITKWhiteTopHatImage::ITKWhiteTopHatImage()
-: ITKImageBase()
 {
   m_SafeBorder = StaticCastScalar<bool, bool, bool>(true);
   m_KernelRadius = CastStdToVec3<std::vector<unsigned int>, FloatVec3_t, float>(std::vector<unsigned int>(3, 1));
   m_KernelType = StaticCastScalar<int, int, int>(itk::simple::sitkBall);
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -64,7 +63,9 @@ void ITKWhiteTopHatImage::setupFilterParameters()
     parameters.push_back(parameter);
   }
   // Other parameters
+  parameters.push_back(SIMPL_NEW_BOOL_FP("SafeBorder", SafeBorder, FilterParameter::Parameter, ITKWhiteTopHatImage));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("KernelRadius", KernelRadius, FilterParameter::Parameter, ITKWhiteTopHatImage));
+
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -102,12 +103,13 @@ void ITKWhiteTopHatImage::readFilterParameters(AbstractFilterParametersReader* r
 // -----------------------------------------------------------------------------
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKWhiteTopHatImage::dataCheck()
 {
+  setErrorCondition(0);
+  setWarningCondition(0);
+
   // Check consistency of parameters
   this->CheckVectorEntry<unsigned int, FloatVec3_t>(m_KernelRadius, "KernelRadius", 1);
 
-  setErrorCondition(0);
-  setWarningCondition(0);
-  ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
+  ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
@@ -141,18 +143,21 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   case 2:
     structuringElement = StructuringElementType::Box(elementRadius);
     break;
-  case 4:
+  case 3:
     structuringElement = StructuringElementType::Cross(elementRadius);
     break;
   default:
     setErrorCondition(-20);
     notifyErrorMessage(getHumanLabel(), "Unsupported structuring element", getErrorCondition());
+    return;
   }
   // define filter
   typedef itk::WhiteTopHatImageFilter<InputImageType, OutputImageType, StructuringElementType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
+  filter->SetSafeBorder(static_cast<bool>(m_SafeBorder));
   filter->SetKernel(structuringElement);
-  this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+  this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+
 }
 
 // -----------------------------------------------------------------------------

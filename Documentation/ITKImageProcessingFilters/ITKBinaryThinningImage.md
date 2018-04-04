@@ -21,10 +21,11 @@ Rafael C. Gonzales and Richard E. Woods. Digital Image Processing. Addison Wesle
 
 To do: Make this filter ND.
 
-\see MorphologyImageFilter 
+\see MorphologyImageFilter
+
 \par Wiki Examples:
 
-\li All Examples 
+\li All Examples
 
 \li Skeletonize/thin an image
 

@@ -55,8 +55,11 @@
 #include <itkMetaImageIO.h>
 #include <itkNrrdImageIO.h>
 #include <itkPNGImageIO.h>
-#include <itkSCIFIOImageIO.h>
 #include <itkTIFFImageIO.h>
+#ifdef ITK_IMAGE_PROCESSING_HAVE_SCIFIO
+#include <itkSCIFIOImageIO.h>
+#endif
+
 
 class ITKImageProcessingReaderTest
 {
@@ -141,12 +144,14 @@ public:
     return image;
   }
 
+#ifdef ITK_IMAGE_PROCESSING_HAVE_SCIFIO
   itk::Dream3DImage<DefaultPixelType, 2>::Pointer WriteSCIFIOTestFile()
   {
     itk::SCIFIOImageIO::Pointer io = itk::SCIFIOImageIO::New();
 
     return WriteTestFile<DefaultPixelType, 2>(UnitTest::ITKImageProcessingReaderTest::SCIFIOInputTestFile, io.GetPointer());
   }
+#endif
 
   itk::Dream3DImage<PNGPixelType, 2>::Pointer WritePNGIOTestFile()
   {
@@ -354,15 +359,18 @@ public:
     DREAM3D_REGISTER_TEST(TestNoDataContainer());
     DREAM3D_REGISTER_TEST(TestBadFilename());
 
+    double zeroOrigin[2] = {0.0, 0.0};
+#ifdef ITK_IMAGE_PROCESSING_HAVE_SCIFIO
     // SCIFIO
     itk::Dream3DImage<DefaultPixelType, 2>::Pointer scifioImage = WriteSCIFIOTestFile();
     // SCIFIO doesn't seem to take spacing into consideration
     double scifioSpacing[2] = {1, 1};
     scifioImage->SetSpacing(scifioSpacing);
     // SCIFIO doesn't seem to take origin into consideration
-    double zeroOrigin[2] = {0.0, 0.0};
     scifioImage->SetOrigin(zeroOrigin);
     DREAM3D_REGISTER_TEST((TestCompareImage<DefaultPixelType, 2>(UnitTest::ITKImageProcessingReaderTest::SCIFIOInputTestFile, scifioImage)))
+#endif
+
     // PNGIO
     // PNG only supports 'unsigned char' and 'unsigned short' pixel types.
     itk::Dream3DImage<PNGPixelType, 2>::Pointer pngioImage = WritePNGIOTestFile();
@@ -409,5 +417,5 @@ public:
 
 private:
   ITKImageProcessingReaderTest(const ITKImageProcessingReaderTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKImageProcessingReaderTest&);               // Operator '=' Not Implemented
+  void operator=(const ITKImageProcessingReaderTest&);               // Move assignment Not Implemented
 };

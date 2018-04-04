@@ -15,18 +15,19 @@ convolution with the itk::LaplacianOperator .
 \par Inputs and Outputs
 The input to this filter is a scalar-valued itk::Image of arbitrary dimension. The output is a scalar-valued itk::Image .
 
-\see Image 
-\see 
-\see Neighborhood 
-\see 
-\see NeighborhoodOperator 
-\see 
-\see NeighborhoodIterator 
-\see 
-\see LaplacianOperator 
+\see Image
+
+\see Neighborhood
+
+\see NeighborhoodOperator
+
+\see NeighborhoodIterator
+
+\see LaplacianOperator
+
 \par Wiki Examples:
 
-\li All Examples 
+\li All Examples
 
 \li Sharpen an image
 

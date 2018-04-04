@@ -74,8 +74,8 @@
 // To remove the support of uint8, copy before including this header file:
 //   #define DREAM3D_USE_uint8_t 0
 
-#ifndef _Dream3DTemplateAliasMacro_h
-#define _Dream3DTemplateAliasMacro_h
+#ifndef _dream3DTemplateAliasMacro_h
+#define _dream3DTemplateAliasMacro_h
 
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include <QString>
@@ -345,10 +345,10 @@
 #define Dream3DArraySwitchMacroLongOutputType(call, path, errorCondition, typeOUT, isTypeOUT, typeOUTTypename)                                                                                         \
   {                                                                                                                                                                                                    \
     IDataArray::Pointer ptr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, path);                                                                            \
-    if(ptr.get() != nullptr)                                                                                                                                                                           \
+    if(nullptr != ptr)                                                                                                                                                                                 \
     {                                                                                                                                                                                                  \
       ImageGeom::Pointer imageGeometry = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, path.getDataContainerName());                                    \
-      if(imageGeometry.get() != nullptr)                                                                                                                                                               \
+      if(nullptr != imageGeometry)                                                                                                                                                                     \
       {                                                                                                                                                                                                \
         QVector<size_t> tDims(3, 0);                                                                                                                                                                   \
         std::tie(tDims[0], tDims[1], tDims[2]) = imageGeometry->getDimensions();                                                                                                                       \
@@ -432,5 +432,44 @@
     notifyErrorMessage(getHumanLabel(), "Unsupported pixel component", errorCondition);                                                                                                                \
     break;                                                                                                                                                                                             \
   }
+
+////////////////////////////////////////////////////////////////////////////////////////
+// Entry Point : Switch case to select output template type based on given data array //
+////////////////////////////////////////////////////////////////////////////////////////
+//
+// Given a data array, extract component type as a string, convert it a an integer
+// corresponding to an ITK ImageIO component type, and call
+// `Dream3DArraySwitchOutputComponentMacro()`
+//
+#define Dream3DArrayOutputComponentFromDataMacro(call, input2_path, input1_path, errorCondition) \
+  {                                                                                                                                                                                                    \
+    IDataArray::Pointer ptr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, input2_path);                                                                     \
+    if(ptr.get() != nullptr)                                                                                                                                                                           \
+    {                                                                                                                                                                                                  \
+      ImageGeom::Pointer imageGeometry = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, input2_path.getDataContainerName());                             \
+      if(imageGeometry.get() != nullptr)                                                                                                                                                               \
+      {                                                                                                                                                                                                \
+        QVector<size_t> tDims(3, 0);                                                                                                                                                                   \
+        imageGeometry->getDimensions(tDims[0], tDims[1], tDims[2]);                                                                                                                                    \
+        if(getErrorCondition() >= 0)                                                                                                                                                                   \
+        {                                                                                                                                                                                              \
+          QString str_type = ptr->getTypeAsString();                                                                                                                                                   \
+          itk::ImageIOBase::IOComponentType type = itk::ImageIOBase::GetComponentTypeFromString(str_type.toStdString()    );                                                                           \
+          Dream3DArraySwitchOutputComponentMacro(call, type, input1_path, errorCondition)                                                                                                              \
+        }                                                                                                                                                                                              \
+      }                                                                                                                                                                                                \
+      else                                                                                                                                                                                             \
+      {                                                                                                                                                                                                \
+        setErrorCondition(errorCondition);                                                                                                                                                             \
+        notifyErrorMessage(getHumanLabel(), "Geometry not found", getErrorCondition());                                                                                                                \
+      }                                                                                                                                                                                                \
+    }                                                                                                                                                                                                  \
+    else                                                                                                                                                                                               \
+    {                                                                                                                                                                                                  \
+      setErrorCondition(errorCondition);                                                                                                                                                               \
+      notifyErrorMessage(getHumanLabel(), "Array not found", getErrorCondition());                                                                                                                     \
+    }                                                                                                                                                                                                  \
+  }
+
 
 #endif // _Dream3DTemplateAliasMacro_h

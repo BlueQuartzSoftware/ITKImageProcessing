@@ -86,5 +86,5 @@ public:
 
 private:
   ITKMorphologicalGradientImageTest(const ITKMorphologicalGradientImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKMorphologicalGradientImageTest&);                    // Operator '=' Not Implemented
+  void operator=(const ITKMorphologicalGradientImageTest&);                    // Move assignment Not Implemented
 };

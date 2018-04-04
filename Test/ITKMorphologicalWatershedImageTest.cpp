@@ -9,6 +9,7 @@
 #include <SIMPLib/FilterParameters/BooleanFilterParameter.h>
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 
+
 class ITKMorphologicalWatershedImageTest : public ITKTestBase
 {
 
@@ -21,7 +22,7 @@ public:
   }
 
   int TestITKMorphologicalWatershedImagedefaultsTest()
-  {
+{
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/cthead1-grad-mag.nrrd");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -48,10 +49,10 @@ public:
     GetMD5FromDataContainer(containerArray, input_path, md5Output);
     DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("406079d7904d4e9ab0b5f29f7a3a1ea8"));
     return 0;
-  }
+}
 
-  int TestITKMorphologicalWatershedImagelevel_1Test()
-  {
+int TestITKMorphologicalWatershedImagelevel_1Test()
+{
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/cthead1-grad-mag.nrrd");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -70,18 +71,18 @@ public:
     propWasSet = filter->setProperty("SaveAsNewArray", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     {
-      double d3d_var;
-      d3d_var = 1.0;
-      var.setValue(d3d_var);
-      propWasSet = filter->setProperty("Level", var);
-      DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+        double d3d_var;
+        d3d_var = 1.0;
+        var.setValue(d3d_var);
+        propWasSet = filter->setProperty("Level", var);
+        DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     }
     {
-      bool d3d_var;
-      d3d_var = false;
-      var.setValue(d3d_var);
-      propWasSet = filter->setProperty("MarkWatershedLine", var);
-      DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+        bool d3d_var;
+        d3d_var = false;
+        var.setValue(d3d_var);
+        propWasSet = filter->setProperty("MarkWatershedLine", var);
+        DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     }
     filter->setDataContainerArray(containerArray);
     filter->execute();
@@ -92,7 +93,9 @@ public:
     GetMD5FromDataContainer(containerArray, input_path, md5Output);
     DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("a204ce7cf8ec4e7bc6538f0515a8910e"));
     return 0;
-  }
+}
+
+
 
   // -----------------------------------------------------------------------------
   //
@@ -103,8 +106,8 @@ public:
 
     DREAM3D_REGISTER_TEST(this->TestFilterAvailability("ITKMorphologicalWatershedImage"));
 
-    DREAM3D_REGISTER_TEST(TestITKMorphologicalWatershedImagedefaultsTest());
-    DREAM3D_REGISTER_TEST(TestITKMorphologicalWatershedImagelevel_1Test());
+    DREAM3D_REGISTER_TEST( TestITKMorphologicalWatershedImagedefaultsTest());
+    DREAM3D_REGISTER_TEST( TestITKMorphologicalWatershedImagelevel_1Test());
 
     if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
     {
@@ -114,5 +117,5 @@ public:
 
 private:
   ITKMorphologicalWatershedImageTest(const ITKMorphologicalWatershedImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKMorphologicalWatershedImageTest&);                     // Operator '=' Not Implemented
+  void operator=(const ITKMorphologicalWatershedImageTest&);                     // Move assignment Not Implemented
 };

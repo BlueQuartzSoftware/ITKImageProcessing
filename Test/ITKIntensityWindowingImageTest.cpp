@@ -8,6 +8,7 @@
 // Auto includes
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 
+
 class ITKIntensityWindowingImageTest : public ITKTestBase
 {
 
@@ -20,7 +21,7 @@ public:
   }
 
   int TestITKIntensityWindowingImage2dTest()
-  {
+{
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/STAPLE1.png");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -47,10 +48,10 @@ public:
     GetMD5FromDataContainer(containerArray, input_path, md5Output);
     DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("095f00a68a84df4396914fa758f34dcc"));
     return 0;
-  }
+}
 
-  int TestITKIntensityWindowingImage3dFloatTest()
-  {
+int TestITKIntensityWindowingImage3dFloatTest()
+{
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/RA-Float.nrrd");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -77,10 +78,10 @@ public:
     GetMD5FromDataContainer(containerArray, input_path, md5Output);
     DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("199c966fabac791c758766e14df9974c"));
     return 0;
-  }
+}
 
-  int TestITKIntensityWindowingImage3dShortTest()
-  {
+int TestITKIntensityWindowingImage3dShortTest()
+{
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/RA-Short.nrrd");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -107,7 +108,9 @@ public:
     GetMD5FromDataContainer(containerArray, input_path, md5Output);
     DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("2790c2bdfeb8610821e9ec8751f95516"));
     return 0;
-  }
+}
+
+
 
   // -----------------------------------------------------------------------------
   //
@@ -118,9 +121,9 @@ public:
 
     DREAM3D_REGISTER_TEST(this->TestFilterAvailability("ITKIntensityWindowingImage"));
 
-    DREAM3D_REGISTER_TEST(TestITKIntensityWindowingImage2dTest());
-    DREAM3D_REGISTER_TEST(TestITKIntensityWindowingImage3dFloatTest());
-    DREAM3D_REGISTER_TEST(TestITKIntensityWindowingImage3dShortTest());
+    DREAM3D_REGISTER_TEST( TestITKIntensityWindowingImage2dTest());
+    DREAM3D_REGISTER_TEST( TestITKIntensityWindowingImage3dFloatTest());
+    DREAM3D_REGISTER_TEST( TestITKIntensityWindowingImage3dShortTest());
 
     if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
     {
@@ -130,5 +133,5 @@ public:
 
 private:
   ITKIntensityWindowingImageTest(const ITKIntensityWindowingImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKIntensityWindowingImageTest&);                 // Operator '=' Not Implemented
+  void operator=(const ITKIntensityWindowingImageTest&);                 // Move assignment Not Implemented
 };

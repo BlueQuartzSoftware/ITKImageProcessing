@@ -23,7 +23,6 @@
 //
 // -----------------------------------------------------------------------------
 ITKPatchBasedDenoisingImage::ITKPatchBasedDenoisingImage()
-: ITKImageBase()
 {
   m_KernelBandwidthSigma = StaticCastScalar<double, double, double>(400.0);
   m_PatchRadius = StaticCastScalar<double, double, double>(4u);
@@ -38,7 +37,6 @@ ITKPatchBasedDenoisingImage::ITKPatchBasedDenoisingImage()
   m_KernelBandwidthUpdateFrequency = StaticCastScalar<double, double, double>(3u);
   m_KernelBandwidthFractionPixelsForEstimation = StaticCastScalar<double, double, double>(0.2);
   m_NoiseModel = 0; //  NOMODEL
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -136,7 +134,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
 
   setErrorCondition(0);
   setWarningCondition(0);
-  ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
+  ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
@@ -189,7 +187,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   NoiseModelType noiseModel = static_cast<NoiseModelType>(m_NoiseModel);
   filter->SetNoiseModel(noiseModel);
 
-  this->ITKImageBase::filterCastToFloat<InputPixelType, OutputPixelType, Dimension, FilterType, RealImageType>(filter);
+  this->ITKImageProcessingBase::filterCastToFloat<InputPixelType, OutputPixelType, Dimension, FilterType, RealImageType>(filter);
 }
 
 // -----------------------------------------------------------------------------

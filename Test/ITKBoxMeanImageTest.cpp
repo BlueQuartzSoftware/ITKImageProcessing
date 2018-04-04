@@ -8,6 +8,7 @@
 // Auto includes
 #include <SIMPLib/FilterParameters/FloatVec3FilterParameter.h>
 
+
 class ITKBoxMeanImageTest : public ITKTestBase
 {
 
@@ -20,7 +21,7 @@ public:
   }
 
   int TestITKBoxMeanImagedefaultsTest()
-  {
+{
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/VM1111Shrink-RGBFloat.nrrd");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -47,10 +48,10 @@ public:
     GetMD5FromDataContainer(containerArray, input_path, md5Output);
     DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("dc71425a437766b9566cb13bd4139a91"));
     return 0;
-  }
+}
 
-  int TestITKBoxMeanImageby23Test()
-  {
+int TestITKBoxMeanImageby23Test()
+{
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/VM1111Shrink-RGB.png");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -69,13 +70,13 @@ public:
     propWasSet = filter->setProperty("SaveAsNewArray", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     {
-      FloatVec3_t d3d_var;
-      d3d_var.y = 3;
-      d3d_var.x = 2;
-      d3d_var.z = 0; // should not be taken into account. Dim <
-      var.setValue(d3d_var);
-      propWasSet = filter->setProperty("Radius", var);
-      DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+        FloatVec3_t d3d_var;
+        d3d_var.y = 3;
+        d3d_var.x = 2;
+        d3d_var.z = 0; // should not be taken into account. Dim <
+        var.setValue(d3d_var);
+        propWasSet = filter->setProperty("Radius", var);
+        DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     }
     filter->setDataContainerArray(containerArray);
     filter->execute();
@@ -86,10 +87,10 @@ public:
     GetMD5FromDataContainer(containerArray, input_path, md5Output);
     DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("23c2a0d1f7816366aa55b90c0b86f6e6"));
     return 0;
-  }
+}
 
-  int TestITKBoxMeanImageby333Test()
-  {
+int TestITKBoxMeanImageby333Test()
+{
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/RA-Short.nrrd");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -108,13 +109,13 @@ public:
     propWasSet = filter->setProperty("SaveAsNewArray", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     {
-      FloatVec3_t d3d_var;
-      d3d_var.y = 3;
-      d3d_var.x = 3;
-      d3d_var.z = 3;
-      var.setValue(d3d_var);
-      propWasSet = filter->setProperty("Radius", var);
-      DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+        FloatVec3_t d3d_var;
+        d3d_var.y = 3;
+        d3d_var.x = 3;
+        d3d_var.z = 3;
+        var.setValue(d3d_var);
+        propWasSet = filter->setProperty("Radius", var);
+        DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     }
     filter->setDataContainerArray(containerArray);
     filter->execute();
@@ -125,7 +126,9 @@ public:
     GetMD5FromDataContainer(containerArray, input_path, md5Output);
     DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("c6a8c4774f59ac92eefcaea18bd0f514"));
     return 0;
-  }
+}
+
+
 
   // -----------------------------------------------------------------------------
   //
@@ -136,9 +139,9 @@ public:
 
     DREAM3D_REGISTER_TEST(this->TestFilterAvailability("ITKBoxMeanImage"));
 
-    DREAM3D_REGISTER_TEST(TestITKBoxMeanImagedefaultsTest());
-    DREAM3D_REGISTER_TEST(TestITKBoxMeanImageby23Test());
-    DREAM3D_REGISTER_TEST(TestITKBoxMeanImageby333Test());
+    DREAM3D_REGISTER_TEST( TestITKBoxMeanImagedefaultsTest());
+    DREAM3D_REGISTER_TEST( TestITKBoxMeanImageby23Test());
+    DREAM3D_REGISTER_TEST( TestITKBoxMeanImageby333Test());
 
     if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
     {
@@ -148,5 +151,5 @@ public:
 
 private:
   ITKBoxMeanImageTest(const ITKBoxMeanImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKBoxMeanImageTest&);      // Operator '=' Not Implemented
+  void operator=(const ITKBoxMeanImageTest&);  // Operator '=' Not Implemented
 };

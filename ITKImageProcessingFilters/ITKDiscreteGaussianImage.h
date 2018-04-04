@@ -12,7 +12,7 @@
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
-#include "ITKImageBase.h"
+#include "ITKImageProcessingBase.h"
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
@@ -20,12 +20,14 @@
 // Auto includes
 #include <SIMPLib/FilterParameters/BooleanFilterParameter.h>
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
+#include <SIMPLib/FilterParameters/FloatVec3FilterParameter.h>
 #include <itkDiscreteGaussianImageFilter.h>
+
 
 /**
  * @brief The ITKDiscreteGaussianImage class. See [Filter documentation](@ref ITKDiscreteGaussianImage) for details.
  */
-class ITKDiscreteGaussianImage : public ITKImageBase
+class ITKDiscreteGaussianImage : public ITKImageProcessingBase
 {
   Q_OBJECT
 
@@ -36,48 +38,49 @@ public:
 
   virtual ~ITKDiscreteGaussianImage();
 
-  SIMPL_FILTER_PARAMETER(double, Variance)
-  Q_PROPERTY(double Variance READ getVariance WRITE setVariance)
+  SIMPL_FILTER_PARAMETER(FloatVec3_t, Variance)
+  Q_PROPERTY(FloatVec3_t Variance READ getVariance WRITE setVariance)
 
   SIMPL_FILTER_PARAMETER(double, MaximumKernelWidth)
   Q_PROPERTY(double MaximumKernelWidth READ getMaximumKernelWidth WRITE setMaximumKernelWidth)
 
-  SIMPL_FILTER_PARAMETER(double, MaximumError)
-  Q_PROPERTY(double MaximumError READ getMaximumError WRITE setMaximumError)
+  SIMPL_FILTER_PARAMETER(FloatVec3_t, MaximumError)
+  Q_PROPERTY(FloatVec3_t MaximumError READ getMaximumError WRITE setMaximumError)
 
   SIMPL_FILTER_PARAMETER(bool, UseImageSpacing)
   Q_PROPERTY(bool UseImageSpacing READ getUseImageSpacing WRITE setUseImageSpacing)
 
+
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
    */
-  virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) const override;
+  AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  virtual const QString getHumanLabel() const override;
+  const QString getHumanLabel() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  virtual const QString getSubGroupName() const override;
+  const QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  virtual const QUuid getUuid() override;
+  const QUuid getUuid() override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
    */
-  virtual void setupFilterParameters() override;
+  void setupFilterParameters() override;
 
   /**
    * @brief readFilterParameters Reimplemented from @see AbstractFilter class
    */
-  virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
+  void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
 
 protected:
   ITKDiscreteGaussianImage();
@@ -103,8 +106,8 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKDiscreteGaussianImage(const ITKDiscreteGaussianImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKDiscreteGaussianImage&);           // Operator '=' Not Implemented
+  ITKDiscreteGaussianImage(const ITKDiscreteGaussianImage&) = delete;    // Copy Constructor Not Implemented
+  void operator=(const ITKDiscreteGaussianImage&) = delete;              // Move assignment Not Implemented
 };
 
 #ifdef __clang__

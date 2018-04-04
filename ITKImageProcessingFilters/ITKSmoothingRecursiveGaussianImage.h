@@ -12,66 +12,68 @@
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
-#include "ITKImageBase.h"
+#include "ITKImageProcessingBase.h"
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
 
 // Auto includes
 #include <SIMPLib/FilterParameters/BooleanFilterParameter.h>
-#include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
+#include <SIMPLib/FilterParameters/FloatVec3FilterParameter.h>
 #include <itkSmoothingRecursiveGaussianImageFilter.h>
+
 
 /**
  * @brief The ITKSmoothingRecursiveGaussianImage class. See [Filter documentation](@ref ITKSmoothingRecursiveGaussianImage) for details.
  */
-class ITKSmoothingRecursiveGaussianImage : public ITKImageBase
+class ITKSmoothingRecursiveGaussianImage : public ITKImageProcessingBase
 {
   Q_OBJECT
 
 public:
   SIMPL_SHARED_POINTERS(ITKSmoothingRecursiveGaussianImage)
-  SIMPL_STATIC_NEW_MACRO(ITKSmoothingRecursiveGaussianImage)
-   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKSmoothingRecursiveGaussianImage, AbstractFilter)
+  SIMPL_FILTER_NEW_MACRO(ITKSmoothingRecursiveGaussianImage)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKSmoothingRecursiveGaussianImage, AbstractFilter)
 
   virtual ~ITKSmoothingRecursiveGaussianImage();
 
-  SIMPL_FILTER_PARAMETER(double, Sigma)
-  Q_PROPERTY(double Sigma READ getSigma WRITE setSigma)
+  SIMPL_FILTER_PARAMETER(FloatVec3_t, Sigma)
+  Q_PROPERTY(FloatVec3_t Sigma READ getSigma WRITE setSigma)
 
   SIMPL_FILTER_PARAMETER(bool, NormalizeAcrossScale)
   Q_PROPERTY(bool NormalizeAcrossScale READ getNormalizeAcrossScale WRITE setNormalizeAcrossScale)
 
+
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
    */
-  virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) const override;
+  AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  virtual const QString getHumanLabel() const override;
+  const QString getHumanLabel() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  virtual const QString getSubGroupName() const override;
+  const QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  virtual const QUuid getUuid() override;
+  const QUuid getUuid() override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
    */
-  virtual void setupFilterParameters() override;
+  void setupFilterParameters() override;
 
   /**
    * @brief readFilterParameters Reimplemented from @see AbstractFilter class
    */
-  virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
+  void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
 
 protected:
   ITKSmoothingRecursiveGaussianImage();
@@ -97,8 +99,8 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKSmoothingRecursiveGaussianImage(const ITKSmoothingRecursiveGaussianImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKSmoothingRecursiveGaussianImage&);                     // Operator '=' Not Implemented
+  ITKSmoothingRecursiveGaussianImage(const ITKSmoothingRecursiveGaussianImage&) = delete;    // Copy Constructor Not Implemented
+  void operator=(const ITKSmoothingRecursiveGaussianImage&) = delete;                        // Move assignment Not Implemented
 };
 
 #ifdef __clang__

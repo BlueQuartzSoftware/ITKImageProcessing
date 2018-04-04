@@ -149,5 +149,5 @@ public:
 
 private:
   ITKBinaryDilateImageTest(const ITKBinaryDilateImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKBinaryDilateImageTest&);           // Operator '=' Not Implemented
+  void operator=(const ITKBinaryDilateImageTest&);           // Move assignment Not Implemented
 };

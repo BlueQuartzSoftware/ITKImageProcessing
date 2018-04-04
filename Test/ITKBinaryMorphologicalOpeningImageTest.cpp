@@ -94,5 +94,5 @@ public:
 
 private:
   ITKBinaryMorphologicalOpeningImageTest(const ITKBinaryMorphologicalOpeningImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKBinaryMorphologicalOpeningImageTest&);                         // Operator '=' Not Implemented
+  void operator=(const ITKBinaryMorphologicalOpeningImageTest&);                         // Move assignment Not Implemented
 };

@@ -4,7 +4,8 @@
  * Your License or Copyright can go here
  */
 
-#include "ITKVectorConnectedComponentImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/ITKVectorConnectedComponentImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/SimpleITKEnums.h"
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -28,19 +29,19 @@
 
 #define DREAM3D_USE_Scalar 0
 #define DREAM3D_USE_Vector 1
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
+
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 ITKVectorConnectedComponentImage::ITKVectorConnectedComponentImage()
-: ITKImageBase()
 {
   m_DistanceThreshold = StaticCastScalar<double, double, double>(1.0);
   m_FullyConnected = StaticCastScalar<bool, bool, bool>(false);
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -57,6 +58,7 @@ void ITKVectorConnectedComponentImage::setupFilterParameters()
 
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("DistanceThreshold", DistanceThreshold, FilterParameter::Parameter, ITKVectorConnectedComponentImage));
   parameters.push_back(SIMPL_NEW_BOOL_FP("FullyConnected", FullyConnected, FilterParameter::Parameter, ITKVectorConnectedComponentImage));
+
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -93,15 +95,17 @@ void ITKVectorConnectedComponentImage::readFilterParameters(AbstractFilterParame
 // -----------------------------------------------------------------------------
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKVectorConnectedComponentImage::dataCheck()
 {
+  setErrorCondition(0);
+  setWarningCondition(0);
+
   // Check consistency of parameters
   QVector<QString> supportedTypes;
   // All integer types
   supportedTypes << "float"
                  << "double";
   checkImageType(supportedTypes, getSelectedCellArrayPath());
-  setErrorCondition(0);
-  setWarningCondition(0);
-  ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
+
+  ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
@@ -121,11 +125,12 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   typedef itk::Dream3DImage<InputPixelType, Dimension> InputImageType;
   typedef itk::Dream3DImage<OutputPixelType, Dimension> OutputImageType;
   // define filter
-  typedef itk::VectorConnectedComponentImageFilter<InputImageType, OutputImageType, itk::Dream3DImage<uint8_t, InputImageType::ImageDimension>> FilterType;
+  typedef itk::VectorConnectedComponentImageFilter<InputImageType, OutputImageType, itk::Image<uint8_t, InputImageType::ImageDimension> > FilterType;
   typename FilterType::Pointer filter = FilterType::New();
-  filter->SetDistanceThreshold(static_cast<typename FilterType::InputValueType>(this->m_DistanceThreshold));
+  filter->SetDistanceThreshold( static_cast<typename FilterType::InputValueType>( this->m_DistanceThreshold ) );
   filter->SetFullyConnected(static_cast<bool>(m_FullyConnected));
-  this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+  this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+
 }
 
 // -----------------------------------------------------------------------------
@@ -170,5 +175,5 @@ const QUuid ITKVectorConnectedComponentImage::getUuid()
 // -----------------------------------------------------------------------------
 const QString ITKVectorConnectedComponentImage::getSubGroupName() const
 {
-  return "ITK Segmentation";
+  return "ITK SegmentationPostProcessing";
 }

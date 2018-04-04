@@ -4,7 +4,8 @@
  * Your License or Copyright can go here
  */
 
-#include "ITKHMaximaImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/ITKHMaximaImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/SimpleITKEnums.h"
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -18,15 +19,14 @@
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 ITKHMaximaImage::ITKHMaximaImage()
-: ITKImageBase()
 {
   m_Height = StaticCastScalar<double, double, double>(2.0);
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -42,6 +42,7 @@ void ITKHMaximaImage::setupFilterParameters()
   FilterParameterVector parameters;
 
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Height", Height, FilterParameter::Parameter, ITKHMaximaImage));
+
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -77,11 +78,12 @@ void ITKHMaximaImage::readFilterParameters(AbstractFilterParametersReader* reade
 // -----------------------------------------------------------------------------
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKHMaximaImage::dataCheck()
 {
-  // Check consistency of parameters
-
   setErrorCondition(0);
   setWarningCondition(0);
-  ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
+
+  // Check consistency of parameters
+
+  ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
@@ -104,7 +106,8 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   typedef itk::HMaximaImageFilter<InputImageType, OutputImageType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
   filter->SetHeight(static_cast<double>(m_Height));
-  this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+  this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+
 }
 
 // -----------------------------------------------------------------------------
@@ -149,5 +152,5 @@ const QUuid ITKHMaximaImage::getUuid()
 // -----------------------------------------------------------------------------
 const QString ITKHMaximaImage::getSubGroupName() const
 {
-  return "ITK MathematicalMorphology";
+  return "ITK BiasCorrection";
 }

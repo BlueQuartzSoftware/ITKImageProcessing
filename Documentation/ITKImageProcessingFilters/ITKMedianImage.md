@@ -15,18 +15,19 @@ A median filter is one of the family of nonlinear filters. It is used to smooth 
 
 This filter requires that the input pixel type provides an operator<() (LessThan Comparable).
 
-\see Image 
-\see 
-\see Neighborhood 
-\see 
-\see NeighborhoodOperator 
-\see 
-\see NeighborhoodIterator 
+\see Image
+
+\see Neighborhood
+
+\see NeighborhoodOperator
+
+\see NeighborhoodIterator
+
 \par Wiki Examples:
 
-\li All Examples 
+\li All Examples
 
-\li Median filter an image 
+\li Median filter an image
 
 \li Median filter an RGB image
 

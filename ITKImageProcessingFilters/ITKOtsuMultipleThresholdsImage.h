@@ -12,7 +12,7 @@
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
-#include "ITKImageBase.h"
+#include "ITKImageProcessingBase.h"
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
@@ -20,20 +20,22 @@
 // Auto includes
 #include <SIMPLib/FilterParameters/BooleanFilterParameter.h>
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
+#include <SIMPLib/FilterParameters/FloatVec3FilterParameter.h>
 #include <SIMPLib/FilterParameters/IntFilterParameter.h>
 #include <itkOtsuMultipleThresholdsImageFilter.h>
+
 
 /**
  * @brief The ITKOtsuMultipleThresholdsImage class. See [Filter documentation](@ref ITKOtsuMultipleThresholdsImage) for details.
  */
-class ITKOtsuMultipleThresholdsImage : public ITKImageBase
+class ITKOtsuMultipleThresholdsImage : public ITKImageProcessingBase
 {
   Q_OBJECT
 
 public:
   SIMPL_SHARED_POINTERS(ITKOtsuMultipleThresholdsImage)
-  SIMPL_STATIC_NEW_MACRO(ITKOtsuMultipleThresholdsImage)
-   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKOtsuMultipleThresholdsImage, AbstractFilter)
+  SIMPL_FILTER_NEW_MACRO(ITKOtsuMultipleThresholdsImage)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKOtsuMultipleThresholdsImage, AbstractFilter)
 
   virtual ~ITKOtsuMultipleThresholdsImage();
 
@@ -49,36 +51,40 @@ public:
   SIMPL_FILTER_PARAMETER(bool, ValleyEmphasis)
   Q_PROPERTY(bool ValleyEmphasis READ getValleyEmphasis WRITE setValleyEmphasis)
 
+  SIMPL_FILTER_PARAMETER(FloatVec3_t, Thresholds)
+  Q_PROPERTY(FloatVec3_t Thresholds READ getThresholds)
+
+
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
    */
-  virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) const override;
+  AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  virtual const QString getHumanLabel() const override;
+  const QString getHumanLabel() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  virtual const QString getSubGroupName() const override;
+  const QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  virtual const QUuid getUuid() override;
+  const QUuid getUuid() override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
    */
-  virtual void setupFilterParameters() override;
+  void setupFilterParameters() override;
 
   /**
    * @brief readFilterParameters Reimplemented from @see AbstractFilter class
    */
-  virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
+  void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
 
 protected:
   ITKOtsuMultipleThresholdsImage();
@@ -104,8 +110,8 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKOtsuMultipleThresholdsImage(const ITKOtsuMultipleThresholdsImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKOtsuMultipleThresholdsImage&);                 // Operator '=' Not Implemented
+  ITKOtsuMultipleThresholdsImage(const ITKOtsuMultipleThresholdsImage&) = delete;    // Copy Constructor Not Implemented
+  void operator=(const ITKOtsuMultipleThresholdsImage&) = delete;                    // Move assignment Not Implemented
 };
 
 #ifdef __clang__

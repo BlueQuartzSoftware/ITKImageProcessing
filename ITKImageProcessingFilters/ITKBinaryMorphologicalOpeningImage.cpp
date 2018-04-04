@@ -4,7 +4,7 @@
  * Your License or Copyright can go here
  */
 
-#include "ITKBinaryMorphologicalOpeningImage.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/ITKBinaryMorphologicalOpeningImage.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/SimpleITKEnums.h"
 
 #include "SIMPLib/Common/Constants.h"
@@ -21,18 +21,17 @@
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 #include <itkFlatStructuringElement.h>
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 ITKBinaryMorphologicalOpeningImage::ITKBinaryMorphologicalOpeningImage()
-: ITKImageBase()
 {
   m_BackgroundValue = StaticCastScalar<double, double, double>(0.0);
   m_ForegroundValue = StaticCastScalar<double, double, double>(1.0);
   m_KernelRadius = CastStdToVec3<std::vector<unsigned int>, FloatVec3_t, float>(std::vector<unsigned int>(3, 1));
   m_KernelType = StaticCastScalar<int, int, int>(itk::simple::sitkBall);
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -68,6 +67,7 @@ void ITKBinaryMorphologicalOpeningImage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("BackgroundValue", BackgroundValue, FilterParameter::Parameter, ITKBinaryMorphologicalOpeningImage));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("ForegroundValue", ForegroundValue, FilterParameter::Parameter, ITKBinaryMorphologicalOpeningImage));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("KernelRadius", KernelRadius, FilterParameter::Parameter, ITKBinaryMorphologicalOpeningImage));
+
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -108,6 +108,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
 {
   setErrorCondition(0);
   setWarningCondition(0);
+
   // Check consistency of parameters
   this->CheckVectorEntry<unsigned int, FloatVec3_t>(m_KernelRadius, "KernelRadius", 1);
   QVector<QString> supportedTypes;
@@ -121,7 +122,8 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
                  << "uint64_t"
                  << "int64_t";
   checkImageType(supportedTypes, getSelectedCellArrayPath());
-  ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
+
+  ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
@@ -169,7 +171,8 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   filter->SetBackgroundValue(static_cast<double>(m_BackgroundValue));
   filter->SetForegroundValue(static_cast<double>(m_ForegroundValue));
   filter->SetKernel(structuringElement);
-  this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+  this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+
 }
 
 // -----------------------------------------------------------------------------

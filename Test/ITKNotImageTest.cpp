@@ -7,6 +7,7 @@
 #include "ITKTestBase.h"
 // Auto includes
 
+
 class ITKNotImageTest : public ITKTestBase
 {
 
@@ -19,7 +20,7 @@ public:
   }
 
   int TestITKNotImagedefaultsTest()
-  {
+{
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/STAPLE1.png");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -46,7 +47,9 @@ public:
     GetMD5FromDataContainer(containerArray, input_path, md5Output);
     DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("2004dccdb2d68b953fd858a5b6a37d35"));
     return 0;
-  }
+}
+
+
 
   // -----------------------------------------------------------------------------
   //
@@ -57,7 +60,7 @@ public:
 
     DREAM3D_REGISTER_TEST(this->TestFilterAvailability("ITKNotImage"));
 
-    DREAM3D_REGISTER_TEST(TestITKNotImagedefaultsTest());
+    DREAM3D_REGISTER_TEST( TestITKNotImagedefaultsTest());
 
     if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
     {
@@ -67,5 +70,5 @@ public:
 
 private:
   ITKNotImageTest(const ITKNotImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKNotImageTest&);  // Operator '=' Not Implemented
+  void operator=(const ITKNotImageTest&);  // Move assignment Not Implemented
 };

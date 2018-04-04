@@ -4,7 +4,8 @@
  * Your License or Copyright can go here
  */
 
-#include "ITKLog10Image.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/ITKLog10Image.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/SimpleITKEnums.h"
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -18,14 +19,13 @@
 #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 ITKLog10Image::ITKLog10Image()
-: ITKImageBase()
 {
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -39,6 +39,8 @@ ITKLog10Image::~ITKLog10Image() = default;
 void ITKLog10Image::setupFilterParameters()
 {
   FilterParameterVector parameters;
+
+
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -73,11 +75,12 @@ void ITKLog10Image::readFilterParameters(AbstractFilterParametersReader* reader,
 // -----------------------------------------------------------------------------
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKLog10Image::dataCheck()
 {
-  // Check consistency of parameters
-
   setErrorCondition(0);
   setWarningCondition(0);
-  ITKImageBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
+
+  // Check consistency of parameters
+
+  ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
@@ -99,7 +102,8 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   // define filter
   typedef itk::Log10ImageFilter<InputImageType, OutputImageType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
-  this->ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+  this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
+
 }
 
 // -----------------------------------------------------------------------------

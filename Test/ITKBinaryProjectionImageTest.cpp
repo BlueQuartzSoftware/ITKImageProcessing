@@ -8,6 +8,7 @@
 // Auto includes
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 
+
 class ITKBinaryProjectionImageTest : public ITKTestBase
 {
 
@@ -20,7 +21,7 @@ public:
   }
 
   int TestITKBinaryProjectionImagedefaultsTest()
-  {
+{
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/2th_cthead1.mha");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -47,10 +48,10 @@ public:
     GetMD5FromDataContainer(containerArray, input_path, md5Output);
     DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("3fc3603b27bf51df592190227d6cd6ed"));
     return 0;
-  }
+}
 
-  int TestITKBinaryProjectionImageanother_dimensionTest()
-  {
+int TestITKBinaryProjectionImageanother_dimensionTest()
+{
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/WhiteDots.png");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -69,18 +70,18 @@ public:
     propWasSet = filter->setProperty("SaveAsNewArray", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     {
-      double d3d_var;
-      d3d_var = 1;
-      var.setValue(d3d_var);
-      propWasSet = filter->setProperty("ProjectionDimension", var);
-      DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+        double d3d_var;
+        d3d_var = 1;
+        var.setValue(d3d_var);
+        propWasSet = filter->setProperty("ProjectionDimension", var);
+        DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     }
     {
-      double d3d_var;
-      d3d_var = 255;
-      var.setValue(d3d_var);
-      propWasSet = filter->setProperty("ForegroundValue", var);
-      DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+        double d3d_var;
+        d3d_var = 255;
+        var.setValue(d3d_var);
+        propWasSet = filter->setProperty("ForegroundValue", var);
+        DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     }
     filter->setDataContainerArray(containerArray);
     filter->execute();
@@ -91,7 +92,9 @@ public:
     GetMD5FromDataContainer(containerArray, input_path, md5Output);
     DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("827f263ef9fb63d05499d14fcef32f60"));
     return 0;
-  }
+}
+
+
 
   // -----------------------------------------------------------------------------
   //
@@ -102,8 +105,8 @@ public:
 
     DREAM3D_REGISTER_TEST(this->TestFilterAvailability("ITKBinaryProjectionImage"));
 
-    DREAM3D_REGISTER_TEST(TestITKBinaryProjectionImagedefaultsTest());
-    DREAM3D_REGISTER_TEST(TestITKBinaryProjectionImageanother_dimensionTest());
+    DREAM3D_REGISTER_TEST( TestITKBinaryProjectionImagedefaultsTest());
+    DREAM3D_REGISTER_TEST( TestITKBinaryProjectionImageanother_dimensionTest());
 
     if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
     {
@@ -113,5 +116,5 @@ public:
 
 private:
   ITKBinaryProjectionImageTest(const ITKBinaryProjectionImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKBinaryProjectionImageTest&);               // Operator '=' Not Implemented
+  void operator=(const ITKBinaryProjectionImageTest&);               // Move assignment Not Implemented
 };
