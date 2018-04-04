@@ -74,7 +74,7 @@ class ZeissTagsXmlSection
     MetaDataType m_MetaDataMap;
 
     ZeissTagsXmlSection(const ZeissTagsXmlSection&) = delete; // Copy Constructor Not Implemented
-    void operator=(const ZeissTagsXmlSection&) = delete;      // Operator '=' Not Implemented
+    void operator=(const ZeissTagsXmlSection&) = delete;      // Move assignment Not Implemented
 };
 
 #endif /* ZEISSTAGSXMLSECTION_H_ */

@@ -63,8 +63,7 @@ class ZeissTagMapping
 
 
     ZeissTagMapping(const ZeissTagMapping&);    // Copy Constructor Not Implemented
-    void operator=(const ZeissTagMapping&);  // Operator '=' Not Implemented
-
+    void operator=(const ZeissTagMapping&);     // Move assignment Not Implemented
 };
 
 

@@ -76,7 +76,7 @@ class AbstractZeissMetaData
 
   private:
     AbstractZeissMetaData(const AbstractZeissMetaData&);    // Copy Constructor Not Implemented
-    void operator=(const AbstractZeissMetaData&);  // Operator '=' Not Implemented
+    void operator=(const AbstractZeissMetaData&);           // Move assignment Not Implemented
 };
 
 // -----------------------------------------------------------------------------
@@ -122,7 +122,7 @@ class Int32ZeissMetaEntry : public AbstractZeissMetaData
     int _value;
 
     Int32ZeissMetaEntry(const Int32ZeissMetaEntry&);    // Copy Constructor Not Implemented
-    void operator=(const Int32ZeissMetaEntry&);  // Operator '=' Not Implemented
+    void operator=(const Int32ZeissMetaEntry&);         // Move assignment Not Implemented
 };
 
 // -----------------------------------------------------------------------------
@@ -162,7 +162,7 @@ class Int64ZeissMetaEntry : public AbstractZeissMetaData
     long long int _value;
 
     Int64ZeissMetaEntry(const Int64ZeissMetaEntry&);    // Copy Constructor Not Implemented
-    void operator=(const Int64ZeissMetaEntry&);  // Operator '=' Not Implemented
+    void operator=(const Int64ZeissMetaEntry&);         // Move assignment Not Implemented
 };
 
 // -----------------------------------------------------------------------------
@@ -220,7 +220,7 @@ class FloatZeissMetaEntry : public AbstractZeissMetaData
     float _value;
 
     FloatZeissMetaEntry(const FloatZeissMetaEntry&);    // Copy Constructor Not Implemented
-    void operator=(const FloatZeissMetaEntry&);  // Operator '=' Not Implemented
+    void operator=(const FloatZeissMetaEntry&);         // Move assignment Not Implemented
 };
 
 // -----------------------------------------------------------------------------
@@ -274,7 +274,7 @@ class StringZeissMetaEntry : public AbstractZeissMetaData
     QString _value;
 
     StringZeissMetaEntry(const StringZeissMetaEntry&);    // Copy Constructor Not Implemented
-      void operator=(const StringZeissMetaEntry&);  // Operator '=' Not Implemented
+    void operator=(const StringZeissMetaEntry&);          // Move assignment Not Implemented
 };
 
 
