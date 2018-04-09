@@ -28,6 +28,8 @@
 class ITKMaximumProjectionImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+  PYB11_CREATE_BINDINGS(ITKMaximumProjectionImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_PROPERTY(double ProjectionDimension READ getProjectionDimension WRITE setProjectionDimension)
 
 public:
   SIMPL_SHARED_POINTERS(ITKMaximumProjectionImage)

@@ -28,6 +28,8 @@
 class ITKMedianProjectionImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+  PYB11_CREATE_BINDINGS(ITKMedianProjectionImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_PROPERTY(double ProjectionDimension READ getProjectionDimension WRITE setProjectionDimension)
 
 public:
   SIMPL_SHARED_POINTERS(ITKMedianProjectionImage)

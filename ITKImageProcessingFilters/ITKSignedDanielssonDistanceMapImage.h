@@ -28,6 +28,10 @@
 class ITKSignedDanielssonDistanceMapImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+  PYB11_CREATE_BINDINGS(ITKSignedDanielssonDistanceMapImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_PROPERTY(bool InsideIsPositive READ getInsideIsPositive WRITE setInsideIsPositive)
+  PYB11_PROPERTY(bool SquaredDistance READ getSquaredDistance WRITE setSquaredDistance)
+  PYB11_PROPERTY(bool UseImageSpacing READ getUseImageSpacing WRITE setUseImageSpacing)
 
 public:
   SIMPL_SHARED_POINTERS(ITKSignedDanielssonDistanceMapImage)

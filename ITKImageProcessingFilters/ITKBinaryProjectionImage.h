@@ -28,6 +28,10 @@
 class ITKBinaryProjectionImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+  PYB11_CREATE_BINDINGS(ITKBinaryProjectionImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_PROPERTY(double ProjectionDimension READ getProjectionDimension WRITE setProjectionDimension)
+  PYB11_PROPERTY(double ForegroundValue READ getForegroundValue WRITE setForegroundValue)
+  PYB11_PROPERTY(double BackgroundValue READ getBackgroundValue WRITE setBackgroundValue)
 
 public:
   SIMPL_SHARED_POINTERS(ITKBinaryProjectionImage)

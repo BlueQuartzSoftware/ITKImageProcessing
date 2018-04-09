@@ -2,18 +2,10 @@
  * Your License or Copyright can go here
  */
 
-#ifndef _ITKImageProcessingBase_h_
-#define _ITKImageProcessingBase_h_
+#ifndef _iTKImageProcessingBase_h_
+#define _iTKImageProcessingBase_h_
 
 #include "ITKImageBase.h"
-
-// The sitkExplicitITK.h header must be AFTER any ITK includes above or
-// the code will not compile on Windows. Further, windows does not seem
-// to have the symbol loading issues that macOS has so lets just #define
-// around it for macOS systems only.
-#if defined(__APPLE__)
-//  #include "sitkExplicitITK.h"
-#endif
 
 /**
  * @brief The ITKImageProcessingBase class. See [Filter documentation](@ref ITKImageProcessingBase) for details.
@@ -21,10 +13,15 @@
 class ITKImageProcessingBase : public ITKImageBase
 {
   Q_OBJECT
+  PYB11_CREATE_BINDINGS(ITKImageProcessingBase SUPERCLASS ITKImageBase)
+  PYB11_PROPERTY(DataArrayPath SelectedCellArrayPath READ getSelectedCellArrayPath WRITE setSelectedCellArrayPath)
+  PYB11_PROPERTY(QString NewCellArrayName READ getNewCellArrayName WRITE setNewCellArrayName)
+  PYB11_PROPERTY(bool SaveAsNewArray READ getSaveAsNewArray WRITE setSaveAsNewArray)
 
 public:
-  // SIMPL_SHARED_POINTERS(ITKImageProcessingBase)
-  // SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKImageProcessingBase, AbstractFilter)
+  SIMPL_SHARED_POINTERS(ITKImageProcessingBase)
+  SIMPL_FILTER_NEW_MACRO(ITKImageProcessingBase)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKImageProcessingBase, ITKImageBase)
 
   virtual ~ITKImageProcessingBase();
 
@@ -36,6 +33,7 @@ public:
 
   SIMPL_FILTER_PARAMETER(bool, SaveAsNewArray)
   Q_PROPERTY(bool SaveAsNewArray READ getSaveAsNewArray WRITE setSaveAsNewArray)
+
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
@@ -47,12 +45,14 @@ public:
    * @return Branding string
   */
   const QString getBrandingString() const override;
+
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
    * @return
    */
   const QString getFilterVersion() const override;
+
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
@@ -60,21 +60,22 @@ public:
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
    */
-  virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) const override = 0;
+  virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) const override;
+
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  virtual const QString getHumanLabel() const override = 0;
+  virtual const QString getHumanLabel() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
    */
-  virtual void setupFilterParameters() override = 0;
+  virtual void setupFilterParameters() override;
 
   /**
    * @brief readFilterParameters Reimplemented from @see AbstractFilter class
    */
-  virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index) override = 0;
+  virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
 
 protected:
   ITKImageProcessingBase();
@@ -142,4 +143,4 @@ private:
   void operator=(const ITKImageProcessingBase&) = delete;  // Move assignment Not Implemented
 };
 
-#endif /* _ITKImageProcessingBase_H_ */
+#endif /* _iTKImageProcessingBase_H_ */

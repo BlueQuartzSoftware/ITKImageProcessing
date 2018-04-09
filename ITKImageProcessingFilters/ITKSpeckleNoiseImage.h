@@ -28,6 +28,9 @@
 class ITKSpeckleNoiseImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+  PYB11_CREATE_BINDINGS(ITKSpeckleNoiseImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_PROPERTY(double StandardDeviation READ getStandardDeviation WRITE setStandardDeviation)
+  PYB11_PROPERTY(double Seed READ getSeed WRITE setSeed)
 
 public:
   SIMPL_SHARED_POINTERS(ITKSpeckleNoiseImage)

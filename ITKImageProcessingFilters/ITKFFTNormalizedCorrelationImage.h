@@ -28,6 +28,10 @@
 class ITKFFTNormalizedCorrelationImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+  PYB11_CREATE_BINDINGS(ITKFFTNormalizedCorrelationImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_PROPERTY(DataArrayPath MovingCellArrayPath READ getMovingCellArrayPath WRITE setMovingCellArrayPath)
+  PYB11_PROPERTY(double RequiredNumberOfOverlappingPixels READ getRequiredNumberOfOverlappingPixels WRITE setRequiredNumberOfOverlappingPixels)
+  PYB11_PROPERTY(double RequiredFractionOfOverlappingPixels READ getRequiredFractionOfOverlappingPixels WRITE setRequiredFractionOfOverlappingPixels)
 
 public:
   SIMPL_SHARED_POINTERS(ITKFFTNormalizedCorrelationImage)

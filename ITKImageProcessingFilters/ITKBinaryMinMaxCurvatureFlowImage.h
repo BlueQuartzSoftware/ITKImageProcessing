@@ -29,6 +29,11 @@
 class ITKBinaryMinMaxCurvatureFlowImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+  PYB11_CREATE_BINDINGS(ITKBinaryMinMaxCurvatureFlowImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_PROPERTY(double TimeStep READ getTimeStep WRITE setTimeStep)
+  PYB11_PROPERTY(double NumberOfIterations READ getNumberOfIterations WRITE setNumberOfIterations)
+  PYB11_PROPERTY(int StencilRadius READ getStencilRadius WRITE setStencilRadius)
+  PYB11_PROPERTY(double Threshold READ getThreshold WRITE setThreshold)
 
 public:
   SIMPL_SHARED_POINTERS(ITKBinaryMinMaxCurvatureFlowImage)

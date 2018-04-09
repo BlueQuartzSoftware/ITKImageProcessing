@@ -31,6 +31,11 @@
 class ITKBinaryClosingByReconstructionImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+  PYB11_CREATE_BINDINGS(ITKBinaryClosingByReconstructionImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_PROPERTY(double ForegroundValue READ getForegroundValue WRITE setForegroundValue)
+  PYB11_PROPERTY(bool FullyConnected READ getFullyConnected WRITE setFullyConnected)
+  PYB11_PROPERTY(FloatVec3_t KernelRadius READ getKernelRadius WRITE setKernelRadius)
+  PYB11_PROPERTY(int KernelType READ getKernelType WRITE setKernelType)
 
 public:
   SIMPL_SHARED_POINTERS(ITKBinaryClosingByReconstructionImage)

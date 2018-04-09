@@ -30,6 +30,13 @@
 class ITKRelabelComponentImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+  PYB11_CREATE_BINDINGS(ITKRelabelComponentImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_PROPERTY(double MinimumObjectSize READ getMinimumObjectSize WRITE setMinimumObjectSize)
+  PYB11_PROPERTY(bool SortByObjectSize READ getSortByObjectSize WRITE setSortByObjectSize)
+  PYB11_PROPERTY(double NumberOfObjects READ getNumberOfObjects WRITE setNumberOfObjects)
+  PYB11_PROPERTY(double OriginalNumberOfObjects READ getOriginalNumberOfObjects WRITE setOriginalNumberOfObjects)
+  PYB11_PROPERTY(FloatVec3_t SizeOfObjectsInPhysicalUnits READ getSizeOfObjectsInPhysicalUnits WRITE setSizeOfObjectsInPhysicalUnits)
+  PYB11_PROPERTY(FloatVec3_t SizeOfObjectsInPixels READ getSizeOfObjectsInPixels WRITE setSizeOfObjectsInPixels)
 
 public:
   SIMPL_SHARED_POINTERS(ITKRelabelComponentImage)

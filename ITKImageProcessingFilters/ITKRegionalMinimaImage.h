@@ -29,6 +29,11 @@
 class ITKRegionalMinimaImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+  PYB11_CREATE_BINDINGS(ITKRegionalMinimaImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_PROPERTY(double BackgroundValue READ getBackgroundValue WRITE setBackgroundValue)
+  PYB11_PROPERTY(double ForegroundValue READ getForegroundValue WRITE setForegroundValue)
+  PYB11_PROPERTY(bool FullyConnected READ getFullyConnected WRITE setFullyConnected)
+  PYB11_PROPERTY(bool FlatIsMinima READ getFlatIsMinima WRITE setFlatIsMinima)
 
 public:
   SIMPL_SHARED_POINTERS(ITKRegionalMinimaImage)

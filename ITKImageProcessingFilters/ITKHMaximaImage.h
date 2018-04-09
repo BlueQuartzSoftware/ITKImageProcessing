@@ -28,6 +28,8 @@
 class ITKHMaximaImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+  PYB11_CREATE_BINDINGS(ITKHMaximaImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_PROPERTY(double Height READ getHeight WRITE setHeight)
 
 public:
   SIMPL_SHARED_POINTERS(ITKHMaximaImage)

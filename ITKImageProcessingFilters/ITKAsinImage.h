@@ -27,7 +27,7 @@
 class ITKAsinImage : public ITKImageProcessingBase
 {
   Q_OBJECT
-
+  PYB11_CREATE_BINDINGS(ITKAsinImage SUPERCLASS ITKImageProcessingBase)
 public:
   SIMPL_SHARED_POINTERS(ITKAsinImage)
   SIMPL_STATIC_NEW_MACRO(ITKAsinImage)

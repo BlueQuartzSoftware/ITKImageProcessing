@@ -28,6 +28,10 @@
 class ITKBilateralImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+  PYB11_CREATE_BINDINGS(ITKBilateralImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_PROPERTY(double DomainSigma READ getDomainSigma WRITE setDomainSigma)
+  PYB11_PROPERTY(double RangeSigma READ getRangeSigma WRITE setRangeSigma)
+  PYB11_PROPERTY(double NumberOfRangeGaussianSamples READ getNumberOfRangeGaussianSamples WRITE setNumberOfRangeGaussianSamples)
 
 public:
   SIMPL_SHARED_POINTERS(ITKBilateralImage)

@@ -27,6 +27,7 @@
 class ITKAcosImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+  PYB11_CREATE_BINDINGS(ITKAcosImage SUPERCLASS ITKImageProcessingBase)
 
 public:
   SIMPL_SHARED_POINTERS(ITKAcosImage)

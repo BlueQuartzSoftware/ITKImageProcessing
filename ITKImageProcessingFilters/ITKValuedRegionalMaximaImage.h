@@ -28,6 +28,9 @@
 class ITKValuedRegionalMaximaImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+  PYB11_CREATE_BINDINGS(ITKValuedRegionalMaximaImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_PROPERTY(bool FullyConnected READ getFullyConnected WRITE setFullyConnected)
+  PYB11_PROPERTY(bool Flat READ getFlat WRITE setFlat)
 
 public:
   SIMPL_SHARED_POINTERS(ITKValuedRegionalMaximaImage)

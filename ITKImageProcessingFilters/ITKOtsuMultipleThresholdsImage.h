@@ -31,6 +31,12 @@
 class ITKOtsuMultipleThresholdsImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+  PYB11_CREATE_BINDINGS(ITKOtsuMultipleThresholdsImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_PROPERTY(int NumberOfThresholds READ getNumberOfThresholds WRITE setNumberOfThresholds)
+  PYB11_PROPERTY(int LabelOffset READ getLabelOffset WRITE setLabelOffset)
+  PYB11_PROPERTY(double NumberOfHistogramBins READ getNumberOfHistogramBins WRITE setNumberOfHistogramBins)
+  PYB11_PROPERTY(bool ValleyEmphasis READ getValleyEmphasis WRITE setValleyEmphasis)
+  PYB11_PROPERTY(FloatVec3_t Thresholds READ getThresholds WRITE setThresholds)
 
 public:
   SIMPL_SHARED_POINTERS(ITKOtsuMultipleThresholdsImage)

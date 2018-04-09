@@ -29,6 +29,11 @@
 class ITKSignedMaurerDistanceMapImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+  PYB11_CREATE_BINDINGS(ITKSignedMaurerDistanceMapImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_PROPERTY(bool InsideIsPositive READ getInsideIsPositive WRITE setInsideIsPositive)
+  PYB11_PROPERTY(bool SquaredDistance READ getSquaredDistance WRITE setSquaredDistance)
+  PYB11_PROPERTY(bool UseImageSpacing READ getUseImageSpacing WRITE setUseImageSpacing)
+  PYB11_PROPERTY(double BackgroundValue READ getBackgroundValue WRITE setBackgroundValue)
 
 public:
   SIMPL_SHARED_POINTERS(ITKSignedMaurerDistanceMapImage)

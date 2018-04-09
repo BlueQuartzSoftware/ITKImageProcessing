@@ -29,6 +29,11 @@
 class ITKRegionalMaximaImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+  PYB11_CREATE_BINDINGS(ITKRegionalMaximaImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_PROPERTY(double BackgroundValue READ getBackgroundValue WRITE setBackgroundValue)
+  PYB11_PROPERTY(double ForegroundValue READ getForegroundValue WRITE setForegroundValue)
+  PYB11_PROPERTY(bool FullyConnected READ getFullyConnected WRITE setFullyConnected)
+  PYB11_PROPERTY(bool FlatIsMaxima READ getFlatIsMaxima WRITE setFlatIsMaxima)
 
 public:
   SIMPL_SHARED_POINTERS(ITKRegionalMaximaImage)

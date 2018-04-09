@@ -30,6 +30,11 @@
 class ITKOpeningByReconstructionImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+  PYB11_CREATE_BINDINGS(ITKOpeningByReconstructionImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_PROPERTY(bool FullyConnected READ getFullyConnected WRITE setFullyConnected)
+  PYB11_PROPERTY(bool PreserveIntensities READ getPreserveIntensities WRITE setPreserveIntensities)
+  PYB11_PROPERTY(FloatVec3_t KernelRadius READ getKernelRadius WRITE setKernelRadius)
+  PYB11_PROPERTY(int KernelType READ getKernelType WRITE setKernelType)
 
 public:
   SIMPL_SHARED_POINTERS(ITKOpeningByReconstructionImage)

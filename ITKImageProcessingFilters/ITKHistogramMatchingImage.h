@@ -26,6 +26,11 @@
 class ITKHistogramMatchingImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+  PYB11_CREATE_BINDINGS(ITKHistogramMatchingImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_PROPERTY(DataArrayPath ReferenceCellArrayPath READ getReferenceCellArrayPath WRITE setReferenceCellArrayPath)
+  PYB11_PROPERTY(double NumberOfHistogramLevels READ getNumberOfHistogramLevels WRITE setNumberOfHistogramLevels)
+  PYB11_PROPERTY(double NumberOfMatchPoints READ getNumberOfMatchPoints WRITE setNumberOfMatchPoints)
+  PYB11_PROPERTY(bool ThresholdAtMeanIntensity READ getThresholdAtMeanIntensity WRITE setThresholdAtMeanIntensity)
 
 public:
   SIMPL_SHARED_POINTERS(ITKHistogramMatchingImage)

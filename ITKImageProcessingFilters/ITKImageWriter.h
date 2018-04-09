@@ -46,10 +46,12 @@
 class ITKImageWriter : public AbstractFilter
 {
   Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
+  PYB11_CREATE_BINDINGS(ITKImageWriter SUPERCLASS AbstractFilter) PYB11_PROPERTY(QString FileName READ getFileName WRITE setFileName)
+      PYB11_PROPERTY(DataArrayPath ImageArrayPath READ getImageArrayPath WRITE setImageArrayPath)
 
-      public : SIMPL_SHARED_POINTERS(ITKImageWriter) SIMPL_FILTER_NEW_MACRO(ITKImageWriter) SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKImageWriter, AbstractFilter)
+          public : SIMPL_SHARED_POINTERS(ITKImageWriter) SIMPL_FILTER_NEW_MACRO(ITKImageWriter) SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKImageWriter, AbstractFilter)
 
-                   ~ITKImageWriter() override;
+                       ~ITKImageWriter() override;
 
   SIMPL_FILTER_PARAMETER(QString, FileName)
   Q_PROPERTY(QString FileName READ getFileName WRITE setFileName)

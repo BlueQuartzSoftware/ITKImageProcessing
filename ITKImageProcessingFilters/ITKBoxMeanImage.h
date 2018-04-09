@@ -28,6 +28,8 @@
 class ITKBoxMeanImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+  PYB11_CREATE_BINDINGS(ITKBoxMeanImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_PROPERTY(FloatVec3_t Radius READ getRadius WRITE setRadius)
 
 public:
   SIMPL_SHARED_POINTERS(ITKBoxMeanImage)

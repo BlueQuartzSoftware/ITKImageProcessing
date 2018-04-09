@@ -28,6 +28,8 @@
 class ITKLaplacianSharpeningImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+  PYB11_CREATE_BINDINGS(ITKLaplacianSharpeningImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_PROPERTY(bool UseImageSpacing READ getUseImageSpacing WRITE setUseImageSpacing)
 
 public:
   SIMPL_SHARED_POINTERS(ITKLaplacianSharpeningImage)

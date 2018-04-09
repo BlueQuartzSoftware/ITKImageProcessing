@@ -27,6 +27,21 @@
 class ITKPatchBasedDenoisingImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+  PYB11_CREATE_BINDINGS(ITKPatchBasedDenoisingImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_PROPERTY(double KernelBandwidthSigma READ getKernelBandwidthSigma WRITE setKernelBandwidthSigma)
+  PYB11_PROPERTY(double PatchRadius READ getPatchRadius WRITE setPatchRadius)
+  PYB11_PROPERTY(double NumberOfIterations READ getNumberOfIterations WRITE setNumberOfIterations)
+  PYB11_PROPERTY(double NumberOfSamplePatches READ getNumberOfSamplePatches WRITE setNumberOfSamplePatches)
+  PYB11_PROPERTY(double SampleVariance READ getSampleVariance WRITE setSampleVariance)
+  PYB11_PROPERTY(double NoiseSigma READ getNoiseSigma WRITE setNoiseSigma)
+  PYB11_PROPERTY(double NoiseModelFidelityWeight READ getNoiseModelFidelityWeight WRITE setNoiseModelFidelityWeight)
+  PYB11_PROPERTY(bool AlwaysTreatComponentsAsEuclidean READ getAlwaysTreatComponentsAsEuclidean WRITE setAlwaysTreatComponentsAsEuclidean)
+  PYB11_PROPERTY(bool KernelBandwidthEstimation READ getKernelBandwidthEstimation WRITE setKernelBandwidthEstimation)
+  PYB11_PROPERTY(double KernelBandwidthMultiplicationFactor READ getKernelBandwidthMultiplicationFactor WRITE setKernelBandwidthMultiplicationFactor)
+  PYB11_PROPERTY(double KernelBandwidthUpdateFrequency READ getKernelBandwidthUpdateFrequency WRITE setKernelBandwidthUpdateFrequency)
+  PYB11_PROPERTY(double KernelBandwidthFractionPixelsForEstimation READ getKernelBandwidthFractionPixelsForEstimation WRITE setKernelBandwidthFractionPixelsForEstimation)
+  PYB11_PROPERTY(int NoiseModel READ getNoiseModel WRITE setNoiseModel)
+  PYB11_PROPERTY(int NumberOfThreads READ getNumberOfThreads WRITE setNumberOfThreads)
 
 public:
   SIMPL_SHARED_POINTERS(ITKPatchBasedDenoisingImage)

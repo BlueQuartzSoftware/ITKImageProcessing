@@ -28,6 +28,9 @@
 class ITKApproximateSignedDistanceMapImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+  PYB11_CREATE_BINDINGS(ITKApproximateSignedDistanceMapImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_PROPERTY(double InsideValue READ getInsideValue WRITE setInsideValue)
+  PYB11_PROPERTY(double OutsideValue READ getOutsideValue WRITE setOutsideValue)
 
 public:
   SIMPL_SHARED_POINTERS(ITKApproximateSignedDistanceMapImage)

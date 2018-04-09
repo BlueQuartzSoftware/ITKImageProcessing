@@ -28,6 +28,9 @@
 class ITKZeroCrossingImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+  PYB11_CREATE_BINDINGS(ITKZeroCrossingImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_PROPERTY(int ForegroundValue READ getForegroundValue WRITE setForegroundValue)
+  PYB11_PROPERTY(int BackgroundValue READ getBackgroundValue WRITE setBackgroundValue)
 
 public:
   SIMPL_SHARED_POINTERS(ITKZeroCrossingImage)

@@ -27,6 +27,7 @@
 class ITKAbsImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+  PYB11_CREATE_BINDINGS(ITKAbsImage SUPERCLASS ITKImageProcessingBase)
 
 public:
   SIMPL_SHARED_POINTERS(ITKAbsImage)

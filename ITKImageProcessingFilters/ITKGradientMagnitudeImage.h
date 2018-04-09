@@ -28,6 +28,8 @@
 class ITKGradientMagnitudeImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+  PYB11_CREATE_BINDINGS(ITKGradientMagnitudeImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_PROPERTY(bool UseImageSpacing READ getUseImageSpacing WRITE setUseImageSpacing)
 
 public:
   SIMPL_SHARED_POINTERS(ITKGradientMagnitudeImage)

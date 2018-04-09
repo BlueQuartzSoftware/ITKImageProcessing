@@ -28,6 +28,8 @@
 class ITKGrayscaleGrindPeakImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+  PYB11_CREATE_BINDINGS(ITKGrayscaleGrindPeakImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_PROPERTY(bool FullyConnected READ getFullyConnected WRITE setFullyConnected)
 
 public:
   SIMPL_SHARED_POINTERS(ITKGrayscaleGrindPeakImage)

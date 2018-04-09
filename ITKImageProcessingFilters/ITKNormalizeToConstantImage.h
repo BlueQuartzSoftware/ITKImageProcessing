@@ -28,6 +28,8 @@
 class ITKNormalizeToConstantImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+  PYB11_CREATE_BINDINGS(ITKNormalizeToConstantImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_PROPERTY(double Constant READ getConstant WRITE setConstant)
 
 public:
   SIMPL_SHARED_POINTERS(ITKNormalizeToConstantImage)

@@ -29,6 +29,11 @@
 class ITKGradientAnisotropicDiffusionImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+  PYB11_CREATE_BINDINGS(ITKGradientAnisotropicDiffusionImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_PROPERTY(double TimeStep READ getTimeStep WRITE setTimeStep)
+  PYB11_PROPERTY(double ConductanceParameter READ getConductanceParameter WRITE setConductanceParameter)
+  PYB11_PROPERTY(double ConductanceScalingUpdateInterval READ getConductanceScalingUpdateInterval WRITE setConductanceScalingUpdateInterval)
+  PYB11_PROPERTY(double NumberOfIterations READ getNumberOfIterations WRITE setNumberOfIterations)
 
 public:
   SIMPL_SHARED_POINTERS(ITKGradientAnisotropicDiffusionImage)

@@ -29,6 +29,10 @@
 class ITKMorphologicalWatershedImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+  PYB11_CREATE_BINDINGS(ITKMorphologicalWatershedImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_PROPERTY(double Level READ getLevel WRITE setLevel)
+  PYB11_PROPERTY(bool MarkWatershedLine READ getMarkWatershedLine WRITE setMarkWatershedLine)
+  PYB11_PROPERTY(bool FullyConnected READ getFullyConnected WRITE setFullyConnected)
 
 public:
   SIMPL_SHARED_POINTERS(ITKMorphologicalWatershedImage)

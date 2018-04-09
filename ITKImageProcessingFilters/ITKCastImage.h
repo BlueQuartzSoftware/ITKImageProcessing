@@ -24,6 +24,8 @@
 class ITKCastImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+  PYB11_CREATE_BINDINGS(ITKCastImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_PROPERTY(int CastingType READ getCastingType WRITE setCastingType)
 
 public:
   SIMPL_SHARED_POINTERS(ITKCastImage)

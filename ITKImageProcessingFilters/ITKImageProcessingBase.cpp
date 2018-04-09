@@ -1,21 +1,14 @@
-/*
- * Your License or Copyright can go here
- */
-
 #include "ITKImageProcessingBase.h"
 
-#include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 ITKImageProcessingBase::ITKImageProcessingBase()
-: ITKImageBase()
-, m_NewCellArrayName("")
-, m_SaveAsNewArray(true)
-, m_NewCellArray(nullptr)
 {
 }
 
@@ -23,6 +16,13 @@ ITKImageProcessingBase::ITKImageProcessingBase()
 //
 // -----------------------------------------------------------------------------
 ITKImageProcessingBase::~ITKImageProcessingBase() = default;
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ITKImageProcessingBase::setupFilterParameters()
+{
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -56,5 +56,35 @@ const QString ITKImageProcessingBase::getFilterVersion() const
 // -----------------------------------------------------------------------------
 const QString ITKImageProcessingBase::getGroupName() const
 {
-  return "Image Processing";
+  return "AbstractClass";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer ITKImageProcessingBase::newFilterInstance(bool copyFilterParameters) const
+{
+  ITKImageProcessingBase::Pointer filter = ITKImageProcessingBase::New();
+  if(true == copyFilterParameters)
+  {
+    copyFilterParameterInstanceVariables(filter.get());
+  }
+  return filter;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ITKImageProcessingBase::getHumanLabel() const
+{
+  return "ITK::ITKImageProcessingBase";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ITKImageProcessingBase::readFilterParameters(AbstractFilterParametersReader* reader, int index)
+{
+  reader->openFilterGroup(this, index);
+  reader->closeFilterGroup();
 }

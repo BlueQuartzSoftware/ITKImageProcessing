@@ -27,6 +27,9 @@
 class ITKVectorRescaleIntensityImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+  PYB11_CREATE_BINDINGS(ITKVectorRescaleIntensityImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_PROPERTY(double OutputMaximumMagnitude READ getOutputMaximumMagnitude WRITE setOutputMaximumMagnitude)
+  PYB11_PROPERTY(int OutputType READ getOutputType WRITE setOutputType)
 
 public:
   SIMPL_SHARED_POINTERS(ITKVectorRescaleIntensityImage)

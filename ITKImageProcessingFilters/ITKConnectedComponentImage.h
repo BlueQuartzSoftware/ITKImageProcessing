@@ -29,6 +29,9 @@
 class ITKConnectedComponentImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+  PYB11_CREATE_BINDINGS(ITKConnectedComponentImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_PROPERTY(bool FullyConnected READ getFullyConnected WRITE setFullyConnected)
+  PYB11_PROPERTY(double ObjectCount READ getObjectCount WRITE setObjectCount)
 
 public:
   SIMPL_SHARED_POINTERS(ITKConnectedComponentImage)

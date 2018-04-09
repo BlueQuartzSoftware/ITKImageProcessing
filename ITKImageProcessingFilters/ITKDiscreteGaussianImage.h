@@ -30,6 +30,11 @@
 class ITKDiscreteGaussianImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+  PYB11_CREATE_BINDINGS(ITKDiscreteGaussianImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_PROPERTY(FloatVec3_t Variance READ getVariance WRITE setVariance)
+  PYB11_PROPERTY(double MaximumKernelWidth READ getMaximumKernelWidth WRITE setMaximumKernelWidth)
+  PYB11_PROPERTY(FloatVec3_t MaximumError READ getMaximumError WRITE setMaximumError)
+  PYB11_PROPERTY(bool UseImageSpacing READ getUseImageSpacing WRITE setUseImageSpacing)
 
 public:
   SIMPL_SHARED_POINTERS(ITKDiscreteGaussianImage)

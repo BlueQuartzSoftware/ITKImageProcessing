@@ -28,6 +28,9 @@
 class ITKShiftScaleImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+  PYB11_CREATE_BINDINGS(ITKShiftScaleImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_PROPERTY(double Shift READ getShift WRITE setShift)
+  PYB11_PROPERTY(double Scale READ getScale WRITE setScale)
 
 public:
   SIMPL_SHARED_POINTERS(ITKShiftScaleImage)

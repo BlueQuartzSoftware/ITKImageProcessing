@@ -27,6 +27,9 @@
 class ITKMaskImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+  PYB11_CREATE_BINDINGS(ITKMaskImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_PROPERTY(double OutsideValue READ getOutsideValue WRITE setOutsideValue)
+  PYB11_PROPERTY(DataArrayPath MaskCellArrayPath READ getMaskCellArrayPath WRITE setMaskCellArrayPath)
 
 public:
   SIMPL_SHARED_POINTERS(ITKMaskImage)

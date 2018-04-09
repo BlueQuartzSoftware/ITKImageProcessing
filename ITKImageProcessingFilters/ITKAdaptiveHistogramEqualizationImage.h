@@ -30,6 +30,10 @@
 class ITKAdaptiveHistogramEqualizationImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+  PYB11_CREATE_BINDINGS(ITKAdaptiveHistogramEqualizationImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_PROPERTY(FloatVec3_t Radius READ getRadius WRITE setRadius)
+  PYB11_PROPERTY(float Alpha READ getAlpha WRITE setAlpha)
+  PYB11_PROPERTY(float Beta READ getBeta WRITE setBeta)
 
 public:
   SIMPL_SHARED_POINTERS(ITKAdaptiveHistogramEqualizationImage)

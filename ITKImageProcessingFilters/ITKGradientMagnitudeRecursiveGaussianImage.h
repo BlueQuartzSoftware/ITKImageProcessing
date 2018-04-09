@@ -29,6 +29,9 @@
 class ITKGradientMagnitudeRecursiveGaussianImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+  PYB11_CREATE_BINDINGS(ITKGradientMagnitudeRecursiveGaussianImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_PROPERTY(double Sigma READ getSigma WRITE setSigma)
+  PYB11_PROPERTY(bool NormalizeAcrossScale READ getNormalizeAcrossScale WRITE setNormalizeAcrossScale)
 
 public:
   SIMPL_SHARED_POINTERS(ITKGradientMagnitudeRecursiveGaussianImage)

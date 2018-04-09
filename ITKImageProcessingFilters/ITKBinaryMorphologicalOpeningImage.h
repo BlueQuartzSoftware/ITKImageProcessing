@@ -30,6 +30,11 @@
 class ITKBinaryMorphologicalOpeningImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+  PYB11_CREATE_BINDINGS(ITKBinaryMorphologicalOpeningImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_PROPERTY(double BackgroundValue READ getBackgroundValue WRITE setBackgroundValue)
+  PYB11_PROPERTY(double ForegroundValue READ getForegroundValue WRITE setForegroundValue)
+  PYB11_PROPERTY(FloatVec3_t KernelRadius READ getKernelRadius WRITE setKernelRadius)
+  PYB11_PROPERTY(int KernelType READ getKernelType WRITE setKernelType)
 
 public:
   SIMPL_SHARED_POINTERS(ITKBinaryMorphologicalOpeningImage)

@@ -26,6 +26,16 @@
 class ITKMultiScaleHessianBasedObjectnessImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+  PYB11_CREATE_BINDINGS(ITKMultiScaleHessianBasedObjectnessImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_PROPERTY(int ObjectDimension READ getObjectDimension WRITE setObjectDimension)
+  PYB11_PROPERTY(double Alpha READ getAlpha WRITE setAlpha)
+  PYB11_PROPERTY(double Beta READ getBeta WRITE setBeta)
+  PYB11_PROPERTY(double Gamma READ getGamma WRITE setGamma)
+  PYB11_PROPERTY(bool ScaleObjectnessMeasure READ getScaleObjectnessMeasure WRITE setScaleObjectnessMeasure)
+  PYB11_PROPERTY(bool BrightObject READ getBrightObject WRITE setBrightObject)
+  PYB11_PROPERTY(double SigmaMinimum READ getSigmaMinimum WRITE setSigmaMinimum)
+  PYB11_PROPERTY(double SigmaMaximum READ getSigmaMaximum WRITE setSigmaMaximum)
+  PYB11_PROPERTY(double NumberOfSigmaSteps READ getNumberOfSigmaSteps WRITE setNumberOfSigmaSteps)
 
 public:
   SIMPL_SHARED_POINTERS(ITKMultiScaleHessianBasedObjectnessImage)

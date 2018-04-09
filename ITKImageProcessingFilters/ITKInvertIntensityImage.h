@@ -28,6 +28,8 @@
 class ITKInvertIntensityImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+  PYB11_CREATE_BINDINGS(ITKInvertIntensityImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_PROPERTY(double Maximum READ getMaximum WRITE setMaximum)
 
 public:
   SIMPL_SHARED_POINTERS(ITKInvertIntensityImage)

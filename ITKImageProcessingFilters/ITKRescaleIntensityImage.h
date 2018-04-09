@@ -28,6 +28,10 @@
 class ITKRescaleIntensityImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+  PYB11_CREATE_BINDINGS(ITKRescaleIntensityImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_PROPERTY(double OutputMinimum READ getOutputMinimum WRITE setOutputMinimum)
+  PYB11_PROPERTY(double OutputMaximum READ getOutputMaximum WRITE setOutputMaximum)
+  PYB11_PROPERTY(int OutputType READ getOutputType WRITE setOutputType)
 
 public:
   SIMPL_SHARED_POINTERS(ITKRescaleIntensityImage)

@@ -28,6 +28,9 @@
 class ITKShotNoiseImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+  PYB11_CREATE_BINDINGS(ITKShotNoiseImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_PROPERTY(double Scale READ getScale WRITE setScale)
+  PYB11_PROPERTY(double Seed READ getSeed WRITE setSeed)
 
 public:
   SIMPL_SHARED_POINTERS(ITKShotNoiseImage)

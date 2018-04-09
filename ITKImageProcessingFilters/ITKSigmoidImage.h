@@ -28,6 +28,11 @@
 class ITKSigmoidImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+  PYB11_CREATE_BINDINGS(ITKSigmoidImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_PROPERTY(double Alpha READ getAlpha WRITE setAlpha)
+  PYB11_PROPERTY(double Beta READ getBeta WRITE setBeta)
+  PYB11_PROPERTY(double OutputMaximum READ getOutputMaximum WRITE setOutputMaximum)
+  PYB11_PROPERTY(double OutputMinimum READ getOutputMinimum WRITE setOutputMinimum)
 
 public:
   SIMPL_SHARED_POINTERS(ITKSigmoidImage)

@@ -29,6 +29,9 @@
 class ITKVectorConnectedComponentImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+  PYB11_CREATE_BINDINGS(ITKVectorConnectedComponentImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_PROPERTY(double DistanceThreshold READ getDistanceThreshold WRITE setDistanceThreshold)
+  PYB11_PROPERTY(bool FullyConnected READ getFullyConnected WRITE setFullyConnected)
 
 public:
   SIMPL_SHARED_POINTERS(ITKVectorConnectedComponentImage)

@@ -28,6 +28,8 @@
 class ITKGrayscaleFillholeImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+  PYB11_CREATE_BINDINGS(ITKGrayscaleFillholeImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_PROPERTY(bool FullyConnected READ getFullyConnected WRITE setFullyConnected)
 
 public:
   SIMPL_SHARED_POINTERS(ITKGrayscaleFillholeImage)

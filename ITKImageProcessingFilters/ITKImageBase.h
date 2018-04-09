@@ -2,8 +2,8 @@
  * Your License or Copyright can go here
  */
 
-#ifndef _ITKImageBase_h_
-#define _ITKImageBase_h_
+#ifndef _itkImageBase_h_
+#define _itkImageBase_h_
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -18,13 +18,6 @@
 #include <itkCastImageFilter.h>
 #include <itkNumericTraits.h>
 
-// The sitkExplicitITK.h header must be AFTER any ITK includes above or
-// the code will not compile on Windows. Further, windows does not seem
-// to have the symbol loading issues that macOS has so lets just #define
-// around it for macOS systems only.
-#if defined(__APPLE__)
-//  #include "sitkExplicitITK.h"
-#endif
 
 /**
  * @brief The ITKImageBase class. See [Filter documentation](@ref ITKImageBase) for details.
@@ -32,44 +25,23 @@
 class ITKImageBase : public AbstractFilter
 {
   Q_OBJECT
+  PYB11_CREATE_BINDINGS(ITKImageBase SUPERCLASS AbstractFilter)
 
 public:
   // SIMPL_SHARED_POINTERS(ITKImageBase)
   // SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKImageBase, AbstractFilter)
 
-  ~ITKImageBase() override = default;
+  virtual ~ITKImageBase();
 
   /**
    * @brief execute Reimplemented from @see AbstractFilter class
    */
-  virtual void execute() override
-{
-  initialize();
-  this->dataCheckInternal();
-  if(getErrorCondition() < 0)
-  {
-    return;
-  }
-  if(getCancel() == true)
-  {
-    return;
-  }
-  this->filterInternal();
-}
+  virtual void execute() override;
+
   /**
   * @brief preflight Reimplemented from @see AbstractFilter class
   */
-  virtual void preflight() override
-{
-  // These are the REQUIRED lines of CODE to make sure the filter behaves correctly
-  setInPreflight(true);              // Set the fact that we are preflighting.
-  emit preflightAboutToExecute();    // Emit this signal so that other widgets can do one file update
-  emit updateFilterParameters(this); // Emit this signal to have the widgets push their values down to the filter
-  this->dataCheckInternal();
-  emit preflightExecuted(); // We are done preflighting this filter
-  setInPreflight(false);    // Inform the system this filter is NOT in preflight mode anymore.
-}
-
+  virtual void preflight() override;
 
   /**
    * @brief CastVec3ToITK Input type should be FloatVec3_t or IntVec3_t, Output
@@ -146,22 +118,18 @@ signals:
   void preflightExecuted();
 
 protected:
-  ITKImageBase()
-  {
-    initialize();
-  }
-
+  ITKImageBase();
 
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
    */
 
-  void virtual dataCheckInternal() = 0;
+  virtual void dataCheckInternal();
 
   /**
    * @brief imageCheck checks if data array contains an image.
    */
-  template <typename PixelType, unsigned int Dimension> void imageCheck(const DataArrayPath &array_path)
+  template <typename PixelType, unsigned int Dimension> void imageCheck(const DataArrayPath& array_path)
   {
     typedef typename itk::NumericTraits<PixelType>::ValueType ValueType;
     // Check data array
@@ -191,7 +159,8 @@ protected:
   /**
   * @brief Applies the filter
   */
-  template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension, typename FilterType> void filter(FilterType* filter, std::string outputArrayName, bool saveAsNewArray, DataArrayPath selectedArray)
+  template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension, typename FilterType>
+  void filter(FilterType* filter, std::string outputArrayName, bool saveAsNewArray, DataArrayPath selectedArray)
   {
     try
     {
@@ -248,7 +217,8 @@ protected:
   /**
   * @brief Applies the filter, casting the input to float
   */
-  template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension, typename FilterType, typename FloatImageType> void filterCastToFloat(FilterType* filter, std::string outputArrayName, bool saveAsNewArray, DataArrayPath selectedArray)
+  template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension, typename FilterType, typename FloatImageType>
+  void filterCastToFloat(FilterType* filter, std::string outputArrayName, bool saveAsNewArray, DataArrayPath selectedArray)
   {
     try
     {
@@ -378,20 +348,14 @@ protected:
   /**
   * @brief Applies the filter
   */
-  void virtual filterInternal() = 0;
+  virtual void filterInternal();
 
   /**
    * @brief Initializes all the private instance variables.
    */
-  void initialize()
-  {
-    setErrorCondition(0);
-    setWarningCondition(0);
-    setCancel(false);
-  }
+  void initialize();
 
-private:
-
+public:
   ITKImageBase(const ITKImageBase&);   // Copy Constructor Not Implemented
   ITKImageBase& operator=(const ITKImageBase&) = delete; // Copy Assignment Not Implemented
   ITKImageBase& operator=(ITKImageBase&&) = delete;      // Move Assignment

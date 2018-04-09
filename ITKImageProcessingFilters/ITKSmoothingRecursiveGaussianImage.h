@@ -29,6 +29,9 @@
 class ITKSmoothingRecursiveGaussianImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+  PYB11_CREATE_BINDINGS(ITKSmoothingRecursiveGaussianImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_PROPERTY(FloatVec3_t Sigma READ getSigma WRITE setSigma)
+  PYB11_PROPERTY(bool NormalizeAcrossScale READ getNormalizeAcrossScale WRITE setNormalizeAcrossScale)
 
 public:
   SIMPL_SHARED_POINTERS(ITKSmoothingRecursiveGaussianImage)

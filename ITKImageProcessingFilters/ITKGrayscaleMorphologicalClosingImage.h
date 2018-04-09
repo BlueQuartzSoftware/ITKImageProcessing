@@ -30,6 +30,10 @@
 class ITKGrayscaleMorphologicalClosingImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+  PYB11_CREATE_BINDINGS(ITKGrayscaleMorphologicalClosingImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_PROPERTY(bool SafeBorder READ getSafeBorder WRITE setSafeBorder)
+  PYB11_PROPERTY(FloatVec3_t KernelRadius READ getKernelRadius WRITE setKernelRadius)
+  PYB11_PROPERTY(int KernelType READ getKernelType WRITE setKernelType)
 
 public:
   SIMPL_SHARED_POINTERS(ITKGrayscaleMorphologicalClosingImage)

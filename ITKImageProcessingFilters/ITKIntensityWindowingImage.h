@@ -28,6 +28,11 @@
 class ITKIntensityWindowingImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+  PYB11_CREATE_BINDINGS(ITKIntensityWindowingImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_PROPERTY(double WindowMinimum READ getWindowMinimum WRITE setWindowMinimum)
+  PYB11_PROPERTY(double WindowMaximum READ getWindowMaximum WRITE setWindowMaximum)
+  PYB11_PROPERTY(double OutputMinimum READ getOutputMinimum WRITE setOutputMinimum)
+  PYB11_PROPERTY(double OutputMaximum READ getOutputMaximum WRITE setOutputMaximum)
 
 public:
   SIMPL_SHARED_POINTERS(ITKIntensityWindowingImage)

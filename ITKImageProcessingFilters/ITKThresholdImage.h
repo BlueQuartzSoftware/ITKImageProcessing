@@ -28,6 +28,10 @@
 class ITKThresholdImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+  PYB11_CREATE_BINDINGS(ITKThresholdImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_PROPERTY(double Lower READ getLower WRITE setLower)
+  PYB11_PROPERTY(double Upper READ getUpper WRITE setUpper)
+  PYB11_PROPERTY(double OutsideValue READ getOutsideValue WRITE setOutsideValue)
 
 public:
   SIMPL_SHARED_POINTERS(ITKThresholdImage)

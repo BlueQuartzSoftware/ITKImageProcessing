@@ -28,6 +28,9 @@
 class ITKIsoContourDistanceImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+  PYB11_CREATE_BINDINGS(ITKIsoContourDistanceImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_PROPERTY(double LevelSetValue READ getLevelSetValue WRITE setLevelSetValue)
+  PYB11_PROPERTY(double FarValue READ getFarValue WRITE setFarValue)
 
 public:
   SIMPL_SHARED_POINTERS(ITKIsoContourDistanceImage)

@@ -29,6 +29,9 @@
 class ITKHMinimaImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+  PYB11_CREATE_BINDINGS(ITKHMinimaImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_PROPERTY(double Height READ getHeight WRITE setHeight)
+  PYB11_PROPERTY(bool FullyConnected READ getFullyConnected WRITE setFullyConnected)
 
 public:
   SIMPL_SHARED_POINTERS(ITKHMinimaImage)

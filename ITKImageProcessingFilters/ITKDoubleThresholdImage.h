@@ -30,6 +30,14 @@
 class ITKDoubleThresholdImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+  PYB11_CREATE_BINDINGS(ITKDoubleThresholdImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_PROPERTY(double Threshold1 READ getThreshold1 WRITE setThreshold1)
+  PYB11_PROPERTY(double Threshold2 READ getThreshold2 WRITE setThreshold2)
+  PYB11_PROPERTY(double Threshold3 READ getThreshold3 WRITE setThreshold3)
+  PYB11_PROPERTY(double Threshold4 READ getThreshold4 WRITE setThreshold4)
+  PYB11_PROPERTY(int InsideValue READ getInsideValue WRITE setInsideValue)
+  PYB11_PROPERTY(int OutsideValue READ getOutsideValue WRITE setOutsideValue)
+  PYB11_PROPERTY(bool FullyConnected READ getFullyConnected WRITE setFullyConnected)
 
 public:
   SIMPL_SHARED_POINTERS(ITKDoubleThresholdImage)

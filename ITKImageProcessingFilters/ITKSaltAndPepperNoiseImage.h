@@ -28,6 +28,9 @@
 class ITKSaltAndPepperNoiseImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+  PYB11_CREATE_BINDINGS(ITKSaltAndPepperNoiseImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_PROPERTY(double Probability READ getProbability WRITE setProbability)
+  PYB11_PROPERTY(double Seed READ getSeed WRITE setSeed)
 
 public:
   SIMPL_SHARED_POINTERS(ITKSaltAndPepperNoiseImage)

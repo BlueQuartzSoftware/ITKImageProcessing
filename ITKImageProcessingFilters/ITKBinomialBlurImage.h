@@ -28,6 +28,8 @@
 class ITKBinomialBlurImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+  PYB11_CREATE_BINDINGS(ITKBinomialBlurImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_PROPERTY(double Repetitions READ getRepetitions WRITE setRepetitions)
 
 public:
   SIMPL_SHARED_POINTERS(ITKBinomialBlurImage)

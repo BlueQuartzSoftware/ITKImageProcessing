@@ -29,6 +29,11 @@
 class ITKBinaryThresholdImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+  PYB11_CREATE_BINDINGS(ITKBinaryThresholdImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_PROPERTY(double LowerThreshold READ getLowerThreshold WRITE setLowerThreshold)
+  PYB11_PROPERTY(double UpperThreshold READ getUpperThreshold WRITE setUpperThreshold)
+  PYB11_PROPERTY(int InsideValue READ getInsideValue WRITE setInsideValue)
+  PYB11_PROPERTY(int OutsideValue READ getOutsideValue WRITE setOutsideValue)
 
 public:
   SIMPL_SHARED_POINTERS(ITKBinaryThresholdImage)

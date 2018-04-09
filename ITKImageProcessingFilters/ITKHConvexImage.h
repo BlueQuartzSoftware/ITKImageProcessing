@@ -22,18 +22,20 @@
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 #include <itkHConvexImageFilter.h>
 
-
 /**
  * @brief The ITKHConvexImage class. See [Filter documentation](@ref ITKHConvexImage) for details.
  */
 class ITKHConvexImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+  PYB11_CREATE_BINDINGS(ITKHConvexImage SUPERCLASS AbstractFilter)
+  PYB11_PROPERTY(double Height READ getHeight WRITE setHeight)
+  PYB11_PROPERTY(bool FullyConnected READ getFullyConnected WRITE setFullyConnected)
 
 public:
   SIMPL_SHARED_POINTERS(ITKHConvexImage)
   SIMPL_STATIC_NEW_MACRO(ITKHConvexImage)
-   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKHConvexImage, AbstractFilter)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKHConvexImage, AbstractFilter)
 
   virtual ~ITKHConvexImage();
 
@@ -42,7 +44,6 @@ public:
 
   SIMPL_FILTER_PARAMETER(bool, FullyConnected)
   Q_PROPERTY(bool FullyConnected READ getFullyConnected WRITE setFullyConnected)
-
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -89,18 +90,18 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void dataCheck();
 
   /**
-  * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
-  */
+   * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
+   */
   void virtual filterInternal() override;
 
   /**
-  * @brief Applies the filter
-  */
+   * @brief Applies the filter
+   */
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ITKHConvexImage(const ITKHConvexImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKHConvexImage&) = delete;     // Move assignment Not Implemented
+  ITKHConvexImage(const ITKHConvexImage&) = delete; // Copy Constructor Not Implemented
+  void operator=(const ITKHConvexImage&) = delete;  // Move assignment Not Implemented
 };
 
 #ifdef __clang__

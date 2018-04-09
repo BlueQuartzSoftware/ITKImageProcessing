@@ -28,6 +28,8 @@
 class ITKMedianImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+  PYB11_CREATE_BINDINGS(ITKMedianImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_PROPERTY(FloatVec3_t Radius READ getRadius WRITE setRadius)
 
 public:
   SIMPL_SHARED_POINTERS(ITKMedianImage)

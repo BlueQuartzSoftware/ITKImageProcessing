@@ -29,6 +29,11 @@
 class ITKThresholdMaximumConnectedComponentsImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+  PYB11_CREATE_BINDINGS(ITKThresholdMaximumConnectedComponentsImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_PROPERTY(double MinimumObjectSizeInPixels READ getMinimumObjectSizeInPixels WRITE setMinimumObjectSizeInPixels)
+  PYB11_PROPERTY(double UpperBoundary READ getUpperBoundary WRITE setUpperBoundary)
+  PYB11_PROPERTY(int InsideValue READ getInsideValue WRITE setInsideValue)
+  PYB11_PROPERTY(int OutsideValue READ getOutsideValue WRITE setOutsideValue)
 
 public:
   SIMPL_SHARED_POINTERS(ITKThresholdMaximumConnectedComponentsImage)

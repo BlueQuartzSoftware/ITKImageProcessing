@@ -29,6 +29,9 @@
 class ITKLaplacianRecursiveGaussianImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+  PYB11_CREATE_BINDINGS(ITKLaplacianRecursiveGaussianImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_PROPERTY(double Sigma READ getSigma WRITE setSigma)
+  PYB11_PROPERTY(bool NormalizeAcrossScale READ getNormalizeAcrossScale WRITE setNormalizeAcrossScale)
 
 public:
   SIMPL_SHARED_POINTERS(ITKLaplacianRecursiveGaussianImage)
