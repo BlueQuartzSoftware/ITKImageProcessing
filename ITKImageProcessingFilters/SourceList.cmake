@@ -17,6 +17,7 @@ set(_PublicFilters
   ITKImageReader
   ITKImageWriter
   ITKImportImageStack
+  ITKMedianImage
 )
 
 if(NOT ITKImageProcessing_LeanAndMean)
@@ -94,7 +95,6 @@ if(NOT ITKImageProcessing_LeanAndMean)
     ITKSmoothingRecursiveGaussianImage
     ITKAdaptiveHistogramEqualizationImage
     ITKCastImage
-    ITKMedianImage
     ITKRGBToLuminanceImage
     ITKHistogramMatchingImage
     ITKMorphologicalWatershedImage

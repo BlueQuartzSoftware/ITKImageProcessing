@@ -37,45 +37,46 @@ public:
   // SIMPL_SHARED_POINTERS(ITKImageBase)
   // SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKImageBase, AbstractFilter)
 
-  ~ITKImageBase() override = default;
-
-  /**
+    ~ITKImageBase() override = default;
+    
+    /**
    * @brief execute Reimplemented from @see AbstractFilter class
    */
-  virtual void execute() override
-{
-  initialize();
-  this->dataCheckInternal();
-  if(getErrorCondition() < 0)
-  {
-    return;
-  }
-  if(getCancel() == true)
-  {
-    return;
-  }
-  this->filterInternal();
-}
-  /**
+    void execute() override
+    {
+      initialize();
+      this->dataCheckInternal();
+      if(getErrorCondition() < 0)
+      {
+        return;
+      }
+      if(getCancel())
+      {
+        return;
+      }
+      this->filterInternal();
+    }
+    /**
   * @brief preflight Reimplemented from @see AbstractFilter class
   */
-  virtual void preflight() override
-{
-  // These are the REQUIRED lines of CODE to make sure the filter behaves correctly
-  setInPreflight(true);              // Set the fact that we are preflighting.
-  emit preflightAboutToExecute();    // Emit this signal so that other widgets can do one file update
-  emit updateFilterParameters(this); // Emit this signal to have the widgets push their values down to the filter
-  this->dataCheckInternal();
-  emit preflightExecuted(); // We are done preflighting this filter
-  setInPreflight(false);    // Inform the system this filter is NOT in preflight mode anymore.
-}
+    void preflight() override
+    {
+      // These are the REQUIRED lines of CODE to make sure the filter behaves correctly
+      setInPreflight(true);              // Set the fact that we are preflighting.
+      emit preflightAboutToExecute();    // Emit this signal so that other widgets can do one file update
+      emit updateFilterParameters(this); // Emit this signal to have the widgets push their values down to the filter
+      this->dataCheckInternal();
+      emit preflightExecuted(); // We are done preflighting this filter
+      setInPreflight(false);    // Inform the system this filter is NOT in preflight mode anymore.
+    }
 
 
   /**
    * @brief CastVec3ToITK Input type should be FloatVec3_t or IntVec3_t, Output
      type should be some kind of ITK "array" (itk::Size, itk::Index,...)
    */
-  template <typename InputType, typename OutputType, typename ComponentType> OutputType CastVec3ToITK(const InputType& inputVec3, unsigned int dimension) const
+  template <typename InputType, typename OutputType, typename ComponentType> 
+  OutputType CastVec3ToITK(const InputType& inputVec3, unsigned int dimension) const
   {
     OutputType output;
     if(dimension > 0)
@@ -95,7 +96,8 @@ public:
   /**
    * @brief StaticCast Performs a static cast on a value. 'unused' type is to match 'CastStdToVec3' template format to simplify template declaration in conversion script.
    */
-  template <typename InputType, typename OutputType, typename unused> OutputType StaticCastScalar(const InputType& val) const
+  template <typename InputType, typename OutputType, typename unused> 
+  OutputType StaticCastScalar(const InputType& val) const
   {
     return static_cast<OutputType>(val);
   }
@@ -104,7 +106,8 @@ public:
    * @brief CastStdToVec3 Input type should be std::vector<float> or std::vector<int>
      and Output type should be FloatVec3_t or IntVec3_t
    */
-  template <typename InputType, typename OutputType, typename ComponentType> OutputType CastStdToVec3(const InputType& inputVector) const
+  template <typename InputType, typename OutputType, typename ComponentType> 
+  OutputType CastStdToVec3(const InputType& inputVector) const
   {
     OutputType outputVec3;
     if(inputVector.size() > 0)
@@ -161,9 +164,10 @@ protected:
   /**
    * @brief imageCheck checks if data array contains an image.
    */
-  template <typename PixelType, unsigned int Dimension> void imageCheck(const DataArrayPath &array_path)
+  template <typename PixelType, unsigned int Dimension> 
+  void imageCheck(const DataArrayPath &array_path)
   {
-    typedef typename itk::NumericTraits<PixelType>::ValueType ValueType;
+    using ValueType = typename itk::NumericTraits<PixelType>::ValueType ;
     // Check data array
     typename DataArray<ValueType>::WeakPointer cellArrayPtr;
     ValueType* cellArray;
@@ -181,7 +185,7 @@ protected:
     }
 
     ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(array_path.getDataContainerName())->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
-    if(nullptr == image.get())
+    if(nullptr == image)
     {
       setErrorCondition(-1);
       notifyErrorMessage(getHumanLabel(), "Array path does not contain image geometry.", getErrorCondition());
@@ -191,14 +195,15 @@ protected:
   /**
   * @brief Applies the filter
   */
-  template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension, typename FilterType> void filter(FilterType* filter, std::string outputArrayName, bool saveAsNewArray, DataArrayPath selectedArray)
+  template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension, typename FilterType> 
+  void filter(FilterType* filter, const std::string &outputArrayName, bool saveAsNewArray, const DataArrayPath &selectedArray)
   {
     try
     {
       DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(selectedArray.getDataContainerName());
 
-      typedef itk::Dream3DImage<OutputPixelType, Dimension> OutputImageType;
-      typedef itk::InPlaceDream3DDataToImageFilter<InputPixelType, Dimension> toITKType;
+      using OutputImageType = itk::Dream3DImage<OutputPixelType, Dimension> ;
+      using toITKType = itk::InPlaceDream3DDataToImageFilter<InputPixelType, Dimension> ;
       // Create a Bridge to wrap an existing DREAM.3D array with an ItkImage container
       typename toITKType::Pointer toITK = toITKType::New();
       toITK->SetInput(dc);
@@ -218,14 +223,14 @@ protected:
       image = filter->GetOutput();
       image->DisconnectPipeline();
 
-      if(saveAsNewArray == false)
+      if(!saveAsNewArray)
       {
         AttributeMatrix::Pointer attrMat = dc->getAttributeMatrix(selectedArray.getAttributeMatrixName());
         // Remove the original input data array
         attrMat->removeAttributeArray(selectedArray.getDataArrayName());
       }
 
-      typedef itk::InPlaceImageToDream3DDataFilter<OutputPixelType, Dimension> toDream3DType;
+      using toDream3DType = itk::InPlaceImageToDream3DDataFilter<OutputPixelType, Dimension> ;
       typename toDream3DType::Pointer toDream3DFilter = toDream3DType::New();
       toDream3DFilter->SetInput(image);
       toDream3DFilter->SetInPlace(true);
@@ -247,13 +252,14 @@ protected:
   /**
   * @brief Applies the filter, casting the input to float
   */
-  template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension, typename FilterType, typename FloatImageType> void filterCastToFloat(FilterType* filter, std::string outputArrayName, bool saveAsNewArray, DataArrayPath selectedArray)
+  template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension, typename FilterType, typename FloatImageType> 
+  void filterCastToFloat(FilterType* filter, const std::string &outputArrayName, bool saveAsNewArray, const DataArrayPath &selectedArray)
   {
     try
     {
       DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(selectedArray.getDataContainerName());
 
-      typedef itk::InPlaceDream3DDataToImageFilter<InputPixelType, Dimension> toITKType;
+      using toITKType = itk::InPlaceDream3DDataToImageFilter<InputPixelType, Dimension>;
       // Create a Bridge to wrap an existing DREAM.3D array with an ItkImage container
       typename toITKType::Pointer toITK = toITKType::New();
       toITK->SetInput(dc);
@@ -264,8 +270,8 @@ protected:
       itk::Dream3DFilterInterruption::Pointer interruption = itk::Dream3DFilterInterruption::New();
       interruption->SetFilter(this);
 
-      typedef typename toITKType::ImageType InputImageType;
-      typedef itk::CastImageFilter<InputImageType, FloatImageType> CasterToType;
+      using InputImageType = typename toITKType::ImageType ;
+      using CasterToType = itk::CastImageFilter<InputImageType, FloatImageType> ;
       typename CasterToType::Pointer casterTo = CasterToType::New();
       casterTo->SetInput(toITK->GetOutput());
 
@@ -273,8 +279,8 @@ protected:
       filter->SetInput(casterTo->GetOutput());
       filter->AddObserver(itk::ProgressEvent(), interruption);
 
-      typedef itk::Dream3DImage<OutputPixelType, Dimension> OutputImageType;
-      typedef itk::CastImageFilter<FloatImageType, OutputImageType> CasterFromType;
+      using OutputImageType = itk::Dream3DImage<OutputPixelType, Dimension> ;
+      using CasterFromType = itk::CastImageFilter<FloatImageType, OutputImageType> ;
       typename CasterFromType::Pointer casterFrom = CasterFromType::New();
       casterFrom->SetInput(filter->GetOutput());
       casterFrom->Update();
@@ -283,14 +289,14 @@ protected:
       image = casterFrom->GetOutput();
       image->DisconnectPipeline();
 
-      if(saveAsNewArray == false)
+      if(!saveAsNewArray)
       {
         AttributeMatrix::Pointer attrMat = dc->getAttributeMatrix(selectedArray.getAttributeMatrixName());
         // Remove the original input data array
         attrMat->removeAttributeArray(selectedArray.getDataArrayName());
       }
 
-      typedef itk::InPlaceImageToDream3DDataFilter<OutputPixelType, Dimension> toDream3DType;
+      using toDream3DType = itk::InPlaceImageToDream3DDataFilter<OutputPixelType, Dimension> ;
       typename toDream3DType::Pointer toDream3DFilter = toDream3DType::New();
       toDream3DFilter->SetInput(image);
       toDream3DFilter->SetInPlace(true);
@@ -316,9 +322,10 @@ protected:
     The 3rd parameter, 'bool' is given to match the definition of CheckVectorEntry. This allows
     to use a dictionary in Python to choose between the 2 functions.
   */
-  template <typename VarType, typename SubsType> void CheckIntegerEntry(SubsType value, QString name, bool)
+  template <typename VarType, typename SubsType> 
+  void CheckIntegerEntry(SubsType value, const QString &name, bool /* b */)
   {
-    typedef typename itk::NumericTraits<VarType>::ValueType ValueType;
+    using ValueType = typename itk::NumericTraits<VarType>::ValueType ;
     SubsType lowest = static_cast<SubsType>(std::numeric_limits<ValueType>::lowest());
     SubsType max = static_cast<SubsType>(std::numeric_limits<ValueType>::max());
     if(value < lowest || value > max || value != floor(value))
@@ -334,11 +341,12 @@ protected:
     For the other type, we have to use one of this primitive type, and verify that the
     value corresponds to what is expected.
   */
-  template <typename VarType, typename SubsType> void CheckVectorEntry(SubsType value, QString name, bool integer)
+  template <typename VarType, typename SubsType> 
+  void CheckVectorEntry(SubsType value, const QString &name, bool integer)
   {
-    typedef typename itk::NumericTraits<VarType>::ValueType ValueType;
-    float lowest = static_cast<float>(std::numeric_limits<ValueType>::lowest());
-    float max = static_cast<float>(std::numeric_limits<ValueType>::max());
+    using ValueType = typename itk::NumericTraits<VarType>::ValueType;
+    auto lowest = static_cast<float>(std::numeric_limits<ValueType>::lowest());
+    auto max = static_cast<float>(std::numeric_limits<ValueType>::max());
     if(value.x < lowest || value.x > max || (integer && value.x != floor(value.x)) || value.y < lowest || value.y > max || (integer && value.y != floor(value.y)) || value.z < lowest ||
        value.z > max || (integer && value.z != floor(value.z)))
     {
@@ -358,7 +366,7 @@ protected:
   bool checkImageType(const QVector<QString>& types, const DataArrayPath& path)
   {
     IDataArray::Pointer ptr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, path);
-    if(ptr.get() != nullptr)
+    if(nullptr != ptr)
     {
       if(types.indexOf(ptr->getTypeAsString()) != -1)
       {
@@ -388,11 +396,13 @@ protected:
     setCancel(false);
   }
 
-private:
-
-  ITKImageBase(const ITKImageBase&);   // Copy Constructor Not Implemented
+  private:
+  
+  public:
+  ITKImageBase(const ITKImageBase&) = delete; // Copy Constructor Not Implemented
+  ITKImageBase(ITKImageBase&&) = delete;      // Move Constructor Not Implemented
   ITKImageBase& operator=(const ITKImageBase&) = delete; // Copy Assignment Not Implemented
-  ITKImageBase& operator=(ITKImageBase&&) = delete;      // Move Assignment
+  ITKImageBase& operator=(ITKImageBase&&) = delete;      // Move Assignment Not Implemented
 };
 
 #endif /* _ITKImageBase_H_ */
