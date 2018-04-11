@@ -33,7 +33,7 @@ public:
   SIMPL_FILTER_NEW_MACRO(ITKVectorRescaleIntensityImage)
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKVectorRescaleIntensityImage, AbstractFilter)
 
-  virtual ~ITKVectorRescaleIntensityImage();
+  ~ITKVectorRescaleIntensityImage() override;
 
   SIMPL_FILTER_PARAMETER(double, OutputMaximumMagnitude)
   Q_PROPERTY(double OutputMaximumMagnitude READ getOutputMaximumMagnitude WRITE setOutputMaximumMagnitude)
@@ -102,7 +102,9 @@ protected:
 
 private:
   ITKVectorRescaleIntensityImage(const ITKVectorRescaleIntensityImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKVectorRescaleIntensityImage&);                          // Move assignment Not Implemented
+  ITKVectorRescaleIntensityImage(ITKVectorRescaleIntensityImage&&) = delete;      // Move Constructor Not Implemented
+  ITKVectorRescaleIntensityImage& operator=(const ITKVectorRescaleIntensityImage&) = delete; // Copy Assignment Not Implemented
+  ITKVectorRescaleIntensityImage& operator=(ITKVectorRescaleIntensityImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

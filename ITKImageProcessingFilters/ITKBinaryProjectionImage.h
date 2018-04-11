@@ -31,10 +31,10 @@ class ITKBinaryProjectionImage : public ITKImageProcessingBase
 
 public:
   SIMPL_SHARED_POINTERS(ITKBinaryProjectionImage)
-  SIMPL_STATIC_NEW_MACRO(ITKBinaryProjectionImage)
-   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKBinaryProjectionImage, AbstractFilter)
+  SIMPL_FILTER_NEW_MACRO(ITKBinaryProjectionImage)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKBinaryProjectionImage, AbstractFilter)
 
-  virtual ~ITKBinaryProjectionImage();
+  ~ITKBinaryProjectionImage() override;
 
   SIMPL_FILTER_PARAMETER(double, ProjectionDimension)
   Q_PROPERTY(double ProjectionDimension READ getProjectionDimension WRITE setProjectionDimension)
@@ -102,7 +102,9 @@ protected:
 
 private:
   ITKBinaryProjectionImage(const ITKBinaryProjectionImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKBinaryProjectionImage&) = delete;              // Move assignment Not Implemented
+  ITKBinaryProjectionImage(ITKBinaryProjectionImage&&) = delete;         // Move Constructor Not Implemented
+  ITKBinaryProjectionImage& operator=(const ITKBinaryProjectionImage&) = delete; // Copy Assignment Not Implemented
+  ITKBinaryProjectionImage& operator=(ITKBinaryProjectionImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

@@ -34,7 +34,7 @@ public:
   SIMPL_FILTER_NEW_MACRO(ITKSaltAndPepperNoiseImage)
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKSaltAndPepperNoiseImage, AbstractFilter)
 
-  virtual ~ITKSaltAndPepperNoiseImage();
+  ~ITKSaltAndPepperNoiseImage() override;
 
   SIMPL_FILTER_PARAMETER(double, Probability)
   Q_PROPERTY(double Probability READ getProbability WRITE setProbability)
@@ -99,7 +99,9 @@ protected:
 
 private:
   ITKSaltAndPepperNoiseImage(const ITKSaltAndPepperNoiseImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKSaltAndPepperNoiseImage&) = delete;                // Move assignment Not Implemented
+  ITKSaltAndPepperNoiseImage(ITKSaltAndPepperNoiseImage&&) = delete;         // Move Constructor Not Implemented
+  ITKSaltAndPepperNoiseImage& operator=(const ITKSaltAndPepperNoiseImage&) = delete; // Copy Assignment Not Implemented
+  ITKSaltAndPepperNoiseImage& operator=(ITKSaltAndPepperNoiseImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

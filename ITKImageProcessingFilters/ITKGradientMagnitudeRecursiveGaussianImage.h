@@ -32,10 +32,10 @@ class ITKGradientMagnitudeRecursiveGaussianImage : public ITKImageProcessingBase
 
 public:
   SIMPL_SHARED_POINTERS(ITKGradientMagnitudeRecursiveGaussianImage)
-  SIMPL_STATIC_NEW_MACRO(ITKGradientMagnitudeRecursiveGaussianImage)
-   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKGradientMagnitudeRecursiveGaussianImage, AbstractFilter)
+  SIMPL_FILTER_NEW_MACRO(ITKGradientMagnitudeRecursiveGaussianImage)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKGradientMagnitudeRecursiveGaussianImage, AbstractFilter)
 
-  virtual ~ITKGradientMagnitudeRecursiveGaussianImage();
+  ~ITKGradientMagnitudeRecursiveGaussianImage() override;
 
   SIMPL_FILTER_PARAMETER(double, Sigma)
   Q_PROPERTY(double Sigma READ getSigma WRITE setSigma)
@@ -100,7 +100,9 @@ protected:
 
 private:
   ITKGradientMagnitudeRecursiveGaussianImage(const ITKGradientMagnitudeRecursiveGaussianImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKGradientMagnitudeRecursiveGaussianImage&) = delete;                                // Move assignment Not Implemented
+  ITKGradientMagnitudeRecursiveGaussianImage(ITKGradientMagnitudeRecursiveGaussianImage&&) = delete;         // Move Constructor Not Implemented
+  ITKGradientMagnitudeRecursiveGaussianImage& operator=(const ITKGradientMagnitudeRecursiveGaussianImage&) = delete; // Copy Assignment Not Implemented
+  ITKGradientMagnitudeRecursiveGaussianImage& operator=(ITKGradientMagnitudeRecursiveGaussianImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

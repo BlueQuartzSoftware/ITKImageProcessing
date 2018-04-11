@@ -33,8 +33,7 @@ public:
   SIMPL_FILTER_NEW_MACRO(ITKLogImage)
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKLogImage, AbstractFilter)
 
-  virtual ~ITKLogImage();
-
+  ~ITKLogImage() override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -92,7 +91,9 @@ protected:
 
 private:
   ITKLogImage(const ITKLogImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKLogImage&) = delete; // Move assignment Not Implemented
+  ITKLogImage(ITKLogImage&&) = delete;         // Move Constructor Not Implemented
+  ITKLogImage& operator=(const ITKLogImage&) = delete; // Copy Assignment Not Implemented
+  ITKLogImage& operator=(ITKLogImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

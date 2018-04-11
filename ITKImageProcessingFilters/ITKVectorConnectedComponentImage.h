@@ -35,7 +35,7 @@ public:
   SIMPL_FILTER_NEW_MACRO(ITKVectorConnectedComponentImage)
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKVectorConnectedComponentImage, AbstractFilter)
 
-  virtual ~ITKVectorConnectedComponentImage();
+  ~ITKVectorConnectedComponentImage() override;
 
   SIMPL_FILTER_PARAMETER(double, DistanceThreshold)
   Q_PROPERTY(double DistanceThreshold READ getDistanceThreshold WRITE setDistanceThreshold)
@@ -100,7 +100,9 @@ protected:
 
 private:
   ITKVectorConnectedComponentImage(const ITKVectorConnectedComponentImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKVectorConnectedComponentImage&) = delete;                      // Move assignment Not Implemented
+  ITKVectorConnectedComponentImage(ITKVectorConnectedComponentImage&&) = delete;         // Move Constructor Not Implemented
+  ITKVectorConnectedComponentImage& operator=(const ITKVectorConnectedComponentImage&) = delete; // Copy Assignment Not Implemented
+  ITKVectorConnectedComponentImage& operator=(ITKVectorConnectedComponentImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

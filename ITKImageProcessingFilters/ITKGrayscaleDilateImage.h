@@ -32,10 +32,10 @@ class ITKGrayscaleDilateImage : public ITKImageProcessingBase
 
 public:
   SIMPL_SHARED_POINTERS(ITKGrayscaleDilateImage)
-  SIMPL_STATIC_NEW_MACRO(ITKGrayscaleDilateImage)
+  SIMPL_FILTER_NEW_MACRO(ITKGrayscaleDilateImage)
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKGrayscaleDilateImage, AbstractFilter)
 
-  virtual ~ITKGrayscaleDilateImage();
+  ~ITKGrayscaleDilateImage() override;
 
   SIMPL_FILTER_PARAMETER(FloatVec3_t, KernelRadius)
   Q_PROPERTY(FloatVec3_t KernelRadius READ getKernelRadius WRITE setKernelRadius)
@@ -100,7 +100,9 @@ protected:
 
 private:
   ITKGrayscaleDilateImage(const ITKGrayscaleDilateImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKGrayscaleDilateImage&) = delete;             // Move assignment Not Implemented
+  ITKGrayscaleDilateImage(ITKGrayscaleDilateImage&&) = delete;         // Move Constructor Not Implemented
+  ITKGrayscaleDilateImage& operator=(const ITKGrayscaleDilateImage&) = delete; // Copy Assignment Not Implemented
+  ITKGrayscaleDilateImage& operator=(ITKGrayscaleDilateImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

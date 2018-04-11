@@ -32,10 +32,10 @@ class ITKBinaryMinMaxCurvatureFlowImage : public ITKImageProcessingBase
 
 public:
   SIMPL_SHARED_POINTERS(ITKBinaryMinMaxCurvatureFlowImage)
-  SIMPL_STATIC_NEW_MACRO(ITKBinaryMinMaxCurvatureFlowImage)
-   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKBinaryMinMaxCurvatureFlowImage, AbstractFilter)
+  SIMPL_FILTER_NEW_MACRO(ITKBinaryMinMaxCurvatureFlowImage)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKBinaryMinMaxCurvatureFlowImage, AbstractFilter)
 
-  virtual ~ITKBinaryMinMaxCurvatureFlowImage();
+  ~ITKBinaryMinMaxCurvatureFlowImage() override;
 
   SIMPL_FILTER_PARAMETER(double, TimeStep)
   Q_PROPERTY(double TimeStep READ getTimeStep WRITE setTimeStep)
@@ -106,7 +106,9 @@ protected:
 
 private:
   ITKBinaryMinMaxCurvatureFlowImage(const ITKBinaryMinMaxCurvatureFlowImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKBinaryMinMaxCurvatureFlowImage&) = delete;                       // Move assignment Not Implemented
+  ITKBinaryMinMaxCurvatureFlowImage(ITKBinaryMinMaxCurvatureFlowImage&&) = delete;         // Move Constructor Not Implemented
+  ITKBinaryMinMaxCurvatureFlowImage& operator=(const ITKBinaryMinMaxCurvatureFlowImage&) = delete; // Copy Assignment Not Implemented
+  ITKBinaryMinMaxCurvatureFlowImage& operator=(ITKBinaryMinMaxCurvatureFlowImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

@@ -34,7 +34,7 @@ public:
   SIMPL_FILTER_NEW_MACRO(ITKSigmoidImage)
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKSigmoidImage, AbstractFilter)
 
-  virtual ~ITKSigmoidImage();
+  ~ITKSigmoidImage() override;
 
   SIMPL_FILTER_PARAMETER(double, Alpha)
   Q_PROPERTY(double Alpha READ getAlpha WRITE setAlpha)
@@ -105,7 +105,9 @@ protected:
 
 private:
   ITKSigmoidImage(const ITKSigmoidImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKSigmoidImage&) = delete;     // Move assignment Not Implemented
+  ITKSigmoidImage(ITKSigmoidImage&&) = delete;         // Move Constructor Not Implemented
+  ITKSigmoidImage& operator=(const ITKSigmoidImage&) = delete; // Copy Assignment Not Implemented
+  ITKSigmoidImage& operator=(ITKSigmoidImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

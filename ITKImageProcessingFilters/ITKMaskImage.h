@@ -33,7 +33,7 @@ public:
   SIMPL_FILTER_NEW_MACRO(ITKMaskImage)
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKMaskImage, AbstractFilter)
 
-  virtual ~ITKMaskImage();
+  ~ITKMaskImage() override;
 
   SIMPL_FILTER_PARAMETER(double, OutsideValue)
   Q_PROPERTY(double OutsideValue READ getOutsideValue WRITE setOutsideValue)
@@ -107,7 +107,8 @@ protected:
 
 private:
   ITKMaskImage(const ITKMaskImage&);   // Copy Constructor Not Implemented
-  void operator=(const ITKMaskImage&) = delete; // Move assignment Not Implemented
+  ITKMaskImage& operator=(const ITKMaskImage&) = delete; // Copy Assignment Not Implemented
+  ITKMaskImage& operator=(ITKMaskImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

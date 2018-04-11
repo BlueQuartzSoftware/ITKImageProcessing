@@ -32,10 +32,10 @@ class ITKBinaryContourImage : public ITKImageProcessingBase
 
 public:
   SIMPL_SHARED_POINTERS(ITKBinaryContourImage)
-  SIMPL_STATIC_NEW_MACRO(ITKBinaryContourImage)
-   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKBinaryContourImage, AbstractFilter)
+  SIMPL_FILTER_NEW_MACRO(ITKBinaryContourImage)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKBinaryContourImage, AbstractFilter)
 
-  virtual ~ITKBinaryContourImage();
+  ~ITKBinaryContourImage() override;
 
   SIMPL_FILTER_PARAMETER(bool, FullyConnected)
   Q_PROPERTY(bool FullyConnected READ getFullyConnected WRITE setFullyConnected)
@@ -103,7 +103,9 @@ protected:
 
 private:
   ITKBinaryContourImage(const ITKBinaryContourImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKBinaryContourImage&) = delete;           // Move assignment Not Implemented
+  ITKBinaryContourImage(ITKBinaryContourImage&&) = delete;         // Move Constructor Not Implemented
+  ITKBinaryContourImage& operator=(const ITKBinaryContourImage&) = delete; // Copy Assignment Not Implemented
+  ITKBinaryContourImage& operator=(ITKBinaryContourImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

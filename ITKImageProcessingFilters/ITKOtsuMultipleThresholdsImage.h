@@ -37,7 +37,7 @@ public:
   SIMPL_FILTER_NEW_MACRO(ITKOtsuMultipleThresholdsImage)
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKOtsuMultipleThresholdsImage, AbstractFilter)
 
-  virtual ~ITKOtsuMultipleThresholdsImage();
+  ~ITKOtsuMultipleThresholdsImage() override;
 
   SIMPL_FILTER_PARAMETER(int, NumberOfThresholds)
   Q_PROPERTY(int NumberOfThresholds READ getNumberOfThresholds WRITE setNumberOfThresholds)
@@ -111,7 +111,9 @@ protected:
 
 private:
   ITKOtsuMultipleThresholdsImage(const ITKOtsuMultipleThresholdsImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKOtsuMultipleThresholdsImage&) = delete;                    // Move assignment Not Implemented
+  ITKOtsuMultipleThresholdsImage(ITKOtsuMultipleThresholdsImage&&) = delete;         // Move Constructor Not Implemented
+  ITKOtsuMultipleThresholdsImage& operator=(const ITKOtsuMultipleThresholdsImage&) = delete; // Copy Assignment Not Implemented
+  ITKOtsuMultipleThresholdsImage& operator=(ITKOtsuMultipleThresholdsImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

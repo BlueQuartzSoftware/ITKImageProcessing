@@ -36,7 +36,7 @@ public:
   SIMPL_FILTER_NEW_MACRO(ITKRelabelComponentImage)
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKRelabelComponentImage, AbstractFilter)
 
-  virtual ~ITKRelabelComponentImage();
+  ~ITKRelabelComponentImage() override;
 
   SIMPL_FILTER_PARAMETER(double, MinimumObjectSize)
   Q_PROPERTY(double MinimumObjectSize READ getMinimumObjectSize WRITE setMinimumObjectSize)
@@ -113,7 +113,9 @@ protected:
 
 private:
   ITKRelabelComponentImage(const ITKRelabelComponentImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKRelabelComponentImage&) = delete;              // Move assignment Not Implemented
+  ITKRelabelComponentImage(ITKRelabelComponentImage&&) = delete;         // Move Constructor Not Implemented
+  ITKRelabelComponentImage& operator=(const ITKRelabelComponentImage&) = delete; // Copy Assignment Not Implemented
+  ITKRelabelComponentImage& operator=(ITKRelabelComponentImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

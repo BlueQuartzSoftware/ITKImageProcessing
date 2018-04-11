@@ -34,7 +34,7 @@ public:
   SIMPL_FILTER_NEW_MACRO(ITKShiftScaleImage)
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKShiftScaleImage, AbstractFilter)
 
-  virtual ~ITKShiftScaleImage();
+  ~ITKShiftScaleImage() override;
 
   SIMPL_FILTER_PARAMETER(double, Shift)
   Q_PROPERTY(double Shift READ getShift WRITE setShift)
@@ -99,7 +99,9 @@ protected:
 
 private:
   ITKShiftScaleImage(const ITKShiftScaleImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKShiftScaleImage&) = delete;        // Move assignment Not Implemented
+  ITKShiftScaleImage(ITKShiftScaleImage&&) = delete;         // Move Constructor Not Implemented
+  ITKShiftScaleImage& operator=(const ITKShiftScaleImage&) = delete; // Copy Assignment Not Implemented
+  ITKShiftScaleImage& operator=(ITKShiftScaleImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

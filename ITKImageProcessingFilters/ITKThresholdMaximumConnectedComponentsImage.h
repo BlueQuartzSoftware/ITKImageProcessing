@@ -35,7 +35,7 @@ public:
   SIMPL_FILTER_NEW_MACRO(ITKThresholdMaximumConnectedComponentsImage)
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKThresholdMaximumConnectedComponentsImage, AbstractFilter)
 
-  virtual ~ITKThresholdMaximumConnectedComponentsImage();
+  ~ITKThresholdMaximumConnectedComponentsImage() override;
 
   SIMPL_FILTER_PARAMETER(double, MinimumObjectSizeInPixels)
   Q_PROPERTY(double MinimumObjectSizeInPixels READ getMinimumObjectSizeInPixels WRITE setMinimumObjectSizeInPixels)
@@ -106,7 +106,9 @@ protected:
 
 private:
   ITKThresholdMaximumConnectedComponentsImage(const ITKThresholdMaximumConnectedComponentsImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKThresholdMaximumConnectedComponentsImage&) = delete;                                 // Move assignment Not Implemented
+  ITKThresholdMaximumConnectedComponentsImage(ITKThresholdMaximumConnectedComponentsImage&&) = delete;         // Move Constructor Not Implemented
+  ITKThresholdMaximumConnectedComponentsImage& operator=(const ITKThresholdMaximumConnectedComponentsImage&) = delete; // Copy Assignment Not Implemented
+  ITKThresholdMaximumConnectedComponentsImage& operator=(ITKThresholdMaximumConnectedComponentsImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

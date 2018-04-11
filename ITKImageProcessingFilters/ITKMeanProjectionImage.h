@@ -34,7 +34,7 @@ public:
   SIMPL_FILTER_NEW_MACRO(ITKMeanProjectionImage)
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKMeanProjectionImage, AbstractFilter)
 
-  virtual ~ITKMeanProjectionImage();
+  ~ITKMeanProjectionImage() override;
 
   SIMPL_FILTER_PARAMETER(double, ProjectionDimension)
   Q_PROPERTY(double ProjectionDimension READ getProjectionDimension WRITE setProjectionDimension)
@@ -96,7 +96,9 @@ protected:
 
 private:
   ITKMeanProjectionImage(const ITKMeanProjectionImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKMeanProjectionImage&) = delete;            // Move assignment Not Implemented
+  ITKMeanProjectionImage(ITKMeanProjectionImage&&) = delete;         // Move Constructor Not Implemented
+  ITKMeanProjectionImage& operator=(const ITKMeanProjectionImage&) = delete; // Copy Assignment Not Implemented
+  ITKMeanProjectionImage& operator=(ITKMeanProjectionImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

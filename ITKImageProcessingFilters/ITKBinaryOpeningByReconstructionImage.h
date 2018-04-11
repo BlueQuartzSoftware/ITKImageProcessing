@@ -34,10 +34,10 @@ class ITKBinaryOpeningByReconstructionImage : public ITKImageProcessingBase
 
 public:
   SIMPL_SHARED_POINTERS(ITKBinaryOpeningByReconstructionImage)
-  SIMPL_STATIC_NEW_MACRO(ITKBinaryOpeningByReconstructionImage)
+  SIMPL_FILTER_NEW_MACRO(ITKBinaryOpeningByReconstructionImage)
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKBinaryOpeningByReconstructionImage, AbstractFilter)
 
-  virtual ~ITKBinaryOpeningByReconstructionImage();
+  ~ITKBinaryOpeningByReconstructionImage() override;
 
   SIMPL_FILTER_PARAMETER(double, ForegroundValue)
   Q_PROPERTY(double ForegroundValue READ getForegroundValue WRITE setForegroundValue)
@@ -111,7 +111,9 @@ protected:
 
 private:
   ITKBinaryOpeningByReconstructionImage(const ITKBinaryOpeningByReconstructionImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKBinaryOpeningByReconstructionImage&) = delete;                           // Move assignment Not Implemented
+  ITKBinaryOpeningByReconstructionImage(ITKBinaryOpeningByReconstructionImage&&) = delete;         // Move Constructor Not Implemented
+  ITKBinaryOpeningByReconstructionImage& operator=(const ITKBinaryOpeningByReconstructionImage&) = delete; // Copy Assignment Not Implemented
+  ITKBinaryOpeningByReconstructionImage& operator=(ITKBinaryOpeningByReconstructionImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

@@ -27,13 +27,13 @@ class ITKCastImage : public ITKImageProcessingBase
 
 public:
   SIMPL_SHARED_POINTERS(ITKCastImage)
-  SIMPL_STATIC_NEW_MACRO(ITKCastImage)
-   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKCastImage, AbstractFilter)
+  SIMPL_FILTER_NEW_MACRO(ITKCastImage)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKCastImage, AbstractFilter)
 
   SIMPL_FILTER_PARAMETER(int, CastingType)
   Q_PROPERTY(int CastingType READ getCastingType WRITE setCastingType)
 
-  virtual ~ITKCastImage();
+  ~ITKCastImage() override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -91,7 +91,8 @@ protected:
 
 private:
   ITKCastImage(const ITKCastImage&);   // Copy Constructor Not Implemented
-  void operator=(const ITKCastImage&) = delete; // Move assignment Not Implemented
+  ITKCastImage& operator=(const ITKCastImage&) = delete; // Copy Assignment Not Implemented
+  ITKCastImage& operator=(ITKCastImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

@@ -35,7 +35,7 @@ public:
   SIMPL_FILTER_NEW_MACRO(ITKSmoothingRecursiveGaussianImage)
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKSmoothingRecursiveGaussianImage, AbstractFilter)
 
-  virtual ~ITKSmoothingRecursiveGaussianImage();
+  ~ITKSmoothingRecursiveGaussianImage() override;
 
   SIMPL_FILTER_PARAMETER(FloatVec3_t, Sigma)
   Q_PROPERTY(FloatVec3_t Sigma READ getSigma WRITE setSigma)
@@ -100,7 +100,9 @@ protected:
 
 private:
   ITKSmoothingRecursiveGaussianImage(const ITKSmoothingRecursiveGaussianImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKSmoothingRecursiveGaussianImage&) = delete;                        // Move assignment Not Implemented
+  ITKSmoothingRecursiveGaussianImage(ITKSmoothingRecursiveGaussianImage&&) = delete;         // Move Constructor Not Implemented
+  ITKSmoothingRecursiveGaussianImage& operator=(const ITKSmoothingRecursiveGaussianImage&) = delete; // Copy Assignment Not Implemented
+  ITKSmoothingRecursiveGaussianImage& operator=(ITKSmoothingRecursiveGaussianImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

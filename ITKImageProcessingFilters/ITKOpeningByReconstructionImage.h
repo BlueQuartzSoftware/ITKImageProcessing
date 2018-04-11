@@ -36,7 +36,7 @@ public:
   SIMPL_FILTER_NEW_MACRO(ITKOpeningByReconstructionImage)
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKOpeningByReconstructionImage, AbstractFilter)
 
-  virtual ~ITKOpeningByReconstructionImage();
+  ~ITKOpeningByReconstructionImage() override;
 
   SIMPL_FILTER_PARAMETER(bool, FullyConnected)
   Q_PROPERTY(bool FullyConnected READ getFullyConnected WRITE setFullyConnected)
@@ -107,7 +107,9 @@ protected:
 
 private:
   ITKOpeningByReconstructionImage(const ITKOpeningByReconstructionImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKOpeningByReconstructionImage&) = delete;                     // Move assignment Not Implemented
+  ITKOpeningByReconstructionImage(ITKOpeningByReconstructionImage&&) = delete;         // Move Constructor Not Implemented
+  ITKOpeningByReconstructionImage& operator=(const ITKOpeningByReconstructionImage&) = delete; // Copy Assignment Not Implemented
+  ITKOpeningByReconstructionImage& operator=(ITKOpeningByReconstructionImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

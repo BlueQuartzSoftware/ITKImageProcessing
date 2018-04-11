@@ -31,10 +31,10 @@ class ITKApproximateSignedDistanceMapImage : public ITKImageProcessingBase
 
 public:
   SIMPL_SHARED_POINTERS(ITKApproximateSignedDistanceMapImage)
-  SIMPL_STATIC_NEW_MACRO(ITKApproximateSignedDistanceMapImage)
-   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKApproximateSignedDistanceMapImage, AbstractFilter)
+  SIMPL_FILTER_NEW_MACRO(ITKApproximateSignedDistanceMapImage)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKApproximateSignedDistanceMapImage, AbstractFilter)
 
-  virtual ~ITKApproximateSignedDistanceMapImage();
+  ~ITKApproximateSignedDistanceMapImage() override;
 
   SIMPL_FILTER_PARAMETER(double, InsideValue)
   Q_PROPERTY(double InsideValue READ getInsideValue WRITE setInsideValue)
@@ -99,7 +99,9 @@ protected:
 
 private:
   ITKApproximateSignedDistanceMapImage(const ITKApproximateSignedDistanceMapImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKApproximateSignedDistanceMapImage&) = delete;                          // Move assignment Not Implemented
+  ITKApproximateSignedDistanceMapImage(ITKApproximateSignedDistanceMapImage&&) = delete;         // Move Constructor Not Implemented
+  ITKApproximateSignedDistanceMapImage& operator=(const ITKApproximateSignedDistanceMapImage&) = delete; // Copy Assignment Not Implemented
+  ITKApproximateSignedDistanceMapImage& operator=(ITKApproximateSignedDistanceMapImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

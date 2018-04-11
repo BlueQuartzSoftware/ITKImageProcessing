@@ -30,11 +30,10 @@ class ITKBoundedReciprocalImage : public ITKImageProcessingBase
 
 public:
   SIMPL_SHARED_POINTERS(ITKBoundedReciprocalImage)
-  SIMPL_STATIC_NEW_MACRO(ITKBoundedReciprocalImage)
-   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKBoundedReciprocalImage, AbstractFilter)
+  SIMPL_FILTER_NEW_MACRO(ITKBoundedReciprocalImage)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKBoundedReciprocalImage, AbstractFilter)
 
-  virtual ~ITKBoundedReciprocalImage();
-
+  ~ITKBoundedReciprocalImage() override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -92,7 +91,9 @@ protected:
 
 private:
   ITKBoundedReciprocalImage(const ITKBoundedReciprocalImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKBoundedReciprocalImage&) = delete;               // Move assignment Not Implemented
+  ITKBoundedReciprocalImage(ITKBoundedReciprocalImage&&) = delete;         // Move Constructor Not Implemented
+  ITKBoundedReciprocalImage& operator=(const ITKBoundedReciprocalImage&) = delete; // Copy Assignment Not Implemented
+  ITKBoundedReciprocalImage& operator=(ITKBoundedReciprocalImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

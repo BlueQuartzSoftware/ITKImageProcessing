@@ -31,13 +31,13 @@ class ITKFFTNormalizedCorrelationImage : public ITKImageProcessingBase
 
 public:
   SIMPL_SHARED_POINTERS(ITKFFTNormalizedCorrelationImage)
-  SIMPL_STATIC_NEW_MACRO(ITKFFTNormalizedCorrelationImage)
-   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKFFTNormalizedCorrelationImage, AbstractFilter)
+  SIMPL_FILTER_NEW_MACRO(ITKFFTNormalizedCorrelationImage)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKFFTNormalizedCorrelationImage, AbstractFilter)
 
   SIMPL_FILTER_PARAMETER(DataArrayPath, MovingCellArrayPath)
   Q_PROPERTY(DataArrayPath MovingCellArrayPath READ getMovingCellArrayPath WRITE setMovingCellArrayPath)
 
-  virtual ~ITKFFTNormalizedCorrelationImage();
+  ~ITKFFTNormalizedCorrelationImage() override;
 
   SIMPL_FILTER_PARAMETER(double, RequiredNumberOfOverlappingPixels)
   Q_PROPERTY(double RequiredNumberOfOverlappingPixels READ getRequiredNumberOfOverlappingPixels WRITE setRequiredNumberOfOverlappingPixels)
@@ -101,7 +101,9 @@ protected:
 
 private:
   ITKFFTNormalizedCorrelationImage(const ITKFFTNormalizedCorrelationImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKFFTNormalizedCorrelationImage&);                            // Move assignment Not Implemented
+  ITKFFTNormalizedCorrelationImage(ITKFFTNormalizedCorrelationImage&&) = delete;      // Move Constructor Not Implemented
+  ITKFFTNormalizedCorrelationImage& operator=(const ITKFFTNormalizedCorrelationImage&) = delete; // Copy Assignment Not Implemented
+  ITKFFTNormalizedCorrelationImage& operator=(ITKFFTNormalizedCorrelationImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

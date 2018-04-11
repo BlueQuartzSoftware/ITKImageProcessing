@@ -32,10 +32,10 @@ class ITKBinaryThresholdImage : public ITKImageProcessingBase
 
 public:
   SIMPL_SHARED_POINTERS(ITKBinaryThresholdImage)
-  SIMPL_STATIC_NEW_MACRO(ITKBinaryThresholdImage)
-   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKBinaryThresholdImage, AbstractFilter)
+  SIMPL_FILTER_NEW_MACRO(ITKBinaryThresholdImage)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKBinaryThresholdImage, AbstractFilter)
 
-  virtual ~ITKBinaryThresholdImage();
+  ~ITKBinaryThresholdImage() override;
 
   SIMPL_FILTER_PARAMETER(double, LowerThreshold)
   Q_PROPERTY(double LowerThreshold READ getLowerThreshold WRITE setLowerThreshold)
@@ -106,7 +106,9 @@ protected:
 
 private:
   ITKBinaryThresholdImage(const ITKBinaryThresholdImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKBinaryThresholdImage&) = delete;             // Move assignment Not Implemented
+  ITKBinaryThresholdImage(ITKBinaryThresholdImage&&) = delete;         // Move Constructor Not Implemented
+  ITKBinaryThresholdImage& operator=(const ITKBinaryThresholdImage&) = delete; // Copy Assignment Not Implemented
+  ITKBinaryThresholdImage& operator=(ITKBinaryThresholdImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

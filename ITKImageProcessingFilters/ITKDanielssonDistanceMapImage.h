@@ -31,10 +31,10 @@ class ITKDanielssonDistanceMapImage : public ITKImageProcessingBase
 
 public:
   SIMPL_SHARED_POINTERS(ITKDanielssonDistanceMapImage)
-  SIMPL_STATIC_NEW_MACRO(ITKDanielssonDistanceMapImage)
-   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKDanielssonDistanceMapImage, AbstractFilter)
+  SIMPL_FILTER_NEW_MACRO(ITKDanielssonDistanceMapImage)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKDanielssonDistanceMapImage, AbstractFilter)
 
-  virtual ~ITKDanielssonDistanceMapImage();
+  ~ITKDanielssonDistanceMapImage() override;
 
   SIMPL_FILTER_PARAMETER(bool, InputIsBinary)
   Q_PROPERTY(bool InputIsBinary READ getInputIsBinary WRITE setInputIsBinary)
@@ -102,7 +102,9 @@ protected:
 
 private:
   ITKDanielssonDistanceMapImage(const ITKDanielssonDistanceMapImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKDanielssonDistanceMapImage&) = delete;                   // Move assignment Not Implemented
+  ITKDanielssonDistanceMapImage(ITKDanielssonDistanceMapImage&&) = delete;         // Move Constructor Not Implemented
+  ITKDanielssonDistanceMapImage& operator=(const ITKDanielssonDistanceMapImage&) = delete; // Copy Assignment Not Implemented
+  ITKDanielssonDistanceMapImage& operator=(ITKDanielssonDistanceMapImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

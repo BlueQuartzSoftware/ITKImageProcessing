@@ -31,10 +31,10 @@ class ITKBinomialBlurImage : public ITKImageProcessingBase
 
 public:
   SIMPL_SHARED_POINTERS(ITKBinomialBlurImage)
-  SIMPL_STATIC_NEW_MACRO(ITKBinomialBlurImage)
-   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKBinomialBlurImage, AbstractFilter)
+  SIMPL_FILTER_NEW_MACRO(ITKBinomialBlurImage)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKBinomialBlurImage, AbstractFilter)
 
-  virtual ~ITKBinomialBlurImage();
+  ~ITKBinomialBlurImage() override;
 
   SIMPL_FILTER_PARAMETER(double, Repetitions)
   Q_PROPERTY(double Repetitions READ getRepetitions WRITE setRepetitions)
@@ -96,7 +96,9 @@ protected:
 
 private:
   ITKBinomialBlurImage(const ITKBinomialBlurImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKBinomialBlurImage&) = delete;          // Move assignment Not Implemented
+  ITKBinomialBlurImage(ITKBinomialBlurImage&&) = delete;         // Move Constructor Not Implemented
+  ITKBinomialBlurImage& operator=(const ITKBinomialBlurImage&) = delete; // Copy Assignment Not Implemented
+  ITKBinomialBlurImage& operator=(ITKBinomialBlurImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

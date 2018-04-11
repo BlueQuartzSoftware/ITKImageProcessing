@@ -31,10 +31,10 @@ class ITKHMaximaImage : public ITKImageProcessingBase
 
 public:
   SIMPL_SHARED_POINTERS(ITKHMaximaImage)
-  SIMPL_STATIC_NEW_MACRO(ITKHMaximaImage)
-   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKHMaximaImage, AbstractFilter)
+  SIMPL_FILTER_NEW_MACRO(ITKHMaximaImage)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKHMaximaImage, AbstractFilter)
 
-  virtual ~ITKHMaximaImage();
+  ~ITKHMaximaImage() override;
 
   SIMPL_FILTER_PARAMETER(double, Height)
   Q_PROPERTY(double Height READ getHeight WRITE setHeight)
@@ -96,7 +96,9 @@ protected:
 
 private:
   ITKHMaximaImage(const ITKHMaximaImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKHMaximaImage&) = delete;     // Move assignment Not Implemented
+  ITKHMaximaImage(ITKHMaximaImage&&) = delete;         // Move Constructor Not Implemented
+  ITKHMaximaImage& operator=(const ITKHMaximaImage&) = delete; // Copy Assignment Not Implemented
+  ITKHMaximaImage& operator=(ITKHMaximaImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

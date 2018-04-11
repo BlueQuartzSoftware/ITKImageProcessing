@@ -33,7 +33,7 @@ public:
   SIMPL_FILTER_NEW_MACRO(ITKPatchBasedDenoisingImage)
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKPatchBasedDenoisingImage, AbstractFilter)
 
-  virtual ~ITKPatchBasedDenoisingImage();
+  ~ITKPatchBasedDenoisingImage() override;
 
   SIMPL_FILTER_PARAMETER(double, KernelBandwidthSigma)
   Q_PROPERTY(double KernelBandwidthSigma READ getKernelBandwidthSigma WRITE setKernelBandwidthSigma)
@@ -133,7 +133,9 @@ protected:
 
 private:
   ITKPatchBasedDenoisingImage(const ITKPatchBasedDenoisingImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKPatchBasedDenoisingImage&);                       // Move assignment Not Implemented
+  ITKPatchBasedDenoisingImage(ITKPatchBasedDenoisingImage&&) = delete;      // Move Constructor Not Implemented
+  ITKPatchBasedDenoisingImage& operator=(const ITKPatchBasedDenoisingImage&) = delete; // Copy Assignment Not Implemented
+  ITKPatchBasedDenoisingImage& operator=(ITKPatchBasedDenoisingImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

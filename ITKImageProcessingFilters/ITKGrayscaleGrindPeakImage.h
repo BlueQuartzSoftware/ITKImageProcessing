@@ -31,10 +31,10 @@ class ITKGrayscaleGrindPeakImage : public ITKImageProcessingBase
 
 public:
   SIMPL_SHARED_POINTERS(ITKGrayscaleGrindPeakImage)
-  SIMPL_STATIC_NEW_MACRO(ITKGrayscaleGrindPeakImage)
-   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKGrayscaleGrindPeakImage, AbstractFilter)
+  SIMPL_FILTER_NEW_MACRO(ITKGrayscaleGrindPeakImage)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKGrayscaleGrindPeakImage, AbstractFilter)
 
-  virtual ~ITKGrayscaleGrindPeakImage();
+  ~ITKGrayscaleGrindPeakImage() override;
 
   SIMPL_FILTER_PARAMETER(bool, FullyConnected)
   Q_PROPERTY(bool FullyConnected READ getFullyConnected WRITE setFullyConnected)
@@ -96,7 +96,9 @@ protected:
 
 private:
   ITKGrayscaleGrindPeakImage(const ITKGrayscaleGrindPeakImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKGrayscaleGrindPeakImage&) = delete;                // Move assignment Not Implemented
+  ITKGrayscaleGrindPeakImage(ITKGrayscaleGrindPeakImage&&) = delete;         // Move Constructor Not Implemented
+  ITKGrayscaleGrindPeakImage& operator=(const ITKGrayscaleGrindPeakImage&) = delete; // Copy Assignment Not Implemented
+  ITKGrayscaleGrindPeakImage& operator=(ITKGrayscaleGrindPeakImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

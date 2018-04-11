@@ -32,7 +32,7 @@ public:
   SIMPL_FILTER_NEW_MACRO(${FilterName})
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(${FilterName}, AbstractFilter)
 
-  virtual ~${FilterName}();
+  ~${FilterName}() override;
 
   ${Parameters} /**
                  * @brief newFilterInstance Reimplemented from @see AbstractFilter class

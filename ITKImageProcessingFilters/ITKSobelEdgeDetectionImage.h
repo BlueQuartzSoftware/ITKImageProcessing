@@ -33,8 +33,7 @@ public:
   SIMPL_FILTER_NEW_MACRO(ITKSobelEdgeDetectionImage)
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKSobelEdgeDetectionImage, AbstractFilter)
 
-  virtual ~ITKSobelEdgeDetectionImage();
-
+  ~ITKSobelEdgeDetectionImage() override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -92,7 +91,9 @@ protected:
 
 private:
   ITKSobelEdgeDetectionImage(const ITKSobelEdgeDetectionImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKSobelEdgeDetectionImage&) = delete;                // Move assignment Not Implemented
+  ITKSobelEdgeDetectionImage(ITKSobelEdgeDetectionImage&&) = delete;         // Move Constructor Not Implemented
+  ITKSobelEdgeDetectionImage& operator=(const ITKSobelEdgeDetectionImage&) = delete; // Copy Assignment Not Implemented
+  ITKSobelEdgeDetectionImage& operator=(ITKSobelEdgeDetectionImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

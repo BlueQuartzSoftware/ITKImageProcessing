@@ -34,7 +34,7 @@ public:
   SIMPL_FILTER_NEW_MACRO(ITKSpeckleNoiseImage)
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKSpeckleNoiseImage, AbstractFilter)
 
-  virtual ~ITKSpeckleNoiseImage();
+  ~ITKSpeckleNoiseImage() override;
 
   SIMPL_FILTER_PARAMETER(double, StandardDeviation)
   Q_PROPERTY(double StandardDeviation READ getStandardDeviation WRITE setStandardDeviation)
@@ -99,7 +99,9 @@ protected:
 
 private:
   ITKSpeckleNoiseImage(const ITKSpeckleNoiseImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKSpeckleNoiseImage&) = delete;          // Move assignment Not Implemented
+  ITKSpeckleNoiseImage(ITKSpeckleNoiseImage&&) = delete;         // Move Constructor Not Implemented
+  ITKSpeckleNoiseImage& operator=(const ITKSpeckleNoiseImage&) = delete; // Copy Assignment Not Implemented
+  ITKSpeckleNoiseImage& operator=(ITKSpeckleNoiseImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

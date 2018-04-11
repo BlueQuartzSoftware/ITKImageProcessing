@@ -35,7 +35,7 @@ public:
   SIMPL_FILTER_NEW_MACRO(ITKLabelContourImage)
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKLabelContourImage, AbstractFilter)
 
-  virtual ~ITKLabelContourImage();
+  ~ITKLabelContourImage() override;
 
   SIMPL_FILTER_PARAMETER(bool, FullyConnected)
   Q_PROPERTY(bool FullyConnected READ getFullyConnected WRITE setFullyConnected)
@@ -100,7 +100,9 @@ protected:
 
 private:
   ITKLabelContourImage(const ITKLabelContourImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKLabelContourImage&) = delete;          // Move assignment Not Implemented
+  ITKLabelContourImage(ITKLabelContourImage&&) = delete;         // Move Constructor Not Implemented
+  ITKLabelContourImage& operator=(const ITKLabelContourImage&) = delete; // Copy Assignment Not Implemented
+  ITKLabelContourImage& operator=(ITKLabelContourImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

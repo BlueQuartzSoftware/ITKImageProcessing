@@ -30,11 +30,10 @@ class ITKExpNegativeImage : public ITKImageProcessingBase
 
 public:
   SIMPL_SHARED_POINTERS(ITKExpNegativeImage)
-  SIMPL_STATIC_NEW_MACRO(ITKExpNegativeImage)
-   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKExpNegativeImage, AbstractFilter)
+  SIMPL_FILTER_NEW_MACRO(ITKExpNegativeImage)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKExpNegativeImage, AbstractFilter)
 
-  virtual ~ITKExpNegativeImage();
-
+  ~ITKExpNegativeImage() override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -92,7 +91,9 @@ protected:
 
 private:
   ITKExpNegativeImage(const ITKExpNegativeImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKExpNegativeImage&) = delete;         // Move assignment Not Implemented
+  ITKExpNegativeImage(ITKExpNegativeImage&&) = delete;         // Move Constructor Not Implemented
+  ITKExpNegativeImage& operator=(const ITKExpNegativeImage&) = delete; // Copy Assignment Not Implemented
+  ITKExpNegativeImage& operator=(ITKExpNegativeImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

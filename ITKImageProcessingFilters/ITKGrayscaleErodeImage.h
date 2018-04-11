@@ -32,10 +32,10 @@ class ITKGrayscaleErodeImage : public ITKImageProcessingBase
 
 public:
   SIMPL_SHARED_POINTERS(ITKGrayscaleErodeImage)
-  SIMPL_STATIC_NEW_MACRO(ITKGrayscaleErodeImage)
+  SIMPL_FILTER_NEW_MACRO(ITKGrayscaleErodeImage)
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKGrayscaleErodeImage, AbstractFilter)
 
-  virtual ~ITKGrayscaleErodeImage();
+  ~ITKGrayscaleErodeImage() override;
 
   SIMPL_FILTER_PARAMETER(FloatVec3_t, KernelRadius)
   Q_PROPERTY(FloatVec3_t KernelRadius READ getKernelRadius WRITE setKernelRadius)
@@ -100,7 +100,9 @@ protected:
 
 private:
   ITKGrayscaleErodeImage(const ITKGrayscaleErodeImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKGrayscaleErodeImage&) = delete;            // Move assignment Not Implemented
+  ITKGrayscaleErodeImage(ITKGrayscaleErodeImage&&) = delete;         // Move Constructor Not Implemented
+  ITKGrayscaleErodeImage& operator=(const ITKGrayscaleErodeImage&) = delete; // Copy Assignment Not Implemented
+  ITKGrayscaleErodeImage& operator=(ITKGrayscaleErodeImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

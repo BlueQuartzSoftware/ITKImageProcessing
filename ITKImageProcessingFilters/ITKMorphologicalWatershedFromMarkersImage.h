@@ -35,7 +35,7 @@ public:
   SIMPL_FILTER_NEW_MACRO(ITKMorphologicalWatershedFromMarkersImage)
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKMorphologicalWatershedFromMarkersImage, AbstractFilter)
 
-  virtual ~ITKMorphologicalWatershedFromMarkersImage();
+  ~ITKMorphologicalWatershedFromMarkersImage() override;
 
   SIMPL_FILTER_PARAMETER(bool, MarkWatershedLine)
   Q_PROPERTY(bool MarkWatershedLine READ getMarkWatershedLine WRITE setMarkWatershedLine)
@@ -109,7 +109,9 @@ protected:
 
 private:
   ITKMorphologicalWatershedFromMarkersImage(const ITKMorphologicalWatershedFromMarkersImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKMorphologicalWatershedFromMarkersImage&);                                     // Move assignment Not Implemented
+  ITKMorphologicalWatershedFromMarkersImage(ITKMorphologicalWatershedFromMarkersImage&&) = delete;      // Move Constructor Not Implemented
+  ITKMorphologicalWatershedFromMarkersImage& operator=(const ITKMorphologicalWatershedFromMarkersImage&) = delete; // Copy Assignment Not Implemented
+  ITKMorphologicalWatershedFromMarkersImage& operator=(ITKMorphologicalWatershedFromMarkersImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

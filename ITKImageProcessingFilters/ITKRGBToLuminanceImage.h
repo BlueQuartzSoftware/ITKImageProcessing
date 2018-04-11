@@ -30,7 +30,7 @@ public:
   SIMPL_FILTER_NEW_MACRO(ITKRGBToLuminanceImage)
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKRGBToLuminanceImage, AbstractFilter)
 
-  virtual ~ITKRGBToLuminanceImage();
+  ~ITKRGBToLuminanceImage() override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -88,7 +88,9 @@ protected:
 
 private:
   ITKRGBToLuminanceImage(const ITKRGBToLuminanceImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKRGBToLuminanceImage&);                  // Move assignment Not Implemented
+  ITKRGBToLuminanceImage(ITKRGBToLuminanceImage&&) = delete;      // Move Constructor Not Implemented
+  ITKRGBToLuminanceImage& operator=(const ITKRGBToLuminanceImage&) = delete; // Copy Assignment Not Implemented
+  ITKRGBToLuminanceImage& operator=(ITKRGBToLuminanceImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

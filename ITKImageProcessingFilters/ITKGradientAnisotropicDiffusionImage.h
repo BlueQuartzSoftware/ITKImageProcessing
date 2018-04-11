@@ -32,10 +32,10 @@ class ITKGradientAnisotropicDiffusionImage : public ITKImageProcessingBase
 
 public:
   SIMPL_SHARED_POINTERS(ITKGradientAnisotropicDiffusionImage)
-  SIMPL_STATIC_NEW_MACRO(ITKGradientAnisotropicDiffusionImage)
-   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKGradientAnisotropicDiffusionImage, AbstractFilter)
+  SIMPL_FILTER_NEW_MACRO(ITKGradientAnisotropicDiffusionImage)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKGradientAnisotropicDiffusionImage, AbstractFilter)
 
-  virtual ~ITKGradientAnisotropicDiffusionImage();
+  ~ITKGradientAnisotropicDiffusionImage() override;
 
   SIMPL_FILTER_PARAMETER(double, TimeStep)
   Q_PROPERTY(double TimeStep READ getTimeStep WRITE setTimeStep)
@@ -106,7 +106,9 @@ protected:
 
 private:
   ITKGradientAnisotropicDiffusionImage(const ITKGradientAnisotropicDiffusionImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKGradientAnisotropicDiffusionImage&) = delete;                          // Move assignment Not Implemented
+  ITKGradientAnisotropicDiffusionImage(ITKGradientAnisotropicDiffusionImage&&) = delete;         // Move Constructor Not Implemented
+  ITKGradientAnisotropicDiffusionImage& operator=(const ITKGradientAnisotropicDiffusionImage&) = delete; // Copy Assignment Not Implemented
+  ITKGradientAnisotropicDiffusionImage& operator=(ITKGradientAnisotropicDiffusionImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

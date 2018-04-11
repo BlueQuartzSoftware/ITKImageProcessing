@@ -35,7 +35,7 @@ public:
   SIMPL_FILTER_NEW_MACRO(ITKMorphologicalGradientImage)
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKMorphologicalGradientImage, AbstractFilter)
 
-  virtual ~ITKMorphologicalGradientImage();
+  ~ITKMorphologicalGradientImage() override;
 
   SIMPL_FILTER_PARAMETER(FloatVec3_t, KernelRadius)
   Q_PROPERTY(FloatVec3_t KernelRadius READ getKernelRadius WRITE setKernelRadius)
@@ -100,7 +100,9 @@ protected:
 
 private:
   ITKMorphologicalGradientImage(const ITKMorphologicalGradientImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKMorphologicalGradientImage&) = delete;                   // Move assignment Not Implemented
+  ITKMorphologicalGradientImage(ITKMorphologicalGradientImage&&) = delete;         // Move Constructor Not Implemented
+  ITKMorphologicalGradientImage& operator=(const ITKMorphologicalGradientImage&) = delete; // Copy Assignment Not Implemented
+  ITKMorphologicalGradientImage& operator=(ITKMorphologicalGradientImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

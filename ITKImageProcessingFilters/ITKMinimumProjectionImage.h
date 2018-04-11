@@ -34,7 +34,7 @@ public:
   SIMPL_FILTER_NEW_MACRO(ITKMinimumProjectionImage)
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKMinimumProjectionImage, AbstractFilter)
 
-  virtual ~ITKMinimumProjectionImage();
+  ~ITKMinimumProjectionImage() override;
 
   SIMPL_FILTER_PARAMETER(double, ProjectionDimension)
   Q_PROPERTY(double ProjectionDimension READ getProjectionDimension WRITE setProjectionDimension)
@@ -96,7 +96,9 @@ protected:
 
 private:
   ITKMinimumProjectionImage(const ITKMinimumProjectionImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKMinimumProjectionImage&) = delete;               // Move assignment Not Implemented
+  ITKMinimumProjectionImage(ITKMinimumProjectionImage&&) = delete;         // Move Constructor Not Implemented
+  ITKMinimumProjectionImage& operator=(const ITKMinimumProjectionImage&) = delete; // Copy Assignment Not Implemented
+  ITKMinimumProjectionImage& operator=(ITKMinimumProjectionImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

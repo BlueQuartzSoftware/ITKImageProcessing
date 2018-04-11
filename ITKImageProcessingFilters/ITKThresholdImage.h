@@ -34,7 +34,7 @@ public:
   SIMPL_FILTER_NEW_MACRO(ITKThresholdImage)
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKThresholdImage, AbstractFilter)
 
-  virtual ~ITKThresholdImage();
+  ~ITKThresholdImage() override;
 
   SIMPL_FILTER_PARAMETER(double, Lower)
   Q_PROPERTY(double Lower READ getLower WRITE setLower)
@@ -102,7 +102,9 @@ protected:
 
 private:
   ITKThresholdImage(const ITKThresholdImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKThresholdImage&) = delete;       // Move assignment Not Implemented
+  ITKThresholdImage(ITKThresholdImage&&) = delete;         // Move Constructor Not Implemented
+  ITKThresholdImage& operator=(const ITKThresholdImage&) = delete; // Copy Assignment Not Implemented
+  ITKThresholdImage& operator=(ITKThresholdImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

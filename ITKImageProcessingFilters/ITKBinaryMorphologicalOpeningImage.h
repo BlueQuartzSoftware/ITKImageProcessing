@@ -33,10 +33,10 @@ class ITKBinaryMorphologicalOpeningImage : public ITKImageProcessingBase
 
 public:
   SIMPL_SHARED_POINTERS(ITKBinaryMorphologicalOpeningImage)
-  SIMPL_STATIC_NEW_MACRO(ITKBinaryMorphologicalOpeningImage)
+  SIMPL_FILTER_NEW_MACRO(ITKBinaryMorphologicalOpeningImage)
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKBinaryMorphologicalOpeningImage, AbstractFilter)
 
-  virtual ~ITKBinaryMorphologicalOpeningImage();
+  ~ITKBinaryMorphologicalOpeningImage() override;
 
   SIMPL_FILTER_PARAMETER(double, BackgroundValue)
   Q_PROPERTY(double BackgroundValue READ getBackgroundValue WRITE setBackgroundValue)
@@ -107,7 +107,9 @@ protected:
 
 private:
   ITKBinaryMorphologicalOpeningImage(const ITKBinaryMorphologicalOpeningImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKBinaryMorphologicalOpeningImage&) = delete;                        // Move assignment Not Implemented
+  ITKBinaryMorphologicalOpeningImage(ITKBinaryMorphologicalOpeningImage&&) = delete;         // Move Constructor Not Implemented
+  ITKBinaryMorphologicalOpeningImage& operator=(const ITKBinaryMorphologicalOpeningImage&) = delete; // Copy Assignment Not Implemented
+  ITKBinaryMorphologicalOpeningImage& operator=(ITKBinaryMorphologicalOpeningImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

@@ -33,10 +33,10 @@ class ITKGrayscaleMorphologicalClosingImage : public ITKImageProcessingBase
 
 public:
   SIMPL_SHARED_POINTERS(ITKGrayscaleMorphologicalClosingImage)
-  SIMPL_STATIC_NEW_MACRO(ITKGrayscaleMorphologicalClosingImage)
+  SIMPL_FILTER_NEW_MACRO(ITKGrayscaleMorphologicalClosingImage)
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKGrayscaleMorphologicalClosingImage, AbstractFilter)
 
-  virtual ~ITKGrayscaleMorphologicalClosingImage();
+  ~ITKGrayscaleMorphologicalClosingImage() override;
 
   SIMPL_FILTER_PARAMETER(bool, SafeBorder)
   Q_PROPERTY(bool SafeBorder READ getSafeBorder WRITE setSafeBorder)
@@ -104,7 +104,9 @@ protected:
 
 private:
   ITKGrayscaleMorphologicalClosingImage(const ITKGrayscaleMorphologicalClosingImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKGrayscaleMorphologicalClosingImage&) = delete;                           // Move assignment Not Implemented
+  ITKGrayscaleMorphologicalClosingImage(ITKGrayscaleMorphologicalClosingImage&&) = delete;         // Move Constructor Not Implemented
+  ITKGrayscaleMorphologicalClosingImage& operator=(const ITKGrayscaleMorphologicalClosingImage&) = delete; // Copy Assignment Not Implemented
+  ITKGrayscaleMorphologicalClosingImage& operator=(ITKGrayscaleMorphologicalClosingImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

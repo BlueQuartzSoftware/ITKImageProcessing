@@ -31,10 +31,10 @@ class ITKCurvatureFlowImage : public ITKImageProcessingBase
 
 public:
   SIMPL_SHARED_POINTERS(ITKCurvatureFlowImage)
-  SIMPL_STATIC_NEW_MACRO(ITKCurvatureFlowImage)
-   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKCurvatureFlowImage, AbstractFilter)
+  SIMPL_FILTER_NEW_MACRO(ITKCurvatureFlowImage)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKCurvatureFlowImage, AbstractFilter)
 
-  virtual ~ITKCurvatureFlowImage();
+  ~ITKCurvatureFlowImage() override;
 
   SIMPL_FILTER_PARAMETER(double, TimeStep)
   Q_PROPERTY(double TimeStep READ getTimeStep WRITE setTimeStep)
@@ -99,7 +99,9 @@ protected:
 
 private:
   ITKCurvatureFlowImage(const ITKCurvatureFlowImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKCurvatureFlowImage&) = delete;           // Move assignment Not Implemented
+  ITKCurvatureFlowImage(ITKCurvatureFlowImage&&) = delete;         // Move Constructor Not Implemented
+  ITKCurvatureFlowImage& operator=(const ITKCurvatureFlowImage&) = delete; // Copy Assignment Not Implemented
+  ITKCurvatureFlowImage& operator=(ITKCurvatureFlowImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

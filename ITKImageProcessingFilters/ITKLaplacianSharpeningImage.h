@@ -34,7 +34,7 @@ public:
   SIMPL_FILTER_NEW_MACRO(ITKLaplacianSharpeningImage)
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKLaplacianSharpeningImage, AbstractFilter)
 
-  virtual ~ITKLaplacianSharpeningImage();
+  ~ITKLaplacianSharpeningImage() override;
 
   SIMPL_FILTER_PARAMETER(bool, UseImageSpacing)
   Q_PROPERTY(bool UseImageSpacing READ getUseImageSpacing WRITE setUseImageSpacing)
@@ -96,7 +96,9 @@ protected:
 
 private:
   ITKLaplacianSharpeningImage(const ITKLaplacianSharpeningImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKLaplacianSharpeningImage&) = delete;                 // Move assignment Not Implemented
+  ITKLaplacianSharpeningImage(ITKLaplacianSharpeningImage&&) = delete;         // Move Constructor Not Implemented
+  ITKLaplacianSharpeningImage& operator=(const ITKLaplacianSharpeningImage&) = delete; // Copy Assignment Not Implemented
+  ITKLaplacianSharpeningImage& operator=(ITKLaplacianSharpeningImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

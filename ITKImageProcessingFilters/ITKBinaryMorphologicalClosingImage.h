@@ -34,10 +34,10 @@ class ITKBinaryMorphologicalClosingImage : public ITKImageProcessingBase
 
 public:
   SIMPL_SHARED_POINTERS(ITKBinaryMorphologicalClosingImage)
-  SIMPL_STATIC_NEW_MACRO(ITKBinaryMorphologicalClosingImage)
+  SIMPL_FILTER_NEW_MACRO(ITKBinaryMorphologicalClosingImage)
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKBinaryMorphologicalClosingImage, AbstractFilter)
 
-  virtual ~ITKBinaryMorphologicalClosingImage();
+  ~ITKBinaryMorphologicalClosingImage() override;
 
   SIMPL_FILTER_PARAMETER(double, ForegroundValue)
   Q_PROPERTY(double ForegroundValue READ getForegroundValue WRITE setForegroundValue)
@@ -108,7 +108,9 @@ protected:
 
 private:
   ITKBinaryMorphologicalClosingImage(const ITKBinaryMorphologicalClosingImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKBinaryMorphologicalClosingImage&) = delete;                        // Move assignment Not Implemented
+  ITKBinaryMorphologicalClosingImage(ITKBinaryMorphologicalClosingImage&&) = delete;         // Move Constructor Not Implemented
+  ITKBinaryMorphologicalClosingImage& operator=(const ITKBinaryMorphologicalClosingImage&) = delete; // Copy Assignment Not Implemented
+  ITKBinaryMorphologicalClosingImage& operator=(ITKBinaryMorphologicalClosingImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

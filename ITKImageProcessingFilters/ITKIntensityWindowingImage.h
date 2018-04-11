@@ -34,7 +34,7 @@ public:
   SIMPL_FILTER_NEW_MACRO(ITKIntensityWindowingImage)
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKIntensityWindowingImage, AbstractFilter)
 
-  virtual ~ITKIntensityWindowingImage();
+  ~ITKIntensityWindowingImage() override;
 
   SIMPL_FILTER_PARAMETER(double, WindowMinimum)
   Q_PROPERTY(double WindowMinimum READ getWindowMinimum WRITE setWindowMinimum)
@@ -105,7 +105,9 @@ protected:
 
 private:
   ITKIntensityWindowingImage(const ITKIntensityWindowingImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKIntensityWindowingImage&) = delete;                // Move assignment Not Implemented
+  ITKIntensityWindowingImage(ITKIntensityWindowingImage&&) = delete;         // Move Constructor Not Implemented
+  ITKIntensityWindowingImage& operator=(const ITKIntensityWindowingImage&) = delete; // Copy Assignment Not Implemented
+  ITKIntensityWindowingImage& operator=(ITKIntensityWindowingImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

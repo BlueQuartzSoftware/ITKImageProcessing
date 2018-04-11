@@ -34,10 +34,10 @@ class ITKBinaryClosingByReconstructionImage : public ITKImageProcessingBase
 
 public:
   SIMPL_SHARED_POINTERS(ITKBinaryClosingByReconstructionImage)
-  SIMPL_STATIC_NEW_MACRO(ITKBinaryClosingByReconstructionImage)
+  SIMPL_FILTER_NEW_MACRO(ITKBinaryClosingByReconstructionImage)
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKBinaryClosingByReconstructionImage, AbstractFilter)
 
-  virtual ~ITKBinaryClosingByReconstructionImage();
+  ~ITKBinaryClosingByReconstructionImage() override;
 
   SIMPL_FILTER_PARAMETER(double, ForegroundValue)
   Q_PROPERTY(double ForegroundValue READ getForegroundValue WRITE setForegroundValue)
@@ -108,7 +108,9 @@ protected:
 
 private:
   ITKBinaryClosingByReconstructionImage(const ITKBinaryClosingByReconstructionImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKBinaryClosingByReconstructionImage&) = delete;                           // Move assignment Not Implemented
+  ITKBinaryClosingByReconstructionImage(ITKBinaryClosingByReconstructionImage&&) = delete;         // Move Constructor Not Implemented
+  ITKBinaryClosingByReconstructionImage& operator=(const ITKBinaryClosingByReconstructionImage&) = delete; // Copy Assignment Not Implemented
+  ITKBinaryClosingByReconstructionImage& operator=(ITKBinaryClosingByReconstructionImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__
