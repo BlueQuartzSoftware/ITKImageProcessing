@@ -118,6 +118,11 @@ protected:
   template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension, typename FilterType> void filter(FilterType* filter)
   {
     std::string outputArrayName = getSelectedCellArrayPath().getDataArrayName().toStdString();
+    
+    if(getSaveAsNewArray())
+    {
+      outputArrayName = getNewCellArrayName().toStdString();
+    }
     ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter, outputArrayName, getSaveAsNewArray(), getSelectedCellArrayPath());
   }
 
@@ -127,6 +132,11 @@ protected:
   template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension, typename FilterType, typename FloatImageType> void filterCastToFloat(FilterType* filter)
   {
     std::string outputArrayName = getSelectedCellArrayPath().getDataArrayName().toStdString();
+    
+    if(getSaveAsNewArray())
+    {
+      outputArrayName = getNewCellArrayName().toStdString();
+    }
     ITKImageBase::filterCastToFloat<InputPixelType, OutputPixelType, Dimension, FilterType, FloatImageType>(filter, outputArrayName, getSaveAsNewArray(), getSelectedCellArrayPath());
   }
 

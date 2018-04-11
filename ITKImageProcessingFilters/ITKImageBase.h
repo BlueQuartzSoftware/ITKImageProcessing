@@ -220,7 +220,6 @@ protected:
 
       if(saveAsNewArray == false)
       {
-        outputArrayName = selectedArray.getDataArrayName().toStdString();
         AttributeMatrix::Pointer attrMat = dc->getAttributeMatrix(selectedArray.getAttributeMatrixName());
         // Remove the original input data array
         attrMat->removeAttributeArray(selectedArray.getDataArrayName());
@@ -286,7 +285,6 @@ protected:
 
       if(saveAsNewArray == false)
       {
-        outputArrayName = selectedArray.getDataArrayName().toStdString();
         AttributeMatrix::Pointer attrMat = dc->getAttributeMatrix(selectedArray.getAttributeMatrixName());
         // Remove the original input data array
         attrMat->removeAttributeArray(selectedArray.getDataArrayName());
