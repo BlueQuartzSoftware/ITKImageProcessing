@@ -45,11 +45,14 @@
  */
 class ITKImageWriter : public AbstractFilter
 {
-  Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
+  Q_OBJECT
 
-      public : SIMPL_SHARED_POINTERS(ITKImageWriter) SIMPL_FILTER_NEW_MACRO(ITKImageWriter) SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKImageWriter, AbstractFilter)
-
-                   ~ITKImageWriter() override;
+  public : 
+    SIMPL_SHARED_POINTERS(ITKImageWriter) 
+    SIMPL_FILTER_NEW_MACRO(ITKImageWriter) 
+    SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKImageWriter, AbstractFilter)
+    
+    ~ITKImageWriter() override;
 
   SIMPL_FILTER_PARAMETER(QString, FileName)
   Q_PROPERTY(QString FileName READ getFileName WRITE setFileName)
