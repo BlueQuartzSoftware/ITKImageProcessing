@@ -5,7 +5,7 @@
  */
 
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKExpNegativeImage.h"
-#include "ITKImageProcessing/ITKImageProcessingFilters/SimpleITKEnums.h"
+#include "SIMPLib/ITK/SimpleITKEnums.h"
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -16,9 +16,8 @@
 
 #include "SIMPLib/Geometry/ImageGeom.h"
 
-#include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
-#include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
-
+#include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
+#include "SIMPLib/ITK/itkDream3DImage.h"
 
 // -----------------------------------------------------------------------------
 //

@@ -38,10 +38,10 @@ class ITKDiscreteGaussianImage : public ITKImageProcessingBase
 
 public:
   SIMPL_SHARED_POINTERS(ITKDiscreteGaussianImage)
-  SIMPL_STATIC_NEW_MACRO(ITKDiscreteGaussianImage)
-   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKDiscreteGaussianImage, AbstractFilter)
+  SIMPL_FILTER_NEW_MACRO(ITKDiscreteGaussianImage)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKDiscreteGaussianImage, AbstractFilter)
 
-  virtual ~ITKDiscreteGaussianImage();
+  ~ITKDiscreteGaussianImage() override;
 
   SIMPL_FILTER_PARAMETER(FloatVec3_t, Variance)
   Q_PROPERTY(FloatVec3_t Variance READ getVariance WRITE setVariance)
@@ -112,7 +112,9 @@ protected:
 
 private:
   ITKDiscreteGaussianImage(const ITKDiscreteGaussianImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKDiscreteGaussianImage&) = delete;              // Move assignment Not Implemented
+  ITKDiscreteGaussianImage(ITKDiscreteGaussianImage&&) = delete;         // Move Constructor Not Implemented
+  ITKDiscreteGaussianImage& operator=(const ITKDiscreteGaussianImage&) = delete; // Copy Assignment Not Implemented
+  ITKDiscreteGaussianImage& operator=(ITKDiscreteGaussianImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

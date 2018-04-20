@@ -40,10 +40,10 @@ class ITKBinaryErodeImage : public ITKImageProcessingBase
 
 public:
   SIMPL_SHARED_POINTERS(ITKBinaryErodeImage)
-  SIMPL_STATIC_NEW_MACRO(ITKBinaryErodeImage)
+  SIMPL_FILTER_NEW_MACRO(ITKBinaryErodeImage)
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKBinaryErodeImage, AbstractFilter)
 
-  virtual ~ITKBinaryErodeImage();
+  ~ITKBinaryErodeImage() override;
 
   SIMPL_FILTER_PARAMETER(double, BackgroundValue)
   Q_PROPERTY(double BackgroundValue READ getBackgroundValue WRITE setBackgroundValue)
@@ -117,7 +117,9 @@ protected:
 
 private:
   ITKBinaryErodeImage(const ITKBinaryErodeImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKBinaryErodeImage&) = delete;         // Move assignment Not Implemented
+  ITKBinaryErodeImage(ITKBinaryErodeImage&&) = delete;         // Move Constructor Not Implemented
+  ITKBinaryErodeImage& operator=(const ITKBinaryErodeImage&) = delete; // Copy Assignment Not Implemented
+  ITKBinaryErodeImage& operator=(ITKBinaryErodeImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

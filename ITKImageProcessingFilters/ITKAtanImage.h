@@ -31,11 +31,10 @@ class ITKAtanImage : public ITKImageProcessingBase
 
 public:
   SIMPL_SHARED_POINTERS(ITKAtanImage)
-  SIMPL_STATIC_NEW_MACRO(ITKAtanImage)
-   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKAtanImage, AbstractFilter)
+  SIMPL_FILTER_NEW_MACRO(ITKAtanImage)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKAtanImage, AbstractFilter)
 
-  virtual ~ITKAtanImage();
-
+  ~ITKAtanImage() override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -93,7 +92,9 @@ protected:
 
 private:
   ITKAtanImage(const ITKAtanImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKAtanImage&) = delete;  // Move assignment Not Implemented
+  ITKAtanImage(ITKAtanImage&&) = delete;         // Move Constructor Not Implemented
+  ITKAtanImage& operator=(const ITKAtanImage&) = delete; // Copy Assignment Not Implemented
+  ITKAtanImage& operator=(ITKAtanImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

@@ -38,7 +38,7 @@ public:
   SIMPL_FILTER_NEW_MACRO(ITKSignedDanielssonDistanceMapImage)
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKSignedDanielssonDistanceMapImage, AbstractFilter)
 
-  virtual ~ITKSignedDanielssonDistanceMapImage();
+  ~ITKSignedDanielssonDistanceMapImage() override;
 
   SIMPL_FILTER_PARAMETER(bool, InsideIsPositive)
   Q_PROPERTY(bool InsideIsPositive READ getInsideIsPositive WRITE setInsideIsPositive)
@@ -106,7 +106,9 @@ protected:
 
 private:
   ITKSignedDanielssonDistanceMapImage(const ITKSignedDanielssonDistanceMapImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKSignedDanielssonDistanceMapImage&) = delete;                         // Move assignment Not Implemented
+  ITKSignedDanielssonDistanceMapImage(ITKSignedDanielssonDistanceMapImage&&) = delete;         // Move Constructor Not Implemented
+  ITKSignedDanielssonDistanceMapImage& operator=(const ITKSignedDanielssonDistanceMapImage&) = delete; // Copy Assignment Not Implemented
+  ITKSignedDanielssonDistanceMapImage& operator=(ITKSignedDanielssonDistanceMapImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

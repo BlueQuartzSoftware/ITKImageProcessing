@@ -33,10 +33,10 @@ class ITKBoxMeanImage : public ITKImageProcessingBase
 
 public:
   SIMPL_SHARED_POINTERS(ITKBoxMeanImage)
-  SIMPL_STATIC_NEW_MACRO(ITKBoxMeanImage)
-   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKBoxMeanImage, AbstractFilter)
+  SIMPL_FILTER_NEW_MACRO(ITKBoxMeanImage)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKBoxMeanImage, AbstractFilter)
 
-  virtual ~ITKBoxMeanImage();
+  ~ITKBoxMeanImage() override;
 
   SIMPL_FILTER_PARAMETER(FloatVec3_t, Radius)
   Q_PROPERTY(FloatVec3_t Radius READ getRadius WRITE setRadius)
@@ -98,7 +98,9 @@ protected:
 
 private:
   ITKBoxMeanImage(const ITKBoxMeanImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKBoxMeanImage&) = delete;     // Move assignment Not Implemented
+  ITKBoxMeanImage(ITKBoxMeanImage&&) = delete;         // Move Constructor Not Implemented
+  ITKBoxMeanImage& operator=(const ITKBoxMeanImage&) = delete; // Copy Assignment Not Implemented
+  ITKBoxMeanImage& operator=(ITKBoxMeanImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

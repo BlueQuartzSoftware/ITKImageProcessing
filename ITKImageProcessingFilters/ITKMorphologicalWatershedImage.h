@@ -39,7 +39,7 @@ public:
   SIMPL_FILTER_NEW_MACRO(ITKMorphologicalWatershedImage)
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKMorphologicalWatershedImage, AbstractFilter)
 
-  virtual ~ITKMorphologicalWatershedImage();
+  ~ITKMorphologicalWatershedImage() override;
 
   SIMPL_FILTER_PARAMETER(double, Level)
   Q_PROPERTY(double Level READ getLevel WRITE setLevel)
@@ -107,7 +107,9 @@ protected:
 
 private:
   ITKMorphologicalWatershedImage(const ITKMorphologicalWatershedImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKMorphologicalWatershedImage&) = delete;                    // Move assignment Not Implemented
+  ITKMorphologicalWatershedImage(ITKMorphologicalWatershedImage&&) = delete;         // Move Constructor Not Implemented
+  ITKMorphologicalWatershedImage& operator=(const ITKMorphologicalWatershedImage&) = delete; // Copy Assignment Not Implemented
+  ITKMorphologicalWatershedImage& operator=(ITKMorphologicalWatershedImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

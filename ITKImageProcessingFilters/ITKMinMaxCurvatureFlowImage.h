@@ -39,7 +39,7 @@ public:
   SIMPL_FILTER_NEW_MACRO(ITKMinMaxCurvatureFlowImage)
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKMinMaxCurvatureFlowImage, AbstractFilter)
 
-  virtual ~ITKMinMaxCurvatureFlowImage();
+  ~ITKMinMaxCurvatureFlowImage() override;
 
   SIMPL_FILTER_PARAMETER(double, TimeStep)
   Q_PROPERTY(double TimeStep READ getTimeStep WRITE setTimeStep)
@@ -107,7 +107,9 @@ protected:
 
 private:
   ITKMinMaxCurvatureFlowImage(const ITKMinMaxCurvatureFlowImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKMinMaxCurvatureFlowImage&) = delete;                 // Move assignment Not Implemented
+  ITKMinMaxCurvatureFlowImage(ITKMinMaxCurvatureFlowImage&&) = delete;         // Move Constructor Not Implemented
+  ITKMinMaxCurvatureFlowImage& operator=(const ITKMinMaxCurvatureFlowImage&) = delete; // Copy Assignment Not Implemented
+  ITKMinMaxCurvatureFlowImage& operator=(ITKMinMaxCurvatureFlowImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

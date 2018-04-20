@@ -37,10 +37,10 @@ class ITKAdaptiveHistogramEqualizationImage : public ITKImageProcessingBase
 
 public:
   SIMPL_SHARED_POINTERS(ITKAdaptiveHistogramEqualizationImage)
-  SIMPL_STATIC_NEW_MACRO(ITKAdaptiveHistogramEqualizationImage)
-   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKAdaptiveHistogramEqualizationImage, AbstractFilter)
+  SIMPL_FILTER_NEW_MACRO(ITKAdaptiveHistogramEqualizationImage)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKAdaptiveHistogramEqualizationImage, AbstractFilter)
 
-  virtual ~ITKAdaptiveHistogramEqualizationImage();
+  ~ITKAdaptiveHistogramEqualizationImage() override;
 
   SIMPL_FILTER_PARAMETER(FloatVec3_t, Radius)
   Q_PROPERTY(FloatVec3_t Radius READ getRadius WRITE setRadius)
@@ -107,7 +107,9 @@ protected:
 
 private:
   ITKAdaptiveHistogramEqualizationImage(const ITKAdaptiveHistogramEqualizationImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKAdaptiveHistogramEqualizationImage&) = delete;                           // Move assignment Not Implemented
+  ITKAdaptiveHistogramEqualizationImage(ITKAdaptiveHistogramEqualizationImage&&) = delete;         // Move Constructor Not Implemented
+  ITKAdaptiveHistogramEqualizationImage& operator=(const ITKAdaptiveHistogramEqualizationImage&) = delete; // Copy Assignment Not Implemented
+  ITKAdaptiveHistogramEqualizationImage& operator=(ITKAdaptiveHistogramEqualizationImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

@@ -35,10 +35,10 @@ class ITKBilateralImage : public ITKImageProcessingBase
 
 public:
   SIMPL_SHARED_POINTERS(ITKBilateralImage)
-  SIMPL_STATIC_NEW_MACRO(ITKBilateralImage)
-   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKBilateralImage, AbstractFilter)
+  SIMPL_FILTER_NEW_MACRO(ITKBilateralImage)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKBilateralImage, AbstractFilter)
 
-  virtual ~ITKBilateralImage();
+  ~ITKBilateralImage() override;
 
   SIMPL_FILTER_PARAMETER(double, DomainSigma)
   Q_PROPERTY(double DomainSigma READ getDomainSigma WRITE setDomainSigma)
@@ -106,7 +106,9 @@ protected:
 
 private:
   ITKBilateralImage(const ITKBilateralImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKBilateralImage&) = delete;       // Move assignment Not Implemented
+  ITKBilateralImage(ITKBilateralImage&&) = delete;         // Move Constructor Not Implemented
+  ITKBilateralImage& operator=(const ITKBilateralImage&) = delete; // Copy Assignment Not Implemented
+  ITKBilateralImage& operator=(ITKBilateralImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

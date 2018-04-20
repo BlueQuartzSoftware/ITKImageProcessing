@@ -4,8 +4,8 @@
 // Insert your license & copyright information here
 // -----------------------------------------------------------------------------
 
-#include "ITKImageProcessing/ITKImageProcessingFilters/SimpleITKEnums.h"
 #include "ITKTestBase.h"
+#include "SIMPLib/ITK/SimpleITKEnums.h"
 // Auto includes
 #include <SIMPLib/FilterParameters/FloatVec3FilterParameter.h>
 #include <SIMPLib/FilterParameters/IntFilterParameter.h>

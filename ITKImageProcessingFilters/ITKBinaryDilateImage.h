@@ -40,10 +40,10 @@ class ITKBinaryDilateImage : public ITKImageProcessingBase
 
 public:
   SIMPL_SHARED_POINTERS(ITKBinaryDilateImage)
-  SIMPL_STATIC_NEW_MACRO(ITKBinaryDilateImage)
+  SIMPL_FILTER_NEW_MACRO(ITKBinaryDilateImage)
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKBinaryDilateImage, AbstractFilter)
 
-  virtual ~ITKBinaryDilateImage();
+  ~ITKBinaryDilateImage() override;
 
   SIMPL_FILTER_PARAMETER(double, BackgroundValue)
   Q_PROPERTY(double BackgroundValue READ getBackgroundValue WRITE setBackgroundValue)
@@ -117,7 +117,9 @@ protected:
 
 private:
   ITKBinaryDilateImage(const ITKBinaryDilateImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKBinaryDilateImage&) = delete;          // Move assignment Not Implemented
+  ITKBinaryDilateImage(ITKBinaryDilateImage&&) = delete;         // Move Constructor Not Implemented
+  ITKBinaryDilateImage& operator=(const ITKBinaryDilateImage&) = delete; // Copy Assignment Not Implemented
+  ITKBinaryDilateImage& operator=(ITKBinaryDilateImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

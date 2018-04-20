@@ -34,10 +34,10 @@ class ITKHistogramMatchingImage : public ITKImageProcessingBase
 
 public:
   SIMPL_SHARED_POINTERS(ITKHistogramMatchingImage)
-  SIMPL_STATIC_NEW_MACRO(ITKHistogramMatchingImage)
-   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKHistogramMatchingImage, AbstractFilter)
+  SIMPL_FILTER_NEW_MACRO(ITKHistogramMatchingImage)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKHistogramMatchingImage, AbstractFilter)
 
-  virtual ~ITKHistogramMatchingImage();
+  ~ITKHistogramMatchingImage() override;
 
   SIMPL_FILTER_PARAMETER(DataArrayPath, ReferenceCellArrayPath)
   Q_PROPERTY(DataArrayPath ReferenceCellArrayPath READ getReferenceCellArrayPath WRITE setReferenceCellArrayPath)
@@ -128,7 +128,9 @@ protected:
 
 private:
   ITKHistogramMatchingImage(const ITKHistogramMatchingImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKHistogramMatchingImage&);                     // Move assignment Not Implemented
+  ITKHistogramMatchingImage(ITKHistogramMatchingImage&&) = delete;      // Move Constructor Not Implemented
+  ITKHistogramMatchingImage& operator=(const ITKHistogramMatchingImage&) = delete; // Copy Assignment Not Implemented
+  ITKHistogramMatchingImage& operator=(ITKHistogramMatchingImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

@@ -37,11 +37,9 @@
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/ITK/itkDream3DImage.h"
+#include "SIMPLib/ITK/itkImageReaderHelper.h"
 #include "SIMPLib/SIMPLib.h"
-
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
-
-#include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
 
 #include <itkImageFileReader.h>
 
@@ -176,20 +174,11 @@ protected:
   void initialize();
 
   /**
-  * @brief Does the actual reading of the image with itkImageFileReader.
-  */
-  template <typename TComponent> void readImage(const itk::ImageIOBase::Pointer& imageIO, const QString& filename, bool dataCheck);
-  template <typename TComponent, unsigned int dimensions> void readImage(const itk::ImageIOBase::Pointer& imageIO, const QString& filename, bool dataCheck);
-  template <typename TPixel, unsigned int> void readImage(const QString& filename, bool dataCheck);
-  void readImage(bool dataCheck);
+   * @brief Include the declarations of the ITKImageReader helper functions that are common
+   * to a few different filters across different plugins.
+   */
+  ITK_IMAGE_READER_HELPER_DECL()
 
-  /**
-  * @brief Reads image size, spacing and origin, and updates container information accordingly.
-  */
-  template <typename TPixel, unsigned int dimensions>
-  void readImageOutputInformation(typename itk::ImageFileReader<itk::Dream3DImage<TPixel, dimensions>>::Pointer& reader, DataContainer::Pointer& container);
-
-private:
 public:
   ITKImageReader(const ITKImageReader&) = delete; // Copy Constructor Not Implemented
   ITKImageReader(ITKImageReader&&) = delete;      // Move Constructor

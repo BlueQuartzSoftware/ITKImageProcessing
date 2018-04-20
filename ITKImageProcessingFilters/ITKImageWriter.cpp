@@ -43,12 +43,12 @@
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
-#include "ITKImageProcessing/ITKImageProcessingFilters/itkInPlaceDream3DDataToImageFilter.h"
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
 #include "ITKImageProcessingPlugin.h"
+#include "SIMPLib/ITK/itkInPlaceDream3DDataToImageFilter.h"
 #define DREAM3D_USE_RGB_RGBA 1
 #define DREAM3D_USE_Vector 1
-#include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
+#include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
 
 #ifdef _WIN32
 extern Q_CORE_EXPORT int qt_ntfs_permission_lookup;

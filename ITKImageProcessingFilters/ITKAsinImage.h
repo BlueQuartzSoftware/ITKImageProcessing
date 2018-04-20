@@ -30,11 +30,10 @@ class ITKAsinImage : public ITKImageProcessingBase
   PYB11_CREATE_BINDINGS(ITKAsinImage SUPERCLASS ITKImageProcessingBase)
 public:
   SIMPL_SHARED_POINTERS(ITKAsinImage)
-  SIMPL_STATIC_NEW_MACRO(ITKAsinImage)
-   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKAsinImage, AbstractFilter)
+  SIMPL_FILTER_NEW_MACRO(ITKAsinImage)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKAsinImage, AbstractFilter)
 
-  virtual ~ITKAsinImage();
-
+  ~ITKAsinImage() override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -92,7 +91,9 @@ protected:
 
 private:
   ITKAsinImage(const ITKAsinImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKAsinImage&) = delete;  // Move assignment Not Implemented
+  ITKAsinImage(ITKAsinImage&&) = delete;         // Move Constructor Not Implemented
+  ITKAsinImage& operator=(const ITKAsinImage&) = delete; // Copy Assignment Not Implemented
+  ITKAsinImage& operator=(ITKAsinImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

@@ -37,7 +37,7 @@ public:
   SIMPL_FILTER_NEW_MACRO(ITKValuedRegionalMaximaImage)
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKValuedRegionalMaximaImage, AbstractFilter)
 
-  virtual ~ITKValuedRegionalMaximaImage();
+  ~ITKValuedRegionalMaximaImage() override;
 
   SIMPL_FILTER_PARAMETER(bool, FullyConnected)
   Q_PROPERTY(bool FullyConnected READ getFullyConnected WRITE setFullyConnected)
@@ -102,7 +102,9 @@ protected:
 
 private:
   ITKValuedRegionalMaximaImage(const ITKValuedRegionalMaximaImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKValuedRegionalMaximaImage&) = delete;                  // Move assignment Not Implemented
+  ITKValuedRegionalMaximaImage(ITKValuedRegionalMaximaImage&&) = delete;         // Move Constructor Not Implemented
+  ITKValuedRegionalMaximaImage& operator=(const ITKValuedRegionalMaximaImage&) = delete; // Copy Assignment Not Implemented
+  ITKValuedRegionalMaximaImage& operator=(ITKValuedRegionalMaximaImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

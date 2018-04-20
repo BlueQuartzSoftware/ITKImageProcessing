@@ -37,10 +37,10 @@ class ITKCurvatureAnisotropicDiffusionImage : public ITKImageProcessingBase
 
 public:
   SIMPL_SHARED_POINTERS(ITKCurvatureAnisotropicDiffusionImage)
-  SIMPL_STATIC_NEW_MACRO(ITKCurvatureAnisotropicDiffusionImage)
-   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKCurvatureAnisotropicDiffusionImage, AbstractFilter)
+  SIMPL_FILTER_NEW_MACRO(ITKCurvatureAnisotropicDiffusionImage)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKCurvatureAnisotropicDiffusionImage, AbstractFilter)
 
-  virtual ~ITKCurvatureAnisotropicDiffusionImage();
+  ~ITKCurvatureAnisotropicDiffusionImage() override;
 
   SIMPL_FILTER_PARAMETER(double, TimeStep)
   Q_PROPERTY(double TimeStep READ getTimeStep WRITE setTimeStep)
@@ -111,7 +111,9 @@ protected:
 
 private:
   ITKCurvatureAnisotropicDiffusionImage(const ITKCurvatureAnisotropicDiffusionImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKCurvatureAnisotropicDiffusionImage&) = delete;                           // Move assignment Not Implemented
+  ITKCurvatureAnisotropicDiffusionImage(ITKCurvatureAnisotropicDiffusionImage&&) = delete;         // Move Constructor Not Implemented
+  ITKCurvatureAnisotropicDiffusionImage& operator=(const ITKCurvatureAnisotropicDiffusionImage&) = delete; // Copy Assignment Not Implemented
+  ITKCurvatureAnisotropicDiffusionImage& operator=(ITKCurvatureAnisotropicDiffusionImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

@@ -23,7 +23,7 @@ public:
   SIMPL_FILTER_NEW_MACRO(ITKImageProcessingBase)
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKImageProcessingBase, ITKImageBase)
 
-  virtual ~ITKImageProcessingBase();
+  ~ITKImageProcessingBase() override;
 
   SIMPL_FILTER_PARAMETER(DataArrayPath, SelectedCellArrayPath)
   Q_PROPERTY(DataArrayPath SelectedCellArrayPath READ getSelectedCellArrayPath WRITE setSelectedCellArrayPath)
@@ -95,7 +95,7 @@ protected:
       return;
     }
     QVector<size_t> outputDims = ITKDream3DHelper::GetComponentsDimensions<OutputPixelType>();
-    if(m_SaveAsNewArray == true)
+    if(m_SaveAsNewArray)
     {
       DataArrayPath tempPath;
       tempPath.update(getSelectedCellArrayPath().getDataContainerName(), getSelectedCellArrayPath().getAttributeMatrixName(), getNewCellArrayName());
@@ -119,6 +119,11 @@ protected:
   template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension, typename FilterType> void filter(FilterType* filter)
   {
     std::string outputArrayName = getSelectedCellArrayPath().getDataArrayName().toStdString();
+
+    if(getSaveAsNewArray())
+    {
+      outputArrayName = getNewCellArrayName().toStdString();
+    }
     ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter, outputArrayName, getSaveAsNewArray(), getSelectedCellArrayPath());
   }
 
@@ -128,6 +133,11 @@ protected:
   template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension, typename FilterType, typename FloatImageType> void filterCastToFloat(FilterType* filter)
   {
     std::string outputArrayName = getSelectedCellArrayPath().getDataArrayName().toStdString();
+
+    if(getSaveAsNewArray())
+    {
+      outputArrayName = getNewCellArrayName().toStdString();
+    }
     ITKImageBase::filterCastToFloat<InputPixelType, OutputPixelType, Dimension, FilterType, FloatImageType>(filter, outputArrayName, getSaveAsNewArray(), getSelectedCellArrayPath());
   }
 
@@ -139,8 +149,11 @@ protected:
 private:
   DEFINE_IDATAARRAY_VARIABLE(NewCellArray)
 
-  ITKImageProcessingBase(const ITKImageProcessingBase&);   // Copy Constructor Not Implemented
-  void operator=(const ITKImageProcessingBase&) = delete;  // Move assignment Not Implemented
+public:
+  ITKImageProcessingBase(const ITKImageProcessingBase&) = delete;            // Copy Constructor Not Implemented
+  ITKImageProcessingBase(ITKImageProcessingBase&&) = delete;                 // Move Constructor Not Implemented
+  ITKImageProcessingBase& operator=(const ITKImageProcessingBase&) = delete; // Copy Assignment Not Implemented
+  ITKImageProcessingBase& operator=(ITKImageProcessingBase&&) = delete;      // Move Assignment Not Implemented
 };
 
 #endif /* _iTKImageProcessingBase_H_ */

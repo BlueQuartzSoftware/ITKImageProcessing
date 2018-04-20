@@ -37,7 +37,7 @@ public:
   SIMPL_FILTER_NEW_MACRO(ITKZeroCrossingImage)
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKZeroCrossingImage, AbstractFilter)
 
-  virtual ~ITKZeroCrossingImage();
+  ~ITKZeroCrossingImage() override;
 
   SIMPL_FILTER_PARAMETER(int, ForegroundValue)
   Q_PROPERTY(int ForegroundValue READ getForegroundValue WRITE setForegroundValue)
@@ -102,7 +102,9 @@ protected:
 
 private:
   ITKZeroCrossingImage(const ITKZeroCrossingImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKZeroCrossingImage&) = delete;          // Move assignment Not Implemented
+  ITKZeroCrossingImage(ITKZeroCrossingImage&&) = delete;         // Move Constructor Not Implemented
+  ITKZeroCrossingImage& operator=(const ITKZeroCrossingImage&) = delete; // Copy Assignment Not Implemented
+  ITKZeroCrossingImage& operator=(ITKZeroCrossingImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

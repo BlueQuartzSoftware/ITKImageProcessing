@@ -8,8 +8,8 @@
 // Auto includes
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 
-#include "ITKImageProcessing/ITKImageProcessingFilters/itkInPlaceDream3DDataToImageFilter.h"
-#include "ITKImageProcessing/ITKImageProcessingFilters/itkInPlaceImageToDream3DDataFilter.h"
+#include "SIMPLib/ITK/itkInPlaceDream3DDataToImageFilter.h"
+#include "SIMPLib/ITK/itkInPlaceImageToDream3DDataFilter.h"
 
 #include <itkImageIOBase.h>
 

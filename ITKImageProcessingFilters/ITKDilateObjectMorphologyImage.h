@@ -37,10 +37,10 @@ class ITKDilateObjectMorphologyImage : public ITKImageProcessingBase
 
 public:
   SIMPL_SHARED_POINTERS(ITKDilateObjectMorphologyImage)
-  SIMPL_STATIC_NEW_MACRO(ITKDilateObjectMorphologyImage)
+  SIMPL_FILTER_NEW_MACRO(ITKDilateObjectMorphologyImage)
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKDilateObjectMorphologyImage, AbstractFilter)
 
-  virtual ~ITKDilateObjectMorphologyImage();
+  ~ITKDilateObjectMorphologyImage() override;
 
   SIMPL_FILTER_PARAMETER(double, ObjectValue)
   Q_PROPERTY(double ObjectValue READ getObjectValue WRITE setObjectValue)
@@ -108,7 +108,9 @@ protected:
 
 private:
   ITKDilateObjectMorphologyImage(const ITKDilateObjectMorphologyImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKDilateObjectMorphologyImage&) = delete;                    // Move assignment Not Implemented
+  ITKDilateObjectMorphologyImage(ITKDilateObjectMorphologyImage&&) = delete;         // Move Constructor Not Implemented
+  ITKDilateObjectMorphologyImage& operator=(const ITKDilateObjectMorphologyImage&) = delete; // Copy Assignment Not Implemented
+  ITKDilateObjectMorphologyImage& operator=(ITKDilateObjectMorphologyImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

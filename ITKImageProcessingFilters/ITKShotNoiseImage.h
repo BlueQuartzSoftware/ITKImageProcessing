@@ -37,7 +37,7 @@ public:
   SIMPL_FILTER_NEW_MACRO(ITKShotNoiseImage)
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKShotNoiseImage, AbstractFilter)
 
-  virtual ~ITKShotNoiseImage();
+  ~ITKShotNoiseImage() override;
 
   SIMPL_FILTER_PARAMETER(double, Scale)
   Q_PROPERTY(double Scale READ getScale WRITE setScale)
@@ -102,7 +102,9 @@ protected:
 
 private:
   ITKShotNoiseImage(const ITKShotNoiseImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKShotNoiseImage&) = delete;       // Move assignment Not Implemented
+  ITKShotNoiseImage(ITKShotNoiseImage&&) = delete;         // Move Constructor Not Implemented
+  ITKShotNoiseImage& operator=(const ITKShotNoiseImage&) = delete; // Copy Assignment Not Implemented
+  ITKShotNoiseImage& operator=(ITKShotNoiseImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

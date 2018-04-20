@@ -31,11 +31,10 @@ class ITKAcosImage : public ITKImageProcessingBase
 
 public:
   SIMPL_SHARED_POINTERS(ITKAcosImage)
-  SIMPL_STATIC_NEW_MACRO(ITKAcosImage)
-   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKAcosImage, AbstractFilter)
+  SIMPL_FILTER_NEW_MACRO(ITKAcosImage)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKAcosImage, AbstractFilter)
 
-  virtual ~ITKAcosImage();
-
+  ~ITKAcosImage() override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -93,7 +92,9 @@ protected:
 
 private:
   ITKAcosImage(const ITKAcosImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKAcosImage&) = delete;  // Move assignment Not Implemented
+  ITKAcosImage(ITKAcosImage&&) = delete;         // Move Constructor Not Implemented
+  ITKAcosImage& operator=(const ITKAcosImage&) = delete; // Copy Assignment Not Implemented
+  ITKAcosImage& operator=(ITKAcosImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

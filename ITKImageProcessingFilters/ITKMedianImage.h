@@ -36,7 +36,7 @@ public:
   SIMPL_FILTER_NEW_MACRO(ITKMedianImage)
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKMedianImage, AbstractFilter)
 
-  virtual ~ITKMedianImage();
+  ~ITKMedianImage() override;
 
   SIMPL_FILTER_PARAMETER(FloatVec3_t, Radius)
   Q_PROPERTY(FloatVec3_t Radius READ getRadius WRITE setRadius)
@@ -98,7 +98,9 @@ protected:
 
 private:
   ITKMedianImage(const ITKMedianImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKMedianImage&) = delete;    // Move assignment Not Implemented
+  ITKMedianImage(ITKMedianImage&&) = delete;         // Move Constructor Not Implemented
+  ITKMedianImage& operator=(const ITKMedianImage&) = delete; // Copy Assignment Not Implemented
+  ITKMedianImage& operator=(ITKMedianImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

@@ -40,7 +40,7 @@ public:
   SIMPL_FILTER_NEW_MACRO(ITKWhiteTopHatImage)
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKWhiteTopHatImage, AbstractFilter)
 
-  virtual ~ITKWhiteTopHatImage();
+  ~ITKWhiteTopHatImage() override;
 
   SIMPL_FILTER_PARAMETER(bool, SafeBorder)
   Q_PROPERTY(bool SafeBorder READ getSafeBorder WRITE setSafeBorder)
@@ -108,7 +108,9 @@ protected:
 
 private:
   ITKWhiteTopHatImage(const ITKWhiteTopHatImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKWhiteTopHatImage&) = delete;         // Move assignment Not Implemented
+  ITKWhiteTopHatImage(ITKWhiteTopHatImage&&) = delete;         // Move Constructor Not Implemented
+  ITKWhiteTopHatImage& operator=(const ITKWhiteTopHatImage&) = delete; // Copy Assignment Not Implemented
+  ITKWhiteTopHatImage& operator=(ITKWhiteTopHatImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

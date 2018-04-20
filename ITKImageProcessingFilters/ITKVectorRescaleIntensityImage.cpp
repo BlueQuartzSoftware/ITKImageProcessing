@@ -18,8 +18,8 @@
 
 #define DREAM3D_USE_Scalar 0
 #define DREAM3D_USE_Vector 1
-#include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
-#include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
+#include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
+#include "SIMPLib/ITK/itkDream3DImage.h"
 
 // -----------------------------------------------------------------------------
 //

@@ -33,10 +33,10 @@ class ITKGrayscaleFillholeImage : public ITKImageProcessingBase
 
 public:
   SIMPL_SHARED_POINTERS(ITKGrayscaleFillholeImage)
-  SIMPL_STATIC_NEW_MACRO(ITKGrayscaleFillholeImage)
-   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKGrayscaleFillholeImage, AbstractFilter)
+  SIMPL_FILTER_NEW_MACRO(ITKGrayscaleFillholeImage)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKGrayscaleFillholeImage, AbstractFilter)
 
-  virtual ~ITKGrayscaleFillholeImage();
+  ~ITKGrayscaleFillholeImage() override;
 
   SIMPL_FILTER_PARAMETER(bool, FullyConnected)
   Q_PROPERTY(bool FullyConnected READ getFullyConnected WRITE setFullyConnected)
@@ -98,7 +98,9 @@ protected:
 
 private:
   ITKGrayscaleFillholeImage(const ITKGrayscaleFillholeImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKGrayscaleFillholeImage&) = delete;               // Move assignment Not Implemented
+  ITKGrayscaleFillholeImage(ITKGrayscaleFillholeImage&&) = delete;         // Move Constructor Not Implemented
+  ITKGrayscaleFillholeImage& operator=(const ITKGrayscaleFillholeImage&) = delete; // Copy Assignment Not Implemented
+  ITKGrayscaleFillholeImage& operator=(ITKGrayscaleFillholeImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

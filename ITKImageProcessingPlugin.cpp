@@ -376,6 +376,11 @@ void ITKImageProcessingPlugin::readSettings(QSettings& prefs)
 {
 }
 
-#include "ITKImageProcessingFilters/RegisterKnownFilters.cpp"
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ITKImageProcessingPlugin::registerFilterWidgets(FilterWidgetManager* fwm)
+{
+}
 
-#include "FilterParameterWidgets/RegisterKnownFilterParameterWidgets.cpp"
+#include "ITKImageProcessingFilters/RegisterKnownFilters.cpp"

@@ -44,7 +44,7 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
-#include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
+#include "SIMPLib/ITK/itkDream3DImage.h"
 
 #include <itkImageSeriesReader.h>
 

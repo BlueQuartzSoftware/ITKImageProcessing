@@ -36,7 +36,7 @@ public:
   SIMPL_FILTER_NEW_MACRO(ITKMaximumProjectionImage)
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKMaximumProjectionImage, AbstractFilter)
 
-  virtual ~ITKMaximumProjectionImage();
+  ~ITKMaximumProjectionImage() override;
 
   SIMPL_FILTER_PARAMETER(double, ProjectionDimension)
   Q_PROPERTY(double ProjectionDimension READ getProjectionDimension WRITE setProjectionDimension)
@@ -98,7 +98,9 @@ protected:
 
 private:
   ITKMaximumProjectionImage(const ITKMaximumProjectionImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKMaximumProjectionImage&) = delete;               // Move assignment Not Implemented
+  ITKMaximumProjectionImage(ITKMaximumProjectionImage&&) = delete;         // Move Constructor Not Implemented
+  ITKMaximumProjectionImage& operator=(const ITKMaximumProjectionImage&) = delete; // Copy Assignment Not Implemented
+  ITKMaximumProjectionImage& operator=(ITKMaximumProjectionImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

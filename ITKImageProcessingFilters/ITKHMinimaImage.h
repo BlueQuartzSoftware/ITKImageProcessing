@@ -35,10 +35,10 @@ class ITKHMinimaImage : public ITKImageProcessingBase
 
 public:
   SIMPL_SHARED_POINTERS(ITKHMinimaImage)
-  SIMPL_STATIC_NEW_MACRO(ITKHMinimaImage)
-   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKHMinimaImage, AbstractFilter)
+  SIMPL_FILTER_NEW_MACRO(ITKHMinimaImage)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKHMinimaImage, AbstractFilter)
 
-  virtual ~ITKHMinimaImage();
+  ~ITKHMinimaImage() override;
 
   SIMPL_FILTER_PARAMETER(double, Height)
   Q_PROPERTY(double Height READ getHeight WRITE setHeight)
@@ -103,7 +103,9 @@ protected:
 
 private:
   ITKHMinimaImage(const ITKHMinimaImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKHMinimaImage&) = delete;     // Move assignment Not Implemented
+  ITKHMinimaImage(ITKHMinimaImage&&) = delete;         // Move Constructor Not Implemented
+  ITKHMinimaImage& operator=(const ITKHMinimaImage&) = delete; // Copy Assignment Not Implemented
+  ITKHMinimaImage& operator=(ITKHMinimaImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

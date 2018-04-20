@@ -42,7 +42,7 @@ public:
   SIMPL_FILTER_NEW_MACRO(ITKMultiScaleHessianBasedObjectnessImage)
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKMultiScaleHessianBasedObjectnessImage, AbstractFilter)
 
-  virtual ~ITKMultiScaleHessianBasedObjectnessImage();
+  ~ITKMultiScaleHessianBasedObjectnessImage() override;
 
   SIMPL_FILTER_PARAMETER(int, ObjectDimension)
   Q_PROPERTY(int ObjectDimension READ getObjectDimension WRITE setObjectDimension)
@@ -127,7 +127,9 @@ protected:
 
 private:
   ITKMultiScaleHessianBasedObjectnessImage(const ITKMultiScaleHessianBasedObjectnessImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKMultiScaleHessianBasedObjectnessImage&);                                    // Move assignment Not Implemented
+  ITKMultiScaleHessianBasedObjectnessImage(ITKMultiScaleHessianBasedObjectnessImage&&) = delete;      // Move Constructor Not Implemented
+  ITKMultiScaleHessianBasedObjectnessImage& operator=(const ITKMultiScaleHessianBasedObjectnessImage&) = delete; // Copy Assignment Not Implemented
+  ITKMultiScaleHessianBasedObjectnessImage& operator=(ITKMultiScaleHessianBasedObjectnessImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

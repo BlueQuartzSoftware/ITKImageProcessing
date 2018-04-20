@@ -34,10 +34,10 @@ class ITKHConvexImage : public ITKImageProcessingBase
 
 public:
   SIMPL_SHARED_POINTERS(ITKHConvexImage)
-  SIMPL_STATIC_NEW_MACRO(ITKHConvexImage)
+  SIMPL_FILTER_NEW_MACRO(ITKHConvexImage)
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKHConvexImage, AbstractFilter)
 
-  virtual ~ITKHConvexImage();
+  ~ITKHConvexImage() override;
 
   SIMPL_FILTER_PARAMETER(double, Height)
   Q_PROPERTY(double Height READ getHeight WRITE setHeight)
@@ -99,9 +99,11 @@ protected:
    */
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
-private:
-  ITKHConvexImage(const ITKHConvexImage&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKHConvexImage&) = delete;  // Move assignment Not Implemented
+public:
+  ITKHConvexImage(const ITKHConvexImage&) = delete;            // Copy Constructor Not Implemented
+  ITKHConvexImage(ITKHConvexImage&&) = delete;                 // Move Constructor Not Implemented
+  ITKHConvexImage& operator=(const ITKHConvexImage&) = delete; // Copy Assignment Not Implemented
+  ITKHConvexImage& operator=(ITKHConvexImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

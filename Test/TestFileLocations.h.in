@@ -1,5 +1,4 @@
-#ifndef _@PROJECT_NAME@FileLocation_h_
-#define _@PROJECT_NAME@FileLocation_h_
+#pragma once
 
 /* ============================================================================
 * Copyright (c) 2009-2016 BlueQuartz Software, LLC
@@ -53,10 +52,9 @@ namespace UnitTest
   const QString DataDir("@DREAM3D_DATA_DIR@");
   const QString TestTempDir("@TEST_TEMP_DIR@");
   const QString DREAM3DProjDir("@DREAM3DProj_SOURCE_DIR@");
-}
+  const QString ITKImageProcessingSourceDir("@ITKImageProcessing_SOURCE_DIR@");
+  const QString ITKImageProcessingDataDir("@ITKImageProcessing_SOURCE_DIR@/Data");
 
-namespace UnitTest
-{
   namespace ITKImageProcessingReaderTest
   {
     const QString METAIOInputTestFile("@TEST_TEMP_DIR@/METAIOFile.mha");
@@ -66,32 +64,23 @@ namespace UnitTest
     const QString SCIFIOInputTestFile("@TEST_TEMP_DIR@/SCIFIOFile.tif");
     const QString MRCIOInputTestFile("@TEST_TEMP_DIR@/MRCFile.mrc");
     const QString NonExistentInputTestFile("@TEST_TEMP_DIR@/NotHere.ghost");
-  }
-}
+  } // namespace ITKImageProcessingReaderTest
 
-namespace UnitTest
-{
   namespace ITKImageProcessingImportImageStackTest
   {
     const QString StackInputTestDir("@DREAM3D_DATA_DIR@/Data/Image");
-  }
-}
+  } // namespace ITKImageProcessingImportImageStackTest
 
-namespace UnitTest
-{
   namespace ITKImageProcessingWriterTest
   {
     const QString OutputBaseFile("@TEST_TEMP_DIR@/OutputBaseFile");
-  }
-}
+  } // namespace ITKImageProcessingWriterTest
 
-namespace UnitTest
-{
   namespace ITKBinaryThresholdTest
   {
    const QString TestFile1("@TEST_TEMP_DIR@/TestFile1.txt");
    const QString TestFile2("@TEST_TEMP_DIR@/TestFile2.txt");
-  }
-}
+  }// namespace ITKBinaryThresholdTest
+  
+} // namespace UnitTest
 
-#endif

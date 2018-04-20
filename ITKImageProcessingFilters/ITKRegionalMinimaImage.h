@@ -40,7 +40,7 @@ public:
   SIMPL_FILTER_NEW_MACRO(ITKRegionalMinimaImage)
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKRegionalMinimaImage, AbstractFilter)
 
-  virtual ~ITKRegionalMinimaImage();
+  ~ITKRegionalMinimaImage() override;
 
   SIMPL_FILTER_PARAMETER(double, BackgroundValue)
   Q_PROPERTY(double BackgroundValue READ getBackgroundValue WRITE setBackgroundValue)
@@ -111,7 +111,9 @@ protected:
 
 private:
   ITKRegionalMinimaImage(const ITKRegionalMinimaImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKRegionalMinimaImage&) = delete;            // Move assignment Not Implemented
+  ITKRegionalMinimaImage(ITKRegionalMinimaImage&&) = delete;         // Move Constructor Not Implemented
+  ITKRegionalMinimaImage& operator=(const ITKRegionalMinimaImage&) = delete; // Copy Assignment Not Implemented
+  ITKRegionalMinimaImage& operator=(ITKRegionalMinimaImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

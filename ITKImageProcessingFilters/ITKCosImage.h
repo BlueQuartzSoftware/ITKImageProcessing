@@ -30,11 +30,10 @@ class ITKCosImage : public ITKImageProcessingBase
 
 public:
   SIMPL_SHARED_POINTERS(ITKCosImage)
-  SIMPL_STATIC_NEW_MACRO(ITKCosImage)
-   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKCosImage, AbstractFilter)
+  SIMPL_FILTER_NEW_MACRO(ITKCosImage)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKCosImage, AbstractFilter)
 
-  virtual ~ITKCosImage();
-
+  ~ITKCosImage() override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -92,7 +91,9 @@ protected:
 
 private:
   ITKCosImage(const ITKCosImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKCosImage&) = delete; // Move assignment Not Implemented
+  ITKCosImage(ITKCosImage&&) = delete;         // Move Constructor Not Implemented
+  ITKCosImage& operator=(const ITKCosImage&) = delete; // Copy Assignment Not Implemented
+  ITKCosImage& operator=(ITKCosImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

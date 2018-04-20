@@ -30,11 +30,10 @@ class ITKBinaryThinningImage : public ITKImageProcessingBase
 
 public:
   SIMPL_SHARED_POINTERS(ITKBinaryThinningImage)
-  SIMPL_STATIC_NEW_MACRO(ITKBinaryThinningImage)
-   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKBinaryThinningImage, AbstractFilter)
+  SIMPL_FILTER_NEW_MACRO(ITKBinaryThinningImage)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKBinaryThinningImage, AbstractFilter)
 
-  virtual ~ITKBinaryThinningImage();
-
+  ~ITKBinaryThinningImage() override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -92,7 +91,9 @@ protected:
 
 private:
   ITKBinaryThinningImage(const ITKBinaryThinningImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKBinaryThinningImage&) = delete;            // Move assignment Not Implemented
+  ITKBinaryThinningImage(ITKBinaryThinningImage&&) = delete;         // Move Constructor Not Implemented
+  ITKBinaryThinningImage& operator=(const ITKBinaryThinningImage&) = delete; // Copy Assignment Not Implemented
+  ITKBinaryThinningImage& operator=(ITKBinaryThinningImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

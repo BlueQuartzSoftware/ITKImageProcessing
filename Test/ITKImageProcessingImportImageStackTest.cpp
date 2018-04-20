@@ -234,6 +234,7 @@ public:
     fileListInfo.InputPath = UnitTest::ITKImageProcessingImportImageStackTest::StackInputTestDir;
     fileListInfo.StartIndex = 11;
     fileListInfo.EndIndex = 13;
+    fileListInfo.IncrementIndex = 1;
     fileListInfo.FileExtension = "tif";
     fileListInfo.FilePrefix = "slice_";
     fileListInfo.FileSuffix = "";

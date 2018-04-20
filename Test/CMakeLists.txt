@@ -10,6 +10,9 @@ set(TEST_NAMES
   ITKImageProcessingReaderTest
   ITKImageProcessingWriterTest
   ITKImageProcessingImportImageStackTest
+  ImportRegisteredImageMontageTest
+  ImportImageMontageTest
+  ImportVectorImageStackTest
   )
 
 if(NOT ITKImageProcessing_LeanAndMean)
@@ -132,4 +135,4 @@ SIMPL_GenerateUnitTestFile(PLUGIN_NAME ${PLUGIN_NAME}
                                         ${${PLUGIN_NAME}_PARENT_BINARY_DIR}
 )
 
-
+add_dependencies(${PLUGIN_NAME}UnitTest ${PLUGIN_NAME}Gui)

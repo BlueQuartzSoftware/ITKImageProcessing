@@ -38,20 +38,26 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
-#include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
+#include "SIMPLib/ITK/itkDream3DImage.h"
 
 /**
  * @brief The ITKImageProcessingFilter class. See [Filter documentation](@ref itkimageprocessingfilter) for details.
  */
 class ITKImageWriter : public AbstractFilter
 {
-  Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
-  PYB11_CREATE_BINDINGS(ITKImageWriter SUPERCLASS AbstractFilter) PYB11_PROPERTY(QString FileName READ getFileName WRITE setFileName)
-      PYB11_PROPERTY(DataArrayPath ImageArrayPath READ getImageArrayPath WRITE setImageArrayPath)
 
-          public : SIMPL_SHARED_POINTERS(ITKImageWriter) SIMPL_FILTER_NEW_MACRO(ITKImageWriter) SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKImageWriter, AbstractFilter)
+  Q_OBJECT
 
-                       ~ITKImageWriter() override;
+  PYB11_CREATE_BINDINGS(ITKImageWriter SUPERCLASS AbstractFilter)
+  PYB11_PROPERTY(QString FileName READ getFileName WRITE setFileName)
+  PYB11_PROPERTY(DataArrayPath ImageArrayPath READ getImageArrayPath WRITE setImageArrayPath)
+
+public:
+  SIMPL_SHARED_POINTERS(ITKImageWriter)
+  SIMPL_FILTER_NEW_MACRO(ITKImageWriter)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKImageWriter, AbstractFilter)
+
+  ~ITKImageWriter() override;
 
   SIMPL_FILTER_PARAMETER(QString, FileName)
   Q_PROPERTY(QString FileName READ getFileName WRITE setFileName)
@@ -179,7 +185,6 @@ protected:
   */
   template <typename TPixel, unsigned int Dimensions> void writeAsOneFile(typename itk::Dream3DImage<TPixel, Dimensions>* image);
 
-private:
 public:
   ITKImageWriter(const ITKImageWriter&) = delete; // Copy Constructor Not Implemented
   ITKImageWriter(ITKImageWriter&&) = delete;      // Move Constructor

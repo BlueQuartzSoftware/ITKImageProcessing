@@ -15,8 +15,8 @@
 
 #define DREAM3D_USE_RGB_RGBA 1
 #define DREAM3D_USE_Scalar 0
-#include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
-#include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
+#include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
+#include "SIMPLib/ITK/itkDream3DImage.h"
 
 // -----------------------------------------------------------------------------
 //

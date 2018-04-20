@@ -37,10 +37,10 @@ class ITKBlackTopHatImage : public ITKImageProcessingBase
 
 public:
   SIMPL_SHARED_POINTERS(ITKBlackTopHatImage)
-  SIMPL_STATIC_NEW_MACRO(ITKBlackTopHatImage)
+  SIMPL_FILTER_NEW_MACRO(ITKBlackTopHatImage)
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKBlackTopHatImage, AbstractFilter)
 
-  virtual ~ITKBlackTopHatImage();
+  ~ITKBlackTopHatImage() override;
 
   SIMPL_FILTER_PARAMETER(bool, SafeBorder)
   Q_PROPERTY(bool SafeBorder READ getSafeBorder WRITE setSafeBorder)
@@ -108,7 +108,9 @@ protected:
 
 private:
   ITKBlackTopHatImage(const ITKBlackTopHatImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKBlackTopHatImage&) = delete;         // Move assignment Not Implemented
+  ITKBlackTopHatImage(ITKBlackTopHatImage&&) = delete;         // Move Constructor Not Implemented
+  ITKBlackTopHatImage& operator=(const ITKBlackTopHatImage&) = delete; // Copy Assignment Not Implemented
+  ITKBlackTopHatImage& operator=(ITKBlackTopHatImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

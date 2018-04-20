@@ -42,9 +42,9 @@
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
 #include "UnitTestSupport.hpp"
 
-#include "ITKImageProcessing/ITKImageProcessingFilters/itkGetComponentsDimensions.h"
-#include "ITKImageProcessing/ITKImageProcessingFilters/itkInPlaceDream3DDataToImageFilter.h"
-#include "ITKImageProcessing/ITKImageProcessingFilters/itkInPlaceImageToDream3DDataFilter.h"
+#include "SIMPLib/ITK/itkGetComponentsDimensions.h"
+#include "SIMPLib/ITK/itkInPlaceDream3DDataToImageFilter.h"
+#include "SIMPLib/ITK/itkInPlaceImageToDream3DDataFilter.h"
 
 #include "ITKImageProcessingTestFileLocations.h"
 

@@ -30,11 +30,10 @@ class ITKExpImage : public ITKImageProcessingBase
 
 public:
   SIMPL_SHARED_POINTERS(ITKExpImage)
-  SIMPL_STATIC_NEW_MACRO(ITKExpImage)
-   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKExpImage, AbstractFilter)
+  SIMPL_FILTER_NEW_MACRO(ITKExpImage)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKExpImage, AbstractFilter)
 
-  virtual ~ITKExpImage();
-
+  ~ITKExpImage() override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -92,7 +91,9 @@ protected:
 
 private:
   ITKExpImage(const ITKExpImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKExpImage&) = delete; // Move assignment Not Implemented
+  ITKExpImage(ITKExpImage&&) = delete;         // Move Constructor Not Implemented
+  ITKExpImage& operator=(const ITKExpImage&) = delete; // Copy Assignment Not Implemented
+  ITKExpImage& operator=(ITKExpImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

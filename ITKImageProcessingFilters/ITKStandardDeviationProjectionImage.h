@@ -36,7 +36,7 @@ public:
   SIMPL_FILTER_NEW_MACRO(ITKStandardDeviationProjectionImage)
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKStandardDeviationProjectionImage, AbstractFilter)
 
-  virtual ~ITKStandardDeviationProjectionImage();
+  ~ITKStandardDeviationProjectionImage() override;
 
   SIMPL_FILTER_PARAMETER(double, ProjectionDimension)
   Q_PROPERTY(double ProjectionDimension READ getProjectionDimension WRITE setProjectionDimension)
@@ -98,7 +98,9 @@ protected:
 
 private:
   ITKStandardDeviationProjectionImage(const ITKStandardDeviationProjectionImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKStandardDeviationProjectionImage&) = delete;                         // Move assignment Not Implemented
+  ITKStandardDeviationProjectionImage(ITKStandardDeviationProjectionImage&&) = delete;         // Move Constructor Not Implemented
+  ITKStandardDeviationProjectionImage& operator=(const ITKStandardDeviationProjectionImage&) = delete; // Copy Assignment Not Implemented
+  ITKStandardDeviationProjectionImage& operator=(ITKStandardDeviationProjectionImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

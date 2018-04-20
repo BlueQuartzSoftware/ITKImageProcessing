@@ -33,8 +33,7 @@ public:
   SIMPL_FILTER_NEW_MACRO(ITKNormalizeImage)
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKNormalizeImage, AbstractFilter)
 
-  virtual ~ITKNormalizeImage();
-
+  ~ITKNormalizeImage() override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -92,7 +91,9 @@ protected:
 
 private:
   ITKNormalizeImage(const ITKNormalizeImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKNormalizeImage&) = delete;       // Move assignment Not Implemented
+  ITKNormalizeImage(ITKNormalizeImage&&) = delete;         // Move Constructor Not Implemented
+  ITKNormalizeImage& operator=(const ITKNormalizeImage&) = delete; // Copy Assignment Not Implemented
+  ITKNormalizeImage& operator=(ITKNormalizeImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

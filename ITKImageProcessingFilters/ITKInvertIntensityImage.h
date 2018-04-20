@@ -36,7 +36,7 @@ public:
   SIMPL_FILTER_NEW_MACRO(ITKInvertIntensityImage)
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKInvertIntensityImage, AbstractFilter)
 
-  virtual ~ITKInvertIntensityImage();
+  ~ITKInvertIntensityImage() override;
 
   SIMPL_FILTER_PARAMETER(double, Maximum)
   Q_PROPERTY(double Maximum READ getMaximum WRITE setMaximum)
@@ -98,7 +98,9 @@ protected:
 
 private:
   ITKInvertIntensityImage(const ITKInvertIntensityImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKInvertIntensityImage&) = delete;             // Move assignment Not Implemented
+  ITKInvertIntensityImage(ITKInvertIntensityImage&&) = delete;         // Move Constructor Not Implemented
+  ITKInvertIntensityImage& operator=(const ITKInvertIntensityImage&) = delete; // Copy Assignment Not Implemented
+  ITKInvertIntensityImage& operator=(ITKInvertIntensityImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

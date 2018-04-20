@@ -37,7 +37,7 @@ public:
   SIMPL_FILTER_NEW_MACRO(ITKIsoContourDistanceImage)
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKIsoContourDistanceImage, AbstractFilter)
 
-  virtual ~ITKIsoContourDistanceImage();
+  ~ITKIsoContourDistanceImage() override;
 
   SIMPL_FILTER_PARAMETER(double, LevelSetValue)
   Q_PROPERTY(double LevelSetValue READ getLevelSetValue WRITE setLevelSetValue)
@@ -102,7 +102,9 @@ protected:
 
 private:
   ITKIsoContourDistanceImage(const ITKIsoContourDistanceImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKIsoContourDistanceImage&) = delete;                // Move assignment Not Implemented
+  ITKIsoContourDistanceImage(ITKIsoContourDistanceImage&&) = delete;         // Move Constructor Not Implemented
+  ITKIsoContourDistanceImage& operator=(const ITKIsoContourDistanceImage&) = delete; // Copy Assignment Not Implemented
+  ITKIsoContourDistanceImage& operator=(ITKIsoContourDistanceImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

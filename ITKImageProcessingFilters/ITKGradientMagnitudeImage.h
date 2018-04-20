@@ -33,10 +33,10 @@ class ITKGradientMagnitudeImage : public ITKImageProcessingBase
 
 public:
   SIMPL_SHARED_POINTERS(ITKGradientMagnitudeImage)
-  SIMPL_STATIC_NEW_MACRO(ITKGradientMagnitudeImage)
-   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKGradientMagnitudeImage, AbstractFilter)
+  SIMPL_FILTER_NEW_MACRO(ITKGradientMagnitudeImage)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKGradientMagnitudeImage, AbstractFilter)
 
-  virtual ~ITKGradientMagnitudeImage();
+  ~ITKGradientMagnitudeImage() override;
 
   SIMPL_FILTER_PARAMETER(bool, UseImageSpacing)
   Q_PROPERTY(bool UseImageSpacing READ getUseImageSpacing WRITE setUseImageSpacing)
@@ -98,7 +98,9 @@ protected:
 
 private:
   ITKGradientMagnitudeImage(const ITKGradientMagnitudeImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKGradientMagnitudeImage&) = delete;               // Move assignment Not Implemented
+  ITKGradientMagnitudeImage(ITKGradientMagnitudeImage&&) = delete;         // Move Constructor Not Implemented
+  ITKGradientMagnitudeImage& operator=(const ITKGradientMagnitudeImage&) = delete; // Copy Assignment Not Implemented
+  ITKGradientMagnitudeImage& operator=(ITKGradientMagnitudeImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

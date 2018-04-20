@@ -40,7 +40,7 @@ public:
   SIMPL_FILTER_NEW_MACRO(ITKSignedMaurerDistanceMapImage)
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKSignedMaurerDistanceMapImage, AbstractFilter)
 
-  virtual ~ITKSignedMaurerDistanceMapImage();
+  ~ITKSignedMaurerDistanceMapImage() override;
 
   SIMPL_FILTER_PARAMETER(bool, InsideIsPositive)
   Q_PROPERTY(bool InsideIsPositive READ getInsideIsPositive WRITE setInsideIsPositive)
@@ -111,7 +111,9 @@ protected:
 
 private:
   ITKSignedMaurerDistanceMapImage(const ITKSignedMaurerDistanceMapImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKSignedMaurerDistanceMapImage&) = delete;                     // Move assignment Not Implemented
+  ITKSignedMaurerDistanceMapImage(ITKSignedMaurerDistanceMapImage&&) = delete;         // Move Constructor Not Implemented
+  ITKSignedMaurerDistanceMapImage& operator=(const ITKSignedMaurerDistanceMapImage&) = delete; // Copy Assignment Not Implemented
+  ITKSignedMaurerDistanceMapImage& operator=(ITKSignedMaurerDistanceMapImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

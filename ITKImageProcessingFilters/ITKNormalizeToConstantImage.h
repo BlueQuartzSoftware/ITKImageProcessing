@@ -36,7 +36,7 @@ public:
   SIMPL_FILTER_NEW_MACRO(ITKNormalizeToConstantImage)
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKNormalizeToConstantImage, AbstractFilter)
 
-  virtual ~ITKNormalizeToConstantImage();
+  ~ITKNormalizeToConstantImage() override;
 
   SIMPL_FILTER_PARAMETER(double, Constant)
   Q_PROPERTY(double Constant READ getConstant WRITE setConstant)
@@ -98,7 +98,9 @@ protected:
 
 private:
   ITKNormalizeToConstantImage(const ITKNormalizeToConstantImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKNormalizeToConstantImage&) = delete;                 // Move assignment Not Implemented
+  ITKNormalizeToConstantImage(ITKNormalizeToConstantImage&&) = delete;         // Move Constructor Not Implemented
+  ITKNormalizeToConstantImage& operator=(const ITKNormalizeToConstantImage&) = delete; // Copy Assignment Not Implemented
+  ITKNormalizeToConstantImage& operator=(ITKNormalizeToConstantImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

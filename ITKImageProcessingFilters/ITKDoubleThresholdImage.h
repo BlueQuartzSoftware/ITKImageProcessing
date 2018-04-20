@@ -41,10 +41,10 @@ class ITKDoubleThresholdImage : public ITKImageProcessingBase
 
 public:
   SIMPL_SHARED_POINTERS(ITKDoubleThresholdImage)
-  SIMPL_STATIC_NEW_MACRO(ITKDoubleThresholdImage)
-   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKDoubleThresholdImage, AbstractFilter)
+  SIMPL_FILTER_NEW_MACRO(ITKDoubleThresholdImage)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKDoubleThresholdImage, AbstractFilter)
 
-  virtual ~ITKDoubleThresholdImage();
+  ~ITKDoubleThresholdImage() override;
 
   SIMPL_FILTER_PARAMETER(double, Threshold1)
   Q_PROPERTY(double Threshold1 READ getThreshold1 WRITE setThreshold1)
@@ -124,7 +124,9 @@ protected:
 
 private:
   ITKDoubleThresholdImage(const ITKDoubleThresholdImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKDoubleThresholdImage&) = delete;             // Move assignment Not Implemented
+  ITKDoubleThresholdImage(ITKDoubleThresholdImage&&) = delete;         // Move Constructor Not Implemented
+  ITKDoubleThresholdImage& operator=(const ITKDoubleThresholdImage&) = delete; // Copy Assignment Not Implemented
+  ITKDoubleThresholdImage& operator=(ITKDoubleThresholdImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

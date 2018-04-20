@@ -38,7 +38,7 @@ public:
   SIMPL_FILTER_NEW_MACRO(ITKLaplacianRecursiveGaussianImage)
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKLaplacianRecursiveGaussianImage, AbstractFilter)
 
-  virtual ~ITKLaplacianRecursiveGaussianImage();
+  ~ITKLaplacianRecursiveGaussianImage() override;
 
   SIMPL_FILTER_PARAMETER(double, Sigma)
   Q_PROPERTY(double Sigma READ getSigma WRITE setSigma)
@@ -103,7 +103,9 @@ protected:
 
 private:
   ITKLaplacianRecursiveGaussianImage(const ITKLaplacianRecursiveGaussianImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKLaplacianRecursiveGaussianImage&) = delete;                        // Move assignment Not Implemented
+  ITKLaplacianRecursiveGaussianImage(ITKLaplacianRecursiveGaussianImage&&) = delete;         // Move Constructor Not Implemented
+  ITKLaplacianRecursiveGaussianImage& operator=(const ITKLaplacianRecursiveGaussianImage&) = delete; // Copy Assignment Not Implemented
+  ITKLaplacianRecursiveGaussianImage& operator=(ITKLaplacianRecursiveGaussianImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

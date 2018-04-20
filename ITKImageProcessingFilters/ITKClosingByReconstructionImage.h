@@ -38,10 +38,10 @@ class ITKClosingByReconstructionImage : public ITKImageProcessingBase
 
 public:
   SIMPL_SHARED_POINTERS(ITKClosingByReconstructionImage)
-  SIMPL_STATIC_NEW_MACRO(ITKClosingByReconstructionImage)
+  SIMPL_FILTER_NEW_MACRO(ITKClosingByReconstructionImage)
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKClosingByReconstructionImage, AbstractFilter)
 
-  virtual ~ITKClosingByReconstructionImage();
+  ~ITKClosingByReconstructionImage() override;
 
   SIMPL_FILTER_PARAMETER(bool, FullyConnected)
   Q_PROPERTY(bool FullyConnected READ getFullyConnected WRITE setFullyConnected)
@@ -112,7 +112,9 @@ protected:
 
 private:
   ITKClosingByReconstructionImage(const ITKClosingByReconstructionImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKClosingByReconstructionImage&) = delete;                     // Move assignment Not Implemented
+  ITKClosingByReconstructionImage(ITKClosingByReconstructionImage&&) = delete;         // Move Constructor Not Implemented
+  ITKClosingByReconstructionImage& operator=(const ITKClosingByReconstructionImage&) = delete; // Copy Assignment Not Implemented
+  ITKClosingByReconstructionImage& operator=(ITKClosingByReconstructionImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__

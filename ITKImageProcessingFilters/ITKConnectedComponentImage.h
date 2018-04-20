@@ -35,10 +35,10 @@ class ITKConnectedComponentImage : public ITKImageProcessingBase
 
 public:
   SIMPL_SHARED_POINTERS(ITKConnectedComponentImage)
-  SIMPL_STATIC_NEW_MACRO(ITKConnectedComponentImage)
-   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKConnectedComponentImage, AbstractFilter)
+  SIMPL_FILTER_NEW_MACRO(ITKConnectedComponentImage)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKConnectedComponentImage, AbstractFilter)
 
-  virtual ~ITKConnectedComponentImage();
+  ~ITKConnectedComponentImage() override;
 
   SIMPL_FILTER_PARAMETER(bool, FullyConnected)
   Q_PROPERTY(bool FullyConnected READ getFullyConnected WRITE setFullyConnected)
@@ -103,7 +103,9 @@ protected:
 
 private:
   ITKConnectedComponentImage(const ITKConnectedComponentImage&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ITKConnectedComponentImage&) = delete;                // Move assignment Not Implemented
+  ITKConnectedComponentImage(ITKConnectedComponentImage&&) = delete;         // Move Constructor Not Implemented
+  ITKConnectedComponentImage& operator=(const ITKConnectedComponentImage&) = delete; // Copy Assignment Not Implemented
+  ITKConnectedComponentImage& operator=(ITKConnectedComponentImage&&) = delete;      // Move Assignment Not Implemented
 };
 
 #ifdef __clang__
