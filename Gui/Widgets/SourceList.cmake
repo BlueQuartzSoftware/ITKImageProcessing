@@ -12,13 +12,13 @@ set(DREAM3D_WIDGETS
 
 foreach(FPW ${DREAM3D_WIDGETS})
   set(${PLUGIN_NAME}_Widgets_HDRS ${${PLUGIN_NAME}_Widgets_HDRS}
-    ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/${FPW}.h
+    ${${PLUGIN_NAME}_SOURCE_DIR}/Gui/Widgets/${FPW}.h
     )
   set(${PLUGIN_NAME}_Widgets_SRCS ${${PLUGIN_NAME}_Widgets_SRCS}
-    ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/${FPW}.cpp
+    ${${PLUGIN_NAME}_SOURCE_DIR}/Gui/Widgets/${FPW}.cpp
     )
   set(${PLUGIN_NAME}_Widgets_UIS ${${PLUGIN_NAME}_Widgets_UIS}
-    ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/UI_Files/${FPW}.ui
+    ${${PLUGIN_NAME}_SOURCE_DIR}/Gui/Widgets/UI_Files/${FPW}.ui
     )
 endforeach()
 

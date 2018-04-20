@@ -221,7 +221,11 @@ void ZeissImportPlugin::readSettings(QSettings& prefs)
 
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ZeissImportPlugin::registerFilterWidgets(FilterWidgetManager* fwm)
+{
+}
+
 #include "ZeissImportFilters/RegisterKnownFilters.cpp"
-
-#include "FilterParameterWidgets/RegisterKnownFilterParameterWidgets.cpp"
-
