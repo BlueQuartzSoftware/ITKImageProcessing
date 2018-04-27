@@ -11,14 +11,17 @@
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 
 
+#include "ZeissImport/ZeissImportDLLExport.h"
+
 /**
- * @class ZeissImportPlugin ZeissImportPlugin.h SurfaceMeshing/ZeissImportPlugin.h
+ * @class ZeissImportPlugin ZeissImportPlugin.hSurfaceMeshing/ZeissImportPlugin.h
  * @brief
  * @author
  * @date
  * @version 1.0
  */
-class ZeissImportPlugin : public QObject, public ISIMPLibPlugin
+class ZeissImport_EXPORT ZeissImportPlugin : public QObject, public ISIMPLibPlugin
+
 {
     Q_OBJECT
     Q_INTERFACES(ISIMPLibPlugin)

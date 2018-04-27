@@ -10,7 +10,13 @@ class ZeissImportGuiPlugin : public ZeissImportPlugin
 
 public:
   ZeissImportGuiPlugin();
-  ~ZeissImportGuiPlugin() override;
+   ~ZeissImportGuiPlugin() override;
+  
+  /**
+   * @brief Register all the filters with the FilterWidgetFactory
+   */
+  void registerFilterWidgets(FilterWidgetManager* fwm) override;
+  
 
 public:
   ZeissImportGuiPlugin(const ZeissImportGuiPlugin&) = delete;            // Copy Constructor Not Implemented
