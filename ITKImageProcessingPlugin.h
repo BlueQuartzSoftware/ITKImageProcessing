@@ -39,10 +39,13 @@
 
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
+
 /**
  * @brief The ITKImageProcessingPlugin class
  */
-class ITKImageProcessingPlugin : public QObject, public ISIMPLibPlugin
+class ITKImageProcessing_EXPORT ITKImageProcessingPlugin : public QObject, public ISIMPLibPlugin
+
 {
   Q_OBJECT
   Q_INTERFACES(ISIMPLibPlugin)
