@@ -38,7 +38,7 @@ void ITKImageBase::execute()
   {
     return;
   }
-  if(getCancel() == true)
+  if(getCancel())
   {
     return;
   }

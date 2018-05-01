@@ -291,7 +291,7 @@ void ImportImageMontage::execute()
       break;
     }
 
-    if(getCancel() == true)
+    if(getCancel())
     {
       return;
     }

@@ -420,7 +420,7 @@ void ImportRegisteredImageMontage::execute()
       dims[2] = fileList.size();
       imageGeom->setDimensions(dims);
     }
-    if(getCancel() == true)
+    if(getCancel())
     {
       return;
     }
