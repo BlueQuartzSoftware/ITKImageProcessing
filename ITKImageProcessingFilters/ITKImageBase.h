@@ -28,10 +28,11 @@ class ITKImageBase : public AbstractFilter
   PYB11_CREATE_BINDINGS(ITKImageBase SUPERCLASS AbstractFilter)
 
 public:
-  // SIMPL_SHARED_POINTERS(ITKImageBase)
-  // SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKImageBase, AbstractFilter)
+  SIMPL_SHARED_POINTERS(ITKImageBase)
+  SIMPL_FILTER_NEW_MACRO(ITKImageBase)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKImageBase, AbstractFilter)
 
-  virtual ~ITKImageBase();
+  ~ITKImageBase() override;
 
   /**
    * @brief execute Reimplemented from @see AbstractFilter class
@@ -355,7 +356,7 @@ protected:
   void initialize();
 
 public:
-  ITKImageBase(const ITKImageBase&) = delete;            // Copy Constructor Not Implemented
+  ITKImageBase(const ITKImageBase&) = delete;            // Copy Constructor Implemented
   ITKImageBase& operator=(const ITKImageBase&) = delete; // Copy Assignment Not Implemented
   ITKImageBase& operator=(ITKImageBase&&) = delete;      // Move Assignment Not Implemented
 };
