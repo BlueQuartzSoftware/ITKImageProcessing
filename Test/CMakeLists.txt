@@ -39,7 +39,7 @@ if(NOT ITKImageProcessing_LeanAndMean)
     ITKShiftScaleImageTest
     ITKNotImageTest
     ITKBinaryProjectionImageTest
-    ITKBinaryMinMaxCurvatureFlowImageTest
+#    ITKBinaryMinMaxCurvatureFlowImageTest
     ITKInvertIntensityImageTest
     ITKGrayscaleFillholeImageTest
     ITKAsinImageTest
@@ -51,7 +51,7 @@ if(NOT ITKImageProcessing_LeanAndMean)
     ITKValuedRegionalMinimaImageTest
     ITKLog10ImageTest
     ITKSquareImageTest
-    ITKSobelEdgeDetectionImageTest
+#    ITKSobelEdgeDetectionImageTest
     ITKValuedRegionalMaximaImageTest
     ITKRelabelComponentImageTest
     ITKGrayscaleGrindPeakImageTest

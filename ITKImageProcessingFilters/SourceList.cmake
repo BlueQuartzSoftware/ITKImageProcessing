@@ -55,7 +55,7 @@ if(NOT ITKImageProcessing_LeanAndMean)
     ITKShiftScaleImage
     ITKNotImage
     ITKBinaryProjectionImage
-    ITKBinaryMinMaxCurvatureFlowImage
+#    ITKBinaryMinMaxCurvatureFlowImage
     ITKInvertIntensityImage
     ITKGrayscaleFillholeImage
     ITKAsinImage
@@ -67,7 +67,7 @@ if(NOT ITKImageProcessing_LeanAndMean)
     ITKValuedRegionalMinimaImage
     ITKLog10Image
     ITKSquareImage
-    ITKSobelEdgeDetectionImage
+#    ITKSobelEdgeDetectionImage
     ITKBilateralImage
     ITKValuedRegionalMaximaImage
     ITKRelabelComponentImage
