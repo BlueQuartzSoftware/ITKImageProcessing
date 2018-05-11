@@ -21,11 +21,12 @@
 #include <SIMPLib/FilterParameters/FloatVec3FilterParameter.h>
 #include <itkBoxMeanImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief The ITKBoxMeanImage class. See [Filter documentation](@ref ITKBoxMeanImage) for details.
  */
-class ITKBoxMeanImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKBoxMeanImage : public ITKImageProcessingBase
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKBoxMeanImage SUPERCLASS ITKImageProcessingBase)

@@ -22,11 +22,12 @@
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 #include <itkMorphologicalWatershedImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief The ITKMorphologicalWatershedImage class. See [Filter documentation](@ref ITKMorphologicalWatershedImage) for details.
  */
-class ITKMorphologicalWatershedImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKMorphologicalWatershedImage : public ITKImageProcessingBase
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKMorphologicalWatershedImage SUPERCLASS ITKImageProcessingBase)

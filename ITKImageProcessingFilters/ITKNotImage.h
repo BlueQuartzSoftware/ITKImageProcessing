@@ -20,11 +20,12 @@
 // Auto includes
 #include <itkNotImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief The ITKNotImage class. See [Filter documentation](@ref ITKNotImage) for details.
  */
-class ITKNotImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKNotImage : public ITKImageProcessingBase
 {
   Q_OBJECT
 

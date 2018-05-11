@@ -20,11 +20,12 @@
 // Auto includes
 #include <itkSobelEdgeDetectionImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief The ITKSobelEdgeDetectionImage class. See [Filter documentation](@ref ITKSobelEdgeDetectionImage) for details.
  */
-class ITKSobelEdgeDetectionImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKSobelEdgeDetectionImage : public ITKImageProcessingBase
 {
   Q_OBJECT
 

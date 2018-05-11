@@ -18,11 +18,12 @@
 #include <itkCastImageFilter.h>
 #include <itkNumericTraits.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief The ITKImageBase class. See [Filter documentation](@ref ITKImageBase) for details.
  */
-class ITKImageBase : public AbstractFilter
+class ITKImageProcessing_EXPORT ITKImageBase : public AbstractFilter
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKImageBase SUPERCLASS AbstractFilter)

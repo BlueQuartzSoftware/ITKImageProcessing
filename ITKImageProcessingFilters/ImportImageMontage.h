@@ -18,10 +18,12 @@
 
 #include <itkImageFileReader.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
+
 /**
  * @brief The ImportImageMontage class. See [Filter documentation](@ref importimagemontage) for details.
  */
-class ImportImageMontage : public AbstractFilter
+class ITKImageProcessing_EXPORT ImportImageMontage : public AbstractFilter
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ImportImageMontage SUPERCLASS AbstractFilter)

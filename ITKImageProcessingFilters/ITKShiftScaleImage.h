@@ -21,11 +21,12 @@
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 #include <itkShiftScaleImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief The ITKShiftScaleImage class. See [Filter documentation](@ref ITKShiftScaleImage) for details.
  */
-class ITKShiftScaleImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKShiftScaleImage : public ITKImageProcessingBase
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKShiftScaleImage SUPERCLASS ITKImageProcessingBase)

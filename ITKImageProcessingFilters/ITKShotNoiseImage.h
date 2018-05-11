@@ -21,11 +21,12 @@
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 #include <itkShotNoiseImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief The ITKShotNoiseImage class. See [Filter documentation](@ref ITKShotNoiseImage) for details.
  */
-class ITKShotNoiseImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKShotNoiseImage : public ITKImageProcessingBase
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKShotNoiseImage SUPERCLASS ITKImageProcessingBase)

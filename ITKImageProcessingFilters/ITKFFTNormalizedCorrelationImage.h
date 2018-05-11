@@ -22,10 +22,12 @@
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 #include <itkFFTNormalizedCorrelationImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
+
 /**
  * @brief The ITKFFTNormalizedCorrelationImage class. See [Filter documentation](@ref ITKFFTNormalizedCorrelationImage) for details.
  */
-class ITKFFTNormalizedCorrelationImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKFFTNormalizedCorrelationImage : public ITKImageProcessingBase
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKFFTNormalizedCorrelationImage SUPERCLASS ITKImageProcessingBase)

@@ -23,11 +23,12 @@
 #include <SIMPLib/FilterParameters/FloatVec3FilterParameter.h>
 #include <itkDiscreteGaussianImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief The ITKDiscreteGaussianImage class. See [Filter documentation](@ref ITKDiscreteGaussianImage) for details.
  */
-class ITKDiscreteGaussianImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKDiscreteGaussianImage : public ITKImageProcessingBase
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKDiscreteGaussianImage SUPERCLASS ITKImageProcessingBase)

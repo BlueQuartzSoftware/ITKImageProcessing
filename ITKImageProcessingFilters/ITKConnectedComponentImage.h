@@ -22,11 +22,12 @@
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 #include <itkConnectedComponentImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief The ITKConnectedComponentImage class. See [Filter documentation](@ref ITKConnectedComponentImage) for details.
  */
-class ITKConnectedComponentImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKConnectedComponentImage : public ITKImageProcessingBase
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKConnectedComponentImage SUPERCLASS ITKImageProcessingBase)

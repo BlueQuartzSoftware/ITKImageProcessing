@@ -21,11 +21,12 @@
 #include <SIMPLib/FilterParameters/FloatVec3FilterParameter.h>
 #include <itkMedianImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief The ITKMedianImage class. See [Filter documentation](@ref ITKMedianImage) for details.
  */
-class ITKMedianImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKMedianImage : public ITKImageProcessingBase
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKMedianImage SUPERCLASS ITKImageProcessingBase)

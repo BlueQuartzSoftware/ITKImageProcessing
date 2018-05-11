@@ -21,11 +21,12 @@
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 #include <itkSaltAndPepperNoiseImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief The ITKSaltAndPepperNoiseImage class. See [Filter documentation](@ref ITKSaltAndPepperNoiseImage) for details.
  */
-class ITKSaltAndPepperNoiseImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKSaltAndPepperNoiseImage : public ITKImageProcessingBase
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKSaltAndPepperNoiseImage SUPERCLASS ITKImageProcessingBase)

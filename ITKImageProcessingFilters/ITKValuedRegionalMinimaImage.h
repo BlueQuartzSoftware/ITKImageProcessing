@@ -21,11 +21,12 @@
 #include <SIMPLib/FilterParameters/BooleanFilterParameter.h>
 #include <itkValuedRegionalMinimaImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief The ITKValuedRegionalMinimaImage class. See [Filter documentation](@ref ITKValuedRegionalMinimaImage) for details.
  */
-class ITKValuedRegionalMinimaImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKValuedRegionalMinimaImage : public ITKImageProcessingBase
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKValuedRegionalMinimaImage SUPERCLASS ITKImageProcessingBase)

@@ -21,11 +21,12 @@
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 #include <itkMinimumProjectionImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief The ITKMinimumProjectionImage class. See [Filter documentation](@ref ITKMinimumProjectionImage) for details.
  */
-class ITKMinimumProjectionImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKMinimumProjectionImage : public ITKImageProcessingBase
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKMinimumProjectionImage SUPERCLASS ITKImageProcessingBase)

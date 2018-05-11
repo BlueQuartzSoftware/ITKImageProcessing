@@ -21,11 +21,12 @@
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 #include <itkApproximateSignedDistanceMapImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief The ITKApproximateSignedDistanceMapImage class. See [Filter documentation](@ref ITKApproximateSignedDistanceMapImage) for details.
  */
-class ITKApproximateSignedDistanceMapImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKApproximateSignedDistanceMapImage : public ITKImageProcessingBase
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKApproximateSignedDistanceMapImage SUPERCLASS ITKImageProcessingBase)

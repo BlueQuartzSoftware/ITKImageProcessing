@@ -21,11 +21,12 @@
 #include <SIMPLib/FilterParameters/BooleanFilterParameter.h>
 #include <itkGrayscaleGrindPeakImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief The ITKGrayscaleGrindPeakImage class. See [Filter documentation](@ref ITKGrayscaleGrindPeakImage) for details.
  */
-class ITKGrayscaleGrindPeakImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKGrayscaleGrindPeakImage : public ITKImageProcessingBase
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKGrayscaleGrindPeakImage SUPERCLASS ITKImageProcessingBase)

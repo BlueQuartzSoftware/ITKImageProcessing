@@ -21,11 +21,12 @@
 #include <SIMPLib/FilterParameters/BooleanFilterParameter.h>
 #include <itkValuedRegionalMaximaImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief The ITKValuedRegionalMaximaImage class. See [Filter documentation](@ref ITKValuedRegionalMaximaImage) for details.
  */
-class ITKValuedRegionalMaximaImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKValuedRegionalMaximaImage : public ITKImageProcessingBase
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKValuedRegionalMaximaImage SUPERCLASS ITKImageProcessingBase)

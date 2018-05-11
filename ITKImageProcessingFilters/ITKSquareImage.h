@@ -20,11 +20,12 @@
 // Auto includes
 #include <itkSquareImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief The ITKSquareImage class. See [Filter documentation](@ref ITKSquareImage) for details.
  */
-class ITKSquareImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKSquareImage : public ITKImageProcessingBase
 {
   Q_OBJECT
 

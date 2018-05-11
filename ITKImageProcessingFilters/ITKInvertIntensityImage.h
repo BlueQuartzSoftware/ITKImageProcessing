@@ -21,11 +21,12 @@
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 #include <itkInvertIntensityImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief The ITKInvertIntensityImage class. See [Filter documentation](@ref ITKInvertIntensityImage) for details.
  */
-class ITKInvertIntensityImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKInvertIntensityImage : public ITKImageProcessingBase
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKInvertIntensityImage SUPERCLASS ITKImageProcessingBase)

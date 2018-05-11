@@ -22,11 +22,12 @@
 #include <SIMPLib/FilterParameters/IntFilterParameter.h>
 #include <itkBinaryThresholdImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief The ITKBinaryThresholdImage class. See [Filter documentation](@ref ITKBinaryThresholdImage) for details.
  */
-class ITKBinaryThresholdImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKBinaryThresholdImage : public ITKImageProcessingBase
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKBinaryThresholdImage SUPERCLASS ITKImageProcessingBase)

@@ -22,11 +22,12 @@
 #include <SIMPLib/FilterParameters/IntFilterParameter.h>
 #include <itkThresholdMaximumConnectedComponentsImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief The ITKThresholdMaximumConnectedComponentsImage class. See [Filter documentation](@ref ITKThresholdMaximumConnectedComponentsImage) for details.
  */
-class ITKThresholdMaximumConnectedComponentsImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKThresholdMaximumConnectedComponentsImage : public ITKImageProcessingBase
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKThresholdMaximumConnectedComponentsImage SUPERCLASS ITKImageProcessingBase)

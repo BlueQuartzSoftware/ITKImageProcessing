@@ -24,11 +24,12 @@
 #include <SIMPLib/FilterParameters/IntFilterParameter.h>
 #include <itkBinaryErodeImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief The ITKBinaryErodeImage class. See [Filter documentation](@ref ITKBinaryErodeImage) for details.
  */
-class ITKBinaryErodeImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKBinaryErodeImage : public ITKImageProcessingBase
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKBinaryErodeImage SUPERCLASS ITKImageProcessingBase)

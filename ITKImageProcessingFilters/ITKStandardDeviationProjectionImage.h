@@ -21,11 +21,12 @@
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 #include <itkStandardDeviationProjectionImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief The ITKStandardDeviationProjectionImage class. See [Filter documentation](@ref ITKStandardDeviationProjectionImage) for details.
  */
-class ITKStandardDeviationProjectionImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKStandardDeviationProjectionImage : public ITKImageProcessingBase
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKStandardDeviationProjectionImage SUPERCLASS ITKImageProcessingBase)

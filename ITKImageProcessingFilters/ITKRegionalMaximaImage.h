@@ -22,11 +22,12 @@
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 #include <itkRegionalMaximaImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief The ITKRegionalMaximaImage class. See [Filter documentation](@ref ITKRegionalMaximaImage) for details.
  */
-class ITKRegionalMaximaImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKRegionalMaximaImage : public ITKImageProcessingBase
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKRegionalMaximaImage SUPERCLASS ITKImageProcessingBase)

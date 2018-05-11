@@ -20,10 +20,12 @@
 // Auto includes
 #include <SIMPLib/FilterParameters/BooleanFilterParameter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
+
 /**
  * @brief The ITKMultiScaleHessianBasedObjectnessImage class. See [Filter documentation](@ref ITKMultiScaleHessianBasedObjectnessImage) for details.
  */
-class ITKMultiScaleHessianBasedObjectnessImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKMultiScaleHessianBasedObjectnessImage : public ITKImageProcessingBase
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKMultiScaleHessianBasedObjectnessImage SUPERCLASS ITKImageProcessingBase)

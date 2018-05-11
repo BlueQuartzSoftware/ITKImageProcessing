@@ -21,10 +21,12 @@
 #include <itkGaussianRandomSpatialNeighborSubsampler.h>
 #include <itkPatchBasedDenoisingImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
+
 /**
  * @brief The ITKPatchBasedDenoisingImage class. See [Filter documentation](@ref ITKPatchBasedDenoisingImage) for details.
  */
-class ITKPatchBasedDenoisingImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKPatchBasedDenoisingImage : public ITKImageProcessingBase
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKPatchBasedDenoisingImage SUPERCLASS ITKImageProcessingBase)

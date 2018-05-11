@@ -21,11 +21,12 @@
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 #include <itkNormalizeToConstantImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief The ITKNormalizeToConstantImage class. See [Filter documentation](@ref ITKNormalizeToConstantImage) for details.
  */
-class ITKNormalizeToConstantImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKNormalizeToConstantImage : public ITKImageProcessingBase
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKNormalizeToConstantImage SUPERCLASS ITKImageProcessingBase)

@@ -48,6 +48,8 @@
 
 #include "ITKImageProcessing/FilterParameters/ImportVectorImageStackFilterParameter.h"
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
+
 /**
  * @class ImportVectorImageStack ImportVectorImageStack.h ImageIO/Code/ImageIOFilters/ImportVectorImageStack.h
  * @brief
@@ -55,7 +57,7 @@
  * @date
  * @version 1.0
  */
-class ImportVectorImageStack : public AbstractFilter
+class ITKImageProcessing_EXPORT ImportVectorImageStack : public AbstractFilter
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ImportVectorImageStack SUPERCLASS AbstractFilter)

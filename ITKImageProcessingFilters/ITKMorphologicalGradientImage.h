@@ -22,11 +22,12 @@
 #include <SIMPLib/FilterParameters/IntFilterParameter.h>
 #include <itkMorphologicalGradientImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief The ITKMorphologicalGradientImage class. See [Filter documentation](@ref ITKMorphologicalGradientImage) for details.
  */
-class ITKMorphologicalGradientImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKMorphologicalGradientImage : public ITKImageProcessingBase
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKMorphologicalGradientImage SUPERCLASS ITKImageProcessingBase)

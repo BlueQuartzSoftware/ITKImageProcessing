@@ -20,11 +20,12 @@
 // Auto includes
 #include <itkLog10ImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief The ITKLog10Image class. See [Filter documentation](@ref ITKLog10Image) for details.
  */
-class ITKLog10Image : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKLog10Image : public ITKImageProcessingBase
 {
   Q_OBJECT
 

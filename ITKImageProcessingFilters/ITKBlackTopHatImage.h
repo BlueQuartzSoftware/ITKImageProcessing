@@ -23,11 +23,12 @@
 #include <SIMPLib/FilterParameters/IntFilterParameter.h>
 #include <itkBlackTopHatImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief The ITKBlackTopHatImage class. See [Filter documentation](@ref ITKBlackTopHatImage) for details.
  */
-class ITKBlackTopHatImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKBlackTopHatImage : public ITKImageProcessingBase
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKBlackTopHatImage SUPERCLASS ITKImageProcessingBase)

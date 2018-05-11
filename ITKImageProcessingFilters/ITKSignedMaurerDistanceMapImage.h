@@ -22,11 +22,12 @@
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 #include <itkSignedMaurerDistanceMapImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief The ITKSignedMaurerDistanceMapImage class. See [Filter documentation](@ref ITKSignedMaurerDistanceMapImage) for details.
  */
-class ITKSignedMaurerDistanceMapImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKSignedMaurerDistanceMapImage : public ITKImageProcessingBase
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKSignedMaurerDistanceMapImage SUPERCLASS ITKImageProcessingBase)

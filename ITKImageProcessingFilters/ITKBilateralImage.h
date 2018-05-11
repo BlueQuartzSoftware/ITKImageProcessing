@@ -21,11 +21,12 @@
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 #include <itkBilateralImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief The ITKBilateralImage class. See [Filter documentation](@ref ITKBilateralImage) for details.
  */
-class ITKBilateralImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKBilateralImage : public ITKImageProcessingBase
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKBilateralImage SUPERCLASS ITKImageProcessingBase)

@@ -20,11 +20,12 @@
 // Auto includes
 #include <itkAbsImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief The ITKAbsImage class. See [Filter documentation](@ref ITKAbsImage) for details.
  */
-class ITKAbsImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKAbsImage : public ITKImageProcessingBase
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKAbsImage SUPERCLASS ITKImageProcessingBase)

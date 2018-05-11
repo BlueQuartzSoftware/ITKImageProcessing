@@ -21,11 +21,12 @@
 #include <SIMPLib/FilterParameters/IntFilterParameter.h>
 #include <itkZeroCrossingImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief The ITKZeroCrossingImage class. See [Filter documentation](@ref ITKZeroCrossingImage) for details.
  */
-class ITKZeroCrossingImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKZeroCrossingImage : public ITKImageProcessingBase
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKZeroCrossingImage SUPERCLASS ITKImageProcessingBase)

@@ -40,10 +40,12 @@
 
 #include "SIMPLib/ITK/itkDream3DImage.h"
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
+
 /**
  * @brief The ITKImageProcessingFilter class. See [Filter documentation](@ref itkimageprocessingfilter) for details.
  */
-class ITKImageWriter : public AbstractFilter
+class ITKImageProcessing_EXPORT ITKImageWriter : public AbstractFilter
 {
 
   Q_OBJECT

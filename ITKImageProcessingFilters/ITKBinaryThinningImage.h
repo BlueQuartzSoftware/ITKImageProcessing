@@ -20,11 +20,12 @@
 // Auto includes
 #include <itkBinaryThinningImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief The ITKBinaryThinningImage class. See [Filter documentation](@ref ITKBinaryThinningImage) for details.
  */
-class ITKBinaryThinningImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKBinaryThinningImage : public ITKImageProcessingBase
 {
   Q_OBJECT
 

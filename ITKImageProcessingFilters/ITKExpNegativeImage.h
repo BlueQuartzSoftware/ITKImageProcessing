@@ -20,11 +20,12 @@
 // Auto includes
 #include <itkExpNegativeImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief The ITKExpNegativeImage class. See [Filter documentation](@ref ITKExpNegativeImage) for details.
  */
-class ITKExpNegativeImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKExpNegativeImage : public ITKImageProcessingBase
 {
   Q_OBJECT
 

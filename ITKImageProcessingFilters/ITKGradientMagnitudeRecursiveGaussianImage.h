@@ -22,11 +22,12 @@
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 #include <itkGradientMagnitudeRecursiveGaussianImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief The ITKGradientMagnitudeRecursiveGaussianImage class. See [Filter documentation](@ref ITKGradientMagnitudeRecursiveGaussianImage) for details.
  */
-class ITKGradientMagnitudeRecursiveGaussianImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKGradientMagnitudeRecursiveGaussianImage : public ITKImageProcessingBase
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKGradientMagnitudeRecursiveGaussianImage SUPERCLASS ITKImageProcessingBase)

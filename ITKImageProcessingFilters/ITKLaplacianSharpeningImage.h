@@ -21,11 +21,12 @@
 #include <SIMPLib/FilterParameters/BooleanFilterParameter.h>
 #include <itkLaplacianSharpeningImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief The ITKLaplacianSharpeningImage class. See [Filter documentation](@ref ITKLaplacianSharpeningImage) for details.
  */
-class ITKLaplacianSharpeningImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKLaplacianSharpeningImage : public ITKImageProcessingBase
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKLaplacianSharpeningImage SUPERCLASS ITKImageProcessingBase)

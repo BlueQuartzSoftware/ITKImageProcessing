@@ -20,11 +20,12 @@
 // Auto includes
 #include <itkTanImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief The ITKTanImage class. See [Filter documentation](@ref ITKTanImage) for details.
  */
-class ITKTanImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKTanImage : public ITKImageProcessingBase
 {
   Q_OBJECT
 

@@ -21,11 +21,12 @@
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 #include <itkThresholdImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief The ITKThresholdImage class. See [Filter documentation](@ref ITKThresholdImage) for details.
  */
-class ITKThresholdImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKThresholdImage : public ITKImageProcessingBase
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKThresholdImage SUPERCLASS ITKImageProcessingBase)

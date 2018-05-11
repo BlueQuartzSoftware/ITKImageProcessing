@@ -21,11 +21,12 @@
 #include <SIMPLib/FilterParameters/BooleanFilterParameter.h>
 #include <itkGrayscaleFillholeImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief The ITKGrayscaleFillholeImage class. See [Filter documentation](@ref ITKGrayscaleFillholeImage) for details.
  */
-class ITKGrayscaleFillholeImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKGrayscaleFillholeImage : public ITKImageProcessingBase
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKGrayscaleFillholeImage SUPERCLASS ITKImageProcessingBase)

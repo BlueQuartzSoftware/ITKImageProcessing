@@ -24,11 +24,12 @@
 #include <SIMPLib/FilterParameters/IntFilterParameter.h>
 #include <itkOtsuMultipleThresholdsImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief The ITKOtsuMultipleThresholdsImage class. See [Filter documentation](@ref ITKOtsuMultipleThresholdsImage) for details.
  */
-class ITKOtsuMultipleThresholdsImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKOtsuMultipleThresholdsImage : public ITKImageProcessingBase
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKOtsuMultipleThresholdsImage SUPERCLASS ITKImageProcessingBase)

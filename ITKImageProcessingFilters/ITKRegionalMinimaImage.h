@@ -22,11 +22,12 @@
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 #include <itkRegionalMinimaImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief The ITKRegionalMinimaImage class. See [Filter documentation](@ref ITKRegionalMinimaImage) for details.
  */
-class ITKRegionalMinimaImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKRegionalMinimaImage : public ITKImageProcessingBase
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKRegionalMinimaImage SUPERCLASS ITKImageProcessingBase)

@@ -23,11 +23,12 @@
 #include <SIMPLib/FilterParameters/IntFilterParameter.h>
 #include <itkBinaryMorphologicalOpeningImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief The ITKBinaryMorphologicalOpeningImage class. See [Filter documentation](@ref ITKBinaryMorphologicalOpeningImage) for details.
  */
-class ITKBinaryMorphologicalOpeningImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKBinaryMorphologicalOpeningImage : public ITKImageProcessingBase
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKBinaryMorphologicalOpeningImage SUPERCLASS ITKImageProcessingBase)

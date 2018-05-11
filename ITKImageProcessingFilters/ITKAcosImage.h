@@ -20,11 +20,12 @@
 // Auto includes
 #include <itkAcosImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief The ITKAcosImage class. See [Filter documentation](@ref ITKAcosImage) for details.
  */
-class ITKAcosImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKAcosImage : public ITKImageProcessingBase
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKAcosImage SUPERCLASS ITKImageProcessingBase)

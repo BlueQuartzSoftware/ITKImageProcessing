@@ -22,11 +22,12 @@
 #include <SIMPLib/FilterParameters/IntFilterParameter.h>
 #include <itkGrayscaleErodeImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief The ITKGrayscaleErodeImage class. See [Filter documentation](@ref ITKGrayscaleErodeImage) for details.
  */
-class ITKGrayscaleErodeImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKGrayscaleErodeImage : public ITKImageProcessingBase
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKGrayscaleErodeImage SUPERCLASS ITKImageProcessingBase)

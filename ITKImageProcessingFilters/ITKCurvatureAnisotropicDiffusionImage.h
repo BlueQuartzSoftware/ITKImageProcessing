@@ -22,11 +22,12 @@
 #include <algorithm>
 #include <itkCurvatureAnisotropicDiffusionImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief The ITKCurvatureAnisotropicDiffusionImage class. See [Filter documentation](@ref ITKCurvatureAnisotropicDiffusionImage) for details.
  */
-class ITKCurvatureAnisotropicDiffusionImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKCurvatureAnisotropicDiffusionImage : public ITKImageProcessingBase
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKCurvatureAnisotropicDiffusionImage SUPERCLASS ITKImageProcessingBase)

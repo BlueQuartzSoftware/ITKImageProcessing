@@ -18,10 +18,12 @@
 #include <SIMPLib/FilterParameters/BooleanFilterParameter.h>
 #include <itkRGBToLuminanceImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
+
 /**
  * @brief The ITKRGBToLuminanceImage class. See [Filter documentation](@ref ITKRGBToLuminanceImage) for details.
  */
-class ITKRGBToLuminanceImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKRGBToLuminanceImage : public ITKImageProcessingBase
 {
   Q_OBJECT
 

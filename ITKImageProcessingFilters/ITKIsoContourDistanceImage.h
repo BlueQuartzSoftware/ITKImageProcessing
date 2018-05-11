@@ -21,11 +21,12 @@
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 #include <itkIsoContourDistanceImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief The ITKIsoContourDistanceImage class. See [Filter documentation](@ref ITKIsoContourDistanceImage) for details.
  */
-class ITKIsoContourDistanceImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKIsoContourDistanceImage : public ITKImageProcessingBase
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKIsoContourDistanceImage SUPERCLASS ITKImageProcessingBase)

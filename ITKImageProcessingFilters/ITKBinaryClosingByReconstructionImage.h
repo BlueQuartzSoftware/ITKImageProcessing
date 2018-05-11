@@ -24,11 +24,12 @@
 #include <SIMPLib/FilterParameters/IntFilterParameter.h>
 #include <itkBinaryClosingByReconstructionImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief The ITKBinaryClosingByReconstructionImage class. See [Filter documentation](@ref ITKBinaryClosingByReconstructionImage) for details.
  */
-class ITKBinaryClosingByReconstructionImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKBinaryClosingByReconstructionImage : public ITKImageProcessingBase
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKBinaryClosingByReconstructionImage SUPERCLASS ITKImageProcessingBase)

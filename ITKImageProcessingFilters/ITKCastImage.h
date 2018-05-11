@@ -18,10 +18,12 @@
 #include <SIMPLib/FilterParameters/BooleanFilterParameter.h>
 #include <itkCastImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
+
 /**
  * @brief The ITKCastImage class. See [Filter documentation](@ref ITKCastImage) for details.
  */
-class ITKCastImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKCastImage : public ITKImageProcessingBase
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKCastImage SUPERCLASS ITKImageProcessingBase)

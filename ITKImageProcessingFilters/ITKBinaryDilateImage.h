@@ -24,11 +24,12 @@
 #include <SIMPLib/FilterParameters/IntFilterParameter.h>
 #include <itkBinaryDilateImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief The ITKBinaryDilateImage class. See [Filter documentation](@ref ITKBinaryDilateImage) for details.
  */
-class ITKBinaryDilateImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKBinaryDilateImage : public ITKImageProcessingBase
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKBinaryDilateImage SUPERCLASS ITKImageProcessingBase)

@@ -21,11 +21,12 @@
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 #include <itkHMaximaImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief The ITKHMaximaImage class. See [Filter documentation](@ref ITKHMaximaImage) for details.
  */
-class ITKHMaximaImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKHMaximaImage : public ITKImageProcessingBase
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKHMaximaImage SUPERCLASS ITKImageProcessingBase)

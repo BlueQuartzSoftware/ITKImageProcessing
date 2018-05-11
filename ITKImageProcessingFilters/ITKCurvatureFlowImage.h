@@ -21,11 +21,12 @@
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 #include <itkCurvatureFlowImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief The ITKCurvatureFlowImage class. See [Filter documentation](@ref ITKCurvatureFlowImage) for details.
  */
-class ITKCurvatureFlowImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKCurvatureFlowImage : public ITKImageProcessingBase
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKCurvatureFlowImage SUPERCLASS ITKImageProcessingBase)

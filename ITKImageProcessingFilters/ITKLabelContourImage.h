@@ -22,11 +22,12 @@
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 #include <itkLabelContourImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief The ITKLabelContourImage class. See [Filter documentation](@ref ITKLabelContourImage) for details.
  */
-class ITKLabelContourImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKLabelContourImage : public ITKImageProcessingBase
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKLabelContourImage SUPERCLASS ITKImageProcessingBase)

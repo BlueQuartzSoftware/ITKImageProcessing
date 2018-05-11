@@ -43,10 +43,12 @@
 
 #include <itkImageFileReader.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
+
 /**
  * @brief The ITKImageProcessingFilter class. See [Filter documentation](@ref itkimageprocessingfilter) for details.
  */
-class ITKImageReader : public AbstractFilter
+class ITKImageProcessing_EXPORT ITKImageReader : public AbstractFilter
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKImageReader SUPERCLASS AbstractFilter)

@@ -21,11 +21,12 @@
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 #include <itkBinomialBlurImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief The ITKBinomialBlurImage class. See [Filter documentation](@ref ITKBinomialBlurImage) for details.
  */
-class ITKBinomialBlurImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKBinomialBlurImage : public ITKImageProcessingBase
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKBinomialBlurImage SUPERCLASS ITKImageProcessingBase)

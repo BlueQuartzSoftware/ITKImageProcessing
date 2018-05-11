@@ -22,10 +22,12 @@
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 #include <itkHConvexImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
+
 /**
  * @brief The ITKHConvexImage class. See [Filter documentation](@ref ITKHConvexImage) for details.
  */
-class ITKHConvexImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKHConvexImage : public ITKImageProcessingBase
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKHConvexImage SUPERCLASS AbstractFilter)

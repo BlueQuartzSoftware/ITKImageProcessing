@@ -21,11 +21,12 @@
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 #include <itkSigmoidImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief The ITKSigmoidImage class. See [Filter documentation](@ref ITKSigmoidImage) for details.
  */
-class ITKSigmoidImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKSigmoidImage : public ITKImageProcessingBase
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKSigmoidImage SUPERCLASS ITKImageProcessingBase)

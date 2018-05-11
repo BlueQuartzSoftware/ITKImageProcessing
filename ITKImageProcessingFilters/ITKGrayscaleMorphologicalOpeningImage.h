@@ -23,11 +23,12 @@
 #include <SIMPLib/FilterParameters/IntFilterParameter.h>
 #include <itkGrayscaleMorphologicalOpeningImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief The ITKGrayscaleMorphologicalOpeningImage class. See [Filter documentation](@ref ITKGrayscaleMorphologicalOpeningImage) for details.
  */
-class ITKGrayscaleMorphologicalOpeningImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKGrayscaleMorphologicalOpeningImage : public ITKImageProcessingBase
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKGrayscaleMorphologicalOpeningImage SUPERCLASS ITKImageProcessingBase)

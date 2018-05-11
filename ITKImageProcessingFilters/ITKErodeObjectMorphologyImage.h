@@ -23,11 +23,12 @@
 #include <SIMPLib/FilterParameters/IntFilterParameter.h>
 #include <itkErodeObjectMorphologyImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief The ITKErodeObjectMorphologyImage class. See [Filter documentation](@ref ITKErodeObjectMorphologyImage) for details.
  */
-class ITKErodeObjectMorphologyImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKErodeObjectMorphologyImage : public ITKImageProcessingBase
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKErodeObjectMorphologyImage SUPERCLASS ITKImageProcessingBase)

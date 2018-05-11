@@ -20,11 +20,12 @@
 // Auto includes
 #include <itkNormalizeImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief The ITKNormalizeImage class. See [Filter documentation](@ref ITKNormalizeImage) for details.
  */
-class ITKNormalizeImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKNormalizeImage : public ITKImageProcessingBase
 {
   Q_OBJECT
 

@@ -21,11 +21,12 @@
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 #include <itkMedianProjectionImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief The ITKMedianProjectionImage class. See [Filter documentation](@ref ITKMedianProjectionImage) for details.
  */
-class ITKMedianProjectionImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKMedianProjectionImage : public ITKImageProcessingBase
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKMedianProjectionImage SUPERCLASS ITKImageProcessingBase)

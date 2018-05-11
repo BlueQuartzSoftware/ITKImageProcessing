@@ -48,10 +48,12 @@
 
 #include <itkImageSeriesReader.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
+
 /**
  * @brief The ITKImportImageStack class. See [Filter documentation](@ref itkimportimagestack) for details.
  */
-class ITKImportImageStack : public AbstractFilter
+class ITKImageProcessing_EXPORT ITKImportImageStack : public AbstractFilter
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKImportImageStack SUPERCLASS AbstractFilter)

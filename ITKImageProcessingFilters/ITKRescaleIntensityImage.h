@@ -21,11 +21,12 @@
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 #include <itkRescaleIntensityImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief The ITKRescaleIntensityImage class. See [Filter documentation](@ref ITKRescaleIntensityImage) for details.
  */
-class ITKRescaleIntensityImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKRescaleIntensityImage : public ITKImageProcessingBase
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKRescaleIntensityImage SUPERCLASS ITKImageProcessingBase)

@@ -23,11 +23,12 @@
 #include <SIMPLib/FilterParameters/FloatVec3FilterParameter.h>
 #include <itkRelabelComponentImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief The ITKRelabelComponentImage class. See [Filter documentation](@ref ITKRelabelComponentImage) for details.
  */
-class ITKRelabelComponentImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKRelabelComponentImage : public ITKImageProcessingBase
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKRelabelComponentImage SUPERCLASS ITKImageProcessingBase)

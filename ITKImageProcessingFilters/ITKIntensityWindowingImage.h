@@ -21,11 +21,12 @@
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 #include <itkIntensityWindowingImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief The ITKIntensityWindowingImage class. See [Filter documentation](@ref ITKIntensityWindowingImage) for details.
  */
-class ITKIntensityWindowingImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKIntensityWindowingImage : public ITKImageProcessingBase
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKIntensityWindowingImage SUPERCLASS ITKImageProcessingBase)

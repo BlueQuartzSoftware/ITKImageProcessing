@@ -20,11 +20,12 @@
 // Auto includes
 #include <itkCosImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief The ITKCosImage class. See [Filter documentation](@ref ITKCosImage) for details.
  */
-class ITKCosImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKCosImage : public ITKImageProcessingBase
 {
   Q_OBJECT
 

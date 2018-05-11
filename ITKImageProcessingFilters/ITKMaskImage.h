@@ -21,10 +21,12 @@
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 #include <itkMaskImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
+
 /**
  * @brief The ITKMaskImage class. See [Filter documentation](@ref ITKMaskImage) for details.
  */
-class ITKMaskImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKMaskImage : public ITKImageProcessingBase
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKMaskImage SUPERCLASS ITKImageProcessingBase)

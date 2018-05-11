@@ -7,10 +7,12 @@
 
 #include "ITKImageBase.h"
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
+
 /**
  * @brief The ITKImageProcessingBase class. See [Filter documentation](@ref ITKImageProcessingBase) for details.
  */
-class ITKImageProcessingBase : public ITKImageBase
+class ITKImageProcessing_EXPORT ITKImageProcessingBase : public ITKImageBase
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKImageProcessingBase SUPERCLASS ITKImageBase)

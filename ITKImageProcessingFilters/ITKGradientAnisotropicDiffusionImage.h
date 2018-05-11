@@ -22,11 +22,12 @@
 #include <algorithm>
 #include <itkGradientAnisotropicDiffusionImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief The ITKGradientAnisotropicDiffusionImage class. See [Filter documentation](@ref ITKGradientAnisotropicDiffusionImage) for details.
  */
-class ITKGradientAnisotropicDiffusionImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKGradientAnisotropicDiffusionImage : public ITKImageProcessingBase
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKGradientAnisotropicDiffusionImage SUPERCLASS ITKImageProcessingBase)

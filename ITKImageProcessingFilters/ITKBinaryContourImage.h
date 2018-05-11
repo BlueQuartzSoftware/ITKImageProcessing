@@ -22,11 +22,12 @@
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 #include <itkBinaryContourImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief The ITKBinaryContourImage class. See [Filter documentation](@ref ITKBinaryContourImage) for details.
  */
-class ITKBinaryContourImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKBinaryContourImage : public ITKImageProcessingBase
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKBinaryContourImage SUPERCLASS ITKImageProcessingBase)

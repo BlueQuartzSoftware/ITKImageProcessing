@@ -21,11 +21,12 @@
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 #include <itkSpeckleNoiseImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief The ITKSpeckleNoiseImage class. See [Filter documentation](@ref ITKSpeckleNoiseImage) for details.
  */
-class ITKSpeckleNoiseImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKSpeckleNoiseImage : public ITKImageProcessingBase
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKSpeckleNoiseImage SUPERCLASS ITKImageProcessingBase)

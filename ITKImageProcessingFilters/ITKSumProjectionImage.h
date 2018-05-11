@@ -21,11 +21,12 @@
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 #include <itkSumProjectionImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief The ITKSumProjectionImage class. See [Filter documentation](@ref ITKSumProjectionImage) for details.
  */
-class ITKSumProjectionImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKSumProjectionImage : public ITKImageProcessingBase
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKSumProjectionImage SUPERCLASS ITKImageProcessingBase)

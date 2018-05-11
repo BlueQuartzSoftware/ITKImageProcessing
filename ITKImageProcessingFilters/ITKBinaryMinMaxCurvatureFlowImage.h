@@ -22,11 +22,12 @@
 #include <SIMPLib/FilterParameters/IntFilterParameter.h>
 #include <itkBinaryMinMaxCurvatureFlowImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief The ITKBinaryMinMaxCurvatureFlowImage class. See [Filter documentation](@ref ITKBinaryMinMaxCurvatureFlowImage) for details.
  */
-class ITKBinaryMinMaxCurvatureFlowImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKBinaryMinMaxCurvatureFlowImage : public ITKImageProcessingBase
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKBinaryMinMaxCurvatureFlowImage SUPERCLASS ITKImageProcessingBase)

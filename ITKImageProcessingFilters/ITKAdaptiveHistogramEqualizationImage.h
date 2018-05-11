@@ -23,11 +23,12 @@
 #include <SIMPLib/FilterParameters/FloatVec3FilterParameter.h>
 #include <itkAdaptiveHistogramEqualizationImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief The ITKAdaptiveHistogramEqualizationImage class. See [Filter documentation](@ref ITKAdaptiveHistogramEqualizationImage) for details.
  */
-class ITKAdaptiveHistogramEqualizationImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKAdaptiveHistogramEqualizationImage : public ITKImageProcessingBase
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKAdaptiveHistogramEqualizationImage SUPERCLASS ITKImageProcessingBase)

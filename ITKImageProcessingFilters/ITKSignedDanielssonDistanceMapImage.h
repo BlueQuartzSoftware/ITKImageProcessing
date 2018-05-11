@@ -21,11 +21,12 @@
 #include <SIMPLib/FilterParameters/BooleanFilterParameter.h>
 #include <itkSignedDanielssonDistanceMapImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief The ITKSignedDanielssonDistanceMapImage class. See [Filter documentation](@ref ITKSignedDanielssonDistanceMapImage) for details.
  */
-class ITKSignedDanielssonDistanceMapImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKSignedDanielssonDistanceMapImage : public ITKImageProcessingBase
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKSignedDanielssonDistanceMapImage SUPERCLASS ITKImageProcessingBase)

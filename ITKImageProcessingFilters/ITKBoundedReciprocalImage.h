@@ -20,11 +20,12 @@
 // Auto includes
 #include <itkBoundedReciprocalImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief The ITKBoundedReciprocalImage class. See [Filter documentation](@ref ITKBoundedReciprocalImage) for details.
  */
-class ITKBoundedReciprocalImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKBoundedReciprocalImage : public ITKImageProcessingBase
 {
   Q_OBJECT
 

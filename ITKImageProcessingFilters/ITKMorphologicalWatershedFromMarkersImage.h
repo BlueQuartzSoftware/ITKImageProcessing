@@ -24,9 +24,13 @@
 /**
  * @brief The ITKMorphologicalWatershedFromMarkersImage class. See [Filter documentation](@ref ITKMorphologicalWatershedFromMarkersImage) for details.
 
+
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
+
+
  WARNING: This filter is not thread safe. It uses a member variable to cast the marker image into the expected pixel type (uint16).
  */
-class ITKMorphologicalWatershedFromMarkersImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKMorphologicalWatershedFromMarkersImage : public ITKImageProcessingBase
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKMorphologicalWatershedFromMarkersImage SUPERCLASS ITKImageProcessingBase)

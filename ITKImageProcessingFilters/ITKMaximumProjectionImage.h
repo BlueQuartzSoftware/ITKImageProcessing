@@ -21,11 +21,12 @@
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 #include <itkMaximumProjectionImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief The ITKMaximumProjectionImage class. See [Filter documentation](@ref ITKMaximumProjectionImage) for details.
  */
-class ITKMaximumProjectionImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKMaximumProjectionImage : public ITKImageProcessingBase
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKMaximumProjectionImage SUPERCLASS ITKImageProcessingBase)

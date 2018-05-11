@@ -20,10 +20,12 @@
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 #include <itkHistogramMatchingImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
+
 /**
  * @brief The ITKHistogramMatchingImage class. See [Filter documentation](@ref ITKHistogramMatchingImage) for details.
  */
-class ITKHistogramMatchingImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKHistogramMatchingImage : public ITKImageProcessingBase
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKHistogramMatchingImage SUPERCLASS ITKImageProcessingBase)

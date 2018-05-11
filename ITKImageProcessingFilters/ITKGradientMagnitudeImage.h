@@ -21,11 +21,12 @@
 #include <SIMPLib/FilterParameters/BooleanFilterParameter.h>
 #include <itkGradientMagnitudeImageFilter.h>
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief The ITKGradientMagnitudeImage class. See [Filter documentation](@ref ITKGradientMagnitudeImage) for details.
  */
-class ITKGradientMagnitudeImage : public ITKImageProcessingBase
+class ITKImageProcessing_EXPORT ITKGradientMagnitudeImage : public ITKImageProcessingBase
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKGradientMagnitudeImage SUPERCLASS ITKImageProcessingBase)
