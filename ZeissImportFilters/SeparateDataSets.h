@@ -36,10 +36,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
+#include "ZeissImport/ZeissImportDLLExport.h"
+
 /**
  * @brief The SeparateDataSets class. See [Filter documentation](@ref separatedatasets) for details.
  */
-class SeparateDataSets : public AbstractFilter
+class ZeissImport_EXPORT SeparateDataSets : public AbstractFilter
 {
   Q_OBJECT
 

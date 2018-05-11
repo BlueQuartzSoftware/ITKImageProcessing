@@ -15,6 +15,8 @@
 
 #include "ZeissImport/ZeissXml/ZeissTagsXmlSection.h"
 
+#include "ZeissImport/ZeissImportDLLExport.h"
+
 /**
  * @class CalculateBackground CalculateBackground.h ZeissImport/CalculateBackgrounds/CalculateBackground.h
  * @brief
@@ -22,7 +24,7 @@
  * @date
  * @version 1.0
  */
-class CalculateBackground : public AbstractFilter
+class ZeissImport_EXPORT CalculateBackground : public AbstractFilter
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(CalculateBackground SUPERCLASS AbstractFilter)

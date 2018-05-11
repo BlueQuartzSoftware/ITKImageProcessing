@@ -21,6 +21,8 @@
 // our PIMPL private class
 class ZeissImportFilterPrivate;
 
+#include "ZeissImport/ZeissImportDLLExport.h"
+
 /**
  * @class ZeissImportFilter ZeissImportFilter.h ZeissImport/ZeissImportFilters/ZeissImportFilter.h
  * @brief
@@ -28,7 +30,7 @@ class ZeissImportFilterPrivate;
  * @date
  * @version 1.0
  */
-class ZeissImportFilter : public AbstractFilter
+class ZeissImport_EXPORT ZeissImportFilter : public AbstractFilter
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ZeissImportFilter SUPERCLASS AbstractFilter)
