@@ -56,7 +56,7 @@ const QString ITKImageProcessingBase::getFilterVersion() const
 // -----------------------------------------------------------------------------
 const QString ITKImageProcessingBase::getGroupName() const
 {
-  return "AbstractClass";
+  return "ITK Image Processing";
 }
 
 // -----------------------------------------------------------------------------
@@ -77,7 +77,7 @@ AbstractFilter::Pointer ITKImageProcessingBase::newFilterInstance(bool copyFilte
 // -----------------------------------------------------------------------------
 const QString ITKImageProcessingBase::getHumanLabel() const
 {
-  return "ITK::ITKImageProcessingBase";
+  return "ITK::ITK Image Processing Base";
 }
 
 // -----------------------------------------------------------------------------
