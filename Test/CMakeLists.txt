@@ -113,7 +113,7 @@ endif()
 include( ${CMP_SOURCE_DIR}/ITKSupport/IncludeITK.cmake)
 
 
-list(APPEND ${PLUGIN_NAME}_LINK_LIBS Qt5::Core H5Support SIMPLib ${ITK_LIBRARIES})
+list(APPEND ${PLUGIN_NAME}_LINK_LIBS Qt5::Core H5Support SIMPLib ${ITK_LIBRARIES} ${PLUGIN_NAME}Server)
 
 
 #------------------------------------------------------------------------------
