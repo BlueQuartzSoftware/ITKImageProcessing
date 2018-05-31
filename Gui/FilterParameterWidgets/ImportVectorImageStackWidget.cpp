@@ -247,7 +247,7 @@ void ImportVectorImageStackWidget::setupMenuField()
 
   QMenu* lineEditMenu = new QMenu(m_Ui->inputDir);
   m_Ui->inputDir->setButtonMenu(QtSLineEdit::Left, lineEditMenu);
-  QLatin1String iconPath = QLatin1String(":/caret-bottom.png");
+  QLatin1String iconPath = QLatin1String(":/SIMPL/icons/images/caret-bottom.png");
 
   m_Ui->inputDir->setButtonVisible(QtSLineEdit::Left, true);
 
@@ -458,8 +458,8 @@ void ImportVectorImageStackWidget::generateExampleInputFile()
   QVector<QString> fileList = FilePathGenerator::GenerateVectorFileList(start, end, cstart, cend, hasMissingFiles, m_Ui->orderAscending->isChecked(), m_Ui->inputDir->text(), m_Ui->filePrefix->text(),
                                                                         m_Ui->separator->text(), m_Ui->fileSuffix->text(), m_Ui->fileExt->text(), m_Ui->totalDigits->value());
   m_Ui->fileListView->clear();
-  QIcon greenDot = QIcon(QString(":/bullet_ball_green.png"));
-  QIcon redDot = QIcon(QString(":/bullet_ball_red.png"));
+  QIcon greenDot = QIcon(QString(":/SIMPL/icons/images/bullet_ball_green.png"));
+  QIcon redDot = QIcon(QString(":/SIMPL/icons/images/bullet_ball_red.png"));
   for(QVector<QString>::size_type i = 0; i < fileList.size(); ++i)
   {
     QString filePath(fileList.at(i));
