@@ -286,7 +286,7 @@ if(EXISTS ${${PLUGIN_NAME}_SOURCE_DIR}/Data/${PLUGIN_NAME})
   endif()
 
   install(DIRECTORY ${${PLUGIN_NAME}_SOURCE_DIR}/Data/${PLUGIN_NAME}
-          DESTINATION ${INSTALL_DESTINATION}
+          DESTINATION Data
           COMPONENT Applications )
 endif()
 # -- Include the GUI Plugin codes
