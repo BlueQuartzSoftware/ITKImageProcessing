@@ -24,10 +24,10 @@
 ZeissImportPlugin::ZeissImportPlugin() :
   m_Version(ZeissImport::Version::Package()),
   m_CompatibilityVersion(ZeissImport::Version::Package()),
-  m_Vendor(BlueQuartz::VendorName),
-  m_URL(BlueQuartz::URL),
+  m_Vendor(ZeissImportConstants::BlueQuartz::VendorName),
+  m_URL(ZeissImportConstants::BlueQuartz::URL),
   m_Location(""),
-  m_Copyright(BlueQuartz::Copyright),
+  m_Copyright(ZeissImportConstants::BlueQuartz::Copyright),
   m_DidLoad(false)
 {
 

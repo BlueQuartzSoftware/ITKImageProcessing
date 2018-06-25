@@ -17,6 +17,14 @@ namespace ZeissImportConstants
   const QString ZeissImportPluginDisplayName("ZeissImport");
   const QString ZeissImportBaseName("ZeissImport");
 
+  namespace BlueQuartz
+  {
+    const QString VendorName("BlueQuartz Software, LLC");
+    const QString URL("http://www.bluequartz.net");
+    const QString Copyright("(C) 2016 BlueQuartz Software, LLC");
+  }
+
+
   namespace FilterGroups
   {
     const QString ZeissImportFilters("Zeiss Import");
@@ -58,14 +66,6 @@ namespace FilterParameterWidgetType
 /*  const QString SomeCustomWidget("SomeCustomWidget"); */
 
 }
-
-namespace BlueQuartz
-{
-  const QString VendorName("BlueQuartz Software, LLC");
-  const QString URL("http://www.bluequartz.net");
-  const QString Copyright("(C) 2016 BlueQuartz Software, LLC");
-}
-
 
 
 #endif
