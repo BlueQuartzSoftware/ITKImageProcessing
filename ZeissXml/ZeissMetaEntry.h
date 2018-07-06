@@ -8,8 +8,7 @@
 //                           F33615-03-C-5220
 //
 ///////////////////////////////////////////////////////////////////////////////
-#ifndef _zeissmetaentry_h_
-#define _zeissmetaentry_h_
+#pragma once
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
@@ -301,4 +300,3 @@ namespace ZeissMetaEntry {
 }
 
 
-#endif /* ZEISSMETAENTRY_HPP_ */

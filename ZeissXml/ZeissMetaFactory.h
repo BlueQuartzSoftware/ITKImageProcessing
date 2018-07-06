@@ -8,8 +8,7 @@
 //                           F33615-03-C-5220
 //
 ///////////////////////////////////////////////////////////////////////////////
-#ifndef _zeissmetafactory_h_
-#define _zeissmetafactory_h_
+#pragma once
 
 #include "ZeissImport/ZeissXml/ZeissMetaEntry.h"
 
@@ -117,4 +116,3 @@ class StringZeissMetaFactory : public ZeissMetaFactory
 
 
 
-#endif /* ZEISSMETAFACTORY_HPP_ */

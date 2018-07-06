@@ -2,8 +2,7 @@
 * THE ZVI DOCUMENTATION FILE THAT IS DOWNLOADED FROM CARL ZEISS UNDER LICENSE.
 */
 
-#ifndef _zeisstagmappingconstants_h_
-#define _zeisstagmappingconstants_h_
+#pragma once
 
 #include <QtCore/QString>
 
@@ -1068,4 +1067,3 @@ namespace Zeiss {
     const QString AuroxCamReserved5 ("AuroxCamReserved5"); //Gets Mapped to Id 65789
   }
 }
-#endif

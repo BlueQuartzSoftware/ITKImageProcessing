@@ -9,8 +9,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#ifndef _zeissdirectorypatterns_h_
-#define _zeissdirectorypatterns_h_
+#pragma once
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
@@ -69,4 +68,3 @@ protected:
     void operator=(const ZeissDirectoryPatterns&);  // Operator '=' Not Implemented
 };
 
-#endif /* ZEISSDIRECTORYPATTERNS_H_ */

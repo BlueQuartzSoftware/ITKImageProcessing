@@ -2,8 +2,7 @@
  * Your License or Copyright Information can go here
  */
 
-#ifndef _zeissimportplugin_h_
-#define _zeissimportplugin_h_
+#pragma once
 
 #include <QtCore/QObject>
 #include <QtCore/QSettings>
@@ -159,4 +158,3 @@ class ZeissImport_EXPORT ZeissImportPlugin : public QObject, public ISIMPLibPlug
     void operator=(const ZeissImportPlugin&) = delete;    // Move assignment Not Implemented
 };
 
-#endif /* _ZeissImport_H_ */

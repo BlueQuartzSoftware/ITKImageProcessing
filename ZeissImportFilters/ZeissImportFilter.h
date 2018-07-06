@@ -2,8 +2,7 @@
  * Your License or Copyright Information can go here
  */
 
-#ifndef _zeissimportfilter_h_
-#define _zeissimportfilter_h_
+#pragma once
 
 
 #include <QtCore/QString>
@@ -259,4 +258,3 @@ public:
   ZeissImportFilter& operator=(ZeissImportFilter&&) = delete;      // Move Assignment
 };
 
-#endif /* _ZeissImportFilter_H_ */

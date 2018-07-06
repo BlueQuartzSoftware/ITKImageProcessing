@@ -32,8 +32,7 @@
  //                           FA8650-07-D-5800
  //
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _zeisstagsxmlsection_h_
-#define _zeisstagsxmlsection_h_
+#pragma once
 
 #include <QtCore/QMap>
 
@@ -77,4 +76,3 @@ class ZeissTagsXmlSection
     void operator=(const ZeissTagsXmlSection&) = delete;      // Move assignment Not Implemented
 };
 
-#endif /* ZEISSTAGSXMLSECTION_H_ */

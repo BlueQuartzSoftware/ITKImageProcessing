@@ -8,8 +8,7 @@
 //                           F33615-03-C-5220
 //
 ///////////////////////////////////////////////////////////////////////////////
-#ifndef _zeisstagmapping_h_
-#define _zeisstagmapping_h_
+#pragma once
 
 
 #include "ZeissImport/ZeissXml/ZeissMetaFactory.h"
@@ -72,4 +71,3 @@ class ZeissTagMapping
 
 
 
-#endif /* ZEISSTAGMAPPING_H_ */

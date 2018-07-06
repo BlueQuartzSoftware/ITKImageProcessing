@@ -1,8 +1,7 @@
 /*
  * Your License should go here
  */
-#ifndef _zeissimportconstants_h_
-#define _zeissimportconstants_h_
+#pragma once
 
 #include <QtCore/QString>
 
@@ -68,4 +67,3 @@ namespace FilterParameterWidgetType
 }
 
 
-#endif

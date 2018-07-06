@@ -2,8 +2,7 @@
  * Your License or Copyright Information can go here
  */
 
-#ifndef _calculatebackground_h_
-#define _calculatebackground_h_
+#pragma once
 
 
 #include <QtCore/QString>
@@ -195,4 +194,3 @@ public:
   CalculateBackground& operator=(CalculateBackground&&) = delete;      // Move Assignment
 };
 
-#endif /* _CalculateBackground_H_ */
