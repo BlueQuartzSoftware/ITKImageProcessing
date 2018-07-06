@@ -30,8 +30,7 @@
 *    United States Air Force Prime Contract FA8650-10-D-5210
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _itkImageProcessingConstants_H_
-#define _itkImageProcessingConstants_H_
+#pragma once
 
 #include <QtCore/QString>
 
@@ -85,4 +84,3 @@ namespace FilterParameterWidgetType
 {
 /* const QString SomeCustomWidget("SomeCustomWidget"); */
 }
-#endif

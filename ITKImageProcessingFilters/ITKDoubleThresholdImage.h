@@ -4,8 +4,7 @@
  * Your License or Copyright can go here
  */
 
-#ifndef _ITKDoubleThresholdImage_h_
-#define _ITKDoubleThresholdImage_h_
+#pragma once
 
 #ifdef __clang__
 #pragma clang diagnostic push
@@ -134,4 +133,3 @@ private:
 #pragma clang diagnostic pop
 #endif
 
-#endif /* _ITKDoubleThresholdImage_H_ */

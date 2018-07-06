@@ -4,8 +4,7 @@
  * Your License or Copyright can go here
  */
 
-#ifndef _ITKSinImage_h_
-#define _ITKSinImage_h_
+#pragma once
 
 #ifdef __clang__
 #pragma clang diagnostic push
@@ -101,4 +100,3 @@ private:
 #pragma clang diagnostic pop
 #endif
 
-#endif /* _ITKSinImage_H_ */

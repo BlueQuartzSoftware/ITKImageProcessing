@@ -33,8 +33,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _importvectorimagestackwidget_h_
-#define _importvectorimagestackwidget_h_
+#pragma once
 
 #include <QtCore/QSettings>
 #include <QtCore/QString>
@@ -173,4 +172,3 @@ private:
   void operator=(const ImportVectorImageStackWidget&) = delete;               // Move assignment Not Implemented
 };
 
-#endif /* ImportVectorImageStackWidget_H_ */

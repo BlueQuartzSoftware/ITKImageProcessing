@@ -33,8 +33,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _importvectorimagestack_h_
-#define _importvectorimagestack_h_
+#pragma once
 
 #include <QtCore/QString>
 
@@ -205,4 +204,3 @@ public:
   ImportVectorImageStack& operator=(ImportVectorImageStack&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* ImportVectorImageStack_H_ */

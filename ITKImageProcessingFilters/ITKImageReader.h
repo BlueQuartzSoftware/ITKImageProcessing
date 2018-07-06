@@ -31,8 +31,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _ITKImageReader_H_
-#define _ITKImageReader_H_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -188,4 +187,3 @@ public:
   ITKImageReader& operator=(ITKImageReader&&) = delete;      // Move Assignment
 };
 
-#endif /* _ITKImageReader_H_ */

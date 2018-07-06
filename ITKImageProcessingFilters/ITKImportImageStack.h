@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _ITKImportImageStack_H_
-#define _ITKImportImageStack_H_
+#pragma once
 
 #include <QtCore/QFile>
 
@@ -224,4 +223,3 @@ public:
   ITKImportImageStack& operator=(ITKImportImageStack&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* ITKImportImageStack_H_ */

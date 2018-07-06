@@ -4,8 +4,7 @@
  * Your License or Copyright can go here
  */
 
-#ifndef _ITKHConvexImage_h_
-#define _ITKHConvexImage_h_
+#pragma once
 
 #ifdef __clang__
 #pragma clang diagnostic push
@@ -112,4 +111,3 @@ public:
 #pragma clang diagnostic pop
 #endif
 
-#endif /* _ITKHConvexImage_H_ */

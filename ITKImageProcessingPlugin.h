@@ -31,8 +31,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _iTKImageProcessing_H_
-#define _iTKImageProcessing_H_
+#pragma once
 
 #include <QtCore/QObject>
 #include <QtCore/QSettings>
@@ -211,4 +210,3 @@ private:
   void operator=(const ITKImageProcessingPlugin&);                    // Move assignment Not Implemented
 };
 
-#endif /* _iTKImageProcessing_H_ */

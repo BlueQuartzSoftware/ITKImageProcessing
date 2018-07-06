@@ -4,8 +4,7 @@
  * Your License or Copyright can go here
  */
 
-#ifndef _ITKMultiScaleHessianBasedObjectnessImage_h_
-#define _ITKMultiScaleHessianBasedObjectnessImage_h_
+#pragma once
 
 #ifdef __clang__
 #pragma clang diagnostic push
@@ -138,4 +137,3 @@ private:
 #pragma clang diagnostic pop
 #endif
 
-#endif /* _ITKMultiScaleHessianBasedObjectnessImage_H_ */

@@ -33,8 +33,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _importvectorimagestackfilterparameter_h_
-#define _importvectorimagestackfilterparameter_h_
+#pragma once
 
 #include "SIMPLib/FilterParameters/FilterParameter.h"
 
@@ -179,4 +178,3 @@ private:
   void operator=(const ImportVectorImageStackFilterParameter&) = delete;                        // Move assignment Not Implemented
 };
 
-#endif /* _ImportVectorImageStackFilterParameter_H_ */

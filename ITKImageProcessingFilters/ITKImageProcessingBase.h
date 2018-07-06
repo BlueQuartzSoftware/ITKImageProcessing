@@ -2,8 +2,7 @@
  * Your License or Copyright can go here
  */
 
-#ifndef _iTKImageProcessingBase_h_
-#define _iTKImageProcessingBase_h_
+#pragma once
 
 #include "ITKImageBase.h"
 
@@ -158,4 +157,3 @@ public:
   ITKImageProcessingBase& operator=(ITKImageProcessingBase&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* _iTKImageProcessingBase_H_ */

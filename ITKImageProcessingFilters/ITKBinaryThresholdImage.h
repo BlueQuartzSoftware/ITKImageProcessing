@@ -4,8 +4,7 @@
  * Your License or Copyright can go here
  */
 
-#ifndef _ITKBinaryThresholdImage_h_
-#define _ITKBinaryThresholdImage_h_
+#pragma once
 
 #ifdef __clang__
 #pragma clang diagnostic push
@@ -121,4 +120,3 @@ private:
 #pragma clang diagnostic pop
 #endif
 
-#endif /* _ITKBinaryThresholdImage_H_ */

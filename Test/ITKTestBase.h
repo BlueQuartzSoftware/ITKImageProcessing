@@ -2,8 +2,7 @@
 // Insert your license & copyright information here
 // -----------------------------------------------------------------------------
 
-#ifndef _ITKTestBase_h_
-#define _ITKTestBase_h_
+#pragma once
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QFile>
@@ -526,4 +525,3 @@ private:
   void operator=(const ITKTestBase&) = delete; // Move assignment Not Implemented
 };
 
-#endif

@@ -31,8 +31,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _ITKImageWriter_H_
-#define _ITKImageWriter_H_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -194,4 +193,3 @@ public:
   ITKImageWriter& operator=(ITKImageWriter&&) = delete;      // Move Assignment
 };
 
-#endif /* _ITKImageWriter_H_ */

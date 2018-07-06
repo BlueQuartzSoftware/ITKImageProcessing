@@ -4,8 +4,7 @@
  * Your License or Copyright can go here
  */
 
-#ifndef _ITKCurvatureAnisotropicDiffusionImage_h_
-#define _ITKCurvatureAnisotropicDiffusionImage_h_
+#pragma once
 
 #ifdef __clang__
 #pragma clang diagnostic push
@@ -121,4 +120,3 @@ private:
 #pragma clang diagnostic pop
 #endif
 
-#endif /* _ITKCurvatureAnisotropicDiffusionImage_H_ */

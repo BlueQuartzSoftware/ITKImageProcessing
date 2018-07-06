@@ -4,8 +4,7 @@
  * Your License or Copyright can go here
  */
 
-#ifndef _ITKSpeckleNoiseImage_h_
-#define _ITKSpeckleNoiseImage_h_
+#pragma once
 
 #ifdef __clang__
 #pragma clang diagnostic push
@@ -112,4 +111,3 @@ private:
 #pragma clang diagnostic pop
 #endif
 
-#endif /* _ITKSpeckleNoiseImage_H_ */

@@ -2,8 +2,7 @@
  * Your License or Copyright Information can go here
  */
 
-#ifndef _importregisteredimagemontage_h_
-#define _importregisteredimagemontage_h_
+#pragma once
 
 #include <QtCore/QFile>
 
@@ -199,4 +198,3 @@ private:
   ImportRegisteredImageMontage& operator=(ImportRegisteredImageMontage&&) = delete;        // Move Assignment Not Implemented
 };
 
-#endif /* ImportRegisteredImageMontage_H_ */
