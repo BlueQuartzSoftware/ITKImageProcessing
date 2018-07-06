@@ -3,9 +3,8 @@
 /*
  * Your License or Copyright can go here
  */
+#prama once
 
-#ifndef _${FilterName}_h_
-#define _${FilterName}_h_
 
 #ifdef __clang__
 #pragma clang diagnostic push
@@ -97,5 +96,3 @@ private:
 #ifdef __clang__
 #pragma clang diagnostic pop
 #endif
-
-#endif /* _${FilterName}_H_ */
