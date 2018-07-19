@@ -140,7 +140,7 @@ void ZeissImportFilter::readFilterParameters(QJsonObject &obj)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ZeissImportFilter::writeFilterParameters(QJsonObject &obj)
+void ZeissImportFilter::writeFilterParameters(QJsonObject &obj) const
 {
   AbstractFilter::writeFilterParameters(obj);
   obj["ImageDataArrayPrefix"] = getImageDataArrayPrefix();
