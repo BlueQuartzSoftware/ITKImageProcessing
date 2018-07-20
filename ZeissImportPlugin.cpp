@@ -2,12 +2,11 @@
  * Your License or Copyright Information can go here
  */
 
-
 #include "ZeissImportPlugin.h"
 
+#include <QtCore/QDir>
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
-#include <QtCore/QDir>
 #include <QtCore/QStringList>
 
 #include "SIMPLib/Filtering/FilterFactory.hpp"
@@ -16,21 +15,18 @@
 #include "ZeissImport/ZeissImportConstants.h"
 #include "ZeissImport/ZeissImportVersion.h"
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ZeissImportPlugin::ZeissImportPlugin() :
-  m_Version(ZeissImport::Version::Package()),
-  m_CompatibilityVersion(ZeissImport::Version::Package()),
-  m_Vendor(ZeissImportConstants::BlueQuartz::VendorName),
-  m_URL(ZeissImportConstants::BlueQuartz::URL),
-  m_Location(""),
-  m_Copyright(ZeissImportConstants::BlueQuartz::Copyright),
-  m_DidLoad(false)
+ZeissImportPlugin::ZeissImportPlugin()
+: m_Version(ZeissImport::Version::Package())
+, m_CompatibilityVersion(ZeissImport::Version::Package())
+, m_Vendor(ZeissImportConstants::BlueQuartz::VendorName)
+, m_URL(ZeissImportConstants::BlueQuartz::URL)
+, m_Location("")
+, m_Copyright(ZeissImportConstants::BlueQuartz::Copyright)
+, m_DidLoad(false)
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -61,7 +57,6 @@ QString ZeissImportPlugin::getPluginBaseName()
 {
   return ZeissImportConstants::ZeissImportBaseName;
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -112,9 +107,9 @@ QString ZeissImportPlugin::getDescription()
   QFileInfo licenseFileInfo(licenseFile);
   QString text = "<<--Description was not read-->>";
 
-  if ( licenseFileInfo.exists() )
+  if(licenseFileInfo.exists())
   {
-    if ( licenseFile.open(QIODevice::ReadOnly | QIODevice::Text) )
+    if(licenseFile.open(QIODevice::ReadOnly | QIODevice::Text))
     {
       QTextStream in(&licenseFile);
       text = in.readAll();
@@ -140,9 +135,9 @@ QString ZeissImportPlugin::getLicense()
   QFileInfo licenseFileInfo(licenseFile);
   QString text = "<<--License was not read-->>";
 
-  if ( licenseFileInfo.exists() )
+  if(licenseFileInfo.exists())
   {
-    if ( licenseFile.open(QIODevice::ReadOnly | QIODevice::Text) )
+    if(licenseFile.open(QIODevice::ReadOnly | QIODevice::Text))
     {
       QTextStream in(&licenseFile);
       text = in.readAll();
@@ -159,18 +154,18 @@ QMap<QString, QString> ZeissImportPlugin::getThirdPartyLicenses()
   QMap<QString, QString> licenseMap;
   QList<QString> fileStrList;
   fileStrList.push_back(":/ThirdParty/HDF5.txt");
-  
+
   fileStrList.push_back(":/ThirdParty/Qt.txt");
   fileStrList.push_back(":/ThirdParty/Qwt.txt");
 
-  for (QList<QString>::iterator iter = fileStrList.begin(); iter != fileStrList.end(); iter++)
+  for(QList<QString>::iterator iter = fileStrList.begin(); iter != fileStrList.end(); iter++)
   {
     QFile file(*iter);
     QFileInfo licenseFileInfo(file);
 
-    if ( licenseFileInfo.exists() )
+    if(licenseFileInfo.exists())
     {
-      if ( file.open(QIODevice::ReadOnly | QIODevice::Text) )
+      if(file.open(QIODevice::ReadOnly | QIODevice::Text))
       {
         QTextStream in(&file);
         licenseMap.insert(licenseFileInfo.baseName(), in.readAll());
@@ -210,7 +205,6 @@ void ZeissImportPlugin::setLocation(QString filePath)
 // -----------------------------------------------------------------------------
 void ZeissImportPlugin::writeSettings(QSettings& prefs)
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -218,7 +212,6 @@ void ZeissImportPlugin::writeSettings(QSettings& prefs)
 // -----------------------------------------------------------------------------
 void ZeissImportPlugin::readSettings(QSettings& prefs)
 {
-
 }
 
 // -----------------------------------------------------------------------------
