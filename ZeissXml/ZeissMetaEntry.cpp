@@ -17,7 +17,7 @@
 #endif
 
 #include "SIMPLib/DataArrays/DataArray.hpp"
-#include "SIMPLib/DataArrays/StringDataArray.hpp"
+#include "SIMPLib/DataArrays/StringDataArray.h"
 
 #include "ZeissImport/ZeissXml/ZeissTagMapping.h"
 

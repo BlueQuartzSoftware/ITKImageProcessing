@@ -33,9 +33,9 @@
 #include "SeparateDataSets.h"
 
 #include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/DataArrays/StringDataArray.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
-#include "SIMPLib/DataArrays/StringDataArray.hpp"
+#include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "ZeissImport/ZeissImportConstants.h"
 #include "ZeissImport/ZeissImportVersion.h"
