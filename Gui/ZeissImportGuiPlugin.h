@@ -20,7 +20,7 @@ public:
 
 public:
   ZeissImportGuiPlugin(const ZeissImportGuiPlugin&) = delete;            // Copy Constructor Not Implemented
-  ZeissImportGuiPlugin(ZeissImportGuiPlugin&&) = delete;                 // Move Constructor
+  ZeissImportGuiPlugin(ZeissImportGuiPlugin&&) = delete;                 // Move Constructor Not Implemented
   ZeissImportGuiPlugin& operator=(const ZeissImportGuiPlugin&) = delete; // Copy Assignment Not Implemented
   ZeissImportGuiPlugin& operator=(ZeissImportGuiPlugin&&) = delete;      // Move Assignment Not Implemented
 };
