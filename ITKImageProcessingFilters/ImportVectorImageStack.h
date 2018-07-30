@@ -199,7 +199,7 @@ protected:
 private:
 public:
   ImportVectorImageStack(const ImportVectorImageStack&) = delete;            // Copy Constructor Not Implemented
-  ImportVectorImageStack(ImportVectorImageStack&&) = delete;                 // Move Constructor
+  ImportVectorImageStack(ImportVectorImageStack&&) = delete;                 // Move Constructor Not Implemented
   ImportVectorImageStack& operator=(const ImportVectorImageStack&) = delete; // Copy Assignment Not Implemented
   ImportVectorImageStack& operator=(ImportVectorImageStack&&) = delete;      // Move Assignment Not Implemented
 };

@@ -20,7 +20,7 @@ public:
 
 public:
   ITKImageProcessingGuiPlugin(const ITKImageProcessingGuiPlugin&) = delete;            // Copy Constructor Not Implemented
-  ITKImageProcessingGuiPlugin(ITKImageProcessingGuiPlugin&&) = delete;                 // Move Constructor
+  ITKImageProcessingGuiPlugin(ITKImageProcessingGuiPlugin&&) = delete;                 // Move Constructor Not Implemented
   ITKImageProcessingGuiPlugin& operator=(const ITKImageProcessingGuiPlugin&) = delete; // Copy Assignment Not Implemented
   ITKImageProcessingGuiPlugin& operator=(ITKImageProcessingGuiPlugin&&) = delete;      // Move Assignment Not Implemented
 };

@@ -181,7 +181,7 @@ private:
   ITK_IMAGE_READER_HELPER_ImageDataArrayName() ITK_IMAGE_READER_HELPER_DECL()
 
       public : ImportImageMontage(const ImportImageMontage&) = delete; // Copy Constructor Not Implemented
-  ImportImageMontage(ImportImageMontage&&) = delete;                   // Move Constructor
+  ImportImageMontage(ImportImageMontage&&) = delete;                   // Move Constructor Not Implemented
   ImportImageMontage& operator=(const ImportImageMontage&) = delete;   // Copy Assignment Not Implemented
   ImportImageMontage& operator=(ImportImageMontage&&) = delete;        // Move Assignment Not Implemented
 };
