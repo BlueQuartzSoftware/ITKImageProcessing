@@ -33,11 +33,14 @@
 
 #include "ITKImageWriter.h"
 
+#include <string.h> 
+
 #include <QtCore/QDir>
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
@@ -80,6 +83,24 @@ ITKImageWriter::~ITKImageWriter() = default;
 void ITKImageWriter::setupFilterParameters()
 {
   FilterParameterVector parameters;
+  
+  {
+    ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
+    parameter->setHumanLabel("Plane");
+    parameter->setPropertyName("Plane");
+    parameter->setSetterCallback(SIMPL_BIND_SETTER(ITKImageWriter, this, Plane));
+    parameter->setGetterCallback(SIMPL_BIND_GETTER(ITKImageWriter, this, Plane));
+    
+    QVector<QString> choices;
+    choices.push_back("XY");
+    choices.push_back("XZ");
+    choices.push_back("YZ");
+    parameter->setChoices(choices);
+    parameter->setCategory(FilterParameter::Parameter);
+    parameters.push_back(parameter);
+  }
+  
+  
   QString supportedExtensions = ITKImageProcessingPlugin::getListSupportedWriteExtensions();
   parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Output File", FileName, FilterParameter::Parameter, ITKImageWriter, supportedExtensions));
 
@@ -181,6 +202,14 @@ void ITKImageWriter::dataCheck()
     QString ss = QObject::tr("The data array path '%1' was invalid for the property ImageArrayPath. Please check the input value.").arg(getImageArrayPath().serialize("/"));
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
+  
+  if(imageDataArrayPtr->getComponentDimensions().size() > 1)
+  {
+    setErrorCondition(-21019);
+    QString errorMessage = "ITKImageWriter only works on Scalar or Vector data. The selected data array has more than 1 dimension.";
+    notifyErrorMessage(getHumanLabel(), errorMessage, getErrorCondition());
+    return;
+  }
 
 }
 
@@ -216,7 +245,8 @@ bool ITKImageWriter::is2DFormat()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename TPixel, unsigned int Dimensions> void ITKImageWriter::writeAs2DStack(typename itk::Dream3DImage<TPixel, Dimensions>* image, unsigned long z_size)
+template <typename TPixel, unsigned int Dimensions> 
+void ITKImageWriter::writeAs2DStack(typename itk::Dream3DImage<TPixel, Dimensions>* image, unsigned long z_size)
 {
   typedef itk::NumericSeriesFileNames NamesGeneratorType;
   NamesGeneratorType::Pointer namesGenerator = NamesGeneratorType::New();
@@ -241,7 +271,8 @@ template <typename TPixel, unsigned int Dimensions> void ITKImageWriter::writeAs
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename TPixel, unsigned int Dimensions> void ITKImageWriter::writeAsOneFile(typename itk::Dream3DImage<TPixel, Dimensions>* image)
+template <typename TPixel, unsigned int Dimensions> 
+void ITKImageWriter::writeAsOneFile(typename itk::Dream3DImage<TPixel, Dimensions>* image)
 {
   typedef itk::Dream3DImage<TPixel, Dimensions> ImageType;
   typedef itk::ImageFileWriter<ImageType> FileWriterType;
@@ -255,12 +286,15 @@ template <typename TPixel, unsigned int Dimensions> void ITKImageWriter::writeAs
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename TPixel, typename UnusedTPixel, unsigned int Dimensions> void ITKImageWriter::writeImage()
+template <typename TPixel, typename UnusedTPixel, unsigned int Dimensions> 
+void ITKImageWriter::writeImage()
 {
-  typedef itk::Dream3DImage<TPixel, Dimensions> ImageType;
-  typedef itk::InPlaceDream3DDataToImageFilter<TPixel, Dimensions> ToITKType;
+  using ImageType = itk::Dream3DImage<TPixel, Dimensions>;
+  using ToITKType = itk::InPlaceDream3DDataToImageFilter<TPixel, Dimensions>;
+  
   DataArrayPath path = getImageArrayPath();
   DataContainer::Pointer container = getDataContainerArray()->getDataContainer(path.getDataContainerName());
+
   try
   {
     typename ToITKType::Pointer toITK = ToITKType::New();
@@ -292,6 +326,18 @@ template <typename TPixel, typename UnusedTPixel, unsigned int Dimensions> void 
     return;
   }
 }
+
+#define ITKIW_PREP_DC(dimA, dimB)\
+  size_t dA = dimA;\
+  size_t dB = dimB;\
+  size_t numElements = dA * dB;\
+  AttributeMatrix::Pointer am = AttributeMatrix::New(tDims, attributeMatrix->getName(), AttributeMatrix::Type::Cell);\
+  dc->addAttributeMatrix(am->getName(), am);\
+  imageGeom->setDimensions(tDims.data());\
+  IDataArray::Pointer sliceData = currentData->createNewArray(numElements, cDims, currentData->getName(), true);\
+  am->addAttributeArray(sliceData->getName(), sliceData);\
+    
+
 
 // -----------------------------------------------------------------------------
 //
@@ -344,8 +390,132 @@ void ITKImageWriter::execute()
     notifyErrorMessage(getHumanLabel(), errorMessage.arg(path.getDataArrayName()), getErrorCondition());
     return;
   }
-  Dream3DArraySwitchMacro(this->writeImage, getImageArrayPath(), -21010);
+  
+
+  size_t dims[3] = {0, 0, 0};
+  ImageGeom::Pointer currentGeom = container->getGeometryAs<ImageGeom>();
+  std::tie(dims[0], dims[1], dims[2]) = currentGeom->getDimensions();
+  
+  DataContainerArray::Pointer dca = DataContainerArray::New();
+  DataContainer::Pointer dc = DataContainer::New(container->getName());
+  dca->addDataContainer(dc);
+  ImageGeom::Pointer imageGeom = ImageGeom::CreateGeometry(attributeMatrix->getName());
+  dc->setGeometry(imageGeom);
+  
+  IDataArray::Pointer currentData = attributeMatrix->getAttributeArray(path.getDataArrayName());
+  QVector<size_t> cDims = currentData->getComponentDimensions();
+  if(cDims.size() > 1)
+  {
+    setErrorCondition(-21019);
+    QString errorMessage = "ITKImageWriter only works on Scalar or Vector data. The selected data array has more than 1 dimension.";
+    notifyErrorMessage(getHumanLabel(), errorMessage.arg(path.getDataArrayName()), getErrorCondition());
+    return;
+  }
+  size_t nComp = cDims[0];
+  
+  if(ITKImageWriter::XYPlane == m_Plane) // XY plane
+  {
+    QVector<size_t> tDims = { dims[0], dims[1], 1};
+    ITKIW_PREP_DC(dims[0], dims[1])
+    
+    for(size_t slice = 0; slice < dims[2]; ++slice)
+    {
+      for(size_t axisA = 0; axisA < dA; ++axisA)
+      {
+        for(size_t axisB = 0; axisB < dB; ++axisB)
+        {
+          size_t index = (slice * dA * dB) + (axisA * dB) + axisB;          
+          copyTuple(index, axisA, dB, axisB, nComp, currentData.get(), sliceData.get());
+        }
+      }
+      QString progress = QString("%1::Saving Image %2/%3").arg(getHumanLabel()).arg(slice).arg(dims[2]);
+      notifyStatusMessage(getHumanLabel(), progress);
+
+      saveImageData(dca, slice, dims[2]);
+    }
+  }
+  else if(ITKImageWriter::XZPlane == m_Plane) // XZ plane
+  {
+    QVector<size_t> tDims = { dims[0], dims[2], 1};
+    ITKIW_PREP_DC(dims[2], dims[0])
+
+    for(size_t slice = 0; slice < dims[1]; ++slice)
+    {
+      for(size_t axisA = 0; axisA < dA; ++axisA)
+      {
+        for(size_t axisB = 0; axisB < dB; ++axisB)
+        {
+          size_t index = (dims[1] * axisA * dB) + (slice * dB) + axisB;
+          copyTuple(index, axisA, dB, axisB, nComp, currentData.get(), sliceData.get());
+        }
+      }
+      QString progress = QString("%1::Saving Image %2/%3").arg(getHumanLabel()).arg(slice).arg(dims[1]);
+      notifyStatusMessage(getHumanLabel(), progress);      
+      saveImageData(dca, slice, dims[1]);
+    }
+  }
+  else if(ITKImageWriter::YZPlane == m_Plane) // YZ plane
+  {
+    QVector<size_t> tDims = { dims[1], dims[2], 1};
+    ITKIW_PREP_DC(dims[2], dims[1])
+
+    for(size_t slice = 0; slice < dims[0]; ++slice) // X 
+    {
+      for(size_t axisA = 0; axisA < dA; ++axisA) // Z
+      { 
+        for(size_t axisB = 0; axisB < dB; ++axisB) // Y
+        {
+          size_t index = (dims[0] * axisA * dB) + (axisB * dims[0]) + slice;
+          copyTuple(index, axisA, dB, axisB, nComp, currentData.get(), sliceData.get());
+        }
+      }
+      QString progress = QString("%1::Saving Image %2/%3").arg(getHumanLabel()).arg(slice).arg(dims[0]);
+      notifyStatusMessage(getHumanLabel(), progress);      
+      saveImageData(dca, slice, dims[0]);
+    }
+  }
+  
   notifyStatusMessage(getHumanLabel(), "Complete");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ITKImageWriter::copyTuple(size_t index, size_t axisA, 
+                                size_t dB, size_t axisB,  size_t nComp,
+                               IDataArray* currentData, IDataArray* sliceData)
+{
+  size_t indexNew = (axisA * dB) + axisB;
+  
+  void* source = currentData->getVoidPointer((nComp * index));
+  void* destination = sliceData->getVoidPointer(nComp * indexNew);
+  ::memcpy(destination, source, currentData->getTypeSize() * nComp); 
+  
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ITKImageWriter::saveImageData(DataContainerArray::Pointer dca, size_t slice, size_t maxSlice)
+{
+  QString originalFileName = getFileName();
+  QFileInfo fi(originalFileName);
+  
+  QString adjustedFilePath;
+  QTextStream out(&adjustedFilePath);
+  out << fi.absolutePath() << "/" << fi.completeBaseName();
+  if(maxSlice != 1)
+  {
+    out << "_" << slice;
+  }
+  out << "." << fi.suffix();
+    
+  setFileName(adjustedFilePath);
+  DataContainerArray::Pointer originalDataContainerArray = getDataContainerArray();
+  setDataContainerArray(dca);
+  Dream3DArraySwitchMacro(this->writeImage, getImageArrayPath(), -21010);
+  setDataContainerArray(originalDataContainerArray);
+  setFileName(originalFileName);  
 }
 
 // -----------------------------------------------------------------------------

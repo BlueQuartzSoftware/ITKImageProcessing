@@ -60,12 +60,19 @@ public:
 
   ~ITKImageWriter() override;
 
+  static const int XYPlane = 0;
+  static const int XZPlane = 1;
+  static const int YZPlane = 2;
+  
   SIMPL_FILTER_PARAMETER(QString, FileName)
   Q_PROPERTY(QString FileName READ getFileName WRITE setFileName)
 
   SIMPL_FILTER_PARAMETER(DataArrayPath, ImageArrayPath)
   Q_PROPERTY(DataArrayPath ImageArrayPath READ getImageArrayPath WRITE setImageArrayPath)
 
+  SIMPL_FILTER_PARAMETER(int, Plane)
+  Q_PROPERTY(int Plane READ getPlane WRITE setPlane)
+  
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
@@ -179,12 +186,35 @@ protected:
   /**
   * @brief writeAs2DStack Writes 3D images as a stack of 2D images.
   */
-  template <typename TPixel, unsigned int Dimensions> void writeAs2DStack(typename itk::Dream3DImage<TPixel, Dimensions>* image, unsigned long z_size);
+  template <typename TPixel, unsigned int Dimensions> 
+  void writeAs2DStack(typename itk::Dream3DImage<TPixel, Dimensions>* image, unsigned long z_size);
 
   /**
   * @brief writeAsOneFile Writes images as one file.
   */
-  template <typename TPixel, unsigned int Dimensions> void writeAsOneFile(typename itk::Dream3DImage<TPixel, Dimensions>* image);
+  template <typename TPixel, unsigned int Dimensions> 
+  void writeAsOneFile(typename itk::Dream3DImage<TPixel, Dimensions>* image);
+  
+  private:
+  /**
+   * @brief copyTuple
+   * @param index
+   * @param axisA
+   * @param dB
+   * @param axisB
+   * @param nComp
+   * @param currentData
+   * @param sliceData
+   */
+  void copyTuple(size_t index, size_t axisA, size_t dB, size_t axisB, size_t nComp,
+                               IDataArray* currentData, IDataArray* sliceData);
+  /**
+   * @brief saveImageData
+   * @param dca
+   * @param slice
+   * @param maxSlice
+   */
+  void saveImageData(DataContainerArray::Pointer dca, size_t slice, size_t maxSlice);                               
 
 public:
   ITKImageWriter(const ITKImageWriter&) = delete; // Copy Constructor Not Implemented
