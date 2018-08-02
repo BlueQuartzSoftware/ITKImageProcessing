@@ -203,7 +203,7 @@ void ITKImageWriter::dataCheck()
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   
-  if(imageDataArrayPtr->getComponentDimensions().size() > 1)
+  if(nullptr != imageDataArrayPtr.get() && imageDataArrayPtr->getComponentDimensions().size() > 1)
   {
     setErrorCondition(-21019);
     QString errorMessage = "ITKImageWriter only works on Scalar or Vector data. The selected data array has more than 1 dimension.";
