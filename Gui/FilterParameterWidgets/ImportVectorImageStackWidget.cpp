@@ -49,6 +49,7 @@
 #include <QtWidgets/QListWidget>
 #include <QtWidgets/QListWidgetItem>
 #include <QtWidgets/QMenu>
+#include <QtWidgets/QButtonGroup>
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
