@@ -95,7 +95,7 @@ if(NOT ITKImageProcessing_LeanAndMean)
     ITKMeanProjectionImage
     ITKZeroCrossingImage
     ITKBoundedReciprocalImage
-  #  ITKThresholdMaximumConnectedComponentsImage
+    ITKThresholdMaximumConnectedComponentsImage
     ITKSmoothingRecursiveGaussianImage
     ITKAdaptiveHistogramEqualizationImage
     ITKCastImage
@@ -122,7 +122,7 @@ if(NOT ITKImageProcessing_LeanAndMean)
     ITKBinaryClosingByReconstructionImage
     ITKGrayscaleDilateImage
     ITKMultiScaleHessianBasedObjectnessImage
-  #  ITKVectorConnectedComponentImage
+    ITKVectorConnectedComponentImage
     ITKConnectedComponentImage
     ITKMaskImage
     ITKFFTNormalizedCorrelationImage
