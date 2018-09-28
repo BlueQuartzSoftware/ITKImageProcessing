@@ -35,13 +35,17 @@
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
+#include "SIMPLib/FilterParameters/FileListInfoFilterParameter.h"
 #include "SIMPLib/Filtering/FilterFactory.hpp"
 #include "SIMPLib/Filtering/FilterManager.h"
 #include "SIMPLib/Filtering/FilterPipeline.h"
 #include "SIMPLib/Filtering/QMetaObjectUtilities.h"
+#include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Utilities/FilePathGenerator.h"
+
 #include "UnitTestSupport.hpp"
 
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKImageWriter.h"
@@ -53,19 +57,20 @@
 
 class ITKImageProcessingWriterTest
 {
+  const int k_MaxIndex = 95;
+  const int k_MinIndex = 0;
+  const int k_Increment = 1;
 
 public:
-  ITKImageProcessingWriterTest()
-  {
-  }
-  virtual ~ITKImageProcessingWriterTest()
-  {
-  }
+  ITKImageProcessingWriterTest() = default;
+  virtual ~ITKImageProcessingWriterTest() = default;
+  ITKImageProcessingWriterTest(const ITKImageProcessingWriterTest&) = delete;            // Copy Constructor Not Implemented
+  ITKImageProcessingWriterTest(ITKImageProcessingWriterTest&&) = delete;                 // Move Constructor Not Implemented
+  ITKImageProcessingWriterTest& operator=(const ITKImageProcessingWriterTest&) = delete; // Copy Assignment Not Implemented
+  ITKImageProcessingWriterTest& operator=(ITKImageProcessingWriterTest&&) = delete;      // Move Assignment Not Implemented
 
   QList<QString> FilesToRemove;
 
-  // -----------------------------------------------------------------------------
-  //
   // -----------------------------------------------------------------------------
   void RemoveTestFiles()
   {
@@ -89,6 +94,7 @@ public:
     return filterFactory->create();
   }
 
+  // -----------------------------------------------------------------------------
   template <class PixelType, unsigned int Dimension> DataContainerArray::Pointer CreateTestData(const DataArrayPath& path)
   {
     // Create test data (baseline)
@@ -118,16 +124,18 @@ public:
     containerArray->addDataContainer(container);
     return containerArray;
   }
-
+  // -----------------------------------------------------------------------------
   ImageGeom::Pointer GetImageGeometry(DataContainer::Pointer& container)
   {
     IGeometry::Pointer geometry = container->getGeometry();
+    DREAM3D_REQUIRE_VALID_POINTER(geometry.get());
     DREAM3D_REQUIRE_EQUAL(geometry->getGeometryTypeAsString(), "ImageGeometry");
     ImageGeom::Pointer imageGeometry = std::dynamic_pointer_cast<ImageGeom>(geometry);
     DREAM3D_REQUIRE_NE(imageGeometry.get(), 0);
     return imageGeometry;
   }
 
+  // -----------------------------------------------------------------------------
   bool CompareImageGeometries(const ImageGeom::Pointer& inputImageGeometry, const ImageGeom::Pointer& baselineImageGeometry)
   {
     float inputResolution[3];
@@ -155,6 +163,7 @@ public:
     return true;
   }
 
+  // -----------------------------------------------------------------------------
   void GetMatrixAndAttributeArray(const DataContainer::Pointer& container, const QString& matrixName, const QString& arrayName, AttributeMatrix::Pointer& attributeMatrix,
                                   IDataArray::Pointer& dataArray)
   {
@@ -164,6 +173,7 @@ public:
     DREAM3D_REQUIRE_NE(dataArray.get(), 0);
   }
 
+  // -----------------------------------------------------------------------------
   bool CompareAttributeMatrices(const AttributeMatrix::Pointer& baselineMatrix, const AttributeMatrix::Pointer& inputMatrix)
   {
     // Compare number of attributes
@@ -180,6 +190,7 @@ public:
     return true;
   }
 
+  // -----------------------------------------------------------------------------
   template <class PixelType> bool CompareDataArrays(const IDataArray::Pointer& baselineArray, const IDataArray::Pointer& inputArray)
   {
     float tol = 1e-6;
@@ -197,6 +208,7 @@ public:
     return true;
   }
 
+  // -----------------------------------------------------------------------------
   template <class PixelType> bool CompareImageContainers(DataContainer::Pointer& inputContainer, DataContainer::Pointer& baselineContainer, const DataArrayPath& baselinePath)
   {
     // First compare geometries
@@ -215,7 +227,9 @@ public:
     return true;
   }
 
-  template <class PixelType> bool CompareImages(const QString& inputFilename, const DataContainerArray::Pointer& baselineContainerArray, const DataArrayPath& baselinePath)
+  // -----------------------------------------------------------------------------
+  template <class PixelType, unsigned int Dimension>
+  bool CompareImages(const QString& inputFilename, const DataContainerArray::Pointer& baselineContainerArray, const DataArrayPath& baselinePath, const QString& dataFileExtension = "")
   {
     // Get container for baseline
     QString baselineContainerName = baselinePath.getDataContainerName();
@@ -225,15 +239,74 @@ public:
     // Load container for input
     // Use ITKImageReader filter to avoid re-writing filter here
     FilterManager* fm = FilterManager::Instance();
-    IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(QString("ITKImageReader"));
-    DREAM3D_REQUIRE_NE(filterFactory.get(), 0);
-    AbstractFilter::Pointer filter = filterFactory->create();
+    AbstractFilter::Pointer filter;
     QVariant var;
     bool propWasSet;
 
-    var.setValue(inputFilename);
-    propWasSet = filter->setProperty("FileName", var);
-    DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+    if(Dimension == 2)
+    {
+      IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(QString("ITKImageReader"));
+      DREAM3D_REQUIRE_NE(filterFactory.get(), 0);
+      filter = filterFactory->create();
+
+      var.setValue(inputFilename);
+      propWasSet = filter->setProperty("FileName", var);
+      DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+    }
+    else if(Dimension == 3)
+    {
+      IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(QString("ITKImportImageStack"));
+      DREAM3D_REQUIRE_NE(filterFactory.get(), 0);
+      filter = filterFactory->create();
+
+      FileListInfo_t listInfo;
+      listInfo.PaddingDigits = 0;
+      listInfo.Ordering = 0;
+      listInfo.StartIndex = 0;
+      listInfo.EndIndex = 95;
+      listInfo.IncrementIndex = 1;
+
+      QFileInfo fi(inputFilename);
+      listInfo.InputPath = fi.absolutePath();
+
+      listInfo.FilePrefix = fi.baseName() + QString("_");
+
+      listInfo.FileExtension = fi.suffix();
+
+      var.setValue(listInfo);
+      propWasSet = filter->setProperty("InputFileListInfo", var);
+      DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+
+      bool hasMissingFiles = false;
+      bool orderAscending = false;
+
+      if(listInfo.Ordering == 0)
+      {
+        orderAscending = true;
+      }
+      else if(listInfo.Ordering == 1)
+      {
+        orderAscending = false;
+      }
+
+      // Now generate all the file names the user is asking for and populate the table
+      QVector<QString> files = FilePathGenerator::GenerateFileList(listInfo.StartIndex, listInfo.EndIndex, listInfo.IncrementIndex, hasMissingFiles, orderAscending, listInfo.InputPath,
+                                                                   listInfo.FilePrefix, listInfo.FileSuffix, listInfo.FileExtension, listInfo.PaddingDigits);
+      this->FilesToRemove.append(files.toList());
+      if(!dataFileExtension.isEmpty())
+      {
+        listInfo.FileExtension = dataFileExtension;
+      }
+      files = FilePathGenerator::GenerateFileList(listInfo.StartIndex, listInfo.EndIndex, listInfo.IncrementIndex, hasMissingFiles, orderAscending, listInfo.InputPath, listInfo.FilePrefix,
+                                                  listInfo.FileSuffix, listInfo.FileExtension, listInfo.PaddingDigits);
+      this->FilesToRemove.append(files.toList());
+    }
+
+    //    Observer obs;
+    //    QObject::connect(
+    //          filter.get(), &AbstractFilter::filterGeneratedMessage,
+    //          &obs, &Observer::processPipelineMessage
+    //          );
 
     const QString inputContainerName = "inputContainer";
     DataContainerArray::Pointer inputContainerArray = DataContainerArray::New();
@@ -242,6 +315,8 @@ public:
     propWasSet = filter->setProperty("DataContainerName", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true)
     filter->execute();
+    int err = filter->getErrorCondition();
+    DREAM3D_REQUIRE_EQUAL(err, 0)
 
     DREAM3D_REQUIRE(inputContainerArray->getDataContainerNames().contains(inputContainerName));
     DataContainer::Pointer inputContainer = inputContainerArray->getDataContainer(inputContainerName);
@@ -250,8 +325,10 @@ public:
     return true;
   }
 
-  template <class PixelType> bool RunWriteImage(const QString& filename, DataContainerArray::Pointer containerArray, DataArrayPath& path)
+  // -----------------------------------------------------------------------------
+  template <class PixelType, unsigned int Dimension> bool RunWriteImage(const QString& filename, DataContainerArray::Pointer containerArray, DataArrayPath& path)
   {
+
     QString filtName = "ITKImageWriter";
     FilterManager* fm = FilterManager::Instance();
     IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filtName);
@@ -260,6 +337,9 @@ public:
     // If we get this far, the Factory is good so creating the filter should not fail unless something has
     // horribly gone wrong in which case the system is going to come down quickly after this.
     AbstractFilter::Pointer filter = filterFactory->create();
+
+    //    Observer obs;
+    //    QObject::connect(filter.get(), &AbstractFilter::filterGeneratedMessage, &obs, &Observer::processPipelineMessage);
 
     QVariant var;
     bool propWasSet;
@@ -282,13 +362,19 @@ public:
     return true;
   }
 
+  // -----------------------------------------------------------------------------
   template <class PixelType, unsigned int Dimension> void TestWriteImage(const QString& suffix, const QString& extension, const QString& dataFileExtension)
   {
+    //    std::cout << "******** TestWriteImageSeries " << suffix.toStdString() << ", " << extension.toStdString() << ", " << dataFileExtension.toStdString() << ", " << Dimension
+    //              << " ******************************" << std::endl;
+
     QString filename = UnitTest::ITKImageProcessingWriterTest::OutputBaseFile + suffix + extension;
     DataArrayPath path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = CreateTestData<PixelType, Dimension>(path);
-    DREAM3D_REQUIRE(RunWriteImage<PixelType>(filename, containerArray, path));
-    DREAM3D_REQUIRE(CompareImages<PixelType>(filename, containerArray, path));
+    bool success = RunWriteImage<PixelType, Dimension>(filename, containerArray, path);
+    DREAM3D_REQUIRE(success);
+    success = CompareImages<PixelType, Dimension>(filename, containerArray, path, dataFileExtension);
+    DREAM3D_REQUIRE(success);
 
     this->FilesToRemove << filename;
     if(!dataFileExtension.isEmpty())
@@ -326,7 +412,8 @@ public:
     return EXIT_SUCCESS;
   }
 
-  template <unsigned int Dimension> int TestWriteImage(QString extension, QStringList listPixelTypes, QString dataFileExtension = "")
+  // -----------------------------------------------------------------------------
+  template <unsigned int Dimension> int TestWriteImage(QString extension, const QStringList& listPixelTypes, QString dataFileExtension = "")
   {
     for(QStringList::const_iterator it = listPixelTypes.constBegin(); it != listPixelTypes.constEnd(); ++it)
     {
@@ -371,6 +458,8 @@ public:
         TestWriteImage<double, Dimension>("_double.", extension, dataFileExtension);
       }
     }
+    RemoveTestFiles();
+    this->FilesToRemove.clear();
     return EXIT_SUCCESS;
   }
 
@@ -379,22 +468,28 @@ public:
   // -----------------------------------------------------------------------------
   int TestWriteImageSeries()
   {
+    //    std::cout << "************************ TestWriteImageSeries ******************************" << std::endl;
     QString filename = UnitTest::ITKImageProcessingWriterTest::OutputBaseFile + ".png";
     DataArrayPath path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = CreateTestData<uint8_t, 3>(path);
-    DREAM3D_REQUIRE(RunWriteImage<uint8_t>(filename, containerArray, path));
-    typedef itk::NumericSeriesFileNames NamesGeneratorType;
-    QString seriesfilename = UnitTest::ITKImageProcessingWriterTest::OutputBaseFile + "%03d.png";
+    bool success = RunWriteImage<uint8_t, 2>(filename, containerArray, path);
+    DREAM3D_REQUIRE(success);
+    using NamesGeneratorType = itk::NumericSeriesFileNames;
+    QString seriesfilename = UnitTest::ITKImageProcessingWriterTest::OutputBaseFile + "_%d.png";
     NamesGeneratorType::Pointer namesGenerator = NamesGeneratorType::New();
     namesGenerator->SetSeriesFormat(seriesfilename.toStdString());
-    namesGenerator->SetIncrementIndex(1);
-    namesGenerator->SetStartIndex(0);
-    namesGenerator->SetEndIndex(95); // There should be 96 slices: 90 + 3*2 (see CreateTestData)
+    namesGenerator->SetIncrementIndex(k_Increment);
+    namesGenerator->SetStartIndex(k_MinIndex);
+    namesGenerator->SetEndIndex(k_MaxIndex); // There should be 96 slices: 90 + 3*2 (see CreateTestData)
     std::vector<std::string> listFileNames = namesGenerator->GetFileNames();
     for(size_t ii = 0; ii < listFileNames.size(); ii++)
     {
       // Check that all files exist
       QFileInfo check_file(listFileNames[ii].c_str());
+      if(!check_file.exists())
+      {
+        std::cout << listFileNames[ii] << " Does not exist" << std::endl;
+      }
       DREAM3D_REQUIRE((check_file.exists() && check_file.isFile()));
       // Remove file
       this->FilesToRemove << QString(listFileNames[ii].c_str());
@@ -415,83 +510,6 @@ public:
     DREAM3D_REGISTER_TEST(TestAvailability("ITKImageWriter"));
     DREAM3D_REGISTER_TEST(TestNoInput());
 
-    // Meta
-    QStringList listMetaPixelTypes;
-    listMetaPixelTypes << "uint8_t"
-                       << "int8_t"
-                       << "uint16_t"
-                       << "int16_t"
-                       << "uint32_t"
-                       << "int32_t"
-                       << "uint64_t"
-                       << "int64_t"
-                       << "float"
-                       << "double";
-    DREAM3D_REGISTER_TEST(TestWriteImage<3>("mha", listMetaPixelTypes));
-    DREAM3D_REGISTER_TEST(TestWriteImage<3>("mhd", listMetaPixelTypes, "zraw"));
-
-    // MRC
-    QStringList listMRCPixelTypes;
-    listMRCPixelTypes << "uint8_t"
-                      << "int16_t"
-                      << "uint16_t"
-                      << "float";
-    DREAM3D_REGISTER_TEST(TestWriteImage<3>("mrc", listMRCPixelTypes));
-
-    // NRRD
-    QStringList listNRRDPixelTypes;
-    listNRRDPixelTypes << "uint8_t"
-                       << "int8_t"
-                       << "uint16_t"
-                       << "int16_t"
-                       << "uint32_t"
-                       << "int32_t"
-                       << "uint64_t"
-                       << "int64_t"
-                       << "float"
-                       << "double";
-    DREAM3D_REGISTER_TEST(TestWriteImage<3>("nrrd", listNRRDPixelTypes));
-    DREAM3D_REGISTER_TEST(TestWriteImage<3>("nhdr", listNRRDPixelTypes, "raw.gz"));
-
-    // NII
-    QStringList listNIIPixelTypes;
-    listNIIPixelTypes << "uint8_t"
-                      << "int8_t"
-                      << "uint16_t"
-                      << "int16_t"
-                      << "uint32_t"
-                      << "int32_t"
-                      << "uint64_t"
-                      << "int64_t"
-                      << "float"
-                      << "double";
-    DREAM3D_REGISTER_TEST(TestWriteImage<3>("nii", listNIIPixelTypes));
-    DREAM3D_REGISTER_TEST(TestWriteImage<3>("nii.gz", listNIIPixelTypes));
-
-    // GIPL
-    QStringList listGIPLPixelTypes;
-    listGIPLPixelTypes << "uint8_t"
-                       << "int8_t"
-                       << "uint16_t"
-                       << "int16_t"
-                       << "float";
-    DREAM3D_REGISTER_TEST(TestWriteImage<3>("gipl", listGIPLPixelTypes));
-    DREAM3D_REGISTER_TEST(TestWriteImage<3>("gipl.gz", listGIPLPixelTypes));
-
-    // ANALYZE
-    QStringList listHDRPixelTypes;
-    listHDRPixelTypes << "uint8_t"
-                      << "int8_t"
-                      << "uint16_t"
-                      << "int16_t"
-                      << "uint32_t"
-                      << "int32_t"
-                      << "uint64_t"
-                      << "int64_t"
-                      << "float"
-                      << "double";
-    DREAM3D_REGISTER_TEST(TestWriteImage<3>("hdr", listHDRPixelTypes, "img"));
-
     // TIFF
     QStringList listTIFFPixelTypes;
     listTIFFPixelTypes << "uint8_t"
@@ -510,6 +528,87 @@ public:
     listJPGPixelTypes << "uint8_t";
     DREAM3D_REGISTER_TEST(TestWriteImage<2>("jpg", listJPGPixelTypes));
 
+    // MRC
+    QStringList listMRCPixelTypes;
+    listMRCPixelTypes << "uint8_t"
+                      << "int16_t"
+                      << "uint16_t"
+                      << "float";
+    DREAM3D_REGISTER_TEST(TestWriteImage<3>("mrc", listMRCPixelTypes));
+
+    // Meta
+    QStringList listMetaPixelTypes;
+    listMetaPixelTypes << "uint8_t"
+                       << "int8_t"
+                       << "uint16_t"
+                       << "int16_t"
+                       << "uint32_t"
+                       << "int32_t"
+                       << "uint64_t"
+                       << "int64_t"
+                       << "float"
+                       << "double";
+    DREAM3D_REGISTER_TEST(TestWriteImage<3>("mha", listMetaPixelTypes));
+    DREAM3D_REGISTER_TEST(TestWriteImage<3>("mhd", listMetaPixelTypes, "zraw"));
+
+    // NRRD
+    QStringList listNRRDPixelTypes;
+    listNRRDPixelTypes << "uint8_t"
+                       << "int8_t"
+                       << "uint16_t"
+                       << "int16_t"
+                       << "uint32_t"
+                       << "int32_t"
+                       << "uint64_t"
+                       << "int64_t"
+                       << "float"
+                       << "double";
+    DREAM3D_REGISTER_TEST(TestWriteImage<3>("nrrd", listNRRDPixelTypes));
+    DREAM3D_REGISTER_TEST(TestWriteImage<3>("nhdr", listNRRDPixelTypes, "raw.gz"));
+    // NII
+    QStringList listNIIPixelTypes;
+    listNIIPixelTypes << "uint8_t"
+                      << "int8_t"
+                      << "uint16_t"
+                      << "int16_t"
+                      << "uint32_t"
+                      << "int32_t"
+                      << "uint64_t"
+                      << "int64_t"
+                      << "float"
+                      << "double";
+    DREAM3D_REGISTER_TEST(TestWriteImage<3>("nii", listNIIPixelTypes));
+#ifdef ITK_IMAGE_PROCESSING_HAVE_SCIFIO
+    DREAM3D_REGISTER_TEST(TestWriteImage<3>("nii.gz", listNIIPixelTypes));
+#endif
+
+    // GIPL
+    QStringList listGIPLPixelTypes;
+    listGIPLPixelTypes << "uint8_t"
+                       << "int8_t"
+                       << "uint16_t"
+                       << "int16_t"
+                       << "float";
+    DREAM3D_REGISTER_TEST(TestWriteImage<3>("gipl", listGIPLPixelTypes));
+
+#ifdef ITK_IMAGE_PROCESSING_HAVE_SCIFIO
+    DREAM3D_REGISTER_TEST(TestWriteImage<3>("gipl.gz", listGIPLPixelTypes));
+#endif
+
+    // ANALYZE
+    QStringList listHDRPixelTypes;
+    listHDRPixelTypes << "uint8_t"
+                      << "int8_t"
+                      << "uint16_t"
+                      << "int16_t"
+                      << "uint32_t"
+                      << "int32_t"
+                      << "uint64_t"
+                      << "int64_t"
+                      << "float"
+                      << "double";
+    DREAM3D_REGISTER_TEST(TestWriteImage<3>("hdr", listHDRPixelTypes, "img"));
+
     // BMP -> Load all images as RGB in ITK??
     //    QStringList listBMPPixelTypes;
     //    listBMPPixelTypes << "uint8_t" ;
@@ -519,14 +618,11 @@ public:
     DREAM3D_REGISTER_TEST(TestWriteImageSeries())
 
 #if REMOVE_TEST_FILES
-    if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
+    //   if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
     {
       DREAM3D_REGISTER_TEST(RemoveTestFiles())
     }
 #endif
   }
 
-private:
-  ITKImageProcessingWriterTest(const ITKImageProcessingWriterTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKImageProcessingWriterTest&);               // Move assignment Not Implemented
 };

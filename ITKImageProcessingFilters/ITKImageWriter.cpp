@@ -277,6 +277,10 @@ void ITKImageWriter::writeAsOneFile(typename itk::Dream3DImage<TPixel, Dimension
   typedef itk::Dream3DImage<TPixel, Dimensions> ImageType;
   typedef itk::ImageFileWriter<ImageType> FileWriterType;
   typename FileWriterType::Pointer writer = FileWriterType::New();
+
+  QString progress = QString("Saving %1").arg(getFileName());
+  notifyStatusMessage(getHumanLabel(), progress);
+
   writer->SetInput(image);
   writer->SetFileName(getFileName().toStdString().c_str());
   writer->UseCompressionOn();
@@ -428,9 +432,6 @@ void ITKImageWriter::execute()
           copyTuple(index, axisA, dB, axisB, nComp, currentData.get(), sliceData.get());
         }
       }
-      QString progress = QString("%1::Saving Image %2/%3").arg(getHumanLabel()).arg(slice).arg(dims[2]);
-      notifyStatusMessage(getHumanLabel(), progress);
-
       saveImageData(dca, slice, dims[2]);
     }
   }
@@ -448,9 +449,7 @@ void ITKImageWriter::execute()
           size_t index = (dims[1] * axisA * dB) + (slice * dB) + axisB;
           copyTuple(index, axisA, dB, axisB, nComp, currentData.get(), sliceData.get());
         }
-      }
-      QString progress = QString("%1::Saving Image %2/%3").arg(getHumanLabel()).arg(slice).arg(dims[1]);
-      notifyStatusMessage(getHumanLabel(), progress);      
+      } 
       saveImageData(dca, slice, dims[1]);
     }
   }
@@ -469,8 +468,6 @@ void ITKImageWriter::execute()
           copyTuple(index, axisA, dB, axisB, nComp, currentData.get(), sliceData.get());
         }
       }
-      QString progress = QString("%1::Saving Image %2/%3").arg(getHumanLabel()).arg(slice).arg(dims[0]);
-      notifyStatusMessage(getHumanLabel(), progress);      
       saveImageData(dca, slice, dims[0]);
     }
   }

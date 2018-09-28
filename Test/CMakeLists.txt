@@ -135,4 +135,8 @@ SIMPL_GenerateUnitTestFile(PLUGIN_NAME ${PLUGIN_NAME}
                                         ${${PLUGIN_NAME}_PARENT_BINARY_DIR}
 )
 
+if(${${PLUGIN_NAME}_ENABLE_SCIFIO})
+  target_compile_definitions(${PLUGIN_NAME}UnitTest PUBLIC "ITK_IMAGE_PROCESSING_HAVE_SCIFIO")
+endif()
+
 add_dependencies(${PLUGIN_NAME}UnitTest ${PLUGIN_NAME}Gui)
