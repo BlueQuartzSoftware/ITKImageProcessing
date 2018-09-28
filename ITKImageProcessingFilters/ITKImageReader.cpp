@@ -165,7 +165,7 @@ void ITKImageReader::execute()
 AbstractFilter::Pointer ITKImageReader::newFilterInstance(bool copyFilterParameters) const
 {
   ITKImageReader::Pointer filter = ITKImageReader::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

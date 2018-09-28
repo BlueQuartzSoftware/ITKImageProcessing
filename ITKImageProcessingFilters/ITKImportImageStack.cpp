@@ -233,15 +233,38 @@ void ITKImportImageStack::readImage(const QVector<QString>& fileList, bool dataC
     imageIO->SetFileName(filename.toLatin1());
     imageIO->ReadImageInformation();
 
-    typedef itk::ImageIOBase::IOComponentType ComponentType;
+    using ComponentType = itk::ImageIOBase::IOComponentType;
     const ComponentType type = imageIO->GetComponentType();
     const unsigned int dimensions = imageIO->GetNumberOfDimensions();
-    if(dimensions != 2)
+    if(dimensions == 3)
     {
-      setErrorCondition(-1);
-      const QString errorMessage = QString("Slice image dimensions do not equal 2. Dimension of current image is %1").arg(dimensions);
-      notifyErrorMessage(getHumanLabel(), errorMessage, getErrorCondition());
-      return;
+      //      itk::ImageIOBase::SizeValueType dim0 = imageIO->GetDimensions(0);
+      //      itk::ImageIOBase::SizeValueType dim1 = imageIO->GetDimensions(1);
+      itk::ImageIOBase::SizeValueType dim2 = imageIO->GetDimensions(2);
+      // std::cout << "ITKImportImageStack: Input Image Dims: " << dim0 << ", " << dim1 << ", " << dim2 << std::endl;
+
+      if(dim2 != 1)
+      {
+        setErrorCondition(-2342342);
+        const QString errorMessage = QString("The Z Dimension of the image file does not equal 1. Dimension of Z is %1").arg(dim2);
+        notifyErrorMessage(getHumanLabel(), errorMessage, getErrorCondition());
+        return;
+      }
+    }
+    else if(dimensions > 3)
+    {
+      QString msg;
+      QTextStream out(&msg);
+      out << "Slice image dimensions do not equal 2. The dimenions of the image are:";
+      for(unsigned int i = 0; i < dimensions; i++)
+      {
+        itk::ImageIOBase::SizeValueType dim = imageIO->GetDimensions(i);
+        out << dim;
+        if(i != dimensions - 1)
+        {
+          out << ", ";
+        }
+      }
     }
 
     switch(type)
