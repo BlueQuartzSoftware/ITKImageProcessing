@@ -202,14 +202,6 @@ void ITKImageWriter::dataCheck()
     QString ss = QObject::tr("The data array path '%1' was invalid for the property ImageArrayPath. Please check the input value.").arg(getImageArrayPath().serialize("/"));
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
-  
-  if(nullptr != imageDataArrayPtr.get() && imageDataArrayPtr->getComponentDimensions().size() > 1)
-  {
-    setErrorCondition(-21019);
-    QString errorMessage = "ITKImageWriter only works on Scalar or Vector data. The selected data array has more than 1 dimension.";
-    notifyErrorMessage(getHumanLabel(), errorMessage, getErrorCondition());
-    return;
-  }
 
 }
 
@@ -407,15 +399,8 @@ void ITKImageWriter::execute()
   dc->setGeometry(imageGeom);
   
   IDataArray::Pointer currentData = attributeMatrix->getAttributeArray(path.getDataArrayName());
-  QVector<size_t> cDims = currentData->getComponentDimensions();
-  if(cDims.size() > 1)
-  {
-    setErrorCondition(-21019);
-    QString errorMessage = "ITKImageWriter only works on Scalar or Vector data. The selected data array has more than 1 dimension.";
-    notifyErrorMessage(getHumanLabel(), errorMessage.arg(path.getDataArrayName()), getErrorCondition());
-    return;
-  }
-  size_t nComp = cDims[0];
+  size_t nComp = currentData->getNumberOfComponents();
+  QVector<size_t> cDims(1, currentData->getNumberOfComponents());
   
   if(ITKImageWriter::XYPlane == m_Plane) // XY plane
   {
