@@ -392,7 +392,7 @@ void ITKImageWriter::execute()
 
   IDataArray::Pointer currentData = attributeMatrix->getAttributeArray(path.getDataArrayName());
   size_t nComp = currentData->getNumberOfComponents();
-  QVector<size_t> cDims = {currentData->getNumberOfComponents()};
+  QVector<size_t> cDims = {nComp};
 
   if(ITKImageWriter::XYPlane == m_Plane) // XY plane
   {
