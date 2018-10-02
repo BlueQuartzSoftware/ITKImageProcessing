@@ -1,46 +1,46 @@
 /* ============================================================================
-* Copyright (c) 2009-2016 BlueQuartz Software, LLC
-*
-* Redistribution and use in source and binary forms, with or without modification,
-* are permitted provided that the following conditions are met:
-*
-* Redistributions of source code must retain the above copyright notice, this
-* list of conditions and the following disclaimer.
-*
-* Redistributions in binary form must reproduce the above copyright notice, this
-* list of conditions and the following disclaimer in the documentation and/or
-* other materials provided with the distribution.
-*
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
-* contributors may be used to endorse or promote products derived from this software
-* without specific prior written permission.
-*
-* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
-* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*
-* The code contained herein was partially funded by the followig contracts:
-*    United States Air Force Prime Contract FA8650-10-D-5210
-*
-* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+ * Copyright (c) 2009-2016 BlueQuartz Software, LLC
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this
+ * list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+ *
+ * Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+ * contributors may be used to endorse or promote products derived from this software
+ * without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+ * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * The code contained herein was partially funded by the followig contracts:
+ *    United States Air Force Prime Contract FA8650-10-D-5210
+ *
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "ITKImageWriter.h"
 
-#include <string.h> 
+#include <string.h>
 
 #include <QtCore/QDir>
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
@@ -83,14 +83,14 @@ ITKImageWriter::~ITKImageWriter() = default;
 void ITKImageWriter::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  
+
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Plane");
     parameter->setPropertyName("Plane");
     parameter->setSetterCallback(SIMPL_BIND_SETTER(ITKImageWriter, this, Plane));
     parameter->setGetterCallback(SIMPL_BIND_GETTER(ITKImageWriter, this, Plane));
-    
+
     QVector<QString> choices;
     choices.push_back("XY");
     choices.push_back("XZ");
@@ -99,8 +99,7 @@ void ITKImageWriter::setupFilterParameters()
     parameter->setCategory(FilterParameter::Parameter);
     parameters.push_back(parameter);
   }
-  
-  
+
   QString supportedExtensions = ITKImageProcessingPlugin::getListSupportedWriteExtensions();
   parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Output File", FileName, FilterParameter::Parameter, ITKImageWriter, supportedExtensions));
 
@@ -138,7 +137,7 @@ void ITKImageWriter::dataCheck()
 {
   setErrorCondition(0);
   setWarningCondition(0);
-  
+
   // check file name exists
   QString filename = getFileName();
   if(filename.isEmpty())
@@ -202,7 +201,6 @@ void ITKImageWriter::dataCheck()
     QString ss = QObject::tr("The data array path '%1' was invalid for the property ImageArrayPath. Please check the input value.").arg(getImageArrayPath().serialize("/"));
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
-
 }
 
 // -----------------------------------------------------------------------------
@@ -237,8 +235,7 @@ bool ITKImageWriter::is2DFormat()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename TPixel, unsigned int Dimensions> 
-void ITKImageWriter::writeAs2DStack(typename itk::Dream3DImage<TPixel, Dimensions>* image, unsigned long z_size)
+template <typename TPixel, unsigned int Dimensions> void ITKImageWriter::writeAs2DStack(typename itk::Dream3DImage<TPixel, Dimensions>* image, unsigned long z_size)
 {
   typedef itk::NumericSeriesFileNames NamesGeneratorType;
   NamesGeneratorType::Pointer namesGenerator = NamesGeneratorType::New();
@@ -263,8 +260,7 @@ void ITKImageWriter::writeAs2DStack(typename itk::Dream3DImage<TPixel, Dimension
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename TPixel, unsigned int Dimensions> 
-void ITKImageWriter::writeAsOneFile(typename itk::Dream3DImage<TPixel, Dimensions>* image)
+template <typename TPixel, unsigned int Dimensions> void ITKImageWriter::writeAsOneFile(typename itk::Dream3DImage<TPixel, Dimensions>* image)
 {
   typedef itk::Dream3DImage<TPixel, Dimensions> ImageType;
   typedef itk::ImageFileWriter<ImageType> FileWriterType;
@@ -282,12 +278,11 @@ void ITKImageWriter::writeAsOneFile(typename itk::Dream3DImage<TPixel, Dimension
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename TPixel, typename UnusedTPixel, unsigned int Dimensions> 
-void ITKImageWriter::writeImage()
+template <typename TPixel, typename UnusedTPixel, unsigned int Dimensions> void ITKImageWriter::writeImage()
 {
   using ImageType = itk::Dream3DImage<TPixel, Dimensions>;
   using ToITKType = itk::InPlaceDream3DDataToImageFilter<TPixel, Dimensions>;
-  
+
   DataArrayPath path = getImageArrayPath();
   DataContainer::Pointer container = getDataContainerArray()->getDataContainer(path.getDataContainerName());
 
@@ -323,17 +318,15 @@ void ITKImageWriter::writeImage()
   }
 }
 
-#define ITKIW_PREP_DC(dimA, dimB)\
-  size_t dA = dimA;\
-  size_t dB = dimB;\
-  size_t numElements = dA * dB;\
-  AttributeMatrix::Pointer am = AttributeMatrix::New(tDims, attributeMatrix->getName(), AttributeMatrix::Type::Cell);\
-  dc->addAttributeMatrix(am->getName(), am);\
-  imageGeom->setDimensions(tDims.data());\
-  IDataArray::Pointer sliceData = currentData->createNewArray(numElements, cDims, currentData->getName(), true);\
-  am->addAttributeArray(sliceData->getName(), sliceData);\
-    
-
+#define ITKIW_PREP_DC(dimA, dimB)                                                                                                                                                                      \
+  size_t dA = dimA;                                                                                                                                                                                    \
+  size_t dB = dimB;                                                                                                                                                                                    \
+  size_t numElements = dA * dB;                                                                                                                                                                        \
+  AttributeMatrix::Pointer am = AttributeMatrix::New(tDims, attributeMatrix->getName(), AttributeMatrix::Type::Cell);                                                                                  \
+  dc->addAttributeMatrix(am->getName(), am);                                                                                                                                                           \
+  imageGeom->setDimensions(tDims.data());                                                                                                                                                              \
+  IDataArray::Pointer sliceData = currentData->createNewArray(numElements, cDims, currentData->getName(), true);                                                                                       \
+  am->addAttributeArray(sliceData->getName(), sliceData);
 
 // -----------------------------------------------------------------------------
 //
@@ -386,34 +379,33 @@ void ITKImageWriter::execute()
     notifyErrorMessage(getHumanLabel(), errorMessage.arg(path.getDataArrayName()), getErrorCondition());
     return;
   }
-  
 
   size_t dims[3] = {0, 0, 0};
   ImageGeom::Pointer currentGeom = container->getGeometryAs<ImageGeom>();
   std::tie(dims[0], dims[1], dims[2]) = currentGeom->getDimensions();
-  
+
   DataContainerArray::Pointer dca = DataContainerArray::New();
   DataContainer::Pointer dc = DataContainer::New(container->getName());
   dca->addDataContainer(dc);
   ImageGeom::Pointer imageGeom = ImageGeom::CreateGeometry(attributeMatrix->getName());
   dc->setGeometry(imageGeom);
-  
+
   IDataArray::Pointer currentData = attributeMatrix->getAttributeArray(path.getDataArrayName());
   size_t nComp = currentData->getNumberOfComponents();
-  QVector<size_t> cDims = { currentData->getNumberOfComponents() };
-  
+  QVector<size_t> cDims = {currentData->getNumberOfComponents()};
+
   if(ITKImageWriter::XYPlane == m_Plane) // XY plane
   {
-    QVector<size_t> tDims = { dims[0], dims[1], 1};
+    QVector<size_t> tDims = {dims[0], dims[1], 1};
     ITKIW_PREP_DC(dims[0], dims[1])
-    
+
     for(size_t slice = 0; slice < dims[2]; ++slice)
     {
       for(size_t axisA = 0; axisA < dA; ++axisA)
       {
         for(size_t axisB = 0; axisB < dB; ++axisB)
         {
-          size_t index = (slice * dA * dB) + (axisA * dB) + axisB;          
+          size_t index = (slice * dA * dB) + (axisA * dB) + axisB;
           copyTuple(index, axisA, dB, axisB, nComp, currentData.get(), sliceData.get());
         }
       }
@@ -422,7 +414,7 @@ void ITKImageWriter::execute()
   }
   else if(ITKImageWriter::XZPlane == m_Plane) // XZ plane
   {
-    QVector<size_t> tDims = { dims[0], dims[2], 1};
+    QVector<size_t> tDims = {dims[0], dims[2], 1};
     ITKIW_PREP_DC(dims[2], dims[0])
 
     for(size_t slice = 0; slice < dims[1]; ++slice)
@@ -434,19 +426,19 @@ void ITKImageWriter::execute()
           size_t index = (dims[1] * axisA * dB) + (slice * dB) + axisB;
           copyTuple(index, axisA, dB, axisB, nComp, currentData.get(), sliceData.get());
         }
-      } 
+      }
       saveImageData(dca, slice, dims[1]);
     }
   }
   else if(ITKImageWriter::YZPlane == m_Plane) // YZ plane
   {
-    QVector<size_t> tDims = { dims[1], dims[2], 1};
+    QVector<size_t> tDims = {dims[1], dims[2], 1};
     ITKIW_PREP_DC(dims[2], dims[1])
 
-    for(size_t slice = 0; slice < dims[0]; ++slice) // X 
+    for(size_t slice = 0; slice < dims[0]; ++slice) // X
     {
       for(size_t axisA = 0; axisA < dA; ++axisA) // Z
-      { 
+      {
         for(size_t axisB = 0; axisB < dB; ++axisB) // Y
         {
           size_t index = (dims[0] * axisA * dB) + (axisB * dims[0]) + slice;
@@ -456,23 +448,20 @@ void ITKImageWriter::execute()
       saveImageData(dca, slice, dims[0]);
     }
   }
-  
+
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ITKImageWriter::copyTuple(size_t index, size_t axisA, 
-                                size_t dB, size_t axisB,  size_t nComp,
-                               IDataArray* currentData, IDataArray* sliceData)
+void ITKImageWriter::copyTuple(size_t index, size_t axisA, size_t dB, size_t axisB, size_t nComp, IDataArray* currentData, IDataArray* sliceData)
 {
   size_t indexNew = (axisA * dB) + axisB;
-  
+
   void* source = currentData->getVoidPointer((nComp * index));
   void* destination = sliceData->getVoidPointer(nComp * indexNew);
-  ::memcpy(destination, source, currentData->getTypeSize() * nComp); 
-  
+  ::memcpy(destination, source, currentData->getTypeSize() * nComp);
 }
 
 // -----------------------------------------------------------------------------
@@ -482,7 +471,7 @@ void ITKImageWriter::saveImageData(DataContainerArray::Pointer dca, size_t slice
 {
   QString originalFileName = getFileName();
   QFileInfo fi(originalFileName);
-  
+
   QString adjustedFilePath;
   QTextStream out(&adjustedFilePath);
   out << fi.absolutePath() << "/" << fi.completeBaseName();
@@ -491,13 +480,13 @@ void ITKImageWriter::saveImageData(DataContainerArray::Pointer dca, size_t slice
     out << "_" << slice;
   }
   out << "." << fi.suffix();
-    
+
   setFileName(adjustedFilePath);
   DataContainerArray::Pointer originalDataContainerArray = getDataContainerArray();
   setDataContainerArray(dca);
   Dream3DArraySwitchMacro(this->writeImage, getImageArrayPath(), -21010);
   setDataContainerArray(originalDataContainerArray);
-  setFileName(originalFileName);  
+  setFileName(originalFileName);
 }
 
 // -----------------------------------------------------------------------------
