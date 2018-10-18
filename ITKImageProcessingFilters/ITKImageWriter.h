@@ -41,6 +41,22 @@
 
 #include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
+/* For registering ImageIO Factories in Python*/
+#include <itkBMPImageIOFactory.h>
+#include <itkBioRadImageIOFactory.h>
+#include <itkGE4ImageIOFactory.h>
+#include <itkGE5ImageIOFactory.h>
+#include <itkGiplImageIOFactory.h>
+#include <itkJPEGImageIOFactory.h>
+#include <itkMRCImageIOFactory.h>
+#include <itkMetaImageIOFactory.h>
+#include <itkNiftiImageIOFactory.h>
+#include <itkNrrdImageIOFactory.h>
+#include <itkPNGImageIOFactory.h>
+#include <itkStimulateImageIOFactory.h>
+#include <itkTIFFImageIOFactory.h>
+#include <itkVTKImageIOFactory.h>
+
 /**
  * @brief The ITKImageProcessingFilter class. See [Filter documentation](@ref itkimageprocessingfilter) for details.
  */
@@ -52,6 +68,8 @@ class ITKImageProcessing_EXPORT ITKImageWriter : public AbstractFilter
   PYB11_CREATE_BINDINGS(ITKImageWriter SUPERCLASS AbstractFilter)
   PYB11_PROPERTY(QString FileName READ getFileName WRITE setFileName)
   PYB11_PROPERTY(DataArrayPath ImageArrayPath READ getImageArrayPath WRITE setImageArrayPath)
+  PYB11_PROPERTY(int Plane READ getPlane WRITE setPlane)
+  PYB11_METHOD(void registerImageIOFactories)
 
 public:
   SIMPL_SHARED_POINTERS(ITKImageWriter)
@@ -142,6 +160,28 @@ public:
   * @brief preflight Reimplemented from @see AbstractFilter class
   */
   void preflight() override;
+
+  /* For Python use,
+      register the ImageIOFactories
+  */
+  void registerImageIOFactories() 
+  {
+	  itk::JPEGImageIOFactory::RegisterOneFactory();
+	  itk::NrrdImageIOFactory::RegisterOneFactory();
+	  itk::PNGImageIOFactory::RegisterOneFactory();
+	  itk::TIFFImageIOFactory::RegisterOneFactory();
+	  itk::JPEGImageIOFactory::RegisterOneFactory();
+	  itk::BMPImageIOFactory::RegisterOneFactory();
+	  itk::MetaImageIOFactory::RegisterOneFactory();
+	  itk::NiftiImageIOFactory::RegisterOneFactory();
+	  itk::GiplImageIOFactory::RegisterOneFactory();
+	  itk::VTKImageIOFactory::RegisterOneFactory();
+	  itk::StimulateImageIOFactory::RegisterOneFactory();
+	  itk::BioRadImageIOFactory::RegisterOneFactory();
+	  itk::GE4ImageIOFactory::RegisterOneFactory();
+	  itk::GE5ImageIOFactory::RegisterOneFactory();
+	  itk::MRCImageIOFactory::RegisterOneFactory();
+  }
 
 signals:
   /**
