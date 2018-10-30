@@ -407,7 +407,7 @@ public:
     }
 
     writer->execute();
-    DREAM3D_REQUIRED(writer->getErrorCondition(), ==, -1);
+    DREAM3D_REQUIRED(writer->getErrorCondition(), ==, -21003);
     DREAM3D_REQUIRED(writer->getWarningCondition(), >=, 0);
     return EXIT_SUCCESS;
   }
