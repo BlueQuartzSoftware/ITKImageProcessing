@@ -44,6 +44,7 @@
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/Utilities/FileSystemPathHelper.h"
 
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
@@ -138,23 +139,7 @@ void ITKImageWriter::dataCheck()
   setErrorCondition(0);
   setWarningCondition(0);
 
-  // check file name exists
-  QString filename = getFileName();
-  if(filename.isEmpty())
-  {
-    setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), "Invalid filename.", getErrorCondition());
-    return;
-  }
-
-  QFileInfo fi(filename);
-  QDir parentPath(fi.path());
-  if(parentPath.exists() == false)
-  {
-    setWarningCondition(-1);
-    QString ss = QObject::tr("The directory path for the output file does not exist. The application will attempt to create this path during execution of the filter");
-    notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
-  }
+  FileSystemPathHelper::CheckOutputFile(this, "Output File Name", getFileName(), true);
 
   DataContainerArray::Pointer containerArray = getDataContainerArray();
   if(!containerArray)
@@ -171,29 +156,6 @@ void ITKImageWriter::dataCheck()
     notifyErrorMessage(getHumanLabel(), "No image geometry.", getErrorCondition());
     return;
   }
-
-#ifdef _WIN32
-// Turn file permission checking on, if requested
-#ifdef SIMPL_NTFS_FILE_CHECK
-  qt_ntfs_permission_lookup++;
-#endif
-#endif
-
-  QFileInfo dirInfo(fi.path());
-
-  if(dirInfo.isWritable() == false && parentPath.exists() == true)
-  {
-    setErrorCondition(-21015);
-    QString ss = QObject::tr("The user does not have the proper permissions to write to the output file");
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-  }
-
-#ifdef _WIN32
-// Turn file permission checking off, if requested
-#ifdef SIMPL_NTFS_FILE_CHECK
-  qt_ntfs_permission_lookup--;
-#endif
-#endif
 
   IDataArray::Pointer imageDataArrayPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, getImageArrayPath());
   if(getErrorCondition() < 0)
