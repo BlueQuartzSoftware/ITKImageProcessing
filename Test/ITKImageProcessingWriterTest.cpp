@@ -302,11 +302,11 @@ public:
       this->FilesToRemove.append(files.toList());
     }
 
-    //    Observer obs;
-    //    QObject::connect(
-    //          filter.get(), &AbstractFilter::filterGeneratedMessage,
-    //          &obs, &Observer::processPipelineMessage
-    //          );
+        Observer obs;
+        QObject::connect(
+              filter.get(), &AbstractFilter::filterGeneratedMessage,
+              &obs, &Observer::processPipelineMessage
+              );
 
     const QString inputContainerName = "inputContainer";
     DataContainerArray::Pointer inputContainerArray = DataContainerArray::New();
