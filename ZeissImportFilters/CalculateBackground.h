@@ -191,6 +191,6 @@ public:
   CalculateBackground(const CalculateBackground&) = delete;            // Copy Constructor Not Implemented
   CalculateBackground(CalculateBackground&&) = delete;                 // Move Constructor Not Implemented
   CalculateBackground& operator=(const CalculateBackground&) = delete; // Copy Assignment Not Implemented
-  CalculateBackground& operator=(CalculateBackground&&) = delete;      // Move Assignment
+  CalculateBackground& operator=(CalculateBackground&&) = delete;      // Move Assignment Not Implemented
 };
 
