@@ -31,8 +31,8 @@ class ZeissMetaFactory
     ZeissMetaFactory() {}
 
   private:
-    ZeissMetaFactory(const ZeissMetaFactory&);    // Copy Constructor Not Implemented
-    void operator=(const ZeissMetaFactory&);      // Move assignment Not Implemented
+    ZeissMetaFactory(const ZeissMetaFactory&) = delete; // Copy Constructor Not Implemented
+    void operator=(const ZeissMetaFactory&) = delete;   // Move assignment Not Implemented
 };
 
 // -----------------------------------------------------------------------------
@@ -50,8 +50,8 @@ class Int32ZeissMetaFactory : public ZeissMetaFactory
     Int32ZeissMetaFactory() {}
 
   private:
-    Int32ZeissMetaFactory(const Int32ZeissMetaFactory&);    // Copy Constructor Not Implemented
-    void operator=(const Int32ZeissMetaFactory&);           // Move assignment Not Implemented
+    Int32ZeissMetaFactory(const Int32ZeissMetaFactory&) = delete; // Copy Constructor Not Implemented
+    void operator=(const Int32ZeissMetaFactory&) = delete;        // Move assignment Not Implemented
 };
 
 // -----------------------------------------------------------------------------
@@ -69,8 +69,8 @@ class Int64ZeissMetaFactory : public ZeissMetaFactory
     Int64ZeissMetaFactory() {}
 
   private:
-    Int64ZeissMetaFactory(const Int64ZeissMetaFactory&);    // Copy Constructor Not Implemented
-    void operator=(const Int64ZeissMetaFactory&);           // Move assignment Not Implemented
+    Int64ZeissMetaFactory(const Int64ZeissMetaFactory&) = delete; // Copy Constructor Not Implemented
+    void operator=(const Int64ZeissMetaFactory&) = delete;        // Move assignment Not Implemented
 };
 
 
@@ -90,8 +90,8 @@ class FloatZeissMetaFactory : public ZeissMetaFactory
     FloatZeissMetaFactory() {}
 
   private:
-    FloatZeissMetaFactory(const FloatZeissMetaFactory&);    // Copy Constructor Not Implemented
-    void operator=(const FloatZeissMetaFactory&);           // Move assignment Not Implemented
+    FloatZeissMetaFactory(const FloatZeissMetaFactory&) = delete; // Copy Constructor Not Implemented
+    void operator=(const FloatZeissMetaFactory&) = delete;        // Move assignment Not Implemented
 };
 
 // -----------------------------------------------------------------------------
@@ -109,8 +109,8 @@ class StringZeissMetaFactory : public ZeissMetaFactory
     StringZeissMetaFactory() {}
 
   private:
-    StringZeissMetaFactory(const StringZeissMetaFactory&);    // Copy Constructor Not Implemented
-    void operator=(const StringZeissMetaFactory&);            // Move assignment Not Implemented
+    StringZeissMetaFactory(const StringZeissMetaFactory&) = delete; // Copy Constructor Not Implemented
+    void operator=(const StringZeissMetaFactory&) = delete;         // Move assignment Not Implemented
 };
 
 

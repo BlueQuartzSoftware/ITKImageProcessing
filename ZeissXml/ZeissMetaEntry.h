@@ -74,8 +74,8 @@ class AbstractZeissMetaData
 
 
   private:
-    AbstractZeissMetaData(const AbstractZeissMetaData&);    // Copy Constructor Not Implemented
-    void operator=(const AbstractZeissMetaData&);           // Move assignment Not Implemented
+    AbstractZeissMetaData(const AbstractZeissMetaData&) = delete; // Copy Constructor Not Implemented
+    void operator=(const AbstractZeissMetaData&) = delete;        // Move assignment Not Implemented
 };
 
 // -----------------------------------------------------------------------------
@@ -120,8 +120,8 @@ class Int32ZeissMetaEntry : public AbstractZeissMetaData
 
     int _value;
 
-    Int32ZeissMetaEntry(const Int32ZeissMetaEntry&);    // Copy Constructor Not Implemented
-    void operator=(const Int32ZeissMetaEntry&);         // Move assignment Not Implemented
+    Int32ZeissMetaEntry(const Int32ZeissMetaEntry&) = delete; // Copy Constructor Not Implemented
+    void operator=(const Int32ZeissMetaEntry&) = delete;      // Move assignment Not Implemented
 };
 
 // -----------------------------------------------------------------------------
@@ -160,8 +160,8 @@ class Int64ZeissMetaEntry : public AbstractZeissMetaData
   private:
     long long int _value;
 
-    Int64ZeissMetaEntry(const Int64ZeissMetaEntry&);    // Copy Constructor Not Implemented
-    void operator=(const Int64ZeissMetaEntry&);         // Move assignment Not Implemented
+    Int64ZeissMetaEntry(const Int64ZeissMetaEntry&) = delete; // Copy Constructor Not Implemented
+    void operator=(const Int64ZeissMetaEntry&) = delete;      // Move assignment Not Implemented
 };
 
 // -----------------------------------------------------------------------------
@@ -218,8 +218,8 @@ class FloatZeissMetaEntry : public AbstractZeissMetaData
   private:
     float _value;
 
-    FloatZeissMetaEntry(const FloatZeissMetaEntry&);    // Copy Constructor Not Implemented
-    void operator=(const FloatZeissMetaEntry&);         // Move assignment Not Implemented
+    FloatZeissMetaEntry(const FloatZeissMetaEntry&) = delete; // Copy Constructor Not Implemented
+    void operator=(const FloatZeissMetaEntry&) = delete;      // Move assignment Not Implemented
 };
 
 // -----------------------------------------------------------------------------
@@ -272,8 +272,8 @@ class StringZeissMetaEntry : public AbstractZeissMetaData
   private:
     QString _value;
 
-    StringZeissMetaEntry(const StringZeissMetaEntry&);    // Copy Constructor Not Implemented
-    void operator=(const StringZeissMetaEntry&);          // Move assignment Not Implemented
+    StringZeissMetaEntry(const StringZeissMetaEntry&) = delete; // Copy Constructor Not Implemented
+    void operator=(const StringZeissMetaEntry&) = delete;       // Move assignment Not Implemented
 };
 
 

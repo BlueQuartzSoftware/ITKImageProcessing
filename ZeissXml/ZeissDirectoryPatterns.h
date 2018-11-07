@@ -62,9 +62,7 @@ protected:
     ZeissDirectoryPatterns();
 
   private:
-
-
-    ZeissDirectoryPatterns(const ZeissDirectoryPatterns&);    // Copy Constructor Not Implemented
+    ZeissDirectoryPatterns(const ZeissDirectoryPatterns&) = delete; // Copy Constructor Not Implemented
     void operator=(const ZeissDirectoryPatterns&);  // Operator '=' Not Implemented
 };
 

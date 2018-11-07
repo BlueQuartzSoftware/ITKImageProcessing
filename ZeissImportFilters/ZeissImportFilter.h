@@ -123,7 +123,7 @@ public:
   /**
    * @brief readFilterParameters Reimplemented from @see AbstractFilter class
    */
-  void readFilterParameters(AbstractFilterParametersReader* reader, int index);
+  void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
 
   /**
    * @brief readFilterParametersFromJson Reads the filter parameters from a file

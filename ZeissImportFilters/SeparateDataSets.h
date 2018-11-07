@@ -154,8 +154,9 @@ class ZeissImport_EXPORT SeparateDataSets : public AbstractFilter
     */
     void initialize();
 
-  private:
-    SeparateDataSets(const SeparateDataSets&); // Copy Constructor Not Implemented
+  public:
+    SeparateDataSets(const SeparateDataSets&) = delete;            // Copy Constructor Not Implemented
+    SeparateDataSets(SeparateDataSets&&) = delete;                 // Move Constructor Not Implemented
     SeparateDataSets& operator=(const SeparateDataSets&) = delete; // Copy Assignment Not Implemented
     SeparateDataSets& operator=(SeparateDataSets&&) = delete;      // Move Assignment Not Implemented
 };
