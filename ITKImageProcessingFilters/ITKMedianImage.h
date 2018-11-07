@@ -96,7 +96,7 @@ protected:
   */
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
-private:
+public:
   ITKMedianImage(const ITKMedianImage&) = delete;    // Copy Constructor Not Implemented
   ITKMedianImage(ITKMedianImage&&) = delete;         // Move Constructor Not Implemented
   ITKMedianImage& operator=(const ITKMedianImage&) = delete; // Copy Assignment Not Implemented

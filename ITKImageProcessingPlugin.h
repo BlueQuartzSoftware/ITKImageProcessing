@@ -207,6 +207,6 @@ private:
   bool m_DidLoad;
 
   ITKImageProcessingPlugin(const ITKImageProcessingPlugin&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ITKImageProcessingPlugin&);                    // Move assignment Not Implemented
+  void operator=(const ITKImageProcessingPlugin&) = delete;           // Move assignment Not Implemented
 };
 

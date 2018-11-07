@@ -89,7 +89,7 @@ protected:
   */
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
-private:
+public:
   ITKSobelEdgeDetectionImage(const ITKSobelEdgeDetectionImage&) = delete;    // Copy Constructor Not Implemented
   ITKSobelEdgeDetectionImage(ITKSobelEdgeDetectionImage&&) = delete;         // Move Constructor Not Implemented
   ITKSobelEdgeDetectionImage& operator=(const ITKSobelEdgeDetectionImage&) = delete; // Copy Assignment Not Implemented

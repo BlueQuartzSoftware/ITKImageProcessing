@@ -96,7 +96,7 @@ protected:
   */
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
-private:
+public:
   ITKGradientMagnitudeImage(const ITKGradientMagnitudeImage&) = delete;    // Copy Constructor Not Implemented
   ITKGradientMagnitudeImage(ITKGradientMagnitudeImage&&) = delete;         // Move Constructor Not Implemented
   ITKGradientMagnitudeImage& operator=(const ITKGradientMagnitudeImage&) = delete; // Copy Assignment Not Implemented

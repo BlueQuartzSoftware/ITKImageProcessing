@@ -110,7 +110,7 @@ protected:
   */
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
-private:
+public:
   ITKErodeObjectMorphologyImage(const ITKErodeObjectMorphologyImage&) = delete;    // Copy Constructor Not Implemented
   ITKErodeObjectMorphologyImage(ITKErodeObjectMorphologyImage&&) = delete;         // Move Constructor Not Implemented
   ITKErodeObjectMorphologyImage& operator=(const ITKErodeObjectMorphologyImage&) = delete; // Copy Assignment Not Implemented

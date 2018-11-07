@@ -109,7 +109,7 @@ protected:
   */
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
-private:
+public:
   ITKBinaryMinMaxCurvatureFlowImage(const ITKBinaryMinMaxCurvatureFlowImage&) = delete;    // Copy Constructor Not Implemented
   ITKBinaryMinMaxCurvatureFlowImage(ITKBinaryMinMaxCurvatureFlowImage&&) = delete;         // Move Constructor Not Implemented
   ITKBinaryMinMaxCurvatureFlowImage& operator=(const ITKBinaryMinMaxCurvatureFlowImage&) = delete; // Copy Assignment Not Implemented

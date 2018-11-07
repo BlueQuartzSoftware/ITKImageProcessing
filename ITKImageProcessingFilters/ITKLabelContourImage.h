@@ -101,7 +101,7 @@ protected:
   */
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
-private:
+public:
   ITKLabelContourImage(const ITKLabelContourImage&) = delete;    // Copy Constructor Not Implemented
   ITKLabelContourImage(ITKLabelContourImage&&) = delete;         // Move Constructor Not Implemented
   ITKLabelContourImage& operator=(const ITKLabelContourImage&) = delete; // Copy Assignment Not Implemented

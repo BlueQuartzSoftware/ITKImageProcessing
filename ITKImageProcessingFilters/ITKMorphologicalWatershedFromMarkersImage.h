@@ -114,7 +114,7 @@ protected:
   */
   template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void convertDataContainerType();
 
-private:
+public:
   ITKMorphologicalWatershedFromMarkersImage(const ITKMorphologicalWatershedFromMarkersImage&) = delete; // Copy Constructor Not Implemented
   ITKMorphologicalWatershedFromMarkersImage(ITKMorphologicalWatershedFromMarkersImage&&) = delete;      // Move Constructor Not Implemented
   ITKMorphologicalWatershedFromMarkersImage& operator=(const ITKMorphologicalWatershedFromMarkersImage&) = delete; // Copy Assignment Not Implemented

@@ -122,7 +122,7 @@ protected:
   */
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
-private:
+public:
   ITKDoubleThresholdImage(const ITKDoubleThresholdImage&) = delete;    // Copy Constructor Not Implemented
   ITKDoubleThresholdImage(ITKDoubleThresholdImage&&) = delete;         // Move Constructor Not Implemented
   ITKDoubleThresholdImage& operator=(const ITKDoubleThresholdImage&) = delete; // Copy Assignment Not Implemented

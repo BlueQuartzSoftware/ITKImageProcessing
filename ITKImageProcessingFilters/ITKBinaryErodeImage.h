@@ -115,7 +115,7 @@ protected:
   */
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
-private:
+public:
   ITKBinaryErodeImage(const ITKBinaryErodeImage&) = delete;    // Copy Constructor Not Implemented
   ITKBinaryErodeImage(ITKBinaryErodeImage&&) = delete;         // Move Constructor Not Implemented
   ITKBinaryErodeImage& operator=(const ITKBinaryErodeImage&) = delete; // Copy Assignment Not Implemented

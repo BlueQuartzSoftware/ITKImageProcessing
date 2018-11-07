@@ -89,7 +89,7 @@ protected:
   */
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
-private:
+public:
   ITKLogImage(const ITKLogImage&) = delete;    // Copy Constructor Not Implemented
   ITKLogImage(ITKLogImage&&) = delete;         // Move Constructor Not Implemented
   ITKLogImage& operator=(const ITKLogImage&) = delete; // Copy Assignment Not Implemented

@@ -360,6 +360,7 @@ protected:
 
 public:
   ITKImageBase(const ITKImageBase&) = delete;            // Copy Constructor Implemented
+  ITKImageBase(ITKImageBase&&) = delete;                 // Move Constructor Not Implemented
   ITKImageBase& operator=(const ITKImageBase&) = delete; // Copy Assignment Not Implemented
   ITKImageBase& operator=(ITKImageBase&&) = delete;      // Move Assignment Not Implemented
 };

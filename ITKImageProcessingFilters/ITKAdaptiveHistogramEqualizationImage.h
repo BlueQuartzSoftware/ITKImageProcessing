@@ -105,7 +105,7 @@ protected:
   */
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
-private:
+public:
   ITKAdaptiveHistogramEqualizationImage(const ITKAdaptiveHistogramEqualizationImage&) = delete;    // Copy Constructor Not Implemented
   ITKAdaptiveHistogramEqualizationImage(ITKAdaptiveHistogramEqualizationImage&&) = delete;         // Move Constructor Not Implemented
   ITKAdaptiveHistogramEqualizationImage& operator=(const ITKAdaptiveHistogramEqualizationImage&) = delete; // Copy Assignment Not Implemented

@@ -106,7 +106,7 @@ protected:
   */
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
-private:
+public:
   ITKWhiteTopHatImage(const ITKWhiteTopHatImage&) = delete;    // Copy Constructor Not Implemented
   ITKWhiteTopHatImage(ITKWhiteTopHatImage&&) = delete;         // Move Constructor Not Implemented
   ITKWhiteTopHatImage& operator=(const ITKWhiteTopHatImage&) = delete; // Copy Assignment Not Implemented

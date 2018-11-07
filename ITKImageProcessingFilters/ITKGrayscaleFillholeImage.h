@@ -96,7 +96,7 @@ protected:
   */
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
-private:
+public:
   ITKGrayscaleFillholeImage(const ITKGrayscaleFillholeImage&) = delete;    // Copy Constructor Not Implemented
   ITKGrayscaleFillholeImage(ITKGrayscaleFillholeImage&&) = delete;         // Move Constructor Not Implemented
   ITKGrayscaleFillholeImage& operator=(const ITKGrayscaleFillholeImage&) = delete; // Copy Assignment Not Implemented

@@ -96,7 +96,7 @@ protected:
   */
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
-private:
+public:
   ITKMaximumProjectionImage(const ITKMaximumProjectionImage&) = delete;    // Copy Constructor Not Implemented
   ITKMaximumProjectionImage(ITKMaximumProjectionImage&&) = delete;         // Move Constructor Not Implemented
   ITKMaximumProjectionImage& operator=(const ITKMaximumProjectionImage&) = delete; // Copy Assignment Not Implemented

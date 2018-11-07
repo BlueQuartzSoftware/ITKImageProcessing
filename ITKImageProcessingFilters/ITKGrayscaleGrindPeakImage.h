@@ -96,7 +96,7 @@ protected:
   */
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
-private:
+public:
   ITKGrayscaleGrindPeakImage(const ITKGrayscaleGrindPeakImage&) = delete;    // Copy Constructor Not Implemented
   ITKGrayscaleGrindPeakImage(ITKGrayscaleGrindPeakImage&&) = delete;         // Move Constructor Not Implemented
   ITKGrayscaleGrindPeakImage& operator=(const ITKGrayscaleGrindPeakImage&) = delete; // Copy Assignment Not Implemented

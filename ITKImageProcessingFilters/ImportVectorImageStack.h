@@ -196,7 +196,6 @@ protected:
    */
   void generateFileList();
 
-private:
 public:
   ImportVectorImageStack(const ImportVectorImageStack&) = delete;            // Copy Constructor Not Implemented
   ImportVectorImageStack(ImportVectorImageStack&&) = delete;                 // Move Constructor Not Implemented

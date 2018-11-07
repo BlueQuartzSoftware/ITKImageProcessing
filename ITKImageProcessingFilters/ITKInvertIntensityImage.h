@@ -96,7 +96,7 @@ protected:
   */
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
-private:
+public:
   ITKInvertIntensityImage(const ITKInvertIntensityImage&) = delete;    // Copy Constructor Not Implemented
   ITKInvertIntensityImage(ITKInvertIntensityImage&&) = delete;         // Move Constructor Not Implemented
   ITKInvertIntensityImage& operator=(const ITKInvertIntensityImage&) = delete; // Copy Assignment Not Implemented

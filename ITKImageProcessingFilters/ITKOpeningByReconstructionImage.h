@@ -110,7 +110,7 @@ protected:
   */
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
-private:
+public:
   ITKOpeningByReconstructionImage(const ITKOpeningByReconstructionImage&) = delete;    // Copy Constructor Not Implemented
   ITKOpeningByReconstructionImage(ITKOpeningByReconstructionImage&&) = delete;         // Move Constructor Not Implemented
   ITKOpeningByReconstructionImage& operator=(const ITKOpeningByReconstructionImage&) = delete; // Copy Assignment Not Implemented

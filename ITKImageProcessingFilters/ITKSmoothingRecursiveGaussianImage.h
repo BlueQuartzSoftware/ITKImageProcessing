@@ -101,7 +101,7 @@ protected:
   */
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
-private:
+public:
   ITKSmoothingRecursiveGaussianImage(const ITKSmoothingRecursiveGaussianImage&) = delete;    // Copy Constructor Not Implemented
   ITKSmoothingRecursiveGaussianImage(ITKSmoothingRecursiveGaussianImage&&) = delete;         // Move Constructor Not Implemented
   ITKSmoothingRecursiveGaussianImage& operator=(const ITKSmoothingRecursiveGaussianImage&) = delete; // Copy Assignment Not Implemented
