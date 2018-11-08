@@ -100,7 +100,7 @@ protected:
   */
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
-private:
+public:
   ITKShiftScaleImage(const ITKShiftScaleImage&) = delete;    // Copy Constructor Not Implemented
   ITKShiftScaleImage(ITKShiftScaleImage&&) = delete;         // Move Constructor Not Implemented
   ITKShiftScaleImage& operator=(const ITKShiftScaleImage&) = delete; // Copy Assignment Not Implemented

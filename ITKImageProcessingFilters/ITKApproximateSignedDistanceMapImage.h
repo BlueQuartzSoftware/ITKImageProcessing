@@ -100,7 +100,7 @@ protected:
   */
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
-private:
+public:
   ITKApproximateSignedDistanceMapImage(const ITKApproximateSignedDistanceMapImage&) = delete;    // Copy Constructor Not Implemented
   ITKApproximateSignedDistanceMapImage(ITKApproximateSignedDistanceMapImage&&) = delete;         // Move Constructor Not Implemented
   ITKApproximateSignedDistanceMapImage& operator=(const ITKApproximateSignedDistanceMapImage&) = delete; // Copy Assignment Not Implemented

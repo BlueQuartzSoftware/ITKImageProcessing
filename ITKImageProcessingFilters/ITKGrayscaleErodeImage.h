@@ -101,7 +101,7 @@ protected:
   */
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
-private:
+public:
   ITKGrayscaleErodeImage(const ITKGrayscaleErodeImage&) = delete;    // Copy Constructor Not Implemented
   ITKGrayscaleErodeImage(ITKGrayscaleErodeImage&&) = delete;         // Move Constructor Not Implemented
   ITKGrayscaleErodeImage& operator=(const ITKGrayscaleErodeImage&) = delete; // Copy Assignment Not Implemented

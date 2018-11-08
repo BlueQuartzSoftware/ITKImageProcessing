@@ -104,7 +104,7 @@ protected:
   */
   template <typename OutputPixelType> void CheckEntryBounds(double value, QString name);
 
-private:
+public:
   ITKVectorRescaleIntensityImage(const ITKVectorRescaleIntensityImage&) = delete; // Copy Constructor Not Implemented
   ITKVectorRescaleIntensityImage(ITKVectorRescaleIntensityImage&&) = delete;      // Move Constructor Not Implemented
   ITKVectorRescaleIntensityImage& operator=(const ITKVectorRescaleIntensityImage&) = delete; // Copy Assignment Not Implemented

@@ -106,7 +106,7 @@ protected:
   */
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
-private:
+public:
   ITKDilateObjectMorphologyImage(const ITKDilateObjectMorphologyImage&) = delete;    // Copy Constructor Not Implemented
   ITKDilateObjectMorphologyImage(ITKDilateObjectMorphologyImage&&) = delete;         // Move Constructor Not Implemented
   ITKDilateObjectMorphologyImage& operator=(const ITKDilateObjectMorphologyImage&) = delete; // Copy Assignment Not Implemented

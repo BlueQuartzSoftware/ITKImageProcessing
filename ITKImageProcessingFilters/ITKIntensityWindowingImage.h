@@ -108,7 +108,7 @@ protected:
   */
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
-private:
+public:
   ITKIntensityWindowingImage(const ITKIntensityWindowingImage&) = delete;    // Copy Constructor Not Implemented
   ITKIntensityWindowingImage(ITKIntensityWindowingImage&&) = delete;         // Move Constructor Not Implemented
   ITKIntensityWindowingImage& operator=(const ITKIntensityWindowingImage&) = delete; // Copy Assignment Not Implemented

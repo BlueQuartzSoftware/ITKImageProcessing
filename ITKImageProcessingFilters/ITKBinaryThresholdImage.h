@@ -109,7 +109,7 @@ protected:
   */
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
-private:
+public:
   ITKBinaryThresholdImage(const ITKBinaryThresholdImage&) = delete;    // Copy Constructor Not Implemented
   ITKBinaryThresholdImage(ITKBinaryThresholdImage&&) = delete;         // Move Constructor Not Implemented
   ITKBinaryThresholdImage& operator=(const ITKBinaryThresholdImage&) = delete; // Copy Assignment Not Implemented

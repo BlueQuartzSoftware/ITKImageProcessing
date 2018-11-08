@@ -111,7 +111,7 @@ protected:
   */
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
-private:
+public:
   ITKBinaryMorphologicalClosingImage(const ITKBinaryMorphologicalClosingImage&) = delete;    // Copy Constructor Not Implemented
   ITKBinaryMorphologicalClosingImage(ITKBinaryMorphologicalClosingImage&&) = delete;         // Move Constructor Not Implemented
   ITKBinaryMorphologicalClosingImage& operator=(const ITKBinaryMorphologicalClosingImage&) = delete; // Copy Assignment Not Implemented

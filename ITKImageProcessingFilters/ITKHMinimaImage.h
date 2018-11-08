@@ -101,7 +101,7 @@ protected:
   */
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
-private:
+public:
   ITKHMinimaImage(const ITKHMinimaImage&) = delete;    // Copy Constructor Not Implemented
   ITKHMinimaImage(ITKHMinimaImage&&) = delete;         // Move Constructor Not Implemented
   ITKHMinimaImage& operator=(const ITKHMinimaImage&) = delete; // Copy Assignment Not Implemented

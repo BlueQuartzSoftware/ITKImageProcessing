@@ -106,7 +106,7 @@ protected:
   */
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
-private:
+public:
   ITKGrayscaleMorphologicalOpeningImage(const ITKGrayscaleMorphologicalOpeningImage&) = delete;    // Copy Constructor Not Implemented
   ITKGrayscaleMorphologicalOpeningImage(ITKGrayscaleMorphologicalOpeningImage&&) = delete;         // Move Constructor Not Implemented
   ITKGrayscaleMorphologicalOpeningImage& operator=(const ITKGrayscaleMorphologicalOpeningImage&) = delete; // Copy Assignment Not Implemented

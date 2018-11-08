@@ -122,7 +122,7 @@ public:
   /**
    * @brief readFilterParameters Reimplemented from @see AbstractFilter class
    */
-  void readFilterParameters(AbstractFilterParametersReader* reader, int index);
+  void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
 
   /**
    * @brief execute Reimplemented from @see AbstractFilter class
@@ -192,7 +192,8 @@ private:
    */
   ITK_IMAGE_READER_HELPER_ImageDataArrayName() ITK_IMAGE_READER_HELPER_DECL()
 
-      public : ImportRegisteredImageMontage(const ImportRegisteredImageMontage&) = delete; // Copy Constructor Not Implemented
+public :
+  ImportRegisteredImageMontage(const ImportRegisteredImageMontage&) = delete; // Copy Constructor Not Implemented
   ImportRegisteredImageMontage(ImportRegisteredImageMontage&&) = delete;                   // Move Constructor Not Implemented
   ImportRegisteredImageMontage& operator=(const ImportRegisteredImageMontage&) = delete;   // Copy Assignment Not Implemented
   ImportRegisteredImageMontage& operator=(ImportRegisteredImageMontage&&) = delete;        // Move Assignment Not Implemented

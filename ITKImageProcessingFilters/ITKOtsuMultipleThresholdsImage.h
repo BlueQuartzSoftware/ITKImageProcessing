@@ -115,7 +115,7 @@ protected:
   */
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
-private:
+public:
   ITKOtsuMultipleThresholdsImage(const ITKOtsuMultipleThresholdsImage&) = delete;    // Copy Constructor Not Implemented
   ITKOtsuMultipleThresholdsImage(ITKOtsuMultipleThresholdsImage&&) = delete;         // Move Constructor Not Implemented
   ITKOtsuMultipleThresholdsImage& operator=(const ITKOtsuMultipleThresholdsImage&) = delete; // Copy Assignment Not Implemented

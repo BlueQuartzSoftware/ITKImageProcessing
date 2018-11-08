@@ -96,7 +96,7 @@ protected:
   */
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
-private:
+public:
   ITKSumProjectionImage(const ITKSumProjectionImage&) = delete;    // Copy Constructor Not Implemented
   ITKSumProjectionImage(ITKSumProjectionImage&&) = delete;         // Move Constructor Not Implemented
   ITKSumProjectionImage& operator=(const ITKSumProjectionImage&) = delete; // Copy Assignment Not Implemented

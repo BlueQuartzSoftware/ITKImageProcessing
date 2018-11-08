@@ -118,7 +118,7 @@ protected:
   */
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
-private:
+public:
   ITKRelabelComponentImage(const ITKRelabelComponentImage&) = delete;    // Copy Constructor Not Implemented
   ITKRelabelComponentImage(ITKRelabelComponentImage&&) = delete;         // Move Constructor Not Implemented
   ITKRelabelComponentImage& operator=(const ITKRelabelComponentImage&) = delete; // Copy Assignment Not Implemented

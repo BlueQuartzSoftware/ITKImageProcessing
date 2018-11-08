@@ -104,7 +104,7 @@ protected:
   */
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
-private:
+public:
   ITKBinaryProjectionImage(const ITKBinaryProjectionImage&) = delete;    // Copy Constructor Not Implemented
   ITKBinaryProjectionImage(ITKBinaryProjectionImage&&) = delete;         // Move Constructor Not Implemented
   ITKBinaryProjectionImage& operator=(const ITKBinaryProjectionImage&) = delete; // Copy Assignment Not Implemented

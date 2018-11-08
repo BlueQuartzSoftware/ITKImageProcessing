@@ -147,7 +147,7 @@ protected:
   */
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
-private:
+public:
   ITKPatchBasedDenoisingImage(const ITKPatchBasedDenoisingImage&) = delete; // Copy Constructor Not Implemented
   ITKPatchBasedDenoisingImage(ITKPatchBasedDenoisingImage&&) = delete;      // Move Constructor Not Implemented
   ITKPatchBasedDenoisingImage& operator=(const ITKPatchBasedDenoisingImage&) = delete; // Copy Assignment Not Implemented

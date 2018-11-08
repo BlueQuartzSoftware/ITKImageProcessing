@@ -101,7 +101,7 @@ protected:
   */
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
-private:
+public:
   ITKGrayscaleDilateImage(const ITKGrayscaleDilateImage&) = delete;    // Copy Constructor Not Implemented
   ITKGrayscaleDilateImage(ITKGrayscaleDilateImage&&) = delete;         // Move Constructor Not Implemented
   ITKGrayscaleDilateImage& operator=(const ITKGrayscaleDilateImage&) = delete; // Copy Assignment Not Implemented

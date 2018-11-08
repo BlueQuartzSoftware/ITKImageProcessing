@@ -96,7 +96,7 @@ protected:
   */
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
-private:
+public:
   ITKBoxMeanImage(const ITKBoxMeanImage&) = delete;    // Copy Constructor Not Implemented
   ITKBoxMeanImage(ITKBoxMeanImage&&) = delete;         // Move Constructor Not Implemented
   ITKBoxMeanImage& operator=(const ITKBoxMeanImage&) = delete; // Copy Assignment Not Implemented

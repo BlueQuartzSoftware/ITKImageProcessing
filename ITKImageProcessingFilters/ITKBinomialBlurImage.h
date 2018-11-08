@@ -96,7 +96,7 @@ protected:
   */
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
-private:
+public:
   ITKBinomialBlurImage(const ITKBinomialBlurImage&) = delete;    // Copy Constructor Not Implemented
   ITKBinomialBlurImage(ITKBinomialBlurImage&&) = delete;         // Move Constructor Not Implemented
   ITKBinomialBlurImage& operator=(const ITKBinomialBlurImage&) = delete; // Copy Assignment Not Implemented

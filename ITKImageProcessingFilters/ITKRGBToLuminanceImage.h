@@ -87,7 +87,7 @@ protected:
   */
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
-private:
+public:
   ITKRGBToLuminanceImage(const ITKRGBToLuminanceImage&) = delete; // Copy Constructor Not Implemented
   ITKRGBToLuminanceImage(ITKRGBToLuminanceImage&&) = delete;      // Move Constructor Not Implemented
   ITKRGBToLuminanceImage& operator=(const ITKRGBToLuminanceImage&) = delete; // Copy Assignment Not Implemented

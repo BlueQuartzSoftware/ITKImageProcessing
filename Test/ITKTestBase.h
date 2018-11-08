@@ -521,7 +521,7 @@ protected:
   QList<QString> FilesToRemove;
 
 private:
-  ITKTestBase(const ITKTestBase&);    // Copy Constructor Not Implemented
+  ITKTestBase(const ITKTestBase&) = delete;    // Copy Constructor Not Implemented
   void operator=(const ITKTestBase&) = delete; // Move assignment Not Implemented
 };
 

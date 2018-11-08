@@ -89,7 +89,7 @@ protected:
   */
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
-private:
+public:
   ITKAsinImage(const ITKAsinImage&) = delete;    // Copy Constructor Not Implemented
   ITKAsinImage(ITKAsinImage&&) = delete;         // Move Constructor Not Implemented
   ITKAsinImage& operator=(const ITKAsinImage&) = delete; // Copy Assignment Not Implemented

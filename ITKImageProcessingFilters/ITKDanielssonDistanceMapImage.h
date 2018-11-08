@@ -104,7 +104,7 @@ protected:
   */
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
-private:
+public:
   ITKDanielssonDistanceMapImage(const ITKDanielssonDistanceMapImage&) = delete;    // Copy Constructor Not Implemented
   ITKDanielssonDistanceMapImage(ITKDanielssonDistanceMapImage&&) = delete;         // Move Constructor Not Implemented
   ITKDanielssonDistanceMapImage& operator=(const ITKDanielssonDistanceMapImage&) = delete; // Copy Assignment Not Implemented

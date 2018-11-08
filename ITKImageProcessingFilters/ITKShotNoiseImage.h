@@ -100,7 +100,7 @@ protected:
   */
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
-private:
+public:
   ITKShotNoiseImage(const ITKShotNoiseImage&) = delete;    // Copy Constructor Not Implemented
   ITKShotNoiseImage(ITKShotNoiseImage&&) = delete;         // Move Constructor Not Implemented
   ITKShotNoiseImage& operator=(const ITKShotNoiseImage&) = delete; // Copy Assignment Not Implemented

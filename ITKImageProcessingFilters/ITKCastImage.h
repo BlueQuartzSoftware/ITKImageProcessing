@@ -92,8 +92,9 @@ protected:
   */
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
-private:
-  ITKCastImage(const ITKCastImage&);   // Copy Constructor Not Implemented
+public:
+  ITKCastImage(const ITKCastImage&) = delete;            // Copy Constructor Not Implemented
+  ITKCastImage(ITKCastImage&&) = delete;                 // Move Constructor Not Implemented
   ITKCastImage& operator=(const ITKCastImage&) = delete; // Copy Assignment Not Implemented
   ITKCastImage& operator=(ITKCastImage&&) = delete;      // Move Assignment Not Implemented
 };

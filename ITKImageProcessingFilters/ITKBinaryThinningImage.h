@@ -89,7 +89,7 @@ protected:
   */
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
-private:
+public:
   ITKBinaryThinningImage(const ITKBinaryThinningImage&) = delete;    // Copy Constructor Not Implemented
   ITKBinaryThinningImage(ITKBinaryThinningImage&&) = delete;         // Move Constructor Not Implemented
   ITKBinaryThinningImage& operator=(const ITKBinaryThinningImage&) = delete; // Copy Assignment Not Implemented

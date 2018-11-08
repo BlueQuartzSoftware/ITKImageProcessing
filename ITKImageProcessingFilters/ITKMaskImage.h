@@ -109,8 +109,9 @@ protected:
 
   template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> typename std::enable_if<!std::is_scalar<InputPixelType>::value>::type convertDataContainerType();
 
-private:
-  ITKMaskImage(const ITKMaskImage&);   // Copy Constructor Not Implemented
+public:
+  ITKMaskImage(const ITKMaskImage&) = delete;            // Copy Constructor Not Implemented
+  ITKMaskImage(ITKMaskImage&&) = delete;                 // Move Constructor Not Implemented
   ITKMaskImage& operator=(const ITKMaskImage&) = delete; // Copy Assignment Not Implemented
   ITKMaskImage& operator=(ITKMaskImage&&) = delete;      // Move Assignment Not Implemented
 };

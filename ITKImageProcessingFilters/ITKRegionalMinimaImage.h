@@ -109,7 +109,7 @@ protected:
   */
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
-private:
+public:
   ITKRegionalMinimaImage(const ITKRegionalMinimaImage&) = delete;    // Copy Constructor Not Implemented
   ITKRegionalMinimaImage(ITKRegionalMinimaImage&&) = delete;         // Move Constructor Not Implemented
   ITKRegionalMinimaImage& operator=(const ITKRegionalMinimaImage&) = delete; // Copy Assignment Not Implemented

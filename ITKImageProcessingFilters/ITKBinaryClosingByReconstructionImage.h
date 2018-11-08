@@ -111,7 +111,7 @@ protected:
   */
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
-private:
+public:
   ITKBinaryClosingByReconstructionImage(const ITKBinaryClosingByReconstructionImage&) = delete;    // Copy Constructor Not Implemented
   ITKBinaryClosingByReconstructionImage(ITKBinaryClosingByReconstructionImage&&) = delete;         // Move Constructor Not Implemented
   ITKBinaryClosingByReconstructionImage& operator=(const ITKBinaryClosingByReconstructionImage&) = delete; // Copy Assignment Not Implemented

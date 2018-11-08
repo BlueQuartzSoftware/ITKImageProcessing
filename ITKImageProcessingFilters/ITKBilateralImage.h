@@ -104,7 +104,7 @@ protected:
   */
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
-private:
+public:
   ITKBilateralImage(const ITKBilateralImage&) = delete;    // Copy Constructor Not Implemented
   ITKBilateralImage(ITKBilateralImage&&) = delete;         // Move Constructor Not Implemented
   ITKBilateralImage& operator=(const ITKBilateralImage&) = delete; // Copy Assignment Not Implemented

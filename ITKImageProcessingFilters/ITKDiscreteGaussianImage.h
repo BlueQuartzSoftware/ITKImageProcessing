@@ -110,7 +110,7 @@ protected:
   */
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
-private:
+public:
   ITKDiscreteGaussianImage(const ITKDiscreteGaussianImage&) = delete;    // Copy Constructor Not Implemented
   ITKDiscreteGaussianImage(ITKDiscreteGaussianImage&&) = delete;         // Move Constructor Not Implemented
   ITKDiscreteGaussianImage& operator=(const ITKDiscreteGaussianImage&) = delete; // Copy Assignment Not Implemented

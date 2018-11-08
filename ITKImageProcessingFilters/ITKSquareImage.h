@@ -89,7 +89,7 @@ protected:
   */
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
-private:
+public:
   ITKSquareImage(const ITKSquareImage&) = delete;    // Copy Constructor Not Implemented
   ITKSquareImage(ITKSquareImage&&) = delete;         // Move Constructor Not Implemented
   ITKSquareImage& operator=(const ITKSquareImage&) = delete; // Copy Assignment Not Implemented

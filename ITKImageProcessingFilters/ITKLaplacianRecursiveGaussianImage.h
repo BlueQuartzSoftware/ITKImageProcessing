@@ -101,7 +101,7 @@ protected:
   */
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
-private:
+public:
   ITKLaplacianRecursiveGaussianImage(const ITKLaplacianRecursiveGaussianImage&) = delete;    // Copy Constructor Not Implemented
   ITKLaplacianRecursiveGaussianImage(ITKLaplacianRecursiveGaussianImage&&) = delete;         // Move Constructor Not Implemented
   ITKLaplacianRecursiveGaussianImage& operator=(const ITKLaplacianRecursiveGaussianImage&) = delete; // Copy Assignment Not Implemented

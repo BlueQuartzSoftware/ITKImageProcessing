@@ -110,7 +110,7 @@ protected:
   */
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
-private:
+public:
   ITKClosingByReconstructionImage(const ITKClosingByReconstructionImage&) = delete;    // Copy Constructor Not Implemented
   ITKClosingByReconstructionImage(ITKClosingByReconstructionImage&&) = delete;         // Move Constructor Not Implemented
   ITKClosingByReconstructionImage& operator=(const ITKClosingByReconstructionImage&) = delete; // Copy Assignment Not Implemented

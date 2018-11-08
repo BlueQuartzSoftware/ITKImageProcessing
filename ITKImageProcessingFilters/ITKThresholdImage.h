@@ -104,7 +104,7 @@ protected:
   */
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
-private:
+public:
   ITKThresholdImage(const ITKThresholdImage&) = delete;    // Copy Constructor Not Implemented
   ITKThresholdImage(ITKThresholdImage&&) = delete;         // Move Constructor Not Implemented
   ITKThresholdImage& operator=(const ITKThresholdImage&) = delete; // Copy Assignment Not Implemented
