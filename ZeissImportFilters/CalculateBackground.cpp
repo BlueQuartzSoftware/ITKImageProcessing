@@ -160,7 +160,7 @@ void CalculateBackground::dataCheck()
 
   }
 
-  if(m_SubtractBackground == true && m_DivideBackground == true)
+  if(m_SubtractBackground && m_DivideBackground)
   {
     setErrorCondition(-76002);
     notifyErrorMessage(getHumanLabel(), "Cannot choose BOTH subtract and divide. Choose one or neither.", -76002);
@@ -334,7 +334,7 @@ void CalculateBackground::execute()
     m_BackgroundImage[i] = Bcalc(i);
   }
 
-  if(m_SubtractBackground == true)
+  if(m_SubtractBackground)
   {
     for(size_t i = 0; i < names.size(); i++)
     {
@@ -361,7 +361,7 @@ void CalculateBackground::execute()
     }
   }
 
-  if(m_DivideBackground == true)
+  if(m_DivideBackground)
   {
     for(size_t i = 0; i < names.size(); i++)
     {
@@ -457,7 +457,7 @@ AbstractFilter::Pointer CalculateBackground::newFilterInstance(bool copyFilterPa
   * write code to optionally copy the filter parameters from the current filter into the new instance
   */
   CalculateBackground::Pointer filter = CalculateBackground::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     /* If the filter uses all the standard Filter Parameter Widgets you can probabaly get
      * away with using this method to copy the filter parameters from the current instance

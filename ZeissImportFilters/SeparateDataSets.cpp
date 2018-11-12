@@ -44,8 +44,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SeparateDataSets::SeparateDataSets() :
-  AbstractFilter()
+SeparateDataSets::SeparateDataSets()
 {
   initialize();
 }
@@ -170,7 +169,7 @@ void SeparateDataSets::execute()
 
     bool ok = false;
     float stagePositionX = stagePositionXPtr->getValue(i).toFloat(&ok);
-    if (ok == false)
+    if(!ok)
     {
       QString ss = QObject::tr("The filter could not convert the string values in array '%1' to floating point values.").arg(stagePositionXPtr->getName());
       setErrorCondition(-90002);
@@ -179,7 +178,7 @@ void SeparateDataSets::execute()
     }
 
     float stagePositionY = stagePositionYPtr->getValue(i).toFloat(&ok);
-    if (ok == false)
+    if(!ok)
     {
       QString ss = QObject::tr("The filter could not convert the string values in array '%1' to floating point values.").arg(stagePositionYPtr->getName());
       setErrorCondition(-90003);
@@ -188,7 +187,7 @@ void SeparateDataSets::execute()
     }
 
     float scaleFactorForX = scaleFactorForXPtr->getValue(i).toFloat(&ok);
-    if (ok == false)
+    if(!ok)
     {
       QString ss = QObject::tr("The filter could not convert the string values in array '%1' to floating point values.").arg(scaleFactorForXPtr->getName());
       setErrorCondition(-90004);
@@ -197,7 +196,7 @@ void SeparateDataSets::execute()
     }
 
     float scaleFactorForY = scaleFactorForYPtr->getValue(i).toFloat(&ok);
-    if (ok == false)
+    if(!ok)
     {
       QString ss = QObject::tr("The filter could not convert the string values in array '%1' to floating point values.").arg(scaleFactorForYPtr->getName());
       setErrorCondition(-90005);
@@ -281,7 +280,7 @@ void SeparateDataSets::execute()
 AbstractFilter::Pointer SeparateDataSets::newFilterInstance(bool copyFilterParameters) const
 {
   SeparateDataSets::Pointer filter = SeparateDataSets::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

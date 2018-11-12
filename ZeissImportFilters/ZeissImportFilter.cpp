@@ -163,13 +163,13 @@ void ZeissImportFilter::dataCheck()
 
   QString ss;
   QFileInfo fi(getInputFile());
-  if (getInputFile().isEmpty() == true)
+  if(getInputFile().isEmpty())
   {
     ss = QObject::tr("%1 needs the Input File Set and it was not.").arg(ClassName());
     setErrorCondition(-387);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
-  else if (fi.exists() == false)
+  else if(!fi.exists())
   {
     ss = QObject::tr("The input file does not exist.");
     setErrorCondition(-388);
@@ -319,7 +319,7 @@ int ZeissImportFilter::readMetaXml(QIODevice* device)
     root = domDocument.documentElement();
 
     QDomElement tags = root.firstChildElement(ZeissImportConstants::Xml::Tags);
-    if (tags.isNull() == true)
+    if(tags.isNull())
     {
       QString ss = QObject::tr("Could not find the <ROOT><Tags> element. Aborting Parsing. Is the file a Zeiss _meta.xml file");
       setErrorCondition(-70001);
@@ -489,7 +489,7 @@ void ZeissImportFilter::parseImages(QDomElement& root, ZeissTagsXmlSection::Poin
       return;
     }
     QDomElement tags = photoEle.firstChildElement(ZeissImportConstants::Xml::Tags);
-    if (tags.isNull() == true)
+    if(tags.isNull())
     {
       QString ss = QObject::tr("Could not find the <ROOT><%1><Tags> element. Aborting Parsing. Is the file a Zeiss _meta.xml file").arg(pTag);
       setErrorCondition(-70003);
@@ -651,7 +651,7 @@ void ZeissImportFilter::importImage(const QString& imageName, const QString& pTa
     filter->setDataContainerArray(getDataContainerArray()); // AbstractFilter implements this so no problem
 
     bool propWasSet = filter->setProperty("FileName", imagePath);
-    if(false == propWasSet)
+    if(!propWasSet)
     {
       QString ss = QObject::tr("Error Setting Property '%1' into filter '%2' which is a subfilter called by %3. The property was not set which could mean the property was not exposed with a Q_PROPERTY macro. Please notify the developers.")
                    .arg("InputFileName").arg(filtName).arg(getHumanLabel());
@@ -660,7 +660,7 @@ void ZeissImportFilter::importImage(const QString& imageName, const QString& pTa
     }
 
     propWasSet = filter->setProperty("DataContainerName", dcName + "temp");
-    if(false == propWasSet)
+    if(!propWasSet)
     {
       QString ss = QObject::tr("Error Setting Property '%1' into filter '%2' which is a subfilter called by %3. The property was not set which could mean the property was not exposed with a Q_PROPERTY macro. Please notify the developers.")
                    .arg("DataContainerName").arg(filtName).arg(getHumanLabel());
@@ -669,7 +669,7 @@ void ZeissImportFilter::importImage(const QString& imageName, const QString& pTa
     }
 
     propWasSet = filter->setProperty("CellAttributeMatrixName", getImageAttributeMatrixName());
-    if(false == propWasSet)
+    if(!propWasSet)
     {
       QString ss = QObject::tr("Error Setting Property '%1' into filter '%2' which is a subfilter called by %3. The property was not set which could mean the property was not exposed with a Q_PROPERTY macro. Please notify the developers.")
                    .arg("CellAttributeMatrixName").arg(filtName).arg(getHumanLabel());
@@ -678,7 +678,7 @@ void ZeissImportFilter::importImage(const QString& imageName, const QString& pTa
     }
 
     propWasSet = filter->setProperty("ImageDataArrayName", dataArrayName);
-    if(false == propWasSet)
+    if(!propWasSet)
     {
       QString ss = QObject::tr("Error Setting Property '%1' into filter '%2' which is a subfilter called by %3. The property was not set which could mean the property was not exposed with a Q_PROPERTY macro. Please notify the developers.")
                    .arg("ImageDataArrayName").arg(filtName).arg(getHumanLabel());
@@ -686,7 +686,7 @@ void ZeissImportFilter::importImage(const QString& imageName, const QString& pTa
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     }
 
-    if(getInPreflight() == true)
+    if(getInPreflight())
     {
       filter->preflight();
     }
@@ -753,7 +753,7 @@ void ZeissImportFilter::convertToGrayScale(const QString& imageName, const QStri
     //----- Set the Conversion Algorithm property
     variant.setValue(0); // Luminosity
     propWasSet = filter->setProperty("ConversionAlgorithm", variant);
-    if(false == propWasSet)
+    if(!propWasSet)
     {
       QString ss = QObject::tr("Error Setting Property '%1' into filter '%2' which is a subfilter called by %3. The property was not set which could mean the property was not exposed with a Q_PROPERTY macro. Please notify the developers.")
                    .arg("ConversionAlgorithm").arg(filtName).arg(getHumanLabel());
@@ -764,7 +764,7 @@ void ZeissImportFilter::convertToGrayScale(const QString& imageName, const QStri
     //----- Set the ColorWeights Property
     variant.setValue(getColorWeights());
     propWasSet = filter->setProperty("ColorWeights", variant);
-    if(false == propWasSet)
+    if(!propWasSet)
     {
       QString ss = QObject::tr("Error Setting Property '%1' into filter '%2' which is a subfilter called by %3. The property was not set which could mean the property was not exposed with a Q_PROPERTY macro. Please notify the developers.")
                    .arg("ColorWeights").arg(filtName).arg(getHumanLabel());
@@ -776,7 +776,7 @@ void ZeissImportFilter::convertToGrayScale(const QString& imageName, const QStri
     QVector<DataArrayPath> inputDataArrayVector = { dap };
     variant.setValue(inputDataArrayVector);
     propWasSet = filter->setProperty("InputDataArrayVector", variant);
-    if(false == propWasSet)
+    if(!propWasSet)
     {
       QString ss = QObject::tr("Error Setting Property '%1' into filter '%2' which is a subfilter called by %3. The property was not set which could mean the property was not exposed with a Q_PROPERTY macro. Please notify the developers.")
                    .arg("InputDataArrayVector").arg(filtName).arg(getHumanLabel());
@@ -787,7 +787,7 @@ void ZeissImportFilter::convertToGrayScale(const QString& imageName, const QStri
     //----- Set the CreateNewAttributeMatrix Property
     variant.setValue(false);
     propWasSet = filter->setProperty("CreateNewAttributeMatrix", variant);
-    if(false == propWasSet)
+    if(!propWasSet)
     {
       QString ss = QObject::tr("Error Setting Property '%1' into filter '%2' which is a subfilter called by %3. The property was not set which could mean the property was not exposed with a Q_PROPERTY macro. Please notify the developers.")
                    .arg("CreateNewAttributeMatrix").arg(filtName).arg(getHumanLabel());
@@ -798,7 +798,7 @@ void ZeissImportFilter::convertToGrayScale(const QString& imageName, const QStri
     //----- Set the OutputAttributeMatrixName Property
     variant.setValue(getImageAttributeMatrixName());
     propWasSet = filter->setProperty("OutputAttributeMatrixName", variant);
-    if(false == propWasSet)
+    if(!propWasSet)
     {
       QString ss = QObject::tr("Error Setting Property '%1' into filter '%2' which is a subfilter called by %3. The property was not set which could mean the property was not exposed with a Q_PROPERTY macro. Please notify the developers.")
                    .arg("OutputAttributeMatrixName").arg(filtName).arg(getHumanLabel());
@@ -808,14 +808,14 @@ void ZeissImportFilter::convertToGrayScale(const QString& imageName, const QStri
 
     //----- Set the OutputArrayPrefix Property
     propWasSet = filter->setProperty("OutputArrayPrefix", k_GrayScaleTempArrayName);
-    if(false == propWasSet)
+    if(!propWasSet)
     {
       QString ss = QObject::tr("Error Setting Property '%1' into filter '%2' which is a subfilter called by %3. The property was not set which could mean the property was not exposed with a Q_PROPERTY macro. Please notify the developers.")
                    .arg("OutputArrayPrefix").arg(filtName).arg(getHumanLabel());
       setErrorCondition(-70007);
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     }
-    if(getInPreflight() == true)
+    if(getInPreflight())
     {
       filter->preflight();
     }
@@ -936,7 +936,7 @@ AbstractFilter::Pointer ZeissImportFilter::newFilterInstance(bool copyFilterPara
   * write code to optionally copy the filter parameters from the current filter into the new instance
   */
   ZeissImportFilter::Pointer filter = ZeissImportFilter::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     /* If the filter uses all the standard Filter Parameter Widgets you can probabaly get
      * away with using this method to copy the filter parameters from the current instance

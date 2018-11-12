@@ -154,7 +154,7 @@ IDataArray::Pointer FloatZeissMetaEntry::createDataArray(bool allocate)
 {
   ZeissTagMapping::Pointer tagMap = ZeissTagMapping::instance();
   QString tagName = tagMap->nameForId(this->getZeissIdTag());
-  if (tagName.isEmpty() == true)
+  if(tagName.isEmpty())
   {
     std::cout << "writeHDF5Attribute: Error writing attribute. No zeiss id was found "
               << " for id=" << getZeissIdTag();
@@ -176,7 +176,7 @@ IDataArray::Pointer StringZeissMetaEntry::createDataArray(bool allocate)
 {
   ZeissTagMapping::Pointer tagMap = ZeissTagMapping::instance();
   QString tagName = tagMap->nameForId(this->getZeissIdTag());
-  if (tagName.isEmpty() == true)
+  if(tagName.isEmpty())
   {
     std::cout << "writeHDF5Attribute: Error writing attribute. No zeiss id was found "
               << " for id=" << getZeissIdTag();
