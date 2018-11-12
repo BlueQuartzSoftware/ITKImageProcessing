@@ -171,7 +171,7 @@ void ITKRescaleIntensityImage::filterInternal()
 AbstractFilter::Pointer ITKRescaleIntensityImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKRescaleIntensityImage::Pointer filter = ITKRescaleIntensityImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

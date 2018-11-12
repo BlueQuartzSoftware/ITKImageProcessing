@@ -174,7 +174,7 @@ void ITKBlackTopHatImage::filterInternal()
 AbstractFilter::Pointer ITKBlackTopHatImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKBlackTopHatImage::Pointer filter = ITKBlackTopHatImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

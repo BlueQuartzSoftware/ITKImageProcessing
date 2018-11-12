@@ -131,7 +131,7 @@ void ITKThresholdImage::filterInternal()
 AbstractFilter::Pointer ITKThresholdImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKThresholdImage::Pointer filter = ITKThresholdImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

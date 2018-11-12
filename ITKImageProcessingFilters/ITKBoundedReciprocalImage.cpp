@@ -22,10 +22,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKBoundedReciprocalImage::ITKBoundedReciprocalImage()
-{
-
-}
+ITKBoundedReciprocalImage::ITKBoundedReciprocalImage() = default;
 
 // -----------------------------------------------------------------------------
 //
@@ -119,7 +116,7 @@ void ITKBoundedReciprocalImage::filterInternal()
 AbstractFilter::Pointer ITKBoundedReciprocalImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKBoundedReciprocalImage::Pointer filter = ITKBoundedReciprocalImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

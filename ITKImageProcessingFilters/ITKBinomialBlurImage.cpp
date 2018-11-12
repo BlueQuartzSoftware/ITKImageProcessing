@@ -124,7 +124,7 @@ void ITKBinomialBlurImage::filterInternal()
 AbstractFilter::Pointer ITKBinomialBlurImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKBinomialBlurImage::Pointer filter = ITKBinomialBlurImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

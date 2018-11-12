@@ -273,7 +273,7 @@ void ImportVectorImageStackWidget::setupMenuField()
     connect(m_ShowFileAction, SIGNAL(triggered()), this, SLOT(showFileInFileSystem()));
   }
 
-  if(m_Ui->inputDir->text().isEmpty() == false && fi.exists())
+  if(!m_Ui->inputDir->text().isEmpty() && fi.exists())
   {
     m_ShowFileAction->setEnabled(true);
   }
@@ -322,14 +322,14 @@ void ImportVectorImageStackWidget::validateInputFile()
 
   QString currentPath = data.InputPath;
   QFileInfo fi(currentPath);
-  if(currentPath.isEmpty() == false && fi.exists() == false)
+  if(!currentPath.isEmpty() && !fi.exists())
   {
     QString defaultName = m_OpenDialogLastFilePath;
 
     QString title = QObject::tr("Select a replacement input file in filter '%2'").arg(getFilter()->getHumanLabel());
 
     QString file = QFileDialog::getExistingDirectory(this, title, getInputDirectory(), QFileDialog::ShowDirsOnly);
-    if(true == file.isEmpty())
+    if(file.isEmpty())
     {
       file = currentPath;
     }
@@ -355,7 +355,7 @@ void ImportVectorImageStackWidget::validateInputFile()
 // -----------------------------------------------------------------------------
 void ImportVectorImageStackWidget::checkIOFiles()
 {
-  if(true == this->verifyPathExists(m_Ui->inputDir->text(), m_Ui->inputDir))
+  if(this->verifyPathExists(m_Ui->inputDir->text(), m_Ui->inputDir))
   {
     findMaxSliceAndPrefix();
   }
@@ -466,7 +466,7 @@ void ImportVectorImageStackWidget::generateExampleInputFile()
     QString filePath(fileList.at(i));
     QFileInfo fi(filePath);
     QListWidgetItem* item = new QListWidgetItem(filePath, m_Ui->fileListView);
-    if(fi.exists() == true)
+    if(fi.exists())
     {
       item->setIcon(greenDot);
       foundFileCount++;
@@ -481,8 +481,12 @@ void ImportVectorImageStackWidget::generateExampleInputFile()
 
   QString eMsg("Please make sure all files exist");
   m_Ui->errorMessage->setVisible(true);
-  QString msg =
-      QString("%1 File%2 Found  ||  %3 File%4 Missing. %5").arg(foundFileCount).arg(foundFileCount ? "s" : "").arg(missingFileCount).arg(missingFileCount ? "s" : "").arg(hasMissingFiles ? eMsg : "");
+  QString msg = QString("%1 File%2 Found  ||  %3 File%4 Missing. %5")
+                    .arg(foundFileCount)
+                    .arg(foundFileCount != 0 ? "s" : "")
+                    .arg(missingFileCount)
+                    .arg(missingFileCount != 0 ? "s" : "")
+                    .arg(hasMissingFiles ? eMsg : "");
   m_Ui->errorMessage->setText(msg);
 }
 
@@ -498,7 +502,7 @@ void ImportVectorImageStackWidget::findMaxSliceAndPrefix()
   QDir dir(m_Ui->inputDir->text());
 
   // Final check to make sure we have a valid file extension
-  if(m_Ui->fileExt->text().isEmpty() == true)
+  if(m_Ui->fileExt->text().isEmpty())
   {
     return;
   }
@@ -524,7 +528,7 @@ void ImportVectorImageStackWidget::findMaxSliceAndPrefix()
   int minTotalDigits = 1000;
   foreach(QFileInfo fi, angList)
   {
-    if(fi.suffix().compare(ext) && fi.isFile() == true)
+    if((fi.suffix().compare(ext) != 0) && fi.isFile())
     {
       pos = 0;
       list.clear();
@@ -556,10 +560,10 @@ void ImportVectorImageStackWidget::findMaxSliceAndPrefix()
         minTotalDigits = digitEnd - digitStart;
       }
       m_Ui->totalDigits->setValue(minTotalDigits);
-      if(list.size() > 0)
+      if(!list.empty())
       {
         currValue = list.front().toInt(&ok);
-        if(false == flag)
+        if(!flag)
         {
           minSlice = currValue;
           flag = true;
@@ -621,7 +625,7 @@ void ImportVectorImageStackWidget::filterNeedsInputParameters(AbstractFilter* fi
   QVariant v;
   v.setValue(data);
   ok = filter->setProperty(PROPERTY_NAME_AS_CHAR, v);
-  if(false == ok)
+  if(!ok)
   {
     getFilter()->notifyMissingProperty(getFilterParameter());
   }
@@ -632,7 +636,7 @@ void ImportVectorImageStackWidget::filterNeedsInputParameters(AbstractFilter* fi
 // -----------------------------------------------------------------------------
 void ImportVectorImageStackWidget::beforePreflight()
 {
-  if(m_DidCausePreflight == false)
+  if(!m_DidCausePreflight)
   {
   }
 }

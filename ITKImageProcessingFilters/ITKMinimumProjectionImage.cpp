@@ -124,7 +124,7 @@ void ITKMinimumProjectionImage::filterInternal()
 AbstractFilter::Pointer ITKMinimumProjectionImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKMinimumProjectionImage::Pointer filter = ITKMinimumProjectionImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

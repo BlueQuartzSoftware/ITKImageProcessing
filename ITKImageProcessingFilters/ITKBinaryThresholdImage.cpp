@@ -137,7 +137,7 @@ void ITKBinaryThresholdImage::filterInternal()
 AbstractFilter::Pointer ITKBinaryThresholdImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKBinaryThresholdImage::Pointer filter = ITKBinaryThresholdImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

@@ -127,7 +127,7 @@ void ITKIsoContourDistanceImage::filterInternal()
 AbstractFilter::Pointer ITKIsoContourDistanceImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKIsoContourDistanceImage::Pointer filter = ITKIsoContourDistanceImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

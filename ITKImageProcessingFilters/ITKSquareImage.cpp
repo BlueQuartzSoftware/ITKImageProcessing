@@ -22,10 +22,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKSquareImage::ITKSquareImage()
-{
-
-}
+ITKSquareImage::ITKSquareImage() = default;
 
 // -----------------------------------------------------------------------------
 //
@@ -119,7 +116,7 @@ void ITKSquareImage::filterInternal()
 AbstractFilter::Pointer ITKSquareImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKSquareImage::Pointer filter = ITKSquareImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

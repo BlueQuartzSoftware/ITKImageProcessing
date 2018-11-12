@@ -127,7 +127,7 @@ void ITKLabelContourImage::filterInternal()
 AbstractFilter::Pointer ITKLabelContourImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKLabelContourImage::Pointer filter = ITKLabelContourImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

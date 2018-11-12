@@ -22,10 +22,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKExpNegativeImage::ITKExpNegativeImage()
-{
-
-}
+ITKExpNegativeImage::ITKExpNegativeImage() = default;
 
 // -----------------------------------------------------------------------------
 //
@@ -119,7 +116,7 @@ void ITKExpNegativeImage::filterInternal()
 AbstractFilter::Pointer ITKExpNegativeImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKExpNegativeImage::Pointer filter = ITKExpNegativeImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

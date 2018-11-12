@@ -123,7 +123,7 @@ void ITKNormalizeToConstantImage::filterInternal()
 AbstractFilter::Pointer ITKNormalizeToConstantImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKNormalizeToConstantImage::Pointer filter = ITKNormalizeToConstantImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

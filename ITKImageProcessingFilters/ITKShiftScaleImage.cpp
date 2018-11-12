@@ -127,7 +127,7 @@ void ITKShiftScaleImage::filterInternal()
 AbstractFilter::Pointer ITKShiftScaleImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKShiftScaleImage::Pointer filter = ITKShiftScaleImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

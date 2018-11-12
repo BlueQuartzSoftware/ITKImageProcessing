@@ -135,7 +135,7 @@ void ITKSignedMaurerDistanceMapImage::filterInternal()
 AbstractFilter::Pointer ITKSignedMaurerDistanceMapImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKSignedMaurerDistanceMapImage::Pointer filter = ITKSignedMaurerDistanceMapImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

@@ -8,9 +8,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKImageProcessingBase::ITKImageProcessingBase()
-{
-}
+ITKImageProcessingBase::ITKImageProcessingBase() = default;
 
 // -----------------------------------------------------------------------------
 //
@@ -65,7 +63,7 @@ const QString ITKImageProcessingBase::getGroupName() const
 AbstractFilter::Pointer ITKImageProcessingBase::newFilterInstance(bool copyFilterParameters) const
 {
   ITKImageProcessingBase::Pointer filter = ITKImageProcessingBase::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

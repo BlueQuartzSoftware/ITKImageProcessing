@@ -127,7 +127,7 @@ void ITKApproximateSignedDistanceMapImage::filterInternal()
 AbstractFilter::Pointer ITKApproximateSignedDistanceMapImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKApproximateSignedDistanceMapImage::Pointer filter = ITKApproximateSignedDistanceMapImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

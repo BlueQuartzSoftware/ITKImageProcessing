@@ -131,7 +131,7 @@ void ITKBinaryContourImage::filterInternal()
 AbstractFilter::Pointer ITKBinaryContourImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKBinaryContourImage::Pointer filter = ITKBinaryContourImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

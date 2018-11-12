@@ -132,7 +132,7 @@ void ITKBilateralImage::filterInternal()
 AbstractFilter::Pointer ITKBilateralImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKBilateralImage::Pointer filter = ITKBilateralImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

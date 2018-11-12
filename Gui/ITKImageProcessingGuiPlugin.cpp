@@ -5,10 +5,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKImageProcessingGuiPlugin::ITKImageProcessingGuiPlugin()
-: ITKImageProcessingPlugin()
-{
-}
+ITKImageProcessingGuiPlugin::ITKImageProcessingGuiPlugin() = default;
 
 // -----------------------------------------------------------------------------
 //

@@ -138,7 +138,7 @@ void ITKDiscreteGaussianImage::filterInternal()
 AbstractFilter::Pointer ITKDiscreteGaussianImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKDiscreteGaussianImage::Pointer filter = ITKDiscreteGaussianImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

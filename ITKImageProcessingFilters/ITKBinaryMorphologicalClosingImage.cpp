@@ -189,7 +189,7 @@ void ITKBinaryMorphologicalClosingImage::filterInternal()
 AbstractFilter::Pointer ITKBinaryMorphologicalClosingImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKBinaryMorphologicalClosingImage::Pointer filter = ITKBinaryMorphologicalClosingImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

@@ -131,7 +131,7 @@ void ITKDanielssonDistanceMapImage::filterInternal()
 AbstractFilter::Pointer ITKDanielssonDistanceMapImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKDanielssonDistanceMapImage::Pointer filter = ITKDanielssonDistanceMapImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

@@ -170,7 +170,7 @@ void ITKMorphologicalGradientImage::filterInternal()
 AbstractFilter::Pointer ITKMorphologicalGradientImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKMorphologicalGradientImage::Pointer filter = ITKMorphologicalGradientImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

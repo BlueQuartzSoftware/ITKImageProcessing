@@ -135,7 +135,7 @@ void ITKSigmoidImage::filterInternal()
 AbstractFilter::Pointer ITKSigmoidImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKSigmoidImage::Pointer filter = ITKSigmoidImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

@@ -170,7 +170,7 @@ void ITKGrayscaleErodeImage::filterInternal()
 AbstractFilter::Pointer ITKGrayscaleErodeImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKGrayscaleErodeImage::Pointer filter = ITKGrayscaleErodeImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

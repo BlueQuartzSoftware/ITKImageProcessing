@@ -135,7 +135,7 @@ void ITKIntensityWindowingImage::filterInternal()
 AbstractFilter::Pointer ITKIntensityWindowingImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKIntensityWindowingImage::Pointer filter = ITKIntensityWindowingImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

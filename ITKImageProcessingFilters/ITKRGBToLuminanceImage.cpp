@@ -21,9 +21,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKRGBToLuminanceImage::ITKRGBToLuminanceImage()
-{
-}
+ITKRGBToLuminanceImage::ITKRGBToLuminanceImage() = default;
 
 // -----------------------------------------------------------------------------
 //
@@ -139,7 +137,7 @@ void ITKRGBToLuminanceImage::filterInternal()
 AbstractFilter::Pointer ITKRGBToLuminanceImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKRGBToLuminanceImage::Pointer filter = ITKRGBToLuminanceImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

@@ -22,10 +22,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKAsinImage::ITKAsinImage()
-{
-
-}
+ITKAsinImage::ITKAsinImage() = default;
 
 // -----------------------------------------------------------------------------
 //
@@ -119,7 +116,7 @@ void ITKAsinImage::filterInternal()
 AbstractFilter::Pointer ITKAsinImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKAsinImage::Pointer filter = ITKAsinImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

@@ -22,10 +22,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKTanImage::ITKTanImage()
-{
-
-}
+ITKTanImage::ITKTanImage() = default;
 
 // -----------------------------------------------------------------------------
 //
@@ -119,7 +116,7 @@ void ITKTanImage::filterInternal()
 AbstractFilter::Pointer ITKTanImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKTanImage::Pointer filter = ITKTanImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

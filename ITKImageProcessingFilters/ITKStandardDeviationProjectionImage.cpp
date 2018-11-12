@@ -124,7 +124,7 @@ void ITKStandardDeviationProjectionImage::filterInternal()
 AbstractFilter::Pointer ITKStandardDeviationProjectionImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKStandardDeviationProjectionImage::Pointer filter = ITKStandardDeviationProjectionImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

@@ -22,10 +22,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKAbsImage::ITKAbsImage()
-{
-
-}
+ITKAbsImage::ITKAbsImage() = default;
 
 // -----------------------------------------------------------------------------
 //
@@ -119,7 +116,7 @@ void ITKAbsImage::filterInternal()
 AbstractFilter::Pointer ITKAbsImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKAbsImage::Pointer filter = ITKAbsImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

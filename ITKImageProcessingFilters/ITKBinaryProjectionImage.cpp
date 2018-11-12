@@ -132,7 +132,7 @@ void ITKBinaryProjectionImage::filterInternal()
 AbstractFilter::Pointer ITKBinaryProjectionImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKBinaryProjectionImage::Pointer filter = ITKBinaryProjectionImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

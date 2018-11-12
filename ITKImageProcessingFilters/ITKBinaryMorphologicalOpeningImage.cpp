@@ -189,7 +189,7 @@ void ITKBinaryMorphologicalOpeningImage::filterInternal()
 AbstractFilter::Pointer ITKBinaryMorphologicalOpeningImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKBinaryMorphologicalOpeningImage::Pointer filter = ITKBinaryMorphologicalOpeningImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

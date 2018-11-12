@@ -109,7 +109,10 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   typedef itk::SpeckleNoiseImageFilter<InputImageType, OutputImageType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
   filter->SetStandardDeviation(static_cast<double>(m_StandardDeviation));
-  if (m_Seed) filter->SetSeed(m_Seed);
+  if(m_Seed)
+  {
+    filter->SetSeed(m_Seed);
+  }
   this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
 
 }
@@ -128,7 +131,7 @@ void ITKSpeckleNoiseImage::filterInternal()
 AbstractFilter::Pointer ITKSpeckleNoiseImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKSpeckleNoiseImage::Pointer filter = ITKSpeckleNoiseImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

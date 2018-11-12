@@ -124,7 +124,7 @@ void ITKBoxMeanImage::filterInternal()
 AbstractFilter::Pointer ITKBoxMeanImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKBoxMeanImage::Pointer filter = ITKBoxMeanImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

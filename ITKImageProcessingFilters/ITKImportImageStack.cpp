@@ -155,7 +155,7 @@ void ITKImportImageStack::dataCheck()
   DataArrayPath tempPath;
   QString ss;
 
-  if(m_InputFileListInfo.InputPath.isEmpty() == true)
+  if(m_InputFileListInfo.InputPath.isEmpty())
   {
     ss = QObject::tr("The input directory must be set");
     setErrorCondition(-13);
@@ -181,7 +181,7 @@ void ITKImportImageStack::dataCheck()
 
   // Now generate all the file names the user is asking for and populate the table
   const QVector<QString> fileList = this->getFileList();
-  if(fileList.size() == 0)
+  if(fileList.empty())
   {
     ss.clear();
     QTextStream out(&ss);
@@ -436,7 +436,7 @@ void ITKImportImageStack::execute()
 AbstractFilter::Pointer ITKImportImageStack::newFilterInstance(bool copyFilterParameters) const
 {
   ITKImportImageStack::Pointer filter = ITKImportImageStack::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     filter->setFilterParameters(getFilterParameters());
     // We are going to hand copy all of the parameters because the other way of copying the parameters are going to

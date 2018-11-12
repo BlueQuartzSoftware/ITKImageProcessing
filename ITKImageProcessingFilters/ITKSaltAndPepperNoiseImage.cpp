@@ -110,8 +110,10 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   typedef itk::SaltAndPepperNoiseImageFilter<InputImageType, OutputImageType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
   filter->SetProbability(static_cast<double>(m_Probability));
-  if (m_Seed)
+  if(m_Seed)
+  {
     filter->SetSeed(m_Seed);
+  }
   this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
 
 }
@@ -130,7 +132,7 @@ void ITKSaltAndPepperNoiseImage::filterInternal()
 AbstractFilter::Pointer ITKSaltAndPepperNoiseImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKSaltAndPepperNoiseImage::Pointer filter = ITKSaltAndPepperNoiseImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

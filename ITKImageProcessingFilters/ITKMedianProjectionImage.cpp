@@ -124,7 +124,7 @@ void ITKMedianProjectionImage::filterInternal()
 AbstractFilter::Pointer ITKMedianProjectionImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKMedianProjectionImage::Pointer filter = ITKMedianProjectionImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

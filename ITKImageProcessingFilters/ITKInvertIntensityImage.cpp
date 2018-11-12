@@ -123,7 +123,7 @@ void ITKInvertIntensityImage::filterInternal()
 AbstractFilter::Pointer ITKInvertIntensityImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKInvertIntensityImage::Pointer filter = ITKInvertIntensityImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

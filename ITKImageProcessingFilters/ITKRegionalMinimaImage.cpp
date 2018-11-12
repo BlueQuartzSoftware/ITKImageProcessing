@@ -135,7 +135,7 @@ void ITKRegionalMinimaImage::filterInternal()
 AbstractFilter::Pointer ITKRegionalMinimaImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKRegionalMinimaImage::Pointer filter = ITKRegionalMinimaImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

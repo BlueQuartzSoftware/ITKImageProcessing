@@ -174,7 +174,7 @@ void ITKGrayscaleMorphologicalClosingImage::filterInternal()
 AbstractFilter::Pointer ITKGrayscaleMorphologicalClosingImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKGrayscaleMorphologicalClosingImage::Pointer filter = ITKGrayscaleMorphologicalClosingImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

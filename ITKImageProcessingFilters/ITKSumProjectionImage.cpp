@@ -124,7 +124,7 @@ void ITKSumProjectionImage::filterInternal()
 AbstractFilter::Pointer ITKSumProjectionImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKSumProjectionImage::Pointer filter = ITKSumProjectionImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

@@ -22,10 +22,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKBinaryThinningImage::ITKBinaryThinningImage()
-{
-
-}
+ITKBinaryThinningImage::ITKBinaryThinningImage() = default;
 
 // -----------------------------------------------------------------------------
 //
@@ -119,7 +116,7 @@ void ITKBinaryThinningImage::filterInternal()
 AbstractFilter::Pointer ITKBinaryThinningImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKBinaryThinningImage::Pointer filter = ITKBinaryThinningImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

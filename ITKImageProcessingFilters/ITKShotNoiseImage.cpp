@@ -109,8 +109,10 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   typedef itk::ShotNoiseImageFilter<InputImageType, OutputImageType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
   filter->SetScale(static_cast<double>(m_Scale));
-  if (m_Seed)
+  if(m_Seed)
+  {
     filter->SetSeed(m_Seed);
+  }
   this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
 
 }
@@ -129,7 +131,7 @@ void ITKShotNoiseImage::filterInternal()
 AbstractFilter::Pointer ITKShotNoiseImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKShotNoiseImage::Pointer filter = ITKShotNoiseImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

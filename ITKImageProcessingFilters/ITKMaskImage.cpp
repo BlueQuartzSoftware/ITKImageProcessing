@@ -233,7 +233,7 @@ void ITKMaskImage::filterInternal()
 AbstractFilter::Pointer ITKMaskImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKMaskImage::Pointer filter = ITKMaskImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

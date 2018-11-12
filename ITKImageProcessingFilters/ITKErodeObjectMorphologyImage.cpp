@@ -178,7 +178,7 @@ void ITKErodeObjectMorphologyImage::filterInternal()
 AbstractFilter::Pointer ITKErodeObjectMorphologyImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKErodeObjectMorphologyImage::Pointer filter = ITKErodeObjectMorphologyImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

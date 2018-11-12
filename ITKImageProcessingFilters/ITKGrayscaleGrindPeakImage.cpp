@@ -123,7 +123,7 @@ void ITKGrayscaleGrindPeakImage::filterInternal()
 AbstractFilter::Pointer ITKGrayscaleGrindPeakImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKGrayscaleGrindPeakImage::Pointer filter = ITKGrayscaleGrindPeakImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

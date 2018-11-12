@@ -189,7 +189,7 @@ void ITKFFTNormalizedCorrelationImage::filterInternal()
 AbstractFilter::Pointer ITKFFTNormalizedCorrelationImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKFFTNormalizedCorrelationImage::Pointer filter = ITKFFTNormalizedCorrelationImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

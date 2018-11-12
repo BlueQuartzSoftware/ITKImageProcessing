@@ -127,7 +127,7 @@ void ITKHConvexImage::filterInternal()
 AbstractFilter::Pointer ITKHConvexImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKHConvexImage::Pointer filter = ITKHConvexImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

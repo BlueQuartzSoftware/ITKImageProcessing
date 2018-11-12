@@ -22,10 +22,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKNormalizeImage::ITKNormalizeImage()
-{
-
-}
+ITKNormalizeImage::ITKNormalizeImage() = default;
 
 // -----------------------------------------------------------------------------
 //
@@ -119,7 +116,7 @@ void ITKNormalizeImage::filterInternal()
 AbstractFilter::Pointer ITKNormalizeImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKNormalizeImage::Pointer filter = ITKNormalizeImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }
