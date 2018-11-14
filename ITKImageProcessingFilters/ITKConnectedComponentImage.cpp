@@ -128,7 +128,7 @@ void ITKConnectedComponentImage::filterInternal()
 AbstractFilter::Pointer ITKConnectedComponentImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKConnectedComponentImage::Pointer filter = ITKConnectedComponentImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

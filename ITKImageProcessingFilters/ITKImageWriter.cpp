@@ -150,7 +150,7 @@ void ITKImageWriter::dataCheck()
   }
 
   ImageGeom::Pointer imageGeometry = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getImageArrayPath().getDataContainerName());
-  if(!imageGeometry.get())
+  if(imageGeometry.get() == nullptr)
   {
     setErrorCondition(-21003);
     notifyErrorMessage(getHumanLabel(), "No image geometry.", getErrorCondition());
@@ -187,11 +187,7 @@ bool ITKImageWriter::is2DFormat()
   QString Ext = itksys::SystemTools::LowerCase(itksys::SystemTools::GetFilenameExtension(getFileName().toStdString())).c_str();
   QStringList supported2DExtensions = ITKImageProcessingPlugin::getList2DSupportedFileExtensions();
   int index = supported2DExtensions.indexOf(QRegExp(".*" + Ext));
-  if(index != -1)
-  {
-    return true;
-  }
-  return false;
+  return index != -1;
 }
 
 // -----------------------------------------------------------------------------
@@ -457,7 +453,7 @@ void ITKImageWriter::saveImageData(DataContainerArray::Pointer dca, size_t slice
 AbstractFilter::Pointer ITKImageWriter::newFilterInstance(bool copyFilterParameters) const
 {
   ITKImageWriter::Pointer filter = ITKImageWriter::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

@@ -178,7 +178,7 @@ void ITKClosingByReconstructionImage::filterInternal()
 AbstractFilter::Pointer ITKClosingByReconstructionImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKClosingByReconstructionImage::Pointer filter = ITKClosingByReconstructionImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

@@ -146,7 +146,7 @@ void ITKVectorConnectedComponentImage::filterInternal()
 AbstractFilter::Pointer ITKVectorConnectedComponentImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKVectorConnectedComponentImage::Pointer filter = ITKVectorConnectedComponentImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

@@ -127,7 +127,7 @@ void ITKHMinimaImage::filterInternal()
 AbstractFilter::Pointer ITKHMinimaImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKHMinimaImage::Pointer filter = ITKHMinimaImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

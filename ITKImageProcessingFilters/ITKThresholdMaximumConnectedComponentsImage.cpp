@@ -138,7 +138,7 @@ void ITKThresholdMaximumConnectedComponentsImage::filterInternal()
 AbstractFilter::Pointer ITKThresholdMaximumConnectedComponentsImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKThresholdMaximumConnectedComponentsImage::Pointer filter = ITKThresholdMaximumConnectedComponentsImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

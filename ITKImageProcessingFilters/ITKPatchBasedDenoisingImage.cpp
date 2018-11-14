@@ -169,7 +169,9 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   filter->SetPatchRadius(static_cast<uint32_t>(m_PatchRadius));
   filter->SetNumberOfIterations(static_cast<uint32_t>(m_NumberOfIterations));
   if(this->m_NoiseSigma != 0.0)
+  {
     filter->SetNoiseSigma(this->m_NoiseSigma);
+  }
   filter->SetNoiseModelFidelityWeight(static_cast<double>(m_NoiseModelFidelityWeight));
   filter->SetAlwaysTreatComponentsAsEuclidean(static_cast<bool>(m_AlwaysTreatComponentsAsEuclidean));
   filter->SetKernelBandwidthEstimation(static_cast<bool>(m_KernelBandwidthEstimation));
@@ -204,7 +206,7 @@ void ITKPatchBasedDenoisingImage::filterInternal()
 AbstractFilter::Pointer ITKPatchBasedDenoisingImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKPatchBasedDenoisingImage::Pointer filter = ITKPatchBasedDenoisingImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

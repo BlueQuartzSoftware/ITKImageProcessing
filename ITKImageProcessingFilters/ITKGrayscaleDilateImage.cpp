@@ -170,7 +170,7 @@ void ITKGrayscaleDilateImage::filterInternal()
 AbstractFilter::Pointer ITKGrayscaleDilateImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKGrayscaleDilateImage::Pointer filter = ITKGrayscaleDilateImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

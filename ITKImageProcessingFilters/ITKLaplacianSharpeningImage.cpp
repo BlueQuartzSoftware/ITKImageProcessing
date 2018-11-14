@@ -123,7 +123,7 @@ void ITKLaplacianSharpeningImage::filterInternal()
 AbstractFilter::Pointer ITKLaplacianSharpeningImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKLaplacianSharpeningImage::Pointer filter = ITKLaplacianSharpeningImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

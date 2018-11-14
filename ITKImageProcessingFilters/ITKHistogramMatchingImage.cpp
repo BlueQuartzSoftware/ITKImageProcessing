@@ -165,7 +165,7 @@ void ITKHistogramMatchingImage::CompareImagePixelTypes(const DataArrayPath& path
 void ITKHistogramMatchingImage::CompareImageTypes(const DataArrayPath& path1, const DataArrayPath& path2)
 {
   // Does data array exist
-  if(CheckArrayExists(path1) || CheckArrayExists(path2))
+  if((CheckArrayExists(path1) != 0) || (CheckArrayExists(path2) != 0))
   {
     return;
   }
@@ -251,7 +251,7 @@ void ITKHistogramMatchingImage::filterInternal()
 AbstractFilter::Pointer ITKHistogramMatchingImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKHistogramMatchingImage::Pointer filter = ITKHistogramMatchingImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

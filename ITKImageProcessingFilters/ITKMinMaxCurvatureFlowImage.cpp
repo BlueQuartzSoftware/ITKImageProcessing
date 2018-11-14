@@ -132,7 +132,7 @@ void ITKMinMaxCurvatureFlowImage::filterInternal()
 AbstractFilter::Pointer ITKMinMaxCurvatureFlowImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKMinMaxCurvatureFlowImage::Pointer filter = ITKMinMaxCurvatureFlowImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

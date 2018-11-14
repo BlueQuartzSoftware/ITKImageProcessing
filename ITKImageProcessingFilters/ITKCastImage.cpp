@@ -144,7 +144,7 @@ void ITKCastImage::filterInternal()
 AbstractFilter::Pointer ITKCastImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKCastImage::Pointer filter = ITKCastImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

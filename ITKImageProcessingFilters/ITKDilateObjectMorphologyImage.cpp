@@ -174,7 +174,7 @@ void ITKDilateObjectMorphologyImage::filterInternal()
 AbstractFilter::Pointer ITKDilateObjectMorphologyImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKDilateObjectMorphologyImage::Pointer filter = ITKDilateObjectMorphologyImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

@@ -129,7 +129,7 @@ void ITKZeroCrossingImage::filterInternal()
 AbstractFilter::Pointer ITKZeroCrossingImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKZeroCrossingImage::Pointer filter = ITKZeroCrossingImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

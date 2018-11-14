@@ -174,7 +174,7 @@ void ITKGrayscaleMorphologicalOpeningImage::filterInternal()
 AbstractFilter::Pointer ITKGrayscaleMorphologicalOpeningImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKGrayscaleMorphologicalOpeningImage::Pointer filter = ITKGrayscaleMorphologicalOpeningImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

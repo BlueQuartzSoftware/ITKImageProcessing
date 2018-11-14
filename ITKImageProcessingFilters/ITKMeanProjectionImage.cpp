@@ -124,7 +124,7 @@ void ITKMeanProjectionImage::filterInternal()
 AbstractFilter::Pointer ITKMeanProjectionImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKMeanProjectionImage::Pointer filter = ITKMeanProjectionImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

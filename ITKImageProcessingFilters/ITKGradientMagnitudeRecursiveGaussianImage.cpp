@@ -127,7 +127,7 @@ void ITKGradientMagnitudeRecursiveGaussianImage::filterInternal()
 AbstractFilter::Pointer ITKGradientMagnitudeRecursiveGaussianImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKGradientMagnitudeRecursiveGaussianImage::Pointer filter = ITKGradientMagnitudeRecursiveGaussianImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

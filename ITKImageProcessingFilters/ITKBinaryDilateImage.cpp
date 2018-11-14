@@ -192,7 +192,7 @@ void ITKBinaryDilateImage::filterInternal()
 AbstractFilter::Pointer ITKBinaryDilateImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKBinaryDilateImage::Pointer filter = ITKBinaryDilateImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

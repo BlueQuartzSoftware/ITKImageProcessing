@@ -193,7 +193,7 @@ void ITKBinaryErodeImage::filterInternal()
 AbstractFilter::Pointer ITKBinaryErodeImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKBinaryErodeImage::Pointer filter = ITKBinaryErodeImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

@@ -142,7 +142,7 @@ void ITKOtsuMultipleThresholdsImage::filterInternal()
 AbstractFilter::Pointer ITKOtsuMultipleThresholdsImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKOtsuMultipleThresholdsImage::Pointer filter = ITKOtsuMultipleThresholdsImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

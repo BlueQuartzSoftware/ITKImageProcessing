@@ -128,7 +128,7 @@ void ITKCurvatureFlowImage::filterInternal()
 AbstractFilter::Pointer ITKCurvatureFlowImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKCurvatureFlowImage::Pointer filter = ITKCurvatureFlowImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

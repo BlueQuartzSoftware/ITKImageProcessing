@@ -123,7 +123,7 @@ void ITKHMaximaImage::filterInternal()
 AbstractFilter::Pointer ITKHMaximaImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKHMaximaImage::Pointer filter = ITKHMaximaImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

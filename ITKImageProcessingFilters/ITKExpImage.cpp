@@ -22,10 +22,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKExpImage::ITKExpImage()
-{
-
-}
+ITKExpImage::ITKExpImage() = default;
 
 // -----------------------------------------------------------------------------
 //
@@ -119,7 +116,7 @@ void ITKExpImage::filterInternal()
 AbstractFilter::Pointer ITKExpImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKExpImage::Pointer filter = ITKExpImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

@@ -128,7 +128,7 @@ void ITKValuedRegionalMaximaImage::filterInternal()
 AbstractFilter::Pointer ITKValuedRegionalMaximaImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKValuedRegionalMaximaImage::Pointer filter = ITKValuedRegionalMaximaImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

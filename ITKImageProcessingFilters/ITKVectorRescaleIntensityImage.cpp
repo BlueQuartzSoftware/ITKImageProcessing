@@ -166,7 +166,7 @@ void ITKVectorRescaleIntensityImage::filterInternal()
 AbstractFilter::Pointer ITKVectorRescaleIntensityImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKVectorRescaleIntensityImage::Pointer filter = ITKVectorRescaleIntensityImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

@@ -178,7 +178,7 @@ void ITKOpeningByReconstructionImage::filterInternal()
 AbstractFilter::Pointer ITKOpeningByReconstructionImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKOpeningByReconstructionImage::Pointer filter = ITKOpeningByReconstructionImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

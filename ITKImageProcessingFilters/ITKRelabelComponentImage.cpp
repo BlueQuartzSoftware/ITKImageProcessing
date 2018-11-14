@@ -146,7 +146,7 @@ void ITKRelabelComponentImage::filterInternal()
 AbstractFilter::Pointer ITKRelabelComponentImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKRelabelComponentImage::Pointer filter = ITKRelabelComponentImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

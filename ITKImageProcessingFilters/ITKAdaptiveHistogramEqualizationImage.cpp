@@ -132,7 +132,7 @@ void ITKAdaptiveHistogramEqualizationImage::filterInternal()
 AbstractFilter::Pointer ITKAdaptiveHistogramEqualizationImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKAdaptiveHistogramEqualizationImage::Pointer filter = ITKAdaptiveHistogramEqualizationImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

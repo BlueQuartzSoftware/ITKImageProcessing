@@ -124,7 +124,7 @@ void ITKMaximumProjectionImage::filterInternal()
 AbstractFilter::Pointer ITKMaximumProjectionImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKMaximumProjectionImage::Pointer filter = ITKMaximumProjectionImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

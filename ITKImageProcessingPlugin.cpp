@@ -135,7 +135,7 @@ QString ITKImageProcessingPlugin::getListSupportedReadExtensions()
 {
   QStringList supportedExtensions;
   std::list<itk::LightObject::Pointer> allobjects = itk::ObjectFactoryBase::CreateAllInstance("itkImageIOBase");
-  if(allobjects.size() > 0)
+  if(!allobjects.empty())
   {
     for(std::list<itk::LightObject::Pointer>::iterator ii = allobjects.begin(); ii != allobjects.end(); ++ii)
     {
@@ -157,7 +157,7 @@ QString ITKImageProcessingPlugin::getListSupportedWriteExtensions()
 {
   QStringList supportedExtensions;
   std::list<itk::LightObject::Pointer> allobjects = itk::ObjectFactoryBase::CreateAllInstance("itkImageIOBase");
-  if(allobjects.size() > 0)
+  if(!allobjects.empty())
   {
     for(std::list<itk::LightObject::Pointer>::iterator ii = allobjects.begin(); ii != allobjects.end(); ++ii)
     {

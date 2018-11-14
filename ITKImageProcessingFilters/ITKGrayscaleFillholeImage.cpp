@@ -123,7 +123,7 @@ void ITKGrayscaleFillholeImage::filterInternal()
 AbstractFilter::Pointer ITKGrayscaleFillholeImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKGrayscaleFillholeImage::Pointer filter = ITKGrayscaleFillholeImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

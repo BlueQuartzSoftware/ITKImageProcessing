@@ -22,10 +22,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKLog10Image::ITKLog10Image()
-{
-
-}
+ITKLog10Image::ITKLog10Image() = default;
 
 // -----------------------------------------------------------------------------
 //
@@ -119,7 +116,7 @@ void ITKLog10Image::filterInternal()
 AbstractFilter::Pointer ITKLog10Image::newFilterInstance(bool copyFilterParameters) const
 {
   ITKLog10Image::Pointer filter = ITKLog10Image::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

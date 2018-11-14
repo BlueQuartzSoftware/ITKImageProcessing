@@ -97,7 +97,9 @@ void ImportImageMontage::initialize()
 {
   m_AttributeArrayNamesPtr = StringDataArray::NullPointer();
   if(m_InStream.isOpen())
+  {
     m_InStream.close();
+  }
   m_NumImages = 0;
   m_ArrayNames.clear();
   m_Coords.clear();
@@ -114,7 +116,7 @@ void ImportImageMontage::dataCheck()
 
   QString ss;
 
-  if(m_InputFileListInfo.InputPath.isEmpty() == true)
+  if(m_InputFileListInfo.InputPath.isEmpty())
   {
     ss = QObject::tr("The input directory must be set");
     setErrorCondition(-13);
@@ -160,7 +162,7 @@ void ImportImageMontage::dataCheck()
   QVector<QString> fileList = FilePathGenerator::GenerateFileList(m_InputFileListInfo.StartIndex, m_InputFileListInfo.EndIndex, m_InputFileListInfo.IncrementIndex, hasMissingFiles, orderAscending,
                                                                   m_InputFileListInfo.InputPath, m_InputFileListInfo.FilePrefix, m_InputFileListInfo.FileSuffix, m_InputFileListInfo.FileExtension,
                                                                   m_InputFileListInfo.PaddingDigits);
-  if(fileList.size() == 0)
+  if(fileList.empty())
   {
     QString ss = QObject::tr("No files have been selected for import. Have you set the input directory?");
     setErrorCondition(-11);
@@ -259,7 +261,7 @@ void ImportImageMontage::execute()
   QVector<QString> fileList = FilePathGenerator::GenerateFileList(m_InputFileListInfo.StartIndex, m_InputFileListInfo.EndIndex, m_InputFileListInfo.IncrementIndex, hasMissingFiles, orderAscending,
                                                                   m_InputFileListInfo.InputPath, m_InputFileListInfo.FilePrefix, m_InputFileListInfo.FileSuffix, m_InputFileListInfo.FileExtension,
                                                                   m_InputFileListInfo.PaddingDigits);
-  if(fileList.size() == 0)
+  if(fileList.empty())
   {
     QString ss = QObject::tr("No files have been selected for import. Have you set the input directory?");
     setErrorCondition(-11);
@@ -306,7 +308,7 @@ void ImportImageMontage::execute()
 AbstractFilter::Pointer ImportImageMontage::newFilterInstance(bool copyFilterParameters) const
 {
   ImportImageMontage::Pointer filter = ImportImageMontage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     filter->setFilterParameters(getFilterParameters());
     // We are going to hand copy all of the parameters because the other way of copying the parameters are going to

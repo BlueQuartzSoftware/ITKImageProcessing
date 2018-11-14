@@ -149,7 +149,7 @@ void ITKDoubleThresholdImage::filterInternal()
 AbstractFilter::Pointer ITKDoubleThresholdImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKDoubleThresholdImage::Pointer filter = ITKDoubleThresholdImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

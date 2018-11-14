@@ -22,10 +22,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKNotImage::ITKNotImage()
-{
-
-}
+ITKNotImage::ITKNotImage() = default;
 
 // -----------------------------------------------------------------------------
 //
@@ -119,7 +116,7 @@ void ITKNotImage::filterInternal()
 AbstractFilter::Pointer ITKNotImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKNotImage::Pointer filter = ITKNotImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

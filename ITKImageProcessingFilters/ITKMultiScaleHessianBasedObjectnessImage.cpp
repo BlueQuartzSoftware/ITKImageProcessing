@@ -169,7 +169,7 @@ void ITKMultiScaleHessianBasedObjectnessImage::filterInternal()
 AbstractFilter::Pointer ITKMultiScaleHessianBasedObjectnessImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKMultiScaleHessianBasedObjectnessImage::Pointer filter = ITKMultiScaleHessianBasedObjectnessImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

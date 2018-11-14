@@ -22,10 +22,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKAcosImage::ITKAcosImage()
-{
-
-}
+ITKAcosImage::ITKAcosImage() = default;
 
 // -----------------------------------------------------------------------------
 //
@@ -119,7 +116,7 @@ void ITKAcosImage::filterInternal()
 AbstractFilter::Pointer ITKAcosImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKAcosImage::Pointer filter = ITKAcosImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

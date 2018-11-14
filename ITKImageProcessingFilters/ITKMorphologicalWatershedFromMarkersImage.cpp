@@ -203,7 +203,7 @@ void ITKMorphologicalWatershedFromMarkersImage::filterInternal()
 AbstractFilter::Pointer ITKMorphologicalWatershedFromMarkersImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKMorphologicalWatershedFromMarkersImage::Pointer filter = ITKMorphologicalWatershedFromMarkersImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

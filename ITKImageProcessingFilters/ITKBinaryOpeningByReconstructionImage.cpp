@@ -193,7 +193,7 @@ void ITKBinaryOpeningByReconstructionImage::filterInternal()
 AbstractFilter::Pointer ITKBinaryOpeningByReconstructionImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKBinaryOpeningByReconstructionImage::Pointer filter = ITKBinaryOpeningByReconstructionImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

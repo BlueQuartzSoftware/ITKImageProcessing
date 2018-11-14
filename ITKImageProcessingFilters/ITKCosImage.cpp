@@ -22,10 +22,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKCosImage::ITKCosImage()
-{
-
-}
+ITKCosImage::ITKCosImage() = default;
 
 // -----------------------------------------------------------------------------
 //
@@ -119,7 +116,7 @@ void ITKCosImage::filterInternal()
 AbstractFilter::Pointer ITKCosImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKCosImage::Pointer filter = ITKCosImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

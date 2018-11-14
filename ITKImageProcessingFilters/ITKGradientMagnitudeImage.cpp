@@ -123,7 +123,7 @@ void ITKGradientMagnitudeImage::filterInternal()
 AbstractFilter::Pointer ITKGradientMagnitudeImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKGradientMagnitudeImage::Pointer filter = ITKGradientMagnitudeImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

@@ -128,7 +128,7 @@ void ITKValuedRegionalMinimaImage::filterInternal()
 AbstractFilter::Pointer ITKValuedRegionalMinimaImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKValuedRegionalMinimaImage::Pointer filter = ITKValuedRegionalMinimaImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

@@ -189,7 +189,7 @@ void ITKBinaryClosingByReconstructionImage::filterInternal()
 AbstractFilter::Pointer ITKBinaryClosingByReconstructionImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKBinaryClosingByReconstructionImage::Pointer filter = ITKBinaryClosingByReconstructionImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }
