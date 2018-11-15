@@ -364,7 +364,7 @@ void ImportRegisteredImageMontage::execute()
     m_RegistrationCoordinates[2 * i + 1] = m_Coords[2 * i + 1];
   }
 
-  qint64 z = m_InputFileListInfo.StartIndex;
+  //qint64 z = m_InputFileListInfo.StartIndex;
 
   bool hasMissingFiles = false;
   bool orderAscending = false;
