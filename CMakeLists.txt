@@ -259,6 +259,8 @@ target_link_libraries(${plug_target_name}
 )
 if(MSVC)
   set_target_properties(${plug_target_name} PROPERTIES LINK_FLAGS_DEBUG "/INCREMENTAL:NO" )
+  # enable per object parallel compilation in this large library
+  target_compile_options(${plug_target_name} PRIVATE "/MP")
 endif()
 
 
