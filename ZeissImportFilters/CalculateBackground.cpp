@@ -4,7 +4,7 @@
 
 #include "CalculateBackground.h"
 
-#include <string.h>
+#include <cstring>
 
 #include <set>
 

@@ -4,7 +4,7 @@
 
 #include "ZeissImportFilter.h"
 
-#include <string.h>
+#include <cstring>
 
 #include <set>
 
@@ -63,7 +63,6 @@ ZeissImportFilterPrivate::ZeissImportFilterPrivate(ZeissImportFilter* ptr) :
   m_InputFile_Cache(""),
   m_LastRead(QDateTime())
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -150,7 +149,6 @@ void ZeissImportFilter::writeFilterParameters(QJsonObject &obj) const
 // -----------------------------------------------------------------------------
 void ZeissImportFilter::initialize()
 {
-
 }
 
 // -----------------------------------------------------------------------------

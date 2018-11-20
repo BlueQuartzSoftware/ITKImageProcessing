@@ -394,7 +394,6 @@ void ZeissXMLReader::onRoot_StartTag(const XML_Char* name, const XML_Char** attr
 // -----------------------------------------------------------------------------
 void ZeissXMLReader::onRoot_EndTag(const XML_Char* name)
 {
-
 }
 
 // -----------------------------------------------------------------------------
