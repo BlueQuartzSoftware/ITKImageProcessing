@@ -90,8 +90,8 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   setWarningCondition(0);
 
   // Check consistency of parameters
-  this->CheckIntegerEntry<uint8_t, int>(m_InsideValue, "InsideValue", 1);
-  this->CheckIntegerEntry<uint8_t, int>(m_OutsideValue, "OutsideValue", 1);
+  this->CheckIntegerEntry<uint8_t, int>(m_InsideValue, "InsideValue", true);
+  this->CheckIntegerEntry<uint8_t, int>(m_OutsideValue, "OutsideValue", true);
 
   ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }

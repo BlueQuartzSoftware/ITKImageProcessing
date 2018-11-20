@@ -191,8 +191,8 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   setErrorCondition(0);
   setWarningCondition(0);
   // Check consistency of parameters
-  this->CheckIntegerEntry<uint32_t, double>(m_NumberOfHistogramLevels, "NumberOfHistogramLevels", 1);
-  this->CheckIntegerEntry<uint32_t, double>(m_NumberOfMatchPoints, "NumberOfMatchPoints", 1);
+  this->CheckIntegerEntry<uint32_t, double>(m_NumberOfHistogramLevels, "NumberOfHistogramLevels", true);
+  this->CheckIntegerEntry<uint32_t, double>(m_NumberOfMatchPoints, "NumberOfMatchPoints", true);
 
   // Compare source and reference image type
   CompareImageTypes(getSelectedCellArrayPath(), getReferenceCellArrayPath());

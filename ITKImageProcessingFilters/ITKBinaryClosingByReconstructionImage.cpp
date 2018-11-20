@@ -110,7 +110,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   setWarningCondition(0);
 
   // Check consistency of parameters
-  this->CheckVectorEntry<unsigned int, FloatVec3_t>(m_KernelRadius, "KernelRadius", 1);
+  this->CheckVectorEntry<unsigned int, FloatVec3_t>(m_KernelRadius, "KernelRadius", true);
   QVector<QString> supportedTypes;
   // All integer types
   supportedTypes << "uint8_t"

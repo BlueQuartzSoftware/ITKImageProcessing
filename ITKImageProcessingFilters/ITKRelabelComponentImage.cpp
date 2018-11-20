@@ -84,7 +84,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   setWarningCondition(0);
 
   // Check consistency of parameters
-  this->CheckIntegerEntry<uint64_t, double>(m_MinimumObjectSize, "MinimumObjectSize", 1);
+  this->CheckIntegerEntry<uint64_t, double>(m_MinimumObjectSize, "MinimumObjectSize", true);
 
   ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }

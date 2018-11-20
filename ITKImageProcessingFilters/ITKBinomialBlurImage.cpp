@@ -81,7 +81,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   setWarningCondition(0);
 
   // Check consistency of parameters
-  this->CheckIntegerEntry<unsigned int, double>(m_Repetitions, "Repetitions", 1);
+  this->CheckIntegerEntry<unsigned int, double>(m_Repetitions, "Repetitions", true);
 
   ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }

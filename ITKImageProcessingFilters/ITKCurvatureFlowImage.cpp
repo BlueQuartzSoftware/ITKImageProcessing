@@ -84,7 +84,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   setWarningCondition(0);
 
   // Check consistency of parameters
-  this->CheckIntegerEntry<uint32_t, double>(m_NumberOfIterations, "NumberOfIterations", 1);
+  this->CheckIntegerEntry<uint32_t, double>(m_NumberOfIterations, "NumberOfIterations", true);
 
   ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
