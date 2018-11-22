@@ -107,7 +107,7 @@ void ITKMultiScaleHessianBasedObjectnessImage::readFilterParameters(AbstractFilt
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKMultiScaleHessianBasedObjectnessImage::dataCheck()
 {
   // Check consistency of parameters
-  this->CheckIntegerEntry<uint32_t, double>(m_NumberOfSigmaSteps, "NumberOfSigmaSteps", 1);
+  this->CheckIntegerEntry<uint32_t, double>(m_NumberOfSigmaSteps, "NumberOfSigmaSteps", true);
 
   setErrorCondition(0);
   setWarningCondition(0);

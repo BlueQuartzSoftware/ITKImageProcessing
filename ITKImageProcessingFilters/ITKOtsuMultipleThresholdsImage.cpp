@@ -90,9 +90,9 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   setWarningCondition(0);
 
   // Check consistency of parameters
-  this->CheckIntegerEntry<uint8_t, int>(m_NumberOfThresholds, "NumberOfThresholds", 1);
-  this->CheckIntegerEntry<uint8_t, int>(m_LabelOffset, "LabelOffset", 1);
-  this->CheckIntegerEntry<uint32_t, double>(m_NumberOfHistogramBins, "NumberOfHistogramBins", 1);
+  this->CheckIntegerEntry<uint8_t, int>(m_NumberOfThresholds, "NumberOfThresholds", true);
+  this->CheckIntegerEntry<uint8_t, int>(m_LabelOffset, "LabelOffset", true);
+  this->CheckIntegerEntry<uint32_t, double>(m_NumberOfHistogramBins, "NumberOfHistogramBins", true);
 
   ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }

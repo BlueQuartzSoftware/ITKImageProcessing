@@ -87,7 +87,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   setWarningCondition(0);
 
   // Check consistency of parameters
-  this->CheckIntegerEntry<unsigned int, double>(m_NumberOfRangeGaussianSamples, "NumberOfRangeGaussianSamples", 1);
+  this->CheckIntegerEntry<unsigned int, double>(m_NumberOfRangeGaussianSamples, "NumberOfRangeGaussianSamples", true);
 
   ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }

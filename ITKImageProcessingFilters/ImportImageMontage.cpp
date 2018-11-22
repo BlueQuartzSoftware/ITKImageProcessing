@@ -30,7 +30,6 @@ ImportImageMontage::ImportImageMontage()
 : m_DataContainerName(SIMPL::Defaults::ImageDataContainerName)
 , m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName)
 , m_MetaDataAttributeMatrixName("MetaDataAttributeMatrix")
-, m_RegistrationCoordinates(nullptr)
 {
   m_Origin.x = 0.0;
   m_Origin.y = 0.0;

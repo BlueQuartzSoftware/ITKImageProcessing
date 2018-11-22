@@ -84,8 +84,8 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   setWarningCondition(0);
 
   // Check consistency of parameters
-  this->CheckIntegerEntry<uint8_t, int>(m_ForegroundValue, "ForegroundValue", 1);
-  this->CheckIntegerEntry<uint8_t, int>(m_BackgroundValue, "BackgroundValue", 1);
+  this->CheckIntegerEntry<uint8_t, int>(m_ForegroundValue, "ForegroundValue", true);
+  this->CheckIntegerEntry<uint8_t, int>(m_BackgroundValue, "BackgroundValue", true);
 
   ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }

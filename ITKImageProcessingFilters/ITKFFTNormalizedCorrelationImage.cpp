@@ -85,7 +85,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   setWarningCondition(0);
 
   // Check consistency of parameters
-  this->CheckIntegerEntry<uint64_t, double>(m_RequiredNumberOfOverlappingPixels, "RequiredNumberOfOverlappingPixels", 1);
+  this->CheckIntegerEntry<uint64_t, double>(m_RequiredNumberOfOverlappingPixels, "RequiredNumberOfOverlappingPixels", true);
 
   ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }

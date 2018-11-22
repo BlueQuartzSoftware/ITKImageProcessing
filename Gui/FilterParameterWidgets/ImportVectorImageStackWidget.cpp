@@ -70,7 +70,6 @@ static QString m_OpenDialogLastFilePath;
 ImportVectorImageStackWidget::ImportVectorImageStackWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent)
 : FilterParameterWidget(parameter, filter, parent)
 , m_Ui(new Ui::ImportVectorImageStackWidget)
-, m_DidCausePreflight(false)
 {
   ImportVectorImageStackFilterParameter* fli = dynamic_cast<ImportVectorImageStackFilterParameter*>(parameter);
   if(nullptr == fli)

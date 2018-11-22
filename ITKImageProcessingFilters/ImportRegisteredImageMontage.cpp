@@ -30,7 +30,6 @@ ImportRegisteredImageMontage::ImportRegisteredImageMontage()
 , m_RegistrationFile("")
 , m_RegistrationCoordinatesArrayName("RegistrationCoordinates")
 , m_AttributeArrayNamesArrayName("AttributeArrayNames")
-, m_RegistrationCoordinates(nullptr)
 {
   m_Origin.x = 0.0;
   m_Origin.y = 0.0;
@@ -288,9 +287,8 @@ void ImportRegisteredImageMontage::dataCheck()
 
     AttributeMatrix::Pointer mdAttrMat = getDataContainerArray()->getDataContainer(getDataContainerName())->getAttributeMatrix(getMetaDataAttributeMatrixName());
     size_t availableFileCount = 0;
-    for(QVector<QString>::iterator filepath = fileList.begin(); filepath != fileList.end(); ++filepath)
+    for(const auto& imageFName : fileList)
     {
-      QString imageFName = *filepath;
       QFileInfo fi(imageFName);
       if(fi.exists())
       {
@@ -307,9 +305,8 @@ void ImportRegisteredImageMontage::dataCheck()
 
     QVector<size_t> cDims(1, 1);
 
-    for(QVector<QString>::iterator filepath = fileList.begin(); filepath != fileList.end(); ++filepath)
+    for(const auto& imageFName : fileList)
     {
-      QString imageFName = *filepath;
       QFileInfo fi(imageFName);
       if(!fi.exists())
       {

@@ -33,7 +33,7 @@
 
 #include "ITKImageWriter.h"
 
-#include <string.h>
+#include <cstring>
 
 #include <QtCore/QDir>
 

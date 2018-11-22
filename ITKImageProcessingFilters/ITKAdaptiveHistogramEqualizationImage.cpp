@@ -87,7 +87,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   setWarningCondition(0);
 
   // Check consistency of parameters
-  this->CheckVectorEntry<unsigned int, FloatVec3_t>(m_Radius, "Radius", 1);
+  this->CheckVectorEntry<unsigned int, FloatVec3_t>(m_Radius, "Radius", true);
 
   ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }

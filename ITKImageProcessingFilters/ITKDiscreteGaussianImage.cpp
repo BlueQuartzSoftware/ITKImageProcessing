@@ -90,9 +90,9 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   setWarningCondition(0);
 
   // Check consistency of parameters
-  this->CheckVectorEntry<double, FloatVec3_t>(m_Variance, "Variance", 0);
-  this->CheckIntegerEntry<unsigned int, double>(m_MaximumKernelWidth, "MaximumKernelWidth", 1);
-  this->CheckVectorEntry<double, FloatVec3_t>(m_MaximumError, "MaximumError", 0);
+  this->CheckVectorEntry<double, FloatVec3_t>(m_Variance, "Variance", false);
+  this->CheckIntegerEntry<unsigned int, double>(m_MaximumKernelWidth, "MaximumKernelWidth", true);
+  this->CheckVectorEntry<double, FloatVec3_t>(m_MaximumError, "MaximumError", false);
 
   ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
