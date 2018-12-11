@@ -41,22 +41,6 @@
 
 #include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
-/* For registering ImageIO Factories in Python*/
-#include <itkBMPImageIOFactory.h>
-#include <itkBioRadImageIOFactory.h>
-#include <itkGE4ImageIOFactory.h>
-#include <itkGE5ImageIOFactory.h>
-#include <itkGiplImageIOFactory.h>
-#include <itkJPEGImageIOFactory.h>
-#include <itkMRCImageIOFactory.h>
-#include <itkMetaImageIOFactory.h>
-#include <itkNiftiImageIOFactory.h>
-#include <itkNrrdImageIOFactory.h>
-#include <itkPNGImageIOFactory.h>
-#include <itkStimulateImageIOFactory.h>
-#include <itkTIFFImageIOFactory.h>
-#include <itkVTKImageIOFactory.h>
-
 /**
  * @brief The ITKImageProcessingFilter class. See [Filter documentation](@ref itkimageprocessingfilter) for details.
  */
@@ -164,24 +148,7 @@ public:
   /* For Python use,
       register the ImageIOFactories
   */
-  void registerImageIOFactories() 
-  {
-	  itk::JPEGImageIOFactory::RegisterOneFactory();
-	  itk::NrrdImageIOFactory::RegisterOneFactory();
-	  itk::PNGImageIOFactory::RegisterOneFactory();
-	  itk::TIFFImageIOFactory::RegisterOneFactory();
-	  itk::JPEGImageIOFactory::RegisterOneFactory();
-	  itk::BMPImageIOFactory::RegisterOneFactory();
-	  itk::MetaImageIOFactory::RegisterOneFactory();
-	  itk::NiftiImageIOFactory::RegisterOneFactory();
-	  itk::GiplImageIOFactory::RegisterOneFactory();
-	  itk::VTKImageIOFactory::RegisterOneFactory();
-	  itk::StimulateImageIOFactory::RegisterOneFactory();
-	  itk::BioRadImageIOFactory::RegisterOneFactory();
-	  itk::GE4ImageIOFactory::RegisterOneFactory();
-	  itk::GE5ImageIOFactory::RegisterOneFactory();
-	  itk::MRCImageIOFactory::RegisterOneFactory();
-  }
+  void registerImageIOFactories() const;
 
 signals:
   /**

@@ -37,6 +37,28 @@
 
 #include <QtCore/QDir>
 
+// ITK includes
+#include <itkImageFileWriter.h>
+#include <itkImageSeriesWriter.h>
+#include <itkNumericSeriesFileNames.h>
+#include <itksys/SystemTools.hxx>
+
+/* For registering ImageIO Factories in Python*/
+#include <itkBMPImageIOFactory.h>
+#include <itkBioRadImageIOFactory.h>
+#include <itkGE4ImageIOFactory.h>
+#include <itkGE5ImageIOFactory.h>
+#include <itkGiplImageIOFactory.h>
+#include <itkJPEGImageIOFactory.h>
+#include <itkMRCImageIOFactory.h>
+#include <itkMetaImageIOFactory.h>
+#include <itkNiftiImageIOFactory.h>
+#include <itkNrrdImageIOFactory.h>
+#include <itkPNGImageIOFactory.h>
+#include <itkStimulateImageIOFactory.h>
+#include <itkTIFFImageIOFactory.h>
+#include <itkVTKImageIOFactory.h>
+
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
@@ -45,24 +67,21 @@
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Utilities/FileSystemPathHelper.h"
-
-#include "ITKImageProcessing/ITKImageProcessingConstants.h"
-#include "ITKImageProcessing/ITKImageProcessingVersion.h"
-#include "ITKImageProcessingPlugin.h"
 #include "SIMPLib/ITK/itkInPlaceDream3DDataToImageFilter.h"
 #define DREAM3D_USE_RGB_RGBA 1
 #define DREAM3D_USE_Vector 1
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
 
+
+#include "ITKImageProcessing/ITKImageProcessingConstants.h"
+#include "ITKImageProcessing/ITKImageProcessingVersion.h"
+#include "ITKImageProcessingPlugin.h"
+
 #ifdef _WIN32
 extern Q_CORE_EXPORT int qt_ntfs_permission_lookup;
 #endif
 
-// ITK includes
-#include <itkImageFileWriter.h>
-#include <itkImageSeriesWriter.h>
-#include <itkNumericSeriesFileNames.h>
-#include <itksys/SystemTools.hxx>
+
 
 // -----------------------------------------------------------------------------
 //
@@ -77,6 +96,28 @@ ITKImageWriter::ITKImageWriter()
 //
 // -----------------------------------------------------------------------------
 ITKImageWriter::~ITKImageWriter() = default;
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ITKImageWriter::registerImageIOFactories() const
+{
+	  itk::JPEGImageIOFactory::RegisterOneFactory();
+	  itk::NrrdImageIOFactory::RegisterOneFactory();
+	  itk::PNGImageIOFactory::RegisterOneFactory();
+	  itk::TIFFImageIOFactory::RegisterOneFactory();
+	  itk::JPEGImageIOFactory::RegisterOneFactory();
+	  itk::BMPImageIOFactory::RegisterOneFactory();
+	  itk::MetaImageIOFactory::RegisterOneFactory();
+	  itk::NiftiImageIOFactory::RegisterOneFactory();
+	  itk::GiplImageIOFactory::RegisterOneFactory();
+	  itk::VTKImageIOFactory::RegisterOneFactory();
+	  itk::StimulateImageIOFactory::RegisterOneFactory();
+	  itk::BioRadImageIOFactory::RegisterOneFactory();
+	  itk::GE4ImageIOFactory::RegisterOneFactory();
+	  itk::GE5ImageIOFactory::RegisterOneFactory();
+	  itk::MRCImageIOFactory::RegisterOneFactory();
+}
 
 // -----------------------------------------------------------------------------
 //
