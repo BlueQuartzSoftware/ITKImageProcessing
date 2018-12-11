@@ -86,7 +86,7 @@ protected:
   /**
    * @brief dataCheckInternal overloads dataCheckInternal in ITKImageBase and calls templated dataCheck
    */
-  void virtual dataCheckInternal() override;
+  void dataCheckInternal() override;
 
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
@@ -96,7 +96,7 @@ protected:
   /**
   * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
   */
-  void virtual filterInternal() override;
+  void filterInternal() override;
 
   /**
   * @brief Applies the filter
