@@ -59,6 +59,7 @@ set(DREAM3D_ADDITIONAL_ITK_MODULES
     ITKIOGE
     ITKIOMRC
     ITKTestKernel
+    Montage
     )
     
 option(${PLUGIN_NAME}_ENABLE_SCIFIO "Enable SCIFIO ITK Modules" OFF)

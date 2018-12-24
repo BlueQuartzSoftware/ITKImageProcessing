@@ -6,6 +6,8 @@
 
 #include <QtCore/QDir>
 
+#include "itkParseTileConfiguration.h"
+
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/FileListInfoFilterParameter.h"
@@ -26,10 +28,8 @@
 ImportRegisteredImageMontage::ImportRegisteredImageMontage()
 : m_DataContainerName(SIMPL::Defaults::ImageDataContainerName)
 , m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName)
-, m_MetaDataAttributeMatrixName("MetaDataAttributeMatrix")
 , m_RegistrationFile("")
-, m_RegistrationCoordinatesArrayName("RegistrationCoordinates")
-, m_AttributeArrayNamesArrayName("AttributeArrayNames")
+, m_AttributeArrayName("ImageTile")
 {
   m_Origin.x = 0.0;
   m_Origin.y = 0.0;
@@ -55,6 +55,22 @@ ImportRegisteredImageMontage::~ImportRegisteredImageMontage() = default;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void ImportRegisteredImageMontage::initialize()
+{
+  setErrorCondition(0);
+  setWarningCondition(0);
+  setCancel(false);
+
+  if(m_InStream.isOpen())
+  {
+    m_InStream.close();
+  }
+  m_NumImages = 0;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void ImportRegisteredImageMontage::setupFilterParameters()
 {
   QVector<FilterParameter::Pointer> parameters;
@@ -64,99 +80,10 @@ void ImportRegisteredImageMontage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Resolution", Resolution, FilterParameter::Parameter, ImportRegisteredImageMontage));
 
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Registration File", RegistrationFile, FilterParameter::Parameter, ImportRegisteredImageMontage, "", "*.txt"));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Data Container", DataContainerName, FilterParameter::CreatedArray, ImportRegisteredImageMontage));
-  parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Data Container Prefix", DataContainerName, FilterParameter::CreatedArray, ImportRegisteredImageMontage));
   parameters.push_back(SIMPL_NEW_STRING_FP("Cell Attribute Matrix", CellAttributeMatrixName, FilterParameter::CreatedArray, ImportRegisteredImageMontage));
-  parameters.push_back(SeparatorFilterParameter::New("Meta Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Meta Data Attribute Matrix", MetaDataAttributeMatrixName, FilterParameter::CreatedArray, ImportRegisteredImageMontage));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Registration Coordinates", RegistrationCoordinatesArrayName, FilterParameter::CreatedArray, ImportRegisteredImageMontage));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Image Array Names", AttributeArrayNamesArrayName, FilterParameter::CreatedArray, ImportRegisteredImageMontage));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Image Array Name", AttributeArrayName, FilterParameter::CreatedArray, ImportRegisteredImageMontage));
   setFilterParameters(parameters);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void ImportRegisteredImageMontage::readFilterParameters(AbstractFilterParametersReader* reader, int index)
-{
-  reader->openFilterGroup(this, index);
-  setDataContainerName(reader->readString("DataContainerName", getDataContainerName()));
-  setCellAttributeMatrixName(reader->readString("CellAttributeMatrixName", getCellAttributeMatrixName()));
-  setMetaDataAttributeMatrixName(reader->readString("MetaDataAttributeMatrixName", getMetaDataAttributeMatrixName()));
-  setRegistrationCoordinatesArrayName(reader->readString("RegistrationCoordinatesArrayName", getRegistrationCoordinatesArrayName()));
-  setAttributeArrayNamesArrayName(reader->readString("AttributeArrayNamesArrayName", getAttributeArrayNamesArrayName()));
-  setInputFileListInfo(reader->readFileListInfo("InputFileListInfo", getInputFileListInfo()));
-  setOrigin(reader->readFloatVec3("Origin", getOrigin()));
-  setResolution(reader->readFloatVec3("Resolution", getResolution()));
-  setRegistrationFile(reader->readString("RegistrationFile", getRegistrationFile()));
-  reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int32_t ImportRegisteredImageMontage::parseRegistrationFile(QFile& reader)
-{
-  reader.reset();
-  int32_t err = 0;
-  QByteArray buf;
-  QList<QByteArray> tokens;
-  QList<QByteArray> files;
-  bool ok = false;
-  QString word("");
-  QString xCoord;
-  QString yCoord;
-  int32_t lineNum = 0;
-
-  // TODO: modify this reader to use caching
-  while(!reader.atEnd())
-  {
-    buf = reader.readLine();
-    buf = buf.trimmed();
-    buf = buf.simplified();
-    tokens = buf.split(' ');
-
-    // If the buffer is split by a ';' and ends in a ')', then
-    // we are probable actually reading a file name and its coordinates
-    if(tokens.size() == 4)
-    {
-      if(tokens[1][0] == ';' && tokens[tokens.size() - 1][tokens[tokens.size() - 1].size() - 1] == ')')
-      {
-        lineNum++;
-      }
-
-      files = tokens[0].split('.');
-      word = files[0];
-      m_ArrayNames.push_back(word);
-
-      yCoord = tokens[tokens.size() - 1];
-      xCoord = tokens[tokens.size() - 2];
-      yCoord.remove(')');
-      xCoord.remove(',');
-      xCoord.remove('(');
-      m_Coords.push_back(xCoord.toFloat(&ok));
-      m_Coords.push_back(yCoord.toFloat(&ok));
-    }
-  }
-
-  m_NumImages = lineNum;
-
-  return err;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void ImportRegisteredImageMontage::initialize()
-{
-  m_AttributeArrayNamesPtr = StringDataArray::NullPointer();
-  if(m_InStream.isOpen())
-  {
-    m_InStream.close();
-  }
-  m_NumImages = 0;
-  m_ArrayNames.clear();
-  m_Coords.clear();
 }
 
 // -----------------------------------------------------------------------------
@@ -212,44 +139,28 @@ void ImportRegisteredImageMontage::dataCheck()
     return;
   }
 
-  err = parseRegistrationFile(m_InStream);
-  if(err < 0)
+  if (fi.completeSuffix() == "csv")
   {
-    return;
+    // Parse Robomet Config File
+    err = parseRobometConfigFile(m_InStream);
+    if(err < 0)
+    {
+      return;
+    }
+  }
+  else if (fi.completeSuffix() == "txt")
+  {
+    // Parse Fiji Config File
+    err = parseFijiConfigFile(m_InStream);
+    if(err < 0)
+    {
+      return;
+    }
   }
 
   if(getInPreflight())
   {
     m_InStream.close();
-  }
-
-  QVector<size_t> tDims(1, m_NumImages);
-  QVector<size_t> cDims(1, 1);
-  getDataContainerArray()->getDataContainer(getDataContainerName())->createNonPrereqAttributeMatrix(this, getMetaDataAttributeMatrixName(), tDims, AttributeMatrix::Type::MetaData);
-  if(getErrorCondition() < 0)
-  {
-    return;
-  }
-  DataArrayPath path(getDataContainerName(), getMetaDataAttributeMatrixName(), getAttributeArrayNamesArrayName());
-  AttributeMatrix::Pointer metaDataAttrMat = getDataContainerArray()->getAttributeMatrix(path);
-  StringDataArray::Pointer attributeArrayNames = StringDataArray::CreateArray(metaDataAttrMat->getNumberOfTuples(), getAttributeArrayNamesArrayName());
-  metaDataAttrMat->addAttributeArray(getAttributeArrayNamesArrayName(), attributeArrayNames);
-  m_AttributeArrayNamesPtr = attributeArrayNames;
-  if(getErrorCondition() < 0)
-  {
-    return;
-  }
-
-  cDims[0] = 2;
-  path.update(getDataContainerName(), getMetaDataAttributeMatrixName(), getRegistrationCoordinatesArrayName());
-  m_RegistrationCoordinatesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<FloatArrayType, AbstractFilter, float>(this, path, 0, cDims);
-  if(getErrorCondition() < 0)
-  {
-    return;
-  }
-  if(nullptr != m_RegistrationCoordinatesPtr.lock())
-  {
-    m_RegistrationCoordinates = m_RegistrationCoordinatesPtr.lock()->getPointer(0);
   }
 
   bool hasMissingFiles = false;
@@ -323,6 +234,73 @@ void ImportRegisteredImageMontage::dataCheck()
       }
     }
   }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int32_t ImportRegisteredImageMontage::parseFijiConfigFile(QFile& reader)
+{
+  itk::TileLayout2D stageTiles = itk::ParseTileConfiguration2D(getRegistrationFile().toStdString());
+  for (auto tile2D : stageTiles)
+  {
+    for (auto tile : tile2D)
+    {
+      tile.FileName;
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int32_t ImportRegisteredImageMontage::parseRobometConfigFile(QFile& reader)
+{
+  reader.reset();
+  int32_t err = 0;
+  QByteArray buf;
+  QList<QByteArray> tokens;
+  QList<QByteArray> files;
+  bool ok = false;
+  QString word("");
+  QString xCoord;
+  QString yCoord;
+  int32_t lineNum = 0;
+
+  // TODO: modify this reader to use caching
+  while(!reader.atEnd())
+  {
+    buf = reader.readLine();
+    buf = buf.trimmed();
+    buf = buf.simplified();
+    tokens = buf.split(' ');
+
+    // If the buffer is split by a ';' and ends in a ')', then
+    // we are probable actually reading a file name and its coordinates
+    if(tokens.size() == 4)
+    {
+      if(tokens[1][0] == ';' && tokens[tokens.size() - 1][tokens[tokens.size() - 1].size() - 1] == ')')
+      {
+        lineNum++;
+      }
+
+      files = tokens[0].split('.');
+      word = files[0];
+      m_ArrayNames.push_back(word);
+
+      yCoord = tokens[tokens.size() - 1];
+      xCoord = tokens[tokens.size() - 2];
+      yCoord.remove(')');
+      xCoord.remove(',');
+      xCoord.remove('(');
+      m_Coords.push_back(xCoord.toFloat(&ok));
+      m_Coords.push_back(yCoord.toFloat(&ok));
+    }
+  }
+
+  m_NumImages = lineNum;
+
+  return err;
 }
 
 // -----------------------------------------------------------------------------

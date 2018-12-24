@@ -48,9 +48,6 @@ public:
   SIMPL_FILTER_PARAMETER(QString, CellAttributeMatrixName)
   Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
-  SIMPL_FILTER_PARAMETER(QString, MetaDataAttributeMatrixName)
-  Q_PROPERTY(QString MetaDataAttributeMatrixName READ getMetaDataAttributeMatrixName WRITE setMetaDataAttributeMatrixName)
-
   SIMPL_FILTER_PARAMETER(FloatVec3_t, Origin)
   Q_PROPERTY(FloatVec3_t Origin READ getOrigin WRITE setOrigin)
 
@@ -63,11 +60,8 @@ public:
   SIMPL_FILTER_PARAMETER(FileListInfo_t, InputFileListInfo)
   Q_PROPERTY(FileListInfo_t InputFileListInfo READ getInputFileListInfo WRITE setInputFileListInfo)
 
-  SIMPL_FILTER_PARAMETER(QString, RegistrationCoordinatesArrayName)
-  Q_PROPERTY(QString RegistrationCoordinatesArrayName READ getRegistrationCoordinatesArrayName WRITE setRegistrationCoordinatesArrayName)
-
-  SIMPL_FILTER_PARAMETER(QString, AttributeArrayNamesArrayName)
-  Q_PROPERTY(QString AttributeArrayNamesArrayName READ getAttributeArrayNamesArrayName WRITE setAttributeArrayNamesArrayName)
+  SIMPL_FILTER_PARAMETER(QString, AttributeArrayName)
+  Q_PROPERTY(QString AttributeArrayName READ getAttributeArrayName WRITE setAttributeArrayName)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -120,11 +114,6 @@ public:
   void setupFilterParameters() override;
 
   /**
-   * @brief readFilterParameters Reimplemented from @see AbstractFilter class
-   */
-  void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
-
-  /**
    * @brief execute Reimplemented from @see AbstractFilter class
    */
   void execute() override;
@@ -161,11 +150,18 @@ protected:
   ImportRegisteredImageMontage();
 
   /**
-   * @brief parseRegistrationFile Parses the ASCII file with the registration coordinates
+   * @brief parseFijiConfigFile Parses the Fiji file with the configuration coordinates
    * @param reader QFile to read
    * @return Integer error value
    */
-  int32_t parseRegistrationFile(QFile& reader);
+  int32_t parseFijiConfigFile(QFile& reader);
+
+  /**
+   * @brief parseRobometConfigFile Parses the Robomet file with the configuration coordinates
+   * @param reader QFile to read
+   * @return Integer error value
+   */
+  int32_t parseRobometConfigFile(QFile& reader);
 
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
@@ -178,13 +174,8 @@ protected:
   void initialize();
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(float, RegistrationCoordinates)
-
-  StringDataArray::WeakPointer m_AttributeArrayNamesPtr;
   QFile m_InStream;
   int32_t m_NumImages;
-  QVector<QString> m_ArrayNames;
-  std::vector<float> m_Coords;
 
   /**
    * @brief Include the declarations of the ITKImageReader helper functions that are common
