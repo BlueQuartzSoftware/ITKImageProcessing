@@ -508,7 +508,7 @@ const QString ImportRegisteredImageMontage::getSubGroupName() const
 // -----------------------------------------------------------------------------
 const QString ImportRegisteredImageMontage::getHumanLabel() const
 {
-  return "Import Registered Image Montage";
+  return "ITK::Import Registered Image Montage";
 }
 
 #define ITK_IMAGE_READER_CLASS_NAME ImportRegisteredImageMontage
