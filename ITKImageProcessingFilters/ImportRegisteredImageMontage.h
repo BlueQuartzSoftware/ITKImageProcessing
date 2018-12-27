@@ -42,8 +42,8 @@ public:
 
   ~ImportRegisteredImageMontage() override;
 
-  SIMPL_FILTER_PARAMETER(QString, DataContainerName)
-  Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
+  SIMPL_FILTER_PARAMETER(QString, DataContainerPrefix)
+  Q_PROPERTY(QString DataContainerPrefix READ getDataContainerPrefix WRITE setDataContainerPrefix)
 
   SIMPL_FILTER_PARAMETER(QString, CellAttributeMatrixName)
   Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
@@ -176,6 +176,9 @@ protected:
 private:
   QFile m_InStream;
   int32_t m_NumImages;
+  std::vector<QString> m_RegisteredFileNames;
+  std::vector<QPointF> m_Coords;
+  std::vector<QString> m_RowColId;
 
   /**
    * @brief Include the declarations of the ITKImageReader helper functions that are common
