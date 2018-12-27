@@ -26,7 +26,7 @@
 //
 // -----------------------------------------------------------------------------
 ImportRegisteredImageMontage::ImportRegisteredImageMontage()
-: m_DataContainerName(SIMPL::Defaults::ImageDataContainerName)
+: m_DataContainerPrefix(SIMPL::Defaults::ImageDataContainerName + "_")
 , m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName)
 , m_RegistrationFile("")
 , m_AttributeArrayName("ImageTile")
@@ -66,6 +66,9 @@ void ImportRegisteredImageMontage::initialize()
     m_InStream.close();
   }
   m_NumImages = 0;
+  m_RegisteredFileNames.clear();
+  m_Coords.clear();
+  m_RowColId.clear();
 }
 
 // -----------------------------------------------------------------------------
@@ -74,13 +77,12 @@ void ImportRegisteredImageMontage::initialize()
 void ImportRegisteredImageMontage::setupFilterParameters()
 {
   QVector<FilterParameter::Pointer> parameters;
+  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Registration File", RegistrationFile, FilterParameter::Parameter, ImportRegisteredImageMontage, "", "*.txt"));
   parameters.push_back(SIMPL_NEW_FILELISTINFO_FP("Input File List", InputFileListInfo, FilterParameter::Parameter, ImportRegisteredImageMontage));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Origin", Origin, FilterParameter::Parameter, ImportRegisteredImageMontage));
-
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Resolution", Resolution, FilterParameter::Parameter, ImportRegisteredImageMontage));
 
-  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Registration File", RegistrationFile, FilterParameter::Parameter, ImportRegisteredImageMontage, "", "*.txt"));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Data Container Prefix", DataContainerName, FilterParameter::CreatedArray, ImportRegisteredImageMontage));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Data Container Prefix", DataContainerPrefix, FilterParameter::CreatedArray, ImportRegisteredImageMontage));
   parameters.push_back(SIMPL_NEW_STRING_FP("Cell Attribute Matrix", CellAttributeMatrixName, FilterParameter::CreatedArray, ImportRegisteredImageMontage));
   parameters.push_back(SIMPL_NEW_STRING_FP("Image Array Name", AttributeArrayName, FilterParameter::CreatedArray, ImportRegisteredImageMontage));
   setFilterParameters(parameters);
@@ -101,9 +103,8 @@ void ImportRegisteredImageMontage::dataCheck()
   if(m_InputFileListInfo.InputPath.isEmpty())
   {
     ss = QObject::tr("The input directory must be set");
-    setErrorCondition(-13);
+    setErrorCondition(-2000);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-
     return;
   }
 
@@ -111,7 +112,7 @@ void ImportRegisteredImageMontage::dataCheck()
   if(!fi.exists())
   {
     QString ss = QObject::tr("The registration file does not exist");
-    setErrorCondition(-388);
+    setErrorCondition(-2001);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
@@ -119,7 +120,7 @@ void ImportRegisteredImageMontage::dataCheck()
   if(m_RegistrationFile.isEmpty())
   {
     QString ss = QObject::tr("The registration file must be set").arg(getHumanLabel());
-    setErrorCondition(-1);
+    setErrorCondition(-2002);
     notifyErrorMessage(getHumanLabel(), ss, -1);
     return;
   }
@@ -128,14 +129,8 @@ void ImportRegisteredImageMontage::dataCheck()
   if(!m_InStream.open(QIODevice::ReadOnly | QIODevice::Text))
   {
     QString ss = QObject::tr("Registration file could not be opened");
-    setErrorCondition(-100);
+    setErrorCondition(-2003);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return;
-  }
-
-  DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
-  if(getErrorCondition() < 0)
-  {
     return;
   }
 
@@ -156,6 +151,13 @@ void ImportRegisteredImageMontage::dataCheck()
     {
       return;
     }
+  }
+  else
+  {
+    QString ss = QObject::tr("Registration file is not in a recognized format.  Registration files must either be Fiji (*.txt) or Robomet (*.csv) configuration files.");
+    setErrorCondition(-2005);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
   }
 
   if(getInPreflight())
@@ -182,21 +184,11 @@ void ImportRegisteredImageMontage::dataCheck()
   if(fileList.empty())
   {
     QString ss = QObject::tr("No files have been selected for import. Have you set the input directory?");
-    setErrorCondition(-11);
+    setErrorCondition(-2006);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   else
   {
-    setFileName(fileList[0]);
-    QFileInfo fi(fileList[0]);
-    DataArrayPath dap(getDataContainerName(), getCellAttributeMatrixName(), fi.baseName());
-    readImage(dap, true);
-    // The previous call will add an attribute array that we don't need at this point
-    // so just remove it.
-    AttributeMatrix::Pointer am = m->getAttributeMatrix(getCellAttributeMatrixName());
-    am->removeAttributeArray(fi.baseName());
-
-    AttributeMatrix::Pointer mdAttrMat = getDataContainerArray()->getDataContainer(getDataContainerName())->getAttributeMatrix(getMetaDataAttributeMatrixName());
     size_t availableFileCount = 0;
     for(const auto& imageFName : fileList)
     {
@@ -206,32 +198,54 @@ void ImportRegisteredImageMontage::dataCheck()
         availableFileCount++;
       }
     }
-    if(availableFileCount != mdAttrMat->getNumberOfTuples())
+    if(availableFileCount != m_NumImages)
     {
-      QString ss = QObject::tr("The number of files in selected folder (%1) does not match the number in the registration file (%2)").arg(fileList.size()).arg(mdAttrMat->getNumberOfTuples());
-      setErrorCondition(-101);
+      QString ss = QObject::tr("The number of files in selected folder (%1) does not match the number in the registration file (%2)").arg(fileList.size()).arg(m_NumImages);
+      setErrorCondition(-2007);
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return;
     }
 
     QVector<size_t> cDims(1, 1);
 
-    for(const auto& imageFName : fileList)
+    for(int i = 0; i < fileList.size(); i++)
     {
+      if(getCancel())
+      {
+        return;
+      }
+
+      QString imageFName = fileList[i];
+
       QFileInfo fi(imageFName);
       if(!fi.exists())
       {
         continue;
       }
-      QStringList splitFilePaths = imageFName.split('/');
-      QString fileName = splitFilePaths[splitFilePaths.size() - 1];
-      splitFilePaths = fileName.split('.');
-      DataArrayPath path(getDataContainerName(), getCellAttributeMatrixName(), splitFilePaths[0]);
-      getDataContainerArray()->createNonPrereqArrayFromPath<UInt8ArrayType, AbstractFilter, uint8_t>(this, path, 0, cDims);
+
+      int arrayNamesPos = find(m_RegisteredFileNames.begin(), m_RegisteredFileNames.end(), fi.fileName()) - m_RegisteredFileNames.begin();
+      if (arrayNamesPos >= m_RegisteredFileNames.size())
+      {
+        QString ss = QObject::tr("File '%1' in the selected files list does not have a corresponding entry in the registration file '%2'").arg(fi.fileName()).arg(m_RegistrationFile);
+        setErrorCondition(-2008);
+        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        return;
+      }
+
+      QString dcName = tr("%1_%2").arg(getDataContainerPrefix()).arg(m_RowColId[arrayNamesPos]);
+
+      DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, dcName);
       if(getErrorCondition() < 0)
       {
         return;
       }
+      ImageGeom::Pointer geom = ImageGeom::New();
+      geom->initializeWithZeros();
+      m->setGeometry(geom);
+
+      setFileName(imageFName);
+      DataArrayPath dap(dcName, getCellAttributeMatrixName(), getAttributeArrayName());
+      readImage(dap, getInPreflight());
     }
   }
 }
@@ -241,14 +255,37 @@ void ImportRegisteredImageMontage::dataCheck()
 // -----------------------------------------------------------------------------
 int32_t ImportRegisteredImageMontage::parseFijiConfigFile(QFile& reader)
 {
+  int32_t err = 0;
+
   itk::TileLayout2D stageTiles = itk::ParseTileConfiguration2D(getRegistrationFile().toStdString());
-  for (auto tile2D : stageTiles)
+  for (int i = 0; i < stageTiles.size(); i++)
   {
-    for (auto tile : tile2D)
+    auto tile2D = stageTiles[i];
+    for (int j = 0; j < tile2D.size(); j++)
     {
-      tile.FileName;
+      auto tile = tile2D[j];
+      m_RegisteredFileNames.push_back(QString::fromStdString(tile.FileName));
+
+      uint32_t coordsSize = tile.Position.GetPointDimension();
+      if (coordsSize != 2)
+      {
+        QString ss = QObject::tr("The dimension size of all tiles in the fiji config file must be equal to 2.");
+        setErrorCondition(-2004);
+        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        m_RegisteredFileNames.clear();
+        m_Coords.clear();
+        m_RowColId.clear();
+        m_NumImages = 0;
+        return -1;
+      }
+
+      m_Coords.push_back(QPointF(tile.Position[0], tile.Position[1]));
+      m_RowColId.push_back(tr("r%1c%2").arg(i).arg(j));
+      m_NumImages++;
     }
   }
+
+  return err;
 }
 
 // -----------------------------------------------------------------------------
@@ -286,15 +323,14 @@ int32_t ImportRegisteredImageMontage::parseRobometConfigFile(QFile& reader)
 
       files = tokens[0].split('.');
       word = files[0];
-      m_ArrayNames.push_back(word);
+      m_RegisteredFileNames.push_back(word);
 
       yCoord = tokens[tokens.size() - 1];
       xCoord = tokens[tokens.size() - 2];
       yCoord.remove(')');
       xCoord.remove(',');
       xCoord.remove('(');
-      m_Coords.push_back(xCoord.toFloat(&ok));
-      m_Coords.push_back(yCoord.toFloat(&ok));
+      m_Coords.push_back(QPointF(xCoord.toFloat(&ok), yCoord.toFloat(&ok)));
     }
   }
 
@@ -329,74 +365,32 @@ void ImportRegisteredImageMontage::execute()
     return;
   }
 
-  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
-  AttributeMatrix::Pointer attrMat = m->getAttributeMatrix(getCellAttributeMatrixName());
-
-  for(int32_t i = 0; i < m_NumImages; i++)
+  int fileCount = m_RegisteredFileNames.size();
+  for(int i = 0; i < fileCount; i++)
   {
-    m_AttributeArrayNamesPtr.lock()->setValue(i, m_ArrayNames[i]);
-    m_RegistrationCoordinates[2 * i] = m_Coords[2 * i];
-    m_RegistrationCoordinates[2 * i + 1] = m_Coords[2 * i + 1];
-  }
-
-  //qint64 z = m_InputFileListInfo.StartIndex;
-
-  bool hasMissingFiles = false;
-  bool orderAscending = false;
-
-  if(m_InputFileListInfo.Ordering == 0)
-  {
-    orderAscending = true;
-  }
-  else if(m_InputFileListInfo.Ordering == 1)
-  {
-    orderAscending = false;
-  }
-
-  // Now generate all the file names the user is asking for and populate the table
-  QVector<QString> fileList = FilePathGenerator::GenerateFileList(m_InputFileListInfo.StartIndex, m_InputFileListInfo.EndIndex, m_InputFileListInfo.IncrementIndex, hasMissingFiles, orderAscending,
-                                                                  m_InputFileListInfo.InputPath, m_InputFileListInfo.FilePrefix, m_InputFileListInfo.FileSuffix, m_InputFileListInfo.FileExtension,
-                                                                  m_InputFileListInfo.PaddingDigits);
-  if(fileList.empty())
-  {
-    QString ss = QObject::tr("No files have been selected for import. Have you set the input directory?");
-    setErrorCondition(-11);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-  }
-
-  for(QVector<QString>::iterator filepath = fileList.begin(); filepath != fileList.end(); ++filepath)
-  {
-    QString imageFName = *filepath;
+    QString imageFName = m_RegisteredFileNames[i];
     QFileInfo fi(imageFName);
     if(!fi.exists())
     {
       continue;
     }
-    QStringList splitFilePaths = imageFName.split('/');
-    QString fileName = splitFilePaths[splitFilePaths.size() - 1];
-    splitFilePaths = fileName.split('.');
-    QString ss = QObject::tr("Importing file %1").arg(imageFName);
-    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
 
-    setFileName(imageFName);
-    DataArrayPath dap(getDataContainerName(), getCellAttributeMatrixName(), splitFilePaths[0]);
-    readImage(dap, false);
+    QString dcName = getDataContainerPrefix() + QString::number(i);
+
+    DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, dcName);
     if(getErrorCondition() < 0)
     {
-      setErrorCondition(-14000);
-      notifyErrorMessage(getHumanLabel(), "Failed to load image file", getErrorCondition());
-      break;
+      return;
     }
 
-    // This is the first image so we need to create our block of data to store the data
-    // if(z == m_InputFileListInfo.StartIndex)
     {
       ImageGeom::Pointer imageGeom = m->getGeometryAs<ImageGeom>();
       size_t dims[3] = {0, 0, 0};
       std::tie(dims[0], dims[1], dims[2]) = imageGeom->getDimensions();
-      dims[2] = fileList.size();
+      dims[2] = fileCount;
       imageGeom->setDimensions(dims);
     }
+
     if(getCancel())
     {
       return;
@@ -412,18 +406,7 @@ AbstractFilter::Pointer ImportRegisteredImageMontage::newFilterInstance(bool cop
   ImportRegisteredImageMontage::Pointer filter = ImportRegisteredImageMontage::New();
   if(copyFilterParameters)
   {
-    filter->setFilterParameters(getFilterParameters());
-    // We are going to hand copy all of the parameters because the other way of copying the parameters are going to
-    // miss some of them because we are not enumerating all of them.
-    SIMPL_COPY_INSTANCEVAR(DataContainerName)
-    SIMPL_COPY_INSTANCEVAR(CellAttributeMatrixName)
-    SIMPL_COPY_INSTANCEVAR(MetaDataAttributeMatrixName)
-    SIMPL_COPY_INSTANCEVAR(RegistrationCoordinatesArrayName)
-    SIMPL_COPY_INSTANCEVAR(AttributeArrayNamesArrayName)
-    SIMPL_COPY_INSTANCEVAR(Resolution)
-    SIMPL_COPY_INSTANCEVAR(Origin)
-    SIMPL_COPY_INSTANCEVAR(InputFileListInfo)
-    SIMPL_COPY_INSTANCEVAR(RegistrationFile)
+    copyFilterParameterInstanceVariables(filter.get());
   }
   return filter;
 }
