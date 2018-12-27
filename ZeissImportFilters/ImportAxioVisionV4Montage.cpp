@@ -947,7 +947,7 @@ ImageGeom::Pointer ImportAxioVisionV4Montage::initializeImageGeom(const QDomElem
   scaling[0] = scalingDom.text().toFloat(&ok);
   scalingDom = root.firstChildElement(ZeissImportConstants::Xml::Scaling).firstChildElement("Factor_1");
   scaling[1] = scalingDom.text().toFloat(&ok);
-  image->setResolution(scaling);
+  image->setResolution(scaling.data());
 
   //#######################################################################
   // Initialize the Length Units of the geometry
