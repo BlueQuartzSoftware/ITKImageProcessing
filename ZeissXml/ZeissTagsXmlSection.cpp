@@ -38,10 +38,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ZeissTagsXmlSection::ZeissTagsXmlSection()
-{
-  //m_MetaDataMap = MetaDataType(new MetaDataType);
-}
+ZeissTagsXmlSection::ZeissTagsXmlSection() = default;
 
 // -----------------------------------------------------------------------------
 //
@@ -51,7 +48,7 @@ ZeissTagsXmlSection::~ZeissTagsXmlSection() = default;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ZeissTagsXmlSection::addMetaDataEntry(AbstractZeissMetaData::Pointer entry)
+void ZeissTagsXmlSection::addMetaDataEntry(AbstractZeissMetaData::Pointer& entry)
 {
   int idTag = entry->getZeissIdTag();
   QMap<int, AbstractZeissMetaData::Pointer>::iterator e =  m_MetaDataMap.find(idTag);

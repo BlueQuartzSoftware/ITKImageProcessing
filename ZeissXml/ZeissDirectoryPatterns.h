@@ -11,18 +11,21 @@
 
 #pragma once
 
+#error THIS FILE IS NO LONGER USED OR COMPILED
+
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 #include <string>
 
 namespace Zeiss {
-  namespace DirectoryPatterns {
-    const std::string Dot (".");
-    const std::string _Files("_Files");
-    const  std::string _P ("_p");
-    const std::string MetaXML("_meta.xml");
-  }
+namespace DirectoryPatterns
+{
+const std::string Dot(".");
+const std::string _Files("_Files");
+const std::string _P("_p");
+const std::string MetaXML("_meta.xml");
+} // namespace DirectoryPatterns
 }
 
 
@@ -51,18 +54,19 @@ class ZeissDirectoryPatterns
 
     std::string generateZeissTileName(int slice, int numberWidth, int tileIndex);
 
-    int parseDocumentName(const std::string &guessedPrefix,
-                                  const std::string &zeissDocumentName);
+    int parseDocumentName(const std::string& guessedPrefix, const std::string& zeissDocumentName);
 
     int extractSlice(const std::string &directoryName);
 
     void print(std::ostream &ostream);
 
-protected:
+  protected:
     ZeissDirectoryPatterns();
 
-  private:
+  public:
     ZeissDirectoryPatterns(const ZeissDirectoryPatterns&) = delete; // Copy Constructor Not Implemented
-    void operator=(const ZeissDirectoryPatterns&);  // Operator '=' Not Implemented
+    ZeissDirectoryPatterns(ZeissDirectoryPatterns&&) = delete;      // Move Constructor Not Implemented
+    ZeissDirectoryPatterns& operator=(const ZeissDirectoryPatterns&) = delete; // Copy Assignment Not Implemented
+    ZeissDirectoryPatterns& operator=(ZeissDirectoryPatterns&&) = delete;      // Move Assignment Not Implemented
 };
 

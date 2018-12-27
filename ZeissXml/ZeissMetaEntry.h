@@ -21,20 +21,25 @@
 #include "H5Support/H5Utilities.h"
 #endif
 
-#define STATIC_NEW_METHODS(SuperClass, thisClass, type)\
-static SuperClass::Pointer New(int32_t idTag, const QString &value) {\
-  SuperClass::Pointer ptr (new thisClass(idTag));\
-  bool ok = ptr->setValue(value);\
-  if (ok == false) { ptr = SuperClass::NullPointer(); }\
-  return ptr;\
-}\
-\
-static SuperClass::Pointer New(int32_t idTag, type value) {\
-  thisClass* p = new thisClass(idTag);\
-  SuperClass::Pointer ptr ( static_cast<SuperClass*>(p) );\
-  p->setValue(value);\
-  return ptr;\
-}
+#define STATIC_NEW_METHODS(SuperClass, thisClass, type)                                                                                                                                                \
+  static SuperClass::Pointer New(int32_t idTag, const QString& value)                                                                                                                                  \
+  {                                                                                                                                                                                                    \
+    auto ptr = std::make_shared<thisClass>(idTag);                                                                                                                                                     \
+    bool ok = ptr->setValue(value);                                                                                                                                                                    \
+    if(ok == false)                                                                                                                                                                                    \
+    {                                                                                                                                                                                                  \
+      ptr = thisClass::NullPointer();                                                                                                                                                                  \
+    }                                                                                                                                                                                                  \
+    return ptr;                                                                                                                                                                                        \
+  }                                                                                                                                                                                                    \
+                                                                                                                                                                                                       \
+  static SuperClass::Pointer New(int32_t idTag, type value)                                                                                                                                            \
+  {                                                                                                                                                                                                    \
+    auto* p = new thisClass(idTag);                                                                                                                                                                    \
+    SuperClass::Pointer ptr(static_cast<SuperClass*>(p));                                                                                                                                              \
+    p->setValue(value);                                                                                                                                                                                \
+    return ptr;                                                                                                                                                                                        \
+  }
 
 #define VALUE_DECLARATION(type)\
 virtual bool setValue(const QString &value);\
@@ -56,7 +61,7 @@ class AbstractZeissMetaData
     SIMPL_SHARED_POINTERS(AbstractZeissMetaData)
     SIMPL_TYPE_MACRO(AbstractZeissMetaData)
 
-    virtual ~AbstractZeissMetaData() {}
+    virtual ~AbstractZeissMetaData() = default;
 
     SIMPL_INSTANCE_PROPERTY(int32_t, ZeissIdTag)
 
@@ -72,10 +77,11 @@ class AbstractZeissMetaData
   protected:
     AbstractZeissMetaData() {m_ZeissIdTag = 0;}
 
-
-  private:
+  public:
     AbstractZeissMetaData(const AbstractZeissMetaData&) = delete; // Copy Constructor Not Implemented
-    void operator=(const AbstractZeissMetaData&) = delete;        // Move assignment Not Implemented
+    AbstractZeissMetaData(AbstractZeissMetaData&&) = delete;      // Move Constructor Not Implemented
+    AbstractZeissMetaData& operator=(const AbstractZeissMetaData&) = delete; // Copy Assignment Not Implemented
+    AbstractZeissMetaData& operator=(AbstractZeissMetaData&&) = delete;      // Move Assignment Not Implemented
 };
 
 // -----------------------------------------------------------------------------
@@ -88,10 +94,13 @@ class Int32ZeissMetaEntry : public AbstractZeissMetaData
     SIMPL_TYPE_MACRO(Int32ZeissMetaEntry)
     SIMPL_STATIC_NEW_MACRO(Int32ZeissMetaEntry)
 
+    Int32ZeissMetaEntry();
+
+    explicit Int32ZeissMetaEntry(int32_t idTag);
+
     STATIC_NEW_METHODS(AbstractZeissMetaData, Int32ZeissMetaEntry, int32_t)
 
-    virtual ~Int32ZeissMetaEntry() { }
-
+    ~Int32ZeissMetaEntry() override;
 
     VALUE_DECLARATION(int32_t)
 
@@ -99,29 +108,22 @@ class Int32ZeissMetaEntry : public AbstractZeissMetaData
     HDF5_READ_WRITE_DECLARATIONS()
 #endif
 
-    void printValue(std::ostream &out) { out << _value; }
+    void printValue(std::ostream& out) override;
 
-    virtual IDataArray::Pointer createDataArray(bool allocate = true);
-
+    IDataArray::Pointer createDataArray(bool allocate = true) override;
 
   protected:
-    Int32ZeissMetaEntry()
-    {
-      this->_value = 0;
-    }
 
-    explicit Int32ZeissMetaEntry(int32_t idTag)
-    {
-      setZeissIdTag(idTag);
-    }
 
 
   private:
+    int m_Value = 0;
 
-    int _value;
-
+  public:
     Int32ZeissMetaEntry(const Int32ZeissMetaEntry&) = delete; // Copy Constructor Not Implemented
-    void operator=(const Int32ZeissMetaEntry&) = delete;      // Move assignment Not Implemented
+    Int32ZeissMetaEntry(Int32ZeissMetaEntry&&) = delete;      // Move Constructor Not Implemented
+    Int32ZeissMetaEntry& operator=(const Int32ZeissMetaEntry&) = delete; // Copy Assignment Not Implemented
+    Int32ZeissMetaEntry& operator=(Int32ZeissMetaEntry&&) = delete;      // Move Assignment Not Implemented
 };
 
 // -----------------------------------------------------------------------------
@@ -134,34 +136,33 @@ class Int64ZeissMetaEntry : public AbstractZeissMetaData
     SIMPL_TYPE_MACRO(Int64ZeissMetaEntry)
     SIMPL_STATIC_NEW_MACRO(Int64ZeissMetaEntry)
 
-    STATIC_NEW_METHODS(AbstractZeissMetaData, Int64ZeissMetaEntry, qint64)
+    STATIC_NEW_METHODS(AbstractZeissMetaData, Int64ZeissMetaEntry, int64_t)
 
-    VALUE_DECLARATION(int32_t)
+    Int64ZeissMetaEntry();
+    explicit Int64ZeissMetaEntry(int32_t idTag);
+
+    ~Int64ZeissMetaEntry() override;
+
+    VALUE_DECLARATION(int64_t)
 
 #ifdef ZEISS_HDF_SUPPORT
     HDF5_READ_WRITE_DECLARATIONS()
 #endif
-    void printValue(std::ostream &out) { out << _value; }
+    void printValue(std::ostream& out) override;
 
-    virtual IDataArray::Pointer createDataArray(bool allocate = true);
+    IDataArray::Pointer createDataArray(bool allocate = true) override;
 
   protected:
-    Int64ZeissMetaEntry()
-    {
-      this->_value = 0;
-    }
-
-    explicit Int64ZeissMetaEntry(int32_t idTag)
-    {
-        setZeissIdTag(idTag);
-    }
 
 
   private:
-    long long int _value;
+    int64_t m_Value = 0;
 
+  public:
     Int64ZeissMetaEntry(const Int64ZeissMetaEntry&) = delete; // Copy Constructor Not Implemented
-    void operator=(const Int64ZeissMetaEntry&) = delete;      // Move assignment Not Implemented
+    Int64ZeissMetaEntry(Int64ZeissMetaEntry&&) = delete;      // Move Constructor Not Implemented
+    Int64ZeissMetaEntry& operator=(const Int64ZeissMetaEntry&) = delete; // Copy Assignment Not Implemented
+    Int64ZeissMetaEntry& operator=(Int64ZeissMetaEntry&&) = delete;      // Move Assignment Not Implemented
 };
 
 // -----------------------------------------------------------------------------
@@ -176,50 +177,30 @@ class FloatZeissMetaEntry : public AbstractZeissMetaData
 
     STATIC_NEW_METHODS(AbstractZeissMetaData, FloatZeissMetaEntry, float)
 
-    virtual ~FloatZeissMetaEntry() {}
+    FloatZeissMetaEntry();
+    explicit FloatZeissMetaEntry(int32_t idTag);
 
-    virtual bool setValue(const QString &value)
-     {
-      if(value.isNull() ) { return false;}
-      if(value.isEmpty() ) { return false;}
-      bool ok = false;
+    ~FloatZeissMetaEntry() override;
 
-      _value = value.toFloat(&ok);
-      return ok;
-     }
-
-    bool setValue(float f)
-    {
-      _value = f;
-      return true;
-    }
-
-    float getValue() { return _value; }
+    VALUE_DECLARATION(float)
 
 #ifdef ZEISS_HDF_SUPPORT
     HDF5_READ_WRITE_DECLARATIONS()
 #endif
 
-    void printValue(std::ostream &out) { out << _value; }
+    void printValue(std::ostream& out) override;
 
-    virtual IDataArray::Pointer createDataArray(bool allocate = true);
-
+    IDataArray::Pointer createDataArray(bool allocate = true) override;
 
   protected:
-    FloatZeissMetaEntry()
-    {
-      _value = 0.0f;
-    }
-    explicit FloatZeissMetaEntry(int32_t idTag)
-    {
-        setZeissIdTag(idTag);
-    }
-
   private:
-    float _value;
+    float m_Value = 0.0f;
 
+  public:
     FloatZeissMetaEntry(const FloatZeissMetaEntry&) = delete; // Copy Constructor Not Implemented
-    void operator=(const FloatZeissMetaEntry&) = delete;      // Move assignment Not Implemented
+    FloatZeissMetaEntry(FloatZeissMetaEntry&&) = delete;      // Move Constructor Not Implemented
+    FloatZeissMetaEntry& operator=(const FloatZeissMetaEntry&) = delete; // Copy Assignment Not Implemented
+    FloatZeissMetaEntry& operator=(FloatZeissMetaEntry&&) = delete;      // Move Assignment Not Implemented
 };
 
 // -----------------------------------------------------------------------------
@@ -235,32 +216,30 @@ class StringZeissMetaEntry : public AbstractZeissMetaData
     static AbstractZeissMetaData::Pointer New(int32_t idTag, const QString &value) {
       AbstractZeissMetaData::Pointer ptr (new StringZeissMetaEntry(idTag));
       bool ok = ptr->setValue(value);
-      if (ok == false) { ptr = AbstractZeissMetaData::NullPointer(); }
+      if(!ok)
+      {
+        ptr = AbstractZeissMetaData::NullPointer();
+      }
       return ptr;
     }
 
-    virtual ~StringZeissMetaEntry() {}
+    ~StringZeissMetaEntry() override;
 
-    virtual bool setValue(const QString &value)
-     {
-       _value = value;
-       return true;
-     }
-
-    QString getValue() { return _value; }
+    bool setValue(const QString& value) override;
+    QString getValue();
 
 #ifdef ZEISS_HDF_SUPPORT
     HDF5_READ_WRITE_DECLARATIONS()
 #endif
 
-    void printValue(std::ostream &out) { out << _value.toStdString(); }
+    void printValue(std::ostream& out) override;
 
-    virtual IDataArray::Pointer createDataArray(bool allocate = true);
+    IDataArray::Pointer createDataArray(bool allocate = true) override;
 
   protected:
     StringZeissMetaEntry()
     {
-      _value = "";
+      m_Value = "";
     }
 
     explicit StringZeissMetaEntry(int32_t idTag)
@@ -270,10 +249,13 @@ class StringZeissMetaEntry : public AbstractZeissMetaData
 
 
   private:
-    QString _value;
+    QString m_Value;
 
+  public:
     StringZeissMetaEntry(const StringZeissMetaEntry&) = delete; // Copy Constructor Not Implemented
-    void operator=(const StringZeissMetaEntry&) = delete;       // Move assignment Not Implemented
+    StringZeissMetaEntry(StringZeissMetaEntry&&) = delete;      // Move Constructor Not Implemented
+    StringZeissMetaEntry& operator=(const StringZeissMetaEntry&) = delete; // Copy Assignment Not Implemented
+    StringZeissMetaEntry& operator=(StringZeissMetaEntry&&) = delete;      // Move Assignment Not Implemented
 };
 
 

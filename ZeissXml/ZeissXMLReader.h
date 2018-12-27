@@ -34,6 +34,7 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #pragma once
 
+#error THIS FILE IS NO LONGER USED. WE are now using the QtXML framework instead of Expat
 //-- C++ Includes
 #include <string>
 #include <sstream>

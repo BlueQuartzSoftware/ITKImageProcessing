@@ -13,14 +13,15 @@
 
 #include "ZeissImport/ZeissXml/ZeissMetaFactory.h"
 
-#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/Geometry/IGeometry.h"
+#include "SIMPLib/SIMPLib.h"
 
 #include <map>
 
-typedef QMap<int, QString>  ZeissIdNameMap;
-typedef QMap<QString, int>  ZeissNameIdMap;
-typedef QMap<int, ZeissMetaFactory::Pointer> ZeissFactoryMap;
+using ZeissIdNameMap = QMap<int, QString>;
+using ZeissNameIdMap = QMap<QString, int>;
+using ZeissFactoryMap = QMap<int, ZeissMetaFactory::Pointer>;
 
 /**
 * @class ZeissTagMapping ZeissTagMapping.h R3D/Common/ZeissTagMapping.h
@@ -37,22 +38,28 @@ class ZeissTagMapping
   public:
     SIMPL_SHARED_POINTERS(ZeissTagMapping)
 
-    virtual ~ZeissTagMapping();
+    ~ZeissTagMapping();
 
     static ZeissTagMapping::Pointer instance();
 
 
     QString nameForId(int idtag);
+
     int idForName(const QString &name);
+
     ZeissMetaFactory::Pointer factoryForId(int idTag);
+
     AbstractZeissMetaData::Pointer metaDataForId(int idTag, const QString &value);
+
     AbstractZeissMetaData::Pointer metaDataForTagName(const QString &name);
 
   protected:
     ZeissTagMapping();
 
     void initIdNameMap();
+
     void initNameIdMap();
+
     void initFactoryMap();
 
   private:
@@ -60,11 +67,40 @@ class ZeissTagMapping
     ZeissNameIdMap _nameIdMap;
     ZeissFactoryMap _idFactoryMap;
 
+  public:
     ZeissTagMapping(const ZeissTagMapping&) = delete; // Copy Constructor Not Implemented
-    void operator=(const ZeissTagMapping&) = delete;  // Move assignment Not Implemented
+    ZeissTagMapping(ZeissTagMapping&&) = delete;      // Move Constructor Not Implemented
+    ZeissTagMapping& operator=(const ZeissTagMapping&) = delete; // Copy Assignment Not Implemented
+    ZeissTagMapping& operator=(ZeissTagMapping&&) = delete;      // Move Assignment Not Implemented
 };
 
+/**
+ * @brief The ZeissUnitMapping class
+ */
+class ZeissUnitMapping
+{
+public:
+  SIMPL_SHARED_POINTERS(ZeissUnitMapping)
 
+  ~ZeissUnitMapping();
+
+  static ZeissUnitMapping::Pointer Instance();
+
+  QString nameForId(int idtag);
+
+  IGeometry::LengthUnit convertToIGeometryLengthUnit(int idTag);
+
+  //  int idForName(const QString &name);
+
+protected:
+  ZeissUnitMapping();
+
+public:
+  ZeissUnitMapping(const ZeissUnitMapping&) = delete;            // Copy Constructor Not Implemented
+  ZeissUnitMapping(ZeissUnitMapping&&) = delete;                 // Move Constructor Not Implemented
+  ZeissUnitMapping& operator=(const ZeissUnitMapping&) = delete; // Copy Assignment Not Implemented
+  ZeissUnitMapping& operator=(ZeissUnitMapping&&) = delete;      // Move Assignment Not Implemented
+};
 
 #include "ZeissTagMappingConstants.h"
 

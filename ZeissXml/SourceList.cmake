@@ -1,21 +1,17 @@
 
 
 set(ZeissXml_SRCS
-#   ${${PLUGIN_NAME}_SOURCE_DIR}/ZeissXml/ZeissDirectoryPatterns.cpp
    ${${PLUGIN_NAME}_SOURCE_DIR}/ZeissXml/ZeissMetaEntry.cpp
    ${${PLUGIN_NAME}_SOURCE_DIR}/ZeissXml/ZeissMetaFactory.cpp
    ${${PLUGIN_NAME}_SOURCE_DIR}/ZeissXml/ZeissTagMapping.cpp
-#   ${${PLUGIN_NAME}_SOURCE_DIR}/ZeissXml/ZeissXmlReader.cpp
    ${${PLUGIN_NAME}_SOURCE_DIR}/ZeissXml/ZeissTagsXmlSection.cpp
 )
 
 
 set(ZeissXml_HDRS
-#   ${${PLUGIN_NAME}_SOURCE_DIR}/ZeissXml/ZeissDirectoryPatterns.h
    ${${PLUGIN_NAME}_SOURCE_DIR}/ZeissXml/ZeissMetaEntry.h
    ${${PLUGIN_NAME}_SOURCE_DIR}/ZeissXml/ZeissMetaFactory.h
    ${${PLUGIN_NAME}_SOURCE_DIR}/ZeissXml/ZeissTagMapping.h
-#   ${${PLUGIN_NAME}_SOURCE_DIR}/ZeissXml/ZeissXmlReader.h
    ${${PLUGIN_NAME}_SOURCE_DIR}/ZeissXml/ZeissTagsXmlSection.h
    ${${PLUGIN_NAME}_SOURCE_DIR}/ZeissXml/ZeissTagMappingConstants.h
 )

@@ -42,8 +42,8 @@
 #include "ZeissImport/ZeissImportConstants.h"
 #include "ZeissImport/ZeissXml/ZeissMetaEntry.h"
 
-/*
- *
+/**
+ * @brief The ZeissTagsXmlSection class
  */
 class ZeissTagsXmlSection
 {
@@ -51,15 +51,14 @@ class ZeissTagsXmlSection
     SIMPL_SHARED_POINTERS(ZeissTagsXmlSection)
     SIMPL_TYPE_MACRO(ZeissTagsXmlSection)
     SIMPL_STATIC_NEW_MACRO(ZeissTagsXmlSection)
-    typedef QMap<int, AbstractZeissMetaData::Pointer>  MetaDataType;
-    //typedef std::shared_ptr<MetaDataType>            MetaDataPtrType;
 
-    virtual ~ZeissTagsXmlSection();
+    using MetaDataType = QMap<int, AbstractZeissMetaData::Pointer>;
 
-    //SIMPL_INSTANCE_PROPERTY(MetaDataType, MetaDataMap)
+    ~ZeissTagsXmlSection();
+
     MetaDataType& getMetaDataMap();
 
-    void addMetaDataEntry(AbstractZeissMetaData::Pointer entry);
+    void addMetaDataEntry(AbstractZeissMetaData::Pointer& entry);
     void removeMetaDataEntry(int idTag);
     AbstractZeissMetaData::Pointer getEntry(int idTag);
     int count();
@@ -72,7 +71,10 @@ class ZeissTagsXmlSection
 
     MetaDataType m_MetaDataMap;
 
+  public:
     ZeissTagsXmlSection(const ZeissTagsXmlSection&) = delete; // Copy Constructor Not Implemented
-    void operator=(const ZeissTagsXmlSection&) = delete;      // Move assignment Not Implemented
+    ZeissTagsXmlSection(ZeissTagsXmlSection&&) = delete;      // Move Constructor Not Implemented
+    ZeissTagsXmlSection& operator=(const ZeissTagsXmlSection&) = delete; // Copy Assignment Not Implemented
+    ZeissTagsXmlSection& operator=(ZeissTagsXmlSection&&) = delete;      // Move Assignment Not Implemented
 };
 

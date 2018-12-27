@@ -33,6 +33,7 @@ namespace ZeissImportConstants
   {
     static const QString Tags("Tags");
     static const QString Count("Count");
+    static const QString Scaling("Scaling");
   }
 
   namespace PolynomialOrder

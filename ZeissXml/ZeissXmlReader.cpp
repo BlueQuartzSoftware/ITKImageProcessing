@@ -32,9 +32,11 @@
  //                           FA8650-07-D-5800
  //
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+#error THIS FILE IS NO LONGER USED. WE are now using the QtXML framework instead of Expat
+
 #include "ZeissXMLReader.h"
 
-#include <stdio.h>
+#include <cstdio>
 #include <iostream>
 
 

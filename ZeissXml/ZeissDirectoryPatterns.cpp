@@ -32,7 +32,7 @@
  //                           F33615-03-C-5220
  //
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
+#error THIS FILE IS NO LONGER USED OR COMPILED
 #include "ZeissDirectoryPatterns.h"
 #include <sstream>
 #include <iomanip>

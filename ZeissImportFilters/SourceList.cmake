@@ -19,7 +19,7 @@ SIMPL_START_FILTER_GROUP(
 # List your public filters here
 set(_PublicFilters
   CalculateBackground
-  ZeissImportFilter
+  ImportAxioVisionV4Montage
 )
 
 

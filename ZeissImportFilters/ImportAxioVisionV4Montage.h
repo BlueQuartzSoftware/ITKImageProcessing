@@ -4,50 +4,50 @@
 
 #pragma once
 
-
-#include <QtCore/QString>
 #include <QtCore/QDateTime>
+#include <QtCore/QString>
 #include <QtXml/QDomDocument>
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/StringDataArray.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/SIMPLib.h"
 
 #include "ZeissImport/ZeissXml/ZeissTagsXmlSection.h"
 
 // our PIMPL private class
-class ZeissImportFilterPrivate;
+class ImportAxioVisionV4MontagePrivate;
 
 #include "ZeissImport/ZeissImportDLLExport.h"
 
 /**
- * @class ZeissImportFilter ZeissImportFilter.h ZeissImport/ZeissImportFilters/ZeissImportFilter.h
+ * @class ImportAxioVisionV4Montage ImportAxioVisionV4Montage.h ZeissImport/ImportAxioVisionV4Montages/ImportAxioVisionV4Montage.h
  * @brief
  * @author
  * @date
  * @version 1.0
  */
-class ZeissImport_EXPORT ZeissImportFilter : public AbstractFilter
+class ZeissImport_EXPORT ImportAxioVisionV4Montage : public AbstractFilter
 {
   Q_OBJECT
-  PYB11_CREATE_BINDINGS(ZeissImportFilter SUPERCLASS AbstractFilter)
+  PYB11_CREATE_BINDINGS(ImportAxioVisionV4Montage SUPERCLASS AbstractFilter)
   PYB11_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
   PYB11_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
-  PYB11_PROPERTY(QString ImageAttributeMatrixName READ getImageAttributeMatrixName WRITE setImageAttributeMatrixName)
-  PYB11_PROPERTY(QString ImageDataArrayPrefix READ getImageDataArrayPrefix WRITE setImageDataArrayPrefix)
+  PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
+  PYB11_PROPERTY(QString ImageDataArrayName READ getImageDataArrayName WRITE setImageDataArrayName)
   PYB11_PROPERTY(bool ConvertToGrayScale READ getConvertToGrayScale WRITE setConvertToGrayScale)
   PYB11_PROPERTY(FloatVec3_t ColorWeights READ getColorWeights WRITE setColorWeights)
   PYB11_PROPERTY(bool FileWasRead READ getFileWasRead WRITE setFileWasRead)
-  Q_DECLARE_PRIVATE(ZeissImportFilter)
+  Q_DECLARE_PRIVATE(ImportAxioVisionV4Montage)
 
 public:
-  SIMPL_SHARED_POINTERS(ZeissImportFilter)
-  SIMPL_FILTER_NEW_MACRO(ZeissImportFilter)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ZeissImportFilter, AbstractFilter)
+  SIMPL_SHARED_POINTERS(ImportAxioVisionV4Montage)
+  SIMPL_FILTER_NEW_MACRO(ImportAxioVisionV4Montage)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ImportAxioVisionV4Montage, AbstractFilter)
 
-  ~ZeissImportFilter() override;
+  ~ImportAxioVisionV4Montage() override;
 
   SIMPL_FILTER_PARAMETER(QString, InputFile)
   Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
@@ -55,11 +55,14 @@ public:
   SIMPL_FILTER_PARAMETER(QString, DataContainerName)
   Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
 
-  SIMPL_FILTER_PARAMETER(QString, ImageAttributeMatrixName)
-  Q_PROPERTY(QString ImageAttributeMatrixName READ getImageAttributeMatrixName WRITE setImageAttributeMatrixName)
+  SIMPL_FILTER_PARAMETER(QString, CellAttributeMatrixName)
+  Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
-  SIMPL_FILTER_PARAMETER(QString, ImageDataArrayPrefix)
-  Q_PROPERTY(QString ImageDataArrayPrefix READ getImageDataArrayPrefix WRITE setImageDataArrayPrefix)
+  SIMPL_FILTER_PARAMETER(QString, ImageDataArrayName)
+  Q_PROPERTY(QString ImageDataArrayName READ getImageDataArrayName WRITE setImageDataArrayName)
+
+  SIMPL_FILTER_PARAMETER(QString, MetaDataAttributeMatrixName)
+  Q_PROPERTY(QString MetaDataAttributeMatrixName READ getMetaDataAttributeMatrixName WRITE setMetaDataAttributeMatrixName)
 
   SIMPL_FILTER_PARAMETER(bool, ConvertToGrayScale)
   Q_PROPERTY(bool ConvertToGrayScale READ getConvertToGrayScale WRITE setConvertToGrayScale)
@@ -176,7 +179,7 @@ signals:
   void preflightExecuted();
 
 protected:
-  ZeissImportFilter();
+  ImportAxioVisionV4Montage();
 
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
@@ -193,7 +196,7 @@ protected:
    * @param device
    * @return
    */
-  int readMetaXml(QIODevice* device);
+  void readMetaXml(QIODevice* device);
 
   /**
    * @brief parseRootTagsSection
@@ -206,14 +209,14 @@ protected:
    * @brief parseImages
    * @param rootTags
    */
-  void parseImages(QDomElement& root, ZeissTagsXmlSection::Pointer rootTagsSection);
+  void parseImages(QDomElement& root, const ZeissTagsXmlSection::Pointer& rootTagsSection);
 
   /**
-   * @brief getImageDimensions
-   * @param photoTagsSection
+   * @brief getImageScaling
+   * @param scalingTagsSection
    * @return
    */
-  QVector<size_t> getImageDimensions(ZeissTagsXmlSection::Pointer photoTagsSection);
+  ImageGeom::Pointer initializeImageGeom(const QDomElement& root, const ZeissTagsXmlSection::Pointer& photoTagsSection);
 
   /**
    * @brief generateMetaDataAttributeMatrix
@@ -221,7 +224,7 @@ protected:
    * @param imageCount
    * @return
    */
-  void addMetaData(AttributeMatrix::Pointer metaAm, ZeissTagsXmlSection::Pointer photoTagsSection, int index);
+  void addMetaData(const AttributeMatrix::Pointer& metaAm, const ZeissTagsXmlSection::Pointer& photoTagsSection, int index);
 
   /**
    * @brief generateMetaDataAttributeMatrix -root data
@@ -230,7 +233,7 @@ protected:
    * @return
    */
 
-  void addRootMetaData(AttributeMatrix::Pointer metaAm, ZeissTagsXmlSection::Pointer rootTagsSection, int index);
+  void addRootMetaData(const AttributeMatrix::Pointer& metaAm, const ZeissTagsXmlSection::Pointer& rootTagsSection, int index);
 
   /**
    * @brief generateDataArrays
@@ -238,7 +241,7 @@ protected:
    * @param pTag
    * @param dcName
    */
-  void importImage(const QString& imageName, const QString& pTag, const QString& dcName, int imageIndex, StringDataArray::Pointer attributeArrayNames);
+  void importImage(DataContainer* dc, const QString& imageName, const QString& pTag, int imageIndex);
 
   /**
    * @brief convertToGrayScale
@@ -246,15 +249,14 @@ protected:
    * @param pTag
    * @param dcName
    */
-  void convertToGrayScale(const QString& imageName, const QString& pTag, const QString& dcName);
+  void convertToGrayScale(DataContainer* dc, const QString& imageName, const QString& pTag);
 
 private:
-  QScopedPointer<ZeissImportFilterPrivate> const d_ptr;
+  QScopedPointer<ImportAxioVisionV4MontagePrivate> const d_ptr;
 
 public:
-  ZeissImportFilter(const ZeissImportFilter&) = delete;            // Copy Constructor Not Implemented
-  ZeissImportFilter(ZeissImportFilter&&) = delete;                 // Move Constructor Not Implemented
-  ZeissImportFilter& operator=(const ZeissImportFilter&) = delete; // Copy Assignment Not Implemented
-  ZeissImportFilter& operator=(ZeissImportFilter&&) = delete;      // Move Assignment Not Implemented
+  ImportAxioVisionV4Montage(const ImportAxioVisionV4Montage&) = delete;            // Copy Constructor Not Implemented
+  ImportAxioVisionV4Montage(ImportAxioVisionV4Montage&&) = delete;                 // Move Constructor Not Implemented
+  ImportAxioVisionV4Montage& operator=(const ImportAxioVisionV4Montage&) = delete; // Copy Assignment Not Implemented
+  ImportAxioVisionV4Montage& operator=(ImportAxioVisionV4Montage&&) = delete;      // Move Assignment Not Implemented
 };
-

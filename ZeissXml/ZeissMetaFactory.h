@@ -24,15 +24,17 @@ class ZeissMetaFactory
   public:
     SIMPL_SHARED_POINTERS(ZeissMetaFactory);
 
-    virtual ~ZeissMetaFactory() {}
+    virtual ~ZeissMetaFactory() = default;
 
     virtual AbstractZeissMetaData::Pointer createMetaEntry() = 0;
   protected:
-    ZeissMetaFactory() {}
+    ZeissMetaFactory() = default;
 
-  private:
+  public:
     ZeissMetaFactory(const ZeissMetaFactory&) = delete; // Copy Constructor Not Implemented
-    void operator=(const ZeissMetaFactory&) = delete;   // Move assignment Not Implemented
+    ZeissMetaFactory(ZeissMetaFactory&&) = delete;      // Move Constructor Not Implemented
+    ZeissMetaFactory& operator=(const ZeissMetaFactory&) = delete; // Copy Assignment Not Implemented
+    ZeissMetaFactory& operator=(ZeissMetaFactory&&) = delete;      // Move Assignment Not Implemented
 };
 
 // -----------------------------------------------------------------------------
@@ -44,14 +46,16 @@ class Int32ZeissMetaFactory : public ZeissMetaFactory
     SIMPL_SHARED_POINTERS(Int32ZeissMetaFactory);
     SIMPL_NEW_SUPERCLASS(Int32ZeissMetaFactory, ZeissMetaFactory);
 
-    AbstractZeissMetaData::Pointer createMetaEntry();
+    AbstractZeissMetaData::Pointer createMetaEntry() override;
 
   protected:
-    Int32ZeissMetaFactory() {}
+    Int32ZeissMetaFactory() = default;
 
-  private:
+  public:
     Int32ZeissMetaFactory(const Int32ZeissMetaFactory&) = delete; // Copy Constructor Not Implemented
-    void operator=(const Int32ZeissMetaFactory&) = delete;        // Move assignment Not Implemented
+    Int32ZeissMetaFactory(Int32ZeissMetaFactory&&) = delete;      // Move Constructor Not Implemented
+    Int32ZeissMetaFactory& operator=(const Int32ZeissMetaFactory&) = delete; // Copy Assignment Not Implemented
+    Int32ZeissMetaFactory& operator=(Int32ZeissMetaFactory&&) = delete;      // Move Assignment Not Implemented
 };
 
 // -----------------------------------------------------------------------------
@@ -63,14 +67,16 @@ class Int64ZeissMetaFactory : public ZeissMetaFactory
     SIMPL_SHARED_POINTERS(Int64ZeissMetaFactory);
     SIMPL_NEW_SUPERCLASS(Int64ZeissMetaFactory, ZeissMetaFactory);
 
-    AbstractZeissMetaData::Pointer createMetaEntry();
+    AbstractZeissMetaData::Pointer createMetaEntry() override;
 
   protected:
-    Int64ZeissMetaFactory() {}
+    Int64ZeissMetaFactory() = default;
 
-  private:
+  public:
     Int64ZeissMetaFactory(const Int64ZeissMetaFactory&) = delete; // Copy Constructor Not Implemented
-    void operator=(const Int64ZeissMetaFactory&) = delete;        // Move assignment Not Implemented
+    Int64ZeissMetaFactory(Int64ZeissMetaFactory&&) = delete;      // Move Constructor Not Implemented
+    Int64ZeissMetaFactory& operator=(const Int64ZeissMetaFactory&) = delete; // Copy Assignment Not Implemented
+    Int64ZeissMetaFactory& operator=(Int64ZeissMetaFactory&&) = delete;      // Move Assignment Not Implemented
 };
 
 
@@ -84,14 +90,16 @@ class FloatZeissMetaFactory : public ZeissMetaFactory
     SIMPL_SHARED_POINTERS(FloatZeissMetaFactory);
     SIMPL_NEW_SUPERCLASS(FloatZeissMetaFactory, ZeissMetaFactory);
 
-    AbstractZeissMetaData::Pointer createMetaEntry();
+    AbstractZeissMetaData::Pointer createMetaEntry() override;
 
   protected:
-    FloatZeissMetaFactory() {}
+    FloatZeissMetaFactory() = default;
 
-  private:
+  public:
     FloatZeissMetaFactory(const FloatZeissMetaFactory&) = delete; // Copy Constructor Not Implemented
-    void operator=(const FloatZeissMetaFactory&) = delete;        // Move assignment Not Implemented
+    FloatZeissMetaFactory(FloatZeissMetaFactory&&) = delete;      // Move Constructor Not Implemented
+    FloatZeissMetaFactory& operator=(const FloatZeissMetaFactory&) = delete; // Copy Assignment Not Implemented
+    FloatZeissMetaFactory& operator=(FloatZeissMetaFactory&&) = delete;      // Move Assignment Not Implemented
 };
 
 // -----------------------------------------------------------------------------
@@ -103,16 +111,14 @@ class StringZeissMetaFactory : public ZeissMetaFactory
     SIMPL_SHARED_POINTERS(StringZeissMetaFactory);
     SIMPL_NEW_SUPERCLASS(StringZeissMetaFactory, ZeissMetaFactory);
 
-    AbstractZeissMetaData::Pointer createMetaEntry();
+    AbstractZeissMetaData::Pointer createMetaEntry() override;
 
   protected:
-    StringZeissMetaFactory() {}
+    StringZeissMetaFactory() = default;
 
-  private:
+  public:
     StringZeissMetaFactory(const StringZeissMetaFactory&) = delete; // Copy Constructor Not Implemented
-    void operator=(const StringZeissMetaFactory&) = delete;         // Move assignment Not Implemented
+    StringZeissMetaFactory(StringZeissMetaFactory&&) = delete;      // Move Constructor Not Implemented
+    StringZeissMetaFactory& operator=(const StringZeissMetaFactory&) = delete; // Copy Assignment Not Implemented
+    StringZeissMetaFactory& operator=(StringZeissMetaFactory&&) = delete;      // Move Assignment Not Implemented
 };
-
-
-
-
