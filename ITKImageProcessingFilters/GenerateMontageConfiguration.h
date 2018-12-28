@@ -168,6 +168,10 @@ protected:
 	 */
 	DataContainer::Pointer GetImageDataContainer(int y, int x);
 
+	/**
+	 * @brief Get the transform container from an affine transform
+	 * @param itkAffine
+	 */
 	typename TransformContainer::Pointer GetTransformContainerFromITKAffineTransform(const AffineType::Pointer& itkAffine);
 
 private:
