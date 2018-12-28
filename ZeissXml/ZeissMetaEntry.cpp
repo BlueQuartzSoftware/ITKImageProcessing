@@ -12,8 +12,9 @@
 #include "ZeissMetaEntry.h"
 
 #ifdef ZEISS_HDF_SUPPORT
-#include "H5Support/QH5Lite.h"
+#include "H5Support/H5Lite.h"
 #include "H5Support/H5Utilities.h"
+#include "H5Support/QH5Lite.h"
 #endif
 
 #include "SIMPLib/DataArrays/DataArray.hpp"
@@ -21,12 +22,6 @@
 
 #include "ZeissImport/ZeissXml/ZeissTagMapping.h"
 
-
-
-#define ZME_CHECK_ATTRIBUTE_ADDITION(ds, attr, value) \
-  if ( err < 0 ) {\
-    qDebug() << "Error adding attribute " << attr << " with value " << value \
-             <<   " to data set " << ds; retErr = err;}
 
 // -----------------------------------------------------------------------------
 //
@@ -38,14 +33,14 @@
     QString tagName = tagMap->nameForId(this->getZeissIdTag());                                                                                                                                        \
     if(tagName.isEmpty() == true)                                                                                                                                                                      \
     {                                                                                                                                                                                                  \
-      std::cout << "writeHDF5Attribute: Error writing attribute. No zeiss id was found "                                                                                                               \
-                << " for id=" << getZeissIdTag();                                                                                                                                                      \
+      qDebug() << getNameOfClass() << "::writeHDF5Attribute:  Error writing attribute. No zeiss id was found "                                                                                         \
+               << " for id=" << getZeissIdTag();                                                                                                                                                       \
       return -19;                                                                                                                                                                                      \
     }                                                                                                                                                                                                  \
     int32_t err = QH5Lite::writeScalarAttribute(fileId, datasetPath, tagName, m_Value);                                                                                                                \
     if(err < 0)                                                                                                                                                                                        \
     {                                                                                                                                                                                                  \
-      qDebug() << "Error writing attribute " << tagName << " with value " << m_Value << " to data set " << datasetPath;                                                                                \
+      qDebug() << getNameOfClass() << "::writeHDF5Attribute: Error writing attribute " << tagName << " with value " << m_Value << " to data set " << datasetPath;                                      \
       return err;                                                                                                                                                                                      \
     }                                                                                                                                                                                                  \
     return err;                                                                                                                                                                                        \
@@ -58,20 +53,19 @@
     QString tagName = tagMap->nameForId(getZeissIdTag());                                                                                                                                              \
     if(tagName.isEmpty() == true)                                                                                                                                                                      \
     {                                                                                                                                                                                                  \
-      std::cout << "readHDF5Attribute: Error reading attribute. No zeiss id was found "                                                                                                                \
-                << " for id=" << getZeissIdTag();                                                                                                                                                      \
+      qDebug() << getNameOfClass() << "::readHDF5Attribute: Error reading attribute. No zeiss id was found "                                                                                           \
+               << " for id=" << getZeissIdTag();                                                                                                                                                       \
       return -19;                                                                                                                                                                                      \
     }                                                                                                                                                                                                  \
     int32_t err = QH5Lite::readScalarAttribute<type>(fileId, datasetPath, tagName, m_Value);                                                                                                           \
     if(err < 0)                                                                                                                                                                                        \
     {                                                                                                                                                                                                  \
-      qDebug() << "Error reading attribute " << tagName << " from data set " << datasetPath;                                                                                                           \
+      qDebug() << getNameOfClass() << "::readHDF5Attribute: Error reading attribute " << tagName << " from data set " << datasetPath;                                                                  \
       return err;                                                                                                                                                                                      \
     }                                                                                                                                                                                                  \
     return err;                                                                                                                                                                                        \
   }
 
-#if 1
 #define WriteHDF5Attribute_StrImplementation(thisClass)                                                                                                                                                \
   int thisClass::writeHDF5Attribute(hid_t fileId, const QString& datasetPath)                                                                                                                          \
   {                                                                                                                                                                                                    \
@@ -79,14 +73,14 @@
     QString tagName = tagMap->nameForId(getZeissIdTag());                                                                                                                                              \
     if(tagName.isEmpty() == true)                                                                                                                                                                      \
     {                                                                                                                                                                                                  \
-      std::cout << "writeHDF5Attribute: Error writing attribute. No zeiss id was found "                                                                                                               \
-                << " for id=" << getZeissIdTag();                                                                                                                                                      \
+      qDebug() << getNameOfClass() << "::writeHDF5Attribute: Error writing attribute. No zeiss id was found "                                                                                          \
+               << " for id=" << getZeissIdTag();                                                                                                                                                       \
       return -19;                                                                                                                                                                                      \
     }                                                                                                                                                                                                  \
     int32_t err = QH5Lite::writeStringAttribute(fileId, datasetPath, tagName, m_Value);                                                                                                                \
     if(err < 0)                                                                                                                                                                                        \
     {                                                                                                                                                                                                  \
-      qDebug() << "Error adding attribute " << tagName << " with value " << m_Value << " to data set " << datasetPath;                                                                                 \
+      qDebug() << getNameOfClass() << "::writeHDF5Attribute:Error adding attribute " << tagName << " with value " << m_Value << " to data set " << datasetPath;                                        \
       return err;                                                                                                                                                                                      \
     }                                                                                                                                                                                                  \
     return err;                                                                                                                                                                                        \
@@ -99,29 +93,18 @@
     QString tagName = tagMap->nameForId(getZeissIdTag());                                                                                                                                              \
     if(tagName.isEmpty() == true)                                                                                                                                                                      \
     {                                                                                                                                                                                                  \
-      std::cout << "readHDF5Attribute: Error reading attribute. No zeiss id was found "                                                                                                                \
-                << " for id=" << getZeissIdTag();                                                                                                                                                      \
+      qDebug() << getNameOfClass() << "::readHDF5Attribute: Error reading attribute. No zeiss id was found "                                                                                           \
+               << " for id=" << getZeissIdTag();                                                                                                                                                       \
       return -19;                                                                                                                                                                                      \
     }                                                                                                                                                                                                  \
     int32_t err = QH5Lite::readStringAttribute(fileId, datasetPath, tagName, m_Value);                                                                                                                 \
     if(err < 0)                                                                                                                                                                                        \
     {                                                                                                                                                                                                  \
-      qDebug() << "Error reading attribute " << tagName << " from data set " << datasetPath;                                                                                                           \
+      qDebug() << getNameOfClass() << "::readHDF5Attribute: Error reading attribute " << tagName << " from data set " << datasetPath;                                                                  \
       return err;                                                                                                                                                                                      \
     }                                                                                                                                                                                                  \
     return err;                                                                                                                                                                                        \
   }
-#else
-
-#define ReadHDF5Attribute_STR_DEFINITION(thisClass)\
-  int thisClass::readHDF5Attribute(hid_t fileId, const QString &datasetPath) { \
-    std::cout << "NOT IMPLEMENTED"; return -1;}
-
-#define WriteHDF5Attribute_StrImplementation(thisClass)\
-  int thisClass::writeHDF5Attribute(hid_t fileId, const QString &datasetPath)\
-  { std::cout << "NOT IMPLEMENTED"; return -1;}
-
-#endif
 
 // -----------------------------------------------------------------------------
 //
@@ -155,8 +138,8 @@
     QString tagName = tagMap->nameForId(this->getZeissIdTag());                                                                                                                                        \
     if(tagName.isEmpty() == true)                                                                                                                                                                      \
     {                                                                                                                                                                                                  \
-      std::cout << "createDataArray: Error retrieving name of AxioVisio tag.. No zeiss id was found "                                                                                                  \
-                << " for id=" << getZeissIdTag();                                                                                                                                                      \
+      qDebug() << getNameOfClass() << "::createDataArray: Error retrieving name of AxioVisio tag.. No zeiss id was found "                                                                             \
+               << " for id=" << getZeissIdTag();                                                                                                                                                       \
       return DataArray<Type>::NullPointer();                                                                                                                                                           \
     }                                                                                                                                                                                                  \
     DataArray<Type>::Pointer array = DataArray<Type>::CreateArray(1, tagName, allocate);                                                                                                               \
@@ -184,7 +167,7 @@ WriteHDF5Attribute_Implementation(Int32ZeissMetaEntry) ReadHDF5Attribute_DEFINIT
     // -----------------------------------------------------------------------------
     AXIOVISION_NUMERIC_DEFINITION(Int64ZeissMetaEntry, int64_t, toLongLong)
 #ifdef ZEISS_HDF_SUPPORT
-        WriteHDF5Attribute_Implementation(Int64ZeissMetaEntry) ReadHDF5Attribute_DEFINITION(qint64, Int64ZeissMetaEntry)
+        WriteHDF5Attribute_Implementation(Int64ZeissMetaEntry) ReadHDF5Attribute_DEFINITION(int64_t, Int64ZeissMetaEntry)
 #endif
 
     // -----------------------------------------------------------------------------
@@ -206,8 +189,8 @@ IDataArray::Pointer StringZeissMetaEntry::createDataArray(bool allocate)
   QString tagName = tagMap->nameForId(this->getZeissIdTag());
   if(tagName.isEmpty())
   {
-    std::cout << "StringZeissMetaEntry::createDataArray: Error creating StringArray. No Zeiss id was found "
-              << " for id=" << getZeissIdTag();
+    qDebug() << getNameOfClass() << "::createDataArray: Error creating StringArray. No Zeiss id was found "
+             << " for id=" << getZeissIdTag();
     return StringDataArray::NullPointer();
   }
   StringDataArray::Pointer array = StringDataArray::CreateArray(1, tagName, allocate);
@@ -241,14 +224,14 @@ int StringZeissMetaEntry::writeHDF5Attribute(hid_t fileId, const QString& datase
   QString tagName = tagMap->nameForId(getZeissIdTag());
   if(tagName.isEmpty())
   {
-    std::cout << "writeHDF5Attribute: Error writing attribute. No zeiss id was found "
-              << " for id=" << getZeissIdTag();
+    qDebug() << getNameOfClass() << "::writeHDF5Attribute: Error writing attribute. No zeiss id was found "
+             << " for id=" << getZeissIdTag();
     return -19;
   }
   int32_t err = QH5Lite::writeStringAttribute(fileId, datasetPath, tagName, m_Value);
   if(err < 0)
   {
-    qDebug() << "Error adding attribute " << tagName << " with value " << m_Value << " to data set " << datasetPath;
+    qDebug() << getNameOfClass() << "::writeHDF5Attribute: Error adding attribute " << tagName << " with value " << m_Value << " to data set " << datasetPath;
     return err;
   }
   return err;
