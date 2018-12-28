@@ -15,6 +15,7 @@
 #include "SIMPLib/ITK/itkDream3DImage.h"
 #include "SIMPLib/ITK/itkTransformToDream3DTransformContainer.h"
 #include "SIMPLib/ITK/itkTransformToDream3DITransformContainer.h"
+#include "SIMPLib/ITK/itkInPlaceDream3DDataToImageFilter.h"
 
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
