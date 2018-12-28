@@ -129,6 +129,9 @@ void GenerateMontageConfiguration::execute()
 	notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void GenerateMontageConfiguration::CreateFijiDataStructure()
 {
 	DataContainerArray* dca = getDataContainerArray().get();
@@ -183,6 +186,9 @@ void GenerateMontageConfiguration::CreateFijiDataStructure()
 	}
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 template< typename PixelType, typename AccumulatePixelType >
 void GenerateMontageConfiguration::GenerateMontage(int peakMethodToUse)
 {
@@ -273,6 +279,9 @@ void GenerateMontageConfiguration::GenerateMontage(int peakMethodToUse)
 	}
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 DataContainer::Pointer GenerateMontageConfiguration::GetImageDataContainer(int y, int x)
 {
 	DataContainerArray* dca = getDataContainerArray().get();
@@ -304,6 +313,9 @@ DataContainer::Pointer GenerateMontageConfiguration::GetImageDataContainer(int y
 }
 
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 typename TransformContainer::Pointer GenerateMontageConfiguration::GetTransformContainerFromITKAffineTransform(const AffineType::Pointer& itkAffine)
 {
 	auto parameters = itkAffine->GetParameters();
