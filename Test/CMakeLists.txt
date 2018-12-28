@@ -10,7 +10,8 @@ set(TEST_NAMES
   ITKImageProcessingReaderTest
   ITKImageProcessingWriterTest
   ITKImageProcessingImportImageStackTest
-  ImportRegisteredImageMontageTest
+  ITKImportFijiMontageTest
+  ITKImportRoboMetMontageTest
   ImportImageMontageTest
   ImportVectorImageStackTest
   )

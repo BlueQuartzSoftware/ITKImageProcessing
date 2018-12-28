@@ -20,12 +20,12 @@
 #include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
- * @brief The ImportRegisteredImageMontage class. See [Filter documentation](@ref importregisteredimagemontage) for details.
+ * @brief The ITKImportRoboMetMontage class. See [Filter documentation](@ref ITKImportRoboMetMontage) for details.
  */
-class ITKImageProcessing_EXPORT ImportRegisteredImageMontage : public AbstractFilter
+class ITKImageProcessing_EXPORT ITKImportRoboMetMontage : public AbstractFilter
 {
   Q_OBJECT
-  PYB11_CREATE_BINDINGS(ImportRegisteredImageMontage SUPERCLASS AbstractFilter)
+  PYB11_CREATE_BINDINGS(ITKImportRoboMetMontage SUPERCLASS AbstractFilter)
   PYB11_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
   PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
   PYB11_PROPERTY(QString MetaDataAttributeMatrixName READ getMetaDataAttributeMatrixName WRITE setMetaDataAttributeMatrixName)
@@ -36,11 +36,11 @@ class ITKImageProcessing_EXPORT ImportRegisteredImageMontage : public AbstractFi
   PYB11_PROPERTY(QString RegistrationCoordinatesArrayName READ getRegistrationCoordinatesArrayName WRITE setRegistrationCoordinatesArrayName)
   PYB11_PROPERTY(QString AttributeArrayNamesArrayName READ getAttributeArrayNamesArrayName WRITE setAttributeArrayNamesArrayName)
 public:
-  SIMPL_SHARED_POINTERS(ImportRegisteredImageMontage)
-  SIMPL_FILTER_NEW_MACRO(ImportRegisteredImageMontage)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ImportRegisteredImageMontage, AbstractFilter)
+  SIMPL_SHARED_POINTERS(ITKImportRoboMetMontage)
+  SIMPL_FILTER_NEW_MACRO(ITKImportRoboMetMontage)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKImportRoboMetMontage, AbstractFilter)
 
-  ~ImportRegisteredImageMontage() override;
+  ~ITKImportRoboMetMontage() override;
 
   SIMPL_FILTER_PARAMETER(QString, DataContainerPrefix)
   Q_PROPERTY(QString DataContainerPrefix READ getDataContainerPrefix WRITE setDataContainerPrefix)
@@ -56,9 +56,6 @@ public:
 
   SIMPL_FILTER_PARAMETER(QString, RegistrationFile)
   Q_PROPERTY(QString RegistrationFile READ getRegistrationFile WRITE setRegistrationFile)
-
-  SIMPL_FILTER_PARAMETER(FileListInfo_t, InputFileListInfo)
-  Q_PROPERTY(FileListInfo_t InputFileListInfo READ getInputFileListInfo WRITE setInputFileListInfo)
 
   SIMPL_FILTER_PARAMETER(QString, AttributeArrayName)
   Q_PROPERTY(QString AttributeArrayName READ getAttributeArrayName WRITE setAttributeArrayName)
@@ -147,14 +144,14 @@ signals:
   void preflightExecuted();
 
 protected:
-  ImportRegisteredImageMontage();
+  ITKImportRoboMetMontage();
 
   /**
    * @brief parseFijiConfigFile Parses the Fiji file with the configuration coordinates
    * @param reader QFile to read
    * @return Integer error value
    */
-  int32_t parseFijiConfigFile(QFile& reader);
+  int32_t parseRoboMetConfigFile(const QString &filePath);
 
   /**
    * @brief parseRobometConfigFile Parses the Robomet file with the configuration coordinates
@@ -174,9 +171,8 @@ protected:
   void initialize();
 
 private:
-  QFile m_InStream;
   int32_t m_NumImages;
-  std::vector<QString> m_RegisteredFileNames;
+  std::vector<QString> m_RegisteredFilePaths;
   std::vector<QPointF> m_Coords;
   std::vector<QString> m_RowColId;
 
@@ -187,9 +183,9 @@ private:
   ITK_IMAGE_READER_HELPER_ImageDataArrayName() ITK_IMAGE_READER_HELPER_DECL()
 
 public :
-  ImportRegisteredImageMontage(const ImportRegisteredImageMontage&) = delete; // Copy Constructor Not Implemented
-  ImportRegisteredImageMontage(ImportRegisteredImageMontage&&) = delete;                   // Move Constructor Not Implemented
-  ImportRegisteredImageMontage& operator=(const ImportRegisteredImageMontage&) = delete;   // Copy Assignment Not Implemented
-  ImportRegisteredImageMontage& operator=(ImportRegisteredImageMontage&&) = delete;        // Move Assignment Not Implemented
+  ITKImportRoboMetMontage(const ITKImportRoboMetMontage&) = delete; // Copy Constructor Not Implemented
+  ITKImportRoboMetMontage(ITKImportRoboMetMontage&&) = delete;                   // Move Constructor Not Implemented
+  ITKImportRoboMetMontage& operator=(const ITKImportRoboMetMontage&) = delete;   // Copy Assignment Not Implemented
+  ITKImportRoboMetMontage& operator=(ITKImportRoboMetMontage&&) = delete;        // Move Assignment Not Implemented
 };
 
