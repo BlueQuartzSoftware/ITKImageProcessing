@@ -143,16 +143,13 @@ void ITKImportFijiMontage::dataCheck()
     {
       return;
     }
-    ImageGeom::Pointer geom = ImageGeom::New();
-    FloatVec3_t res = getResolution();
-    geom->setResolution(res.x, res.y, res.z);
-    geom->setOrigin(m_Coords[i].x(), m_Coords[i].y(), 0.0f);
-//    geom->setDimensions()
-    m->setGeometry(geom);
 
     setFileName(fi.filePath());
     DataArrayPath dap(dcName, getCellAttributeMatrixName(), getAttributeArrayName());
     readImage(dap, getInPreflight());
+
+    ImageGeom::Pointer geom = m->getGeometryAs<ImageGeom>();
+    geom->setOrigin(m_Coords[i].x(), m_Coords[i].y(), 0.0f);
   }
 }
 
