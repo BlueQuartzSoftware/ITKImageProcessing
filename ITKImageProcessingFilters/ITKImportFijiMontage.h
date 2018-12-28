@@ -28,7 +28,6 @@ class ITKImageProcessing_EXPORT ITKImportFijiMontage : public AbstractFilter
   PYB11_CREATE_BINDINGS(ITKImportFijiMontage SUPERCLASS AbstractFilter)
   PYB11_PROPERTY(QString DataContainerPrefix READ getDataContainerPrefix WRITE setDataContainerPrefix)
   PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
-  PYB11_PROPERTY(FloatVec3_t Resolution READ getResolution WRITE setResolution)
   PYB11_PROPERTY(QString FijiConfigFilePath READ getFijiConfigFilePath WRITE setFijiConfigFilePath)
   PYB11_PROPERTY(QString AttributeArrayName READ getAttributeArrayName WRITE setAttributeArrayName)
 public:
@@ -49,9 +48,6 @@ public:
 
   SIMPL_FILTER_PARAMETER(QString, FijiConfigFilePath)
   Q_PROPERTY(QString FijiConfigFilePath READ getFijiConfigFilePath WRITE setFijiConfigFilePath)
-
-  SIMPL_FILTER_PARAMETER(FloatVec3_t, Resolution)
-  Q_PROPERTY(FloatVec3_t Resolution READ getResolution WRITE setResolution)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
