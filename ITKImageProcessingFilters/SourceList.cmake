@@ -20,8 +20,8 @@ set(_PublicFilters
     ITKMedianImage
 
     ImportVectorImageStack
-    ImportRegisteredImageMontage
-    ImportImageMontage
+    ITKImportFijiMontage
+    ITKImportRoboMetMontage
 )
 
 if(NOT ITKImageProcessing_LeanAndMean)
