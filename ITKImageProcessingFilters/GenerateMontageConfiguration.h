@@ -35,10 +35,9 @@ class ITKImageProcessing_EXPORT GenerateMontageConfiguration : public AbstractFi
 	Q_OBJECT
 	PYB11_CREATE_BINDINGS(GenerateMontageConfiguration SUPERCLASS AbstractFilter)
 	PYB11_PROPERTY(IntVec3_t MontageSize READ getMontageSize WRITE setMontageSize)
-	PYB11_PROPERTY(DataContainerArrayProxy InputDataContainerArrayProxy READ getInputDataContainerArrayProxy WRITE setInputDataContainerArrayProxy)
-    PYB11_PROPERTY(DataArrayPath ImageDataArrayPath READ getImageDataArrayPath WRITE setImageDataArrayPath)
-
-	PYB11_METHOD(DataContainerArrayProxy readDataContainerArrayStructure ARGS path)
+	PYB11_PROPERTY(QVector<DataArrayPath>, ImageDataContainers READ getImageDataContainers WRITE setImageDataContainers)
+	PYB11_PROPERTY(QString CommonAttributeMatrixName READ getCommonAttributeMatrixName WRITE setCommonAttributeMatrixName)
+	PYB11_PROPERTY(QString CommonDataArrayName READ getCommonDataArrayName WRITE setCommonDataArrayName)
 public:
 	SIMPL_SHARED_POINTERS(GenerateMontageConfiguration)
 	SIMPL_FILTER_NEW_MACRO(GenerateMontageConfiguration)
@@ -49,11 +48,14 @@ public:
 	SIMPL_FILTER_PARAMETER(IntVec3_t, MontageSize)
 	Q_PROPERTY(IntVec3_t MontageSize READ getMontageSize WRITE setMontageSize)
 
-	SIMPL_FILTER_PARAMETER(DataContainerArrayProxy, InputDataContainerArrayProxy)
-	Q_PROPERTY(DataContainerArrayProxy InputDataContainerArrayProxy READ getInputDataContainerArrayProxy WRITE setInputDataContainerArrayProxy)
+	SIMPL_FILTER_PARAMETER(QVector<DataArrayPath>, ImageDataContainers)
+	Q_PROPERTY(QVector<DataArrayPath> ImageDataContainers READ getImageDataContainers WRITE setImageDataContainers)
 
-	SIMPL_FILTER_PARAMETER(DataArrayPath, ImageDataArrayPath)
-	Q_PROPERTY(DataArrayPath ImageDataArrayPath READ getImageDataArrayPath WRITE setImageDataArrayPath)
+	SIMPL_FILTER_PARAMETER(QString, CommonAttributeMatrixName)
+	Q_PROPERTY(QString CommonAttributeMatrixName READ getCommonAttributeMatrixName WRITE setCommonAttributeMatrixName)
+
+	SIMPL_FILTER_PARAMETER(QString, CommonDataArrayName)
+	Q_PROPERTY(QString CommonDataArrayName READ getCommonDataArrayName WRITE setCommonDataArrayName)
 
 	/**
 	 * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class

@@ -7,8 +7,8 @@
 #include <QtCore/QDir>
 
 #include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/FilterParameters/DataContainerArrayProxyFilterParameter.h"
-#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/MultiDataContainerSelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
@@ -55,21 +55,12 @@ void GenerateMontageConfiguration::setupFilterParameters()
 	QVector<FilterParameter::Pointer> parameters;
 
 	parameters.push_back(SIMPL_NEW_INT_VEC3_FP("Montage Size", MontageSize, FilterParameter::Parameter, GenerateMontageConfiguration));
+	parameters.push_back(SIMPL_NEW_STRING_FP("Common Attribute Matrix", CommonAttributeMatrixName, FilterParameter::RequiredArray, GenerateMontageConfiguration));
+	parameters.push_back(SIMPL_NEW_STRING_FP("Common Data Array", CommonDataArrayName, FilterParameter::RequiredArray, GenerateMontageConfiguration));
 	{
-		DataContainerArrayProxyFilterParameter::Pointer parameter = DataContainerArrayProxyFilterParameter::New();
-		parameter->setHumanLabel("Image Data Containers");
-		parameter->setPropertyName("InputDataContainerArrayProxy");
-		parameter->setSetterCallback(SIMPL_BIND_SETTER(GenerateMontageConfiguration, this, InputDataContainerArrayProxy));
-		parameter->setGetterCallback(SIMPL_BIND_GETTER(GenerateMontageConfiguration, this, InputDataContainerArrayProxy));
-
-		parameter->setDefaultFlagValue(Qt::Unchecked);
-		parameter->setCategory(FilterParameter::RequiredArray);
-		parameters.push_back(parameter);
-	}
-
-	{
-		DataArraySelectionFilterParameter::RequirementType req;
-		parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Image Data Array Path", ImageDataArrayPath, FilterParameter::RequiredArray, GenerateMontageConfiguration, req));
+		MultiDataContainerSelectionFilterParameter::RequirementType req =
+			MultiDataContainerSelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
+		parameters.push_back(SIMPL_NEW_MDC_SELECTION_FP("Image Data Containers", ImageDataContainers, FilterParameter::RequiredArray, GenerateMontageConfiguration, req));
 	}
 	setFilterParameters(parameters);
 }
@@ -137,8 +128,8 @@ void GenerateMontageConfiguration::CreateFijiDataStructure()
 {
 	DataContainerArray* dca = getDataContainerArray().get();
 	// Loop over the data containers until we find the proper data container
-	QList<DataContainerProxy> containers = m_InputDataContainerArrayProxy.dataContainers.values();
-	QMutableListIterator<DataContainerProxy> containerIter(containers);
+	QList<DataArrayPath> containers = m_ImageDataContainers.toList();
+	QMutableListIterator<DataArrayPath> containerIter(containers);
 	QStringList dcList;
 	bool dataContainerPrefixChanged = false;
 	if (containers.size() != (m_xMontageSize * m_yMontageSize))
@@ -155,9 +146,9 @@ void GenerateMontageConfiguration::CreateFijiDataStructure()
 	}
 	while (containerIter.hasNext())
 	{
-		DataContainerProxy dcProxy = containerIter.next();
-		dcList.push_back(dcProxy.name);
-		DataContainer::Pointer dcItem = dca->getPrereqDataContainer(this, dcProxy.name);
+		DataArrayPath dcArrayPath = containerIter.next();
+		dcList.push_back(dcArrayPath.getDataContainerName());
+		DataContainer::Pointer dcItem = dca->getPrereqDataContainer(this, dcArrayPath.getDataContainerName());
 		if (getErrorCondition() < 0 || dcItem.get() == nullptr)
 		{
 			continue;
@@ -166,13 +157,14 @@ void GenerateMontageConfiguration::CreateFijiDataStructure()
 
 		// Extract row and column data from the data container name
 		QString filename = ""; // Need to find this?
-		int indexOfUnderscore = dcProxy.name.lastIndexOf("_");
+		QString dcName = dcArrayPath.getDataContainerName();
+		int indexOfUnderscore = dcName.lastIndexOf("_");
 		if (!dataContainerPrefixChanged)
 		{
-			m_dataContainerPrefix = dcProxy.name.left(indexOfUnderscore);
+			m_dataContainerPrefix = dcName.left(indexOfUnderscore);
 			dataContainerPrefixChanged = true;
 		}
-		QString rowCol = dcProxy.name.right(dcProxy.name.size() - indexOfUnderscore - 1);
+		QString rowCol = dcName.right(dcName.size() - indexOfUnderscore - 1);
 		rowCol = rowCol.right(rowCol.size() - 1); // Remove 'r'
 		QStringList rowCol_Split = rowCol.split("c"); // Split by 'c'
 		int row = rowCol_Split[0].toInt();
@@ -229,8 +221,8 @@ void GenerateMontageConfiguration::GenerateMontage(int peakMethodToUse)
 			DataContainer::Pointer imageDC = GetImageDataContainer(y, x);
 			toITK->SetInput(imageDC);
 			toITK->SetInPlace(true);
-			toITK->SetAttributeMatrixArrayName(getImageDataArrayPath().getAttributeMatrixName().toStdString());
-			toITK->SetDataArrayName(getImageDataArrayPath().getDataArrayName().toStdString());
+			toITK->SetAttributeMatrixArrayName(getCommonAttributeMatrixName().toStdString());
+			toITK->SetDataArrayName(getCommonDataArrayName().toStdString());
 			toITK->Update();
 			itk::Dream3DFilterInterruption::Pointer interruption = itk::Dream3DFilterInterruption::New();
 			interruption->SetFilter(this);
@@ -287,20 +279,21 @@ DataContainer::Pointer GenerateMontageConfiguration::GetImageDataContainer(int y
 {
 	DataContainerArray* dca = getDataContainerArray().get();
 	// Loop over the data containers until we find the proper data container
-	QList<DataContainerProxy> containers = m_InputDataContainerArrayProxy.dataContainers.values();
-	QMutableListIterator<DataContainerProxy> containerIter(containers);
+	QList<DataArrayPath> containers = m_ImageDataContainers.toList();
+	QMutableListIterator<DataArrayPath> containerIter(containers);
 	QStringList dcList;
 	while (containerIter.hasNext())
 	{
-		DataContainerProxy dcProxy = containerIter.next();
-		dcList.push_back(dcProxy.name);
-		DataContainer::Pointer dcItem = dca->getPrereqDataContainer(this, dcProxy.name);
+		DataArrayPath dcArrayPath = containerIter.next();
+		QString dcName = dcArrayPath.getDataContainerName();
+		dcList.push_back(dcName);
+		DataContainer::Pointer dcItem = dca->getPrereqDataContainer(this, dcName);
 		if (getErrorCondition() < 0 || dcItem.get() == nullptr)
 		{
 			continue;
 		}
 
-		QString rowCol = dcProxy.name.right(dcProxy.name.size() - dcProxy.name.lastIndexOf("_") - 1);
+		QString rowCol = dcName.right(dcName.size() - dcName.lastIndexOf("_") - 1);
 		rowCol = rowCol.right(rowCol.size() - 1); // Remove 'r'
 		QStringList rowCol_Split = rowCol.split("c"); // Split by 'c'
 		int row = rowCol_Split[0].toInt();
