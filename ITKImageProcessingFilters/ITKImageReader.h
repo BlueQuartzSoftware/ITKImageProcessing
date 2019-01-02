@@ -33,6 +33,8 @@
 
 #pragma once
 
+#include <QtCore/QDateTime>
+
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
@@ -43,6 +45,9 @@
 #include <itkImageFileReader.h>
 
 #include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
+
+// our PIMPL private class
+class ITKImageReaderPrivate;
 
 /**
  * @brief The ITKImageProcessingFilter class. See [Filter documentation](@ref itkimageprocessingfilter) for details.
@@ -55,6 +60,7 @@ class ITKImageProcessing_EXPORT ITKImageReader : public AbstractFilter
   PYB11_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
   PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
   PYB11_PROPERTY(QString ImageDataArrayName READ getImageDataArrayName WRITE setImageDataArrayName)
+  Q_DECLARE_PRIVATE(ITKImageReader)
 
 public:
   SIMPL_SHARED_POINTERS(ITKImageReader)
@@ -74,6 +80,12 @@ public:
 
   SIMPL_FILTER_PARAMETER(QString, ImageDataArrayName)
   Q_PROPERTY(QString ImageDataArrayName READ getImageDataArrayName WRITE setImageDataArrayName)
+
+  SIMPL_PIMPL_PROPERTY_DECL(QString, FileNameCache)
+  SIMPL_PIMPL_PROPERTY_DECL(QDateTime, LastRead)
+  SIMPL_PIMPL_PROPERTY_DECL(IDataArray::Pointer, ImageArrayCache)
+  SIMPL_PIMPL_PROPERTY_DECL(ImageGeom::Pointer, DCGeometryCache)
+
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
@@ -179,6 +191,9 @@ protected:
    * to a few different filters across different plugins.
    */
   ITK_IMAGE_READER_HELPER_DECL()
+
+private:
+  QScopedPointer<ITKImageReaderPrivate> const d_ptr;
 
 public:
   ITKImageReader(const ITKImageReader&) = delete; // Copy Constructor Not Implemented
