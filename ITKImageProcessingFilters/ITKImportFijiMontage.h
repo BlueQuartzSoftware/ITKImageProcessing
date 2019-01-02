@@ -17,7 +17,11 @@
 
 #include <itkImageFileReader.h>
 
+#include "ITKImageProcessing/ITKImageProcessingFilters/ITKImageReader.h"
 #include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
+
+// our PIMPL private class
+class ITKImportFijiMontagePrivate;
 
 /**
  * @brief The ITKImportFijiMontage class. See [Filter documentation](@ref ITKImportFijiMontage) for details.
@@ -30,6 +34,7 @@ class ITKImageProcessing_EXPORT ITKImportFijiMontage : public AbstractFilter
   PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
   PYB11_PROPERTY(QString FijiConfigFilePath READ getFijiConfigFilePath WRITE setFijiConfigFilePath)
   PYB11_PROPERTY(QString AttributeArrayName READ getAttributeArrayName WRITE setAttributeArrayName)
+  Q_DECLARE_PRIVATE(ITKImportFijiMontage)
 public:
   SIMPL_SHARED_POINTERS(ITKImportFijiMontage)
   SIMPL_FILTER_NEW_MACRO(ITKImportFijiMontage)
@@ -48,6 +53,24 @@ public:
 
   SIMPL_FILTER_PARAMETER(QString, FijiConfigFilePath)
   Q_PROPERTY(QString FijiConfigFilePath READ getFijiConfigFilePath WRITE setFijiConfigFilePath)
+
+  typedef QMap<QString,ITKImageReader::Pointer> ReaderMap;
+
+  SIMPL_PIMPL_PROPERTY_DECL(QString, FijiConfigFilePathCache)
+  SIMPL_PIMPL_PROPERTY_DECL(QDateTime, LastRead)
+  SIMPL_PIMPL_GET_PROPERTY_DECL(ReaderMap, ReaderCache)
+
+  /**
+   * @brief setReaderCacheValue
+   * @param filePath
+   * @param reader
+   */
+  void setReaderCacheValue(const QString &filePath, const ITKImageReader::Pointer &reader);
+
+  /**
+   * @brief clearReaderCache
+   */
+  void clearReaderCache();
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -160,16 +183,23 @@ protected:
   void initialize();
 
 private:
+  QScopedPointer<ITKImportFijiMontagePrivate> const d_ptr;
+
   int32_t m_NumImages;
   std::vector<QString> m_RegisteredFilePaths;
-  std::vector<QPointF> m_Coords;
-  std::vector<QString> m_RowColId;
+  QMap<QString,QPointF> m_CoordsMap;
+  QMap<QString,QString> m_RowColIdMap;
 
   /**
-   * @brief Include the declarations of the ITKImageReader helper functions that are common
-   * to a few different filters across different plugins.
+   * @brief readDataFile
+   * @param filePath
    */
-  ITK_IMAGE_READER_HELPER_ImageDataArrayName() ITK_IMAGE_READER_HELPER_DECL()
+  void readImageFile(const QString &filePath);
+
+  /**
+   * @brief clearParsingCache
+   */
+  void clearParsingCache();
 
 public :
   ITKImportFijiMontage(const ITKImportFijiMontage&) = delete; // Copy Constructor Not Implemented
