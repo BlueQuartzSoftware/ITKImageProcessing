@@ -33,6 +33,8 @@
 
 #include "ITKImageReader.h"
 
+#include <QtCore/QFileInfo>
+
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
@@ -43,6 +45,31 @@
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
 #include "ITKImageProcessingPlugin.h"
 
+/* ############## Start Private Implementation ############################### */
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+class ITKImageReaderPrivate
+{
+  Q_DISABLE_COPY(ITKImageReaderPrivate)
+  Q_DECLARE_PUBLIC(ITKImageReader)
+  ITKImageReader* const q_ptr;
+  ITKImageReaderPrivate(ITKImageReader* ptr);
+  QString m_FileNameCache;
+  QDateTime m_LastRead;
+  IDataArray::Pointer m_ImageArrayCache;
+  ImageGeom::Pointer m_DCGeometryCache;
+};
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+ITKImageReaderPrivate::ITKImageReaderPrivate(ITKImageReader* ptr)
+: q_ptr(ptr)
+, m_FileNameCache("")
+{
+}
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -51,6 +78,7 @@ ITKImageReader::ITKImageReader()
 , m_DataContainerName(SIMPL::Defaults::ImageDataContainerName)
 , m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName)
 , m_ImageDataArrayName(SIMPL::CellData::ImageData)
+, d_ptr(new ITKImageReaderPrivate(this))
 {
 }
 
@@ -58,6 +86,14 @@ ITKImageReader::ITKImageReader()
 //
 // -----------------------------------------------------------------------------
 ITKImageReader::~ITKImageReader() = default;
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+SIMPL_PIMPL_PROPERTY_DEF(ITKImageReader, QString, FileNameCache)
+SIMPL_PIMPL_PROPERTY_DEF(ITKImageReader, QDateTime, LastRead)
+SIMPL_PIMPL_PROPERTY_DEF(ITKImageReader, IDataArray::Pointer, ImageArrayCache)
+SIMPL_PIMPL_PROPERTY_DEF(ITKImageReader, ImageGeom::Pointer, DCGeometryCache)
 
 // -----------------------------------------------------------------------------
 //
@@ -113,18 +149,58 @@ void ITKImageReader::dataCheck()
     return;
   }
 
-  DataContainer::Pointer container = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
-  if(container.get() == nullptr)
+  QFileInfo fi(filename);
+  QDateTime lastModified(fi.lastModified());
+  DataArrayPath dap(getDataContainerName(), getCellAttributeMatrixName(), getImageDataArrayName());
+
+  DataContainer::Pointer dc = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
+  if(dc.get() == nullptr)
   {
-    setErrorCondition(-3);
-    notifyErrorMessage(getHumanLabel(), "No container.", getErrorCondition());
     return;
   }
-  DataArrayPath dap(getDataContainerName(), getCellAttributeMatrixName(), getImageDataArrayName());
-  readImage(dap, true);
-  // If we got here, that means that there is no error
-  setErrorCondition(0);
-  setWarningCondition(0);
+
+  // Only parse the file again if the cache is outdated
+  if (!getInPreflight() || filename != getFileNameCache() || !getLastRead().isValid() || lastModified.msecsTo(getLastRead()) < 0)
+  {
+    setFileName(filename);
+    readImage(dap, getInPreflight());
+
+    if (getErrorCondition() < 0)
+    {
+      return;
+    }
+
+    IDataArray::Pointer da = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray,AbstractFilter>(this, dap);
+    setImageArrayCache(da);
+
+    ImageGeom::Pointer geom = dc->getGeometryAs<ImageGeom>();
+    if (geom)
+    {
+      setDCGeometryCache(geom);
+    }
+
+    // Set the new data into the cache
+    setLastRead(QDateTime::currentDateTime());
+    setFileNameCache(getFileName());
+  }
+  else
+  {
+    dc->setGeometry(getDCGeometryCache());
+
+    QVector<size_t> tDims;
+    std::tuple<size_t,size_t,size_t> dims = getDCGeometryCache()->getDimensions();
+    tDims.push_back(std::get<0>(dims));
+    tDims.push_back(std::get<1>(dims));
+    tDims.push_back(std::get<2>(dims));
+    AttributeMatrix::Pointer am = dc->createNonPrereqAttributeMatrix(this, dap, tDims, AttributeMatrix::Type::Cell);
+
+    IDataArray::Pointer da = getImageArrayCache();
+    if (da->getName() != getImageDataArrayName())
+    {
+      da->setName(getImageDataArrayName());
+    }
+    am->addAttributeArray(da->getName(), da);
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -154,8 +230,9 @@ void ITKImageReader::execute()
   {
     return;
   }
-  DataArrayPath dap(getDataContainerName(), getCellAttributeMatrixName(), getImageDataArrayName());
-  readImage(dap, false);
+
+  // dataCheck() function does all of the execution work.
+
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
