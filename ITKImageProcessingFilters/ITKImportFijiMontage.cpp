@@ -5,6 +5,7 @@
 #include "ITKImportFijiMontage.h"
 
 #include <QtCore/QDir>
+#include <QtCore/QDateTime>
 
 #include "itkParseTileConfiguration.h"
 
@@ -22,6 +23,30 @@
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
 
+/* ############## Start Private Implementation ############################### */
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+class ITKImportFijiMontagePrivate
+{
+  Q_DISABLE_COPY(ITKImportFijiMontagePrivate)
+  Q_DECLARE_PUBLIC(ITKImportFijiMontage)
+  ITKImportFijiMontage* const q_ptr;
+  ITKImportFijiMontagePrivate(ITKImportFijiMontage* ptr);
+  QString m_FijiConfigFilePathCache;
+  QDateTime m_LastRead;
+  ITKImportFijiMontage::ReaderMap m_ReaderCache;
+};
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+ITKImportFijiMontagePrivate::ITKImportFijiMontagePrivate(ITKImportFijiMontage* ptr)
+: q_ptr(ptr)
+, m_FijiConfigFilePathCache("")
+{
+}
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -30,6 +55,7 @@ ITKImportFijiMontage::ITKImportFijiMontage()
 , m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName)
 , m_FijiConfigFilePath("")
 , m_AttributeArrayName("ImageTile")
+, d_ptr(new ITKImportFijiMontagePrivate(this))
 {
   m_NumImages = 0;
 }
@@ -42,16 +68,36 @@ ITKImportFijiMontage::~ITKImportFijiMontage() = default;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+SIMPL_PIMPL_PROPERTY_DEF(ITKImportFijiMontage, QString, FijiConfigFilePathCache)
+SIMPL_PIMPL_PROPERTY_DEF(ITKImportFijiMontage, QDateTime, LastRead)
+SIMPL_PIMPL_GET_PROPERTY_DEF(ITKImportFijiMontage, ITKImportFijiMontage::ReaderMap, ReaderCache)
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ITKImportFijiMontage::setReaderCacheValue(const QString &filePath, const ITKImageReader::Pointer &reader)
+{
+  Q_D(ITKImportFijiMontage);
+  d->m_ReaderCache.insert(filePath, reader);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ITKImportFijiMontage::clearReaderCache()
+{
+  Q_D(ITKImportFijiMontage);
+  d->m_ReaderCache.clear();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void ITKImportFijiMontage::initialize()
 {
   setErrorCondition(0);
   setWarningCondition(0);
   setCancel(false);
-
-  m_NumImages = 0;
-  m_RegisteredFilePaths.clear();
-  m_Coords.clear();
-  m_RowColId.clear();
 }
 
 // -----------------------------------------------------------------------------
@@ -104,53 +150,122 @@ void ITKImportFijiMontage::dataCheck()
     return;
   }
 
-  int32_t err = 0;
+  QDateTime lastModified(fi.lastModified());
 
-  // Parse Fiji Config File
-  err = parseFijiConfigFile(getFijiConfigFilePath());
-  if(err < 0)
+  // Only parse the fiji config file again if the cache is outdated
+  if (!getInPreflight() || getFijiConfigFilePath() != getFijiConfigFilePathCache() || !getLastRead().isValid() || lastModified.msecsTo(getLastRead()) < 0)
+  {
+    clearReaderCache();
+    clearParsingCache();
+
+    // Parse Fiji Config File
+    int32_t err = parseFijiConfigFile(getFijiConfigFilePath());
+    if(err < 0)
+    {
+      return;
+    }
+
+    QVector<size_t> cDims(1, 1);
+
+    for(int i = 0; i < m_RegisteredFilePaths.size(); i++)
+    {
+      if(getCancel())
+      {
+        return;
+      }
+
+      QString registeredFilePath = m_RegisteredFilePaths[i];
+
+      readImageFile(registeredFilePath);
+    }
+
+    // Set the new data into the cache
+    setLastRead(QDateTime::currentDateTime());
+    setFijiConfigFilePathCache(getFijiConfigFilePath());
+  }
+  else
+  {
+    ReaderMap readerCache = getReaderCache();
+    for (ReaderMap::iterator iter = readerCache.begin(); iter != readerCache.end(); iter++)
+    {
+      QString filePath = iter.key();
+
+      QString rowColIdString = m_RowColIdMap[filePath];
+      QString dcName = tr("%1_%2").arg(getDataContainerPrefix()).arg(rowColIdString);
+
+      ITKImageReader::Pointer reader = iter.value();
+      reader->setDataContainerName(dcName);
+      reader->setCellAttributeMatrixName(getCellAttributeMatrixName());
+      reader->setImageDataArrayName(getAttributeArrayName());
+      reader->setDataContainerArray(DataContainerArray::New());
+      if (getInPreflight())
+      {
+        reader->preflight();
+      }
+      else
+      {
+        reader->execute();
+      }
+
+      DataContainerArray::Pointer filterDca = reader->getDataContainerArray();
+      QList<DataContainer::Pointer> dcs = filterDca->getDataContainers();
+      for (DataContainer::Pointer dc : dcs)
+      {
+        getDataContainerArray()->addDataContainer(dc);
+
+        QPointF coords = m_CoordsMap[filePath];
+
+        ImageGeom::Pointer geom = dc->getGeometryAs<ImageGeom>();
+
+        geom->setOrigin(coords.x(), coords.y(), 1.0f);
+      }
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ITKImportFijiMontage::readImageFile(const QString &filePath)
+{
+  QFileInfo fi(filePath);
+  QString rowColIdString = m_RowColIdMap[filePath];
+  QPointF coords = m_CoordsMap[filePath];
+
+  QString dcName = tr("%1_%2").arg(getDataContainerPrefix()).arg(rowColIdString);
+
+  ITKImageReader::Pointer reader = ITKImageReader::New();
+  reader->setFileName(fi.filePath());
+  reader->setDataContainerName(dcName);
+  reader->setCellAttributeMatrixName(getCellAttributeMatrixName());
+  reader->setImageDataArrayName(getAttributeArrayName());
+
+  if (getInPreflight())
+  {
+    reader->preflight();
+  }
+  else
+  {
+    reader->execute();
+  }
+
+  DataContainerArray::Pointer filterDca = reader->getDataContainerArray();
+  QList<DataContainer::Pointer> dcs = filterDca->getDataContainers();
+  for (DataContainer::Pointer dc : dcs)
+  {
+    getDataContainerArray()->addDataContainer(dc);
+  }
+
+  DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, dcName);
+  if(getErrorCondition() < 0)
   {
     return;
   }
 
-  QVector<size_t> cDims(1, 1);
+  ImageGeom::Pointer geom = m->getGeometryAs<ImageGeom>();
+  geom->setOrigin(coords.x(), coords.y(), 1.0f);
 
-  for(int i = 0; i < m_RegisteredFilePaths.size(); i++)
-  {
-    if(getCancel())
-    {
-      return;
-    }
-
-    QString registeredFilePath = m_RegisteredFilePaths[i];
-
-    QFileInfo fi(registeredFilePath);
-    if (fi.isRelative())
-    {
-      QFileInfo configFi(getFijiConfigFilePath());
-      fi.setFile(configFi.path() + QDir::separator() + registeredFilePath);
-    }
-
-    if(!fi.exists())
-    {
-      continue;
-    }
-
-    QString dcName = tr("%1_%2").arg(getDataContainerPrefix()).arg(m_RowColId[i]);
-
-    DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, dcName);
-    if(getErrorCondition() < 0)
-    {
-      return;
-    }
-
-    setFileName(fi.filePath());
-    DataArrayPath dap(dcName, getCellAttributeMatrixName(), getAttributeArrayName());
-    readImage(dap, getInPreflight());
-
-    ImageGeom::Pointer geom = m->getGeometryAs<ImageGeom>();
-    geom->setOrigin(m_Coords[i].x(), m_Coords[i].y(), 0.0f);
-  }
+  setReaderCacheValue(filePath, reader);
 }
 
 // -----------------------------------------------------------------------------
@@ -167,7 +282,16 @@ int32_t ITKImportFijiMontage::parseFijiConfigFile(const QString &filePath)
     for (int j = 0; j < tile2D.size(); j++)
     {
       auto tile = tile2D[j];
-      m_RegisteredFilePaths.push_back(QString::fromStdString(tile.FileName));
+
+      QString filePath = QString::fromStdString(tile.FileName);
+      QFileInfo fi(filePath);
+      if (fi.isRelative())
+      {
+        QFileInfo configFi(getFijiConfigFilePath());
+        filePath = configFi.path() + QDir::separator() + filePath;
+      }
+
+      m_RegisteredFilePaths.push_back(filePath);
 
       uint32_t coordsSize = tile.Position.GetPointDimension();
       if (coordsSize != 2)
@@ -176,14 +300,14 @@ int32_t ITKImportFijiMontage::parseFijiConfigFile(const QString &filePath)
         setErrorCondition(-2004);
         notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
         m_RegisteredFilePaths.clear();
-        m_Coords.clear();
-        m_RowColId.clear();
+        m_CoordsMap.clear();
+        m_RowColIdMap.clear();
         m_NumImages = 0;
         return -1;
       }
 
-      m_Coords.push_back(QPointF(tile.Position[0], tile.Position[1]));
-      m_RowColId.push_back(tr("r%1c%2").arg(i).arg(j));
+      m_CoordsMap.insert(filePath, QPointF(tile.Position[0], tile.Position[1]));
+      m_RowColIdMap.insert(filePath, tr("r%1c%2").arg(i).arg(j));
       m_NumImages++;
     }
   }
@@ -295,22 +419,10 @@ const QString ITKImportFijiMontage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void getDimensions(const QString &filePath)
+void ITKImportFijiMontage::clearParsingCache()
 {
-//  ReaderType::Pointer reader = ReaderType::New();
-//    reader->SetFileName( argv[1] );
-//    reader->Update();
-
-//    ImageType::Pointer image = reader->GetOutput();
-
-//    ImageType::RegionType region = image->GetLargestPossibleRegion();
-
-//    ImageType::SizeType size = region.GetSize();
+  m_NumImages = 0;
+  m_RegisteredFilePaths.clear();
+  m_CoordsMap.clear();
+  m_RowColIdMap.clear();
 }
-
-#define ITK_IMAGE_READER_CLASS_NAME ITKImportFijiMontage
-
-#include "SIMPLib/ITK/itkGetComponentsDimensions.h"
-#include "SIMPLib/ITK/itkInPlaceImageToDream3DDataFilter.h"
-
-#include "SIMPLib/ITK/itkImageReaderHelper.cpp"
