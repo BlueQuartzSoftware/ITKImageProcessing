@@ -79,7 +79,50 @@ void GenerateMontageConfiguration::dataCheck()
 
 	m_xMontageSize = m_MontageSize.x;
 	m_yMontageSize = m_MontageSize.y;
-	
+
+	if (m_xMontageSize == 0 || m_yMontageSize == 0)
+	{
+		setErrorCondition(-11001);
+		QString ss = QObject::tr("The Montage Size x and y values must be greater than 0");
+		notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+		return;
+	}
+
+	// Test to make sure at least on data container is selected
+
+	if (getImageDataContainers().size() < 1)
+	{
+		setErrorCondition(-11002);
+		QString ss = QObject::tr("At least one Data Container must be selected");
+		notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+		return;
+	}
+
+	// Test to see that the image data containers are correct
+	for (int i = 0; i < getImageDataContainers().size(); i++)
+	{
+		DataArrayPath testPath = getImageDataContainers()[i];
+		testPath.setAttributeMatrixName(getCommonAttributeMatrixName());
+		testPath.setDataArrayName(getCommonDataArrayName());
+		IDataArray::WeakPointer ptr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, testPath);
+		if (nullptr != ptr.lock())
+		{
+
+			ImageGeom::Pointer image = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, testPath.getDataContainerName());
+			if (getErrorCondition() < 0)
+			{
+				return;
+			}
+		}
+		else
+		{
+			setErrorCondition(-11003);
+			QString ss = QObject::tr("The Data Array Path(%1, %2, %3) is not valid").arg(testPath.getDataContainerName())
+				.arg(getCommonAttributeMatrixName()).arg(getCommonDataArrayName());
+			notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+			return;
+		}
+	}	
 }
 
 // -----------------------------------------------------------------------------
