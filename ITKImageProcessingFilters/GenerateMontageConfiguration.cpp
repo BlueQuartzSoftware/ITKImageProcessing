@@ -158,7 +158,7 @@ void GenerateMontageConfiguration::execute()
 		// Pass to ITK and generate montage
 		// ITK returns a new Fiji data structure to DREAM3D
 		// Store FIJI DS into SIMPL Transform DS inside the Geometry
-		GenerateMontage< unsigned char, unsigned int >(0);
+		GenerateMontage< unsigned char, unsigned int >(1);
 	}
 	/* Let the GUI know we are done with this filter */
 	notifyStatusMessage(getHumanLabel(), "Complete");
@@ -214,7 +214,7 @@ void GenerateMontageConfiguration::CreateFijiDataStructure()
 		int col = rowCol_Split[1].toInt();
 		itk::Tile2D tile;
 		tile.Position[0] = col;
-		tile.Position[0] = row;
+		tile.Position[1] = row;
 		tile.FileName = filename.toStdString();
 
 		m_tiles[row][col] = tile;
@@ -262,6 +262,13 @@ void GenerateMontageConfiguration::GenerateMontage(int peakMethodToUse)
 			typedef itk::InPlaceDream3DDataToImageFilter <ScalarPixelType, Dimension > toITKType;
 			typename toITKType::Pointer toITK = toITKType::New();
 			DataContainer::Pointer imageDC = GetImageDataContainer(y, x);
+			// Check the resolution and fix if necessary
+			SIMPL::Tuple3FVec resolution = imageDC->getGeometryAs<ImageGeom>()->getResolution();
+			if (std::get<0>(resolution) < 1 || std::get<1>(resolution) < 1)
+			{
+				imageDC->getGeometryAs<ImageGeom>()->setResolution(1, 1, 1);
+			}
+
 			toITK->SetInput(imageDC);
 			toITK->SetInPlace(true);
 			toITK->SetAttributeMatrixArrayName(getCommonAttributeMatrixName().toStdString());
@@ -310,7 +317,7 @@ void GenerateMontageConfiguration::GenerateMontage(int peakMethodToUse)
 			::ITransformContainer::Pointer convertedITransformContainer = filter->GetOutput()->Get();
 			::TransformContainer::Pointer convertedTransformContainer = std::dynamic_pointer_cast<::TransformContainer>(convertedITransformContainer);
 
-			image->setTransformContainer(convertedITransformContainer);
+			image->setTransformContainer(convertedTransformContainer);
 		}
 	}
 }
