@@ -35,7 +35,7 @@ class ITKImageProcessing_EXPORT GenerateMontageConfiguration : public AbstractFi
 	Q_OBJECT
 	PYB11_CREATE_BINDINGS(GenerateMontageConfiguration SUPERCLASS AbstractFilter)
 	PYB11_PROPERTY(IntVec3_t MontageSize READ getMontageSize WRITE setMontageSize)
-	PYB11_PROPERTY(QVector<DataArrayPath>, ImageDataContainers READ getImageDataContainers WRITE setImageDataContainers)
+  PYB11_PROPERTY(QStringList, ImageDataContainers READ getImageDataContainers WRITE setImageDataContainers)
 	PYB11_PROPERTY(QString CommonAttributeMatrixName READ getCommonAttributeMatrixName WRITE setCommonAttributeMatrixName)
 	PYB11_PROPERTY(QString CommonDataArrayName READ getCommonDataArrayName WRITE setCommonDataArrayName)
 public:
@@ -48,14 +48,26 @@ public:
 	SIMPL_FILTER_PARAMETER(IntVec3_t, MontageSize)
 	Q_PROPERTY(IntVec3_t MontageSize READ getMontageSize WRITE setMontageSize)
 
-	SIMPL_FILTER_PARAMETER(QVector<DataArrayPath>, ImageDataContainers)
-	Q_PROPERTY(QVector<DataArrayPath> ImageDataContainers READ getImageDataContainers WRITE setImageDataContainers)
+  SIMPL_FILTER_PARAMETER(QStringList, ImageDataContainers)
+  Q_PROPERTY(QStringList ImageDataContainers READ getImageDataContainers WRITE setImageDataContainers)
 
 	SIMPL_FILTER_PARAMETER(QString, CommonAttributeMatrixName)
 	Q_PROPERTY(QString CommonAttributeMatrixName READ getCommonAttributeMatrixName WRITE setCommonAttributeMatrixName)
 
+  SIMPL_FILTER_PARAMETER(bool, StitchMontage)
+  Q_PROPERTY(bool StitchMontage READ getStitchMontage WRITE setStitchMontage)
+
 	SIMPL_FILTER_PARAMETER(QString, CommonDataArrayName)
 	Q_PROPERTY(QString CommonDataArrayName READ getCommonDataArrayName WRITE setCommonDataArrayName)
+
+  SIMPL_FILTER_PARAMETER(QString, MontageDataContainerName)
+  Q_PROPERTY(QString MontageDataContainerName READ getMontageDataContainerName WRITE setMontageDataContainerName)
+
+  SIMPL_FILTER_PARAMETER(QString, MontageAttributeMatrixName)
+  Q_PROPERTY(QString MontageAttributeMatrixName READ getMontageAttributeMatrixName WRITE setMontageAttributeMatrixName)
+
+  SIMPL_FILTER_PARAMETER(QString, MontageDataArrayName)
+  Q_PROPERTY(QString MontageDataArrayName READ getMontageDataArrayName WRITE setMontageDataArrayName)
 
 	/**
 	 * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -156,12 +168,12 @@ protected:
 	/**
 	 * @brief Create the Fiji data structure
 	 */
-	void CreateFijiDataStructure();
+  void createFijiDataStructure();
 
 	/**
 	 * @brief Generate the montage
 	 */
-	template< typename PixelType, typename AccumulatePixelType > void GenerateMontage(int peakMethodToUse);
+  template<typename PixelType, typename AccumulatePixelType> void generateMontage(int peakMethodToUse = 1, unsigned streamSubdivisions = 1);
 
 	/**
 	 * @brief Get the image from the appropriate data container
@@ -177,7 +189,8 @@ protected:
 	typename TransformContainer::Pointer GetTransformContainerFromITKAffineTransform(const AffineType::Pointer& itkAffine);
 
 private:
-	itk::TileLayout2D m_tiles;
+  itk::TileLayout2D m_StageTiles;
+  itk::TileLayout2D m_ActualTiles;
 	unsigned int m_xMontageSize;
 	unsigned int m_yMontageSize;
 	QString m_dataContainerPrefix;
