@@ -54,7 +54,7 @@ class ZeissTagsXmlSection
 
     using MetaDataType = QMap<int, AbstractZeissMetaData::Pointer>;
 
-    ~ZeissTagsXmlSection();
+    virtual ~ZeissTagsXmlSection();
 
     MetaDataType& getMetaDataMap();
 
