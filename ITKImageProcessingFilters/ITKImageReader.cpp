@@ -156,7 +156,6 @@ void ITKImageReader::execute()
   }
   DataArrayPath dap(getDataContainerName(), getCellAttributeMatrixName(), getImageDataArrayName());
   readImage(dap, false);
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

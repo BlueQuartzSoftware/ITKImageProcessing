@@ -425,9 +425,6 @@ void ITKImportImageStack::execute()
   const QVector<QString> fileList = this->getFileList();
   const bool dataCheck = false;
   readImage(fileList, dataCheck);
-
-  /* Let the GUI know we are done with this filter */
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

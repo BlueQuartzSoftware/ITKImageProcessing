@@ -172,7 +172,6 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
     return;
   }
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

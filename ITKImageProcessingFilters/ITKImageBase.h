@@ -213,8 +213,6 @@ protected:
       }
       return;
     }
-
-    notifyStatusMessage(getHumanLabel(), "Complete");
   }
 
   /**
@@ -280,8 +278,6 @@ protected:
       notifyErrorMessage(getHumanLabel(), errorMessage.arg(err.GetDescription()), getErrorCondition());
       return;
     }
-
-    notifyStatusMessage(getHumanLabel(), "Complete");
   }
 
   /**
