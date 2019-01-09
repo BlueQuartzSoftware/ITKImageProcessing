@@ -271,7 +271,6 @@ void SeparateDataSets::execute()
 //    return;
 //  }
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------
