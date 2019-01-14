@@ -178,7 +178,11 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   filter->SetKernelBandwidthMultiplicationFactor(static_cast<double>(m_KernelBandwidthMultiplicationFactor));
   filter->SetKernelBandwidthUpdateFrequency(static_cast<uint32_t>(m_KernelBandwidthUpdateFrequency));
   filter->SetKernelBandwidthFractionPixelsForEstimation(static_cast<double>(m_KernelBandwidthFractionPixelsForEstimation));
+#if ITK_VERSION_MAJOR >= 5
+  filter->SetNumberOfWorkUnits(this->getNumberOfThreads());
+#else
   filter->SetNumberOfThreads(this->getNumberOfThreads());
+#endif
   typedef itk::Statistics::GaussianRandomSpatialNeighborSubsampler<typename FilterType::PatchSampleType, typename RealImageType::RegionType> SamplerType;
   typename SamplerType::Pointer sampler = SamplerType::New();
   sampler->SetVariance(m_SampleVariance);
