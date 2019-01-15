@@ -214,6 +214,30 @@ void GenerateMontageConfiguration::dataCheck()
 
   if (m_StitchMontage)
   {
+    if (getMontageDataContainerName().isEmpty())
+    {
+      setErrorCondition(-11006);
+      QString ss = QObject::tr("Montage Data Container is empty.");
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      return;
+    }
+
+    if (getMontageAttributeMatrixName().isEmpty())
+    {
+      setErrorCondition(-11007);
+      QString ss = QObject::tr("Montage Attribute Matrix is empty.");
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      return;
+    }
+
+    if (getMontageDataArrayName().isEmpty())
+    {
+      setErrorCondition(-11008);
+      QString ss = QObject::tr("Montage Data Array is empty.");
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      return;
+    }
+
     DataArrayPath dap(getMontageDataContainerName(), getMontageAttributeMatrixName(), getMontageDataArrayName());
 
     DataContainer::Pointer dc = getDataContainerArray()->createNonPrereqDataContainer(this, getMontageDataContainerName());
