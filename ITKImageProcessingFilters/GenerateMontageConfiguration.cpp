@@ -418,12 +418,25 @@ void GenerateMontageConfiguration::generateMontage(int peakMethodToUse, unsigned
 	using PeakFinderUnderlying = typename std::underlying_type<PeakInterpolationType>::type;
 	auto peakMethod = static_cast<PeakFinderUnderlying>(peakMethodToUse);
 
+  unsigned x1 = 1;
+  unsigned y1 = 1;
+  if (m_xMontageSize < 2)
+  {
+    x1 = 0;
+  }
+  if(m_yMontageSize < 2)
+  {
+    y1 = 0;
+  }
+
+  PointType originAdjustment = m_StageTiles[y1][x1].Position - m_StageTiles[0][0].Position;
+
   // Create tile montage
 	typename MontageType::Pointer montage = MontageType::New();
 	montage->SetMontageSize({ m_xMontageSize, m_yMontageSize });
 	montage->GetModifiablePCM()->SetPaddingMethod(PCMType::PaddingMethod::MirrorWithExponentialDecay);
 	montage->GetModifiablePCMOptimizer()->SetPeakInterpolationMethod(static_cast<PeakInterpolationType>(peakMethod));
-  montage->SetOriginAdjustment(m_StageTiles[1][1].Position);
+  montage->SetOriginAdjustment(originAdjustment);
 	montage->SetForcedSpacing(sp);
 
   // Set tile image data from DREAM3D structure into tile montage
