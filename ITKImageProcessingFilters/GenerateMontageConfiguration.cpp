@@ -28,6 +28,47 @@
 #include "itkTxtTransformIOFactory.h"
 #include "itkTileMergeImageFilter.h"
 #include "itkStreamingImageFilter.h"
+#include "itkCommand.h"
+
+class ITKProgressObserver : public itk::Command
+{
+  public:
+    void Execute(itk::Object* caller, const itk::EventObject& event) override
+    {
+      Execute((const itk::Object*)caller, event);
+    }
+
+    void Execute(const itk::Object* caller, const itk::EventObject& event) override
+    {
+      if(!itk::ProgressEvent().CheckEvent(&event))
+      {
+        return;
+      }
+      const auto* processObject = dynamic_cast<const itk::ProcessObject*>(caller);
+      if(!processObject)
+      {
+        return;
+      }
+
+      QString progressStr = QString::number(processObject->GetProgress() * 100);
+      QString ss = QObject::tr("%1: %2%").arg(m_MessagePrefix).arg(progressStr);
+      m_Filter->notifyStatusMessage(m_Filter->getHumanLabel(), ss);
+    }
+
+    void setMessagePrefix(const QString &prefix)
+    {
+      m_MessagePrefix = prefix;
+    }
+
+    void setFilter(AbstractFilter* filter)
+    {
+      m_Filter = filter;
+    }
+
+  private:
+    AbstractFilter* m_Filter = nullptr;
+    QString m_MessagePrefix;
+};
 
  // -----------------------------------------------------------------------------
  //
@@ -346,6 +387,9 @@ void GenerateMontageConfiguration::generateMontage(int peakMethodToUse, unsigned
 	typename ScalarImageType::SpacingType sp;
 	sp.Fill(1.0); // assume unit spacing
 
+  ITKProgressObserver* progressObs = new ITKProgressObserver();
+  progressObs->setFilter(this);
+
 	using PeakInterpolationType = typename itk::MaxPhaseCorrelationOptimizer<PCMType>::PeakInterpolationMethod;
 	using PeakFinderUnderlying = typename std::underlying_type<PeakInterpolationType>::type;
 	auto peakMethod = static_cast<PeakFinderUnderlying>(peakMethodToUse);
@@ -390,7 +434,13 @@ void GenerateMontageConfiguration::generateMontage(int peakMethodToUse, unsigned
 
   // Execute the tile registrations
 	notifyStatusMessage(getHumanLabel(), "Doing the tile registrations");
+
+  progressObs->setMessagePrefix("Registering Tiles");
+  montage->AddObserver(itk::ProgressEvent(), progressObs);
+
 	montage->Update();
+
+  montage->RemoveAllObservers();
 	notifyStatusMessage(getHumanLabel(), "Finished the tile registrations");
 
   // Store tile registration transforms in DREAM3D data containers
@@ -443,9 +493,15 @@ void GenerateMontageConfiguration::generateMontage(int peakMethodToUse, unsigned
     streamingFilter->SetNumberOfStreamDivisions(streamSubdivisions);
 
     notifyStatusMessage(getHumanLabel(), "Resampling tiles into the stitched image");
+
+    progressObs->setMessagePrefix("Stitching Tiles Together");
+    resampleF->AddObserver(itk::ProgressEvent(), progressObs);
+
     streamingFilter->Update();
     notifyStatusMessage(getHumanLabel(), "Finished resampling tiles");
     notifyStatusMessage(getHumanLabel(), "Converting into DREAM3D data structure");
+
+    resampleF->RemoveAllObservers();
 
     // Convert montaged image into DREAM3D data structure
     DataArrayPath dataArrayPath(getMontageDataContainerName(), getMontageAttributeMatrixName(), getMontageDataArrayName());
@@ -460,6 +516,8 @@ void GenerateMontageConfiguration::generateMontage(int peakMethodToUse, unsigned
     toDream3DFilter->SetDataContainer(container);
     toDream3DFilter->Update();
   }
+
+  delete progressObs;
 }
 
 // -----------------------------------------------------------------------------
