@@ -7,6 +7,7 @@
 #include <QtCore/QDir>
 
 #include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/FilterParameters/FloatFilterParameter.h"
 #include "SIMPLib/FilterParameters/MultiDataContainerSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
@@ -108,6 +109,12 @@ void GenerateMontageConfiguration::setupFilterParameters()
     linkedProps << "MontageDataArrayName";
     parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Stitch Montage", StitchMontage, FilterParameter::Parameter, GenerateMontageConfiguration, linkedProps));
   }
+  
+  {
+	  QStringList linkedProps;
+	  linkedProps << "TileOverlap";
+	  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Manual Tile Overlap", ManualTileOverlap, FilterParameter::Parameter, GenerateMontageConfiguration, linkedProps));
+  }
 
   {
     MultiDataContainerSelectionFilterParameter::RequirementType req =
@@ -120,6 +127,8 @@ void GenerateMontageConfiguration::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_STRING_FP("Montage Data Container Name", MontageDataContainerName, FilterParameter::CreatedArray, GenerateMontageConfiguration));
   parameters.push_back(SIMPL_NEW_STRING_FP("Montage Attribute Matrix Name", MontageAttributeMatrixName, FilterParameter::CreatedArray, GenerateMontageConfiguration));
   parameters.push_back(SIMPL_NEW_STRING_FP("Montage Data Array Name", MontageDataArrayName, FilterParameter::CreatedArray, GenerateMontageConfiguration));
+
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("Tile Overlap", TileOverlap, FilterParameter::RequiredArray, GenerateMontageConfiguration));
 
 
 	setFilterParameters(parameters);
@@ -210,6 +219,14 @@ void GenerateMontageConfiguration::dataCheck()
     {
       return;
     }
+	
+	if (getManualTileOverlap() && (getTileOverlap() < 0.0f || getTileOverlap() > 100.0f))
+	{
+		setErrorCondition(-11009);
+		QString ss = QObject::tr("Tile Overlap must be between 0.0 and 100.0.");
+		notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+		return;
+	}
 	}	
 
   if (m_StitchMontage)
@@ -245,6 +262,8 @@ void GenerateMontageConfiguration::dataCheck()
     {
       return;
     }
+
+
 
 //    size_t montageArrayXSize = imageDataTupleDims[0] * m_xMontageSize;
 //    size_t montageArrayYSize = imageDataTupleDims[1] * m_yMontageSize;
@@ -359,6 +378,8 @@ void GenerateMontageConfiguration::createFijiDataStructure()
 		}
 	}
 
+  float tileOverlapFactor = ((100.0 - getTileOverlap()) / 100.0);
+
   while (dcNameIter.hasNext())
 	{
     QString dcName = dcNameIter.next();
@@ -369,6 +390,8 @@ void GenerateMontageConfiguration::createFijiDataStructure()
 			continue;
 		}
     ImageGeom::Pointer image = dcItem->getGeometryAs<ImageGeom>();
+	SIMPL::Tuple3SVec dimensions = image->getDimensions();
+	SIMPL::Tuple3FVec origin = image->getOrigin();
 
 		// Extract row and column data from the data container name
 		QString filename = ""; // Need to find this?
@@ -384,8 +407,17 @@ void GenerateMontageConfiguration::createFijiDataStructure()
 		int row = rowCol_Split[0].toInt();
 		int col = rowCol_Split[1].toInt();
 		itk::Tile2D tile;
-    tile.Position[0] = col;
-    tile.Position[1] = row;
+  		if ((std::get<0>(origin) == 0.0f && std::get<1>(origin) == 0.0f) || getManualTileOverlap())
+		{
+			tile.Position[0] = col * (tileOverlapFactor * std::get<0>(dimensions));
+			tile.Position[1] = row * (tileOverlapFactor * std::get<1>(dimensions));
+			image->setOrigin(tile.Position[0], tile.Position[1], 0.0f);
+		}
+		else
+		{
+			tile.Position[0] = std::get<0>(origin);
+			tile.Position[1] = std::get<1>(origin);
+		}
     tile.FileName = "";   // This code gets its data from memory, not from a file
 
     m_StageTiles[row][col] = tile;
