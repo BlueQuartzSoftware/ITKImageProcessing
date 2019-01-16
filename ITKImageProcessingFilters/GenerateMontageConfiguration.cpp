@@ -372,9 +372,9 @@ void GenerateMontageConfiguration::createFijiDataStructure()
 	else
 	{
     m_StageTiles.resize(m_yMontageSize);
-		for (int i = 0; i < m_yMontageSize; i++)
+		for (unsigned i = 0; i < m_yMontageSize; i++)
 		{
-      m_StageTiles[i].resize(m_xMontageSize);
+        m_StageTiles[i].resize(m_xMontageSize);
 		}
 	}
 
@@ -436,8 +436,8 @@ void GenerateMontageConfiguration::generateMontage(int peakMethodToUse, unsigned
 	using PointType = itk::Point<double, Dimension>;
 	using VectorType = itk::Vector<double, Dimension>;
 	using TransformType = itk::TranslationTransform< double, Dimension >;
-	using ScalarImageType = itk::Image< ScalarPixelType, Dimension >;
-	using OriginalImageType = itk::Image< PixelType, Dimension >; // possibly RGB instead of scalar
+	using ScalarImageType = itk::Dream3DImage< ScalarPixelType, Dimension >;
+	using OriginalImageType = itk::Dream3DImage< PixelType, Dimension >; // possibly RGB instead of scalar
 	using MontageType = itk::TileMontage< ScalarImageType >;
 	using PCMType = itk::PhaseCorrelationImageRegistrationMethod<ScalarImageType, ScalarImageType>;
 	typename ScalarImageType::SpacingType sp;
@@ -494,10 +494,9 @@ void GenerateMontageConfiguration::generateMontage(int peakMethodToUse, unsigned
 			toITK->SetAttributeMatrixArrayName(getCommonAttributeMatrixName().toStdString());
 			toITK->SetDataArrayName(getCommonDataArrayName().toStdString());
 			toITK->Update();
-			itk::Dream3DFilterInterruption::Pointer interruption = itk::Dream3DFilterInterruption::New();
-			interruption->SetFilter(this);
-			montage->AddObserver(itk::ProgressEvent(), interruption);
-			montage->SetInputTile(ind, toITK->GetOutput());
+
+            typename ScalarImageType::Pointer image = toITK->GetOutput();
+			montage->SetInputTile(ind, image);
 		}
 	}
 
@@ -553,7 +552,39 @@ void GenerateMontageConfiguration::generateMontage(int peakMethodToUse, unsigned
     // Stitch the montage together
     using Resampler = itk::TileMergeImageFilter<OriginalImageType, AccumulatePixelType>;
     typename Resampler::Pointer resampleF = Resampler::New();
-    resampleF->SetMontage(montage);
+    //resampleF->SetMontage(montage); // doesn't compile, because montage is expected
+    // to be templated using itk::Image, not itk::Dream3DImage
+
+    resampleF->SetMontageSize({m_xMontageSize, m_yMontageSize});
+    resampleF->SetOriginAdjustment(originAdjustment);
+    resampleF->SetForcedSpacing(sp);
+    for(unsigned y = 0; y < m_yMontageSize; y++)
+    {
+      ind[1] = y;
+      for(unsigned x = 0; x < m_xMontageSize; x++)
+      {
+        ind[0] = x;
+        typedef itk::InPlaceDream3DDataToImageFilter<PixelType, Dimension> toITKType;
+        typename toITKType::Pointer toITK = toITKType::New();
+        DataContainer::Pointer imageDC = GetImageDataContainer(y, x);
+        // Check the resolution and fix if necessary
+        SIMPL::Tuple3FVec resolution = imageDC->getGeometryAs<ImageGeom>()->getResolution();
+        if(std::get<0>(resolution) < 1 || std::get<1>(resolution) < 1)
+        {
+          imageDC->getGeometryAs<ImageGeom>()->setResolution(1, 1, 1);
+        }
+
+        toITK->SetInput(imageDC);
+        toITK->SetInPlace(true);
+        toITK->SetAttributeMatrixArrayName(getCommonAttributeMatrixName().toStdString());
+        toITK->SetDataArrayName(getCommonDataArrayName().toStdString());
+        toITK->Update();
+
+        typename OriginalImageType::Pointer image = toITK->GetOutput();
+        resampleF->SetInputTile(ind, image);
+        resampleF->SetTileTransform(ind, montage->GetOutputTransform(ind));
+      }
+    }
 
     using Dream3DImageType = itk::Dream3DImage<PixelType, Dimension>;
     using StreamingFilterType = itk::StreamingImageFilter<OriginalImageType, Dream3DImageType>;
