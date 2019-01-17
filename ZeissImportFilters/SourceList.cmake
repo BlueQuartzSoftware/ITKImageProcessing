@@ -20,6 +20,7 @@ SIMPL_START_FILTER_GROUP(
 set(_PublicFilters
   CalculateBackground
   ImportAxioVisionV4Montage
+  MetaXmlToTileConfiguration
 )
 
 
@@ -53,6 +54,8 @@ foreach(f ${_PrivateFilters} )
 endforeach()
 
 
+ADD_SIMPL_SUPPORT_SOURCE(${${PLUGIN_NAME}_SOURCE_DIR} ${_filterGroupName} MetaXmlUtils.cpp)
+ADD_SIMPL_SUPPORT_HEADER(${${PLUGIN_NAME}_SOURCE_DIR} ${_filterGroupName} MetaXmlUtils.h)
 
 #---------------------
 # This macro must come last after we are done adding all the filters and support files.

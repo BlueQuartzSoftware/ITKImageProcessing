@@ -225,12 +225,6 @@ protected:
    */
   void readMetaXml(QIODevice* device);
 
-  /**
-   * @brief parseRootTagsSection
-   * @param tags
-   * @return
-   */
-  ZeissTagsXmlSection::Pointer parseTagsSection(QDomElement& tags);
 
   /**
    * @brief parseImages

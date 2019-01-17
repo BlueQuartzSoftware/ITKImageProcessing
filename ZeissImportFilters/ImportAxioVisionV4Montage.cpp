@@ -54,6 +54,7 @@
 #include "ZeissImport/ZeissImportConstants.h"
 #include "ZeissImport/ZeissImportVersion.h"
 #include "ZeissImport/ZeissXml/ZeissTagMapping.h"
+#include "MetaXmlUtils.h"
 
 #define ZIF_PRINT_DBG_MSGS 0
 
@@ -90,6 +91,8 @@ ImportAxioVisionV4MontagePrivate::ImportAxioVisionV4MontagePrivate(ImportAxioVis
 , m_LastRead(QDateTime())
 {
 }
+
+/* ############## Start Public Implementation ############################### */
 
 // -----------------------------------------------------------------------------
 //
@@ -343,7 +346,7 @@ void ImportAxioVisionV4Montage::readMetaXml(QIODevice* device)
     }
 
     // First parse the <ROOT><Tags> section to get the values of how many images we are going to have
-    rootTagsSection = parseTagsSection(tags);
+    rootTagsSection = MetaXmlUtils::ParseTagsSection(this, tags);
     if(nullptr == rootTagsSection.get())
     {
       return;
@@ -364,182 +367,26 @@ void ImportAxioVisionV4Montage::readMetaXml(QIODevice* device)
   parseImages(root, rootTagsSection);
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-ZeissTagsXmlSection::Pointer ImportAxioVisionV4Montage::parseTagsSection(QDomElement& tags)
-{
-  int count = -1;
-  bool ok = false;
 
-  QDomElement countEle = tags.firstChildElement(ZeissImportConstants::Xml::Count);
-
-  count = countEle.text().toInt(&ok, 10);
-  if(!ok)
-  {
-    QString ss = QObject::tr("Error Parsing 'Count' Tag in Root 'Tags' DOM element");
-    setErrorCondition(-70001);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return ZeissTagsXmlSection::NullPointer();
-  }
-
-  ZeissTagsXmlSection::Pointer rootTagsSection = ZeissTagsXmlSection::New();
-  ZeissTagMapping::Pointer tagMapping = ZeissTagMapping::instance();
-
-  std::set<int> unknownTags;
-
-  for(int c = 0; c < count; c++)
-  {
-    QString Vx = QString("V%1").arg(c);
-    QString Ix = QString("I%1").arg(c);
-    // QString Ax = QString("A%1").arg(c);
-
-    QDomElement vxEle = tags.firstChildElement(Vx);
-    QDomElement ixEle = tags.firstChildElement(Ix);
-
-    qint32 idValue = ixEle.text().toInt(&ok, 10);
-    AbstractZeissMetaData::Pointer ptr = ZeissTagMapping::instance()->metaDataForId(idValue, vxEle.text());
-    if(nullptr != ptr.get() && vxEle.text().size() > 0)
-    {
-      rootTagsSection->addMetaDataEntry(ptr);
-    }
-#if ZIF_PRINT_DBG_MSGS
-    else
-    {
-      unknownTags.insert(idValue);
-      //      QString str;
-      //      QTextStream ss(&str);
-      //      ss << "<" << Ix << ">" << idValue << "</" << Ix << "> is Unknown to the Tag Mapping Software";
-      //      qDebug() << str;
-    }
-#endif
-  }
-
-#if ZIF_PRINT_DBG_MSGS
-
-  if(unknownTags.size() > 0)
-  {
-    QString str;
-    QTextStream ss(&str);
-    ss << "======= Unknown Zeiss Axio Vision _Meta XML Tags ===================\n";
-    for(std::set<int>::iterator iter = unknownTags.begin(); iter != unknownTags.end(); ++iter)
-    {
-      ss << *iter << " is Unknown to the Tag Mapping Software\n";
-    }
-    qDebug() << str;
-  }
-#endif
-
-  return rootTagsSection;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int32_t getInt32Entry(AbstractFilter* filter, const ZeissTagsXmlSection::Pointer& tagsSection, int idValue)
-{
-  AbstractZeissMetaData::Pointer ptr = tagsSection->getEntry(idValue);
-  if(nullptr == ptr)
-  {
-    filter->setErrorCondition(-70600);
-    QString msg;
-    QTextStream errStrm(&msg);
-    errStrm << "AxioVision Import: XML Section for '" << ZeissTagMapping::instance()->nameForId(idValue) << "' was not found.";
-    filter->notifyErrorMessage(filter->getHumanLabel(), msg, filter->getErrorCondition());
-    return 0;
-  }
-
-  Int32ZeissMetaEntry::Pointer valuePtr = ZeissMetaEntry::convert<Int32ZeissMetaEntry>(ptr);
-  if(nullptr == valuePtr)
-  {
-    filter->setErrorCondition(-70601);
-    QString msg;
-    QTextStream errStrm(&msg);
-    errStrm << "AxioVision Import: Could not convert '" << ZeissTagMapping::instance()->nameForId(idValue) << "' tag to an integer.";
-    filter->notifyErrorMessage(filter->getHumanLabel(), msg, filter->getErrorCondition());
-    return 0;
-  }
-
-  return valuePtr->getValue();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-float getFloatEntry(AbstractFilter* filter, const ZeissTagsXmlSection::Pointer& tagsSection, int idValue)
-{
-  AbstractZeissMetaData::Pointer ptr = tagsSection->getEntry(idValue);
-  if(nullptr == ptr)
-  {
-    filter->setErrorCondition(-70602);
-    QString msg;
-    QTextStream errStrm(&msg);
-    errStrm << "AxioVision Import: XML Section for '" << ZeissTagMapping::instance()->nameForId(idValue) << "' was not found.";
-    filter->notifyErrorMessage(filter->getHumanLabel(), msg, filter->getErrorCondition());
-    return std::numeric_limits<float>::quiet_NaN();
-  }
-
-  FloatZeissMetaEntry::Pointer valuePtr = ZeissMetaEntry::convert<FloatZeissMetaEntry>(ptr);
-  if(nullptr == valuePtr)
-  {
-    filter->setErrorCondition(-70603);
-    QString msg;
-    QTextStream errStrm(&msg);
-    errStrm << "AxioVision Import: Could not convert '" << ZeissTagMapping::instance()->nameForId(idValue) << "' tag to a float.";
-    filter->notifyErrorMessage(filter->getHumanLabel(), msg, filter->getErrorCondition());
-    return std::numeric_limits<float>::quiet_NaN();
-  }
-
-  return valuePtr->getValue();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int32_t calculatePaddingDigits(int32_t count)
-{
-  int zeroPadding = 0;
-  if(count > 0)
-  {
-    zeroPadding++;
-  }
-  if(count > 9)
-  {
-    zeroPadding++;
-  }
-  if(count > 99)
-  {
-    zeroPadding++;
-  }
-  if(count > 999)
-  {
-    zeroPadding++;
-  }
-  if(count > 9999)
-  {
-    zeroPadding++;
-  }
-  return zeroPadding;
-}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void ImportAxioVisionV4Montage::parseImages(QDomElement& root, const ZeissTagsXmlSection::Pointer& rootTagsSection)
 {
 
-  int32_t imageCount = getInt32Entry(this, rootTagsSection, Zeiss::MetaXML::ImageCountRawId);
+  int32_t imageCount = MetaXmlUtils::GetInt32Entry(this, rootTagsSection.get(), Zeiss::MetaXML::ImageCountRawId);
   if(getErrorCondition() < 0)
   {
     return;
   }
 
-  int32_t rowCount = getInt32Entry(this, rootTagsSection, Zeiss::MetaXML::ImageCountVId);
+  int32_t rowCount = MetaXmlUtils::GetInt32Entry(this, rootTagsSection.get(), Zeiss::MetaXML::ImageCountVId);
   if(getErrorCondition() < 0)
   {
     return;
   }
 
-  int32_t colCount = getInt32Entry(this, rootTagsSection, Zeiss::MetaXML::ImageCountUId);
+  int32_t colCount = MetaXmlUtils::GetInt32Entry(this, rootTagsSection.get(), Zeiss::MetaXML::ImageCountUId);
   if(getErrorCondition() < 0)
   {
     return;
@@ -551,9 +398,9 @@ void ImportAxioVisionV4Montage::parseImages(QDomElement& root, const ZeissTagsXm
 
   // Figure out the max padding digits for both the imageCount (we need that to generate the proper xml tag) and
   // the row/col values because we need to have a consistent numbering format for later filters.
-  int imageCountPadding = calculatePaddingDigits(imageCount);
-  int32_t rowCountPadding = calculatePaddingDigits(rowCount);
-  int32_t colCountPadding = calculatePaddingDigits(colCount);
+  int imageCountPadding = MetaXmlUtils::CalculatePaddingDigits(imageCount);
+  int32_t rowCountPadding = MetaXmlUtils::CalculatePaddingDigits(rowCount);
+  int32_t colCountPadding = MetaXmlUtils::CalculatePaddingDigits(colCount);
   int charPaddingCount = std::max(rowCountPadding, colCountPadding);
 
   DataContainerArray::Pointer dca = getDataContainerArray();
@@ -593,7 +440,7 @@ void ImportAxioVisionV4Montage::parseImages(QDomElement& root, const ZeissTagsXm
       return;
     }
     // Now Parse the TAGS section
-    ZeissTagsXmlSection::Pointer photoTagsSection = parseTagsSection(tags);
+    ZeissTagsXmlSection::Pointer photoTagsSection = MetaXmlUtils::ParseTagsSection(this, tags);
     if(nullptr == photoTagsSection.get())
     {
       QString ss = QObject::tr("Error Parsing the <ROOT><%1><Tags> element. Aborting Parsing. Is the file a Zeiss AxioVision _meta.xml file").arg(pTag);
@@ -603,13 +450,13 @@ void ImportAxioVisionV4Montage::parseImages(QDomElement& root, const ZeissTagsXm
     }
 
     // Get the Row Index (Zero Based)
-    int32_t rowIndex = getInt32Entry(this, photoTagsSection, Zeiss::MetaXML::ImageIndexVId);
+    int32_t rowIndex = MetaXmlUtils::GetInt32Entry(this, photoTagsSection.get(), Zeiss::MetaXML::ImageIndexVId);
     if(getErrorCondition() < 0)
     {
       return;
     }
     // Get the Columnn Index (Zero Based)
-    int32_t colIndex = getInt32Entry(this, photoTagsSection, Zeiss::MetaXML::ImageIndexUId);
+    int32_t colIndex = MetaXmlUtils::GetInt32Entry(this, photoTagsSection.get(), Zeiss::MetaXML::ImageIndexUId);
     if(getErrorCondition() < 0)
     {
       return;
@@ -957,8 +804,8 @@ ImageGeom::Pointer ImportAxioVisionV4Montage::initializeImageGeom(const QDomElem
 
   //#######################################################################
   // Initialize the Origin to the Stage Positions
-  float stageXPos = getFloatEntry(this, photoTagsSection, Zeiss::MetaXML::StagePositionXId);
-  float stageYPos = getFloatEntry(this, photoTagsSection, Zeiss::MetaXML::StagePositionYId);
+  float stageXPos = MetaXmlUtils::GetFloatEntry(this, photoTagsSection.get(), Zeiss::MetaXML::StagePositionXId);
+  float stageYPos = MetaXmlUtils::GetFloatEntry(this, photoTagsSection.get(), Zeiss::MetaXML::StagePositionYId);
   float origin[3] = {stageXPos, stageYPos, 0.0f};
   image->setOrigin(origin);
 

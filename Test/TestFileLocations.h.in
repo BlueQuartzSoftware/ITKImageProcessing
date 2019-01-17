@@ -33,4 +33,15 @@ namespace ZeissImport
   }
 }
 
+namespace UnitTest
+{
+  namespace MetaXmlToTileConfigurationTest
+  {
+   const QString InputFile("@ZeissImport_SOURCE_DIR@/Test/TestFiles/_meta.xml");
+   const QString ExemplarOutputFile("@ZeissImport_SOURCE_DIR@/Test/TestFiles/TileConfiguration.txt");
+   const QString OutputFile("@TEST_TEMP_DIR@/TileConfiguration.txt");
+  }
+}
+
+
 #endif
