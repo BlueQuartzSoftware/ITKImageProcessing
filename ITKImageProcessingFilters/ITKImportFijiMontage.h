@@ -14,8 +14,7 @@
 #include "SIMPLib/SIMPLib.h"
 
 #include "SIMPLib/ITK/itkImageReaderHelper.h"
-
-#include <itkImageFileReader.h>
+#include "SIMPLib/ITK/itkFijiConfigurationFileReader.hpp"
 
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKImageReader.h"
 #include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
@@ -54,23 +53,25 @@ public:
   SIMPL_FILTER_PARAMETER(QString, FijiConfigFilePath)
   Q_PROPERTY(QString FijiConfigFilePath READ getFijiConfigFilePath WRITE setFijiConfigFilePath)
 
-  typedef QMap<QString,ITKImageReader::Pointer> ReaderMap;
+  typedef std::vector<ITKImageReader::Pointer> ImageReaderVector;
+  typedef std::vector<itk::FijiImageTileData> TileDataVector;
 
   SIMPL_PIMPL_PROPERTY_DECL(QString, FijiConfigFilePathCache)
   SIMPL_PIMPL_PROPERTY_DECL(QDateTime, LastRead)
-  SIMPL_PIMPL_GET_PROPERTY_DECL(ReaderMap, ReaderCache)
+  SIMPL_PIMPL_PROPERTY_DECL(ImageReaderVector, ImageReaderCache)
+  SIMPL_PIMPL_PROPERTY_DECL(TileDataVector, TileDataCache)
 
   /**
-   * @brief setReaderCacheValue
-   * @param filePath
+   * @brief appendImageReaderToCache
    * @param reader
    */
-  void setReaderCacheValue(const QString &filePath, const ITKImageReader::Pointer &reader);
+  void appendImageReaderToCache(const ITKImageReader::Pointer &reader);
 
   /**
-   * @brief clearReaderCache
+   * @brief appendImageTileToCache
+   * @param tileData
    */
-  void clearReaderCache();
+  void appendImageTileToCache(const itk::FijiImageTileData &tileData);
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -159,20 +160,6 @@ protected:
   ITKImportFijiMontage();
 
   /**
-   * @brief parseFijiConfigFile Parses the Fiji file with the configuration coordinates
-   * @param reader QFile to read
-   * @return Integer error value
-   */
-  int32_t parseFijiConfigFile(const QString &filePath);
-
-  /**
-   * @brief parseRobometConfigFile Parses the Robomet file with the configuration coordinates
-   * @param reader QFile to read
-   * @return Integer error value
-   */
-  int32_t parseRobometConfigFile(QFile& reader);
-
-  /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
    */
   void dataCheck();
@@ -185,21 +172,11 @@ protected:
 private:
   QScopedPointer<ITKImportFijiMontagePrivate> const d_ptr;
 
-  int32_t m_NumImages;
-  std::vector<QString> m_RegisteredFilePaths;
-  QMap<QString,QPointF> m_CoordsMap;
-  QMap<QString,QString> m_RowColIdMap;
-
   /**
    * @brief readDataFile
-   * @param filePath
+   * @param imageTileData
    */
-  void readImageFile(const QString &filePath);
-
-  /**
-   * @brief clearParsingCache
-   */
-  void clearParsingCache();
+  void readImageFile(itk::FijiImageTileData imageTileData);
 
 public :
   ITKImportFijiMontage(const ITKImportFijiMontage&) = delete; // Copy Constructor Not Implemented
