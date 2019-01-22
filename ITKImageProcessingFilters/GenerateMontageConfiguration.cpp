@@ -119,7 +119,7 @@ void GenerateMontageConfiguration::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_STRING_FP("Montage Attribute Matrix Name", MontageAttributeMatrixName, FilterParameter::CreatedArray, GenerateMontageConfiguration));
   parameters.push_back(SIMPL_NEW_STRING_FP("Montage Data Array Name", MontageDataArrayName, FilterParameter::CreatedArray, GenerateMontageConfiguration));
 
-  parameters.push_back(SIMPL_NEW_FLOAT_FP("Tile Overlap", TileOverlap, FilterParameter::RequiredArray, GenerateMontageConfiguration));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("Tile Overlap (Percent)", TileOverlap, FilterParameter::RequiredArray, GenerateMontageConfiguration));
 
 
 	setFilterParameters(parameters);
