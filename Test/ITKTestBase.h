@@ -23,7 +23,6 @@
 #include "SIMPLib/ITK/itkInPlaceDream3DDataToImageFilter.h"
 
 // Testing
-#include <itkTestingComparisonImageFilter.h>
 #include <itkTestingHashImageFilter.h>
 
 class ITKTestBase
