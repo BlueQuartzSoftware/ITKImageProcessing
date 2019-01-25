@@ -94,11 +94,17 @@ public:
   SIMPL_FILTER_PARAMETER(bool, ConvertToGrayScale)
   Q_PROPERTY(bool ConvertToGrayScale READ getConvertToGrayScale WRITE setConvertToGrayScale)
 
+  SIMPL_FILTER_PARAMETER(bool, ImportAllMetaData)
+  Q_PROPERTY(bool ImportAllMetaData READ getImportAllMetaData WRITE setImportAllMetaData)
+
   SIMPL_FILTER_PARAMETER(FloatVec3_t, ColorWeights)
   Q_PROPERTY(FloatVec3_t ColorWeights READ getColorWeights WRITE setColorWeights)
 
-  SIMPL_FILTER_PARAMETER(bool, FileWasRead)
+  SIMPL_INSTANCE_PROPERTY(bool, FileWasRead)
   Q_PROPERTY(bool FileWasRead READ getFileWasRead)
+
+  QString getMontageInformation();
+  Q_PROPERTY(QString MontageInformation READ getMontageInformation)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class

@@ -44,9 +44,11 @@
 
 #include "SIMPLib/DataArrays/StringDataArray.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/PreflightUpdatedValueFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Filtering/FilterManager.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
@@ -79,6 +81,7 @@ class ImportAxioVisionV4MontagePrivate
   ZeissTagsXmlSection::Pointer m_RootTagsSection;
   QString m_InputFile_Cache;
   QDateTime m_LastRead;
+  QString m_MontageInformation;
 };
 
 // -----------------------------------------------------------------------------
@@ -103,6 +106,8 @@ ImportAxioVisionV4Montage::ImportAxioVisionV4Montage()
 , m_CellAttributeMatrixName(k_TileAttributeMatrixDefaultName)
 , m_ImageDataArrayName(SIMPL::CellData::ImageData)
 , m_MetaDataAttributeMatrixName(k_AxioVisionMetaData)
+, m_ConvertToGrayScale(false)
+, m_ImportAllMetaData(false)
 , m_FileWasRead(false)
 , d_ptr(new ImportAxioVisionV4MontagePrivate(this))
 {
@@ -128,6 +133,12 @@ void ImportAxioVisionV4Montage::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Zeiss XML File (_meta.xml)", InputFile, FilterParameter::Parameter, ImportAxioVisionV4Montage, "*.xml"));
+
+  PreflightUpdatedValueFilterParameter::Pointer param = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Montage Information", MontageInformation, FilterParameter::Parameter, ImportAxioVisionV4Montage);
+  param->setReadOnly(true);
+  parameters.push_back(param);
+
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Import All MetaData", ImportAllMetaData, FilterParameter::Parameter, ImportAxioVisionV4Montage));
   QStringList linkedProps("ColorWeights");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Convert To GrayScale", ConvertToGrayScale, FilterParameter::Parameter, ImportAxioVisionV4Montage, linkedProps));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Color Weighting", ColorWeights, FilterParameter::Parameter, ImportAxioVisionV4Montage));
@@ -296,6 +307,12 @@ void ImportAxioVisionV4Montage::execute()
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
+}
+
+// -----------------------------------------------------------------------------
+QString ImportAxioVisionV4Montage::getMontageInformation()
+{
+  return d_ptr->m_MontageInformation;
 }
 
 // -----------------------------------------------------------------------------
@@ -482,15 +499,17 @@ void ImportAxioVisionV4Montage::parseImages(QDomElement& root, const ZeissTagsXm
     ImageGeom::Pointer image = initializeImageGeom(root, photoTagsSection);
     dc->setGeometry(image);
 
-    QVector<size_t> dims = {1};
-    AttributeMatrix::Pointer metaAm = dc->createAndAddAttributeMatrix(dims, getMetaDataAttributeMatrixName(), AttributeMatrix::Type::Generic);
-    ZeissTagsXmlSection::MetaDataType tagMap = photoTagsSection->getMetaDataMap();
-    for(const auto& value : tagMap)
+    if(getImportAllMetaData())
     {
-      IDataArray::Pointer dataArray = value->createDataArray(!getInPreflight());
-      metaAm->addAttributeArray(dataArray->getName(), dataArray);
+      QVector<size_t> dims = {1};
+      AttributeMatrix::Pointer metaAm = dc->createAndAddAttributeMatrix(dims, getMetaDataAttributeMatrixName(), AttributeMatrix::Type::Generic);
+      ZeissTagsXmlSection::MetaDataType tagMap = photoTagsSection->getMetaDataMap();
+      for(const auto& value : tagMap)
+      {
+        IDataArray::Pointer dataArray = value->createDataArray(!getInPreflight());
+        metaAm->addAttributeArray(dataArray->getName(), dataArray);
+      }
     }
-
     // Read the image into a data array
     importImage(dc.get(), imageName, pTag, p);
 
@@ -499,6 +518,11 @@ void ImportAxioVisionV4Montage::parseImages(QDomElement& root, const ZeissTagsXm
       convertToGrayScale(dc.get(), imageName, pTag);
     }
   }
+
+  QString montageInfo;
+  QTextStream ss(&montageInfo);
+  ss << "Rows=" << rowCount << "  Columns=" << colCount << "  Num. Images=" << imageCount;
+  d_ptr->m_MontageInformation = montageInfo;
 }
 
 // -----------------------------------------------------------------------------
