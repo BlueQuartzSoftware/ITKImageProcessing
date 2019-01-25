@@ -339,8 +339,33 @@ void GenerateMontageConfiguration::execute()
 	{
 		// Pass to ITK and generate montage
 		// ITK returns a new Fiji data structure to DREAM3D
-		// Store FIJI DS into SIMPL Transform DS inside the Geometry
-    generateMontage< unsigned char, unsigned int >();
+    // Store FIJI DS into SIMPL Transform DS inside the Geometry
+    DataArrayPath dap(m_ImageDataContainers[0], getCommonAttributeMatrixName(), getCommonDataArrayName());
+    DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(m_ImageDataContainers[0]);
+    AttributeMatrix::Pointer am = dc->getAttributeMatrix(getCommonAttributeMatrixName());
+    IDataArray::Pointer da = am->getAttributeArray(getCommonDataArrayName());
+
+    int numOfComponents = da->getNumberOfComponents();
+
+    if (numOfComponents == 3)
+    {
+      generateMontage< itk::RGBPixel< unsigned char >, itk::RGBPixel< unsigned int > >();
+    }
+    else if (numOfComponents == 4)
+    {
+      generateMontage< itk::RGBAPixel< unsigned char >, itk::RGBAPixel< unsigned int > >();
+    }
+    else if (numOfComponents == 1)
+    {
+      generateMontage< unsigned char, unsigned int >();
+    }
+    else
+    {
+      setErrorCondition(-5000);
+      notifyErrorMessage(getHumanLabel(), "The common data array's image type is not recognized.  Supported image types"
+                                          " are grayscale (1-component), RGB (3-component), and RGBA (4-component)",
+                         getErrorCondition());
+    }
 	}
 	/* Let the GUI know we are done with this filter */
 	notifyStatusMessage(getHumanLabel(), "Complete");
