@@ -46,9 +46,6 @@
 #include "SIMPLib/Geometry/TransformContainer.h"
 #include "SIMPLib/SIMPLib.h"
 
-#include "SIMPLib/ITK/itkImageReaderHelper.h"
-
-#include <itkImageFileReader.h>
 #include "itkParseTileConfiguration.h"
 #include "itkAffineTransform.h"
 #include "itkCompositeTransform.h"
@@ -61,21 +58,21 @@ using CompositeTransform = itk::CompositeTransform<double, 3>;
  /**
   * @brief The ImportRegisteredImageMontage class. See [Filter documentation](@ref importregisteredimagemontage) for details.
   */
-class ITKImageProcessing_EXPORT GenerateMontageConfiguration : public AbstractFilter
+class ITKImageProcessing_EXPORT ITKGenerateMontageConfiguration : public AbstractFilter
 {
 	Q_OBJECT
-	PYB11_CREATE_BINDINGS(GenerateMontageConfiguration SUPERCLASS AbstractFilter)
+  PYB11_CREATE_BINDINGS(ITKGenerateMontageConfiguration SUPERCLASS AbstractFilter)
 	PYB11_PROPERTY(IntVec3_t MontageSize READ getMontageSize WRITE setMontageSize)
   PYB11_PROPERTY(QStringList, ImageDataContainers READ getImageDataContainers WRITE setImageDataContainers)
 	PYB11_PROPERTY(QString CommonAttributeMatrixName READ getCommonAttributeMatrixName WRITE setCommonAttributeMatrixName)
 	PYB11_PROPERTY(QString CommonDataArrayName READ getCommonDataArrayName WRITE setCommonDataArrayName)
 	PYB11_PROPERTY(float TileOverlap READ getTileOverlap WRITE setTileOverlap)
 public:
-	SIMPL_SHARED_POINTERS(GenerateMontageConfiguration)
-	SIMPL_FILTER_NEW_MACRO(GenerateMontageConfiguration)
-	SIMPL_TYPE_MACRO_SUPER_OVERRIDE(GenerateMontageConfiguration, AbstractFilter)
+  SIMPL_SHARED_POINTERS(ITKGenerateMontageConfiguration)
+  SIMPL_FILTER_NEW_MACRO(ITKGenerateMontageConfiguration)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKGenerateMontageConfiguration, AbstractFilter)
 
-	~GenerateMontageConfiguration() override;
+  ~ITKGenerateMontageConfiguration() override;
 
 	SIMPL_FILTER_PARAMETER(IntVec3_t, MontageSize)
 	Q_PROPERTY(IntVec3_t MontageSize READ getMontageSize WRITE setMontageSize)
@@ -191,7 +188,7 @@ signals:
 	void preflightExecuted();
 
 protected:
-	GenerateMontageConfiguration();
+  ITKGenerateMontageConfiguration();
 
 	/**
 	 * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
@@ -211,7 +208,7 @@ protected:
 	/**
 	 * @brief Generate the montage
 	 */
-  template<typename PixelType, typename AccumulatePixelType> void generateMontage(int peakMethodToUse = 1, unsigned streamSubdivisions = 1);
+  template<typename PixelType, typename AccumulatePixelType> void generateMontage(int peakMethodToUse = 0, unsigned streamSubdivisions = 1);
 
 	/**
 	 * @brief Get the image from the appropriate data container
@@ -233,16 +230,10 @@ private:
 	unsigned int m_yMontageSize;
 	QString m_dataContainerPrefix;
 
-	/**
-	 * @brief Include the declarations of the ITKImageReader helper functions that are common
-	 * to a few different filters across different plugins.
-	 */
-	ITK_IMAGE_READER_HELPER_ImageDataArrayName() ITK_IMAGE_READER_HELPER_DECL()
-
 public:
-	GenerateMontageConfiguration(const GenerateMontageConfiguration&) = delete; // Copy Constructor Not Implemented
-	GenerateMontageConfiguration(GenerateMontageConfiguration&&) = delete;                   // Move Constructor Not Implemented
-	GenerateMontageConfiguration& operator=(const GenerateMontageConfiguration&) = delete;   // Copy Assignment Not Implemented
-	GenerateMontageConfiguration& operator=(GenerateMontageConfiguration&&) = delete;        // Move Assignment Not Implemented
+  ITKGenerateMontageConfiguration(const ITKGenerateMontageConfiguration&) = delete; // Copy Constructor Not Implemented
+  ITKGenerateMontageConfiguration(ITKGenerateMontageConfiguration&&) = delete;                   // Move Constructor Not Implemented
+  ITKGenerateMontageConfiguration& operator=(const ITKGenerateMontageConfiguration&) = delete;   // Copy Assignment Not Implemented
+  ITKGenerateMontageConfiguration& operator=(ITKGenerateMontageConfiguration&&) = delete;        // Move Assignment Not Implemented
 };
 
