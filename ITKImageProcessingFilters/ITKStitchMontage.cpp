@@ -456,6 +456,7 @@ void ITKStitchMontage::stitchMontage(int peakMethodToUse, unsigned streamSubdivi
   using ScalarImageType = itk::Dream3DImage< ScalarPixelType, Dimension >;
   using OriginalImageType = itk::Dream3DImage< PixelType, Dimension >; // possibly RGB instead of scalar
   using MontageType = itk::TileMontage< ScalarImageType >;
+  using TransformType = itk::TranslationTransform< double, Dimension >;
   typename ScalarImageType::SpacingType sp;
   sp.Fill(1.0); // assume unit spacing
 
@@ -503,8 +504,18 @@ void ITKStitchMontage::stitchMontage(int peakMethodToUse, unsigned streamSubdivi
       filter->SetInput(transformContainer);
       filter->Update();
 
-      auto convertedITKTransform = dynamic_cast<typename MontageType::TransformType*>(filter->GetOutput()->Get().GetPointer());
-      resampleF->SetTileTransform(ind, convertedITKTransform);
+      AffineType::Pointer itkAffine = dynamic_cast<AffineType*>(filter->GetOutput()->Get().GetPointer());
+      AffineType::TranslationType t = itkAffine->GetTranslation();
+      TransformType::Pointer regTr = TransformType::New();
+      auto offset = regTr->GetOffset();
+      for (unsigned i = 0; i < TransformType::SpaceDimension; i++)
+      {
+        offset[i] = t[i];
+      }
+
+      regTr->SetOffset(offset);
+
+      resampleF->SetTileTransform(ind, regTr);
     }
   }
 
