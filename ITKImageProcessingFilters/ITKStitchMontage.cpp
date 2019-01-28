@@ -498,22 +498,25 @@ void ITKStitchMontage::stitchMontage(int peakMethodToUse, unsigned streamSubdivi
 
       resampleF->SetInputTile(ind, image);
 
+      TransformType::Pointer regTr = TransformType::New();
       using FilterType = itk::Dream3DITransformContainerToTransform<double, 3>;
       ::ITransformContainer::Pointer transformContainer = geom->getTransformContainer();
-      FilterType::Pointer filter = FilterType::New();
-      filter->SetInput(transformContainer);
-      filter->Update();
-
-      AffineType::Pointer itkAffine = dynamic_cast<AffineType*>(filter->GetOutput()->Get().GetPointer());
-      AffineType::TranslationType t = itkAffine->GetTranslation();
-      TransformType::Pointer regTr = TransformType::New();
-      auto offset = regTr->GetOffset();
-      for (unsigned i = 0; i < TransformType::SpaceDimension; i++)
+      if (transformContainer.get() != nullptr)
       {
-        offset[i] = t[i];
-      }
+        FilterType::Pointer filter = FilterType::New();
+        filter->SetInput(transformContainer);
+        filter->Update();
 
-      regTr->SetOffset(offset);
+        AffineType::Pointer itkAffine = dynamic_cast<AffineType*>(filter->GetOutput()->Get().GetPointer());
+        AffineType::TranslationType t = itkAffine->GetTranslation();
+        auto offset = regTr->GetOffset();
+        for (unsigned i = 0; i < TransformType::SpaceDimension; i++)
+        {
+          offset[i] = t[i];
+        }
+
+        regTr->SetOffset(offset);
+      }
 
       resampleF->SetTileTransform(ind, regTr);
     }
