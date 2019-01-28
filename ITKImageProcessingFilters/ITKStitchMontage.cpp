@@ -33,7 +33,9 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "GenerateMontageConfiguration.h"
+#include "ITKStitchMontage.h"
+
+#include <sstream>
 
 #include <QtCore/QDir>
 
@@ -49,10 +51,12 @@
 #include "SIMPLib/ITK/itkDream3DImage.h"
 #include "SIMPLib/ITK/itkTransformToDream3DTransformContainer.h"
 #include "SIMPLib/ITK/itkTransformToDream3DITransformContainer.h"
+#include "SIMPLib/ITK/itkDream3DITransformContainerToTransform.h"
+#include "SIMPLib/ITK/itkDream3DTransformContainerToTransform.h"
 #include "SIMPLib/ITK/itkInPlaceDream3DDataToImageFilter.h"
 #include "SIMPLib/ITK/itkInPlaceImageToDream3DDataFilter.h"
 #include "SIMPLib/ITK/itkDream3DFilterInterruption.h"
-#include "SIMPLib/ITK/itkProgressObserver.h"
+#include "SIMPLib/ITK/itkProgressObserver.hpp"
 
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
@@ -61,23 +65,24 @@
 #include "itkTxtTransformIOFactory.h"
 #include "itkTileMergeImageFilter.h"
 #include "itkStreamingImageFilter.h"
+#include "itkImageFileWriter.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-GenerateMontageConfiguration::GenerateMontageConfiguration()
+ITKStitchMontage::ITKStitchMontage()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-GenerateMontageConfiguration::~GenerateMontageConfiguration() = default;
+ITKStitchMontage::~ITKStitchMontage() = default;
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenerateMontageConfiguration::initialize()
+void ITKStitchMontage::initialize()
 {
 	setErrorCondition(0);
 	setWarningCondition(0);
@@ -87,39 +92,31 @@ void GenerateMontageConfiguration::initialize()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenerateMontageConfiguration::setupFilterParameters()
+void ITKStitchMontage::setupFilterParameters()
 {
 	QVector<FilterParameter::Pointer> parameters;
 
-	parameters.push_back(SIMPL_NEW_INT_VEC3_FP("Montage Size", MontageSize, FilterParameter::Parameter, GenerateMontageConfiguration));
-
-  {
-    QStringList linkedProps;
-    linkedProps << "MontageDataContainerName";
-    linkedProps << "MontageAttributeMatrixName";
-    linkedProps << "MontageDataArrayName";
-    parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Stitch Montage", StitchMontage, FilterParameter::Parameter, GenerateMontageConfiguration, linkedProps));
-  }
+  parameters.push_back(SIMPL_NEW_INT_VEC3_FP("Montage Size", MontageSize, FilterParameter::Parameter, ITKStitchMontage));
   
   {
 	  QStringList linkedProps;
 	  linkedProps << "TileOverlap";
-	  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Manual Tile Overlap", ManualTileOverlap, FilterParameter::Parameter, GenerateMontageConfiguration, linkedProps));
+    parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Manual Tile Overlap", ManualTileOverlap, FilterParameter::Parameter, ITKStitchMontage, linkedProps));
   }
 
   {
     MultiDataContainerSelectionFilterParameter::RequirementType req =
     MultiDataContainerSelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
-    parameters.push_back(SIMPL_NEW_MDC_SELECTION_FP("Image Data Containers", ImageDataContainers, FilterParameter::RequiredArray, GenerateMontageConfiguration, req));
+    parameters.push_back(SIMPL_NEW_MDC_SELECTION_FP("Image Data Containers", ImageDataContainers, FilterParameter::RequiredArray, ITKStitchMontage, req));
   }
-  parameters.push_back(SIMPL_NEW_STRING_FP("Common Attribute Matrix", CommonAttributeMatrixName, FilterParameter::RequiredArray, GenerateMontageConfiguration));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Common Data Array", CommonDataArrayName, FilterParameter::RequiredArray, GenerateMontageConfiguration));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Common Attribute Matrix", CommonAttributeMatrixName, FilterParameter::RequiredArray, ITKStitchMontage));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Common Data Array", CommonDataArrayName, FilterParameter::RequiredArray, ITKStitchMontage));
 
-  parameters.push_back(SIMPL_NEW_STRING_FP("Montage Data Container Name", MontageDataContainerName, FilterParameter::CreatedArray, GenerateMontageConfiguration));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Montage Attribute Matrix Name", MontageAttributeMatrixName, FilterParameter::CreatedArray, GenerateMontageConfiguration));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Montage Data Array Name", MontageDataArrayName, FilterParameter::CreatedArray, GenerateMontageConfiguration));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Montage Data Container Name", MontageDataContainerName, FilterParameter::CreatedArray, ITKStitchMontage));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Montage Attribute Matrix Name", MontageAttributeMatrixName, FilterParameter::CreatedArray, ITKStitchMontage));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Montage Data Array Name", MontageDataArrayName, FilterParameter::CreatedArray, ITKStitchMontage));
 
-  parameters.push_back(SIMPL_NEW_FLOAT_FP("Tile Overlap (Percent)", TileOverlap, FilterParameter::RequiredArray, GenerateMontageConfiguration));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("Tile Overlap (Percent)", TileOverlap, FilterParameter::RequiredArray, ITKStitchMontage));
 
 
 	setFilterParameters(parameters);
@@ -128,7 +125,7 @@ void GenerateMontageConfiguration::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenerateMontageConfiguration::dataCheck()
+void ITKStitchMontage::dataCheck()
 {
 	setErrorCondition(0);
 	setWarningCondition(0);
@@ -228,91 +225,88 @@ void GenerateMontageConfiguration::dataCheck()
     }
   }
 
-  if (m_StitchMontage)
+  if (getMontageDataContainerName().isEmpty())
   {
-    if (getMontageDataContainerName().isEmpty())
-    {
-      setErrorCondition(-11007);
-      QString ss = QObject::tr("Montage Data Container is empty.");
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-      return;
-    }
-
-    if (getMontageAttributeMatrixName().isEmpty())
-    {
-      setErrorCondition(-11008);
-      QString ss = QObject::tr("Montage Attribute Matrix is empty.");
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-      return;
-    }
-
-    if (getMontageDataArrayName().isEmpty())
-    {
-      setErrorCondition(-11009);
-      QString ss = QObject::tr("Montage Data Array is empty.");
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-      return;
-    }
-
-    DataArrayPath dap(getMontageDataContainerName(), getMontageAttributeMatrixName(), getMontageDataArrayName());
-
-    DataContainer::Pointer dc = getDataContainerArray()->createNonPrereqDataContainer(this, getMontageDataContainerName());
-    if (getErrorCondition() < 0)
-    {
-      return;
-    }
-
-    size_t montageArrayXSize = imageDataTupleDims[0] * m_xMontageSize;
-    size_t montageArrayYSize = imageDataTupleDims[1] * m_yMontageSize;
-
-    ImageGeom::Pointer imageGeom = ImageGeom::New();
-    imageGeom->setName("MontageGeometry");
-    imageGeom->setDimensions(montageArrayXSize, montageArrayYSize, 1);
-    dc->setGeometry(imageGeom);
-
-    QString ss = QObject::tr("The image geometry dimensions of data container '%1' are projected to be (%2, %3, %4).  This is assuming "
-                             "0% overlap between tiles, so the actual geometry dimensions after executing the stitching algorithm may be smaller.")
-        .arg(dc->getName()).arg(montageArrayXSize).arg(montageArrayYSize).arg(1);
-    setWarningCondition(-3001);
-    notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
-
-    QVector<size_t> tDims = {montageArrayXSize, montageArrayYSize, 1};
-
-    AttributeMatrix::Pointer am = dc->createNonPrereqAttributeMatrix(this, dap.getAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell);
-    if (getErrorCondition() < 0)
-    {
-      return;
-    }
-
-    ss = QObject::tr("The tuple dimensions of attribute matrix '%1' are projected to be (%2, %3, %4).  This is assuming "
-                     "0% overlap between tiles, so the actual geometry dimensions after executing the stitching algorithm may be smaller.")
-        .arg(am->getName()).arg(montageArrayXSize).arg(montageArrayYSize).arg(1);
-    setWarningCondition(-3002);
-    notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
-
-    if (getMontageDataArrayName().isEmpty())
-    {
-      QString ss = QObject::tr("The Montage Data Array Name field is empty.");
-      setErrorCondition(-3003);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-      return;
-    }
-
-    IDataArray::Pointer da = imagePtr->createNewArray(montageArrayXSize * montageArrayYSize, QVector<size_t>(1, 1), getMontageDataArrayName(), !getInPreflight());
-    am->addAttributeArray(da->getName(), da);
-
-    ss = QObject::tr("The number of elements of montage data array '%1' is projected to be %2.  This is assuming "
-                     "0% overlap between tiles, so the actual geometry dimensions after executing the stitching algorithm may be smaller.")
-        .arg(da->getName()).arg(QLocale::system().toString(static_cast<int>(da->getNumberOfTuples())));
-    setWarningCondition(-3004);
-    notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
+    setErrorCondition(-11007);
+    QString ss = QObject::tr("Montage Data Container is empty.");
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
   }
+
+  if (getMontageAttributeMatrixName().isEmpty())
+  {
+    setErrorCondition(-11008);
+    QString ss = QObject::tr("Montage Attribute Matrix is empty.");
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
+
+  if (getMontageDataArrayName().isEmpty())
+  {
+    setErrorCondition(-11009);
+    QString ss = QObject::tr("Montage Data Array is empty.");
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
+
+  DataArrayPath dap(getMontageDataContainerName(), getMontageAttributeMatrixName(), getMontageDataArrayName());
+
+  DataContainer::Pointer dc = getDataContainerArray()->createNonPrereqDataContainer(this, getMontageDataContainerName());
+  if (getErrorCondition() < 0)
+  {
+    return;
+  }
+
+  size_t montageArrayXSize = imageDataTupleDims[0] * m_xMontageSize;
+  size_t montageArrayYSize = imageDataTupleDims[1] * m_yMontageSize;
+
+  ImageGeom::Pointer imageGeom = ImageGeom::New();
+  imageGeom->setName("MontageGeometry");
+  imageGeom->setDimensions(montageArrayXSize, montageArrayYSize, 1);
+  dc->setGeometry(imageGeom);
+
+  ss = QObject::tr("The image geometry dimensions of data container '%1' are projected to be (%2, %3, %4).  This is assuming "
+                           "0% overlap between tiles, so the actual geometry dimensions after executing the stitching algorithm may be smaller.")
+      .arg(dc->getName()).arg(montageArrayXSize).arg(montageArrayYSize).arg(1);
+  setWarningCondition(-3001);
+  notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
+
+  QVector<size_t> tDims = {montageArrayXSize, montageArrayYSize, 1};
+
+  AttributeMatrix::Pointer am = dc->createNonPrereqAttributeMatrix(this, dap.getAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell);
+  if (getErrorCondition() < 0)
+  {
+    return;
+  }
+
+  ss = QObject::tr("The tuple dimensions of attribute matrix '%1' are projected to be (%2, %3, %4).  This is assuming "
+                   "0% overlap between tiles, so the actual geometry dimensions after executing the stitching algorithm may be smaller.")
+      .arg(am->getName()).arg(montageArrayXSize).arg(montageArrayYSize).arg(1);
+  setWarningCondition(-3002);
+  notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
+
+  if (getMontageDataArrayName().isEmpty())
+  {
+    QString ss = QObject::tr("The Montage Data Array Name field is empty.");
+    setErrorCondition(-3003);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
+
+  IDataArray::Pointer da = imagePtr->createNewArray(montageArrayXSize * montageArrayYSize, QVector<size_t>(1, 1), getMontageDataArrayName(), !getInPreflight());
+  am->addAttributeArray(da->getName(), da);
+
+  ss = QObject::tr("The number of elements of montage data array '%1' is projected to be %2.  This is assuming "
+                   "0% overlap between tiles, so the actual geometry dimensions after executing the stitching algorithm may be smaller.")
+      .arg(da->getName()).arg(QLocale::system().toString(static_cast<int>(da->getNumberOfTuples())));
+  setWarningCondition(-3004);
+  notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenerateMontageConfiguration::preflight()
+void ITKStitchMontage::preflight()
 {
 	setInPreflight(true);
 	emit preflightAboutToExecute();
@@ -325,7 +319,7 @@ void GenerateMontageConfiguration::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenerateMontageConfiguration::execute()
+void ITKStitchMontage::execute()
 {
 	setErrorCondition(0);
 	setWarningCondition(0);
@@ -355,15 +349,15 @@ void GenerateMontageConfiguration::execute()
 
     if (numOfComponents == 3)
     {
-      generateMontage< itk::RGBPixel< unsigned char >, itk::RGBPixel< unsigned int > >();
+      stitchMontage< itk::RGBPixel< unsigned char >, itk::RGBPixel< unsigned int > >();
     }
     else if (numOfComponents == 4)
     {
-      generateMontage< itk::RGBAPixel< unsigned char >, itk::RGBAPixel< unsigned int > >();
+      stitchMontage< itk::RGBAPixel< unsigned char >, itk::RGBAPixel< unsigned int > >();
     }
     else if (numOfComponents == 1)
     {
-      generateMontage< unsigned char, unsigned int >();
+      stitchMontage< unsigned char, unsigned int >();
     }
     else
     {
@@ -380,7 +374,7 @@ void GenerateMontageConfiguration::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenerateMontageConfiguration::createFijiDataStructure()
+void ITKStitchMontage::createFijiDataStructure()
 {
 	DataContainerArray* dca = getDataContainerArray().get();
 	// Loop over the data containers until we find the proper data container
@@ -402,6 +396,7 @@ void GenerateMontageConfiguration::createFijiDataStructure()
 
   float tileOverlapFactor = ((100.0 - getTileOverlap()) / 100.0);
 
+  QVector<size_t> cDims;
   while (dcNameIter.hasNext())
 	{
     QString dcName = dcNameIter.next();
@@ -443,6 +438,9 @@ void GenerateMontageConfiguration::createFijiDataStructure()
     tile.FileName = "";   // This code gets its data from memory, not from a file
 
     m_StageTiles[row][col] = tile;
+
+    int err;
+    AttributeMatrix::Pointer am = dcItem->getPrereqAttributeMatrix(this, getCommonAttributeMatrixName(), err);
 	}
 }
 
@@ -450,194 +448,97 @@ void GenerateMontageConfiguration::createFijiDataStructure()
 //
 // -----------------------------------------------------------------------------
 template< typename PixelType, typename AccumulatePixelType >
-void GenerateMontageConfiguration::generateMontage(int peakMethodToUse, unsigned streamSubdivisions)
+void ITKStitchMontage::stitchMontage(int peakMethodToUse, unsigned streamSubdivisions)
 {
-	using ScalarPixelType = typename itk::NumericTraits< PixelType >::ValueType;
-	constexpr unsigned Dimension = 2;
-	using AffineType = itk::AffineTransform< double, 3 >;
-	using PointType = itk::Point<double, Dimension>;
-	using VectorType = itk::Vector<double, Dimension>;
-	using TransformType = itk::TranslationTransform< double, Dimension >;
-	using ScalarImageType = itk::Dream3DImage< ScalarPixelType, Dimension >;
-	using OriginalImageType = itk::Dream3DImage< PixelType, Dimension >; // possibly RGB instead of scalar
-	using MontageType = itk::TileMontage< ScalarImageType >;
-	using PCMType = itk::PhaseCorrelationImageRegistrationMethod<ScalarImageType, ScalarImageType>;
-	typename ScalarImageType::SpacingType sp;
-	sp.Fill(1.0); // assume unit spacing
+  using ScalarPixelType = typename itk::NumericTraits< PixelType >::ValueType;
+  constexpr unsigned Dimension = 2;
+  using PointType = itk::Point<double, Dimension>;
+  using ScalarImageType = itk::Dream3DImage< ScalarPixelType, Dimension >;
+  using OriginalImageType = itk::Dream3DImage< PixelType, Dimension >; // possibly RGB instead of scalar
+  using MontageType = itk::TileMontage< ScalarImageType >;
+  typename ScalarImageType::SpacingType sp;
+  sp.Fill(1.0); // assume unit spacing
+
+  typename MontageType::TileIndexType ind;
+
+  PointType originAdjustment = m_StageTiles[m_xMontageSize - 1][m_yMontageSize - 1].Position;
+
+  // Stitch the montage together
+  using Resampler = itk::TileMergeImageFilter<OriginalImageType, AccumulatePixelType>;
+  typename Resampler::Pointer resampleF = Resampler::New();
+  //resampleF->SetMontage(montage); // doesn't compile, because montage is expected
+  // to be templated using itk::Image, not itk::Dream3DImage
+
+  resampleF->SetMontageSize({m_xMontageSize, m_yMontageSize});
+  resampleF->SetOriginAdjustment(originAdjustment);
+  resampleF->SetForcedSpacing(sp);
+
+  for(unsigned y = 0; y < m_yMontageSize; y++)
+  {
+    ind[1] = y;
+    for(unsigned x = 0; x < m_xMontageSize; x++)
+    {
+      ind[0] = x;
+      typedef itk::InPlaceDream3DDataToImageFilter<PixelType, Dimension> toITKType;
+      typename toITKType::Pointer toITK = toITKType::New();
+      DataContainer::Pointer imageDC = GetImageDataContainer(y, x);
+      // Check the resolution and fix if necessary
+      ImageGeom::Pointer geom = imageDC->getGeometryAs<ImageGeom>();
+      geom->setResolution(1, 1, 1);
+      geom->setOrigin(0, 0, 0);
+
+      toITK->SetInput(imageDC);
+      toITK->SetInPlace(true);
+      toITK->SetAttributeMatrixArrayName(getCommonAttributeMatrixName().toStdString());
+      toITK->SetDataArrayName(getCommonDataArrayName().toStdString());
+      toITK->Update();
+
+      typename OriginalImageType::Pointer image = toITK->GetOutput();
+
+      resampleF->SetInputTile(ind, image);
+
+      using FilterType = itk::Dream3DITransformContainerToTransform<double, 3>;
+      ::ITransformContainer::Pointer transformContainer = geom->getTransformContainer();
+      FilterType::Pointer filter = FilterType::New();
+      filter->SetInput(transformContainer);
+      filter->Update();
+
+      auto convertedITKTransform = dynamic_cast<typename MontageType::TransformType*>(filter->GetOutput()->Get().GetPointer());
+      resampleF->SetTileTransform(ind, convertedITKTransform);
+    }
+  }
+
+  using Dream3DImageType = itk::Dream3DImage<PixelType, Dimension>;
+  using StreamingFilterType = itk::StreamingImageFilter<OriginalImageType, Dream3DImageType>;
+  typename StreamingFilterType::Pointer streamingFilter = StreamingFilterType::New();
+  streamingFilter->SetInput(resampleF->GetOutput());
+  streamingFilter->SetNumberOfStreamDivisions(streamSubdivisions);
+
+  notifyStatusMessage(getHumanLabel(), "Resampling tiles into the stitched image");
 
   itk::ProgressObserver* progressObs = new itk::ProgressObserver();
   progressObs->setFilter(this);
+  progressObs->setMessagePrefix("Stitching Tiles Together");
+  resampleF->AddObserver(itk::ProgressEvent(), progressObs);
 
-	using PeakInterpolationType = typename itk::MaxPhaseCorrelationOptimizer<PCMType>::PeakInterpolationMethod;
-	using PeakFinderUnderlying = typename std::underlying_type<PeakInterpolationType>::type;
-	auto peakMethod = static_cast<PeakFinderUnderlying>(peakMethodToUse);
+  resampleF->Update();
+  notifyStatusMessage(getHumanLabel(), "Finished resampling tiles");
+  notifyStatusMessage(getHumanLabel(), "Converting into DREAM3D data structure");
 
-  unsigned x1 = 1;
-  unsigned y1 = 1;
-  if (m_xMontageSize < 2)
-  {
-    x1 = 0;
-  }
-  if(m_yMontageSize < 2)
-  {
-    y1 = 0;
-  }
+  resampleF->RemoveAllObservers();
 
-  PointType originAdjustment = m_StageTiles[y1][x1].Position - m_StageTiles[0][0].Position;
+  // Convert montaged image into DREAM3D data structure
+  DataArrayPath dataArrayPath(getMontageDataContainerName(), getMontageAttributeMatrixName(), getMontageDataArrayName());
+  DataContainer::Pointer container = getDataContainerArray()->getDataContainer(dataArrayPath.getDataContainerName());
 
-  // Create tile montage
-	typename MontageType::Pointer montage = MontageType::New();
-	montage->SetMontageSize({ m_xMontageSize, m_yMontageSize });
-	montage->GetModifiablePCM()->SetPaddingMethod(PCMType::PaddingMethod::MirrorWithExponentialDecay);
-	montage->GetModifiablePCMOptimizer()->SetPeakInterpolationMethod(static_cast<PeakInterpolationType>(peakMethod));
-  montage->SetOriginAdjustment(originAdjustment);
-	montage->SetForcedSpacing(sp);
-
-  // Set tile image data from DREAM3D structure into tile montage
-	typename MontageType::TileIndexType ind;
-	for (unsigned y = 0; y < m_yMontageSize; y++)
-	{
-		ind[1] = y;
-		for (unsigned x = 0; x < m_xMontageSize; x++)
-		{
-			ind[0] = x;
-			typedef itk::InPlaceDream3DDataToImageFilter <ScalarPixelType, Dimension > toITKType;
-			typename toITKType::Pointer toITK = toITKType::New();
-			DataContainer::Pointer imageDC = GetImageDataContainer(y, x);
-			// Check the resolution and fix if necessary
-			SIMPL::Tuple3FVec resolution = imageDC->getGeometryAs<ImageGeom>()->getResolution();
-			if (std::get<0>(resolution) < 1 || std::get<1>(resolution) < 1)
-			{
-				imageDC->getGeometryAs<ImageGeom>()->setResolution(1, 1, 1);
-			}
-
-			toITK->SetInput(imageDC);
-			toITK->SetInPlace(true);
-			toITK->SetAttributeMatrixArrayName(getCommonAttributeMatrixName().toStdString());
-			toITK->SetDataArrayName(getCommonDataArrayName().toStdString());
-			toITK->Update();
-
-            typename ScalarImageType::Pointer image = toITK->GetOutput();
-			montage->SetInputTile(ind, image);
-		}
-	}
-
-  // Execute the tile registrations
-	notifyStatusMessage(getHumanLabel(), "Doing the tile registrations");
-
-  progressObs->setMessagePrefix("Registering Tiles");
-  montage->AddObserver(itk::ProgressEvent(), progressObs);
-
-	montage->Update();
-
-  montage->RemoveAllObservers();
-	notifyStatusMessage(getHumanLabel(), "Finished the tile registrations");
-
-  // Store tile registration transforms in DREAM3D data containers
-	for (unsigned y = 0; y < m_yMontageSize; y++)
-	{
-		ind[1] = y;
-		for (unsigned x = 0; x < m_xMontageSize; x++)
-		{
-			ind[0] = x;
-			const TransformType* regTr = montage->GetOutputTransform(ind);
-			DataContainer::Pointer imageDC = GetImageDataContainer(y, x);
-			ImageGeom::Pointer image = imageDC->getGeometryAs<ImageGeom>();
-
-			// Create an ITK affine transform as a reference
-			AffineType::Pointer itkAffine = AffineType::New();
-			AffineType::TranslationType t;
-			t.Fill(0);
-			for (unsigned i = 0; i < TransformType::SpaceDimension; i++)
-			{
-				t[i] = regTr->GetOffset()[i];
-			}
-			itkAffine->SetTranslation(t);
-
-			TransformContainer::Pointer transformContainer = GetTransformContainerFromITKAffineTransform(itkAffine);
-			auto containerParameters = transformContainer->getParameters();
-			auto containerFixedParameters = transformContainer->getFixedParameters();
-			using FilterType = itk::TransformToDream3DITransformContainer<double, 3>;
-
-			FilterType::Pointer filter = FilterType::New();
-			filter->SetInput(itkAffine);
-			filter->Update();
-			::ITransformContainer::Pointer convertedITransformContainer = filter->GetOutput()->Get();
-			::TransformContainer::Pointer convertedTransformContainer = std::dynamic_pointer_cast<::TransformContainer>(convertedITransformContainer);
-
-			image->setTransformContainer(convertedTransformContainer);
-		}
-	}
-
-  if (m_StitchMontage)
-  {
-    // Stitch the montage together
-    using Resampler = itk::TileMergeImageFilter<OriginalImageType, AccumulatePixelType>;
-    typename Resampler::Pointer resampleF = Resampler::New();
-    //resampleF->SetMontage(montage); // doesn't compile, because montage is expected
-    // to be templated using itk::Image, not itk::Dream3DImage
-
-    resampleF->SetMontageSize({m_xMontageSize, m_yMontageSize});
-    resampleF->SetOriginAdjustment(originAdjustment);
-    resampleF->SetForcedSpacing(sp);
-    for(unsigned y = 0; y < m_yMontageSize; y++)
-    {
-      ind[1] = y;
-      for(unsigned x = 0; x < m_xMontageSize; x++)
-      {
-        ind[0] = x;
-        typedef itk::InPlaceDream3DDataToImageFilter<PixelType, Dimension> toITKType;
-        typename toITKType::Pointer toITK = toITKType::New();
-        DataContainer::Pointer imageDC = GetImageDataContainer(y, x);
-        // Check the resolution and fix if necessary
-        SIMPL::Tuple3FVec resolution = imageDC->getGeometryAs<ImageGeom>()->getResolution();
-        if(std::get<0>(resolution) < 1 || std::get<1>(resolution) < 1)
-        {
-          imageDC->getGeometryAs<ImageGeom>()->setResolution(1, 1, 1);
-        }
-
-        toITK->SetInput(imageDC);
-        toITK->SetInPlace(true);
-        toITK->SetAttributeMatrixArrayName(getCommonAttributeMatrixName().toStdString());
-        toITK->SetDataArrayName(getCommonDataArrayName().toStdString());
-        toITK->Update();
-
-        typename OriginalImageType::Pointer image = toITK->GetOutput();
-        resampleF->SetInputTile(ind, image);
-        resampleF->SetTileTransform(ind, montage->GetOutputTransform(ind));
-      }
-    }
-
-    using Dream3DImageType = itk::Dream3DImage<PixelType, Dimension>;
-    using StreamingFilterType = itk::StreamingImageFilter<OriginalImageType, Dream3DImageType>;
-    typename StreamingFilterType::Pointer streamingFilter = StreamingFilterType::New();
-    streamingFilter->SetInput(resampleF->GetOutput());
-    streamingFilter->SetNumberOfStreamDivisions(streamSubdivisions);
-
-    notifyStatusMessage(getHumanLabel(), "Resampling tiles into the stitched image");
-
-    progressObs->setMessagePrefix("Stitching Tiles Together");
-    resampleF->AddObserver(itk::ProgressEvent(), progressObs);
-
-    streamingFilter->Update();
-    notifyStatusMessage(getHumanLabel(), "Finished resampling tiles");
-    notifyStatusMessage(getHumanLabel(), "Converting into DREAM3D data structure");
-
-    resampleF->RemoveAllObservers();
-
-    // Convert montaged image into DREAM3D data structure
-    DataArrayPath dataArrayPath(getMontageDataContainerName(), getMontageAttributeMatrixName(), getMontageDataArrayName());
-    DataContainer::Pointer container = getDataContainerArray()->getDataContainer(dataArrayPath.getDataContainerName());
-
-    using ToDream3DType = itk::InPlaceImageToDream3DDataFilter<PixelType, Dimension>;
-    typename ToDream3DType::Pointer toDream3DFilter = ToDream3DType::New();
-    toDream3DFilter->SetInput(streamingFilter->GetOutput());
-    toDream3DFilter->SetInPlace(true);
-    toDream3DFilter->SetAttributeMatrixArrayName(dataArrayPath.getAttributeMatrixName().toStdString());
-    toDream3DFilter->SetDataArrayName(dataArrayPath.getDataArrayName().toStdString());
-    toDream3DFilter->SetDataContainer(container);
-    toDream3DFilter->Update();
-  }
+  using ToDream3DType = itk::InPlaceImageToDream3DDataFilter<PixelType, Dimension>;
+  typename ToDream3DType::Pointer toDream3DFilter = ToDream3DType::New();
+  toDream3DFilter->SetInput(resampleF->GetOutput());
+  toDream3DFilter->SetInPlace(true);
+  toDream3DFilter->SetAttributeMatrixArrayName(dataArrayPath.getAttributeMatrixName().toStdString());
+  toDream3DFilter->SetDataArrayName(dataArrayPath.getDataArrayName().toStdString());
+  toDream3DFilter->SetDataContainer(container);
+  toDream3DFilter->Update();
 
   delete progressObs;
 }
@@ -645,7 +546,7 @@ void GenerateMontageConfiguration::generateMontage(int peakMethodToUse, unsigned
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DataContainer::Pointer GenerateMontageConfiguration::GetImageDataContainer(int y, int x)
+DataContainer::Pointer ITKStitchMontage::GetImageDataContainer(int y, int x)
 {
 	DataContainerArray* dca = getDataContainerArray().get();
 	// Loop over the data containers until we find the proper data container
@@ -678,7 +579,7 @@ DataContainer::Pointer GenerateMontageConfiguration::GetImageDataContainer(int y
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-typename TransformContainer::Pointer GenerateMontageConfiguration::GetTransformContainerFromITKAffineTransform(const AffineType::Pointer& itkAffine)
+typename TransformContainer::Pointer ITKStitchMontage::GetTransformContainerFromITKAffineTransform(const AffineType::Pointer& itkAffine)
 {
 	auto parameters = itkAffine->GetParameters();
 	auto fixedParameters = itkAffine->GetFixedParameters();
@@ -708,9 +609,9 @@ typename TransformContainer::Pointer GenerateMontageConfiguration::GetTransformC
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer GenerateMontageConfiguration::newFilterInstance(bool copyFilterParameters) const
+AbstractFilter::Pointer ITKStitchMontage::newFilterInstance(bool copyFilterParameters) const
 {
-	GenerateMontageConfiguration::Pointer filter = GenerateMontageConfiguration::New();
+  ITKStitchMontage::Pointer filter = ITKStitchMontage::New();
 	if (copyFilterParameters)
 	{
 		filter->setFilterParameters(getFilterParameters());
@@ -723,7 +624,7 @@ AbstractFilter::Pointer GenerateMontageConfiguration::newFilterInstance(bool cop
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateMontageConfiguration::getCompiledLibraryName() const
+const QString ITKStitchMontage::getCompiledLibraryName() const
 {
 	return ITKImageProcessingConstants::ITKImageProcessingBaseName;
 }
@@ -731,7 +632,7 @@ const QString GenerateMontageConfiguration::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateMontageConfiguration::getBrandingString() const
+const QString ITKStitchMontage::getBrandingString() const
 {
 	return "ITKImageProcessing";
 }
@@ -739,7 +640,7 @@ const QString GenerateMontageConfiguration::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateMontageConfiguration::getFilterVersion() const
+const QString ITKStitchMontage::getFilterVersion() const
 {
 	QString version;
 	QTextStream vStream(&version);
@@ -749,7 +650,7 @@ const QString GenerateMontageConfiguration::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateMontageConfiguration::getGroupName() const
+const QString ITKStitchMontage::getGroupName() const
 {
 	return SIMPL::FilterGroups::IOFilters;
 }
@@ -757,7 +658,7 @@ const QString GenerateMontageConfiguration::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid GenerateMontageConfiguration::getUuid()
+const QUuid ITKStitchMontage::getUuid()
 {
 	return QUuid("{4388723b-cc16-3477-ac6f-fe0107107e74}");
 }
@@ -765,7 +666,7 @@ const QUuid GenerateMontageConfiguration::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateMontageConfiguration::getSubGroupName() const
+const QString ITKStitchMontage::getSubGroupName() const
 {
 	return SIMPL::FilterSubGroups::GenerationFilters;
 }
@@ -773,14 +674,7 @@ const QString GenerateMontageConfiguration::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateMontageConfiguration::getHumanLabel() const
+const QString ITKStitchMontage::getHumanLabel() const
 {
 	return "Generate Montage Configuration";
 }
-
-#define ITK_IMAGE_READER_CLASS_NAME GenerateMontageConfiguration
-
-#include "SIMPLib/ITK/itkGetComponentsDimensions.h"
-#include "SIMPLib/ITK/itkInPlaceImageToDream3DDataFilter.h"
-
-#include "SIMPLib/ITK/itkImageReaderHelper.cpp"
