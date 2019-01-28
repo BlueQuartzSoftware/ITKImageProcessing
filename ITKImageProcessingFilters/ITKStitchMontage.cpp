@@ -671,7 +671,7 @@ const QString ITKStitchMontage::getGroupName() const
 // -----------------------------------------------------------------------------
 const QUuid ITKStitchMontage::getUuid()
 {
-	return QUuid("{4388723b-cc16-3477-ac6f-fe0107107e74}");
+  return QUuid("{fa4efd40-f4a6-5524-9fc6-e1f8bbb2c42f}");
 }
 
 // -----------------------------------------------------------------------------
