@@ -175,56 +175,64 @@ void GenerateMontageConfiguration::dataCheck()
 
 	// Test to see that the image data containers are correct
   int dcCount = m_ImageDataContainers.size();
+
+  QString dcName = m_ImageDataContainers[0];
+
+  DataArrayPath testPath;
+  testPath.setDataContainerName(dcName);
+  testPath.setAttributeMatrixName(getCommonAttributeMatrixName());
+  testPath.setDataArrayName(getCommonDataArrayName());
+
+  AttributeMatrix::Pointer imageDataAM = getDataContainerArray()->getPrereqAttributeMatrixFromPath(this, testPath, err);
+  if (getErrorCondition() < 0 || err < 0)
+  {
+    return;
+  }
+
+  QVector<size_t> imageDataTupleDims = imageDataAM->getTupleDimensions();
+  if (imageDataTupleDims.size() < 2)
+  {
+    QString ss = QObject::tr("Image Data Array at path '%1' must have at least 2 tuple dimensions.").arg(testPath.serialize("/"));
+    setErrorCondition(-11005);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
+
+  IDataArray::Pointer imagePtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, testPath);
+  if (getErrorCondition() < 0)
+  {
+    return;
+  }
+
   for (int i = 0; i < dcCount; i++)
-	{
+  {
     QString dcName = m_ImageDataContainers[i];
 
     DataArrayPath testPath;
     testPath.setDataContainerName(dcName);
-		testPath.setAttributeMatrixName(getCommonAttributeMatrixName());
-		testPath.setDataArrayName(getCommonDataArrayName());
-
-    AttributeMatrix::Pointer imageDataAM = getDataContainerArray()->getPrereqAttributeMatrixFromPath(this, testPath, err);
-    if (getErrorCondition() < 0 || err < 0)
-    {
-      return;
-    }
-
-    IDataArray::Pointer ptr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, testPath);
-    if (getErrorCondition() < 0)
-    {
-      return;
-    }
-
-    QVector<size_t> imageDataTupleDims = imageDataAM->getTupleDimensions();
-    if (imageDataTupleDims.size() < 2)
-    {
-      QString ss = QObject::tr("Image Data Array at path '%1' must have at least 2 tuple dimensions.").arg(testPath.serialize("/"));
-      setErrorCondition(-11005);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-      return;
-    }
+    testPath.setAttributeMatrixName(getCommonAttributeMatrixName());
+    testPath.setDataArrayName(getCommonDataArrayName());
 
     ImageGeom::Pointer image = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, testPath.getDataContainerName());
     if (getErrorCondition() < 0)
     {
       return;
     }
-	
-	if (getManualTileOverlap() && (getTileOverlap() < 0.0f || getTileOverlap() > 100.0f))
-	{
-		setErrorCondition(-11009);
-		QString ss = QObject::tr("Tile Overlap must be between 0.0 and 100.0.");
-		notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-		return;
-	}
-	}	
+
+    if (getManualTileOverlap() && (getTileOverlap() < 0.0f || getTileOverlap() > 100.0f))
+    {
+      setErrorCondition(-11006);
+      QString ss = QObject::tr("Tile Overlap must be between 0.0 and 100.0.");
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      return;
+    }
+  }
 
   if (m_StitchMontage)
   {
     if (getMontageDataContainerName().isEmpty())
     {
-      setErrorCondition(-11006);
+      setErrorCondition(-11007);
       QString ss = QObject::tr("Montage Data Container is empty.");
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return;
@@ -232,7 +240,7 @@ void GenerateMontageConfiguration::dataCheck()
 
     if (getMontageAttributeMatrixName().isEmpty())
     {
-      setErrorCondition(-11007);
+      setErrorCondition(-11008);
       QString ss = QObject::tr("Montage Attribute Matrix is empty.");
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return;
@@ -240,7 +248,7 @@ void GenerateMontageConfiguration::dataCheck()
 
     if (getMontageDataArrayName().isEmpty())
     {
-      setErrorCondition(-11008);
+      setErrorCondition(-11009);
       QString ss = QObject::tr("Montage Data Array is empty.");
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return;
@@ -254,52 +262,50 @@ void GenerateMontageConfiguration::dataCheck()
       return;
     }
 
+    size_t montageArrayXSize = imageDataTupleDims[0] * m_xMontageSize;
+    size_t montageArrayYSize = imageDataTupleDims[1] * m_yMontageSize;
 
+    ImageGeom::Pointer imageGeom = ImageGeom::New();
+    imageGeom->setName("MontageGeometry");
+    imageGeom->setDimensions(montageArrayXSize, montageArrayYSize, 1);
+    dc->setGeometry(imageGeom);
 
-//    size_t montageArrayXSize = imageDataTupleDims[0] * m_xMontageSize;
-//    size_t montageArrayYSize = imageDataTupleDims[1] * m_yMontageSize;
+    QString ss = QObject::tr("The image geometry dimensions of data container '%1' are projected to be (%2, %3, %4).  This is assuming "
+                             "0% overlap between tiles, so the actual geometry dimensions after executing the stitching algorithm may be smaller.")
+        .arg(dc->getName()).arg(montageArrayXSize).arg(montageArrayYSize).arg(1);
+    setWarningCondition(-3001);
+    notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
 
-//    ImageGeom::Pointer imageGeom = ImageGeom::New();
-//    imageGeom->setName("MontageGeometry");
-//    imageGeom->setDimensions(montageArrayXSize, montageArrayYSize, 1);
-//    dc->setGeometry(imageGeom);
+    QVector<size_t> tDims = {montageArrayXSize, montageArrayYSize, 1};
 
-//    QString ss = QObject::tr("The image geometry dimensions of data container '%1' are projected to be (%2, %3, %4).  This is assuming "
-//                             "0% overlap between tiles, so the actual geometry dimensions after executing the stitching algorithm may be smaller.")
-//        .arg(dc->getName()).arg(montageArrayXSize).arg(montageArrayYSize).arg(1);
-//    setWarningCondition(-3001);
-//    notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
+    AttributeMatrix::Pointer am = dc->createNonPrereqAttributeMatrix(this, dap.getAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell);
+    if (getErrorCondition() < 0)
+    {
+      return;
+    }
 
-//    QVector<size_t> tDims = {montageArrayXSize, montageArrayYSize, 1};
+    ss = QObject::tr("The tuple dimensions of attribute matrix '%1' are projected to be (%2, %3, %4).  This is assuming "
+                     "0% overlap between tiles, so the actual geometry dimensions after executing the stitching algorithm may be smaller.")
+        .arg(am->getName()).arg(montageArrayXSize).arg(montageArrayYSize).arg(1);
+    setWarningCondition(-3002);
+    notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
 
-//    AttributeMatrix::Pointer am = dc->createNonPrereqAttributeMatrix(this, dap.getAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell);
-//    if (getErrorCondition() < 0)
-//    {
-//      return;
-//    }
+    if (getMontageDataArrayName().isEmpty())
+    {
+      QString ss = QObject::tr("The Montage Data Array Name field is empty.");
+      setErrorCondition(-3003);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      return;
+    }
 
-//    ss = QObject::tr("The tuple dimensions of attribute matrix '%1' are projected to be (%2, %3, %4).  This is assuming "
-//                     "0% overlap between tiles, so the actual geometry dimensions after executing the stitching algorithm may be smaller.")
-//        .arg(am->getName()).arg(montageArrayXSize).arg(montageArrayYSize).arg(1);
-//    setWarningCondition(-3002);
-//    notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
+    IDataArray::Pointer da = imagePtr->createNewArray(montageArrayXSize * montageArrayYSize, QVector<size_t>(1, 1), getMontageDataArrayName(), !getInPreflight());
+    am->addAttributeArray(da->getName(), da);
 
-//    if (getMontageDataArrayName().isEmpty())
-//    {
-//      QString ss = QObject::tr("The Montage Data Array Name field is empty.");
-//      setErrorCondition(-3003);
-//      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-//      return;
-//    }
-
-//    IDataArray::Pointer da = imageDataPtr->createNewArray(montageArrayXSize * montageArrayYSize, QVector<size_t>(1, 1), getMontageDataArrayName(), !getInPreflight());
-//    am->addAttributeArray(da->getName(), da);
-
-//    ss = QObject::tr("The number of elements of montage data array '%1' is projected to be %2.  This is assuming "
-//                     "0% overlap between tiles, so the actual geometry dimensions after executing the stitching algorithm may be smaller.")
-//        .arg(da->getName()).arg(QLocale::system().toString(static_cast<int>(da->getNumberOfTuples())));
-//    setWarningCondition(-3004);
-//    notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
+    ss = QObject::tr("The number of elements of montage data array '%1' is projected to be %2.  This is assuming "
+                     "0% overlap between tiles, so the actual geometry dimensions after executing the stitching algorithm may be smaller.")
+        .arg(da->getName()).arg(QLocale::system().toString(static_cast<int>(da->getNumberOfTuples())));
+    setWarningCondition(-3004);
+    notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
   }
 }
 
