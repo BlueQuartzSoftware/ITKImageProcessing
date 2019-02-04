@@ -485,8 +485,6 @@ void ITKStitchMontage::stitchMontage(int peakMethodToUse, unsigned streamSubdivi
       DataContainer::Pointer imageDC = GetImageDataContainer(y, x);
       // Check the resolution and fix if necessary
       ImageGeom::Pointer geom = imageDC->getGeometryAs<ImageGeom>();
-      geom->setResolution(1, 1, 1);
-      geom->setOrigin(0, 0, 0);
 
       toITK->SetInput(imageDC);
       toITK->SetInPlace(true);
