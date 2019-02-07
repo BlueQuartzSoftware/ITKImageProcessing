@@ -167,7 +167,7 @@ void ITKImportFijiMontage::dataCheck()
   }
 
   QFileInfo fi(getFijiConfigFilePath());
-  if (fi.completeSuffix() != "txt")
+  if (fi.suffix() != "txt")
   {
     QString ss = QObject::tr("Configuration file is not in Fiji format (*.txt).");
     setErrorCondition(-2001);
