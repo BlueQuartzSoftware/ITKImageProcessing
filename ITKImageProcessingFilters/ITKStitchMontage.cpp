@@ -462,8 +462,6 @@ void ITKStitchMontage::stitchMontage(int peakMethodToUse, unsigned streamSubdivi
 
   typename MontageType::TileIndexType ind;
 
-  PointType originAdjustment = m_StageTiles[m_xMontageSize - 1][m_yMontageSize - 1].Position;
-
   // Stitch the montage together
   using Resampler = itk::TileMergeImageFilter<OriginalImageType, AccumulatePixelType>;
   typename Resampler::Pointer resampleF = Resampler::New();
@@ -471,7 +469,6 @@ void ITKStitchMontage::stitchMontage(int peakMethodToUse, unsigned streamSubdivi
   // to be templated using itk::Image, not itk::Dream3DImage
 
   resampleF->SetMontageSize({m_xMontageSize, m_yMontageSize});
-  resampleF->SetOriginAdjustment(originAdjustment);
   resampleF->SetForcedSpacing(sp);
 
   for(unsigned y = 0; y < m_yMontageSize; y++)
@@ -496,11 +493,11 @@ void ITKStitchMontage::stitchMontage(int peakMethodToUse, unsigned streamSubdivi
 
       resampleF->SetInputTile(ind, image);
 
-      TransformType::Pointer regTr = TransformType::New();
-      using FilterType = itk::Dream3DITransformContainerToTransform<double, 3>;
+      typename MontageType::TransformPointer regTr = MontageType::TransformType::New();
       ::ITransformContainer::Pointer transformContainer = geom->getTransformContainer();
       if (transformContainer.get() != nullptr)
       {
+        using FilterType = itk::Dream3DITransformContainerToTransform<double, 3>;
         FilterType::Pointer filter = FilterType::New();
         filter->SetInput(transformContainer);
         filter->Update();
