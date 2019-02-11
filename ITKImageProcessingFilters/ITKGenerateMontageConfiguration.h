@@ -208,7 +208,8 @@ protected:
 	/**
 	 * @brief Generate the montage
 	 */
-  template<typename PixelType, typename AccumulatePixelType> void generateMontage(int peakMethodToUse = 0, unsigned streamSubdivisions = 1);
+  template<typename PixelType>
+  void generateMontage(int peakMethodToUse = 0, unsigned streamSubdivisions = 1);
 
 	/**
 	 * @brief Get the image from the appropriate data container

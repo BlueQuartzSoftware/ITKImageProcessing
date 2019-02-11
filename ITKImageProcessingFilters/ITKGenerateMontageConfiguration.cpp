@@ -53,6 +53,7 @@
 #include "SIMPLib/ITK/itkInPlaceImageToDream3DDataFilter.h"
 #include "SIMPLib/ITK/itkDream3DFilterInterruption.h"
 #include "SIMPLib/ITK/itkProgressObserver.hpp"
+#include "SIMPLib/ITK/itkTemplateHelpers.h"
 
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
@@ -80,9 +81,9 @@ ITKGenerateMontageConfiguration::~ITKGenerateMontageConfiguration() = default;
 // -----------------------------------------------------------------------------
 void ITKGenerateMontageConfiguration::initialize()
 {
-	setErrorCondition(0);
-	setWarningCondition(0);
-	setCancel(false);
+  setErrorCondition(0);
+  setWarningCondition(0);
+  setCancel(false);
 }
 
 // -----------------------------------------------------------------------------
@@ -90,13 +91,13 @@ void ITKGenerateMontageConfiguration::initialize()
 // -----------------------------------------------------------------------------
 void ITKGenerateMontageConfiguration::setupFilterParameters()
 {
-	QVector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
 
   parameters.push_back(SIMPL_NEW_INT_VEC3_FP("Montage Size", MontageSize, FilterParameter::Parameter, ITKGenerateMontageConfiguration));
-  
+
   {
-	  QStringList linkedProps;
-	  linkedProps << "TileOverlap";
+    QStringList linkedProps;
+    linkedProps << "TileOverlap";
     parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Manual Tile Overlap", ManualTileOverlap, FilterParameter::Parameter, ITKGenerateMontageConfiguration, linkedProps));
   }
 
@@ -115,7 +116,7 @@ void ITKGenerateMontageConfiguration::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_FLOAT_FP("Tile Overlap (Percent)", TileOverlap, FilterParameter::RequiredArray, ITKGenerateMontageConfiguration));
 
 
-	setFilterParameters(parameters);
+  setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------
@@ -123,32 +124,32 @@ void ITKGenerateMontageConfiguration::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void ITKGenerateMontageConfiguration::dataCheck()
 {
-	setErrorCondition(0);
-	setWarningCondition(0);
-	initialize();
+  setErrorCondition(0);
+  setWarningCondition(0);
+  initialize();
 
-	QString ss;
+  QString ss;
   int err = 0;
 
-	m_xMontageSize = m_MontageSize.x;
-	m_yMontageSize = m_MontageSize.y;
+  m_xMontageSize = m_MontageSize.x;
+  m_yMontageSize = m_MontageSize.y;
 
   if (m_xMontageSize <= 0 || m_yMontageSize <= 0)
-	{
+  {
     setErrorCondition(-11000);
-		QString ss = QObject::tr("The Montage Size x and y values must be greater than 0");
-		notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-		return;
-	}
+    QString ss = QObject::tr("The Montage Size x and y values must be greater than 0");
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
 
   // Test to make sure at least one data container is selected
-	if (getImageDataContainers().size() < 1)
-	{
+  if (getImageDataContainers().size() < 1)
+  {
     setErrorCondition(-11001);
-		QString ss = QObject::tr("At least one Data Container must be selected");
-		notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-		return;
-	}
+    QString ss = QObject::tr("At least one Data Container must be selected");
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
 
   if (getCommonAttributeMatrixName().isEmpty())
   {
@@ -166,7 +167,7 @@ void ITKGenerateMontageConfiguration::dataCheck()
     return;
   }
 
-	// Test to see that the image data containers are correct
+  // Test to see that the image data containers are correct
   int dcCount = m_ImageDataContainers.size();
 
   QString dcName = m_ImageDataContainers[0];
@@ -227,12 +228,12 @@ void ITKGenerateMontageConfiguration::dataCheck()
 // -----------------------------------------------------------------------------
 void ITKGenerateMontageConfiguration::preflight()
 {
-	setInPreflight(true);
-	emit preflightAboutToExecute();
-	emit updateFilterParameters(this);
-	dataCheck();
-	emit preflightExecuted();
-	setInPreflight(false);
+  setInPreflight(true);
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
+  dataCheck();
+  emit preflightExecuted();
+  setInPreflight(false);
 }
 
 // -----------------------------------------------------------------------------
@@ -240,13 +241,13 @@ void ITKGenerateMontageConfiguration::preflight()
 // -----------------------------------------------------------------------------
 void ITKGenerateMontageConfiguration::execute()
 {
-	setErrorCondition(0);
-	setWarningCondition(0);
-	dataCheck();
-	if (getErrorCondition() < 0)
-	{
-		return;
-	}
+  setErrorCondition(0);
+  setWarningCondition(0);
+  dataCheck();
+  if (getErrorCondition() < 0)
+  {
+    return;
+  }
 
   createFijiDataStructure();
   if (getErrorCondition() < 0)
@@ -255,39 +256,19 @@ void ITKGenerateMontageConfiguration::execute()
   }
 
   if (m_StageTiles.size() > 0)
-	{
-		// Pass to ITK and generate montage
-		// ITK returns a new Fiji data structure to DREAM3D
+  {
+    // Pass to ITK and generate montage
+    // ITK returns a new Fiji data structure to DREAM3D
     // Store FIJI DS into SIMPL Transform DS inside the Geometry
     DataArrayPath dap(m_ImageDataContainers[0], getCommonAttributeMatrixName(), getCommonDataArrayName());
     DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(m_ImageDataContainers[0]);
     AttributeMatrix::Pointer am = dc->getAttributeMatrix(getCommonAttributeMatrixName());
     IDataArray::Pointer da = am->getAttributeArray(getCommonDataArrayName());
 
-    int numOfComponents = da->getNumberOfComponents();
-
-    if (numOfComponents == 3)
-    {
-      generateMontage< itk::RGBPixel< unsigned char >, itk::RGBPixel< unsigned int > >();
-    }
-    else if (numOfComponents == 4)
-    {
-      generateMontage< itk::RGBAPixel< unsigned char >, itk::RGBAPixel< unsigned int > >();
-    }
-    else if (numOfComponents == 1)
-    {
-      generateMontage< unsigned char, unsigned int >();
-    }
-    else
-    {
-      setErrorCondition(-5000);
-      notifyErrorMessage(getHumanLabel(), "The common data array's image type is not recognized.  Supported image types"
-                                          " are grayscale (1-component), RGB (3-component), and RGBA (4-component)",
-                         getErrorCondition());
-    }
-	}
-	/* Let the GUI know we are done with this filter */
-	notifyStatusMessage(getHumanLabel(), "Complete");
+    EXECUTE_REGISTER_FUNCTION_TEMPLATE(this, generateMontage, da);
+  }
+  /* Let the GUI know we are done with this filter */
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------
@@ -295,96 +276,94 @@ void ITKGenerateMontageConfiguration::execute()
 // -----------------------------------------------------------------------------
 void ITKGenerateMontageConfiguration::createFijiDataStructure()
 {
-	DataContainerArray* dca = getDataContainerArray().get();
-	// Loop over the data containers until we find the proper data container
+  DataContainerArray* dca = getDataContainerArray().get();
+  // Loop over the data containers until we find the proper data container
   QMutableListIterator<QString> dcNameIter(m_ImageDataContainers);
-	QStringList dcList;
-	bool dataContainerPrefixChanged = false;
+  QStringList dcList;
+  bool dataContainerPrefixChanged = false;
   if (m_ImageDataContainers.size() != (m_xMontageSize * m_yMontageSize))
-	{
-		return;
-	}
-	else
-	{
+  {
+    return;
+  }
+  else
+  {
     m_StageTiles.resize(m_yMontageSize);
-		for (unsigned i = 0; i < m_yMontageSize; i++)
-		{
+    for (unsigned i = 0; i < m_yMontageSize; i++)
+    {
         m_StageTiles[i].resize(m_xMontageSize);
-		}
-	}
+    }
+  }
 
   float tileOverlapFactor = ((100.0 - getTileOverlap()) / 100.0);
 
   QVector<size_t> cDims;
   while (dcNameIter.hasNext())
-	{
+  {
     QString dcName = dcNameIter.next();
     dcList.push_back(dcName);
     DataContainer::Pointer dcItem = dca->getPrereqDataContainer(this, dcName);
-		if (getErrorCondition() < 0 || dcItem.get() == nullptr)
-		{
-			continue;
-		}
+    if (getErrorCondition() < 0 || dcItem.get() == nullptr)
+    {
+      continue;
+    }
     ImageGeom::Pointer image = dcItem->getGeometryAs<ImageGeom>();
-	SIMPL::Tuple3SVec dimensions = image->getDimensions();
-	SIMPL::Tuple3FVec origin = image->getOrigin();
+  SIMPL::Tuple3SVec dimensions = image->getDimensions();
+  SIMPL::Tuple3FVec origin = image->getOrigin();
 
-		// Extract row and column data from the data container name
-		QString filename = ""; // Need to find this?
-		int indexOfUnderscore = dcName.lastIndexOf("_");
-		if (!dataContainerPrefixChanged)
-		{
-			m_dataContainerPrefix = dcName.left(indexOfUnderscore);
-			dataContainerPrefixChanged = true;
-		}
-		QString rowCol = dcName.right(dcName.size() - indexOfUnderscore - 1);
-		rowCol = rowCol.right(rowCol.size() - 1); // Remove 'r'
-		QStringList rowCol_Split = rowCol.split("c"); // Split by 'c'
-		int row = rowCol_Split[0].toInt();
-		int col = rowCol_Split[1].toInt();
-		itk::Tile2D tile;
-  		if ((std::get<0>(origin) == 0.0f && std::get<1>(origin) == 0.0f) || getManualTileOverlap())
-		{
-			tile.Position[0] = col * (tileOverlapFactor * std::get<0>(dimensions));
-			tile.Position[1] = row * (tileOverlapFactor * std::get<1>(dimensions));
-			image->setOrigin(tile.Position[0], tile.Position[1], 0.0f);
-		}
-		else
-		{
-			tile.Position[0] = std::get<0>(origin);
-			tile.Position[1] = std::get<1>(origin);
-		}
+    // Extract row and column data from the data container name
+    QString filename = ""; // Need to find this?
+    int indexOfUnderscore = dcName.lastIndexOf("_");
+    if (!dataContainerPrefixChanged)
+    {
+      m_dataContainerPrefix = dcName.left(indexOfUnderscore);
+      dataContainerPrefixChanged = true;
+    }
+    QString rowCol = dcName.right(dcName.size() - indexOfUnderscore - 1);
+    rowCol = rowCol.right(rowCol.size() - 1); // Remove 'r'
+    QStringList rowCol_Split = rowCol.split("c"); // Split by 'c'
+    int row = rowCol_Split[0].toInt();
+    int col = rowCol_Split[1].toInt();
+    itk::Tile2D tile;
+      if ((std::get<0>(origin) == 0.0f && std::get<1>(origin) == 0.0f) || getManualTileOverlap())
+    {
+      tile.Position[0] = col * (tileOverlapFactor * std::get<0>(dimensions));
+      tile.Position[1] = row * (tileOverlapFactor * std::get<1>(dimensions));
+      image->setOrigin(tile.Position[0], tile.Position[1], 0.0f);
+    }
+    else
+    {
+      tile.Position[0] = std::get<0>(origin);
+      tile.Position[1] = std::get<1>(origin);
+    }
     tile.FileName = "";   // This code gets its data from memory, not from a file
 
     m_StageTiles[row][col] = tile;
 
     int err = 0;
     AttributeMatrix::Pointer am = dcItem->getPrereqAttributeMatrix(this, getCommonAttributeMatrixName(), err);
-	}
+  }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template< typename PixelType, typename AccumulatePixelType >
+template< typename PixelType >
 void ITKGenerateMontageConfiguration::generateMontage(int peakMethodToUse, unsigned streamSubdivisions)
 {
-	using ScalarPixelType = typename itk::NumericTraits< PixelType >::ValueType;
-	constexpr unsigned Dimension = 2;
-	using AffineType = itk::AffineTransform< double, 3 >;
-	using PointType = itk::Point<double, Dimension>;
-	using VectorType = itk::Vector<double, Dimension>;
-	using TransformType = itk::TranslationTransform< double, Dimension >;
-	using ScalarImageType = itk::Dream3DImage< ScalarPixelType, Dimension >;
-	using OriginalImageType = itk::Dream3DImage< PixelType, Dimension >; // possibly RGB instead of scalar
-	using MontageType = itk::TileMontage< ScalarImageType >;
-	using PCMType = itk::PhaseCorrelationImageRegistrationMethod<ScalarImageType, ScalarImageType>;
-	typename ScalarImageType::SpacingType sp;
-	sp.Fill(1.0); // assume unit spacing
+  using ScalarPixelType = typename itk::NumericTraits< PixelType >::ValueType;
+  constexpr unsigned Dimension = 2;
+  using AffineType = itk::AffineTransform< double, 3 >;
+//	using PointType = itk::Point<double, Dimension>;
+  using TransformType = itk::TranslationTransform< double, Dimension >;
+  using ScalarImageType = itk::Dream3DImage< ScalarPixelType, Dimension >;
+  using MontageType = itk::TileMontage< ScalarImageType >;
+  using PCMType = itk::PhaseCorrelationImageRegistrationMethod<ScalarImageType, ScalarImageType>;
+  typename ScalarImageType::SpacingType sp;
+  sp.Fill(1.0); // assume unit spacing
 
-	using PeakInterpolationType = typename itk::MaxPhaseCorrelationOptimizer<PCMType>::PeakInterpolationMethod;
-	using PeakFinderUnderlying = typename std::underlying_type<PeakInterpolationType>::type;
-	auto peakMethod = static_cast<PeakFinderUnderlying>(peakMethodToUse);
+  using PeakInterpolationType = typename itk::MaxPhaseCorrelationOptimizer<PCMType>::PeakInterpolationMethod;
+  using PeakFinderUnderlying = typename std::underlying_type<PeakInterpolationType>::type;
+  auto peakMethod = static_cast<PeakFinderUnderlying>(peakMethodToUse);
 
   unsigned x1 = 1;
   unsigned y1 = 1;
@@ -398,92 +377,90 @@ void ITKGenerateMontageConfiguration::generateMontage(int peakMethodToUse, unsig
   }
 
 //  PointType originAdjustment = m_StageTiles[y1][x1].Position - m_StageTiles[0][0].Position;
-  PointType originAdjustment = m_StageTiles[m_xMontageSize - 1][m_yMontageSize - 1].Position;
 
   typename MontageType::TileIndexType ind;
 
   // Create tile montage
-	typename MontageType::Pointer montage = MontageType::New();
-	montage->SetMontageSize({ m_xMontageSize, m_yMontageSize });
-	montage->GetModifiablePCM()->SetPaddingMethod(PCMType::PaddingMethod::MirrorWithExponentialDecay);
-	montage->GetModifiablePCMOptimizer()->SetPeakInterpolationMethod(static_cast<PeakInterpolationType>(peakMethod));
+  typename MontageType::Pointer montage = MontageType::New();
+  montage->SetMontageSize({ m_xMontageSize, m_yMontageSize });
+  montage->GetModifiablePCM()->SetPaddingMethod(PCMType::PaddingMethod::MirrorWithExponentialDecay);
+  montage->GetModifiablePCMOptimizer()->SetPeakInterpolationMethod(static_cast<PeakInterpolationType>(peakMethod));
 //  montage->SetOriginAdjustment(originAdjustment);
-	montage->SetForcedSpacing(sp);
+  montage->SetForcedSpacing(sp);
 
   // Set tile image data from DREAM3D structure into tile montage
-	for (unsigned y = 0; y < m_yMontageSize; y++)
-	{
-		ind[1] = y;
-		for (unsigned x = 0; x < m_xMontageSize; x++)
-		{
-			ind[0] = x;
-			typedef itk::InPlaceDream3DDataToImageFilter <ScalarPixelType, Dimension > toITKType;
-			typename toITKType::Pointer toITK = toITKType::New();
-			DataContainer::Pointer imageDC = GetImageDataContainer(y, x);
-			// Check the resolution and fix if necessary
-			SIMPL::Tuple3FVec resolution = imageDC->getGeometryAs<ImageGeom>()->getResolution();
+  for (unsigned y = 0; y < m_yMontageSize; y++)
+  {
+    ind[1] = y;
+    for (unsigned x = 0; x < m_xMontageSize; x++)
+    {
+      ind[0] = x;
+      typedef itk::InPlaceDream3DDataToImageFilter <ScalarPixelType, Dimension > toITKType;
+      typename toITKType::Pointer toITK = toITKType::New();
+      DataContainer::Pointer imageDC = GetImageDataContainer(y, x);
 
-			toITK->SetInput(imageDC);
-			toITK->SetInPlace(true);
-			toITK->SetAttributeMatrixArrayName(getCommonAttributeMatrixName().toStdString());
-			toITK->SetDataArrayName(getCommonDataArrayName().toStdString());
-			toITK->Update();
+      toITK->SetInput(imageDC);
+      toITK->SetInPlace(true);
+      toITK->SetAttributeMatrixArrayName(getCommonAttributeMatrixName().toStdString());
+      toITK->SetDataArrayName(getCommonDataArrayName().toStdString());
+      toITK->Update();
 
             typename ScalarImageType::Pointer image = toITK->GetOutput();
       montage->SetInputTile(ind, image);
-		}
+    }
   }
 
   montage->Modified();
 
   // Execute the tile registrations
-	notifyStatusMessage(getHumanLabel(), "Doing the tile registrations");
+  notifyStatusMessage(getHumanLabel(), "Doing the tile registrations");
 
   itk::ProgressObserver* progressObs = new itk::ProgressObserver();
   progressObs->setFilter(this);
   progressObs->setMessagePrefix("Registering Tiles");
-  montage->AddObserver(itk::ProgressEvent(), progressObs);
+  unsigned long progressObsTag = montage->AddObserver(itk::ProgressEvent(), progressObs);
 
-	montage->Update();
+  montage->Update();
 
-  montage->RemoveAllObservers();
-	notifyStatusMessage(getHumanLabel(), "Finished the tile registrations");
+  montage->RemoveObserver(progressObsTag);
+  notifyStatusMessage(getHumanLabel(), "Finished the tile registrations");
 
   // Store tile registration transforms in DREAM3D data containers
-	for (unsigned y = 0; y < m_yMontageSize; y++)
-	{
-		ind[1] = y;
-		for (unsigned x = 0; x < m_xMontageSize; x++)
-		{
-			ind[0] = x;
-			const TransformType* regTr = montage->GetOutputTransform(ind);
-			DataContainer::Pointer imageDC = GetImageDataContainer(y, x);
-			ImageGeom::Pointer image = imageDC->getGeometryAs<ImageGeom>();
+  for (unsigned y = 0; y < m_yMontageSize; y++)
+  {
+    ind[1] = y;
+    for (unsigned x = 0; x < m_xMontageSize; x++)
+    {
+      ind[0] = x;
+      const TransformType* regTr = montage->GetOutputTransform(ind);
+      auto offset = regTr->GetOffset();
+      DataContainer::Pointer imageDC = GetImageDataContainer(y, x);
+      ImageGeom::Pointer image = imageDC->getGeometryAs<ImageGeom>();
 
-			// Create an ITK affine transform as a reference
-			AffineType::Pointer itkAffine = AffineType::New();
-			AffineType::TranslationType t;
-			t.Fill(0);
-			for (unsigned i = 0; i < TransformType::SpaceDimension; i++)
-			{
-				t[i] = regTr->GetOffset()[i];
-			}
-			itkAffine->SetTranslation(t);
+      // Create an ITK affine transform as a reference
+      AffineType::Pointer itkAffine = AffineType::New();
+      AffineType::TranslationType t;
+      t.Fill(0);
+      for (unsigned i = 0; i < TransformType::SpaceDimension; i++)
+      {
+        t[i] = regTr->GetOffset()[i];
+      }
+      itkAffine->SetTranslation(t);
 
-			TransformContainer::Pointer transformContainer = GetTransformContainerFromITKAffineTransform(itkAffine);
-			auto containerParameters = transformContainer->getParameters();
-			auto containerFixedParameters = transformContainer->getFixedParameters();
-			using FilterType = itk::TransformToDream3DITransformContainer<double, 3>;
+      TransformContainer::Pointer transformContainer = GetTransformContainerFromITKAffineTransform(itkAffine);
+      auto containerParameters = transformContainer->getParameters();
+      auto containerFixedParameters = transformContainer->getFixedParameters();
+      using FilterType = itk::TransformToDream3DITransformContainer<double, 3>;
 
-			FilterType::Pointer filter = FilterType::New();
-			filter->SetInput(itkAffine);
-			filter->Update();
-			::ITransformContainer::Pointer convertedITransformContainer = filter->GetOutput()->Get();
-			::TransformContainer::Pointer convertedTransformContainer = std::dynamic_pointer_cast<::TransformContainer>(convertedITransformContainer);
+      FilterType::Pointer filter = FilterType::New();
+      filter->SetInput(itkAffine);
+      filter->Update();
+      ::ITransformContainer::Pointer convertedITransformContainer = filter->GetOutput()->Get();
+      ::TransformContainer::Pointer convertedTransformContainer = std::dynamic_pointer_cast<::TransformContainer>(convertedITransformContainer);
 
-			image->setTransformContainer(convertedTransformContainer);
-		}
-	}
+      image->setTransformContainer(convertedTransformContainer);
+    }
+  }
 
   delete progressObs;
 }
@@ -493,31 +470,31 @@ void ITKGenerateMontageConfiguration::generateMontage(int peakMethodToUse, unsig
 // -----------------------------------------------------------------------------
 DataContainer::Pointer ITKGenerateMontageConfiguration::GetImageDataContainer(int y, int x)
 {
-	DataContainerArray* dca = getDataContainerArray().get();
-	// Loop over the data containers until we find the proper data container
+  DataContainerArray* dca = getDataContainerArray().get();
+  // Loop over the data containers until we find the proper data container
   QMutableListIterator<QString> dcNameIter(m_ImageDataContainers);
-	QStringList dcList;
+  QStringList dcList;
   while (dcNameIter.hasNext())
-	{
+  {
     QString dcName = dcNameIter.next();
-		dcList.push_back(dcName);
-		DataContainer::Pointer dcItem = dca->getPrereqDataContainer(this, dcName);
-		if (getErrorCondition() < 0 || dcItem.get() == nullptr)
-		{
-			continue;
-		}
+    dcList.push_back(dcName);
+    DataContainer::Pointer dcItem = dca->getPrereqDataContainer(this, dcName);
+    if (getErrorCondition() < 0 || dcItem.get() == nullptr)
+    {
+      continue;
+    }
 
-		QString rowCol = dcName.right(dcName.size() - dcName.lastIndexOf("_") - 1);
-		rowCol = rowCol.right(rowCol.size() - 1); // Remove 'r'
-		QStringList rowCol_Split = rowCol.split("c"); // Split by 'c'
-		int row = rowCol_Split[0].toInt();
-		int col = rowCol_Split[1].toInt();
-		if (row == y && col == x)
-		{
-			return dcItem;
-		}
-	}
-	return nullptr;
+    QString rowCol = dcName.right(dcName.size() - dcName.lastIndexOf("_") - 1);
+    rowCol = rowCol.right(rowCol.size() - 1); // Remove 'r'
+    QStringList rowCol_Split = rowCol.split("c"); // Split by 'c'
+    int row = rowCol_Split[0].toInt();
+    int col = rowCol_Split[1].toInt();
+    if (row == y && col == x)
+    {
+      return dcItem;
+    }
+  }
+  return nullptr;
 }
 
 
@@ -526,29 +503,29 @@ DataContainer::Pointer ITKGenerateMontageConfiguration::GetImageDataContainer(in
 // -----------------------------------------------------------------------------
 typename TransformContainer::Pointer ITKGenerateMontageConfiguration::GetTransformContainerFromITKAffineTransform(const AffineType::Pointer& itkAffine)
 {
-	auto parameters = itkAffine->GetParameters();
-	auto fixedParameters = itkAffine->GetFixedParameters();
-	auto itkAffineName = itkAffine->GetTransformTypeAsString();
+  auto parameters = itkAffine->GetParameters();
+  auto fixedParameters = itkAffine->GetFixedParameters();
+  auto itkAffineName = itkAffine->GetTransformTypeAsString();
 
-	std::vector<::TransformContainer::ParametersValueType> dream3DParameters(parameters.GetSize());
-	std::vector<::TransformContainer::ParametersValueType> dream3DFixedParameters(fixedParameters.GetSize());
-	for (size_t p = 0; p < dream3DParameters.size(); p++)
-	{
-		dream3DParameters[p] = parameters[p];
-	}
-	for (size_t p = 0; p < dream3DFixedParameters.size(); p++)
-	{
-		dream3DFixedParameters[p] = fixedParameters[p];
-	}
-	// Create a SIMPL transform container and manually convert the ITK transform to
-	// a SIMPL transform container.
-	TransformContainer::Pointer transformContainer = TransformContainer::New();
-	transformContainer->setTransformTypeAsString(itkAffineName);
-	transformContainer->setMovingName("");
-	transformContainer->setReferenceName("World");
-	transformContainer->setFixedParameters(dream3DFixedParameters);
-	transformContainer->setParameters(dream3DParameters);
-	return transformContainer;
+  std::vector<::TransformContainer::ParametersValueType> dream3DParameters(parameters.GetSize());
+  std::vector<::TransformContainer::ParametersValueType> dream3DFixedParameters(fixedParameters.GetSize());
+  for (size_t p = 0; p < dream3DParameters.size(); p++)
+  {
+    dream3DParameters[p] = parameters[p];
+  }
+  for (size_t p = 0; p < dream3DFixedParameters.size(); p++)
+  {
+    dream3DFixedParameters[p] = fixedParameters[p];
+  }
+  // Create a SIMPL transform container and manually convert the ITK transform to
+  // a SIMPL transform container.
+  TransformContainer::Pointer transformContainer = TransformContainer::New();
+  transformContainer->setTransformTypeAsString(itkAffineName);
+  transformContainer->setMovingName("");
+  transformContainer->setReferenceName("World");
+  transformContainer->setFixedParameters(dream3DFixedParameters);
+  transformContainer->setParameters(dream3DParameters);
+  return transformContainer;
 }
 
 // -----------------------------------------------------------------------------
@@ -557,13 +534,13 @@ typename TransformContainer::Pointer ITKGenerateMontageConfiguration::GetTransfo
 AbstractFilter::Pointer ITKGenerateMontageConfiguration::newFilterInstance(bool copyFilterParameters) const
 {
   ITKGenerateMontageConfiguration::Pointer filter = ITKGenerateMontageConfiguration::New();
-	if (copyFilterParameters)
-	{
-		filter->setFilterParameters(getFilterParameters());
-		// We are going to hand copy all of the parameters because the other way of copying the parameters are going to
-		// miss some of them because we are not enumerating all of them.
-	}
-	return filter;
+  if (copyFilterParameters)
+  {
+    filter->setFilterParameters(getFilterParameters());
+    // We are going to hand copy all of the parameters because the other way of copying the parameters are going to
+    // miss some of them because we are not enumerating all of them.
+  }
+  return filter;
 }
 
 // -----------------------------------------------------------------------------
@@ -571,7 +548,7 @@ AbstractFilter::Pointer ITKGenerateMontageConfiguration::newFilterInstance(bool 
 // -----------------------------------------------------------------------------
 const QString ITKGenerateMontageConfiguration::getCompiledLibraryName() const
 {
-	return ITKImageProcessingConstants::ITKImageProcessingBaseName;
+  return ITKImageProcessingConstants::ITKImageProcessingBaseName;
 }
 
 // -----------------------------------------------------------------------------
@@ -579,7 +556,7 @@ const QString ITKGenerateMontageConfiguration::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 const QString ITKGenerateMontageConfiguration::getBrandingString() const
 {
-	return "ITKImageProcessing";
+  return "ITKImageProcessing";
 }
 
 // -----------------------------------------------------------------------------
@@ -587,17 +564,17 @@ const QString ITKGenerateMontageConfiguration::getBrandingString() const
 // -----------------------------------------------------------------------------
 const QString ITKGenerateMontageConfiguration::getFilterVersion() const
 {
-	QString version;
-	QTextStream vStream(&version);
-	vStream << ITKImageProcessing::Version::Major() << "." << ITKImageProcessing::Version::Minor() << "." << ITKImageProcessing::Version::Patch();
-	return version;
+  QString version;
+  QTextStream vStream(&version);
+  vStream << ITKImageProcessing::Version::Major() << "." << ITKImageProcessing::Version::Minor() << "." << ITKImageProcessing::Version::Patch();
+  return version;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ITKGenerateMontageConfiguration::getGroupName() const
 {
-	return SIMPL::FilterGroups::IOFilters;
+  return SIMPL::FilterGroups::IOFilters;
 }
 
 // -----------------------------------------------------------------------------
@@ -605,7 +582,7 @@ const QString ITKGenerateMontageConfiguration::getGroupName() const
 // -----------------------------------------------------------------------------
 const QUuid ITKGenerateMontageConfiguration::getUuid()
 {
-	return QUuid("{4388723b-cc16-3477-ac6f-fe0107107e74}");
+  return QUuid("{4388723b-cc16-3477-ac6f-fe0107107e74}");
 }
 
 // -----------------------------------------------------------------------------
@@ -613,7 +590,7 @@ const QUuid ITKGenerateMontageConfiguration::getUuid()
 // -----------------------------------------------------------------------------
 const QString ITKGenerateMontageConfiguration::getSubGroupName() const
 {
-	return SIMPL::FilterSubGroups::GenerationFilters;
+  return SIMPL::FilterSubGroups::GenerationFilters;
 }
 
 // -----------------------------------------------------------------------------
@@ -621,5 +598,5 @@ const QString ITKGenerateMontageConfiguration::getSubGroupName() const
 // -----------------------------------------------------------------------------
 const QString ITKGenerateMontageConfiguration::getHumanLabel() const
 {
-	return "Generate Montage Configuration";
+  return "Generate Montage Configuration";
 }
