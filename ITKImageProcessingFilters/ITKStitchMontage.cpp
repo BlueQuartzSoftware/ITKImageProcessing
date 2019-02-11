@@ -57,6 +57,7 @@
 #include "SIMPLib/ITK/itkInPlaceImageToDream3DDataFilter.h"
 #include "SIMPLib/ITK/itkDream3DFilterInterruption.h"
 #include "SIMPLib/ITK/itkProgressObserver.hpp"
+#include "SIMPLib/ITK/itkTemplateHelpers.h"
 
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
@@ -345,28 +346,8 @@ void ITKStitchMontage::execute()
     AttributeMatrix::Pointer am = dc->getAttributeMatrix(getCommonAttributeMatrixName());
     IDataArray::Pointer da = am->getAttributeArray(getCommonDataArrayName());
 
-    int numOfComponents = da->getNumberOfComponents();
-
-    if (numOfComponents == 3)
-    {
-      stitchMontage< itk::RGBPixel< unsigned char >, itk::RGBPixel< unsigned int > >();
-    }
-    else if (numOfComponents == 4)
-    {
-      stitchMontage< itk::RGBAPixel< unsigned char >, itk::RGBAPixel< unsigned int > >();
-    }
-    else if (numOfComponents == 1)
-    {
-      stitchMontage< unsigned char, unsigned int >();
-    }
-    else
-    {
-      setErrorCondition(-5000);
-      notifyErrorMessage(getHumanLabel(), "The common data array's image type is not recognized.  Supported image types"
-                                          " are grayscale (1-component), RGB (3-component), and RGBA (4-component)",
-                         getErrorCondition());
-    }
-	}
+    EXECUTE_STITCH_FUNCTION_TEMPLATE(this, stitchMontage, da);
+  }
 	/* Let the GUI know we are done with this filter */
 	notifyStatusMessage(getHumanLabel(), "Complete");
 }
@@ -528,13 +509,13 @@ void ITKStitchMontage::stitchMontage(int peakMethodToUse, unsigned streamSubdivi
   itk::ProgressObserver* progressObs = new itk::ProgressObserver();
   progressObs->setFilter(this);
   progressObs->setMessagePrefix("Stitching Tiles Together");
-  resampleF->AddObserver(itk::ProgressEvent(), progressObs);
+  unsigned long progressObsTag = resampleF->AddObserver(itk::ProgressEvent(), progressObs);
 
   resampleF->Update();
   notifyStatusMessage(getHumanLabel(), "Finished resampling tiles");
   notifyStatusMessage(getHumanLabel(), "Converting into DREAM3D data structure");
 
-  resampleF->RemoveAllObservers();
+  resampleF->RemoveObserver(progressObsTag);
 
   // Convert montaged image into DREAM3D data structure
   DataArrayPath dataArrayPath(getMontageDataContainerName(), getMontageAttributeMatrixName(), getMontageDataArrayName());
