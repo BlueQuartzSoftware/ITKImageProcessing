@@ -230,15 +230,8 @@ void ITKImageReader::execute()
   {
     return;
   }
-<<<<<<< HEAD
   DataArrayPath dap(getDataContainerName(), getCellAttributeMatrixName(), getImageDataArrayName());
   readImage(dap, false);
-=======
-
-  // dataCheck() function does all of the execution work.
-
-  notifyStatusMessage(getHumanLabel(), "Complete");
->>>>>>> Adding caching API to ITKImageReader.
 }
 
 // -----------------------------------------------------------------------------
