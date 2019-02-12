@@ -420,7 +420,7 @@ void ITKStitchMontage::createFijiDataStructure()
 
     m_StageTiles[row][col] = tile;
 
-    int err;
+    int err = 0;
     AttributeMatrix::Pointer am = dcItem->getPrereqAttributeMatrix(this, getCommonAttributeMatrixName(), err);
 	}
 }
