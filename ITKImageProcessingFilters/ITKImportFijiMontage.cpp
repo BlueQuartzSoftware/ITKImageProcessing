@@ -204,6 +204,8 @@ void ITKImportFijiMontage::dataCheck()
 
     QVector<size_t> cDims(1, 1);
 
+    size_t totalImageCount = fijiFileData.size() * fijiFileData[0].size();
+    int currentImageCount = 1;
     for (int row = 0; row < fijiFileData.size(); row++)
     {
       itk::FijiRowData fijiRowData = fijiFileData[row];
@@ -216,7 +218,16 @@ void ITKImportFijiMontage::dataCheck()
           return;
         }
 
+        if (!getInPreflight())
+        {
+          QString imagePath = fijiImageData.filePath;
+          QFileInfo imageFi(imagePath);
+          notifyStatusMessage(getHumanLabel(), tr("[%1/%2]: Reading image '%3'").arg(currentImageCount)
+                              .arg(totalImageCount).arg(imageFi.fileName()));
+        }
+
         readImageFile(fijiImageData);
+        currentImageCount++;
       }
     }
 
