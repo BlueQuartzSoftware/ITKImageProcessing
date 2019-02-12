@@ -506,10 +506,10 @@ void ITKStitchMontage::stitchMontage(int peakMethodToUse, unsigned streamSubdivi
 
   notifyStatusMessage(getHumanLabel(), "Resampling tiles into the stitched image");
 
-  itk::ProgressObserver* progressObs = new itk::ProgressObserver();
+  itk::ProgressObserver::Pointer progressObs = itk::ProgressObserver::New();
   progressObs->setFilter(this);
   progressObs->setMessagePrefix("Stitching Tiles Together");
-  unsigned long progressObsTag = resampleF->AddObserver(itk::ProgressEvent(), progressObs);
+  unsigned long progressObsTag = resampleF->AddObserver(itk::ProgressEvent(), progressObs.get());
 
   resampleF->Update();
   notifyStatusMessage(getHumanLabel(), "Finished resampling tiles");
@@ -529,8 +529,6 @@ void ITKStitchMontage::stitchMontage(int peakMethodToUse, unsigned streamSubdivi
   toDream3DFilter->SetDataArrayName(dataArrayPath.getDataArrayName().toStdString());
   toDream3DFilter->SetDataContainer(container);
   toDream3DFilter->Update();
-
-  delete progressObs;
 }
 
 // -----------------------------------------------------------------------------
