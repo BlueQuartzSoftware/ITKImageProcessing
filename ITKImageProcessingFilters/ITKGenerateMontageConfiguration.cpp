@@ -415,10 +415,10 @@ void ITKGenerateMontageConfiguration::generateMontage(int peakMethodToUse, unsig
   // Execute the tile registrations
   notifyStatusMessage(getHumanLabel(), "Doing the tile registrations");
 
-  itk::ProgressObserver* progressObs = new itk::ProgressObserver();
+  itk::ProgressObserver::Pointer progressObs = itk::ProgressObserver::New();
   progressObs->setFilter(this);
   progressObs->setMessagePrefix("Registering Tiles");
-  unsigned long progressObsTag = montage->AddObserver(itk::ProgressEvent(), progressObs);
+  unsigned long progressObsTag = montage->AddObserver(itk::ProgressEvent(), progressObs.get());
 
   montage->Update();
 
@@ -461,8 +461,6 @@ void ITKGenerateMontageConfiguration::generateMontage(int peakMethodToUse, unsig
       image->setTransformContainer(convertedTransformContainer);
     }
   }
-
-  delete progressObs;
 }
 
 // -----------------------------------------------------------------------------
