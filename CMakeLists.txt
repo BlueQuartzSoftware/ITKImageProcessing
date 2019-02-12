@@ -41,7 +41,7 @@ include(${SIMPLProj_SOURCE_DIR}/Source/SIMPLib/SIMPLibMacros.cmake)
 ## Then do not forget to add "${ITK_LIBRARIES}" to the target_link_libraries below
 # --------------------------------------------------------------------
 # ITK Include
-set(DREAM3D_ADDITIONAL_ITK_MODULES
+set(ADDITIONAL_ITK_MODULES
     ITKIOImageBase
     ITKImageNoise
     ITKIOBMP
@@ -61,13 +61,13 @@ set(DREAM3D_ADDITIONAL_ITK_MODULES
     ITKTestKernel
     Montage
     )
-    
+
 option(${PLUGIN_NAME}_ENABLE_SCIFIO "Enable SCIFIO ITK Modules" OFF)
 set(DREAM3D_ADDITIONAL_INSTALL_ITK_DIRECTORIES "")
 if(${${PLUGIN_NAME}_ENABLE_SCIFIO})
   message(STATUS "${PLUGIN_NAME} Enabling SCIFIO Module")
-  set( DREAM3D_ADDITIONAL_ITK_MODULES
-      ${DREAM3D_ADDITIONAL_ITK_MODULES}
+  set( ADDITIONAL_ITK_MODULES
+      ${ADDITIONAL_ITK_MODULES}
       SCIFIO
      )
   set(DREAM3D_ADDITIONAL_INSTALL_ITK_DIRECTORIES
@@ -76,7 +76,7 @@ if(${${PLUGIN_NAME}_ENABLE_SCIFIO})
   )
 endif()
 
-set_property(GLOBAL APPEND PROPERTY ADDITIONAL_ITK_MODULES ${DREAM3D_ADDITIONAL_ITK_MODULES})
+set_property(GLOBAL APPEND PROPERTY ADDITIONAL_ITK_MODULES ${ADDITIONAL_ITK_MODULES})
 set_property(GLOBAL APPEND PROPERTY ADDITIONAL_INSTALL_ITK_DIRECTORIES ${DREAM3D_ADDITIONAL_INSTALL_ITK_DIRECTORIES})
 
 include(${CMP_SOURCE_DIR}/ITKSupport/IncludeITK.cmake)
@@ -223,8 +223,8 @@ target_sources(${plug_target_name}
 
 )
 
-#------------------------------- 
-# 
+#-------------------------------
+#
 target_include_directories(${plug_target_name}
                           PUBLIC
                               ${${PLUGIN_NAME}_BINARY_DIR}
@@ -275,17 +275,17 @@ if(BUILD_TESTING)
   include(${${PLUGIN_NAME}_SOURCE_DIR}/Test/CMakeLists.txt)
 endif()
 
-# -------------------------------------------------------------------- 
-# If Python Wrapping is enabled then generate the Python module code 
+# --------------------------------------------------------------------
+# If Python Wrapping is enabled then generate the Python module code
 if(SIMPL_WRAP_PYTHON)
   include("${SIMPLProj_SOURCE_DIR}/Wrapping/Python/Pybind11/cmake/WrappingFunctions.cmake")
-  string(TOLOWER ${PLUGIN_NAME} PLUGIN_NAME_lower) 
-  CreatePybind11Module(MODULE_NAME ${PLUGIN_NAME} 
-                    SOURCE_DIR "${${PLUGIN_NAME}_SOURCE_DIR}/${PLUGIN_NAME}Filters" 
-                    PATH_TO_STRIP "${PLUGIN_NAME}/${PLUGIN_NAME}Filters" 
-                    OUTPUT_PATH "${${PLUGIN_NAME}_BINARY_DIR}/Wrapping/PythonCore" 
-                    BINARY_DIR "${${PLUGIN_NAME}_BINARY_DIR}" 
-                    MODULE_TEMPLATE_FILE "${SIMPLProj_SOURCE_DIR}/Wrapping/Python/Pybind11/Templates/PluginModuleCodeTemplate.in.cpp" 
+  string(TOLOWER ${PLUGIN_NAME} PLUGIN_NAME_lower)
+  CreatePybind11Module(MODULE_NAME ${PLUGIN_NAME}
+                    SOURCE_DIR "${${PLUGIN_NAME}_SOURCE_DIR}/${PLUGIN_NAME}Filters"
+                    PATH_TO_STRIP "${PLUGIN_NAME}/${PLUGIN_NAME}Filters"
+                    OUTPUT_PATH "${${PLUGIN_NAME}_BINARY_DIR}/Wrapping/PythonCore"
+                    BINARY_DIR "${${PLUGIN_NAME}_BINARY_DIR}"
+                    MODULE_TEMPLATE_FILE "${SIMPLProj_SOURCE_DIR}/Wrapping/Python/Pybind11/Templates/PluginModuleCodeTemplate.in.cpp"
                     MODULE_LINK_LIBRARIES ${plug_target_name} ${ITK_LIBRARIES}
   )
 endif()
