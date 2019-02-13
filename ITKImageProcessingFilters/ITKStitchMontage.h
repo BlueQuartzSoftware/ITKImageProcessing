@@ -224,11 +224,37 @@ protected:
 	typename TransformContainer::Pointer GetTransformContainerFromITKAffineTransform(const AffineType::Pointer& itkAffine);
 
 private:
+  static constexpr unsigned Dimension = 2;
   itk::TileLayout2D m_StageTiles;
   itk::TileLayout2D m_ActualTiles;
 	unsigned int m_xMontageSize;
 	unsigned int m_yMontageSize;
 	QString m_dataContainerPrefix;
+
+  /**
+   * @brief createResampler
+   */
+  template<typename PixelType, typename Resampler>
+  typename Resampler::Pointer createResampler();
+
+  /**
+   * @brief initializeResampler
+   */
+  template<typename PixelType, typename MontageType, typename Resampler>
+  void initializeResampler(typename Resampler::Pointer resampler);
+
+  /**
+   * @brief stitchMontageHelper
+   * @param resampler
+   */
+  template<typename PixelType, typename Resampler>
+  void executeStitching(typename Resampler::Pointer resampler, unsigned streamSubdivisions);
+
+  /**
+   * @brief convertMontageToD3D
+   */
+  template<typename PixelType, typename OriginalImageType>
+  void convertMontageToD3D(OriginalImageType* image);
 
 public:
   ITKStitchMontage(const ITKStitchMontage&) = delete; // Copy Constructor Not Implemented

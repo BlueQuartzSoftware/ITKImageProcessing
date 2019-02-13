@@ -40,6 +40,7 @@
 #include <QtCore/QDir>
 
 #include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/Common/TemplateHelpers.h"
 #include "SIMPLib/FilterParameters/FloatFilterParameter.h"
 #include "SIMPLib/FilterParameters/MultiDataContainerSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
@@ -57,7 +58,6 @@
 #include "SIMPLib/ITK/itkInPlaceImageToDream3DDataFilter.h"
 #include "SIMPLib/ITK/itkDream3DFilterInterruption.h"
 #include "SIMPLib/ITK/itkProgressObserver.hpp"
-#include "SIMPLib/ITK/itkTemplateHelpers.h"
 
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
@@ -67,6 +67,106 @@
 #include "itkTileMergeImageFilter.h"
 #include "itkStreamingImageFilter.h"
 #include "itkImageFileWriter.h"
+
+#define EXECUTE_STITCH_FUNCTION_TEMPLATE_HELPER(DATATYPE, filter, call, inputData, ...)                                                                                                 \
+  int numOfComponents = inputData->getNumberOfComponents();                                                                                                                                            \
+  if(numOfComponents == 3)                                                                                                                                                                             \
+  {                                                                                                                                                                                                    \
+    call<itk::RGBPixel<DATATYPE>, itk::RGBPixel<uint64_t>>(__VA_ARGS__);                                                                                                                       \
+  }                                                                                                                                                                                                    \
+  else if(numOfComponents == 4)                                                                                                                                                                        \
+  {                                                                                                                                                                                                    \
+    call<itk::RGBAPixel<DATATYPE>, itk::RGBAPixel<uint64_t>>(__VA_ARGS__);                                                                                                                     \
+  }                                                                                                                                                                                                    \
+  else if(numOfComponents == 1)                                                                                                                                                                        \
+  {                                                                                                                                                                                                    \
+    call<DATATYPE, uint64_t>(__VA_ARGS__);                                                                                                                                                     \
+  }                                                                                                                                                                                                    \
+  else                                                                                                                                                                                                 \
+  {                                                                                                                                                                                                    \
+    filter->notifyErrorMessage(filter->getHumanLabel(),                                                                                                                                                   \
+                                      "The input array's image type is not recognized.  Supported image types"                                                                                         \
+                                      " are grayscale (1-component), RGB (3-component), and RGBA (4-component)",                                                                                       \
+                                      TemplateHelpers::Errors::UnsupportedImageType);                                                                                                                  \
+  }
+
+#define EXECUTE_ACCUMULATETYPE_FUNCTION_TEMPLATE(DATATYPE, filter, call, inputData, ...)                                                                                     \
+  int numOfComponents = inputData->getNumberOfComponents();                                                                                                                                            \
+  if(numOfComponents == 3)                                                                                                                                                                             \
+  {                                                                                                                                                                                                    \
+    EXECUTE_STITCH_FUNCTION_TEMPLATE_HELPER(DATATYPE, filter, call, inputData, __VA_ARGS__);                                                                                     \
+  }                                                                                                                                                                                                    \
+  else if(numOfComponents == 4)                                                                                                                                                                        \
+  {                                                                                                                                                                                                    \
+    EXECUTE_STITCH_FUNCTION_TEMPLATE_HELPER(DATATYPE, filter, call, inputData, __VA_ARGS__);                                                                                     \
+  }                                                                                                                                                                                                    \
+  else if(numOfComponents == 1)                                                                                                                                                                        \
+  {                                                                                                                                                                                                    \
+    EXECUTE_STITCH_FUNCTION_TEMPLATE_HELPER(DATATYPE, filter, call, inputData, __VA_ARGS__);                                                                                     \
+  }                                                                                                                                                                                                    \
+  else                                                                                                                                                                                                 \
+  {                                                                                                                                                                                                    \
+    filter->notifyErrorMessage(filter->getHumanLabel(),                                                                                                                                                   \
+                                      "The input array's image type is not recognized.  Supported image types"                                                                                         \
+                                      " are grayscale (1-component), RGB (3-component), and RGBA (4-component)",                                                                                       \
+                                      TemplateHelpers::Errors::UnsupportedImageType);                                                                                                                  \
+  }
+
+#define EXECUTE_DATATYPE_FUNCTION_TEMPLATE(filter, call, inputData, ...)                                                                                                     \
+  if(TemplateHelpers::CanDynamicCast<FloatArrayType>()(inputData))                                                                                                                                     \
+  {                                                                                                                                                                                                    \
+    EXECUTE_ACCUMULATETYPE_FUNCTION_TEMPLATE(float, filter, call, inputData, __VA_ARGS__);                                                                                   \
+  }                                                                                                                                                                                                    \
+  else if(TemplateHelpers::CanDynamicCast<DoubleArrayType>()(inputData))                                                                                                                               \
+  {                                                                                                                                                                                                    \
+    EXECUTE_ACCUMULATETYPE_FUNCTION_TEMPLATE(double, filter, call, inputData, __VA_ARGS__);                                                                                  \
+  }                                                                                                                                                                                                    \
+  else if(TemplateHelpers::CanDynamicCast<Int8ArrayType>()(inputData))                                                                                                                                 \
+  {                                                                                                                                                                                                    \
+    EXECUTE_ACCUMULATETYPE_FUNCTION_TEMPLATE(int8_t, filter, call, inputData, __VA_ARGS__);                                                                                  \
+  }                                                                                                                                                                                                    \
+  else if(TemplateHelpers::CanDynamicCast<UInt8ArrayType>()(inputData))                                                                                                                                \
+  {                                                                                                                                                                                                    \
+    EXECUTE_ACCUMULATETYPE_FUNCTION_TEMPLATE(uint8_t, filter, call, inputData, __VA_ARGS__);                                                                                 \
+  }                                                                                                                                                                                                    \
+  else if(TemplateHelpers::CanDynamicCast<Int16ArrayType>()(inputData))                                                                                                                                \
+  {                                                                                                                                                                                                    \
+    EXECUTE_ACCUMULATETYPE_FUNCTION_TEMPLATE(int16_t, filter, call, inputData, __VA_ARGS__);                                                                                 \
+  }                                                                                                                                                                                                    \
+  else if(TemplateHelpers::CanDynamicCast<UInt16ArrayType>()(inputData))                                                                                                                               \
+  {                                                                                                                                                                                                    \
+    EXECUTE_ACCUMULATETYPE_FUNCTION_TEMPLATE(uint16_t, filter, call, inputData, __VA_ARGS__);                                                                                \
+  }                                                                                                                                                                                                    \
+  else if(TemplateHelpers::CanDynamicCast<Int32ArrayType>()(inputData))                                                                                                                                \
+  {                                                                                                                                                                                                    \
+    EXECUTE_ACCUMULATETYPE_FUNCTION_TEMPLATE(int32_t, filter, call, inputData, __VA_ARGS__);                                                                                 \
+  }                                                                                                                                                                                                    \
+  else if(TemplateHelpers::CanDynamicCast<UInt32ArrayType>()(inputData))                                                                                                                               \
+  {                                                                                                                                                                                                    \
+    EXECUTE_ACCUMULATETYPE_FUNCTION_TEMPLATE(uint32_t, filter, call, inputData, __VA_ARGS__);                                                                                \
+  }                                                                                                                                                                                                    \
+  else if(TemplateHelpers::CanDynamicCast<Int64ArrayType>()(inputData))                                                                                                                                \
+  {                                                                                                                                                                                                    \
+    EXECUTE_ACCUMULATETYPE_FUNCTION_TEMPLATE(int64_t, filter, call, inputData, __VA_ARGS__);                                                                                 \
+  }                                                                                                                                                                                                    \
+  else if(TemplateHelpers::CanDynamicCast<UInt64ArrayType>()(inputData))                                                                                                                               \
+  {                                                                                                                                                                                                    \
+    EXECUTE_ACCUMULATETYPE_FUNCTION_TEMPLATE(uint64_t, filter, call, inputData, __VA_ARGS__);                                                                                \
+  }                                                                                                                                                                                                    \
+  else if(TemplateHelpers::CanDynamicCast<BoolArrayType>()(inputData))                                                                                                                                 \
+  {                                                                                                                                                                                                    \
+    EXECUTE_ACCUMULATETYPE_FUNCTION_TEMPLATE(bool, filter, call, inputData, __VA_ARGS__);                                                                                    \
+  }                                                                                                                                                                                                    \
+  else if(TemplateHelpers::CanDynamicCast<DataArray<size_t>>()(inputData))                                                                                                                             \
+  {                                                                                                                                                                                                    \
+    EXECUTE_ACCUMULATETYPE_FUNCTION_TEMPLATE(size_t, filter, call, inputData, __VA_ARGS__);                                                                                  \
+  }                                                                                                                                                                                                    \
+  else                                                                                                                                                                                                 \
+  {                                                                                                                                                                                                    \
+    filter->notifyErrorMessage(filter->getHumanLabel(), "The input array's data type is not supported", TemplateHelpers::Errors::UnsupportedDataType);                                                    \
+  }
+
+#define EXECUTE_STITCH_FUNCTION_TEMPLATE(filter, call, inputData, ...) EXECUTE_DATATYPE_FUNCTION_TEMPLATE(filter, call, inputData, __VA_ARGS__)
 
 // -----------------------------------------------------------------------------
 //
@@ -432,26 +532,56 @@ template< typename PixelType, typename AccumulatePixelType >
 void ITKStitchMontage::stitchMontage(int peakMethodToUse, unsigned streamSubdivisions)
 {
   using ScalarPixelType = typename itk::NumericTraits< PixelType >::ValueType;
-  constexpr unsigned Dimension = 2;
-  using PointType = itk::Point<double, Dimension>;
   using ScalarImageType = itk::Dream3DImage< ScalarPixelType, Dimension >;
-  using OriginalImageType = itk::Dream3DImage< PixelType, Dimension >; // possibly RGB instead of scalar
+  using OriginalImageType = itk::Dream3DImage< PixelType, Dimension >;
   using MontageType = itk::TileMontage< ScalarImageType >;
-  using TransformType = itk::TranslationTransform< double, Dimension >;
-  typename ScalarImageType::SpacingType sp;
-  sp.Fill(1.0); // assume unit spacing
 
-  typename MontageType::TileIndexType ind;
-
-  // Stitch the montage together
+  // Create the resampler
   using Resampler = itk::TileMergeImageFilter<OriginalImageType, AccumulatePixelType>;
-  typename Resampler::Pointer resampleF = Resampler::New();
+  typename Resampler::Pointer resampler = createResampler<PixelType,Resampler>();
+
+  // Initialize the resampler
+  initializeResampler<PixelType,MontageType,Resampler>(resampler);
+
+  // Execute the stitching algorithm
+  executeStitching<PixelType,Resampler>(resampler, streamSubdivisions);
+
+  // Convert montaged image into DREAM3D data structure
+  convertMontageToD3D<PixelType,OriginalImageType>(resampler->GetOutput());
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+template<typename PixelType, typename Resampler>
+typename Resampler::Pointer ITKStitchMontage::createResampler()
+{
+  using ScalarPixelType = typename itk::NumericTraits< PixelType >::ValueType;
+  using ScalarImageType = itk::Dream3DImage< ScalarPixelType, Dimension >;
+
+  typename Resampler::Pointer resampler = Resampler::New();
   //resampleF->SetMontage(montage); // doesn't compile, because montage is expected
   // to be templated using itk::Image, not itk::Dream3DImage
 
-  resampleF->SetMontageSize({m_xMontageSize, m_yMontageSize});
-  resampleF->SetForcedSpacing(sp);
+  typename ScalarImageType::SpacingType sp;
+  sp.Fill(1.0); // assume unit spacing
 
+  resampler->SetMontageSize({m_xMontageSize, m_yMontageSize});
+  resampler->SetForcedSpacing(sp);
+
+  return resampler;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+template<typename PixelType, typename MontageType, typename Resampler>
+void ITKStitchMontage::initializeResampler(typename Resampler::Pointer resampler)
+{
+  using OriginalImageType = itk::Dream3DImage< PixelType, Dimension >;
+  using TransformType = itk::TranslationTransform< double, Dimension >;
+
+  typename MontageType::TileIndexType ind;
   for(unsigned y = 0; y < m_yMontageSize; y++)
   {
     ind[1] = y;
@@ -472,7 +602,7 @@ void ITKStitchMontage::stitchMontage(int peakMethodToUse, unsigned streamSubdivi
 
       typename OriginalImageType::Pointer image = toITK->GetOutput();
 
-      resampleF->SetInputTile(ind, image);
+      resampler->SetInputTile(ind, image);
 
       typename MontageType::TransformPointer regTr = MontageType::TransformType::New();
       ::ITransformContainer::Pointer transformContainer = geom->getTransformContainer();
@@ -494,36 +624,51 @@ void ITKStitchMontage::stitchMontage(int peakMethodToUse, unsigned streamSubdivi
         regTr->SetOffset(offset);
       }
 
-      resampleF->SetTileTransform(ind, regTr);
+      resampler->SetTileTransform(ind, regTr);
     }
   }
+}
 
-  using Dream3DImageType = itk::Dream3DImage<PixelType, Dimension>;
-  using StreamingFilterType = itk::StreamingImageFilter<OriginalImageType, Dream3DImageType>;
-  typename StreamingFilterType::Pointer streamingFilter = StreamingFilterType::New();
-  streamingFilter->SetInput(resampleF->GetOutput());
-  streamingFilter->SetNumberOfStreamDivisions(streamSubdivisions);
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+template<typename PixelType, typename Resampler>
+void ITKStitchMontage::executeStitching(typename Resampler::Pointer resampler, unsigned streamSubdivisions)
+{
+  using OriginalImageType = itk::Dream3DImage< PixelType, Dimension >;
 
   notifyStatusMessage(getHumanLabel(), "Resampling tiles into the stitched image");
 
   itk::ProgressObserver::Pointer progressObs = itk::ProgressObserver::New();
   progressObs->setFilter(this);
   progressObs->setMessagePrefix("Stitching Tiles Together");
-  unsigned long progressObsTag = resampleF->AddObserver(itk::ProgressEvent(), progressObs.get());
+  unsigned long progressObsTag = resampler->AddObserver(itk::ProgressEvent(), progressObs.get());
 
-  resampleF->Update();
+  using Dream3DImageType = itk::Dream3DImage<PixelType, Dimension>;
+  using StreamingFilterType = itk::StreamingImageFilter<OriginalImageType, Dream3DImageType>;
+  typename StreamingFilterType::Pointer streamingFilter = StreamingFilterType::New();
+  streamingFilter->SetInput(resampler->GetOutput());
+  streamingFilter->SetNumberOfStreamDivisions(streamSubdivisions);
+
+  streamingFilter->Update();
   notifyStatusMessage(getHumanLabel(), "Finished resampling tiles");
   notifyStatusMessage(getHumanLabel(), "Converting into DREAM3D data structure");
 
-  resampleF->RemoveObserver(progressObsTag);
+  resampler->RemoveObserver(progressObsTag);
+}
 
-  // Convert montaged image into DREAM3D data structure
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+template<typename PixelType, typename OriginalImageType>
+void ITKStitchMontage::convertMontageToD3D(OriginalImageType* image)
+{
   DataArrayPath dataArrayPath(getMontageDataContainerName(), getMontageAttributeMatrixName(), getMontageDataArrayName());
   DataContainer::Pointer container = getDataContainerArray()->getDataContainer(dataArrayPath.getDataContainerName());
 
   using ToDream3DType = itk::InPlaceImageToDream3DDataFilter<PixelType, Dimension>;
   typename ToDream3DType::Pointer toDream3DFilter = ToDream3DType::New();
-  toDream3DFilter->SetInput(resampleF->GetOutput());
+  toDream3DFilter->SetInput(image);
   toDream3DFilter->SetInPlace(true);
   toDream3DFilter->SetAttributeMatrixArrayName(dataArrayPath.getAttributeMatrixName().toStdString());
   toDream3DFilter->SetDataArrayName(dataArrayPath.getDataArrayName().toStdString());
