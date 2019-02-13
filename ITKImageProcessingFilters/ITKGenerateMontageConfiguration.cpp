@@ -35,9 +35,12 @@
 
 #include "ITKGenerateMontageConfiguration.h"
 
+#include <type_traits>
+
 #include <QtCore/QDir>
 
 #include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/Common/TemplateHelpers.h"
 #include "SIMPLib/FilterParameters/FloatFilterParameter.h"
 #include "SIMPLib/FilterParameters/MultiDataContainerSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
@@ -53,7 +56,6 @@
 #include "SIMPLib/ITK/itkInPlaceImageToDream3DDataFilter.h"
 #include "SIMPLib/ITK/itkDream3DFilterInterruption.h"
 #include "SIMPLib/ITK/itkProgressObserver.hpp"
-#include "SIMPLib/ITK/itkTemplateHelpers.h"
 
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
@@ -63,6 +65,85 @@
 #include "itkTileMergeImageFilter.h"
 #include "itkStreamingImageFilter.h"
 #include "itkImageFileWriter.h"
+#include "itkRGBToLuminanceImageFilter.h"
+
+#define EXECUTE_REGISTER_FUNCTION_TEMPLATE_HELPER(DATATYPE, filter, rgb_call, grayscale_call, inputData, ...)                                                                                          \
+  int numOfComponents = inputData->getNumberOfComponents();                                                                                                                                            \
+  if(numOfComponents == 3)                                                                                                                                                                             \
+  {                                                                                                                                                                                                    \
+    rgb_call<itk::RGBPixel<DATATYPE>>(__VA_ARGS__);                                                                                                                                                    \
+  }                                                                                                                                                                                                    \
+  else if(numOfComponents == 4)                                                                                                                                                                        \
+  {                                                                                                                                                                                                    \
+    rgb_call<itk::RGBAPixel<DATATYPE>>(__VA_ARGS__);                                                                                                                                                   \
+  }                                                                                                                                                                                                    \
+  else if(numOfComponents == 1)                                                                                                                                                                        \
+  {                                                                                                                                                                                                    \
+    grayscale_call<DATATYPE>(__VA_ARGS__);                                                                                                                                                             \
+  }                                                                                                                                                                                                    \
+  else                                                                                                                                                                                                 \
+  {                                                                                                                                                                                                    \
+    filter->notifyErrorMessage(filter->getHumanLabel(),                                                                                                                                                \
+                               "The input array's image type is not recognized.  Supported image types"                                                                                                \
+                               " are grayscale (1-component), RGB (3-component), and RGBA (4-component)",                                                                                              \
+                               TemplateHelpers::Errors::UnsupportedImageType);                                                                                                                         \
+  }
+
+#define EXECUTE_DATATYPE_FUNCTION_TEMPLATE(filter, rgb_call, grayscale_call, inputData, ...)                                                                                                           \
+  if(TemplateHelpers::CanDynamicCast<FloatArrayType>()(inputData))                                                                                                                                     \
+  {                                                                                                                                                                                                    \
+    EXECUTE_REGISTER_FUNCTION_TEMPLATE_HELPER(float, filter, rgb_call, grayscale_call, inputData, __VA_ARGS__);                                                                                        \
+  }                                                                                                                                                                                                    \
+  else if(TemplateHelpers::CanDynamicCast<DoubleArrayType>()(inputData))                                                                                                                               \
+  {                                                                                                                                                                                                    \
+    EXECUTE_REGISTER_FUNCTION_TEMPLATE_HELPER(double, filter, rgb_call, grayscale_call, inputData, __VA_ARGS__);                                                                                       \
+  }                                                                                                                                                                                                    \
+  else if(TemplateHelpers::CanDynamicCast<Int8ArrayType>()(inputData))                                                                                                                                 \
+  {                                                                                                                                                                                                    \
+    EXECUTE_REGISTER_FUNCTION_TEMPLATE_HELPER(int8_t, filter, rgb_call, grayscale_call, inputData, __VA_ARGS__);                                                                                       \
+  }                                                                                                                                                                                                    \
+  else if(TemplateHelpers::CanDynamicCast<UInt8ArrayType>()(inputData))                                                                                                                                \
+  {                                                                                                                                                                                                    \
+    EXECUTE_REGISTER_FUNCTION_TEMPLATE_HELPER(uint8_t, filter, rgb_call, grayscale_call, inputData, __VA_ARGS__);                                                                                      \
+  }                                                                                                                                                                                                    \
+  else if(TemplateHelpers::CanDynamicCast<Int16ArrayType>()(inputData))                                                                                                                                \
+  {                                                                                                                                                                                                    \
+    EXECUTE_REGISTER_FUNCTION_TEMPLATE_HELPER(int16_t, filter, rgb_call, grayscale_call, inputData, __VA_ARGS__);                                                                                      \
+  }                                                                                                                                                                                                    \
+  else if(TemplateHelpers::CanDynamicCast<UInt16ArrayType>()(inputData))                                                                                                                               \
+  {                                                                                                                                                                                                    \
+    EXECUTE_REGISTER_FUNCTION_TEMPLATE_HELPER(uint16_t, filter, rgb_call, grayscale_call, inputData, __VA_ARGS__);                                                                                     \
+  }                                                                                                                                                                                                    \
+  else if(TemplateHelpers::CanDynamicCast<Int32ArrayType>()(inputData))                                                                                                                                \
+  {                                                                                                                                                                                                    \
+    EXECUTE_REGISTER_FUNCTION_TEMPLATE_HELPER(int32_t, filter, rgb_call, grayscale_call, inputData, __VA_ARGS__);                                                                                      \
+  }                                                                                                                                                                                                    \
+  else if(TemplateHelpers::CanDynamicCast<UInt32ArrayType>()(inputData))                                                                                                                               \
+  {                                                                                                                                                                                                    \
+    EXECUTE_REGISTER_FUNCTION_TEMPLATE_HELPER(uint32_t, filter, rgb_call, grayscale_call, inputData, __VA_ARGS__);                                                                                     \
+  }                                                                                                                                                                                                    \
+  else if(TemplateHelpers::CanDynamicCast<Int64ArrayType>()(inputData))                                                                                                                                \
+  {                                                                                                                                                                                                    \
+    EXECUTE_REGISTER_FUNCTION_TEMPLATE_HELPER(int64_t, filter, rgb_call, grayscale_call, inputData, __VA_ARGS__);                                                                                      \
+  }                                                                                                                                                                                                    \
+  else if(TemplateHelpers::CanDynamicCast<UInt64ArrayType>()(inputData))                                                                                                                               \
+  {                                                                                                                                                                                                    \
+    EXECUTE_REGISTER_FUNCTION_TEMPLATE_HELPER(uint64_t, filter, rgb_call, grayscale_call, inputData, __VA_ARGS__);                                                                                     \
+  }                                                                                                                                                                                                    \
+  else if(TemplateHelpers::CanDynamicCast<BoolArrayType>()(inputData))                                                                                                                                 \
+  {                                                                                                                                                                                                    \
+    EXECUTE_REGISTER_FUNCTION_TEMPLATE_HELPER(bool, filter, rgb_call, grayscale_call, inputData, __VA_ARGS__);                                                                                         \
+  }                                                                                                                                                                                                    \
+  else if(TemplateHelpers::CanDynamicCast<DataArray<size_t>>()(inputData))                                                                                                                             \
+  {                                                                                                                                                                                                    \
+    EXECUTE_REGISTER_FUNCTION_TEMPLATE_HELPER(size_t, filter, rgb_call, grayscale_call, inputData, __VA_ARGS__);                                                                                       \
+  }                                                                                                                                                                                                    \
+  else                                                                                                                                                                                                 \
+  {                                                                                                                                                                                                    \
+    filter->notifyErrorMessage(filter->getHumanLabel(), "The input array's data type is not supported", TemplateHelpers::Errors::UnsupportedDataType);                                                 \
+  }
+
+#define EXECUTE_REGISTER_FUNCTION_TEMPLATE(filter, rgb_call, grayscale_call, inputData, ...) EXECUTE_DATATYPE_FUNCTION_TEMPLATE(filter, rgb_call, grayscale_call, inputData, __VA_ARGS__)
 
 // -----------------------------------------------------------------------------
 //
@@ -265,7 +346,8 @@ void ITKGenerateMontageConfiguration::execute()
     AttributeMatrix::Pointer am = dc->getAttributeMatrix(getCommonAttributeMatrixName());
     IDataArray::Pointer da = am->getAttributeArray(getCommonDataArrayName());
 
-    EXECUTE_REGISTER_FUNCTION_TEMPLATE(this, generateMontage, da);
+    EXECUTE_REGISTER_FUNCTION_TEMPLATE(this, registerRGBMontage, registerGrayscaleMontage, da);
+
   }
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage(getHumanLabel(), "Complete");
@@ -347,23 +429,15 @@ void ITKGenerateMontageConfiguration::createFijiDataStructure()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template< typename PixelType >
-void ITKGenerateMontageConfiguration::generateMontage(int peakMethodToUse, unsigned streamSubdivisions)
+template< typename PixelType, typename MontageType >
+typename MontageType::Pointer ITKGenerateMontageConfiguration::createMontage(int peakMethodToUse)
 {
   using ScalarPixelType = typename itk::NumericTraits< PixelType >::ValueType;
-  constexpr unsigned Dimension = 2;
-  using AffineType = itk::AffineTransform< double, 3 >;
 //	using PointType = itk::Point<double, Dimension>;
-  using TransformType = itk::TranslationTransform< double, Dimension >;
   using ScalarImageType = itk::Dream3DImage< ScalarPixelType, Dimension >;
-  using MontageType = itk::TileMontage< ScalarImageType >;
   using PCMType = itk::PhaseCorrelationImageRegistrationMethod<ScalarImageType, ScalarImageType>;
   typename ScalarImageType::SpacingType sp;
   sp.Fill(1.0); // assume unit spacing
-
-  using PeakInterpolationType = typename itk::MaxPhaseCorrelationOptimizer<PCMType>::PeakInterpolationMethod;
-  using PeakFinderUnderlying = typename std::underlying_type<PeakInterpolationType>::type;
-  auto peakMethod = static_cast<PeakFinderUnderlying>(peakMethodToUse);
 
   unsigned x1 = 1;
   unsigned y1 = 1;
@@ -378,26 +452,47 @@ void ITKGenerateMontageConfiguration::generateMontage(int peakMethodToUse, unsig
 
 //  PointType originAdjustment = m_StageTiles[y1][x1].Position - m_StageTiles[0][0].Position;
 
-  typename MontageType::TileIndexType ind;
-
   // Create tile montage
   typename MontageType::Pointer montage = MontageType::New();
   montage->SetMontageSize({ m_xMontageSize, m_yMontageSize });
   montage->GetModifiablePCM()->SetPaddingMethod(PCMType::PaddingMethod::MirrorWithExponentialDecay);
-  montage->GetModifiablePCMOptimizer()->SetPeakInterpolationMethod(static_cast<PeakInterpolationType>(peakMethod));
 //  montage->SetOriginAdjustment(originAdjustment);
   montage->SetForcedSpacing(sp);
 
+  using PeakInterpolationType = typename itk::MaxPhaseCorrelationOptimizer<PCMType>::PeakInterpolationMethod;
+  using PeakFinderUnderlying = typename std::underlying_type<PeakInterpolationType>::type;
+
+  auto peakMethod = static_cast<PeakFinderUnderlying>(peakMethodToUse);
+  montage->GetModifiablePCMOptimizer()->SetPeakInterpolationMethod(static_cast<PeakInterpolationType>(peakMethod));
+  montage->Modified();
+
+  return montage;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+template< typename PixelType, typename MontageType >
+typename MontageType::Pointer ITKGenerateMontageConfiguration::createGrayscaleMontage(int peakMethodToUse)
+{
+  using ScalarPixelType = typename itk::NumericTraits< PixelType >::ValueType;
+//	using PointType = itk::Point<double, Dimension>;
+  using ScalarImageType = itk::Dream3DImage< ScalarPixelType, Dimension >;
+
+  typename MontageType::Pointer montage = createMontage<PixelType,MontageType>(peakMethodToUse);
+
   // Set tile image data from DREAM3D structure into tile montage
+  typename MontageType::TileIndexType ind;
   for (unsigned y = 0; y < m_yMontageSize; y++)
   {
     ind[1] = y;
     for (unsigned x = 0; x < m_xMontageSize; x++)
     {
       ind[0] = x;
+      DataContainer::Pointer imageDC = GetImageDataContainer(y, x);
+
       typedef itk::InPlaceDream3DDataToImageFilter <ScalarPixelType, Dimension > toITKType;
       typename toITKType::Pointer toITK = toITKType::New();
-      DataContainer::Pointer imageDC = GetImageDataContainer(y, x);
 
       toITK->SetInput(imageDC);
       toITK->SetInPlace(true);
@@ -405,13 +500,105 @@ void ITKGenerateMontageConfiguration::generateMontage(int peakMethodToUse, unsig
       toITK->SetDataArrayName(getCommonDataArrayName().toStdString());
       toITK->Update();
 
-            typename ScalarImageType::Pointer image = toITK->GetOutput();
+      typename ScalarImageType::Pointer image = toITK->GetOutput();
+
       montage->SetInputTile(ind, image);
     }
   }
 
-  montage->Modified();
+  return montage;
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+template< typename PixelType, typename MontageType >
+typename MontageType::Pointer ITKGenerateMontageConfiguration::createRGBMontage(int peakMethodToUse)
+{
+  using ScalarPixelType = typename itk::NumericTraits< PixelType >::ValueType;
+//	using PointType = itk::Point<double, Dimension>;
+  using ScalarImageType = itk::Dream3DImage< ScalarPixelType, Dimension >;
+  using OriginalImageType = itk::Dream3DImage< PixelType, Dimension >;
+
+  typename MontageType::Pointer montage = createMontage<PixelType,MontageType>(peakMethodToUse);
+
+  // Set tile image data from DREAM3D structure into tile montage
+  typename MontageType::TileIndexType ind;
+  for (unsigned y = 0; y < m_yMontageSize; y++)
+  {
+    ind[1] = y;
+    for (unsigned x = 0; x < m_xMontageSize; x++)
+    {
+      ind[0] = x;
+      DataContainer::Pointer imageDC = GetImageDataContainer(y, x);
+
+      typedef itk::InPlaceDream3DDataToImageFilter <PixelType, Dimension > toITKType;
+      typename toITKType::Pointer toITK = toITKType::New();
+
+      toITK->SetInput(imageDC);
+      toITK->SetInPlace(true);
+      toITK->SetAttributeMatrixArrayName(getCommonAttributeMatrixName().toStdString());
+      toITK->SetDataArrayName(getCommonDataArrayName().toStdString());
+      toITK->Update();
+
+      typename OriginalImageType::Pointer image = toITK->GetOutput();
+
+      using FilterType = itk::RGBToLuminanceImageFilter< OriginalImageType, ScalarImageType >;
+      typename FilterType::Pointer filter = FilterType::New();
+      filter->SetInput( image );
+      filter->Update();
+
+      montage->SetInputTile(ind, filter->GetOutput());
+    }
+  }
+
+  return montage;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+template< typename PixelType >
+void ITKGenerateMontageConfiguration::registerGrayscaleMontage(int peakMethodToUse, unsigned streamSubdivisions)
+{
+  using ScalarPixelType = typename itk::NumericTraits< PixelType >::ValueType;
+  using ScalarImageType = itk::Dream3DImage< ScalarPixelType, Dimension >;
+  using MontageType = itk::TileMontage< ScalarImageType >;
+
+  typename MontageType::Pointer montage = createGrayscaleMontage<PixelType,MontageType>(peakMethodToUse);
+
+  // Execute the montage registration algorithm
+  executeMontageRegistration<MontageType>(montage);
+
+  // Store tile registration transforms in DREAM3D data containers
+  storeMontageTransforms<MontageType>(montage);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+template< typename PixelType >
+void ITKGenerateMontageConfiguration::registerRGBMontage(int peakMethodToUse, unsigned streamSubdivisions)
+{
+  using ScalarPixelType = typename itk::NumericTraits< PixelType >::ValueType;
+  using ScalarImageType = itk::Dream3DImage< ScalarPixelType, Dimension >;
+  using MontageType = itk::TileMontage< ScalarImageType >;
+
+  typename MontageType::Pointer montage = createRGBMontage<PixelType,MontageType>(peakMethodToUse);
+
+  // Execute the montage registration algorithm
+  executeMontageRegistration<MontageType>(montage);
+
+  // Store tile registration transforms in DREAM3D data containers
+  storeMontageTransforms<MontageType>(montage);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+template<typename MontageType>
+void ITKGenerateMontageConfiguration::executeMontageRegistration(typename MontageType::Pointer montage)
+{
   // Execute the tile registrations
   notifyStatusMessage(getHumanLabel(), "Doing the tile registrations");
 
@@ -424,8 +611,17 @@ void ITKGenerateMontageConfiguration::generateMontage(int peakMethodToUse, unsig
 
   montage->RemoveObserver(progressObsTag);
   notifyStatusMessage(getHumanLabel(), "Finished the tile registrations");
+}
 
-  // Store tile registration transforms in DREAM3D data containers
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+template<typename MontageType>
+void ITKGenerateMontageConfiguration::storeMontageTransforms(typename MontageType::Pointer montage)
+{
+  using TransformType = itk::TranslationTransform< double, Dimension >;
+
+  typename MontageType::TileIndexType ind;
   for (unsigned y = 0; y < m_yMontageSize; y++)
   {
     ind[1] = y;
@@ -434,6 +630,9 @@ void ITKGenerateMontageConfiguration::generateMontage(int peakMethodToUse, unsig
       ind[0] = x;
       const TransformType* regTr = montage->GetOutputTransform(ind);
       auto offset = regTr->GetOffset();
+      std::cout << tr("(%1, %2): ").arg(x).arg(y).toStdString();
+      std::cout << offset << std::endl;
+
       DataContainer::Pointer imageDC = GetImageDataContainer(y, x);
       ImageGeom::Pointer image = imageDC->getGeometryAs<ImageGeom>();
 

@@ -205,11 +205,21 @@ protected:
 	 */
   void createFijiDataStructure();
 
-	/**
-	 * @brief Generate the montage
-	 */
+  /**
+   * @brief registerGrayscaleMontage
+   * @param peakMethodToUse
+   * @param streamSubdivisions
+   */
   template<typename PixelType>
-  void generateMontage(int peakMethodToUse = 0, unsigned streamSubdivisions = 1);
+  void registerGrayscaleMontage(int peakMethodToUse = 0, unsigned streamSubdivisions = 1);
+
+  /**
+   * @brief registerRGBMontage
+   * @param peakMethodToUse
+   * @param streamSubdivisions
+   */
+  template<typename PixelType>
+  void registerRGBMontage(int peakMethodToUse = 0, unsigned streamSubdivisions = 1);
 
 	/**
 	 * @brief Get the image from the appropriate data container
@@ -225,11 +235,49 @@ protected:
 	typename TransformContainer::Pointer GetTransformContainerFromITKAffineTransform(const AffineType::Pointer& itkAffine);
 
 private:
+  static constexpr unsigned Dimension = 2;
   itk::TileLayout2D m_StageTiles;
   itk::TileLayout2D m_ActualTiles;
 	unsigned int m_xMontageSize;
 	unsigned int m_yMontageSize;
 	QString m_dataContainerPrefix;
+
+  /**
+   * @brief createMontage
+   * @param peakMethodToUse
+   * @param streamSubdivisions
+   */
+  template<typename PixelType, typename MontageType>
+  typename MontageType::Pointer createMontage(int peakMethodToUse = 0);
+
+  /**
+   * @brief createGrayscaleMontage
+   * @param peakMethodToUse
+   * @param streamSubdivisions
+   */
+  template<typename PixelType, typename MontageType>
+  typename MontageType::Pointer createGrayscaleMontage(int peakMethodToUse = 0);
+
+  /**
+   * @brief createRGBMontage
+   * @param peakMethodToUse
+   * @param streamSubdivisions
+   */
+  template<typename PixelType, typename MontageType>
+  typename MontageType::Pointer createRGBMontage(int peakMethodToUse = 0);
+
+  /**
+   * @brief storeMontageTransforms
+   */
+  template<typename MontageType>
+  void storeMontageTransforms(typename MontageType::Pointer montage);
+
+  /**
+   * @brief executeMontageRegistration
+   * @param montage
+   */
+  template<typename MontageType>
+  void executeMontageRegistration(typename MontageType::Pointer montage);
 
 public:
   ITKGenerateMontageConfiguration(const ITKGenerateMontageConfiguration&) = delete; // Copy Constructor Not Implemented
