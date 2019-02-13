@@ -629,10 +629,6 @@ void ITKGenerateMontageConfiguration::storeMontageTransforms(typename MontageTyp
     {
       ind[0] = x;
       const TransformType* regTr = montage->GetOutputTransform(ind);
-      auto offset = regTr->GetOffset();
-      std::cout << tr("(%1, %2): ").arg(x).arg(y).toStdString();
-      std::cout << offset << std::endl;
-
       DataContainer::Pointer imageDC = GetImageDataContainer(y, x);
       ImageGeom::Pointer image = imageDC->getGeometryAs<ImageGeom>();
 
