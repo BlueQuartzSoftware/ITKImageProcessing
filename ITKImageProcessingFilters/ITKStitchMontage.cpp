@@ -1,37 +1,37 @@
 /* ============================================================================
-* Copyright (c) 2009-2016 BlueQuartz Software, LLC
-*
-* Redistribution and use in source and binary forms, with or without modification,
-* are permitted provided that the following conditions are met:
-*
-* Redistributions of source code must retain the above copyright notice, this
-* list of conditions and the following disclaimer.
-*
-* Redistributions in binary form must reproduce the above copyright notice, this
-* list of conditions and the following disclaimer in the documentation and/or
-* other materials provided with the distribution.
-*
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
-* contributors may be used to endorse or promote products derived from this software
-* without specific prior written permission.
-*
-* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
-* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*
-* The code contained herein was partially funded by the followig contracts:
-*    United States Air Force Prime Contract FA8650-07-D-5800
-*    United States Air Force Prime Contract FA8650-10-D-5210
-*    United States Prime Contract Navy N00173-07-C-2068
-*
-* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+ * Copyright (c) 2009-2016 BlueQuartz Software, LLC
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this
+ * list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+ *
+ * Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+ * contributors may be used to endorse or promote products derived from this software
+ * without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+ * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * The code contained herein was partially funded by the followig contracts:
+ *    United States Air Force Prime Contract FA8650-07-D-5800
+ *    United States Air Force Prime Contract FA8650-10-D-5210
+ *    United States Prime Contract Navy N00173-07-C-2068
+ *
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "ITKStitchMontage.h"
 
@@ -41,129 +41,129 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Common/TemplateHelpers.h"
-#include "SIMPLib/FilterParameters/FloatFilterParameter.h"
-#include "SIMPLib/FilterParameters/MultiDataContainerSelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
-#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/FloatFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/MultiDataContainerSelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
-#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
-#include "SIMPLib/ITK/itkDream3DImage.h"
-#include "SIMPLib/ITK/itkTransformToDream3DTransformContainer.h"
-#include "SIMPLib/ITK/itkTransformToDream3DITransformContainer.h"
+#include "SIMPLib/ITK/itkDream3DFilterInterruption.h"
 #include "SIMPLib/ITK/itkDream3DITransformContainerToTransform.h"
+#include "SIMPLib/ITK/itkDream3DImage.h"
 #include "SIMPLib/ITK/itkDream3DTransformContainerToTransform.h"
 #include "SIMPLib/ITK/itkInPlaceDream3DDataToImageFilter.h"
 #include "SIMPLib/ITK/itkInPlaceImageToDream3DDataFilter.h"
-#include "SIMPLib/ITK/itkDream3DFilterInterruption.h"
 #include "SIMPLib/ITK/itkProgressObserver.hpp"
+#include "SIMPLib/ITK/itkTransformToDream3DITransformContainer.h"
+#include "SIMPLib/ITK/itkTransformToDream3DTransformContainer.h"
+#include "SIMPLib/SIMPLibVersion.h"
 
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
 
+#include "itkImageFileWriter.h"
+#include "itkStreamingImageFilter.h"
+#include "itkTileMergeImageFilter.h"
 #include "itkTileMontage.h"
 #include "itkTxtTransformIOFactory.h"
-#include "itkTileMergeImageFilter.h"
-#include "itkStreamingImageFilter.h"
-#include "itkImageFileWriter.h"
 
-#define EXECUTE_STITCH_FUNCTION_TEMPLATE_HELPER(DATATYPE, filter, call, inputData, ...)                                                                                                 \
+#define EXECUTE_STITCH_FUNCTION_TEMPLATE_HELPER(DATATYPE, filter, call, inputData, ...)                                                                                                                \
   int numOfComponents = inputData->getNumberOfComponents();                                                                                                                                            \
   if(numOfComponents == 3)                                                                                                                                                                             \
   {                                                                                                                                                                                                    \
-    call<itk::RGBPixel<DATATYPE>, itk::RGBPixel<uint64_t>>(__VA_ARGS__);                                                                                                                       \
+    call<itk::RGBPixel<DATATYPE>, itk::RGBPixel<uint64_t>>(__VA_ARGS__);                                                                                                                               \
   }                                                                                                                                                                                                    \
   else if(numOfComponents == 4)                                                                                                                                                                        \
   {                                                                                                                                                                                                    \
-    call<itk::RGBAPixel<DATATYPE>, itk::RGBAPixel<uint64_t>>(__VA_ARGS__);                                                                                                                     \
+    call<itk::RGBAPixel<DATATYPE>, itk::RGBAPixel<uint64_t>>(__VA_ARGS__);                                                                                                                             \
   }                                                                                                                                                                                                    \
   else if(numOfComponents == 1)                                                                                                                                                                        \
   {                                                                                                                                                                                                    \
-    call<DATATYPE, uint64_t>(__VA_ARGS__);                                                                                                                                                     \
+    call<DATATYPE, uint64_t>(__VA_ARGS__);                                                                                                                                                             \
   }                                                                                                                                                                                                    \
   else                                                                                                                                                                                                 \
   {                                                                                                                                                                                                    \
-    filter->notifyErrorMessage(filter->getHumanLabel(),                                                                                                                                                   \
-                                      "The input array's image type is not recognized.  Supported image types"                                                                                         \
-                                      " are grayscale (1-component), RGB (3-component), and RGBA (4-component)",                                                                                       \
-                                      TemplateHelpers::Errors::UnsupportedImageType);                                                                                                                  \
+    filter->notifyErrorMessage(filter->getHumanLabel(),                                                                                                                                                \
+                               "The input array's image type is not recognized.  Supported image types"                                                                                                \
+                               " are grayscale (1-component), RGB (3-component), and RGBA (4-component)",                                                                                              \
+                               TemplateHelpers::Errors::UnsupportedImageType);                                                                                                                         \
   }
 
-#define EXECUTE_ACCUMULATETYPE_FUNCTION_TEMPLATE(DATATYPE, filter, call, inputData, ...)                                                                                     \
+#define EXECUTE_ACCUMULATETYPE_FUNCTION_TEMPLATE(DATATYPE, filter, call, inputData, ...)                                                                                                               \
   int numOfComponents = inputData->getNumberOfComponents();                                                                                                                                            \
   if(numOfComponents == 3)                                                                                                                                                                             \
   {                                                                                                                                                                                                    \
-    EXECUTE_STITCH_FUNCTION_TEMPLATE_HELPER(DATATYPE, filter, call, inputData, __VA_ARGS__);                                                                                     \
+    EXECUTE_STITCH_FUNCTION_TEMPLATE_HELPER(DATATYPE, filter, call, inputData, __VA_ARGS__);                                                                                                           \
   }                                                                                                                                                                                                    \
   else if(numOfComponents == 4)                                                                                                                                                                        \
   {                                                                                                                                                                                                    \
-    EXECUTE_STITCH_FUNCTION_TEMPLATE_HELPER(DATATYPE, filter, call, inputData, __VA_ARGS__);                                                                                     \
+    EXECUTE_STITCH_FUNCTION_TEMPLATE_HELPER(DATATYPE, filter, call, inputData, __VA_ARGS__);                                                                                                           \
   }                                                                                                                                                                                                    \
   else if(numOfComponents == 1)                                                                                                                                                                        \
   {                                                                                                                                                                                                    \
-    EXECUTE_STITCH_FUNCTION_TEMPLATE_HELPER(DATATYPE, filter, call, inputData, __VA_ARGS__);                                                                                     \
+    EXECUTE_STITCH_FUNCTION_TEMPLATE_HELPER(DATATYPE, filter, call, inputData, __VA_ARGS__);                                                                                                           \
   }                                                                                                                                                                                                    \
   else                                                                                                                                                                                                 \
   {                                                                                                                                                                                                    \
-    filter->notifyErrorMessage(filter->getHumanLabel(),                                                                                                                                                   \
-                                      "The input array's image type is not recognized.  Supported image types"                                                                                         \
-                                      " are grayscale (1-component), RGB (3-component), and RGBA (4-component)",                                                                                       \
-                                      TemplateHelpers::Errors::UnsupportedImageType);                                                                                                                  \
+    filter->notifyErrorMessage(filter->getHumanLabel(),                                                                                                                                                \
+                               "The input array's image type is not recognized.  Supported image types"                                                                                                \
+                               " are grayscale (1-component), RGB (3-component), and RGBA (4-component)",                                                                                              \
+                               TemplateHelpers::Errors::UnsupportedImageType);                                                                                                                         \
   }
 
-#define EXECUTE_DATATYPE_FUNCTION_TEMPLATE(filter, call, inputData, ...)                                                                                                     \
+#define EXECUTE_DATATYPE_FUNCTION_TEMPLATE(filter, call, inputData, ...)                                                                                                                               \
   if(TemplateHelpers::CanDynamicCast<FloatArrayType>()(inputData))                                                                                                                                     \
   {                                                                                                                                                                                                    \
-    EXECUTE_ACCUMULATETYPE_FUNCTION_TEMPLATE(float, filter, call, inputData, __VA_ARGS__);                                                                                   \
+    EXECUTE_ACCUMULATETYPE_FUNCTION_TEMPLATE(float, filter, call, inputData, __VA_ARGS__);                                                                                                             \
   }                                                                                                                                                                                                    \
   else if(TemplateHelpers::CanDynamicCast<DoubleArrayType>()(inputData))                                                                                                                               \
   {                                                                                                                                                                                                    \
-    EXECUTE_ACCUMULATETYPE_FUNCTION_TEMPLATE(double, filter, call, inputData, __VA_ARGS__);                                                                                  \
+    EXECUTE_ACCUMULATETYPE_FUNCTION_TEMPLATE(double, filter, call, inputData, __VA_ARGS__);                                                                                                            \
   }                                                                                                                                                                                                    \
   else if(TemplateHelpers::CanDynamicCast<Int8ArrayType>()(inputData))                                                                                                                                 \
   {                                                                                                                                                                                                    \
-    EXECUTE_ACCUMULATETYPE_FUNCTION_TEMPLATE(int8_t, filter, call, inputData, __VA_ARGS__);                                                                                  \
+    EXECUTE_ACCUMULATETYPE_FUNCTION_TEMPLATE(int8_t, filter, call, inputData, __VA_ARGS__);                                                                                                            \
   }                                                                                                                                                                                                    \
   else if(TemplateHelpers::CanDynamicCast<UInt8ArrayType>()(inputData))                                                                                                                                \
   {                                                                                                                                                                                                    \
-    EXECUTE_ACCUMULATETYPE_FUNCTION_TEMPLATE(uint8_t, filter, call, inputData, __VA_ARGS__);                                                                                 \
+    EXECUTE_ACCUMULATETYPE_FUNCTION_TEMPLATE(uint8_t, filter, call, inputData, __VA_ARGS__);                                                                                                           \
   }                                                                                                                                                                                                    \
   else if(TemplateHelpers::CanDynamicCast<Int16ArrayType>()(inputData))                                                                                                                                \
   {                                                                                                                                                                                                    \
-    EXECUTE_ACCUMULATETYPE_FUNCTION_TEMPLATE(int16_t, filter, call, inputData, __VA_ARGS__);                                                                                 \
+    EXECUTE_ACCUMULATETYPE_FUNCTION_TEMPLATE(int16_t, filter, call, inputData, __VA_ARGS__);                                                                                                           \
   }                                                                                                                                                                                                    \
   else if(TemplateHelpers::CanDynamicCast<UInt16ArrayType>()(inputData))                                                                                                                               \
   {                                                                                                                                                                                                    \
-    EXECUTE_ACCUMULATETYPE_FUNCTION_TEMPLATE(uint16_t, filter, call, inputData, __VA_ARGS__);                                                                                \
+    EXECUTE_ACCUMULATETYPE_FUNCTION_TEMPLATE(uint16_t, filter, call, inputData, __VA_ARGS__);                                                                                                          \
   }                                                                                                                                                                                                    \
   else if(TemplateHelpers::CanDynamicCast<Int32ArrayType>()(inputData))                                                                                                                                \
   {                                                                                                                                                                                                    \
-    EXECUTE_ACCUMULATETYPE_FUNCTION_TEMPLATE(int32_t, filter, call, inputData, __VA_ARGS__);                                                                                 \
+    EXECUTE_ACCUMULATETYPE_FUNCTION_TEMPLATE(int32_t, filter, call, inputData, __VA_ARGS__);                                                                                                           \
   }                                                                                                                                                                                                    \
   else if(TemplateHelpers::CanDynamicCast<UInt32ArrayType>()(inputData))                                                                                                                               \
   {                                                                                                                                                                                                    \
-    EXECUTE_ACCUMULATETYPE_FUNCTION_TEMPLATE(uint32_t, filter, call, inputData, __VA_ARGS__);                                                                                \
+    EXECUTE_ACCUMULATETYPE_FUNCTION_TEMPLATE(uint32_t, filter, call, inputData, __VA_ARGS__);                                                                                                          \
   }                                                                                                                                                                                                    \
   else if(TemplateHelpers::CanDynamicCast<Int64ArrayType>()(inputData))                                                                                                                                \
   {                                                                                                                                                                                                    \
-    EXECUTE_ACCUMULATETYPE_FUNCTION_TEMPLATE(int64_t, filter, call, inputData, __VA_ARGS__);                                                                                 \
+    EXECUTE_ACCUMULATETYPE_FUNCTION_TEMPLATE(int64_t, filter, call, inputData, __VA_ARGS__);                                                                                                           \
   }                                                                                                                                                                                                    \
   else if(TemplateHelpers::CanDynamicCast<UInt64ArrayType>()(inputData))                                                                                                                               \
   {                                                                                                                                                                                                    \
-    EXECUTE_ACCUMULATETYPE_FUNCTION_TEMPLATE(uint64_t, filter, call, inputData, __VA_ARGS__);                                                                                \
+    EXECUTE_ACCUMULATETYPE_FUNCTION_TEMPLATE(uint64_t, filter, call, inputData, __VA_ARGS__);                                                                                                          \
   }                                                                                                                                                                                                    \
   else if(TemplateHelpers::CanDynamicCast<BoolArrayType>()(inputData))                                                                                                                                 \
   {                                                                                                                                                                                                    \
-    EXECUTE_ACCUMULATETYPE_FUNCTION_TEMPLATE(bool, filter, call, inputData, __VA_ARGS__);                                                                                    \
+    EXECUTE_ACCUMULATETYPE_FUNCTION_TEMPLATE(bool, filter, call, inputData, __VA_ARGS__);                                                                                                              \
   }                                                                                                                                                                                                    \
   else if(TemplateHelpers::CanDynamicCast<DataArray<size_t>>()(inputData))                                                                                                                             \
   {                                                                                                                                                                                                    \
-    EXECUTE_ACCUMULATETYPE_FUNCTION_TEMPLATE(size_t, filter, call, inputData, __VA_ARGS__);                                                                                  \
+    EXECUTE_ACCUMULATETYPE_FUNCTION_TEMPLATE(size_t, filter, call, inputData, __VA_ARGS__);                                                                                                            \
   }                                                                                                                                                                                                    \
   else                                                                                                                                                                                                 \
   {                                                                                                                                                                                                    \
-    filter->notifyErrorMessage(filter->getHumanLabel(), "The input array's data type is not supported", TemplateHelpers::Errors::UnsupportedDataType);                                                    \
+    filter->notifyErrorMessage(filter->getHumanLabel(), "The input array's data type is not supported", TemplateHelpers::Errors::UnsupportedDataType);                                                 \
   }
 
 #define EXECUTE_STITCH_FUNCTION_TEMPLATE(filter, call, inputData, ...) EXECUTE_DATATYPE_FUNCTION_TEMPLATE(filter, call, inputData, __VA_ARGS__)
@@ -185,9 +185,9 @@ ITKStitchMontage::~ITKStitchMontage() = default;
 // -----------------------------------------------------------------------------
 void ITKStitchMontage::initialize()
 {
-	setErrorCondition(0);
-	setWarningCondition(0);
-	setCancel(false);
+  setErrorCondition(0);
+  setWarningCondition(0);
+  setCancel(false);
 }
 
 // -----------------------------------------------------------------------------
@@ -195,19 +195,19 @@ void ITKStitchMontage::initialize()
 // -----------------------------------------------------------------------------
 void ITKStitchMontage::setupFilterParameters()
 {
-	QVector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
 
   parameters.push_back(SIMPL_NEW_INT_VEC3_FP("Montage Size", MontageSize, FilterParameter::Parameter, ITKStitchMontage));
-  
+
   {
-	  QStringList linkedProps;
-	  linkedProps << "TileOverlap";
+    QStringList linkedProps;
+    linkedProps << "TileOverlap";
     parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Manual Tile Overlap", ManualTileOverlap, FilterParameter::Parameter, ITKStitchMontage, linkedProps));
   }
 
   {
     MultiDataContainerSelectionFilterParameter::RequirementType req =
-    MultiDataContainerSelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
+        MultiDataContainerSelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_MDC_SELECTION_FP("Image Data Containers", ImageDataContainers, FilterParameter::RequiredArray, ITKStitchMontage, req));
   }
   parameters.push_back(SIMPL_NEW_STRING_FP("Common Attribute Matrix", CommonAttributeMatrixName, FilterParameter::RequiredArray, ITKStitchMontage));
@@ -219,8 +219,7 @@ void ITKStitchMontage::setupFilterParameters()
 
   parameters.push_back(SIMPL_NEW_FLOAT_FP("Tile Overlap (Percent)", TileOverlap, FilterParameter::RequiredArray, ITKStitchMontage));
 
-
-	setFilterParameters(parameters);
+  setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------
@@ -228,34 +227,34 @@ void ITKStitchMontage::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void ITKStitchMontage::dataCheck()
 {
-	setErrorCondition(0);
-	setWarningCondition(0);
-	initialize();
+  setErrorCondition(0);
+  setWarningCondition(0);
+  initialize();
 
-	QString ss;
+  QString ss;
   int err = 0;
 
-	m_xMontageSize = m_MontageSize.x;
-	m_yMontageSize = m_MontageSize.y;
+  m_xMontageSize = m_MontageSize.x;
+  m_yMontageSize = m_MontageSize.y;
 
-  if (m_xMontageSize <= 0 || m_yMontageSize <= 0)
-	{
+  if(m_xMontageSize <= 0 || m_yMontageSize <= 0)
+  {
     setErrorCondition(-11000);
-		QString ss = QObject::tr("The Montage Size x and y values must be greater than 0");
-		notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-		return;
-	}
+    QString ss = QObject::tr("The Montage Size x and y values must be greater than 0");
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
 
   // Test to make sure at least one data container is selected
-	if (getImageDataContainers().size() < 1)
-	{
+  if(getImageDataContainers().size() < 1)
+  {
     setErrorCondition(-11001);
-		QString ss = QObject::tr("At least one Data Container must be selected");
-		notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-		return;
-	}
+    QString ss = QObject::tr("At least one Data Container must be selected");
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
 
-  if (getCommonAttributeMatrixName().isEmpty())
+  if(getCommonAttributeMatrixName().isEmpty())
   {
     setErrorCondition(-11003);
     QString ss = QObject::tr("Common Attribute Matrix is empty.");
@@ -263,7 +262,7 @@ void ITKStitchMontage::dataCheck()
     return;
   }
 
-  if (getCommonDataArrayName().isEmpty())
+  if(getCommonDataArrayName().isEmpty())
   {
     setErrorCondition(-11004);
     QString ss = QObject::tr("Common Data Array is empty.");
@@ -271,7 +270,7 @@ void ITKStitchMontage::dataCheck()
     return;
   }
 
-	// Test to see that the image data containers are correct
+  // Test to see that the image data containers are correct
   int dcCount = m_ImageDataContainers.size();
 
   QString dcName = m_ImageDataContainers[0];
@@ -282,13 +281,13 @@ void ITKStitchMontage::dataCheck()
   testPath.setDataArrayName(getCommonDataArrayName());
 
   AttributeMatrix::Pointer imageDataAM = getDataContainerArray()->getPrereqAttributeMatrixFromPath(this, testPath, err);
-  if (getErrorCondition() < 0 || err < 0)
+  if(getErrorCondition() < 0 || err < 0)
   {
     return;
   }
 
   QVector<size_t> imageDataTupleDims = imageDataAM->getTupleDimensions();
-  if (imageDataTupleDims.size() < 2)
+  if(imageDataTupleDims.size() < 2)
   {
     QString ss = QObject::tr("Image Data Array at path '%1' must have at least 2 tuple dimensions.").arg(testPath.serialize("/"));
     setErrorCondition(-11005);
@@ -297,12 +296,12 @@ void ITKStitchMontage::dataCheck()
   }
 
   IDataArray::Pointer imagePtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, testPath);
-  if (getErrorCondition() < 0)
+  if(getErrorCondition() < 0)
   {
     return;
   }
 
-  for (int i = 0; i < dcCount; i++)
+  for(int i = 0; i < dcCount; i++)
   {
     QString dcName = m_ImageDataContainers[i];
 
@@ -312,12 +311,12 @@ void ITKStitchMontage::dataCheck()
     testPath.setDataArrayName(getCommonDataArrayName());
 
     ImageGeom::Pointer image = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, testPath.getDataContainerName());
-    if (getErrorCondition() < 0)
+    if(getErrorCondition() < 0)
     {
       return;
     }
 
-    if (getManualTileOverlap() && (getTileOverlap() < 0.0f || getTileOverlap() > 100.0f))
+    if(getManualTileOverlap() && (getTileOverlap() < 0.0f || getTileOverlap() > 100.0f))
     {
       setErrorCondition(-11006);
       QString ss = QObject::tr("Tile Overlap must be between 0.0 and 100.0.");
@@ -326,7 +325,7 @@ void ITKStitchMontage::dataCheck()
     }
   }
 
-  if (getMontageDataContainerName().isEmpty())
+  if(getMontageDataContainerName().isEmpty())
   {
     setErrorCondition(-11007);
     QString ss = QObject::tr("Montage Data Container is empty.");
@@ -334,7 +333,7 @@ void ITKStitchMontage::dataCheck()
     return;
   }
 
-  if (getMontageAttributeMatrixName().isEmpty())
+  if(getMontageAttributeMatrixName().isEmpty())
   {
     setErrorCondition(-11008);
     QString ss = QObject::tr("Montage Attribute Matrix is empty.");
@@ -342,7 +341,7 @@ void ITKStitchMontage::dataCheck()
     return;
   }
 
-  if (getMontageDataArrayName().isEmpty())
+  if(getMontageDataArrayName().isEmpty())
   {
     setErrorCondition(-11009);
     QString ss = QObject::tr("Montage Data Array is empty.");
@@ -353,7 +352,7 @@ void ITKStitchMontage::dataCheck()
   DataArrayPath dap(getMontageDataContainerName(), getMontageAttributeMatrixName(), getMontageDataArrayName());
 
   DataContainer::Pointer dc = getDataContainerArray()->createNonPrereqDataContainer(this, getMontageDataContainerName());
-  if (getErrorCondition() < 0)
+  if(getErrorCondition() < 0)
   {
     return;
   }
@@ -367,26 +366,32 @@ void ITKStitchMontage::dataCheck()
   dc->setGeometry(imageGeom);
 
   ss = QObject::tr("The image geometry dimensions of data container '%1' are projected to be (%2, %3, %4).  This is assuming "
-                           "0% overlap between tiles, so the actual geometry dimensions after executing the stitching algorithm may be smaller.")
-      .arg(dc->getName()).arg(montageArrayXSize).arg(montageArrayYSize).arg(1);
+                   "0% overlap between tiles, so the actual geometry dimensions after executing the stitching algorithm may be smaller.")
+           .arg(dc->getName())
+           .arg(montageArrayXSize)
+           .arg(montageArrayYSize)
+           .arg(1);
   setWarningCondition(-3001);
   notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
 
   QVector<size_t> tDims = {montageArrayXSize, montageArrayYSize, 1};
 
   AttributeMatrix::Pointer am = dc->createNonPrereqAttributeMatrix(this, dap.getAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell);
-  if (getErrorCondition() < 0)
+  if(getErrorCondition() < 0)
   {
     return;
   }
 
   ss = QObject::tr("The tuple dimensions of attribute matrix '%1' are projected to be (%2, %3, %4).  This is assuming "
                    "0% overlap between tiles, so the actual geometry dimensions after executing the stitching algorithm may be smaller.")
-      .arg(am->getName()).arg(montageArrayXSize).arg(montageArrayYSize).arg(1);
+           .arg(am->getName())
+           .arg(montageArrayXSize)
+           .arg(montageArrayYSize)
+           .arg(1);
   setWarningCondition(-3002);
   notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
 
-  if (getMontageDataArrayName().isEmpty())
+  if(getMontageDataArrayName().isEmpty())
   {
     QString ss = QObject::tr("The Montage Data Array Name field is empty.");
     setErrorCondition(-3003);
@@ -399,7 +404,8 @@ void ITKStitchMontage::dataCheck()
 
   ss = QObject::tr("The number of elements of montage data array '%1' is projected to be %2.  This is assuming "
                    "0% overlap between tiles, so the actual geometry dimensions after executing the stitching algorithm may be smaller.")
-      .arg(da->getName()).arg(QLocale::system().toString(static_cast<int>(da->getNumberOfTuples())));
+           .arg(da->getName())
+           .arg(QLocale::system().toString(static_cast<int>(da->getNumberOfTuples())));
   setWarningCondition(-3004);
   notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
 }
@@ -409,12 +415,12 @@ void ITKStitchMontage::dataCheck()
 // -----------------------------------------------------------------------------
 void ITKStitchMontage::preflight()
 {
-	setInPreflight(true);
-	emit preflightAboutToExecute();
-	emit updateFilterParameters(this);
-	dataCheck();
-	emit preflightExecuted();
-	setInPreflight(false);
+  setInPreflight(true);
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
+  dataCheck();
+  emit preflightExecuted();
+  setInPreflight(false);
 }
 
 // -----------------------------------------------------------------------------
@@ -422,24 +428,24 @@ void ITKStitchMontage::preflight()
 // -----------------------------------------------------------------------------
 void ITKStitchMontage::execute()
 {
-	setErrorCondition(0);
-	setWarningCondition(0);
-	dataCheck();
-	if (getErrorCondition() < 0)
-	{
-		return;
-	}
-
-  createFijiDataStructure();
-  if (getErrorCondition() < 0)
+  setErrorCondition(0);
+  setWarningCondition(0);
+  dataCheck();
+  if(getErrorCondition() < 0)
   {
     return;
   }
 
-  if (m_StageTiles.size() > 0)
-	{
-		// Pass to ITK and generate montage
-		// ITK returns a new Fiji data structure to DREAM3D
+  createFijiDataStructure();
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
+
+  if(m_StageTiles.size() > 0)
+  {
+    // Pass to ITK and generate montage
+    // ITK returns a new Fiji data structure to DREAM3D
     // Store FIJI DS into SIMPL Transform DS inside the Geometry
     DataArrayPath dap(m_ImageDataContainers[0], getCommonAttributeMatrixName(), getCommonDataArrayName());
     DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(m_ImageDataContainers[0]);
@@ -448,8 +454,8 @@ void ITKStitchMontage::execute()
 
     EXECUTE_STITCH_FUNCTION_TEMPLATE(this, stitchMontage, da);
   }
-	/* Let the GUI know we are done with this filter */
-	notifyStatusMessage(getHumanLabel(), "Complete");
+  /* Let the GUI know we are done with this filter */
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------
@@ -457,110 +463,108 @@ void ITKStitchMontage::execute()
 // -----------------------------------------------------------------------------
 void ITKStitchMontage::createFijiDataStructure()
 {
-	DataContainerArray* dca = getDataContainerArray().get();
-	// Loop over the data containers until we find the proper data container
+  DataContainerArray* dca = getDataContainerArray().get();
+  // Loop over the data containers until we find the proper data container
   QMutableListIterator<QString> dcNameIter(m_ImageDataContainers);
-	QStringList dcList;
-	bool dataContainerPrefixChanged = false;
-  if (m_ImageDataContainers.size() != (m_xMontageSize * m_yMontageSize))
-	{
-		return;
-	}
-	else
-	{
+  QStringList dcList;
+  bool dataContainerPrefixChanged = false;
+  if(m_ImageDataContainers.size() != (m_xMontageSize * m_yMontageSize))
+  {
+    return;
+  }
+  else
+  {
     m_StageTiles.resize(m_yMontageSize);
-		for (unsigned i = 0; i < m_yMontageSize; i++)
-		{
-        m_StageTiles[i].resize(m_xMontageSize);
-		}
-	}
+    for(unsigned i = 0; i < m_yMontageSize; i++)
+    {
+      m_StageTiles[i].resize(m_xMontageSize);
+    }
+  }
 
   float tileOverlapFactor = ((100.0 - getTileOverlap()) / 100.0);
 
   QVector<size_t> cDims;
-  while (dcNameIter.hasNext())
-	{
+  while(dcNameIter.hasNext())
+  {
     QString dcName = dcNameIter.next();
     dcList.push_back(dcName);
     DataContainer::Pointer dcItem = dca->getPrereqDataContainer(this, dcName);
-		if (getErrorCondition() < 0 || dcItem.get() == nullptr)
-		{
-			continue;
-		}
+    if(getErrorCondition() < 0 || dcItem.get() == nullptr)
+    {
+      continue;
+    }
     ImageGeom::Pointer image = dcItem->getGeometryAs<ImageGeom>();
-	SIMPL::Tuple3SVec dimensions = image->getDimensions();
-	SIMPL::Tuple3FVec origin = image->getOrigin();
+    SIMPL::Tuple3SVec dimensions = image->getDimensions();
+    SIMPL::Tuple3FVec origin = image->getOrigin();
 
-		// Extract row and column data from the data container name
-		QString filename = ""; // Need to find this?
-		int indexOfUnderscore = dcName.lastIndexOf("_");
-		if (!dataContainerPrefixChanged)
-		{
-			m_dataContainerPrefix = dcName.left(indexOfUnderscore);
-			dataContainerPrefixChanged = true;
-		}
-		QString rowCol = dcName.right(dcName.size() - indexOfUnderscore - 1);
-		rowCol = rowCol.right(rowCol.size() - 1); // Remove 'r'
-		QStringList rowCol_Split = rowCol.split("c"); // Split by 'c'
-		int row = rowCol_Split[0].toInt();
-		int col = rowCol_Split[1].toInt();
-		itk::Tile2D tile;
-  		if ((std::get<0>(origin) == 0.0f && std::get<1>(origin) == 0.0f) || getManualTileOverlap())
-		{
-			tile.Position[0] = col * (tileOverlapFactor * std::get<0>(dimensions));
-			tile.Position[1] = row * (tileOverlapFactor * std::get<1>(dimensions));
-			image->setOrigin(tile.Position[0], tile.Position[1], 0.0f);
-		}
-		else
-		{
-			tile.Position[0] = std::get<0>(origin);
-			tile.Position[1] = std::get<1>(origin);
-		}
-    tile.FileName = "";   // This code gets its data from memory, not from a file
+    // Extract row and column data from the data container name
+    QString filename = ""; // Need to find this?
+    int indexOfUnderscore = dcName.lastIndexOf("_");
+    if(!dataContainerPrefixChanged)
+    {
+      m_dataContainerPrefix = dcName.left(indexOfUnderscore);
+      dataContainerPrefixChanged = true;
+    }
+    QString rowCol = dcName.right(dcName.size() - indexOfUnderscore - 1);
+    rowCol = rowCol.right(rowCol.size() - 1);     // Remove 'r'
+    QStringList rowCol_Split = rowCol.split("c"); // Split by 'c'
+    int row = rowCol_Split[0].toInt();
+    int col = rowCol_Split[1].toInt();
+    itk::Tile2D tile;
+    if((std::get<0>(origin) == 0.0f && std::get<1>(origin) == 0.0f) || getManualTileOverlap())
+    {
+      tile.Position[0] = col * (tileOverlapFactor * std::get<0>(dimensions));
+      tile.Position[1] = row * (tileOverlapFactor * std::get<1>(dimensions));
+      image->setOrigin(tile.Position[0], tile.Position[1], 0.0f);
+    }
+    else
+    {
+      tile.Position[0] = std::get<0>(origin);
+      tile.Position[1] = std::get<1>(origin);
+    }
+    tile.FileName = ""; // This code gets its data from memory, not from a file
 
     m_StageTiles[row][col] = tile;
 
     int err = 0;
     AttributeMatrix::Pointer am = dcItem->getPrereqAttributeMatrix(this, getCommonAttributeMatrixName(), err);
-	}
+  }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template< typename PixelType, typename AccumulatePixelType >
-void ITKStitchMontage::stitchMontage(int peakMethodToUse, unsigned streamSubdivisions)
+template <typename PixelType, typename AccumulatePixelType> void ITKStitchMontage::stitchMontage(int peakMethodToUse, unsigned streamSubdivisions)
 {
-  using ScalarPixelType = typename itk::NumericTraits< PixelType >::ValueType;
-  using ScalarImageType = itk::Dream3DImage< ScalarPixelType, Dimension >;
-  using OriginalImageType = itk::Dream3DImage< PixelType, Dimension >;
-  using MontageType = itk::TileMontage< ScalarImageType >;
+  using ScalarPixelType = typename itk::NumericTraits<PixelType>::ValueType;
+  using ScalarImageType = itk::Dream3DImage<ScalarPixelType, Dimension>;
+  using OriginalImageType = itk::Dream3DImage<PixelType, Dimension>;
+  using MontageType = itk::TileMontage<ScalarImageType>;
 
   // Create the resampler
   using Resampler = itk::TileMergeImageFilter<OriginalImageType, AccumulatePixelType>;
-  typename Resampler::Pointer resampler = createResampler<PixelType,Resampler>();
+  typename Resampler::Pointer resampler = createResampler<PixelType, Resampler>();
 
   // Initialize the resampler
-  initializeResampler<PixelType,MontageType,Resampler>(resampler);
+  initializeResampler<PixelType, MontageType, Resampler>(resampler);
 
   // Execute the stitching algorithm
-  executeStitching<PixelType,Resampler>(resampler, streamSubdivisions);
+  executeStitching<PixelType, Resampler>(resampler, streamSubdivisions);
 
   // Convert montaged image into DREAM3D data structure
-  convertMontageToD3D<PixelType,OriginalImageType>(resampler->GetOutput());
+  convertMontageToD3D<PixelType, OriginalImageType>(resampler->GetOutput());
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename PixelType, typename Resampler>
-typename Resampler::Pointer ITKStitchMontage::createResampler()
+template <typename PixelType, typename Resampler> typename Resampler::Pointer ITKStitchMontage::createResampler()
 {
-  using ScalarPixelType = typename itk::NumericTraits< PixelType >::ValueType;
-  using ScalarImageType = itk::Dream3DImage< ScalarPixelType, Dimension >;
+  using ScalarPixelType = typename itk::NumericTraits<PixelType>::ValueType;
+  using ScalarImageType = itk::Dream3DImage<ScalarPixelType, Dimension>;
 
   typename Resampler::Pointer resampler = Resampler::New();
-  //resampleF->SetMontage(montage); // doesn't compile, because montage is expected
+  // resampleF->SetMontage(montage); // doesn't compile, because montage is expected
   // to be templated using itk::Image, not itk::Dream3DImage
 
   typename ScalarImageType::SpacingType sp;
@@ -575,11 +579,10 @@ typename Resampler::Pointer ITKStitchMontage::createResampler()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename PixelType, typename MontageType, typename Resampler>
-void ITKStitchMontage::initializeResampler(typename Resampler::Pointer resampler)
+template <typename PixelType, typename MontageType, typename Resampler> void ITKStitchMontage::initializeResampler(typename Resampler::Pointer resampler)
 {
-  using OriginalImageType = itk::Dream3DImage< PixelType, Dimension >;
-  using TransformType = itk::TranslationTransform< double, Dimension >;
+  using OriginalImageType = itk::Dream3DImage<PixelType, Dimension>;
+  using TransformType = itk::TranslationTransform<double, Dimension>;
 
   typename MontageType::TileIndexType ind;
   for(unsigned y = 0; y < m_yMontageSize; y++)
@@ -606,7 +609,7 @@ void ITKStitchMontage::initializeResampler(typename Resampler::Pointer resampler
 
       typename MontageType::TransformPointer regTr = MontageType::TransformType::New();
       ::ITransformContainer::Pointer transformContainer = geom->getTransformContainer();
-      if (transformContainer.get() != nullptr)
+      if(transformContainer.get() != nullptr)
       {
         using FilterType = itk::Dream3DITransformContainerToTransform<double, 3>;
         FilterType::Pointer filter = FilterType::New();
@@ -616,7 +619,7 @@ void ITKStitchMontage::initializeResampler(typename Resampler::Pointer resampler
         AffineType::Pointer itkAffine = dynamic_cast<AffineType*>(filter->GetOutput()->Get().GetPointer());
         AffineType::TranslationType t = itkAffine->GetTranslation();
         auto offset = regTr->GetOffset();
-        for (unsigned i = 0; i < TransformType::SpaceDimension; i++)
+        for(unsigned i = 0; i < TransformType::SpaceDimension; i++)
         {
           offset[i] = t[i];
         }
@@ -632,10 +635,9 @@ void ITKStitchMontage::initializeResampler(typename Resampler::Pointer resampler
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename PixelType, typename Resampler>
-void ITKStitchMontage::executeStitching(typename Resampler::Pointer resampler, unsigned streamSubdivisions)
+template <typename PixelType, typename Resampler> void ITKStitchMontage::executeStitching(typename Resampler::Pointer resampler, unsigned streamSubdivisions)
 {
-  using OriginalImageType = itk::Dream3DImage< PixelType, Dimension >;
+  using OriginalImageType = itk::Dream3DImage<PixelType, Dimension>;
 
   notifyStatusMessage(getHumanLabel(), "Resampling tiles into the stitched image");
 
@@ -660,8 +662,7 @@ void ITKStitchMontage::executeStitching(typename Resampler::Pointer resampler, u
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename PixelType, typename OriginalImageType>
-void ITKStitchMontage::convertMontageToD3D(OriginalImageType* image)
+template <typename PixelType, typename OriginalImageType> void ITKStitchMontage::convertMontageToD3D(OriginalImageType* image)
 {
   DataArrayPath dataArrayPath(getMontageDataContainerName(), getMontageAttributeMatrixName(), getMontageDataArrayName());
   DataContainer::Pointer container = getDataContainerArray()->getDataContainer(dataArrayPath.getDataContainerName());
@@ -681,62 +682,61 @@ void ITKStitchMontage::convertMontageToD3D(OriginalImageType* image)
 // -----------------------------------------------------------------------------
 DataContainer::Pointer ITKStitchMontage::GetImageDataContainer(int y, int x)
 {
-	DataContainerArray* dca = getDataContainerArray().get();
-	// Loop over the data containers until we find the proper data container
+  DataContainerArray* dca = getDataContainerArray().get();
+  // Loop over the data containers until we find the proper data container
   QMutableListIterator<QString> dcNameIter(m_ImageDataContainers);
-	QStringList dcList;
-  while (dcNameIter.hasNext())
-	{
+  QStringList dcList;
+  while(dcNameIter.hasNext())
+  {
     QString dcName = dcNameIter.next();
-		dcList.push_back(dcName);
-		DataContainer::Pointer dcItem = dca->getPrereqDataContainer(this, dcName);
-		if (getErrorCondition() < 0 || dcItem.get() == nullptr)
-		{
-			continue;
-		}
+    dcList.push_back(dcName);
+    DataContainer::Pointer dcItem = dca->getPrereqDataContainer(this, dcName);
+    if(getErrorCondition() < 0 || dcItem.get() == nullptr)
+    {
+      continue;
+    }
 
-		QString rowCol = dcName.right(dcName.size() - dcName.lastIndexOf("_") - 1);
-		rowCol = rowCol.right(rowCol.size() - 1); // Remove 'r'
-		QStringList rowCol_Split = rowCol.split("c"); // Split by 'c'
-		int row = rowCol_Split[0].toInt();
-		int col = rowCol_Split[1].toInt();
-		if (row == y && col == x)
-		{
-			return dcItem;
-		}
-	}
-	return nullptr;
+    QString rowCol = dcName.right(dcName.size() - dcName.lastIndexOf("_") - 1);
+    rowCol = rowCol.right(rowCol.size() - 1);     // Remove 'r'
+    QStringList rowCol_Split = rowCol.split("c"); // Split by 'c'
+    int row = rowCol_Split[0].toInt();
+    int col = rowCol_Split[1].toInt();
+    if(row == y && col == x)
+    {
+      return dcItem;
+    }
+  }
+  return nullptr;
 }
-
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 typename TransformContainer::Pointer ITKStitchMontage::GetTransformContainerFromITKAffineTransform(const AffineType::Pointer& itkAffine)
 {
-	auto parameters = itkAffine->GetParameters();
-	auto fixedParameters = itkAffine->GetFixedParameters();
-	auto itkAffineName = itkAffine->GetTransformTypeAsString();
+  auto parameters = itkAffine->GetParameters();
+  auto fixedParameters = itkAffine->GetFixedParameters();
+  auto itkAffineName = itkAffine->GetTransformTypeAsString();
 
-	std::vector<::TransformContainer::ParametersValueType> dream3DParameters(parameters.GetSize());
-	std::vector<::TransformContainer::ParametersValueType> dream3DFixedParameters(fixedParameters.GetSize());
-	for (size_t p = 0; p < dream3DParameters.size(); p++)
-	{
-		dream3DParameters[p] = parameters[p];
-	}
-	for (size_t p = 0; p < dream3DFixedParameters.size(); p++)
-	{
-		dream3DFixedParameters[p] = fixedParameters[p];
-	}
-	// Create a SIMPL transform container and manually convert the ITK transform to
-	// a SIMPL transform container.
-	TransformContainer::Pointer transformContainer = TransformContainer::New();
-	transformContainer->setTransformTypeAsString(itkAffineName);
-	transformContainer->setMovingName("");
-	transformContainer->setReferenceName("World");
-	transformContainer->setFixedParameters(dream3DFixedParameters);
-	transformContainer->setParameters(dream3DParameters);
-	return transformContainer;
+  std::vector<::TransformContainer::ParametersValueType> dream3DParameters(parameters.GetSize());
+  std::vector<::TransformContainer::ParametersValueType> dream3DFixedParameters(fixedParameters.GetSize());
+  for(size_t p = 0; p < dream3DParameters.size(); p++)
+  {
+    dream3DParameters[p] = parameters[p];
+  }
+  for(size_t p = 0; p < dream3DFixedParameters.size(); p++)
+  {
+    dream3DFixedParameters[p] = fixedParameters[p];
+  }
+  // Create a SIMPL transform container and manually convert the ITK transform to
+  // a SIMPL transform container.
+  TransformContainer::Pointer transformContainer = TransformContainer::New();
+  transformContainer->setTransformTypeAsString(itkAffineName);
+  transformContainer->setMovingName("");
+  transformContainer->setReferenceName("World");
+  transformContainer->setFixedParameters(dream3DFixedParameters);
+  transformContainer->setParameters(dream3DParameters);
+  return transformContainer;
 }
 
 // -----------------------------------------------------------------------------
@@ -745,13 +745,13 @@ typename TransformContainer::Pointer ITKStitchMontage::GetTransformContainerFrom
 AbstractFilter::Pointer ITKStitchMontage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKStitchMontage::Pointer filter = ITKStitchMontage::New();
-	if (copyFilterParameters)
-	{
-		filter->setFilterParameters(getFilterParameters());
-		// We are going to hand copy all of the parameters because the other way of copying the parameters are going to
-		// miss some of them because we are not enumerating all of them.
-	}
-	return filter;
+  if(copyFilterParameters)
+  {
+    filter->setFilterParameters(getFilterParameters());
+    // We are going to hand copy all of the parameters because the other way of copying the parameters are going to
+    // miss some of them because we are not enumerating all of them.
+  }
+  return filter;
 }
 
 // -----------------------------------------------------------------------------
@@ -759,7 +759,7 @@ AbstractFilter::Pointer ITKStitchMontage::newFilterInstance(bool copyFilterParam
 // -----------------------------------------------------------------------------
 const QString ITKStitchMontage::getCompiledLibraryName() const
 {
-	return ITKImageProcessingConstants::ITKImageProcessingBaseName;
+  return ITKImageProcessingConstants::ITKImageProcessingBaseName;
 }
 
 // -----------------------------------------------------------------------------
@@ -767,7 +767,7 @@ const QString ITKStitchMontage::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 const QString ITKStitchMontage::getBrandingString() const
 {
-	return "ITKImageProcessing";
+  return "ITKImageProcessing";
 }
 
 // -----------------------------------------------------------------------------
@@ -775,17 +775,17 @@ const QString ITKStitchMontage::getBrandingString() const
 // -----------------------------------------------------------------------------
 const QString ITKStitchMontage::getFilterVersion() const
 {
-	QString version;
-	QTextStream vStream(&version);
-	vStream << ITKImageProcessing::Version::Major() << "." << ITKImageProcessing::Version::Minor() << "." << ITKImageProcessing::Version::Patch();
-	return version;
+  QString version;
+  QTextStream vStream(&version);
+  vStream << ITKImageProcessing::Version::Major() << "." << ITKImageProcessing::Version::Minor() << "." << ITKImageProcessing::Version::Patch();
+  return version;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ITKStitchMontage::getGroupName() const
 {
-	return SIMPL::FilterGroups::IOFilters;
+  return SIMPL::FilterGroups::IOFilters;
 }
 
 // -----------------------------------------------------------------------------
@@ -801,7 +801,7 @@ const QUuid ITKStitchMontage::getUuid()
 // -----------------------------------------------------------------------------
 const QString ITKStitchMontage::getSubGroupName() const
 {
-	return SIMPL::FilterSubGroups::GenerationFilters;
+  return SIMPL::FilterSubGroups::GenerationFilters;
 }
 
 // -----------------------------------------------------------------------------
