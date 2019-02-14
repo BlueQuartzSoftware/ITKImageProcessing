@@ -83,20 +83,8 @@ public:
   SIMPL_FILTER_PARAMETER(QString, CommonAttributeMatrixName)
   Q_PROPERTY(QString CommonAttributeMatrixName READ getCommonAttributeMatrixName WRITE setCommonAttributeMatrixName)
 
-  SIMPL_FILTER_PARAMETER(bool, StitchMontage)
-  Q_PROPERTY(bool StitchMontage READ getStitchMontage WRITE setStitchMontage)
-
   SIMPL_FILTER_PARAMETER(QString, CommonDataArrayName)
   Q_PROPERTY(QString CommonDataArrayName READ getCommonDataArrayName WRITE setCommonDataArrayName)
-
-  SIMPL_FILTER_PARAMETER(QString, MontageDataContainerName)
-  Q_PROPERTY(QString MontageDataContainerName READ getMontageDataContainerName WRITE setMontageDataContainerName)
-
-  SIMPL_FILTER_PARAMETER(QString, MontageAttributeMatrixName)
-  Q_PROPERTY(QString MontageAttributeMatrixName READ getMontageAttributeMatrixName WRITE setMontageAttributeMatrixName)
-
-  SIMPL_FILTER_PARAMETER(QString, MontageDataArrayName)
-  Q_PROPERTY(QString MontageDataArrayName READ getMontageDataArrayName WRITE setMontageDataArrayName)
 
   SIMPL_FILTER_PARAMETER(bool, ManualTileOverlap)
   Q_PROPERTY(bool ManualTileOverlap READ getManualTileOverlap WRITE setManualTileOverlap)
