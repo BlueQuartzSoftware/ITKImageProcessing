@@ -174,7 +174,7 @@ void ITKGenerateMontageConfiguration::setupFilterParameters()
 {
   QVector<FilterParameter::Pointer> parameters;
 
-  parameters.push_back(SIMPL_NEW_INT_VEC3_FP("Montage Size", MontageSize, FilterParameter::Parameter, ITKGenerateMontageConfiguration));
+  parameters.push_back(SIMPL_NEW_INT_VEC3_FP("Montage Size (Cols, Rows)", MontageSize, FilterParameter::Parameter, ITKGenerateMontageConfiguration));
 
   {
     QStringList linkedProps;
