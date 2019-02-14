@@ -210,6 +210,8 @@ void ITKGenerateMontageConfiguration::dataCheck()
   m_xMontageSize = m_MontageSize.x;
   m_yMontageSize = m_MontageSize.y;
 
+  int totalMontageSize = m_xMontageSize*m_yMontageSize;
+
   if(m_xMontageSize <= 0 || m_yMontageSize <= 0)
   {
     setErrorCondition(-11000);
@@ -218,11 +220,22 @@ void ITKGenerateMontageConfiguration::dataCheck()
     return;
   }
 
+  int selectedDCCount = getImageDataContainers().size();
+
   // Test to make sure at least one data container is selected
-  if(getImageDataContainers().size() < 1)
+  if(selectedDCCount < 1)
   {
     setErrorCondition(-11001);
     QString ss = QObject::tr("At least one Data Container must be selected");
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
+
+  if (totalMontageSize != selectedDCCount)
+  {
+    setErrorCondition(-11002);
+    QString ss = QObject::tr("The number of selected data containers (%1) does not match the number of data "
+                             "containers expected by the montage size dimensions specified (%2)").arg(selectedDCCount).arg(totalMontageSize);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
