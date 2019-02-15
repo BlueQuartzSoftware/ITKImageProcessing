@@ -580,11 +580,11 @@ template <typename PixelType, typename Resampler> typename Resampler::Pointer IT
   // resampleF->SetMontage(montage); // doesn't compile, because montage is expected
   // to be templated using itk::Image, not itk::Dream3DImage
 
-  typename ScalarImageType::SpacingType sp;
-  sp.Fill(1.0); // assume unit spacing
+//  typename ScalarImageType::SpacingType sp;
+//  sp.Fill(1.0); // assume unit spacing
 
   resampler->SetMontageSize({m_xMontageSize, m_yMontageSize});
-  resampler->SetForcedSpacing(sp);
+//  resampler->SetForcedSpacing(sp);
 
   return resampler;
 }
