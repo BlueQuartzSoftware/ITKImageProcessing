@@ -158,6 +158,46 @@ void ITKImportRoboMetMontage::dataCheck()
     return;
   }
 
+  if(m_ImageFilePrefix.isEmpty())
+  {
+	  QString ss = QObject::tr("The image file prefix must be set").arg(getHumanLabel());
+	  setErrorCondition(-2004);
+	  notifyErrorMessage(getHumanLabel(), ss, -1);
+	  return;
+  }
+
+  if(m_ImageFileExtension.isEmpty())
+  {
+	  QString ss = QObject::tr("The image file extension must be set").arg(getHumanLabel());
+	  setErrorCondition(-2005);
+	  notifyErrorMessage(getHumanLabel(), ss, -1);
+	  return;
+  }
+
+  if(m_DataContainerPrefix.isEmpty())
+  {
+	  QString ss = QObject::tr("The data container prefix must be set").arg(getHumanLabel());
+	  setErrorCondition(-2006);
+	  notifyErrorMessage(getHumanLabel(), ss, -1);
+	  return;
+  }
+
+  if(m_CellAttributeMatrixName.isEmpty())
+  {
+	  QString ss = QObject::tr("The cell attribute matrix name must be set").arg(getHumanLabel());
+	  setErrorCondition(-2007);
+	  notifyErrorMessage(getHumanLabel(), ss, -1);
+	  return;
+  }
+
+  if(m_AttributeArrayName.isEmpty())
+  {
+	  QString ss = QObject::tr("The attribute array name must be set").arg(getHumanLabel());
+	  setErrorCondition(-2008);
+	  notifyErrorMessage(getHumanLabel(), ss, -1);
+	  return;
+  }
+
   // Parse Fiji Config File
   QDateTime lastModified(fi.lastModified());
 
