@@ -67,6 +67,10 @@ class ZeissImport_EXPORT ImportAxioVisionV4Montage : public AbstractFilter
   PYB11_PROPERTY(bool ConvertToGrayScale READ getConvertToGrayScale WRITE setConvertToGrayScale)
   PYB11_PROPERTY(FloatVec3_t ColorWeights READ getColorWeights WRITE setColorWeights)
   PYB11_PROPERTY(bool FileWasRead READ getFileWasRead WRITE setFileWasRead)
+  PYB11_PROPERTY(bool OverrideSpacingOrigin READ getOverrideSpacingOrigin WRITE setOverrideSpacingOrigin)
+  PYB11_PROPERTY(FloatVec3_t Origin READ getOrigin WRITE setOrigin)
+  PYB11_PROPERTY(FloatVec3_t Spacing READ getSpacing WRITE setSpacing)
+
   Q_DECLARE_PRIVATE(ImportAxioVisionV4Montage)
 
 public:
@@ -102,6 +106,15 @@ public:
 
   SIMPL_INSTANCE_PROPERTY(bool, FileWasRead)
   Q_PROPERTY(bool FileWasRead READ getFileWasRead)
+
+  SIMPL_INSTANCE_PROPERTY(bool, OverrideSpacingOrigin)
+  Q_PROPERTY(bool OverrideSpacingOrigin READ getOverrideSpacingOrigin WRITE setOverrideSpacingOrigin)
+
+  SIMPL_FILTER_PARAMETER(FloatVec3_t, Origin)
+  Q_PROPERTY(FloatVec3_t Origin READ getOrigin WRITE setOrigin)
+
+  SIMPL_FILTER_PARAMETER(FloatVec3_t, Spacing)
+  Q_PROPERTY(FloatVec3_t Spacing READ getSpacing WRITE setSpacing)
 
   QString getMontageInformation();
   Q_PROPERTY(QString MontageInformation READ getMontageInformation)

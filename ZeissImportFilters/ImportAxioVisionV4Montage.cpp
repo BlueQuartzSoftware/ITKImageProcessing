@@ -109,11 +109,15 @@ ImportAxioVisionV4Montage::ImportAxioVisionV4Montage()
 , m_ConvertToGrayScale(false)
 , m_ImportAllMetaData(false)
 , m_FileWasRead(false)
+, m_OverrideSpacingOrigin(false)
 , d_ptr(new ImportAxioVisionV4MontagePrivate(this))
 {
   m_ColorWeights.x = 0.2125f;
   m_ColorWeights.y = 0.7154f;
   m_ColorWeights.z = 0.0721f;
+
+  m_Spacing.FloatVec3(1.0f, 1.0f, 1.0f);
+  m_Origin.FloatVec3(0.0f, 0.0f, 0.0f);
 }
 
 // -----------------------------------------------------------------------------
@@ -139,7 +143,15 @@ void ImportAxioVisionV4Montage::setupFilterParameters()
   parameters.push_back(param);
 
   parameters.push_back(SIMPL_NEW_BOOL_FP("Import All MetaData", ImportAllMetaData, FilterParameter::Parameter, ImportAxioVisionV4Montage));
-  QStringList linkedProps("ColorWeights");
+
+  QStringList linkedProps("Spacing");
+  linkedProps << "Origin";
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Override Origin and Spacing", OverrideSpacingOrigin, FilterParameter::Parameter, ImportAxioVisionV4Montage, linkedProps));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Origin", Origin, FilterParameter::Parameter, ImportAxioVisionV4Montage));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Spacing", Spacing, FilterParameter::Parameter, ImportAxioVisionV4Montage));
+
+  linkedProps.clear();
+  linkedProps << "ColorWeights";
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Convert To GrayScale", ConvertToGrayScale, FilterParameter::Parameter, ImportAxioVisionV4Montage, linkedProps));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Color Weighting", ColorWeights, FilterParameter::Parameter, ImportAxioVisionV4Montage));
 
@@ -419,8 +431,12 @@ void ImportAxioVisionV4Montage::parseImages(QDomElement& root, const ZeissTagsXm
   int32_t rowCountPadding = MetaXmlUtils::CalculatePaddingDigits(rowCount);
   int32_t colCountPadding = MetaXmlUtils::CalculatePaddingDigits(colCount);
   int charPaddingCount = std::max(rowCountPadding, colCountPadding);
+  std::array<float, 3> minCoord = {std::numeric_limits<float>::max(), std::numeric_limits<float>::max(), std::numeric_limits<float>::max()};
+  std::array<float, 3> minSpacing = {std::numeric_limits<float>::max(), std::numeric_limits<float>::max(), std::numeric_limits<float>::max()};
 
   DataContainerArray::Pointer dca = getDataContainerArray();
+
+  std::vector<ImageGeom::Pointer> geometries;
 
   // Loop over every image in the _meta.xml file
   for(int p = 0; p < imageCount; p++)
@@ -499,6 +515,16 @@ void ImportAxioVisionV4Montage::parseImages(QDomElement& root, const ZeissTagsXm
     ImageGeom::Pointer image = initializeImageGeom(root, photoTagsSection);
     dc->setGeometry(image);
 
+    image->getResolution(minSpacing.data());
+
+    float xOrigin = 0.0f, yOrigin = 0.0f, zOrigin = 0.0f;
+    std::tie(xOrigin, yOrigin, zOrigin) = image->getOrigin();
+    minCoord[0] = std::min(xOrigin, minCoord[0]);
+    minCoord[1] = std::min(yOrigin, minCoord[1]);
+    minCoord[2] = 0.0f;
+
+    geometries.emplace_back(image);
+
     if(getImportAllMetaData())
     {
       QVector<size_t> dims = {1};
@@ -519,9 +545,44 @@ void ImportAxioVisionV4Montage::parseImages(QDomElement& root, const ZeissTagsXm
     }
   }
 
+  // Now adjust the origin/spacing if needed
+  if(getOverrideSpacingOrigin())
+  {
+    std::array<float, 3> overrideSpacing = {m_Spacing.x, m_Spacing.y, m_Spacing.z};
+    std::array<float, 3> overrideOrigin = {m_Origin.x, m_Origin.y, m_Origin.z};
+    for(const auto& image : geometries)
+    {
+      std::array<float, 3> currentOrigin;
+      image->getOrigin(currentOrigin.data());
+
+      std::array<float, 3> currentSpacing;
+      image->getResolution(currentSpacing.data());
+
+      for(size_t i = 0; i < 3; i++)
+      {
+        float delta = currentOrigin[i] - minCoord[i];
+        // Convert to Pixel Coords
+        delta = delta / currentSpacing[i];
+        // Convert to the override origin
+        delta = delta * overrideSpacing[i];
+        currentOrigin[i] = overrideOrigin[i] + delta;
+      }
+      image->setOrigin(currentOrigin.data());
+      image->setResolution(overrideSpacing.data());
+    }
+  }
+
   QString montageInfo;
   QTextStream ss(&montageInfo);
   ss << "Rows=" << rowCount << "  Columns=" << colCount << "  Num. Images=" << imageCount;
+  if(getOverrideSpacingOrigin())
+  {
+    ss << "\nOrigin: " << m_Origin.x << ", " << m_Origin.y << "  Spacing: " << m_Spacing.x << ", " << m_Spacing.y;
+  }
+  else
+  {
+    ss << "\nOrigin: " << minCoord[0] << ", " << minCoord[1] << "  Spacing: " << minSpacing[0] << ", " << minSpacing[1];
+  }
   d_ptr->m_MontageInformation = montageInfo;
 }
 
@@ -848,9 +909,6 @@ ImageGeom::Pointer ImportAxioVisionV4Montage::initializeImageGeom(const QDomElem
   QDomElement unitsDom = root.firstChildElement(ZeissImportConstants::Xml::Scaling).firstChildElement("Type_0");
   int xUnits = unitsDom.text().toInt(&ok);
   // We are going to assume that the units in both the X and Y are the same. Why would they be different?
-  //  unitsDom = root.firstChildElement(ZeissImportConstants::Xml::Scaling).firstChildElement("Type_1");
-  //  int yUnits = unitsDom.text().toInt(&ok);
-
   IGeometry::LengthUnit lengthUnit = ZeissUnitMapping::Instance()->convertToIGeometryLengthUnit(xUnits);
   image->setUnits(lengthUnit);
   image->setName("AxioVision V4 Geometry");
