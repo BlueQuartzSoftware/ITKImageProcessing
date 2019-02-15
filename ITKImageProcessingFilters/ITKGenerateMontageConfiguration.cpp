@@ -442,8 +442,8 @@ template <typename PixelType, typename MontageType> typename MontageType::Pointe
   //	using PointType = itk::Point<double, Dimension>;
   using ScalarImageType = itk::Dream3DImage<ScalarPixelType, Dimension>;
   using PCMType = itk::PhaseCorrelationImageRegistrationMethod<ScalarImageType, ScalarImageType>;
-  typename ScalarImageType::SpacingType sp;
-  sp.Fill(1.0); // assume unit spacing
+//  typename ScalarImageType::SpacingType sp;
+//  sp.Fill(1.0); // assume unit spacing
 
   unsigned x1 = 1;
   unsigned y1 = 1;
@@ -463,7 +463,7 @@ template <typename PixelType, typename MontageType> typename MontageType::Pointe
   montage->SetMontageSize({m_xMontageSize, m_yMontageSize});
   montage->GetModifiablePCM()->SetPaddingMethod(PCMType::PaddingMethod::MirrorWithExponentialDecay);
   //  montage->SetOriginAdjustment(originAdjustment);
-  montage->SetForcedSpacing(sp);
+//  montage->SetForcedSpacing(sp);
 
   using PeakInterpolationType = typename itk::MaxPhaseCorrelationOptimizer<PCMType>::PeakInterpolationMethod;
   using PeakFinderUnderlying = typename std::underlying_type<PeakInterpolationType>::type;
