@@ -11,7 +11,7 @@ option(ITKImageProcessing_LeanAndMean "Only compile the Reader and Writers, All 
 # Look for ITK as it is required.
 if(NOT SIMPL_USE_ITK)
   set(PluginNumFilters "-100")
-  set(DREAM3D_BUILD_PLUGIN_${PLUGIN_NAME} "OFF")
+  set(DREAM3D_ENABLE_${PLUGIN_NAME} "OFF")
   message(STATUS "${PLUGIN_NAME}: SIMPL_USE_ITK=OFF, ${PLUGIN_NAME} is disabled.")
   return()
 endif()
@@ -276,7 +276,7 @@ endif()
 
 # -------------------------------------------------------------------- 
 # If Python Wrapping is enabled then generate the Python module code 
-if(SIMPL_WRAP_PYTHON)
+if(SIMPL_ENABLE_PYTHON)
   include("${SIMPLProj_SOURCE_DIR}/Wrapping/Python/Pybind11/cmake/WrappingFunctions.cmake")
   string(TOLOWER ${PLUGIN_NAME} PLUGIN_NAME_lower) 
   CreatePybind11Module(MODULE_NAME ${PLUGIN_NAME} 
