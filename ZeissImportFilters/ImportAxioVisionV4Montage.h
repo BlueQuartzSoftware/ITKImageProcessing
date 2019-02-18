@@ -69,7 +69,7 @@ class ZeissImport_EXPORT ImportAxioVisionV4Montage : public AbstractFilter
   PYB11_PROPERTY(bool FileWasRead READ getFileWasRead WRITE setFileWasRead)
   PYB11_PROPERTY(bool OverrideSpacingOrigin READ getOverrideSpacingOrigin WRITE setOverrideSpacingOrigin)
   PYB11_PROPERTY(FloatVec3_t Origin READ getOrigin WRITE setOrigin)
-  PYB11_PROPERTY(FloatVec3_t Spacing READ getSpacing WRITE setSpacing)
+  PYB11_PROPERTY(float Spacing READ getSpacing WRITE setSpacing)
 
   Q_DECLARE_PRIVATE(ImportAxioVisionV4Montage)
 
@@ -107,11 +107,14 @@ public:
   SIMPL_INSTANCE_PROPERTY(bool, FileWasRead)
   Q_PROPERTY(bool FileWasRead READ getFileWasRead)
 
-  SIMPL_INSTANCE_PROPERTY(bool, OverrideSpacingOrigin)
-  Q_PROPERTY(bool OverrideSpacingOrigin READ getOverrideSpacingOrigin WRITE setOverrideSpacingOrigin)
+  SIMPL_FILTER_PARAMETER(bool, ChangeOrigin)
+  Q_PROPERTY(bool ChangeOrigin READ getChangeOrigin WRITE setChangeOrigin)
 
   SIMPL_FILTER_PARAMETER(FloatVec3_t, Origin)
   Q_PROPERTY(FloatVec3_t Origin READ getOrigin WRITE setOrigin)
+
+  SIMPL_FILTER_PARAMETER(bool, ChangeSpacing)
+  Q_PROPERTY(bool ChangeSpacing READ getChangeSpacing WRITE setChangeSpacing)
 
   SIMPL_FILTER_PARAMETER(FloatVec3_t, Spacing)
   Q_PROPERTY(FloatVec3_t Spacing READ getSpacing WRITE setSpacing)
@@ -168,23 +171,6 @@ public:
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
    */
   void setupFilterParameters() override;
-
-  /**
-   * @brief readFilterParameters Reimplemented from @see AbstractFilter class
-   */
-  void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
-
-  /**
-   * @brief readFilterParametersFromJson Reads the filter parameters from a file
-   * @param reader Reader that is used to read the parameters from a file
-   */
-  void readFilterParameters(QJsonObject& obj) override;
-
-  /**
-   * @brief writeFilterParametersToJson Writes the filter parameters to a file
-   * @param root The root json object
-   */
-  void writeFilterParameters(QJsonObject& obj) const override;
 
   /**
    * @brief execute Reimplemented from @see AbstractFilter class

@@ -45,6 +45,7 @@
 #include "SIMPLib/DataArrays/StringDataArray.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/FloatFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
@@ -109,15 +110,16 @@ ImportAxioVisionV4Montage::ImportAxioVisionV4Montage()
 , m_ConvertToGrayScale(false)
 , m_ImportAllMetaData(false)
 , m_FileWasRead(false)
-, m_OverrideSpacingOrigin(false)
+, m_ChangeOrigin(false)
+, m_ChangeSpacing(false)
 , d_ptr(new ImportAxioVisionV4MontagePrivate(this))
 {
   m_ColorWeights.x = 0.2125f;
   m_ColorWeights.y = 0.7154f;
   m_ColorWeights.z = 0.0721f;
 
-  m_Spacing.FloatVec3(1.0f, 1.0f, 1.0f);
   m_Origin.FloatVec3(0.0f, 0.0f, 0.0f);
+  m_Spacing.FloatVec3(1.0f, 1.0f, 1.0f);
 }
 
 // -----------------------------------------------------------------------------
@@ -144,10 +146,13 @@ void ImportAxioVisionV4Montage::setupFilterParameters()
 
   parameters.push_back(SIMPL_NEW_BOOL_FP("Import All MetaData", ImportAllMetaData, FilterParameter::Parameter, ImportAxioVisionV4Montage));
 
-  QStringList linkedProps("Spacing");
-  linkedProps << "Origin";
-  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Override Origin and Spacing", OverrideSpacingOrigin, FilterParameter::Parameter, ImportAxioVisionV4Montage, linkedProps));
+  QStringList linkedProps("Origin");
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Change Origin", ChangeOrigin, FilterParameter::Parameter, ImportAxioVisionV4Montage, linkedProps));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Origin", Origin, FilterParameter::Parameter, ImportAxioVisionV4Montage));
+
+  linkedProps.clear();
+  linkedProps << "Spacing";
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Change Spacing", ChangeSpacing, FilterParameter::Parameter, ImportAxioVisionV4Montage, linkedProps));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Spacing", Spacing, FilterParameter::Parameter, ImportAxioVisionV4Montage));
 
   linkedProps.clear();
@@ -163,40 +168,6 @@ void ImportAxioVisionV4Montage::setupFilterParameters()
   setFilterParameters(parameters);
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void ImportAxioVisionV4Montage::readFilterParameters(AbstractFilterParametersReader* reader, int index)
-{
-  reader->openFilterGroup(this, index);
-  setInputFile(reader->readString("InputFile", getInputFile()));
-  setDataContainerName(reader->readString("DataContainerName", getDataContainerName()));
-  setCellAttributeMatrixName(reader->readString("CellAttributeMatrixName", getCellAttributeMatrixName()));
-  setImageDataArrayName(reader->readString("ImageDataArrayName", getImageDataArrayName()));
-  setConvertToGrayScale(reader->readValue("ConvertToGrayScale", getConvertToGrayScale()));
-  setColorWeights(reader->readFloatVec3("ColorWeights", getColorWeights()));
-  reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void ImportAxioVisionV4Montage::readFilterParameters(QJsonObject& obj)
-{
-  AbstractFilter::readFilterParameters(obj);
-  setImageDataArrayName(obj["ImageDataArrayName"].toString());
-}
-
-// FP: Check why these values are not connected to a filter parameter!
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void ImportAxioVisionV4Montage::writeFilterParameters(QJsonObject& obj) const
-{
-  AbstractFilter::writeFilterParameters(obj);
-  obj["ImageDataArrayName"] = getImageDataArrayName();
-}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -545,11 +516,26 @@ void ImportAxioVisionV4Montage::parseImages(QDomElement& root, const ZeissTagsXm
     }
   }
 
+  QString montageInfo;
+  QTextStream ss(&montageInfo);
+  ss << "Columns=" << colCount << "  Rows=" << rowCount << "  Num. Images=" << imageCount;
+
+  std::array<float, 3> overrideOrigin = minCoord;
+  std::array<float, 3> overrideSpacing = minSpacing;
+
   // Now adjust the origin/spacing if needed
-  if(getOverrideSpacingOrigin())
+  if(getChangeOrigin() || getChangeSpacing())
   {
-    std::array<float, 3> overrideSpacing = {m_Spacing.x, m_Spacing.y, m_Spacing.z};
-    std::array<float, 3> overrideOrigin = {m_Origin.x, m_Origin.y, m_Origin.z};
+
+    if(getChangeOrigin())
+    {
+      overrideOrigin = {m_Origin.x, m_Origin.y, m_Origin.z};
+    }
+    if(getChangeSpacing())
+    {
+      overrideSpacing = {m_Spacing.x, m_Spacing.y, m_Spacing.z};
+    }
+
     for(const auto& image : geometries)
     {
       std::array<float, 3> currentOrigin;
@@ -571,18 +557,8 @@ void ImportAxioVisionV4Montage::parseImages(QDomElement& root, const ZeissTagsXm
       image->setResolution(overrideSpacing.data());
     }
   }
-
-  QString montageInfo;
-  QTextStream ss(&montageInfo);
-  ss << "Rows=" << rowCount << "  Columns=" << colCount << "  Num. Images=" << imageCount;
-  if(getOverrideSpacingOrigin())
-  {
-    ss << "\nOrigin: " << m_Origin.x << ", " << m_Origin.y << "  Spacing: " << m_Spacing.x << ", " << m_Spacing.y;
-  }
-  else
-  {
-    ss << "\nOrigin: " << minCoord[0] << ", " << minCoord[1] << "  Spacing: " << minSpacing[0] << ", " << minSpacing[1];
-  }
+  ss << "\nOrigin: " << overrideOrigin[0] << ", " << overrideOrigin[1] << ", " << overrideOrigin[2];
+  ss << "  Spacing: " << overrideSpacing[0] << ", " << overrideSpacing[1] << ", " << overrideSpacing[2];
   d_ptr->m_MontageInformation = montageInfo;
 }
 
@@ -851,11 +827,15 @@ void ImportAxioVisionV4Montage::convertToGrayScale(DataContainer* dc, const QStr
       gray->setName(rgb->getName());
       am->addAttributeArray(gray->getName(), gray);
     }
+    else
+    {
+      setErrorCondition(filter->getErrorCondition());
+      notifyErrorMessage(getHumanLabel(), "Grayscale conversion failed. The data must be RGB or RGBA to convert.", getErrorCondition());
+    }
   }
   else
   {
-    QString ss = QObject::tr("Error trying to instantiate the '%1' filter which is typically included in the 'ImageProcessing' plugin.")
-                     .arg(ZeissImportConstants::ImageProcessingFilters::k_RgbToGrayFilterClassName);
+    QString ss = QObject::tr("Error trying to instantiate the '%1' filter.").arg(ZeissImportConstants::ImageProcessingFilters::k_RgbToGrayFilterClassName);
     setErrorCondition(-70009);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
