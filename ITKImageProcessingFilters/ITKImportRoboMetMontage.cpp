@@ -398,7 +398,7 @@ int32_t ITKImportRoboMetMontage::parseRoboMetConfigFile(const QString &filePath)
 
 		  m_RegisteredFilePaths.push_back(imageFilePath);
 		  m_CoordsMap.insert(imageFilePath, QPointF(xPos, yPos));
-		  m_RowColIdMap.insert(imageFilePath, tr("r%1c%2").arg(col).arg(row));
+		  m_RowColIdMap.insert(imageFilePath, tr("r%1c%2").arg(row).arg(col));
 		  m_NumImages++;
 	  }
 
