@@ -380,13 +380,13 @@ void ImportAxioVisionV4Montage::parseImages(QDomElement& root, const ZeissTagsXm
     return;
   }
 
-  int32_t rowCount = MetaXmlUtils::GetInt32Entry(this, rootTagsSection.get(), Zeiss::MetaXML::ImageCountVId);
+  m_RowCount = MetaXmlUtils::GetInt32Entry(this, rootTagsSection.get(), Zeiss::MetaXML::ImageCountVId);
   if(getErrorCondition() < 0)
   {
     return;
   }
 
-  int32_t colCount = MetaXmlUtils::GetInt32Entry(this, rootTagsSection.get(), Zeiss::MetaXML::ImageCountUId);
+  m_ColumnCount = MetaXmlUtils::GetInt32Entry(this, rootTagsSection.get(), Zeiss::MetaXML::ImageCountUId);
   if(getErrorCondition() < 0)
   {
     return;
@@ -399,8 +399,8 @@ void ImportAxioVisionV4Montage::parseImages(QDomElement& root, const ZeissTagsXm
   // Figure out the max padding digits for both the imageCount (we need that to generate the proper xml tag) and
   // the row/col values because we need to have a consistent numbering format for later filters.
   int imageCountPadding = MetaXmlUtils::CalculatePaddingDigits(imageCount);
-  int32_t rowCountPadding = MetaXmlUtils::CalculatePaddingDigits(rowCount);
-  int32_t colCountPadding = MetaXmlUtils::CalculatePaddingDigits(colCount);
+  int32_t rowCountPadding = MetaXmlUtils::CalculatePaddingDigits(m_RowCount);
+  int32_t colCountPadding = MetaXmlUtils::CalculatePaddingDigits(m_ColumnCount);
   int charPaddingCount = std::max(rowCountPadding, colCountPadding);
   std::array<float, 3> minCoord = {std::numeric_limits<float>::max(), std::numeric_limits<float>::max(), std::numeric_limits<float>::max()};
   std::array<float, 3> minSpacing = {std::numeric_limits<float>::max(), std::numeric_limits<float>::max(), std::numeric_limits<float>::max()};
@@ -518,7 +518,7 @@ void ImportAxioVisionV4Montage::parseImages(QDomElement& root, const ZeissTagsXm
 
   QString montageInfo;
   QTextStream ss(&montageInfo);
-  ss << "Columns=" << colCount << "  Rows=" << rowCount << "  Num. Images=" << imageCount;
+  ss << "Columns=" << m_ColumnCount << "  Rows=" << m_RowCount << "  Num. Images=" << imageCount;
 
   std::array<float, 3> overrideOrigin = minCoord;
   std::array<float, 3> overrideSpacing = minSpacing;

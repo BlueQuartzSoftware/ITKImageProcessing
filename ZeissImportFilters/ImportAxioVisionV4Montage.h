@@ -71,6 +71,8 @@ class ZeissImport_EXPORT ImportAxioVisionV4Montage : public AbstractFilter
   PYB11_PROPERTY(FloatVec3_t Origin READ getOrigin WRITE setOrigin)
   PYB11_PROPERTY(bool ChangeSpacing READ getChangeSpacing WRITE setChangeSpacing)
   PYB11_PROPERTY(FloatVec3_t Spacing READ getSpacing WRITE setSpacing)
+  PYB11_PROPERTY(int32_t RowCount READ getRowCount)
+  PYB11_PROPERTY(int32_t ColumnCount READ getColumnCount)
 
   Q_DECLARE_PRIVATE(ImportAxioVisionV4Montage)
 
@@ -119,6 +121,12 @@ public:
 
   SIMPL_FILTER_PARAMETER(FloatVec3_t, Spacing)
   Q_PROPERTY(FloatVec3_t Spacing READ getSpacing WRITE setSpacing)
+
+  SIMPL_GET_PROPERTY(int32_t, RowCount)
+  Q_PROPERTY(int32_t RowCount READ getRowCount)
+
+  SIMPL_GET_PROPERTY(int32_t, ColumnCount)
+  Q_PROPERTY(int32_t ColumnCount READ getColumnCount)
 
   QString getMontageInformation();
   Q_PROPERTY(QString MontageInformation READ getMontageInformation)
@@ -280,6 +288,9 @@ protected:
 
 private:
   QScopedPointer<ImportAxioVisionV4MontagePrivate> const d_ptr;
+
+  int m_RowCount = -1;
+  int m_ColumnCount = -1;
 
 public:
   ImportAxioVisionV4Montage(const ImportAxioVisionV4Montage&) = delete;            // Copy Constructor Not Implemented
