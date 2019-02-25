@@ -88,7 +88,7 @@ CalculateBackground::~CalculateBackground() = default;
 // -----------------------------------------------------------------------------
 void CalculateBackground::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   //parameters.push_back(DataBundleSelectionFilterParameter::New("DataContainerBundle Name", "DataContainerBundleName", getDataContainerBundleName(), FilterParameter::Uncategorized, SIMPL_BIND_SETTER(CalculateBackground, this, DataContainerBundleName), SIMPL_BIND_GETTER(CalculateBackground, this, DataContainerBundleName)));
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req;

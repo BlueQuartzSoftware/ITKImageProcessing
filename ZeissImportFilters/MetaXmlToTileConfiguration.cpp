@@ -80,7 +80,7 @@ void MetaXmlToTileConfiguration::initialize()
 // -----------------------------------------------------------------------------
 void MetaXmlToTileConfiguration::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Input File", InputFile, FilterParameter::Parameter, MetaXmlToTileConfiguration, "*.raw *.bin"));
   parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Output File", OutputFile, FilterParameter::Parameter, MetaXmlToTileConfiguration, ""));
   setFilterParameters(parameters);

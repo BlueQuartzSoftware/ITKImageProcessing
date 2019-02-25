@@ -68,7 +68,7 @@ void SeparateDataSets::initialize()
 // -----------------------------------------------------------------------------
 void SeparateDataSets::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req =

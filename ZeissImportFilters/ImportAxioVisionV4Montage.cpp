@@ -137,7 +137,7 @@ SIMPL_PIMPL_PROPERTY_DEF(ImportAxioVisionV4Montage, ZeissTagsXmlSection::Pointer
 // -----------------------------------------------------------------------------
 void ImportAxioVisionV4Montage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Zeiss XML File (_meta.xml)", InputFile, FilterParameter::Parameter, ImportAxioVisionV4Montage, "*.xml"));
 
   PreflightUpdatedValueFilterParameter::Pointer param = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Montage Information", MontageInformation, FilterParameter::Parameter, ImportAxioVisionV4Montage);
