@@ -40,7 +40,7 @@ ITKDanielssonDistanceMapImage::~ITKDanielssonDistanceMapImage() = default;
 // -----------------------------------------------------------------------------
 void ITKDanielssonDistanceMapImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_BOOL_FP("InputIsBinary", InputIsBinary, FilterParameter::Parameter, ITKDanielssonDistanceMapImage));
   parameters.push_back(SIMPL_NEW_BOOL_FP("SquaredDistance", SquaredDistance, FilterParameter::Parameter, ITKDanielssonDistanceMapImage));

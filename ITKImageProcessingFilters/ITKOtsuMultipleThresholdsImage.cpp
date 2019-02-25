@@ -41,7 +41,7 @@ ITKOtsuMultipleThresholdsImage::~ITKOtsuMultipleThresholdsImage() = default;
 // -----------------------------------------------------------------------------
 void ITKOtsuMultipleThresholdsImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_INTEGER_FP("NumberOfThresholds", NumberOfThresholds, FilterParameter::Parameter, ITKOtsuMultipleThresholdsImage));
   parameters.push_back(SIMPL_NEW_INTEGER_FP("LabelOffset", LabelOffset, FilterParameter::Parameter, ITKOtsuMultipleThresholdsImage));

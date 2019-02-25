@@ -42,7 +42,7 @@ ITKGrayscaleDilateImage::~ITKGrayscaleDilateImage() = default;
 // -----------------------------------------------------------------------------
 void ITKGrayscaleDilateImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   // Structuring element
   {

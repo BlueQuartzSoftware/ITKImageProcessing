@@ -38,7 +38,7 @@ ITKSumProjectionImage::~ITKSumProjectionImage() = default;
 // -----------------------------------------------------------------------------
 void ITKSumProjectionImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("ProjectionDimension", ProjectionDimension, FilterParameter::Parameter, ITKSumProjectionImage));
 

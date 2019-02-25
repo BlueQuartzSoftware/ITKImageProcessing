@@ -44,7 +44,7 @@ ITKBinaryMorphologicalOpeningImage::~ITKBinaryMorphologicalOpeningImage() = defa
 // -----------------------------------------------------------------------------
 void ITKBinaryMorphologicalOpeningImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   // Structuring element
   {

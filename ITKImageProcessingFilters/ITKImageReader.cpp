@@ -64,7 +64,7 @@ ITKImageReader::~ITKImageReader() = default;
 // -----------------------------------------------------------------------------
 void ITKImageReader::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   QString supportedExtensions = ITKImageProcessingPlugin::getListSupportedReadExtensions();
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("File", FileName, FilterParameter::Parameter, ITKImageReader, supportedExtensions, "Image"));
   parameters.push_back(SIMPL_NEW_STRING_FP("Data Container", DataContainerName, FilterParameter::CreatedArray, ITKImageReader));

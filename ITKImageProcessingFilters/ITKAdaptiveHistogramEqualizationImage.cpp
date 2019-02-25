@@ -40,7 +40,7 @@ ITKAdaptiveHistogramEqualizationImage::~ITKAdaptiveHistogramEqualizationImage() 
 // -----------------------------------------------------------------------------
 void ITKAdaptiveHistogramEqualizationImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Radius", Radius, FilterParameter::Parameter, ITKAdaptiveHistogramEqualizationImage));
   parameters.push_back(SIMPL_NEW_FLOAT_FP("Alpha", Alpha, FilterParameter::Parameter, ITKAdaptiveHistogramEqualizationImage));

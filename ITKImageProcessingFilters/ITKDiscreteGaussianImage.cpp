@@ -41,7 +41,7 @@ ITKDiscreteGaussianImage::~ITKDiscreteGaussianImage() = default;
 // -----------------------------------------------------------------------------
 void ITKDiscreteGaussianImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Variance", Variance, FilterParameter::Parameter, ITKDiscreteGaussianImage));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("MaximumKernelWidth", MaximumKernelWidth, FilterParameter::Parameter, ITKDiscreteGaussianImage));

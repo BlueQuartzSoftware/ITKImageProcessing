@@ -38,7 +38,7 @@ ITKMedianImage::~ITKMedianImage() = default;
 // -----------------------------------------------------------------------------
 void ITKMedianImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Radius", Radius, FilterParameter::Parameter, ITKMedianImage));
 

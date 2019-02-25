@@ -39,7 +39,7 @@ ITKShiftScaleImage::~ITKShiftScaleImage() = default;
 // -----------------------------------------------------------------------------
 void ITKShiftScaleImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Shift", Shift, FilterParameter::Parameter, ITKShiftScaleImage));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Scale", Scale, FilterParameter::Parameter, ITKShiftScaleImage));

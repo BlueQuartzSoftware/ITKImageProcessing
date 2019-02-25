@@ -124,7 +124,7 @@ void ITKImageWriter::registerImageIOFactories() const
 // -----------------------------------------------------------------------------
 void ITKImageWriter::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();

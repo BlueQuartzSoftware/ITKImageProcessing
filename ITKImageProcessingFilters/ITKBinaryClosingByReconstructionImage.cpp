@@ -44,7 +44,7 @@ ITKBinaryClosingByReconstructionImage::~ITKBinaryClosingByReconstructionImage() 
 // -----------------------------------------------------------------------------
 void ITKBinaryClosingByReconstructionImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   // Structuring element
   {

@@ -44,7 +44,7 @@ ITKBinaryMorphologicalClosingImage::~ITKBinaryMorphologicalClosingImage() = defa
 // -----------------------------------------------------------------------------
 void ITKBinaryMorphologicalClosingImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   // Structuring element
   {

@@ -44,7 +44,7 @@ ITKErodeObjectMorphologyImage::~ITKErodeObjectMorphologyImage() = default;
 // -----------------------------------------------------------------------------
 void ITKErodeObjectMorphologyImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   // Structuring element
   {

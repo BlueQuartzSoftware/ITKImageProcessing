@@ -45,7 +45,7 @@ ITKBinaryDilateImage::~ITKBinaryDilateImage() = default;
 // -----------------------------------------------------------------------------
 void ITKBinaryDilateImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   // Structuring element
   {

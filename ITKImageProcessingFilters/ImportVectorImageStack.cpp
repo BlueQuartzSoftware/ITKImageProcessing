@@ -86,7 +86,7 @@ ImportVectorImageStack::~ImportVectorImageStack() = default;
 // -----------------------------------------------------------------------------
 void ImportVectorImageStack::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_VECTORFILELISTINFO_FP("Input File List", InputFileListInfo, FilterParameter::Parameter, ImportVectorImageStack));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Origin", Origin, FilterParameter::Parameter, ImportVectorImageStack));

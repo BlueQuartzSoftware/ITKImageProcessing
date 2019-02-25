@@ -43,7 +43,7 @@ ITKGrayscaleMorphologicalClosingImage::~ITKGrayscaleMorphologicalClosingImage() 
 // -----------------------------------------------------------------------------
 void ITKGrayscaleMorphologicalClosingImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   // Structuring element
   {

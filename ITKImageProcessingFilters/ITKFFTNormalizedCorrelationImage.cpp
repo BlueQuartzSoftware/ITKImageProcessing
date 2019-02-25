@@ -40,7 +40,7 @@ ITKFFTNormalizedCorrelationImage::~ITKFFTNormalizedCorrelationImage() = default;
 // -----------------------------------------------------------------------------
 void ITKFFTNormalizedCorrelationImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("RequiredNumberOfOverlappingPixels", RequiredNumberOfOverlappingPixels, FilterParameter::Parameter, ITKFFTNormalizedCorrelationImage));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("RequiredFractionOfOverlappingPixels", RequiredFractionOfOverlappingPixels, FilterParameter::Parameter, ITKFFTNormalizedCorrelationImage));

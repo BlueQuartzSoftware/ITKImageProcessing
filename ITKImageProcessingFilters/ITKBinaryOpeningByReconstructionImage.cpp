@@ -45,7 +45,7 @@ ITKBinaryOpeningByReconstructionImage::~ITKBinaryOpeningByReconstructionImage() 
 // -----------------------------------------------------------------------------
 void ITKBinaryOpeningByReconstructionImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   // Structuring element
   {

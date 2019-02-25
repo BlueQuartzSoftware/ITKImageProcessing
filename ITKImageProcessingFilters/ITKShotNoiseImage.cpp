@@ -39,7 +39,7 @@ ITKShotNoiseImage::~ITKShotNoiseImage() = default;
 // -----------------------------------------------------------------------------
 void ITKShotNoiseImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Scale", Scale, FilterParameter::Parameter, ITKShotNoiseImage));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Seed", Seed, FilterParameter::Parameter, ITKShotNoiseImage));

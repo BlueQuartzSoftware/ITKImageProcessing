@@ -44,7 +44,7 @@ ITKClosingByReconstructionImage::~ITKClosingByReconstructionImage() = default;
 // -----------------------------------------------------------------------------
 void ITKClosingByReconstructionImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   // Structuring element
   {

@@ -43,7 +43,7 @@ ITKWhiteTopHatImage::~ITKWhiteTopHatImage() = default;
 // -----------------------------------------------------------------------------
 void ITKWhiteTopHatImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   // Structuring element
   {

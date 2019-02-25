@@ -41,7 +41,7 @@ ITKBinaryMinMaxCurvatureFlowImage::~ITKBinaryMinMaxCurvatureFlowImage() = defaul
 // -----------------------------------------------------------------------------
 void ITKBinaryMinMaxCurvatureFlowImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("TimeStep", TimeStep, FilterParameter::Parameter, ITKBinaryMinMaxCurvatureFlowImage));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("NumberOfIterations", NumberOfIterations, FilterParameter::Parameter, ITKBinaryMinMaxCurvatureFlowImage));

@@ -38,7 +38,7 @@ ITKBoxMeanImage::~ITKBoxMeanImage() = default;
 // -----------------------------------------------------------------------------
 void ITKBoxMeanImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Radius", Radius, FilterParameter::Parameter, ITKBoxMeanImage));
 

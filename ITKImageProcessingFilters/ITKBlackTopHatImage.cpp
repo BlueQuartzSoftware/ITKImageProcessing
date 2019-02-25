@@ -43,7 +43,7 @@ ITKBlackTopHatImage::~ITKBlackTopHatImage() = default;
 // -----------------------------------------------------------------------------
 void ITKBlackTopHatImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   // Structuring element
   {

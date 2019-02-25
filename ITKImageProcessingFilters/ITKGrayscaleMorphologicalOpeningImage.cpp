@@ -43,7 +43,7 @@ ITKGrayscaleMorphologicalOpeningImage::~ITKGrayscaleMorphologicalOpeningImage() 
 // -----------------------------------------------------------------------------
 void ITKGrayscaleMorphologicalOpeningImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   // Structuring element
   {

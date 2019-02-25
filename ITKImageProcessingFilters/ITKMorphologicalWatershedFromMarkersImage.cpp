@@ -37,7 +37,7 @@ ITKMorphologicalWatershedFromMarkersImage::~ITKMorphologicalWatershedFromMarkers
 // -----------------------------------------------------------------------------
 void ITKMorphologicalWatershedFromMarkersImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_BOOL_FP("MarkWatershedLine", MarkWatershedLine, FilterParameter::Parameter, ITKMorphologicalWatershedFromMarkersImage));
   parameters.push_back(SIMPL_NEW_BOOL_FP("FullyConnected", FullyConnected, FilterParameter::Parameter, ITKMorphologicalWatershedFromMarkersImage));

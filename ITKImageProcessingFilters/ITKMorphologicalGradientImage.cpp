@@ -42,7 +42,7 @@ ITKMorphologicalGradientImage::~ITKMorphologicalGradientImage() = default;
 // -----------------------------------------------------------------------------
 void ITKMorphologicalGradientImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   // Structuring element
   {

@@ -42,7 +42,7 @@ ITKGrayscaleErodeImage::~ITKGrayscaleErodeImage() = default;
 // -----------------------------------------------------------------------------
 void ITKGrayscaleErodeImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   // Structuring element
   {

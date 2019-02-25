@@ -43,7 +43,7 @@ ITKDilateObjectMorphologyImage::~ITKDilateObjectMorphologyImage() = default;
 // -----------------------------------------------------------------------------
 void ITKDilateObjectMorphologyImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   // Structuring element
   {

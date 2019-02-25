@@ -44,7 +44,7 @@ ITKOpeningByReconstructionImage::~ITKOpeningByReconstructionImage() = default;
 // -----------------------------------------------------------------------------
 void ITKOpeningByReconstructionImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   // Structuring element
   {

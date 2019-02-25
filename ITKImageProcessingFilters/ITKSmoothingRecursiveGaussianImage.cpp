@@ -40,7 +40,7 @@ ITKSmoothingRecursiveGaussianImage::~ITKSmoothingRecursiveGaussianImage() = defa
 // -----------------------------------------------------------------------------
 void ITKSmoothingRecursiveGaussianImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Sigma", Sigma, FilterParameter::Parameter, ITKSmoothingRecursiveGaussianImage));
   parameters.push_back(SIMPL_NEW_BOOL_FP("NormalizeAcrossScale", NormalizeAcrossScale, FilterParameter::Parameter, ITKSmoothingRecursiveGaussianImage));

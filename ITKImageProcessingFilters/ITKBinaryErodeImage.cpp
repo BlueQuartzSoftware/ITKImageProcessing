@@ -45,7 +45,7 @@ ITKBinaryErodeImage::~ITKBinaryErodeImage() = default;
 // -----------------------------------------------------------------------------
 void ITKBinaryErodeImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   // Structuring element
   {

@@ -34,9 +34,7 @@ ITKExpImage::~ITKExpImage() = default;
 // -----------------------------------------------------------------------------
 void ITKExpImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
-
-
+  FilterParameterVectorType parameters;
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
