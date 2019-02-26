@@ -97,7 +97,7 @@ void CalculateBackground::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Lowest allowed Image value (Image Value)", lowThresh, FilterParameter::Parameter, CalculateBackground));
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Highest allowed Image value (Image Value)", highThresh, FilterParameter::Parameter, CalculateBackground));
   //    parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));
-  //    parameters.push_back(SIMPL_NEW_STRING_FP("Volume Data Container", VolumeDataContainerName, FilterParameter::Uncategorized, CalculateBackground));
+  //    parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Volume Data Container", VolumeDataContainerName, FilterParameter::Uncategorized, CalculateBackground));
   parameters.push_back(SIMPL_NEW_STRING_FP("Background Attribute Matrix", BackgroundAttributeMatrixName, FilterParameter::CreatedArray, CalculateBackground));
   parameters.push_back(SIMPL_NEW_STRING_FP("Background Image Array Name", BackgroundImageArrayName, FilterParameter::CreatedArray, CalculateBackground));
   parameters.push_back(SIMPL_NEW_BOOL_FP("Subtract Background from Current Images", SubtractBackground, FilterParameter::Parameter, CalculateBackground));

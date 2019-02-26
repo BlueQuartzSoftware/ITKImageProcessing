@@ -53,12 +53,12 @@ class ZeissImport_EXPORT CalculateBackground : public AbstractFilter
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(CalculateBackground SUPERCLASS AbstractFilter)
-  PYB11_PROPERTY(QString VolumeDataContainerName READ getVolumeDataContainerName WRITE setVolumeDataContainerName)
+  PYB11_PROPERTY(DataArrayPath VolumeDataContainerName READ getVolumeDataContainerName WRITE setVolumeDataContainerName)
   PYB11_PROPERTY(QString BackgroundAttributeMatrixName READ getBackgroundAttributeMatrixName WRITE setBackgroundAttributeMatrixName)
   PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
   PYB11_PROPERTY(DataArrayPath ImageDataArrayPath READ getImageDataArrayPath WRITE setImageDataArrayPath)
   PYB11_PROPERTY(DataArrayPath AttributeMatrixName READ getAttributeMatrixName WRITE setAttributeMatrixName)
-  PYB11_PROPERTY(QString DataContainerBundleName READ getDataContainerBundleName WRITE setDataContainerBundleName)
+  PYB11_PROPERTY(DataArrayPath DataContainerBundleName READ getDataContainerBundleName WRITE setDataContainerBundleName)
   PYB11_PROPERTY(QString BackgroundImageArrayName READ getBackgroundImageArrayName WRITE setBackgroundImageArrayName)
   PYB11_PROPERTY(uint lowThresh READ getlowThresh WRITE setlowThresh)
   PYB11_PROPERTY(uint highThresh READ gethighThresh WRITE sethighThresh)
@@ -74,8 +74,8 @@ public:
 
   SIMPL_INSTANCE_STRING_PROPERTY(DataContainerName)
 
-  SIMPL_FILTER_PARAMETER(QString, VolumeDataContainerName)
-  Q_PROPERTY(QString VolumeDataContainerName READ getVolumeDataContainerName WRITE setVolumeDataContainerName)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, VolumeDataContainerName)
+  Q_PROPERTY(DataArrayPath VolumeDataContainerName READ getVolumeDataContainerName WRITE setVolumeDataContainerName)
 
   SIMPL_FILTER_PARAMETER(QString, BackgroundAttributeMatrixName)
   Q_PROPERTY(QString BackgroundAttributeMatrixName READ getBackgroundAttributeMatrixName WRITE setBackgroundAttributeMatrixName)
@@ -89,8 +89,8 @@ public:
   SIMPL_FILTER_PARAMETER(DataArrayPath, AttributeMatrixName)
   Q_PROPERTY(DataArrayPath AttributeMatrixName READ getAttributeMatrixName WRITE setAttributeMatrixName)
 
-  SIMPL_FILTER_PARAMETER(QString, DataContainerBundleName)
-  Q_PROPERTY(QString DataContainerBundleName READ getDataContainerBundleName WRITE setDataContainerBundleName)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, DataContainerBundleName)
+  Q_PROPERTY(DataArrayPath DataContainerBundleName READ getDataContainerBundleName WRITE setDataContainerBundleName)
 
   SIMPL_FILTER_PARAMETER(QString, BackgroundImageArrayName)
   Q_PROPERTY(QString BackgroundImageArrayName READ getBackgroundImageArrayName WRITE setBackgroundImageArrayName)

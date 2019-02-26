@@ -160,7 +160,7 @@ void ImportAxioVisionV4Montage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Convert To GrayScale", ConvertToGrayScale, FilterParameter::Parameter, ImportAxioVisionV4Montage, linkedProps));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Color Weighting", ColorWeights, FilterParameter::Parameter, ImportAxioVisionV4Montage));
 
-  parameters.push_back(SIMPL_NEW_STRING_FP("DataContainer Prefix", DataContainerName, FilterParameter::CreatedArray, ImportAxioVisionV4Montage));
+  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("DataContainer Prefix", DataContainerName, FilterParameter::CreatedArray, ImportAxioVisionV4Montage));
   parameters.push_back(SIMPL_NEW_STRING_FP("Cell Attribute Matrix Name", CellAttributeMatrixName, FilterParameter::CreatedArray, ImportAxioVisionV4Montage));
   parameters.push_back(SIMPL_NEW_STRING_FP("Image DataArray Name", ImageDataArrayName, FilterParameter::CreatedArray, ImportAxioVisionV4Montage));
   parameters.push_back(SIMPL_NEW_STRING_FP("MetaData AttributeMatrix Name", MetaDataAttributeMatrixName, FilterParameter::CreatedArray, ImportAxioVisionV4Montage));
