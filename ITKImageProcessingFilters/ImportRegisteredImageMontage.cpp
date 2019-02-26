@@ -64,7 +64,7 @@ void ImportRegisteredImageMontage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Resolution", Resolution, FilterParameter::Parameter, ImportRegisteredImageMontage));
 
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Registration File", RegistrationFile, FilterParameter::Parameter, ImportRegisteredImageMontage, "", "*.txt"));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Data Container", DataContainerName, FilterParameter::CreatedArray, ImportRegisteredImageMontage));
+  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container", DataContainerName, FilterParameter::CreatedArray, ImportRegisteredImageMontage));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
   parameters.push_back(SIMPL_NEW_STRING_FP("Cell Attribute Matrix", CellAttributeMatrixName, FilterParameter::CreatedArray, ImportRegisteredImageMontage));
   parameters.push_back(SeparatorFilterParameter::New("Meta Data", FilterParameter::CreatedArray));
@@ -80,7 +80,7 @@ void ImportRegisteredImageMontage::setupFilterParameters()
 void ImportRegisteredImageMontage::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setDataContainerName(reader->readString("DataContainerName", getDataContainerName()));
+  setDataContainerName(reader->readDataArrayPath("DataContainerName", getDataContainerName()));
   setCellAttributeMatrixName(reader->readString("CellAttributeMatrixName", getCellAttributeMatrixName()));
   setMetaDataAttributeMatrixName(reader->readString("MetaDataAttributeMatrixName", getMetaDataAttributeMatrixName()));
   setRegistrationCoordinatesArrayName(reader->readString("RegistrationCoordinatesArrayName", getRegistrationCoordinatesArrayName()));

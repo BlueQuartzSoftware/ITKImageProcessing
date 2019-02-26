@@ -67,7 +67,7 @@ void ITKImageReader::setupFilterParameters()
   FilterParameterVectorType parameters;
   QString supportedExtensions = ITKImageProcessingPlugin::getListSupportedReadExtensions();
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("File", FileName, FilterParameter::Parameter, ITKImageReader, supportedExtensions, "Image"));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Data Container", DataContainerName, FilterParameter::CreatedArray, ITKImageReader));
+  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container", DataContainerName, FilterParameter::CreatedArray, ITKImageReader));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
   parameters.push_back(SIMPL_NEW_STRING_FP("Cell Attribute Matrix", CellAttributeMatrixName, FilterParameter::CreatedArray, ITKImageReader));
   parameters.push_back(SIMPL_NEW_STRING_FP("Image Data", ImageDataArrayName, FilterParameter::CreatedArray, ITKImageReader));
@@ -81,7 +81,7 @@ void ITKImageReader::readFilterParameters(AbstractFilterParametersReader* reader
 {
   reader->openFilterGroup(this, index);
   setFileName(reader->readString("FileName", getFileName()));
-  setDataContainerName(reader->readString("DataContainerName", getDataContainerName()));
+  setDataContainerName(reader->readDataArrayPath("DataContainerName", getDataContainerName()));
   reader->closeFilterGroup();
 }
 
