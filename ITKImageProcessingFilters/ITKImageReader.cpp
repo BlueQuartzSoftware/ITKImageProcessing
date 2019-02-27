@@ -35,6 +35,7 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
@@ -120,7 +121,7 @@ void ITKImageReader::dataCheck()
     notifyErrorMessage(getHumanLabel(), "No container.", getErrorCondition());
     return;
   }
-  DataArrayPath dap(getDataContainerName(), getCellAttributeMatrixName(), getImageDataArrayName());
+  DataArrayPath dap(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), getImageDataArrayName());
   readImage(dap, true);
   // If we got here, that means that there is no error
   setErrorCondition(0);
@@ -154,7 +155,7 @@ void ITKImageReader::execute()
   {
     return;
   }
-  DataArrayPath dap(getDataContainerName(), getCellAttributeMatrixName(), getImageDataArrayName());
+  DataArrayPath dap(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), getImageDataArrayName());
   readImage(dap, false);
 }
 

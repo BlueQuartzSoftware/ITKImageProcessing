@@ -11,6 +11,7 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/FileListInfoFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
@@ -171,7 +172,7 @@ void ImportImageMontage::dataCheck()
   {
     setFileName(fileList[0]);
     QFileInfo fi(fileList[0]);
-    DataArrayPath dap(getDataContainerName(), getCellAttributeMatrixName(), fi.baseName());
+    DataArrayPath dap(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), fi.baseName());
     readImage(dap, true);
     // The previous call will add an attribute array that we don't need at this point
     // so just remove it.
@@ -204,7 +205,7 @@ void ImportImageMontage::dataCheck()
       QStringList splitFilePaths = imageFName.split('/');
       QString fileName = splitFilePaths[splitFilePaths.size() - 1];
       splitFilePaths = fileName.split('.');
-      DataArrayPath path(getDataContainerName(), getCellAttributeMatrixName(), splitFilePaths[0]);
+      DataArrayPath path(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), splitFilePaths[0]);
       getDataContainerArray()->createNonPrereqArrayFromPath<UInt8ArrayType, AbstractFilter, uint8_t>(this, path, 0, cDims);
       if(getErrorCondition() < 0)
       {
@@ -282,7 +283,7 @@ void ImportImageMontage::execute()
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
 
     setFileName(imageFName);
-    DataArrayPath dap(getDataContainerName(), getCellAttributeMatrixName(), splitFilePaths[0]);
+    DataArrayPath dap(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), splitFilePaths[0]);
     readImage(dap, false);
     if(getErrorCondition() < 0)
     {

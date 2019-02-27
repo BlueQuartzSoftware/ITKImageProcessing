@@ -44,6 +44,7 @@
 
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
@@ -147,7 +148,7 @@ void ImportVectorImageStack::dataCheck()
   {
     return;
   }
-  DataArrayPath dap(getDataContainerName(), getCellAttributeMatrixName(), QString(""));
+  DataArrayPath dap(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), QString(""));
   QVector<size_t> tDims = {0};
   AttributeMatrix::Pointer am = m->createNonPrereqAttributeMatrix(this, dap, tDims, AttributeMatrix::Type::Cell);
 
@@ -234,7 +235,7 @@ void ImportVectorImageStack::dataCheck()
       }
 
       ITKImageReader::Pointer imageReader = ITKImageReader::New();
-      imageReader->setDataContainerName(::TempDCName);
+      imageReader->setDataContainerName(DataArrayPath(::TempDCName, "", ""));
       imageReader->setCellAttributeMatrixName(::TempAMName);
       imageReader->setImageDataArrayName(::TempDAName);
       imageReader->setFileName(filePath);
@@ -360,7 +361,7 @@ template <typename T> void importVectorData(ImportVectorImageStack* filter)
       filter->notifyStatusMessage(filter->getHumanLabel(), progress);
 
       ITKImageReader::Pointer imageReader = ITKImageReader::New();
-      imageReader->setDataContainerName(::TempDCName);
+      imageReader->setDataContainerName(DataArrayPath(::TempDCName, "", ""));
       imageReader->setCellAttributeMatrixName(::TempAMName);
       imageReader->setImageDataArrayName(::TempDAName);
       imageReader->setFileName(filePath);

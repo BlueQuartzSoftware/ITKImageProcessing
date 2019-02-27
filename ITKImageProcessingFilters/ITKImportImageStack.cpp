@@ -37,6 +37,7 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/FileListInfoFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
@@ -391,7 +392,7 @@ template <typename TPixel> void ITKImportImageStack::readImageOutputInformation(
     return;
   }
   DataArrayPath path;
-  path.update(getDataContainerName(), getCellAttributeMatrixName(), getImageDataArrayName());
+  path.update(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), getImageDataArrayName());
   getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<TPixel>, AbstractFilter, TPixel>(this, path, 0, cDims);
 }
 

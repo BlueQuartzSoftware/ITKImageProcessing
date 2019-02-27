@@ -8,6 +8,7 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/FileListInfoFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
@@ -230,7 +231,7 @@ void ImportRegisteredImageMontage::dataCheck()
   {
     return;
   }
-  DataArrayPath path(getDataContainerName(), getMetaDataAttributeMatrixName(), getAttributeArrayNamesArrayName());
+  DataArrayPath path(getDataContainerName().getDataContainerName(), getMetaDataAttributeMatrixName(), getAttributeArrayNamesArrayName());
   AttributeMatrix::Pointer metaDataAttrMat = getDataContainerArray()->getAttributeMatrix(path);
   StringDataArray::Pointer attributeArrayNames = StringDataArray::CreateArray(metaDataAttrMat->getNumberOfTuples(), getAttributeArrayNamesArrayName());
   metaDataAttrMat->addAttributeArray(getAttributeArrayNamesArrayName(), attributeArrayNames);
@@ -241,7 +242,7 @@ void ImportRegisteredImageMontage::dataCheck()
   }
 
   cDims[0] = 2;
-  path.update(getDataContainerName(), getMetaDataAttributeMatrixName(), getRegistrationCoordinatesArrayName());
+  path.update(getDataContainerName().getDataContainerName(), getMetaDataAttributeMatrixName(), getRegistrationCoordinatesArrayName());
   m_RegistrationCoordinatesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<FloatArrayType, AbstractFilter, float>(this, path, 0, cDims);
   if(getErrorCondition() < 0)
   {
@@ -278,7 +279,7 @@ void ImportRegisteredImageMontage::dataCheck()
   {
     setFileName(fileList[0]);
     QFileInfo fi(fileList[0]);
-    DataArrayPath dap(getDataContainerName(), getCellAttributeMatrixName(), fi.baseName());
+    DataArrayPath dap(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), fi.baseName());
     readImage(dap, true);
     // The previous call will add an attribute array that we don't need at this point
     // so just remove it.
@@ -315,7 +316,7 @@ void ImportRegisteredImageMontage::dataCheck()
       QStringList splitFilePaths = imageFName.split('/');
       QString fileName = splitFilePaths[splitFilePaths.size() - 1];
       splitFilePaths = fileName.split('.');
-      DataArrayPath path(getDataContainerName(), getCellAttributeMatrixName(), splitFilePaths[0]);
+      DataArrayPath path(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), splitFilePaths[0]);
       getDataContainerArray()->createNonPrereqArrayFromPath<UInt8ArrayType, AbstractFilter, uint8_t>(this, path, 0, cDims);
       if(getErrorCondition() < 0)
       {
@@ -401,7 +402,7 @@ void ImportRegisteredImageMontage::execute()
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
 
     setFileName(imageFName);
-    DataArrayPath dap(getDataContainerName(), getCellAttributeMatrixName(), splitFilePaths[0]);
+    DataArrayPath dap(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), splitFilePaths[0]);
     readImage(dap, false);
     if(getErrorCondition() < 0)
     {
