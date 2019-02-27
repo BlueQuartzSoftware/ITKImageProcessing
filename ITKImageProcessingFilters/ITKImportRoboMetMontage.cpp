@@ -200,6 +200,7 @@ void ITKImportRoboMetMontage::dataCheck()
 
   // Parse Fiji Config File
   QDateTime lastModified(fi.lastModified());
+  size_t totalImageCount = m_RegisteredFilePaths.size();
 
   // Only parse the fiji config file again if the cache is outdated
   if (!getInPreflight() || getRegistrationFile() != getRoboMetConfigFilePathCache() || !getLastRead().isValid() || lastModified.msecsTo(getLastRead()) < 0)
@@ -223,6 +224,9 @@ void ITKImportRoboMetMontage::dataCheck()
 		  }
 
 		  QString registeredFilePath = m_RegisteredFilePaths[i];
+		  QFileInfo imageFi(registeredFilePath);
+		  notifyStatusMessage(getHumanLabel(), tr("[%1/%2]: Reading image '%3'").arg(i + 1)
+			  .arg(totalImageCount).arg(imageFi.fileName()));
 
 		  readImageFile(registeredFilePath);
 	  }
