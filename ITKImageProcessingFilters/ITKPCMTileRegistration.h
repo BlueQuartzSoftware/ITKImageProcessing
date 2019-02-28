@@ -58,21 +58,21 @@ using CompositeTransform = itk::CompositeTransform<double, 3>;
 /**
  * @brief The ImportRegisteredImageMontage class. See [Filter documentation](@ref importregisteredimagemontage) for details.
  */
-class ITKImageProcessing_EXPORT ITKGenerateMontageConfiguration : public AbstractFilter
+class ITKImageProcessing_EXPORT ITKPCMTileRegistration : public AbstractFilter
 {
   Q_OBJECT
-  PYB11_CREATE_BINDINGS(ITKGenerateMontageConfiguration SUPERCLASS AbstractFilter)
+  PYB11_CREATE_BINDINGS(ITKPCMTileRegistration SUPERCLASS AbstractFilter)
   PYB11_PROPERTY(IntVec3_t MontageSize READ getMontageSize WRITE setMontageSize)
   PYB11_PROPERTY(QStringList, ImageDataContainers READ getImageDataContainers WRITE setImageDataContainers)
   PYB11_PROPERTY(QString CommonAttributeMatrixName READ getCommonAttributeMatrixName WRITE setCommonAttributeMatrixName)
   PYB11_PROPERTY(QString CommonDataArrayName READ getCommonDataArrayName WRITE setCommonDataArrayName)
   PYB11_PROPERTY(float TileOverlap READ getTileOverlap WRITE setTileOverlap)
 public:
-  SIMPL_SHARED_POINTERS(ITKGenerateMontageConfiguration)
-  SIMPL_FILTER_NEW_MACRO(ITKGenerateMontageConfiguration)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKGenerateMontageConfiguration, AbstractFilter)
+  SIMPL_SHARED_POINTERS(ITKPCMTileRegistration)
+  SIMPL_FILTER_NEW_MACRO(ITKPCMTileRegistration)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKPCMTileRegistration, AbstractFilter)
 
-  ~ITKGenerateMontageConfiguration() override;
+  ~ITKPCMTileRegistration() override;
 
   SIMPL_FILTER_PARAMETER(IntVec3_t, MontageSize)
   Q_PROPERTY(IntVec3_t MontageSize READ getMontageSize WRITE setMontageSize)
@@ -176,7 +176,7 @@ signals:
   void preflightExecuted();
 
 protected:
-  ITKGenerateMontageConfiguration();
+  ITKPCMTileRegistration();
 
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
@@ -261,8 +261,8 @@ private:
   template <typename MontageType> void executeMontageRegistration(typename MontageType::Pointer montage);
 
 public:
-  ITKGenerateMontageConfiguration(const ITKGenerateMontageConfiguration&) = delete;            // Copy Constructor Not Implemented
-  ITKGenerateMontageConfiguration(ITKGenerateMontageConfiguration&&) = delete;                 // Move Constructor Not Implemented
-  ITKGenerateMontageConfiguration& operator=(const ITKGenerateMontageConfiguration&) = delete; // Copy Assignment Not Implemented
-  ITKGenerateMontageConfiguration& operator=(ITKGenerateMontageConfiguration&&) = delete;      // Move Assignment Not Implemented
+  ITKPCMTileRegistration(const ITKPCMTileRegistration&) = delete;            // Copy Constructor Not Implemented
+  ITKPCMTileRegistration(ITKPCMTileRegistration&&) = delete;                 // Move Constructor Not Implemented
+  ITKPCMTileRegistration& operator=(const ITKPCMTileRegistration&) = delete; // Copy Assignment Not Implemented
+  ITKPCMTileRegistration& operator=(ITKPCMTileRegistration&&) = delete;      // Move Assignment Not Implemented
 };

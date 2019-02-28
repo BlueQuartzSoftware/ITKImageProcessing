@@ -33,7 +33,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "ITKGenerateMontageConfiguration.h"
+#include "ITKPCMTileRegistration.h"
 
 #include <type_traits>
 
@@ -148,19 +148,19 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKGenerateMontageConfiguration::ITKGenerateMontageConfiguration()
+ITKPCMTileRegistration::ITKPCMTileRegistration()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKGenerateMontageConfiguration::~ITKGenerateMontageConfiguration() = default;
+ITKPCMTileRegistration::~ITKPCMTileRegistration() = default;
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ITKGenerateMontageConfiguration::initialize()
+void ITKPCMTileRegistration::initialize()
 {
   setErrorCondition(0);
   setWarningCondition(0);
@@ -170,27 +170,27 @@ void ITKGenerateMontageConfiguration::initialize()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ITKGenerateMontageConfiguration::setupFilterParameters()
+void ITKPCMTileRegistration::setupFilterParameters()
 {
   QVector<FilterParameter::Pointer> parameters;
 
-  parameters.push_back(SIMPL_NEW_INT_VEC3_FP("Montage Size (Cols, Rows)", MontageSize, FilterParameter::Parameter, ITKGenerateMontageConfiguration));
+  parameters.push_back(SIMPL_NEW_INT_VEC3_FP("Montage Size (Cols, Rows)", MontageSize, FilterParameter::Parameter, ITKPCMTileRegistration));
 
   {
     QStringList linkedProps;
     linkedProps << "TileOverlap";
-    parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Manual Tile Overlap", ManualTileOverlap, FilterParameter::Parameter, ITKGenerateMontageConfiguration, linkedProps));
+    parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Manual Tile Overlap", ManualTileOverlap, FilterParameter::Parameter, ITKPCMTileRegistration, linkedProps));
   }
 
   {
     MultiDataContainerSelectionFilterParameter::RequirementType req =
         MultiDataContainerSelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
-    parameters.push_back(SIMPL_NEW_MDC_SELECTION_FP("Image Data Containers", ImageDataContainers, FilterParameter::RequiredArray, ITKGenerateMontageConfiguration, req));
+    parameters.push_back(SIMPL_NEW_MDC_SELECTION_FP("Image Data Containers", ImageDataContainers, FilterParameter::RequiredArray, ITKPCMTileRegistration, req));
   }
-  parameters.push_back(SIMPL_NEW_STRING_FP("Common Attribute Matrix", CommonAttributeMatrixName, FilterParameter::RequiredArray, ITKGenerateMontageConfiguration));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Common Data Array", CommonDataArrayName, FilterParameter::RequiredArray, ITKGenerateMontageConfiguration));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Common Attribute Matrix", CommonAttributeMatrixName, FilterParameter::RequiredArray, ITKPCMTileRegistration));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Common Data Array", CommonDataArrayName, FilterParameter::RequiredArray, ITKPCMTileRegistration));
 
-  parameters.push_back(SIMPL_NEW_FLOAT_FP("Tile Overlap (Percent)", TileOverlap, FilterParameter::RequiredArray, ITKGenerateMontageConfiguration));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("Tile Overlap (Percent)", TileOverlap, FilterParameter::RequiredArray, ITKPCMTileRegistration));
 
   setFilterParameters(parameters);
 }
@@ -198,7 +198,7 @@ void ITKGenerateMontageConfiguration::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ITKGenerateMontageConfiguration::dataCheck()
+void ITKPCMTileRegistration::dataCheck()
 {
   setErrorCondition(0);
   setWarningCondition(0);
@@ -315,7 +315,7 @@ void ITKGenerateMontageConfiguration::dataCheck()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ITKGenerateMontageConfiguration::preflight()
+void ITKPCMTileRegistration::preflight()
 {
   setInPreflight(true);
   emit preflightAboutToExecute();
@@ -328,7 +328,7 @@ void ITKGenerateMontageConfiguration::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ITKGenerateMontageConfiguration::execute()
+void ITKPCMTileRegistration::execute()
 {
   setErrorCondition(0);
   setWarningCondition(0);
@@ -363,7 +363,7 @@ void ITKGenerateMontageConfiguration::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ITKGenerateMontageConfiguration::createFijiDataStructure()
+void ITKPCMTileRegistration::createFijiDataStructure()
 {
   DataContainerArray* dca = getDataContainerArray().get();
   // Loop over the data containers until we find the proper data container
@@ -436,7 +436,7 @@ void ITKGenerateMontageConfiguration::createFijiDataStructure()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename PixelType, typename MontageType> typename MontageType::Pointer ITKGenerateMontageConfiguration::createMontage(int peakMethodToUse)
+template <typename PixelType, typename MontageType> typename MontageType::Pointer ITKPCMTileRegistration::createMontage(int peakMethodToUse)
 {
   using ScalarPixelType = typename itk::NumericTraits<PixelType>::ValueType;
   //	using PointType = itk::Point<double, Dimension>;
@@ -478,7 +478,7 @@ template <typename PixelType, typename MontageType> typename MontageType::Pointe
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename PixelType, typename MontageType> typename MontageType::Pointer ITKGenerateMontageConfiguration::createGrayscaleMontage(int peakMethodToUse)
+template <typename PixelType, typename MontageType> typename MontageType::Pointer ITKPCMTileRegistration::createGrayscaleMontage(int peakMethodToUse)
 {
   using ScalarPixelType = typename itk::NumericTraits<PixelType>::ValueType;
   //	using PointType = itk::Point<double, Dimension>;
@@ -517,7 +517,7 @@ template <typename PixelType, typename MontageType> typename MontageType::Pointe
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename PixelType, typename MontageType> typename MontageType::Pointer ITKGenerateMontageConfiguration::createRGBMontage(int peakMethodToUse)
+template <typename PixelType, typename MontageType> typename MontageType::Pointer ITKPCMTileRegistration::createRGBMontage(int peakMethodToUse)
 {
   using ScalarPixelType = typename itk::NumericTraits<PixelType>::ValueType;
   //	using PointType = itk::Point<double, Dimension>;
@@ -562,7 +562,7 @@ template <typename PixelType, typename MontageType> typename MontageType::Pointe
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename PixelType> void ITKGenerateMontageConfiguration::registerGrayscaleMontage(int peakMethodToUse, unsigned streamSubdivisions)
+template <typename PixelType> void ITKPCMTileRegistration::registerGrayscaleMontage(int peakMethodToUse, unsigned streamSubdivisions)
 {
   using ScalarPixelType = typename itk::NumericTraits<PixelType>::ValueType;
   using ScalarImageType = itk::Dream3DImage<ScalarPixelType, Dimension>;
@@ -580,7 +580,7 @@ template <typename PixelType> void ITKGenerateMontageConfiguration::registerGray
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename PixelType> void ITKGenerateMontageConfiguration::registerRGBMontage(int peakMethodToUse, unsigned streamSubdivisions)
+template <typename PixelType> void ITKPCMTileRegistration::registerRGBMontage(int peakMethodToUse, unsigned streamSubdivisions)
 {
   using ScalarPixelType = typename itk::NumericTraits<PixelType>::ValueType;
   using ScalarImageType = itk::Dream3DImage<ScalarPixelType, Dimension>;
@@ -598,7 +598,7 @@ template <typename PixelType> void ITKGenerateMontageConfiguration::registerRGBM
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename MontageType> void ITKGenerateMontageConfiguration::executeMontageRegistration(typename MontageType::Pointer montage)
+template <typename MontageType> void ITKPCMTileRegistration::executeMontageRegistration(typename MontageType::Pointer montage)
 {
   // Execute the tile registrations
   notifyStatusMessage(getHumanLabel(), "Doing the tile registrations");
@@ -617,7 +617,7 @@ template <typename MontageType> void ITKGenerateMontageConfiguration::executeMon
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename MontageType> void ITKGenerateMontageConfiguration::storeMontageTransforms(typename MontageType::Pointer montage)
+template <typename MontageType> void ITKPCMTileRegistration::storeMontageTransforms(typename MontageType::Pointer montage)
 {
   using TransformType = itk::TranslationTransform<double, Dimension>;
 
@@ -661,7 +661,7 @@ template <typename MontageType> void ITKGenerateMontageConfiguration::storeMonta
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DataContainer::Pointer ITKGenerateMontageConfiguration::GetImageDataContainer(int y, int x)
+DataContainer::Pointer ITKPCMTileRegistration::GetImageDataContainer(int y, int x)
 {
   DataContainerArray* dca = getDataContainerArray().get();
   // Loop over the data containers until we find the proper data container
@@ -693,7 +693,7 @@ DataContainer::Pointer ITKGenerateMontageConfiguration::GetImageDataContainer(in
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-typename TransformContainer::Pointer ITKGenerateMontageConfiguration::GetTransformContainerFromITKAffineTransform(const AffineType::Pointer& itkAffine)
+typename TransformContainer::Pointer ITKPCMTileRegistration::GetTransformContainerFromITKAffineTransform(const AffineType::Pointer& itkAffine)
 {
   auto parameters = itkAffine->GetParameters();
   auto fixedParameters = itkAffine->GetFixedParameters();
@@ -723,9 +723,9 @@ typename TransformContainer::Pointer ITKGenerateMontageConfiguration::GetTransfo
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKGenerateMontageConfiguration::newFilterInstance(bool copyFilterParameters) const
+AbstractFilter::Pointer ITKPCMTileRegistration::newFilterInstance(bool copyFilterParameters) const
 {
-  ITKGenerateMontageConfiguration::Pointer filter = ITKGenerateMontageConfiguration::New();
+  ITKPCMTileRegistration::Pointer filter = ITKPCMTileRegistration::New();
   if(copyFilterParameters)
   {
     filter->setFilterParameters(getFilterParameters());
@@ -738,7 +738,7 @@ AbstractFilter::Pointer ITKGenerateMontageConfiguration::newFilterInstance(bool 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKGenerateMontageConfiguration::getCompiledLibraryName() const
+const QString ITKPCMTileRegistration::getCompiledLibraryName() const
 {
   return ITKImageProcessingConstants::ITKImageProcessingBaseName;
 }
@@ -746,7 +746,7 @@ const QString ITKGenerateMontageConfiguration::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKGenerateMontageConfiguration::getBrandingString() const
+const QString ITKPCMTileRegistration::getBrandingString() const
 {
   return "ITKImageProcessing";
 }
@@ -754,7 +754,7 @@ const QString ITKGenerateMontageConfiguration::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKGenerateMontageConfiguration::getFilterVersion() const
+const QString ITKPCMTileRegistration::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -764,7 +764,7 @@ const QString ITKGenerateMontageConfiguration::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKGenerateMontageConfiguration::getGroupName() const
+const QString ITKPCMTileRegistration::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -772,7 +772,7 @@ const QString ITKGenerateMontageConfiguration::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKGenerateMontageConfiguration::getUuid()
+const QUuid ITKPCMTileRegistration::getUuid()
 {
   return QUuid("{4388723b-cc16-3477-ac6f-fe0107107e74}");
 }
@@ -780,7 +780,7 @@ const QUuid ITKGenerateMontageConfiguration::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKGenerateMontageConfiguration::getSubGroupName() const
+const QString ITKPCMTileRegistration::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::GenerationFilters;
 }
@@ -788,7 +788,7 @@ const QString ITKGenerateMontageConfiguration::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKGenerateMontageConfiguration::getHumanLabel() const
+const QString ITKPCMTileRegistration::getHumanLabel() const
 {
   return "Generate Montage Configuration";
 }

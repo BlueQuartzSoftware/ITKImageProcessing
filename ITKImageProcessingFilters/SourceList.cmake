@@ -20,7 +20,7 @@ set(_PublicFilters
     ITKMedianImage
 
     ImportVectorImageStack
-	  ITKGenerateMontageConfiguration
+	  ITKPCMTileRegistration
     ITKImportFijiMontage
     ITKImportRoboMetMontage
     ITKStitchMontage

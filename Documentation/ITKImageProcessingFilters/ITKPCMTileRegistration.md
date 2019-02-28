@@ -1,4 +1,4 @@
-# Generate Montage Configuration #
+# PCM Tile Registration #
 
 
 ## Group (Subgroup) ##
@@ -8,7 +8,7 @@ ITKImageProcessing (Input)
 
 ## Description ##
 
-Generates a montage configuration based a set of input data containers with names ending in rXcX where X represents the row and column number.
+Registers tiles into a montage using PCM algorithm. Tiles are contained in a set of input data containers with names ending in rXcX where X represents the row and column number.
 
 ## Parameters ##
 
