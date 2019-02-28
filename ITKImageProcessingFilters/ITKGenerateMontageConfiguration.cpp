@@ -34,7 +34,7 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "ITKGenerateMontageConfiguration.h"
-
+#include <array>
 #include <type_traits>
 
 #include <QtCore/QDir>
@@ -66,6 +66,327 @@
 #include "itkTileMergeImageFilter.h"
 #include "itkTileMontage.h"
 #include "itkTxtTransformIOFactory.h"
+
+#include "itkMaxPhaseCorrelationOptimizer.h"
+#include "itkPhaseCorrelationImageRegistrationMethod.h"
+#include "itkPhaseCorrelationOperator.h"
+#include "itkPhaseCorrelationOptimizer.h"
+#include "itkCastImageFilter.h"
+#include <itkExtractImageFilter.h>
+
+//-- ITK Typedefs
+namespace R3D
+{
+namespace PCM
+{
+const unsigned int FFTResolutionSize = 14;
+const float PCMAbsolutePixelOffset = 5.0f;
+} // namespace PCM
+} // namespace R3D
+
+namespace pcm
+{
+const unsigned int Dimension = 2;
+using PixelType = float;
+
+using InternalPixelType = itk::NumericTraits<PixelType>::RealType;
+using ComplexPixelType = std::complex<InternalPixelType>;
+using ComplexImageType = itk::Image<ComplexPixelType, Dimension>;
+using PCM_SuperClass = itk::ImageToImageFilter<ComplexImageType, ComplexImageType>;
+
+} // namespace pcm
+
+using UCharPixelType = uint8_t;
+using UCharImageType = itk::Image<UCharPixelType, pcm::Dimension>;
+using FFTPixelType = float;
+using FFTImageType = itk::Image<FFTPixelType, pcm::Dimension>;
+
+
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+template<typename T>
+void texecute(ITKGenerateMontageConfiguration* filter)
+{
+  using PixelType = T;
+  using ScalarPixelType = typename itk::NumericTraits<PixelType>::ValueType;
+  //	using PointType = itk::Point<double, Dimension>;
+  using ScalarImageType = itk::Dream3DImage<ScalarPixelType, pcm::Dimension>;
+//  using OriginalImageType = itk::Dream3DImage<PixelType, pcm::Dimension>;
+
+
+
+
+//  using ImageType = itk::Image<pcm::PixelType, pcm::Dimension>;
+  using RegistrationType = itk::PhaseCorrelationImageRegistrationMethod<FFTImageType, FFTImageType>;
+  using OperatorType = RegistrationType::OperatorType;
+
+  using OptimizerType = itk::MaxPhaseCorrelationOptimizer<RegistrationType>;
+  using CasterType = itk::CastImageFilter<ScalarImageType, FFTImageType>;
+//  using InverseCasterType = itk::CastImageFilter<FFTImageType, UCharImageType>;
+//  using RegistrationOutputTransformType = RegistrationType::TransformOutputType;
+
+  IntVec3_t montageSize = filter->getMontageSize();
+  // Set tile image data from DREAM3D structure into tile montage
+  for(unsigned y = 0; y < montageSize.y; y++)
+  {
+
+    for(unsigned x = 0; x < montageSize.x; x++)
+    {
+      std::cout << "\n#-----------------------------------------------------" << std::endl;
+      std::cout << "Fixed Image Index: Row " << y << " Col: " << x << std::endl;
+
+      typename ScalarImageType::Pointer fixedImage;
+      {
+        DataContainer::Pointer imageDC = filter->GetImageDataContainer(y, x);
+        if(imageDC.get() == nullptr) { continue; }
+        ImageGeom::Pointer geom = std::dynamic_pointer_cast<ImageGeom> (imageDC->getGeometry());
+        std::array<float, 3> origin;
+        geom->getOrigin(origin.data());
+        std::cout << "Fixed Image Origin: " << origin[0] << ", " << origin[1] << std::endl;
+
+        using toITKType = itk::InPlaceDream3DDataToImageFilter<ScalarPixelType, pcm::Dimension>;
+        typename toITKType::Pointer toITK = toITKType::New();
+
+        toITK->SetInput(imageDC);
+        toITK->SetInPlace(true);
+        toITK->SetAttributeMatrixArrayName(filter->getCommonAttributeMatrixName().toStdString());
+        toITK->SetDataArrayName(filter->getCommonDataArrayName().toStdString());
+        toITK->Update();
+        fixedImage =  toITK->GetOutput();
+
+        using WriterType = itk::ImageFileWriter< ScalarImageType >;
+        typename WriterType::Pointer writer = WriterType::New();
+        std::stringstream ss;
+        ss << "/tmp/" << y << "_" << x << "_InputImage.png";
+        writer->SetFileName( ss.str() );
+        writer->SetInput( toITK->GetOutput() );
+        writer->Update();
+      }
+
+      // This is horrible and will fail on the last row..
+      uint32_t movingImageXIndex = x + 1;
+      uint32_t movingImageYIndex = y;
+      if(x==montageSize.x - 1)
+      {
+        movingImageXIndex = x;
+        movingImageYIndex = y + 1;
+      }
+
+      typename ScalarImageType::Pointer movingImage;
+      {
+        DataContainer::Pointer imageDC = filter->GetImageDataContainer(movingImageYIndex, movingImageXIndex);
+        if(imageDC.get() == nullptr) { continue; }
+        ImageGeom::Pointer geom = std::dynamic_pointer_cast<ImageGeom> (imageDC->getGeometry());
+        std::array<float, 3> origin;
+        geom->getOrigin(origin.data());
+        std::cout << "Moving Image Index: Row " << movingImageYIndex << " Col: " << movingImageXIndex << std::endl;
+        std::cout << "Moving Image Origin: " << origin[0] << ", " << origin[1] << std::endl;
+
+        using toITKType = itk::InPlaceDream3DDataToImageFilter<ScalarPixelType, pcm::Dimension>;
+        typename toITKType::Pointer toITK = toITKType::New();
+
+        toITK->SetInput(imageDC);
+        toITK->SetInPlace(true);
+        toITK->SetAttributeMatrixArrayName(filter->getCommonAttributeMatrixName().toStdString());
+        toITK->SetDataArrayName(filter->getCommonDataArrayName().toStdString());
+        toITK->Update();
+        movingImage =  toITK->GetOutput();
+      }
+
+
+      std::cout << "Itk Moving Image Origin: " << movingImage->GetOrigin().GetElement(0) << ", " << movingImage->GetOrigin().GetElement(1) << std::endl;
+
+      using R3DFrame  = struct
+      {
+        float xMin, xMax, yMin, yMax;
+        float getXMin() { return xMin; }
+        float getXMax() { return xMax;}
+        float getYMin() { return yMin;}
+        float getYMax() { return yMax;}
+        void setXMin(float v) { xMin = v;}
+        void setYMin(float v) { yMin = v;}
+        void setXMax(float v) { xMax = v;}
+        void setYMax(float v) { yMax = v;}
+
+        void init(ScalarImageType* image)
+        {
+          typename ScalarImageType::PointType origin = image->GetOrigin();
+          typename ScalarImageType::SpacingType spacing = image->GetSpacing();
+          typename ScalarImageType::RegionType dims = image->GetLargestPossibleRegion();
+
+          xMin = origin[0];
+          yMin = origin[1];
+          xMax = origin[0] + ((dims.GetSize(0)-1) * spacing[0]);
+          yMax = origin[1] + ((dims.GetSize(1)-1) * spacing[1]);
+        }
+      };
+
+    // Find the overlapping region of
+    R3DFrame fixFrame;
+    fixFrame.init(fixedImage);
+
+    R3DFrame movingFrame;
+    movingFrame.init(movingImage);
+    R3DFrame intersection;
+    if (!(movingFrame.getXMin() > fixFrame.getXMax()
+          || movingFrame.getXMax() < fixFrame.getXMin()
+          || movingFrame.getYMin() > fixFrame.getYMax()
+          || movingFrame.getYMax() < fixFrame.getYMin() ) )
+    {
+      float f;
+
+      f = (fixFrame.getXMin() > movingFrame.getXMin()) ? fixFrame.getXMin() : movingFrame.getXMin();
+      intersection.setXMin(f);
+      f = (fixFrame.getYMin() > movingFrame.getYMin()) ? fixFrame.getYMin() : movingFrame.getYMin();
+      intersection.setYMin(f);
+      f = (fixFrame.getXMax() < movingFrame.getXMax()) ? fixFrame.getXMax() : movingFrame.getXMax();
+      intersection.setXMax(f);
+      f = (fixFrame.getYMax() < movingFrame.getYMax()) ? fixFrame.getYMax() : movingFrame.getYMax();
+      intersection.setYMax(f);
+    }
+
+      std::cout << "Overlapping Region: " << intersection.xMin << ", " << intersection.yMin << " to "
+                << intersection.xMax << ", " << intersection.yMax << std::endl;
+      typename ScalarImageType::SpacingType spacing = fixedImage->GetSpacing();
+
+      itk::Size<2> overlapRegion;
+      overlapRegion[0] = static_cast<uint32_t>((intersection.xMax - intersection.xMin) / spacing[0]);
+      overlapRegion[1] = static_cast<uint32_t>((intersection.yMax - intersection.yMin) / spacing[1]);
+      std::cout << "Overlapping Region Pixel Size: " << overlapRegion[0] << " x " << overlapRegion[1] << std::endl;
+
+
+      using PointType = itk::Point<float, 2>;
+      typename ScalarImageType::IndexType fixedIndex;
+      PointType point;
+      point[0] = intersection.xMin;
+      point[1] = intersection.yMin;
+      fixedImage->TransformPhysicalPointToIndex(point, fixedIndex);
+
+      typename ScalarImageType::RegionType inputRegion;
+      inputRegion.SetIndex(fixedIndex);
+      inputRegion.SetSize(overlapRegion);
+     // std::cout << point << "  " << fixedIndex << "  "  << inputRegion << std::endl;
+
+      using ExtractImageFilterType = itk::ExtractImageFilter<ScalarImageType, ScalarImageType>;
+      typename ExtractImageFilterType::Pointer extractFixedOverlapRegion = ExtractImageFilterType::New();
+      extractFixedOverlapRegion->SetInput(fixedImage);
+      extractFixedOverlapRegion->InPlaceOff();
+      extractFixedOverlapRegion->SetDirectionCollapseToSubmatrix();
+      extractFixedOverlapRegion->SetExtractionRegion(inputRegion);
+      extractFixedOverlapRegion->UpdateLargestPossibleRegion();
+
+      typename ScalarImageType::Pointer fixedSubImage = extractFixedOverlapRegion->GetOutput();
+      {
+        using WriterType = itk::ImageFileWriter< ScalarImageType >;
+        typename WriterType::Pointer writer = WriterType::New();
+        std::stringstream ss;
+        ss << "/tmp/" << y << "_" << x << "_FixedSubregion.png";
+        writer->SetFileName( ss.str() );
+        writer->SetInput( fixedSubImage );
+        writer->Update();
+      }
+
+      movingImage->TransformPhysicalPointToIndex(point, fixedIndex);
+      typename ScalarImageType::RegionType mvInputRegion;
+      mvInputRegion.SetIndex(fixedIndex);
+      mvInputRegion.SetSize(overlapRegion);
+
+      typename ExtractImageFilterType::Pointer extractMovingOverlapRegion = ExtractImageFilterType::New();
+
+   //   std::cout << point << "  " << fixedIndex << "  "  << mvInputRegion << movingImage->GetLargestPossibleRegion() << std::endl;
+      extractMovingOverlapRegion->SetInput(movingImage);
+      extractMovingOverlapRegion->InPlaceOff();
+      extractMovingOverlapRegion->SetDirectionCollapseToSubmatrix();
+      extractMovingOverlapRegion->SetExtractionRegion(mvInputRegion);
+      extractMovingOverlapRegion->UpdateLargestPossibleRegion();
+      typename ScalarImageType::Pointer movingSubImage = extractMovingOverlapRegion->GetOutput();
+      {
+        using WriterType = itk::ImageFileWriter< ScalarImageType >;
+        typename WriterType::Pointer writer = WriterType::New();
+        std::stringstream ss;
+        ss << "/tmp/" << y << "_" << x << "_MovingSubregion.png";
+        writer->SetFileName( ss.str() );
+        writer->SetInput( movingSubImage );
+        writer->Update();
+      }
+      std::cout << "Moving Scaling: " << movingSubImage->GetSpacing() << std::endl;
+
+      typename CasterType::Pointer fxUcharToFft = CasterType::New();
+      fxUcharToFft->SetInput(fixedSubImage);
+      fxUcharToFft->Update();
+      typename CasterType::Pointer mvUcharToFft = CasterType::New();
+      mvUcharToFft->SetInput(movingSubImage);
+      mvUcharToFft->Update();
+
+      RegistrationType::Pointer pcmRegistration = RegistrationType::New();
+      RegistrationType::TransformPointer transform = RegistrationType::TransformType::New();
+      OperatorType::Pointer pcmOperator = OperatorType::New();
+      OptimizerType::Pointer pcmOptimizer = OptimizerType::New();
+
+      pcmRegistration->SetOperator(pcmOperator);
+      pcmRegistration->SetOptimizer(pcmOptimizer);
+
+      FFTImageType::Pointer fxUcharToFftImage = fxUcharToFft->GetOutput();
+      FFTImageType::Pointer mvUcharToFftImage = mvUcharToFft->GetOutput();
+
+      PointType zeroOrigin;
+      zeroOrigin[0] = 0.0f;
+      zeroOrigin[1] = 0.0f;
+
+      fxUcharToFftImage->SetOrigin(zeroOrigin);
+      mvUcharToFftImage->SetOrigin(zeroOrigin);
+
+      pcmRegistration->SetFixedImage(fxUcharToFftImage);
+      pcmRegistration->SetMovingImage(mvUcharToFftImage);
+      pcmRegistration->SetDebug(true);
+     // pcmRegistration->SetTransform(transform);
+
+      int err = 0;
+      // execute the registration
+      try
+      {
+        pcmRegistration->Update();
+      } catch(itk::ExceptionObject& e)
+      {
+        std::cout << "Some error during registration:" << std::endl;
+        std::cout << e << std::endl;
+        err = -1;
+      }
+
+      const RegistrationType::TransformOutputType* outputTransform = pcmRegistration->GetOutput();
+      const RegistrationType::TransformType* regTr = outputTransform->Get();
+      // this translation is in index space, convert it into physical space
+      typename RegistrationType::TransformType::OutputVectorType translation = regTr->GetOffset();
+
+      std::cout << "Transform: " << translation << std::endl;
+//      using DoubleImageType = itk::Image<double, 2>;
+//      const DoubleImageType* pci = pcmRegistration->GetPhaseCorrelationImage();
+//      if(pci != nullptr)
+//      {
+//        using UInt8CasterType = itk::CastImageFilter<DoubleImageType, ScalarImageType>;
+//        UInt8CasterType::Pointer uint8Caster = UInt8CasterType::New();
+//        uint8Caster->SetInput(pci);
+//        uint8Caster->Update();
+
+//        using WriterType = itk::ImageFileWriter< ScalarImageType >;
+//        WriterType::Pointer writer = WriterType::New();
+//        std::stringstream ss;
+//        ss << "/tmp/" << y << "_" << x << "_PhaseCorrelationImage.png";
+//        writer->SetFileName( ss.str() );
+//        writer->SetInput( uint8Caster->GetOutput() );
+//        writer->Update();
+//      }
+      err = 1;
+     // return err;
+    }
+  }
+}
+
+
+
 
 #define EXECUTE_REGISTER_FUNCTION_TEMPLATE_HELPER(DATATYPE, filter, rgb_call, grayscale_call, inputData, ...)                                                                                          \
   int numOfComponents = inputData->getNumberOfComponents();                                                                                                                                            \
@@ -148,9 +469,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKGenerateMontageConfiguration::ITKGenerateMontageConfiguration()
-{
-}
+ITKGenerateMontageConfiguration::ITKGenerateMontageConfiguration() = default;
 
 // -----------------------------------------------------------------------------
 //
@@ -325,6 +644,7 @@ void ITKGenerateMontageConfiguration::preflight()
   setInPreflight(false);
 }
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -344,7 +664,8 @@ void ITKGenerateMontageConfiguration::execute()
     return;
   }
 
-  if(m_StageTiles.size() > 0)
+#if 0
+  if(!m_StageTiles.empty())
   {
     // Pass to ITK and generate montage
     // ITK returns a new Fiji data structure to DREAM3D
@@ -356,6 +677,29 @@ void ITKGenerateMontageConfiguration::execute()
 
     EXECUTE_REGISTER_FUNCTION_TEMPLATE(this, registerRGBMontage, registerGrayscaleMontage, da);
   }
+#else
+
+  // Get the top corner DataContainer
+  DataContainer::Pointer imageDC = GetImageDataContainer(0,0);
+  AttributeMatrix::Pointer am = imageDC->getAttributeMatrix(getCommonAttributeMatrixName());
+  IDataArray::Pointer data = am->getAttributeArray(getCommonDataArrayName());
+  size_t bits = data->getTypeSize();
+  int ncomps = data->getNumberOfComponents();
+  if(bits == 1 && ncomps == 1)
+  {
+    texecute<uint8_t>(this);
+  }
+  else if (bits == 2 && ncomps == 1)
+  {
+    texecute<uint16_t>(this);
+  }
+  else {
+    std::cout << "Bits=" << bits << "  ncomps=" << ncomps << std::endl;
+    std::cout << "Filter is not executing anything...." << std::endl;
+  }
+
+#endif
+
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
@@ -374,14 +718,13 @@ void ITKGenerateMontageConfiguration::createFijiDataStructure()
   {
     return;
   }
-  else
+
+  m_StageTiles.resize(m_yMontageSize);
+  for(unsigned i = 0; i < m_yMontageSize; i++)
   {
-    m_StageTiles.resize(m_yMontageSize);
-    for(unsigned i = 0; i < m_yMontageSize; i++)
-    {
-      m_StageTiles[i].resize(m_xMontageSize);
-    }
+    m_StageTiles[i].resize(m_xMontageSize);
   }
+
 
   float tileOverlapFactor = ((100.0 - getTileOverlap()) / 100.0);
 
@@ -496,7 +839,7 @@ template <typename PixelType, typename MontageType> typename MontageType::Pointe
       ind[0] = x;
       DataContainer::Pointer imageDC = GetImageDataContainer(y, x);
 
-      typedef itk::InPlaceDream3DDataToImageFilter<ScalarPixelType, Dimension> toITKType;
+      using toITKType = itk::InPlaceDream3DDataToImageFilter<ScalarPixelType, Dimension>;
       typename toITKType::Pointer toITK = toITKType::New();
 
       toITK->SetInput(imageDC);
@@ -536,7 +879,7 @@ template <typename PixelType, typename MontageType> typename MontageType::Pointe
       ind[0] = x;
       DataContainer::Pointer imageDC = GetImageDataContainer(y, x);
 
-      typedef itk::InPlaceDream3DDataToImageFilter<PixelType, Dimension> toITKType;
+      using toITKType = itk::InPlaceDream3DDataToImageFilter<PixelType, Dimension>;
       typename toITKType::Pointer toITK = toITKType::New();
 
       toITK->SetInput(imageDC);

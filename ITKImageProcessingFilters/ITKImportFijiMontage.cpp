@@ -85,8 +85,8 @@ ITKImportFijiMontagePrivate::ITKImportFijiMontagePrivate(ITKImportFijiMontage* p
 ITKImportFijiMontage::ITKImportFijiMontage()
 : m_DataContainerPrefix(SIMPL::Defaults::ImageDataContainerName + "_")
 , m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName)
-, m_FijiConfigFilePath("")
 , m_AttributeArrayName("ImageTile")
+, m_FijiConfigFilePath("")
 , d_ptr(new ITKImportFijiMontagePrivate(this))
 {
 

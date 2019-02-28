@@ -152,6 +152,14 @@ public:
    */
   void preflight() override;
 
+
+  /**
+   * @brief Get the image from the appropriate data container
+   * @param y
+   * @param x
+   */
+  DataContainer::Pointer GetImageDataContainer(int y, int x);
+
 signals:
   /**
    * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
@@ -174,6 +182,8 @@ signals:
    * @brief preflightExecuted Emitted just after calling dataCheck()
    */
   void preflightExecuted();
+
+
 
 protected:
   ITKGenerateMontageConfiguration();
@@ -206,13 +216,6 @@ protected:
    * @param streamSubdivisions
    */
   template <typename PixelType> void registerRGBMontage(int peakMethodToUse = 0, unsigned streamSubdivisions = 1);
-
-  /**
-   * @brief Get the image from the appropriate data container
-   * @param y
-   * @param x
-   */
-  DataContainer::Pointer GetImageDataContainer(int y, int x);
 
   /**
    * @brief Get the transform container from an affine transform
