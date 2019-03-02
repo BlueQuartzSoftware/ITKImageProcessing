@@ -84,6 +84,12 @@ public:
   SIMPL_FILTER_PARAMETER(QString, FijiConfigFilePath)
   Q_PROPERTY(QString FijiConfigFilePath READ getFijiConfigFilePath WRITE setFijiConfigFilePath)
 
+  SIMPL_GET_PROPERTY(int, RowCount)
+  Q_PROPERTY(int RowCount READ getRowCount)
+
+  SIMPL_GET_PROPERTY(int, ColumnCount)
+  Q_PROPERTY(int ColumnCount READ getColumnCount)
+
   typedef std::vector<ITKImageReader::Pointer> ImageReaderVector;
   typedef std::vector<itk::FijiImageTileData> TileDataVector;
 
@@ -202,6 +208,9 @@ protected:
 
 private:
   QScopedPointer<ITKImportFijiMontagePrivate> const d_ptr;
+
+  int m_RowCount = 0;
+  int m_ColumnCount = 0;
 
   /**
    * @brief readDataFile

@@ -197,10 +197,29 @@ void ITKImportFijiMontage::dataCheck()
     if(fijiFileReader.getErrorCode() < 0)
     {
       QString ss = fijiFileReader.getErrorMessage();
-      int code = fijiFileReader.getErrorCode();
-      notifyErrorMessage(getHumanLabel(), ss, code);
+      setErrorCondition(fijiFileReader.getErrorCode());
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return;
     }
+
+    if (fijiFileData.size() <= 0)
+    {
+      QString ss = "Fiji file does not contain at least 1 tile row.  Please choose a Fiji file that contains at least 1 tile row.";
+      setErrorCondition(-2003);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      return;
+    }
+
+    if (fijiFileData[0].size() <= 0)
+    {
+      QString ss = "Fiji file does not contain at least 1 tile column.  Please choose a Fiji file that contains at least 1 tile column.";
+      setErrorCondition(-2004);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      return;
+    }
+
+    m_RowCount = fijiFileData.size();
+    m_ColumnCount = fijiFileData[0].size();
 
     QVector<size_t> cDims(1, 1);
 
