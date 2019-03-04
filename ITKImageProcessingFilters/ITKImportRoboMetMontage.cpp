@@ -20,6 +20,7 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/ITK/itkReadImageImpl.hpp"
 #include "SIMPLib/Utilities/FilePathGenerator.h"
+#include "SIMPLib/Utilities/StringOperations.h"
 
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
@@ -418,29 +419,11 @@ QString ITKImportRoboMetMontage::getImageFilePath(const QString &filePath, int i
 	int row, int col)
 {
 	QFileInfo fi(filePath);
-	int numberOfDigits = imageNumber == 0 ? 1 : ceil(log10(imageNumber));
-	int numRowDigits = row <= 1 ? 1 : ceil(log10(row));
-	int numColDigits = col <= 1 ? 1 : ceil(log10(col));
-	QString sixDigitImageNumber;
-	for (int digits = 6; digits > numberOfDigits; digits--)
-	{
-		sixDigitImageNumber.append("0");
-	}
-	sixDigitImageNumber.append(QString::number(imageNumber));
+  QString sixDigitImageNumber = StringOperations::GeneratePaddedString(imageNumber, 6, '0');
 
-	QString twoDigitRowNumber;
-	for (int digits = 2; digits > numRowDigits; digits--)
-	{
-		twoDigitRowNumber.append("0");
-	} 
-	twoDigitRowNumber.append(QString::number(row));
+  QString twoDigitRowNumber = StringOperations::GeneratePaddedString(row, 2, '0');
 
-	QString twoDigitColNumber;
-	for (int digits = 2; digits > numColDigits; digits--)
-	{
-		twoDigitColNumber.append("0");
-	}
-	twoDigitColNumber.append(QString::number(col));
+  QString twoDigitColNumber = StringOperations::GeneratePaddedString(col, 2, '0');
 
 	QString imageDir = getImageFilePrefix() + '_' + sixDigitImageNumber;
 	QString imageFile = getImageFilePrefix() + '_' + sixDigitImageNumber + '_' +
