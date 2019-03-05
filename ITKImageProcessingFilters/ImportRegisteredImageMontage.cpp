@@ -234,7 +234,7 @@ void ImportRegisteredImageMontage::dataCheck()
   DataArrayPath path(getDataContainerName().getDataContainerName(), getMetaDataAttributeMatrixName(), getAttributeArrayNamesArrayName());
   AttributeMatrix::Pointer metaDataAttrMat = getDataContainerArray()->getAttributeMatrix(path);
   StringDataArray::Pointer attributeArrayNames = StringDataArray::CreateArray(metaDataAttrMat->getNumberOfTuples(), getAttributeArrayNamesArrayName());
-  metaDataAttrMat->insert_or_assign(attributeArrayNames);
+  metaDataAttrMat->insertOrAssign(attributeArrayNames);
   m_AttributeArrayNamesPtr = attributeArrayNames;
   if(getErrorCondition() < 0)
   {

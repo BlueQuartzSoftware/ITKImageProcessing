@@ -325,7 +325,7 @@ template <typename TPixel, typename UnusedTPixel, unsigned int Dimensions> void 
   dc->addAttributeMatrix(am);                                                                                                                                                                          \
   imageGeom->setDimensions(tDims.data());                                                                                                                                                              \
   IDataArray::Pointer sliceData = currentData->createNewArray(numElements, cDims, currentData->getName(), true);                                                                                       \
-  am->insert_or_assign(sliceData);
+  am->insertOrAssign(sliceData);
 
 // -----------------------------------------------------------------------------
 //

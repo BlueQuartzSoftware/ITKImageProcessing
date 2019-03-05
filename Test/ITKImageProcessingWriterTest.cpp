@@ -118,7 +118,7 @@ public:
     AttributeMatrix::Pointer matrixArray = container->createAndAddAttributeMatrix(dimensions, path.getAttributeMatrixName(), AttributeMatrix::Type::Cell);
     typename DataArray<PixelType>::Pointer data = DataArray<PixelType>::CreateArray(dimensions, arrayDimensions, path.getDataArrayName(), true);
     data->initializeWithValue(11.0);
-    matrixArray->insert_or_assign(data);
+    matrixArray->insertOrAssign(data);
 
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
     containerArray->addDataContainer(container);
