@@ -109,7 +109,7 @@ public:
       spacing[i] = 0.45f + static_cast<float>(i) * 0.2f;
       dimensions[i] = 90 + i * 3;
     }
-    imageGeometry->setResolution(spacing.data());
+    imageGeometry->setSpacing(spacing.data());
     imageGeometry->setOrigin(origin.data());
     imageGeometry->setDimensions(dimensions.data());
     container->setGeometry(imageGeometry);
@@ -118,7 +118,7 @@ public:
     AttributeMatrix::Pointer matrixArray = container->createAndAddAttributeMatrix(dimensions, path.getAttributeMatrixName(), AttributeMatrix::Type::Cell);
     typename DataArray<PixelType>::Pointer data = DataArray<PixelType>::CreateArray(dimensions, arrayDimensions, path.getDataArrayName(), true);
     data->initializeWithValue(11.0);
-    matrixArray->addAttributeArray(path.getDataArrayName(), data);
+    matrixArray->insert_or_assign(data);
 
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
     containerArray->addDataContainer(container);
@@ -138,12 +138,12 @@ public:
   // -----------------------------------------------------------------------------
   bool CompareImageGeometries(const ImageGeom::Pointer& inputImageGeometry, const ImageGeom::Pointer& baselineImageGeometry)
   {
-    float inputResolution[3];
-    float baselineResolution[3];
-    inputImageGeometry->getResolution(inputResolution);
-    baselineImageGeometry->getResolution(baselineResolution);
-    float inputOrigin[3];
-    float baselineOrigin[3];
+    FloatVec3Type inputResolution;
+    FloatVec3Type baselineResolution;
+    inputImageGeometry->getSpacing(inputResolution);
+    baselineImageGeometry->getSpacing(baselineResolution);
+    FloatVec3Type inputOrigin;
+    FloatVec3Type baselineOrigin;
     inputImageGeometry->getOrigin(inputOrigin);
     baselineImageGeometry->getOrigin(baselineOrigin);
     size_t inputDimensions[3];

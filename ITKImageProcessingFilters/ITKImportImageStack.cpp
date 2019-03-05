@@ -63,13 +63,13 @@ ITKImportImageStack::ITKImportImageStack()
 , m_BoundsFile("")
 , m_ImageDataArrayName(SIMPL::CellData::ImageData)
 {
-  m_Origin.x = 0.0f;
-  m_Origin.y = 0.0f;
-  m_Origin.z = 0.0f;
+  m_Origin[0] = 0.0f;
+  m_Origin[1] = 0.0f;
+  m_Origin[2] = 0.0f;
 
-  m_Resolution.x = 1.0f;
-  m_Resolution.y = 1.0f;
-  m_Resolution.z = 1.0f;
+  m_Spacing[0] = 1.0f;
+  m_Spacing[1] = 1.0f;
+  m_Spacing[2] = 1.0f;
 
   m_InputFileListInfo.FileExtension = QString("tif");
   m_InputFileListInfo.StartIndex = 0;
@@ -91,7 +91,7 @@ void ITKImportImageStack::setupFilterParameters()
   FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_FILELISTINFO_FP("Input File List", InputFileListInfo, FilterParameter::Parameter, ITKImportImageStack));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Origin", Origin, FilterParameter::Parameter, ITKImportImageStack, 0));
-  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Resolution", Resolution, FilterParameter::Parameter, ITKImportImageStack, 0));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Spacing", Spacing, FilterParameter::Parameter, ITKImportImageStack, 0));
   parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container", DataContainerName, FilterParameter::CreatedArray, ITKImportImageStack));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
   parameters.push_back(SIMPL_NEW_STRING_FP("Cell Attribute Matrix", CellAttributeMatrixName, FilterParameter::CreatedArray, ITKImportImageStack));
@@ -110,7 +110,7 @@ void ITKImportImageStack::readFilterParameters(AbstractFilterParametersReader* r
   setImageDataArrayName(reader->readString("ImageDataArrayName", getImageDataArrayName()));
   setInputFileListInfo(reader->readFileListInfo("InputFileListInfo", getInputFileListInfo()));
   setOrigin(reader->readFloatVec3("Origin", getOrigin()));
-  setResolution(reader->readFloatVec3("Resolution", getResolution()));
+  setSpacing(reader->readFloatVec3("Spacing", getSpacing()));
   reader->closeFilterGroup();
 }
 
@@ -357,15 +357,11 @@ template <typename TPixel> void ITKImportImageStack::readImageWithPixelType(cons
   }
 
   ImageGeom::Pointer image = ImageGeom::CreateGeometry(SIMPL::Geometry::ImageGeometry);
-  image->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
-  image->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
+  image->setSpacing(m_Spacing);
+  image->setOrigin(m_Origin);
   const typename ImageType::SizeType size = reader->GetOutput()->GetLargestPossibleRegion().GetSize();
-  QVector<size_t> tDims(Dimension, 1);
-  for(unsigned int i = 0; i < Dimension; i++)
-  {
-    tDims[i] = size[i];
-  }
-  image->setDimensions(tDims[0], tDims[1], tDims[2]);
+  SizeVec3Type tDims(size[0], size[1], size[2]);
+  image->setDimensions(tDims);
   container->setGeometry(image);
 }
 
@@ -441,7 +437,7 @@ AbstractFilter::Pointer ITKImportImageStack::newFilterInstance(bool copyFilterPa
     // miss some of them because we are not enumerating all of them.
     SIMPL_COPY_INSTANCEVAR(DataContainerName)
     SIMPL_COPY_INSTANCEVAR(CellAttributeMatrixName)
-    SIMPL_COPY_INSTANCEVAR(Resolution)
+    SIMPL_COPY_INSTANCEVAR(Spacing)
     SIMPL_COPY_INSTANCEVAR(Origin)
 #if 0
     SIMPL_COPY_INSTANCEVAR(ZStartIndex)

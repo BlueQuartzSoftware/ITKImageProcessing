@@ -33,7 +33,7 @@ class ITKImageProcessing_EXPORT ITKErodeObjectMorphologyImage : public ITKImageP
   PYB11_CREATE_BINDINGS(ITKErodeObjectMorphologyImage SUPERCLASS ITKImageProcessingBase)
   PYB11_PROPERTY(double ObjectValue READ getObjectValue WRITE setObjectValue)
   PYB11_PROPERTY(double BackgroundValue READ getBackgroundValue WRITE setBackgroundValue)
-  PYB11_PROPERTY(FloatVec3_t KernelRadius READ getKernelRadius WRITE setKernelRadius)
+  PYB11_PROPERTY(FloatVec3Type KernelRadius READ getKernelRadius WRITE setKernelRadius)
   PYB11_PROPERTY(int KernelType READ getKernelType WRITE setKernelType)
 
 public:
@@ -49,8 +49,8 @@ public:
   SIMPL_FILTER_PARAMETER(double, BackgroundValue)
   Q_PROPERTY(double BackgroundValue READ getBackgroundValue WRITE setBackgroundValue)
 
-  SIMPL_FILTER_PARAMETER(FloatVec3_t, KernelRadius)
-  Q_PROPERTY(FloatVec3_t KernelRadius READ getKernelRadius WRITE setKernelRadius)
+  SIMPL_FILTER_PARAMETER(FloatVec3Type, KernelRadius)
+  Q_PROPERTY(FloatVec3Type KernelRadius READ getKernelRadius WRITE setKernelRadius)
 
   SIMPL_FILTER_PARAMETER(int, KernelType)
   Q_PROPERTY(int KernelType READ getKernelType WRITE setKernelType)

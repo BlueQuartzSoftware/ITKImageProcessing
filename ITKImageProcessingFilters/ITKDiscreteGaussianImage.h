@@ -31,9 +31,9 @@ class ITKImageProcessing_EXPORT ITKDiscreteGaussianImage : public ITKImageProces
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKDiscreteGaussianImage SUPERCLASS ITKImageProcessingBase)
-  PYB11_PROPERTY(FloatVec3_t Variance READ getVariance WRITE setVariance)
+  PYB11_PROPERTY(FloatVec3Type Variance READ getVariance WRITE setVariance)
   PYB11_PROPERTY(double MaximumKernelWidth READ getMaximumKernelWidth WRITE setMaximumKernelWidth)
-  PYB11_PROPERTY(FloatVec3_t MaximumError READ getMaximumError WRITE setMaximumError)
+  PYB11_PROPERTY(FloatVec3Type MaximumError READ getMaximumError WRITE setMaximumError)
   PYB11_PROPERTY(bool UseImageSpacing READ getUseImageSpacing WRITE setUseImageSpacing)
 
 public:
@@ -43,14 +43,14 @@ public:
 
   ~ITKDiscreteGaussianImage() override;
 
-  SIMPL_FILTER_PARAMETER(FloatVec3_t, Variance)
-  Q_PROPERTY(FloatVec3_t Variance READ getVariance WRITE setVariance)
+  SIMPL_FILTER_PARAMETER(FloatVec3Type, Variance)
+  Q_PROPERTY(FloatVec3Type Variance READ getVariance WRITE setVariance)
 
   SIMPL_FILTER_PARAMETER(double, MaximumKernelWidth)
   Q_PROPERTY(double MaximumKernelWidth READ getMaximumKernelWidth WRITE setMaximumKernelWidth)
 
-  SIMPL_FILTER_PARAMETER(FloatVec3_t, MaximumError)
-  Q_PROPERTY(FloatVec3_t MaximumError READ getMaximumError WRITE setMaximumError)
+  SIMPL_FILTER_PARAMETER(FloatVec3Type, MaximumError)
+  Q_PROPERTY(FloatVec3Type MaximumError READ getMaximumError WRITE setMaximumError)
 
   SIMPL_FILTER_PARAMETER(bool, UseImageSpacing)
   Q_PROPERTY(bool UseImageSpacing READ getUseImageSpacing WRITE setUseImageSpacing)

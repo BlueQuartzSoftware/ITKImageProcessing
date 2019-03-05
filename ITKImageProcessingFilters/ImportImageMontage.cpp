@@ -32,13 +32,13 @@ ImportImageMontage::ImportImageMontage()
 , m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName)
 , m_MetaDataAttributeMatrixName("MetaDataAttributeMatrix")
 {
-  m_Origin.x = 0.0;
-  m_Origin.y = 0.0;
-  m_Origin.z = 0.0;
+  m_Origin[0] = 0.0;
+  m_Origin[1] = 0.0;
+  m_Origin[2] = 0.0;
 
-  m_Resolution.x = 1.0;
-  m_Resolution.y = 1.0;
-  m_Resolution.z = 1.0;
+  m_Spacing[0] = 1.0;
+  m_Spacing[1] = 1.0;
+  m_Spacing[2] = 1.0;
 
   m_InputFileListInfo.FileExtension = QString("tif");
   m_InputFileListInfo.StartIndex = 0;
@@ -63,7 +63,7 @@ void ImportImageMontage::setupFilterParameters()
 
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Origin", Origin, FilterParameter::Parameter, ImportImageMontage));
 
-  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Resolution", Resolution, FilterParameter::Parameter, ImportImageMontage));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Spacing", Spacing, FilterParameter::Parameter, ImportImageMontage));
 
   parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container", DataContainerName, FilterParameter::CreatedArray, ImportImageMontage));
 
@@ -86,7 +86,7 @@ void ImportImageMontage::readFilterParameters(AbstractFilterParametersReader* re
   setMetaDataAttributeMatrixName(reader->readString("MetaDataAttributeMatrixName", getMetaDataAttributeMatrixName()));
   setInputFileListInfo(reader->readFileListInfo("InputFileListInfo", getInputFileListInfo()));
   setOrigin(reader->readFloatVec3("Origin", getOrigin()));
-  setResolution(reader->readFloatVec3("Resolution", getResolution()));
+  setSpacing(reader->readFloatVec3("Spacing", getSpacing()));
   reader->closeFilterGroup();
 }
 
@@ -312,7 +312,7 @@ AbstractFilter::Pointer ImportImageMontage::newFilterInstance(bool copyFilterPar
     // miss some of them because we are not enumerating all of them.
     SIMPL_COPY_INSTANCEVAR(DataContainerName)
     SIMPL_COPY_INSTANCEVAR(CellAttributeMatrixName)
-    SIMPL_COPY_INSTANCEVAR(Resolution)
+    SIMPL_COPY_INSTANCEVAR(Spacing)
     SIMPL_COPY_INSTANCEVAR(Origin)
     SIMPL_COPY_INSTANCEVAR(InputFileListInfo)
   }

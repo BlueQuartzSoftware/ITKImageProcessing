@@ -58,8 +58,8 @@ class ITKImageProcessing_EXPORT ITKImportImageStack : public AbstractFilter
   PYB11_CREATE_BINDINGS(ITKImportImageStack SUPERCLASS AbstractFilter)
   PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
   PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
-  PYB11_PROPERTY(FloatVec3_t Origin READ getOrigin WRITE setOrigin)
-  PYB11_PROPERTY(FloatVec3_t Resolution READ getResolution WRITE setResolution)
+  PYB11_PROPERTY(FloatVec3Type Origin READ getOrigin WRITE setOrigin)
+  PYB11_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
   PYB11_PROPERTY(QString BoundsFile READ getBoundsFile WRITE setBoundsFile)
   PYB11_PROPERTY(FileListInfo_t InputFileListInfo READ getInputFileListInfo WRITE setInputFileListInfo)
   PYB11_PROPERTY(int ImageStack READ getImageStack WRITE setImageStack)
@@ -77,11 +77,11 @@ public:
   SIMPL_FILTER_PARAMETER(QString, CellAttributeMatrixName)
   Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
-  SIMPL_FILTER_PARAMETER(FloatVec3_t, Origin)
-  Q_PROPERTY(FloatVec3_t Origin READ getOrigin WRITE setOrigin)
+  SIMPL_FILTER_PARAMETER(FloatVec3Type, Origin)
+  Q_PROPERTY(FloatVec3Type Origin READ getOrigin WRITE setOrigin)
 
-  SIMPL_FILTER_PARAMETER(FloatVec3_t, Resolution)
-  Q_PROPERTY(FloatVec3_t Resolution READ getResolution WRITE setResolution)
+  SIMPL_FILTER_PARAMETER(FloatVec3Type, Spacing)
+  Q_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
 
   SIMPL_FILTER_PARAMETER(QString, BoundsFile)
   Q_PROPERTY(QString BoundsFile READ getBoundsFile WRITE setBoundsFile)

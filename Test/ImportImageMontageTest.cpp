@@ -43,8 +43,8 @@ class ImportImageMontageTest : public ITKTestBase
   const QString m_CellAMName = QString("CellData");
   const QString m_MetaDataAMName = QString("MetaData");
 
-  FloatVec3_t m_Origin;
-  FloatVec3_t m_Resolution;
+  FloatVec3Type m_Origin;
+  FloatVec3Type m_Spacing;
 
 public:
   ImportImageMontageTest() = default;
@@ -82,18 +82,18 @@ public:
     propWasSet = import->setProperty("MetaDataAttributeMatrixName", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
 
-    m_Origin.x = 0.0f;
-    m_Origin.y = 0.0f;
-    m_Origin.z = 0.0f;
+    m_Origin[0] = 0.0f;
+    m_Origin[1] = 0.0f;
+    m_Origin[2] = 0.0f;
     var.setValue(m_Origin);
     propWasSet = import->setProperty("Origin", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
 
-    m_Resolution.x = 0.25f;
-    m_Resolution.y = 0.50f;
-    m_Resolution.z = 1.25f;
-    var.setValue(m_Resolution);
-    propWasSet = import->setProperty("Resolution", var);
+    m_Spacing[0] = 0.25f;
+    m_Spacing[1] = 0.50f;
+    m_Spacing[2] = 1.25f;
+    var.setValue(m_Spacing);
+    propWasSet = import->setProperty("Spacing", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
 
     // DeltaE_16bit_gamma1.0_01-00.tif

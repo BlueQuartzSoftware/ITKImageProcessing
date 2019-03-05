@@ -35,8 +35,8 @@ class ITKImageProcessing_EXPORT ITKRelabelComponentImage : public ITKImageProces
   PYB11_PROPERTY(bool SortByObjectSize READ getSortByObjectSize WRITE setSortByObjectSize)
   PYB11_PROPERTY(double NumberOfObjects READ getNumberOfObjects WRITE setNumberOfObjects)
   PYB11_PROPERTY(double OriginalNumberOfObjects READ getOriginalNumberOfObjects WRITE setOriginalNumberOfObjects)
-  PYB11_PROPERTY(FloatVec3_t SizeOfObjectsInPhysicalUnits READ getSizeOfObjectsInPhysicalUnits WRITE setSizeOfObjectsInPhysicalUnits)
-  PYB11_PROPERTY(FloatVec3_t SizeOfObjectsInPixels READ getSizeOfObjectsInPixels WRITE setSizeOfObjectsInPixels)
+  PYB11_PROPERTY(FloatVec3Type SizeOfObjectsInPhysicalUnits READ getSizeOfObjectsInPhysicalUnits WRITE setSizeOfObjectsInPhysicalUnits)
+  PYB11_PROPERTY(FloatVec3Type SizeOfObjectsInPixels READ getSizeOfObjectsInPixels WRITE setSizeOfObjectsInPixels)
 
 public:
   SIMPL_SHARED_POINTERS(ITKRelabelComponentImage)
@@ -57,12 +57,11 @@ public:
   SIMPL_FILTER_PARAMETER(double, OriginalNumberOfObjects)
   Q_PROPERTY(double OriginalNumberOfObjects READ getOriginalNumberOfObjects)
 
-  SIMPL_FILTER_PARAMETER(FloatVec3_t, SizeOfObjectsInPhysicalUnits)
-  Q_PROPERTY(FloatVec3_t SizeOfObjectsInPhysicalUnits READ getSizeOfObjectsInPhysicalUnits)
+  SIMPL_FILTER_PARAMETER(FloatVec3Type, SizeOfObjectsInPhysicalUnits)
+  Q_PROPERTY(FloatVec3Type SizeOfObjectsInPhysicalUnits READ getSizeOfObjectsInPhysicalUnits)
 
-  SIMPL_FILTER_PARAMETER(FloatVec3_t, SizeOfObjectsInPixels)
-  Q_PROPERTY(FloatVec3_t SizeOfObjectsInPixels READ getSizeOfObjectsInPixels)
-
+  SIMPL_FILTER_PARAMETER(FloatVec3Type, SizeOfObjectsInPixels)
+  Q_PROPERTY(FloatVec3Type SizeOfObjectsInPixels READ getSizeOfObjectsInPixels)
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class

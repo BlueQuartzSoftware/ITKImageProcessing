@@ -31,7 +31,7 @@ class ITKImageProcessing_EXPORT ITKAdaptiveHistogramEqualizationImage : public I
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKAdaptiveHistogramEqualizationImage SUPERCLASS ITKImageProcessingBase)
-  PYB11_PROPERTY(FloatVec3_t Radius READ getRadius WRITE setRadius)
+  PYB11_PROPERTY(FloatVec3Type Radius READ getRadius WRITE setRadius)
   PYB11_PROPERTY(float Alpha READ getAlpha WRITE setAlpha)
   PYB11_PROPERTY(float Beta READ getBeta WRITE setBeta)
 
@@ -42,8 +42,8 @@ public:
 
   ~ITKAdaptiveHistogramEqualizationImage() override;
 
-  SIMPL_FILTER_PARAMETER(FloatVec3_t, Radius)
-  Q_PROPERTY(FloatVec3_t Radius READ getRadius WRITE setRadius)
+  SIMPL_FILTER_PARAMETER(FloatVec3Type, Radius)
+  Q_PROPERTY(FloatVec3Type Radius READ getRadius WRITE setRadius)
 
   SIMPL_FILTER_PARAMETER(float, Alpha)
   Q_PROPERTY(float Alpha READ getAlpha WRITE setAlpha)

@@ -322,10 +322,10 @@ template <typename TPixel, typename UnusedTPixel, unsigned int Dimensions> void 
   size_t dB = dimB;                                                                                                                                                                                    \
   size_t numElements = dA * dB;                                                                                                                                                                        \
   AttributeMatrix::Pointer am = AttributeMatrix::New(tDims, attributeMatrix->getName(), AttributeMatrix::Type::Cell);                                                                                  \
-  dc->addAttributeMatrix(am->getName(), am);                                                                                                                                                           \
+  dc->addAttributeMatrix(am);                                                                                                                                                                          \
   imageGeom->setDimensions(tDims.data());                                                                                                                                                              \
   IDataArray::Pointer sliceData = currentData->createNewArray(numElements, cDims, currentData->getName(), true);                                                                                       \
-  am->addAttributeArray(sliceData->getName(), sliceData);
+  am->insert_or_assign(sliceData);
 
 // -----------------------------------------------------------------------------
 //
