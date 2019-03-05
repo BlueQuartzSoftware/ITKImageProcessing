@@ -354,7 +354,7 @@ void ImportVectorImageStackWidget::validateInputFile()
 // -----------------------------------------------------------------------------
 void ImportVectorImageStackWidget::checkIOFiles()
 {
-  if(this->verifyPathExists(m_Ui->inputDir->text(), m_Ui->inputDir))
+  if(QtSFileUtils::VerifyPathExists(m_Ui->inputDir->text(), m_Ui->inputDir))
   {
     findMaxSliceAndPrefix();
   }
@@ -384,7 +384,7 @@ void ImportVectorImageStackWidget::inputDir_textChanged(const QString& text)
 {
   Q_UNUSED(text)
 
-  if(verifyPathExists(m_Ui->inputDir->text(), m_Ui->inputDir))
+  if(QtSFileUtils::VerifyPathExists(m_Ui->inputDir->text(), m_Ui->inputDir))
   {
     m_ShowFileAction->setEnabled(true);
     findMaxSliceAndPrefix();
