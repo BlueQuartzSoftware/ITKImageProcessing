@@ -212,12 +212,12 @@ void SeparateDataSets::execute()
     size_t dims[3] = {0, 0, 0};
     std::tie(dims[0], dims[1], dims[2]) = originalGeom->getDimensions();
     newGeom->setDimensions(dims);
-    float res[3] = {0.0f, 0.0f, 0.0f};
-    originalGeom->getResolution(res);
-    newGeom->setResolution(scaleFactorForX, scaleFactorForY, 0.0f);
-    float origin[3] = {0.0f, 0.0f, 0.0f};
+    FloatVec3Type spacing;
+    originalGeom->getSpacing(spacing);
+    newGeom->setSpacing(FloatVec3Type(scaleFactorForX, scaleFactorForY, 0.0f));
+    FloatVec3Type origin;
     originalGeom->getOrigin(origin);
-    newGeom->setOrigin(stagePositionX, stagePositionY, origin[2]);
+    newGeom->setOrigin(FloatVec3Type(stagePositionX, stagePositionY, origin[2]));
     newGeom->setName(originalGeom->getName());
     newDCPtr->setGeometry(newGeom);
 
@@ -229,7 +229,7 @@ void SeparateDataSets::execute()
     IDataArray::Pointer newDataSetPtr = origDataSetAM->removeAttributeArray(origDataSetPtr->getName());
     if (nullptr != newDataSetPtr.get())
     {
-      newDataSetAM->addAttributeArray(newDataSetPtr->getName(), newDataSetPtr);
+      newDataSetAM->insert_or_assign(newDataSetPtr);
     }
 
     // Copy the meta data attribute matrix
@@ -247,8 +247,8 @@ void SeparateDataSets::execute()
     }
     newMetaDataAM->setTupleDimensions(QVector<size_t>(1, 1));
 
-    newDCPtr->addAttributeMatrix(newMetaDataAM->getName(), newMetaDataAM);
-    newDCPtr->addAttributeMatrix(newDataSetAM->getName(), newDataSetAM);
+    newDCPtr->addAttributeMatrix(newMetaDataAM);
+    newDCPtr->addAttributeMatrix(newDataSetAM);
   }
 
   getDataContainerArray()->removeDataContainer(getDatasetAMPath().getDataContainerName());

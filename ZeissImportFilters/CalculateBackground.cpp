@@ -70,7 +70,7 @@ CalculateBackground::CalculateBackground()
 , m_ImageDataArrayPath("", "", "")
 , m_AttributeMatrixName(SIMPL::Defaults::DataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, "")
 , m_DataContainerBundleName("")
-, m_BackgroundImageArrayName(getDataContainerBundleName() + "BackgroundImage")
+, m_BackgroundImageArrayName(getDataContainerBundleName().getDataContainerName() + "BackgroundImage")
 , m_lowThresh(0)
 , m_highThresh(255)
 , m_SubtractBackground(false)
@@ -116,7 +116,7 @@ void CalculateBackground::readFilterParameters(AbstractFilterParametersReader* r
   //    setVolumeDataContainerName(reader->readString("VolumeDataContainerName", getVolumeDataContainerName() ) );
   setBackgroundAttributeMatrixName(reader->readString("BackgroundAttributeMatrixName", getBackgroundAttributeMatrixName()));
   setBackgroundImageArrayName(reader->readString("BackgroundImageArrayName", getBackgroundImageArrayName()));
-  setDataContainerBundleName(reader->readString("DataContainerBundleName", getDataContainerBundleName() ) );
+  setDataContainerBundleName(reader->readDataArrayPath("DataContainerBundleName", getDataContainerBundleName()));
   setlowThresh(reader->readValue("lowThresh", getlowThresh()) );
   sethighThresh(reader->readValue("highThresh", gethighThresh()) );
   setSubtractBackground(reader->readValue("SubtractBackground", getSubtractBackground()));
