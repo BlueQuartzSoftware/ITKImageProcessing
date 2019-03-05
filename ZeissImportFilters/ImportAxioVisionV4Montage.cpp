@@ -505,7 +505,7 @@ void ImportAxioVisionV4Montage::parseImages(QDomElement& root, const ZeissTagsXm
       for(const auto& value : tagMap)
       {
         IDataArray::Pointer dataArray = value->createDataArray(!getInPreflight());
-        metaAm->insert_or_assign(dataArray);
+        metaAm->insertOrAssign(dataArray);
       }
     }
     // Read the image into a data array
@@ -584,7 +584,7 @@ void ImportAxioVisionV4Montage::addMetaData(const AttributeMatrix::Pointer& meta
     StringDataArray::Pointer strArray = std::dynamic_pointer_cast<StringDataArray>(iDataArray);
     strArray->setValue(index, zStrVal->getValue());
     // IDataArray::Pointer dataArray = iter.value()->createDataArray(!getInPreflight());
-    // metaData->insert_or_assign(dataArray);
+    // metaData->insertOrAssign(dataArray);
   }
 }
 
@@ -609,7 +609,7 @@ void ImportAxioVisionV4Montage::addRootMetaData(const AttributeMatrix::Pointer& 
       StringDataArray::Pointer strArray = std::dynamic_pointer_cast<StringDataArray>(iDataArray);
       strArray->setValue(index, zStrVal->getValue());
       // IDataArray::Pointer dataArray = iter.value()->createDataArray(!getInPreflight());
-      // metaData->insert_or_assign(dataArray);
+      // metaData->insertOrAssign(dataArray);
     }
   }
 }
@@ -829,7 +829,7 @@ void ImportAxioVisionV4Montage::convertToGrayScale(DataContainer* dc, const QStr
       IDataArray::Pointer rgb = am->removeAttributeArray(getImageDataArrayName());
       IDataArray::Pointer gray = am->removeAttributeArray(k_GrayScaleTempArrayName + getImageDataArrayName());
       gray->setName(rgb->getName());
-      am->insert_or_assign(gray);
+      am->insertOrAssign(gray);
     }
     else
     {

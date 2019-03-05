@@ -229,7 +229,7 @@ void SeparateDataSets::execute()
     IDataArray::Pointer newDataSetPtr = origDataSetAM->removeAttributeArray(origDataSetPtr->getName());
     if (nullptr != newDataSetPtr.get())
     {
-      newDataSetAM->insert_or_assign(newDataSetPtr);
+      newDataSetAM->insertOrAssign(newDataSetPtr);
     }
 
     // Copy the meta data attribute matrix
