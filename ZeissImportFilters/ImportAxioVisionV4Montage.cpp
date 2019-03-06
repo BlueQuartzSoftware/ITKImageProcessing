@@ -646,6 +646,9 @@ void ImportAxioVisionV4Montage::importImage(DataContainer* dc, const QString& im
     DataContainerArray::Pointer dca = DataContainerArray::New();
 
     filter->setDataContainerArray(dca); // AbstractFilter implements this so no problem
+	
+	// Add to filename list
+	m_FilenameList.push_back(imagePath);
 
     bool propWasSet = filter->setProperty("FileName", imagePath);
     if(!propWasSet)

@@ -73,6 +73,7 @@ class ZeissImport_EXPORT ImportAxioVisionV4Montage : public AbstractFilter
   PYB11_PROPERTY(FloatVec3_t Spacing READ getSpacing WRITE setSpacing)
   PYB11_PROPERTY(int32_t RowCount READ getRowCount)
   PYB11_PROPERTY(int32_t ColumnCount READ getColumnCount)
+  PYB11_PROPERTY(QStringList FilenameList READ getFilenameList)
 
   Q_DECLARE_PRIVATE(ImportAxioVisionV4Montage)
 
@@ -130,6 +131,9 @@ public:
 
   QString getMontageInformation();
   Q_PROPERTY(QString MontageInformation READ getMontageInformation)
+
+  SIMPL_GET_PROPERTY(QStringList, FilenameList)
+  Q_PROPERTY(QStringList FilenameList READ getFilenameList)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -291,6 +295,7 @@ private:
 
   int m_RowCount = -1;
   int m_ColumnCount = -1;
+  QStringList m_FilenameList;
 
 public:
   ImportAxioVisionV4Montage(const ImportAxioVisionV4Montage&) = delete;            // Copy Constructor Not Implemented
