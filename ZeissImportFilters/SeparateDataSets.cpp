@@ -243,7 +243,7 @@ void SeparateDataSets::execute()
       IDataArray::Pointer newMetaDataPtr = newMetaDataAM->getAttributeArray(metaDataArrayName);
 
       newMetaDataPtr->copyTuple(i, 0);
-      newMetaDataPtr->resize(1);
+      newMetaDataPtr->resizeTuples(1);
     }
     newMetaDataAM->setTupleDimensions(QVector<size_t>(1, 1));
 
