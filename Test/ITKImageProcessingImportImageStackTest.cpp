@@ -56,29 +56,25 @@ class ITKImageProcessingImportImageStackTest
 {
 
 public:
-  ITKImageProcessingImportImageStackTest()
-  {
-  }
-  virtual ~ITKImageProcessingImportImageStackTest()
-  {
-  }
+ITKImageProcessingImportImageStackTest() = default;
+~ITKImageProcessingImportImageStackTest() = default;
 
-  static const unsigned int Dimension = 3;
-  typedef short PixelType;
-  typedef itk::Image<PixelType, Dimension> ImageType;
+static const unsigned int Dimension = 3;
+typedef short PixelType;
+typedef itk::Image<PixelType, Dimension> ImageType;
 
-  // -----------------------------------------------------------------------------
-  //  Helper methods
-  // -----------------------------------------------------------------------------
-  AbstractFilter::Pointer GetFilterByName(const QString& filterName)
+// -----------------------------------------------------------------------------
+//  Helper methods
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer GetFilterByName(const QString& filterName)
+{
+  FilterManager* fm = FilterManager::Instance();
+  IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filterName);
+  if(nullptr == filterFactory.get())
   {
-    FilterManager* fm = FilterManager::Instance();
-    IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filterName);
-    if(nullptr == filterFactory.get())
-    {
-      return nullptr;
-    }
-    return filterFactory->create();
+    return nullptr;
+  }
+  return filterFactory->create();
   }
 
   void WriteTestFile(const QString& filePath, ImageType* image)

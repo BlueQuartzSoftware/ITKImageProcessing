@@ -13,12 +13,8 @@ class ITKIsoContourDistanceImageTest : public ITKTestBase
 {
 
 public:
-  ITKIsoContourDistanceImageTest()
-  {
-  }
-  virtual ~ITKIsoContourDistanceImageTest()
-  {
-  }
+ITKIsoContourDistanceImageTest() = default;
+~ITKIsoContourDistanceImageTest() override = default;
 
   int TestITKIsoContourDistanceImagedefaultTest()
 {

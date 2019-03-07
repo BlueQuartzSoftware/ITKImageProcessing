@@ -13,12 +13,8 @@ class ITKSpeckleNoiseImageTest : public ITKTestBase
 {
 
 public:
-  ITKSpeckleNoiseImageTest()
-  {
-  }
-  virtual ~ITKSpeckleNoiseImageTest()
-  {
-  }
+ITKSpeckleNoiseImageTest() = default;
+~ITKSpeckleNoiseImageTest() override = default;
 
   int TestITKSpeckleNoiseImage2dTest()
 {

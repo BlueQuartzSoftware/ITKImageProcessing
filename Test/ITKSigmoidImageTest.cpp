@@ -13,12 +13,8 @@ class ITKSigmoidImageTest : public ITKTestBase
 {
 
 public:
-  ITKSigmoidImageTest()
-  {
-  }
-  virtual ~ITKSigmoidImageTest()
-  {
-  }
+ITKSigmoidImageTest() = default;
+~ITKSigmoidImageTest() override = default;
 
   int TestITKSigmoidImagedefaultsTest()
 {

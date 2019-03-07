@@ -13,12 +13,8 @@ class ITKThresholdImageTest : public ITKTestBase
 {
 
 public:
-  ITKThresholdImageTest()
-  {
-  }
-  virtual ~ITKThresholdImageTest()
-  {
-  }
+ITKThresholdImageTest() = default;
+~ITKThresholdImageTest() override = default;
 
   int TestITKThresholdImageDefaultTest()
 {

@@ -13,12 +13,8 @@ class ITKMeanProjectionImageTest : public ITKTestBase
 {
 
 public:
-  ITKMeanProjectionImageTest()
-  {
-  }
-  virtual ~ITKMeanProjectionImageTest()
-  {
-  }
+ITKMeanProjectionImageTest() = default;
+~ITKMeanProjectionImageTest() override = default;
 
   int TestITKMeanProjectionImagez_projectionTest()
 {
