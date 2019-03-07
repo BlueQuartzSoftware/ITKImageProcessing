@@ -69,7 +69,7 @@ public:
     propWasSet = filter->setProperty("SaveAsNewArray", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     {
-      FloatVec3_t d3d_var;
+      FloatVec3Type d3d_var;
       d3d_var.y = 3;
       d3d_var.x = 2;
       d3d_var.z = 0; // should not be taken into account. Dim <

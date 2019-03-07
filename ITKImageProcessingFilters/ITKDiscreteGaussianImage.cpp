@@ -24,9 +24,9 @@
 // -----------------------------------------------------------------------------
 ITKDiscreteGaussianImage::ITKDiscreteGaussianImage()
 {
-  m_Variance = CastStdToVec3<std::vector<double>, FloatVec3_t, float>(std::vector<double>(3,1.0));
+  m_Variance = CastStdToVec3<std::vector<double>, FloatVec3Type, float>(std::vector<double>(3,1.0));
   m_MaximumKernelWidth = StaticCastScalar<double, double, double>(32u);
-  m_MaximumError = CastStdToVec3<std::vector<double>, FloatVec3_t, float>(std::vector<double>(3, 0.01));
+  m_MaximumError = CastStdToVec3<std::vector<double>, FloatVec3Type, float>(std::vector<double>(3, 0.01));
   m_UseImageSpacing = StaticCastScalar<bool, bool, bool>(true);
 
 }
@@ -90,9 +90,9 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   setWarningCondition(0);
 
   // Check consistency of parameters
-  this->CheckVectorEntry<double, FloatVec3_t>(m_Variance, "Variance", false);
+  this->CheckVectorEntry<double, FloatVec3Type>(m_Variance, "Variance", false);
   this->CheckIntegerEntry<unsigned int, double>(m_MaximumKernelWidth, "MaximumKernelWidth", true);
-  this->CheckVectorEntry<double, FloatVec3_t>(m_MaximumError, "MaximumError", false);
+  this->CheckVectorEntry<double, FloatVec3Type>(m_MaximumError, "MaximumError", false);
 
   ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
@@ -116,9 +116,9 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   // define filter
   typedef itk::DiscreteGaussianImageFilter<InputImageType, OutputImageType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
-  filter->SetVariance(CastVec3ToITK<FloatVec3_t, typename FilterType::ArrayType, typename FilterType::ArrayType::ValueType>(m_Variance, FilterType::ArrayType::Dimension));
+  filter->SetVariance(CastVec3ToITK<FloatVec3Type, typename FilterType::ArrayType, typename FilterType::ArrayType::ValueType>(m_Variance, FilterType::ArrayType::Dimension));
   filter->SetMaximumKernelWidth(static_cast<unsigned int>(m_MaximumKernelWidth));
-  filter->SetMaximumError(CastVec3ToITK<FloatVec3_t, typename FilterType::ArrayType, typename FilterType::ArrayType::ValueType>(m_MaximumError, FilterType::ArrayType::Dimension));
+  filter->SetMaximumError(CastVec3ToITK<FloatVec3Type, typename FilterType::ArrayType, typename FilterType::ArrayType::ValueType>(m_MaximumError, FilterType::ArrayType::Dimension));
   filter->SetUseImageSpacing(static_cast<bool>(m_UseImageSpacing));
   this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
 

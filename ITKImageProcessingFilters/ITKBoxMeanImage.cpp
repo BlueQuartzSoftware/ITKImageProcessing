@@ -24,8 +24,7 @@
 // -----------------------------------------------------------------------------
 ITKBoxMeanImage::ITKBoxMeanImage()
 {
-  m_Radius = CastStdToVec3<std::vector<unsigned int>, FloatVec3_t, float>(std::vector<unsigned int>(3, 1));
-
+  m_Radius = CastStdToVec3<std::vector<unsigned int>, FloatVec3Type, float>(std::vector<unsigned int>(3, 1));
 }
 
 // -----------------------------------------------------------------------------
@@ -81,7 +80,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   setWarningCondition(0);
 
   // Check consistency of parameters
-  this->CheckVectorEntry<unsigned int, FloatVec3_t>(m_Radius, "Radius", true);
+  this->CheckVectorEntry<unsigned int, FloatVec3Type>(m_Radius, "Radius", true);
 
   ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
@@ -105,7 +104,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   // define filter
   typedef itk::BoxMeanImageFilter<InputImageType, OutputImageType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
-  filter->SetRadius(CastVec3ToITK<FloatVec3_t, typename FilterType::RadiusType, typename FilterType::RadiusType::SizeValueType>(m_Radius, FilterType::RadiusType::Dimension));
+  filter->SetRadius(CastVec3ToITK<FloatVec3Type, typename FilterType::RadiusType, typename FilterType::RadiusType::SizeValueType>(m_Radius, FilterType::RadiusType::Dimension));
   this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
 
 }
