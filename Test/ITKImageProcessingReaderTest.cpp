@@ -66,16 +66,16 @@ class ITKImageProcessingReaderTest
 
 public:
 ITKImageProcessingReaderTest() = default;
-~ITKImageProcessingReaderTest() override = default;
+~ITKImageProcessingReaderTest() = default;
 
-  typedef float DefaultPixelType;
-  typedef unsigned short PNGPixelType;
+typedef float DefaultPixelType;
+typedef unsigned short PNGPixelType;
 
-  // -----------------------------------------------------------------------------
-  //
-  // -----------------------------------------------------------------------------
-  void RemoveTestFiles()
-  {
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RemoveTestFiles()
+{
 #if REMOVE_TEST_FILES
     QFile::remove(UnitTest::ITKImageProcessingReaderTest::NRRDIOInputTestFile);
     QFile::remove(UnitTest::ITKImageProcessingReaderTest::MRCIOInputTestFile);

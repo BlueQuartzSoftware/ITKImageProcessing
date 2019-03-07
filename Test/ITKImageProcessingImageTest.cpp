@@ -56,22 +56,22 @@ class ITKImageProcessingImageTest
 
 public:
 ITKImageProcessingImageTest() = default;
-~ITKImageProcessingImageTest() override = default;
+~ITKImageProcessingImageTest() = default;
 
-  // -----------------------------------------------------------------------------
-  //  Test methods
-  // -----------------------------------------------------------------------------
-  int CreateDream3DDataToImageFilters()
-  {
-    typedef itk::InPlaceDream3DDataToImageFilter<float, 3> ToITK_float_3_Type;
-    ToITK_float_3_Type::Pointer toITK_float_3 = ToITK_float_3_Type::New();
-    typedef itk::InPlaceDream3DDataToImageFilter<itk::RGBAPixel<float>, 3> ToITK_rgba_float_3_Type;
-    ToITK_rgba_float_3_Type::Pointer toITK_rgba_float_3 = ToITK_rgba_float_3_Type::New();
-    typedef itk::InPlaceDream3DDataToImageFilter<itk::RGBAPixel<unsigned char>, 3> ToITK_rgba_uchar_3_Type;
-    ToITK_rgba_uchar_3_Type::Pointer toITK_rgba_uchar_3 = ToITK_rgba_uchar_3_Type::New();
-    typedef itk::InPlaceDream3DDataToImageFilter<itk::RGBPixel<float>, 3> ToITK_rgb_float_3_Type;
-    ToITK_rgb_float_3_Type::Pointer toITK_rgb_float_3 = ToITK_rgb_float_3_Type::New();
-    return EXIT_SUCCESS;
+// -----------------------------------------------------------------------------
+//  Test methods
+// -----------------------------------------------------------------------------
+int CreateDream3DDataToImageFilters()
+{
+  typedef itk::InPlaceDream3DDataToImageFilter<float, 3> ToITK_float_3_Type;
+  ToITK_float_3_Type::Pointer toITK_float_3 = ToITK_float_3_Type::New();
+  typedef itk::InPlaceDream3DDataToImageFilter<itk::RGBAPixel<float>, 3> ToITK_rgba_float_3_Type;
+  ToITK_rgba_float_3_Type::Pointer toITK_rgba_float_3 = ToITK_rgba_float_3_Type::New();
+  typedef itk::InPlaceDream3DDataToImageFilter<itk::RGBAPixel<unsigned char>, 3> ToITK_rgba_uchar_3_Type;
+  ToITK_rgba_uchar_3_Type::Pointer toITK_rgba_uchar_3 = ToITK_rgba_uchar_3_Type::New();
+  typedef itk::InPlaceDream3DDataToImageFilter<itk::RGBPixel<float>, 3> ToITK_rgb_float_3_Type;
+  ToITK_rgb_float_3_Type::Pointer toITK_rgb_float_3 = ToITK_rgb_float_3_Type::New();
+  return EXIT_SUCCESS;
   }
 
   int TestConvertITKToDream3DAndBackToITKImages()
