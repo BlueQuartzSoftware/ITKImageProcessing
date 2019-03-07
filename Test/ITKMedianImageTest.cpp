@@ -12,12 +12,8 @@ class ITKMedianImageTest : public ITKTestBase
 {
 
 public:
-  ITKMedianImageTest()
-  {
-  }
-  virtual ~ITKMedianImageTest()
-  {
-  }
+ITKMedianImageTest() = default;
+~ITKMedianImageTest() override = default;
 
   int TestITKMedianImagedefaultsTest()
   {
@@ -70,9 +66,9 @@ public:
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     {
       FloatVec3Type d3d_var;
-      d3d_var.y = 3;
-      d3d_var.x = 2;
-      d3d_var.z = 0; // should not be taken into account. Dim <
+      d3d_var[1] = 3;
+      d3d_var[0] = 2;
+      d3d_var[2] = 0; // should not be taken into account. Dim <
       var.setValue(d3d_var);
       propWasSet = filter->setProperty("Radius", var);
       DREAM3D_REQUIRE_EQUAL(propWasSet, true);

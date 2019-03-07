@@ -12,12 +12,8 @@ class ITKSinImageTest : public ITKTestBase
 {
 
 public:
-  ITKSinImageTest()
-  {
-  }
-  virtual ~ITKSinImageTest()
-  {
-  }
+ITKSinImageTest() = default;
+~ITKSinImageTest() override = default;
 
   int TestITKSinImagedefaultsTest()
 {

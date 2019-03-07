@@ -16,12 +16,8 @@ class ITKBinaryClosingByReconstructionImageTest : public ITKTestBase
 {
 
 public:
-  ITKBinaryClosingByReconstructionImageTest()
-  {
-  }
-  virtual ~ITKBinaryClosingByReconstructionImageTest()
-  {
-  }
+ITKBinaryClosingByReconstructionImageTest() = default;
+~ITKBinaryClosingByReconstructionImageTest() override = default;
 
   int TestITKBinaryClosingByReconstructionImageBinaryClosingByReconstructionTest()
   {
@@ -44,9 +40,9 @@ public:
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     {
       FloatVec3Type d3d_var;
-      d3d_var.x = 10;
-      d3d_var.y = 10;
-      d3d_var.z = 10;
+      d3d_var[0] = 10;
+      d3d_var[1] = 10;
+      d3d_var[2] = 10;
       var.setValue(d3d_var);
       propWasSet = filter->setProperty("KernelRadius", var);
       DREAM3D_REQUIRE_EQUAL(propWasSet, true);

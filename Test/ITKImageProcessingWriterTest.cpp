@@ -63,7 +63,7 @@ class ITKImageProcessingWriterTest
 
 public:
   ITKImageProcessingWriterTest() = default;
-  virtual ~ITKImageProcessingWriterTest() = default;
+  virtual ~ITKImageProcessingWriterTest() override = default;
   ITKImageProcessingWriterTest(const ITKImageProcessingWriterTest&) = delete;            // Copy Constructor Not Implemented
   ITKImageProcessingWriterTest(ITKImageProcessingWriterTest&&) = delete;                 // Move Constructor Not Implemented
   ITKImageProcessingWriterTest& operator=(const ITKImageProcessingWriterTest&) = delete; // Copy Assignment Not Implemented

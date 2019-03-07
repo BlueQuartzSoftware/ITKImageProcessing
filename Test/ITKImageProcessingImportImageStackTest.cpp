@@ -56,12 +56,8 @@ class ITKImageProcessingImportImageStackTest
 {
 
 public:
-  ITKImageProcessingImportImageStackTest()
-  {
-  }
-  virtual ~ITKImageProcessingImportImageStackTest()
-  {
-  }
+ITKImageProcessingImportImageStackTest() = default;
+~ITKImageProcessingImportImageStackTest() override = default;
 
   static const unsigned int Dimension = 3;
   typedef short PixelType;

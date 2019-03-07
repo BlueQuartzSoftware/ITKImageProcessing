@@ -12,12 +12,8 @@ class ITKLogImageTest : public ITKTestBase
 {
 
 public:
-  ITKLogImageTest()
-  {
-  }
-  virtual ~ITKLogImageTest()
-  {
-  }
+ITKLogImageTest() = default;
+~ITKLogImageTest() override = default;
 
   int TestITKLogImagedefaultsTest()
 {

@@ -13,12 +13,8 @@ class ITKSaltAndPepperNoiseImageTest : public ITKTestBase
 {
 
 public:
-  ITKSaltAndPepperNoiseImageTest()
-  {
-  }
-  virtual ~ITKSaltAndPepperNoiseImageTest()
-  {
-  }
+ITKSaltAndPepperNoiseImageTest() = default;
+~ITKSaltAndPepperNoiseImageTest() override = default;
 
   int TestITKSaltAndPepperNoiseImage2dTest()
 {

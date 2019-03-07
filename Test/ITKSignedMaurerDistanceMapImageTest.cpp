@@ -14,12 +14,8 @@ class ITKSignedMaurerDistanceMapImageTest : public ITKTestBase
 {
 
 public:
-  ITKSignedMaurerDistanceMapImageTest()
-  {
-  }
-  virtual ~ITKSignedMaurerDistanceMapImageTest()
-  {
-  }
+ITKSignedMaurerDistanceMapImageTest() = default;
+~ITKSignedMaurerDistanceMapImageTest() override = default;
 
   int TestITKSignedMaurerDistanceMapImagedefaultTest()
 {

@@ -15,12 +15,8 @@ class ITKDilateObjectMorphologyImageTest : public ITKTestBase
 {
 
 public:
-  ITKDilateObjectMorphologyImageTest()
-  {
-  }
-  virtual ~ITKDilateObjectMorphologyImageTest()
-  {
-  }
+ITKDilateObjectMorphologyImageTest() = default;
+~ITKDilateObjectMorphologyImageTest() override = default;
 
   int TestITKDilateObjectMorphologyImagefloatTest()
   {
@@ -43,9 +39,9 @@ public:
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     {
       FloatVec3Type d3d_var;
-      d3d_var.x = 1;
-      d3d_var.y = 1;
-      d3d_var.z = 1;
+      d3d_var[0] = 1;
+      d3d_var[1] = 1;
+      d3d_var[2] = 1;
       var.setValue(d3d_var);
       propWasSet = filter->setProperty("KernelRadius", var);
       DREAM3D_REQUIRE_EQUAL(propWasSet, true);
@@ -91,9 +87,9 @@ public:
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     {
       FloatVec3Type d3d_var;
-      d3d_var.x = 1;
-      d3d_var.y = 1;
-      d3d_var.z = 1;
+      d3d_var[0] = 1;
+      d3d_var[1] = 1;
+      d3d_var[2] = 1;
       var.setValue(d3d_var);
       propWasSet = filter->setProperty("KernelRadius", var);
       DREAM3D_REQUIRE_EQUAL(propWasSet, true);

@@ -14,12 +14,8 @@ class ITKVectorConnectedComponentImageTest : public ITKTestBase
 {
 
 public:
-  ITKVectorConnectedComponentImageTest()
-  {
-  }
-  virtual ~ITKVectorConnectedComponentImageTest()
-  {
-  }
+ITKVectorConnectedComponentImageTest() = default;
+~ITKVectorConnectedComponentImageTest() override = default;
 
   int TestITKVectorConnectedComponentImagewDistanceTest()
 {

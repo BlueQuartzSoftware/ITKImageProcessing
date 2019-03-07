@@ -14,12 +14,8 @@ class ITKRegionalMinimaImageTest : public ITKTestBase
 {
 
 public:
-  ITKRegionalMinimaImageTest()
-  {
-  }
-  virtual ~ITKRegionalMinimaImageTest()
-  {
-  }
+ITKRegionalMinimaImageTest() = default;
+~ITKRegionalMinimaImageTest() override = default;
 
   int TestITKRegionalMinimaImagedefaultsTest()
 {

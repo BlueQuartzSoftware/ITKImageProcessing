@@ -55,12 +55,8 @@ class ITKImageProcessingImageTest
 {
 
 public:
-  ITKImageProcessingImageTest()
-  {
-  }
-  virtual ~ITKImageProcessingImageTest()
-  {
-  }
+ITKImageProcessingImageTest() = default;
+~ITKImageProcessingImageTest() override = default;
 
   // -----------------------------------------------------------------------------
   //  Test methods

@@ -65,12 +65,8 @@ class ITKImageProcessingReaderTest
 {
 
 public:
-  ITKImageProcessingReaderTest()
-  {
-  }
-  virtual ~ITKImageProcessingReaderTest()
-  {
-  }
+ITKImageProcessingReaderTest() = default;
+~ITKImageProcessingReaderTest() override = default;
 
   typedef float DefaultPixelType;
   typedef unsigned short PNGPixelType;

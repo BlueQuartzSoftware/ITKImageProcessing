@@ -14,12 +14,8 @@ class ITKHConvexImageTest : public ITKTestBase
 {
 
 public:
-  ITKHConvexImageTest()
-  {
-  }
-  virtual ~ITKHConvexImageTest()
-  {
-  }
+ITKHConvexImageTest() = default;
+~ITKHConvexImageTest() override = default;
 
   int TestITKHConvexImageHConvexTest()
 {
