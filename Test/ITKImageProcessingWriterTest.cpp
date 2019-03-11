@@ -311,7 +311,7 @@ public:
     const QString inputContainerName = "inputContainer";
     DataContainerArray::Pointer inputContainerArray = DataContainerArray::New();
     filter->setDataContainerArray(inputContainerArray);
-    var.setValue(inputContainerName);
+    var.setValue(DataArrayPath(inputContainerName, "", ""));
     propWasSet = filter->setProperty("DataContainerName", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true)
     filter->execute();

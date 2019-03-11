@@ -223,7 +223,9 @@ void RemoveTestFiles()
     // No data container (and bogus filename)
     propertySet = reader->setProperty("FileName", UnitTest::ITKImageProcessingReaderTest::NonExistentInputTestFile);
     DREAM3D_REQUIRE_EQUAL(propertySet, true);
-    propertySet = reader->setProperty("DataContainerName", "");
+    QVariant var;
+    var.setValue(DataArrayPath());
+    propertySet = reader->setProperty("DataContainerName", var);
     DREAM3D_REQUIRE_EQUAL(propertySet, true);
     reader->execute();
     DREAM3D_REQUIRED(reader->getErrorCondition(), ==, -2);
@@ -246,7 +248,9 @@ void RemoveTestFiles()
     inputContainerArray->addDataContainer(inputContainer);
 
     reader->setDataContainerArray(inputContainerArray);
-    propertySet = reader->setProperty("DataContainerName", containerName);
+    QVariant var;
+    var.setValue(DataArrayPath(containerName, "", ""));
+    propertySet = reader->setProperty("DataContainerName", var);
     DREAM3D_REQUIRE_EQUAL(propertySet, true);
 
     propertySet = reader->setProperty("FileName", UnitTest::ITKImageProcessingReaderTest::NonExistentInputTestFile);
@@ -277,7 +281,9 @@ void RemoveTestFiles()
     DataContainerArray::Pointer inputContainerArray = DataContainerArray::New();
 
     reader->setDataContainerArray(inputContainerArray);
-    propertySet = reader->setProperty("DataContainerName", containerName);
+    QVariant var;
+    var.setValue(DataArrayPath(containerName, "", ""));
+    propertySet = reader->setProperty("DataContainerName", var);
     DREAM3D_REQUIRE_EQUAL(propertySet, true);
 
     propertySet = reader->setProperty("FileName", file);

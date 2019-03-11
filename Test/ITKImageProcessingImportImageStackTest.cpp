@@ -130,7 +130,9 @@ AbstractFilter::Pointer GetFilterByName(const QString& filterName)
     reader->setInputFileListInfo(fileListInfo);
 
     bool propertySet = false;
-    propertySet = reader->setProperty("DataContainerName", "");
+    QVariant var;
+    var.setValue(DataArrayPath());
+    propertySet = reader->setProperty("DataContainerName", var);
     DREAM3D_REQUIRE_EQUAL(propertySet, true);
     reader->execute();
     DREAM3D_REQUIRED(reader->getErrorCondition(), ==, -887);
@@ -150,7 +152,9 @@ AbstractFilter::Pointer GetFilterByName(const QString& filterName)
 
     bool propertySet = false;
     const QString containerName = "TestNoFiles";
-    propertySet = reader->setProperty("DataContainerName", containerName);
+    QVariant var;
+    var.setValue(DataArrayPath(containerName, "", ""));
+    propertySet = reader->setProperty("DataContainerName", var);
     DREAM3D_REQUIRE_EQUAL(propertySet, true);
 
     FileListInfo_t fileListInfo;
@@ -182,7 +186,9 @@ AbstractFilter::Pointer GetFilterByName(const QString& filterName)
 
     bool propertySet = false;
     const QString containerName = "TestFileDoesNotExist";
-    propertySet = reader->setProperty("DataContainerName", containerName);
+    QVariant var;
+    var.setValue(DataArrayPath(containerName, "", ""));
+    propertySet = reader->setProperty("DataContainerName", var);
     DREAM3D_REQUIRE_EQUAL(propertySet, true);
 
     FileListInfo_t fileListInfo;
@@ -223,7 +229,9 @@ AbstractFilter::Pointer GetFilterByName(const QString& filterName)
     bool propertySet = false;
 
     const QString containerName = "TestCompareImage";
-    propertySet = reader->setProperty("DataContainerName", containerName);
+    QVariant var;
+    var.setValue(DataArrayPath(containerName, "", ""));
+    propertySet = reader->setProperty("DataContainerName", var);
     DREAM3D_REQUIRE_EQUAL(propertySet, true);
 
     FileListInfo_t fileListInfo;

@@ -72,7 +72,7 @@ public:
     DREAM3D_REQUIRE_VALID_POINTER(filterFactory.get());
     AbstractFilter::Pointer import = filterFactory->create();
 
-    var.setValue(m_DataContainerName);
+    var.setValue(DataArrayPath(m_DataContainerName, "", ""));
     propWasSet = import->setProperty("DataContainerName", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
 
