@@ -245,7 +245,7 @@ void RemoveTestFiles()
     const QString containerName = "TestContainer";
     DataContainer::Pointer inputContainer = DataContainer::New(containerName);
     DataContainerArray::Pointer inputContainerArray = DataContainerArray::New();
-    inputContainerArray->addDataContainer(inputContainer);
+    inputContainerArray->addOrReplaceDataContainer(inputContainer);
 
     reader->setDataContainerArray(inputContainerArray);
     QVariant var;

@@ -121,7 +121,7 @@ public:
     matrixArray->insertOrAssign(data);
 
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
-    containerArray->addDataContainer(container);
+    containerArray->addOrReplaceDataContainer(container);
     return containerArray;
   }
   // -----------------------------------------------------------------------------

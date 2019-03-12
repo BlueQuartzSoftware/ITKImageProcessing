@@ -322,7 +322,7 @@ template <typename TPixel, typename UnusedTPixel, unsigned int Dimensions> void 
   size_t dB = dimB;                                                                                                                                                                                    \
   size_t numElements = dA * dB;                                                                                                                                                                        \
   AttributeMatrix::Pointer am = AttributeMatrix::New(tDims, attributeMatrix->getName(), AttributeMatrix::Type::Cell);                                                                                  \
-  dc->addAttributeMatrix(am);                                                                                                                                                                          \
+  dc->addOrReplaceAttributeMatrix(am);                                                                                                                                                                          \
   imageGeom->setDimensions(tDims.data());                                                                                                                                                              \
   IDataArray::Pointer sliceData = currentData->createNewArray(numElements, cDims, currentData->getName(), true);                                                                                       \
   am->insertOrAssign(sliceData);
@@ -385,7 +385,7 @@ void ITKImageWriter::execute()
 
   DataContainerArray::Pointer dca = DataContainerArray::New();
   DataContainer::Pointer dc = DataContainer::New(container->getName());
-  dca->addDataContainer(dc);
+  dca->addOrReplaceDataContainer(dc);
   ImageGeom::Pointer imageGeom = ImageGeom::CreateGeometry(attributeMatrix->getName());
   dc->setGeometry(imageGeom);
 
