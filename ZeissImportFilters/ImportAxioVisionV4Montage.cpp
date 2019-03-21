@@ -705,7 +705,7 @@ void ImportAxioVisionV4Montage::importImage(DataContainer* dc, const QString& im
       //  Copy the image from the temp data container into the current data container by grabbing the entire
       // Cell AttributeMatrix
       AttributeMatrix::Pointer cellAttrMat = dca->getDataContainer(dc->getName())->getAttributeMatrix(getCellAttributeMatrixName());
-      dc->addAttributeMatrix(cellAttrMat);
+      dc->addOrReplaceAttributeMatrix(cellAttrMat);
     }
   }
   else

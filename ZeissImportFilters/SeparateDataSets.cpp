@@ -247,8 +247,8 @@ void SeparateDataSets::execute()
     }
     newMetaDataAM->setTupleDimensions(QVector<size_t>(1, 1));
 
-    newDCPtr->addAttributeMatrix(newMetaDataAM);
-    newDCPtr->addAttributeMatrix(newDataSetAM);
+    newDCPtr->addOrReplaceAttributeMatrix(newMetaDataAM);
+    newDCPtr->addOrReplaceAttributeMatrix(newDataSetAM);
   }
 
   getDataContainerArray()->removeDataContainer(getDatasetAMPath().getDataContainerName());
