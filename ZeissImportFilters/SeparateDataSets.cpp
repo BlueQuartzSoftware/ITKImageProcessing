@@ -39,6 +39,10 @@
 #include "ZeissImport/ZeissImportConstants.h"
 #include "ZeissImport/ZeissImportVersion.h"
 
+enum createdPathID : RenameDataPath::DataID_t
+{
+  DataContainerID = 1
+};
 
 // -----------------------------------------------------------------------------
 //
@@ -205,7 +209,7 @@ void SeparateDataSets::execute()
 
     // Create the new data container for this data set
     DataContainerShPtr origDCPtr = getDataContainerArray()->getDataContainer(getDatasetAMPath());
-    DataContainerShPtr newDCPtr = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, dataSetName);
+    DataContainerShPtr newDCPtr = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, dataSetName, DataContainerID);
 
     ImageGeom::Pointer originalGeom = origDCPtr->getGeometryAs<ImageGeom>();
     ImageGeom::Pointer newGeom = ImageGeom::New();
