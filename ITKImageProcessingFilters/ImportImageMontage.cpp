@@ -118,8 +118,7 @@ void ImportImageMontage::dataCheck()
   if(m_InputFileListInfo.InputPath.isEmpty())
   {
     ss = QObject::tr("The input directory must be set");
-    setErrorCondition(-13);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    notifyErrorMessage("", ss, -13);
     return;
   }
 
@@ -164,8 +163,7 @@ void ImportImageMontage::dataCheck()
   if(fileList.empty())
   {
     QString ss = QObject::tr("No files have been selected for import. Have you set the input directory?");
-    setErrorCondition(-11);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    notifyErrorMessage("", ss, -11);
   }
   else
   {
@@ -263,8 +261,7 @@ void ImportImageMontage::execute()
   if(fileList.empty())
   {
     QString ss = QObject::tr("No files have been selected for import. Have you set the input directory?");
-    setErrorCondition(-11);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    notifyErrorMessage("", ss, -11);
   }
 
   for(QVector<QString>::iterator filepath = fileList.begin(); filepath != fileList.end(); ++filepath)
@@ -286,8 +283,7 @@ void ImportImageMontage::execute()
     readImage(dap, false);
     if(getErrorCondition() < 0)
     {
-      setErrorCondition(-14000);
-      notifyErrorMessage(getHumanLabel(), "Failed to load image file", getErrorCondition());
+      notifyErrorMessage("", "Failed to load image file", -14000);
       break;
     }
 

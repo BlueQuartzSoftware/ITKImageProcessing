@@ -185,25 +185,18 @@ void ITKImageWriter::dataCheck()
   DataContainerArray::Pointer containerArray = getDataContainerArray();
   if(!containerArray)
   {
-    setErrorCondition(-21002);
-    notifyErrorMessage(getHumanLabel(), "No container array.", getErrorCondition());
+    notifyErrorMessage("", "No container array.", -21002);
     return;
   }
 
   ImageGeom::Pointer imageGeometry = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getImageArrayPath().getDataContainerName());
   if(imageGeometry.get() == nullptr)
   {
-    setErrorCondition(-21003);
-    notifyErrorMessage(getHumanLabel(), "No image geometry.", getErrorCondition());
+    notifyErrorMessage("", "No image geometry.", -21003);
     return;
   }
 
   IDataArray::Pointer imageDataArrayPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, getImageArrayPath());
-  if(getErrorCondition() < 0)
-  {
-    QString ss = QObject::tr("The data array path '%1' was invalid for the property ImageArrayPath. Please check the input value.").arg(getImageArrayPath().serialize("/"));
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-  }
 }
 
 // -----------------------------------------------------------------------------
@@ -266,7 +259,7 @@ template <typename TPixel, unsigned int Dimensions> void ITKImageWriter::writeAs
   typename FileWriterType::Pointer writer = FileWriterType::New();
 
   QString progress = QString("Saving %1").arg(getFileName());
-  notifyStatusMessage(getHumanLabel(), progress);
+  notifyStatusMessage("", progress);
 
   writer->SetInput(image);
   writer->SetFileName(getFileName().toStdString().c_str());
@@ -298,8 +291,7 @@ template <typename TPixel, typename UnusedTPixel, unsigned int Dimensions> void 
       typename ImageType::SizeType size = toITK->GetOutput()->GetLargestPossibleRegion().GetSize();
       if(size[2] < 2)
       {
-        setErrorCondition(-21012);
-        notifyErrorMessage(getHumanLabel(), "Image is 2D, not 3D.", getErrorCondition());
+        notifyErrorMessage("", "Image is 2D, not 3D.", -21012);
         return;
       }
       this->writeAs2DStack<TPixel, Dimensions>(toITK->GetOutput(), size[2]);
@@ -310,9 +302,8 @@ template <typename TPixel, typename UnusedTPixel, unsigned int Dimensions> void 
     }
   } catch(itk::ExceptionObject& err)
   {
-    setErrorCondition(-21011);
     QString errorMessage = "ITK exception was thrown while writing output file: %1";
-    notifyErrorMessage(getHumanLabel(), errorMessage.arg(err.GetDescription()), getErrorCondition());
+    notifyErrorMessage("", errorMessage.arg(err.GetDescription()), -21011);
     return;
   }
 }
@@ -349,33 +340,29 @@ void ITKImageWriter::execute()
   if(!dir.mkpath(parentPath))
   {
     QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath);
-    setErrorCondition(-21009);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    notifyErrorMessage("", ss, -21009);
     return;
   }
 
   DataArrayPath path = getImageArrayPath();
   if(!getDataContainerArray()->doesDataContainerExist(path.getDataContainerName()))
   {
-    setErrorCondition(-21006);
     QString errorMessage = "Data container %1 does not exist.";
-    notifyErrorMessage(getHumanLabel(), errorMessage.arg(path.getDataContainerName()), getErrorCondition());
+    notifyErrorMessage("", errorMessage.arg(path.getDataContainerName()), -21006);
     return;
   }
   DataContainer::Pointer container = getDataContainerArray()->getDataContainer(path.getDataContainerName());
   if(!container->doesAttributeMatrixExist(path.getAttributeMatrixName()))
   {
-    setErrorCondition(-21007);
     QString errorMessage = "Attribute matrix %1 does not exist.";
-    notifyErrorMessage(getHumanLabel(), errorMessage.arg(path.getAttributeMatrixName()), getErrorCondition());
+    notifyErrorMessage("", errorMessage.arg(path.getAttributeMatrixName()), -21007);
     return;
   }
   AttributeMatrix::Pointer attributeMatrix = container->getAttributeMatrix(path.getAttributeMatrixName());
   if(!attributeMatrix->doesAttributeArrayExist(path.getDataArrayName()))
   {
-    setErrorCondition(-21008);
     QString errorMessage = "Attribute array %1 does not exist.";
-    notifyErrorMessage(getHumanLabel(), errorMessage.arg(path.getDataArrayName()), getErrorCondition());
+    notifyErrorMessage("", errorMessage.arg(path.getDataArrayName()), -21008);
     return;
   }
 

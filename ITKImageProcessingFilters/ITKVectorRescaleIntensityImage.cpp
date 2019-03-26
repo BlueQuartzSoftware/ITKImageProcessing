@@ -103,9 +103,8 @@ template <typename OutputPixelType> void ITKVectorRescaleIntensityImage::CheckEn
   double max = static_cast<double>(std::numeric_limits<OutputPixelType>::max());
   if(value < lowest || value > max)
   {
-    setErrorCondition(-1);
     QString errorMessage = name + QString(" must be greater or equal than %1 and lesser or equal than %2 and an integer");
-    notifyErrorMessage(getHumanLabel(), errorMessage.arg(lowest).arg(max), getErrorCondition());
+    notifyErrorMessage("", errorMessage.arg(lowest).arg(max), -1);
   }
 }
 
