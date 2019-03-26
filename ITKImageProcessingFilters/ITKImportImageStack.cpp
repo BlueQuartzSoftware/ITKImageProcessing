@@ -54,6 +54,11 @@
 
 #include "itksys/SystemTools.hxx"
 
+enum createdPathID : RenameDataPath::DataID_t
+{
+  DataContainerID = 1
+};
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -163,7 +168,7 @@ void ITKImportImageStack::dataCheck()
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-  DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName(), DataContainerID);
   if(getErrorCondition() < 0 || nullptr == m.get())
   {
     return;

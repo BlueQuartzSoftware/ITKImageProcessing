@@ -65,6 +65,11 @@ const QString TempDAName("Image");
 const DataArrayPath TempDAP(TempDCName, TempAMName, TempDAName);
 } // namespace
 
+enum createdPathID : RenameDataPath::DataID_t
+{
+  DataContainerID = 1
+};
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -143,7 +148,7 @@ void ImportVectorImageStack::dataCheck()
     return;
   }
 
-  DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName(), DataContainerID);
   if(getErrorCondition() < 0)
   {
     return;

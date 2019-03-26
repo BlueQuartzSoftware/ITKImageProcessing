@@ -24,6 +24,11 @@
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
 
+enum createdPathID : RenameDataPath::DataID_t
+{
+  DataContainerID = 1
+};
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -124,7 +129,7 @@ void ImportImageMontage::dataCheck()
     return;
   }
 
-  DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName(), DataContainerID);
   if(getErrorCondition() < 0)
   {
     return;

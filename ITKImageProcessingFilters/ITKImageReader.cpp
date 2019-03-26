@@ -44,6 +44,11 @@
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
 #include "ITKImageProcessingPlugin.h"
 
+enum createdPathID : RenameDataPath::DataID_t
+{
+  DataContainerID = 1
+};
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -114,7 +119,7 @@ void ITKImageReader::dataCheck()
     return;
   }
 
-  DataContainer::Pointer container = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
+  DataContainer::Pointer container = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName(), DataContainerID);
   if(container.get() == nullptr)
   {
     setErrorCondition(-3);
