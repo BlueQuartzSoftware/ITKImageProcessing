@@ -398,7 +398,7 @@ void ImportRegisteredImageMontage::execute()
     QString fileName = splitFilePaths[splitFilePaths.size() - 1];
     splitFilePaths = fileName.split('.');
     QString ss = QObject::tr("Importing file %1").arg(imageFName);
-    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+    notifyStatusMessage(getMessagePrefix(), ss);
 
     setFileName(imageFName);
     DataArrayPath dap(getDataContainerName(), getCellAttributeMatrixName(), splitFilePaths[0]);
