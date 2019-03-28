@@ -665,8 +665,9 @@ void ImportAxioVisionV4Montage::importImage(DataContainer* dc, const QString& im
       setErrorCondition(-70015);
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     }
-
-    propWasSet = filter->setProperty("DataContainerName", dc->getName());
+    QVariant var;
+    var.setValue(DataArrayPath(dc->getName(), "", ""));
+    propWasSet = filter->setProperty("DataContainerName", var);
     if(!propWasSet)
     {
       QString ss = QObject::tr("Error Setting Property '%1' into filter '%2' which is a subfilter called by %3. The property was not set which could mean the property was not exposed with a "
@@ -705,11 +706,11 @@ void ImportAxioVisionV4Montage::importImage(DataContainer* dc, const QString& im
       filter->execute();
     }
 
-    if(filter->getErrorCondition() >= 0)
+    if(getErrorCondition() >= 0 && filter->getErrorCondition() >= 0)
     {
-      //  Copy the image from the temp data container into the current data container by grabbing the entire
-      // Cell AttributeMatrix
-      AttributeMatrix::Pointer cellAttrMat = dca->getDataContainer(dc->getName())->getAttributeMatrix(getCellAttributeMatrixName());
+      QString targetName = dc->getName();
+      DataContainer::Pointer fromDca = dca->getDataContainer(targetName);
+      AttributeMatrix::Pointer cellAttrMat = fromDca->getAttributeMatrix(getCellAttributeMatrixName());
       dc->addOrReplaceAttributeMatrix(cellAttrMat);
     }
   }
