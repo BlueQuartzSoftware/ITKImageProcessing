@@ -26,6 +26,8 @@
 
 enum createdPathID : RenameDataPath::DataID_t
 {
+  DataArrayID31 = 31,
+
   DataContainerID = 1
 };
 
@@ -211,7 +213,7 @@ void ImportImageMontage::dataCheck()
       QString fileName = splitFilePaths[splitFilePaths.size() - 1];
       splitFilePaths = fileName.split('.');
       DataArrayPath path(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), splitFilePaths[0]);
-      getDataContainerArray()->createNonPrereqArrayFromPath<UInt8ArrayType, AbstractFilter, uint8_t>(this, path, 0, cDims);
+      getDataContainerArray()->createNonPrereqArrayFromPath<UInt8ArrayType, AbstractFilter, uint8_t>(this, path, 0, cDims, "", DataArrayID31); /* @ADD_DATAARRAY_ID@ */
       if(getErrorCondition() < 0)
       {
         return;

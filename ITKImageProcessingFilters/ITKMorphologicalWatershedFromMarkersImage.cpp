@@ -18,6 +18,13 @@
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
 #include "SIMPLib/ITK/itkDream3DImage.h"
 
+/* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
+enum createdPathID : RenameDataPath::DataID_t
+{
+  DataArrayID30 = 30,
+  DataArrayID31 = 31,
+};
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -130,8 +137,8 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
       return;
     }
     QVector<size_t> dims = ITKDream3DHelper::GetComponentsDimensions<OutputPixelType>();
-    // getMarkerContainerArray()->createNonPrereqArrayFromPath<DataArray<OutputPixelType>, AbstractFilter, OutputPixelType>(this, dap, 0, dims);
-    DataContainer::Pointer dcMarker = getMarkerContainerArray()->getDataContainer(dap.getDataContainerName());
+    // getMarkerContainerArray()->createNonPrereqArrayFromPath<DataArray<OutputPixelType>, AbstractFilter, OutputPixelType>(this, dap, 0, dims, DataArrayID31);/* @ADD_DATAARRAY_ID@ */
+    // DataContainer::Pointer dcMarker = getMarkerContainerArray()->getDataContainer(dap.getDataContainerName(), "", DataArrayID31);/* @ADD_DATAARRAY_ID@ */
     typename toDream3DType::Pointer toDream3D = toDream3DType::New();
     toDream3D->SetInput(cast->GetOutput());
     toDream3D->SetInPlace(true);

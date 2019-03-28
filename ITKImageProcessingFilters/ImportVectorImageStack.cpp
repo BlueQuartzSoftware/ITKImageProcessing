@@ -67,6 +67,9 @@ const DataArrayPath TempDAP(TempDCName, TempAMName, TempDAName);
 
 enum createdPathID : RenameDataPath::DataID_t
 {
+  DataArrayID31 = 31,
+  DataArrayID32 = 32,
+
   DataContainerID = 1
 };
 
@@ -271,12 +274,12 @@ void ImportVectorImageStack::dataCheck()
       UInt8ArrayType::Pointer bit8 = std::dynamic_pointer_cast<UInt8ArrayType>(imageData);
       if(nullptr != bit8)
       {
-        am->createNonPrereqArray<UInt8ArrayType>(this, getVectorDataArrayName(), 0, cDims);
+        am->createNonPrereqArray<UInt8ArrayType>(this, getVectorDataArrayName(), 0, cDims, DataArrayID31); /* @ADD_DATAARRAY_ID@ */
       }
       UInt16ArrayType::Pointer bit16 = std::dynamic_pointer_cast<UInt16ArrayType>(imageData);
       if(nullptr != bit16)
       {
-        am->createNonPrereqArray<UInt16ArrayType>(this, getVectorDataArrayName(), 0, cDims);
+        am->createNonPrereqArray<UInt16ArrayType>(this, getVectorDataArrayName(), 0, cDims, DataArrayID32); /* @ADD_DATAARRAY_ID@ */
       }
     }
   }

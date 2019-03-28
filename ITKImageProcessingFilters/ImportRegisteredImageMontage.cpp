@@ -23,6 +23,9 @@
 
 enum createdPathID : RenameDataPath::DataID_t
 {
+  DataArrayID31 = 31,
+  DataArrayID32 = 32,
+
   DataContainerID = 1
 };
 
@@ -248,7 +251,7 @@ void ImportRegisteredImageMontage::dataCheck()
 
   cDims[0] = 2;
   path.update(getDataContainerName().getDataContainerName(), getMetaDataAttributeMatrixName(), getRegistrationCoordinatesArrayName());
-  m_RegistrationCoordinatesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<FloatArrayType, AbstractFilter, float>(this, path, 0, cDims);
+  m_RegistrationCoordinatesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<FloatArrayType, AbstractFilter, float>(this, path, 0, cDims, "", DataArrayID31); /* @ADD_DATAARRAY_ID@ */
   if(getErrorCondition() < 0)
   {
     return;
@@ -322,7 +325,7 @@ void ImportRegisteredImageMontage::dataCheck()
       QString fileName = splitFilePaths[splitFilePaths.size() - 1];
       splitFilePaths = fileName.split('.');
       DataArrayPath path(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), splitFilePaths[0]);
-      getDataContainerArray()->createNonPrereqArrayFromPath<UInt8ArrayType, AbstractFilter, uint8_t>(this, path, 0, cDims);
+      getDataContainerArray()->createNonPrereqArrayFromPath<UInt8ArrayType, AbstractFilter, uint8_t>(this, path, 0, cDims, "", DataArrayID32); /* @ADD_DATAARRAY_ID@ */
       if(getErrorCondition() < 0)
       {
         return;

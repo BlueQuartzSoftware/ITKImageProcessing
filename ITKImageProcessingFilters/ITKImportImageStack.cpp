@@ -56,6 +56,8 @@
 
 enum createdPathID : RenameDataPath::DataID_t
 {
+  DataArrayID31 = 31,
+
   DataContainerID = 1
 };
 
