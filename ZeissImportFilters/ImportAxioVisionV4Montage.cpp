@@ -630,7 +630,7 @@ void ImportAxioVisionV4Montage::importImage(DataContainer* dc, const QString& im
     AbstractFilter::Pointer filter = filterFactory->create();
 
     // Connect up the Error/Warning/Progress object so the filter can report those things
-    connect(filter.get(), SIGNAL(messageGenerated(AbstractMessage::Pointer)), this, SIGNAL(messageGenerated(AbstractMessage::Pointer)));
+    connect(filter.get(), SIGNAL(messageGenerated(const AbstractMessage::Pointer&)), this, SIGNAL(messageGenerated(const AbstractMessage::Pointer&)));
     DataContainerArray::Pointer dca = DataContainerArray::New();
 
     filter->setDataContainerArray(dca); // AbstractFilter implements this so no problem
@@ -716,7 +716,7 @@ void ImportAxioVisionV4Montage::convertToGrayScale(DataContainer* dc, const QStr
     AbstractFilter::Pointer filter = filterFactory->create();
 
     // Connect up the Error/Warning/Progress object so the filter can report those things
-    connect(filter.get(), SIGNAL(messageGenerated(AbstractMessage::Pointer)), this, SIGNAL(messageGenerated(AbstractMessage::Pointer)));
+    connect(filter.get(), SIGNAL(messageGenerated(const AbstractMessage::Pointer&)), this, SIGNAL(messageGenerated(const AbstractMessage::Pointer&)));
 
     filter->setDataContainerArray(getDataContainerArray()); // AbstractFilter implements this so no problem
 
