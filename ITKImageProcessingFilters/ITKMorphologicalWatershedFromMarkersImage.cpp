@@ -137,8 +137,8 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
       return;
     }
     QVector<size_t> dims = ITKDream3DHelper::GetComponentsDimensions<OutputPixelType>();
-    // getMarkerContainerArray()->createNonPrereqArrayFromPath<DataArray<OutputPixelType>, AbstractFilter, OutputPixelType>(this, dap, 0, dims, DataArrayID31);/* @ADD_DATAARRAY_ID@ */
-    // DataContainer::Pointer dcMarker = getMarkerContainerArray()->getDataContainer(dap.getDataContainerName(), "", DataArrayID31);/* @ADD_DATAARRAY_ID@ */
+    // getMarkerContainerArray()->createNonPrereqArrayFromPath<DataArray<OutputPixelType>, AbstractFilter, OutputPixelType>(this, dap, 0, dims, DataArrayID31);
+    // DataContainer::Pointer dcMarker = getMarkerContainerArray()->getDataContainer(dap.getDataContainerName(), "", DataArrayID31);
     typename toDream3DType::Pointer toDream3D = toDream3DType::New();
     toDream3D->SetInput(cast->GetOutput());
     toDream3D->SetInPlace(true);

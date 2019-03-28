@@ -56,6 +56,8 @@
 
 enum createdPathID : RenameDataPath::DataID_t
 {
+  AttributeMatrixID21 = 21,
+
   DataArrayID31 = 31,
 
   DataContainerID = 1
@@ -389,7 +391,7 @@ template <typename TPixel> void ITKImportImageStack::readImageOutputInformation(
   }
 
   QVector<size_t> cDims(1, 1);
-  AttributeMatrix::Pointer cellAttrMat = container->createNonPrereqAttributeMatrix(this, m_CellAttributeMatrixName, tDims, AttributeMatrix::Type::Cell);
+  AttributeMatrix::Pointer cellAttrMat = container->createNonPrereqAttributeMatrix(this, m_CellAttributeMatrixName, tDims, AttributeMatrix::Type::Cell, AttributeMatrixID21);
   if(getErrorCondition() < 0)
   {
     return;

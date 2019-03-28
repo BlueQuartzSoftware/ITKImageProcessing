@@ -26,6 +26,8 @@
 
 enum createdPathID : RenameDataPath::DataID_t
 {
+  AttributeMatrixID21 = 21,
+
   DataArrayID31 = 31,
 
   DataContainerID = 1
@@ -147,7 +149,9 @@ void ImportImageMontage::dataCheck()
 
   QVector<size_t> tDims(1, m_NumImages);
   QVector<size_t> cDims(1, 1);
-  getDataContainerArray()->getDataContainer(getDataContainerName())->createNonPrereqAttributeMatrix(this, getMetaDataAttributeMatrixName(), tDims, AttributeMatrix::Type::MetaData);
+  getDataContainerArray()
+      ->getDataContainer(getDataContainerName())
+      ->createNonPrereqAttributeMatrix(this, getMetaDataAttributeMatrixName(), tDims, AttributeMatrix::Type::MetaData, AttributeMatrixID21);
   if(getErrorCondition() < 0)
   {
     return;
@@ -213,7 +217,7 @@ void ImportImageMontage::dataCheck()
       QString fileName = splitFilePaths[splitFilePaths.size() - 1];
       splitFilePaths = fileName.split('.');
       DataArrayPath path(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), splitFilePaths[0]);
-      getDataContainerArray()->createNonPrereqArrayFromPath<UInt8ArrayType, AbstractFilter, uint8_t>(this, path, 0, cDims, "", DataArrayID31); /* @ADD_DATAARRAY_ID@ */
+      getDataContainerArray()->createNonPrereqArrayFromPath<UInt8ArrayType, AbstractFilter, uint8_t>(this, path, 0, cDims, "", DataArrayID31);
       if(getErrorCondition() < 0)
       {
         return;
