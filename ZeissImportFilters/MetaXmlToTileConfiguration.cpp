@@ -70,8 +70,8 @@ MetaXmlToTileConfiguration::~MetaXmlToTileConfiguration() = default;
 // -----------------------------------------------------------------------------
 void MetaXmlToTileConfiguration::initialize()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
   setCancel(false);
 }
 
@@ -91,8 +91,8 @@ void MetaXmlToTileConfiguration::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void MetaXmlToTileConfiguration::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
 
   QFileInfo fi(getInputFile());
 

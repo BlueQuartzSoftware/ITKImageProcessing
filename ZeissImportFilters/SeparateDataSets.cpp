@@ -58,8 +58,8 @@ SeparateDataSets::~SeparateDataSets() = default;
 // -----------------------------------------------------------------------------
 void SeparateDataSets::initialize()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
   setCancel(false);
 }
 
@@ -90,8 +90,8 @@ void SeparateDataSets::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void SeparateDataSets::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
 }
 
 // -----------------------------------------------------------------------------
