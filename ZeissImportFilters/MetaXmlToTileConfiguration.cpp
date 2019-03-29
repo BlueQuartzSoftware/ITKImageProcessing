@@ -100,7 +100,7 @@ void MetaXmlToTileConfiguration::dataCheck()
   {
     QString ss = QObject::tr("The input file must be set for property %1").arg("InputFile");
     setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), ss, -1);
+    notifyErrorMessage(ss, -1);
     return;
   }
 
@@ -109,7 +109,7 @@ void MetaXmlToTileConfiguration::dataCheck()
   {
     setErrorCondition(-997);
     QString ss = QObject::tr("The file extension '%1' was not recognized. The reader only recognizes the .xml file extension").arg(ext);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    notifyErrorMessage(ss, getErrorCondition());
     return;
   }
 
@@ -117,7 +117,7 @@ void MetaXmlToTileConfiguration::dataCheck()
   {
     QString ss = QObject::tr("The input file does not exist: '%1'").arg(getInputFile());
     setErrorCondition(-388);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    notifyErrorMessage(ss, getErrorCondition());
     return;
   }
 
@@ -180,7 +180,7 @@ void MetaXmlToTileConfiguration::readMetaXml(QIODevice* device)
   {
     QString ss = QObject::tr("Parse error at line %1, column %2:\n%3").arg(errorLine).arg(errorColumn).arg(errorStr);
     setErrorCondition(-70000);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    notifyErrorMessage(ss, getErrorCondition());
     return;
   }
 
@@ -191,7 +191,7 @@ void MetaXmlToTileConfiguration::readMetaXml(QIODevice* device)
   {
     QString ss = QObject::tr("Could not find the <ROOT><Tags> element. Aborting Parsing. Is the file a Zeiss _meta.xml file");
     setErrorCondition(-70001);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    notifyErrorMessage(ss, getErrorCondition());
     return;
   }
 
@@ -282,7 +282,7 @@ void MetaXmlToTileConfiguration::parseImages(QDomElement& root, ZeissTagsXmlSect
     {
       QString ss = QObject::tr("Could not find the <ROOT><%1> element. Aborting Parsing. Is the file a Zeiss _meta.xml file").arg(pTag);
       setErrorCondition(-70002);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      notifyErrorMessage(ss, getErrorCondition());
       return;
     }
     // Get the TAGS section
@@ -291,7 +291,7 @@ void MetaXmlToTileConfiguration::parseImages(QDomElement& root, ZeissTagsXmlSect
     {
       QString ss = QObject::tr("Could not find the <ROOT><%1><Tags> element. Aborting Parsing. Is the file a Zeiss _meta.xml file").arg(pTag);
       setErrorCondition(-70003);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      notifyErrorMessage(ss, getErrorCondition());
       return;
     }
     // Now Parse the TAGS section
@@ -300,7 +300,7 @@ void MetaXmlToTileConfiguration::parseImages(QDomElement& root, ZeissTagsXmlSect
     {
       QString ss = QObject::tr("Error Parsing the <ROOT><%1><Tags> element. Aborting Parsing. Is the file a Zeiss AxioVision _meta.xml file").arg(pTag);
       setErrorCondition(-70004);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      notifyErrorMessage(ss, getErrorCondition());
       return;
     }
 

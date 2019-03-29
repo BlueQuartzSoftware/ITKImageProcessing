@@ -56,7 +56,7 @@ ZeissTagsXmlSectionPtr MetaXmlUtils::ParseTagsSection(AbstractFilter* filter, QD
   {
     QString ss = QObject::tr("Error Parsing 'Count' Tag in Root 'Tags' DOM element");
     filter->setErrorCondition(-70001);
-    filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
+    filter->notifyErrorMessage(ss, filter->getErrorCondition());
     return ZeissTagsXmlSection::NullPointer();
   }
 
@@ -96,7 +96,7 @@ int32_t MetaXmlUtils::GetInt32Entry(AbstractFilter* filter, ZeissTagsXmlSection*
     QString msg;
     QTextStream errStrm(&msg);
     errStrm << "AxioVision Import: XML Section for '" << ZeissTagMapping::instance()->nameForId(idValue) << "' was not found.";
-    filter->notifyErrorMessage(filter->getHumanLabel(), msg, filter->getErrorCondition());
+    filter->notifyErrorMessage(msg, filter->getErrorCondition());
     return 0;
   }
 
@@ -107,7 +107,7 @@ int32_t MetaXmlUtils::GetInt32Entry(AbstractFilter* filter, ZeissTagsXmlSection*
     QString msg;
     QTextStream errStrm(&msg);
     errStrm << "AxioVision Import: Could not convert '" << ZeissTagMapping::instance()->nameForId(idValue) << "' tag to an integer.";
-    filter->notifyErrorMessage(filter->getHumanLabel(), msg, filter->getErrorCondition());
+    filter->notifyErrorMessage(msg, filter->getErrorCondition());
     return 0;
   }
 
@@ -126,7 +126,7 @@ float MetaXmlUtils::GetFloatEntry(AbstractFilter* filter, ZeissTagsXmlSection* t
     QString msg;
     QTextStream errStrm(&msg);
     errStrm << "AxioVision Import: XML Section for '" << ZeissTagMapping::instance()->nameForId(idValue) << "' was not found.";
-    filter->notifyErrorMessage(filter->getHumanLabel(), msg, filter->getErrorCondition());
+    filter->notifyErrorMessage(msg, filter->getErrorCondition());
     return std::numeric_limits<float>::quiet_NaN();
   }
 
@@ -137,7 +137,7 @@ float MetaXmlUtils::GetFloatEntry(AbstractFilter* filter, ZeissTagsXmlSection* t
     QString msg;
     QTextStream errStrm(&msg);
     errStrm << "AxioVision Import: Could not convert '" << ZeissTagMapping::instance()->nameForId(idValue) << "' tag to a float.";
-    filter->notifyErrorMessage(filter->getHumanLabel(), msg, filter->getErrorCondition());
+    filter->notifyErrorMessage(msg, filter->getErrorCondition());
     return std::numeric_limits<float>::quiet_NaN();
   }
 

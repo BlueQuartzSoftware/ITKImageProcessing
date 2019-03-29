@@ -150,7 +150,7 @@ void CalculateBackground::dataCheck()
   if (am.get() == nullptr)
   {
     setErrorCondition(-76000);
-    notifyErrorMessage(getHumanLabel(), "The Attribute Matrix for property 'Input AttributeMatrix Name' has not been selected properly", -76000);
+    notifyErrorMessage("The Attribute Matrix for property 'Input AttributeMatrix Name' has not been selected properly", -76000);
     return;
   }
 
@@ -180,7 +180,7 @@ void CalculateBackground::dataCheck()
     if(nullptr == imagePtr)
     {
       setErrorCondition(-76001);
-      notifyErrorMessage(getHumanLabel(), "The data was not found", -76001);
+      notifyErrorMessage("The data was not found", -76001);
     }
 
 
@@ -189,7 +189,7 @@ void CalculateBackground::dataCheck()
   if(m_SubtractBackground && m_DivideBackground)
   {
     setErrorCondition(-76002);
-    notifyErrorMessage(getHumanLabel(), "Cannot choose BOTH subtract and divide. Choose one or neither.", -76002);
+    notifyErrorMessage("Cannot choose BOTH subtract and divide. Choose one or neither.", -76002);
   }
 
 
@@ -255,7 +255,7 @@ void CalculateBackground::execute()
   {
     QString ss = QObject::tr("Error Importing a Zeiss AxioVision file set.");
     setErrorCondition(-90000);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    notifyErrorMessage(ss, getErrorCondition());
     return;
   }
 
