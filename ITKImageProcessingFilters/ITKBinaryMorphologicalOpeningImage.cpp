@@ -161,7 +161,8 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
     structuringElement = StructuringElementType::Cross(elementRadius);
     break;
   default:
-    notifyErrorMessage("", "Unsupported structuring element", -20);
+    setErrorCondition(-20);
+    notifyErrorMessage(getHumanLabel(), "Unsupported structuring element", getErrorCondition());
     return;
   }
   // define filter

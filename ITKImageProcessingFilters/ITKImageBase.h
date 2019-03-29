@@ -152,7 +152,8 @@ protected:
     ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(array_path.getDataContainerName())->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
     if(nullptr == image)
     {
-      notifyErrorMessage("", "Array path does not contain image geometry.", -1);
+      setErrorCondition(-1);
+      notifyErrorMessage(getHumanLabel(), "Array path does not contain image geometry.", getErrorCondition());
     }
   }
 
@@ -206,8 +207,9 @@ protected:
     { 
       if(!getCancel())
       {
+        setErrorCondition(-55555);
         QString errorMessage = "ITK exception was thrown while filtering input image: %1";
-        notifyErrorMessage("", errorMessage.arg(err.GetDescription()), -55555);
+        notifyErrorMessage(getHumanLabel(), errorMessage.arg(err.GetDescription()), getErrorCondition());
       }
       return;
     }
@@ -271,8 +273,9 @@ protected:
       toDream3DFilter->Update();
     } catch(itk::ExceptionObject& err)
     {
+      setErrorCondition(-55556);
       QString errorMessage = "ITK exception was thrown while filtering input image: %1";
-      notifyErrorMessage("", errorMessage.arg(err.GetDescription()), -55556);
+      notifyErrorMessage(getHumanLabel(), errorMessage.arg(err.GetDescription()), getErrorCondition());
       return;
     }
   }
@@ -291,8 +294,9 @@ protected:
     SubsType max = static_cast<SubsType>(std::numeric_limits<ValueType>::max());
     if(value < lowest || value > max || value != floor(value))
     {
+      setErrorCondition(-1);
       QString errorMessage = name + QString(" must be greater or equal than %1 and lesser or equal than %2 and an integer");
-      notifyErrorMessage("", errorMessage.arg(lowest).arg(max), -1);
+      notifyErrorMessage(getHumanLabel(), errorMessage.arg(lowest).arg(max), getErrorCondition());
     }
   }
 
@@ -309,12 +313,13 @@ protected:
     if(value.x < lowest || value.x > max || (integer && value.x != floor(value.x)) || value.y < lowest || value.y > max || (integer && value.y != floor(value.y)) || value.z < lowest ||
        value.z > max || (integer && value.z != floor(value.z)))
     {
+      setErrorCondition(-1);
       QString errorMessage = name + QString(" values must be greater or equal than %1 and lesser or equal than %2");
       if(integer)
       {
         errorMessage += QString(" and integers");
       }
-      notifyErrorMessage("", errorMessage.arg(lowest).arg(max), -1);
+      notifyErrorMessage(getHumanLabel(), errorMessage.arg(lowest).arg(max), getErrorCondition());
     }
   }
 
@@ -330,9 +335,10 @@ protected:
       {
         return true;
       }
+      setErrorCondition(-12);
       QString errorMessage = "Wrong data type in %1. Expected %2. Try CastImageFilter or RescaleImageFilter to convert input data to a supported type.";
       QString stringTypes = QStringList(types.toList()).join(",");
-      notifyErrorMessage("", errorMessage.arg(path.serialize()).arg(stringTypes), -12);
+      notifyErrorMessage(getHumanLabel(), errorMessage.arg(path.serialize()).arg(stringTypes), getErrorCondition());
     }
     // If no data container, return false, but do not set any error condition.
     return false;

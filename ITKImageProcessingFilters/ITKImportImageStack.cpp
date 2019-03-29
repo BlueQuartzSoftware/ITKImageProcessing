@@ -158,7 +158,8 @@ void ITKImportImageStack::dataCheck()
   if(m_InputFileListInfo.InputPath.isEmpty())
   {
     ss = QObject::tr("The input directory must be set");
-    notifyErrorMessage("", ss, -13);
+    setErrorCondition(-13);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
@@ -193,7 +194,8 @@ void ITKImportImageStack::dataCheck()
     out << "StartIndex: " << m_InputFileListInfo.StartIndex << "\n";
     out << "EndIndex: " << m_InputFileListInfo.EndIndex << "\n";
 
-    notifyErrorMessage("", ss, -11);
+    setErrorCondition(-11);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
@@ -213,8 +215,9 @@ void ITKImportImageStack::readImage(const QVector<QString>& fileList, bool dataC
       const std::string fileName = fileList[fileIndex].toStdString();
       if(!itksys::SystemTools::FileExists(fileName))
       {
+        setErrorCondition(-7);
         QString errorMessage = "File does not exist: %1";
-        notifyErrorMessage("", errorMessage.arg(fileName.c_str()), -7);
+        notifyErrorMessage(getHumanLabel(), errorMessage.arg(fileName.c_str()), getErrorCondition());
         return;
       }
     }
@@ -222,8 +225,9 @@ void ITKImportImageStack::readImage(const QVector<QString>& fileList, bool dataC
     itk::ImageIOBase::Pointer imageIO = itk::ImageIOFactory::CreateImageIO(filename.toLatin1(), itk::ImageIOFactory::ReadMode);
     if(nullptr == imageIO)
     {
+      setErrorCondition(-5);
       QString errorMessage = "ITK could not read the given file \"%1\". Format is likely unsupported.";
-      notifyErrorMessage("", errorMessage.arg(filename), -5);
+      notifyErrorMessage(getHumanLabel(), errorMessage.arg(filename), getErrorCondition());
       return;
     }
     imageIO->SetFileName(filename.toLatin1());
@@ -241,8 +245,9 @@ void ITKImportImageStack::readImage(const QVector<QString>& fileList, bool dataC
 
       if(dim2 != 1)
       {
+        setErrorCondition(-2342342);
         const QString errorMessage = QString("The Z Dimension of the image file does not equal 1. Dimension of Z is %1").arg(dim2);
-        notifyErrorMessage("", errorMessage, -2342342);
+        notifyErrorMessage(getHumanLabel(), errorMessage, getErrorCondition());
         return;
       }
     }
@@ -295,14 +300,16 @@ void ITKImportImageStack::readImage(const QVector<QString>& fileList, bool dataC
       readImageWithPixelType<double>(fileList, dataCheck);
       break;
     default:
+      setErrorCondition(-4);
       QString errorMessage = QString("Unsupported pixel type: %1.").arg(imageIO->GetComponentTypeAsString(type).c_str());
-      notifyErrorMessage("", errorMessage, -4);
+      notifyErrorMessage(getHumanLabel(), errorMessage, getErrorCondition());
       break;
     }
   } catch(itk::ExceptionObject& err)
   {
+    setErrorCondition(-55559);
     QString errorMessage = "ITK exception was thrown while processing input file: %1";
-    notifyErrorMessage("", errorMessage.arg(err.what()), -55559);
+    notifyErrorMessage(getHumanLabel(), errorMessage.arg(err.what()), getErrorCondition());
     return;
   }
 }
@@ -315,7 +322,8 @@ template <typename TPixel> void ITKImportImageStack::readImageWithPixelType(cons
   DataContainer::Pointer container = getDataContainerArray()->getDataContainer(getDataContainerName());
   if(nullptr == container.get())
   {
-    notifyErrorMessage("", "Container not found.", -4);
+    setErrorCondition(-4);
+    notifyErrorMessage(getHumanLabel(), "Container not found.", getErrorCondition());
     return;
   }
 

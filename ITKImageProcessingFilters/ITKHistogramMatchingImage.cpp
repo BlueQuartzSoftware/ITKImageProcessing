@@ -92,8 +92,9 @@ size_t ITKHistogramMatchingImage::getImageDimension(const DataArrayPath& path)
   }
   else
   {
+    setErrorCondition(-10);
     errorMessage = "Geometry not found (%1)";
-    notifyErrorMessage("", errorMessage.arg(path.serialize()), -10);
+    notifyErrorMessage(getHumanLabel(), errorMessage.arg(path.serialize()), getErrorCondition());
     return 0;
   }
   // Geometry is always 3D, but assume image is 2D if
@@ -113,8 +114,9 @@ int ITKHistogramMatchingImage::CheckArrayExists(const DataArrayPath& path)
   IDataArray::Pointer ptr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, path);
   if(ptr.get() == nullptr)
   {
+    setErrorCondition(-6);
     QString errorMessage("Data Array %1 does not exist");
-    notifyErrorMessage("", errorMessage.arg(path.serialize()), -6);
+    notifyErrorMessage(getHumanLabel(), errorMessage.arg(path.serialize()), getErrorCondition());
     return 1;
   }
   return 0;
@@ -130,8 +132,9 @@ void ITKHistogramMatchingImage::CompareImagePixelTypes(const DataArrayPath& path
   IDataArray::Pointer ptr2 = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, path2);
   if(ptr1->getTypeAsString() != ptr2->getTypeAsString())
   {
+    setErrorCondition(-5);
     QString errorMessage("Both images must have the same pixel type.\nFound %1 and %2");
-    notifyErrorMessage("", errorMessage.arg(ptr1->getTypeAsString()).arg(ptr2->getTypeAsString()), -5);
+    notifyErrorMessage(getHumanLabel(), errorMessage.arg(ptr1->getTypeAsString()).arg(ptr2->getTypeAsString()), getErrorCondition());
     return;
   }
   // Compare that pixel types are the same
@@ -139,16 +142,18 @@ void ITKHistogramMatchingImage::CompareImagePixelTypes(const DataArrayPath& path
   QVector<size_t> cDims2 = ptr2->getComponentDimensions();
   if(cDims1.size() != cDims2.size())
   {
+    setErrorCondition(-8);
     QString errorMessage("Both images must have components of the same size.\nFound %1 and %2");
-    notifyErrorMessage("", errorMessage.arg(cDims1.size()).arg(cDims2.size()), -8);
+    notifyErrorMessage(getHumanLabel(), errorMessage.arg(cDims1.size()).arg(cDims2.size()), getErrorCondition());
     return;
   }
   for(int ii = 0; ii < cDims1.size(); ii++)
   {
     if(cDims1[ii] != cDims2[ii])
     {
+      setErrorCondition(-9);
       QString errorMessage("Both images must have all components of the same size.\nFound %1 and %2 for component %3");
-      notifyErrorMessage("", errorMessage.arg(cDims1[ii]).arg(cDims2[ii]).arg(ii), -9);
+      notifyErrorMessage(getHumanLabel(), errorMessage.arg(cDims1[ii]).arg(cDims2[ii]).arg(ii), getErrorCondition());
       return;
     }
   }
@@ -169,8 +174,9 @@ void ITKHistogramMatchingImage::CompareImageTypes(const DataArrayPath& path1, co
   size_t dimension2 = getImageDimension(getReferenceCellArrayPath());
   if(dimension1 != dimension2)
   {
+    setErrorCondition(-7);
     QString errorMessage("Images have a different number of dimensions:\n %1 != %2");
-    notifyErrorMessage("", errorMessage.arg(dimension1).arg(dimension2), -7);
+    notifyErrorMessage(getHumanLabel(), errorMessage.arg(dimension1).arg(dimension2), getErrorCondition());
     return;
   }
   // image pixeltype+image component

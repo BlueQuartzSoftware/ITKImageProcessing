@@ -125,7 +125,8 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
     DataContainer::Pointer container = getMarkerContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, dap.getDataContainerName());
     if(!container.get())
     {
-      notifyErrorMessage("", "No container.", -3);
+      setErrorCondition(-3);
+      notifyErrorMessage(getHumanLabel(), "No container.", getErrorCondition());
       return;
     }
     QVector<size_t> dims = ITKDream3DHelper::GetComponentsDimensions<OutputPixelType>();
@@ -140,8 +141,9 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
     toDream3D->Update();
   } catch(itk::ExceptionObject& err)
   {
+    setErrorCondition(-55562);
     QString errorMessage = "ITK exception was thrown while converting marker image: %1";
-    notifyErrorMessage("", errorMessage.arg(err.GetDescription()), -55562);
+    notifyErrorMessage(getHumanLabel(), errorMessage.arg(err.GetDescription()), getErrorCondition());
     return;
   }
 }
@@ -173,8 +175,9 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
     filter->SetMarkerImage(toITK->GetOutput());
   } catch(itk::ExceptionObject& err)
   {
+    setErrorCondition(-55563);
     QString errorMessage = "ITK exception was thrown while converting marker image: %1";
-    notifyErrorMessage("", errorMessage.arg(err.GetDescription()), -55563);
+    notifyErrorMessage(getHumanLabel(), errorMessage.arg(err.GetDescription()), getErrorCondition());
     return;
   }
   // Run filter

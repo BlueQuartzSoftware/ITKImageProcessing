@@ -166,8 +166,9 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
     toDream3DFilter->Update();
   } catch(itk::ExceptionObject& err)
   {
+    setErrorCondition(-55558);
     QString errorMessage = "ITK exception was thrown while filtering input image: %1";
-    notifyErrorMessage("", errorMessage.arg(err.GetDescription()), -55558);
+    notifyErrorMessage(getHumanLabel(), errorMessage.arg(err.GetDescription()), getErrorCondition());
     return;
   }
 

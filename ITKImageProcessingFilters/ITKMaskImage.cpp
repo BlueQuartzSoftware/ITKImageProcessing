@@ -114,8 +114,9 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   // checkImageType() is called before this function and limits the types of
   // supported mask images.
   // Just in case, an error is returned if this function is called.
+  setErrorCondition(-20);
   QString errorMessage = "Mask images are required to be scalar images.";
-  notifyErrorMessage("", errorMessage, -20);
+  notifyErrorMessage(getHumanLabel(), errorMessage, getErrorCondition());
 }
 
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> typename std::enable_if<std::is_scalar<InputPixelType>::value>::type ITKMaskImage::convertDataContainerType()
@@ -143,7 +144,8 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
     DataContainer::Pointer container = getMaskContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, dap.getDataContainerName());
     if(!container.get())
     {
-      notifyErrorMessage("", "No container.", -3);
+      setErrorCondition(-3);
+      notifyErrorMessage(getHumanLabel(), "No container.", getErrorCondition());
       return;
     }
     QVector<size_t> dims = ITKDream3DHelper::GetComponentsDimensions<OutputPixelType>();
@@ -157,8 +159,9 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
     toDream3D->Update();
   } catch(itk::ExceptionObject& err)
   {
+    setErrorCondition(-55560);
     QString errorMessage = "ITK exception was thrown while converting mask image: %1";
-    notifyErrorMessage("", errorMessage.arg(err.GetDescription()), -55560);
+    notifyErrorMessage(getHumanLabel(), errorMessage.arg(err.GetDescription()), getErrorCondition());
     return;
   }
 }
@@ -190,8 +193,9 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
     filter->SetMaskImage(toITK->GetOutput());
   } catch(itk::ExceptionObject& err)
   {
+    setErrorCondition(-55561);
     QString errorMessage = "ITK exception was thrown while converting mask image: %1";
-    notifyErrorMessage("", errorMessage.arg(err.GetDescription()), -55561);
+    notifyErrorMessage(getHumanLabel(), errorMessage.arg(err.GetDescription()), getErrorCondition());
     return;
   }
   typename OutputImageType::PixelType v;

@@ -72,7 +72,8 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   const unsigned int length = itk::NumericTraits<InputPixelType>::GetLength();
   if(length < 3 || length > 4)
   {
-    notifyErrorMessage("", "Input image pixels should have three (RGB) or four (RGBA) components.", -5);
+    setErrorCondition(-5);
+    notifyErrorMessage(getHumanLabel(), "Input image pixels should have three (RGB) or four (RGBA) components.", getErrorCondition());
     return;
   }
   typedef typename itk::NumericTraits<InputPixelType>::ValueType ScalarPixelType;
@@ -116,7 +117,8 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
     this->ITKImageProcessingBase::filter<RGBAPixelType, ScalarPixelType, Dimension, RGBAFilterType>(rgbaFilter);
     break;
   default:
-    notifyErrorMessage("", "Input image pixels should have three (RGB) or four (RGBA) components.", -7);
+    setErrorCondition(-7);
+    notifyErrorMessage(getHumanLabel(), "Input image pixels should have three (RGB) or four (RGBA) components.", getErrorCondition());
     return;
   }
 }

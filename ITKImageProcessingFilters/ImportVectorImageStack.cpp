@@ -137,7 +137,8 @@ void ImportVectorImageStack::dataCheck()
   if(m_InputFileListInfo.InputPath.isEmpty())
   {
     ss = QObject::tr("The Input Directory must be set before executing this filter.");
-    notifyErrorMessage("", ss, -13);
+    setErrorCondition(-13);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
@@ -171,7 +172,8 @@ void ImportVectorImageStack::dataCheck()
   if(fileList.isEmpty())
   {
     QString ss = QObject::tr("No files have been selected for import. Have you set the input directory?");
-    notifyErrorMessage("", ss, -11);
+    setErrorCondition(-11);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
@@ -184,8 +186,9 @@ void ImportVectorImageStack::dataCheck()
     QFileInfo fi(filePath);
     if(!fi.exists())
     {
+      setErrorCondition(-40201);
       QString errorMessage = QString("File Not Found: %1.").arg(filePath);
-      notifyErrorMessage("", errorMessage, -40201);
+      notifyErrorMessage(getHumanLabel(), errorMessage, getErrorCondition());
     }
   }
 
@@ -224,8 +227,9 @@ void ImportVectorImageStack::dataCheck()
       QFileInfo fi(filePath);
       if(!fi.exists())
       {
+        setErrorCondition(-40200);
         QString errorMessage = QString("File Not Found: %1.").arg(filePath);
-        notifyErrorMessage("", errorMessage, -40200);
+        notifyErrorMessage(getHumanLabel(), errorMessage, getErrorCondition());
         return;
       }
 
@@ -346,8 +350,9 @@ template <typename T> void importVectorData(ImportVectorImageStack* filter)
       QFileInfo fi(filePath);
       if(!fi.exists())
       {
+        filter->setErrorCondition(-40200);
         QString errorMessage = QString("File Not Found: %1.").arg(filePath);
-        filter->notifyErrorMessage("", errorMessage, -40200);
+        filter->notifyErrorMessage(filter->getHumanLabel(), errorMessage, filter->getErrorCondition());
         return;
       }
 
