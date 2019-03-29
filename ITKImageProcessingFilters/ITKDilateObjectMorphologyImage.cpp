@@ -148,7 +148,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
     break;
   default:
     setErrorCondition(-20);
-    notifyErrorMessage(getHumanLabel(), "Unsupported structuring element", getErrorCondition());
+    notifyErrorMessage("Unsupported structuring element", getErrorCondition());
     return;
   }
   // define filter

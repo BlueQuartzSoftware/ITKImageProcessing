@@ -153,7 +153,7 @@ protected:
     if(nullptr == image)
     {
       setErrorCondition(-1);
-      notifyErrorMessage(getHumanLabel(), "Array path does not contain image geometry.", getErrorCondition());
+      notifyErrorMessage("Array path does not contain image geometry.", getErrorCondition());
     }
   }
 
@@ -209,7 +209,7 @@ protected:
       {
         setErrorCondition(-55555);
         QString errorMessage = "ITK exception was thrown while filtering input image: %1";
-        notifyErrorMessage(getHumanLabel(), errorMessage.arg(err.GetDescription()), getErrorCondition());
+        notifyErrorMessage(errorMessage.arg(err.GetDescription()), getErrorCondition());
       }
       return;
     }
@@ -275,7 +275,7 @@ protected:
     {
       setErrorCondition(-55556);
       QString errorMessage = "ITK exception was thrown while filtering input image: %1";
-      notifyErrorMessage(getHumanLabel(), errorMessage.arg(err.GetDescription()), getErrorCondition());
+      notifyErrorMessage(errorMessage.arg(err.GetDescription()), getErrorCondition());
       return;
     }
   }
@@ -296,7 +296,7 @@ protected:
     {
       setErrorCondition(-1);
       QString errorMessage = name + QString(" must be greater or equal than %1 and lesser or equal than %2 and an integer");
-      notifyErrorMessage(getHumanLabel(), errorMessage.arg(lowest).arg(max), getErrorCondition());
+      notifyErrorMessage(errorMessage.arg(lowest).arg(max), getErrorCondition());
     }
   }
 
@@ -319,7 +319,7 @@ protected:
       {
         errorMessage += QString(" and integers");
       }
-      notifyErrorMessage(getHumanLabel(), errorMessage.arg(lowest).arg(max), getErrorCondition());
+      notifyErrorMessage(errorMessage.arg(lowest).arg(max), getErrorCondition());
     }
   }
 
@@ -338,7 +338,7 @@ protected:
       setErrorCondition(-12);
       QString errorMessage = "Wrong data type in %1. Expected %2. Try CastImageFilter or RescaleImageFilter to convert input data to a supported type.";
       QString stringTypes = QStringList(types.toList()).join(",");
-      notifyErrorMessage(getHumanLabel(), errorMessage.arg(path.serialize()).arg(stringTypes), getErrorCondition());
+      notifyErrorMessage(errorMessage.arg(path.serialize()).arg(stringTypes), getErrorCondition());
     }
     // If no data container, return false, but do not set any error condition.
     return false;

@@ -105,7 +105,7 @@ template <typename OutputPixelType> void ITKVectorRescaleIntensityImage::CheckEn
   {
     setErrorCondition(-1);
     QString errorMessage = name + QString(" must be greater or equal than %1 and lesser or equal than %2 and an integer");
-    notifyErrorMessage(getHumanLabel(), errorMessage.arg(lowest).arg(max), getErrorCondition());
+    notifyErrorMessage(errorMessage.arg(lowest).arg(max), getErrorCondition());
   }
 }
 

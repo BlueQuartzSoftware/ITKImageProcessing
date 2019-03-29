@@ -116,7 +116,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   // Just in case, an error is returned if this function is called.
   setErrorCondition(-20);
   QString errorMessage = "Mask images are required to be scalar images.";
-  notifyErrorMessage(getHumanLabel(), errorMessage, getErrorCondition());
+  notifyErrorMessage(errorMessage, getErrorCondition());
 }
 
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> typename std::enable_if<std::is_scalar<InputPixelType>::value>::type ITKMaskImage::convertDataContainerType()
@@ -145,7 +145,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
     if(!container.get())
     {
       setErrorCondition(-3);
-      notifyErrorMessage(getHumanLabel(), "No container.", getErrorCondition());
+      notifyErrorMessage("No container.", getErrorCondition());
       return;
     }
     QVector<size_t> dims = ITKDream3DHelper::GetComponentsDimensions<OutputPixelType>();
@@ -161,7 +161,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   {
     setErrorCondition(-55560);
     QString errorMessage = "ITK exception was thrown while converting mask image: %1";
-    notifyErrorMessage(getHumanLabel(), errorMessage.arg(err.GetDescription()), getErrorCondition());
+    notifyErrorMessage(errorMessage.arg(err.GetDescription()), getErrorCondition());
     return;
   }
 }
@@ -195,7 +195,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   {
     setErrorCondition(-55561);
     QString errorMessage = "ITK exception was thrown while converting mask image: %1";
-    notifyErrorMessage(getHumanLabel(), errorMessage.arg(err.GetDescription()), getErrorCondition());
+    notifyErrorMessage(errorMessage.arg(err.GetDescription()), getErrorCondition());
     return;
   }
   typename OutputImageType::PixelType v;

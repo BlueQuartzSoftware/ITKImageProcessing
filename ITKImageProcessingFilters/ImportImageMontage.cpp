@@ -119,7 +119,7 @@ void ImportImageMontage::dataCheck()
   {
     ss = QObject::tr("The input directory must be set");
     setErrorCondition(-13);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    notifyErrorMessage(ss, getErrorCondition());
     return;
   }
 
@@ -165,7 +165,7 @@ void ImportImageMontage::dataCheck()
   {
     QString ss = QObject::tr("No files have been selected for import. Have you set the input directory?");
     setErrorCondition(-11);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    notifyErrorMessage(ss, getErrorCondition());
   }
   else
   {
@@ -264,7 +264,7 @@ void ImportImageMontage::execute()
   {
     QString ss = QObject::tr("No files have been selected for import. Have you set the input directory?");
     setErrorCondition(-11);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    notifyErrorMessage(ss, getErrorCondition());
   }
 
   for(QVector<QString>::iterator filepath = fileList.begin(); filepath != fileList.end(); ++filepath)
@@ -287,7 +287,7 @@ void ImportImageMontage::execute()
     if(getErrorCondition() < 0)
     {
       setErrorCondition(-14000);
-      notifyErrorMessage(getHumanLabel(), "Failed to load image file", getErrorCondition());
+      notifyErrorMessage("Failed to load image file", getErrorCondition());
       break;
     }
 

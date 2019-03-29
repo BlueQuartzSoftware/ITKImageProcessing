@@ -102,14 +102,14 @@ void ITKImageReader::dataCheck()
   if(filename.isEmpty())
   {
     setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), "Invalid filename.", getErrorCondition());
+    notifyErrorMessage("Invalid filename.", getErrorCondition());
     return;
   }
 
   if(getDataContainerName().isEmpty())
   {
     setErrorCondition(-2);
-    notifyErrorMessage(getHumanLabel(), "No container name.", getErrorCondition());
+    notifyErrorMessage("No container name.", getErrorCondition());
     return;
   }
 
@@ -117,7 +117,7 @@ void ITKImageReader::dataCheck()
   if(container.get() == nullptr)
   {
     setErrorCondition(-3);
-    notifyErrorMessage(getHumanLabel(), "No container.", getErrorCondition());
+    notifyErrorMessage("No container.", getErrorCondition());
     return;
   }
   DataArrayPath dap(getDataContainerName(), getCellAttributeMatrixName(), getImageDataArrayName());

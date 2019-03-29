@@ -102,7 +102,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
      static_cast<double>(std::numeric_limits<InputValueType>::lowest()) < static_cast<double>(std::numeric_limits<OutputValueType>::lowest()))
   {
     setErrorCondition(-5);
-    notifyErrorMessage(getHumanLabel(), "Boundaries values of output component type inside boundaries of input component type. Use ITK::Rescale Intensity Image Filter instead.", getErrorCondition());
+    notifyErrorMessage("Boundaries values of output component type inside boundaries of input component type. Use ITK::Rescale Intensity Image Filter instead.", getErrorCondition());
     return;
   }
   ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();

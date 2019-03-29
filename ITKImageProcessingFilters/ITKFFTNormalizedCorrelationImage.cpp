@@ -168,7 +168,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   {
     setErrorCondition(-55558);
     QString errorMessage = "ITK exception was thrown while filtering input image: %1";
-    notifyErrorMessage(getHumanLabel(), errorMessage.arg(err.GetDescription()), getErrorCondition());
+    notifyErrorMessage(errorMessage.arg(err.GetDescription()), getErrorCondition());
     return;
   }
 
