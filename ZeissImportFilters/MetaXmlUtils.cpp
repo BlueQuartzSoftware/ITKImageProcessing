@@ -55,7 +55,8 @@ ZeissTagsXmlSectionPtr MetaXmlUtils::ParseTagsSection(AbstractFilter* filter, QD
   if(!ok)
   {
     QString ss = QObject::tr("Error Parsing 'Count' Tag in Root 'Tags' DOM element");
-    filter->notifyErrorMessage("", ss, -70001);
+    filter->setErrorCondition(-70001);
+    filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
     return ZeissTagsXmlSection::NullPointer();
   }
 
@@ -91,20 +92,22 @@ int32_t MetaXmlUtils::GetInt32Entry(AbstractFilter* filter, ZeissTagsXmlSection*
   AbstractZeissMetaData::Pointer ptr = tagsSection->getEntry(idValue);
   if(nullptr == ptr)
   {
+    filter->setErrorCondition(-70600);
     QString msg;
     QTextStream errStrm(&msg);
     errStrm << "AxioVision Import: XML Section for '" << ZeissTagMapping::instance()->nameForId(idValue) << "' was not found.";
-    filter->notifyErrorMessage("", msg, -70600);
+    filter->notifyErrorMessage(filter->getHumanLabel(), msg, filter->getErrorCondition());
     return 0;
   }
 
   Int32ZeissMetaEntry::Pointer valuePtr = ZeissMetaEntry::convert<Int32ZeissMetaEntry>(ptr);
   if(nullptr == valuePtr)
   {
+    filter->setErrorCondition(-70601);
     QString msg;
     QTextStream errStrm(&msg);
     errStrm << "AxioVision Import: Could not convert '" << ZeissTagMapping::instance()->nameForId(idValue) << "' tag to an integer.";
-    filter->notifyErrorMessage("", msg, -70601);
+    filter->notifyErrorMessage(filter->getHumanLabel(), msg, filter->getErrorCondition());
     return 0;
   }
 
@@ -119,20 +122,22 @@ float MetaXmlUtils::GetFloatEntry(AbstractFilter* filter, ZeissTagsXmlSection* t
   AbstractZeissMetaData::Pointer ptr = tagsSection->getEntry(idValue);
   if(nullptr == ptr)
   {
+    filter->setErrorCondition(-70602);
     QString msg;
     QTextStream errStrm(&msg);
     errStrm << "AxioVision Import: XML Section for '" << ZeissTagMapping::instance()->nameForId(idValue) << "' was not found.";
-    filter->notifyErrorMessage("", msg, -70602);
+    filter->notifyErrorMessage(filter->getHumanLabel(), msg, filter->getErrorCondition());
     return std::numeric_limits<float>::quiet_NaN();
   }
 
   FloatZeissMetaEntry::Pointer valuePtr = ZeissMetaEntry::convert<FloatZeissMetaEntry>(ptr);
   if(nullptr == valuePtr)
   {
+    filter->setErrorCondition(-70603);
     QString msg;
     QTextStream errStrm(&msg);
     errStrm << "AxioVision Import: Could not convert '" << ZeissTagMapping::instance()->nameForId(idValue) << "' tag to a float.";
-    filter->notifyErrorMessage("", msg, -70603);
+    filter->notifyErrorMessage(filter->getHumanLabel(), msg, filter->getErrorCondition());
     return std::numeric_limits<float>::quiet_NaN();
   }
 

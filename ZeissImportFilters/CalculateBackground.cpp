@@ -149,7 +149,8 @@ void CalculateBackground::dataCheck()
 
   if (am.get() == nullptr)
   {
-    notifyErrorMessage("", "The Attribute Matrix for property 'Input AttributeMatrix Name' has not been selected properly", -76000);
+    setErrorCondition(-76000);
+    notifyErrorMessage(getHumanLabel(), "The Attribute Matrix for property 'Input AttributeMatrix Name' has not been selected properly", -76000);
     return;
   }
 
@@ -178,7 +179,8 @@ void CalculateBackground::dataCheck()
 
     if(nullptr == imagePtr)
     {
-      notifyErrorMessage("", "The data was not found", -76001);
+      setErrorCondition(-76001);
+      notifyErrorMessage(getHumanLabel(), "The data was not found", -76001);
     }
 
 
@@ -186,7 +188,8 @@ void CalculateBackground::dataCheck()
 
   if(m_SubtractBackground && m_DivideBackground)
   {
-    notifyErrorMessage("", "Cannot choose BOTH subtract and divide. Choose one or neither.", -76002);
+    setErrorCondition(-76002);
+    notifyErrorMessage(getHumanLabel(), "Cannot choose BOTH subtract and divide. Choose one or neither.", -76002);
   }
 
 
@@ -251,7 +254,8 @@ void CalculateBackground::execute()
   if (err < 0)
   {
     QString ss = QObject::tr("Error Importing a Zeiss AxioVision file set.");
-    notifyErrorMessage("", ss, -90000);
+    setErrorCondition(-90000);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
@@ -332,7 +336,7 @@ void CalculateBackground::execute()
     A(i, 5) = yval * yval;
   }
 
-  notifyStatusMessage("", "Fitting a polynomial to data. May take a while to solve if images are large");
+  notifyStatusMessage(getHumanLabel(), "Fitting a polynomial to data. May take a while to solve if images are large");
   Eigen::VectorXd p = A.colPivHouseholderQr().solve(B);
 
   QVector<size_t> tDims(3);

@@ -171,7 +171,8 @@ void SeparateDataSets::execute()
     if(!ok)
     {
       QString ss = QObject::tr("The filter could not convert the string values in array '%1' to floating point values.").arg(stagePositionXPtr->getName());
-      notifyErrorMessage("", ss, -90002);
+      setErrorCondition(-90002);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return;
     }
 
@@ -179,7 +180,8 @@ void SeparateDataSets::execute()
     if(!ok)
     {
       QString ss = QObject::tr("The filter could not convert the string values in array '%1' to floating point values.").arg(stagePositionYPtr->getName());
-      notifyErrorMessage("", ss, -90003);
+      setErrorCondition(-90003);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return;
     }
 
@@ -187,7 +189,8 @@ void SeparateDataSets::execute()
     if(!ok)
     {
       QString ss = QObject::tr("The filter could not convert the string values in array '%1' to floating point values.").arg(scaleFactorForXPtr->getName());
-      notifyErrorMessage("", ss, -90004);
+      setErrorCondition(-90004);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return;
     }
 
@@ -195,7 +198,8 @@ void SeparateDataSets::execute()
     if(!ok)
     {
       QString ss = QObject::tr("The filter could not convert the string values in array '%1' to floating point values.").arg(scaleFactorForYPtr->getName());
-      notifyErrorMessage("", ss, -90005);
+      setErrorCondition(-90005);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return;
     }
 
@@ -251,18 +255,21 @@ void SeparateDataSets::execute()
 
 //  if (getCancel() == true) { return; }
 
-  //  if (getWarningCondition() < 0)
-  //  {
-  //    QString ss = QObject::tr("Some warning message");
-  //    //    notifyWarningMessage("", ss, -88888888);
-  //  }
+//  if (getWarningCondition() < 0)
+//  {
+//    QString ss = QObject::tr("Some warning message");
+//    setWarningCondition(-88888888);
+//    notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
+//  }
 
-  //  if (getErrorCondition() < 0)
-  //  {
-  //    QString ss = QObject::tr("Some error message");
-  //    //    notifyErrorMessage("", ss, -99999999);
-  //    return;
-  //  }
+//  if (getErrorCondition() < 0)
+//  {
+//    QString ss = QObject::tr("Some error message");
+//    setErrorCondition(-99999999);
+//    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+//    return;
+//  }
+
 }
 
 // -----------------------------------------------------------------------------
