@@ -423,7 +423,7 @@ void ImportAxioVisionV4Montage::parseImages(QDomElement& root, const ZeissTagsXm
 
     // Send a status update on the progress
     QString msg = QString("%1: Importing file %2 of %3").arg(getHumanLabel()).arg(p).arg(imageCount);
-    notifyStatusMessage(getHumanLabel(), msg);
+    notifyStatusMessage(msg);
 
     // Drill down into the XML document....
     QDomElement photoEle = root.firstChildElement(pTag);

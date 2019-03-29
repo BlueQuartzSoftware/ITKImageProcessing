@@ -336,7 +336,7 @@ void CalculateBackground::execute()
     A(i, 5) = yval * yval;
   }
 
-  notifyStatusMessage(getHumanLabel(), "Fitting a polynomial to data. May take a while to solve if images are large");
+  notifyStatusMessage("Fitting a polynomial to data. May take a while to solve if images are large");
   Eigen::VectorXd p = A.colPivHouseholderQr().solve(B);
 
   QVector<size_t> tDims(3);
