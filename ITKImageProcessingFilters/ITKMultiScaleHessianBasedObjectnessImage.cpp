@@ -109,8 +109,8 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   // Check consistency of parameters
   this->CheckIntegerEntry<uint32_t, double>(m_NumberOfSigmaSteps, "NumberOfSigmaSteps", true);
 
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
   ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
 

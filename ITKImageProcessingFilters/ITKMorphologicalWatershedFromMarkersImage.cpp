@@ -80,8 +80,8 @@ void ITKMorphologicalWatershedFromMarkersImage::readFilterParameters(AbstractFil
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKMorphologicalWatershedFromMarkersImage::dataCheck()
 {
   // Check consistency of parameters
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
   QVector<QString> supportedTypes;
   supportedTypes << "uint8_t"
                  << "uint16_t";

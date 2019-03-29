@@ -80,8 +80,8 @@ void ITKHConvexImage::readFilterParameters(AbstractFilterParametersReader* reade
 // -----------------------------------------------------------------------------
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKHConvexImage::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
 
   // Check consistency of parameters
 

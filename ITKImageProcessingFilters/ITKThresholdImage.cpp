@@ -83,8 +83,8 @@ void ITKThresholdImage::readFilterParameters(AbstractFilterParametersReader* rea
 // -----------------------------------------------------------------------------
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKThresholdImage::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
 
   // Check consistency of parameters
 

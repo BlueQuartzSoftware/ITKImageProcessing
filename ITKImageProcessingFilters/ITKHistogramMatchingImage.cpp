@@ -188,8 +188,8 @@ void ITKHistogramMatchingImage::CompareImageTypes(const DataArrayPath& path1, co
 // -----------------------------------------------------------------------------
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKHistogramMatchingImage::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
   // Check consistency of parameters
   this->CheckIntegerEntry<uint32_t, double>(m_NumberOfHistogramLevels, "NumberOfHistogramLevels", true);
   this->CheckIntegerEntry<uint32_t, double>(m_NumberOfMatchPoints, "NumberOfMatchPoints", true);

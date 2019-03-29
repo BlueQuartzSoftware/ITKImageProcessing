@@ -22,8 +22,8 @@ ITKImageBase::~ITKImageBase() = default;
 // -----------------------------------------------------------------------------
 void ITKImageBase::initialize()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
   setCancel(false);
 }
 

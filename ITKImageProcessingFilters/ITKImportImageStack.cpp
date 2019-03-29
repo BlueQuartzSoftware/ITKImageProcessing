@@ -148,9 +148,9 @@ QVector<QString> ITKImportImageStack::getFileList()
 // -----------------------------------------------------------------------------
 void ITKImportImageStack::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
+  clearWarningCondition();
 
   DataArrayPath tempPath;
   QString ss;
@@ -413,9 +413,9 @@ void ITKImportImageStack::preflight()
 // -----------------------------------------------------------------------------
 void ITKImportImageStack::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
+  clearWarningCondition();
   dataCheck();
   if(getErrorCondition() < 0)
   {

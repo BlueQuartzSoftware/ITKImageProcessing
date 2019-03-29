@@ -80,8 +80,8 @@ void ITKLaplacianRecursiveGaussianImage::readFilterParameters(AbstractFilterPara
 // -----------------------------------------------------------------------------
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKLaplacianRecursiveGaussianImage::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
 
   // Check consistency of parameters
 

@@ -77,8 +77,8 @@ void ITKMedianProjectionImage::readFilterParameters(AbstractFilterParametersRead
 // -----------------------------------------------------------------------------
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKMedianProjectionImage::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
 
   // Check consistency of parameters
   this->CheckIntegerEntry<unsigned int, double>(m_ProjectionDimension, "ProjectionDimension", true);

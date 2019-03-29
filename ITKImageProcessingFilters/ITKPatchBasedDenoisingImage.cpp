@@ -132,8 +132,8 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   this->CheckIntegerEntry<uint32_t, double>(m_NumberOfSamplePatches, "NumberOfSamplePatches", true);
   this->CheckIntegerEntry<uint32_t, double>(m_KernelBandwidthUpdateFrequency, "KernelBandwidthUpdateFrequency", true);
 
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
   ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
 

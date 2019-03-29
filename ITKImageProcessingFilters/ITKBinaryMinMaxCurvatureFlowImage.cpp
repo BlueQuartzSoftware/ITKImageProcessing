@@ -86,8 +86,8 @@ void ITKBinaryMinMaxCurvatureFlowImage::readFilterParameters(AbstractFilterParam
 // -----------------------------------------------------------------------------
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKBinaryMinMaxCurvatureFlowImage::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
 
   // Check consistency of parameters
   this->CheckIntegerEntry<uint32_t, double>(m_NumberOfIterations, "NumberOfIterations", 1);

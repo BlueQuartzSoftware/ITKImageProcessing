@@ -86,8 +86,8 @@ void ITKRegionalMaximaImage::readFilterParameters(AbstractFilterParametersReader
 // -----------------------------------------------------------------------------
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKRegionalMaximaImage::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
 
   // Check consistency of parameters
 

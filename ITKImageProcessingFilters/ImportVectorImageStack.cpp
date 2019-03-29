@@ -130,8 +130,8 @@ void ImportVectorImageStack::initialize()
 void ImportVectorImageStack::dataCheck()
 {
   DataArrayPath tempPath;
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
   QString ss;
 
   if(m_InputFileListInfo.InputPath.isEmpty())

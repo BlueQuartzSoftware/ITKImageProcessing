@@ -67,8 +67,8 @@ void ITKRGBToLuminanceImage::readFilterParameters(AbstractFilterParametersReader
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKRGBToLuminanceImage::dataCheck()
 {
   // Check consistency of parameters
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
   const unsigned int length = itk::NumericTraits<InputPixelType>::GetLength();
   if(length < 3 || length > 4)
   {

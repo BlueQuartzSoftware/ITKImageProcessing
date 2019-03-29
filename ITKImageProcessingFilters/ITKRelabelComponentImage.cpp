@@ -80,8 +80,8 @@ void ITKRelabelComponentImage::readFilterParameters(AbstractFilterParametersRead
 // -----------------------------------------------------------------------------
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKRelabelComponentImage::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
 
   // Check consistency of parameters
   this->CheckIntegerEntry<uint64_t, double>(m_MinimumObjectSize, "MinimumObjectSize", true);

@@ -80,8 +80,8 @@ void ITKIsoContourDistanceImage::readFilterParameters(AbstractFilterParametersRe
 // -----------------------------------------------------------------------------
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKIsoContourDistanceImage::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
 
   // Check consistency of parameters
 

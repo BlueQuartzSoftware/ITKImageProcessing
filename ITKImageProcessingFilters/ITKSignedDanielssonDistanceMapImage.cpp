@@ -83,8 +83,8 @@ void ITKSignedDanielssonDistanceMapImage::readFilterParameters(AbstractFilterPar
 // -----------------------------------------------------------------------------
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKSignedDanielssonDistanceMapImage::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
 
   // Check consistency of parameters
 

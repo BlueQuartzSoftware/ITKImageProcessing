@@ -77,8 +77,8 @@ void ITKGrayscaleFillholeImage::readFilterParameters(AbstractFilterParametersRea
 // -----------------------------------------------------------------------------
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKGrayscaleFillholeImage::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
 
   // Check consistency of parameters
 

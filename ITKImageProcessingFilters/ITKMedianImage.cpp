@@ -77,8 +77,8 @@ void ITKMedianImage::readFilterParameters(AbstractFilterParametersReader* reader
 // -----------------------------------------------------------------------------
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKMedianImage::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
 
   // Check consistency of parameters
   this->CheckVectorEntry<unsigned int, FloatVec3_t>(m_Radius, "Radius", true);

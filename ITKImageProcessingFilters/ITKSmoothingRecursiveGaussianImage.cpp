@@ -81,8 +81,8 @@ void ITKSmoothingRecursiveGaussianImage::readFilterParameters(AbstractFilterPara
 // -----------------------------------------------------------------------------
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKSmoothingRecursiveGaussianImage::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
 
   // Check consistency of parameters
   this->CheckVectorEntry<double, FloatVec3_t>(m_Sigma, "Sigma", false);

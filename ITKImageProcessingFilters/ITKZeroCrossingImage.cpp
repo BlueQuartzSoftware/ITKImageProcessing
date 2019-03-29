@@ -80,8 +80,8 @@ void ITKZeroCrossingImage::readFilterParameters(AbstractFilterParametersReader* 
 // -----------------------------------------------------------------------------
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKZeroCrossingImage::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
 
   // Check consistency of parameters
   this->CheckIntegerEntry<uint8_t, int>(m_ForegroundValue, "ForegroundValue", true);
