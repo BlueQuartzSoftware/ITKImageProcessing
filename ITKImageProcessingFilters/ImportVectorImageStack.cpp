@@ -357,7 +357,7 @@ template <typename T> void importVectorData(ImportVectorImageStack* filter)
       }
 
       QString progress = QString("Reading Slice %1/%2 Component %3/%4").arg(slice).arg(numSlices).arg(j).arg(totalComp);
-      filter->notifyStatusMessage(filter->getHumanLabel(), progress);
+      filter->notifyStatusMessage(progress);
 
       ITKImageReader::Pointer imageReader = ITKImageReader::New();
       imageReader->setDataContainerName(::TempDCName);

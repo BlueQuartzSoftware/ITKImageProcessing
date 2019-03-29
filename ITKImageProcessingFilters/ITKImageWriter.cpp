@@ -266,7 +266,7 @@ template <typename TPixel, unsigned int Dimensions> void ITKImageWriter::writeAs
   typename FileWriterType::Pointer writer = FileWriterType::New();
 
   QString progress = QString("Saving %1").arg(getFileName());
-  notifyStatusMessage(getHumanLabel(), progress);
+  notifyStatusMessage(progress);
 
   writer->SetInput(image);
   writer->SetFileName(getFileName().toStdString().c_str());
