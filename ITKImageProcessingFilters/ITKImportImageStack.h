@@ -42,10 +42,7 @@
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
-
 #include "SIMPLib/ITK/itkDream3DImage.h"
-
-#include <itkImageSeriesReader.h>
 
 #include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
@@ -82,9 +79,6 @@ public:
 
   SIMPL_FILTER_PARAMETER(FloatVec3_t, Resolution)
   Q_PROPERTY(FloatVec3_t Resolution READ getResolution WRITE setResolution)
-
-  SIMPL_FILTER_PARAMETER(QString, BoundsFile)
-  Q_PROPERTY(QString BoundsFile READ getBoundsFile WRITE setBoundsFile)
 
   SIMPL_FILTER_PARAMETER(FileListInfo_t, InputFileListInfo)
   Q_PROPERTY(FileListInfo_t InputFileListInfo READ getInputFileListInfo WRITE setInputFileListInfo)
@@ -200,19 +194,6 @@ private:
    * @brief Get the ordered list of input files.
    */
   QVector<QString> getFileList();
-
-  /**
-   * @brief readImage does the work of reading in the image. If \c dataCheck
-   * is true, only the image information is read -- pixel buffer information
-   * is not read.
-   */
-  void readImage(const QVector<QString>& fileList, bool dataCheck);
-  template <typename TPixel> void readImageWithPixelType(const QVector<QString>& fileList, bool dataCheck);
-
-  /**
-  * @brief Reads image size, spacing and origin, and updates container information accordingly.
-  */
-  template <typename TPixel> void readImageOutputInformation(typename itk::ImageSeriesReader<itk::Dream3DImage<TPixel, 3>>::Pointer& reader, DataContainer::Pointer& container);
 
   DEFINE_DATAARRAY_VARIABLE(uint8_t, ImageData)
 

@@ -203,7 +203,7 @@ const QString ITKImageReader::getFilterVersion() const
 // -----------------------------------------------------------------------------
 const QString ITKImageReader::getGroupName() const
 {
-  return "IO";
+  return SIMPL::FilterGroups::IOFilters;
 }
 
 // -----------------------------------------------------------------------------
@@ -219,7 +219,7 @@ const QUuid ITKImageReader::getUuid()
 // -----------------------------------------------------------------------------
 const QString ITKImageReader::getSubGroupName() const
 {
-  return "Input";
+  return SIMPL::FilterSubGroups::InputFilters;
 }
 
 // -----------------------------------------------------------------------------

@@ -52,20 +52,16 @@
 #include <itkImageFileWriter.h>
 #include <itkImageIOBase.h>
 
-class ITKImageProcessingImportImageStackTest
+class ITKImportImageStackTest
 {
 
 public:
-  ITKImageProcessingImportImageStackTest()
-  {
-  }
-  virtual ~ITKImageProcessingImportImageStackTest()
-  {
-  }
+  ITKImportImageStackTest() = default;
+  virtual ~ITKImportImageStackTest() = default;
 
   static const unsigned int Dimension = 3;
-  typedef short PixelType;
-  typedef itk::Image<PixelType, Dimension> ImageType;
+  using PixelType = short;
+  using ImageType = itk::Image<PixelType, Dimension>;
 
   // -----------------------------------------------------------------------------
   //  Helper methods
@@ -83,7 +79,7 @@ public:
 
   void WriteTestFile(const QString& filePath, ImageType* image)
   {
-    typedef itk::ImageFileWriter<ImageType> WriterType;
+    using WriterType = itk::ImageFileWriter<ImageType>;
     WriterType::Pointer writer = WriterType::New();
     writer->SetFileName(filePath.toStdString());
     writer->SetInput(image);
@@ -104,6 +100,7 @@ public:
     return 0;
   }
 
+  // -----------------------------------------------------------------------------
   int TestNoInput()
   {
     AbstractFilter::Pointer reader = GetFilterByName("ITKImportImageStack");
@@ -113,11 +110,12 @@ public:
     }
 
     reader->execute();
-    DREAM3D_REQUIRED(reader->getErrorCondition(), ==, -13);
+    DREAM3D_REQUIRED(reader->getErrorCondition(), ==, -64500);
     DREAM3D_REQUIRED(reader->getWarningCondition(), >=, 0);
     return EXIT_SUCCESS;
   }
 
+  // -----------------------------------------------------------------------------
   int TestNoDataContainer()
   {
     AbstractFilter::Pointer abstractFilter = GetFilterByName("ITKImportImageStack");
@@ -129,7 +127,7 @@ public:
     ITKImportImageStack::Pointer reader = std::static_pointer_cast<ITKImportImageStack>(abstractFilter);
 
     FileListInfo_t fileListInfo;
-    fileListInfo.InputPath = UnitTest::ITKImageProcessingImportImageStackTest::StackInputTestDir;
+    fileListInfo.InputPath = UnitTest::ITKImportImageStackTest::StackInputTestDir;
 
     reader->setInputFileListInfo(fileListInfo);
 
@@ -142,6 +140,7 @@ public:
     return EXIT_SUCCESS;
   }
 
+  // -----------------------------------------------------------------------------
   int TestNoFiles()
   {
     AbstractFilter::Pointer abstractFilter = GetFilterByName("ITKImportImageStack");
@@ -169,7 +168,7 @@ public:
     reader->setInputFileListInfo(fileListInfo);
 
     reader->execute();
-    DREAM3D_REQUIRED(reader->getErrorCondition(), ==, -11);
+    DREAM3D_REQUIRED(reader->getErrorCondition(), ==, -64501);
     DREAM3D_REQUIRED(reader->getWarningCondition(), >=, 0);
     return EXIT_SUCCESS;
   }
@@ -190,7 +189,7 @@ public:
     DREAM3D_REQUIRE_EQUAL(propertySet, true);
 
     FileListInfo_t fileListInfo;
-    fileListInfo.InputPath = UnitTest::ITKImageProcessingImportImageStackTest::StackInputTestDir;
+    fileListInfo.InputPath = UnitTest::ITKImportImageStackTest::StackInputTestDir;
     fileListInfo.StartIndex = 75;
     fileListInfo.EndIndex = 79;
     fileListInfo.FileExtension = "dcm";
@@ -201,7 +200,7 @@ public:
     reader->setInputFileListInfo(fileListInfo);
 
     reader->execute();
-    DREAM3D_REQUIRED(reader->getErrorCondition(), ==, -7);
+    DREAM3D_REQUIRED(reader->getErrorCondition(), ==, -64502);
     DREAM3D_REQUIRED(reader->getWarningCondition(), >=, 0);
     return EXIT_SUCCESS;
   }
@@ -231,7 +230,7 @@ public:
     DREAM3D_REQUIRE_EQUAL(propertySet, true);
 
     FileListInfo_t fileListInfo;
-    fileListInfo.InputPath = UnitTest::ITKImageProcessingImportImageStackTest::StackInputTestDir;
+    fileListInfo.InputPath = UnitTest::ITKImportImageStackTest::StackInputTestDir;
     fileListInfo.StartIndex = 11;
     fileListInfo.EndIndex = 13;
     fileListInfo.IncrementIndex = 1;
@@ -305,6 +304,7 @@ public:
   // -----------------------------------------------------------------------------
   void operator()()
   {
+    std::cout << "############# ITKImportImageStackTest ###############" << std::endl;
     int err = EXIT_SUCCESS;
 
     DREAM3D_REGISTER_TEST(TestAvailability("ITKImportImageStack"));
@@ -315,7 +315,9 @@ public:
     DREAM3D_REGISTER_TEST(TestCompareImage());
   }
 
-private:
-  ITKImageProcessingImportImageStackTest(const ITKImageProcessingImportImageStackTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKImageProcessingImportImageStackTest&);                         // Move assignment Not Implemented
+public:
+  ITKImportImageStackTest(const ITKImportImageStackTest&) = delete;            // Copy Constructor Not Implemented
+  ITKImportImageStackTest(ITKImportImageStackTest&&) = delete;                 // Move Constructor Not Implemented
+  ITKImportImageStackTest& operator=(const ITKImportImageStackTest&) = delete; // Copy Assignment Not Implemented
+  ITKImportImageStackTest& operator=(ITKImportImageStackTest&&) = delete;      // Move Assignment Not Implemented
 };
