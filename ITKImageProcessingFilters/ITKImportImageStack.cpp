@@ -248,8 +248,8 @@ void ITKImportImageStack::dataCheck()
   std::tie(x, y, z) = imageGeom->getDimensions();
   z = fileList.size();
   imageGeom->setDimensions(x, y, z);
-  imageGeom->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
-  imageGeom->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
+  imageGeom->setOrigin(m_Origin[0], m_Origin[1], m_Origin[2]);
+  imageGeom->setSpacing(m_Spacing[0], m_Spacing[1], m_Spacing[2]);
   m->setGeometry(imageGeom);
   dc->setGeometry(IGeometry::NullPointer());
 
@@ -258,7 +258,7 @@ void ITKImportImageStack::dataCheck()
   AttributeMatrix::Pointer cellAttrMat = dc->getAttributeMatrix(getCellAttributeMatrixName());
   QVector<size_t> tDims = {x, y, z};
   cellAttrMat->resizeAttributeArrays(tDims);
-  m->addAttributeMatrix(cellAttrMat->getName(), cellAttrMat);
+  m->insertOrAssign(cellAttrMat);
   // The data array that was embedded in the Cell Attribute Matrix just got resized so we should not have to do
   // anything else at this point.
 }
@@ -283,7 +283,7 @@ template <typename TPixel>
 void readImageStack(ITKImportImageStack* filter, const QVector<QString>& fileList)
 {
 
-  QString dcName = filter->getDataContainerName();
+  DataArrayPath dcName = filter->getDataContainerName();
   QString attrMatName = filter->getCellAttributeMatrixName();
   QString arrayName = filter->getImageDataArrayName();
 
