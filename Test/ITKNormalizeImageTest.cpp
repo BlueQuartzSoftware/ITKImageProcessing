@@ -12,12 +12,8 @@ class ITKNormalizeImageTest : public ITKTestBase
 {
 
 public:
-  ITKNormalizeImageTest()
-  {
-  }
-  virtual ~ITKNormalizeImageTest()
-  {
-  }
+ITKNormalizeImageTest() = default;
+~ITKNormalizeImageTest() override = default;
 
   int TestITKNormalizeImagedefaultsTest()
 {

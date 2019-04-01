@@ -39,7 +39,7 @@ ITKGradientMagnitudeRecursiveGaussianImage::~ITKGradientMagnitudeRecursiveGaussi
 // -----------------------------------------------------------------------------
 void ITKGradientMagnitudeRecursiveGaussianImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Sigma", Sigma, FilterParameter::Parameter, ITKGradientMagnitudeRecursiveGaussianImage));
   parameters.push_back(SIMPL_NEW_BOOL_FP("NormalizeAcrossScale", NormalizeAcrossScale, FilterParameter::Parameter, ITKGradientMagnitudeRecursiveGaussianImage));

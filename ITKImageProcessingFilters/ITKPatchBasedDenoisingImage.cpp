@@ -49,7 +49,7 @@ ITKPatchBasedDenoisingImage::~ITKPatchBasedDenoisingImage() = default;
 // -----------------------------------------------------------------------------
 void ITKPatchBasedDenoisingImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();

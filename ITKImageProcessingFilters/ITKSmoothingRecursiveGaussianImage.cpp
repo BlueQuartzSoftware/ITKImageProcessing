@@ -25,7 +25,7 @@
 // -----------------------------------------------------------------------------
 ITKSmoothingRecursiveGaussianImage::ITKSmoothingRecursiveGaussianImage()
 {
-  m_Sigma = CastStdToVec3<std::vector<double>, FloatVec3_t, float>(std::vector<double>(3,1.0));
+  m_Sigma = CastStdToVec3<std::vector<double>, FloatVec3Type, float>(std::vector<double>(3,1.0));
   m_NormalizeAcrossScale = StaticCastScalar<bool, bool, bool>(false);
 
 }
@@ -40,7 +40,7 @@ ITKSmoothingRecursiveGaussianImage::~ITKSmoothingRecursiveGaussianImage() = defa
 // -----------------------------------------------------------------------------
 void ITKSmoothingRecursiveGaussianImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Sigma", Sigma, FilterParameter::Parameter, ITKSmoothingRecursiveGaussianImage));
   parameters.push_back(SIMPL_NEW_BOOL_FP("NormalizeAcrossScale", NormalizeAcrossScale, FilterParameter::Parameter, ITKSmoothingRecursiveGaussianImage));
@@ -85,7 +85,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   setWarningCondition(0);
 
   // Check consistency of parameters
-  this->CheckVectorEntry<double, FloatVec3_t>(m_Sigma, "Sigma", false);
+  this->CheckVectorEntry<double, FloatVec3Type>(m_Sigma, "Sigma", false);
 
   ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
@@ -109,7 +109,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   // define filter
   typedef itk::SmoothingRecursiveGaussianImageFilter<InputImageType, OutputImageType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
-  typename FilterType::SigmaArrayType itkVecSigma = CastVec3ToITK<FloatVec3_t, typename FilterType::SigmaArrayType, typename FilterType::SigmaArrayType::ValueType>( this->getSigma(), FilterType::SigmaArrayType::Dimension);
+  typename FilterType::SigmaArrayType itkVecSigma = CastVec3ToITK<FloatVec3Type, typename FilterType::SigmaArrayType, typename FilterType::SigmaArrayType::ValueType>( this->getSigma(), FilterType::SigmaArrayType::Dimension);
   filter->SetSigmaArray( itkVecSigma );
   filter->SetNormalizeAcrossScale(static_cast<bool>(m_NormalizeAcrossScale));
   this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);

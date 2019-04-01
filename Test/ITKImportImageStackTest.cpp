@@ -63,18 +63,18 @@ public:
   using PixelType = short;
   using ImageType = itk::Image<PixelType, Dimension>;
 
-  // -----------------------------------------------------------------------------
-  //  Helper methods
-  // -----------------------------------------------------------------------------
-  AbstractFilter::Pointer GetFilterByName(const QString& filterName)
+// -----------------------------------------------------------------------------
+//  Helper methods
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer GetFilterByName(const QString& filterName)
+{
+  FilterManager* fm = FilterManager::Instance();
+  IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filterName);
+  if(nullptr == filterFactory.get())
   {
-    FilterManager* fm = FilterManager::Instance();
-    IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filterName);
-    if(nullptr == filterFactory.get())
-    {
-      return nullptr;
-    }
-    return filterFactory->create();
+    return nullptr;
+  }
+  return filterFactory->create();
   }
 
   void WriteTestFile(const QString& filePath, ImageType* image)
@@ -132,7 +132,9 @@ public:
     reader->setInputFileListInfo(fileListInfo);
 
     bool propertySet = false;
-    propertySet = reader->setProperty("DataContainerName", "");
+    QVariant var;
+    var.setValue(DataArrayPath());
+    propertySet = reader->setProperty("DataContainerName", var);
     DREAM3D_REQUIRE_EQUAL(propertySet, true);
     reader->execute();
     DREAM3D_REQUIRED(reader->getErrorCondition(), ==, -887);
@@ -153,7 +155,9 @@ public:
 
     bool propertySet = false;
     const QString containerName = "TestNoFiles";
-    propertySet = reader->setProperty("DataContainerName", containerName);
+    QVariant var;
+    var.setValue(DataArrayPath(containerName, "", ""));
+    propertySet = reader->setProperty("DataContainerName", var);
     DREAM3D_REQUIRE_EQUAL(propertySet, true);
 
     FileListInfo_t fileListInfo;
@@ -185,7 +189,9 @@ public:
 
     bool propertySet = false;
     const QString containerName = "TestFileDoesNotExist";
-    propertySet = reader->setProperty("DataContainerName", containerName);
+    QVariant var;
+    var.setValue(DataArrayPath(containerName, "", ""));
+    propertySet = reader->setProperty("DataContainerName", var);
     DREAM3D_REQUIRE_EQUAL(propertySet, true);
 
     FileListInfo_t fileListInfo;
@@ -226,7 +232,9 @@ public:
     bool propertySet = false;
 
     const QString containerName = "TestCompareImage";
-    propertySet = reader->setProperty("DataContainerName", containerName);
+    QVariant var;
+    var.setValue(DataArrayPath(containerName, "", ""));
+    propertySet = reader->setProperty("DataContainerName", var);
     DREAM3D_REQUIRE_EQUAL(propertySet, true);
 
     FileListInfo_t fileListInfo;
@@ -242,18 +250,18 @@ public:
     reader->setInputFileListInfo(fileListInfo);
 
     static const unsigned int Dimension = 3;
-    FloatVec3_t inputOrigin;
-    inputOrigin.x = 1.f;
-    inputOrigin.y = 4.f;
-    inputOrigin.z = 8.f;
+    FloatVec3Type inputOrigin;
+    inputOrigin[0] = 1.f;
+    inputOrigin[1] = 4.f;
+    inputOrigin[2] = 8.f;
     reader->setOrigin(inputOrigin);
     DREAM3D_REQUIRE_EQUAL(propertySet, true);
 
-    FloatVec3_t inputResolution;
-    inputResolution.x = 0.3f;
-    inputResolution.y = 0.2f;
-    inputResolution.z = 0.9f;
-    reader->setResolution(inputResolution);
+    FloatVec3Type inputspacing;
+    inputspacing[0] = 0.3f;
+    inputspacing[1] = 0.2f;
+    inputspacing[2] = 0.9f;
+    reader->setSpacing(inputspacing);
     DREAM3D_REQUIRE_EQUAL(propertySet, true);
 
     reader->execute();
@@ -273,18 +281,18 @@ public:
     ImageGeom::Pointer imageGeometry = std::dynamic_pointer_cast<ImageGeom>(geometry);
     DREAM3D_REQUIRE_NE(imageGeometry.get(), 0);
 
-    float resolution[Dimension];
-    imageGeometry->getResolution(resolution);
-    float origin[Dimension];
+    FloatVec3Type spacing;
+    imageGeometry->getSpacing(spacing);
+    FloatVec3Type origin;
     imageGeometry->getOrigin(origin);
 
-    DREAM3D_COMPARE_FLOATS(&origin[0], &inputOrigin.x, 5);
-    DREAM3D_COMPARE_FLOATS(&origin[1], &inputOrigin.y, 5);
-    DREAM3D_COMPARE_FLOATS(&origin[2], &inputOrigin.z, 5);
+    DREAM3D_COMPARE_FLOATS(&origin[0], &inputOrigin[0], 5);
+    DREAM3D_COMPARE_FLOATS(&origin[1], &inputOrigin[1], 5);
+    DREAM3D_COMPARE_FLOATS(&origin[2], &inputOrigin[2], 5);
 
-    DREAM3D_COMPARE_FLOATS(&resolution[0], &inputResolution.x, 5);
-    DREAM3D_COMPARE_FLOATS(&resolution[1], &inputResolution.y, 5);
-    DREAM3D_COMPARE_FLOATS(&resolution[2], &inputResolution.z, 5);
+    DREAM3D_COMPARE_FLOATS(&spacing[0], &inputspacing[0], 5);
+    DREAM3D_COMPARE_FLOATS(&spacing[1], &inputspacing[1], 5);
+    DREAM3D_COMPARE_FLOATS(&spacing[2], &inputspacing[2], 5);
 
     size_t dimensions[Dimension];
     size_t expectedDimensions[Dimension];

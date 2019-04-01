@@ -11,6 +11,7 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/FileListInfoFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
@@ -23,6 +24,15 @@
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
 
+enum createdPathID : RenameDataPath::DataID_t
+{
+  AttributeMatrixID21 = 21,
+
+  DataArrayID31 = 31,
+
+  DataContainerID = 1
+};
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -31,13 +41,13 @@ ImportImageMontage::ImportImageMontage()
 , m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName)
 , m_MetaDataAttributeMatrixName("MetaDataAttributeMatrix")
 {
-  m_Origin.x = 0.0;
-  m_Origin.y = 0.0;
-  m_Origin.z = 0.0;
+  m_Origin[0] = 0.0;
+  m_Origin[1] = 0.0;
+  m_Origin[2] = 0.0;
 
-  m_Resolution.x = 1.0;
-  m_Resolution.y = 1.0;
-  m_Resolution.z = 1.0;
+  m_Spacing[0] = 1.0;
+  m_Spacing[1] = 1.0;
+  m_Spacing[2] = 1.0;
 
   m_InputFileListInfo.FileExtension = QString("tif");
   m_InputFileListInfo.StartIndex = 0;
@@ -57,14 +67,14 @@ ImportImageMontage::~ImportImageMontage() = default;
 // -----------------------------------------------------------------------------
 void ImportImageMontage::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_FILELISTINFO_FP("Input File List", InputFileListInfo, FilterParameter::Parameter, ImportImageMontage));
 
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Origin", Origin, FilterParameter::Parameter, ImportImageMontage));
 
-  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Resolution", Resolution, FilterParameter::Parameter, ImportImageMontage));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Spacing", Spacing, FilterParameter::Parameter, ImportImageMontage));
 
-  parameters.push_back(SIMPL_NEW_STRING_FP("Data Container", DataContainerName, FilterParameter::CreatedArray, ImportImageMontage));
+  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container", DataContainerName, FilterParameter::CreatedArray, ImportImageMontage));
 
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
 
@@ -80,12 +90,12 @@ void ImportImageMontage::setupFilterParameters()
 void ImportImageMontage::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setDataContainerName(reader->readString("DataContainerName", getDataContainerName()));
+  setDataContainerName(reader->readDataArrayPath("DataContainerName", getDataContainerName()));
   setCellAttributeMatrixName(reader->readString("CellAttributeMatrixName", getCellAttributeMatrixName()));
   setMetaDataAttributeMatrixName(reader->readString("MetaDataAttributeMatrixName", getMetaDataAttributeMatrixName()));
   setInputFileListInfo(reader->readFileListInfo("InputFileListInfo", getInputFileListInfo()));
   setOrigin(reader->readFloatVec3("Origin", getOrigin()));
-  setResolution(reader->readFloatVec3("Resolution", getResolution()));
+  setSpacing(reader->readFloatVec3("Spacing", getSpacing()));
   reader->closeFilterGroup();
 }
 
@@ -123,7 +133,7 @@ void ImportImageMontage::dataCheck()
     return;
   }
 
-  DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName(), DataContainerID);
   if(getErrorCondition() < 0)
   {
     return;
@@ -139,7 +149,9 @@ void ImportImageMontage::dataCheck()
 
   QVector<size_t> tDims(1, m_NumImages);
   QVector<size_t> cDims(1, 1);
-  getDataContainerArray()->getDataContainer(getDataContainerName())->createNonPrereqAttributeMatrix(this, getMetaDataAttributeMatrixName(), tDims, AttributeMatrix::Type::MetaData);
+  getDataContainerArray()
+      ->getDataContainer(getDataContainerName())
+      ->createNonPrereqAttributeMatrix(this, getMetaDataAttributeMatrixName(), tDims, AttributeMatrix::Type::MetaData, AttributeMatrixID21);
   if(getErrorCondition() < 0)
   {
     return;
@@ -171,7 +183,7 @@ void ImportImageMontage::dataCheck()
   {
     setFileName(fileList[0]);
     QFileInfo fi(fileList[0]);
-    DataArrayPath dap(getDataContainerName(), getCellAttributeMatrixName(), fi.baseName());
+    DataArrayPath dap(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), fi.baseName());
     readImage(dap, true);
     // The previous call will add an attribute array that we don't need at this point
     // so just remove it.
@@ -204,8 +216,8 @@ void ImportImageMontage::dataCheck()
       QStringList splitFilePaths = imageFName.split('/');
       QString fileName = splitFilePaths[splitFilePaths.size() - 1];
       splitFilePaths = fileName.split('.');
-      DataArrayPath path(getDataContainerName(), getCellAttributeMatrixName(), splitFilePaths[0]);
-      getDataContainerArray()->createNonPrereqArrayFromPath<UInt8ArrayType, AbstractFilter, uint8_t>(this, path, 0, cDims);
+      DataArrayPath path(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), splitFilePaths[0]);
+      getDataContainerArray()->createNonPrereqArrayFromPath<UInt8ArrayType, AbstractFilter, uint8_t>(this, path, 0, cDims, "", DataArrayID31);
       if(getErrorCondition() < 0)
       {
         return;
@@ -282,7 +294,7 @@ void ImportImageMontage::execute()
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
 
     setFileName(imageFName);
-    DataArrayPath dap(getDataContainerName(), getCellAttributeMatrixName(), splitFilePaths[0]);
+    DataArrayPath dap(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), splitFilePaths[0]);
     readImage(dap, false);
     if(getErrorCondition() < 0)
     {
@@ -311,7 +323,7 @@ AbstractFilter::Pointer ImportImageMontage::newFilterInstance(bool copyFilterPar
     // miss some of them because we are not enumerating all of them.
     SIMPL_COPY_INSTANCEVAR(DataContainerName)
     SIMPL_COPY_INSTANCEVAR(CellAttributeMatrixName)
-    SIMPL_COPY_INSTANCEVAR(Resolution)
+    SIMPL_COPY_INSTANCEVAR(Spacing)
     SIMPL_COPY_INSTANCEVAR(Origin)
     SIMPL_COPY_INSTANCEVAR(InputFileListInfo)
   }

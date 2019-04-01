@@ -13,12 +13,8 @@ class ITKIntensityWindowingImageTest : public ITKTestBase
 {
 
 public:
-  ITKIntensityWindowingImageTest()
-  {
-  }
-  virtual ~ITKIntensityWindowingImageTest()
-  {
-  }
+ITKIntensityWindowingImageTest() = default;
+~ITKIntensityWindowingImageTest() override = default;
 
   int TestITKIntensityWindowingImage2dTest()
 {

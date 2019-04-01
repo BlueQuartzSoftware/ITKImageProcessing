@@ -53,7 +53,7 @@ ITKVectorConnectedComponentImage::~ITKVectorConnectedComponentImage() = default;
 // -----------------------------------------------------------------------------
 void ITKVectorConnectedComponentImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("DistanceThreshold", DistanceThreshold, FilterParameter::Parameter, ITKVectorConnectedComponentImage));
   parameters.push_back(SIMPL_NEW_BOOL_FP("FullyConnected", FullyConnected, FilterParameter::Parameter, ITKVectorConnectedComponentImage));

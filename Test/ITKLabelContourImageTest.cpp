@@ -14,12 +14,8 @@ class ITKLabelContourImageTest : public ITKTestBase
 {
 
 public:
-  ITKLabelContourImageTest()
-  {
-  }
-  virtual ~ITKLabelContourImageTest()
-  {
-  }
+ITKLabelContourImageTest() = default;
+~ITKLabelContourImageTest() override = default;
 
   int TestITKLabelContourImagedefaultTest()
 {

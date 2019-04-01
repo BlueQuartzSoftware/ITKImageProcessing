@@ -41,7 +41,7 @@ ITKRegionalMaximaImage::~ITKRegionalMaximaImage() = default;
 // -----------------------------------------------------------------------------
 void ITKRegionalMaximaImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("BackgroundValue", BackgroundValue, FilterParameter::Parameter, ITKRegionalMaximaImage));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("ForegroundValue", ForegroundValue, FilterParameter::Parameter, ITKRegionalMaximaImage));

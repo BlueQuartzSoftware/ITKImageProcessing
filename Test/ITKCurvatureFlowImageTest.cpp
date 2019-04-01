@@ -13,12 +13,8 @@ class ITKCurvatureFlowImageTest : public ITKTestBase
 {
 
 public:
-  ITKCurvatureFlowImageTest()
-  {
-  }
-  virtual ~ITKCurvatureFlowImageTest()
-  {
-  }
+ITKCurvatureFlowImageTest() = default;
+~ITKCurvatureFlowImageTest() override = default;
 
   int TestITKCurvatureFlowImagedefaultsTest()
 {

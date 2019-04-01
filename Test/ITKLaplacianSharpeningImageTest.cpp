@@ -13,12 +13,8 @@ class ITKLaplacianSharpeningImageTest : public ITKTestBase
 {
 
 public:
-  ITKLaplacianSharpeningImageTest()
-  {
-  }
-  virtual ~ITKLaplacianSharpeningImageTest()
-  {
-  }
+ITKLaplacianSharpeningImageTest() = default;
+~ITKLaplacianSharpeningImageTest() override = default;
 
   int TestITKLaplacianSharpeningImagedefaultTest()
 {

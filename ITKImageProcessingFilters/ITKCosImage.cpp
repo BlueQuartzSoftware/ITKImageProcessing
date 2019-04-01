@@ -34,9 +34,7 @@ ITKCosImage::~ITKCosImage() = default;
 // -----------------------------------------------------------------------------
 void ITKCosImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
-
-
+  FilterParameterVectorType parameters;
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";

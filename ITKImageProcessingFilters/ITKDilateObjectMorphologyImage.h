@@ -32,7 +32,7 @@ class ITKImageProcessing_EXPORT ITKDilateObjectMorphologyImage : public ITKImage
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKDilateObjectMorphologyImage SUPERCLASS ITKImageProcessingBase)
   PYB11_PROPERTY(double ObjectValue READ getObjectValue WRITE setObjectValue)
-  PYB11_PROPERTY(FloatVec3_t KernelRadius READ getKernelRadius WRITE setKernelRadius)
+  PYB11_PROPERTY(FloatVec3Type KernelRadius READ getKernelRadius WRITE setKernelRadius)
   PYB11_PROPERTY(int KernelType READ getKernelType WRITE setKernelType)
 
 public:
@@ -45,8 +45,8 @@ public:
   SIMPL_FILTER_PARAMETER(double, ObjectValue)
   Q_PROPERTY(double ObjectValue READ getObjectValue WRITE setObjectValue)
 
-  SIMPL_FILTER_PARAMETER(FloatVec3_t, KernelRadius)
-  Q_PROPERTY(FloatVec3_t KernelRadius READ getKernelRadius WRITE setKernelRadius)
+  SIMPL_FILTER_PARAMETER(FloatVec3Type, KernelRadius)
+  Q_PROPERTY(FloatVec3Type KernelRadius READ getKernelRadius WRITE setKernelRadius)
 
   SIMPL_FILTER_PARAMETER(int, KernelType)
   Q_PROPERTY(int KernelType READ getKernelType WRITE setKernelType)
