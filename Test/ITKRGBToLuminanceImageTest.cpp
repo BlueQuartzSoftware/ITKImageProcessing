@@ -41,8 +41,8 @@ public:
     filter->setDataContainerArray(containerArray);
 
     filter->execute();
-    DREAM3D_REQUIRED(filter->getErrorCondition(), >=, 0);
-    DREAM3D_REQUIRED(filter->getWarningCondition(), >=, 0);
+    DREAM3D_REQUIRED(filter->getErrorCode(), >=, 0);
+    DREAM3D_REQUIRED(filter->getWarningCode(), >=, 0);
 
     WriteImage("ITKRGBToLuminanceImageInput.nrrd", containerArray, inputPath);
     QString baselineFilename = UnitTest::DataDir + QString("/Data/JSONFilters/Baseline/BasicFilters_RGBToLuminanceImageFilter_Input.nrrd");

@@ -98,8 +98,8 @@ public:
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     filter->setDataContainerArray(containerArray);
     filter->execute();
-    DREAM3D_REQUIRED(filter->getErrorCondition(), >=, 0);
-    DREAM3D_REQUIRED(filter->getWarningCondition(), >=, 0);
+    DREAM3D_REQUIRED(filter->getErrorCode(), >=, 0);
+    DREAM3D_REQUIRED(filter->getWarningCode(), >=, 0);
     WriteImage("ITKVectorRescaleIntensityImage3d.nrrd", containerArray, input_path);
     // Convert filter output to ITK image
     typedef itk::InPlaceDream3DDataToImageFilter<OutputPixelType, ImageDimension> toITKType;

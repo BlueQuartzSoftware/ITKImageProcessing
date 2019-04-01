@@ -158,12 +158,11 @@ void ITKImportImageStack::dataCheck()
   if(m_InputFileListInfo.InputPath.isEmpty())
   {
     ss = QObject::tr("The input directory must be set");
-    setErrorCondition(-13);
-    notifyErrorMessage(ss, getErrorCondition());
+    setErrorCondition(-13, ss);
   }
 
   DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
-  if(getErrorCondition() < 0 || nullptr == m.get())
+  if(getErrorCode() < 0 || nullptr == m.get())
   {
     return;
   }
@@ -194,8 +193,7 @@ void ITKImportImageStack::dataCheck()
     out << "StartIndex: " << m_InputFileListInfo.StartIndex << "\n";
     out << "EndIndex: " << m_InputFileListInfo.EndIndex << "\n";
 
-    setErrorCondition(-11);
-    notifyErrorMessage(ss, getErrorCondition());
+    setErrorCondition(-11, ss);
     return;
   }
 
@@ -215,9 +213,8 @@ void ITKImportImageStack::readImage(const QVector<QString>& fileList, bool dataC
       const std::string fileName = fileList[fileIndex].toStdString();
       if(!itksys::SystemTools::FileExists(fileName))
       {
-        setErrorCondition(-7);
         QString errorMessage = "File does not exist: %1";
-        notifyErrorMessage(errorMessage.arg(fileName.c_str()), getErrorCondition());
+        setErrorCondition(-7, errorMessage.arg(fileName.c_str()));
         return;
       }
     }
@@ -225,9 +222,8 @@ void ITKImportImageStack::readImage(const QVector<QString>& fileList, bool dataC
     itk::ImageIOBase::Pointer imageIO = itk::ImageIOFactory::CreateImageIO(filename.toLatin1(), itk::ImageIOFactory::ReadMode);
     if(nullptr == imageIO)
     {
-      setErrorCondition(-5);
       QString errorMessage = "ITK could not read the given file \"%1\". Format is likely unsupported.";
-      notifyErrorMessage(errorMessage.arg(filename), getErrorCondition());
+      setErrorCondition(-5, errorMessage.arg(filename));
       return;
     }
     imageIO->SetFileName(filename.toLatin1());
@@ -245,9 +241,8 @@ void ITKImportImageStack::readImage(const QVector<QString>& fileList, bool dataC
 
       if(dim2 != 1)
       {
-        setErrorCondition(-2342342);
         const QString errorMessage = QString("The Z Dimension of the image file does not equal 1. Dimension of Z is %1").arg(dim2);
-        notifyErrorMessage(errorMessage, getErrorCondition());
+        setErrorCondition(-2342342, errorMessage);
         return;
       }
     }
@@ -300,16 +295,14 @@ void ITKImportImageStack::readImage(const QVector<QString>& fileList, bool dataC
       readImageWithPixelType<double>(fileList, dataCheck);
       break;
     default:
-      setErrorCondition(-4);
       QString errorMessage = QString("Unsupported pixel type: %1.").arg(imageIO->GetComponentTypeAsString(type).c_str());
-      notifyErrorMessage(errorMessage, getErrorCondition());
+      setErrorCondition(-4, errorMessage);
       break;
     }
   } catch(itk::ExceptionObject& err)
   {
-    setErrorCondition(-55559);
     QString errorMessage = "ITK exception was thrown while processing input file: %1";
-    notifyErrorMessage(errorMessage.arg(err.what()), getErrorCondition());
+    setErrorCondition(-55559, errorMessage.arg(err.what()));
     return;
   }
 }
@@ -322,8 +315,7 @@ template <typename TPixel> void ITKImportImageStack::readImageWithPixelType(cons
   DataContainer::Pointer container = getDataContainerArray()->getDataContainer(getDataContainerName());
   if(nullptr == container.get())
   {
-    setErrorCondition(-4);
-    notifyErrorMessage("Container not found.", getErrorCondition());
+    setErrorCondition(-4, "Container not found.");
     return;
   }
 
@@ -386,7 +378,7 @@ template <typename TPixel> void ITKImportImageStack::readImageOutputInformation(
 
   QVector<size_t> cDims(1, 1);
   AttributeMatrix::Pointer cellAttrMat = container->createNonPrereqAttributeMatrix(this, m_CellAttributeMatrixName, tDims, AttributeMatrix::Type::Cell);
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -417,7 +409,7 @@ void ITKImportImageStack::execute()
   clearWarningCondition();
   clearWarningCondition();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }

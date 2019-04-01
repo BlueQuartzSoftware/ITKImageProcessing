@@ -174,8 +174,7 @@ void ImportRegisteredImageMontage::dataCheck()
   if(m_InputFileListInfo.InputPath.isEmpty())
   {
     ss = QObject::tr("The input directory must be set");
-    setErrorCondition(-13);
-    notifyErrorMessage(ss, getErrorCondition());
+    setErrorCondition(-13, ss);
 
     return;
   }
@@ -184,16 +183,14 @@ void ImportRegisteredImageMontage::dataCheck()
   if(!fi.exists())
   {
     QString ss = QObject::tr("The registration file does not exist");
-    setErrorCondition(-388);
-    notifyErrorMessage(ss, getErrorCondition());
+    setErrorCondition(-388, ss);
     return;
   }
 
   if(m_RegistrationFile.isEmpty())
   {
     QString ss = QObject::tr("The registration file must be set").arg(getHumanLabel());
-    setErrorCondition(-1);
-    notifyErrorMessage(ss, -1);
+    setErrorCondition(-1, ss);
     return;
   }
 
@@ -201,13 +198,12 @@ void ImportRegisteredImageMontage::dataCheck()
   if(!m_InStream.open(QIODevice::ReadOnly | QIODevice::Text))
   {
     QString ss = QObject::tr("Registration file could not be opened");
-    setErrorCondition(-100);
-    notifyErrorMessage(ss, getErrorCondition());
+    setErrorCondition(-100, ss);
     return;
   }
 
   DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -226,7 +222,7 @@ void ImportRegisteredImageMontage::dataCheck()
   QVector<size_t> tDims(1, m_NumImages);
   QVector<size_t> cDims(1, 1);
   getDataContainerArray()->getDataContainer(getDataContainerName())->createNonPrereqAttributeMatrix(this, getMetaDataAttributeMatrixName(), tDims, AttributeMatrix::Type::MetaData);
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -235,7 +231,7 @@ void ImportRegisteredImageMontage::dataCheck()
   StringDataArray::Pointer attributeArrayNames = StringDataArray::CreateArray(metaDataAttrMat->getNumberOfTuples(), getAttributeArrayNamesArrayName());
   metaDataAttrMat->addAttributeArray(getAttributeArrayNamesArrayName(), attributeArrayNames);
   m_AttributeArrayNamesPtr = attributeArrayNames;
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -243,7 +239,7 @@ void ImportRegisteredImageMontage::dataCheck()
   cDims[0] = 2;
   path.update(getDataContainerName(), getMetaDataAttributeMatrixName(), getRegistrationCoordinatesArrayName());
   m_RegistrationCoordinatesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<FloatArrayType, AbstractFilter, float>(this, path, 0, cDims);
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -271,8 +267,7 @@ void ImportRegisteredImageMontage::dataCheck()
   if(fileList.empty())
   {
     QString ss = QObject::tr("No files have been selected for import. Have you set the input directory?");
-    setErrorCondition(-11);
-    notifyErrorMessage(ss, getErrorCondition());
+    setErrorCondition(-11, ss);
   }
   else
   {
@@ -298,8 +293,7 @@ void ImportRegisteredImageMontage::dataCheck()
     if(availableFileCount != mdAttrMat->getNumberOfTuples())
     {
       QString ss = QObject::tr("The number of files in selected folder (%1) does not match the number in the registration file (%2)").arg(fileList.size()).arg(mdAttrMat->getNumberOfTuples());
-      setErrorCondition(-101);
-      notifyErrorMessage(ss, getErrorCondition());
+      setErrorCondition(-101, ss);
       return;
     }
 
@@ -317,7 +311,7 @@ void ImportRegisteredImageMontage::dataCheck()
       splitFilePaths = fileName.split('.');
       DataArrayPath path(getDataContainerName(), getCellAttributeMatrixName(), splitFilePaths[0]);
       getDataContainerArray()->createNonPrereqArrayFromPath<UInt8ArrayType, AbstractFilter, uint8_t>(this, path, 0, cDims);
-      if(getErrorCondition() < 0)
+      if(getErrorCode() < 0)
       {
         return;
       }
@@ -346,7 +340,7 @@ void ImportRegisteredImageMontage::execute()
   clearErrorCondition();
   clearWarningCondition();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -382,8 +376,7 @@ void ImportRegisteredImageMontage::execute()
   if(fileList.empty())
   {
     QString ss = QObject::tr("No files have been selected for import. Have you set the input directory?");
-    setErrorCondition(-11);
-    notifyErrorMessage(ss, getErrorCondition());
+    setErrorCondition(-11, ss);
   }
 
   for(QVector<QString>::iterator filepath = fileList.begin(); filepath != fileList.end(); ++filepath)
@@ -403,10 +396,9 @@ void ImportRegisteredImageMontage::execute()
     setFileName(imageFName);
     DataArrayPath dap(getDataContainerName(), getCellAttributeMatrixName(), splitFilePaths[0]);
     readImage(dap, false);
-    if(getErrorCondition() < 0)
+    if(getErrorCode() < 0)
     {
-      setErrorCondition(-14000);
-      notifyErrorMessage("Failed to load image file", getErrorCondition());
+      setErrorCondition(-14000, "Failed to load image file");
       break;
     }
 

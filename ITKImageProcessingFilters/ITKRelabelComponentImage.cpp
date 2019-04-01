@@ -114,12 +114,12 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
 {
   QString outputVal = "NumberOfObjects :%1";
   m_NumberOfObjects = filter->GetNumberOfObjects();
-  notifyWarningMessage(getHumanLabel(),outputVal.arg(m_NumberOfObjects),0);
+  setWarningCondition(0, outputVal.arg(m_NumberOfObjects));
 }
 {
   QString outputVal = "OriginalNumberOfObjects :%1";
   m_OriginalNumberOfObjects = filter->GetOriginalNumberOfObjects();
-  notifyWarningMessage(getHumanLabel(),outputVal.arg(m_OriginalNumberOfObjects),0);
+  setWarningCondition(0, outputVal.arg(m_OriginalNumberOfObjects));
 }
 //{
 //  QString outputVal = "SizeOfObjectsInPhysicalUnits :%1";

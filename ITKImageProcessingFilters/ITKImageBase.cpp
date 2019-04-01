@@ -34,7 +34,7 @@ void ITKImageBase::execute()
 {
   initialize();
   this->dataCheckInternal();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }

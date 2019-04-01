@@ -109,7 +109,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
 {
   QString outputVal = "Flat :%1";
   m_Flat = filter->GetFlat();
-  notifyWarningMessage(getHumanLabel(),outputVal.arg(m_Flat),0);
+  setWarningCondition(0, outputVal.arg(m_Flat));
 }
 
 }

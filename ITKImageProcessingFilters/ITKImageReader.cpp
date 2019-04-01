@@ -101,23 +101,20 @@ void ITKImageReader::dataCheck()
   QString filename = getFileName();
   if(filename.isEmpty())
   {
-    setErrorCondition(-1);
-    notifyErrorMessage("Invalid filename.", getErrorCondition());
+    setErrorCondition(-1, "Invalid filename.");
     return;
   }
 
   if(getDataContainerName().isEmpty())
   {
-    setErrorCondition(-2);
-    notifyErrorMessage("No container name.", getErrorCondition());
+    setErrorCondition(-2, "No container name.");
     return;
   }
 
   DataContainer::Pointer container = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
   if(container.get() == nullptr)
   {
-    setErrorCondition(-3);
-    notifyErrorMessage("No container.", getErrorCondition());
+    setErrorCondition(-3, "No container.");
     return;
   }
   DataArrayPath dap(getDataContainerName(), getCellAttributeMatrixName(), getImageDataArrayName());
@@ -150,7 +147,7 @@ void ITKImageReader::execute()
   clearErrorCondition();
   clearWarningCondition();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }

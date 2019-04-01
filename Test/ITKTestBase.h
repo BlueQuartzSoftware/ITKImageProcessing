@@ -315,8 +315,8 @@ public:
     DREAM3D_REQUIRE_EQUAL(propertySet, true);
 
     reader->execute();
-    DREAM3D_REQUIRED(reader->getErrorCondition(), >=, 0);
-    DREAM3D_REQUIRED(reader->getWarningCondition(), >=, 0);
+    DREAM3D_REQUIRED(reader->getErrorCode(), >=, 0);
+    DREAM3D_REQUIRED(reader->getWarningCode(), >=, 0);
 
     containerArray = reader->getDataContainerArray();
 
@@ -348,8 +348,8 @@ public:
     DREAM3D_REQUIRE_EQUAL(propertySet, true);
 
     writer->execute();
-    DREAM3D_REQUIRED(writer->getErrorCondition(), >=, 0);
-    DREAM3D_REQUIRED(writer->getWarningCondition(), >=, 0);
+    DREAM3D_REQUIRED(writer->getErrorCode(), >=, 0);
+    DREAM3D_REQUIRED(writer->getWarningCode(), >=, 0);
 
     // Remove file at the end of the tests_settings
     FilesToRemove << fileWithPath;

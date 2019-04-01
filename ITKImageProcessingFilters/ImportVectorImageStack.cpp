@@ -137,13 +137,12 @@ void ImportVectorImageStack::dataCheck()
   if(m_InputFileListInfo.InputPath.isEmpty())
   {
     ss = QObject::tr("The Input Directory must be set before executing this filter.");
-    setErrorCondition(-13);
-    notifyErrorMessage(ss, getErrorCondition());
+    setErrorCondition(-13, ss);
     return;
   }
 
   DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -172,8 +171,7 @@ void ImportVectorImageStack::dataCheck()
   if(fileList.isEmpty())
   {
     QString ss = QObject::tr("No files have been selected for import. Have you set the input directory?");
-    setErrorCondition(-11);
-    notifyErrorMessage(ss, getErrorCondition());
+    setErrorCondition(-11, ss);
     return;
   }
 
@@ -186,9 +184,8 @@ void ImportVectorImageStack::dataCheck()
     QFileInfo fi(filePath);
     if(!fi.exists())
     {
-      setErrorCondition(-40201);
       QString errorMessage = QString("File Not Found: %1.").arg(filePath);
-      notifyErrorMessage(errorMessage, getErrorCondition());
+      setErrorCondition(-40201, errorMessage);
     }
   }
 
@@ -227,9 +224,8 @@ void ImportVectorImageStack::dataCheck()
       QFileInfo fi(filePath);
       if(!fi.exists())
       {
-        setErrorCondition(-40200);
         QString errorMessage = QString("File Not Found: %1.").arg(filePath);
-        notifyErrorMessage(errorMessage, getErrorCondition());
+        setErrorCondition(-40200, errorMessage);
         return;
       }
 
@@ -239,7 +235,11 @@ void ImportVectorImageStack::dataCheck()
       imageReader->setImageDataArrayName(::TempDAName);
       imageReader->setFileName(filePath);
       imageReader->preflight();
-      setErrorCondition(imageReader->getErrorCondition());
+
+      if (imageReader->getErrorCode() < 0)
+      {
+        setErrorCondition(imageReader->getErrorCode(), "Image Reader failed preflight.  Please contact the DREAM.3D developers for more information.");
+      }
 
       // Get the DataContainer from the ITKReadImage filter
       DataContainer::Pointer imageReaderDC = imageReader->getDataContainerArray()->getDataContainer(::TempDCName);
@@ -350,9 +350,8 @@ template <typename T> void importVectorData(ImportVectorImageStack* filter)
       QFileInfo fi(filePath);
       if(!fi.exists())
       {
-        filter->setErrorCondition(-40200);
         QString errorMessage = QString("File Not Found: %1.").arg(filePath);
-        filter->notifyErrorMessage(errorMessage, filter->getErrorCondition());
+        filter->setErrorCondition(-40200, errorMessage);
         return;
       }
 
@@ -365,7 +364,11 @@ template <typename T> void importVectorData(ImportVectorImageStack* filter)
       imageReader->setImageDataArrayName(::TempDAName);
       imageReader->setFileName(filePath);
       imageReader->execute();
-      filter->setErrorCondition(imageReader->getErrorCondition());
+      if (imageReader->getErrorCode() < 0)
+      {
+        filter->setErrorCondition(imageReader->getErrorCode(), "Image Reader failed execution.  Please contact the DREAM.3D developers for more information.");
+      }
+
 
       // Get the DataContainer from the ITKReadImage filter
       DataContainer::Pointer imageReaderDC = imageReader->getDataContainerArray()->getDataContainer(::TempDCName);
@@ -400,10 +403,11 @@ template <typename T> void importVectorData(ImportVectorImageStack* filter)
 // -----------------------------------------------------------------------------
 void ImportVectorImageStack::execute()
 {
-  int err = 0;
-  setErrorCondition(err);
+  clearErrorCondition();
+  clearWarningCondition();
+
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }

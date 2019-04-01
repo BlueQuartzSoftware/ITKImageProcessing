@@ -113,8 +113,8 @@ public:
     }
 
     reader->execute();
-    DREAM3D_REQUIRED(reader->getErrorCondition(), ==, -13);
-    DREAM3D_REQUIRED(reader->getWarningCondition(), >=, 0);
+    DREAM3D_REQUIRED(reader->getErrorCode(), ==, -13);
+    DREAM3D_REQUIRED(reader->getWarningCode(), >=, 0);
     return EXIT_SUCCESS;
   }
 
@@ -137,8 +137,8 @@ public:
     propertySet = reader->setProperty("DataContainerName", "");
     DREAM3D_REQUIRE_EQUAL(propertySet, true);
     reader->execute();
-    DREAM3D_REQUIRED(reader->getErrorCondition(), ==, -887);
-    DREAM3D_REQUIRED(reader->getWarningCondition(), >=, 0);
+    DREAM3D_REQUIRED(reader->getErrorCode(), ==, -887);
+    DREAM3D_REQUIRED(reader->getWarningCode(), >=, 0);
     return EXIT_SUCCESS;
   }
 
@@ -169,8 +169,8 @@ public:
     reader->setInputFileListInfo(fileListInfo);
 
     reader->execute();
-    DREAM3D_REQUIRED(reader->getErrorCondition(), ==, -11);
-    DREAM3D_REQUIRED(reader->getWarningCondition(), >=, 0);
+    DREAM3D_REQUIRED(reader->getErrorCode(), ==, -11);
+    DREAM3D_REQUIRED(reader->getWarningCode(), >=, 0);
     return EXIT_SUCCESS;
   }
 
@@ -201,8 +201,8 @@ public:
     reader->setInputFileListInfo(fileListInfo);
 
     reader->execute();
-    DREAM3D_REQUIRED(reader->getErrorCondition(), ==, -7);
-    DREAM3D_REQUIRED(reader->getWarningCondition(), >=, 0);
+    DREAM3D_REQUIRED(reader->getErrorCode(), ==, -7);
+    DREAM3D_REQUIRED(reader->getWarningCode(), >=, 0);
     return EXIT_SUCCESS;
   }
 
@@ -258,8 +258,8 @@ public:
     DREAM3D_REQUIRE_EQUAL(propertySet, true);
 
     reader->execute();
-    DREAM3D_REQUIRED(reader->getErrorCondition(), >=, 0);
-    DREAM3D_REQUIRED(reader->getWarningCondition(), >=, 0);
+    DREAM3D_REQUIRED(reader->getErrorCode(), >=, 0);
+    DREAM3D_REQUIRED(reader->getWarningCode(), >=, 0);
 
     // Compare read data
     DataContainerArray::Pointer containerArray = reader->getDataContainerArray();
