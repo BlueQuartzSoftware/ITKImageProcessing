@@ -57,7 +57,6 @@ class ITKImageProcessing_EXPORT ITKImportImageStack : public AbstractFilter
   PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
   PYB11_PROPERTY(FloatVec3Type Origin READ getOrigin WRITE setOrigin)
   PYB11_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
-  PYB11_PROPERTY(QString BoundsFile READ getBoundsFile WRITE setBoundsFile)
   PYB11_PROPERTY(FileListInfo_t InputFileListInfo READ getInputFileListInfo WRITE setInputFileListInfo)
   PYB11_PROPERTY(int ImageStack READ getImageStack WRITE setImageStack)
   PYB11_PROPERTY(QString ImageDataArrayName READ getImageDataArrayName WRITE setImageDataArrayName)
