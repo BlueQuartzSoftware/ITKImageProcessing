@@ -188,14 +188,12 @@ void ImportAxioVisionV4Montage::dataCheck()
   if(getInputFile().isEmpty())
   {
     ss = QObject::tr("%1 needs the Input File Set and it was not.").arg(ClassName());
-    setErrorCondition(-387);
-    notifyErrorMessage(ss, getErrorCondition());
+    setErrorCondition(-387, ss);
   }
   else if(!fi.exists())
   {
     ss = QObject::tr("The input file does not exist.");
-    setErrorCondition(-388);
-    notifyErrorMessage(ss, getErrorCondition());
+    setErrorCondition(-388, ss);
   }
 
   QString filtName = ZeissImportConstants::ImageProcessingFilters::k_ReadImageFilterClassName;
@@ -209,8 +207,7 @@ void ImportAxioVisionV4Montage::dataCheck()
     if(nullptr == filter.get())
     {
       ss = QObject::tr("The '%1' filter is not Available, did the ITKImageProcessing Plugin Load.").arg(filtName);
-      setErrorCondition(-391);
-      notifyErrorMessage(ss, getErrorCondition());
+      setErrorCondition(-391, ss);
     }
   }
   if(getConvertToGrayScale())
@@ -226,12 +223,11 @@ void ImportAxioVisionV4Montage::dataCheck()
       if(nullptr == filter.get())
       {
         ss = QObject::tr("The '%1' filter is not Available, did the Processing Plugin Load.").arg(filtName);
-        setErrorCondition(-391);
-        notifyErrorMessage(ss, getErrorCondition());
+        setErrorCondition(-391, ss);
       }
     }
   }
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -240,8 +236,7 @@ void ImportAxioVisionV4Montage::dataCheck()
   if(nullptr == dca.get())
   {
     ss = QObject::tr("%1 needs a valid DataContainerArray").arg(ClassName());
-    setErrorCondition(-390);
-    notifyErrorMessage(ss, getErrorCondition());
+    setErrorCondition(-390, ss);
     return;
   }
 
@@ -275,7 +270,7 @@ void ImportAxioVisionV4Montage::execute()
   dataCheck();
   // Check to make sure you made it through the data check. Errors would have been reported already so if something
   // happens to fail in the dataCheck() then we simply return
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -286,8 +281,7 @@ void ImportAxioVisionV4Montage::execute()
   if(err < 0)
   {
     QString ss = QObject::tr("Error Importing a Zeiss AxioVision file set.");
-    setErrorCondition(-90000);
-    notifyErrorMessage(ss, getErrorCondition());
+    setErrorCondition(-90000, ss);
     return;
   }
 }
@@ -329,8 +323,7 @@ void ImportAxioVisionV4Montage::readMetaXml(QIODevice* device)
     if(!domDocument.setContent(device, true, &errorStr, &errorLine, &errorColumn))
     {
       QString ss = QObject::tr("Parse error at line %1, column %2:\n%3").arg(errorLine).arg(errorColumn).arg(errorStr);
-      setErrorCondition(-70000);
-      notifyErrorMessage(ss, getErrorCondition());
+      setErrorCondition(-70000, ss);
       return;
     }
 
@@ -340,8 +333,7 @@ void ImportAxioVisionV4Montage::readMetaXml(QIODevice* device)
     if(tags.isNull())
     {
       QString ss = QObject::tr("Could not find the <ROOT><Tags> element. Aborting Parsing. Is the file a Zeiss _meta.xml file");
-      setErrorCondition(-70001);
-      notifyErrorMessage(ss, getErrorCondition());
+      setErrorCondition(-70001, ss);
       return;
     }
 
@@ -375,19 +367,19 @@ void ImportAxioVisionV4Montage::parseImages(QDomElement& root, const ZeissTagsXm
 {
 
   int32_t imageCount = MetaXmlUtils::GetInt32Entry(this, rootTagsSection.get(), Zeiss::MetaXML::ImageCountRawId);
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
 
   m_RowCount = MetaXmlUtils::GetInt32Entry(this, rootTagsSection.get(), Zeiss::MetaXML::ImageCountVId);
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
 
   m_ColumnCount = MetaXmlUtils::GetInt32Entry(this, rootTagsSection.get(), Zeiss::MetaXML::ImageCountUId);
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -430,8 +422,7 @@ void ImportAxioVisionV4Montage::parseImages(QDomElement& root, const ZeissTagsXm
     if(photoEle.isNull())
     {
       QString ss = QObject::tr("Could not find the <ROOT><%1> element. Aborting Parsing. Is the file a Zeiss _meta.xml file").arg(pTag);
-      setErrorCondition(-70002);
-      notifyErrorMessage(ss, getErrorCondition());
+      setErrorCondition(-70002, ss);
       return;
     }
     // Get the TAGS section
@@ -439,8 +430,7 @@ void ImportAxioVisionV4Montage::parseImages(QDomElement& root, const ZeissTagsXm
     if(tags.isNull())
     {
       QString ss = QObject::tr("Could not find the <ROOT><%1><Tags> element. Aborting Parsing. Is the file a Zeiss _meta.xml file").arg(pTag);
-      setErrorCondition(-70003);
-      notifyErrorMessage(ss, getErrorCondition());
+      setErrorCondition(-70003, ss);
       return;
     }
     // Now Parse the TAGS section
@@ -448,20 +438,19 @@ void ImportAxioVisionV4Montage::parseImages(QDomElement& root, const ZeissTagsXm
     if(nullptr == photoTagsSection.get())
     {
       QString ss = QObject::tr("Error Parsing the <ROOT><%1><Tags> element. Aborting Parsing. Is the file a Zeiss AxioVision _meta.xml file").arg(pTag);
-      setErrorCondition(-70004);
-      notifyErrorMessage(ss, getErrorCondition());
+      setErrorCondition(-70004, ss);
       return;
     }
 
     // Get the Row Index (Zero Based)
     int32_t rowIndex = MetaXmlUtils::GetInt32Entry(this, photoTagsSection.get(), Zeiss::MetaXML::ImageIndexVId);
-    if(getErrorCondition() < 0)
+    if(getErrorCode() < 0)
     {
       return;
     }
     // Get the Columnn Index (Zero Based)
     int32_t colIndex = MetaXmlUtils::GetInt32Entry(this, photoTagsSection.get(), Zeiss::MetaXML::ImageIndexUId);
-    if(getErrorCondition() < 0)
+    if(getErrorCode() < 0)
     {
       return;
     }
@@ -655,8 +644,7 @@ void ImportAxioVisionV4Montage::importImage(DataContainer* dc, const QString& im
       QString ss = QObject::tr("Error Setting Property '%1' into filter '%2' which is a subfilter called by %3. The property was not set which could mean the property was not exposed with a "
                                "Q_PROPERTY macro. Please notify the developers.")
                        .arg("InputFileName", filtName, getHumanLabel());
-      setErrorCondition(-70015);
-      notifyErrorMessage(ss, getErrorCondition());
+      setErrorCondition(-70015, ss);
     }
 
     propWasSet = filter->setProperty("DataContainerName", dc->getName());
@@ -665,8 +653,7 @@ void ImportAxioVisionV4Montage::importImage(DataContainer* dc, const QString& im
       QString ss = QObject::tr("Error Setting Property '%1' into filter '%2' which is a subfilter called by %3. The property was not set which could mean the property was not exposed with a "
                                "Q_PROPERTY macro. Please notify the developers.")
                        .arg("DataContainerName", filtName, getHumanLabel());
-      setErrorCondition(-70016);
-      notifyErrorMessage(ss, getErrorCondition());
+      setErrorCondition(-70016, ss);
     }
 
     propWasSet = filter->setProperty("CellAttributeMatrixName", getCellAttributeMatrixName());
@@ -675,8 +662,7 @@ void ImportAxioVisionV4Montage::importImage(DataContainer* dc, const QString& im
       QString ss = QObject::tr("Error Setting Property '%1' into filter '%2' which is a subfilter called by %3. The property was not set which could mean the property was not exposed with a "
                                "Q_PROPERTY macro. Please notify the developers.")
                        .arg("CellAttributeMatrixName", filtName, getHumanLabel());
-      setErrorCondition(-70017);
-      notifyErrorMessage(ss, getErrorCondition());
+      setErrorCondition(-70017, ss);
     }
 
     propWasSet = filter->setProperty("ImageDataArrayName", imageDataArrayNamme);
@@ -685,8 +671,7 @@ void ImportAxioVisionV4Montage::importImage(DataContainer* dc, const QString& im
       QString ss = QObject::tr("Error Setting Property '%1' into filter '%2' which is a subfilter called by %3. The property was not set which could mean the property was not exposed with a "
                                "Q_PROPERTY macro. Please notify the developers.")
                        .arg("ImageDataArrayName", filtName, getHumanLabel());
-      setErrorCondition(-70018);
-      notifyErrorMessage(ss, getErrorCondition());
+      setErrorCondition(-70018, ss);
     }
 
     if(getInPreflight())
@@ -698,7 +683,7 @@ void ImportAxioVisionV4Montage::importImage(DataContainer* dc, const QString& im
       filter->execute();
     }
 
-    if(filter->getErrorCondition() >= 0)
+    if(filter->getErrorCode() >= 0)
     {
       //  Copy the image from the temp data container into the current data container by grabbing the entire
       // Cell AttributeMatrix
@@ -710,8 +695,7 @@ void ImportAxioVisionV4Montage::importImage(DataContainer* dc, const QString& im
   {
     QString ss = QObject::tr("Error trying to instantiate the '%1' filter which is typically included in the 'ImageProcessing' plugin.")
                      .arg(ZeissImportConstants::ImageProcessingFilters::k_ReadImageFilterClassName);
-    setErrorCondition(-70019);
-    notifyErrorMessage(ss, getErrorCondition());
+    setErrorCondition(-70019, ss);
     return;
   }
 }
@@ -749,8 +733,7 @@ void ImportAxioVisionV4Montage::convertToGrayScale(DataContainer* dc, const QStr
       QString ss = QObject::tr("Error Setting Property '%1' into filter '%2' which is a subfilter called by %3. The property was not set which could mean the property was not exposed with a "
                                "Q_PROPERTY macro. Please notify the developers.")
                        .arg("ConversionAlgorithm", filtName, getHumanLabel());
-      setErrorCondition(-70002);
-      notifyErrorMessage(ss, getErrorCondition());
+      setErrorCondition(-70002, ss);
     }
 
     //----- Set the ColorWeights Property
@@ -761,8 +744,7 @@ void ImportAxioVisionV4Montage::convertToGrayScale(DataContainer* dc, const QStr
       QString ss = QObject::tr("Error Setting Property '%1' into filter '%2' which is a subfilter called by %3. The property was not set which could mean the property was not exposed with a "
                                "Q_PROPERTY macro. Please notify the developers.")
                        .arg("ColorWeights", filtName, getHumanLabel());
-      setErrorCondition(-70003);
-      notifyErrorMessage(ss, getErrorCondition());
+      setErrorCondition(-70003, ss);
     }
 
     //------- Set the InputDataArrayVector property
@@ -774,8 +756,7 @@ void ImportAxioVisionV4Montage::convertToGrayScale(DataContainer* dc, const QStr
       QString ss = QObject::tr("Error Setting Property '%1' into filter '%2' which is a subfilter called by %3. The property was not set which could mean the property was not exposed with a "
                                "Q_PROPERTY macro. Please notify the developers.")
                        .arg("InputDataArrayVector", filtName, getHumanLabel());
-      setErrorCondition(-70004);
-      notifyErrorMessage(ss, getErrorCondition());
+      setErrorCondition(-70004, ss);
     }
 
     //----- Set the CreateNewAttributeMatrix Property
@@ -786,8 +767,7 @@ void ImportAxioVisionV4Montage::convertToGrayScale(DataContainer* dc, const QStr
       QString ss = QObject::tr("Error Setting Property '%1' into filter '%2' which is a subfilter called by %3. The property was not set which could mean the property was not exposed with a "
                                "Q_PROPERTY macro. Please notify the developers.")
                        .arg("CreateNewAttributeMatrix", filtName, getHumanLabel());
-      setErrorCondition(-70005);
-      notifyErrorMessage(ss, getErrorCondition());
+      setErrorCondition(-70005, ss);
     }
 
     //----- Set the OutputAttributeMatrixName Property
@@ -798,8 +778,7 @@ void ImportAxioVisionV4Montage::convertToGrayScale(DataContainer* dc, const QStr
       QString ss = QObject::tr("Error Setting Property '%1' into filter '%2' which is a subfilter called by %3. The property was not set which could mean the property was not exposed with a "
                                "Q_PROPERTY macro. Please notify the developers.")
                        .arg("OutputAttributeMatrixName", filtName, getHumanLabel());
-      setErrorCondition(-70006);
-      notifyErrorMessage(ss, getErrorCondition());
+      setErrorCondition(-70006, ss);
     }
 
     //----- Set the OutputArrayPrefix Property
@@ -809,8 +788,7 @@ void ImportAxioVisionV4Montage::convertToGrayScale(DataContainer* dc, const QStr
       QString ss = QObject::tr("Error Setting Property '%1' into filter '%2' which is a subfilter called by %3. The property was not set which could mean the property was not exposed with a "
                                "Q_PROPERTY macro. Please notify the developers.")
                        .arg("OutputArrayPrefix", filtName, getHumanLabel());
-      setErrorCondition(-70007);
-      notifyErrorMessage(ss, getErrorCondition());
+      setErrorCondition(-70007, ss);
     }
     if(getInPreflight())
     {
@@ -821,7 +799,7 @@ void ImportAxioVisionV4Montage::convertToGrayScale(DataContainer* dc, const QStr
       filter->execute();
     }
 
-    if(filter->getErrorCondition() >= 0)
+    if(filter->getErrorCode() >= 0)
     {
       AttributeMatrix::Pointer am = dc->getAttributeMatrix(getCellAttributeMatrixName());
       IDataArray::Pointer rgb = am->removeAttributeArray(getImageDataArrayName());
@@ -831,15 +809,13 @@ void ImportAxioVisionV4Montage::convertToGrayScale(DataContainer* dc, const QStr
     }
     else
     {
-      setErrorCondition(filter->getErrorCondition());
-      notifyErrorMessage("Grayscale conversion failed. The data must be RGB or RGBA to convert.", getErrorCondition());
+      setErrorCondition(filter->getErrorCode(), "Grayscale conversion failed. The data must be RGB or RGBA to convert.");
     }
   }
   else
   {
     QString ss = QObject::tr("Error trying to instantiate the '%1' filter.").arg(ZeissImportConstants::ImageProcessingFilters::k_RgbToGrayFilterClassName);
-    setErrorCondition(-70009);
-    notifyErrorMessage(ss, getErrorCondition());
+    setErrorCondition(-70009, ss);
     return;
   }
 }

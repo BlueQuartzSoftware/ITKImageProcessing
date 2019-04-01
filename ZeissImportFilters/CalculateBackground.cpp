@@ -149,8 +149,7 @@ void CalculateBackground::dataCheck()
 
   if (am.get() == nullptr)
   {
-    setErrorCondition(-76000);
-    notifyErrorMessage("The Attribute Matrix for property 'Input AttributeMatrix Name' has not been selected properly", -76000);
+    setErrorCondition(-76000, "The Attribute Matrix for property 'Input AttributeMatrix Name' has not been selected properly");
     return;
   }
 
@@ -179,8 +178,7 @@ void CalculateBackground::dataCheck()
 
     if(nullptr == imagePtr)
     {
-      setErrorCondition(-76001);
-      notifyErrorMessage("The data was not found", -76001);
+      setErrorCondition(-76001, "The data was not found");
     }
 
 
@@ -188,22 +186,28 @@ void CalculateBackground::dataCheck()
 
   if(m_SubtractBackground && m_DivideBackground)
   {
-    setErrorCondition(-76002);
-    notifyErrorMessage("Cannot choose BOTH subtract and divide. Choose one or neither.", -76002);
+    setErrorCondition(-76002, "Cannot choose BOTH subtract and divide. Choose one or neither.");
   }
 
-
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCode() < 0)
+  {
+    return;
+  }
   m_TotalPoints = imagePtr->getNumberOfTuples();
 
   setDataContainerName(getAttributeMatrixName().getDataContainerName());
   DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0 || nullptr == m) { return; }
+  if(getErrorCode() < 0 || nullptr == m)
+  {
+    return;
+  }
 
   QVector<size_t> tDims(1, 0);
   AttributeMatrix::Pointer backgroundAttrMat = m->createNonPrereqAttributeMatrix(this, getBackgroundAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell);
-  if(getErrorCondition() < 0) { return; }
-
+  if(getErrorCode() < 0)
+  {
+    return;
+  }
 
   // Background Image array
   dims[0] = 1;
@@ -211,11 +215,10 @@ void CalculateBackground::dataCheck()
   m_BackgroundImagePtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_BackgroundImagePtr.lock())                          /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_BackgroundImage = m_BackgroundImagePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() < 0) { return; }
-
-
-
-
+  if(getErrorCode() < 0)
+  {
+    return;
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -246,7 +249,10 @@ void CalculateBackground::execute()
   dataCheck();
   // Check to make sure you made it through the data check. Errors would have been reported already so if something
   // happens to fail in the dataCheck() then we simply return
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCode() < 0)
+  {
+    return;
+  }
   clearErrorCondition();
   clearWarningCondition();
 
@@ -254,8 +260,7 @@ void CalculateBackground::execute()
   if (err < 0)
   {
     QString ss = QObject::tr("Error Importing a Zeiss AxioVision file set.");
-    setErrorCondition(-90000);
-    notifyErrorMessage(ss, getErrorCondition());
+    setErrorCondition(-90000, ss);
     return;
   }
 

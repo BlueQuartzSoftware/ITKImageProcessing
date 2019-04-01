@@ -115,16 +115,19 @@ void SeparateDataSets::execute()
 {
   initialize();
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCode() < 0)
+  {
+    return;
+  }
 
   AttributeMatrix::Pointer origDataSetAM = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, getDatasetAMPath(), -9000);
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
 
   AttributeMatrix::Pointer origMetaDataAM = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, getMetadataAMPath(), -9001);
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -132,31 +135,31 @@ void SeparateDataSets::execute()
   int err = 0;
   QVector<size_t> cDims = { 1 };
   StringDataArray::Pointer attrArrayNamesPtr = origMetaDataAM->getPrereqArray<StringDataArray, AbstractFilter>(this, "AttributeArrayNames", err, cDims);
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
 
   StringDataArray::Pointer stagePositionXPtr = origMetaDataAM->getPrereqArray<StringDataArray, AbstractFilter>(this, "StagePositionX", err, cDims);
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
 
   StringDataArray::Pointer stagePositionYPtr = origMetaDataAM->getPrereqArray<StringDataArray, AbstractFilter>(this, "StagePositionY", err, cDims);
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
 
   StringDataArray::Pointer scaleFactorForXPtr = origMetaDataAM->getPrereqArray<StringDataArray, AbstractFilter>(this, "ScaleFactorForX", err, cDims);
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
 
   StringDataArray::Pointer scaleFactorForYPtr = origMetaDataAM->getPrereqArray<StringDataArray, AbstractFilter>(this, "ScaleFactorForY", err, cDims);
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -171,8 +174,7 @@ void SeparateDataSets::execute()
     if(!ok)
     {
       QString ss = QObject::tr("The filter could not convert the string values in array '%1' to floating point values.").arg(stagePositionXPtr->getName());
-      setErrorCondition(-90002);
-      notifyErrorMessage(ss, getErrorCondition());
+      setErrorCondition(-90002, ss);
       return;
     }
 
@@ -180,8 +182,7 @@ void SeparateDataSets::execute()
     if(!ok)
     {
       QString ss = QObject::tr("The filter could not convert the string values in array '%1' to floating point values.").arg(stagePositionYPtr->getName());
-      setErrorCondition(-90003);
-      notifyErrorMessage(ss, getErrorCondition());
+      setErrorCondition(-90003, ss);
       return;
     }
 
@@ -189,8 +190,7 @@ void SeparateDataSets::execute()
     if(!ok)
     {
       QString ss = QObject::tr("The filter could not convert the string values in array '%1' to floating point values.").arg(scaleFactorForXPtr->getName());
-      setErrorCondition(-90004);
-      notifyErrorMessage(ss, getErrorCondition());
+      setErrorCondition(-90004, ss);
       return;
     }
 
@@ -198,8 +198,7 @@ void SeparateDataSets::execute()
     if(!ok)
     {
       QString ss = QObject::tr("The filter could not convert the string values in array '%1' to floating point values.").arg(scaleFactorForYPtr->getName());
-      setErrorCondition(-90005);
-      notifyErrorMessage(ss, getErrorCondition());
+      setErrorCondition(-90005, ss);
       return;
     }
 
@@ -255,18 +254,16 @@ void SeparateDataSets::execute()
 
 //  if (getCancel() == true) { return; }
 
-  //  if (getWarningCondition() < 0)
+  //  if (getWarningCode() < 0)
   //  {
   //    QString ss = QObject::tr("Some warning message");
-  //    setWarningCondition(-88888888);
-  //    notifyWarningMessage(ss, getWarningCondition());
+  //    setWarningCondition(-88888888, ss);
   //  }
 
-  //  if (getErrorCondition() < 0)
+  //  if (getErrorCode() < 0)
   //  {
   //    QString ss = QObject::tr("Some error message");
-  //    setErrorCondition(-99999999);
-  //    notifyErrorMessage(ss, getErrorCondition());
+  //    setErrorCondition(-99999999, ss);
   //    return;
   //  }
 }

@@ -83,11 +83,11 @@ class MetaXmlToTileConfigurationTest
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
 
     import->preflight();
-    err = import->getErrorCondition();
+    err = import->getErrorCode();
     DREAM3D_REQUIRED(err, ==, 0);
 
     import->execute();
-    err = import->getErrorCondition();
+    err = import->getErrorCode();
     DREAM3D_REQUIRED(err, ==, 0);
 
 
