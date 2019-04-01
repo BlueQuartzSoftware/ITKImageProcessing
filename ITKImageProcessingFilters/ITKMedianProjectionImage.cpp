@@ -38,7 +38,7 @@ ITKMedianProjectionImage::~ITKMedianProjectionImage() = default;
 // -----------------------------------------------------------------------------
 void ITKMedianProjectionImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("ProjectionDimension", ProjectionDimension, FilterParameter::Parameter, ITKMedianProjectionImage));
 

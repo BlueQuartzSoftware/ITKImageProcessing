@@ -39,7 +39,7 @@ ITKRelabelComponentImage::~ITKRelabelComponentImage() = default;
 // -----------------------------------------------------------------------------
 void ITKRelabelComponentImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("MinimumObjectSize", MinimumObjectSize, FilterParameter::Parameter, ITKRelabelComponentImage));
   parameters.push_back(SIMPL_NEW_BOOL_FP("SortByObjectSize", SortByObjectSize, FilterParameter::Parameter, ITKRelabelComponentImage));

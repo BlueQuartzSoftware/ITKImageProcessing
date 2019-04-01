@@ -34,7 +34,7 @@ class ITKImageProcessing_EXPORT ITKBinaryClosingByReconstructionImage : public I
   PYB11_CREATE_BINDINGS(ITKBinaryClosingByReconstructionImage SUPERCLASS ITKImageProcessingBase)
   PYB11_PROPERTY(double ForegroundValue READ getForegroundValue WRITE setForegroundValue)
   PYB11_PROPERTY(bool FullyConnected READ getFullyConnected WRITE setFullyConnected)
-  PYB11_PROPERTY(FloatVec3_t KernelRadius READ getKernelRadius WRITE setKernelRadius)
+  PYB11_PROPERTY(FloatVec3Type KernelRadius READ getKernelRadius WRITE setKernelRadius)
   PYB11_PROPERTY(int KernelType READ getKernelType WRITE setKernelType)
 
 public:
@@ -50,8 +50,8 @@ public:
   SIMPL_FILTER_PARAMETER(bool, FullyConnected)
   Q_PROPERTY(bool FullyConnected READ getFullyConnected WRITE setFullyConnected)
 
-  SIMPL_FILTER_PARAMETER(FloatVec3_t, KernelRadius)
-  Q_PROPERTY(FloatVec3_t KernelRadius READ getKernelRadius WRITE setKernelRadius)
+  SIMPL_FILTER_PARAMETER(FloatVec3Type, KernelRadius)
+  Q_PROPERTY(FloatVec3Type KernelRadius READ getKernelRadius WRITE setKernelRadius)
 
   SIMPL_FILTER_PARAMETER(int, KernelType)
   Q_PROPERTY(int KernelType READ getKernelType WRITE setKernelType)

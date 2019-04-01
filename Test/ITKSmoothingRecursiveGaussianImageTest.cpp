@@ -14,12 +14,8 @@ class ITKSmoothingRecursiveGaussianImageTest : public ITKTestBase
 {
 
 public:
-  ITKSmoothingRecursiveGaussianImageTest()
-  {
-  }
-  virtual ~ITKSmoothingRecursiveGaussianImageTest()
-  {
-  }
+ITKSmoothingRecursiveGaussianImageTest() = default;
+~ITKSmoothingRecursiveGaussianImageTest() override = default;
 
   int TestITKSmoothingRecursiveGaussianImagedefaultTest()
 {
@@ -73,10 +69,10 @@ int TestITKSmoothingRecursiveGaussianImagergb_imageTest()
     propWasSet = filter->setProperty("SaveAsNewArray", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     {
-        FloatVec3_t d3d_var;
-        d3d_var.y = 5.0;
-        d3d_var.x = 5.0;
-        d3d_var.z = 5.0;
+        FloatVec3Type d3d_var;
+        d3d_var[0] = 5.0;
+        d3d_var[1] = 5.0;
+        d3d_var[2] = 5.0;
         var.setValue(d3d_var);
         propWasSet = filter->setProperty("Sigma", var);
         DREAM3D_REQUIRE_EQUAL(propWasSet, true);

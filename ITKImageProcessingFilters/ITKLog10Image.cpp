@@ -34,9 +34,7 @@ ITKLog10Image::~ITKLog10Image() = default;
 // -----------------------------------------------------------------------------
 void ITKLog10Image::setupFilterParameters()
 {
-  FilterParameterVector parameters;
-
-
+  FilterParameterVectorType parameters;
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";

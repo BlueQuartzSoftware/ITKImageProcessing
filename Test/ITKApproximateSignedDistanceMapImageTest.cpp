@@ -13,12 +13,8 @@ class ITKApproximateSignedDistanceMapImageTest : public ITKTestBase
 {
 
 public:
-  ITKApproximateSignedDistanceMapImageTest()
-  {
-  }
-  virtual ~ITKApproximateSignedDistanceMapImageTest()
-  {
-  }
+ITKApproximateSignedDistanceMapImageTest() = default;
+~ITKApproximateSignedDistanceMapImageTest() override = default;
 
   int TestITKApproximateSignedDistanceMapImagedefaultTest()
 {

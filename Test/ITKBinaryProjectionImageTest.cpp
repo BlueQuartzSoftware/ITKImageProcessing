@@ -13,12 +13,8 @@ class ITKBinaryProjectionImageTest : public ITKTestBase
 {
 
 public:
-  ITKBinaryProjectionImageTest()
-  {
-  }
-  virtual ~ITKBinaryProjectionImageTest()
-  {
-  }
+ITKBinaryProjectionImageTest() = default;
+~ITKBinaryProjectionImageTest() override = default;
 
   int TestITKBinaryProjectionImagedefaultsTest()
 {

@@ -13,12 +13,8 @@ class ITKMinimumProjectionImageTest : public ITKTestBase
 {
 
 public:
-  ITKMinimumProjectionImageTest()
-  {
-  }
-  virtual ~ITKMinimumProjectionImageTest()
-  {
-  }
+ITKMinimumProjectionImageTest() = default;
+~ITKMinimumProjectionImageTest() override = default;
 
   int TestITKMinimumProjectionImagedefaultsTest()
 {

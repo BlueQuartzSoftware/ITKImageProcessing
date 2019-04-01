@@ -41,7 +41,7 @@ ITKSignedMaurerDistanceMapImage::~ITKSignedMaurerDistanceMapImage() = default;
 // -----------------------------------------------------------------------------
 void ITKSignedMaurerDistanceMapImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_BOOL_FP("InsideIsPositive", InsideIsPositive, FilterParameter::Parameter, ITKSignedMaurerDistanceMapImage));
   parameters.push_back(SIMPL_NEW_BOOL_FP("SquaredDistance", SquaredDistance, FilterParameter::Parameter, ITKSignedMaurerDistanceMapImage));

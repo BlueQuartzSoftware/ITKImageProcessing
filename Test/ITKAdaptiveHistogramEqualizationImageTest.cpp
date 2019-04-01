@@ -15,12 +15,8 @@ class ITKAdaptiveHistogramEqualizationImageTest : public ITKTestBase
 {
 
 public:
-  ITKAdaptiveHistogramEqualizationImageTest()
-  {
-  }
-  virtual ~ITKAdaptiveHistogramEqualizationImageTest()
-  {
-  }
+ITKAdaptiveHistogramEqualizationImageTest() = default;
+~ITKAdaptiveHistogramEqualizationImageTest() override = default;
 
   int TestITKAdaptiveHistogramEqualizationImagedefaultsTest()
 {

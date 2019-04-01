@@ -13,12 +13,8 @@ class ITKCurvatureAnisotropicDiffusionImageTest : public ITKTestBase
 {
 
 public:
-  ITKCurvatureAnisotropicDiffusionImageTest()
-  {
-  }
-  virtual ~ITKCurvatureAnisotropicDiffusionImageTest()
-  {
-  }
+ITKCurvatureAnisotropicDiffusionImageTest() = default;
+~ITKCurvatureAnisotropicDiffusionImageTest() override = default;
 
   int TestITKCurvatureAnisotropicDiffusionImagedefaultsTest()
 {

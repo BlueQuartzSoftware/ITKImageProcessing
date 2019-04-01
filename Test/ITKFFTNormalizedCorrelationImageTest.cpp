@@ -13,12 +13,8 @@ class ITKFFTNormalizedCorrelationImageTest : public ITKTestBase
 {
 
 public:
-  ITKFFTNormalizedCorrelationImageTest()
-  {
-  }
-  virtual ~ITKFFTNormalizedCorrelationImageTest()
-  {
-  }
+ITKFFTNormalizedCorrelationImageTest() = default;
+~ITKFFTNormalizedCorrelationImageTest() override = default;
 
   int TestITKFFTNormalizedCorrelationImagedefaultTest()
   {

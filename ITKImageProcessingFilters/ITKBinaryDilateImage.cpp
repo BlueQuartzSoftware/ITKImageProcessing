@@ -30,7 +30,7 @@ ITKBinaryDilateImage::ITKBinaryDilateImage()
   m_BackgroundValue = StaticCastScalar<double, double, double>(0.0);
   m_ForegroundValue = StaticCastScalar<double, double, double>(1.0);
   m_BoundaryToForeground = StaticCastScalar<bool, bool, bool>(false);
-  m_KernelRadius = CastStdToVec3<std::vector<unsigned int>, FloatVec3_t, float>(std::vector<unsigned int>(3, 1));
+  m_KernelRadius = CastStdToVec3<std::vector<unsigned int>, FloatVec3Type, float>(std::vector<unsigned int>(3, 1));
   m_KernelType = StaticCastScalar<int, int, int>(itk::simple::sitkBall);
 
 }
@@ -45,7 +45,7 @@ ITKBinaryDilateImage::~ITKBinaryDilateImage() = default;
 // -----------------------------------------------------------------------------
 void ITKBinaryDilateImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   // Structuring element
   {
@@ -113,7 +113,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   setWarningCondition(0);
 
   // Check consistency of parameters
-  this->CheckVectorEntry<unsigned int, FloatVec3_t>(m_KernelRadius, "KernelRadius", true);
+  this->CheckVectorEntry<unsigned int, FloatVec3Type>(m_KernelRadius, "KernelRadius", true);
   QVector<QString> supportedTypes;
   // All integer types
   supportedTypes << "uint8_t"
@@ -146,7 +146,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   typedef itk::Dream3DImage<OutputPixelType, Dimension> OutputImageType;
   typedef itk::FlatStructuringElement<Dimension> StructuringElementType;
   typedef typename StructuringElementType::RadiusType RadiusType;
-  RadiusType elementRadius = CastVec3ToITK<FloatVec3_t, RadiusType, typename RadiusType::SizeValueType>(m_KernelRadius, RadiusType::Dimension);
+  RadiusType elementRadius = CastVec3ToITK<FloatVec3Type, RadiusType, typename RadiusType::SizeValueType>(m_KernelRadius, RadiusType::Dimension);
   StructuringElementType structuringElement;
   switch(getKernelType())
   {

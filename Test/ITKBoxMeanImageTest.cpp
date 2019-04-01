@@ -13,12 +13,8 @@ class ITKBoxMeanImageTest : public ITKTestBase
 {
 
 public:
-  ITKBoxMeanImageTest()
-  {
-  }
-  virtual ~ITKBoxMeanImageTest()
-  {
-  }
+ITKBoxMeanImageTest() = default;
+~ITKBoxMeanImageTest() override = default;
 
   int TestITKBoxMeanImagedefaultsTest()
 {

@@ -13,12 +13,8 @@ class ITKSignedDanielssonDistanceMapImageTest : public ITKTestBase
 {
 
 public:
-  ITKSignedDanielssonDistanceMapImageTest()
-  {
-  }
-  virtual ~ITKSignedDanielssonDistanceMapImageTest()
-  {
-  }
+ITKSignedDanielssonDistanceMapImageTest() = default;
+~ITKSignedDanielssonDistanceMapImageTest() override = default;
 
   int TestITKSignedDanielssonDistanceMapImagedefaultTest()
 {

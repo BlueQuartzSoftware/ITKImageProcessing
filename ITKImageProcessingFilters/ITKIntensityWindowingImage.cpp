@@ -41,7 +41,7 @@ ITKIntensityWindowingImage::~ITKIntensityWindowingImage() = default;
 // -----------------------------------------------------------------------------
 void ITKIntensityWindowingImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("WindowMinimum", WindowMinimum, FilterParameter::Parameter, ITKIntensityWindowingImage));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("WindowMaximum", WindowMaximum, FilterParameter::Parameter, ITKIntensityWindowingImage));
