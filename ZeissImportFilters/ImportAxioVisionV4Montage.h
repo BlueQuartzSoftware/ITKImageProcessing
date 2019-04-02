@@ -61,16 +61,16 @@ class ZeissImport_EXPORT ImportAxioVisionV4Montage : public AbstractFilter
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ImportAxioVisionV4Montage SUPERCLASS AbstractFilter)
   PYB11_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
-  PYB11_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
+  PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
   PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
   PYB11_PROPERTY(QString ImageDataArrayName READ getImageDataArrayName WRITE setImageDataArrayName)
   PYB11_PROPERTY(bool ConvertToGrayScale READ getConvertToGrayScale WRITE setConvertToGrayScale)
-  PYB11_PROPERTY(FloatVec3_t ColorWeights READ getColorWeights WRITE setColorWeights)
+  PYB11_PROPERTY(FloatVec3Type ColorWeights READ getColorWeights WRITE setColorWeights)
   PYB11_PROPERTY(bool FileWasRead READ getFileWasRead WRITE setFileWasRead)
   PYB11_PROPERTY(bool ChangeOrigin READ getChangeOrigin WRITE setChangeOrigin)
-  PYB11_PROPERTY(FloatVec3_t Origin READ getOrigin WRITE setOrigin)
+  PYB11_PROPERTY(FloatVec3Type Origin READ getOrigin WRITE setOrigin)
   PYB11_PROPERTY(bool ChangeSpacing READ getChangeSpacing WRITE setChangeSpacing)
-  PYB11_PROPERTY(FloatVec3_t Spacing READ getSpacing WRITE setSpacing)
+  PYB11_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
   PYB11_PROPERTY(int32_t RowCount READ getRowCount)
   PYB11_PROPERTY(int32_t ColumnCount READ getColumnCount)
   PYB11_PROPERTY(QStringList FilenameList READ getFilenameList)
@@ -87,8 +87,8 @@ public:
   SIMPL_FILTER_PARAMETER(QString, InputFile)
   Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
-  SIMPL_FILTER_PARAMETER(QString, DataContainerName)
-  Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, DataContainerName)
+  Q_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
 
   SIMPL_FILTER_PARAMETER(QString, CellAttributeMatrixName)
   Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
@@ -105,8 +105,8 @@ public:
   SIMPL_FILTER_PARAMETER(bool, ImportAllMetaData)
   Q_PROPERTY(bool ImportAllMetaData READ getImportAllMetaData WRITE setImportAllMetaData)
 
-  SIMPL_FILTER_PARAMETER(FloatVec3_t, ColorWeights)
-  Q_PROPERTY(FloatVec3_t ColorWeights READ getColorWeights WRITE setColorWeights)
+  SIMPL_FILTER_PARAMETER(FloatVec3Type, ColorWeights)
+  Q_PROPERTY(FloatVec3Type ColorWeights READ getColorWeights WRITE setColorWeights)
 
   SIMPL_INSTANCE_PROPERTY(bool, FileWasRead)
   Q_PROPERTY(bool FileWasRead READ getFileWasRead)
@@ -114,14 +114,14 @@ public:
   SIMPL_FILTER_PARAMETER(bool, ChangeOrigin)
   Q_PROPERTY(bool ChangeOrigin READ getChangeOrigin WRITE setChangeOrigin)
 
-  SIMPL_FILTER_PARAMETER(FloatVec3_t, Origin)
-  Q_PROPERTY(FloatVec3_t Origin READ getOrigin WRITE setOrigin)
+  SIMPL_FILTER_PARAMETER(FloatVec3Type, Origin)
+  Q_PROPERTY(FloatVec3Type Origin READ getOrigin WRITE setOrigin)
 
   SIMPL_FILTER_PARAMETER(bool, ChangeSpacing)
   Q_PROPERTY(bool ChangeSpacing READ getChangeSpacing WRITE setChangeSpacing)
 
-  SIMPL_FILTER_PARAMETER(FloatVec3_t, Spacing)
-  Q_PROPERTY(FloatVec3_t Spacing READ getSpacing WRITE setSpacing)
+  SIMPL_FILTER_PARAMETER(FloatVec3Type, Spacing)
+  Q_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
 
   SIMPL_GET_PROPERTY(int32_t, RowCount)
   Q_PROPERTY(int32_t RowCount READ getRowCount)

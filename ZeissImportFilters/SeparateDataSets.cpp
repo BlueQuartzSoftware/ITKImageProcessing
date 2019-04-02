@@ -39,6 +39,12 @@
 #include "ZeissImport/ZeissImportConstants.h"
 #include "ZeissImport/ZeissImportVersion.h"
 
+enum createdPathID : RenameDataPath::DataID_t
+{
+  AttributeMatrixID21 = 21,
+
+  DataContainerID = 1
+};
 
 // -----------------------------------------------------------------------------
 //
@@ -68,7 +74,7 @@ void SeparateDataSets::initialize()
 // -----------------------------------------------------------------------------
 void SeparateDataSets::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req =
@@ -204,31 +210,31 @@ void SeparateDataSets::execute()
 
     // Create the new data container for this data set
     DataContainerShPtr origDCPtr = getDataContainerArray()->getDataContainer(getDatasetAMPath());
-    DataContainerShPtr newDCPtr = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, dataSetName);
+    DataContainerShPtr newDCPtr = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, dataSetName, DataContainerID);
 
     ImageGeom::Pointer originalGeom = origDCPtr->getGeometryAs<ImageGeom>();
     ImageGeom::Pointer newGeom = ImageGeom::New();
     size_t dims[3] = {0, 0, 0};
     std::tie(dims[0], dims[1], dims[2]) = originalGeom->getDimensions();
     newGeom->setDimensions(dims);
-    float res[3] = {0.0f, 0.0f, 0.0f};
-    originalGeom->getResolution(res);
-    newGeom->setResolution(scaleFactorForX, scaleFactorForY, 0.0f);
-    float origin[3] = {0.0f, 0.0f, 0.0f};
+    FloatVec3Type spacing;
+    originalGeom->getSpacing(spacing);
+    newGeom->setSpacing(FloatVec3Type(scaleFactorForX, scaleFactorForY, 0.0f));
+    FloatVec3Type origin;
     originalGeom->getOrigin(origin);
-    newGeom->setOrigin(stagePositionX, stagePositionY, origin[2]);
+    newGeom->setOrigin(FloatVec3Type(stagePositionX, stagePositionY, origin[2]));
     newGeom->setName(originalGeom->getName());
     newDCPtr->setGeometry(newGeom);
 
     // Create the new attribute matrix for this data set
     DataArrayPath newDataSetAMPath = DataArrayPath(newDCPtr->getName(), origDataSetAM->getName(), "");
-    AttributeMatrix::Pointer newDataSetAM = newDCPtr->createNonPrereqAttributeMatrix(this, newDataSetAMPath, origDataSetAM->getTupleDimensions(), origDataSetAM->getType());
+    AttributeMatrix::Pointer newDataSetAM = newDCPtr->createNonPrereqAttributeMatrix(this, newDataSetAMPath, origDataSetAM->getTupleDimensions(), origDataSetAM->getType(), AttributeMatrixID21);
 
     // Move the data set to the new attribute matrix
     IDataArray::Pointer newDataSetPtr = origDataSetAM->removeAttributeArray(origDataSetPtr->getName());
     if (nullptr != newDataSetPtr.get())
     {
-      newDataSetAM->addAttributeArray(newDataSetPtr->getName(), newDataSetPtr);
+      newDataSetAM->insertOrAssign(newDataSetPtr);
     }
 
     // Copy the meta data attribute matrix
@@ -242,12 +248,12 @@ void SeparateDataSets::execute()
       IDataArray::Pointer newMetaDataPtr = newMetaDataAM->getAttributeArray(metaDataArrayName);
 
       newMetaDataPtr->copyTuple(i, 0);
-      newMetaDataPtr->resize(1);
+      newMetaDataPtr->resizeTuples(1);
     }
     newMetaDataAM->setTupleDimensions(QVector<size_t>(1, 1));
 
-    newDCPtr->addAttributeMatrix(newMetaDataAM->getName(), newMetaDataAM);
-    newDCPtr->addAttributeMatrix(newDataSetAM->getName(), newDataSetAM);
+    newDCPtr->addOrReplaceAttributeMatrix(newMetaDataAM);
+    newDCPtr->addOrReplaceAttributeMatrix(newDataSetAM);
   }
 
   getDataContainerArray()->removeDataContainer(getDatasetAMPath().getDataContainerName());

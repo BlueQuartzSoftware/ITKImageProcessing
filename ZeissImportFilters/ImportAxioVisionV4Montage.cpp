@@ -45,6 +45,7 @@
 #include "SIMPLib/DataArrays/StringDataArray.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
@@ -66,6 +67,11 @@ static const QString k_DataContaineNameDefaultName("Zeiss Axio Vision Montage");
 static const QString k_TileAttributeMatrixDefaultName("Tile Data");
 static const QString k_GrayScaleTempArrayName("gray_scale_temp");
 static const QString k_AxioVisionMetaData("AxioVision MetaData");
+
+enum createdPathID : RenameDataPath::DataID_t
+{
+  DataContainerID = 1
+};
 
 /* ############## Start Private Implementation ############################### */
 // -----------------------------------------------------------------------------
@@ -114,12 +120,12 @@ ImportAxioVisionV4Montage::ImportAxioVisionV4Montage()
 , m_ChangeSpacing(false)
 , d_ptr(new ImportAxioVisionV4MontagePrivate(this))
 {
-  m_ColorWeights.x = 0.2125f;
-  m_ColorWeights.y = 0.7154f;
-  m_ColorWeights.z = 0.0721f;
+  m_ColorWeights[0] = 0.2125f;
+  m_ColorWeights[1] = 0.7154f;
+  m_ColorWeights[2] = 0.0721f;
 
-  m_Origin.FloatVec3(0.0f, 0.0f, 0.0f);
-  m_Spacing.FloatVec3(1.0f, 1.0f, 1.0f);
+  m_Origin = FloatVec3Type(0.0f, 0.0f, 0.0f);
+  m_Spacing = FloatVec3Type(1.0f, 1.0f, 1.0f);
 }
 
 // -----------------------------------------------------------------------------
@@ -137,8 +143,8 @@ SIMPL_PIMPL_PROPERTY_DEF(ImportAxioVisionV4Montage, ZeissTagsXmlSection::Pointer
 // -----------------------------------------------------------------------------
 void ImportAxioVisionV4Montage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
-  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Zeiss XML File (_meta.xml)", InputFile, FilterParameter::Parameter, ImportAxioVisionV4Montage, "*.xml"));
+  FilterParameterVectorType parameters;
+  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Zeiss XML File (_meta[0]ml)", InputFile, FilterParameter::Parameter, ImportAxioVisionV4Montage, "*[0]ml"));
 
   PreflightUpdatedValueFilterParameter::Pointer param = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Montage Information", MontageInformation, FilterParameter::Parameter, ImportAxioVisionV4Montage);
   param->setReadOnly(true);
@@ -160,7 +166,7 @@ void ImportAxioVisionV4Montage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Convert To GrayScale", ConvertToGrayScale, FilterParameter::Parameter, ImportAxioVisionV4Montage, linkedProps));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Color Weighting", ColorWeights, FilterParameter::Parameter, ImportAxioVisionV4Montage));
 
-  parameters.push_back(SIMPL_NEW_STRING_FP("DataContainer Prefix", DataContainerName, FilterParameter::CreatedArray, ImportAxioVisionV4Montage));
+  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("DataContainer Prefix", DataContainerName, FilterParameter::CreatedArray, ImportAxioVisionV4Montage));
   parameters.push_back(SIMPL_NEW_STRING_FP("Cell Attribute Matrix Name", CellAttributeMatrixName, FilterParameter::CreatedArray, ImportAxioVisionV4Montage));
   parameters.push_back(SIMPL_NEW_STRING_FP("Image DataArray Name", ImageDataArrayName, FilterParameter::CreatedArray, ImportAxioVisionV4Montage));
   parameters.push_back(SIMPL_NEW_STRING_FP("MetaData AttributeMatrix Name", MetaDataAttributeMatrixName, FilterParameter::CreatedArray, ImportAxioVisionV4Montage));
@@ -394,14 +400,14 @@ void ImportAxioVisionV4Montage::parseImages(QDomElement& root, const ZeissTagsXm
   int32_t rowCountPadding = MetaXmlUtils::CalculatePaddingDigits(m_RowCount);
   int32_t colCountPadding = MetaXmlUtils::CalculatePaddingDigits(m_ColumnCount);
   int charPaddingCount = std::max(rowCountPadding, colCountPadding);
-  std::array<float, 3> minCoord = {std::numeric_limits<float>::max(), std::numeric_limits<float>::max(), std::numeric_limits<float>::max()};
-  std::array<float, 3> minSpacing = {std::numeric_limits<float>::max(), std::numeric_limits<float>::max(), std::numeric_limits<float>::max()};
+  FloatVec3Type minCoord = {std::numeric_limits<float>::max(), std::numeric_limits<float>::max(), std::numeric_limits<float>::max()};
+  FloatVec3Type minSpacing = {std::numeric_limits<float>::max(), std::numeric_limits<float>::max(), std::numeric_limits<float>::max()};
 
   DataContainerArray::Pointer dca = getDataContainerArray();
 
   std::vector<ImageGeom::Pointer> geometries;
 
-  // Loop over every image in the _meta.xml file
+  // Loop over every image in the _meta[0]ml file
   for(int p = 0; p < imageCount; p++)
   {
     // Generate the xml tag that is for this image
@@ -456,7 +462,7 @@ void ImportAxioVisionV4Montage::parseImages(QDomElement& root, const ZeissTagsXm
     }
 
     // Create our DataContainer Name using a Prefix and a rXXcYY format.
-    QString dcName = getDataContainerName();
+    QString dcName = getDataContainerName().getDataContainerName();
     QTextStream dcNameStream(&dcName);
     dcNameStream << "_r";
     dcNameStream.setFieldWidth(charPaddingCount);
@@ -469,13 +475,13 @@ void ImportAxioVisionV4Montage::parseImages(QDomElement& root, const ZeissTagsXm
     dcNameStream << colIndex;
 
     // Create the DataContainer with a name based on the ROW & COLUMN indices
-    DataContainer::Pointer dc = dca->createNonPrereqDataContainer<AbstractFilter>(this, dcName);
+    DataContainer::Pointer dc = dca->createNonPrereqDataContainer<AbstractFilter>(this, dcName, DataContainerID);
 
     // Create the Image Geometry
     ImageGeom::Pointer image = initializeImageGeom(root, photoTagsSection);
     dc->setGeometry(image);
 
-    image->getResolution(minSpacing.data());
+    image->getSpacing(minSpacing);
 
     float xOrigin = 0.0f, yOrigin = 0.0f, zOrigin = 0.0f;
     std::tie(xOrigin, yOrigin, zOrigin) = image->getOrigin();
@@ -493,7 +499,7 @@ void ImportAxioVisionV4Montage::parseImages(QDomElement& root, const ZeissTagsXm
       for(const auto& value : tagMap)
       {
         IDataArray::Pointer dataArray = value->createDataArray(!getInPreflight());
-        metaAm->addAttributeArray(dataArray->getName(), dataArray);
+        metaAm->insertOrAssign(dataArray);
       }
     }
     // Read the image into a data array
@@ -509,8 +515,8 @@ void ImportAxioVisionV4Montage::parseImages(QDomElement& root, const ZeissTagsXm
   QTextStream ss(&montageInfo);
   ss << "Columns=" << m_ColumnCount << "  Rows=" << m_RowCount << "  Num. Images=" << imageCount;
 
-  std::array<float, 3> overrideOrigin = minCoord;
-  std::array<float, 3> overrideSpacing = minSpacing;
+  FloatVec3Type overrideOrigin = minCoord;
+  FloatVec3Type overrideSpacing = minSpacing;
 
   // Now adjust the origin/spacing if needed
   if(getChangeOrigin() || getChangeSpacing())
@@ -518,20 +524,20 @@ void ImportAxioVisionV4Montage::parseImages(QDomElement& root, const ZeissTagsXm
 
     if(getChangeOrigin())
     {
-      overrideOrigin = {m_Origin.x, m_Origin.y, m_Origin.z};
+      overrideOrigin = {m_Origin[0], m_Origin[1], m_Origin[2]};
     }
     if(getChangeSpacing())
     {
-      overrideSpacing = {m_Spacing.x, m_Spacing.y, m_Spacing.z};
+      overrideSpacing = {m_Spacing[0], m_Spacing[1], m_Spacing[2]};
     }
 
     for(const auto& image : geometries)
     {
-      std::array<float, 3> currentOrigin;
-      image->getOrigin(currentOrigin.data());
+      FloatVec3Type currentOrigin;
+      image->getOrigin(currentOrigin);
 
-      std::array<float, 3> currentSpacing;
-      image->getResolution(currentSpacing.data());
+      FloatVec3Type currentSpacing;
+      image->getSpacing(currentSpacing);
 
       for(size_t i = 0; i < 3; i++)
       {
@@ -543,7 +549,7 @@ void ImportAxioVisionV4Montage::parseImages(QDomElement& root, const ZeissTagsXm
         currentOrigin[i] = overrideOrigin[i] + delta;
       }
       image->setOrigin(currentOrigin.data());
-      image->setResolution(overrideSpacing.data());
+      image->setSpacing(overrideSpacing.data());
     }
   }
   ss << "\nOrigin: " << overrideOrigin[0] << ", " << overrideOrigin[1] << ", " << overrideOrigin[2];
@@ -572,7 +578,7 @@ void ImportAxioVisionV4Montage::addMetaData(const AttributeMatrix::Pointer& meta
     StringDataArray::Pointer strArray = std::dynamic_pointer_cast<StringDataArray>(iDataArray);
     strArray->setValue(index, zStrVal->getValue());
     // IDataArray::Pointer dataArray = iter.value()->createDataArray(!getInPreflight());
-    // metaData->addAttributeArray(dataArray->getName(), dataArray);
+    // metaData->insertOrAssign(dataArray);
   }
 }
 
@@ -597,7 +603,7 @@ void ImportAxioVisionV4Montage::addRootMetaData(const AttributeMatrix::Pointer& 
       StringDataArray::Pointer strArray = std::dynamic_pointer_cast<StringDataArray>(iDataArray);
       strArray->setValue(index, zStrVal->getValue());
       // IDataArray::Pointer dataArray = iter.value()->createDataArray(!getInPreflight());
-      // metaData->addAttributeArray(dataArray->getName(), dataArray);
+      // metaData->insertOrAssign(dataArray);
     }
   }
 }
@@ -646,8 +652,9 @@ void ImportAxioVisionV4Montage::importImage(DataContainer* dc, const QString& im
                        .arg("InputFileName", filtName, getHumanLabel());
       setErrorCondition(-70015, ss);
     }
-
-    propWasSet = filter->setProperty("DataContainerName", dc->getName());
+    QVariant var;
+    var.setValue(DataArrayPath(dc->getName(), "", ""));
+    propWasSet = filter->setProperty("DataContainerName", var);
     if(!propWasSet)
     {
       QString ss = QObject::tr("Error Setting Property '%1' into filter '%2' which is a subfilter called by %3. The property was not set which could mean the property was not exposed with a "
@@ -683,12 +690,12 @@ void ImportAxioVisionV4Montage::importImage(DataContainer* dc, const QString& im
       filter->execute();
     }
 
-    if(filter->getErrorCode() >= 0)
+    if(getErrorCode() >= 0 && filter->getErrorCode() >= 0)
     {
-      //  Copy the image from the temp data container into the current data container by grabbing the entire
-      // Cell AttributeMatrix
-      AttributeMatrix::Pointer cellAttrMat = dca->getDataContainer(dc->getName())->getAttributeMatrix(getCellAttributeMatrixName());
-      dc->addAttributeMatrix(cellAttrMat->getName(), cellAttrMat);
+      QString targetName = dc->getName();
+      DataContainer::Pointer fromDca = dca->getDataContainer(targetName);
+      AttributeMatrix::Pointer cellAttrMat = fromDca->getAttributeMatrix(getCellAttributeMatrixName());
+      dc->addOrReplaceAttributeMatrix(cellAttrMat);
     }
   }
   else
@@ -805,7 +812,7 @@ void ImportAxioVisionV4Montage::convertToGrayScale(DataContainer* dc, const QStr
       IDataArray::Pointer rgb = am->removeAttributeArray(getImageDataArrayName());
       IDataArray::Pointer gray = am->removeAttributeArray(k_GrayScaleTempArrayName + getImageDataArrayName());
       gray->setName(rgb->getName());
-      am->addAttributeArray(gray->getName(), gray);
+      am->insertOrAssign(gray);
     }
     else
     {
@@ -830,7 +837,7 @@ ImageGeom::Pointer ImportAxioVisionV4Montage::initializeImageGeom(const QDomElem
 
   //#######################################################################
   // Parse out the Pixel Dimensions of the image.
-  QVector<size_t> dims(3);
+  SizeVec3Type dims;
   AbstractZeissMetaData::Pointer ptr = photoTagsSection->getEntry(Zeiss::MetaXML::ImageWidthPixelId);
   Int32ZeissMetaEntry::Pointer int32Entry = ZeissMetaEntry::convert<Int32ZeissMetaEntry>(ptr);
   Q_ASSERT_X(int32Entry.get() != nullptr, "Could not Cast to Int32ZeissMetaEntry", "");
@@ -843,24 +850,24 @@ ImageGeom::Pointer ImportAxioVisionV4Montage::initializeImageGeom(const QDomElem
 
   dims[1] = int32Entry->getValue();
   dims[2] = 1;
-  image->setDimensions(dims[0], dims[1], 1);
+  image->setDimensions(dims);
 
   //#######################################################################
   // Initialize the Origin to the Stage Positions
   float stageXPos = MetaXmlUtils::GetFloatEntry(this, photoTagsSection.get(), Zeiss::MetaXML::StagePositionXId);
   float stageYPos = MetaXmlUtils::GetFloatEntry(this, photoTagsSection.get(), Zeiss::MetaXML::StagePositionYId);
-  float origin[3] = {stageXPos, stageYPos, 0.0f};
+  FloatVec3Type origin = {stageXPos, stageYPos, 0.0f};
   image->setOrigin(origin);
 
   //#######################################################################
-  // Initialize the Resolution of the geometry
+  // Initialize the Spacing of the geometry
   bool ok = false;
-  std::array<float, 3> scaling = {{1.0f, 1.0f, 1.0f}};
+  FloatVec3Type scaling = {1.0f, 1.0f, 1.0f};
   QDomElement scalingDom = root.firstChildElement(ZeissImportConstants::Xml::Scaling).firstChildElement("Factor_0");
   scaling[0] = scalingDom.text().toFloat(&ok);
   scalingDom = root.firstChildElement(ZeissImportConstants::Xml::Scaling).firstChildElement("Factor_1");
   scaling[1] = scalingDom.text().toFloat(&ok);
-  image->setResolution(scaling.data());
+  image->setSpacing(scaling);
 
   //#######################################################################
   // Initialize the Length Units of the geometry

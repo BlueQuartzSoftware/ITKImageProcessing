@@ -57,6 +57,14 @@
 
 #include <Eigen/Dense>
 
+/* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
+enum createdPathID : RenameDataPath::DataID_t
+{
+  AttributeMatrixID21 = 21,
+
+  DataArrayID30 = 30,
+  DataArrayID31 = 31,
+};
 
 #define ZIF_PRINT_DBG_MSGS 0
 
@@ -70,7 +78,7 @@ CalculateBackground::CalculateBackground()
 , m_ImageDataArrayPath("", "", "")
 , m_AttributeMatrixName(SIMPL::Defaults::DataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, "")
 , m_DataContainerBundleName("")
-, m_BackgroundImageArrayName(getDataContainerBundleName() + "BackgroundImage")
+, m_BackgroundImageArrayName(getDataContainerBundleName().getDataContainerName() + "BackgroundImage")
 , m_lowThresh(0)
 , m_highThresh(255)
 , m_SubtractBackground(false)
@@ -88,7 +96,7 @@ CalculateBackground::~CalculateBackground() = default;
 // -----------------------------------------------------------------------------
 void CalculateBackground::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   //parameters.push_back(DataBundleSelectionFilterParameter::New("DataContainerBundle Name", "DataContainerBundleName", getDataContainerBundleName(), FilterParameter::Uncategorized, SIMPL_BIND_SETTER(CalculateBackground, this, DataContainerBundleName), SIMPL_BIND_GETTER(CalculateBackground, this, DataContainerBundleName)));
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req;
@@ -97,7 +105,7 @@ void CalculateBackground::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Lowest allowed Image value (Image Value)", lowThresh, FilterParameter::Parameter, CalculateBackground));
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Highest allowed Image value (Image Value)", highThresh, FilterParameter::Parameter, CalculateBackground));
   //    parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));
-  //    parameters.push_back(SIMPL_NEW_STRING_FP("Volume Data Container", VolumeDataContainerName, FilterParameter::Uncategorized, CalculateBackground));
+  //    parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Volume Data Container", VolumeDataContainerName, FilterParameter::Uncategorized, CalculateBackground));
   parameters.push_back(SIMPL_NEW_STRING_FP("Background Attribute Matrix", BackgroundAttributeMatrixName, FilterParameter::CreatedArray, CalculateBackground));
   parameters.push_back(SIMPL_NEW_STRING_FP("Background Image Array Name", BackgroundImageArrayName, FilterParameter::CreatedArray, CalculateBackground));
   parameters.push_back(SIMPL_NEW_BOOL_FP("Subtract Background from Current Images", SubtractBackground, FilterParameter::Parameter, CalculateBackground));
@@ -116,7 +124,7 @@ void CalculateBackground::readFilterParameters(AbstractFilterParametersReader* r
   //    setVolumeDataContainerName(reader->readString("VolumeDataContainerName", getVolumeDataContainerName() ) );
   setBackgroundAttributeMatrixName(reader->readString("BackgroundAttributeMatrixName", getBackgroundAttributeMatrixName()));
   setBackgroundImageArrayName(reader->readString("BackgroundImageArrayName", getBackgroundImageArrayName()));
-  setDataContainerBundleName(reader->readString("DataContainerBundleName", getDataContainerBundleName() ) );
+  setDataContainerBundleName(reader->readDataArrayPath("DataContainerBundleName", getDataContainerBundleName()));
   setlowThresh(reader->readValue("lowThresh", getlowThresh()) );
   sethighThresh(reader->readValue("highThresh", gethighThresh()) );
   setSubtractBackground(reader->readValue("SubtractBackground", getSubtractBackground()));
@@ -203,16 +211,13 @@ void CalculateBackground::dataCheck()
   }
 
   QVector<size_t> tDims(1, 0);
-  AttributeMatrix::Pointer backgroundAttrMat = m->createNonPrereqAttributeMatrix(this, getBackgroundAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell);
-  if(getErrorCode() < 0)
-  {
-    return;
-  }
+  AttributeMatrix::Pointer backgroundAttrMat = m->createNonPrereqAttributeMatrix(this, getBackgroundAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell, AttributeMatrixID21);
+  if(getErrorCode() < 0) { return; }
 
   // Background Image array
   dims[0] = 1;
   tempPath.update(getDataContainerName(), getBackgroundAttributeMatrixName(), getBackgroundImageArrayName() );
-  m_BackgroundImagePtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_BackgroundImagePtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter>(this, tempPath, 0, dims, "", DataArrayID31);
   if(nullptr != m_BackgroundImagePtr.lock())                          /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   { m_BackgroundImage = m_BackgroundImagePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(getErrorCode() < 0)

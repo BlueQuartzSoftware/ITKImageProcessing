@@ -80,7 +80,7 @@ void MetaXmlToTileConfiguration::initialize()
 // -----------------------------------------------------------------------------
 void MetaXmlToTileConfiguration::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Input File", InputFile, FilterParameter::Parameter, MetaXmlToTileConfiguration, "*.raw *.bin"));
   parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Output File", OutputFile, FilterParameter::Parameter, MetaXmlToTileConfiguration, ""));
   setFilterParameters(parameters);
@@ -351,7 +351,7 @@ void MetaXmlToTileConfiguration::parseImages(QDomElement& root, ZeissTagsXmlSect
     if(origin[2] < minOrigin[2]) { minOrigin[2] = origin[2];}
 
     //#######################################################################
-    // Get the Resolution of the geometry
+    // Get the Spacing of the geometry
     bool ok = false;
     std::array<float, 3> scaling = {{1.0f, 1.0f, 1.0f}};
     QDomElement scalingDom = root.firstChildElement(ZeissImportConstants::Xml::Scaling).firstChildElement("Factor_0");
