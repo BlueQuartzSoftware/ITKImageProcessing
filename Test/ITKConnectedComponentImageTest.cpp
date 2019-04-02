@@ -14,12 +14,8 @@ class ITKConnectedComponentImageTest : public ITKTestBase
 {
 
 public:
-  ITKConnectedComponentImageTest()
-  {
-  }
-  virtual ~ITKConnectedComponentImageTest()
-  {
-  }
+ITKConnectedComponentImageTest() = default;
+~ITKConnectedComponentImageTest() override = default;
 
   int TestITKConnectedComponentImagedefaultTest()
 {

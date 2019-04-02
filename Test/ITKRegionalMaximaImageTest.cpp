@@ -14,12 +14,8 @@ class ITKRegionalMaximaImageTest : public ITKTestBase
 {
 
 public:
-  ITKRegionalMaximaImageTest()
-  {
-  }
-  virtual ~ITKRegionalMaximaImageTest()
-  {
-  }
+ITKRegionalMaximaImageTest() = default;
+~ITKRegionalMaximaImageTest() override = default;
 
   int TestITKRegionalMaximaImagedefaultsTest()
 {

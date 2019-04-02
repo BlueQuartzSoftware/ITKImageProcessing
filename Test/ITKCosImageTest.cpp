@@ -12,12 +12,8 @@ class ITKCosImageTest : public ITKTestBase
 {
 
 public:
-  ITKCosImageTest()
-  {
-  }
-  virtual ~ITKCosImageTest()
-  {
-  }
+ITKCosImageTest() = default;
+~ITKCosImageTest() override = default;
 
   int TestITKCosImagefloatTest()
 {

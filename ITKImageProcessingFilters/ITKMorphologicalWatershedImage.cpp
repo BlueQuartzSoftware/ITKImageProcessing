@@ -40,7 +40,7 @@ ITKMorphologicalWatershedImage::~ITKMorphologicalWatershedImage() = default;
 // -----------------------------------------------------------------------------
 void ITKMorphologicalWatershedImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Level", Level, FilterParameter::Parameter, ITKMorphologicalWatershedImage));
   parameters.push_back(SIMPL_NEW_BOOL_FP("MarkWatershedLine", MarkWatershedLine, FilterParameter::Parameter, ITKMorphologicalWatershedImage));

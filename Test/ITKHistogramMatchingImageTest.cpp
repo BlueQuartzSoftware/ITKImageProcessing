@@ -11,12 +11,8 @@ class ITKHistogramMatchingImageTest : public ITKTestBase
 {
 
 public:
-  ITKHistogramMatchingImageTest()
-  {
-  }
-  virtual ~ITKHistogramMatchingImageTest()
-  {
-  }
+ITKHistogramMatchingImageTest() = default;
+~ITKHistogramMatchingImageTest() override = default;
 
   int TestITKHistogramMatchingImagedefaultsTest()
   {

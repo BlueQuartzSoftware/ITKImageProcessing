@@ -34,9 +34,7 @@ ITKExpNegativeImage::~ITKExpNegativeImage() = default;
 // -----------------------------------------------------------------------------
 void ITKExpNegativeImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
-
-
+  FilterParameterVectorType parameters;
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";

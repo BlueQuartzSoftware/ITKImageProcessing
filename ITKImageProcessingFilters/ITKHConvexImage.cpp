@@ -39,7 +39,7 @@ ITKHConvexImage::~ITKHConvexImage() = default;
 // -----------------------------------------------------------------------------
 void ITKHConvexImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Height", Height, FilterParameter::Parameter, ITKHConvexImage));
   parameters.push_back(SIMPL_NEW_BOOL_FP("FullyConnected", FullyConnected, FilterParameter::Parameter, ITKHConvexImage));

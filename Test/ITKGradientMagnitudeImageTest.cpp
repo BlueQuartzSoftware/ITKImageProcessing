@@ -13,12 +13,8 @@ class ITKGradientMagnitudeImageTest : public ITKTestBase
 {
 
 public:
-  ITKGradientMagnitudeImageTest()
-  {
-  }
-  virtual ~ITKGradientMagnitudeImageTest()
-  {
-  }
+ITKGradientMagnitudeImageTest() = default;
+~ITKGradientMagnitudeImageTest() override = default;
 
   int TestITKGradientMagnitudeImagedefaultTest()
 {

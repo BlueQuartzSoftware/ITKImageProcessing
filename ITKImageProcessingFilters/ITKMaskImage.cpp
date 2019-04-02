@@ -39,7 +39,7 @@ ITKMaskImage::~ITKMaskImage() = default;
 // -----------------------------------------------------------------------------
 void ITKMaskImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("OutsideValue", OutsideValue, FilterParameter::Parameter, ITKMaskImage));
 

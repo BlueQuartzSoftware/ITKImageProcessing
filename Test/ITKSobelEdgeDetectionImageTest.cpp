@@ -12,12 +12,8 @@ class ITKSobelEdgeDetectionImageTest : public ITKTestBase
 {
 
 public:
-  ITKSobelEdgeDetectionImageTest()
-  {
-  }
-  virtual ~ITKSobelEdgeDetectionImageTest()
-  {
-  }
+ITKSobelEdgeDetectionImageTest() = default;
+~ITKSobelEdgeDetectionImageTest() override = default;
 
   int TestITKSobelEdgeDetectionImagedefaultsTest()
 {

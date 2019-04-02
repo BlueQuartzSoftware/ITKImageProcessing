@@ -13,12 +13,8 @@ class ITKShiftScaleImageTest : public ITKTestBase
 {
 
 public:
-  ITKShiftScaleImageTest()
-  {
-  }
-  virtual ~ITKShiftScaleImageTest()
-  {
-  }
+ITKShiftScaleImageTest() = default;
+~ITKShiftScaleImageTest() override = default;
 
   int TestITKShiftScaleImagedefaultTest()
 {

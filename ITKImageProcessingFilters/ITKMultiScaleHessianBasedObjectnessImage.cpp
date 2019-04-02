@@ -52,7 +52,7 @@ ITKMultiScaleHessianBasedObjectnessImage::~ITKMultiScaleHessianBasedObjectnessIm
 // -----------------------------------------------------------------------------
 void ITKMultiScaleHessianBasedObjectnessImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_INTEGER_FP("ObjectDimension", ObjectDimension, FilterParameter::Parameter, ITKMultiScaleHessianBasedObjectnessImage));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Alpha", Alpha, FilterParameter::Parameter, ITKMultiScaleHessianBasedObjectnessImage));

@@ -38,9 +38,9 @@ ${FilterName}::~${FilterName}() = default;
 // -----------------------------------------------------------------------------
 void ${FilterName}::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
-${SetupFilterParameters}
+  ${SetupFilterParameters}
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";

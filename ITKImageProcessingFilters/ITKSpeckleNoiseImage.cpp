@@ -39,7 +39,7 @@ ITKSpeckleNoiseImage::~ITKSpeckleNoiseImage() = default;
 // -----------------------------------------------------------------------------
 void ITKSpeckleNoiseImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("StandardDeviation", StandardDeviation, FilterParameter::Parameter, ITKSpeckleNoiseImage));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Seed", Seed, FilterParameter::Parameter, ITKSpeckleNoiseImage));

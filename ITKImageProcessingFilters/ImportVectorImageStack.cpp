@@ -44,6 +44,7 @@
 
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
@@ -63,6 +64,16 @@ const QString TempAMName("AM");
 const QString TempDAName("Image");
 const DataArrayPath TempDAP(TempDCName, TempAMName, TempDAName);
 } // namespace
+
+enum createdPathID : RenameDataPath::DataID_t
+{
+  AttributeMatrixID21 = 21,
+
+  DataArrayID31 = 31,
+  DataArrayID32 = 32,
+
+  DataContainerID = 1
+};
 
 // -----------------------------------------------------------------------------
 //
@@ -86,14 +97,14 @@ ImportVectorImageStack::~ImportVectorImageStack() = default;
 // -----------------------------------------------------------------------------
 void ImportVectorImageStack::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_VECTORFILELISTINFO_FP("Input File List", InputFileListInfo, FilterParameter::Parameter, ImportVectorImageStack));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Origin", Origin, FilterParameter::Parameter, ImportVectorImageStack));
-  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Resolution", Resolution, FilterParameter::Parameter, ImportVectorImageStack));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Spacing", Spacing, FilterParameter::Parameter, ImportVectorImageStack));
   parameters.push_back(SIMPL_NEW_BOOL_FP("Convert Color To Grayscale", ConvertToGrayscale, FilterParameter::Parameter, ImportVectorImageStack));
 
-  parameters.push_back(SIMPL_NEW_STRING_FP("Data Container Name", DataContainerName, FilterParameter::CreatedArray, ImportVectorImageStack));
+  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container Name", DataContainerName, FilterParameter::CreatedArray, ImportVectorImageStack));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
 
   parameters.push_back(SIMPL_NEW_STRING_FP("Cell Attribute Matrix Name", CellAttributeMatrixName, FilterParameter::CreatedArray, ImportVectorImageStack));
@@ -107,13 +118,13 @@ void ImportVectorImageStack::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void ImportVectorImageStack::initialize()
 {
-  m_Origin.x = 0.0;
-  m_Origin.y = 0.0;
-  m_Origin.z = 0.0;
+  m_Origin[0] = 0.0;
+  m_Origin[1] = 0.0;
+  m_Origin[2] = 0.0;
 
-  m_Resolution.x = 1.0;
-  m_Resolution.y = 1.0;
-  m_Resolution.z = 1.0;
+  m_Spacing[0] = 1.0;
+  m_Spacing[1] = 1.0;
+  m_Spacing[2] = 1.0;
 
   m_InputFileListInfo.FileExtension = QString("tif");
   m_InputFileListInfo.StartIndex = 0;
@@ -141,14 +152,14 @@ void ImportVectorImageStack::dataCheck()
     return;
   }
 
-  DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName(), DataContainerID);
   if(getErrorCode() < 0)
   {
     return;
   }
-  DataArrayPath dap(getDataContainerName(), getCellAttributeMatrixName(), QString(""));
+  DataArrayPath dap(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), QString(""));
   QVector<size_t> tDims = {0};
-  AttributeMatrix::Pointer am = m->createNonPrereqAttributeMatrix(this, dap, tDims, AttributeMatrix::Type::Cell);
+  AttributeMatrix::Pointer am = m->createNonPrereqAttributeMatrix(this, dap, tDims, AttributeMatrix::Type::Cell, AttributeMatrixID21);
 
   bool hasMissingFiles = false;
   bool orderAscending = false;
@@ -230,7 +241,7 @@ void ImportVectorImageStack::dataCheck()
       }
 
       ITKImageReader::Pointer imageReader = ITKImageReader::New();
-      imageReader->setDataContainerName(::TempDCName);
+      imageReader->setDataContainerName(DataArrayPath(::TempDCName, "", ""));
       imageReader->setCellAttributeMatrixName(::TempAMName);
       imageReader->setImageDataArrayName(::TempDAName);
       imageReader->setFileName(filePath);
@@ -265,12 +276,12 @@ void ImportVectorImageStack::dataCheck()
       UInt8ArrayType::Pointer bit8 = std::dynamic_pointer_cast<UInt8ArrayType>(imageData);
       if(nullptr != bit8)
       {
-        am->createNonPrereqArray<UInt8ArrayType>(this, getVectorDataArrayName(), 0, cDims);
+        am->createNonPrereqArray<UInt8ArrayType>(this, getVectorDataArrayName(), 0, cDims, DataArrayID31);
       }
       UInt16ArrayType::Pointer bit16 = std::dynamic_pointer_cast<UInt16ArrayType>(imageData);
       if(nullptr != bit16)
       {
-        am->createNonPrereqArray<UInt16ArrayType>(this, getVectorDataArrayName(), 0, cDims);
+        am->createNonPrereqArray<UInt16ArrayType>(this, getVectorDataArrayName(), 0, cDims, DataArrayID32);
       }
     }
   }
@@ -359,7 +370,7 @@ template <typename T> void importVectorData(ImportVectorImageStack* filter)
       filter->notifyStatusMessage(progress);
 
       ITKImageReader::Pointer imageReader = ITKImageReader::New();
-      imageReader->setDataContainerName(::TempDCName);
+      imageReader->setDataContainerName(DataArrayPath(::TempDCName, "", ""));
       imageReader->setCellAttributeMatrixName(::TempAMName);
       imageReader->setImageDataArrayName(::TempDAName);
       imageReader->setFileName(filePath);
@@ -441,7 +452,7 @@ AbstractFilter::Pointer ImportVectorImageStack::newFilterInstance(bool copyFilte
     // miss some of them because we are not enumerating all of them.
     SIMPL_COPY_INSTANCEVAR(DataContainerName)
     SIMPL_COPY_INSTANCEVAR(CellAttributeMatrixName)
-    SIMPL_COPY_INSTANCEVAR(Resolution)
+    SIMPL_COPY_INSTANCEVAR(Spacing)
     SIMPL_COPY_INSTANCEVAR(Origin)
     SIMPL_COPY_INSTANCEVAR(InputFileListInfo)
     SIMPL_COPY_INSTANCEVAR(VectorDataArrayName)

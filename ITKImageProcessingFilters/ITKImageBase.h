@@ -37,15 +37,15 @@ public:
   /**
    * @brief execute Reimplemented from @see AbstractFilter class
    */
-  virtual void execute() override;
+  void execute() override;
 
   /**
   * @brief preflight Reimplemented from @see AbstractFilter class
   */
-  virtual void preflight() override;
+  void preflight() override;
 
   /**
-   * @brief CastVec3ToITK Input type should be FloatVec3_t or IntVec3_t, Output
+   * @brief CastVec3ToITK Input type should be FloatVec3Type or IntVec3Type, Output
      type should be some kind of ITK "array" (itk::Size, itk::Index,...)
    */
   template <typename InputType, typename OutputType, typename ComponentType> OutputType CastVec3ToITK(const InputType& inputVec3, unsigned int dimension) const
@@ -53,13 +53,13 @@ public:
     OutputType output;
     if(dimension > 0)
     {
-      output[0] = static_cast<ComponentType>(inputVec3.x);
+      output[0] = static_cast<ComponentType>(inputVec3[0]);
       if(dimension > 1)
       {
-        output[1] = static_cast<ComponentType>(inputVec3.y);
+        output[1] = static_cast<ComponentType>(inputVec3[1]);
         if(dimension > 2)
         {
-          output[2] = static_cast<ComponentType>(inputVec3.z);
+          output[2] = static_cast<ComponentType>(inputVec3[2]);
         }
       }
     }
@@ -75,20 +75,20 @@ public:
 
   /**
    * @brief CastStdToVec3 Input type should be std::vector<float> or std::vector<int>
-     and Output type should be FloatVec3_t or IntVec3_t
+     and Output type should be FloatVec3Type or IntVec3Type
    */
   template <typename InputType, typename OutputType, typename ComponentType> OutputType CastStdToVec3(const InputType& inputVector) const
   {
     OutputType outputVec3;
     if(inputVector.size() > 0)
     {
-      outputVec3.x = static_cast<ComponentType>(inputVector[0]);
+      outputVec3[0] = static_cast<ComponentType>(inputVector[0]);
       if(inputVector.size() > 1)
       {
-        outputVec3.y = static_cast<ComponentType>(inputVector[1]);
+        outputVec3[1] = static_cast<ComponentType>(inputVector[1]);
         if(inputVector.size() > 2)
         {
-          outputVec3.z = static_cast<ComponentType>(inputVector[2]);
+          outputVec3[2] = static_cast<ComponentType>(inputVector[2]);
         }
       }
     }
@@ -306,8 +306,8 @@ protected:
     using ValueType = typename itk::NumericTraits<VarType>::ValueType;
     auto lowest = static_cast<float>(std::numeric_limits<ValueType>::lowest());
     auto max = static_cast<float>(std::numeric_limits<ValueType>::max());
-    if(value.x < lowest || value.x > max || (integer && value.x != floor(value.x)) || value.y < lowest || value.y > max || (integer && value.y != floor(value.y)) || value.z < lowest ||
-       value.z > max || (integer && value.z != floor(value.z)))
+    if(value[0] < lowest || value[0] > max || (integer && value[0] != floor(value[0])) || value[1] < lowest || value[1] > max || (integer && value[1] != floor(value[1])) || value[2] < lowest ||
+       value[2] > max || (integer && value[2] != floor(value[2])))
     {
       QString errorMessage = name + QString(" values must be greater or equal than %1 and lesser or equal than %2");
       if(integer)

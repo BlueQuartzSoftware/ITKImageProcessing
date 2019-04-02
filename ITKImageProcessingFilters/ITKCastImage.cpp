@@ -34,7 +34,7 @@ ITKCastImage::~ITKCastImage() = default;
 // -----------------------------------------------------------------------------
 void ITKCastImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();

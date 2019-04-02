@@ -33,7 +33,7 @@ ITKRGBToLuminanceImage::~ITKRGBToLuminanceImage() = default;
 // -----------------------------------------------------------------------------
 void ITKRGBToLuminanceImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));

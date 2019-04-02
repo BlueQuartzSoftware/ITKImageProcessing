@@ -14,12 +14,8 @@ class ITKBinaryThresholdImageTest : public ITKTestBase
 {
 
 public:
-  ITKBinaryThresholdImageTest()
-  {
-  }
-  virtual ~ITKBinaryThresholdImageTest()
-  {
-  }
+ITKBinaryThresholdImageTest() = default;
+~ITKBinaryThresholdImageTest() override = default;
 
   int TestITKBinaryThresholdImagedefaultTest()
 {

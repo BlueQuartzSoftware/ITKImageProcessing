@@ -12,12 +12,8 @@ class ITKExpImageTest : public ITKTestBase
 {
 
 public:
-  ITKExpImageTest()
-  {
-  }
-  virtual ~ITKExpImageTest()
-  {
-  }
+ITKExpImageTest() = default;
+~ITKExpImageTest() override = default;
 
   int TestITKExpImagedefaultsTest()
 {

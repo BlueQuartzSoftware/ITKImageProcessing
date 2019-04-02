@@ -14,12 +14,8 @@ class ITKGradientMagnitudeRecursiveGaussianImageTest : public ITKTestBase
 {
 
 public:
-  ITKGradientMagnitudeRecursiveGaussianImageTest()
-  {
-  }
-  virtual ~ITKGradientMagnitudeRecursiveGaussianImageTest()
-  {
-  }
+ITKGradientMagnitudeRecursiveGaussianImageTest() = default;
+~ITKGradientMagnitudeRecursiveGaussianImageTest() override = default;
 
   int TestITKGradientMagnitudeRecursiveGaussianImagedefaultTest()
 {

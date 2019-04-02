@@ -34,9 +34,7 @@ ITKAbsImage::~ITKAbsImage() = default;
 // -----------------------------------------------------------------------------
 void ITKAbsImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
-
-
+  FilterParameterVectorType parameters;
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";

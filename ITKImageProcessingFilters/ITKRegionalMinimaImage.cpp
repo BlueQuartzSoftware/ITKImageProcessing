@@ -41,7 +41,7 @@ ITKRegionalMinimaImage::~ITKRegionalMinimaImage() = default;
 // -----------------------------------------------------------------------------
 void ITKRegionalMinimaImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("BackgroundValue", BackgroundValue, FilterParameter::Parameter, ITKRegionalMinimaImage));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("ForegroundValue", ForegroundValue, FilterParameter::Parameter, ITKRegionalMinimaImage));

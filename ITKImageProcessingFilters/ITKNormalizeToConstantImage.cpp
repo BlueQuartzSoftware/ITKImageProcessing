@@ -38,7 +38,7 @@ ITKNormalizeToConstantImage::~ITKNormalizeToConstantImage() = default;
 // -----------------------------------------------------------------------------
 void ITKNormalizeToConstantImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Constant", Constant, FilterParameter::Parameter, ITKNormalizeToConstantImage));
 

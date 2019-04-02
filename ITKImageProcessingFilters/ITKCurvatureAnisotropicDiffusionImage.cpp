@@ -41,7 +41,7 @@ ITKCurvatureAnisotropicDiffusionImage::~ITKCurvatureAnisotropicDiffusionImage() 
 // -----------------------------------------------------------------------------
 void ITKCurvatureAnisotropicDiffusionImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("TimeStep", TimeStep, FilterParameter::Parameter, ITKCurvatureAnisotropicDiffusionImage));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("ConductanceParameter", ConductanceParameter, FilterParameter::Parameter, ITKCurvatureAnisotropicDiffusionImage));

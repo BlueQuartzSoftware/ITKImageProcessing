@@ -12,12 +12,8 @@ class ITKAbsImageTest : public ITKTestBase
 {
 
 public:
-  ITKAbsImageTest()
-  {
-  }
-  virtual ~ITKAbsImageTest()
-  {
-  }
+ITKAbsImageTest() = default;
+~ITKAbsImageTest() override = default;
 
   int TestITKAbsImagefloatTest()
 {

@@ -52,38 +52,34 @@
 #include <itkImageFileWriter.h>
 #include <itkImageIOBase.h>
 
-class ITKImageProcessingImportImageStackTest
+class ITKImportImageStackTest
 {
 
 public:
-  ITKImageProcessingImportImageStackTest()
-  {
-  }
-  virtual ~ITKImageProcessingImportImageStackTest()
-  {
-  }
+  ITKImportImageStackTest() = default;
+  virtual ~ITKImportImageStackTest() = default;
 
   static const unsigned int Dimension = 3;
-  typedef short PixelType;
-  typedef itk::Image<PixelType, Dimension> ImageType;
+  using PixelType = short;
+  using ImageType = itk::Image<PixelType, Dimension>;
 
-  // -----------------------------------------------------------------------------
-  //  Helper methods
-  // -----------------------------------------------------------------------------
-  AbstractFilter::Pointer GetFilterByName(const QString& filterName)
+// -----------------------------------------------------------------------------
+//  Helper methods
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer GetFilterByName(const QString& filterName)
+{
+  FilterManager* fm = FilterManager::Instance();
+  IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filterName);
+  if(nullptr == filterFactory.get())
   {
-    FilterManager* fm = FilterManager::Instance();
-    IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filterName);
-    if(nullptr == filterFactory.get())
-    {
-      return nullptr;
-    }
-    return filterFactory->create();
+    return nullptr;
+  }
+  return filterFactory->create();
   }
 
   void WriteTestFile(const QString& filePath, ImageType* image)
   {
-    typedef itk::ImageFileWriter<ImageType> WriterType;
+    using WriterType = itk::ImageFileWriter<ImageType>;
     WriterType::Pointer writer = WriterType::New();
     writer->SetFileName(filePath.toStdString());
     writer->SetInput(image);
@@ -104,6 +100,7 @@ public:
     return 0;
   }
 
+  // -----------------------------------------------------------------------------
   int TestNoInput()
   {
     AbstractFilter::Pointer reader = GetFilterByName("ITKImportImageStack");
@@ -113,11 +110,12 @@ public:
     }
 
     reader->execute();
-    DREAM3D_REQUIRED(reader->getErrorCode(), ==, -13);
+    DREAM3D_REQUIRED(reader->getErrorCode(), ==, -64500);
     DREAM3D_REQUIRED(reader->getWarningCode(), >=, 0);
     return EXIT_SUCCESS;
   }
 
+  // -----------------------------------------------------------------------------
   int TestNoDataContainer()
   {
     AbstractFilter::Pointer abstractFilter = GetFilterByName("ITKImportImageStack");
@@ -129,12 +127,14 @@ public:
     ITKImportImageStack::Pointer reader = std::static_pointer_cast<ITKImportImageStack>(abstractFilter);
 
     FileListInfo_t fileListInfo;
-    fileListInfo.InputPath = UnitTest::ITKImageProcessingImportImageStackTest::StackInputTestDir;
+    fileListInfo.InputPath = UnitTest::ITKImportImageStackTest::StackInputTestDir;
 
     reader->setInputFileListInfo(fileListInfo);
 
     bool propertySet = false;
-    propertySet = reader->setProperty("DataContainerName", "");
+    QVariant var;
+    var.setValue(DataArrayPath());
+    propertySet = reader->setProperty("DataContainerName", var);
     DREAM3D_REQUIRE_EQUAL(propertySet, true);
     reader->execute();
     DREAM3D_REQUIRED(reader->getErrorCode(), ==, -887);
@@ -142,6 +142,7 @@ public:
     return EXIT_SUCCESS;
   }
 
+  // -----------------------------------------------------------------------------
   int TestNoFiles()
   {
     AbstractFilter::Pointer abstractFilter = GetFilterByName("ITKImportImageStack");
@@ -154,7 +155,9 @@ public:
 
     bool propertySet = false;
     const QString containerName = "TestNoFiles";
-    propertySet = reader->setProperty("DataContainerName", containerName);
+    QVariant var;
+    var.setValue(DataArrayPath(containerName, "", ""));
+    propertySet = reader->setProperty("DataContainerName", var);
     DREAM3D_REQUIRE_EQUAL(propertySet, true);
 
     FileListInfo_t fileListInfo;
@@ -169,7 +172,7 @@ public:
     reader->setInputFileListInfo(fileListInfo);
 
     reader->execute();
-    DREAM3D_REQUIRED(reader->getErrorCode(), ==, -11);
+    DREAM3D_REQUIRED(reader->getErrorCode(), ==, -64501);
     DREAM3D_REQUIRED(reader->getWarningCode(), >=, 0);
     return EXIT_SUCCESS;
   }
@@ -186,11 +189,13 @@ public:
 
     bool propertySet = false;
     const QString containerName = "TestFileDoesNotExist";
-    propertySet = reader->setProperty("DataContainerName", containerName);
+    QVariant var;
+    var.setValue(DataArrayPath(containerName, "", ""));
+    propertySet = reader->setProperty("DataContainerName", var);
     DREAM3D_REQUIRE_EQUAL(propertySet, true);
 
     FileListInfo_t fileListInfo;
-    fileListInfo.InputPath = UnitTest::ITKImageProcessingImportImageStackTest::StackInputTestDir;
+    fileListInfo.InputPath = UnitTest::ITKImportImageStackTest::StackInputTestDir;
     fileListInfo.StartIndex = 75;
     fileListInfo.EndIndex = 79;
     fileListInfo.FileExtension = "dcm";
@@ -201,7 +206,7 @@ public:
     reader->setInputFileListInfo(fileListInfo);
 
     reader->execute();
-    DREAM3D_REQUIRED(reader->getErrorCode(), ==, -7);
+    DREAM3D_REQUIRED(reader->getErrorCode(), ==, -64502);
     DREAM3D_REQUIRED(reader->getWarningCode(), >=, 0);
     return EXIT_SUCCESS;
   }
@@ -227,11 +232,13 @@ public:
     bool propertySet = false;
 
     const QString containerName = "TestCompareImage";
-    propertySet = reader->setProperty("DataContainerName", containerName);
+    QVariant var;
+    var.setValue(DataArrayPath(containerName, "", ""));
+    propertySet = reader->setProperty("DataContainerName", var);
     DREAM3D_REQUIRE_EQUAL(propertySet, true);
 
     FileListInfo_t fileListInfo;
-    fileListInfo.InputPath = UnitTest::ITKImageProcessingImportImageStackTest::StackInputTestDir;
+    fileListInfo.InputPath = UnitTest::ITKImportImageStackTest::StackInputTestDir;
     fileListInfo.StartIndex = 11;
     fileListInfo.EndIndex = 13;
     fileListInfo.IncrementIndex = 1;
@@ -243,18 +250,18 @@ public:
     reader->setInputFileListInfo(fileListInfo);
 
     static const unsigned int Dimension = 3;
-    FloatVec3_t inputOrigin;
-    inputOrigin.x = 1.f;
-    inputOrigin.y = 4.f;
-    inputOrigin.z = 8.f;
+    FloatVec3Type inputOrigin;
+    inputOrigin[0] = 1.f;
+    inputOrigin[1] = 4.f;
+    inputOrigin[2] = 8.f;
     reader->setOrigin(inputOrigin);
     DREAM3D_REQUIRE_EQUAL(propertySet, true);
 
-    FloatVec3_t inputResolution;
-    inputResolution.x = 0.3f;
-    inputResolution.y = 0.2f;
-    inputResolution.z = 0.9f;
-    reader->setResolution(inputResolution);
+    FloatVec3Type inputspacing;
+    inputspacing[0] = 0.3f;
+    inputspacing[1] = 0.2f;
+    inputspacing[2] = 0.9f;
+    reader->setSpacing(inputspacing);
     DREAM3D_REQUIRE_EQUAL(propertySet, true);
 
     reader->execute();
@@ -274,18 +281,18 @@ public:
     ImageGeom::Pointer imageGeometry = std::dynamic_pointer_cast<ImageGeom>(geometry);
     DREAM3D_REQUIRE_NE(imageGeometry.get(), 0);
 
-    float resolution[Dimension];
-    imageGeometry->getResolution(resolution);
-    float origin[Dimension];
+    FloatVec3Type spacing;
+    imageGeometry->getSpacing(spacing);
+    FloatVec3Type origin;
     imageGeometry->getOrigin(origin);
 
-    DREAM3D_COMPARE_FLOATS(&origin[0], &inputOrigin.x, 5);
-    DREAM3D_COMPARE_FLOATS(&origin[1], &inputOrigin.y, 5);
-    DREAM3D_COMPARE_FLOATS(&origin[2], &inputOrigin.z, 5);
+    DREAM3D_COMPARE_FLOATS(&origin[0], &inputOrigin[0], 5);
+    DREAM3D_COMPARE_FLOATS(&origin[1], &inputOrigin[1], 5);
+    DREAM3D_COMPARE_FLOATS(&origin[2], &inputOrigin[2], 5);
 
-    DREAM3D_COMPARE_FLOATS(&resolution[0], &inputResolution.x, 5);
-    DREAM3D_COMPARE_FLOATS(&resolution[1], &inputResolution.y, 5);
-    DREAM3D_COMPARE_FLOATS(&resolution[2], &inputResolution.z, 5);
+    DREAM3D_COMPARE_FLOATS(&spacing[0], &inputspacing[0], 5);
+    DREAM3D_COMPARE_FLOATS(&spacing[1], &inputspacing[1], 5);
+    DREAM3D_COMPARE_FLOATS(&spacing[2], &inputspacing[2], 5);
 
     size_t dimensions[Dimension];
     size_t expectedDimensions[Dimension];
@@ -305,6 +312,7 @@ public:
   // -----------------------------------------------------------------------------
   void operator()()
   {
+    std::cout << "############# ITKImportImageStackTest ###############" << std::endl;
     int err = EXIT_SUCCESS;
 
     DREAM3D_REGISTER_TEST(TestAvailability("ITKImportImageStack"));
@@ -315,7 +323,9 @@ public:
     DREAM3D_REGISTER_TEST(TestCompareImage());
   }
 
-private:
-  ITKImageProcessingImportImageStackTest(const ITKImageProcessingImportImageStackTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKImageProcessingImportImageStackTest&);                         // Move assignment Not Implemented
+public:
+  ITKImportImageStackTest(const ITKImportImageStackTest&) = delete;            // Copy Constructor Not Implemented
+  ITKImportImageStackTest(ITKImportImageStackTest&&) = delete;                 // Move Constructor Not Implemented
+  ITKImportImageStackTest& operator=(const ITKImportImageStackTest&) = delete; // Copy Assignment Not Implemented
+  ITKImportImageStackTest& operator=(ITKImportImageStackTest&&) = delete;      // Move Assignment Not Implemented
 };

@@ -17,12 +17,8 @@ class ITKVectorRescaleIntensityImageTest : public ITKTestBase
 {
 
 public:
-  ITKVectorRescaleIntensityImageTest()
-  {
-  }
-  virtual ~ITKVectorRescaleIntensityImageTest()
-  {
-  }
+ITKVectorRescaleIntensityImageTest() = default;
+~ITKVectorRescaleIntensityImageTest() override = default;
 
   int TestITKVectorRescaleIntensityImage3dTest()
   {

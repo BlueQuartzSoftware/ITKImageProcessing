@@ -16,12 +16,8 @@ class ITKOtsuMultipleThresholdsImageTest : public ITKTestBase
 {
 
 public:
-  ITKOtsuMultipleThresholdsImageTest()
-  {
-  }
-  virtual ~ITKOtsuMultipleThresholdsImageTest()
-  {
-  }
+ITKOtsuMultipleThresholdsImageTest() = default;
+~ITKOtsuMultipleThresholdsImageTest() override = default;
 
   int TestITKOtsuMultipleThresholdsImagedefaultTest()
 {

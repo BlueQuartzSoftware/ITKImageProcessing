@@ -36,9 +36,7 @@ ITKSobelEdgeDetectionImage::~ITKSobelEdgeDetectionImage() = default;
 // -----------------------------------------------------------------------------
 void ITKSobelEdgeDetectionImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
-
-
+  FilterParameterVectorType parameters;
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";

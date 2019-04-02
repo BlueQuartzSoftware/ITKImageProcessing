@@ -13,12 +13,8 @@ class ITKGrayscaleFillholeImageTest : public ITKTestBase
 {
 
 public:
-  ITKGrayscaleFillholeImageTest()
-  {
-  }
-  virtual ~ITKGrayscaleFillholeImageTest()
-  {
-  }
+ITKGrayscaleFillholeImageTest() = default;
+~ITKGrayscaleFillholeImageTest() override = default;
 
   int TestITKGrayscaleFillholeImageGrayscaleFillhole1Test()
 {

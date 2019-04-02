@@ -38,7 +38,7 @@ ITKHMaximaImage::~ITKHMaximaImage() = default;
 // -----------------------------------------------------------------------------
 void ITKHMaximaImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Height", Height, FilterParameter::Parameter, ITKHMaximaImage));
 

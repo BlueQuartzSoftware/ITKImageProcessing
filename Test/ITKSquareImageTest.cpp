@@ -12,12 +12,8 @@ class ITKSquareImageTest : public ITKTestBase
 {
 
 public:
-  ITKSquareImageTest()
-  {
-  }
-  virtual ~ITKSquareImageTest()
-  {
-  }
+ITKSquareImageTest() = default;
+~ITKSquareImageTest() override = default;
 
   int TestITKSquareImagedefaultsTest()
 {

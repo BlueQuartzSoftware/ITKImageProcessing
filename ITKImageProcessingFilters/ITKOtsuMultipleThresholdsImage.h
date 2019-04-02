@@ -36,7 +36,7 @@ class ITKImageProcessing_EXPORT ITKOtsuMultipleThresholdsImage : public ITKImage
   PYB11_PROPERTY(int LabelOffset READ getLabelOffset WRITE setLabelOffset)
   PYB11_PROPERTY(double NumberOfHistogramBins READ getNumberOfHistogramBins WRITE setNumberOfHistogramBins)
   PYB11_PROPERTY(bool ValleyEmphasis READ getValleyEmphasis WRITE setValleyEmphasis)
-  PYB11_PROPERTY(FloatVec3_t Thresholds READ getThresholds WRITE setThresholds)
+  PYB11_PROPERTY(FloatVec3Type Thresholds READ getThresholds WRITE setThresholds)
 
 public:
   SIMPL_SHARED_POINTERS(ITKOtsuMultipleThresholdsImage)
@@ -57,9 +57,8 @@ public:
   SIMPL_FILTER_PARAMETER(bool, ValleyEmphasis)
   Q_PROPERTY(bool ValleyEmphasis READ getValleyEmphasis WRITE setValleyEmphasis)
 
-  SIMPL_FILTER_PARAMETER(FloatVec3_t, Thresholds)
-  Q_PROPERTY(FloatVec3_t Thresholds READ getThresholds)
-
+  SIMPL_FILTER_PARAMETER(FloatVec3Type, Thresholds)
+  Q_PROPERTY(FloatVec3Type Thresholds READ getThresholds)
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class

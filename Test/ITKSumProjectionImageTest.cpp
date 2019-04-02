@@ -13,12 +13,8 @@ class ITKSumProjectionImageTest : public ITKTestBase
 {
 
 public:
-  ITKSumProjectionImageTest()
-  {
-  }
-  virtual ~ITKSumProjectionImageTest()
-  {
-  }
+ITKSumProjectionImageTest() = default;
+~ITKSumProjectionImageTest() override = default;
 
   int TestITKSumProjectionImagez_projectionTest()
 {

@@ -30,7 +30,7 @@ class ITKImageProcessing_EXPORT ITKSmoothingRecursiveGaussianImage : public ITKI
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKSmoothingRecursiveGaussianImage SUPERCLASS ITKImageProcessingBase)
-  PYB11_PROPERTY(FloatVec3_t Sigma READ getSigma WRITE setSigma)
+  PYB11_PROPERTY(FloatVec3Type Sigma READ getSigma WRITE setSigma)
   PYB11_PROPERTY(bool NormalizeAcrossScale READ getNormalizeAcrossScale WRITE setNormalizeAcrossScale)
 
 public:
@@ -40,8 +40,8 @@ public:
 
   ~ITKSmoothingRecursiveGaussianImage() override;
 
-  SIMPL_FILTER_PARAMETER(FloatVec3_t, Sigma)
-  Q_PROPERTY(FloatVec3_t Sigma READ getSigma WRITE setSigma)
+  SIMPL_FILTER_PARAMETER(FloatVec3Type, Sigma)
+  Q_PROPERTY(FloatVec3Type Sigma READ getSigma WRITE setSigma)
 
   SIMPL_FILTER_PARAMETER(bool, NormalizeAcrossScale)
   Q_PROPERTY(bool NormalizeAcrossScale READ getNormalizeAcrossScale WRITE setNormalizeAcrossScale)

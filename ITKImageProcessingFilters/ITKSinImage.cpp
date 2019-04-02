@@ -34,9 +34,7 @@ ITKSinImage::~ITKSinImage() = default;
 // -----------------------------------------------------------------------------
 void ITKSinImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
-
-
+  FilterParameterVectorType parameters;
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";

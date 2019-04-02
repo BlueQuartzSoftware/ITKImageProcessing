@@ -13,12 +13,8 @@ class ITKZeroCrossingImageTest : public ITKTestBase
 {
 
 public:
-  ITKZeroCrossingImageTest()
-  {
-  }
-  virtual ~ITKZeroCrossingImageTest()
-  {
-  }
+ITKZeroCrossingImageTest() = default;
+~ITKZeroCrossingImageTest() override = default;
 
   int TestITKZeroCrossingImagedefaultsTest()
 {

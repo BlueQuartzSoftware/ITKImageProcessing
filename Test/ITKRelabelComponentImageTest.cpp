@@ -15,12 +15,8 @@ class ITKRelabelComponentImageTest : public ITKTestBase
 {
 
 public:
-  ITKRelabelComponentImageTest()
-  {
-  }
-  virtual ~ITKRelabelComponentImageTest()
-  {
-  }
+ITKRelabelComponentImageTest() = default;
+~ITKRelabelComponentImageTest() override = default;
 
   int TestITKRelabelComponentImagedefaultTest()
 {

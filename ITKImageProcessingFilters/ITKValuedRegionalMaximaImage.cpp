@@ -38,7 +38,7 @@ ITKValuedRegionalMaximaImage::~ITKValuedRegionalMaximaImage() = default;
 // -----------------------------------------------------------------------------
 void ITKValuedRegionalMaximaImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_BOOL_FP("FullyConnected", FullyConnected, FilterParameter::Parameter, ITKValuedRegionalMaximaImage));
 

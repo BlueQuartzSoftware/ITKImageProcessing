@@ -12,12 +12,8 @@ class ITKMaskImageTest : public ITKTestBase
 {
 
 public:
-  ITKMaskImageTest()
-  {
-  }
-  virtual ~ITKMaskImageTest()
-  {
-  }
+ITKMaskImageTest() = default;
+~ITKMaskImageTest() override = default;
 
   int TestITKMaskImage2dTest()
   {

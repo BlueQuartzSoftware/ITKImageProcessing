@@ -12,12 +12,8 @@ class ITKBinaryThinningImageTest : public ITKTestBase
 {
 
 public:
-  ITKBinaryThinningImageTest()
-  {
-  }
-  virtual ~ITKBinaryThinningImageTest()
-  {
-  }
+ITKBinaryThinningImageTest() = default;
+~ITKBinaryThinningImageTest() override = default;
 
   int TestITKBinaryThinningImageBinaryThinningTest()
 {

@@ -14,12 +14,8 @@ class ITKLaplacianRecursiveGaussianImageTest : public ITKTestBase
 {
 
 public:
-  ITKLaplacianRecursiveGaussianImageTest()
-  {
-  }
-  virtual ~ITKLaplacianRecursiveGaussianImageTest()
-  {
-  }
+ITKLaplacianRecursiveGaussianImageTest() = default;
+~ITKLaplacianRecursiveGaussianImageTest() override = default;
 
   int TestITKLaplacianRecursiveGaussianImagedefaultTest()
 {

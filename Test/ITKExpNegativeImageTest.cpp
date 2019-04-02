@@ -12,12 +12,8 @@ class ITKExpNegativeImageTest : public ITKTestBase
 {
 
 public:
-  ITKExpNegativeImageTest()
-  {
-  }
-  virtual ~ITKExpNegativeImageTest()
-  {
-  }
+ITKExpNegativeImageTest() = default;
+~ITKExpNegativeImageTest() override = default;
 
   int TestITKExpNegativeImagedefaultsTest()
 {

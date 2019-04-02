@@ -29,7 +29,7 @@ class ITKImageProcessing_EXPORT ITKMedianImage : public ITKImageProcessingBase
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKMedianImage SUPERCLASS ITKImageProcessingBase)
-  PYB11_PROPERTY(FloatVec3_t Radius READ getRadius WRITE setRadius)
+  PYB11_PROPERTY(FloatVec3Type Radius READ getRadius WRITE setRadius)
 
 public:
   SIMPL_SHARED_POINTERS(ITKMedianImage)
@@ -38,9 +38,8 @@ public:
 
   ~ITKMedianImage() override;
 
-  SIMPL_FILTER_PARAMETER(FloatVec3_t, Radius)
-  Q_PROPERTY(FloatVec3_t Radius READ getRadius WRITE setRadius)
-
+  SIMPL_FILTER_PARAMETER(FloatVec3Type, Radius)
+  Q_PROPERTY(FloatVec3Type Radius READ getRadius WRITE setRadius)
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class

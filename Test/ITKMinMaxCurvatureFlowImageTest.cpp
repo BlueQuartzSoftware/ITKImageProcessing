@@ -14,12 +14,8 @@ class ITKMinMaxCurvatureFlowImageTest : public ITKTestBase
 {
 
 public:
-  ITKMinMaxCurvatureFlowImageTest()
-  {
-  }
-  virtual ~ITKMinMaxCurvatureFlowImageTest()
-  {
-  }
+ITKMinMaxCurvatureFlowImageTest() = default;
+~ITKMinMaxCurvatureFlowImageTest() override = default;
 
   int TestITKMinMaxCurvatureFlowImagedefaultsTest()
 {

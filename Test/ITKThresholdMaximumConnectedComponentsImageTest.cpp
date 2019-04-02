@@ -14,12 +14,8 @@ class ITKThresholdMaximumConnectedComponentsImageTest : public ITKTestBase
 {
 
 public:
-  ITKThresholdMaximumConnectedComponentsImageTest()
-  {
-  }
-  virtual ~ITKThresholdMaximumConnectedComponentsImageTest()
-  {
-  }
+ITKThresholdMaximumConnectedComponentsImageTest() = default;
+~ITKThresholdMaximumConnectedComponentsImageTest() override = default;
 
   int TestITKThresholdMaximumConnectedComponentsImagedefaultTest()
 {

@@ -65,21 +65,17 @@ class ITKImageProcessingReaderTest
 {
 
 public:
-  ITKImageProcessingReaderTest()
-  {
-  }
-  virtual ~ITKImageProcessingReaderTest()
-  {
-  }
+ITKImageProcessingReaderTest() = default;
+~ITKImageProcessingReaderTest() = default;
 
-  typedef float DefaultPixelType;
-  typedef unsigned short PNGPixelType;
+typedef float DefaultPixelType;
+typedef unsigned short PNGPixelType;
 
-  // -----------------------------------------------------------------------------
-  //
-  // -----------------------------------------------------------------------------
-  void RemoveTestFiles()
-  {
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RemoveTestFiles()
+{
 #if REMOVE_TEST_FILES
     QFile::remove(UnitTest::ITKImageProcessingReaderTest::NRRDIOInputTestFile);
     QFile::remove(UnitTest::ITKImageProcessingReaderTest::MRCIOInputTestFile);
@@ -227,7 +223,9 @@ public:
     // No data container (and bogus filename)
     propertySet = reader->setProperty("FileName", UnitTest::ITKImageProcessingReaderTest::NonExistentInputTestFile);
     DREAM3D_REQUIRE_EQUAL(propertySet, true);
-    propertySet = reader->setProperty("DataContainerName", "");
+    QVariant var;
+    var.setValue(DataArrayPath());
+    propertySet = reader->setProperty("DataContainerName", var);
     DREAM3D_REQUIRE_EQUAL(propertySet, true);
     reader->execute();
     DREAM3D_REQUIRED(reader->getErrorCode(), ==, -2);
@@ -247,10 +245,12 @@ public:
     const QString containerName = "TestContainer";
     DataContainer::Pointer inputContainer = DataContainer::New(containerName);
     DataContainerArray::Pointer inputContainerArray = DataContainerArray::New();
-    inputContainerArray->addDataContainer(inputContainer);
+    inputContainerArray->addOrReplaceDataContainer(inputContainer);
 
     reader->setDataContainerArray(inputContainerArray);
-    propertySet = reader->setProperty("DataContainerName", containerName);
+    QVariant var;
+    var.setValue(DataArrayPath(containerName, "", ""));
+    propertySet = reader->setProperty("DataContainerName", var);
     DREAM3D_REQUIRE_EQUAL(propertySet, true);
 
     propertySet = reader->setProperty("FileName", UnitTest::ITKImageProcessingReaderTest::NonExistentInputTestFile);
@@ -281,7 +281,9 @@ public:
     DataContainerArray::Pointer inputContainerArray = DataContainerArray::New();
 
     reader->setDataContainerArray(inputContainerArray);
-    propertySet = reader->setProperty("DataContainerName", containerName);
+    QVariant var;
+    var.setValue(DataArrayPath(containerName, "", ""));
+    propertySet = reader->setProperty("DataContainerName", var);
     DREAM3D_REQUIRE_EQUAL(propertySet, true);
 
     propertySet = reader->setProperty("FileName", file);
@@ -305,9 +307,9 @@ public:
     DREAM3D_REQUIRE_NE(imageGeometry.get(), 0);
 
     float tol = 1e-6;
-    float resolution[3];
-    imageGeometry->getResolution(resolution);
-    float origin[3];
+    FloatVec3Type resolution;
+    imageGeometry->getSpacing(resolution);
+    FloatVec3Type origin;
     imageGeometry->getOrigin(origin);
     size_t dimensions[3] = {0, 0, 0};
     std::tie(dimensions[0], dimensions[1], dimensions[2]) = imageGeometry->getDimensions();

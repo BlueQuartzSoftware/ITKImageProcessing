@@ -39,7 +39,7 @@ ITKApproximateSignedDistanceMapImage::~ITKApproximateSignedDistanceMapImage() = 
 // -----------------------------------------------------------------------------
 void ITKApproximateSignedDistanceMapImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("InsideValue", InsideValue, FilterParameter::Parameter, ITKApproximateSignedDistanceMapImage));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("OutsideValue", OutsideValue, FilterParameter::Parameter, ITKApproximateSignedDistanceMapImage));

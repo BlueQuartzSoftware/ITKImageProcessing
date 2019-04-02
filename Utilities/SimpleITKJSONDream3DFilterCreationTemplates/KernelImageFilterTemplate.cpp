@@ -41,7 +41,7 @@ ${FilterName}::~${FilterName}() = default;
 // -----------------------------------------------------------------------------
 void ${FilterName}::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   // Structuring element
   {

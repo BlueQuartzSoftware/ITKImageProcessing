@@ -40,7 +40,7 @@ ITKMinMaxCurvatureFlowImage::~ITKMinMaxCurvatureFlowImage() = default;
 // -----------------------------------------------------------------------------
 void ITKMinMaxCurvatureFlowImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("TimeStep", TimeStep, FilterParameter::Parameter, ITKMinMaxCurvatureFlowImage));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("NumberOfIterations", NumberOfIterations, FilterParameter::Parameter, ITKMinMaxCurvatureFlowImage));

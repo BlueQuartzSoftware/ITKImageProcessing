@@ -14,12 +14,8 @@ class ITKHMinimaImageTest : public ITKTestBase
 {
 
 public:
-  ITKHMinimaImageTest()
-  {
-  }
-  virtual ~ITKHMinimaImageTest()
-  {
-  }
+ITKHMinimaImageTest() = default;
+~ITKHMinimaImageTest() override = default;
 
   int TestITKHMinimaImageHMinimaTest()
 {

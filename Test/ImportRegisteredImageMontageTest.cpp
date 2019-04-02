@@ -45,8 +45,8 @@ class ImportRegisteredImageMontageTest : public ITKTestBase
   const QString m_RegistrationCoordinatesArrayName = QString("RegistrationCoordinates");
   const QString m_ArrayNamesArrayName = QString("ArrayNames");
 
-  FloatVec3_t m_Origin;
-  FloatVec3_t m_Resolution;
+  FloatVec3Type m_Origin;
+  FloatVec3Type m_Spacing;
 
 public:
   ImportRegisteredImageMontageTest() = default;
@@ -72,7 +72,7 @@ public:
     DREAM3D_REQUIRE_VALID_POINTER(filterFactory.get());
     AbstractFilter::Pointer import = filterFactory->create();
 
-    var.setValue(m_DataContainerName);
+    var.setValue(DataArrayPath(m_DataContainerName, "", ""));
     propWasSet = import->setProperty("DataContainerName", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
 
@@ -84,18 +84,18 @@ public:
     propWasSet = import->setProperty("MetaDataAttributeMatrixName", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
 
-    m_Origin.x = 0.0f;
-    m_Origin.y = 0.0f;
-    m_Origin.z = 0.0f;
+    m_Origin[0] = 0.0f;
+    m_Origin[1] = 0.0f;
+    m_Origin[2] = 0.0f;
     var.setValue(m_Origin);
     propWasSet = import->setProperty("Origin", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
 
-    m_Resolution.x = 0.25f;
-    m_Resolution.y = 0.50f;
-    m_Resolution.z = 1.25f;
-    var.setValue(m_Resolution);
-    propWasSet = import->setProperty("Resolution", var);
+    m_Spacing[0] = 0.25f;
+    m_Spacing[1] = 0.50f;
+    m_Spacing[2] = 1.25f;
+    var.setValue(m_Spacing);
+    propWasSet = import->setProperty("Spacing", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
 
     FileListInfo_t fli;

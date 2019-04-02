@@ -13,12 +13,8 @@ class ITKGrayscaleGrindPeakImageTest : public ITKTestBase
 {
 
 public:
-  ITKGrayscaleGrindPeakImageTest()
-  {
-  }
-  virtual ~ITKGrayscaleGrindPeakImageTest()
-  {
-  }
+ITKGrayscaleGrindPeakImageTest() = default;
+~ITKGrayscaleGrindPeakImageTest() override = default;
 
   int TestITKGrayscaleGrindPeakImageGrayscaleGrindPeak1Test()
 {

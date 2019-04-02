@@ -15,12 +15,8 @@ class ITKGrayscaleMorphologicalOpeningImageTest : public ITKTestBase
 {
 
 public:
-  ITKGrayscaleMorphologicalOpeningImageTest()
-  {
-  }
-  virtual ~ITKGrayscaleMorphologicalOpeningImageTest()
-  {
-  }
+ITKGrayscaleMorphologicalOpeningImageTest() = default;
+~ITKGrayscaleMorphologicalOpeningImageTest() override = default;
 
   int TestITKGrayscaleMorphologicalOpeningImageGrayscaleMorphologicalOpeningTest()
   {
@@ -42,10 +38,10 @@ public:
     propWasSet = filter->setProperty("SaveAsNewArray", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     {
-      FloatVec3_t d3d_var;
-      d3d_var.x = 1;
-      d3d_var.y = 1;
-      d3d_var.z = 1;
+      FloatVec3Type d3d_var;
+      d3d_var[0] = 1;
+      d3d_var[1] = 1;
+      d3d_var[2] = 1;
       var.setValue(d3d_var);
       propWasSet = filter->setProperty("KernelRadius", var);
       DREAM3D_REQUIRE_EQUAL(propWasSet, true);
@@ -88,10 +84,10 @@ public:
     propWasSet = filter->setProperty("SaveAsNewArray", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     {
-      FloatVec3_t d3d_var;
-      d3d_var.y = 5;
-      d3d_var.x = 20;
-      d3d_var.z = 2;
+      FloatVec3Type d3d_var;
+      d3d_var[1] = 5;
+      d3d_var[0] = 20;
+      d3d_var[2] = 2;
       var.setValue(d3d_var);
       propWasSet = filter->setProperty("KernelRadius", var);
       DREAM3D_REQUIRE_EQUAL(propWasSet, true);
@@ -134,10 +130,10 @@ public:
     propWasSet = filter->setProperty("SaveAsNewArray", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     {
-      FloatVec3_t d3d_var;
-      d3d_var.y = 5;
-      d3d_var.x = 20;
-      d3d_var.z = 0; // should not be taken into account. Dim <
+      FloatVec3Type d3d_var;
+      d3d_var[1] = 5;
+      d3d_var[0] = 20;
+      d3d_var[2] = 0; // should not be taken into account. Dim <
       var.setValue(d3d_var);
       propWasSet = filter->setProperty("KernelRadius", var);
       DREAM3D_REQUIRE_EQUAL(propWasSet, true);

@@ -34,9 +34,7 @@ ITKSquareImage::~ITKSquareImage() = default;
 // -----------------------------------------------------------------------------
 void ITKSquareImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
-
-
+  FilterParameterVectorType parameters;
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";

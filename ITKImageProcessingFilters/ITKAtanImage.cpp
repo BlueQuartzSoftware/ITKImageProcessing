@@ -34,9 +34,7 @@ ITKAtanImage::~ITKAtanImage() = default;
 // -----------------------------------------------------------------------------
 void ITKAtanImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
-
-
+  FilterParameterVectorType parameters;
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";

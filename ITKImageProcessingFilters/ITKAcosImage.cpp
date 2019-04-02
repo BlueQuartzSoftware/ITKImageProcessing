@@ -34,9 +34,7 @@ ITKAcosImage::~ITKAcosImage() = default;
 // -----------------------------------------------------------------------------
 void ITKAcosImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
-
-
+  FilterParameterVectorType parameters;
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";

@@ -38,7 +38,7 @@ ITKMeanProjectionImage::~ITKMeanProjectionImage() = default;
 // -----------------------------------------------------------------------------
 void ITKMeanProjectionImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("ProjectionDimension", ProjectionDimension, FilterParameter::Parameter, ITKMeanProjectionImage));
 

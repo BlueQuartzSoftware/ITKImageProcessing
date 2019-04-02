@@ -38,7 +38,7 @@ ITKConnectedComponentImage::~ITKConnectedComponentImage() = default;
 // -----------------------------------------------------------------------------
 void ITKConnectedComponentImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_BOOL_FP("FullyConnected", FullyConnected, FilterParameter::Parameter, ITKConnectedComponentImage));
 

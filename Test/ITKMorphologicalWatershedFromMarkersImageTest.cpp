@@ -12,12 +12,8 @@ class ITKMorphologicalWatershedFromMarkersImageTest : public ITKTestBase
 {
 
 public:
-  ITKMorphologicalWatershedFromMarkersImageTest()
-  {
-  }
-  virtual ~ITKMorphologicalWatershedFromMarkersImageTest()
-  {
-  }
+ITKMorphologicalWatershedFromMarkersImageTest() = default;
+~ITKMorphologicalWatershedFromMarkersImageTest() override = default;
 
   int TestITKMorphologicalWatershedFromMarkersImagedefaultsTest()
   {

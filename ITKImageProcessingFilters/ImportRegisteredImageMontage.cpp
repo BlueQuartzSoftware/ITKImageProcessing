@@ -8,6 +8,7 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/FileListInfoFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
@@ -20,6 +21,16 @@
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
 
+enum createdPathID : RenameDataPath::DataID_t
+{
+  AttributeMatrixID21 = 21,
+
+  DataArrayID31 = 31,
+  DataArrayID32 = 32,
+
+  DataContainerID = 1
+};
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -31,13 +42,13 @@ ImportRegisteredImageMontage::ImportRegisteredImageMontage()
 , m_RegistrationCoordinatesArrayName("RegistrationCoordinates")
 , m_AttributeArrayNamesArrayName("AttributeArrayNames")
 {
-  m_Origin.x = 0.0;
-  m_Origin.y = 0.0;
-  m_Origin.z = 0.0;
+  m_Origin[0] = 0.0;
+  m_Origin[1] = 0.0;
+  m_Origin[2] = 0.0;
 
-  m_Resolution.x = 1.0;
-  m_Resolution.y = 1.0;
-  m_Resolution.z = 1.0;
+  m_Spacing[0] = 1.0;
+  m_Spacing[1] = 1.0;
+  m_Spacing[2] = 1.0;
 
   m_InputFileListInfo.FileExtension = QString("tif");
   m_InputFileListInfo.StartIndex = 0;
@@ -57,14 +68,14 @@ ImportRegisteredImageMontage::~ImportRegisteredImageMontage() = default;
 // -----------------------------------------------------------------------------
 void ImportRegisteredImageMontage::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_FILELISTINFO_FP("Input File List", InputFileListInfo, FilterParameter::Parameter, ImportRegisteredImageMontage));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Origin", Origin, FilterParameter::Parameter, ImportRegisteredImageMontage));
 
-  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Resolution", Resolution, FilterParameter::Parameter, ImportRegisteredImageMontage));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Spacing", Spacing, FilterParameter::Parameter, ImportRegisteredImageMontage));
 
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Registration File", RegistrationFile, FilterParameter::Parameter, ImportRegisteredImageMontage, "", "*.txt"));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Data Container", DataContainerName, FilterParameter::CreatedArray, ImportRegisteredImageMontage));
+  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container", DataContainerName, FilterParameter::CreatedArray, ImportRegisteredImageMontage));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
   parameters.push_back(SIMPL_NEW_STRING_FP("Cell Attribute Matrix", CellAttributeMatrixName, FilterParameter::CreatedArray, ImportRegisteredImageMontage));
   parameters.push_back(SeparatorFilterParameter::New("Meta Data", FilterParameter::CreatedArray));
@@ -80,14 +91,14 @@ void ImportRegisteredImageMontage::setupFilterParameters()
 void ImportRegisteredImageMontage::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setDataContainerName(reader->readString("DataContainerName", getDataContainerName()));
+  setDataContainerName(reader->readDataArrayPath("DataContainerName", getDataContainerName()));
   setCellAttributeMatrixName(reader->readString("CellAttributeMatrixName", getCellAttributeMatrixName()));
   setMetaDataAttributeMatrixName(reader->readString("MetaDataAttributeMatrixName", getMetaDataAttributeMatrixName()));
   setRegistrationCoordinatesArrayName(reader->readString("RegistrationCoordinatesArrayName", getRegistrationCoordinatesArrayName()));
   setAttributeArrayNamesArrayName(reader->readString("AttributeArrayNamesArrayName", getAttributeArrayNamesArrayName()));
   setInputFileListInfo(reader->readFileListInfo("InputFileListInfo", getInputFileListInfo()));
   setOrigin(reader->readFloatVec3("Origin", getOrigin()));
-  setResolution(reader->readFloatVec3("Resolution", getResolution()));
+  setSpacing(reader->readFloatVec3("Spacing", getSpacing()));
   setRegistrationFile(reader->readString("RegistrationFile", getRegistrationFile()));
   reader->closeFilterGroup();
 }
@@ -202,7 +213,7 @@ void ImportRegisteredImageMontage::dataCheck()
     return;
   }
 
-  DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName(), DataContainerID);
   if(getErrorCode() < 0)
   {
     return;
@@ -221,15 +232,17 @@ void ImportRegisteredImageMontage::dataCheck()
 
   QVector<size_t> tDims(1, m_NumImages);
   QVector<size_t> cDims(1, 1);
-  getDataContainerArray()->getDataContainer(getDataContainerName())->createNonPrereqAttributeMatrix(this, getMetaDataAttributeMatrixName(), tDims, AttributeMatrix::Type::MetaData);
+  getDataContainerArray()
+      ->getDataContainer(getDataContainerName())
+      ->createNonPrereqAttributeMatrix(this, getMetaDataAttributeMatrixName(), tDims, AttributeMatrix::Type::MetaData, AttributeMatrixID21);
   if(getErrorCode() < 0)
   {
     return;
   }
-  DataArrayPath path(getDataContainerName(), getMetaDataAttributeMatrixName(), getAttributeArrayNamesArrayName());
+  DataArrayPath path(getDataContainerName().getDataContainerName(), getMetaDataAttributeMatrixName(), getAttributeArrayNamesArrayName());
   AttributeMatrix::Pointer metaDataAttrMat = getDataContainerArray()->getAttributeMatrix(path);
   StringDataArray::Pointer attributeArrayNames = StringDataArray::CreateArray(metaDataAttrMat->getNumberOfTuples(), getAttributeArrayNamesArrayName());
-  metaDataAttrMat->addAttributeArray(getAttributeArrayNamesArrayName(), attributeArrayNames);
+  metaDataAttrMat->insertOrAssign(attributeArrayNames);
   m_AttributeArrayNamesPtr = attributeArrayNames;
   if(getErrorCode() < 0)
   {
@@ -237,8 +250,8 @@ void ImportRegisteredImageMontage::dataCheck()
   }
 
   cDims[0] = 2;
-  path.update(getDataContainerName(), getMetaDataAttributeMatrixName(), getRegistrationCoordinatesArrayName());
-  m_RegistrationCoordinatesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<FloatArrayType, AbstractFilter, float>(this, path, 0, cDims);
+  path.update(getDataContainerName().getDataContainerName(), getMetaDataAttributeMatrixName(), getRegistrationCoordinatesArrayName());
+  m_RegistrationCoordinatesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<FloatArrayType, AbstractFilter, float>(this, path, 0, cDims, "", DataArrayID31);
   if(getErrorCode() < 0)
   {
     return;
@@ -273,7 +286,7 @@ void ImportRegisteredImageMontage::dataCheck()
   {
     setFileName(fileList[0]);
     QFileInfo fi(fileList[0]);
-    DataArrayPath dap(getDataContainerName(), getCellAttributeMatrixName(), fi.baseName());
+    DataArrayPath dap(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), fi.baseName());
     readImage(dap, true);
     // The previous call will add an attribute array that we don't need at this point
     // so just remove it.
@@ -309,8 +322,8 @@ void ImportRegisteredImageMontage::dataCheck()
       QStringList splitFilePaths = imageFName.split('/');
       QString fileName = splitFilePaths[splitFilePaths.size() - 1];
       splitFilePaths = fileName.split('.');
-      DataArrayPath path(getDataContainerName(), getCellAttributeMatrixName(), splitFilePaths[0]);
-      getDataContainerArray()->createNonPrereqArrayFromPath<UInt8ArrayType, AbstractFilter, uint8_t>(this, path, 0, cDims);
+      DataArrayPath path(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), splitFilePaths[0]);
+      getDataContainerArray()->createNonPrereqArrayFromPath<UInt8ArrayType, AbstractFilter, uint8_t>(this, path, 0, cDims, "", DataArrayID32);
       if(getErrorCode() < 0)
       {
         return;
@@ -394,7 +407,7 @@ void ImportRegisteredImageMontage::execute()
     notifyStatusMessage(ss);
 
     setFileName(imageFName);
-    DataArrayPath dap(getDataContainerName(), getCellAttributeMatrixName(), splitFilePaths[0]);
+    DataArrayPath dap(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), splitFilePaths[0]);
     readImage(dap, false);
     if(getErrorCode() < 0)
     {
@@ -434,7 +447,7 @@ AbstractFilter::Pointer ImportRegisteredImageMontage::newFilterInstance(bool cop
     SIMPL_COPY_INSTANCEVAR(MetaDataAttributeMatrixName)
     SIMPL_COPY_INSTANCEVAR(RegistrationCoordinatesArrayName)
     SIMPL_COPY_INSTANCEVAR(AttributeArrayNamesArrayName)
-    SIMPL_COPY_INSTANCEVAR(Resolution)
+    SIMPL_COPY_INSTANCEVAR(Spacing)
     SIMPL_COPY_INSTANCEVAR(Origin)
     SIMPL_COPY_INSTANCEVAR(InputFileListInfo)
     SIMPL_COPY_INSTANCEVAR(RegistrationFile)

@@ -13,12 +13,8 @@ class ITKInvertIntensityImageTest : public ITKTestBase
 {
 
 public:
-  ITKInvertIntensityImageTest()
-  {
-  }
-  virtual ~ITKInvertIntensityImageTest()
-  {
-  }
+ITKInvertIntensityImageTest() = default;
+~ITKInvertIntensityImageTest() override = default;
 
   int TestITKInvertIntensityImage3dTest()
 {

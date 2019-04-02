@@ -10,12 +10,8 @@ class ITKRGBToLuminanceImageTest : public ITKTestBase
 {
 
 public:
-  ITKRGBToLuminanceImageTest()
-  {
-  }
-  virtual ~ITKRGBToLuminanceImageTest()
-  {
-  }
+ITKRGBToLuminanceImageTest() = default;
+~ITKRGBToLuminanceImageTest() override = default;
 
   int TestITKRGBToLuminanceImageInputTest()
   {

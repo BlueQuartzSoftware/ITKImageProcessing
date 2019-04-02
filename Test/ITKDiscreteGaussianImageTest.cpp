@@ -15,12 +15,8 @@ class ITKDiscreteGaussianImageTest : public ITKTestBase
 {
 
 public:
-  ITKDiscreteGaussianImageTest()
-  {
-  }
-  virtual ~ITKDiscreteGaussianImageTest()
-  {
-  }
+ITKDiscreteGaussianImageTest() = default;
+~ITKDiscreteGaussianImageTest() override = default;
 
   int TestITKDiscreteGaussianImagefloatTest()
 {

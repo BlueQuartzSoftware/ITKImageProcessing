@@ -34,9 +34,7 @@ ITKBoundedReciprocalImage::~ITKBoundedReciprocalImage() = default;
 // -----------------------------------------------------------------------------
 void ITKBoundedReciprocalImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
-
-
+  FilterParameterVectorType parameters;
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";

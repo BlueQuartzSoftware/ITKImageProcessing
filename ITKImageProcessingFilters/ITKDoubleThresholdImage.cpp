@@ -44,7 +44,7 @@ ITKDoubleThresholdImage::~ITKDoubleThresholdImage() = default;
 // -----------------------------------------------------------------------------
 void ITKDoubleThresholdImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Threshold1", Threshold1, FilterParameter::Parameter, ITKDoubleThresholdImage));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Threshold2", Threshold2, FilterParameter::Parameter, ITKDoubleThresholdImage));

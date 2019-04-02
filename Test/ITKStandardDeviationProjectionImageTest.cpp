@@ -13,12 +13,8 @@ class ITKStandardDeviationProjectionImageTest : public ITKTestBase
 {
 
 public:
-  ITKStandardDeviationProjectionImageTest()
-  {
-  }
-  virtual ~ITKStandardDeviationProjectionImageTest()
-  {
-  }
+ITKStandardDeviationProjectionImageTest() = default;
+~ITKStandardDeviationProjectionImageTest() override = default;
 
   int TestITKStandardDeviationProjectionImagez_projectionTest()
 {

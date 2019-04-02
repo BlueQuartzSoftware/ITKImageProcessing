@@ -15,12 +15,8 @@ class ITKDoubleThresholdImageTest : public ITKTestBase
 {
 
 public:
-  ITKDoubleThresholdImageTest()
-  {
-  }
-  virtual ~ITKDoubleThresholdImageTest()
-  {
-  }
+ITKDoubleThresholdImageTest() = default;
+~ITKDoubleThresholdImageTest() override = default;
 
   int TestITKDoubleThresholdImageDoubleThreshold1Test()
 {

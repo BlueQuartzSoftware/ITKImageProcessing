@@ -13,12 +13,8 @@ class ITKRescaleIntensityImageTest : public ITKTestBase
 {
 
 public:
-  ITKRescaleIntensityImageTest()
-  {
-  }
-  virtual ~ITKRescaleIntensityImageTest()
-  {
-  }
+ITKRescaleIntensityImageTest() = default;
+~ITKRescaleIntensityImageTest() override = default;
 
   int TestITKRescaleIntensityImage3dTest()
 {

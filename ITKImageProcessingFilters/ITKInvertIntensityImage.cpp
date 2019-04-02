@@ -38,7 +38,7 @@ ITKInvertIntensityImage::~ITKInvertIntensityImage() = default;
 // -----------------------------------------------------------------------------
 void ITKInvertIntensityImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Maximum", Maximum, FilterParameter::Parameter, ITKInvertIntensityImage));
 

@@ -39,7 +39,7 @@ ITKIsoContourDistanceImage::~ITKIsoContourDistanceImage() = default;
 // -----------------------------------------------------------------------------
 void ITKIsoContourDistanceImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("LevelSetValue", LevelSetValue, FilterParameter::Parameter, ITKIsoContourDistanceImage));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("FarValue", FarValue, FilterParameter::Parameter, ITKIsoContourDistanceImage));

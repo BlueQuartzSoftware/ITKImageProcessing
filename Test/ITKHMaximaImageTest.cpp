@@ -13,12 +13,8 @@ class ITKHMaximaImageTest : public ITKTestBase
 {
 
 public:
-  ITKHMaximaImageTest()
-  {
-  }
-  virtual ~ITKHMaximaImageTest()
-  {
-  }
+ITKHMaximaImageTest() = default;
+~ITKHMaximaImageTest() override = default;
 
   int TestITKHMaximaImageHMaximaTest()
 {

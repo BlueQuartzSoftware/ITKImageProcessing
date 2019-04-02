@@ -38,7 +38,7 @@ ITKLaplacianSharpeningImage::~ITKLaplacianSharpeningImage() = default;
 // -----------------------------------------------------------------------------
 void ITKLaplacianSharpeningImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_BOOL_FP("UseImageSpacing", UseImageSpacing, FilterParameter::Parameter, ITKLaplacianSharpeningImage));
 

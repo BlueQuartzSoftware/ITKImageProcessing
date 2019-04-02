@@ -34,9 +34,7 @@ ITKBinaryThinningImage::~ITKBinaryThinningImage() = default;
 // -----------------------------------------------------------------------------
 void ITKBinaryThinningImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
-
-
+  FilterParameterVectorType parameters;
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
