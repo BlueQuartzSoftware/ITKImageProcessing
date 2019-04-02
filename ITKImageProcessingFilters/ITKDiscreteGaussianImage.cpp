@@ -86,8 +86,8 @@ void ITKDiscreteGaussianImage::readFilterParameters(AbstractFilterParametersRead
 // -----------------------------------------------------------------------------
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKDiscreteGaussianImage::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   // Check consistency of parameters
   this->CheckVectorEntry<double, FloatVec3Type>(m_Variance, "Variance", false);

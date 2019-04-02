@@ -69,8 +69,8 @@ void ITKBoundedReciprocalImage::readFilterParameters(AbstractFilterParametersRea
 // -----------------------------------------------------------------------------
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKBoundedReciprocalImage::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   // Check consistency of parameters
 

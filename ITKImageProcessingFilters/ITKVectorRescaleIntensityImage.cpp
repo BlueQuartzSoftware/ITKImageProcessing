@@ -119,8 +119,8 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   {
     return;
   }
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   // OutputPixelType is based on scalar types. Create corresponding vector pixel type.
   typedef itk::Vector<OutputPixelType, InputPixelType::Dimension> VectorOutputPixelType;
   ITKImageProcessingBase::dataCheck<InputPixelType, VectorOutputPixelType, Dimension>();

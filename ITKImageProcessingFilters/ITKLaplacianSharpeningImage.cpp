@@ -77,8 +77,8 @@ void ITKLaplacianSharpeningImage::readFilterParameters(AbstractFilterParametersR
 // -----------------------------------------------------------------------------
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKLaplacianSharpeningImage::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   // Check consistency of parameters
 

@@ -94,8 +94,8 @@ void ITKCastImage::readFilterParameters(AbstractFilterParametersReader* reader, 
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKCastImage::dataCheck()
 {
   // Check consistency of parameters
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   typedef typename itk::NumericTraits<InputPixelType>::ValueType InputValueType;
   typedef typename itk::NumericTraits<OutputPixelType>::ValueType OutputValueType;
   if(static_cast<double>(std::numeric_limits<InputValueType>::max()) > static_cast<double>(std::numeric_limits<OutputValueType>::max()) ||

@@ -119,8 +119,8 @@ void ImportImageMontage::initialize()
 // -----------------------------------------------------------------------------
 void ImportImageMontage::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   initialize();
 
   QString ss;
@@ -243,8 +243,8 @@ void ImportImageMontage::preflight()
 // -----------------------------------------------------------------------------
 void ImportImageMontage::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

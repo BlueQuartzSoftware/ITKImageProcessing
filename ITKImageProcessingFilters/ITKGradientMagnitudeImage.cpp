@@ -77,8 +77,8 @@ void ITKGradientMagnitudeImage::readFilterParameters(AbstractFilterParametersRea
 // -----------------------------------------------------------------------------
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKGradientMagnitudeImage::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   // Check consistency of parameters
 

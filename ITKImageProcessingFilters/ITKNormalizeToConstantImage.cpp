@@ -77,8 +77,8 @@ void ITKNormalizeToConstantImage::readFilterParameters(AbstractFilterParametersR
 // -----------------------------------------------------------------------------
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKNormalizeToConstantImage::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   // Check consistency of parameters
 

@@ -121,8 +121,8 @@ template <typename OutputPixelType> void ITKRescaleIntensityImage::CheckEntryBou
 // -----------------------------------------------------------------------------
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKRescaleIntensityImage::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   // Check consistency of parameters
   CheckEntryBounds<OutputPixelType>(m_OutputMaximum, "OutputMaximum");

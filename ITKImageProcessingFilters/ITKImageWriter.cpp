@@ -177,8 +177,8 @@ void ITKImageWriter::initialize()
 // -----------------------------------------------------------------------------
 void ITKImageWriter::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   FileSystemPathHelper::CheckOutputFile(this, "Output File Name", getFileName(), true);
 
@@ -328,9 +328,9 @@ template <typename TPixel, typename UnusedTPixel, unsigned int Dimensions> void 
 // -----------------------------------------------------------------------------
 void ITKImageWriter::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

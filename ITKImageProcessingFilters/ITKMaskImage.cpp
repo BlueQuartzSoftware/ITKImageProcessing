@@ -81,8 +81,8 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
 {
   // Check consistency of parameters
 
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   QVector<QString> supportedTypes;
   supportedTypes << "uint8_t"
                  << "uint16_t"

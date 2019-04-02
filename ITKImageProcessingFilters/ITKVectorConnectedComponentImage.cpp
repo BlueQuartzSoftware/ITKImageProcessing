@@ -94,8 +94,8 @@ void ITKVectorConnectedComponentImage::readFilterParameters(AbstractFilterParame
 // -----------------------------------------------------------------------------
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKVectorConnectedComponentImage::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   // Check consistency of parameters
   QVector<QString> supportedTypes;

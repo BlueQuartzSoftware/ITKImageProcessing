@@ -80,8 +80,8 @@ void ITKApproximateSignedDistanceMapImage::readFilterParameters(AbstractFilterPa
 // -----------------------------------------------------------------------------
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKApproximateSignedDistanceMapImage::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   // Check consistency of parameters
 

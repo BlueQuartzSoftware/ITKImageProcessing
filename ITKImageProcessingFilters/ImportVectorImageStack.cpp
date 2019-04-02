@@ -141,8 +141,8 @@ void ImportVectorImageStack::initialize()
 void ImportVectorImageStack::dataCheck()
 {
   DataArrayPath tempPath;
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   QString ss;
 
   if(m_InputFileListInfo.InputPath.isEmpty())
@@ -414,8 +414,8 @@ template <typename T> void importVectorData(ImportVectorImageStack* filter)
 // -----------------------------------------------------------------------------
 void ImportVectorImageStack::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   dataCheck();
   if(getErrorCode() < 0)

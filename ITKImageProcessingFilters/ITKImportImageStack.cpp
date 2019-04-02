@@ -158,8 +158,8 @@ QVector<QString> ITKImportImageStack::getFileList()
 // -----------------------------------------------------------------------------
 void ITKImportImageStack::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   DataArrayPath tempPath;
   QString ss;
@@ -347,8 +347,8 @@ void readImageStack(ITKImportImageStack* filter, const QVector<QString>& fileLis
 // -----------------------------------------------------------------------------
 void ITKImportImageStack::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   dataCheck();
   if(getErrorCode() < 0)

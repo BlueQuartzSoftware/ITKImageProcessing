@@ -86,8 +86,8 @@ void ITKRegionalMinimaImage::readFilterParameters(AbstractFilterParametersReader
 // -----------------------------------------------------------------------------
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKRegionalMinimaImage::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   // Check consistency of parameters
 

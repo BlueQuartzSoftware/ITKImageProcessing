@@ -126,8 +126,8 @@ void ITKImageReader::dataCheck()
   DataArrayPath dap(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), getImageDataArrayName());
   readImage(dap, true);
   // If we got here, that means that there is no error
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 }
 
 // -----------------------------------------------------------------------------
@@ -150,8 +150,8 @@ void ITKImageReader::preflight()
 // -----------------------------------------------------------------------------
 void ITKImageReader::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

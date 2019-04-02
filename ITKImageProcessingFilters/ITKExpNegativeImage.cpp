@@ -69,8 +69,8 @@ void ITKExpNegativeImage::readFilterParameters(AbstractFilterParametersReader* r
 // -----------------------------------------------------------------------------
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKExpNegativeImage::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   // Check consistency of parameters
 
