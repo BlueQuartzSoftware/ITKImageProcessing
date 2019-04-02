@@ -145,8 +145,8 @@ void CalculateBackground::initialize()
 // -----------------------------------------------------------------------------
 void CalculateBackground::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   initialize();
 
   DataArrayPath tempPath;
@@ -258,8 +258,8 @@ void CalculateBackground::execute()
   {
     return;
   }
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   /* If some error occurs this code snippet can report the error up the call chain*/
   if (err < 0)

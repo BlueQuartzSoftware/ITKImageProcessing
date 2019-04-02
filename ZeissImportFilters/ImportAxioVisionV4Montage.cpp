@@ -186,8 +186,8 @@ void ImportAxioVisionV4Montage::initialize()
 // -----------------------------------------------------------------------------
 void ImportAxioVisionV4Montage::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   QString ss;
   QFileInfo fi(getInputFile());
@@ -280,8 +280,8 @@ void ImportAxioVisionV4Montage::execute()
   {
     return;
   }
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   /* If some error occurs this code snippet can report the error up the call chain*/
   if(err < 0)
