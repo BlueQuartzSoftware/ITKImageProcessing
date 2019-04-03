@@ -304,7 +304,9 @@ public:
 
     bool propertySet = false;
     reader->setDataContainerArray(containerArray);
-    propertySet = reader->setProperty("DataContainerName", path.getDataContainerName());
+    QVariant var;
+    var.setValue(DataArrayPath(path.getDataContainerName(), "", ""));
+    propertySet = reader->setProperty("DataContainerName", var);
     DREAM3D_REQUIRE_EQUAL(propertySet, true);
     propertySet = reader->setProperty("CellAttributeMatrixName", path.getAttributeMatrixName());
     DREAM3D_REQUIRE_EQUAL(propertySet, true);

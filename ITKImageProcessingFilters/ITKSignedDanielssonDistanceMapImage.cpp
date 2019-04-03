@@ -40,7 +40,7 @@ ITKSignedDanielssonDistanceMapImage::~ITKSignedDanielssonDistanceMapImage() = de
 // -----------------------------------------------------------------------------
 void ITKSignedDanielssonDistanceMapImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_BOOL_FP("InsideIsPositive", InsideIsPositive, FilterParameter::Parameter, ITKSignedDanielssonDistanceMapImage));
   parameters.push_back(SIMPL_NEW_BOOL_FP("SquaredDistance", SquaredDistance, FilterParameter::Parameter, ITKSignedDanielssonDistanceMapImage));

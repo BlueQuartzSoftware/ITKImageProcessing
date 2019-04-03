@@ -13,12 +13,8 @@ class ITKBinomialBlurImageTest : public ITKTestBase
 {
 
 public:
-  ITKBinomialBlurImageTest()
-  {
-  }
-  virtual ~ITKBinomialBlurImageTest()
-  {
-  }
+ITKBinomialBlurImageTest() = default;
+~ITKBinomialBlurImageTest() override = default;
 
   int TestITKBinomialBlurImagedefaultsTest()
 {

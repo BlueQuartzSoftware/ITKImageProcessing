@@ -13,12 +13,8 @@ class ITKShotNoiseImageTest : public ITKTestBase
 {
 
 public:
-  ITKShotNoiseImageTest()
-  {
-  }
-  virtual ~ITKShotNoiseImageTest()
-  {
-  }
+ITKShotNoiseImageTest() = default;
+~ITKShotNoiseImageTest() override = default;
 
   int TestITKShotNoiseImage2dTest()
 {

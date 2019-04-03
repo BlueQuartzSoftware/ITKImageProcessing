@@ -12,12 +12,8 @@ class ITKAcosImageTest : public ITKTestBase
 {
 
 public:
-  ITKAcosImageTest()
-  {
-  }
-  virtual ~ITKAcosImageTest()
-  {
-  }
+ITKAcosImageTest() = default;
+~ITKAcosImageTest() override = default;
 
   int TestITKAcosImagedefaultsTest()
 {

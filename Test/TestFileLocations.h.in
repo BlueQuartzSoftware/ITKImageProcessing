@@ -66,10 +66,10 @@ namespace UnitTest
     const QString NonExistentInputTestFile("@TEST_TEMP_DIR@/NotHere.ghost");
   } // namespace ITKImageProcessingReaderTest
 
-  namespace ITKImageProcessingImportImageStackTest
+  namespace ITKImportImageStackTest
   {
     const QString StackInputTestDir("@DREAM3D_DATA_DIR@/Data/Image");
-  } // namespace ITKImageProcessingImportImageStackTest
+    } // namespace ITKImportImageStackTest
 
   namespace ITKImageProcessingWriterTest
   {

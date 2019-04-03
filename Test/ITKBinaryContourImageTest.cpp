@@ -14,12 +14,8 @@ class ITKBinaryContourImageTest : public ITKTestBase
 {
 
 public:
-  ITKBinaryContourImageTest()
-  {
-  }
-  virtual ~ITKBinaryContourImageTest()
-  {
-  }
+ITKBinaryContourImageTest() = default;
+~ITKBinaryContourImageTest() override = default;
 
   int TestITKBinaryContourImagedefaultTest()
 {

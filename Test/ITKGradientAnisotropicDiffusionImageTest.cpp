@@ -13,12 +13,8 @@ class ITKGradientAnisotropicDiffusionImageTest : public ITKTestBase
 {
 
 public:
-  ITKGradientAnisotropicDiffusionImageTest()
-  {
-  }
-  virtual ~ITKGradientAnisotropicDiffusionImageTest()
-  {
-  }
+ITKGradientAnisotropicDiffusionImageTest() = default;
+~ITKGradientAnisotropicDiffusionImageTest() override = default;
 
   int TestITKGradientAnisotropicDiffusionImagedefaultsTest()
 {

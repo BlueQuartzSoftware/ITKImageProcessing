@@ -12,12 +12,8 @@ class ITKBoundedReciprocalImageTest : public ITKTestBase
 {
 
 public:
-  ITKBoundedReciprocalImageTest()
-  {
-  }
-  virtual ~ITKBoundedReciprocalImageTest()
-  {
-  }
+ITKBoundedReciprocalImageTest() = default;
+~ITKBoundedReciprocalImageTest() override = default;
 
   int TestITKBoundedReciprocalImagedefaultsTest()
 {

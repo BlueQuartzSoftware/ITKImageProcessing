@@ -13,12 +13,8 @@ class ITKMedianProjectionImageTest : public ITKTestBase
 {
 
 public:
-  ITKMedianProjectionImageTest()
-  {
-  }
-  virtual ~ITKMedianProjectionImageTest()
-  {
-  }
+ITKMedianProjectionImageTest() = default;
+~ITKMedianProjectionImageTest() override = default;
 
   int TestITKMedianProjectionImagedefaultsTest()
 {

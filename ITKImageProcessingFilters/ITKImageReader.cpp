@@ -37,6 +37,7 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
@@ -44,6 +45,7 @@
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
 #include "ITKImageProcessingPlugin.h"
+
 
 /* ############## Start Private Implementation ############################### */
 // -----------------------------------------------------------------------------
@@ -69,6 +71,11 @@ ITKImageReaderPrivate::ITKImageReaderPrivate(ITKImageReader* ptr)
 , m_FileNameCache("")
 {
 }
+
+enum createdPathID : RenameDataPath::DataID_t
+{
+  DataContainerID = 1
+};
 
 // -----------------------------------------------------------------------------
 //
@@ -100,10 +107,10 @@ SIMPL_PIMPL_PROPERTY_DEF(ITKImageReader, ImageGeom::Pointer, DCGeometryCache)
 // -----------------------------------------------------------------------------
 void ITKImageReader::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   QString supportedExtensions = ITKImageProcessingPlugin::getListSupportedReadExtensions();
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("File", FileName, FilterParameter::Parameter, ITKImageReader, supportedExtensions, "Image"));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Data Container", DataContainerName, FilterParameter::CreatedArray, ITKImageReader));
+  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container", DataContainerName, FilterParameter::CreatedArray, ITKImageReader));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
   parameters.push_back(SIMPL_NEW_STRING_FP("Cell Attribute Matrix", CellAttributeMatrixName, FilterParameter::CreatedArray, ITKImageReader));
   parameters.push_back(SIMPL_NEW_STRING_FP("Image Data", ImageDataArrayName, FilterParameter::CreatedArray, ITKImageReader));
@@ -117,7 +124,7 @@ void ITKImageReader::readFilterParameters(AbstractFilterParametersReader* reader
 {
   reader->openFilterGroup(this, index);
   setFileName(reader->readString("FileName", getFileName()));
-  setDataContainerName(reader->readString("DataContainerName", getDataContainerName()));
+  setDataContainerName(reader->readDataArrayPath("DataContainerName", getDataContainerName()));
   reader->closeFilterGroup();
 }
 
@@ -151,9 +158,9 @@ void ITKImageReader::dataCheck()
 
   QFileInfo fi(filename);
   QDateTime lastModified(fi.lastModified());
-  DataArrayPath dap(getDataContainerName(), getCellAttributeMatrixName(), getImageDataArrayName());
+  DataArrayPath dap(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), getImageDataArrayName());
 
-  DataContainer::Pointer dc = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
+  DataContainer::Pointer dc = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName(), DataContainerID);
   if(dc.get() == nullptr)
   {
     return;
@@ -199,8 +206,14 @@ void ITKImageReader::dataCheck()
     {
       da->setName(getImageDataArrayName());
     }
-    am->addAttributeArray(da->getName(), da);
+    am->addOrReplaceAttributeArray(da);
   }
+
+  DataArrayPath dap(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), getImageDataArrayName());
+  readImage(dap, true);
+  // If we got here, that means that there is no error
+  setErrorCondition(0);
+  setWarningCondition(0);
 }
 
 // -----------------------------------------------------------------------------
@@ -230,7 +243,7 @@ void ITKImageReader::execute()
   {
     return;
   }
-  DataArrayPath dap(getDataContainerName(), getCellAttributeMatrixName(), getImageDataArrayName());
+  DataArrayPath dap(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), getImageDataArrayName());
   readImage(dap, false);
 }
 
@@ -279,7 +292,7 @@ const QString ITKImageReader::getFilterVersion() const
 // -----------------------------------------------------------------------------
 const QString ITKImageReader::getGroupName() const
 {
-  return "IO";
+  return SIMPL::FilterGroups::IOFilters;
 }
 
 // -----------------------------------------------------------------------------
@@ -295,7 +308,7 @@ const QUuid ITKImageReader::getUuid()
 // -----------------------------------------------------------------------------
 const QString ITKImageReader::getSubGroupName() const
 {
-  return "Input";
+  return SIMPL::FilterSubGroups::InputFilters;
 }
 
 // -----------------------------------------------------------------------------

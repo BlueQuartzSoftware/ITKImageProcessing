@@ -41,7 +41,7 @@ ITKVectorRescaleIntensityImage::~ITKVectorRescaleIntensityImage() = default;
 // -----------------------------------------------------------------------------
 void ITKVectorRescaleIntensityImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();

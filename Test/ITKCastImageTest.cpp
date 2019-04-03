@@ -10,12 +10,8 @@ class ITKCastImageTest : public ITKTestBase
 {
 
 public:
-  ITKCastImageTest()
-  {
-  }
-  virtual ~ITKCastImageTest()
-  {
-  }
+ITKCastImageTest() = default;
+~ITKCastImageTest() override = default;
 
   int TestITKCastImagefloatTodoubleTest()
   {

@@ -12,12 +12,8 @@ class ITKMultiScaleHessianBasedObjectnessImageTest : public ITKTestBase
 {
 
 public:
-  ITKMultiScaleHessianBasedObjectnessImageTest()
-  {
-  }
-  virtual ~ITKMultiScaleHessianBasedObjectnessImageTest()
-  {
-  }
+ITKMultiScaleHessianBasedObjectnessImageTest() = default;
+~ITKMultiScaleHessianBasedObjectnessImageTest() override = default;
 
   int TestITKMultiScaleHessianBasedObjectnessImagedefaultTest()
   {

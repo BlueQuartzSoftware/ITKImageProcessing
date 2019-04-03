@@ -13,12 +13,8 @@ class ITKMaximumProjectionImageTest : public ITKTestBase
 {
 
 public:
-  ITKMaximumProjectionImageTest()
-  {
-  }
-  virtual ~ITKMaximumProjectionImageTest()
-  {
-  }
+ITKMaximumProjectionImageTest() = default;
+~ITKMaximumProjectionImageTest() override = default;
 
   int TestITKMaximumProjectionImagedefaultsTest()
 {

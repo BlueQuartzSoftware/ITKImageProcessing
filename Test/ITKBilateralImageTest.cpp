@@ -13,12 +13,8 @@ class ITKBilateralImageTest : public ITKTestBase
 {
 
 public:
-  ITKBilateralImageTest()
-  {
-  }
-  virtual ~ITKBilateralImageTest()
-  {
-  }
+ITKBilateralImageTest() = default;
+~ITKBilateralImageTest() override = default;
 
   int TestITKBilateralImagedefaultTest()
 {

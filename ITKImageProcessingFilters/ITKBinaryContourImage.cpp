@@ -40,7 +40,7 @@ ITKBinaryContourImage::~ITKBinaryContourImage() = default;
 // -----------------------------------------------------------------------------
 void ITKBinaryContourImage::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_BOOL_FP("FullyConnected", FullyConnected, FilterParameter::Parameter, ITKBinaryContourImage));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("BackgroundValue", BackgroundValue, FilterParameter::Parameter, ITKBinaryContourImage));

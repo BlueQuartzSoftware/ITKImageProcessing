@@ -42,10 +42,7 @@
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
-
 #include "SIMPLib/ITK/itkDream3DImage.h"
-
-#include <itkImageSeriesReader.h>
 
 #include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
@@ -56,11 +53,10 @@ class ITKImageProcessing_EXPORT ITKImportImageStack : public AbstractFilter
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKImportImageStack SUPERCLASS AbstractFilter)
-  PYB11_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
+  PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
   PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
-  PYB11_PROPERTY(FloatVec3_t Origin READ getOrigin WRITE setOrigin)
-  PYB11_PROPERTY(FloatVec3_t Resolution READ getResolution WRITE setResolution)
-  PYB11_PROPERTY(QString BoundsFile READ getBoundsFile WRITE setBoundsFile)
+  PYB11_PROPERTY(FloatVec3Type Origin READ getOrigin WRITE setOrigin)
+  PYB11_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
   PYB11_PROPERTY(FileListInfo_t InputFileListInfo READ getInputFileListInfo WRITE setInputFileListInfo)
   PYB11_PROPERTY(int ImageStack READ getImageStack WRITE setImageStack)
   PYB11_PROPERTY(QString ImageDataArrayName READ getImageDataArrayName WRITE setImageDataArrayName)
@@ -71,20 +67,17 @@ public:
 
   ~ITKImportImageStack() override;
 
-  SIMPL_FILTER_PARAMETER(QString, DataContainerName)
-  Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, DataContainerName)
+  Q_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
 
   SIMPL_FILTER_PARAMETER(QString, CellAttributeMatrixName)
   Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
-  SIMPL_FILTER_PARAMETER(FloatVec3_t, Origin)
-  Q_PROPERTY(FloatVec3_t Origin READ getOrigin WRITE setOrigin)
+  SIMPL_FILTER_PARAMETER(FloatVec3Type, Origin)
+  Q_PROPERTY(FloatVec3Type Origin READ getOrigin WRITE setOrigin)
 
-  SIMPL_FILTER_PARAMETER(FloatVec3_t, Resolution)
-  Q_PROPERTY(FloatVec3_t Resolution READ getResolution WRITE setResolution)
-
-  SIMPL_FILTER_PARAMETER(QString, BoundsFile)
-  Q_PROPERTY(QString BoundsFile READ getBoundsFile WRITE setBoundsFile)
+  SIMPL_FILTER_PARAMETER(FloatVec3Type, Spacing)
+  Q_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
 
   SIMPL_FILTER_PARAMETER(FileListInfo_t, InputFileListInfo)
   Q_PROPERTY(FileListInfo_t InputFileListInfo READ getInputFileListInfo WRITE setInputFileListInfo)
@@ -200,19 +193,6 @@ private:
    * @brief Get the ordered list of input files.
    */
   QVector<QString> getFileList();
-
-  /**
-   * @brief readImage does the work of reading in the image. If \c dataCheck
-   * is true, only the image information is read -- pixel buffer information
-   * is not read.
-   */
-  void readImage(const QVector<QString>& fileList, bool dataCheck);
-  template <typename TPixel> void readImageWithPixelType(const QVector<QString>& fileList, bool dataCheck);
-
-  /**
-  * @brief Reads image size, spacing and origin, and updates container information accordingly.
-  */
-  template <typename TPixel> void readImageOutputInformation(typename itk::ImageSeriesReader<itk::Dream3DImage<TPixel, 3>>::Pointer& reader, DataContainer::Pointer& container);
 
   DEFINE_DATAARRAY_VARIABLE(uint8_t, ImageData)
 

@@ -54,7 +54,7 @@ ITKImportRoboMetMontagePrivate::ITKImportRoboMetMontagePrivate(ITKImportRoboMetM
 //
 // -----------------------------------------------------------------------------
 ITKImportRoboMetMontage::ITKImportRoboMetMontage()
-: m_DataContainerPrefix(SIMPL::Defaults::ImageDataContainerName + "_")
+: m_DataContainerName(SIMPL::Defaults::ImageDataContainerName + "_")
 , m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName)
 , m_RegistrationFile("")
 , m_AttributeArrayName("ImageTile")
@@ -108,14 +108,14 @@ void ITKImportRoboMetMontage::initialize()
 // -----------------------------------------------------------------------------
 void ITKImportRoboMetMontage::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Registration File (Mosaic Details)", RegistrationFile, FilterParameter::Parameter, ITKImportRoboMetMontage, "", "*.txt"));
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Slice Number", SliceNumber, FilterParameter::Parameter, ITKImportRoboMetMontage));
   parameters.push_back(SIMPL_NEW_STRING_FP("Image File Prefix", ImageFilePrefix, FilterParameter::Parameter, ITKImportRoboMetMontage));
   parameters.push_back(SIMPL_NEW_STRING_FP("Image File Suffix", ImageFileSuffix, FilterParameter::Parameter, ITKImportRoboMetMontage));
   parameters.push_back(SIMPL_NEW_STRING_FP("Image File Extension", ImageFileExtension, FilterParameter::Parameter, ITKImportRoboMetMontage));
 
-  parameters.push_back(SIMPL_NEW_STRING_FP("Data Container Prefix", DataContainerPrefix, FilterParameter::CreatedArray, ITKImportRoboMetMontage));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Data Container Prefix", DataContainerName, FilterParameter::CreatedArray, ITKImportRoboMetMontage));
   parameters.push_back(SIMPL_NEW_STRING_FP("Cell Attribute Matrix", CellAttributeMatrixName, FilterParameter::CreatedArray, ITKImportRoboMetMontage));
   parameters.push_back(SIMPL_NEW_STRING_FP("Image Array Name", AttributeArrayName, FilterParameter::CreatedArray, ITKImportRoboMetMontage));
 
@@ -175,7 +175,7 @@ void ITKImportRoboMetMontage::dataCheck()
 	  return;
   }
 
-  if(m_DataContainerPrefix.isEmpty())
+  if(m_DataContainerName.isEmpty())
   {
 	  QString ss = QObject::tr("The data container prefix must be set").arg(getHumanLabel());
 	  setErrorCondition(-2006);
@@ -244,10 +244,10 @@ void ITKImportRoboMetMontage::dataCheck()
 		  QString filePath = iter.key();
 
 		  QString rowColIdString = m_RowColIdMap[filePath];
-		  QString dcName = tr("%1_%2").arg(getDataContainerPrefix()).arg(rowColIdString);
+		  QString dcName = tr("%1_%2").arg(getDataContainerName()).arg(rowColIdString);
 
 		  ITKImageReader::Pointer reader = iter.value();
-		  reader->setDataContainerName(dcName);
+		  reader->setDataContainerName(DataArrayPath(dcName, "", ""));
 		  reader->setCellAttributeMatrixName(getCellAttributeMatrixName());
 		  reader->setImageDataArrayName(getAttributeArrayName());
 		  reader->setDataContainerArray(DataContainerArray::New());
@@ -261,10 +261,10 @@ void ITKImportRoboMetMontage::dataCheck()
 		  }
 
 		  DataContainerArray::Pointer filterDca = reader->getDataContainerArray();
-		  QList<DataContainer::Pointer> dcs = filterDca->getDataContainers();
+		  DataContainerArray::Container dcs = filterDca->getDataContainers();
 		  for (DataContainer::Pointer dc : dcs)
 		  {
-			  getDataContainerArray()->addDataContainer(dc);
+			  getDataContainerArray()->addOrReplaceDataContainer(dc);
 
 			  QPointF coords = m_CoordsMap[filePath];
 
@@ -285,11 +285,11 @@ void ITKImportRoboMetMontage::readImageFile(const QString &filePath)
 	QString rowColIdString = m_RowColIdMap[filePath];
 	QPointF coords = m_CoordsMap[filePath];
 
-	QString dcName = tr("%1_%2").arg(getDataContainerPrefix()).arg(rowColIdString);
+	QString dcName = tr("%1_%2").arg(getDataContainerName()).arg(rowColIdString);
 
 	ITKImageReader::Pointer reader = ITKImageReader::New();
 	reader->setFileName(fi.filePath());
-	reader->setDataContainerName(dcName);
+	reader->setDataContainerName(DataArrayPath(dcName, "", ""));
 	reader->setCellAttributeMatrixName(getCellAttributeMatrixName());
 	reader->setImageDataArrayName(getAttributeArrayName());
 
@@ -303,10 +303,10 @@ void ITKImportRoboMetMontage::readImageFile(const QString &filePath)
 	}
 
 	DataContainerArray::Pointer filterDca = reader->getDataContainerArray();
-	QList<DataContainer::Pointer> dcs = filterDca->getDataContainers();
+	DataContainerArray::Container dcs = filterDca->getDataContainers();
 	for (DataContainer::Pointer dc : dcs)
 	{
-		getDataContainerArray()->addDataContainer(dc);
+		getDataContainerArray()->addOrReplaceDataContainer(dc);
 	}
 
 	DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, dcName);
