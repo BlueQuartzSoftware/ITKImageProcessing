@@ -45,8 +45,8 @@ class ITKImportRoboMetMontageTest : public ITKTestBase
   const QString m_RegistrationCoordinatesArrayName = QString("RegistrationCoordinates");
   const QString m_ArrayNamesArrayName = QString("ArrayNames");
 
-  FloatVec3_t m_Origin;
-  FloatVec3_t m_Resolution;
+  FloatVec3Type m_Origin;
+  FloatVec3Type m_Resolution;
 
 public:
   ITKImportRoboMetMontageTest() = default;
@@ -84,16 +84,16 @@ public:
     propWasSet = import->setProperty("MetaDataAttributeMatrixName", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
 
-    m_Origin.x = 0.0f;
-    m_Origin.y = 0.0f;
-    m_Origin.z = 0.0f;
+    m_Origin.setX(0.0f);
+    m_Origin.setY(0.0f);
+    m_Origin.setZ(0.0f);
     var.setValue(m_Origin);
     propWasSet = import->setProperty("Origin", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
 
-    m_Resolution.x = 0.25f;
-    m_Resolution.y = 0.50f;
-    m_Resolution.z = 1.25f;
+    m_Resolution.setX(0.25f);
+    m_Resolution.setY(0.50f);
+    m_Resolution.setZ(1.25f);
     var.setValue(m_Resolution);
     propWasSet = import->setProperty("Resolution", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);

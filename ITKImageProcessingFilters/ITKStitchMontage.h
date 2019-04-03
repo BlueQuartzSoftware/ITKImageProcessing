@@ -62,7 +62,7 @@ class ITKImageProcessing_EXPORT ITKStitchMontage : public AbstractFilter
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKStitchMontage SUPERCLASS AbstractFilter)
-  PYB11_PROPERTY(IntVec3_t MontageSize READ getMontageSize WRITE setMontageSize)
+  PYB11_PROPERTY(IntVec3Type MontageSize READ getMontageSize WRITE setMontageSize)
   PYB11_PROPERTY(QStringList, ImageDataContainers READ getImageDataContainers WRITE setImageDataContainers)
   PYB11_PROPERTY(QString CommonAttributeMatrixName READ getCommonAttributeMatrixName WRITE setCommonAttributeMatrixName)
   PYB11_PROPERTY(QString CommonDataArrayName READ getCommonDataArrayName WRITE setCommonDataArrayName)
@@ -74,8 +74,8 @@ public:
 
   ~ITKStitchMontage() override;
 
-  SIMPL_FILTER_PARAMETER(IntVec3_t, MontageSize)
-  Q_PROPERTY(IntVec3_t MontageSize READ getMontageSize WRITE setMontageSize)
+  SIMPL_FILTER_PARAMETER(IntVec3Type, MontageSize)
+  Q_PROPERTY(IntVec3Type MontageSize READ getMontageSize WRITE setMontageSize)
 
   SIMPL_FILTER_PARAMETER(QStringList, ImageDataContainers)
   Q_PROPERTY(QStringList ImageDataContainers READ getImageDataContainers WRITE setImageDataContainers)

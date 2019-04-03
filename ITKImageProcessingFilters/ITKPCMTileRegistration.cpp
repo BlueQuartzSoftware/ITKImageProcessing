@@ -172,7 +172,7 @@ void ITKPCMTileRegistration::initialize()
 // -----------------------------------------------------------------------------
 void ITKPCMTileRegistration::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_INT_VEC3_FP("Montage Size (Cols, Rows)", MontageSize, FilterParameter::Parameter, ITKPCMTileRegistration));
 
@@ -207,8 +207,8 @@ void ITKPCMTileRegistration::dataCheck()
   QString ss;
   int err = 0;
 
-  m_xMontageSize = m_MontageSize.x;
-  m_yMontageSize = m_MontageSize.y;
+  m_xMontageSize = m_MontageSize.getX();
+  m_yMontageSize = m_MontageSize.getY();
 
   int totalMontageSize = m_xMontageSize*m_yMontageSize;
 

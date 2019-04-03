@@ -138,7 +138,7 @@ void ITKImportFijiMontage::initialize()
 // -----------------------------------------------------------------------------
 void ITKImportFijiMontage::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Fiji Configuration File", FijiConfigFilePath, FilterParameter::Parameter, ITKImportFijiMontage, "", "*.txt"));
 
   parameters.push_back(SIMPL_NEW_STRING_FP("Data Container Prefix", DataContainerPrefix, FilterParameter::CreatedArray, ITKImportFijiMontage));
@@ -266,7 +266,7 @@ void ITKImportFijiMontage::dataCheck()
       QString dcName = tr("%1_%2").arg(getDataContainerPrefix()).arg(rowColIdString);
 
       ITKImageReader::Pointer reader = imageReaderCache[i];
-      reader->setDataContainerName(dcName);
+      reader->setDataContainerName(DataArrayPath(dcName, "", ""));
       reader->setCellAttributeMatrixName(getCellAttributeMatrixName());
       reader->setImageDataArrayName(getAttributeArrayName());
       reader->setDataContainerArray(DataContainerArray::New());
@@ -280,10 +280,10 @@ void ITKImportFijiMontage::dataCheck()
       }
 
       DataContainerArray::Pointer filterDca = reader->getDataContainerArray();
-      QList<DataContainer::Pointer> dcs = filterDca->getDataContainers();
+      DataContainerArray::Container dcs = filterDca->getDataContainers();
       for (DataContainer::Pointer dc : dcs)
       {
-        getDataContainerArray()->addDataContainer(dc);
+        getDataContainerArray()->addOrReplaceDataContainer(dc);
 
         QPointF coords = imageTileData.coords;
 
@@ -309,7 +309,7 @@ void ITKImportFijiMontage::readImageFile(itk::FijiImageTileData imageTileData)
 
   ITKImageReader::Pointer reader = ITKImageReader::New();
   reader->setFileName(fi.filePath());
-  reader->setDataContainerName(dcName);
+  reader->setDataContainerName(DataArrayPath(dcName, "", ""));
   reader->setCellAttributeMatrixName(getCellAttributeMatrixName());
   reader->setImageDataArrayName(getAttributeArrayName());
 
@@ -323,10 +323,10 @@ void ITKImportFijiMontage::readImageFile(itk::FijiImageTileData imageTileData)
   }
 
   DataContainerArray::Pointer filterDca = reader->getDataContainerArray();
-  QList<DataContainer::Pointer> dcs = filterDca->getDataContainers();
+  DataContainerArray::Container dcs = filterDca->getDataContainers();
   for (DataContainer::Pointer dc : dcs)
   {
-    getDataContainerArray()->addDataContainer(dc);
+    getDataContainerArray()->addOrReplaceDataContainer(dc);
   }
 
   DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, dcName);

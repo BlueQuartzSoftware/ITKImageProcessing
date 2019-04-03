@@ -195,7 +195,7 @@ void ITKStitchMontage::initialize()
 // -----------------------------------------------------------------------------
 void ITKStitchMontage::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_INT_VEC3_FP("Montage Size (Cols, Rows)", MontageSize, FilterParameter::Parameter, ITKStitchMontage));
 
@@ -234,8 +234,8 @@ void ITKStitchMontage::dataCheck()
   QString ss;
   int err = 0;
 
-  m_xMontageSize = m_MontageSize.x;
-  m_yMontageSize = m_MontageSize.y;
+  m_xMontageSize = m_MontageSize.getX();
+  m_yMontageSize = m_MontageSize.getY();
 
   int totalMontageSize = m_xMontageSize*m_yMontageSize;
 
@@ -413,7 +413,7 @@ void ITKStitchMontage::dataCheck()
   }
 
   IDataArray::Pointer da = imagePtr->createNewArray(montageArrayXSize * montageArrayYSize, QVector<size_t>(1, 1), getMontageDataArrayName(), !getInPreflight());
-  am->addAttributeArray(da->getName(), da);
+  am->addOrReplaceAttributeArray(da);
 
   ss = QObject::tr("The number of elements of montage data array '%1' is projected to be %2.  This is assuming "
                    "0% overlap between tiles, so the actual geometry dimensions after executing the stitching algorithm may be smaller.")

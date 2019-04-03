@@ -159,7 +159,6 @@ void ITKImageReader::dataCheck()
   QFileInfo fi(filename);
   QDateTime lastModified(fi.lastModified());
   DataArrayPath dap(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), getImageDataArrayName());
-
   DataContainer::Pointer dc = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName(), DataContainerID);
   if(dc.get() == nullptr)
   {
@@ -209,7 +208,6 @@ void ITKImageReader::dataCheck()
     am->addOrReplaceAttributeArray(da);
   }
 
-  DataArrayPath dap(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), getImageDataArrayName());
   readImage(dap, true);
   // If we got here, that means that there is no error
   setErrorCondition(0);
