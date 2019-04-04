@@ -574,7 +574,7 @@ template <typename PixelType, typename AccumulatePixelType> void ITKStitchMontag
 template <typename PixelType, typename Resampler> typename Resampler::Pointer ITKStitchMontage::createResampler()
 {
   using ScalarPixelType = typename itk::NumericTraits<PixelType>::ValueType;
-  using ScalarImageType = itk::Dream3DImage<ScalarPixelType, Dimension>;
+  //using ScalarImageType = itk::Dream3DImage<ScalarPixelType, Dimension>;
 
   typename Resampler::Pointer resampler = Resampler::New();
   // resampleF->SetMontage(montage); // doesn't compile, because montage is expected
