@@ -83,10 +83,9 @@
   }                                                                                                                                                                                                    \
   else                                                                                                                                                                                                 \
   {                                                                                                                                                                                                    \
-    filter->notifyErrorMessage(filter->getHumanLabel(),                                                                                                                                                \
+    filter->setErrorCondition(TemplateHelpers::Errors::UnsupportedImageType,                                                                                                                                                \
                                "The input array's image type is not recognized.  Supported image types"                                                                                                \
-                               " are grayscale (1-component), RGB (3-component), and RGBA (4-component)",                                                                                              \
-                               TemplateHelpers::Errors::UnsupportedImageType);                                                                                                                         \
+                               " are grayscale (1-component), RGB (3-component), and RGBA (4-component)");                                                                                                                         \
   }
 
 #define EXECUTE_DATATYPE_FUNCTION_TEMPLATE(filter, rgb_call, grayscale_call, inputData, ...)                                                                                                           \
@@ -140,7 +139,7 @@
   }                                                                                                                                                                                                    \
   else                                                                                                                                                                                                 \
   {                                                                                                                                                                                                    \
-    filter->notifyErrorMessage(filter->getHumanLabel(), "The input array's data type is not supported", TemplateHelpers::Errors::UnsupportedDataType);                                                 \
+    filter->setErrorCondition(TemplateHelpers::Errors::UnsupportedDataType, "The input array's data type is not supported");                                                 \
   }
 
 #define EXECUTE_REGISTER_FUNCTION_TEMPLATE(filter, rgb_call, grayscale_call, inputData, ...) EXECUTE_DATATYPE_FUNCTION_TEMPLATE(filter, rgb_call, grayscale_call, inputData, __VA_ARGS__)
@@ -162,8 +161,8 @@ ITKPCMTileRegistration::~ITKPCMTileRegistration() = default;
 // -----------------------------------------------------------------------------
 void ITKPCMTileRegistration::initialize()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   setCancel(false);
 }
 
@@ -200,8 +199,8 @@ void ITKPCMTileRegistration::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void ITKPCMTileRegistration::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   initialize();
 
   QString ss;
@@ -214,9 +213,8 @@ void ITKPCMTileRegistration::dataCheck()
 
   if(m_xMontageSize <= 0 || m_yMontageSize <= 0)
   {
-    setErrorCondition(-11000);
     QString ss = QObject::tr("The Montage Size x and y values must be greater than 0");
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-11000, ss);
     return;
   }
 
@@ -225,34 +223,30 @@ void ITKPCMTileRegistration::dataCheck()
   // Test to make sure at least one data container is selected
   if(selectedDCCount < 1)
   {
-    setErrorCondition(-11001);
     QString ss = QObject::tr("At least one Data Container must be selected");
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-11001, ss);
     return;
   }
 
   if (totalMontageSize != selectedDCCount)
   {
-    setErrorCondition(-11002);
     QString ss = QObject::tr("The number of selected data containers (%1) does not match the number of data "
                              "containers expected by the montage size dimensions specified (%2)").arg(selectedDCCount).arg(totalMontageSize);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-11002, ss);
     return;
   }
 
   if(getCommonAttributeMatrixName().isEmpty())
   {
-    setErrorCondition(-11003);
     QString ss = QObject::tr("Common Attribute Matrix is empty.");
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-11003, ss);
     return;
   }
 
   if(getCommonDataArrayName().isEmpty())
   {
-    setErrorCondition(-11004);
     QString ss = QObject::tr("Common Data Array is empty.");
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-11004, ss);
     return;
   }
 
@@ -267,7 +261,7 @@ void ITKPCMTileRegistration::dataCheck()
   testPath.setDataArrayName(getCommonDataArrayName());
 
   AttributeMatrix::Pointer imageDataAM = getDataContainerArray()->getPrereqAttributeMatrixFromPath(this, testPath, err);
-  if(getErrorCondition() < 0 || err < 0)
+  if(getErrorCode() < 0 || err < 0)
   {
     return;
   }
@@ -276,13 +270,12 @@ void ITKPCMTileRegistration::dataCheck()
   if(imageDataTupleDims.size() < 2)
   {
     QString ss = QObject::tr("Image Data Array at path '%1' must have at least 2 tuple dimensions.").arg(testPath.serialize("/"));
-    setErrorCondition(-11005);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-11005, ss);
     return;
   }
 
   IDataArray::Pointer imagePtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, testPath);
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -297,16 +290,15 @@ void ITKPCMTileRegistration::dataCheck()
     testPath.setDataArrayName(getCommonDataArrayName());
 
     ImageGeom::Pointer image = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, testPath.getDataContainerName());
-    if(getErrorCondition() < 0)
+    if(getErrorCode() < 0)
     {
       return;
     }
 
     if(getManualTileOverlap() && (getTileOverlap() < 0.0f || getTileOverlap() > 100.0f))
     {
-      setErrorCondition(-11006);
       QString ss = QObject::tr("Tile Overlap must be between 0.0 and 100.0.");
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(-11006, ss);
       return;
     }
   }
@@ -330,16 +322,16 @@ void ITKPCMTileRegistration::preflight()
 // -----------------------------------------------------------------------------
 void ITKPCMTileRegistration::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
 
   createFijiDataStructure();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -357,7 +349,7 @@ void ITKPCMTileRegistration::execute()
     EXECUTE_REGISTER_FUNCTION_TEMPLATE(this, registerRGBMontage, registerGrayscaleMontage, da);
   }
   /* Let the GUI know we are done with this filter */
-  notifyStatusMessage(getHumanLabel(), "Complete");
+  notifyStatusMessage("Complete");
 }
 
 // -----------------------------------------------------------------------------
@@ -391,7 +383,7 @@ void ITKPCMTileRegistration::createFijiDataStructure()
     QString dcName = dcNameIter.next();
     dcList.push_back(dcName);
     DataContainer::Pointer dcItem = dca->getPrereqDataContainer(this, dcName);
-    if(getErrorCondition() < 0 || dcItem.get() == nullptr)
+    if(getErrorCode() < 0 || dcItem.get() == nullptr)
     {
       continue;
     }
@@ -601,7 +593,7 @@ template <typename PixelType> void ITKPCMTileRegistration::registerRGBMontage(in
 template <typename MontageType> void ITKPCMTileRegistration::executeMontageRegistration(typename MontageType::Pointer montage)
 {
   // Execute the tile registrations
-  notifyStatusMessage(getHumanLabel(), "Doing the tile registrations");
+  notifyStatusMessage("Doing the tile registrations");
 
   itk::ProgressObserver::Pointer progressObs = itk::ProgressObserver::New();
   progressObs->setFilter(this);
@@ -611,7 +603,7 @@ template <typename MontageType> void ITKPCMTileRegistration::executeMontageRegis
   montage->Update();
 
   montage->RemoveObserver(progressObsTag);
-  notifyStatusMessage(getHumanLabel(), "Finished the tile registrations");
+  notifyStatusMessage("Finished the tile registrations");
 }
 
 // -----------------------------------------------------------------------------
@@ -672,7 +664,7 @@ DataContainer::Pointer ITKPCMTileRegistration::GetImageDataContainer(int y, int 
     QString dcName = dcNameIter.next();
     dcList.push_back(dcName);
     DataContainer::Pointer dcItem = dca->getPrereqDataContainer(this, dcName);
-    if(getErrorCondition() < 0 || dcItem.get() == nullptr)
+    if(getErrorCode() < 0 || dcItem.get() == nullptr)
     {
       continue;
     }

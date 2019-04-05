@@ -145,7 +145,7 @@ public:
     pipeline->execute();
 
     // Check for errors during the execution.
-    int err = pipeline->getErrorCondition();
+    int err = pipeline->getErrorCode();
     DREAM3D_REQUIRE_EQUAL(err, 0)
   }
 

@@ -84,10 +84,9 @@
   }                                                                                                                                                                                                    \
   else                                                                                                                                                                                                 \
   {                                                                                                                                                                                                    \
-    filter->notifyErrorMessage(filter->getHumanLabel(),                                                                                                                                                \
+    filter->setErrorCondition(TemplateHelpers::Errors::UnsupportedImageType,                                                                                                                                                \
                                "The input array's image type is not recognized.  Supported image types"                                                                                                \
-                               " are grayscale (1-component), RGB (3-component), and RGBA (4-component)",                                                                                              \
-                               TemplateHelpers::Errors::UnsupportedImageType);                                                                                                                         \
+                               " are grayscale (1-component), RGB (3-component), and RGBA (4-component)");                                                                                                                         \
   }
 
 #define EXECUTE_ACCUMULATETYPE_FUNCTION_TEMPLATE(DATATYPE, filter, call, inputData, ...)                                                                                                               \
@@ -106,10 +105,9 @@
   }                                                                                                                                                                                                    \
   else                                                                                                                                                                                                 \
   {                                                                                                                                                                                                    \
-    filter->notifyErrorMessage(filter->getHumanLabel(),                                                                                                                                                \
+    filter->setErrorCondition(TemplateHelpers::Errors::UnsupportedImageType,                                                                                                                                                \
                                "The input array's image type is not recognized.  Supported image types"                                                                                                \
-                               " are grayscale (1-component), RGB (3-component), and RGBA (4-component)",                                                                                              \
-                               TemplateHelpers::Errors::UnsupportedImageType);                                                                                                                         \
+                               " are grayscale (1-component), RGB (3-component), and RGBA (4-component)");                                                                                                                         \
   }
 
 #define EXECUTE_DATATYPE_FUNCTION_TEMPLATE(filter, call, inputData, ...)                                                                                                                               \
@@ -163,7 +161,7 @@
   }                                                                                                                                                                                                    \
   else                                                                                                                                                                                                 \
   {                                                                                                                                                                                                    \
-    filter->notifyErrorMessage(filter->getHumanLabel(), "The input array's data type is not supported", TemplateHelpers::Errors::UnsupportedDataType);                                                 \
+    filter->setErrorCondition(TemplateHelpers::Errors::UnsupportedDataType, "The input array's data type is not supported");                                                 \
   }
 
 #define EXECUTE_STITCH_FUNCTION_TEMPLATE(filter, call, inputData, ...) EXECUTE_DATATYPE_FUNCTION_TEMPLATE(filter, call, inputData, __VA_ARGS__)
@@ -185,8 +183,8 @@ ITKStitchMontage::~ITKStitchMontage() = default;
 // -----------------------------------------------------------------------------
 void ITKStitchMontage::initialize()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   setCancel(false);
 }
 
@@ -227,8 +225,8 @@ void ITKStitchMontage::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void ITKStitchMontage::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   initialize();
 
   QString ss;
@@ -241,9 +239,8 @@ void ITKStitchMontage::dataCheck()
 
   if(m_xMontageSize <= 0 || m_yMontageSize <= 0)
   {
-    setErrorCondition(-11000);
     QString ss = QObject::tr("The Montage Size x and y values must be greater than 0");
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-11000, ss);
     return;
   }
 
@@ -252,34 +249,30 @@ void ITKStitchMontage::dataCheck()
   // Test to make sure at least one data container is selected
   if(selectedDCCount < 1)
   {
-    setErrorCondition(-11001);
     QString ss = QObject::tr("At least one Data Container must be selected");
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-11001, ss);
     return;
   }
 
   if (totalMontageSize != selectedDCCount)
   {
-    setErrorCondition(-11002);
     QString ss = QObject::tr("The number of selected data containers (%1) does not match the number of data "
                              "containers expected by the montage size dimensions specified (%2)").arg(selectedDCCount).arg(totalMontageSize);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-11002, ss);
     return;
   }
 
   if(getCommonAttributeMatrixName().isEmpty())
   {
-    setErrorCondition(-11003);
     QString ss = QObject::tr("Common Attribute Matrix is empty.");
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-11003, ss);
     return;
   }
 
   if(getCommonDataArrayName().isEmpty())
   {
-    setErrorCondition(-11004);
     QString ss = QObject::tr("Common Data Array is empty.");
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-11004, ss);
     return;
   }
 
@@ -294,7 +287,7 @@ void ITKStitchMontage::dataCheck()
   testPath.setDataArrayName(getCommonDataArrayName());
 
   AttributeMatrix::Pointer imageDataAM = getDataContainerArray()->getPrereqAttributeMatrixFromPath(this, testPath, err);
-  if(getErrorCondition() < 0 || err < 0)
+  if(getErrorCode() < 0 || err < 0)
   {
     return;
   }
@@ -303,13 +296,12 @@ void ITKStitchMontage::dataCheck()
   if(imageDataTupleDims.size() < 2)
   {
     QString ss = QObject::tr("Image Data Array at path '%1' must have at least 2 tuple dimensions.").arg(testPath.serialize("/"));
-    setErrorCondition(-11005);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-11005, ss);
     return;
   }
 
   IDataArray::Pointer imagePtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, testPath);
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -324,48 +316,44 @@ void ITKStitchMontage::dataCheck()
     testPath.setDataArrayName(getCommonDataArrayName());
 
     ImageGeom::Pointer image = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, testPath.getDataContainerName());
-    if(getErrorCondition() < 0)
+    if(getErrorCode() < 0)
     {
       return;
     }
 
     if(getManualTileOverlap() && (getTileOverlap() < 0.0f || getTileOverlap() > 100.0f))
     {
-      setErrorCondition(-11006);
       QString ss = QObject::tr("Tile Overlap must be between 0.0 and 100.0.");
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(-11006, ss);
       return;
     }
   }
 
   if(getMontageDataContainerName().isEmpty())
   {
-    setErrorCondition(-11007);
     QString ss = QObject::tr("Montage Data Container is empty.");
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-11007, ss);
     return;
   }
 
   if(getMontageAttributeMatrixName().isEmpty())
   {
-    setErrorCondition(-11008);
     QString ss = QObject::tr("Montage Attribute Matrix is empty.");
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-11008, ss);
     return;
   }
 
   if(getMontageDataArrayName().isEmpty())
   {
-    setErrorCondition(-11009);
     QString ss = QObject::tr("Montage Data Array is empty.");
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-11009, ss);
     return;
   }
 
   DataArrayPath dap(getMontageDataContainerName(), getMontageAttributeMatrixName(), getMontageDataArrayName());
 
   DataContainer::Pointer dc = getDataContainerArray()->createNonPrereqDataContainer(this, getMontageDataContainerName());
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -384,13 +372,12 @@ void ITKStitchMontage::dataCheck()
            .arg(montageArrayXSize)
            .arg(montageArrayYSize)
            .arg(1);
-  setWarningCondition(-3001);
-  notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
+  setWarningCondition(-3001, ss);
 
   QVector<size_t> tDims = {montageArrayXSize, montageArrayYSize, 1};
 
   AttributeMatrix::Pointer am = dc->createNonPrereqAttributeMatrix(this, dap.getAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell);
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -401,14 +388,12 @@ void ITKStitchMontage::dataCheck()
            .arg(montageArrayXSize)
            .arg(montageArrayYSize)
            .arg(1);
-  setWarningCondition(-3002);
-  notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
+  setWarningCondition(-3002, ss);
 
   if(getMontageDataArrayName().isEmpty())
   {
     QString ss = QObject::tr("The Montage Data Array Name field is empty.");
-    setErrorCondition(-3003);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-3003, ss);
     return;
   }
 
@@ -419,8 +404,7 @@ void ITKStitchMontage::dataCheck()
                    "0% overlap between tiles, so the actual geometry dimensions after executing the stitching algorithm may be smaller.")
            .arg(da->getName())
            .arg(QLocale::system().toString(static_cast<int>(da->getNumberOfTuples())));
-  setWarningCondition(-3004);
-  notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
+  setWarningCondition(-3004, ss);
 }
 
 // -----------------------------------------------------------------------------
@@ -441,16 +425,16 @@ void ITKStitchMontage::preflight()
 // -----------------------------------------------------------------------------
 void ITKStitchMontage::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
 
   createFijiDataStructure();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -468,7 +452,7 @@ void ITKStitchMontage::execute()
     EXECUTE_STITCH_FUNCTION_TEMPLATE(this, stitchMontage, da);
   }
   /* Let the GUI know we are done with this filter */
-  notifyStatusMessage(getHumanLabel(), "Complete");
+  notifyStatusMessage("Complete");
 }
 
 // -----------------------------------------------------------------------------
@@ -502,7 +486,7 @@ void ITKStitchMontage::createFijiDataStructure()
     QString dcName = dcNameIter.next();
     dcList.push_back(dcName);
     DataContainer::Pointer dcItem = dca->getPrereqDataContainer(this, dcName);
-    if(getErrorCondition() < 0 || dcItem.get() == nullptr)
+    if(getErrorCode() < 0 || dcItem.get() == nullptr)
     {
       continue;
     }
@@ -652,7 +636,7 @@ template <typename PixelType, typename Resampler> void ITKStitchMontage::execute
 {
   using OriginalImageType = itk::Dream3DImage<PixelType, Dimension>;
 
-  notifyStatusMessage(getHumanLabel(), "Resampling tiles into the stitched image");
+  notifyStatusMessage("Resampling tiles into the stitched image");
 
   itk::ProgressObserver::Pointer progressObs = itk::ProgressObserver::New();
   progressObs->setFilter(this);
@@ -666,8 +650,8 @@ template <typename PixelType, typename Resampler> void ITKStitchMontage::execute
   streamingFilter->SetNumberOfStreamDivisions(streamSubdivisions);
 
   streamingFilter->Update();
-  notifyStatusMessage(getHumanLabel(), "Finished resampling tiles");
-  notifyStatusMessage(getHumanLabel(), "Converting into DREAM3D data structure");
+  notifyStatusMessage("Finished resampling tiles");
+  notifyStatusMessage("Converting into DREAM3D data structure");
 
   resampler->RemoveObserver(progressObsTag);
 }
@@ -704,7 +688,7 @@ DataContainer::Pointer ITKStitchMontage::GetImageDataContainer(int y, int x)
     QString dcName = dcNameIter.next();
     dcList.push_back(dcName);
     DataContainer::Pointer dcItem = dca->getPrereqDataContainer(this, dcName);
-    if(getErrorCondition() < 0 || dcItem.get() == nullptr)
+    if(getErrorCode() < 0 || dcItem.get() == nullptr)
     {
       continue;
     }

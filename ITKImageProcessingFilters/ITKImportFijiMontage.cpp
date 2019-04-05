@@ -128,8 +128,8 @@ void ITKImportFijiMontage::appendImageTileToCache(const itk::FijiImageTileData &
 // -----------------------------------------------------------------------------
 void ITKImportFijiMontage::initialize()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   setCancel(false);
 }
 
@@ -152,8 +152,8 @@ void ITKImportFijiMontage::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void ITKImportFijiMontage::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   initialize();
 
   QString ss;
@@ -161,8 +161,7 @@ void ITKImportFijiMontage::dataCheck()
   if(getFijiConfigFilePath().isEmpty())
   {
     QString ss = QObject::tr("The fiji configuration file must be set").arg(getHumanLabel());
-    setErrorCondition(-2000);
-    notifyErrorMessage(getHumanLabel(), ss, -1);
+    setErrorCondition(-2000, ss);
     return;
   }
 
@@ -170,16 +169,14 @@ void ITKImportFijiMontage::dataCheck()
   if (fi.suffix() != "txt")
   {
     QString ss = QObject::tr("Configuration file is not in Fiji format (*.txt).");
-    setErrorCondition(-2001);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-2001, ss);
     return;
   }
 
   if(!fi.exists())
   {
     QString ss = QObject::tr("The fiji configuration file does not exist");
-    setErrorCondition(-2002);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-2002, ss);
     return;
   }
 
@@ -197,24 +194,21 @@ void ITKImportFijiMontage::dataCheck()
     if(fijiFileReader.getErrorCode() < 0)
     {
       QString ss = fijiFileReader.getErrorMessage();
-      setErrorCondition(fijiFileReader.getErrorCode());
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(fijiFileReader.getErrorCode(), ss);
       return;
     }
 
     if (fijiFileData.size() <= 0)
     {
       QString ss = "Fiji file does not contain at least 1 tile row.  Please choose a Fiji file that contains at least 1 tile row.";
-      setErrorCondition(-2003);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(-2003, ss);
       return;
     }
 
     if (fijiFileData[0].size() <= 0)
     {
       QString ss = "Fiji file does not contain at least 1 tile column.  Please choose a Fiji file that contains at least 1 tile column.";
-      setErrorCondition(-2004);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(-2004, ss);
       return;
     }
 
@@ -241,8 +235,7 @@ void ITKImportFijiMontage::dataCheck()
         {
           QString imagePath = fijiImageData.filePath;
           QFileInfo imageFi(imagePath);
-          notifyStatusMessage(getHumanLabel(), tr("[%1/%2]: Reading image '%3'").arg(currentImageCount)
-                              .arg(totalImageCount).arg(imageFi.fileName()));
+          notifyStatusMessage(tr("[%1/%2]: Reading image '%3'").arg(currentImageCount).arg(totalImageCount).arg(imageFi.fileName()));
         }
 
         readImageFile(fijiImageData);
@@ -330,7 +323,7 @@ void ITKImportFijiMontage::readImageFile(itk::FijiImageTileData imageTileData)
   }
 
   DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, dcName);
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -360,16 +353,16 @@ void ITKImportFijiMontage::preflight()
 // -----------------------------------------------------------------------------
 void ITKImportFijiMontage::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
 
   /* Let the GUI know we are done with this filter */
-  notifyStatusMessage(getHumanLabel(), "Complete");
+  notifyStatusMessage("Complete");
 }
 
 // -----------------------------------------------------------------------------

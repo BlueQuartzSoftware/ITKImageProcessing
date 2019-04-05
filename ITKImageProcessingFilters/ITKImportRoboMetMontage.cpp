@@ -98,8 +98,8 @@ void ITKImportRoboMetMontage::clearReaderCache()
 // -----------------------------------------------------------------------------
 void ITKImportRoboMetMontage::initialize()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   setCancel(false);
 }
 
@@ -127,8 +127,8 @@ void ITKImportRoboMetMontage::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void ITKImportRoboMetMontage::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   initialize();
 
   QString ss;
@@ -137,16 +137,14 @@ void ITKImportRoboMetMontage::dataCheck()
   if(!fi.exists())
   {
     QString ss = QObject::tr("The registration file does not exist");
-    setErrorCondition(-2001);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-2001, ss);
     return;
   }
 
   if(m_RegistrationFile.isEmpty())
   {
     QString ss = QObject::tr("The registration file must be set").arg(getHumanLabel());
-    setErrorCondition(-2002);
-    notifyErrorMessage(getHumanLabel(), ss, -1);
+    setErrorCondition(-2002, ss);
     return;
   }
 
@@ -154,49 +152,43 @@ void ITKImportRoboMetMontage::dataCheck()
   if (fi.completeSuffix() != "csv")
   {
     QString ss = QObject::tr("Config file is not in RoboMet format (*.csv).");
-    setErrorCondition(-2003);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-2003, ss);
     return;
   }
 
   if(m_ImageFilePrefix.isEmpty())
   {
 	  QString ss = QObject::tr("The image file prefix must be set").arg(getHumanLabel());
-	  setErrorCondition(-2004);
-	  notifyErrorMessage(getHumanLabel(), ss, -1);
-	  return;
+    setErrorCondition(-2004, ss);
+    return;
   }
 
   if(m_ImageFileExtension.isEmpty())
   {
 	  QString ss = QObject::tr("The image file extension must be set").arg(getHumanLabel());
-	  setErrorCondition(-2005);
-	  notifyErrorMessage(getHumanLabel(), ss, -1);
-	  return;
+    setErrorCondition(-2005, ss);
+    return;
   }
 
   if(m_DataContainerName.isEmpty())
   {
 	  QString ss = QObject::tr("The data container prefix must be set").arg(getHumanLabel());
-	  setErrorCondition(-2006);
-	  notifyErrorMessage(getHumanLabel(), ss, -1);
-	  return;
+    setErrorCondition(-2006, ss);
+    return;
   }
 
   if(m_CellAttributeMatrixName.isEmpty())
   {
 	  QString ss = QObject::tr("The cell attribute matrix name must be set").arg(getHumanLabel());
-	  setErrorCondition(-2007);
-	  notifyErrorMessage(getHumanLabel(), ss, -1);
-	  return;
+    setErrorCondition(-2007, ss);
+    return;
   }
 
   if(m_AttributeArrayName.isEmpty())
   {
 	  QString ss = QObject::tr("The attribute array name must be set").arg(getHumanLabel());
-	  setErrorCondition(-2008);
-	  notifyErrorMessage(getHumanLabel(), ss, -1);
-	  return;
+    setErrorCondition(-2008, ss);
+    return;
   }
 
   // Parse Fiji Config File
@@ -226,8 +218,7 @@ void ITKImportRoboMetMontage::dataCheck()
 
 		  QString registeredFilePath = m_RegisteredFilePaths[i];
 		  QFileInfo imageFi(registeredFilePath);
-		  notifyStatusMessage(getHumanLabel(), tr("[%1/%2]: Reading image '%3'").arg(i + 1)
-			  .arg(totalImageCount).arg(imageFi.fileName()));
+      notifyStatusMessage(tr("[%1/%2]: Reading image '%3'").arg(i + 1).arg(totalImageCount).arg(imageFi.fileName()));
 
 		  readImageFile(registeredFilePath);
 	  }
@@ -310,7 +301,7 @@ void ITKImportRoboMetMontage::readImageFile(const QString &filePath)
 	}
 
 	DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, dcName);
-	if (getErrorCondition() < 0)
+	if (getErrorCode() < 0)
 	{
 		return;
 	}
@@ -451,16 +442,16 @@ void ITKImportRoboMetMontage::preflight()
 // -----------------------------------------------------------------------------
 void ITKImportRoboMetMontage::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
 
   /* Let the GUI know we are done with this filter */
-  notifyStatusMessage(getHumanLabel(), "Complete");
+  notifyStatusMessage("Complete");
 }
 
 // -----------------------------------------------------------------------------
