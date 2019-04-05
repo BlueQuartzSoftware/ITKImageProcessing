@@ -128,7 +128,7 @@ public:
     pipeline->pushBack(writer);
     pipeline->execute();
 
-    int err = pipeline->getErrorCondition();
+    int err = pipeline->getErrorCode();
     DREAM3D_REQUIRE_EQUAL(err, 0)
   }
 

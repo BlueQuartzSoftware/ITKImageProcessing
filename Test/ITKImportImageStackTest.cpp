@@ -110,8 +110,8 @@ AbstractFilter::Pointer GetFilterByName(const QString& filterName)
     }
 
     reader->execute();
-    DREAM3D_REQUIRED(reader->getErrorCondition(), ==, -64500);
-    DREAM3D_REQUIRED(reader->getWarningCondition(), >=, 0);
+    DREAM3D_REQUIRED(reader->getErrorCode(), ==, -64500);
+    DREAM3D_REQUIRED(reader->getWarningCode(), >=, 0);
     return EXIT_SUCCESS;
   }
 
@@ -137,8 +137,8 @@ AbstractFilter::Pointer GetFilterByName(const QString& filterName)
     propertySet = reader->setProperty("DataContainerName", var);
     DREAM3D_REQUIRE_EQUAL(propertySet, true);
     reader->execute();
-    DREAM3D_REQUIRED(reader->getErrorCondition(), ==, -887);
-    DREAM3D_REQUIRED(reader->getWarningCondition(), >=, 0);
+    DREAM3D_REQUIRED(reader->getErrorCode(), ==, -887);
+    DREAM3D_REQUIRED(reader->getWarningCode(), >=, 0);
     return EXIT_SUCCESS;
   }
 
@@ -172,8 +172,8 @@ AbstractFilter::Pointer GetFilterByName(const QString& filterName)
     reader->setInputFileListInfo(fileListInfo);
 
     reader->execute();
-    DREAM3D_REQUIRED(reader->getErrorCondition(), ==, -64501);
-    DREAM3D_REQUIRED(reader->getWarningCondition(), >=, 0);
+    DREAM3D_REQUIRED(reader->getErrorCode(), ==, -64501);
+    DREAM3D_REQUIRED(reader->getWarningCode(), >=, 0);
     return EXIT_SUCCESS;
   }
 
@@ -206,8 +206,8 @@ AbstractFilter::Pointer GetFilterByName(const QString& filterName)
     reader->setInputFileListInfo(fileListInfo);
 
     reader->execute();
-    DREAM3D_REQUIRED(reader->getErrorCondition(), ==, -64502);
-    DREAM3D_REQUIRED(reader->getWarningCondition(), >=, 0);
+    DREAM3D_REQUIRED(reader->getErrorCode(), ==, -64502);
+    DREAM3D_REQUIRED(reader->getWarningCode(), >=, 0);
     return EXIT_SUCCESS;
   }
 
@@ -265,8 +265,8 @@ AbstractFilter::Pointer GetFilterByName(const QString& filterName)
     DREAM3D_REQUIRE_EQUAL(propertySet, true);
 
     reader->execute();
-    DREAM3D_REQUIRED(reader->getErrorCondition(), >=, 0);
-    DREAM3D_REQUIRED(reader->getWarningCondition(), >=, 0);
+    DREAM3D_REQUIRED(reader->getErrorCode(), >=, 0);
+    DREAM3D_REQUIRED(reader->getWarningCode(), >=, 0);
 
     // Compare read data
     DataContainerArray::Pointer containerArray = reader->getDataContainerArray();

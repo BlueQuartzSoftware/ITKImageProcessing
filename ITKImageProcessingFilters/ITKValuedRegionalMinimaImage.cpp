@@ -77,8 +77,8 @@ void ITKValuedRegionalMinimaImage::readFilterParameters(AbstractFilterParameters
 // -----------------------------------------------------------------------------
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKValuedRegionalMinimaImage::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   // Check consistency of parameters
 
@@ -109,7 +109,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
 {
   QString outputVal = "Flat :%1";
   m_Flat = filter->GetFlat();
-  notifyWarningMessage(getHumanLabel(),outputVal.arg(m_Flat),0);
+  setWarningCondition(0, outputVal.arg(m_Flat));
 }
 
 }

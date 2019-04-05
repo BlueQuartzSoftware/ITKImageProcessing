@@ -86,8 +86,8 @@ void ITKSignedMaurerDistanceMapImage::readFilterParameters(AbstractFilterParamet
 // -----------------------------------------------------------------------------
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKSignedMaurerDistanceMapImage::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   // Check consistency of parameters
 

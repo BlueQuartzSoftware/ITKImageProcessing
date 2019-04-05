@@ -158,9 +158,8 @@ QVector<QString> ITKImportImageStack::getFileList()
 // -----------------------------------------------------------------------------
 void ITKImportImageStack::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   DataArrayPath tempPath;
   QString ss;
@@ -168,12 +167,11 @@ void ITKImportImageStack::dataCheck()
   if(m_InputFileListInfo.InputPath.isEmpty())
   {
     ss = QObject::tr("The input directory must be set");
-    setErrorCondition(-64500);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-64500, ss);
   }
 
   DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName(), DataContainerID);
-  if(getErrorCondition() < 0 || nullptr == m.get())
+  if(getErrorCode() < 0 || nullptr == m.get())
   {
     return;
   }
@@ -203,9 +201,7 @@ void ITKImportImageStack::dataCheck()
     out << "PaddingDigits: " << m_InputFileListInfo.PaddingDigits << "\n";
     out << "StartIndex: " << m_InputFileListInfo.StartIndex << "\n";
     out << "EndIndex: " << m_InputFileListInfo.EndIndex << "\n";
-
-    setErrorCondition(-64501);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-64501, ss);
     return;
   }
 
@@ -215,12 +211,11 @@ void ITKImportImageStack::dataCheck()
     QFileInfo fi(filePath);
     if(!fi.exists())
     {
-      setErrorCondition(-64502);
       QString errorMessage = QString("File does not exist: %1").arg(filePath);
-      notifyErrorMessage(getHumanLabel(), errorMessage, getErrorCondition());
+      setErrorCondition(-64502, errorMessage);
     }
   }
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -235,10 +230,9 @@ void ITKImportImageStack::dataCheck()
   imageReader->setImageDataArrayName(getImageDataArrayName());
   imageReader->setFileName(fileList[0]);
   imageReader->preflight();
-  if(imageReader->getErrorCondition() < 0)
+  if(imageReader->getErrorCode() < 0)
   {
-    setErrorCondition(imageReader->getErrorCondition());
-    notifyErrorMessage(getHumanLabel(), "Error Reading Input Image.", getErrorCondition());
+    setErrorCondition(imageReader->getErrorCode(), "Error Reading Input Image.");
     return;
   }
   // Extract the Geometry and update the geometry
@@ -318,7 +312,7 @@ void readImageStack(ITKImportImageStack* filter, const QVector<QString>& fileLis
     progress = static_cast<int32_t>(z - zStartIndex);
     progress = (int32_t)(100.0f * (float)(progress) / total);
     QString msg = "Importing: " + filePath;
-    filter->notifyStatusMessage(filter->getHumanLabel(), msg.toLatin1().data());
+    filter->notifyStatusMessage(msg.toLatin1().data());
 
     // Create a subfilter to read each image, although for preflight we are going to read the first image in the
     // list and hope the rest are correct.
@@ -330,11 +324,10 @@ void readImageStack(ITKImportImageStack* filter, const QVector<QString>& fileLis
     imageReader->setImageDataArrayName(arrayName);
     imageReader->setFileName(filePath);
     imageReader->execute();
-    if(imageReader->getErrorCondition() < 0)
+    if(imageReader->getErrorCode() < 0)
     {
-      filter->setErrorCondition(imageReader->getErrorCondition());
       QString msg = QString("Error reading image %1").arg(filePath);
-      filter->notifyErrorMessage(filter->getHumanLabel(), msg, filter->getErrorCondition());
+      filter->setErrorCondition(imageReader->getErrorCode(), msg);
       return;
     }
 
@@ -354,11 +347,11 @@ void readImageStack(ITKImportImageStack* filter, const QVector<QString>& fileLis
 // -----------------------------------------------------------------------------
 void ITKImportImageStack::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -404,9 +397,8 @@ void ITKImportImageStack::execute()
     readImageStack<double>(this, fileList);
     break;
   default:
-    setErrorCondition(-64504);
     QString errorMessage = QString("Unsupported pixel component: %1.").arg(imageIO->GetComponentTypeAsString(component).c_str());
-    notifyErrorMessage(getHumanLabel(), errorMessage, getErrorCondition());
+    setErrorCondition(-64504, errorMessage);
     break;
   }
 }

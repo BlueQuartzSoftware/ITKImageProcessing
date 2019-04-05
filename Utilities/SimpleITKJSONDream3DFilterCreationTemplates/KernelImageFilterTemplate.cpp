@@ -96,8 +96,8 @@ ${ReadFilterParameters}
 // -----------------------------------------------------------------------------
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ${FilterName}::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   // Check consistency of parameters
 ${CheckIntegerEntry}
@@ -139,8 +139,8 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
     structuringElement = StructuringElementType::Cross(elementRadius);
     break;
   default:
-    setErrorCondition(-20);
-    notifyErrorMessage(getHumanLabel(), "Unsupported structuring element", getErrorCondition());
+    setErrorCondition(-20); // @@ERROR_CODE@@-20@@
+    @@SET_ERROR_CONDITION@@(@@getErrorCondition()@@, "Unsupported structuring element");
     return;
   }
   // define filter

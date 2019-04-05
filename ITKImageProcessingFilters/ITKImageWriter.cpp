@@ -177,32 +177,30 @@ void ITKImageWriter::initialize()
 // -----------------------------------------------------------------------------
 void ITKImageWriter::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   FileSystemPathHelper::CheckOutputFile(this, "Output File Name", getFileName(), true);
 
   DataContainerArray::Pointer containerArray = getDataContainerArray();
   if(!containerArray)
   {
-    setErrorCondition(-21002);
-    notifyErrorMessage(getHumanLabel(), "No container array.", getErrorCondition());
+    setErrorCondition(-21002, "No container array.");
     return;
   }
 
   ImageGeom::Pointer imageGeometry = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getImageArrayPath().getDataContainerName());
   if(imageGeometry.get() == nullptr)
   {
-    setErrorCondition(-21003);
-    notifyErrorMessage(getHumanLabel(), "No image geometry.", getErrorCondition());
+    setErrorCondition(-21003, "No image geometry.");
     return;
   }
 
   IDataArray::Pointer imageDataArrayPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, getImageArrayPath());
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     QString ss = QObject::tr("The data array path '%1' was invalid for the property ImageArrayPath. Please check the input value.").arg(getImageArrayPath().serialize("/"));
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(getErrorCode(), ss);
   }
 }
 
@@ -266,7 +264,7 @@ template <typename TPixel, unsigned int Dimensions> void ITKImageWriter::writeAs
   typename FileWriterType::Pointer writer = FileWriterType::New();
 
   QString progress = QString("Saving %1").arg(getFileName());
-  notifyStatusMessage(getHumanLabel(), progress);
+  notifyStatusMessage(progress);
 
   writer->SetInput(image);
   writer->SetFileName(getFileName().toStdString().c_str());
@@ -298,8 +296,7 @@ template <typename TPixel, typename UnusedTPixel, unsigned int Dimensions> void 
       typename ImageType::SizeType size = toITK->GetOutput()->GetLargestPossibleRegion().GetSize();
       if(size[2] < 2)
       {
-        setErrorCondition(-21012);
-        notifyErrorMessage(getHumanLabel(), "Image is 2D, not 3D.", getErrorCondition());
+        setErrorCondition(-21012, "Image is 2D, not 3D.");
         return;
       }
       this->writeAs2DStack<TPixel, Dimensions>(toITK->GetOutput(), size[2]);
@@ -310,9 +307,8 @@ template <typename TPixel, typename UnusedTPixel, unsigned int Dimensions> void 
     }
   } catch(itk::ExceptionObject& err)
   {
-    setErrorCondition(-21011);
     QString errorMessage = "ITK exception was thrown while writing output file: %1";
-    notifyErrorMessage(getHumanLabel(), errorMessage.arg(err.GetDescription()), getErrorCondition());
+    setErrorCondition(-21011, errorMessage.arg(err.GetDescription()));
     return;
   }
 }
@@ -332,11 +328,11 @@ template <typename TPixel, typename UnusedTPixel, unsigned int Dimensions> void 
 // -----------------------------------------------------------------------------
 void ITKImageWriter::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -349,33 +345,29 @@ void ITKImageWriter::execute()
   if(!dir.mkpath(parentPath))
   {
     QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath);
-    setErrorCondition(-21009);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-21009, ss);
     return;
   }
 
   DataArrayPath path = getImageArrayPath();
   if(!getDataContainerArray()->doesDataContainerExist(path.getDataContainerName()))
   {
-    setErrorCondition(-21006);
     QString errorMessage = "Data container %1 does not exist.";
-    notifyErrorMessage(getHumanLabel(), errorMessage.arg(path.getDataContainerName()), getErrorCondition());
+    setErrorCondition(-21006, errorMessage.arg(path.getDataContainerName()));
     return;
   }
   DataContainer::Pointer container = getDataContainerArray()->getDataContainer(path.getDataContainerName());
   if(!container->doesAttributeMatrixExist(path.getAttributeMatrixName()))
   {
-    setErrorCondition(-21007);
     QString errorMessage = "Attribute matrix %1 does not exist.";
-    notifyErrorMessage(getHumanLabel(), errorMessage.arg(path.getAttributeMatrixName()), getErrorCondition());
+    setErrorCondition(-21007, errorMessage.arg(path.getAttributeMatrixName()));
     return;
   }
   AttributeMatrix::Pointer attributeMatrix = container->getAttributeMatrix(path.getAttributeMatrixName());
   if(!attributeMatrix->doesAttributeArrayExist(path.getDataArrayName()))
   {
-    setErrorCondition(-21008);
     QString errorMessage = "Attribute array %1 does not exist.";
-    notifyErrorMessage(getHumanLabel(), errorMessage.arg(path.getDataArrayName()), getErrorCondition());
+    setErrorCondition(-21008, errorMessage.arg(path.getDataArrayName()));
     return;
   }
 

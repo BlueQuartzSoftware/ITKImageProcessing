@@ -103,9 +103,8 @@ template <typename OutputPixelType> void ITKVectorRescaleIntensityImage::CheckEn
   double max = static_cast<double>(std::numeric_limits<OutputPixelType>::max());
   if(value < lowest || value > max)
   {
-    setErrorCondition(-1);
     QString errorMessage = name + QString(" must be greater or equal than %1 and lesser or equal than %2 and an integer");
-    notifyErrorMessage(getHumanLabel(), errorMessage.arg(lowest).arg(max), getErrorCondition());
+    setErrorCondition(-1, errorMessage.arg(lowest).arg(max));
   }
 }
 
@@ -116,12 +115,12 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
 {
   // Check consistency of parameters
   CheckEntryBounds<OutputPixelType>(m_OutputMaximumMagnitude, "OutputMaximumMagnitude");
-  if(getErrorCondition())
+  if(getErrorCode() < 0)
   {
     return;
   }
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   // OutputPixelType is based on scalar types. Create corresponding vector pixel type.
   typedef itk::Vector<OutputPixelType, InputPixelType::Dimension> VectorOutputPixelType;
   ITKImageProcessingBase::dataCheck<InputPixelType, VectorOutputPixelType, Dimension>();

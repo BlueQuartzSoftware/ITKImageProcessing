@@ -41,8 +41,8 @@ ITKHistogramMatchingImageTest() = default;
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     filter->setDataContainerArray(containerArray);
     filter->execute();
-    DREAM3D_REQUIRED(filter->getErrorCondition(), >=, 0);
-    DREAM3D_REQUIRED(filter->getWarningCondition(), >=, 0);
+    DREAM3D_REQUIRED(filter->getErrorCode(), >=, 0);
+    DREAM3D_REQUIRED(filter->getWarningCode(), >=, 0);
     WriteImage("ITKHistogramMatchingImagedefaults.nrrd", containerArray, source_path);
     QString baseline_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Baseline/BasicFilters_HistogramMatchingImageFilter_defaults.nrrd");
     DataArrayPath baseline_path("BContainer", "BAttributeMatrixName", "BAttributeArrayName");
@@ -79,7 +79,7 @@ ITKHistogramMatchingImageTest() = default;
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     filter->setDataContainerArray(containerArray);
     filter->execute();
-    DREAM3D_REQUIRE_EQUAL(filter->getErrorCondition(), -7);
+    DREAM3D_REQUIRE_EQUAL(filter->getErrorCode(), -7);
     return 0;
   }
 
@@ -110,7 +110,7 @@ ITKHistogramMatchingImageTest() = default;
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     filter->setDataContainerArray(containerArray);
     filter->execute();
-    DREAM3D_REQUIRE_EQUAL(filter->getErrorCondition(), -5);
+    DREAM3D_REQUIRE_EQUAL(filter->getErrorCode(), -5);
     return 0;
   }
 
@@ -139,7 +139,7 @@ ITKHistogramMatchingImageTest() = default;
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     filter->setDataContainerArray(containerArray);
     filter->execute();
-    DREAM3D_REQUIRE_EQUAL(filter->getErrorCondition(), -6);
+    DREAM3D_REQUIRE_EQUAL(filter->getErrorCode(), -6);
     return 0;
   }
 
@@ -183,8 +183,8 @@ ITKHistogramMatchingImageTest() = default;
     }
     filter->setDataContainerArray(containerArray);
     filter->execute();
-    DREAM3D_REQUIRED(filter->getErrorCondition(), >=, 0);
-    DREAM3D_REQUIRED(filter->getWarningCondition(), >=, 0);
+    DREAM3D_REQUIRED(filter->getErrorCode(), >=, 0);
+    DREAM3D_REQUIRED(filter->getWarningCode(), >=, 0);
     WriteImage("ITKHistogramMatchingImagenear_identity.nrrd", containerArray, source_path);
     QString md5Output;
     GetMD5FromDataContainer(containerArray, source_path, md5Output);

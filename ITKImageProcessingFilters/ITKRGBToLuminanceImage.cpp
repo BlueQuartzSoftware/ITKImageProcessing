@@ -67,13 +67,12 @@ void ITKRGBToLuminanceImage::readFilterParameters(AbstractFilterParametersReader
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKRGBToLuminanceImage::dataCheck()
 {
   // Check consistency of parameters
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   const unsigned int length = itk::NumericTraits<InputPixelType>::GetLength();
   if(length < 3 || length > 4)
   {
-    setErrorCondition(-5);
-    notifyErrorMessage(getHumanLabel(), "Input image pixels should have three (RGB) or four (RGBA) components.", getErrorCondition());
+    setErrorCondition(-5, "Input image pixels should have three (RGB) or four (RGBA) components.");
     return;
   }
   typedef typename itk::NumericTraits<InputPixelType>::ValueType ScalarPixelType;
@@ -117,8 +116,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
     this->ITKImageProcessingBase::filter<RGBAPixelType, ScalarPixelType, Dimension, RGBAFilterType>(rgbaFilter);
     break;
   default:
-    setErrorCondition(-7);
-    notifyErrorMessage(getHumanLabel(), "Input image pixels should have three (RGB) or four (RGBA) components.", getErrorCondition());
+    setErrorCondition(-7, "Input image pixels should have three (RGB) or four (RGBA) components.");
     return;
   }
 }

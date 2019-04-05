@@ -80,8 +80,8 @@ void ITKShotNoiseImage::readFilterParameters(AbstractFilterParametersReader* rea
 // -----------------------------------------------------------------------------
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKShotNoiseImage::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   // Check consistency of parameters
   this->CheckIntegerEntry<uint32_t, double>(m_Seed, "Seed", true);

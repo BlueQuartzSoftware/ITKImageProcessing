@@ -71,8 +71,8 @@ void ITKSobelEdgeDetectionImage::readFilterParameters(AbstractFilterParametersRe
 // -----------------------------------------------------------------------------
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKSobelEdgeDetectionImage::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   // Check consistency of parameters
 

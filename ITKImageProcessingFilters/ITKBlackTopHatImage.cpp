@@ -103,8 +103,8 @@ void ITKBlackTopHatImage::readFilterParameters(AbstractFilterParametersReader* r
 // -----------------------------------------------------------------------------
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKBlackTopHatImage::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   // Check consistency of parameters
   this->CheckVectorEntry<unsigned int, FloatVec3Type>(m_KernelRadius, "KernelRadius", true);
@@ -147,8 +147,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
     structuringElement = StructuringElementType::Cross(elementRadius);
     break;
   default:
-    setErrorCondition(-20);
-    notifyErrorMessage(getHumanLabel(), "Unsupported structuring element", getErrorCondition());
+    setErrorCondition(-20, "Unsupported structuring element");
     return;
   }
   // define filter

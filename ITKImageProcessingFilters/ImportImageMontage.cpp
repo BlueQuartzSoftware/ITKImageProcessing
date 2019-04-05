@@ -119,8 +119,8 @@ void ImportImageMontage::initialize()
 // -----------------------------------------------------------------------------
 void ImportImageMontage::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   initialize();
 
   QString ss;
@@ -128,13 +128,12 @@ void ImportImageMontage::dataCheck()
   if(m_InputFileListInfo.InputPath.isEmpty())
   {
     ss = QObject::tr("The input directory must be set");
-    setErrorCondition(-13);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-13, ss);
     return;
   }
 
   DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName(), DataContainerID);
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -152,7 +151,7 @@ void ImportImageMontage::dataCheck()
   getDataContainerArray()
       ->getDataContainer(getDataContainerName())
       ->createNonPrereqAttributeMatrix(this, getMetaDataAttributeMatrixName(), tDims, AttributeMatrix::Type::MetaData, AttributeMatrixID21);
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -176,8 +175,7 @@ void ImportImageMontage::dataCheck()
   if(fileList.empty())
   {
     QString ss = QObject::tr("No files have been selected for import. Have you set the input directory?");
-    setErrorCondition(-11);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-11, ss);
   }
   else
   {
@@ -218,7 +216,7 @@ void ImportImageMontage::dataCheck()
       splitFilePaths = fileName.split('.');
       DataArrayPath path(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), splitFilePaths[0]);
       getDataContainerArray()->createNonPrereqArrayFromPath<UInt8ArrayType, AbstractFilter, uint8_t>(this, path, 0, cDims, "", DataArrayID31);
-      if(getErrorCondition() < 0)
+      if(getErrorCode() < 0)
       {
         return;
       }
@@ -245,10 +243,10 @@ void ImportImageMontage::preflight()
 // -----------------------------------------------------------------------------
 void ImportImageMontage::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -275,8 +273,7 @@ void ImportImageMontage::execute()
   if(fileList.empty())
   {
     QString ss = QObject::tr("No files have been selected for import. Have you set the input directory?");
-    setErrorCondition(-11);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-11, ss);
   }
 
   for(QVector<QString>::iterator filepath = fileList.begin(); filepath != fileList.end(); ++filepath)
@@ -291,15 +288,14 @@ void ImportImageMontage::execute()
     QString fileName = splitFilePaths[splitFilePaths.size() - 1];
     splitFilePaths = fileName.split('.');
     QString ss = QObject::tr("Importing file %1").arg(imageFName);
-    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+    notifyStatusMessage(ss);
 
     setFileName(imageFName);
     DataArrayPath dap(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), splitFilePaths[0]);
     readImage(dap, false);
-    if(getErrorCondition() < 0)
+    if(getErrorCode() < 0)
     {
-      setErrorCondition(-14000);
-      notifyErrorMessage(getHumanLabel(), "Failed to load image file", getErrorCondition());
+      setErrorCondition(-14000, "Failed to load image file");
       break;
     }
 

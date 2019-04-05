@@ -53,8 +53,8 @@ ITKFFTNormalizedCorrelationImageTest() = default;
 
     filter->setDataContainerArray(containerArray);
     filter->execute();
-    DREAM3D_REQUIRED(filter->getErrorCondition(), >=, 0);
-    DREAM3D_REQUIRED(filter->getWarningCondition(), >=, 0);
+    DREAM3D_REQUIRED(filter->getErrorCode(), >=, 0);
+    DREAM3D_REQUIRED(filter->getWarningCode(), >=, 0);
 
     WriteImage("ITKFFTNormalizedCorrelationImagedefault.nrrd", containerArray, outputPath);
     QString baseline_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Baseline/BasicFilters_FFTNormalizedCorrelationImageFilter_default.nrrd");

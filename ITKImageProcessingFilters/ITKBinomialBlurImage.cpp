@@ -77,8 +77,8 @@ void ITKBinomialBlurImage::readFilterParameters(AbstractFilterParametersReader* 
 // -----------------------------------------------------------------------------
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKBinomialBlurImage::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   // Check consistency of parameters
   this->CheckIntegerEntry<unsigned int, double>(m_Repetitions, "Repetitions", true);
