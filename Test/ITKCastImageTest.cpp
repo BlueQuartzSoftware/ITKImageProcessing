@@ -37,8 +37,8 @@ ITKCastImageTest() = default;
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     filter->setDataContainerArray(containerArray);
     filter->execute();
-    DREAM3D_REQUIRED(filter->getErrorCondition(), >=, 0);
-    DREAM3D_REQUIRED(filter->getWarningCondition(), >=, 0);
+    DREAM3D_REQUIRED(filter->getErrorCode(), >=, 0);
+    DREAM3D_REQUIRED(filter->getWarningCode(), >=, 0);
     WriteImage("ITKCastImagefloatTodouble.nrrd", containerArray, input_path);
     QString baseline_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Baseline/BasicFilters_CastImageFilter_float_to_double.nrrd");
     DataArrayPath baseline_path("BContainer", "BAttributeMatrixName", "BAttributeArrayName");
@@ -72,8 +72,8 @@ ITKCastImageTest() = default;
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     filter->setDataContainerArray(containerArray);
     filter->execute();
-    DREAM3D_REQUIRED(filter->getErrorCondition(), ==, -5);
-    DREAM3D_REQUIRED(filter->getWarningCondition(), >=, 0);
+    DREAM3D_REQUIRED(filter->getErrorCode(), ==, -5);
+    DREAM3D_REQUIRED(filter->getWarningCode(), >=, 0);
     return 0;
   }
 

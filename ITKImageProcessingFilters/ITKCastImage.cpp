@@ -94,15 +94,14 @@ void ITKCastImage::readFilterParameters(AbstractFilterParametersReader* reader, 
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKCastImage::dataCheck()
 {
   // Check consistency of parameters
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   typedef typename itk::NumericTraits<InputPixelType>::ValueType InputValueType;
   typedef typename itk::NumericTraits<OutputPixelType>::ValueType OutputValueType;
   if(static_cast<double>(std::numeric_limits<InputValueType>::max()) > static_cast<double>(std::numeric_limits<OutputValueType>::max()) ||
      static_cast<double>(std::numeric_limits<InputValueType>::lowest()) < static_cast<double>(std::numeric_limits<OutputValueType>::lowest()))
   {
-    setErrorCondition(-5);
-    notifyErrorMessage(getHumanLabel(), "Boundaries values of output component type inside boundaries of input component type. Use ITK::Rescale Intensity Image Filter instead.", getErrorCondition());
+    setErrorCondition(-5, "Boundaries values of output component type inside boundaries of input component type. Use ITK::Rescale Intensity Image Filter instead.");
     return;
   }
   ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();

@@ -81,8 +81,8 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
 {
   // Check consistency of parameters
 
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   QVector<QString> supportedTypes;
   supportedTypes << "uint8_t"
                  << "uint16_t"
@@ -114,9 +114,8 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   // checkImageType() is called before this function and limits the types of
   // supported mask images.
   // Just in case, an error is returned if this function is called.
-  setErrorCondition(-20);
   QString errorMessage = "Mask images are required to be scalar images.";
-  notifyErrorMessage(getHumanLabel(), errorMessage, getErrorCondition());
+  setErrorCondition(-20, errorMessage);
 }
 
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> typename std::enable_if<std::is_scalar<InputPixelType>::value>::type ITKMaskImage::convertDataContainerType()
@@ -144,8 +143,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
     DataContainer::Pointer container = getMaskContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, dap.getDataContainerName());
     if(!container.get())
     {
-      setErrorCondition(-3);
-      notifyErrorMessage(getHumanLabel(), "No container.", getErrorCondition());
+      setErrorCondition(-3, "No container.");
       return;
     }
     QVector<size_t> dims = ITKDream3DHelper::GetComponentsDimensions<OutputPixelType>();
@@ -159,9 +157,8 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
     toDream3D->Update();
   } catch(itk::ExceptionObject& err)
   {
-    setErrorCondition(-55560);
     QString errorMessage = "ITK exception was thrown while converting mask image: %1";
-    notifyErrorMessage(getHumanLabel(), errorMessage.arg(err.GetDescription()), getErrorCondition());
+    setErrorCondition(-55560, errorMessage.arg(err.GetDescription()));
     return;
   }
 }
@@ -193,9 +190,8 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
     filter->SetMaskImage(toITK->GetOutput());
   } catch(itk::ExceptionObject& err)
   {
-    setErrorCondition(-55561);
     QString errorMessage = "ITK exception was thrown while converting mask image: %1";
-    notifyErrorMessage(getHumanLabel(), errorMessage.arg(err.GetDescription()), getErrorCondition());
+    setErrorCondition(-55561, errorMessage.arg(err.GetDescription()));
     return;
   }
   typename OutputImageType::PixelType v;
@@ -219,7 +215,7 @@ void ITKMaskImage::filterInternal()
   m_MaskContainerArray = DataContainerArray::New();
   // Convert Mask image to uint32
   Dream3DArraySwitchMacroOutputType(this->convertDataContainerType, getMaskCellArrayPath(), -4, uint32_t, 0);
-  if(getErrorCondition() != 0)
+  if(getErrorCode() != 0)
   {
     return; // This should never happen thanks to the preflight checks.
   }

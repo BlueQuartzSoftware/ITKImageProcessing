@@ -77,8 +77,8 @@ void ITKConnectedComponentImage::readFilterParameters(AbstractFilterParametersRe
 // -----------------------------------------------------------------------------
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKConnectedComponentImage::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   // Check consistency of parameters
 
@@ -109,7 +109,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
 {
   QString outputVal = "ObjectCount :%1";
   m_ObjectCount = filter->GetObjectCount();
-  notifyWarningMessage(getHumanLabel(),outputVal.arg(m_ObjectCount),0);
+  setWarningCondition(0, outputVal.arg(m_ObjectCount));
 }
 
 }

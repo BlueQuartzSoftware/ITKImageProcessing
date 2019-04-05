@@ -55,8 +55,8 @@ ITKErodeObjectMorphologyImageTest() = default;
     }
     filter->setDataContainerArray(containerArray);
     filter->execute();
-    DREAM3D_REQUIRED(filter->getErrorCondition(), >=, 0);
-    DREAM3D_REQUIRED(filter->getWarningCondition(), >=, 0);
+    DREAM3D_REQUIRED(filter->getErrorCode(), >=, 0);
+    DREAM3D_REQUIRED(filter->getWarningCode(), >=, 0);
     WriteImage("ITKErodeObjectMorphologyImagefloat.nrrd", containerArray, input_path);
     QString baseline_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Baseline/BasicFilters_ErodeObjectMorphologyImageFilter_float.nrrd");
     DataArrayPath baseline_path("BContainer", "BAttributeMatrixName", "BAttributeArrayName");
@@ -103,8 +103,8 @@ ITKErodeObjectMorphologyImageTest() = default;
     }
     filter->setDataContainerArray(containerArray);
     filter->execute();
-    DREAM3D_REQUIRED(filter->getErrorCondition(), >=, 0);
-    DREAM3D_REQUIRED(filter->getWarningCondition(), >=, 0);
+    DREAM3D_REQUIRED(filter->getErrorCode(), >=, 0);
+    DREAM3D_REQUIRED(filter->getWarningCode(), >=, 0);
     WriteImage("ITKErodeObjectMorphologyImageshort.nrrd", containerArray, input_path);
     QString baseline_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Baseline/BasicFilters_ErodeObjectMorphologyImageFilter_short.nrrd");
     DataArrayPath baseline_path("BContainer", "BAttributeMatrixName", "BAttributeArrayName");

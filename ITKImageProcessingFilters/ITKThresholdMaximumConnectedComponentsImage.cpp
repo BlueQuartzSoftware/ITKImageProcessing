@@ -86,8 +86,8 @@ void ITKThresholdMaximumConnectedComponentsImage::readFilterParameters(AbstractF
 // -----------------------------------------------------------------------------
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKThresholdMaximumConnectedComponentsImage::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   // Check consistency of parameters
   this->CheckIntegerEntry<uint32_t, double>(m_MinimumObjectSizeInPixels, "MinimumObjectSizeInPixels", true);

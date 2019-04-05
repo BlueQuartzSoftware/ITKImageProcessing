@@ -306,7 +306,7 @@ public:
     }
 
     Observer obs;
-    QObject::connect(filter.get(), &AbstractFilter::filterGeneratedMessage, &obs, &Observer::processPipelineMessage);
+    QObject::connect(filter.get(), &AbstractFilter::messageGenerated, &obs, &Observer::processPipelineMessage);
 
     const QString inputContainerName = "inputContainer";
     DataContainerArray::Pointer inputContainerArray = DataContainerArray::New();
@@ -315,7 +315,7 @@ public:
     propWasSet = filter->setProperty("DataContainerName", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true)
     filter->execute();
-    int err = filter->getErrorCondition();
+    int err = filter->getErrorCode();
     DREAM3D_REQUIRE_EQUAL(err, 0)
 
     DREAM3D_REQUIRE(inputContainerArray->getDataContainerNames().contains(inputContainerName));
@@ -357,8 +357,8 @@ public:
 
     filter->execute();
 
-    DREAM3D_REQUIRED(filter->getErrorCondition(), >=, 0);
-    DREAM3D_REQUIRED(filter->getWarningCondition(), >=, 0);
+    DREAM3D_REQUIRED(filter->getErrorCode(), >=, 0);
+    DREAM3D_REQUIRED(filter->getWarningCode(), >=, 0);
     this->FilesToRemove << filename;
     return true;
   }
@@ -409,8 +409,8 @@ public:
     }
 
     writer->execute();
-    DREAM3D_REQUIRED(writer->getErrorCondition(), ==, -21003);
-    DREAM3D_REQUIRED(writer->getWarningCondition(), >=, 0);
+    DREAM3D_REQUIRED(writer->getErrorCode(), ==, -21003);
+    DREAM3D_REQUIRED(writer->getWarningCode(), >=, 0);
     return EXIT_SUCCESS;
   }
 

@@ -107,30 +107,27 @@ void ITKImageReader::dataCheck()
   QString filename = getFileName();
   if(filename.isEmpty())
   {
-    setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), "Invalid filename.", getErrorCondition());
+    setErrorCondition(-1, "Invalid filename.");
     return;
   }
 
   if(getDataContainerName().isEmpty())
   {
-    setErrorCondition(-2);
-    notifyErrorMessage(getHumanLabel(), "No container name.", getErrorCondition());
+    setErrorCondition(-2, "No container name.");
     return;
   }
 
   DataContainer::Pointer container = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName(), DataContainerID);
   if(container.get() == nullptr)
   {
-    setErrorCondition(-3);
-    notifyErrorMessage(getHumanLabel(), "No container.", getErrorCondition());
+    setErrorCondition(-3, "No container.");
     return;
   }
   DataArrayPath dap(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), getImageDataArrayName());
   readImage(dap, true);
   // If we got here, that means that there is no error
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 }
 
 // -----------------------------------------------------------------------------
@@ -153,10 +150,10 @@ void ITKImageReader::preflight()
 // -----------------------------------------------------------------------------
 void ITKImageReader::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }

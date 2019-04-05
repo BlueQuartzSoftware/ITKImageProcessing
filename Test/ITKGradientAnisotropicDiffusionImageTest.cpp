@@ -44,8 +44,8 @@ ITKGradientAnisotropicDiffusionImageTest() = default;
     }
     filter->setDataContainerArray(containerArray);
     filter->execute();
-    DREAM3D_REQUIRED(filter->getErrorCondition(), >=, 0);
-    DREAM3D_REQUIRED(filter->getWarningCondition(), >=, 0);
+    DREAM3D_REQUIRED(filter->getErrorCode(), >=, 0);
+    DREAM3D_REQUIRED(filter->getWarningCode(), >=, 0);
     WriteImage("ITKGradientAnisotropicDiffusionImagedefaults.nrrd", containerArray, input_path);
     QString baseline_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Baseline/BasicFilters_GradientAnisotropicDiffusionImageFilter_defaults.nrrd");
     DataArrayPath baseline_path("BContainer", "BAttributeMatrixName", "BAttributeArrayName");
@@ -90,8 +90,8 @@ int TestITKGradientAnisotropicDiffusionImagelongerTest()
     }
     filter->setDataContainerArray(containerArray);
     filter->execute();
-    DREAM3D_REQUIRED(filter->getErrorCondition(), >=, 0);
-    DREAM3D_REQUIRED(filter->getWarningCondition(), >=, 0);
+    DREAM3D_REQUIRED(filter->getErrorCode(), >=, 0);
+    DREAM3D_REQUIRED(filter->getWarningCode(), >=, 0);
     WriteImage("ITKGradientAnisotropicDiffusionImagelonger.nrrd", containerArray, input_path);
     QString baseline_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Baseline/BasicFilters_GradientAnisotropicDiffusionImageFilter_longer.nrrd");
     DataArrayPath baseline_path("BContainer", "BAttributeMatrixName", "BAttributeArrayName");

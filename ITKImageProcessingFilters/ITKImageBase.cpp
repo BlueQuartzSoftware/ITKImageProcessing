@@ -22,8 +22,8 @@ ITKImageBase::~ITKImageBase() = default;
 // -----------------------------------------------------------------------------
 void ITKImageBase::initialize()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   setCancel(false);
 }
 
@@ -34,7 +34,7 @@ void ITKImageBase::execute()
 {
   initialize();
   this->dataCheckInternal();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }

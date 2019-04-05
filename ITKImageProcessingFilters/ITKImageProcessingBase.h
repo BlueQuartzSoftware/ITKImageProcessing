@@ -91,7 +91,7 @@ protected:
     // Check data array
     imageCheck<InputPixelType, Dimension>(getSelectedCellArrayPath());
 
-    if(getErrorCondition() < 0)
+    if(getErrorCode() < 0)
     {
       return;
     }

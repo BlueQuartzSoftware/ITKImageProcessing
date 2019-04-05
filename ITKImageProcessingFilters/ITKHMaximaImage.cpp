@@ -77,8 +77,8 @@ void ITKHMaximaImage::readFilterParameters(AbstractFilterParametersReader* reade
 // -----------------------------------------------------------------------------
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKHMaximaImage::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   // Check consistency of parameters
 

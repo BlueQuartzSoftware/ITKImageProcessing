@@ -207,8 +207,8 @@ void RemoveTestFiles()
     }
 
     reader->execute();
-    DREAM3D_REQUIRED(reader->getErrorCondition(), ==, -1);
-    DREAM3D_REQUIRED(reader->getWarningCondition(), >=, 0);
+    DREAM3D_REQUIRED(reader->getErrorCode(), ==, -1);
+    DREAM3D_REQUIRED(reader->getWarningCode(), >=, 0);
     return EXIT_SUCCESS;
   }
 
@@ -228,8 +228,8 @@ void RemoveTestFiles()
     propertySet = reader->setProperty("DataContainerName", var);
     DREAM3D_REQUIRE_EQUAL(propertySet, true);
     reader->execute();
-    DREAM3D_REQUIRED(reader->getErrorCondition(), ==, -2);
-    DREAM3D_REQUIRED(reader->getWarningCondition(), >=, 0);
+    DREAM3D_REQUIRED(reader->getErrorCode(), ==, -2);
+    DREAM3D_REQUIRED(reader->getWarningCode(), >=, 0);
     return EXIT_SUCCESS;
   }
 
@@ -257,8 +257,8 @@ void RemoveTestFiles()
     DREAM3D_REQUIRE_EQUAL(propertySet, true);
 
     reader->execute();
-    DREAM3D_REQUIRED(reader->getErrorCondition(), ==, -3);
-    DREAM3D_REQUIRED(reader->getWarningCondition(), >=, 0);
+    DREAM3D_REQUIRED(reader->getErrorCode(), ==, -3);
+    DREAM3D_REQUIRED(reader->getWarningCode(), >=, 0);
     return EXIT_SUCCESS;
   }
 
@@ -290,8 +290,8 @@ void RemoveTestFiles()
     DREAM3D_REQUIRE_EQUAL(propertySet, true);
 
     reader->execute();
-    DREAM3D_REQUIRED(reader->getErrorCondition(), >=, 0);
-    DREAM3D_REQUIRED(reader->getWarningCondition(), >=, 0);
+    DREAM3D_REQUIRED(reader->getErrorCode(), >=, 0);
+    DREAM3D_REQUIRED(reader->getWarningCode(), >=, 0);
 
     // Compare read data
     DataContainerArray::Pointer containerArray = reader->getDataContainerArray();

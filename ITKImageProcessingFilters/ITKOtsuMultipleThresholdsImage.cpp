@@ -86,8 +86,8 @@ void ITKOtsuMultipleThresholdsImage::readFilterParameters(AbstractFilterParamete
 // -----------------------------------------------------------------------------
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKOtsuMultipleThresholdsImage::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   // Check consistency of parameters
   this->CheckIntegerEntry<uint8_t, int>(m_NumberOfThresholds, "NumberOfThresholds", true);
