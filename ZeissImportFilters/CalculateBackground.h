@@ -53,13 +53,14 @@ class ZeissImport_EXPORT CalculateBackground : public AbstractFilter
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(CalculateBackground SUPERCLASS AbstractFilter)
-  PYB11_PROPERTY(DataArrayPath VolumeDataContainerName READ getVolumeDataContainerName WRITE setVolumeDataContainerName)
-  PYB11_PROPERTY(QString BackgroundAttributeMatrixName READ getBackgroundAttributeMatrixName WRITE setBackgroundAttributeMatrixName)
+  PYB11_PROPERTY(QStringList DataContainers READ getDataContainers WRITE setDataContainers)
   PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
-  PYB11_PROPERTY(DataArrayPath ImageDataArrayPath READ getImageDataArrayPath WRITE setImageDataArrayPath)
-  PYB11_PROPERTY(DataArrayPath AttributeMatrixName READ getAttributeMatrixName WRITE setAttributeMatrixName)
-  PYB11_PROPERTY(DataArrayPath DataContainerBundleName READ getDataContainerBundleName WRITE setDataContainerBundleName)
-  PYB11_PROPERTY(QString BackgroundImageArrayName READ getBackgroundImageArrayName WRITE setBackgroundImageArrayName)
+  PYB11_PROPERTY(DataArrayPath ImageDataArrayName READ getImageDataArrayName WRITE setImageDataArrayName)
+
+  PYB11_PROPERTY(DataArrayPath OutputDataContainerPath READ getOutputDataContainerPath WRITE setOutputDataContainerPath)
+  PYB11_PROPERTY(DataArrayPath OutputCellAttributeMatrixPath READ getOutputCellAttributeMatrixPath WRITE setOutputCellAttributeMatrixPath)
+  PYB11_PROPERTY(DataArrayPath OutputImageArrayPath READ getOutputImageArrayPath WRITE setOutputImageArrayPath)
+
   PYB11_PROPERTY(uint lowThresh READ getlowThresh WRITE setlowThresh)
   PYB11_PROPERTY(uint highThresh READ gethighThresh WRITE sethighThresh)
   PYB11_PROPERTY(bool SubtractBackground READ getSubtractBackground WRITE setSubtractBackground)
@@ -74,26 +75,23 @@ public:
 
   SIMPL_INSTANCE_STRING_PROPERTY(DataContainerName)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, VolumeDataContainerName)
-  Q_PROPERTY(DataArrayPath VolumeDataContainerName READ getVolumeDataContainerName WRITE setVolumeDataContainerName)
-
-  SIMPL_FILTER_PARAMETER(QString, BackgroundAttributeMatrixName)
-  Q_PROPERTY(QString BackgroundAttributeMatrixName READ getBackgroundAttributeMatrixName WRITE setBackgroundAttributeMatrixName)
+  SIMPL_FILTER_PARAMETER(QStringList, DataContainers)
+  Q_PROPERTY(QStringList DataContainers READ getDataContainers WRITE setDataContainers)
 
   SIMPL_FILTER_PARAMETER(QString, CellAttributeMatrixName)
   Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, ImageDataArrayPath)
-  Q_PROPERTY(DataArrayPath ImageDataArrayPath READ getImageDataArrayPath WRITE setImageDataArrayPath)
+  SIMPL_FILTER_PARAMETER(QString, ImageDataArrayName)
+  Q_PROPERTY(QString ImageDataArrayName READ getImageDataArrayName WRITE setImageDataArrayName)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, AttributeMatrixName)
-  Q_PROPERTY(DataArrayPath AttributeMatrixName READ getAttributeMatrixName WRITE setAttributeMatrixName)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, OutputDataContainerPath)
+  Q_PROPERTY(DataArrayPath OutputDataContainerPath READ getOutputDataContainerPath WRITE setOutputDataContainerPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, DataContainerBundleName)
-  Q_PROPERTY(DataArrayPath DataContainerBundleName READ getDataContainerBundleName WRITE setDataContainerBundleName)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, OutputCellAttributeMatrixPath)
+  Q_PROPERTY(DataArrayPath OutputCellAttributeMatrixPath READ getOutputCellAttributeMatrixPath WRITE setOutputCellAttributeMatrixPath)
 
-  SIMPL_FILTER_PARAMETER(QString, BackgroundImageArrayName)
-  Q_PROPERTY(QString BackgroundImageArrayName READ getBackgroundImageArrayName WRITE setBackgroundImageArrayName)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, OutputImageArrayPath)
+  Q_PROPERTY(DataArrayPath OutputImageArrayPath READ getOutputImageArrayPath WRITE setOutputImageArrayPath)
 
   SIMPL_FILTER_PARAMETER(uint, lowThresh)
   Q_PROPERTY(uint lowThresh READ getlowThresh WRITE setlowThresh)
@@ -158,11 +156,6 @@ public:
   void setupFilterParameters() override;
 
   /**
-   * @brief readFilterParameters Reimplemented from @see AbstractFilter class
-   */
-  void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
-
-  /**
    * @brief execute Reimplemented from @see AbstractFilter class
    */
   void execute() override;
@@ -209,9 +202,9 @@ protected:
   void initialize();
 
 private:
-  int64_t m_TotalPoints;
+  //  int64_t m_TotalPoints;
 
-  DEFINE_DATAARRAY_VARIABLE(double, BackgroundImage)
+  //  DEFINE_DATAARRAY_VARIABLE(double, BackgroundImage)
 
 public:
   CalculateBackground(const CalculateBackground&) = delete;            // Copy Constructor Not Implemented
