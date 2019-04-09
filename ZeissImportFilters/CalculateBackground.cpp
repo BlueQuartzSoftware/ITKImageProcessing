@@ -158,16 +158,16 @@ CalculateBackground::ArrayType CalculateBackground::getArrayType()
       setErrorCondition(-53000, msg);
       return ArrayType::Error;
     }
-    const std::type_info& daType = typeid(da.get());
-    if(typeid(UInt8ArrayType) == daType)
+    QString typeString = da->getTypeAsString();
+    if("uint8_t" == typeString)
     {
       return ArrayType::UInt8;
     }
-    if(typeid(UInt16ArrayType) == daType)
+    if("uint16_t" == typeString)
     {
       return ArrayType::UInt16;
     }
-    if(typeid(FloatArrayType) == daType)
+    if("float" == typeString)
     {
       return ArrayType::Float32;
     }
