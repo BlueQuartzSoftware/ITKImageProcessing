@@ -31,8 +31,8 @@
 #include "CalculateBackground.h"
 
 #include <cstring>
-
 #include <set>
+#include <type_traits>
 
 #include <QtCore/QString>
 #include <QtCore/QFileInfo>
@@ -53,8 +53,8 @@
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Filtering/FilterManager.h"
-#include "SIMPLib/Geometry/IGeometryGrid.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/Geometry/RectGridGeom.h"
 
 #include "ZeissImport/ZeissImportConstants.h"
 #include "ZeissImport/ZeissImportVersion.h"
@@ -140,56 +140,101 @@ void CalculateBackground::initialize()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+CalculateBackground::ArrayType CalculateBackground::getArrayType()
+{
+  DataContainerArray::Pointer dca = getDataContainerArray();
+  const QVector<size_t> cDims = { 1 };
+
+  for(const auto& dcName : m_DataContainers)
+  {
+    DataArrayPath imageArrayPath(dcName, m_CellAttributeMatrixName, m_ImageDataArrayName);
+    AttributeMatrix::Pointer am = dca->getAttributeMatrix(imageArrayPath);
+    IDataArray::Pointer da = am->getChildByName(m_ImageDataArrayName);
+    if(da->getComponentDimensions() != cDims)
+    {
+      QString msg;
+      QTextStream out(&msg);
+      out << "Attribute Array Path: " << imageArrayPath.serialize() << " is not single-component (Grayscale) data. Please select a pattern of AttributeArray Paths that are gray scale images";
+      setErrorCondition(-53000, msg);
+      return ArrayType::Error;
+    }
+    const std::type_info& daType = typeid(da.get());
+    if(typeid(UInt8ArrayType) == daType)
+    {
+      return ArrayType::UInt8;
+    }
+    if(typeid(UInt16ArrayType) == daType)
+    {
+      return ArrayType::UInt16;
+    }
+    if(typeid(FloatArrayType) == daType)
+    {
+      return ArrayType::Float32;
+    }
+
+    QString msg;
+    QTextStream out(&msg);
+    out << "Attribute Array Path: " << imageArrayPath.serialize() << " is not of the appropriate type. Please select a pattern of AttributeArray Paths that are gray scale images";
+    setErrorCondition(-53000, msg);
+    return ArrayType::Error;
+  }
+  return ArrayType::Error;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+CalculateBackground::GeomType CalculateBackground::getGeomType()
+{
+  DataContainerArray::Pointer dca = getDataContainerArray();
+  for(const auto& dcName : m_DataContainers)
+  {
+    IGeometryGrid::Pointer gridGeom = dca->getDataContainer(dcName)->getGeometryAs<IGeometryGrid>();
+    if(nullptr == gridGeom)
+    {
+      QString msg;
+      QTextStream out(&msg);
+      out << "DataContainer: " << dcName << " needs to have an IGeometryGrid assigned. There is either no geometry assign to the Data Container or the Geometry is not of type IGeometryGrid.";
+      setErrorCondition(-53001, msg);
+      return GeomType::Error;
+    }
+    switch(gridGeom->getGeometryType())
+    {
+    case IGeometry::Type::Image:
+      return GeomType::ImageGeom;
+    case IGeometry::Type::RectGrid:
+      return GeomType::RectGridGeom;
+    default:
+      setErrorCondition(-53002, "Invalid Geometry type detected.  An ImageGeometry or RectGridGeometry is required for incoming data.");
+      return GeomType::Error;
+    }
+  }
+  return GeomType::Error;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void CalculateBackground::dataCheck()
 {
   clearErrorCode();
   clearWarningCode();
   initialize();
 
-  DataArrayPath tempPath;
+  // Check for empty list. If list is empty then the OutputGeometry was never formed and it wont help to go on..
+  if(m_DataContainers.isEmpty())
+  {
+    setErrorCondition(-53006, "At least one DataContainer must be selected.");
+    return;
+  }
 
   DataContainerArray::Pointer dca = getDataContainerArray();
   QVector<size_t> cDims = {1};
 
-  ImageGeom::Pointer outputImageGeom = ImageGeom::NullPointer();
-  QString inputDcName;
-
-  // Ensure each DataContainer has the proper path to the image data and the image data is grayscale
-  for(const auto& dcName : m_DataContainers)
-  {
-    if(inputDcName.isEmpty())
-    {
-      inputDcName = dcName;
-    }
-    DataArrayPath imageArrayPath(dcName, m_CellAttributeMatrixName, m_ImageDataArrayName);
-    UInt8ArrayType::Pointer imageData = dca->getPrereqArrayFromPath<UInt8ArrayType, AbstractFilter>(this, imageArrayPath, cDims);
-    if(imageData.get() == nullptr)
-    {
-      QString msg;
-      QTextStream out(&msg);
-      out << "Attribute Array Path: " << imageArrayPath.serialize() << " is not UInt8{1} (Grayscale) data. Please select a pattern of AttributeArray Paths that are gray scale images";
-      setErrorCondition(-53000, msg);
-    }
-
-    if(getErrorCode() >= 0)
-    {
-      ImageGeom::Pointer imageGeom = dca->getDataContainer(dcName)->getGeometryAs<ImageGeom>();
-      if(imageGeom.get() != nullptr)
-      {
-        if(outputImageGeom.get() == nullptr)
-        {
-          outputImageGeom = std::dynamic_pointer_cast<ImageGeom>(imageGeom->deepCopy());
-        }
-      }
-      else
-      {
-        QString msg;
-        QTextStream out(&msg);
-        out << "DataContainer: " << dcName << " needs to have an ImageGeometry assigned. There is either no geometry assign to the Data Container or the Geometry is not of type ImageGeom.";
-        setErrorCondition(-53001, msg);
-      }
-    }
-  }
+  // CheckInputArrays() templated on array and geometry types.
+  ArrayType arrayType = getArrayType();
+  GeomType geomType = getGeomType();
+  IGeometryGrid::Pointer outputGridGeom = checkInputArrays(arrayType, geomType);
 
   if(getErrorCode() < 0)
   {
@@ -202,20 +247,27 @@ void CalculateBackground::dataCheck()
     return;
   }
 
-  // Check for empty list. If list is empty then the OutputGeometry was never formed and it wont help to go on..
-  if(m_DataContainers.isEmpty())
-  {
-    return;
-  }
-
-  outputDc->setGeometry(outputImageGeom);
+  outputDc->setGeometry(outputGridGeom);
 
   QVector<size_t> tDims = {0, 0, 0};
-  std::tie(tDims[0], tDims[1], tDims[2]) = outputImageGeom->getDimensions();
-
+  std::tie(tDims[0], tDims[1], tDims[2]) = outputGridGeom->getDimensions();
   AttributeMatrix::Pointer outputAttrMat = outputDc->createNonPrereqAttributeMatrix(this, getOutputCellAttributeMatrixPath(), tDims, AttributeMatrix::Type::Cell, AttributeMatrixID20);
 
-  UInt8ArrayType::Pointer outputImageArray = outputAttrMat->createNonPrereqArray<UInt8ArrayType>(this, m_OutputImageArrayPath.getDataArrayName(), 0, cDims, DataArrayID30);
+  switch(arrayType)
+  {
+  case ArrayType::UInt8:
+    outputAttrMat->createNonPrereqArray<UInt8ArrayType>(this, m_OutputImageArrayPath.getDataArrayName(), 0, cDims, DataArrayID30);
+    break;
+  case ArrayType::UInt16:
+    outputAttrMat->createNonPrereqArray<UInt16ArrayType>(this, m_OutputImageArrayPath.getDataArrayName(), 0, cDims, DataArrayID30);
+    break;
+  case ArrayType::Float32:
+    outputAttrMat->createNonPrereqArray<FloatArrayType>(this, m_OutputImageArrayPath.getDataArrayName(), 0, cDims, DataArrayID30);
+    break;
+  default:
+    setErrorCondition(-53006, "A valid Attribute Array type (UInt8, UInt16, or Float) is required for this filter.");
+    break;
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -249,150 +301,107 @@ void CalculateBackground::execute()
     return;
   }
 
-  DataContainerArray::Pointer dca = getDataContainerArray();
+  ArrayType arrayType = getArrayType();
+  GeomType geomType = getGeomType();
+  calculateOutputValues(arrayType, geomType);
+}
 
-  DataContainer::Pointer outputDc = dca->getDataContainer(getOutputDataContainerPath());
-  AttributeMatrix::Pointer outputAttrMat = outputDc->getAttributeMatrix(getOutputCellAttributeMatrixPath());
-  UInt8ArrayType::Pointer outputArrayPtr = outputAttrMat->getAttributeArrayAs<UInt8ArrayType>(m_OutputImageArrayPath.getDataArrayName());
-  UInt8ArrayType& outputArray = *(outputArrayPtr);
-
-  ImageGeom::Pointer outputGeom = outputDc->getGeometryAs<ImageGeom>();
-  SizeVec3Type dims;
-  outputGeom->getDimensions(dims);
-
-  UInt64ArrayType::Pointer accumulateArrayPtr = UInt64ArrayType::CreateArray(outputArrayPtr->getNumberOfTuples(), "Accumulation Array", true);
-  accumulateArrayPtr->initializeWithZeros();
-  UInt64ArrayType& accumArray = *accumulateArrayPtr;
-  size_t numTuples = accumArray.getNumberOfTuples();
-
-  SizeTArrayType::Pointer countArrayPtr = SizeTArrayType::CreateArray(outputArrayPtr->getNumberOfTuples(), "Count Array", true);
-  SizeTArrayType& counter = *(countArrayPtr);
-
-  for(const auto& dcName : m_DataContainers)
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+IGeometryGrid::Pointer CalculateBackground::checkInputArrays(ArrayType arrayType, GeomType geomType)
+{
+  switch(arrayType)
   {
-    DataArrayPath imageArrayPath(dcName, m_CellAttributeMatrixName, m_ImageDataArrayName);
-
-    UInt8ArrayType& imageArray = *(dca->getAttributeMatrix(imageArrayPath)->getAttributeArrayAs<UInt8ArrayType>(imageArrayPath.getDataArrayName()));
-
-    for(size_t t = 0; t < numTuples; t++)
+  case ArrayType::UInt8:
+    switch(geomType)
     {
-      if(imageArray[t] >= m_lowThresh && imageArray[t] <= m_highThresh)
-      {
-        accumArray[t] = accumArray[t] + imageArray[t];
-        counter[t]++;
-      }
+    case GeomType::ImageGeom:
+      return checkInputArrays<UInt8ArrayType, ImageGeom>();
+    case GeomType::RectGridGeom:
+      return checkInputArrays<UInt8ArrayType, RectGridGeom>();
+    default:
+      setErrorCondition(-53005, "A valid geometry type (ImageGeom or RectGridGeom) is required for this filter.");
     }
-  }
-
-  // average the background values by the number of counts (counts will be the number of images unless the threshold
-  // values do not include all the possible image values
-  // (i.e. for an 8 bit image, if we only include values from 0 to 100, not every image value will be counted)
-  for(size_t j = 0; j < numTuples; j++)
-  {
-    accumArray[j] = accumArray[j] /= counter[j];
-  }
-
-#if 0
-  // Fit the background to a second order polynomial
-  // p are the coefficients p[0] + p[1]*x + p[2]*y +p[3]*xy + p[4]*x^2 + p[5]*y^2
-  Eigen::MatrixXd A(numTuples, ZeissImportConstants::PolynomialOrder::NumConsts2ndOrder);
-  Eigen::VectorXd B(numTuples);
-
-  for(size_t i = 0; i < numTuples; ++i)
-  {
-    xval = static_cast<int>(i / dims[0]);
-    yval = static_cast<int>(i % dims[0]);
-    B(i) = static_cast<double>(accumArray[i]);
-    A(i, 0) = 1.0;
-    A(i, 1) = static_cast<double>(xval);
-    A(i, 2) = static_cast<double>(yval);
-    A(i, 3) = static_cast<double>(xval * yval);
-    A(i, 4) = static_cast<double>(xval * xval);
-    A(i, 5) = static_cast<double>(yval * yval);
-  }
-
-  notifyStatusMessage("Fitting a polynomial to data. May take a while to solve if images are large");
-  Eigen::VectorXd p = A.colPivHouseholderQr().solve(B);
-
-  QVector<size_t> tDims(3);
-  tDims[0] = dims[0];
-  tDims[1] = dims[1];
-  tDims[2] = dims[2];
-
-  //  m->getAttributeMatrix(getOutputCellAttributeMatrixPath())->resizeAttributeArrays(tDims);
-  //  if(nullptr != m_BackgroundImagePtr.lock())                          /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-  //  { m_BackgroundImage = m_BackgroundImagePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-
-  Eigen::VectorXd Bcalc(numTuples);
-  double average = 0;
-
-  Bcalc = A * p;
-  average = Bcalc.mean();
-  Bcalc = Bcalc - Eigen::VectorXd::Constant(numTuples, average);
-
-  for(int i = 0; i < numTuples; ++i)
-  {
-    accumArray[i] = Bcalc(i);
-  }
-#endif
-
-  for(int i = 0; i < numTuples; ++i)
-  {
-    outputArray[i] = static_cast<uint8_t>(accumArray[i]);
-  }
-
-#if 0
-  if(m_SubtractBackground)
-  {
-    for(size_t i = 0; i < names.size(); i++)
+    break;
+  case ArrayType::UInt16:
+    switch(geomType)
     {
-      m_ImageDataArrayName.update(getDataContainerName(), getAttributeMatrixName().getAttributeMatrixName(), names[i]);
-      iDataArray = getDataContainerArray()->getPrereqIDataArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, m_ImageDataArrayName);
-      imagePtr = std::dynamic_pointer_cast<DataArray<uint8_t> >(iDataArray);
-      if(nullptr != imagePtr.get())
-      {
-        image = imagePtr->getPointer(0);
-
-        for(int64_t t = 0; t < m_TotalPoints; t++)
-        {
-          if (static_cast<uint8_t>(image[t]) >= m_lowThresh && static_cast<uint8_t>(image[t])  <= m_highThresh)
-          {
-            image[t] = image[t] - Bcalc(t);
-
-            if (image[t] < 0) {image[t] = 0;}
-            if (image[t] > 255) {image[t] = 255;}
-
-          }
-        }
-
-      }
+    case GeomType::ImageGeom:
+      return checkInputArrays<UInt16ArrayType, ImageGeom>();
+    case GeomType::RectGridGeom:
+      return checkInputArrays<UInt16ArrayType, RectGridGeom>();
+    default:
+      setErrorCondition(-53005, "A valid geometry type (ImageGeom or RectGridGeom) is required for this filter.");
     }
-  }
-
-  if(m_DivideBackground)
-  {
-    for(size_t i = 0; i < names.size(); i++)
+    break;
+  case ArrayType::Float32:
+    switch(geomType)
     {
-      m_ImageDataArrayName.update(getDataContainerName(), getAttributeMatrixName().getAttributeMatrixName(), names[i]);
-      iDataArray = getDataContainerArray()->getPrereqIDataArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, m_ImageDataArrayName);
-      imagePtr = std::dynamic_pointer_cast<DataArray<uint8_t> >(iDataArray);
-      if(nullptr != imagePtr.get())
-      {
-        image = imagePtr->getPointer(0);
-
-        for(int64_t t = 0; t < m_TotalPoints; t++)
-        {
-          if (static_cast<uint8_t>(image[t]) >= m_lowThresh && static_cast<uint8_t>(image[t])  <= m_highThresh)
-          {
-            image[t] = image[t] / Bcalc(t);
-
-          }
-        }
-
-      }
+    case GeomType::ImageGeom:
+      return checkInputArrays<FloatArrayType, ImageGeom>();
+    case GeomType::RectGridGeom:
+      return checkInputArrays<FloatArrayType, RectGridGeom>();
+    default:
+      setErrorCondition(-53005, "A valid geometry type (ImageGeom or RectGridGeom) is required for this filter.");
     }
+    break;
+  default:
+    setErrorCondition(-53006, "A valid Attribute Array type (UInt8, UInt16, or Float) is required for this filter.");
   }
-#endif
+
+  return IGeometryGrid::NullPointer();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void CalculateBackground::calculateOutputValues(ArrayType arrayType, GeomType geomType)
+{
+  switch(arrayType)
+  {
+  case ArrayType::UInt8:
+    switch(geomType)
+    {
+    case GeomType::ImageGeom:
+      calculateOutputValues<UInt8ArrayType, ImageGeom, UInt64ArrayType>();
+      break;
+    case GeomType::RectGridGeom:
+      calculateOutputValues<UInt8ArrayType, RectGridGeom, UInt64ArrayType>();
+      break;
+    case GeomType::Error:
+      break;
+    }
+    break;
+  case ArrayType::UInt16:
+    switch(geomType)
+    {
+    case GeomType::ImageGeom:
+      calculateOutputValues<UInt16ArrayType, ImageGeom, UInt64ArrayType>();
+      break;
+    case GeomType::RectGridGeom:
+      calculateOutputValues<UInt16ArrayType, RectGridGeom, UInt64ArrayType>();
+      break;
+    case GeomType::Error:
+      break;
+    }
+    break;
+  case ArrayType::Float32:
+    switch(geomType)
+    {
+    case GeomType::ImageGeom:
+      calculateOutputValues<FloatArrayType, ImageGeom, DoubleArrayType>();
+      break;
+    case GeomType::RectGridGeom:
+      calculateOutputValues<FloatArrayType, RectGridGeom, DoubleArrayType>();
+      break;
+    case GeomType::Error:
+      break;
+    }
+    break;
+  case ArrayType::Error:
+    break;
+  }
 }
 
 // -----------------------------------------------------------------------------

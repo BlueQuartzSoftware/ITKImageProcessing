@@ -36,6 +36,7 @@
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/Geometry/IGeometryGrid.h"
 #include "SIMPLib/SIMPLib.h"
 
 #include "ZeissImport/ZeissXml/ZeissTagsXmlSection.h"
@@ -189,6 +190,20 @@ signals:
   void preflightExecuted();
 
 protected:
+  enum class ArrayType
+  {
+    Error = -1,
+    UInt8,
+    UInt16,
+    Float32
+  };
+  enum class GeomType
+  {
+    Error = -1,
+    ImageGeom,
+    RectGridGeom
+  };
+
   CalculateBackground();
 
   /**
@@ -200,6 +215,134 @@ protected:
    * @brief Initializes all the private instance variables.
    */
   void initialize();
+
+  /**
+   * @brief Returns an enum value specifying which supported array type the incoming data falls into.
+   * @return
+   */
+  ArrayType getArrayType();
+  
+  /**
+   * @brief Returns an enum value specifying which supported geometry type the incoming data falls into.
+   * @return
+   */
+  GeomType getGeomType();
+
+  /**
+   * @brief Calls the corresponding checkInputArrays based on the array and geometry type.
+   * @param arrayType
+   * @param geomType
+   * @return
+   */
+  IGeometryGrid::Pointer checkInputArrays(ArrayType arrayType, GeomType geomType);
+
+  /**
+   * @brief Calls the corresponding calculateOutputValues based on the array and geometry type.
+   * @param arrayType
+   * @param geomType
+   * @return
+   */
+  void calculateOutputValues(ArrayType arrayType, GeomType geomType);
+
+  /**
+   * @brief Checks the input arrays' type and geometry type and returns a deep copy of the geometry.
+   * @return
+   */
+  template<typename DataArrayType, typename GeometryType>
+  std::shared_ptr<GeometryType> checkInputArrays()
+  {
+    DataContainerArray::Pointer dca = getDataContainerArray();
+    QVector<size_t> cDims = { 1 };
+    GeometryType::Pointer outputGridGeom = GeometryType::NullPointer();
+
+    // Ensure each DataContainer has the proper path to the image data and the image data is grayscale
+    for(const auto& dcName : m_DataContainers)
+    {
+      DataArrayPath imageArrayPath(dcName, m_CellAttributeMatrixName, m_ImageDataArrayName);
+      DataArrayType::Pointer imageData = dca->getPrereqArrayFromPath<DataArrayType, AbstractFilter>(this, imageArrayPath, cDims);
+      if(imageData.get() == nullptr)
+      {
+        QString msg;
+        QTextStream out(&msg);
+        out << "Attribute Array Path: " << imageArrayPath.serialize() << " is not UInt8{1} (Grayscale) data. Please select a pattern of AttributeArray Paths that are gray scale images";
+        setErrorCondition(-53000, msg);
+      }
+
+      if(getErrorCode() >= 0)
+      {
+        GeometryType::Pointer gridGeom = dca->getDataContainer(dcName)->getGeometryAs<GeometryType>();
+        if(gridGeom.get() != nullptr)
+        {
+          if(outputGridGeom.get() == nullptr)
+          {
+            outputGridGeom = std::dynamic_pointer_cast<GeometryType>(gridGeom->deepCopy());
+          }
+        }
+        else
+        {
+          QString msg;
+          QTextStream out(&msg);
+          out << "DataContainer: " << dcName << " needs to have an ImageGeometry assigned. There is either no geometry assign to the Data Container or the Geometry is not of type ImageGeom.";
+          setErrorCondition(-53001, msg);
+        }
+      }
+    }
+    return outputGridGeom;
+  }
+
+  /**
+   * @brief Calculates the output values using the templated output IDataArray output type
+   */
+  template<typename OutArrayType, typename GeomType, typename AccumType>
+  void calculateOutputValues()
+  {
+    DataContainerArray::Pointer dca = getDataContainerArray();
+
+    DataContainer::Pointer outputDc = dca->getDataContainer(getOutputDataContainerPath());
+    AttributeMatrix::Pointer outputAttrMat = outputDc->getAttributeMatrix(getOutputCellAttributeMatrixPath());
+    OutArrayType::Pointer outputArrayPtr = outputAttrMat->getAttributeArrayAs<OutArrayType>(m_OutputImageArrayPath.getDataArrayName());
+    OutArrayType& outputArray = *(outputArrayPtr);
+
+    GeomType::Pointer outputGeom = outputDc->getGeometryAs<GeomType>();
+    SizeVec3Type dims;
+    outputGeom->getDimensions(dims);
+
+    AccumType::Pointer accumulateArrayPtr = AccumType::CreateArray(outputArrayPtr->getNumberOfTuples(), "Accumulation Array", true);
+    accumulateArrayPtr->initializeWithZeros();
+    AccumType& accumArray = *accumulateArrayPtr;
+    size_t numTuples = accumArray.getNumberOfTuples();
+
+    SizeTArrayType::Pointer countArrayPtr = SizeTArrayType::CreateArray(outputArrayPtr->getNumberOfTuples(), "Count Array", true);
+    SizeTArrayType& counter = *(countArrayPtr);
+
+    for(const auto& dcName : m_DataContainers)
+    {
+      DataArrayPath imageArrayPath(dcName, m_CellAttributeMatrixName, m_ImageDataArrayName);
+      OutArrayType& imageArray = *(dca->getAttributeMatrix(imageArrayPath)->getAttributeArrayAs<OutArrayType>(imageArrayPath.getDataArrayName()));
+
+      for(size_t t = 0; t < numTuples; t++)
+      {
+        if(imageArray[t] >= m_lowThresh && imageArray[t] <= m_highThresh)
+        {
+          accumArray[t] += imageArray[t];
+          counter[t]++;
+        }
+      }
+    }
+
+    // average the background values by the number of counts (counts will be the number of images unless the threshold
+    // values do not include all the possible image values
+    // (i.e. for an 8 bit image, if we only include values from 0 to 100, not every image value will be counted)
+    for(size_t j = 0; j < numTuples; j++)
+    {
+      accumArray[j] /= counter[j];
+    }
+
+    for(size_t i = 0; i < numTuples; ++i)
+    {
+      outputArray[i] = static_cast<uint8_t>(accumArray[i]);
+    }
+  }
 
 private:
   //  int64_t m_TotalPoints;
