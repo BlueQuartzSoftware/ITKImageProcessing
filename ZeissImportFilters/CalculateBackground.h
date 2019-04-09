@@ -324,7 +324,7 @@ protected:
       {
         if(imageArray[t] >= m_lowThresh && imageArray[t] <= m_highThresh)
         {
-          accumArray[t] += imageArray[t];
+          accumArray[t] = accumArray[t] + imageArray[t];
           counter[t]++;
         }
       }
@@ -333,12 +333,12 @@ protected:
     // average the background values by the number of counts (counts will be the number of images unless the threshold
     // values do not include all the possible image values
     // (i.e. for an 8 bit image, if we only include values from 0 to 100, not every image value will be counted)
-    for(size_t j = 0; j < numTuples; j++)
+    for(int j = 0; j < numTuples; j++)
     {
-      accumArray[j] /= counter[j];
+      accumArray[j] = accumArray[j] /= counter[j];
     }
 
-    for(size_t i = 0; i < numTuples; ++i)
+    for(int i = 0; i < numTuples; ++i)
     {
       outputArray[i] = static_cast<uint8_t>(accumArray[i]);
     }
