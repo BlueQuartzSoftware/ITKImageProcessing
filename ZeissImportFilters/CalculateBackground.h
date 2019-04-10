@@ -264,7 +264,7 @@ protected:
       {
         QString msg;
         QTextStream out(&msg);
-        out << "Attribute Array Path: " << imageArrayPath.serialize() << " is not UInt8{1} (Grayscale) data. Please select a pattern of AttributeArray Paths that are gray scale images";
+        out << "Attribute Array Path: " << imageArrayPath.serialize() << " is not of the appropriate type and components{1} (Grayscale) data. Please select a pattern of AttributeArray Paths that are gray scale images";
         setErrorCondition(-53000, msg);
       }
 
@@ -300,16 +300,16 @@ protected:
 
     DataContainer::Pointer outputDc = dca->getDataContainer(getOutputDataContainerPath());
     AttributeMatrix::Pointer outputAttrMat = outputDc->getAttributeMatrix(getOutputCellAttributeMatrixPath());
-    OutArrayType::Pointer outputArrayPtr = outputAttrMat->getAttributeArrayAs<OutArrayType>(m_OutputImageArrayPath.getDataArrayName());
-    OutArrayType& outputArray = *(outputArrayPtr);
+    DataArray<OutArrayType>::Pointer outputArrayPtr = outputAttrMat->getAttributeArrayAs<DataArray<OutArrayType>>(m_OutputImageArrayPath.getDataArrayName());
+    DataArray<OutArrayType>& outputArray = *(outputArrayPtr);
 
     GeomType::Pointer outputGeom = outputDc->getGeometryAs<GeomType>();
     SizeVec3Type dims;
     outputGeom->getDimensions(dims);
 
-    AccumType::Pointer accumulateArrayPtr = AccumType::CreateArray(outputArrayPtr->getNumberOfTuples(), "Accumulation Array", true);
+    DataArray<AccumType>::Pointer accumulateArrayPtr = DataArray<AccumType>::CreateArray(outputArrayPtr->getNumberOfTuples(), "Accumulation Array", true);
     accumulateArrayPtr->initializeWithZeros();
-    AccumType& accumArray = *accumulateArrayPtr;
+    DataArray<AccumType>& accumArray = *accumulateArrayPtr;
     size_t numTuples = accumArray.getNumberOfTuples();
 
     SizeTArrayType::Pointer countArrayPtr = SizeTArrayType::CreateArray(outputArrayPtr->getNumberOfTuples(), "Count Array", true);
@@ -318,7 +318,7 @@ protected:
     for(const auto& dcName : m_DataContainers)
     {
       DataArrayPath imageArrayPath(dcName, m_CellAttributeMatrixName, m_ImageDataArrayName);
-      OutArrayType& imageArray = *(dca->getAttributeMatrix(imageArrayPath)->getAttributeArrayAs<OutArrayType>(imageArrayPath.getDataArrayName()));
+      DataArray<OutArrayType>& imageArray = *(dca->getAttributeMatrix(imageArrayPath)->getAttributeArrayAs<DataArray<OutArrayType>>(imageArrayPath.getDataArrayName()));
 
       for(size_t t = 0; t < numTuples; t++)
       {
@@ -387,7 +387,7 @@ protected:
 
     for(int i = 0; i < numTuples; ++i)
     {
-      outputArray[i] = static_cast<uint8_t>(accumArray[i]);
+      outputArray[i] = static_cast<OutArrayType>(accumArray[i]);
     }
 
 #if 0
@@ -403,7 +403,7 @@ protected:
         {
           auto* image = imagePtr->getPointer(0);
 
-          for(int64_t t = 0; t < totalPoints; t++)
+          for(size_t t = 0; t < totalPoints; t++)
           {
             if((image[t] >= m_lowThresh) && (image[t] <= m_highThresh))
             {

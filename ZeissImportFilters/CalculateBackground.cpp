@@ -364,10 +364,10 @@ void CalculateBackground::calculateOutputValues(ArrayType arrayType, GeomType ge
     switch(geomType)
     {
     case GeomType::ImageGeom:
-      calculateOutputValues<UInt8ArrayType, ImageGeom, UInt64ArrayType>();
+      calculateOutputValues<uint8_t, ImageGeom, uint64_t>();
       break;
     case GeomType::RectGridGeom:
-      calculateOutputValues<UInt8ArrayType, RectGridGeom, UInt64ArrayType>();
+      calculateOutputValues<uint8_t, RectGridGeom, uint64_t>();
       break;
     case GeomType::Error:
       break;
@@ -377,10 +377,10 @@ void CalculateBackground::calculateOutputValues(ArrayType arrayType, GeomType ge
     switch(geomType)
     {
     case GeomType::ImageGeom:
-      calculateOutputValues<UInt16ArrayType, ImageGeom, UInt64ArrayType>();
+      calculateOutputValues<uint16_t, ImageGeom, uint64_t>();
       break;
     case GeomType::RectGridGeom:
-      calculateOutputValues<UInt16ArrayType, RectGridGeom, UInt64ArrayType>();
+      calculateOutputValues<uint16_t, RectGridGeom, uint64_t>();
       break;
     case GeomType::Error:
       break;
@@ -390,10 +390,10 @@ void CalculateBackground::calculateOutputValues(ArrayType arrayType, GeomType ge
     switch(geomType)
     {
     case GeomType::ImageGeom:
-      calculateOutputValues<FloatArrayType, ImageGeom, DoubleArrayType>();
+      calculateOutputValues<float, ImageGeom, double>();
       break;
     case GeomType::RectGridGeom:
-      calculateOutputValues<FloatArrayType, RectGridGeom, DoubleArrayType>();
+      calculateOutputValues<float, RectGridGeom, double>();
       break;
     case GeomType::Error:
       break;
