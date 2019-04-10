@@ -338,10 +338,108 @@ protected:
       accumArray[j] = accumArray[j] /= counter[j];
     }
 
+#if 0
+    int xval = 0;
+    int yval = 0;
+    // Fit the background to a second order polynomial
+    // p are the coefficients p[0] + p[1]*x + p[2]*y +p[3]*xy + p[4]*x^2 + p[5]*y^2
+    Eigen::MatrixXd A(numTuples, ZeissImportConstants::PolynomialOrder::NumConsts2ndOrder);
+    Eigen::VectorXd B(numTuples);
+
+    for(size_t i = 0; i < numTuples; ++i)
+    {
+      xval = static_cast<int>(i / dims[0]);
+      yval = static_cast<int>(i % dims[0]);
+      B(i) = static_cast<double>(accumArray[i]);
+      A(i, 0) = 1.0;
+      A(i, 1) = static_cast<double>(xval);
+      A(i, 2) = static_cast<double>(yval);
+      A(i, 3) = static_cast<double>(xval * yval);
+      A(i, 4) = static_cast<double>(xval * xval);
+      A(i, 5) = static_cast<double>(yval * yval);
+    }
+
+    notifyStatusMessage("Fitting a polynomial to data. May take a while to solve if images are large");
+    Eigen::VectorXd p = A.colPivHouseholderQr().solve(B);
+
+    QVector<size_t> tDims(3);
+    tDims[0] = dims[0];
+    tDims[1] = dims[1];
+    tDims[2] = dims[2];
+
+    //  m->getAttributeMatrix(getOutputCellAttributeMatrixPath())->resizeAttributeArrays(tDims);
+    //  if(nullptr != m_BackgroundImagePtr.lock())                          /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+    //  { m_BackgroundImage = m_BackgroundImagePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
+    Eigen::VectorXd Bcalc(numTuples);
+    double average = 0;
+
+    Bcalc = A * p;
+    average = Bcalc.mean();
+    Bcalc = Bcalc - Eigen::VectorXd::Constant(numTuples, average);
+
+    for(int i = 0; i < numTuples; ++i)
+    {
+      accumArray[i] = Bcalc(i);
+    }
+#endif
+
+
     for(int i = 0; i < numTuples; ++i)
     {
       outputArray[i] = static_cast<uint8_t>(accumArray[i]);
     }
+
+#if 0
+    if(m_SubtractBackground)
+    {
+      for(const auto& dcName : m_DataContainers)
+      {
+        DataArrayPath imageDataPath(dcName, m_CellAttributeMatrixName, m_ImageDataArrayName);
+        auto iDataArray = getDataContainerArray()->getPrereqIDataArrayFromPath<OutArrayType, AbstractFilter>(this, imageDataPath);
+        auto imagePtr = std::dynamic_pointer_cast<OutArrayType>(iDataArray);
+        size_t totalPoints = imagePtr->getNumberOfComponents();
+        if(nullptr != imagePtr.get())
+        {
+          auto* image = imagePtr->getPointer(0);
+
+          for(int64_t t = 0; t < totalPoints; t++)
+          {
+            if((image[t] >= m_lowThresh) && (image[t] <= m_highThresh))
+            {
+              image[t] = image[t] - Bcalc(t);
+
+              if(image[t] < 0) { image[t] = 0; }
+              if(image[t] > 255) { image[t] = 255; }
+            }
+          }
+        }
+      }
+    }
+
+    if(m_DivideBackground)
+    {
+      for(const auto& dcName : m_DataContainers)
+      {
+        DataArrayPath imageDataPath(dcName, m_CellAttributeMatrixName, m_ImageDataArrayName);
+        auto iDataArray = getDataContainerArray()->getPrereqIDataArrayFromPath<OutArrayType, AbstractFilter>(this, imageDataPath);
+        auto imagePtr = std::dynamic_pointer_cast<OutArrayType>(iDataArray);
+        size_t totalPoints = imagePtr->getNumberOfComponents();
+        if(nullptr != imagePtr.get())
+        {
+          auto* image = imagePtr->getPointer(0);
+
+          for(int64_t t = 0; t < totalPoints; t++)
+          {
+            if((image[t] >= m_lowThresh) && (image[t] <= m_highThresh))
+            {
+              image[t] = image[t] / Bcalc(t);
+            }
+          }
+        }
+      }
+    }
+#endif
   }
 
 private:
