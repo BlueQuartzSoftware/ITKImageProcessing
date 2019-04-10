@@ -106,6 +106,12 @@ public:
   SIMPL_FILTER_PARAMETER(bool, DivideBackground)
   Q_PROPERTY(int DivideBackground READ getDivideBackground WRITE setDivideBackground)
 
+  SIMPL_FILTER_PARAMETER(bool, GaussianBlur)
+  Q_PROPERTY(int GaussianBlur READ getGaussianBlur WRITE setGaussianBlur)
+
+  SIMPL_FILTER_PARAMETER(float, GaussianStdVariation)
+  Q_PROPERTY(float GaussianStdVariation READ getGaussianStdVariation WRITE setGaussianStdVariation)
+
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
@@ -396,8 +402,8 @@ protected:
       for(const auto& dcName : m_DataContainers)
       {
         DataArrayPath imageDataPath(dcName, m_CellAttributeMatrixName, m_ImageDataArrayName);
-        auto iDataArray = getDataContainerArray()->getPrereqIDataArrayFromPath<OutArrayType, AbstractFilter>(this, imageDataPath);
-        auto imagePtr = std::dynamic_pointer_cast<OutArrayType>(iDataArray);
+        auto iDataArray = getDataContainerArray()->getPrereqIDataArrayFromPath<DataArray<OutArrayType>, AbstractFilter>(this, imageDataPath);
+        auto imagePtr = std::dynamic_pointer_cast<DataArray<OutArrayType>>(iDataArray);
         size_t totalPoints = imagePtr->getNumberOfComponents();
         if(nullptr != imagePtr.get())
         {
@@ -422,14 +428,14 @@ protected:
       for(const auto& dcName : m_DataContainers)
       {
         DataArrayPath imageDataPath(dcName, m_CellAttributeMatrixName, m_ImageDataArrayName);
-        auto iDataArray = getDataContainerArray()->getPrereqIDataArrayFromPath<OutArrayType, AbstractFilter>(this, imageDataPath);
-        auto imagePtr = std::dynamic_pointer_cast<OutArrayType>(iDataArray);
+        auto iDataArray = getDataContainerArray()->getPrereqIDataArrayFromPath<DataArray<OutArrayType>, AbstractFilter>(this, imageDataPath);
+        auto imagePtr = std::dynamic_pointer_cast<DataArray<OutArrayType>>(iDataArray);
         size_t totalPoints = imagePtr->getNumberOfComponents();
         if(nullptr != imagePtr.get())
         {
           auto* image = imagePtr->getPointer(0);
 
-          for(int64_t t = 0; t < totalPoints; t++)
+          for(size_t t = 0; t < totalPoints; t++)
           {
             if((image[t] >= m_lowThresh) && (image[t] <= m_highThresh))
             {
@@ -440,6 +446,31 @@ protected:
       }
     }
 #endif
+
+    if(getGaussianBlur())
+    {
+      FilterManager* filtManager = FilterManager::Instance();
+      IFilterFactory::Pointer factory = filtManager->getFactoryFromClassName("ItkDiscreteGaussianBlur");
+      if(nullptr != factory.get())
+      {
+        AbstractFilter::Pointer filter = factory->create();
+        if(nullptr != filter.get())
+        {
+          QVariant var;
+          var.setValue(getOutputImageArrayPath());
+          filter->setDataContainerArray(getDataContainerArray());
+          filter->setProperty("SelectedCellArrayPath", var);
+          filter->setProperty("SaveAsNewArray", false);
+          filter->setProperty("Stdev", getGaussianStdVariation());
+          filter->execute();
+        }
+      }
+      else
+      {
+        setErrorCondition(-53009, "ItkDiscreteGaussianBlur filter not found.");
+      }
+    }
+
   }
 
 private:
