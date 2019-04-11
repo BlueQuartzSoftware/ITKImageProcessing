@@ -106,6 +106,9 @@ public:
   SIMPL_FILTER_PARAMETER(bool, DivideBackground)
   Q_PROPERTY(int DivideBackground READ getDivideBackground WRITE setDivideBackground)
 
+  SIMPL_FILTER_PARAMETER(bool, Polynomial)
+  Q_PROPERTY(int Polynomial READ getPolynomial WRITE setPolynomial)
+
   SIMPL_FILTER_PARAMETER(bool, GaussianBlur)
   Q_PROPERTY(int GaussianBlur READ getGaussianBlur WRITE setGaussianBlur)
 
@@ -344,109 +347,112 @@ protected:
       accumArray[j] /= counter[j];
     }
 
-#if 0
-    int xval = 0;
-    int yval = 0;
-    // Fit the background to a second order polynomial
-    // p are the coefficients p[0] + p[1]*x + p[2]*y +p[3]*xy + p[4]*x^2 + p[5]*y^2
-    Eigen::MatrixXd A(numTuples, ZeissImportConstants::PolynomialOrder::NumConsts2ndOrder);
-    Eigen::VectorXd B(numTuples);
-
-    for(size_t i = 0; i < numTuples; ++i)
+    // This block was previously disabled and divided on both sides of the for loop copying values into the output array.
+    // The first part performs required work for polynomial operations.
+    // The first part is required for SubtractBackground and DivideBackground operations.
+    if(getPolynomial())
     {
-      xval = static_cast<int>(i / dims[0]);
-      yval = static_cast<int>(i % dims[0]);
-      B(i) = static_cast<double>(accumArray[i]);
-      A(i, 0) = 1.0;
-      A(i, 1) = static_cast<double>(xval);
-      A(i, 2) = static_cast<double>(yval);
-      A(i, 3) = static_cast<double>(xval * yval);
-      A(i, 4) = static_cast<double>(xval * xval);
-      A(i, 5) = static_cast<double>(yval * yval);
-    }
+      int xval = 0;
+      int yval = 0;
+      // Fit the background to a second order polynomial
+      // p are the coefficients p[0] + p[1]*x + p[2]*y +p[3]*xy + p[4]*x^2 + p[5]*y^2
+      Eigen::MatrixXd A(numTuples, ZeissImportConstants::PolynomialOrder::NumConsts2ndOrder);
+      Eigen::VectorXd B(numTuples);
 
-    notifyStatusMessage("Fitting a polynomial to data. May take a while to solve if images are large");
-    Eigen::VectorXd p = A.colPivHouseholderQr().solve(B);
+      for(size_t i = 0; i < numTuples; ++i)
+      {
+        xval = static_cast<int>(i / dims[0]);
+        yval = static_cast<int>(i % dims[0]);
+        B(i) = static_cast<double>(accumArray[i]);
+        A(i, 0) = 1.0;
+        A(i, 1) = static_cast<double>(xval);
+        A(i, 2) = static_cast<double>(yval);
+        A(i, 3) = static_cast<double>(xval * yval);
+        A(i, 4) = static_cast<double>(xval * xval);
+        A(i, 5) = static_cast<double>(yval * yval);
+      }
 
-    QVector<size_t> tDims(3);
-    tDims[0] = dims[0];
-    tDims[1] = dims[1];
-    tDims[2] = dims[2];
+      notifyStatusMessage("Fitting a polynomial to data. May take a while to solve if images are large");
+      Eigen::VectorXd p = A.colPivHouseholderQr().solve(B);
 
-    //  m->getAttributeMatrix(getOutputCellAttributeMatrixPath())->resizeAttributeArrays(tDims);
-    //  if(nullptr != m_BackgroundImagePtr.lock())                          /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-    //  { m_BackgroundImage = m_BackgroundImagePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+      QVector<size_t> tDims(3);
+      tDims[0] = dims[0];
+      tDims[1] = dims[1];
+      tDims[2] = dims[2];
 
-    Eigen::VectorXd Bcalc(numTuples);
-    double average = 0;
+      //  m->getAttributeMatrix(getOutputCellAttributeMatrixPath())->resizeAttributeArrays(tDims);
+      //  if(nullptr != m_BackgroundImagePtr.lock())                          /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+      //  { m_BackgroundImage = m_BackgroundImagePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-    Bcalc = A * p;
-    average = Bcalc.mean();
-    Bcalc = Bcalc - Eigen::VectorXd::Constant(numTuples, average);
+      Eigen::VectorXd Bcalc(numTuples);
+      double average = 0;
 
-    for(int i = 0; i < numTuples; ++i)
-    {
-      accumArray[i] = Bcalc(i);
-    }
-#endif
+      Bcalc = A * p;
+      average = Bcalc.mean();
+      Bcalc = Bcalc - Eigen::VectorXd::Constant(numTuples, average);
 
+      for(int i = 0; i < numTuples; ++i)
+      {
+        accumArray[i] = Bcalc(i);
+      }
+ 
+      if(m_SubtractBackground)
+      {
+        for(const auto& dcName : m_DataContainers)
+        {
+          DataArrayPath imageDataPath(dcName, m_CellAttributeMatrixName, m_ImageDataArrayName);
+          auto iDataArray = getDataContainerArray()->getPrereqIDataArrayFromPath<DataArray<OutArrayType>, AbstractFilter>(this, imageDataPath);
+          auto imagePtr = std::dynamic_pointer_cast<DataArray<OutArrayType>>(iDataArray);
+          size_t totalPoints = imagePtr->getNumberOfComponents();
+          if(nullptr != imagePtr.get())
+          {
+            auto* image = imagePtr->getPointer(0);
 
+            for(size_t t = 0; t < totalPoints; t++)
+            {
+              if((image[t] >= m_lowThresh) && (image[t] <= m_highThresh))
+              {
+                image[t] -= Bcalc(t);
+
+                if(image[t] < 0) { image[t] = 0; }
+                if(image[t] > 255) { image[t] = 255; }
+              }
+            }
+          }
+        }
+      } // Subtract Background
+
+      if(m_DivideBackground)
+      {
+        for(const auto& dcName : m_DataContainers)
+        {
+          DataArrayPath imageDataPath(dcName, m_CellAttributeMatrixName, m_ImageDataArrayName);
+          auto iDataArray = getDataContainerArray()->getPrereqIDataArrayFromPath<DataArray<OutArrayType>, AbstractFilter>(this, imageDataPath);
+          auto imagePtr = std::dynamic_pointer_cast<DataArray<OutArrayType>>(iDataArray);
+          size_t totalPoints = imagePtr->getNumberOfComponents();
+          if(nullptr != imagePtr.get())
+          {
+            auto* image = imagePtr->getPointer(0);
+
+            for(size_t t = 0; t < totalPoints; t++)
+            {
+              if((image[t] >= m_lowThresh) && (image[t] <= m_highThresh))
+              {
+                image[t] /= Bcalc(t);
+              }
+            }
+          }
+        }
+      } // Divide Background
+    } // Polynomial
+
+    // Assign output array values
     for(int i = 0; i < numTuples; ++i)
     {
       outputArray[i] = static_cast<OutArrayType>(accumArray[i]);
     }
 
-#if 0
-    if(m_SubtractBackground)
-    {
-      for(const auto& dcName : m_DataContainers)
-      {
-        DataArrayPath imageDataPath(dcName, m_CellAttributeMatrixName, m_ImageDataArrayName);
-        auto iDataArray = getDataContainerArray()->getPrereqIDataArrayFromPath<DataArray<OutArrayType>, AbstractFilter>(this, imageDataPath);
-        auto imagePtr = std::dynamic_pointer_cast<DataArray<OutArrayType>>(iDataArray);
-        size_t totalPoints = imagePtr->getNumberOfComponents();
-        if(nullptr != imagePtr.get())
-        {
-          auto* image = imagePtr->getPointer(0);
-
-          for(size_t t = 0; t < totalPoints; t++)
-          {
-            if((image[t] >= m_lowThresh) && (image[t] <= m_highThresh))
-            {
-              image[t] = image[t] - Bcalc(t);
-
-              if(image[t] < 0) { image[t] = 0; }
-              if(image[t] > 255) { image[t] = 255; }
-            }
-          }
-        }
-      }
-    }
-
-    if(m_DivideBackground)
-    {
-      for(const auto& dcName : m_DataContainers)
-      {
-        DataArrayPath imageDataPath(dcName, m_CellAttributeMatrixName, m_ImageDataArrayName);
-        auto iDataArray = getDataContainerArray()->getPrereqIDataArrayFromPath<DataArray<OutArrayType>, AbstractFilter>(this, imageDataPath);
-        auto imagePtr = std::dynamic_pointer_cast<DataArray<OutArrayType>>(iDataArray);
-        size_t totalPoints = imagePtr->getNumberOfComponents();
-        if(nullptr != imagePtr.get())
-        {
-          auto* image = imagePtr->getPointer(0);
-
-          for(size_t t = 0; t < totalPoints; t++)
-          {
-            if((image[t] >= m_lowThresh) && (image[t] <= m_highThresh))
-            {
-              image[t] = image[t] / Bcalc(t);
-            }
-          }
-        }
-      }
-    }
-#endif
-
+    // Blur
     if(getGaussianBlur())
     {
       FilterManager* filtManager = FilterManager::Instance();
