@@ -9,11 +9,7 @@
             "z": 0.07209999859333038
         },
         "ConvertToGrayScale": 1,
-        "DataContainerName": {
-            "Attribute Matrix Name": "",
-            "Data Array Name": "",
-            "Data Container Name": "Zeiss Axio Vision Montage"
-        },
+        "DataContainerName": "Sample Mosaic",
         "FilterVersion": "1.0.147",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Zeiss AxioVision Import (V4)",
@@ -23,7 +19,7 @@
         "ImportAllMetaData": 1,
         "InputFile": "Data/ZeissImport/SampleMosaic/_meta.xml",
         "MetaDataAttributeMatrixName": "AxioVision MetaData",
-        "MontageInformation": "Columns=2  Rows=3  Num. Images=6\nOrigin: 62049.5, 52194.8, 0  Spacing: 1.05597, 1.05597, 1",
+        "MontageInformation":"",
         "Origin": {
             "x": 0,
             "y": 0,
