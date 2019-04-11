@@ -250,7 +250,7 @@ void CalculateBackground::dataCheck()
   // CheckInputArrays() templated on array and geometry types.
   ArrayType arrayType = getArrayType();
   GeomType geomType = getGeomType();
-  IGeometryGrid::Pointer outputGridGeom = checkInputArraysTemplate(arrayType, geomType);
+  IGeometryGrid::Pointer outputGridGeom = checkInputArrays(arrayType, geomType);
 
   if(getErrorCode() < 0)
   {
@@ -316,7 +316,7 @@ void CalculateBackground::execute()
 
   ArrayType arrayType = getArrayType();
   GeomType geomType = getGeomType();
-  calculateOutputValuesTemplate(arrayType, geomType);
+  calculateOutputValues(arrayType, geomType);
 }
 
 // -----------------------------------------------------------------------------
