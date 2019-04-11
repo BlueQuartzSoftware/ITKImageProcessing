@@ -250,7 +250,7 @@ void CalculateBackground::dataCheck()
   // CheckInputArrays() templated on array and geometry types.
   ArrayType arrayType = getArrayType();
   GeomType geomType = getGeomType();
-  IGeometryGrid::Pointer outputGridGeom = checkInputArrays(arrayType, geomType);
+  IGeometryGrid::Pointer outputGridGeom = checkInputArraysTemplate(arrayType, geomType);
 
   if(getErrorCode() < 0)
   {
@@ -316,7 +316,7 @@ void CalculateBackground::execute()
 
   ArrayType arrayType = getArrayType();
   GeomType geomType = getGeomType();
-  calculateOutputValues(arrayType, geomType);
+  calculateOutputValuesTemplate(arrayType, geomType);
 }
 
 // -----------------------------------------------------------------------------
@@ -330,9 +330,9 @@ IGeometryGrid::Pointer CalculateBackground::checkInputArrays(ArrayType arrayType
     switch(geomType)
     {
     case GeomType::ImageGeom:
-      return checkInputArrays<UInt8ArrayType, ImageGeom>();
+      return checkInputArraysTemplate<UInt8ArrayType, ImageGeom>();
     case GeomType::RectGridGeom:
-      return checkInputArrays<UInt8ArrayType, RectGridGeom>();
+      return checkInputArraysTemplate<UInt8ArrayType, RectGridGeom>();
     default:
       setErrorCondition(-53005, "A valid geometry type (ImageGeom or RectGridGeom) is required for this filter.");
     }
@@ -341,9 +341,9 @@ IGeometryGrid::Pointer CalculateBackground::checkInputArrays(ArrayType arrayType
     switch(geomType)
     {
     case GeomType::ImageGeom:
-      return checkInputArrays<UInt16ArrayType, ImageGeom>();
+      return checkInputArraysTemplate<UInt16ArrayType, ImageGeom>();
     case GeomType::RectGridGeom:
-      return checkInputArrays<UInt16ArrayType, RectGridGeom>();
+      return checkInputArraysTemplate<UInt16ArrayType, RectGridGeom>();
     default:
       setErrorCondition(-53005, "A valid geometry type (ImageGeom or RectGridGeom) is required for this filter.");
     }
@@ -352,9 +352,9 @@ IGeometryGrid::Pointer CalculateBackground::checkInputArrays(ArrayType arrayType
     switch(geomType)
     {
     case GeomType::ImageGeom:
-      return checkInputArrays<FloatArrayType, ImageGeom>();
+      return checkInputArraysTemplate<FloatArrayType, ImageGeom>();
     case GeomType::RectGridGeom:
-      return checkInputArrays<FloatArrayType, RectGridGeom>();
+      return checkInputArraysTemplate<FloatArrayType, RectGridGeom>();
     default:
       setErrorCondition(-53005, "A valid geometry type (ImageGeom or RectGridGeom) is required for this filter.");
     }
@@ -377,10 +377,10 @@ void CalculateBackground::calculateOutputValues(ArrayType arrayType, GeomType ge
     switch(geomType)
     {
     case GeomType::ImageGeom:
-      calculateOutputValues<uint8_t, ImageGeom, uint64_t>();
+      calculateOutputValuesTemplate<uint8_t, ImageGeom, uint64_t>();
       break;
     case GeomType::RectGridGeom:
-      calculateOutputValues<uint8_t, RectGridGeom, uint64_t>();
+      calculateOutputValuesTemplate<uint8_t, RectGridGeom, uint64_t>();
       break;
     case GeomType::Error:
       break;
@@ -390,10 +390,10 @@ void CalculateBackground::calculateOutputValues(ArrayType arrayType, GeomType ge
     switch(geomType)
     {
     case GeomType::ImageGeom:
-      calculateOutputValues<uint16_t, ImageGeom, uint64_t>();
+      calculateOutputValuesTemplate<uint16_t, ImageGeom, uint64_t>();
       break;
     case GeomType::RectGridGeom:
-      calculateOutputValues<uint16_t, RectGridGeom, uint64_t>();
+      calculateOutputValuesTemplate<uint16_t, RectGridGeom, uint64_t>();
       break;
     case GeomType::Error:
       break;
@@ -403,10 +403,10 @@ void CalculateBackground::calculateOutputValues(ArrayType arrayType, GeomType ge
     switch(geomType)
     {
     case GeomType::ImageGeom:
-      calculateOutputValues<float, ImageGeom, double>();
+      calculateOutputValuesTemplate<float, ImageGeom, double>();
       break;
     case GeomType::RectGridGeom:
-      calculateOutputValues<float, RectGridGeom, double>();
+      calculateOutputValuesTemplate<float, RectGridGeom, double>();
       break;
     case GeomType::Error:
       break;

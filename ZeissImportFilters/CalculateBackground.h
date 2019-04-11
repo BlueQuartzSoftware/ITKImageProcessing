@@ -262,7 +262,7 @@ protected:
    * @return
    */
   template<typename DataArrayType, typename GeometryType>
-  std::shared_ptr<GeometryType> checkInputArrays()
+  std::shared_ptr<GeometryType> checkInputArraysTemplate()
   {
     DataContainerArray::Pointer dca = getDataContainerArray();
     QVector<size_t> cDims = { 1 };
@@ -307,7 +307,7 @@ protected:
    * @brief Calculates the output values using the templated output IDataArray output type
    */
   template<typename OutArrayType, typename GeomType, typename AccumType>
-  void calculateOutputValues()
+  void calculateOutputValuesTemplate()
   {
     DataContainerArray::Pointer dca = getDataContainerArray();
 
