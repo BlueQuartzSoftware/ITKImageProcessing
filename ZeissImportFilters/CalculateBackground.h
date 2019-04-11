@@ -313,6 +313,12 @@ protected:
 
     DataContainer::Pointer outputDc = dca->getDataContainer(getOutputDataContainerPath());
     AttributeMatrix::Pointer outputAttrMat = outputDc->getAttributeMatrix(getOutputCellAttributeMatrixPath());
+    if(nullptr == outputAttrMat)
+    {
+      setErrorCondition(-53010, "Output AttributeMatrix does not exist");
+      return;
+    }
+
     typename DataArray<OutArrayType>::Pointer outputArrayPtr = outputAttrMat->getAttributeArrayAs<DataArray<OutArrayType>>(m_OutputImageArrayPath.getDataArrayName());
     typename DataArray<OutArrayType>& outputArray = *(outputArrayPtr);
 
