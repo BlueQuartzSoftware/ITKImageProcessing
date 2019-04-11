@@ -1,5 +1,5 @@
 /* ============================================================================
- * Copyright (c) 2009-2019 BlueQuartz Software, LLC
+ * Copyright (c) 2019-2019 BlueQuartz Software, LLC
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -36,31 +36,41 @@
 #include <QtXml/QDomDocument>
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
-#include "SIMPLib/DataArrays/StringDataArray.h"
-#include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/SIMPLib.h"
 
-#include "ZeissImport/ZeissXml/ZeissTagsXmlSection.h"
+#include "ZeissImport/ZeissImportDLLExport.h"
+#include "ZeissImport/ZeissImportPlugin.h"
 
 // our PIMPL private class
-class ImportAxioVisionV4MontagePrivate;
+class ImportZenInfoMontagePrivate;
 
-#include "ZeissImport/ZeissImportDLLExport.h"
+using BoundsType = struct
+{
+  QString Filename;
+  int32_t StartX;
+  int32_t SizeX;
+  int32_t StartY;
+  int32_t SizeY;
+  int32_t StartC;
+  int32_t StartS;
+  int32_t StartB;
+  int32_t StartM;
+  int32_t Row;
+  int32_t Col;
+  float SpacingX;
+  float SpacingY;
+  IDataArray::Pointer ImageDataProxy;
+};
 
 /**
- * @class ImportAxioVisionV4Montage ImportAxioVisionV4Montage.h ZeissImport/ImportAxioVisionV4Montages/ImportAxioVisionV4Montage.h
- * @brief
- * @author
- * @date
- * @version 1.0
+ * @brief The ImportZenInfoMontage class. See [Filter documentation](@ref importzeninfomontage) for details.
  */
-class ZeissImport_EXPORT ImportAxioVisionV4Montage : public AbstractFilter
+class ZeissImport_EXPORT ImportZenInfoMontage : public AbstractFilter
 {
   Q_OBJECT
   // clang-format off
-  PYB11_CREATE_BINDINGS(ImportAxioVisionV4Montage SUPERCLASS AbstractFilter)
+  PYB11_CREATE_BINDINGS(ImportZenInfoMontage SUPERCLASS AbstractFilter)
   PYB11_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
   PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
   PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
@@ -76,15 +86,16 @@ class ZeissImport_EXPORT ImportAxioVisionV4Montage : public AbstractFilter
   PYB11_PROPERTY(int32_t ColumnCount READ getColumnCount)
   PYB11_PROPERTY(QStringList FilenameList READ getFilenameList)
 
-  Q_DECLARE_PRIVATE(ImportAxioVisionV4Montage)
+  Q_DECLARE_PRIVATE(ImportZenInfoMontage)
+
   // clang-format on
 
 public:
-  SIMPL_SHARED_POINTERS(ImportAxioVisionV4Montage)
-  SIMPL_FILTER_NEW_MACRO(ImportAxioVisionV4Montage)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ImportAxioVisionV4Montage, AbstractFilter)
+  SIMPL_SHARED_POINTERS(ImportZenInfoMontage)
+  SIMPL_FILTER_NEW_MACRO(ImportZenInfoMontage)
+  SIMPL_TYPE_MACRO_SUPER(ImportZenInfoMontage, AbstractFilter)
 
-  ~ImportAxioVisionV4Montage() override;
+  ~ImportZenInfoMontage() override;
 
   SIMPL_FILTER_PARAMETER(QString, InputFile)
   Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
@@ -97,9 +108,6 @@ public:
 
   SIMPL_FILTER_PARAMETER(QString, ImageDataArrayName)
   Q_PROPERTY(QString ImageDataArrayName READ getImageDataArrayName WRITE setImageDataArrayName)
-
-  SIMPL_FILTER_PARAMETER(QString, MetaDataAttributeMatrixName)
-  Q_PROPERTY(QString MetaDataAttributeMatrixName READ getMetaDataAttributeMatrixName WRITE setMetaDataAttributeMatrixName)
 
   SIMPL_FILTER_PARAMETER(bool, ConvertToGrayScale)
   Q_PROPERTY(bool ConvertToGrayScale READ getConvertToGrayScale WRITE setConvertToGrayScale)
@@ -198,35 +206,35 @@ public:
   void preflight() override;
 
   SIMPL_PIMPL_PROPERTY_DECL(QDomElement, Root)
-  SIMPL_PIMPL_PROPERTY_DECL(ZeissTagsXmlSection::Pointer, RootTagsSection)
   SIMPL_PIMPL_PROPERTY_DECL(QString, InputFile_Cache)
-  SIMPL_PIMPL_PROPERTY_DECL(QDateTime, LastRead)
+  SIMPL_PIMPL_PROPERTY_DECL(QDateTime, TimeStamp_Cache)
+  SIMPL_PIMPL_PROPERTY_DECL(std::vector<BoundsType>, BoundsCache)
 
 signals:
   /**
-   * @brief updateFilterParameters This is emitted when the filter requests all the latest Filter Parameters need to be
-   * pushed from a user facing control such as the FilterParameter Widget
-   * @param filter The filter to push the values into
+   * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
+   * be pushed from a user-facing control (such as a widget)
+   * @param filter Filter instance pointer
    */
   void updateFilterParameters(AbstractFilter* filter);
 
   /**
-   * @brief parametersChanged This signal can be emitted when any of the filter parameters are changed internally.
+   * @brief parametersChanged Emitted when any Filter parameter is changed internally
    */
   void parametersChanged();
 
   /**
-   * @brief preflightAboutToExecute Emitted just before the dataCheck() is called. This can change if needed.
+   * @brief preflightAboutToExecute Emitted just before calling dataCheck()
    */
   void preflightAboutToExecute();
 
   /**
-   * @brief preflightExecuted Emitted just after the dataCheck() is called. Typically. This can change if needed.
+   * @brief preflightExecuted Emitted just after calling dataCheck()
    */
   void preflightExecuted();
 
 protected:
-  ImportAxioVisionV4Montage();
+  ImportZenInfoMontage();
 
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
@@ -239,69 +247,54 @@ protected:
   void initialize();
 
   /**
-   * @brief readMetaXml
-   * @param device
-   * @return
+   * @brief flushCache
    */
-  void readMetaXml(QIODevice* device);
+  void flushCache();
 
+  /**
+   * @brief generateCache
+   * @param exportDocument
+   */
+  void generateCache(QDomElement& exportDocument);
 
   /**
    * @brief parseImages
    * @param rootTags
    */
-  void parseImages(QDomElement& root, const ZeissTagsXmlSection::Pointer& rootTagsSection);
+  void readImages();
 
   /**
-   * @brief getImageScaling
-   * @param scalingTagsSection
+   * @brief importImage
+   * @param dc
+   * @param imageFileName
+   */
+  AbstractFilter::Pointer createImageImportFiler(const QString& imageFileName, const DataArrayPath& daPath);
+
+  /**
+   * @brief ImportZenInfoMontage::createColorToGrayScaleFilter
+   * @param daPath
    * @return
    */
-  ImageGeom::Pointer initializeImageGeom(const QDomElement& root, const ZeissTagsXmlSection::Pointer& photoTagsSection);
+  AbstractFilter::Pointer createColorToGrayScaleFilter(const DataArrayPath& daPath);
 
   /**
-   * @brief generateMetaDataAttributeMatrix
-   * @param photoTagsSection
-   * @param imageCount
-   * @return
+   * @brief generateDataStructure
    */
-  void addMetaData(const AttributeMatrix::Pointer& metaAm, const ZeissTagsXmlSection::Pointer& photoTagsSection, int index);
-
-  /**
-   * @brief generateMetaDataAttributeMatrix -root data
-   * @param rootTagsSection
-   * @param imageCount
-   * @return
-   */
-
-  void addRootMetaData(const AttributeMatrix::Pointer& metaAm, const ZeissTagsXmlSection::Pointer& rootTagsSection, int index);
-
-  /**
-   * @brief generateDataArrays
-   * @param imageName
-   * @param pTag
-   * @param dcName
-   */
-  void importImage(DataContainer* dc, const QString& imageName, const QString& pTag, int imageIndex);
-
-  /**
-   * @brief convertToGrayScale
-   * @param imageName
-   * @param pTag
-   * @param dcName
-   */
-  void convertToGrayScale(DataContainer* dc, const QString& imageName, const QString& pTag);
+  void generateDataStructure();
 
 private:
-  QScopedPointer<ImportAxioVisionV4MontagePrivate> const d_ptr;
+  QScopedPointer<ImportZenInfoMontagePrivate> const d_ptr;
 
   int m_RowCount = -1;
   int m_ColumnCount = -1;
   QStringList m_FilenameList;
 
 public:
-  ImportAxioVisionV4Montage(const ImportAxioVisionV4Montage&) = delete;            // Copy Constructor Not Implemented
-  ImportAxioVisionV4Montage(ImportAxioVisionV4Montage&&) = delete;                 // Move Constructor Not Implemented
-  ImportAxioVisionV4Montage& operator=(const ImportAxioVisionV4Montage&) = delete; // Copy Assignment Not Implemented
-  ImportAxioVisionV4Montage& operator=(ImportAxioVisionV4Montage&&) = delete;      // Move Assignment Not Implemented
+  /* Rule of 5: All special member functions should be defined if any are defined.
+   * https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md#c21-if-you-define-or-delete-any-default-operation-define-or-delete-them-all
+   */
+  ImportZenInfoMontage(const ImportZenInfoMontage&) = delete;            // Copy Constructor Not Implemented
+  ImportZenInfoMontage& operator=(const ImportZenInfoMontage&) = delete; // Copy Assignment Not Implemented
+  ImportZenInfoMontage(ImportZenInfoMontage&&) = delete;                 // Move Constructor Not Implemented
+  ImportZenInfoMontage& operator=(ImportZenInfoMontage&&) = delete;      // Move Assignment Not Implemented
 };

@@ -9,17 +9,19 @@
             "z": 0.07209999859333038
         },
         "ConvertToGrayScale": 1,
-        "DataContainerName": "Sample Mosaic",
-        "FilterVersion": "1.0.147",
+        "DataContainerName": {
+            "Attribute Matrix Name": "",
+            "Data Array Name": "",
+            "Data Container Name": "Zeiss Zen Montage"
+        },
+        "FilterVersion": "1.0.161",
         "Filter_Enabled": true,
-        "Filter_Human_Label": "Zeiss AxioVision Import (V4)",
-        "Filter_Name": "ImportAxioVisionV4Montage",
-        "Filter_Uuid": "{411b008c-006f-51b2-ba05-99e51a01af3c}",
+        "Filter_Human_Label": "Zeiss Zen Info Import",
+        "Filter_Name": "ImportZenInfoMontage",
+        "Filter_Uuid": "{774ec947-eed6-5eb2-a01b-ee6470e61521}",
         "ImageDataArrayName": "ImageData",
-        "ImportAllMetaData": 1,
-        "InputFile": "Data/ZeissImport/SampleMosaic/_meta.xml",
-        "MetaDataAttributeMatrixName": "AxioVision MetaData",
-        "MontageInformation":"",
+        "InputFile": "Data/ZeissImport/SampleMosaic/SampleMosaic_Info.xml",
+        "MontageInformation": "Columns=2  Rows=3  Num. Images=6\nOrigin: 0, 0, 0  Spacing: 1, 1, 1",
         "Origin": {
             "x": 0,
             "y": 0,
@@ -32,17 +34,17 @@
         }
     },
     "1": {
-        "FilterVersion": "1.2.877",
+        "FilterVersion": "2.0.67",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Write DREAM.3D Data File",
         "Filter_Name": "DataContainerWriter",
         "Filter_Uuid": "{3fcd4c43-9d75-5b86-aad4-4441bc914f37}",
-        "OutputFile": "Data/Output/ZeissImport/SampleMosaic.dream3d",
+        "OutputFile": "Data/Output/ZeissImport/ZenSampleMosaic.dream3d",
         "WriteTimeSeries": 0,
         "WriteXdmfFile": 1
     },
     "PipelineBuilder": {
-        "Name": "AxioVision V4 Example Import",
+        "Name": "Zen Info XML Import",
         "Number_Filters": 2,
         "Version": 6
     }

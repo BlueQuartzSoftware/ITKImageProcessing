@@ -13,14 +13,14 @@
 namespace ZeissImportConstants
 {
   const QString ZeissImportPluginFile("ZeissImportPlugin");
-  const QString ZeissImportPluginDisplayName("ZeissImport");
+  const QString ZeissImportPluginDisplayName("Zeiss Import");
   const QString ZeissImportBaseName("ZeissImport");
 
   namespace BlueQuartz
   {
     const QString VendorName("BlueQuartz Software, LLC");
     const QString URL("http://www.bluequartz.net");
-    const QString Copyright("(C) 2016 BlueQuartz Software, LLC");
+    const QString Copyright("(C) 2016-2019 BlueQuartz Software, LLC");
   }
 
 
@@ -47,19 +47,37 @@ namespace ZeissImportConstants
 */
   namespace ImageProcessingFilters
   {
-
     // This is from the ItkImageProcessing Plugin
     static const QString k_ReadImageFilterClassName("ITKImageReader");
-
-    // This is from the Processing Plugin
-    static const QString k_RgbToGrayFilterClassName("ConvertColorToGrayScale");
   }
 }
 
+namespace Zeiss
+{
+namespace ZenXml
+{
+const QString ExportDocument("ExportDocument");
+const QString Image("Image");
+const QString Filename("Filename");
+const QString Bounds("Bounds");
+const QString StartX("StartX");
+const QString SizeX("SizeX");
+const QString StartY("StartY");
+const QString SizeY("SizeY");
+const QString StartC("StartC");
+const QString StartS("StartS");
+const QString StartB("StartB");
+const QString StartM("StartM");
+const QString Zoom("Zoom");
+const QString Z("Z");
+const QString T("T");
+} // namespace ZenXml
+} // namespace Zeiss
+
 /**
-* @brief Use this namespace to define any custom GUI widgets that collect FilterParameters
-* for a filter. Do NOT define general reusable widgets here.
-*/
+ * @brief Use this namespace to define any custom GUI widgets that collect FilterParameters
+ * for a filter. Do NOT define general reusable widgets here.
+ */
 namespace FilterParameterWidgetType
 {
 

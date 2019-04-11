@@ -45,18 +45,18 @@ class ZeissTagsXmlSection;
 class QIODevice;
 
 /**
- * @brief The MetaXmlToTileConfiguration class. See [Filter documentation](@ref metaxmltofijiconfig) for details.
+ * @brief The AxioVisionV4ToTileConfiguration class. See [Filter documentation](@ref metaxmltofijiconfig) for details.
  */
-class ZeissImport_EXPORT MetaXmlToTileConfiguration : public AbstractFilter
+class ZeissImport_EXPORT AxioVisionV4ToTileConfiguration : public AbstractFilter
 {
   Q_OBJECT
 
   public:
-    SIMPL_SHARED_POINTERS(MetaXmlToTileConfiguration)
-    SIMPL_FILTER_NEW_MACRO(MetaXmlToTileConfiguration)
-    SIMPL_TYPE_MACRO_SUPER(MetaXmlToTileConfiguration, AbstractFilter)
+    SIMPL_SHARED_POINTERS(AxioVisionV4ToTileConfiguration)
+    SIMPL_FILTER_NEW_MACRO(AxioVisionV4ToTileConfiguration)
+    SIMPL_TYPE_MACRO_SUPER(AxioVisionV4ToTileConfiguration, AbstractFilter)
 
-    ~MetaXmlToTileConfiguration() override;
+    ~AxioVisionV4ToTileConfiguration() override;
 
     SIMPL_FILTER_PARAMETER(QString, InputFile)
     Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
@@ -149,7 +149,7 @@ class ZeissImport_EXPORT MetaXmlToTileConfiguration : public AbstractFilter
     void preflightExecuted();
 
   protected:
-    MetaXmlToTileConfiguration();
+    AxioVisionV4ToTileConfiguration();
 
     /**
     * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
@@ -183,10 +183,10 @@ class ZeissImport_EXPORT MetaXmlToTileConfiguration : public AbstractFilter
     /* Rule of 5: All special member functions should be defined if any are defined.
     * https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md#c21-if-you-define-or-delete-any-default-operation-define-or-delete-them-all
     */
-    MetaXmlToTileConfiguration(const MetaXmlToTileConfiguration&) = delete;             // Copy Constructor Not Implemented
-    MetaXmlToTileConfiguration& operator=(const MetaXmlToTileConfiguration&) = delete;  // Copy Assignment Not Implemented
-    MetaXmlToTileConfiguration(MetaXmlToTileConfiguration&&) = delete;                  // Move Constructor Not Implemented
-    MetaXmlToTileConfiguration& operator=(MetaXmlToTileConfiguration&&) = delete;       // Move Assignment Not Implemented
+    AxioVisionV4ToTileConfiguration(const AxioVisionV4ToTileConfiguration&) = delete;             // Copy Constructor Not Implemented
+    AxioVisionV4ToTileConfiguration& operator=(const AxioVisionV4ToTileConfiguration&) = delete;  // Copy Assignment Not Implemented
+    AxioVisionV4ToTileConfiguration(AxioVisionV4ToTileConfiguration&&) = delete;                  // Move Constructor Not Implemented
+    AxioVisionV4ToTileConfiguration& operator=(AxioVisionV4ToTileConfiguration&&) = delete;       // Move Assignment Not Implemented
 
 };
 

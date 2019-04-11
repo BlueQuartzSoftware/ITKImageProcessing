@@ -1,35 +1,25 @@
-# Import AxioVision V4 Montage #
+# ImportZenInfoMontage #
 
 ## Group (Subgroup) ##
 
-Import/Export (Import)
+ZeissImport (ZeissImport)
 
 ## Description ##
 
 This filter imports in a set of tiled images collected by a Zeiss montaging microscope. The user must point to the XML file which contains the meta-data for all the images. The images must be located in the same directory as the XML file. Each image will be put into an individual Data Container / Attribute Matrix / Attribute Array. The XML input file is the type of file that is put out by the Zeiss Zen software as the "*_info.xml" file and has output that is similar to the following:
 
-      <?xml version="1.0" encoding="utf-8" ?>
-      <ROOT>
-        <Tags>
-            <__Version>536875008</__Version>
-            <Count>140</Count>
-            <V0>Image</V0>
-            <I0>1546</I0>
-            <A0>0</A0>
-            <V1/>
-            <I1>530</I1>
-            <A1>0</A1>
-            <V2/>
-            <I2>1549</I2>
-            <A2>0</A2>
-            <V3/>
-            <I3>1550</I3>
-            <A3>0</A3>
-            <V4/>
-            <I4>1551</I4>
-            <A4>0</A4>
-            <V5>SampleMosaic.bmp</V5>
-            <I5>1553</I5>
+    <?xml version="1.0" encoding="utf-8"?>
+        <ExportDocument>
+          <Image>
+            <Filename>SampleMosaic_p0.bmp</Filename>
+            <Bounds StartX="0" SizeX="1292" StartY="0" SizeY="968" StartC="0" StartS="0" StartB="0" StartM="0" />
+            <Zoom>1</Zoom>
+            <Z>8.398 µm</Z>
+            <T>0 ps</T>
+          </Image>
+        </ExportDocument>
+
+Please note that this xml file is distinctly different from the Zeiss Zen "*_info.xml" files that are produced from the Zeiss Zen software.
 
 The generated data containers will have the pattern of "Prefix_rXXcXX" where the XX is a possibly padded integer indicating either the row or column index that the data container belongs.
 
@@ -43,10 +33,9 @@ The generated data containers will have the pattern of "Prefix_rXXcXX" where the
 | Change Spacing | Bool | Set the spacing of the mosaic to a user defined value |
 | Origin | Float 3 Vect | The new origin of the mosaic |
 | Spacing | Float 3 Vect | The new spacing of the mosaic |
-| Data Container Prefix | The prefix for each created Data Container object    |    |
-| Cell AttributeMatrix Name | This attribute matrix holds a single image imported from disk  | Will be the same for all tiles   |
-| Image AttributeArray Name  | The name of the Attribute Array that holds the image data. |  Will be the same for all tiles  |
-| Meta Data AttributeMatrix Name | The name of the Meta-Data AttributeMatrix from the AxioVision \_meta.xml file | |
+| Data Container Prefix | String  | A prefix that can be used for each data container.  |
+| Cell Attribute Matrix Name | String  | The name of the Cell Attribute Matrix. |
+| Image Data Array Name | String  | The name of the import image data |
 
 ## Required Geometry ##
 
@@ -62,7 +51,7 @@ This filter will create one data container for each image tile that is in the xm
 
 ## Example Pipelines ##
 
-Prebuilt Pipelines / Examples / ZeissImport / AxioVision V4 Import
+Prebuilt Pipelines / Examples / ZeissImport / Zen Info XML Import
 
 ## License & Copyright ##
 
@@ -72,4 +61,5 @@ Please see the description file distributed with this plugin.
 
 If you need more help with a filter, please consider asking your question on the DREAM3D Users mailing list:
 https://groups.google.com/forum/?hl=en#!forum/dream3d-users
+
 

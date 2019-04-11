@@ -42,6 +42,7 @@
 #include <QtCore/QTextStream>
 #include <QtCore/QVector>
 
+#include "SIMPLib/CoreFilters/ConvertColorToGrayScale.h"
 #include "SIMPLib/DataArrays/StringDataArray.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
@@ -144,7 +145,7 @@ SIMPL_PIMPL_PROPERTY_DEF(ImportAxioVisionV4Montage, ZeissTagsXmlSection::Pointer
 void ImportAxioVisionV4Montage::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
-  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Zeiss XML File (_meta[0]ml)", InputFile, FilterParameter::Parameter, ImportAxioVisionV4Montage, "*[0]ml"));
+  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("AxioVision XML File (_meta.xml)", InputFile, FilterParameter::Parameter, ImportAxioVisionV4Montage, "*[0]ml"));
 
   PreflightUpdatedValueFilterParameter::Pointer param = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Montage Information", MontageInformation, FilterParameter::Parameter, ImportAxioVisionV4Montage);
   param->setReadOnly(true);
@@ -202,6 +203,27 @@ void ImportAxioVisionV4Montage::dataCheck()
     setErrorCondition(-388, ss);
   }
 
+  if(getDataContainerName().isEmpty())
+  {
+    ss = QObject::tr("The Data Container Name cannot be empty.");
+    setErrorCondition(-392, ss);
+  }
+  if(getCellAttributeMatrixName().isEmpty())
+  {
+    ss = QObject::tr("The Attribute Matrix Name cannot be empty.");
+    setErrorCondition(-393, ss);
+  }
+  if(getImageDataArrayName().isEmpty())
+  {
+    ss = QObject::tr("The Image Data Array Name cannot be empty.");
+    setErrorCondition(-394, ss);
+  }
+
+  if(getErrorCode() < 0)
+  {
+    return;
+  }
+
   QString filtName = ZeissImportConstants::ImageProcessingFilters::k_ReadImageFilterClassName;
   FilterManager* fm = FilterManager::Instance();
   IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filtName);
@@ -214,23 +236,6 @@ void ImportAxioVisionV4Montage::dataCheck()
     {
       ss = QObject::tr("The '%1' filter is not Available, did the ITKImageProcessing Plugin Load.").arg(filtName);
       setErrorCondition(-391, ss);
-    }
-  }
-  if(getConvertToGrayScale())
-  {
-    QString filtName = ZeissImportConstants::ImageProcessingFilters::k_RgbToGrayFilterClassName;
-    FilterManager* fm = FilterManager::Instance();
-    IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filtName);
-    if(nullptr != filterFactory.get())
-    {
-      // If we get this far, the Factory is good so creating the filter should not fail unless something has
-      // horribly gone wrong in which case the system is going to come down quickly after this.
-      AbstractFilter::Pointer filter = filterFactory->create();
-      if(nullptr == filter.get())
-      {
-        ss = QObject::tr("The '%1' filter is not Available, did the Processing Plugin Load.").arg(filtName);
-        setErrorCondition(-391, ss);
-      }
     }
   }
   if(getErrorCode() < 0)
@@ -713,117 +718,42 @@ void ImportAxioVisionV4Montage::importImage(DataContainer* dc, const QString& im
 void ImportAxioVisionV4Montage::convertToGrayScale(DataContainer* dc, const QString& imageName, const QString& pTag)
 {
 
-  QString filtName = ZeissImportConstants::ImageProcessingFilters::k_RgbToGrayFilterClassName;
-  FilterManager* fm = FilterManager::Instance();
-  IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filtName);
-  if(nullptr != filterFactory.get())
+  DataArrayPath dap(dc->getName(), getCellAttributeMatrixName(), getImageDataArrayName());
+
+  ConvertColorToGrayScale::Pointer filter = ConvertColorToGrayScale::New();
+
+  // Connect up the Error/Warning/Progress object so the filter can report those things
+  connect(filter.get(), SIGNAL(messageGenerated(const AbstractMessage::Pointer&)), this, SIGNAL(messageGenerated(const AbstractMessage::Pointer&)));
+
+  filter->setDataContainerArray(getDataContainerArray()); // AbstractFilter implements this so no problem
+  filter->setConversionAlgorithm(0);
+  filter->setColorWeights(getColorWeights());
+  QVector<DataArrayPath> inputDataArrayVector = {dap};
+  filter->setInputDataArrayVector(inputDataArrayVector);
+  filter->setCreateNewAttributeMatrix(false);
+  filter->setOutputAttributeMatrixName(getCellAttributeMatrixName());
+  filter->setOutputArrayPrefix(k_GrayScaleTempArrayName);
+
+  if(getInPreflight())
   {
-    // If we get this far, the Factory is good so creating the filter should not fail unless something has
-    // horribly gone wrong in which case the system is going to come down quickly after this.
-    AbstractFilter::Pointer filter = filterFactory->create();
-
-    // Connect up the Error/Warning/Progress object so the filter can report those things
-    connect(filter.get(), SIGNAL(messageGenerated(const AbstractMessage::Pointer&)), this, SIGNAL(messageGenerated(const AbstractMessage::Pointer&)));
-
-    filter->setDataContainerArray(getDataContainerArray()); // AbstractFilter implements this so no problem
-
-    DataArrayPath dap(dc->getName(), getCellAttributeMatrixName(), getImageDataArrayName());
-
-    QVariant variant;
-    bool propWasSet = false;
-
-    //----- Set the Conversion Algorithm property
-    variant.setValue(0); // Luminosity
-    propWasSet = filter->setProperty("ConversionAlgorithm", variant);
-    if(!propWasSet)
-    {
-      QString ss = QObject::tr("Error Setting Property '%1' into filter '%2' which is a subfilter called by %3. The property was not set which could mean the property was not exposed with a "
-                               "Q_PROPERTY macro. Please notify the developers.")
-                       .arg("ConversionAlgorithm", filtName, getHumanLabel());
-      setErrorCondition(-70002, ss);
-    }
-
-    //----- Set the ColorWeights Property
-    variant.setValue(getColorWeights());
-    propWasSet = filter->setProperty("ColorWeights", variant);
-    if(!propWasSet)
-    {
-      QString ss = QObject::tr("Error Setting Property '%1' into filter '%2' which is a subfilter called by %3. The property was not set which could mean the property was not exposed with a "
-                               "Q_PROPERTY macro. Please notify the developers.")
-                       .arg("ColorWeights", filtName, getHumanLabel());
-      setErrorCondition(-70003, ss);
-    }
-
-    //------- Set the InputDataArrayVector property
-    QVector<DataArrayPath> inputDataArrayVector = {dap};
-    variant.setValue(inputDataArrayVector);
-    propWasSet = filter->setProperty("InputDataArrayVector", variant);
-    if(!propWasSet)
-    {
-      QString ss = QObject::tr("Error Setting Property '%1' into filter '%2' which is a subfilter called by %3. The property was not set which could mean the property was not exposed with a "
-                               "Q_PROPERTY macro. Please notify the developers.")
-                       .arg("InputDataArrayVector", filtName, getHumanLabel());
-      setErrorCondition(-70004, ss);
-    }
-
-    //----- Set the CreateNewAttributeMatrix Property
-    variant.setValue(false);
-    propWasSet = filter->setProperty("CreateNewAttributeMatrix", variant);
-    if(!propWasSet)
-    {
-      QString ss = QObject::tr("Error Setting Property '%1' into filter '%2' which is a subfilter called by %3. The property was not set which could mean the property was not exposed with a "
-                               "Q_PROPERTY macro. Please notify the developers.")
-                       .arg("CreateNewAttributeMatrix", filtName, getHumanLabel());
-      setErrorCondition(-70005, ss);
-    }
-
-    //----- Set the OutputAttributeMatrixName Property
-    variant.setValue(getCellAttributeMatrixName());
-    propWasSet = filter->setProperty("OutputAttributeMatrixName", variant);
-    if(!propWasSet)
-    {
-      QString ss = QObject::tr("Error Setting Property '%1' into filter '%2' which is a subfilter called by %3. The property was not set which could mean the property was not exposed with a "
-                               "Q_PROPERTY macro. Please notify the developers.")
-                       .arg("OutputAttributeMatrixName", filtName, getHumanLabel());
-      setErrorCondition(-70006, ss);
-    }
-
-    //----- Set the OutputArrayPrefix Property
-    propWasSet = filter->setProperty("OutputArrayPrefix", k_GrayScaleTempArrayName);
-    if(!propWasSet)
-    {
-      QString ss = QObject::tr("Error Setting Property '%1' into filter '%2' which is a subfilter called by %3. The property was not set which could mean the property was not exposed with a "
-                               "Q_PROPERTY macro. Please notify the developers.")
-                       .arg("OutputArrayPrefix", filtName, getHumanLabel());
-      setErrorCondition(-70007, ss);
-    }
-    if(getInPreflight())
-    {
-      filter->preflight();
-    }
-    else
-    {
-      filter->execute();
-    }
-
-    if(filter->getErrorCode() >= 0)
-    {
-      AttributeMatrix::Pointer am = dc->getAttributeMatrix(getCellAttributeMatrixName());
-      IDataArray::Pointer rgb = am->removeAttributeArray(getImageDataArrayName());
-      IDataArray::Pointer gray = am->removeAttributeArray(k_GrayScaleTempArrayName + getImageDataArrayName());
-      gray->setName(rgb->getName());
-      am->insertOrAssign(gray);
-    }
-    else
-    {
-      setErrorCondition(filter->getErrorCode(), "Grayscale conversion failed. The data must be RGB or RGBA to convert.");
-    }
+    filter->preflight();
   }
   else
   {
-    QString ss = QObject::tr("Error trying to instantiate the '%1' filter.").arg(ZeissImportConstants::ImageProcessingFilters::k_RgbToGrayFilterClassName);
-    setErrorCondition(-70009, ss);
-    return;
+    filter->execute();
+  }
+
+  if(filter->getErrorCode() >= 0)
+  {
+    AttributeMatrix::Pointer am = dc->getAttributeMatrix(getCellAttributeMatrixName());
+    IDataArray::Pointer rgb = am->removeAttributeArray(getImageDataArrayName());
+    IDataArray::Pointer gray = am->removeAttributeArray(k_GrayScaleTempArrayName + getImageDataArrayName());
+    gray->setName(rgb->getName());
+    am->insertOrAssign(gray);
+  }
+  else
+  {
+    setErrorCondition(filter->getErrorCode(), "Grayscale conversion failed. The data must be RGB or RGBA to convert.");
   }
 }
 
@@ -894,7 +824,7 @@ const QString ImportAxioVisionV4Montage::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 const QString ImportAxioVisionV4Montage::getBrandingString() const
 {
-  return "ZeissImport";
+  return ZeissImportConstants::ZeissImportPluginDisplayName;
 }
 
 // -----------------------------------------------------------------------------
@@ -913,7 +843,7 @@ const QString ImportAxioVisionV4Montage::getFilterVersion() const
 // -----------------------------------------------------------------------------
 const QString ImportAxioVisionV4Montage::getGroupName() const
 {
-  return SIMPL::FilterGroups::Unsupported;
+  return SIMPL::FilterGroups::IOFilters;
 }
 
 // -----------------------------------------------------------------------------
@@ -937,7 +867,7 @@ const QUuid ImportAxioVisionV4Montage::getUuid()
 // -----------------------------------------------------------------------------
 const QString ImportAxioVisionV4Montage::getSubGroupName() const
 {
-  return "IO";
+  return SIMPL::FilterSubGroups::ImportFilters;
 }
 
 // -----------------------------------------------------------------------------

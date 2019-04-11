@@ -13,35 +13,42 @@
  *
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  */
 
-
 namespace UnitTest
 {
 
-  const QString DataDir("@DREAM3D_DATA_DIR@");
-  const QString TestTempDir("@TEST_TEMP_DIR@");
-  const QString DREAM3DProjDir("@DREAM3DProj_SOURCE_DIR@");
+const QString DataDir("@DREAM3D_DATA_DIR@");
+const QString TestTempDir("@TEST_TEMP_DIR@");
+const QString DREAM3DProjDir("@DREAM3DProj_SOURCE_DIR@");
 
-}
+namespace AxioVisionV4ToTileConfigurationTest
+{
+const QString InputFile("@ZeissImport_SOURCE_DIR@/Test/TestFiles/_meta.xml");
+const QString ExemplarOutputFile("@ZeissImport_SOURCE_DIR@/Test/TestFiles/TileConfiguration.txt");
+const QString OutputFile("@TEST_TEMP_DIR@/TileConfiguration.txt");
+} // namespace AxioVisionV4ToTileConfiguration
+
+namespace ImportZenInfoMontageTest
+{
+const QString ZenInfoFile("Data/ZeissImport/SampleMosaic/SampleMosaic_Info.xml");
+const QString OutputDREAM3DFile("@TEST_TEMP_DIR@/ZenInfoImportTest.dream3d");
+} // namespace ImportZenInfoMontageTest
+
+namespace ImportAxioVisionV4MontageTest
+{
+const QString AxioVisionMetaXmlFile("Data/ZeissImport/SampleMosaic/_meta.xml");
+const QString OutputDREAM3DFile("@TEST_TEMP_DIR@/AxioVisionMetaXmlTest.dream3d");
+} // namespace ImportAxioVisionV4MontageTest
+
+} // namespace UnitTest
 
 namespace ZeissImport
 {
-  namespace Tools
-  {
-    const QString TagsTextFile("@ZeissImport_SOURCE_DIR@/ZVI_Tags.txt");
-    const QString ZeissTagMappingConstantsFile("@ZeissImport_SOURCE_DIR@/ZeissXML/ZeissTagMappingConstants.h");
-    const QString ZeissInitIdNameMapFile("@ZeissImport_SOURCE_DIR@/ZeissXML/ZeissTagMapping_InitMaps.cpp");
-  }
-}
-
-namespace UnitTest
+namespace Tools
 {
-  namespace MetaXmlToTileConfigurationTest
-  {
-   const QString InputFile("@ZeissImport_SOURCE_DIR@/Test/TestFiles/_meta.xml");
-   const QString ExemplarOutputFile("@ZeissImport_SOURCE_DIR@/Test/TestFiles/TileConfiguration.txt");
-   const QString OutputFile("@TEST_TEMP_DIR@/TileConfiguration.txt");
-  }
-}
-
+const QString TagsTextFile("@ZeissImport_SOURCE_DIR@/ZVI_Tags.txt");
+const QString ZeissTagMappingConstantsFile("@ZeissImport_SOURCE_DIR@/ZeissXML/ZeissTagMappingConstants.h");
+const QString ZeissInitIdNameMapFile("@ZeissImport_SOURCE_DIR@/ZeissXML/ZeissTagMapping_InitMaps.cpp");
+} // namespace Tools
+} // namespace ZeissImport
 
 #endif

@@ -30,7 +30,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "MetaXmlToTileConfiguration.h"
+#include "AxioVisionV4ToTileConfiguration.h"
 
 #include <array>
 #include <fstream>
@@ -55,7 +55,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-MetaXmlToTileConfiguration::MetaXmlToTileConfiguration()
+AxioVisionV4ToTileConfiguration::AxioVisionV4ToTileConfiguration()
 {
   initialize();
 }
@@ -63,12 +63,12 @@ MetaXmlToTileConfiguration::MetaXmlToTileConfiguration()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-MetaXmlToTileConfiguration::~MetaXmlToTileConfiguration() = default;
+AxioVisionV4ToTileConfiguration::~AxioVisionV4ToTileConfiguration() = default;
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MetaXmlToTileConfiguration::initialize()
+void AxioVisionV4ToTileConfiguration::initialize()
 {
   clearErrorCode();
   clearWarningCode();
@@ -78,18 +78,18 @@ void MetaXmlToTileConfiguration::initialize()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MetaXmlToTileConfiguration::setupFilterParameters()
+void AxioVisionV4ToTileConfiguration::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
-  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Input File", InputFile, FilterParameter::Parameter, MetaXmlToTileConfiguration, "*.raw *.bin"));
-  parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Output File", OutputFile, FilterParameter::Parameter, MetaXmlToTileConfiguration, ""));
+  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Input File", InputFile, FilterParameter::Parameter, AxioVisionV4ToTileConfiguration, "*.raw *.bin"));
+  parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Output File", OutputFile, FilterParameter::Parameter, AxioVisionV4ToTileConfiguration, ""));
   setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MetaXmlToTileConfiguration::dataCheck()
+void AxioVisionV4ToTileConfiguration::dataCheck()
 {
   clearErrorCode();
   clearWarningCode();
@@ -133,7 +133,7 @@ void MetaXmlToTileConfiguration::dataCheck()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MetaXmlToTileConfiguration::preflight()
+void AxioVisionV4ToTileConfiguration::preflight()
 {
   // These are the REQUIRED lines of CODE to make sure the filter behaves correctly
   setInPreflight(true); // Set the fact that we are preflighting.
@@ -147,7 +147,7 @@ void MetaXmlToTileConfiguration::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MetaXmlToTileConfiguration::execute()
+void AxioVisionV4ToTileConfiguration::execute()
 {
   initialize();
   dataCheck();
@@ -165,7 +165,7 @@ void MetaXmlToTileConfiguration::execute()
 }
 
 // -----------------------------------------------------------------------------
-void MetaXmlToTileConfiguration::readMetaXml(QIODevice* device)
+void AxioVisionV4ToTileConfiguration::readMetaXml(QIODevice* device)
 {
   QString errorStr;
   int errorLine;
@@ -209,7 +209,7 @@ void MetaXmlToTileConfiguration::readMetaXml(QIODevice* device)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MetaXmlToTileConfiguration::parseImages(QDomElement& root, ZeissTagsXmlSection* rootTagsSection)
+void AxioVisionV4ToTileConfiguration::parseImages(QDomElement& root, ZeissTagsXmlSection* rootTagsSection)
 {
 
   int32_t imageCount = MetaXmlUtils::GetInt32Entry(this, rootTagsSection, Zeiss::MetaXML::ImageCountRawId);
@@ -395,9 +395,9 @@ void MetaXmlToTileConfiguration::parseImages(QDomElement& root, ZeissTagsXmlSect
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer MetaXmlToTileConfiguration::newFilterInstance(bool copyFilterParameters) const
+AbstractFilter::Pointer AxioVisionV4ToTileConfiguration::newFilterInstance(bool copyFilterParameters) const
 {
-  MetaXmlToTileConfiguration::Pointer filter = MetaXmlToTileConfiguration::New();
+  AxioVisionV4ToTileConfiguration::Pointer filter = AxioVisionV4ToTileConfiguration::New();
   if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
@@ -408,7 +408,7 @@ AbstractFilter::Pointer MetaXmlToTileConfiguration::newFilterInstance(bool copyF
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MetaXmlToTileConfiguration::getCompiledLibraryName() const
+const QString AxioVisionV4ToTileConfiguration::getCompiledLibraryName() const
 { 
   return ZeissImportConstants::ZeissImportBaseName;
 }
@@ -416,15 +416,15 @@ const QString MetaXmlToTileConfiguration::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MetaXmlToTileConfiguration::getBrandingString() const
+const QString AxioVisionV4ToTileConfiguration::getBrandingString() const
 {
-  return "ZeissImport";
+  return ZeissImportConstants::ZeissImportPluginDisplayName;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MetaXmlToTileConfiguration::getFilterVersion() const
+const QString AxioVisionV4ToTileConfiguration::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -435,23 +435,23 @@ const QString MetaXmlToTileConfiguration::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MetaXmlToTileConfiguration::getGroupName() const
-{ 
-  return SIMPL::FilterGroups::Unsupported;
+const QString AxioVisionV4ToTileConfiguration::getGroupName() const
+{
+  return SIMPL::FilterGroups::ProcessingFilters;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MetaXmlToTileConfiguration::getSubGroupName() const
-{ 
-  return "ZeissImport";
+const QString AxioVisionV4ToTileConfiguration::getSubGroupName() const
+{
+  return SIMPL::FilterSubGroups::ConversionFilters;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MetaXmlToTileConfiguration::getHumanLabel() const
+const QString AxioVisionV4ToTileConfiguration::getHumanLabel() const
 { 
   return "Convert AxioVision To Tile Configuration file";
 }
@@ -460,7 +460,7 @@ const QString MetaXmlToTileConfiguration::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid MetaXmlToTileConfiguration::getUuid()
+const QUuid AxioVisionV4ToTileConfiguration::getUuid()
 {
   return QUuid("{30687f44-9c10-5617-bcb8-4109cbd6e55e}");
 }

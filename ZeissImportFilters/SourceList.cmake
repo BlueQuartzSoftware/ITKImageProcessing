@@ -20,7 +20,8 @@ SIMPL_START_FILTER_GROUP(
 set(_PublicFilters
   CalculateBackground
   ImportAxioVisionV4Montage
-  MetaXmlToTileConfiguration
+  AxioVisionV4ToTileConfiguration
+  ImportZenInfoMontage
 )
 
 

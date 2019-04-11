@@ -1,14 +1,13 @@
-# MetaXmlToFijiConfig #
+# AxioVision V4 To Tile Configuration #
 
 
 ## Group (Subgroup) ##
 
-ZeissImport (Import/Export)
+Processing (Conversion)
 
 ## Description ##
 
-This **Filter** will create a "Tile Configuration" file based off of a _meta.xml file that AxioVision software creates. The Tile Configuration file is used by FIJI to stitch a montage of images into a single image.
-
+This **Filter** will create a "Tile Configuration" file based off of a Zeiss AxioVision Version 4 *_meta.xml file. The Tile Configuration file is used by FIJI to stitch a montage of images into a single image.
 
 An example file that is written by the filter is as follows:
 
@@ -25,6 +24,7 @@ An example file that is written by the filter is as follows:
     05MAR09_run2_64-Raw_p5.bmp; ; (1227.31, 1839.55)
 
 Even though the values written are in floating point notation, the values are in **pixel** units.
+
 ## Parameters ##
 
 | Name | Type | Description |
@@ -42,6 +42,7 @@ Not Applicable
 
 ## Created Objects ##
 
+None 
 
 ## Example Pipelines ##
 

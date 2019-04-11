@@ -300,7 +300,7 @@ const QString SeparateDataSets::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 const QString SeparateDataSets::getBrandingString() const
 {
-  return "ZeissImport";
+  return ZeissImportConstants::ZeissImportPluginDisplayName;
 }
 
 // -----------------------------------------------------------------------------
