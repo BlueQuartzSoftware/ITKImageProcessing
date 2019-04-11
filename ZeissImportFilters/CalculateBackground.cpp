@@ -127,16 +127,6 @@ void CalculateBackground::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Lowest allowed Image value (Image Value)", lowThresh, FilterParameter::Parameter, CalculateBackground));
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Highest allowed Image value (Image Value)", highThresh, FilterParameter::Parameter, CalculateBackground));
 
-  {
-    QStringList linkedProps;
-    linkedProps.clear();
-    linkedProps << "SubtractBackground";
-    linkedProps << "DivideBackground";
-    parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Polynomial", Polynomial, FilterParameter::Parameter, CalculateBackground, linkedProps));
-    parameters.push_back(SIMPL_NEW_BOOL_FP("Subtract Background from Current Images", SubtractBackground, FilterParameter::Parameter, CalculateBackground));
-    parameters.push_back(SIMPL_NEW_BOOL_FP("Divide Background from Current Images", DivideBackground, FilterParameter::Parameter, CalculateBackground));
-  }
-
   // Only allow the Gaussian Blur property if the required filter is available
   FilterManager* filtManager = FilterManager::Instance();
   IFilterFactory::Pointer factory = filtManager->getFactoryFromClassName("ItkDiscreteGaussianBlur");
@@ -149,6 +139,9 @@ void CalculateBackground::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Gaussian Blur", GaussianBlur, FilterParameter::Parameter, CalculateBackground, linkedProps));
     parameters.push_back(SIMPL_NEW_FLOAT_FP("Gaussian: Std Deviations", GaussianStdVariation, FilterParameter::Parameter, CalculateBackground));
   }
+
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Subtract Background from Current Images", SubtractBackground, FilterParameter::Parameter, CalculateBackground));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Divide Background from Current Images", DivideBackground, FilterParameter::Parameter, CalculateBackground));
 
   setFilterParameters(parameters);
 }

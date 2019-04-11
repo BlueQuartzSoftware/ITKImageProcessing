@@ -106,8 +106,10 @@ public:
   SIMPL_FILTER_PARAMETER(bool, DivideBackground)
   Q_PROPERTY(int DivideBackground READ getDivideBackground WRITE setDivideBackground)
 
+#if 0
   SIMPL_FILTER_PARAMETER(bool, Polynomial)
   Q_PROPERTY(int Polynomial READ getPolynomial WRITE setPolynomial)
+#endif
 
   SIMPL_FILTER_PARAMETER(bool, GaussianBlur)
   Q_PROPERTY(int GaussianBlur READ getGaussianBlur WRITE setGaussianBlur)
@@ -347,6 +349,7 @@ protected:
       accumArray[j] /= counter[j];
     }
 
+#if 0
     // This block was previously disabled and divided on both sides of the for loop copying values into the output array.
     // The first part performs required work for polynomial operations.
     // The first part is required for SubtractBackground and DivideBackground operations.
@@ -395,56 +398,8 @@ protected:
       {
         accumArray[i] = Bcalc(i);
       }
- 
-      if(m_SubtractBackground)
-      {
-        for(const auto& dcName : m_DataContainers)
-        {
-          DataArrayPath imageDataPath(dcName, m_CellAttributeMatrixName, m_ImageDataArrayName);
-          auto iDataArray = getDataContainerArray()->getPrereqIDataArrayFromPath<DataArray<OutArrayType>, AbstractFilter>(this, imageDataPath);
-          auto imagePtr = std::dynamic_pointer_cast<DataArray<OutArrayType>>(iDataArray);
-          size_t totalPoints = imagePtr->getNumberOfComponents();
-          if(nullptr != imagePtr.get())
-          {
-            auto* image = imagePtr->getPointer(0);
-
-            for(size_t t = 0; t < totalPoints; t++)
-            {
-              if((image[t] >= m_lowThresh) && (image[t] <= m_highThresh))
-              {
-                image[t] -= Bcalc(t);
-
-                if(image[t] < 0) { image[t] = 0; }
-                if(image[t] > 255) { image[t] = 255; }
-              }
-            }
-          }
-        }
-      } // Subtract Background
-
-      if(m_DivideBackground)
-      {
-        for(const auto& dcName : m_DataContainers)
-        {
-          DataArrayPath imageDataPath(dcName, m_CellAttributeMatrixName, m_ImageDataArrayName);
-          auto iDataArray = getDataContainerArray()->getPrereqIDataArrayFromPath<DataArray<OutArrayType>, AbstractFilter>(this, imageDataPath);
-          auto imagePtr = std::dynamic_pointer_cast<DataArray<OutArrayType>>(iDataArray);
-          size_t totalPoints = imagePtr->getNumberOfComponents();
-          if(nullptr != imagePtr.get())
-          {
-            auto* image = imagePtr->getPointer(0);
-
-            for(size_t t = 0; t < totalPoints; t++)
-            {
-              if((image[t] >= m_lowThresh) && (image[t] <= m_highThresh))
-              {
-                image[t] /= Bcalc(t);
-              }
-            }
-          }
-        }
-      } // Divide Background
     } // Polynomial
+#endif
 
     // Assign output array values
     for(int i = 0; i < numTuples; ++i)
@@ -475,7 +430,57 @@ protected:
       {
         setErrorCondition(-53009, "ItkDiscreteGaussianBlur filter not found.");
       }
-    }
+    } // Blur
+
+    // Edit the input data
+    if(m_SubtractBackground)
+    {
+      for(const auto& dcName : m_DataContainers)
+      {
+        DataArrayPath imageDataPath(dcName, m_CellAttributeMatrixName, m_ImageDataArrayName);
+        auto iDataArray = getDataContainerArray()->getPrereqIDataArrayFromPath<DataArray<OutArrayType>, AbstractFilter>(this, imageDataPath);
+        auto imagePtr = std::dynamic_pointer_cast<DataArray<OutArrayType>>(iDataArray);
+        size_t totalPoints = imagePtr->getNumberOfComponents();
+        if(nullptr != imagePtr.get())
+        {
+          auto* image = imagePtr->getPointer(0);
+
+          for(size_t t = 0; t < totalPoints; t++)
+          {
+            if((image[t] >= m_lowThresh) && (image[t] <= m_highThresh))
+            {
+              image[t] -= outputArray[t];
+
+              if(image[t] < 0) { image[t] = 0; }
+              if(image[t] > 255) { image[t] = 255; }
+            }
+          }
+        }
+      }
+    } // Subtract Background
+
+    if(m_DivideBackground)
+    {
+      for(const auto& dcName : m_DataContainers)
+      {
+        DataArrayPath imageDataPath(dcName, m_CellAttributeMatrixName, m_ImageDataArrayName);
+        auto iDataArray = getDataContainerArray()->getPrereqIDataArrayFromPath<DataArray<OutArrayType>, AbstractFilter>(this, imageDataPath);
+        auto imagePtr = std::dynamic_pointer_cast<DataArray<OutArrayType>>(iDataArray);
+        size_t totalPoints = imagePtr->getNumberOfComponents();
+        if(nullptr != imagePtr.get())
+        {
+          auto* image = imagePtr->getPointer(0);
+
+          for(size_t t = 0; t < totalPoints; t++)
+          {
+            if((image[t] >= m_lowThresh) && (image[t] <= m_highThresh))
+            {
+              image[t] /= outputArray[t];
+            }
+          }
+        }
+      }
+    } // Divide Background
 
   }
 
