@@ -376,7 +376,8 @@ protected:
     // (i.e. for an 8 bit image, if we only include values from 0 to 100, not every image value will be counted)
     for(int j = 0; j < numTuples; j++)
     {
-      accumArray[j] /= counter[j];
+      // Avoid dividing by 0 when counter[j] == 0
+      accumArray[j] = (counter[j] == 0) ?  0 : accumArray[j] / counter[j];
     }
 
 #if 0
@@ -505,7 +506,10 @@ protected:
           {
             if((image[t] >= m_lowThresh) && (image[t] <= m_highThresh))
             {
-              image[t] /= outputArray[t];
+              if(outputArray[t] != 0)
+              {
+                image[t] /= outputArray[t];
+              }
             }
           }
         }
