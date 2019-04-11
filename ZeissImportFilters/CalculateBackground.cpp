@@ -305,9 +305,6 @@ void CalculateBackground::preflight()
 // -----------------------------------------------------------------------------
 void CalculateBackground::execute()
 {
-  int err = 0;
-  int xval = 0;
-  int yval = 0;
   // typically run your dataCheck function to make sure you can get that far and all your variables are initialized
   dataCheck();
   // Check to make sure you made it through the data check. Errors would have been reported already so if something
