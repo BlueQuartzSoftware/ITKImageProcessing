@@ -452,7 +452,7 @@ const QString CalculateBackground::getFilterVersion() const
 // -----------------------------------------------------------------------------
 const QString CalculateBackground::getGroupName() const
 {
-  return SIMPL::FilterGroups::Unsupported;
+  return SIMPL::FilterGroups::ProcessingFilters;
 }
 
 // -----------------------------------------------------------------------------
@@ -476,7 +476,7 @@ const QUuid CalculateBackground::getUuid()
 // -----------------------------------------------------------------------------
 const QString CalculateBackground::getSubGroupName() const
 {
-  return "Misc";
+  return SIMPL::FilterSubGroups::MiscFilters;
 }
 
 // -----------------------------------------------------------------------------
