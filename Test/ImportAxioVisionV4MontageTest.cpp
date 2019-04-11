@@ -45,7 +45,7 @@ class ImportAxioVisionV4MontageTest
     int TestImportAxioVisionV4MontageTest()
     {
 
-      // Observer obs;
+      //   Observer obs;
 
       DataContainerArray::Pointer dca = DataContainerArray::New();
 
@@ -53,7 +53,7 @@ class ImportAxioVisionV4MontageTest
       filter->setDataContainerArray(dca);
 
       // obs.connect(filter.get(), SIGNAL(messageGenerated(const AbstractMessage::Pointer&)), &obs, SLOT(processPipelineMessage(const AbstractMessage::Pointer&)));
-
+      //
       // Test without putting in a File, Should get an error
       filter->preflight();
       int32_t err = filter->getErrorCode();

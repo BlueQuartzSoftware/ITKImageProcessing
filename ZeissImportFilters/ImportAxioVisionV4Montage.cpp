@@ -199,7 +199,7 @@ void ImportAxioVisionV4Montage::dataCheck()
   }
   else if(!fi.exists())
   {
-    ss = QObject::tr("The input file does not exist.");
+    ss = QObject::tr("The input file '%1' does not exist.").arg(getInputFile());
     setErrorCondition(-388, ss);
   }
 

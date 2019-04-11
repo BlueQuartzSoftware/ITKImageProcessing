@@ -29,13 +29,13 @@ const QString OutputFile("@TEST_TEMP_DIR@/TileConfiguration.txt");
 
 namespace ImportZenInfoMontageTest
 {
-const QString ZenInfoFile("Data/ZeissImport/SampleMosaic/SampleMosaic_Info.xml");
+const QString ZenInfoFile("@ZeissImport_SOURCE_DIR@/Data/ZeissImport/SampleMosaic/SampleMosaic_Info.xml");
 const QString OutputDREAM3DFile("@TEST_TEMP_DIR@/ZenInfoImportTest.dream3d");
 } // namespace ImportZenInfoMontageTest
 
 namespace ImportAxioVisionV4MontageTest
 {
-const QString AxioVisionMetaXmlFile("Data/ZeissImport/SampleMosaic/_meta.xml");
+const QString AxioVisionMetaXmlFile("@ZeissImport_SOURCE_DIR@/Data/ZeissImport/SampleMosaic/_meta.xml");
 const QString OutputDREAM3DFile("@TEST_TEMP_DIR@/AxioVisionMetaXmlTest.dream3d");
 } // namespace ImportAxioVisionV4MontageTest
 
