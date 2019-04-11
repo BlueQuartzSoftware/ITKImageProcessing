@@ -264,6 +264,17 @@ protected:
   template<typename DataArrayType, typename GeometryType>
   std::shared_ptr<GeometryType> checkInputArraysTemplate()
   {
+    if(typeid(GeometryType) != typeid(ImageGeom) && typeid(GeometryType) != typeid(RectGridGeom))
+    {
+      setErrorCondition(-53011, "Invalid geometry type");
+      return;
+    }
+    if(typeid(OutArrayType) != typeid(UInt8ArrayType) && typeid(OutArrayType) != typeid(UInt16ArrayType) && typeid(OutArrayType) != typeid(FloatArrayType))
+    {
+      setErrorCondition(-53012, "Invalid array type");
+      return;
+    }
+
     DataContainerArray::Pointer dca = getDataContainerArray();
     QVector<size_t> cDims = { 1 };
     typename GeometryType::Pointer outputGridGeom = GeometryType::NullPointer();
@@ -309,6 +320,17 @@ protected:
   template<typename OutArrayType, typename GeomType, typename AccumType>
   void calculateOutputValuesTemplate()
   {
+    if(typeid(GeomType) != typeid(ImageGeom) && typeid(GeomType) != typeid(RectGridGeom))
+    {
+      setErrorCondition(-53011, "Invalid geometry type");
+      return;
+    }
+    if(typeid(OutArrayType) != typeid(uint8_t) && typeid(OutArrayType) != typeid(uint16_t) && typeid(OutArrayType) != typeid(float))
+    {
+      setErrorCondition(-53012, "Invalid array type");
+      return;
+    }
+
     DataContainerArray::Pointer dca = getDataContainerArray();
 
     DataContainer::Pointer outputDc = dca->getDataContainer(getOutputDataContainerPath());
