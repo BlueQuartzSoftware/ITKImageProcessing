@@ -36,6 +36,8 @@
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/Filtering/FilterManager.h"
+#include "SIMPLib/Filtering/IFilterFactory.hpp"
 #include "SIMPLib/Geometry/IGeometryGrid.h"
 #include "SIMPLib/SIMPLib.h"
 
