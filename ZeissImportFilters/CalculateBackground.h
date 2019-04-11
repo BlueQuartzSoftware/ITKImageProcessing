@@ -266,13 +266,13 @@ protected:
   {
     DataContainerArray::Pointer dca = getDataContainerArray();
     QVector<size_t> cDims = { 1 };
-    GeometryType::Pointer outputGridGeom = GeometryType::NullPointer();
+    typename GeometryType::Pointer outputGridGeom = GeometryType::NullPointer();
 
     // Ensure each DataContainer has the proper path to the image data and the image data is grayscale
     for(const auto& dcName : m_DataContainers)
     {
       DataArrayPath imageArrayPath(dcName, m_CellAttributeMatrixName, m_ImageDataArrayName);
-      DataArrayType::Pointer imageData = dca->getPrereqArrayFromPath<DataArrayType, AbstractFilter>(this, imageArrayPath, cDims);
+      typename DataArrayType::Pointer imageData = dca->getPrereqArrayFromPath<DataArrayType, AbstractFilter>(this, imageArrayPath, cDims);
       if(imageData.get() == nullptr)
       {
         QString msg;
@@ -283,7 +283,7 @@ protected:
 
       if(getErrorCode() >= 0)
       {
-        GeometryType::Pointer gridGeom = dca->getDataContainer(dcName)->getGeometryAs<GeometryType>();
+        typename GeometryType::Pointer gridGeom = dca->getDataContainer(dcName)->getGeometryAs<GeometryType>();
         if(gridGeom.get() != nullptr)
         {
           if(outputGridGeom.get() == nullptr)
@@ -313,16 +313,16 @@ protected:
 
     DataContainer::Pointer outputDc = dca->getDataContainer(getOutputDataContainerPath());
     AttributeMatrix::Pointer outputAttrMat = outputDc->getAttributeMatrix(getOutputCellAttributeMatrixPath());
-    DataArray<OutArrayType>::Pointer outputArrayPtr = outputAttrMat->getAttributeArrayAs<DataArray<OutArrayType>>(m_OutputImageArrayPath.getDataArrayName());
-    DataArray<OutArrayType>& outputArray = *(outputArrayPtr);
+    typename DataArray<OutArrayType>::Pointer outputArrayPtr = outputAttrMat->getAttributeArrayAs<DataArray<OutArrayType>>(m_OutputImageArrayPath.getDataArrayName());
+    typename DataArray<OutArrayType>& outputArray = *(outputArrayPtr);
 
-    GeomType::Pointer outputGeom = outputDc->getGeometryAs<GeomType>();
+    typename GeomType::Pointer outputGeom = outputDc->getGeometryAs<GeomType>();
     SizeVec3Type dims;
     outputGeom->getDimensions(dims);
 
-    DataArray<AccumType>::Pointer accumulateArrayPtr = DataArray<AccumType>::CreateArray(outputArrayPtr->getNumberOfTuples(), "Accumulation Array", true);
+    typename DataArray<AccumType>::Pointer accumulateArrayPtr = typename DataArray<AccumType>::CreateArray(outputArrayPtr->getNumberOfTuples(), "Accumulation Array", true);
     accumulateArrayPtr->initializeWithZeros();
-    DataArray<AccumType>& accumArray = *accumulateArrayPtr;
+    typename DataArray<AccumType>& accumArray = *accumulateArrayPtr;
     size_t numTuples = accumArray.getNumberOfTuples();
 
     SizeTArrayType::Pointer countArrayPtr = SizeTArrayType::CreateArray(outputArrayPtr->getNumberOfTuples(), "Count Array", true);
@@ -331,7 +331,7 @@ protected:
     for(const auto& dcName : m_DataContainers)
     {
       DataArrayPath imageArrayPath(dcName, m_CellAttributeMatrixName, m_ImageDataArrayName);
-      DataArray<OutArrayType>& imageArray = *(dca->getAttributeMatrix(imageArrayPath)->getAttributeArrayAs<DataArray<OutArrayType>>(imageArrayPath.getDataArrayName()));
+      typename DataArray<OutArrayType>& imageArray = *(dca->getAttributeMatrix(imageArrayPath)->getAttributeArrayAs<DataArray<OutArrayType>>(imageArrayPath.getDataArrayName()));
 
       for(size_t t = 0; t < numTuples; t++)
       {
@@ -445,7 +445,7 @@ protected:
         size_t totalPoints = imagePtr->getNumberOfComponents();
         if(nullptr != imagePtr.get())
         {
-          auto* image = imagePtr->getPointer(0);
+          typename auto* image = imagePtr->getPointer(0);
 
           for(size_t t = 0; t < totalPoints; t++)
           {
@@ -471,7 +471,7 @@ protected:
         size_t totalPoints = imagePtr->getNumberOfComponents();
         if(nullptr != imagePtr.get())
         {
-          auto* image = imagePtr->getPointer(0);
+          typename auto* image = imagePtr->getPointer(0);
 
           for(size_t t = 0; t < totalPoints; t++)
           {
