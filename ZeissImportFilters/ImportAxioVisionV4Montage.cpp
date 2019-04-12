@@ -69,10 +69,6 @@ static const QString k_TileAttributeMatrixDefaultName("Tile Data");
 static const QString k_GrayScaleTempArrayName("gray_scale_temp");
 static const QString k_AxioVisionMetaData("AxioVision MetaData");
 
-enum createdPathID : RenameDataPath::DataID_t
-{
-  DataContainerID = 1
-};
 
 /* ############## Start Private Implementation ############################### */
 // -----------------------------------------------------------------------------
@@ -480,7 +476,7 @@ void ImportAxioVisionV4Montage::parseImages(QDomElement& root, const ZeissTagsXm
     dcNameStream << colIndex;
 
     // Create the DataContainer with a name based on the ROW & COLUMN indices
-    DataContainer::Pointer dc = dca->createNonPrereqDataContainer<AbstractFilter>(this, dcName, DataContainerID);
+    DataContainer::Pointer dc = dca->createNonPrereqDataContainer<AbstractFilter>(this, dcName);
 
     // Create the Image Geometry
     ImageGeom::Pointer image = initializeImageGeom(root, photoTagsSection);
