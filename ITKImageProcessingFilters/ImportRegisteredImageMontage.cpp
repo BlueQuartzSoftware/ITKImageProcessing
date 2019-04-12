@@ -180,6 +180,10 @@ void ImportRegisteredImageMontage::dataCheck()
   initialize();
 
   QString ss;
+  ss = QObject::tr("This filter is not supported or working.");
+  setErrorCondition(-1, ss);
+  return;
+#if 0
   int32_t err = 0;
 
   if(m_InputFileListInfo.InputPath.isEmpty())
@@ -290,8 +294,8 @@ void ImportRegisteredImageMontage::dataCheck()
     readImage(dap, true);
     // The previous call will add an attribute array that we don't need at this point
     // so just remove it.
-    AttributeMatrix::Pointer am = m->getAttributeMatrix(getCellAttributeMatrixName());
-    am->removeAttributeArray(fi.baseName());
+    //    AttributeMatrix::Pointer am = m->getAttributeMatrix(getCellAttributeMatrixName());
+    //    am->removeAttributeArray(fi.baseName());
 
     AttributeMatrix::Pointer mdAttrMat = getDataContainerArray()->getDataContainer(getDataContainerName())->getAttributeMatrix(getMetaDataAttributeMatrixName());
     size_t availableFileCount = 0;
@@ -330,6 +334,7 @@ void ImportRegisteredImageMontage::dataCheck()
       }
     }
   }
+#endif
 }
 
 // -----------------------------------------------------------------------------
