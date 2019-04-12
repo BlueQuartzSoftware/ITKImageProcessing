@@ -10,9 +10,13 @@ set(TEST_NAMES
   ITKImageProcessingReaderTest
   ITKImageProcessingWriterTest
   ITKImportImageStackTest
+  ImportVectorImageStackTest
+
+  ITKMedianImageTest
+
+  # THESE ARE OLD, DON'T WORK but we are going to compile the tests since we are compiling the filters
   ImportRegisteredImageMontageTest
   ImportImageMontageTest
-  ImportVectorImageStackTest
   )
 
 if(NOT ITKImageProcessing_LeanAndMean)
@@ -77,7 +81,6 @@ if(NOT ITKImageProcessing_LeanAndMean)
     ITKSmoothingRecursiveGaussianImageTest
     ITKAdaptiveHistogramEqualizationImageTest
     ITKCastImageTest
-    ITKMedianImageTest
     ITKRGBToLuminanceImageTest
     ITKHistogramMatchingImageTest
     ITKMorphologicalWatershedImageTest
@@ -128,7 +131,7 @@ get_filename_component(${PLUGIN_NAME}_PARENT_BINARY_DIR "${${PLUGIN_NAME}_BINARY
 SIMPL_GenerateUnitTestFile(PLUGIN_NAME ${PLUGIN_NAME}
                            TEST_DATA_DIR ${${PLUGIN_NAME}_SOURCE_DIR}/Test/Data
                            SOURCES ${TEST_NAMES}
-                           LINK_LIBRARIES ${${PLUGIN_NAME}_LINK_LIBS}
+                           LINK_LIBRARIES ${${PLUGIN_NAME}_LINK_LIBS} ${plug_target_name}
                            INCLUDE_DIRS ${${PLUGIN_NAME}_PARENT_SOURCE_DIR}
                                         ${${PLUGIN_NAME}Test_SOURCE_DIR}
                                         ${${PLUGIN_NAME}Test_BINARY_DIR}

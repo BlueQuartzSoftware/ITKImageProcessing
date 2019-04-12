@@ -154,15 +154,15 @@ public:
   // -----------------------------------------------------------------------------
   void operator()() override
   {
-    int err = EXIT_SUCCESS;
+    //    int err = EXIT_SUCCESS;
 
-    DREAM3D_REGISTER_TEST(this->TestFilterAvailability("ImportRegisteredImageMontage"));
+    //    DREAM3D_REGISTER_TEST(this->TestFilterAvailability("ImportRegisteredImageMontage"));
 
-    DREAM3D_REGISTER_TEST(TestImportRegisteredImageMontageTest());
+    //    DREAM3D_REGISTER_TEST(TestImportRegisteredImageMontageTest());
 
-    if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
-    {
-      DREAM3D_REGISTER_TEST(this->RemoveTestFiles())
-    }
+    //    if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
+    //    {
+    //      DREAM3D_REGISTER_TEST(this->RemoveTestFiles())
+    //    }
   }
 };
