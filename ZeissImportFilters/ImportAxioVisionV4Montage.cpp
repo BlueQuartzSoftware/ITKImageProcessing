@@ -203,6 +203,12 @@ void ImportAxioVisionV4Montage::dataCheck()
     setErrorCondition(-388, ss);
   }
 
+  if(fi.isDir())
+  {
+    ss = QObject::tr("The input path '%1' is a directory. Please select an XML file.").arg(getInputFile());
+    setErrorCondition(-395, ss);
+  }
+
   if(getDataContainerName().isEmpty())
   {
     ss = QObject::tr("The Data Container Name cannot be empty.");

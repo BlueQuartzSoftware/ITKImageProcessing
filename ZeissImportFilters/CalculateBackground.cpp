@@ -326,6 +326,10 @@ CalculateBackground::ArrayType CalculateBackground::getArrayType()
     DataArrayPath imageArrayPath(dcName, m_CellAttributeMatrixName, m_ImageDataArrayName);
     if(!getDataContainerArray()->doesAttributeArrayExist(imageArrayPath))
     {
+      QString msg = QString("The Attribute Array path that was generated does not point to an existing Attribute Array. Please set the 'Input Attribute Matrix Name' and 'Input Image Array Name' to "
+                            "values that will generate a valid path. Current path generated is %2")
+                        .arg(imageArrayPath.serialize());
+      setErrorCondition(-53000, msg);
       continue;
     }
     AttributeMatrix::Pointer am = dca->getAttributeMatrix(imageArrayPath);
@@ -356,7 +360,7 @@ CalculateBackground::ArrayType CalculateBackground::getArrayType()
     QString msg;
     QTextStream out(&msg);
     out << "Attribute Array Path: " << imageArrayPath.serialize() << " is not of the appropriate type. Please select a pattern of AttributeArray Paths that are gray scale images";
-    setErrorCondition(-53000, msg);
+    setErrorCondition(-53004, msg);
     return ArrayType::Error;
   }
   return ArrayType::Error;
@@ -409,12 +413,32 @@ void CalculateBackground::dataCheck()
     return;
   }
 
+  if(m_CellAttributeMatrixName.isEmpty())
+  {
+    setErrorCondition(-53007, "The 'Input Attribute Matrix Name' must contain a valid name. Each Data Container should contain an AttributeMatrix of type Cell with this name.");
+    return;
+  }
+
+  if(m_ImageDataArrayName.isEmpty())
+  {
+    setErrorCondition(-53008, "The 'Input Image Array Name' must contain a valid name. The Attribute Matrix should have an Attribute Array of the given name.");
+    return;
+  }
+
   DataContainerArray::Pointer dca = getDataContainerArray();
   QVector<size_t> cDims = {1};
 
   // CheckInputArrays() templated on array and geometry types.
   ArrayType arrayType = getArrayType();
+  if(arrayType == CalculateBackground::ArrayType::Error)
+  {
+    return;
+  }
   GeomType geomType = getGeomType();
+  if(geomType == CalculateBackground::GeomType::Error)
+  {
+    return;
+  }
   IGeometryGrid::Pointer outputGridGeom = checkInputArrays(arrayType, geomType);
 
   if(getErrorCode() < 0)
