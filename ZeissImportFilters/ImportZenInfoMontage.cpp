@@ -49,7 +49,7 @@ const QString k_AAGrayScaleName("GrayImageData");
 
 enum createdPathID : RenameDataPath::DataID_t
 {
-  DataContainerID = 1
+  //  DataContainerID = 1
 };
 
 // -----------------------------------------------------------------------------
@@ -575,7 +575,7 @@ void ImportZenInfoMontage::generateDataStructure()
     dcNameStream << bound.Col;
 
     // Create the DataContainer with a name based on the ROW & COLUMN indices
-    DataContainer::Pointer dc = dca->createNonPrereqDataContainer<AbstractFilter>(this, dcName, DataContainerID);
+    DataContainer::Pointer dc = dca->createNonPrereqDataContainer<AbstractFilter>(this, dcName);
 
     // Create the Image Geometry
     ImageGeom::Pointer image = ImageGeom::CreateGeometry(dcName);

@@ -69,6 +69,10 @@ static const QString k_TileAttributeMatrixDefaultName("Tile Data");
 static const QString k_GrayScaleTempArrayName("gray_scale_temp");
 static const QString k_AxioVisionMetaData("AxioVision MetaData");
 
+enum createdPathID : RenameDataPath::DataID_t
+{
+  // DataContainerID = 1
+};
 
 /* ############## Start Private Implementation ############################### */
 // -----------------------------------------------------------------------------

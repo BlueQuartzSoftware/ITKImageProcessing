@@ -36,8 +36,8 @@
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/Filtering/FilterFactory.hpp"
 #include "SIMPLib/Filtering/FilterManager.h"
-#include "SIMPLib/Filtering/IFilterFactory.hpp"
 #include "SIMPLib/Geometry/IGeometryGrid.h"
 #include "SIMPLib/SIMPLib.h"
 
@@ -64,10 +64,13 @@ class ZeissImport_EXPORT CalculateBackground : public AbstractFilter
   PYB11_PROPERTY(DataArrayPath OutputCellAttributeMatrixPath READ getOutputCellAttributeMatrixPath WRITE setOutputCellAttributeMatrixPath)
   PYB11_PROPERTY(DataArrayPath OutputImageArrayPath READ getOutputImageArrayPath WRITE setOutputImageArrayPath)
 
-  PYB11_PROPERTY(uint lowThresh READ getlowThresh WRITE setlowThresh)
-  PYB11_PROPERTY(uint highThresh READ gethighThresh WRITE sethighThresh)
+  PYB11_PROPERTY(uint32_t lowThresh READ getlowThresh WRITE setlowThresh)
+  PYB11_PROPERTY(uint32_t highThresh READ gethighThresh WRITE sethighThresh)
   PYB11_PROPERTY(bool SubtractBackground READ getSubtractBackground WRITE setSubtractBackground)
   PYB11_PROPERTY(bool DivideBackground READ getDivideBackground WRITE setDivideBackground)
+
+  PYB11_PROPERTY(bool ApplyMedianFilter READ getApplyMedianFilter WRITE setApplyMedianFilter)
+  PYB11_PROPERTY(FloatVec3Type Radius READ getRadius WRITE setRadius)
 
 public:
   SIMPL_SHARED_POINTERS(CalculateBackground)
@@ -96,11 +99,11 @@ public:
   SIMPL_FILTER_PARAMETER(DataArrayPath, OutputImageArrayPath)
   Q_PROPERTY(DataArrayPath OutputImageArrayPath READ getOutputImageArrayPath WRITE setOutputImageArrayPath)
 
-  SIMPL_FILTER_PARAMETER(uint, lowThresh)
-  Q_PROPERTY(uint lowThresh READ getlowThresh WRITE setlowThresh)
+  SIMPL_FILTER_PARAMETER(uint32_t, lowThresh)
+  Q_PROPERTY(uint32_t lowThresh READ getlowThresh WRITE setlowThresh)
 
-  SIMPL_FILTER_PARAMETER(uint, highThresh)
-  Q_PROPERTY(uint highThresh READ gethighThresh WRITE sethighThresh)
+  SIMPL_FILTER_PARAMETER(uint32_t, highThresh)
+  Q_PROPERTY(uint32_t highThresh READ gethighThresh WRITE sethighThresh)
 
   SIMPL_FILTER_PARAMETER(bool, SubtractBackground)
   Q_PROPERTY(int SubtractBackground READ getSubtractBackground WRITE setSubtractBackground)
@@ -108,16 +111,11 @@ public:
   SIMPL_FILTER_PARAMETER(bool, DivideBackground)
   Q_PROPERTY(int DivideBackground READ getDivideBackground WRITE setDivideBackground)
 
-#if 0
-  SIMPL_FILTER_PARAMETER(bool, Polynomial)
-  Q_PROPERTY(int Polynomial READ getPolynomial WRITE setPolynomial)
-#endif
+  SIMPL_FILTER_PARAMETER(bool, ApplyMedianFilter)
+  Q_PROPERTY(bool ApplyMedianFilter READ getApplyMedianFilter WRITE setApplyMedianFilter)
 
-  SIMPL_FILTER_PARAMETER(bool, GaussianBlur)
-  Q_PROPERTY(int GaussianBlur READ getGaussianBlur WRITE setGaussianBlur)
-
-  SIMPL_FILTER_PARAMETER(float, GaussianStdVariation)
-  Q_PROPERTY(float GaussianStdVariation READ getGaussianStdVariation WRITE setGaussianStdVariation)
+  SIMPL_FILTER_PARAMETER(FloatVec3Type, Radius)
+  Q_PROPERTY(FloatVec3Type Radius READ getRadius WRITE setRadius)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -262,19 +260,8 @@ protected:
    * @return
    */
   template<typename DataArrayType, typename GeometryType>
-  std::shared_ptr<GeometryType> checkInputArraysTemplate()
+  std::shared_ptr<GeometryType> checkInputArrays()
   {
-    if(typeid(GeometryType) != typeid(ImageGeom) && typeid(GeometryType) != typeid(RectGridGeom))
-    {
-      setErrorCondition(-53011, "Invalid geometry type");
-      return;
-    }
-    if(typeid(OutArrayType) != typeid(UInt8ArrayType) && typeid(OutArrayType) != typeid(UInt16ArrayType) && typeid(OutArrayType) != typeid(FloatArrayType))
-    {
-      setErrorCondition(-53012, "Invalid array type");
-      return;
-    }
-
     DataContainerArray::Pointer dca = getDataContainerArray();
     QVector<size_t> cDims = { 1 };
     typename GeometryType::Pointer outputGridGeom = GeometryType::NullPointer();
@@ -314,215 +301,7 @@ protected:
     return outputGridGeom;
   }
 
-  /**
-   * @brief Calculates the output values using the templated output IDataArray output type
-   */
-  template<typename OutArrayType, typename GeomType, typename AccumType>
-  void calculateOutputValuesTemplate()
-  {
-    if(typeid(GeomType) != typeid(ImageGeom) && typeid(GeomType) != typeid(RectGridGeom))
-    {
-      setErrorCondition(-53011, "Invalid geometry type");
-      return;
-    }
-    if(typeid(OutArrayType) != typeid(uint8_t) && typeid(OutArrayType) != typeid(uint16_t) && typeid(OutArrayType) != typeid(float))
-    {
-      setErrorCondition(-53012, "Invalid array type");
-      return;
-    }
-
-    DataContainerArray::Pointer dca = getDataContainerArray();
-
-    DataContainer::Pointer outputDc = dca->getDataContainer(getOutputDataContainerPath());
-    AttributeMatrix::Pointer outputAttrMat = outputDc->getAttributeMatrix(getOutputCellAttributeMatrixPath());
-    if(nullptr == outputAttrMat)
-    {
-      setErrorCondition(-53010, "Output AttributeMatrix does not exist");
-      return;
-    }
-
-    typename DataArray<OutArrayType>::Pointer outputArrayPtr = outputAttrMat->getAttributeArrayAs<DataArray<OutArrayType>>(m_OutputImageArrayPath.getDataArrayName());
-    typename DataArray<OutArrayType>& outputArray = *(outputArrayPtr);
-
-    typename GeomType::Pointer outputGeom = outputDc->getGeometryAs<GeomType>();
-    SizeVec3Type dims;
-    outputGeom->getDimensions(dims);
-
-    typename DataArray<AccumType>::Pointer accumulateArrayPtr = typename DataArray<AccumType>::CreateArray(outputArrayPtr->getNumberOfTuples(), "Accumulation Array", true);
-    accumulateArrayPtr->initializeWithZeros();
-    typename DataArray<AccumType>& accumArray = *accumulateArrayPtr;
-    size_t numTuples = accumArray.getNumberOfTuples();
-
-    SizeTArrayType::Pointer countArrayPtr = SizeTArrayType::CreateArray(outputArrayPtr->getNumberOfTuples(), "Count Array", true);
-    SizeTArrayType& counter = *(countArrayPtr);
-
-    for(const auto& dcName : m_DataContainers)
-    {
-      DataArrayPath imageArrayPath(dcName, m_CellAttributeMatrixName, m_ImageDataArrayName);
-      typename DataArray<OutArrayType>& imageArray = *(dca->getAttributeMatrix(imageArrayPath)->getAttributeArrayAs<DataArray<OutArrayType>>(imageArrayPath.getDataArrayName()));
-
-      for(size_t t = 0; t < numTuples; t++)
-      {
-        if(imageArray[t] >= m_lowThresh && imageArray[t] <= m_highThresh)
-        {
-          accumArray[t] += imageArray[t];
-          counter[t]++;
-        }
-      }
-    }
-
-    // average the background values by the number of counts (counts will be the number of images unless the threshold
-    // values do not include all the possible image values
-    // (i.e. for an 8 bit image, if we only include values from 0 to 100, not every image value will be counted)
-    for(int j = 0; j < numTuples; j++)
-    {
-      // Avoid dividing by 0 when counter[j] == 0
-      accumArray[j] = (counter[j] == 0) ?  0 : accumArray[j] / counter[j];
-    }
-
-#if 0
-    // This block was previously disabled and divided on both sides of the for loop copying values into the output array.
-    // The first part performs required work for polynomial operations.
-    // The first part is required for SubtractBackground and DivideBackground operations.
-    if(getPolynomial())
-    {
-      int xval = 0;
-      int yval = 0;
-      // Fit the background to a second order polynomial
-      // p are the coefficients p[0] + p[1]*x + p[2]*y +p[3]*xy + p[4]*x^2 + p[5]*y^2
-      Eigen::MatrixXd A(numTuples, ZeissImportConstants::PolynomialOrder::NumConsts2ndOrder);
-      Eigen::VectorXd B(numTuples);
-
-      for(size_t i = 0; i < numTuples; ++i)
-      {
-        xval = static_cast<int>(i / dims[0]);
-        yval = static_cast<int>(i % dims[0]);
-        B(i) = static_cast<double>(accumArray[i]);
-        A(i, 0) = 1.0;
-        A(i, 1) = static_cast<double>(xval);
-        A(i, 2) = static_cast<double>(yval);
-        A(i, 3) = static_cast<double>(xval * yval);
-        A(i, 4) = static_cast<double>(xval * xval);
-        A(i, 5) = static_cast<double>(yval * yval);
-      }
-
-      notifyStatusMessage("Fitting a polynomial to data. May take a while to solve if images are large");
-      Eigen::VectorXd p = A.colPivHouseholderQr().solve(B);
-
-      QVector<size_t> tDims(3);
-      tDims[0] = dims[0];
-      tDims[1] = dims[1];
-      tDims[2] = dims[2];
-
-      //  m->getAttributeMatrix(getOutputCellAttributeMatrixPath())->resizeAttributeArrays(tDims);
-      //  if(nullptr != m_BackgroundImagePtr.lock())                          /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-      //  { m_BackgroundImage = m_BackgroundImagePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-
-      Eigen::VectorXd Bcalc(numTuples);
-      double average = 0;
-
-      Bcalc = A * p;
-      average = Bcalc.mean();
-      Bcalc = Bcalc - Eigen::VectorXd::Constant(numTuples, average);
-
-      for(int i = 0; i < numTuples; ++i)
-      {
-        accumArray[i] = Bcalc(i);
-      }
-    } // Polynomial
-#endif
-
-    // Assign output array values
-    for(int i = 0; i < numTuples; ++i)
-    {
-      outputArray[i] = static_cast<OutArrayType>(accumArray[i]);
-    }
-
-    // Blur
-    if(getGaussianBlur())
-    {
-      FilterManager* filtManager = FilterManager::Instance();
-      IFilterFactory::Pointer factory = filtManager->getFactoryFromClassName("ItkDiscreteGaussianBlur");
-      if(nullptr != factory.get())
-      {
-        AbstractFilter::Pointer filter = factory->create();
-        if(nullptr != filter.get())
-        {
-          QVariant var;
-          var.setValue(getOutputImageArrayPath());
-          filter->setDataContainerArray(getDataContainerArray());
-          filter->setProperty("SelectedCellArrayPath", var);
-          filter->setProperty("SaveAsNewArray", false);
-          filter->setProperty("Stdev", getGaussianStdVariation());
-          filter->execute();
-        }
-      }
-      else
-      {
-        setErrorCondition(-53009, "ItkDiscreteGaussianBlur filter not found.");
-      }
-    } // Blur
-
-    // Edit the input data
-    if(m_SubtractBackground)
-    {
-      for(const auto& dcName : m_DataContainers)
-      {
-        DataArrayPath imageDataPath(dcName, m_CellAttributeMatrixName, m_ImageDataArrayName);
-        auto iDataArray = getDataContainerArray()->getPrereqIDataArrayFromPath<DataArray<OutArrayType>, AbstractFilter>(this, imageDataPath);
-        auto imagePtr = std::dynamic_pointer_cast<DataArray<OutArrayType>>(iDataArray);
-        size_t totalPoints = imagePtr->getNumberOfComponents();
-        if(nullptr != imagePtr.get())
-        {
-          typename auto* image = imagePtr->getPointer(0);
-
-          for(size_t t = 0; t < totalPoints; t++)
-          {
-            if((image[t] >= m_lowThresh) && (image[t] <= m_highThresh))
-            {
-              image[t] -= outputArray[t];
-
-              if(image[t] < 0) { image[t] = 0; }
-              if(image[t] > 255) { image[t] = 255; }
-            }
-          }
-        }
-      }
-    } // Subtract Background
-
-    if(m_DivideBackground)
-    {
-      for(const auto& dcName : m_DataContainers)
-      {
-        DataArrayPath imageDataPath(dcName, m_CellAttributeMatrixName, m_ImageDataArrayName);
-        auto iDataArray = getDataContainerArray()->getPrereqIDataArrayFromPath<DataArray<OutArrayType>, AbstractFilter>(this, imageDataPath);
-        auto imagePtr = std::dynamic_pointer_cast<DataArray<OutArrayType>>(iDataArray);
-        size_t totalPoints = imagePtr->getNumberOfComponents();
-        if(nullptr != imagePtr.get())
-        {
-          typename auto* image = imagePtr->getPointer(0);
-
-          for(size_t t = 0; t < totalPoints; t++)
-          {
-            if((image[t] >= m_lowThresh) && (image[t] <= m_highThresh))
-            {
-              if(outputArray[t] != 0)
-              {
-                image[t] /= outputArray[t];
-              }
-            }
-          }
-        }
-      }
-    } // Divide Background
-
-  }
-
 private:
-  //  int64_t m_TotalPoints;
-
-  //  DEFINE_DATAARRAY_VARIABLE(double, BackgroundImage)
-
 public:
   CalculateBackground(const CalculateBackground&) = delete;            // Copy Constructor Not Implemented
   CalculateBackground(CalculateBackground&&) = delete;                 // Move Constructor Not Implemented

@@ -48,6 +48,7 @@
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
+#include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatFilterParameter.h"
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
@@ -75,6 +76,162 @@ enum createdPathID : RenameDataPath::DataID_t
 
 #define ZIF_PRINT_DBG_MSGS 0
 
+namespace
+{
+const QString k_MedianFilter("ITKMedianImage");
+
+/**
+ * @brief Calculates the output values using the templated output IDataArray output type
+ */
+template <typename OutArrayType, typename GeomType, typename AccumType>
+void calculateOutputValues(CalculateBackground* filter)
+{
+  DataContainerArray::Pointer dca = filter->getDataContainerArray();
+
+  DataContainer::Pointer outputDc = dca->getDataContainer(filter->getOutputDataContainerPath());
+  AttributeMatrix::Pointer outputAttrMat = outputDc->getAttributeMatrix(filter->getOutputCellAttributeMatrixPath());
+  typename DataArray<OutArrayType>::Pointer outputArrayPtr = outputAttrMat->getAttributeArrayAs<DataArray<OutArrayType>>(filter->getOutputImageArrayPath().getDataArrayName());
+  DataArray<OutArrayType>& outputArray = *(outputArrayPtr);
+  outputArray.initializeWithZeros();
+
+  typename GeomType::Pointer outputGeom = outputDc->getGeometryAs<GeomType>();
+  SizeVec3Type dims;
+  outputGeom->getDimensions(dims);
+
+  typename DataArray<AccumType>::Pointer accumulateArrayPtr = DataArray<AccumType>::CreateArray(outputArrayPtr->getNumberOfTuples(), "Accumulation Array", true);
+  accumulateArrayPtr->initializeWithZeros();
+  DataArray<AccumType>& accumArray = *accumulateArrayPtr;
+  size_t numTuples = accumArray.getNumberOfTuples();
+
+  typename SizeTArrayType::Pointer countArrayPtr = SizeTArrayType::CreateArray(outputArrayPtr->getNumberOfTuples(), "Count Array", true);
+  countArrayPtr->initializeWithZeros();
+  SizeTArrayType& counter = *(countArrayPtr);
+
+  int32_t lowThresh = filter->getlowThresh();
+  int32_t highThresh = filter->gethighThresh();
+
+  for(const auto& dcName : filter->getDataContainers())
+  {
+    DataArrayPath imageArrayPath(dcName, filter->getCellAttributeMatrixName(), filter->getImageDataArrayName());
+    DataArray<OutArrayType>& imageArray = *(dca->getAttributeMatrix(imageArrayPath)->getAttributeArrayAs<DataArray<OutArrayType>>(imageArrayPath.getDataArrayName()));
+
+    for(size_t t = 0; t < numTuples; t++)
+    {
+      if(imageArray[t] >= lowThresh && imageArray[t] <= highThresh)
+      {
+        accumArray[t] += imageArray[t];
+        counter[t]++;
+      }
+    }
+  }
+
+  // average the background values by the number of counts (counts will be the number of images unless the threshold
+  // values do not include all the possible image values
+  // (i.e. for an 8 bit image, if we only include values from 0 to 100, not every image value will be counted)
+  for(int j = 0; j < numTuples; j++)
+  {
+    if(counter[j] > 0) // Guard against Divide by zero
+    {
+      accumArray[j] /= counter[j];
+    }
+  }
+
+  // Assign output array values
+  for(int i = 0; i < numTuples; ++i)
+  {
+    outputArray[i] = static_cast<OutArrayType>(accumArray[i]);
+  }
+
+  // Blur
+  if(filter->getApplyMedianFilter())
+  {
+    FilterManager* filtManager = FilterManager::Instance();
+    IFilterFactory::Pointer factory = filtManager->getFactoryFromClassName(::k_MedianFilter);
+    if(nullptr != factory.get())
+    {
+      AbstractFilter::Pointer imageProcessingFilter = factory->create();
+      if(nullptr != imageProcessingFilter.get())
+      {
+        QVariant var;
+
+        imageProcessingFilter->setDataContainerArray(filter->getDataContainerArray());
+
+        var.setValue(filter->getOutputImageArrayPath());
+        bool propSet = imageProcessingFilter->setProperty("SelectedCellArrayPath", var);
+
+        propSet = imageProcessingFilter->setProperty("SaveAsNewArray", false);
+
+        var.setValue(filter->getRadius());
+        propSet = imageProcessingFilter->setProperty("Radius", var);
+
+        imageProcessingFilter->execute();
+      }
+    }
+    else
+    {
+      filter->setErrorCondition(-53009, " filter not found.");
+    }
+  } // Blur
+
+  // Edit the input data
+  if(filter->getSubtractBackground())
+  {
+    for(const auto& dcName : filter->getDataContainers())
+    {
+      DataArrayPath imageDataPath(dcName, filter->getCellAttributeMatrixName(), filter->getImageDataArrayName());
+      auto iDataArray = filter->getDataContainerArray()->getPrereqIDataArrayFromPath<DataArray<OutArrayType>, AbstractFilter>(filter, imageDataPath);
+      auto imagePtr = std::dynamic_pointer_cast<DataArray<OutArrayType>>(iDataArray);
+      size_t totalPoints = imagePtr->getNumberOfComponents();
+      if(nullptr != imagePtr)
+      {
+        auto* image = imagePtr->getPointer(0);
+
+        for(size_t t = 0; t < totalPoints; t++)
+        {
+          if((image[t] >= lowThresh) && (image[t] <= highThresh))
+          {
+            image[t] -= outputArray[t];
+
+            if(image[t] < 0)
+            {
+              image[t] = 0;
+            }
+            if(image[t] > 255)
+            {
+              image[t] = 255;
+            }
+          }
+        }
+      }
+    }
+  } // Subtract Background
+
+  if(filter->getDivideBackground())
+  {
+    for(const auto& dcName : filter->getDataContainers())
+    {
+      DataArrayPath imageDataPath(dcName, filter->getCellAttributeMatrixName(), filter->getImageDataArrayName());
+      auto iDataArray = filter->getDataContainerArray()->getPrereqIDataArrayFromPath<DataArray<OutArrayType>, AbstractFilter>(filter, imageDataPath);
+      auto imagePtr = std::dynamic_pointer_cast<DataArray<OutArrayType>>(iDataArray);
+      size_t totalPoints = imagePtr->getNumberOfComponents();
+      if(nullptr != imagePtr)
+      {
+        auto* image = imagePtr->getPointer(0);
+
+        for(size_t t = 0; t < totalPoints; t++)
+        {
+          if((image[t] >= lowThresh) && (image[t] <= highThresh) && outputArray[t] != 0)
+          {
+            image[t] /= outputArray[t];
+          }
+        }
+      }
+    }
+  } // Divide Background
+}
+
+} // namespace
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -85,12 +242,13 @@ CalculateBackground::CalculateBackground()
 , m_OutputDataContainerPath("Background")
 , m_OutputCellAttributeMatrixPath("Background", "Background Data", "")
 , m_OutputImageArrayPath("Background", "Background Data", "Background Image")
-, m_lowThresh(0)
-, m_highThresh(255)
+, m_lowThresh(20000)
+, m_highThresh(67000)
 , m_SubtractBackground(false)
 , m_DivideBackground(false)
-, m_GaussianStdVariation(2)
 {
+  m_ApplyMedianFilter = true;
+  m_Radius = {10.0f, 10.0f, 1.0f};
 }
 
 // -----------------------------------------------------------------------------
@@ -127,19 +285,21 @@ void CalculateBackground::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Lowest allowed Image value (Image Value)", lowThresh, FilterParameter::Parameter, CalculateBackground));
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Highest allowed Image value (Image Value)", highThresh, FilterParameter::Parameter, CalculateBackground));
 
-  // Only allow the Gaussian Blur property if the required filter is available
+  // Only allow the Median Filter property if the required filter is available
   FilterManager* filtManager = FilterManager::Instance();
-  IFilterFactory::Pointer factory = filtManager->getFactoryFromClassName("ItkDiscreteGaussianBlur");
+  IFilterFactory::Pointer factory = filtManager->getFactoryFromClassName(::k_MedianFilter);
   if(nullptr != factory.get())
   {
+    parameters.push_back(SeparatorFilterParameter::New("Median Filter Parameters", FilterParameter::Parameter));
     QStringList linkedProps;
     linkedProps.clear();
-    linkedProps << "GaussianStdVariation";
+    linkedProps << "Radius";
 
-    parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Gaussian Blur", GaussianBlur, FilterParameter::Parameter, CalculateBackground, linkedProps));
-    parameters.push_back(SIMPL_NEW_FLOAT_FP("Gaussian: Std Deviations", GaussianStdVariation, FilterParameter::Parameter, CalculateBackground));
+    parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Apply Median Filter", ApplyMedianFilter, FilterParameter::Parameter, CalculateBackground, linkedProps));
+    parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Radius", Radius, FilterParameter::Parameter, CalculateBackground));
   }
 
+  parameters.push_back(SeparatorFilterParameter::New("Process Input Images", FilterParameter::Parameter));
   parameters.push_back(SIMPL_NEW_BOOL_FP("Subtract Background from Current Images", SubtractBackground, FilterParameter::Parameter, CalculateBackground));
   parameters.push_back(SIMPL_NEW_BOOL_FP("Divide Background from Current Images", DivideBackground, FilterParameter::Parameter, CalculateBackground));
 
@@ -164,7 +324,12 @@ CalculateBackground::ArrayType CalculateBackground::getArrayType()
   for(const auto& dcName : m_DataContainers)
   {
     DataArrayPath imageArrayPath(dcName, m_CellAttributeMatrixName, m_ImageDataArrayName);
+    if(!getDataContainerArray()->doesAttributeArrayExist(imageArrayPath))
+    {
+      continue;
+    }
     AttributeMatrix::Pointer am = dca->getAttributeMatrix(imageArrayPath);
+
     IDataArray::Pointer da = am->getChildByName(m_ImageDataArrayName);
     if(da->getComponentDimensions() != cDims)
     {
@@ -324,43 +489,35 @@ void CalculateBackground::execute()
 // -----------------------------------------------------------------------------
 IGeometryGrid::Pointer CalculateBackground::checkInputArrays(ArrayType arrayType, GeomType geomType)
 {
-  switch(arrayType)
+  if(geomType != GeomType::ImageGeom && geomType != GeomType::RectGridGeom)
   {
-  case ArrayType::UInt8:
-    switch(geomType)
-    {
-    case GeomType::ImageGeom:
-      return checkInputArraysTemplate<UInt8ArrayType, ImageGeom>();
-    case GeomType::RectGridGeom:
-      return checkInputArraysTemplate<UInt8ArrayType, RectGridGeom>();
-    default:
-      setErrorCondition(-53005, "A valid geometry type (ImageGeom or RectGridGeom) is required for this filter.");
-    }
-    break;
-  case ArrayType::UInt16:
-    switch(geomType)
-    {
-    case GeomType::ImageGeom:
-      return checkInputArraysTemplate<UInt16ArrayType, ImageGeom>();
-    case GeomType::RectGridGeom:
-      return checkInputArraysTemplate<UInt16ArrayType, RectGridGeom>();
-    default:
-      setErrorCondition(-53005, "A valid geometry type (ImageGeom or RectGridGeom) is required for this filter.");
-    }
-    break;
-  case ArrayType::Float32:
-    switch(geomType)
-    {
-    case GeomType::ImageGeom:
-      return checkInputArraysTemplate<FloatArrayType, ImageGeom>();
-    case GeomType::RectGridGeom:
-      return checkInputArraysTemplate<FloatArrayType, RectGridGeom>();
-    default:
-      setErrorCondition(-53005, "A valid geometry type (ImageGeom or RectGridGeom) is required for this filter.");
-    }
-    break;
-  default:
-    setErrorCondition(-53006, "A valid Attribute Array type (UInt8, UInt16, or Float) is required for this filter.");
+    setErrorCondition(-53005, "A valid geometry type (ImageGeom or RectGridGeom) is required for this filter.");
+    return IGeometryGrid::NullPointer();
+  }
+
+  if(arrayType == ArrayType::UInt8 && geomType == GeomType::ImageGeom)
+  {
+    return checkInputArrays<UInt8ArrayType, ImageGeom>();
+  }
+  if(arrayType == ArrayType::UInt16 && geomType == GeomType::ImageGeom)
+  {
+    return checkInputArrays<UInt16ArrayType, ImageGeom>();
+  }
+  if(arrayType == ArrayType::Float32 && geomType == GeomType::ImageGeom)
+  {
+    return checkInputArrays<FloatArrayType, ImageGeom>();
+  }
+  if(arrayType == ArrayType::UInt8 && geomType == GeomType::RectGridGeom)
+  {
+    return checkInputArrays<UInt8ArrayType, ImageGeom>();
+  }
+  if(arrayType == ArrayType::UInt16 && geomType == GeomType::RectGridGeom)
+  {
+    return checkInputArrays<UInt16ArrayType, ImageGeom>();
+  }
+  if(arrayType == ArrayType::Float32 && geomType == GeomType::RectGridGeom)
+  {
+    return checkInputArrays<FloatArrayType, RectGridGeom>();
   }
 
   return IGeometryGrid::NullPointer();
@@ -371,49 +528,36 @@ IGeometryGrid::Pointer CalculateBackground::checkInputArrays(ArrayType arrayType
 // -----------------------------------------------------------------------------
 void CalculateBackground::calculateOutputValues(ArrayType arrayType, GeomType geomType)
 {
-  switch(arrayType)
+
+  if(geomType != GeomType::ImageGeom && geomType != GeomType::RectGridGeom)
   {
-  case ArrayType::UInt8:
-    switch(geomType)
-    {
-    case GeomType::ImageGeom:
-      calculateOutputValuesTemplate<uint8_t, ImageGeom, uint64_t>();
-      break;
-    case GeomType::RectGridGeom:
-      calculateOutputValuesTemplate<uint8_t, RectGridGeom, uint64_t>();
-      break;
-    case GeomType::Error:
-      break;
-    }
-    break;
-  case ArrayType::UInt16:
-    switch(geomType)
-    {
-    case GeomType::ImageGeom:
-      calculateOutputValuesTemplate<uint16_t, ImageGeom, uint64_t>();
-      break;
-    case GeomType::RectGridGeom:
-      calculateOutputValuesTemplate<uint16_t, RectGridGeom, uint64_t>();
-      break;
-    case GeomType::Error:
-      break;
-    }
-    break;
-  case ArrayType::Float32:
-    switch(geomType)
-    {
-    case GeomType::ImageGeom:
-      calculateOutputValuesTemplate<float, ImageGeom, double>();
-      break;
-    case GeomType::RectGridGeom:
-      calculateOutputValuesTemplate<float, RectGridGeom, double>();
-      break;
-    case GeomType::Error:
-      break;
-    }
-    break;
-  case ArrayType::Error:
-    break;
+    setErrorCondition(-53005, "A valid geometry type (ImageGeom or RectGridGeom) is required for this filter.");
+    return;
+  }
+
+  if(arrayType == ArrayType::UInt8 && geomType == GeomType::ImageGeom)
+  {
+    ::calculateOutputValues<uint8_t, ImageGeom, uint64_t>(this);
+  }
+  if(arrayType == ArrayType::UInt16 && geomType == GeomType::ImageGeom)
+  {
+    ::calculateOutputValues<uint16_t, ImageGeom, uint64_t>(this);
+  }
+  if(arrayType == ArrayType::Float32 && geomType == GeomType::ImageGeom)
+  {
+    ::calculateOutputValues<float, ImageGeom, double>(this);
+  }
+  if(arrayType == ArrayType::UInt8 && geomType == GeomType::RectGridGeom)
+  {
+    ::calculateOutputValues<uint8_t, RectGridGeom, uint64_t>(this);
+  }
+  if(arrayType == ArrayType::UInt16 && geomType == GeomType::RectGridGeom)
+  {
+    ::calculateOutputValues<uint16_t, RectGridGeom, uint64_t>(this);
+  }
+  if(arrayType == ArrayType::Float32 && geomType == GeomType::RectGridGeom)
+  {
+    ::calculateOutputValues<float, RectGridGeom, double>(this);
   }
 }
 
@@ -449,7 +593,7 @@ const QString CalculateBackground::getFilterVersion() const
 // -----------------------------------------------------------------------------
 const QString CalculateBackground::getGroupName() const
 {
-  return SIMPL::FilterGroups::ProcessingFilters;
+  return SIMPL::FilterGroups::Unsupported;
 }
 
 // -----------------------------------------------------------------------------
@@ -473,7 +617,7 @@ const QUuid CalculateBackground::getUuid()
 // -----------------------------------------------------------------------------
 const QString CalculateBackground::getSubGroupName() const
 {
-  return SIMPL::FilterSubGroups::MiscFilters;
+  return SIMPL::FilterSubGroups::ImageFilters;
 }
 
 // -----------------------------------------------------------------------------
@@ -481,26 +625,62 @@ const QString CalculateBackground::getSubGroupName() const
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer CalculateBackground::newFilterInstance(bool copyFilterParameters) const
 {
-  /*
-  * write code to optionally copy the filter parameters from the current filter into the new instance
-  */
   CalculateBackground::Pointer filter = CalculateBackground::New();
   if(copyFilterParameters)
   {
-    /* If the filter uses all the standard Filter Parameter Widgets you can probabaly get
-     * away with using this method to copy the filter parameters from the current instance
-     * into the new instance
-     */
     copyFilterParameterInstanceVariables(filter.get());
-    /* If your filter is using a lot of custom FilterParameterWidgets @see ReadH5Ebsd then you
-     * may need to copy each filter parameter explicitly plus any other instance variables that
-     * are needed into the new instance. Here is some example code from ReadH5Ebsd
-     */
-    //    SIMPL_COPY_INSTANCEVAR(OutputFile)
-    //    SIMPL_COPY_INSTANCEVAR(ZStartIndex)
-    //    SIMPL_COPY_INSTANCEVAR(ZEndIndex)
-    //    SIMPL_COPY_INSTANCEVAR(ZResolution)
   }
   return filter;
 }
 
+#if 0
+    // This block was previously disabled and divided on both sides of the for loop copying values into the output array.
+    // The first part performs required work for polynomial operations.
+    // The first part is required for SubtractBackground and DivideBackground operations.
+    if(getPolynomial())
+    {
+      int xval = 0;
+      int yval = 0;
+      // Fit the background to a second order polynomial
+      // p are the coefficients p[0] + p[1]*x + p[2]*y +p[3]*xy + p[4]*x^2 + p[5]*y^2
+      Eigen::MatrixXd A(numTuples, ZeissImportConstants::PolynomialOrder::NumConsts2ndOrder);
+      Eigen::VectorXd B(numTuples);
+
+      for(size_t i = 0; i < numTuples; ++i)
+      {
+        xval = static_cast<int>(i / dims[0]);
+        yval = static_cast<int>(i % dims[0]);
+        B(i) = static_cast<double>(accumArray[i]);
+        A(i, 0) = 1.0;
+        A(i, 1) = static_cast<double>(xval);
+        A(i, 2) = static_cast<double>(yval);
+        A(i, 3) = static_cast<double>(xval * yval);
+        A(i, 4) = static_cast<double>(xval * xval);
+        A(i, 5) = static_cast<double>(yval * yval);
+      }
+
+      notifyStatusMessage("Fitting a polynomial to data. May take a while to solve if images are large");
+      Eigen::VectorXd p = A.colPivHouseholderQr().solve(B);
+
+      QVector<size_t> tDims(3);
+      tDims[0] = dims[0];
+      tDims[1] = dims[1];
+      tDims[2] = dims[2];
+
+      //  m->getAttributeMatrix(getOutputCellAttributeMatrixPath())->resizeAttributeArrays(tDims);
+      //  if(nullptr != m_BackgroundImagePtr.lock())                          /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+      //  { m_BackgroundImage = m_BackgroundImagePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
+      Eigen::VectorXd Bcalc(numTuples);
+      double average = 0;
+
+      Bcalc = A * p;
+      average = Bcalc.mean();
+      Bcalc = Bcalc - Eigen::VectorXd::Constant(numTuples, average);
+
+      for(int i = 0; i < numTuples; ++i)
+      {
+        accumArray[i] = Bcalc(i);
+      }
+    } // Polynomial
+#endif
