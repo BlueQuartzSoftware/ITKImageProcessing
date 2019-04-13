@@ -37,6 +37,13 @@ set(${PLUGIN_NAME}_Project_SRCS "")
 
 include(${SIMPLProj_SOURCE_DIR}/Source/SIMPLib/SIMPLibMacros.cmake)
 
+# --------------------------------------------------------------------
+# find ITK so that we can figure out the version of ITK the user has selected
+# Does not register IO factories. It will be done by each plugin that needs it.
+set(ITK_NO_IO_FACTORY_REGISTER_MANAGER TRUE)
+find_package(ITK REQUIRED)
+#message(STATUS "ITK_VERSION_MAJOR: ${ITK_VERSION_MAJOR}")
+
 ## YOU MUST INCLUDE THIS FILE TO USE ITK !!!
 ## Then do not forget to add "${ITK_LIBRARIES}" to the target_link_libraries below
 # --------------------------------------------------------------------
@@ -59,8 +66,17 @@ set(ADDITIONAL_ITK_MODULES
     ITKIOGE
     ITKIOMRC
     ITKTestKernel
-    Montage
+
     )
+
+if(ITK_VERSION_MAJOR EQUAL 4)
+  #message(STATUS "Using ITK v4")
+  # Put ITK 4 Specific Modules in here
+elseif(ITK_VERSION_MAJOR EQUAL 5)
+  #message(STATUS "Using ITK v5")
+  # Put ITK 5 Specific Modyles in here
+  set( ADDITIONAL_ITK_MODULES ${ADDITIONAL_ITK_MODULES} Montage)
+endif()
 
 option(${PLUGIN_NAME}_ENABLE_SCIFIO "Enable SCIFIO ITK Modules" OFF)
 set(DREAM3D_ADDITIONAL_INSTALL_ITK_DIRECTORIES "")

@@ -17,14 +17,23 @@ set(_PublicFilters
     ITKImageReader
     ITKImageWriter
     ITKImportImageStack
-    ITKMedianImage
-
     ImportVectorImageStack
-	  ITKPCMTileRegistration
-    ITKImportFijiMontage
-    ITKImportRoboMetMontage
-    ITKStitchMontage
+
+    ITKMedianImage
 )
+
+if(ITK_VERSION_MAJOR EQUAL 4)
+  # Put ITK 4 Specific Modules in here
+elseif(ITK_VERSION_MAJOR EQUAL 5)
+  # Put ITK 5 Specific Modyles in here
+  set( _PublicFilters 
+      ${_PublicFilters} 
+      ITKPCMTileRegistration
+      ITKImportFijiMontage
+      ITKImportRoboMetMontage
+      ITKStitchMontage
+  )
+endif()
 
 if(NOT ITKImageProcessing_LeanAndMean)
   set(_PublicFilters

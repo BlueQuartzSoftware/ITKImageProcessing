@@ -85,9 +85,11 @@ ITKImportFijiMontagePrivate::ITKImportFijiMontagePrivate(ITKImportFijiMontage* p
 ITKImportFijiMontage::ITKImportFijiMontage()
 : m_DataContainerPrefix(SIMPL::Defaults::ImageDataContainerName + "_")
 , m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName)
-, m_FijiConfigFilePath("")
 , m_AttributeArrayName("ImageTile")
+, m_FijiConfigFilePath("")
 , d_ptr(new ITKImportFijiMontagePrivate(this))
+, m_RowCount(0)
+, m_ColumnCount(0)
 {
 
 }
@@ -111,7 +113,7 @@ SIMPL_PIMPL_PROPERTY_DEF(ITKImportFijiMontage, ITKImportFijiMontage::TileDataVec
 void ITKImportFijiMontage::appendImageReaderToCache(const ITKImageReader::Pointer &reader)
 {
   Q_D(ITKImportFijiMontage);
-  d_ptr->m_ImageReaderCache.push_back(reader);
+  d->m_ImageReaderCache.push_back(reader);
 }
 
 // -----------------------------------------------------------------------------
@@ -120,7 +122,7 @@ void ITKImportFijiMontage::appendImageReaderToCache(const ITKImageReader::Pointe
 void ITKImportFijiMontage::appendImageTileToCache(const itk::FijiImageTileData &tileData)
 {
   Q_D(ITKImportFijiMontage);
-  d_ptr->m_TileDataCache.push_back(tileData);
+  d->m_TileDataCache.push_back(tileData);
 }
 
 // -----------------------------------------------------------------------------

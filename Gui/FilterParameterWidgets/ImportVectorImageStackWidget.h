@@ -159,7 +159,6 @@ private:
   QButtonGroup* m_OriginGroup;
   QButtonGroup* m_zSpacingGroup;
   QAction* m_ShowFileAction = nullptr;
-  QString m_CurrentlyValidPath = "";
   QString m_CurrentText = "";
   bool m_DidCausePreflight = false;
 

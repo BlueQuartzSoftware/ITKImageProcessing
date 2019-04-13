@@ -169,9 +169,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKStitchMontage::ITKStitchMontage()
-{
-}
+ITKStitchMontage::ITKStitchMontage() = default;
 
 // -----------------------------------------------------------------------------
 //
@@ -306,6 +304,7 @@ void ITKStitchMontage::dataCheck()
     return;
   }
 
+  ImageGeom::Pointer tileImageGeom = ImageGeom::NullPointer();
   for(int i = 0; i < dcCount; i++)
   {
     QString dcName = m_ImageDataContainers[i];
@@ -320,6 +319,7 @@ void ITKStitchMontage::dataCheck()
     {
       return;
     }
+    tileImageGeom = image; // Be sure we capture at least one of the input Image Geometries that is valid.. we need it later down the code...
 
     if(getManualTileOverlap() && (getTileOverlap() < 0.0f || getTileOverlap() > 100.0f))
     {
@@ -364,6 +364,8 @@ void ITKStitchMontage::dataCheck()
   ImageGeom::Pointer imageGeom = ImageGeom::New();
   imageGeom->setName("MontageGeometry");
   imageGeom->setDimensions(montageArrayXSize, montageArrayYSize, 1);
+  imageGeom->setSpacing(tileImageGeom->getSpacing());
+
   dc->setGeometry(imageGeom);
 
   ss = QObject::tr("The image geometry dimensions of data container '%1' are projected to be (%2, %3, %4).  This is assuming "
@@ -439,7 +441,7 @@ void ITKStitchMontage::execute()
     return;
   }
 
-  if(m_StageTiles.size() > 0)
+  if(!m_StageTiles.empty())
   {
     // Pass to ITK and generate montage
     // ITK returns a new Fiji data structure to DREAM3D
@@ -469,13 +471,12 @@ void ITKStitchMontage::createFijiDataStructure()
   {
     return;
   }
-  else
+
+  m_StageTiles.resize(m_yMontageSize);
+  // for(unsigned i = 0; i < m_yMontageSize; i++)
+  for(auto& stageTile : m_StageTiles)
   {
-    m_StageTiles.resize(m_yMontageSize);
-    for(unsigned i = 0; i < m_yMontageSize; i++)
-    {
-      m_StageTiles[i].resize(m_xMontageSize);
-    }
+    stageTile.resize(m_xMontageSize);
   }
 
   float tileOverlapFactor = ((100.0 - getTileOverlap()) / 100.0);
@@ -557,8 +558,8 @@ template <typename PixelType, typename AccumulatePixelType> void ITKStitchMontag
 // -----------------------------------------------------------------------------
 template <typename PixelType, typename Resampler> typename Resampler::Pointer ITKStitchMontage::createResampler()
 {
-  using ScalarPixelType = typename itk::NumericTraits<PixelType>::ValueType;
-  //using ScalarImageType = itk::Dream3DImage<ScalarPixelType, Dimension>;
+  // using ScalarPixelType = typename itk::NumericTraits<PixelType>::ValueType;
+  // using ScalarImageType = itk::Dream3DImage<ScalarPixelType, Dimension>;
 
   typename Resampler::Pointer resampler = Resampler::New();
   // resampleF->SetMontage(montage); // doesn't compile, because montage is expected
@@ -588,7 +589,7 @@ template <typename PixelType, typename MontageType, typename Resampler> void ITK
     for(unsigned x = 0; x < m_xMontageSize; x++)
     {
       ind[0] = x;
-      typedef itk::InPlaceDream3DDataToImageFilter<PixelType, Dimension> toITKType;
+      using toITKType = itk::InPlaceDream3DDataToImageFilter<PixelType, Dimension>;
       typename toITKType::Pointer toITK = toITKType::New();
       DataContainer::Pointer imageDC = GetImageDataContainer(y, x);
       // Check the resolution and fix if necessary
