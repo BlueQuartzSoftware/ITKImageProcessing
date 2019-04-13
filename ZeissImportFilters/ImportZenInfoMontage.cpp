@@ -34,7 +34,7 @@
 #include "ZeissImport/ZeissImportVersion.h"
 
 static const QString k_AttributeArrayNames("AttributeArrayNames");
-static const QString k_DataContaineNameDefaultName("Zeiss Zen Montage");
+static const QString k_DataContaineNameDefaultName("Tile");
 static const QString k_TileAttributeMatrixDefaultName("Tile Data");
 static const QString k_GrayScaleTempArrayName("gray_scale_temp");
 static const QString k_AxioVisionMetaData("Zen MetaData");
@@ -79,15 +79,18 @@ class ImportZenInfoMontagePrivate
 
   QDomElement m_Root;
   QString m_InputFile_Cache;
-  QDateTime m_TimeStamp_Cache;
-  QString m_MontageInformation;
-  std::vector<BoundsType> m_BoundsCache;
+  DataArrayPath m_DataContainerName;
+  QString m_CellAttributeMatrixName;
+  QString m_ImageDataArrayName;
   bool m_ChangeOrigin = false;
   bool m_ChangeSpacing = false;
   bool m_ConvertToGrayScale = false;
   FloatVec3Type m_Origin;
   FloatVec3Type m_Spacing;
   FloatVec3Type m_ColorWeights;
+  QDateTime m_TimeStamp_Cache;
+  QString m_MontageInformation;
+  std::vector<BoundsType> m_BoundsCache;
 };
 
 // -----------------------------------------------------------------------------
@@ -109,18 +112,16 @@ ImportZenInfoMontage::ImportZenInfoMontage()
 : m_InputFile("")
 , m_DataContainerName(k_DataContaineNameDefaultName)
 , m_CellAttributeMatrixName(k_TileAttributeMatrixDefaultName)
-, m_ImageDataArrayName(SIMPL::CellData::ImageData)
+, m_ImageDataArrayName("Image Data")
 , m_ConvertToGrayScale(false)
 , m_ImportAllMetaData(false)
 , m_FileWasRead(false)
 , m_ChangeOrigin(false)
-, m_ChangeSpacing(false)
+, m_ChangeSpacing(true)
 , d_ptr(new ImportZenInfoMontagePrivate(this))
 {
-  m_ColorWeights[0] = 0.2125f;
-  m_ColorWeights[1] = 0.7154f;
-  m_ColorWeights[2] = 0.0721f;
 
+  m_ColorWeights = FloatVec3Type(0.2125f, 0.7154f, 0.0721f);
   m_Origin = FloatVec3Type(0.0f, 0.0f, 0.0f);
   m_Spacing = FloatVec3Type(1.0f, 1.0f, 1.0f);
 }
@@ -151,7 +152,7 @@ void ImportZenInfoMontage::initialize()
 void ImportZenInfoMontage::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
-  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Zen Export File (*_info.xml)", InputFile, FilterParameter::Parameter, ImportZenInfoMontage, "*[0]ml"));
+  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Zen Export File (*_info.xml)", InputFile, FilterParameter::Parameter, ImportZenInfoMontage, "*.xml"));
 
   PreflightUpdatedValueFilterParameter::Pointer param = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Montage Information", MontageInformation, FilterParameter::Parameter, ImportZenInfoMontage);
   param->setReadOnly(true);
@@ -268,17 +269,28 @@ void ImportZenInfoMontage::dataCheck()
   QDomDocument domDocument;
   QDomElement exportDocument;
 
-  QString inputFile = getInputFile();
-  QString cacheInputFile = d_ptr->m_InputFile_Cache;
-  QDateTime cacheTimeStamp = d_ptr->m_TimeStamp_Cache;
-
-  if(inputFile == cacheInputFile && cacheTimeStamp.isValid() && cacheTimeStamp == timeStamp && m_ChangeOrigin == d_ptr->m_ChangeOrigin && m_ChangeSpacing == d_ptr->m_ChangeSpacing &&
-     m_ConvertToGrayScale == d_ptr->m_ConvertToGrayScale && m_Origin == d_ptr->m_Origin && m_Spacing == d_ptr->m_Spacing && m_ColorWeights == d_ptr->m_ColorWeights)
+  // clang-format off
+ 
+  if(m_InputFile ==  d_ptr->m_InputFile_Cache
+    && m_DataContainerName == d_ptr->m_DataContainerName
+    && m_CellAttributeMatrixName == d_ptr->m_CellAttributeMatrixName
+    && m_ImageDataArrayName == d_ptr->m_ImageDataArrayName
+    && m_ChangeOrigin == d_ptr->m_ChangeOrigin
+    && m_ChangeSpacing == d_ptr->m_ChangeSpacing 
+    && m_ConvertToGrayScale == d_ptr->m_ConvertToGrayScale
+    && m_Origin == d_ptr->m_Origin
+    && m_Spacing == d_ptr->m_Spacing
+    && m_ColorWeights == d_ptr->m_ColorWeights
+    && d_ptr->m_TimeStamp_Cache.isValid()
+    && timeStamp == d_ptr->m_TimeStamp_Cache
+  )
+  // clang-format on
   {
     // We are reading from the cache, so set the FileWasRead flag to false
     m_FileWasRead = false;
     exportDocument = getRoot();
   }
+
   else
   {
     flushCache();
@@ -300,15 +312,19 @@ void ImportZenInfoMontage::dataCheck()
       setErrorCondition(-70001, ss);
       return;
     }
-    setRoot(exportDocument);
-    setInputFile_Cache(getInputFile());
-    setTimeStamp_Cache(timeStamp);
+
+    d_ptr->m_Root = exportDocument;
+    d_ptr->m_InputFile_Cache = m_InputFile;
+    d_ptr->m_DataContainerName = m_DataContainerName;
+    d_ptr->m_CellAttributeMatrixName = m_CellAttributeMatrixName;
+    d_ptr->m_ImageDataArrayName = m_ImageDataArrayName;
     d_ptr->m_ChangeOrigin = m_ChangeOrigin;
     d_ptr->m_ChangeSpacing = m_ChangeSpacing;
     d_ptr->m_ConvertToGrayScale = m_ConvertToGrayScale;
     d_ptr->m_Origin = m_Origin;
     d_ptr->m_Spacing = m_Spacing;
     d_ptr->m_ColorWeights = m_ColorWeights;
+    setTimeStamp_Cache(timeStamp);
 
     generateCache(exportDocument);
   }
@@ -369,9 +385,21 @@ QString ImportZenInfoMontage::getMontageInformation()
 // -----------------------------------------------------------------------------
 void ImportZenInfoMontage::flushCache()
 {
-  setInputFile_Cache("");
+
   setTimeStamp_Cache(QDateTime());
   setRoot(QDomElement());
+
+  d_ptr->m_InputFile_Cache = "";
+  d_ptr->m_DataContainerName = DataArrayPath();
+  d_ptr->m_CellAttributeMatrixName = "";
+  d_ptr->m_ImageDataArrayName = "";
+  d_ptr->m_ChangeOrigin = false;
+  d_ptr->m_ChangeSpacing = false;
+  d_ptr->m_ConvertToGrayScale = false;
+  d_ptr->m_Origin = FloatVec3Type(0.0f, 0.0f, 0.0f);
+  d_ptr->m_Spacing = FloatVec3Type(1.0f, 1.0f, 1.0f);
+  d_ptr->m_ColorWeights = FloatVec3Type(0.2125f, 0.7154f, 0.0721f);
+  d_ptr->m_BoundsCache.clear();
 }
 
 // -----------------------------------------------------------------------------
@@ -459,18 +487,26 @@ void ImportZenInfoMontage::generateCache(QDomElement& exportDocument)
       DataContainer::Pointer fromDca = importImageDca->getDataContainer(::k_DCName);
       AttributeMatrix::Pointer fromCellAttrMat = fromDca->getAttributeMatrix(::k_AMName);
       IDataArray::Pointer fromImageData = fromCellAttrMat->getAttributeArray(::k_AAName);
+      fromImageData->setName(getImageDataArrayName());
 
       // Get the spacing from the geometry
       ImageGeom::Pointer fromImageGeom = fromDca->getGeometryAs<ImageGeom>();
       FloatVec3Type spacing;
       fromImageGeom->getSpacing(spacing);
-
-      bound.SpacingX = spacing[0];
-      bound.SpacingY = spacing[1];
+      if(m_ChangeSpacing)
+      {
+        bound.SpacingX = m_Spacing[0];
+        bound.SpacingY = m_Spacing[1];
+      }
+      else
+      {
+        bound.SpacingX = spacing[0];
+        bound.SpacingY = spacing[1];
+      }
       bound.ImageDataProxy = fromImageData;
-      minSpacing[0] = spacing[0];
-      minSpacing[1] = spacing[1];
-      minSpacing[2] = spacing[2];
+      minSpacing[0] = bound.SpacingX;
+      minSpacing[1] = bound.SpacingY;
+      minSpacing[2] = 1.0;
 
       FloatVec3Type origin;
       fromImageGeom->getOrigin(origin);
@@ -485,6 +521,7 @@ void ImportZenInfoMontage::generateCache(QDomElement& exportDocument)
     {
       DataArrayPath daPath(::k_DCName, ::k_AMName, k_AAName);
       AbstractFilter::Pointer grayScaleFilter = createColorToGrayScaleFilter(daPath);
+      connect(grayScaleFilter.get(), SIGNAL(messageGenerated(const AbstractMessage::Pointer&)), this, SIGNAL(messageGenerated(const AbstractMessage::Pointer&)));
       grayScaleFilter->setDataContainerArray(importImageDca);
       grayScaleFilter->preflight();
       if(grayScaleFilter->getErrorCode() < 0)
@@ -667,39 +704,39 @@ void ImportZenInfoMontage::readImages()
     }
     // Now transfer the image data from the actual image data read from disk into our existing Attribute Matrix
     DataContainerArray::Pointer importImageDca = imageImportFilter->getDataContainerArray();
+    DataContainer::Pointer fromDc = importImageDca->getDataContainer(::k_DCName);
+    AttributeMatrix::Pointer fromCellAttrMat = fromDc->getAttributeMatrix(::k_AMName);
+    // IDataArray::Pointer fromImageData = fromCellAttrMat->getAttributeArray(getImageDataArrayName());
+
+    if(getConvertToGrayScale())
     {
-      DataContainer::Pointer fromDca = importImageDca->getDataContainer(::k_DCName);
-      AttributeMatrix::Pointer fromCellAttrMat = fromDca->getAttributeMatrix(::k_AMName);
-      IDataArray::Pointer fromImageData = fromCellAttrMat->getAttributeArray(getImageDataArrayName());
-
-      if(getConvertToGrayScale())
+      AbstractFilter::Pointer grayScaleFilter = createColorToGrayScaleFilter(dap);
+      grayScaleFilter->setDataContainerArray(importImageDca); // Use the Data COntainer array that was use for the import. It is setup and ready to go
+      connect(grayScaleFilter.get(), SIGNAL(messageGenerated(const AbstractMessage::Pointer&)), this, SIGNAL(messageGenerated(const AbstractMessage::Pointer&)));
+      grayScaleFilter->execute();
+      if(grayScaleFilter->getErrorCode() < 0)
       {
-        DataArrayPath daPath(::k_DCName, k_AMName, getImageDataArrayName());
-        AbstractFilter::Pointer grayScaleFilter = createColorToGrayScaleFilter(daPath);
-        grayScaleFilter->setDataContainerArray(importImageDca); // Use the Data COntainer array that was use for the import. It is setup and ready to go
-        grayScaleFilter->execute();
-        if(grayScaleFilter->getErrorCode() < 0)
-        {
-          setErrorCondition(grayScaleFilter->getErrorCode(), "Error Executing Color to GrayScale filter");
-          continue;
-        }
-
-        DataContainer::Pointer fromDca = importImageDca->getDataContainer(::k_DCName);
-        AttributeMatrix::Pointer fromCellAttrMat = fromDca->getAttributeMatrix(::k_AMName);
-
-        QString grayScaleArrayName = k_GrayScaleTempArrayName + ::k_AAName;
-        IDataArray::Pointer fromGrayScaleData = fromCellAttrMat->getAttributeArray(grayScaleArrayName);
-
-        IDataArray::Pointer rgbImageArray = fromCellAttrMat->removeAttributeArray(::k_AAName);
-        IDataArray::Pointer gray = fromCellAttrMat->removeAttributeArray(k_GrayScaleTempArrayName + getImageDataArrayName());
-        gray->setName(getImageDataArrayName());
-        dc->getAttributeMatrix(getCellAttributeMatrixName())->addOrReplaceAttributeArray(gray);
+        setErrorCondition(grayScaleFilter->getErrorCode(), "Error Executing Color to GrayScale filter");
+        continue;
       }
-      else
-      {
-        // Copy the IDataArray (which contains the image data) from the temp data container array into our persistent data structure
-        dc->getAttributeMatrix(getCellAttributeMatrixName())->addOrReplaceAttributeArray(fromImageData);
-      }
+
+      DataContainerArray::Pointer c2gDca = grayScaleFilter->getDataContainerArray();
+      DataContainer::Pointer c2gDc = c2gDca->getDataContainer(::k_DCName);
+      AttributeMatrix::Pointer c2gAttrMat = c2gDc->getAttributeMatrix(::k_AMName);
+
+      QString grayScaleArrayName = k_GrayScaleTempArrayName + getImageDataArrayName();
+      // IDataArray::Pointer fromGrayScaleData = fromCellAttrMat->getAttributeArray(grayScaleArrayName);
+
+      IDataArray::Pointer rgbImageArray = c2gAttrMat->removeAttributeArray(::k_AAName);
+      IDataArray::Pointer gray = c2gAttrMat->removeAttributeArray(grayScaleArrayName);
+      gray->setName(getImageDataArrayName());
+      cellAttrMat->addOrReplaceAttributeArray(gray);
+    }
+    else
+    {
+      // Copy the IDataArray (which contains the image data) from the temp data container array into our persistent data structure
+      IDataArray::Pointer gray = fromCellAttrMat->removeAttributeArray(getImageDataArrayName());
+      cellAttrMat->addOrReplaceAttributeArray(gray);
     }
   }
 }

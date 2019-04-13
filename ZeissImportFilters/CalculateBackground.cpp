@@ -31,16 +31,23 @@
 #include "CalculateBackground.h"
 
 #include <cstring>
+#include <numeric>
 #include <set>
+#include <thread>
 #include <type_traits>
 
-#include <QtCore/QString>
-#include <QtCore/QFileInfo>
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
+#include <tbb/task_group.h>
+#include <tbb/task_scheduler_init.h>
+#endif
+
 #include <QtCore/QDir>
+#include <QtCore/QFileInfo>
+#include <QtCore/QMutexLocker>
 #include <QtCore/QSharedPointer>
 #include <QtCore/QString>
-#include <QtCore/QVector>
 #include <QtCore/QTextStream>
+#include <QtCore/QVector>
 
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixCreationFilterParameter.h"
@@ -53,6 +60,7 @@
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/MultiDataContainerSelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/OutputPathFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Filtering/FilterManager.h"
@@ -79,6 +87,108 @@ enum createdPathID : RenameDataPath::DataID_t
 namespace
 {
 const QString k_MedianFilter("ITKMedianImage");
+const QString k_ImageWriterFilter("ITKImageWriter");
+const QString k_BackgroundDataContainerLabel("Created Data Container (Background)");
+const QString k_BackgroundAttributeMatrixLabel("Created Attribute Matrix (Background)");
+const QString k_BackgroundAttributeArrayLabel("Created Image Array Name (Background)");
+
+const QString k_OutputProcessedImageLabel("Corrected Output Tile Image Name");
+
+template <typename OutArrayType, typename AccumType>
+class ProcessInputImagesImpl
+{
+public:
+  using AccumDataArrayType = DataArray<AccumType>;
+
+  ProcessInputImagesImpl(CalculateBackground* filter, QString dcName, AccumType average, const AccumDataArrayType& accumArray)
+  : m_Filter(filter)
+  , m_DcName(std::move(dcName))
+  , m_Average(average)
+  , m_AccumArray(accumArray)
+  {
+  }
+  ~ProcessInputImagesImpl() = default;
+  ProcessInputImagesImpl(const ProcessInputImagesImpl&) = default;
+  ProcessInputImagesImpl(ProcessInputImagesImpl&&) noexcept = default;
+  ProcessInputImagesImpl& operator=(const ProcessInputImagesImpl&) = delete; // Copy Assignment Not Implemented
+  ProcessInputImagesImpl& operator=(ProcessInputImagesImpl&&) = delete;      // Move Assignment Not Implemented
+
+  void operator()() const
+  {
+    // std::cout << "Processing: " << m_DcName.toStdString() << std::endl;
+
+    using OutputDataArrayType = DataArray<OutArrayType>;
+    using OutputDataArrayPointerType = typename OutputDataArrayType::Pointer;
+
+    DataContainer::Pointer dc = m_Filter->getDataContainerArray()->getDataContainer(m_DcName);
+    AttributeMatrix::Pointer am = dc->getAttributeMatrix(m_Filter->getCellAttributeMatrixName());
+    OutputDataArrayPointerType imageDataArrayPtr = am->getAttributeArrayAs<OutputDataArrayType>(m_Filter->getImageDataArrayName());
+    OutputDataArrayPointerType correctedDataArrayPtr = am->getAttributeArrayAs<OutputDataArrayType>(m_Filter->getCorrectedImageDataArrayName());
+
+    OutputDataArrayType& inputImage = *imageDataArrayPtr;
+    OutputDataArrayType& correctedImage = *correctedDataArrayPtr;
+
+    size_t totalPoints = inputImage.getNumberOfTuples();
+
+    for(size_t t = 0; t < totalPoints; t++)
+    {
+      AccumType numerator = static_cast<AccumType>(inputImage[t]);
+      AccumType denominator = m_AccumArray[t];
+
+      AccumType temp = m_Average * numerator;
+      if(denominator != 0)
+      {
+        temp = temp / denominator;
+      }
+      if(temp < 0)
+      {
+        temp = 0;
+      }
+      if(temp > std::numeric_limits<OutArrayType>::max())
+      {
+        temp = std::numeric_limits<OutArrayType>::max();
+      }
+      correctedImage[t] = temp;
+    }
+    if(m_Filter->getExportCorrectedImages())
+    {
+      FilterManager* filtManager = FilterManager::Instance();
+      IFilterFactory::Pointer factory = filtManager->getFactoryFromClassName(::k_ImageWriterFilter);
+      if(nullptr != factory.get())
+      {
+        AbstractFilter::Pointer imageWriter = factory->create();
+        if(nullptr != imageWriter.get())
+        {
+          imageWriter->setDataContainerArray(m_Filter->getDataContainerArray());
+          QString outputPath = QString("%1/%2%3").arg(m_Filter->getOutputPath()).arg(m_DcName).arg(m_Filter->getFileExtension());
+
+          QVariant var(outputPath);
+          bool propSet = imageWriter->setProperty("FileName", var);
+
+          DataArrayPath dap(m_DcName, m_Filter->getCellAttributeMatrixName(), m_Filter->getCorrectedImageDataArrayName());
+          var.setValue(dap);
+          propSet = imageWriter->setProperty("ImageArrayPath", var);
+
+          var.setValue(0);
+          propSet = imageWriter->setProperty("Plane", var);
+
+          imageWriter->execute();
+          if(imageWriter->getErrorCode() < 0)
+          {
+            m_Filter->setErrorCondition(imageWriter->getErrorCode(), QString("%1 Filter could not write image to path '%2'").arg(::k_ImageWriterFilter).arg(outputPath));
+          }
+        }
+      }
+    }
+    m_Filter->notifyFeatureCompleted(m_DcName);
+  }
+
+private:
+  CalculateBackground* m_Filter = nullptr;
+  QString m_DcName;
+  AccumType m_Average;
+  const DataArray<AccumType>& m_AccumArray;
+};
 
 /**
  * @brief Calculates the output values using the templated output IDataArray output type
@@ -86,34 +196,44 @@ const QString k_MedianFilter("ITKMedianImage");
 template <typename OutArrayType, typename GeomType, typename AccumType>
 void calculateOutputValues(CalculateBackground* filter)
 {
+
+  using OutputDataArrayType = DataArray<OutArrayType>;
+  using OutputDataArrayPointerType = typename OutputDataArrayType::Pointer;
+
+  using AccumDataArrayType = DataArray<AccumType>;
+
   DataContainerArray::Pointer dca = filter->getDataContainerArray();
 
-  DataContainer::Pointer outputDc = dca->getDataContainer(filter->getOutputDataContainerPath());
-  AttributeMatrix::Pointer outputAttrMat = outputDc->getAttributeMatrix(filter->getOutputCellAttributeMatrixPath());
-  typename DataArray<OutArrayType>::Pointer outputArrayPtr = outputAttrMat->getAttributeArrayAs<DataArray<OutArrayType>>(filter->getOutputImageArrayPath().getDataArrayName());
-  DataArray<OutArrayType>& outputArray = *(outputArrayPtr);
-  outputArray.initializeWithZeros();
+  DataContainer::Pointer outputDc = dca->getDataContainer(filter->getBackgroundDataContainerPath());
+  AttributeMatrix::Pointer outputAttrMat = outputDc->getAttributeMatrix(filter->getBackgroundCellAttributeMatrixPath());
+  typename OutputDataArrayType::Pointer backgroundArrayPtr = outputAttrMat->getAttributeArrayAs<OutputDataArrayType>(filter->getBackgroundImageArrayPath().getDataArrayName());
+  OutputDataArrayType& backgroundArray = *(backgroundArrayPtr);
+  backgroundArray.initializeWithZeros();
 
   typename GeomType::Pointer outputGeom = outputDc->getGeometryAs<GeomType>();
   SizeVec3Type dims;
   outputGeom->getDimensions(dims);
 
-  typename DataArray<AccumType>::Pointer accumulateArrayPtr = DataArray<AccumType>::CreateArray(outputArrayPtr->getNumberOfTuples(), "Accumulation Array", true);
+  typename AccumDataArrayType::Pointer accumulateArrayPtr = AccumDataArrayType::CreateArray(backgroundArrayPtr->getNumberOfTuples(), "Accumulation Array", true);
   accumulateArrayPtr->initializeWithZeros();
   DataArray<AccumType>& accumArray = *accumulateArrayPtr;
   size_t numTuples = accumArray.getNumberOfTuples();
 
-  typename SizeTArrayType::Pointer countArrayPtr = SizeTArrayType::CreateArray(outputArrayPtr->getNumberOfTuples(), "Count Array", true);
+  typename SizeTArrayType::Pointer countArrayPtr = SizeTArrayType::CreateArray(backgroundArrayPtr->getNumberOfTuples(), "Count Array", true);
   countArrayPtr->initializeWithZeros();
   SizeTArrayType& counter = *(countArrayPtr);
 
   int32_t lowThresh = filter->getlowThresh();
   int32_t highThresh = filter->gethighThresh();
 
+  QString progressMessage = QString("Calculating Background Image...");
+  filter->notifyStatusMessage(progressMessage);
+
   for(const auto& dcName : filter->getDataContainers())
   {
     DataArrayPath imageArrayPath(dcName, filter->getCellAttributeMatrixName(), filter->getImageDataArrayName());
-    DataArray<OutArrayType>& imageArray = *(dca->getAttributeMatrix(imageArrayPath)->getAttributeArrayAs<DataArray<OutArrayType>>(imageArrayPath.getDataArrayName()));
+    OutputDataArrayPointerType imageArrayPtr = dca->getAttributeMatrix(imageArrayPath)->getAttributeArrayAs<OutputDataArrayType>(imageArrayPath.getDataArrayName());
+    OutputDataArrayType& imageArray = *imageArrayPtr;
 
     for(size_t t = 0; t < numTuples; t++)
     {
@@ -136,15 +256,12 @@ void calculateOutputValues(CalculateBackground* filter)
     }
   }
 
-  // Assign output array values
-  for(int i = 0; i < numTuples; ++i)
-  {
-    outputArray[i] = static_cast<OutArrayType>(accumArray[i]);
-  }
-
-  // Blur
+  // Median
   if(filter->getApplyMedianFilter())
   {
+    QString progressMessage = QString("Applying Median Filter to Background Image...");
+    filter->notifyStatusMessage(progressMessage);
+
     FilterManager* filtManager = FilterManager::Instance();
     IFilterFactory::Pointer factory = filtManager->getFactoryFromClassName(::k_MedianFilter);
     if(nullptr != factory.get())
@@ -152,11 +269,18 @@ void calculateOutputValues(CalculateBackground* filter)
       AbstractFilter::Pointer imageProcessingFilter = factory->create();
       if(nullptr != imageProcessingFilter.get())
       {
+        DataContainerArray::Pointer dca = filter->getDataContainerArray();
+        DataArrayPath outPath = filter->getBackgroundImageArrayPath();
+        DataContainer::Pointer outDc = dca->getDataContainer(outPath.getDataContainerName());
+        AttributeMatrix::Pointer outAm = outDc->getAttributeMatrix(outPath.getAttributeMatrixName());
+        IDataArray::Pointer outArray = outAm->removeAttributeArray(outPath.getDataArrayName());
+        outAm->addOrReplaceAttributeArray(accumulateArrayPtr);
+
         QVariant var;
 
         imageProcessingFilter->setDataContainerArray(filter->getDataContainerArray());
-
-        var.setValue(filter->getOutputImageArrayPath());
+        outPath.setDataArrayName(accumulateArrayPtr->getName());
+        var.setValue(outPath);
         bool propSet = imageProcessingFilter->setProperty("SelectedCellArrayPath", var);
 
         propSet = imageProcessingFilter->setProperty("SaveAsNewArray", false);
@@ -165,68 +289,69 @@ void calculateOutputValues(CalculateBackground* filter)
         propSet = imageProcessingFilter->setProperty("Radius", var);
 
         imageProcessingFilter->execute();
+        outAm->addOrReplaceAttributeArray(outArray); // Put the original back into the Attr Mat
       }
     }
     else
     {
-      filter->setErrorCondition(-53009, " filter not found.");
+      filter->setErrorCondition(-53009, QString("%1 filter not found.").arg(::k_MedianFilter));
     }
-  } // Blur
+  } // Median
 
-  // Edit the input data
-  if(filter->getSubtractBackground())
+  // Assign output array values
+  for(int i = 0; i < numTuples; ++i)
   {
-    for(const auto& dcName : filter->getDataContainers())
-    {
-      DataArrayPath imageDataPath(dcName, filter->getCellAttributeMatrixName(), filter->getImageDataArrayName());
-      auto iDataArray = filter->getDataContainerArray()->getPrereqIDataArrayFromPath<DataArray<OutArrayType>, AbstractFilter>(filter, imageDataPath);
-      auto imagePtr = std::dynamic_pointer_cast<DataArray<OutArrayType>>(iDataArray);
-      size_t totalPoints = imagePtr->getNumberOfComponents();
-      if(nullptr != imagePtr)
-      {
-        auto* image = imagePtr->getPointer(0);
+    backgroundArray[i] = static_cast<OutArrayType>(accumArray[i]);
+  }
 
-        for(size_t t = 0; t < totalPoints; t++)
-        {
-          if((image[t] >= lowThresh) && (image[t] <= highThresh))
-          {
-            image[t] -= outputArray[t];
-
-            if(image[t] < 0)
-            {
-              image[t] = 0;
-            }
-            if(image[t] > 255)
-            {
-              image[t] = 255;
-            }
-          }
-        }
-      }
-    }
-  } // Subtract Background
-
+  // Get the average value of the background image
+  AccumType average = 0;
+  for(const auto& v : accumArray)
+  {
+    average = average + v;
+  }
+  size_t count = accumArray.getNumberOfTuples();
+#if 0
+// This is here because using std::accumulate will NOT give proper results. There is a bug somewhere... 
+  std::cout << "average: " << average << std::endl;
+  AccumType accum = std::accumulate(accumArray.begin(), accumArray.end(), 0);
+  std::cout << "accum: " << accum << std::endl;
+#endif
+  average = average / count;
+  // Divide Background
   if(filter->getDivideBackground())
   {
+    QString progressMessage = QString("Generating Corrected Images...");
+    filter->notifyStatusMessage(progressMessage);
+
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
+    tbb::task_scheduler_init init;
+    std::shared_ptr<tbb::task_group> g(new tbb::task_group);
+    // C++11 RIGHT HERE....
+    int32_t nthreads = static_cast<int32_t>(std::thread::hardware_concurrency()); // Returns ZERO if not defined on this platform
+    int32_t threadCount = 0;
+#endif
+
     for(const auto& dcName : filter->getDataContainers())
     {
-      DataArrayPath imageDataPath(dcName, filter->getCellAttributeMatrixName(), filter->getImageDataArrayName());
-      auto iDataArray = filter->getDataContainerArray()->getPrereqIDataArrayFromPath<DataArray<OutArrayType>, AbstractFilter>(filter, imageDataPath);
-      auto imagePtr = std::dynamic_pointer_cast<DataArray<OutArrayType>>(iDataArray);
-      size_t totalPoints = imagePtr->getNumberOfComponents();
-      if(nullptr != imagePtr)
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
+      g->run(ProcessInputImagesImpl<OutArrayType, AccumType>(filter, dcName, average, accumArray));
+      threadCount++;
+      if(threadCount == nthreads)
       {
-        auto* image = imagePtr->getPointer(0);
-
-        for(size_t t = 0; t < totalPoints; t++)
-        {
-          if((image[t] >= lowThresh) && (image[t] <= highThresh) && outputArray[t] != 0)
-          {
-            image[t] /= outputArray[t];
-          }
-        }
+        g->wait();
+        threadCount = 0;
       }
+#else
+      ProcessInputImagesImpl<OutArrayType, AccumType> impl(filter, dcName, average, accumArray);
+      impl();
+#endif
     }
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
+    // This will spill over if the number of files to process does not divide evenly by the number of threads.
+    g->wait();
+#endif
+
   } // Divide Background
 }
 
@@ -238,12 +363,16 @@ void calculateOutputValues(CalculateBackground* filter)
 CalculateBackground::CalculateBackground()
 : m_DataContainers("")
 , m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName)
-, m_ImageDataArrayName("")
-, m_OutputDataContainerPath("Background")
-, m_OutputCellAttributeMatrixPath("Background", "Background Data", "")
-, m_OutputImageArrayPath("Background", "Background Data", "Background Image")
+, m_ImageDataArrayName("Image Data")
+, m_CorrectedImageDataArrayName("Corrected Image")
+, m_ExportCorrectedImages(true)
+, m_OutputPath("")
+, m_FileExtension(".tif")
+, m_BackgroundDataContainerPath("Background")
+, m_BackgroundCellAttributeMatrixPath("Background", "Background Data", "")
+, m_BackgroundImageArrayPath("Background", "Background Data", "Background Image")
 , m_lowThresh(20000)
-, m_highThresh(67000)
+, m_highThresh(65535)
 , m_SubtractBackground(false)
 , m_DivideBackground(false)
 {
@@ -269,18 +398,21 @@ void CalculateBackground::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_MDC_SELECTION_FP("Select Image Data Containers", DataContainers, FilterParameter::Parameter, CalculateBackground, req));
   parameters.push_back(SIMPL_NEW_STRING_FP("Input Attribute Matrix Name", CellAttributeMatrixName, FilterParameter::RequiredArray, CalculateBackground));
   parameters.push_back(SIMPL_NEW_STRING_FP("Input Image Array Name", ImageDataArrayName, FilterParameter::RequiredArray, CalculateBackground));
+  parameters.push_back(SIMPL_NEW_STRING_FP(::k_OutputProcessedImageLabel, CorrectedImageDataArrayName, FilterParameter::CreatedArray, CalculateBackground));
 
-  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Created Data Container", OutputDataContainerPath, FilterParameter::CreatedArray, CalculateBackground));
+  parameters.push_back(SeparatorFilterParameter::New("Created Background Image Names", FilterParameter::CreatedArray));
+
+  parameters.push_back(SIMPL_NEW_DC_CREATION_FP(::k_BackgroundDataContainerLabel, BackgroundDataContainerPath, FilterParameter::CreatedArray, CalculateBackground));
   AttributeMatrixCreationFilterParameter::RequirementType cellAmReq;
   cellAmReq.dcGeometryTypes.push_back(IGeometry::Type::Image);
   cellAmReq.dcGeometryTypes.push_back(IGeometry::Type::RectGrid);
-  parameters.push_back(SIMPL_NEW_AM_CREATION_FP("Created Background Attribute Matrix", OutputCellAttributeMatrixPath, FilterParameter::CreatedArray, CalculateBackground, cellAmReq));
+  parameters.push_back(SIMPL_NEW_AM_CREATION_FP(::k_BackgroundAttributeMatrixLabel, BackgroundCellAttributeMatrixPath, FilterParameter::CreatedArray, CalculateBackground, cellAmReq));
 
   DataArrayCreationFilterParameter::RequirementType imageReq;
   imageReq.dcGeometryTypes.push_back(IGeometry::Type::Image);
   imageReq.dcGeometryTypes.push_back(IGeometry::Type::RectGrid);
   imageReq.amTypes.push_back(AttributeMatrix::Type::Cell);
-  parameters.push_back(SIMPL_NEW_DA_CREATION_FP("Created Background Image Array Name", OutputImageArrayPath, FilterParameter::CreatedArray, CalculateBackground, imageReq));
+  parameters.push_back(SIMPL_NEW_DA_CREATION_FP(::k_BackgroundAttributeArrayLabel, BackgroundImageArrayPath, FilterParameter::CreatedArray, CalculateBackground, imageReq));
 
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Lowest allowed Image value (Image Value)", lowThresh, FilterParameter::Parameter, CalculateBackground));
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Highest allowed Image value (Image Value)", highThresh, FilterParameter::Parameter, CalculateBackground));
@@ -288,21 +420,26 @@ void CalculateBackground::setupFilterParameters()
   // Only allow the Median Filter property if the required filter is available
   FilterManager* filtManager = FilterManager::Instance();
   IFilterFactory::Pointer factory = filtManager->getFactoryFromClassName(::k_MedianFilter);
+  QStringList linkedProps;
   if(nullptr != factory.get())
   {
-    parameters.push_back(SeparatorFilterParameter::New("Median Filter Parameters", FilterParameter::Parameter));
-    QStringList linkedProps;
+    parameters.push_back(SeparatorFilterParameter::New("Background Image Processing", FilterParameter::Parameter));
+
     linkedProps.clear();
     linkedProps << "Radius";
 
-    parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Apply Median Filter", ApplyMedianFilter, FilterParameter::Parameter, CalculateBackground, linkedProps));
+    parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Apply Median Filter to background Image", ApplyMedianFilter, FilterParameter::Parameter, CalculateBackground, linkedProps));
     parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Radius", Radius, FilterParameter::Parameter, CalculateBackground));
   }
 
   parameters.push_back(SeparatorFilterParameter::New("Process Input Images", FilterParameter::Parameter));
-  parameters.push_back(SIMPL_NEW_BOOL_FP("Subtract Background from Current Images", SubtractBackground, FilterParameter::Parameter, CalculateBackground));
-  parameters.push_back(SIMPL_NEW_BOOL_FP("Divide Background from Current Images", DivideBackground, FilterParameter::Parameter, CalculateBackground));
-
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Apply Background Correction to Input Images", DivideBackground, FilterParameter::Parameter, CalculateBackground));
+  linkedProps.clear();
+  linkedProps << "OutputPath"
+              << "FileExtension";
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Export Corrected Images", ExportCorrectedImages, FilterParameter::Parameter, CalculateBackground, linkedProps));
+  parameters.push_back(SIMPL_NEW_OUTPUT_PATH_FP("Output Path", OutputPath, FilterParameter::Parameter, CalculateBackground, "*", "*", 0));
+  parameters.push_back(SIMPL_NEW_STRING_FP("File Extension", FileExtension, FilterParameter::Parameter, CalculateBackground, 0));
   setFilterParameters(parameters);
 }
 
@@ -319,7 +456,7 @@ void CalculateBackground::initialize()
 CalculateBackground::ArrayType CalculateBackground::getArrayType()
 {
   DataContainerArray::Pointer dca = getDataContainerArray();
-  const QVector<size_t> cDims = { 1 };
+  const QVector<size_t> cDims = {1};
 
   for(const auto& dcName : m_DataContainers)
   {
@@ -425,6 +562,12 @@ void CalculateBackground::dataCheck()
     return;
   }
 
+  if(m_CorrectedImageDataArrayName.isEmpty())
+  {
+    setErrorCondition(-53009, "The 'Corrected Output Array Name' must contain a valid name. The Attribute Matrix should have an Attribute Array of the given name.");
+    return;
+  }
+
   DataContainerArray::Pointer dca = getDataContainerArray();
   QVector<size_t> cDims = {1};
 
@@ -439,6 +582,68 @@ void CalculateBackground::dataCheck()
   {
     return;
   }
+
+  if(arrayType == ArrayType::UInt8 && (m_lowThresh > std::numeric_limits<uint8_t>::max() || m_highThresh > std::numeric_limits<uint8_t>::max()))
+  {
+    setWarningCondition(53000, "Either the Lower or Upper threshold values are larger than the larges possibly value for UInt8. Valid values are between [0, 255]");
+  }
+  if(arrayType == ArrayType::UInt16 && (m_lowThresh > std::numeric_limits<uint16_t>::max() || m_highThresh > std::numeric_limits<uint16_t>::max()))
+  {
+    setWarningCondition(53001, "Either the Lower or Upper threshold values are larger than the larges possibly value for UInt8. Valid values are between [0, 65535]");
+  }
+  if(m_lowThresh > m_highThresh)
+  {
+    setErrorCondition(-53030, "The lower threshold is greater than the upper threshold.");
+  }
+
+  // Create all the 'Corrected Input Images'
+  for(const auto& dcName : m_DataContainers)
+  {
+    DataContainer::Pointer dc = dca->getDataContainer(dcName);
+    if(nullptr != dc)
+    {
+      AttributeMatrix::Pointer am = dc->getAttributeMatrix(getCellAttributeMatrixName());
+      if(nullptr != am)
+      {
+        switch(arrayType)
+        {
+        case ArrayType::UInt8:
+          am->createNonPrereqArray<UInt8ArrayType>(this, getCorrectedImageDataArrayName(), 0, {1});
+          break;
+        case ArrayType::UInt16:
+          am->createNonPrereqArray<UInt16ArrayType>(this, getCorrectedImageDataArrayName(), 0, {1});
+          break;
+        case ArrayType::Float32:
+          am->createNonPrereqArray<FloatArrayType>(this, getCorrectedImageDataArrayName(), 0, {1});
+          break;
+        default:
+          setErrorCondition(-53010, "Could create the corrected image Attribute Array because the Input array type is not UInt8, UInt16 or Float");
+          break;
+        }
+      }
+    }
+  }
+
+  if(m_ExportCorrectedImages)
+  {
+    if(m_OutputPath.isEmpty())
+    {
+      QString ss = QObject::tr("The output path must be set");
+      setErrorCondition(-53011, ss);
+      return;
+    }
+    if(m_OutputPath.endsWith("/"))
+    {
+      m_OutputPath.chop(1);
+    }
+
+    if(m_FileExtension.isEmpty())
+    {
+      QString ss = QObject::tr("The file extension must be set.");
+      setErrorCondition(-53012, ss);
+      return;
+    }
+  }
   IGeometryGrid::Pointer outputGridGeom = checkInputArrays(arrayType, geomType);
 
   if(getErrorCode() < 0)
@@ -446,9 +651,17 @@ void CalculateBackground::dataCheck()
     return;
   }
 
-  DataContainer::Pointer outputDc = dca->createNonPrereqDataContainer(this, getOutputDataContainerPath(), DataContainerID10);
+  DataContainer::Pointer outputDc = dca->createNonPrereqDataContainer(this, getBackgroundDataContainerPath(), DataContainerID10);
   if(getErrorCode() < 0)
   {
+    return;
+  }
+
+  if(m_BackgroundDataContainerPath.getDataContainerName() != m_BackgroundCellAttributeMatrixPath.getDataContainerName())
+  {
+    setErrorCondition(
+        -53009,
+        QString("The '%1', '%2' and '%3' must all have the same Data Container.").arg(::k_BackgroundDataContainerLabel).arg(::k_BackgroundAttributeMatrixLabel).arg(::k_BackgroundAttributeArrayLabel));
     return;
   }
 
@@ -456,18 +669,25 @@ void CalculateBackground::dataCheck()
 
   QVector<size_t> tDims = {0, 0, 0};
   std::tie(tDims[0], tDims[1], tDims[2]) = outputGridGeom->getDimensions();
-  AttributeMatrix::Pointer outputAttrMat = outputDc->createNonPrereqAttributeMatrix(this, getOutputCellAttributeMatrixPath(), tDims, AttributeMatrix::Type::Cell, AttributeMatrixID20);
+  AttributeMatrix::Pointer outputAttrMat = outputDc->createNonPrereqAttributeMatrix(this, getBackgroundCellAttributeMatrixPath(), tDims, AttributeMatrix::Type::Cell, AttributeMatrixID20);
+
+  if(m_BackgroundCellAttributeMatrixPath.getAttributeMatrixName() != m_BackgroundImageArrayPath.getAttributeMatrixName())
+  {
+    setErrorCondition(-53009, QString("The '%1' and '%2' must all have the same Attribute Matrix.").arg(::k_BackgroundAttributeMatrixLabel).arg(::k_BackgroundAttributeArrayLabel));
+    return;
+  }
 
   switch(arrayType)
   {
   case ArrayType::UInt8:
-    outputAttrMat->createNonPrereqArray<UInt8ArrayType>(this, m_OutputImageArrayPath.getDataArrayName(), 0, cDims, DataArrayID30);
+    outputAttrMat->createNonPrereqArray<UInt8ArrayType>(this, m_BackgroundImageArrayPath.getDataArrayName(), 0, cDims, DataArrayID30);
+
     break;
   case ArrayType::UInt16:
-    outputAttrMat->createNonPrereqArray<UInt16ArrayType>(this, m_OutputImageArrayPath.getDataArrayName(), 0, cDims, DataArrayID30);
+    outputAttrMat->createNonPrereqArray<UInt16ArrayType>(this, m_BackgroundImageArrayPath.getDataArrayName(), 0, cDims, DataArrayID30);
     break;
   case ArrayType::Float32:
-    outputAttrMat->createNonPrereqArray<FloatArrayType>(this, m_OutputImageArrayPath.getDataArrayName(), 0, cDims, DataArrayID30);
+    outputAttrMat->createNonPrereqArray<FloatArrayType>(this, m_BackgroundImageArrayPath.getDataArrayName(), 0, cDims, DataArrayID30);
     break;
   default:
     setErrorCondition(-53006, "A valid Attribute Array type (UInt8, UInt16, or Float) is required for this filter.");
@@ -481,12 +701,12 @@ void CalculateBackground::dataCheck()
 void CalculateBackground::preflight()
 {
   // These are the REQUIRED lines of CODE to make sure the filter behaves correctly
-  setInPreflight(true); // Set the fact that we are preflighting.
-  emit preflightAboutToExecute(); // Emit this signal so that other widgets can do one file update
+  setInPreflight(true);              // Set the fact that we are preflighting.
+  emit preflightAboutToExecute();    // Emit this signal so that other widgets can do one file update
   emit updateFilterParameters(this); // Emit this signal to have the widgets push their values down to the filter
-  dataCheck(); // Run our DataCheck to make sure everthing is setup correctly
-  emit preflightExecuted(); // We are done preflighting this filter
-  setInPreflight(false); // Inform the system this filter is NOT in preflight mode anymore.
+  dataCheck();                       // Run our DataCheck to make sure everthing is setup correctly
+  emit preflightExecuted();          // We are done preflighting this filter
+  setInPreflight(false);             // Inform the system this filter is NOT in preflight mode anymore.
 }
 
 // -----------------------------------------------------------------------------
@@ -501,6 +721,22 @@ void CalculateBackground::execute()
   if(getErrorCode() < 0)
   {
     return;
+  }
+  if(m_ExportCorrectedImages)
+  {
+    QString ss;
+    QDir dir;
+    if(!dir.mkpath(m_OutputPath))
+    {
+      ss = QObject::tr("Error creating output path '%1'").arg(m_OutputPath);
+      setErrorCondition(-53014, ss);
+      return;
+    }
+
+    if(!m_FileExtension.startsWith(".")) // if no '.', add '.' to file extension
+    {
+      m_FileExtension = "." + m_FileExtension;
+    }
   }
 
   ArrayType arrayType = getArrayType();
@@ -588,6 +824,16 @@ void CalculateBackground::calculateOutputValues(ArrayType arrayType, GeomType ge
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void CalculateBackground::notifyFeatureCompleted(const QString& dcName)
+{
+  QMutexLocker locker(&m_NotifyMessage);
+  QString ss = QObject::tr("%1 Correction Completed").arg(dcName);
+  notifyStatusMessage(ss);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString CalculateBackground::getCompiledLibraryName() const
 {
   return ZeissImportConstants::ZeissImportBaseName;
@@ -608,7 +854,7 @@ const QString CalculateBackground::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  ZeissImport::Version::Major() << "." << ZeissImport::Version::Minor() << "." << ZeissImport::Version::Patch();
+  vStream << ZeissImport::Version::Major() << "." << ZeissImport::Version::Minor() << "." << ZeissImport::Version::Patch();
   return version;
 }
 
@@ -691,7 +937,7 @@ AbstractFilter::Pointer CalculateBackground::newFilterInstance(bool copyFilterPa
       tDims[1] = dims[1];
       tDims[2] = dims[2];
 
-      //  m->getAttributeMatrix(getOutputCellAttributeMatrixPath())->resizeAttributeArrays(tDims);
+      //  m->getAttributeMatrix(getBackgroundCellAttributeMatrixPath())->resizeAttributeArrays(tDims);
       //  if(nullptr != m_BackgroundImagePtr.lock())                          /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
       //  { m_BackgroundImage = m_BackgroundImagePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 

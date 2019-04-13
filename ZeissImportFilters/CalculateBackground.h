@@ -30,7 +30,7 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #pragma once
 
-
+#include <QtCore/QMutex>
 #include <QtCore/QString>
 #include <QtXml/QDomDocument>
 
@@ -58,11 +58,15 @@ class ZeissImport_EXPORT CalculateBackground : public AbstractFilter
   PYB11_CREATE_BINDINGS(CalculateBackground SUPERCLASS AbstractFilter)
   PYB11_PROPERTY(QStringList DataContainers READ getDataContainers WRITE setDataContainers)
   PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
-  PYB11_PROPERTY(DataArrayPath ImageDataArrayName READ getImageDataArrayName WRITE setImageDataArrayName)
+  PYB11_PROPERTY(QString ImageDataArrayName READ getImageDataArrayName WRITE setImageDataArrayName)
+  PYB11_PROPERTY(QString CorrectedImageDataArrayName READ getCorrectedImageDataArrayName WRITE setCorrectedImageDataArrayName)
+  PYB11_PROPERTY(bool ExportCorrectedImages READ getExportCorrectedImages WRITE setExportCorrectedImages)
+  PYB11_PROPERTY(QString OutputPath READ getOutputPath WRITE setOutputPath)
+  PYB11_PROPERTY(QString FileExtension READ getFileExtension WRITE setFileExtension)
 
-  PYB11_PROPERTY(DataArrayPath OutputDataContainerPath READ getOutputDataContainerPath WRITE setOutputDataContainerPath)
-  PYB11_PROPERTY(DataArrayPath OutputCellAttributeMatrixPath READ getOutputCellAttributeMatrixPath WRITE setOutputCellAttributeMatrixPath)
-  PYB11_PROPERTY(DataArrayPath OutputImageArrayPath READ getOutputImageArrayPath WRITE setOutputImageArrayPath)
+  PYB11_PROPERTY(DataArrayPath BackgroundDataContainerPath READ getBackgroundDataContainerPath WRITE setBackgroundDataContainerPath)
+  PYB11_PROPERTY(DataArrayPath BackgroundCellAttributeMatrixPath READ getBackgroundCellAttributeMatrixPath WRITE setBackgroundCellAttributeMatrixPath)
+  PYB11_PROPERTY(DataArrayPath BackgroundImageArrayPath READ getBackgroundImageArrayPath WRITE setBackgroundImageArrayPath)
 
   PYB11_PROPERTY(uint32_t lowThresh READ getlowThresh WRITE setlowThresh)
   PYB11_PROPERTY(uint32_t highThresh READ gethighThresh WRITE sethighThresh)
@@ -90,14 +94,26 @@ public:
   SIMPL_FILTER_PARAMETER(QString, ImageDataArrayName)
   Q_PROPERTY(QString ImageDataArrayName READ getImageDataArrayName WRITE setImageDataArrayName)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, OutputDataContainerPath)
-  Q_PROPERTY(DataArrayPath OutputDataContainerPath READ getOutputDataContainerPath WRITE setOutputDataContainerPath)
+  SIMPL_FILTER_PARAMETER(QString, CorrectedImageDataArrayName)
+  Q_PROPERTY(QString CorrectedImageDataArrayName READ getCorrectedImageDataArrayName WRITE setCorrectedImageDataArrayName)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, OutputCellAttributeMatrixPath)
-  Q_PROPERTY(DataArrayPath OutputCellAttributeMatrixPath READ getOutputCellAttributeMatrixPath WRITE setOutputCellAttributeMatrixPath)
+  SIMPL_FILTER_PARAMETER(bool, ExportCorrectedImages)
+  Q_PROPERTY(bool ExportCorrectedImages READ getExportCorrectedImages WRITE setExportCorrectedImages)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, OutputImageArrayPath)
-  Q_PROPERTY(DataArrayPath OutputImageArrayPath READ getOutputImageArrayPath WRITE setOutputImageArrayPath)
+  SIMPL_FILTER_PARAMETER(QString, OutputPath)
+  Q_PROPERTY(QString OutputPath READ getOutputPath WRITE setOutputPath)
+
+  SIMPL_FILTER_PARAMETER(QString, FileExtension)
+  Q_PROPERTY(QString FileExtension READ getFileExtension WRITE setFileExtension)
+
+  SIMPL_FILTER_PARAMETER(DataArrayPath, BackgroundDataContainerPath)
+  Q_PROPERTY(DataArrayPath BackgroundDataContainerPath READ getBackgroundDataContainerPath WRITE setBackgroundDataContainerPath)
+
+  SIMPL_FILTER_PARAMETER(DataArrayPath, BackgroundCellAttributeMatrixPath)
+  Q_PROPERTY(DataArrayPath BackgroundCellAttributeMatrixPath READ getBackgroundCellAttributeMatrixPath WRITE setBackgroundCellAttributeMatrixPath)
+
+  SIMPL_FILTER_PARAMETER(DataArrayPath, BackgroundImageArrayPath)
+  Q_PROPERTY(DataArrayPath BackgroundImageArrayPath READ getBackgroundImageArrayPath WRITE setBackgroundImageArrayPath)
 
   SIMPL_FILTER_PARAMETER(uint32_t, lowThresh)
   Q_PROPERTY(uint32_t lowThresh READ getlowThresh WRITE setlowThresh)
@@ -116,6 +132,12 @@ public:
 
   SIMPL_FILTER_PARAMETER(FloatVec3Type, Radius)
   Q_PROPERTY(FloatVec3Type Radius READ getRadius WRITE setRadius)
+
+  /**
+   * @brief notifyFeatureCompleted
+   * @return
+   */
+  void notifyFeatureCompleted(const QString& dcName);
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -302,6 +324,8 @@ protected:
   }
 
 private:
+  QMutex m_NotifyMessage;
+
 public:
   CalculateBackground(const CalculateBackground&) = delete;            // Copy Constructor Not Implemented
   CalculateBackground(CalculateBackground&&) = delete;                 // Move Constructor Not Implemented

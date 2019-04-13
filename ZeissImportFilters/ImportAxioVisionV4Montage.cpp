@@ -64,7 +64,7 @@
 #define ZIF_PRINT_DBG_MSGS 0
 
 static const QString k_AttributeArrayNames("AttributeArrayNames");
-static const QString k_DataContaineNameDefaultName("Zeiss Axio Vision Montage");
+static const QString k_DataContaineNameDefaultName("Tile");
 static const QString k_TileAttributeMatrixDefaultName("Tile Data");
 static const QString k_GrayScaleTempArrayName("gray_scale_temp");
 static const QString k_AxioVisionMetaData("AxioVision MetaData");
@@ -112,7 +112,7 @@ ImportAxioVisionV4Montage::ImportAxioVisionV4Montage()
 : m_InputFile("")
 , m_DataContainerName(k_DataContaineNameDefaultName)
 , m_CellAttributeMatrixName(k_TileAttributeMatrixDefaultName)
-, m_ImageDataArrayName(SIMPL::CellData::ImageData)
+, m_ImageDataArrayName("Image Data")
 , m_MetaDataAttributeMatrixName(k_AxioVisionMetaData)
 , m_ConvertToGrayScale(false)
 , m_ImportAllMetaData(false)
@@ -145,7 +145,7 @@ SIMPL_PIMPL_PROPERTY_DEF(ImportAxioVisionV4Montage, ZeissTagsXmlSection::Pointer
 void ImportAxioVisionV4Montage::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
-  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("AxioVision XML File (_meta.xml)", InputFile, FilterParameter::Parameter, ImportAxioVisionV4Montage, "*[0]ml"));
+  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("AxioVision XML File (_meta.xml)", InputFile, FilterParameter::Parameter, ImportAxioVisionV4Montage, "*.xml"));
 
   PreflightUpdatedValueFilterParameter::Pointer param = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Montage Information", MontageInformation, FilterParameter::Parameter, ImportAxioVisionV4Montage);
   param->setReadOnly(true);
