@@ -125,6 +125,10 @@ void ImportImageMontage::dataCheck()
 
   QString ss;
 
+  ss = QObject::tr("This filter is NOT supported or working.");
+  setErrorCondition(-1, ss);
+  return;
+#if 0
   if(m_InputFileListInfo.InputPath.isEmpty())
   {
     ss = QObject::tr("The input directory must be set");
@@ -185,8 +189,8 @@ void ImportImageMontage::dataCheck()
     readImage(dap, true);
     // The previous call will add an attribute array that we don't need at this point
     // so just remove it.
-    AttributeMatrix::Pointer am = m->getAttributeMatrix(getCellAttributeMatrixName());
-    am->removeAttributeArray(fi.baseName());
+    //    AttributeMatrix::Pointer am = m->getAttributeMatrix(getCellAttributeMatrixName());
+    //    am->removeAttributeArray(fi.baseName());
 
     AttributeMatrix::Pointer mdAttrMat = getDataContainerArray()->getDataContainer(getDataContainerName())->getAttributeMatrix(getMetaDataAttributeMatrixName());
     size_t availableFileCount = 0;
@@ -222,6 +226,7 @@ void ImportImageMontage::dataCheck()
       }
     }
   }
+#endif
 }
 
 // -----------------------------------------------------------------------------

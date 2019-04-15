@@ -18,7 +18,7 @@ set(_PublicFilters
     ITKImageWriter
     ITKImportImageStack
     ImportVectorImageStack
-
+    ITKDiscreteGaussianImage
     ITKMedianImage
 )
 
@@ -85,7 +85,7 @@ if(NOT ITKImageProcessing_LeanAndMean)
     ITKRelabelComponentImage
     ITKGrayscaleGrindPeakImage
     ITKLaplacianSharpeningImage
-    ITKDiscreteGaussianImage
+
     ITKBinaryThresholdImage
     ITKGradientMagnitudeImage
     ITKSignedMaurerDistanceMapImage
@@ -164,6 +164,7 @@ endforeach()
 # be able to use them from the DREAM3D user interface.
 set(_PrivateFilters
   ITKImageProcessingBase
+  ImportImageMontage
 )
 
 #-----------------

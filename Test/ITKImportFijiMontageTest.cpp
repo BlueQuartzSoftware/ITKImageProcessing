@@ -154,6 +154,7 @@ public:
   // -----------------------------------------------------------------------------
   void operator()() override
   {
+    std::cout << "############# ITKImportFijiMontage ###############" << std::endl;
     int err = EXIT_SUCCESS;
 
     DREAM3D_REGISTER_TEST(this->TestFilterAvailability("ITKImportFijiMontage"));
