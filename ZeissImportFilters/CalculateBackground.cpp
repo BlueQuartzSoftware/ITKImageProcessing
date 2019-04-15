@@ -304,20 +304,8 @@ void calculateOutputValues(CalculateBackground* filter)
     backgroundArray[i] = static_cast<OutArrayType>(accumArray[i]);
   }
 
-  // Get the average value of the background image
-  AccumType average = 0;
-  for(const auto& v : accumArray)
-  {
-    average = average + v;
-  }
-  size_t count = accumArray.getNumberOfTuples();
-#if 0
-// This is here because using std::accumulate will NOT give proper results. There is a bug somewhere... 
-  std::cout << "average: " << average << std::endl;
-  AccumType accum = std::accumulate(accumArray.begin(), accumArray.end(), 0);
-  std::cout << "accum: " << accum << std::endl;
-#endif
-  average = average / count;
+  AccumType average = std::accumulate(accumArray.begin(), accumArray.end(), static_cast<AccumType>(0)) / accumArray.getNumberOfTuples();
+  
   // Divide Background
   if(filter->getDivideBackground())
   {
