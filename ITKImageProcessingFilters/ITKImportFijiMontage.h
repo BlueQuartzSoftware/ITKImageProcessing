@@ -27,64 +27,88 @@
 * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *
 * The code contained herein was partially funded by the followig contracts:
+*    United States Air Force Prime Contract FA8650-07-D-5800
 *    United States Air Force Prime Contract FA8650-10-D-5210
+*    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #pragma once
 
-#include <QtCore/QDateTime>
+#include <QtCore/QFile>
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/DataArrays/StringDataArray.h"
+#include "SIMPLib/FilterParameters/FileListInfoFilterParameter.h"
+#include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/Geometry/ImageGeom.h"
-#include "SIMPLib/ITK/itkDream3DImage.h"
-#include "SIMPLib/ITK/itkImageReaderHelper.h"
 #include "SIMPLib/SIMPLib.h"
 
-#include <itkImageFileReader.h>
+#include "SIMPLib/ITK/itkImageReaderHelper.h"
+#include "SIMPLib/ITK/itkFijiConfigurationFileReader.hpp"
 
+#include "ITKImageProcessing/ITKImageProcessingFilters/ITKImageReader.h"
 #include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 // our PIMPL private class
-class ITKImageReaderPrivate;
+class ITKImportFijiMontagePrivate;
 
 /**
- * @brief The ITKImageProcessingFilter class. See [Filter documentation](@ref itkimageprocessingfilter) for details.
+ * @brief The ITKImportFijiMontage class. See [Filter documentation](@ref ITKImportFijiMontage) for details.
  */
-class ITKImageProcessing_EXPORT ITKImageReader : public AbstractFilter
+class ITKImageProcessing_EXPORT ITKImportFijiMontage : public AbstractFilter
 {
   Q_OBJECT
-  PYB11_CREATE_BINDINGS(ITKImageReader SUPERCLASS AbstractFilter)
-  PYB11_PROPERTY(QString FileName READ getFileName WRITE setFileName)
-  PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
+  PYB11_CREATE_BINDINGS(ITKImportFijiMontage SUPERCLASS AbstractFilter)
+  PYB11_PROPERTY(QString DataContainerPrefix READ getDataContainerPrefix WRITE setDataContainerPrefix)
   PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
-  PYB11_PROPERTY(QString ImageDataArrayName READ getImageDataArrayName WRITE setImageDataArrayName)
-  Q_DECLARE_PRIVATE(ITKImageReader)
-
+  PYB11_PROPERTY(QString FijiConfigFilePath READ getFijiConfigFilePath WRITE setFijiConfigFilePath)
+  PYB11_PROPERTY(QString AttributeArrayName READ getAttributeArrayName WRITE setAttributeArrayName)
+  Q_DECLARE_PRIVATE(ITKImportFijiMontage)
 public:
-  SIMPL_SHARED_POINTERS(ITKImageReader)
-  SIMPL_FILTER_NEW_MACRO(ITKImageReader)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKImageReader, AbstractFilter)
+  SIMPL_SHARED_POINTERS(ITKImportFijiMontage)
+  SIMPL_FILTER_NEW_MACRO(ITKImportFijiMontage)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKImportFijiMontage, AbstractFilter)
 
-  ~ITKImageReader() override;
+  ~ITKImportFijiMontage() override;
 
-  SIMPL_FILTER_PARAMETER(QString, FileName)
-  Q_PROPERTY(QString FileName READ getFileName WRITE setFileName)
-
-  SIMPL_FILTER_PARAMETER(DataArrayPath, DataContainerName)
-  Q_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
+  SIMPL_FILTER_PARAMETER(QString, DataContainerPrefix)
+  Q_PROPERTY(QString DataContainerPrefix READ getDataContainerPrefix WRITE setDataContainerPrefix)
 
   SIMPL_FILTER_PARAMETER(QString, CellAttributeMatrixName)
   Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
-  SIMPL_FILTER_PARAMETER(QString, ImageDataArrayName)
-  Q_PROPERTY(QString ImageDataArrayName READ getImageDataArrayName WRITE setImageDataArrayName)
+  SIMPL_FILTER_PARAMETER(QString, AttributeArrayName)
+  Q_PROPERTY(QString AttributeArrayName READ getAttributeArrayName WRITE setAttributeArrayName)
 
-  SIMPL_PIMPL_PROPERTY_DECL(QString, FileNameCache)
+  SIMPL_FILTER_PARAMETER(QString, FijiConfigFilePath)
+  Q_PROPERTY(QString FijiConfigFilePath READ getFijiConfigFilePath WRITE setFijiConfigFilePath)
+
+  SIMPL_GET_PROPERTY(int, RowCount)
+  Q_PROPERTY(int RowCount READ getRowCount)
+
+  SIMPL_GET_PROPERTY(int, ColumnCount)
+  Q_PROPERTY(int ColumnCount READ getColumnCount)
+
+  typedef std::vector<ITKImageReader::Pointer> ImageReaderVector;
+  typedef std::vector<itk::FijiImageTileData> TileDataVector;
+
+  SIMPL_PIMPL_PROPERTY_DECL(QString, FijiConfigFilePathCache)
   SIMPL_PIMPL_PROPERTY_DECL(QDateTime, LastRead)
-  SIMPL_PIMPL_PROPERTY_DECL(IDataArray::Pointer, ImageArrayCache)
-  SIMPL_PIMPL_PROPERTY_DECL(ImageGeom::Pointer, DCGeometryCache)
+  SIMPL_PIMPL_PROPERTY_DECL(ImageReaderVector, ImageReaderCache)
+  SIMPL_PIMPL_PROPERTY_DECL(TileDataVector, TileDataCache)
+
+  /**
+   * @brief appendImageReaderToCache
+   * @param reader
+   */
+  void appendImageReaderToCache(const ITKImageReader::Pointer &reader);
+
+  /**
+   * @brief appendImageTileToCache
+   * @param tileData
+   */
+  void appendImageTileToCache(const itk::FijiImageTileData &tileData);
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -95,7 +119,7 @@ public:
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
-  */
+   */
   const QString getBrandingString() const override;
 
   /**
@@ -137,18 +161,13 @@ public:
   void setupFilterParameters() override;
 
   /**
-   * @brief readFilterParameters Reimplemented from @see AbstractFilter class
-   */
-  void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
-
-  /**
    * @brief execute Reimplemented from @see AbstractFilter class
    */
   void execute() override;
 
   /**
-  * @brief preflight Reimplemented from @see AbstractFilter class
-  */
+   * @brief preflight Reimplemented from @see AbstractFilter class
+   */
   void preflight() override;
 
 signals:
@@ -175,7 +194,8 @@ signals:
   void preflightExecuted();
 
 protected:
-  ITKImageReader();
+  ITKImportFijiMontage();
+
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
    */
@@ -186,19 +206,22 @@ protected:
    */
   void initialize();
 
-  /**
-   * @brief Include the declarations of the ITKImageReader helper functions that are common
-   * to a few different filters across different plugins.
-   */
-  ITK_IMAGE_READER_HELPER_DECL()
-
 private:
-  QScopedPointer<ITKImageReaderPrivate> const d_ptr;
+  QScopedPointer<ITKImportFijiMontagePrivate> const d_ptr;
 
-public:
-  ITKImageReader(const ITKImageReader&) = delete; // Copy Constructor Not Implemented
-  ITKImageReader(ITKImageReader&&) = delete;      // Move Constructor Not Implemented
-  ITKImageReader& operator=(const ITKImageReader&) = delete; // Copy Assignment Not Implemented
-  ITKImageReader& operator=(ITKImageReader&&) = delete;      // Move Assignment Not Implemented
+  int m_RowCount = 0;
+  int m_ColumnCount = 0;
+
+  /**
+   * @brief readDataFile
+   * @param imageTileData
+   */
+  void readImageFile(itk::FijiImageTileData imageTileData);
+
+public :
+  ITKImportFijiMontage(const ITKImportFijiMontage&) = delete; // Copy Constructor Not Implemented
+  ITKImportFijiMontage(ITKImportFijiMontage&&) = delete;                   // Move Constructor Not Implemented
+  ITKImportFijiMontage& operator=(const ITKImportFijiMontage&) = delete;   // Copy Assignment Not Implemented
+  ITKImportFijiMontage& operator=(ITKImportFijiMontage&&) = delete;        // Move Assignment Not Implemented
 };
 

@@ -17,15 +17,21 @@
 
 #include <itkImageFileReader.h>
 
+#include "ITKImageProcessing/ITKImageProcessingFilters/ITKImageReader.h"
+
 #include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
+ // our PIMPL private class
+class ITKImportRoboMetMontagePrivate;
+
 /**
- * @brief The ImportRegisteredImageMontage class. See [Filter documentation](@ref importregisteredimagemontage) for details.
+ * @brief The ITKImportRoboMetMontage class. See [Filter documentation](@ref ITKImportRoboMetMontage) for details.
  */
-class ITKImageProcessing_EXPORT ImportRegisteredImageMontage : public AbstractFilter
+class ITKImageProcessing_EXPORT ITKImportRoboMetMontage : public AbstractFilter
 {
   Q_OBJECT
-  PYB11_CREATE_BINDINGS(ImportRegisteredImageMontage SUPERCLASS AbstractFilter)
+  PYB11_CREATE_BINDINGS(ITKImportRoboMetMontage SUPERCLASS AbstractFilter)
+  PYB11_PROPERTY(int SliceNumber READ getSliceNumber WRITE setSliceNumber)
   PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
   PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
   PYB11_PROPERTY(QString MetaDataAttributeMatrixName READ getMetaDataAttributeMatrixName WRITE setMetaDataAttributeMatrixName)
@@ -34,19 +40,32 @@ class ITKImageProcessing_EXPORT ImportRegisteredImageMontage : public AbstractFi
   PYB11_PROPERTY(QString RegistrationFile READ getRegistrationFile WRITE setRegistrationFile)
   PYB11_PROPERTY(FileListInfo_t InputFileListInfo READ getInputFileListInfo WRITE setInputFileListInfo)
   PYB11_PROPERTY(QString RegistrationCoordinatesArrayName READ getRegistrationCoordinatesArrayName WRITE setRegistrationCoordinatesArrayName)
-  PYB11_PROPERTY(QString AttributeArrayNamesArrayName READ getAttributeArrayNamesArrayName WRITE setAttributeArrayNamesArrayName)
+  PYB11_PROPERTY(QString AttributeArrayName READ getAttributeArrayName WRITE setAttributeArrayName)
+  PYB11_PROPERTY(QString ImageFilePrefix READ getImageFilePrefix WRITE setImageFilePrefix)
+  PYB11_PROPERTY(QString ImageFileSuffix READ getImageFileSuffix WRITE setImageFileSuffix)
+  PYB11_PROPERTY(QString ImageFileExtension READ getImageFileExtension WRITE setImageFileExtension)
+  Q_DECLARE_PRIVATE(ITKImportRoboMetMontage)
 public:
-  SIMPL_SHARED_POINTERS(ImportRegisteredImageMontage)
-  SIMPL_FILTER_NEW_MACRO(ImportRegisteredImageMontage)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ImportRegisteredImageMontage, AbstractFilter)
+  SIMPL_SHARED_POINTERS(ITKImportRoboMetMontage)
+  SIMPL_FILTER_NEW_MACRO(ITKImportRoboMetMontage)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKImportRoboMetMontage, AbstractFilter)
 
-  ~ImportRegisteredImageMontage() override;
+  ~ITKImportRoboMetMontage() override;
+  /**
+   * @brief These get filled out if there are errors. Negative values are error codes
+   */
+  SIMPL_INSTANCE_PROPERTY(int, ErrorCode)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, DataContainerName)
-  Q_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
+  SIMPL_INSTANCE_STRING_PROPERTY(ErrorMessage)
+
+  SIMPL_FILTER_PARAMETER(QString, DataContainerName)
+  Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
 
   SIMPL_FILTER_PARAMETER(QString, CellAttributeMatrixName)
   Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
+
+  SIMPL_FILTER_PARAMETER(int, SliceNumber)
+  Q_PROPERTY(int SliceNumber READ getSliceNumber WRITE setSliceNumber)
 
   SIMPL_FILTER_PARAMETER(QString, MetaDataAttributeMatrixName)
   Q_PROPERTY(QString MetaDataAttributeMatrixName READ getMetaDataAttributeMatrixName WRITE setMetaDataAttributeMatrixName)
@@ -60,14 +79,35 @@ public:
   SIMPL_FILTER_PARAMETER(QString, RegistrationFile)
   Q_PROPERTY(QString RegistrationFile READ getRegistrationFile WRITE setRegistrationFile)
 
-  SIMPL_FILTER_PARAMETER(FileListInfo_t, InputFileListInfo)
-  Q_PROPERTY(FileListInfo_t InputFileListInfo READ getInputFileListInfo WRITE setInputFileListInfo)
+  SIMPL_FILTER_PARAMETER(QString, AttributeArrayName)
+  Q_PROPERTY(QString AttributeArrayName READ getAttributeArrayName WRITE setAttributeArrayName)
 
-  SIMPL_FILTER_PARAMETER(QString, RegistrationCoordinatesArrayName)
-  Q_PROPERTY(QString RegistrationCoordinatesArrayName READ getRegistrationCoordinatesArrayName WRITE setRegistrationCoordinatesArrayName)
+  SIMPL_FILTER_PARAMETER(QString, ImageFilePrefix)
+  Q_PROPERTY(QString ImageFilePrefix READ getImageFilePrefix WRITE setImageFilePrefix)
 
-  SIMPL_FILTER_PARAMETER(QString, AttributeArrayNamesArrayName)
-  Q_PROPERTY(QString AttributeArrayNamesArrayName READ getAttributeArrayNamesArrayName WRITE setAttributeArrayNamesArrayName)
+  SIMPL_FILTER_PARAMETER(QString, ImageFileSuffix)
+  Q_PROPERTY(QString ImageFileSuffix READ getImageFileSuffix WRITE setImageFileSuffix)
+
+  SIMPL_FILTER_PARAMETER(QString, ImageFileExtension)
+  Q_PROPERTY(QString ImageFileExtension READ getImageFileExtension WRITE setImageFileExtension)
+
+  typedef QMap<QString, ITKImageReader::Pointer> ReaderMap;
+
+  SIMPL_PIMPL_PROPERTY_DECL(QString, RoboMetConfigFilePathCache)
+  SIMPL_PIMPL_PROPERTY_DECL(QDateTime, LastRead)
+  SIMPL_PIMPL_GET_PROPERTY_DECL(ReaderMap, ReaderCache)
+
+  /**
+   * @brief setReaderCacheValue
+   * @param filePath
+   * @param reader
+   */
+  void setReaderCacheValue(const QString &filePath, const ITKImageReader::Pointer &reader);
+
+  /**
+   * @brief clearReaderCache
+   */
+  void clearReaderCache();
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -120,11 +160,6 @@ public:
   void setupFilterParameters() override;
 
   /**
-   * @brief readFilterParameters Reimplemented from @see AbstractFilter class
-   */
-  void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
-
-  /**
    * @brief execute Reimplemented from @see AbstractFilter class
    */
   void execute() override;
@@ -158,14 +193,21 @@ signals:
   void preflightExecuted();
 
 protected:
-  ImportRegisteredImageMontage();
+  ITKImportRoboMetMontage();
 
   /**
-   * @brief parseRegistrationFile Parses the ASCII file with the registration coordinates
+   * @brief parseFijiConfigFile Parses the Fiji file with the configuration coordinates
    * @param reader QFile to read
    * @return Integer error value
    */
-  int32_t parseRegistrationFile(QFile& reader);
+  int32_t parseRoboMetConfigFile(const QString &filePath);
+
+  /**
+   * @brief parseRobometConfigFile Parses the Robomet file with the configuration coordinates
+   * @param reader QFile to read
+   * @return Integer error value
+   */
+  int32_t parseRobometConfigFile(QFile& reader);
 
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
@@ -177,14 +219,29 @@ protected:
    */
   void initialize();
 
-private:
-  DEFINE_DATAARRAY_VARIABLE(float, RegistrationCoordinates)
+  /**
+   * @brief Get the file path for an image file
+   */
+  QString getImageFilePath(const QString &filePath, int imageNumber, int row, int col);
 
-  StringDataArray::WeakPointer m_AttributeArrayNamesPtr;
-  QFile m_InStream;
+private:
+  QScopedPointer<ITKImportRoboMetMontagePrivate> const d_ptr;
+	
   int32_t m_NumImages;
-  QVector<QString> m_ArrayNames;
-  std::vector<float> m_Coords;
+  std::vector<QString> m_RegisteredFilePaths;
+  QMap<QString, QPointF> m_CoordsMap;
+  QMap<QString, QString> m_RowColIdMap;
+
+  /**
+   * @brief readDataFile
+   * @param filePath
+   */
+  void readImageFile(const QString &filePath);
+
+  /**
+   * @brief clearParsingCache
+   */
+  void clearParsingCache();
 
   /**
    * @brief Include the declarations of the ITKImageReader helper functions that are common
@@ -193,9 +250,9 @@ private:
   ITK_IMAGE_READER_HELPER_ImageDataArrayName() ITK_IMAGE_READER_HELPER_DECL()
 
 public :
-  ImportRegisteredImageMontage(const ImportRegisteredImageMontage&) = delete; // Copy Constructor Not Implemented
-  ImportRegisteredImageMontage(ImportRegisteredImageMontage&&) = delete;                   // Move Constructor Not Implemented
-  ImportRegisteredImageMontage& operator=(const ImportRegisteredImageMontage&) = delete;   // Copy Assignment Not Implemented
-  ImportRegisteredImageMontage& operator=(ImportRegisteredImageMontage&&) = delete;        // Move Assignment Not Implemented
+  ITKImportRoboMetMontage(const ITKImportRoboMetMontage&) = delete; // Copy Constructor Not Implemented
+  ITKImportRoboMetMontage(ITKImportRoboMetMontage&&) = delete;                   // Move Constructor Not Implemented
+  ITKImportRoboMetMontage& operator=(const ITKImportRoboMetMontage&) = delete;   // Copy Assignment Not Implemented
+  ITKImportRoboMetMontage& operator=(ITKImportRoboMetMontage&&) = delete;        // Move Assignment Not Implemented
 };
 

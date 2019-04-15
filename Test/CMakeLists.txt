@@ -13,11 +13,21 @@ set(TEST_NAMES
   ImportVectorImageStackTest
 
   ITKMedianImageTest
+)
 
-  # THESE ARE OLD, DON'T WORK but we are going to compile the tests since we are compiling the filters
-  ImportRegisteredImageMontageTest
-  ImportImageMontageTest
+if(ITK_VERSION_MAJOR EQUAL 4)
+  # Put ITK 4 Specific Modules in here
+elseif(ITK_VERSION_MAJOR EQUAL 5)
+  # Put ITK 5 Specific Modyles in here
+  set( TEST_NAMES
+      ${TEST_NAMES}
+      ITKImportFijiMontageTest
+      ITKImportRoboMetMontageTest
+
+      # ITKPCMTileRegistrationTest
+      # ITKStitchMontageTest
   )
+endif()
 
 if(NOT ITKImageProcessing_LeanAndMean)
   set(TEST_NAMES

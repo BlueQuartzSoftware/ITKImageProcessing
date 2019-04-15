@@ -37,7 +37,7 @@
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/Filtering/FilterPipeline.h"
 
-class ImportRegisteredImageMontageTest : public ITKTestBase
+class ITKImportFijiMontageTest : public ITKTestBase
 {
   const QString m_DataContainerName = QString("ImageMontage");
   const QString m_CellAMName = QString("CellData");
@@ -49,25 +49,25 @@ class ImportRegisteredImageMontageTest : public ITKTestBase
   FloatVec3Type m_Spacing;
 
 public:
-  ImportRegisteredImageMontageTest() = default;
+  ITKImportFijiMontageTest() = default;
 
-  virtual ~ImportRegisteredImageMontageTest() = default;
+  virtual ~ITKImportFijiMontageTest() = default;
 
-  ImportRegisteredImageMontageTest(const ImportRegisteredImageMontageTest&) = delete;            // Copy Constructor Not Implemented
-  ImportRegisteredImageMontageTest(ImportRegisteredImageMontageTest&&) = delete;                 // Move Constructor
-  ImportRegisteredImageMontageTest& operator=(const ImportRegisteredImageMontageTest&) = delete; // Copy Assignment Not Implemented
-  ImportRegisteredImageMontageTest& operator=(ImportRegisteredImageMontageTest&&) = delete;      // Move Assignment
+  ITKImportFijiMontageTest(const ITKImportFijiMontageTest&) = delete;            // Copy Constructor Not Implemented
+  ITKImportFijiMontageTest(ITKImportFijiMontageTest&&) = delete;                 // Move Constructor
+  ITKImportFijiMontageTest& operator=(const ITKImportFijiMontageTest&) = delete; // Copy Assignment Not Implemented
+  ITKImportFijiMontageTest& operator=(ITKImportFijiMontageTest&&) = delete;      // Move Assignment
 
   // -----------------------------------------------------------------------------
   //
   // -----------------------------------------------------------------------------
-  void TestImportRegisteredImageMontageTest()
+  void TestITKImportFijiMontageTest()
   {
     QVariant var;
     bool propWasSet = false;
     FilterManager* fm = FilterManager::Instance();
 
-    QString filtName = "ImportRegisteredImageMontage";
+    QString filtName = "ITKImportFijiMontage";
     IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filtName);
     DREAM3D_REQUIRE_VALID_POINTER(filterFactory.get());
     AbstractFilter::Pointer import = filterFactory->create();
@@ -132,7 +132,7 @@ public:
     DREAM3D_REQUIRE_VALID_POINTER(filterFactory.get());
     AbstractFilter::Pointer writer = filterFactory->create();
 
-    QString output = QString("%1/ImportRegisteredImageMontageTest.dream3d").arg(UnitTest::TestTempDir);
+    QString output = QString("%1/ITKImportFijiMontageTest.dream3d").arg(UnitTest::TestTempDir);
     FilesToRemove << output;
     var.setValue(output);
     propWasSet = writer->setProperty("OutputFile", var);
@@ -154,15 +154,16 @@ public:
   // -----------------------------------------------------------------------------
   void operator()() override
   {
-    //    int err = EXIT_SUCCESS;
+    std::cout << "############# ITKImportFijiMontage ###############" << std::endl;
+    int err = EXIT_SUCCESS;
 
-    //    DREAM3D_REGISTER_TEST(this->TestFilterAvailability("ImportRegisteredImageMontage"));
+    DREAM3D_REGISTER_TEST(this->TestFilterAvailability("ITKImportFijiMontage"));
 
-    //    DREAM3D_REGISTER_TEST(TestImportRegisteredImageMontageTest());
+    DREAM3D_REGISTER_TEST(TestITKImportFijiMontageTest());
 
-    //    if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
-    //    {
-    //      DREAM3D_REGISTER_TEST(this->RemoveTestFiles())
-    //    }
+    if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
+    {
+      DREAM3D_REGISTER_TEST(this->RemoveTestFiles())
+    }
   }
 };

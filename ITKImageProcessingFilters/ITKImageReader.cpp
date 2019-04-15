@@ -44,6 +44,32 @@
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
 #include "ITKImageProcessingPlugin.h"
 
+
+/* ############## Start Private Implementation ############################### */
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+class ITKImageReaderPrivate
+{
+  Q_DISABLE_COPY(ITKImageReaderPrivate)
+  Q_DECLARE_PUBLIC(ITKImageReader)
+  ITKImageReader* const q_ptr;
+  ITKImageReaderPrivate(ITKImageReader* ptr);
+  QString m_FileNameCache;
+  QDateTime m_LastRead;
+  IDataArray::Pointer m_ImageArrayCache;
+  ImageGeom::Pointer m_DCGeometryCache;
+};
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+ITKImageReaderPrivate::ITKImageReaderPrivate(ITKImageReader* ptr)
+: q_ptr(ptr)
+, m_FileNameCache("")
+{
+}
+
 enum createdPathID : RenameDataPath::DataID_t
 {
   DataContainerID = 1
@@ -57,6 +83,7 @@ ITKImageReader::ITKImageReader()
 , m_DataContainerName(SIMPL::Defaults::ImageDataContainerName)
 , m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName)
 , m_ImageDataArrayName(SIMPL::CellData::ImageData)
+, d_ptr(new ITKImageReaderPrivate(this))
 {
 }
 
@@ -64,6 +91,14 @@ ITKImageReader::ITKImageReader()
 //
 // -----------------------------------------------------------------------------
 ITKImageReader::~ITKImageReader() = default;
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+SIMPL_PIMPL_PROPERTY_DEF(ITKImageReader, QString, FileNameCache)
+SIMPL_PIMPL_PROPERTY_DEF(ITKImageReader, QDateTime, LastRead)
+SIMPL_PIMPL_PROPERTY_DEF(ITKImageReader, IDataArray::Pointer, ImageArrayCache)
+SIMPL_PIMPL_PROPERTY_DEF(ITKImageReader, ImageGeom::Pointer, DCGeometryCache)
 
 // -----------------------------------------------------------------------------
 //
