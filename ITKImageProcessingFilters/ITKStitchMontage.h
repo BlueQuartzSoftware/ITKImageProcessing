@@ -56,7 +56,7 @@ using AffineType = itk::AffineTransform<double, 3>;
 using CompositeTransform = itk::CompositeTransform<double, 3>;
 
 /**
- * @brief The ImportRegisteredImageMontage class. See [Filter documentation](@ref importregisteredimagemontage) for details.
+ * @brief The
  */
 class ITKImageProcessing_EXPORT ITKStitchMontage : public AbstractFilter
 {

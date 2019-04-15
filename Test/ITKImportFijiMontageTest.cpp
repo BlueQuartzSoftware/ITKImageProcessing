@@ -67,7 +67,7 @@ public:
     bool propWasSet = false;
     FilterManager* fm = FilterManager::Instance();
 
-    QString filtName = "ImportRegisteredImageMontage";
+    QString filtName = "ITKImportFijiMontage";
     IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filtName);
     DREAM3D_REQUIRE_VALID_POINTER(filterFactory.get());
     AbstractFilter::Pointer import = filterFactory->create();
@@ -156,7 +156,7 @@ public:
   {
     int err = EXIT_SUCCESS;
 
-    DREAM3D_REGISTER_TEST(this->TestFilterAvailability("ImportRegisteredImageMontage"));
+    DREAM3D_REGISTER_TEST(this->TestFilterAvailability("ITKImportFijiMontage"));
 
     DREAM3D_REGISTER_TEST(TestITKImportFijiMontageTest());
 

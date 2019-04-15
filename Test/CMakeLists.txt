@@ -9,11 +9,25 @@ set(${PLUGIN_NAME}Test_BINARY_DIR ${${PLUGIN_NAME}_BINARY_DIR}/Test)
 set(TEST_NAMES
   ITKImageProcessingReaderTest
   ITKImageProcessingWriterTest
-  ITKImportFijiMontageTest
-  ITKImportRoboMetMontageTest
   ITKImportImageStackTest
   ImportVectorImageStackTest
+
+  ITKMedianImageTest
+)
+
+if(ITK_VERSION_MAJOR EQUAL 4)
+  # Put ITK 4 Specific Modules in here
+elseif(ITK_VERSION_MAJOR EQUAL 5)
+  # Put ITK 5 Specific Modyles in here
+  set( TEST_NAMES
+      ${TEST_NAMES}
+      ITKImportFijiMontageTest
+      ITKImportRoboMetMontageTest
+
+      # ITKPCMTileRegistrationTest
+      # ITKStitchMontageTest
   )
+endif()
 
 if(NOT ITKImageProcessing_LeanAndMean)
   set(TEST_NAMES
@@ -77,7 +91,7 @@ if(NOT ITKImageProcessing_LeanAndMean)
     ITKSmoothingRecursiveGaussianImageTest
     ITKAdaptiveHistogramEqualizationImageTest
     ITKCastImageTest
-    ITKMedianImageTest
+
     ITKRGBToLuminanceImageTest
     ITKHistogramMatchingImageTest
     ITKMorphologicalWatershedImageTest

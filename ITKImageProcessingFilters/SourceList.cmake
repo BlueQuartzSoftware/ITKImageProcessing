@@ -28,9 +28,10 @@ elseif(ITK_VERSION_MAJOR EQUAL 5)
   # Put ITK 5 Specific Modyles in here
   set( _PublicFilters 
       ${_PublicFilters} 
-      ITKPCMTileRegistration
       ITKImportFijiMontage
       ITKImportRoboMetMontage
+
+      ITKPCMTileRegistration
       ITKStitchMontage
   )
 endif()
