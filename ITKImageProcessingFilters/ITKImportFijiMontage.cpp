@@ -50,7 +50,6 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/ITK/itkReadImageImpl.hpp"
 #include "SIMPLib/Utilities/FilePathGenerator.h"
-#include "SIMPLib/ITK/itkFijiConfigurationFileReader.hpp"
 
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"

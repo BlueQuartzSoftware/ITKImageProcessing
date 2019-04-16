@@ -45,6 +45,7 @@
 #include "SIMPLib/SIMPLib.h"
 
 #include "SIMPLib/ITK/itkImageReaderHelper.h"
+#include "SIMPLib/ITK/itkFijiConfigurationFileReader.hpp"
 
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKImageReader.h"
 #include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
