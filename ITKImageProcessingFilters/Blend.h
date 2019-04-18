@@ -59,6 +59,11 @@ protected:
   */
   void initialize();
 
+  /**
+  * @brief Registers images using an ITK's Amoeba implementation
+  **/
+  void registerImages(const QString&, const QString&);
+
 public:
   SIMPL_SHARED_POINTERS(Blend)
   SIMPL_FILTER_NEW_MACRO(Blend)
