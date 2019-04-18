@@ -20,6 +20,7 @@ set(_PublicFilters
     AxioVisionV4ToTileConfiguration
     ImportZenInfoMontage
 # These are from ITKImageProcessing Plugin
+    Blend
     ITKImageReader
     ITKImageWriter
     ITKImportImageStack
