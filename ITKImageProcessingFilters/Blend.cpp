@@ -42,35 +42,460 @@
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 //#include "SIMPLib/FilterParameters/MultiDataContainerSelectionFilterParameter.h"
 
-/*=========================================================================
- *
- *  Copyright Insight Software Consortium
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- *=========================================================================*/
-#include "itkAffineTransform.h"
+#include "ITKImageProcessing/ITKImageProcessingConstants.h"
+#include "ITKImageProcessing/ITKImageProcessingVersion.h"
+#include "SIMPLib/Geometry/ImageGeom.h"
 #include "itkAmoebaOptimizer.h"
-#include "itkCastImageFilter.h"
-#include "itkCenteredTransformInitializer.h"
-#include "itkFileOutputWindow.h"
-#include "itkImageFileReader.h"
-#include "itkImageFileWriter.h"
-#include "itkImageRegistrationMethod.h"
-#include "itkMatchCardinalityImageToImageMetric.h"
-#include "itkNearestNeighborInterpolateImageFunction.h"
-#include "itkResampleImageFilter.h"
-#include "itkSquaredDifferenceImageFilter.h"
+#include <itkFFTConvolutionImageFilter.h>
+
+using namespace BlendFilter;
+
+using Coord_T = size_t;
+template <class DataType>
+using DataPairs = std::vector<std::pair<DataType, DataType>>;
+
+using GrayScaleColor = uint8_t;
+using RGBColor = std::tuple<uint8_t, uint8_t, uint8_t>;
+// TODO Set Image Type with filter parameter
+using Image_T = GrayScaleColor;
+using Pixel_T = size_t;
+using PixelCoord = std::pair<Pixel_T, Pixel_T>;
+using Image = std::map<PixelCoord, Image_T>;
+using ImageArray = std::vector<std::vector<Image_T>>;
+
+using OverlapPairs = std::set<std::pair<PixelCoord, PixelCoord>>;
+
+class BlendFilter::ImageImpl
+{
+  Image m_image;
+  size_t m_res_width;
+  size_t m_res_height;
+
+  static Image DataContainerToImage(DataContainerShPtr dc, const QString& amName, const QString& dataAAName, const QString& xAAName, const QString& yAAName)
+  {
+    Image img{};
+    std::tuple<size_t, size_t, size_t> dims = dc->getGeometryAs<ImageGeom>()->getDimensions();
+    AttributeMatrixShPtr am = dc->getAttributeMatrix(amName);
+    UInt8ArrayType::Pointer dataAA = am->getAttributeArrayAs<UInt8ArrayType>(dataAAName);
+    FloatArrayType::Pointer xAA = am->getAttributeArrayAs<FloatArrayType>(xAAName);
+    FloatArrayType::Pointer yAA = am->getAttributeArrayAs<FloatArrayType>(yAAName);
+
+    for(size_t pxlIdx = 0; pxlIdx < std::get<0>(dims) * std::get<1>(dims); ++pxlIdx)
+    {
+      auto x = xAA->getValue(pxlIdx);
+      auto y = yAA->getValue(pxlIdx);
+      auto v = dataAA->getValue(pxlIdx);
+      img[std::make_pair(xAA->getValue(pxlIdx), yAA->getValue(pxlIdx))] = dataAA->getValue(pxlIdx);
+    }
+    return img;
+  }
+
+public:
+  ImageImpl(const ImageImpl&) = default;
+  ImageImpl(ImageImpl&&) = default;
+  ImageImpl& operator=(const ImageImpl& other) = default;
+  ImageImpl& operator=(ImageImpl&&) = default;
+
+  ImageImpl(const Image& image)
+  : m_image{image}
+  {
+    size_t maxX = 0;
+    size_t maxY = 0;
+    float x = 0;
+    float y = 0;
+    for(const auto& eachPixel : m_image)
+    {
+      x = eachPixel.first.first;
+      y = eachPixel.first.second;
+      maxX = roundf(x) > maxX ? roundf(x) : maxX;
+      maxY = roundf(y) > maxY ? roundf(y) : maxY;
+    }
+    m_res_width = maxX + 1;
+    m_res_height = maxY + 1;
+  }
+
+  ImageImpl(const DataContainerShPtr& dc, const QString& amName, const QString& dataAAName, const QString& xAAName, const QString& yAAName)
+  : ImageImpl(DataContainerToImage(dc, amName, dataAAName, xAAName, yAAName))
+  {
+  }
+
+  template <class T>
+  static DataPairs<T> make_product(size_t listOneSize, size_t listOneStart, size_t listTwoSize, size_t listTwoStart)
+  {
+    DataPairs<T> product{};
+    for(size_t listOneIndex = listOneStart; listOneIndex < listOneSize; listOneIndex++)
+    {
+      for(size_t listTwoIndex = listTwoStart; listTwoIndex < listTwoSize; listTwoIndex++)
+      {
+        product.push_back(std::make_pair(listTwoIndex, listOneIndex));
+      }
+    }
+    return product;
+  }
+
+  template <class T>
+  static DataPairs<T> make_product(size_t listOneSize, size_t listTwoSize)
+  {
+    return make_product<T>(listOneSize, 0, listTwoSize, 0);
+  }
+
+  std::pair<size_t, size_t> GetDimensions() const
+  {
+    return std::make_pair(m_res_width, m_res_height);
+  }
+
+  template <class T> static std::pair<T, T> NameToGridCoords(QString name)
+  {
+    // NOTE Ideally, 'R' and 'C' would be parameterized and maybe obtained from
+    // the Blend filter class itself, but this feels like a violation of SOLID
+    // Regardless, these values should be parameterized SOMEWHERE
+    int cLength = name.size() - name.indexOf('C') - 1;
+    T r = static_cast<T>(name.midRef(name.indexOf('R') + 1, name.size() - cLength - 2).toULong());
+    T c = static_cast<T>(name.rightRef(cLength).toULong());
+
+    return std::make_pair(r, c);
+  }
+
+  size_t NumPixels() const
+  {
+    return m_image.size();
+  }
+
+  bool PixelExists(PixelCoord pixelCoord) const
+  {
+    return m_image.find(pixelCoord) != m_image.end();
+  }
+
+  Image_T GetValue(PixelCoord pixelCoord) const
+  {
+    return m_image.at(pixelCoord);
+  }
+
+  static ImageGrid DataContainerArrayToImageGrid(DataContainerArrayShPtr dca, const QString& amName, const QString& dataAAName, const QString& xAAName, const QString& yAAName)
+  {
+    ImageGrid images{};
+    for(const auto& eachDC : dca->getDataContainers())
+    {
+      images.insert_or_assign(NameToGridCoords<Cell_T>(eachDC->getName()), DataContainerToImage(eachDC, amName, dataAAName, xAAName, yAAName));
+    }
+    return images;
+  }
+
+  ImageImpl Transform(std::vector<float> a) const
+  {
+    const float tolerance = 0.05f;
+    const float lastXIndex = m_res_width - 1 + tolerance;
+    const float lastYIndex = m_res_height - 1 + tolerance;
+    const size_t coeff_len = a.size() / 2;
+    const size_t d = roundf(sqrt(coeff_len));
+    const DataPairs<size_t> i_j = make_product<size_t>(d, d);
+
+    const float x_trans = (m_res_width - 1) / 2.0f;
+    const float y_trans = (m_res_height - 1) / 2.0f;
+    float x = 0;
+    float y = 0;
+    float u_v = 0;
+    float term = 0;
+
+    std::pair<int, int> eachIJ{};
+
+    Image distortedImage{};
+    for(const auto& pixel : m_image)
+    {
+      x = x_trans;
+      y = y_trans;
+      for(size_t idx = 0; idx < a.size(); ++idx)
+      {
+        eachIJ = i_j[idx - (idx >= i_j.size() ? i_j.size() : 0)];
+
+        u_v = pow((pixel.first.first - x_trans), eachIJ.first) * pow((pixel.first.second - y_trans), eachIJ.second);
+
+        term = u_v * a[idx];
+        idx < coeff_len ? x += term : y += term;
+      }
+
+      // This check effectively "clips" data
+      if(x >= -tolerance && x <= lastXIndex && y >= -tolerance && y <= lastYIndex)
+      {
+        distortedImage[std::make_pair(roundf(x), roundf(y))] = this->m_image.at(pixel.first);
+      }
+    }
+    return ImageImpl(distortedImage);
+  }
+
+  static void Print(const ImageGrid& imageGrid)
+  {
+    QString stream;
+    // Get the number of rows in the grid - this should work as long as a map is used (highest R value will be last)
+    Cell_T tileRows = imageGrid.rbegin()->first.first + 1;
+
+    for(Cell_T tileRowIdx = 0; tileRowIdx < tileRows; ++tileRowIdx)
+    {
+      // Get the maximum height
+      size_t max_height = 0;
+
+      // Populate the images in this row
+      std::vector<ImageArray> imageRow{};
+      for(const auto& eachImage : imageGrid)
+      {
+        // Get the dimensions of the image
+        size_t width = 0, height = 0;
+        std::tie(width, height) = eachImage.second.GetDimensions();
+        max_height = height > max_height ? height : max_height;
+        if(eachImage.first.first == tileRowIdx)
+        {
+          ImageArray imgArray(height, std::vector<Image_T>(width, 0));
+          for(const auto& eachPixel : eachImage.second.m_image)
+          {
+            // Use nearest-neighbor sampling to convert raw x, y pixels into integers
+            // Iterate through all of the pixels in the image
+            // When converting to array, pixel origin comes from lower-left
+            // corner - and need translated to origin in upper-left corner
+            imgArray[height - roundf(eachPixel.first.second) - 1][roundf(eachPixel.first.first)] = eachPixel.second;
+          }
+          imageRow.push_back(imgArray);
+        }
+      }
+
+      for(size_t row_idx = 0; row_idx < max_height; ++row_idx)
+      {
+        for(const auto& eachImage : imageRow)
+        {
+          // This could result in misaligned images if all heights are not the same
+          // Or in a worst-case, throw an out-of-index exception
+          // FIXME Should instead have a more robust way of lining up rows
+          // And skipping that image if it does not have the desired row_idx
+          for(const auto& eachCol : eachImage[row_idx])
+          {
+            stream += QString::number(eachCol) + " ";
+          }
+          stream += "  ";
+        }
+        stream += "\n";
+      }
+      stream += "\n";
+    }
+    qDebug().noquote() << stream.trimmed();
+  }
+};
+
+class BlendFilter::OverlapImpl
+{
+  std::pair<Cell_T, Cell_T> m_image1_key;
+  std::pair<Cell_T, Cell_T> m_image2_key;
+  OverlapPairs m_pairs;
+
+public:
+  OverlapImpl() = delete;
+  OverlapImpl(const OverlapImpl&) = delete;
+  OverlapImpl(OverlapImpl&&) = default;
+  OverlapImpl& operator=(const OverlapImpl&) = delete;
+  OverlapImpl& operator=(OverlapImpl&&) = delete;
+
+  OverlapImpl(std::pair<Cell_T, Cell_T> image1Key, std::pair<Cell_T, Cell_T> image2Key, OverlapPairs pairs)
+  {
+    m_image1_key = image1Key;
+    m_image2_key = image2Key;
+    m_pairs = pairs;
+  }
+
+  OverlapPairs GetOverlapPairs() const
+  {
+    return m_pairs;
+  }
+
+  std::pair<Cell_T, Cell_T> Image1Key() const
+  {
+    return m_image1_key;
+  }
+
+  std::pair<Cell_T, Cell_T> Image2Key() const
+  {
+    return m_image2_key;
+  }
+
+  void Print(ImageGrid imageGrid) const
+  {
+    Image img1{}, img2{};
+    Pixel_T lowestImage1X = m_pairs.begin()->first.first;
+    Pixel_T lowestImage1Y = m_pairs.begin()->first.second;
+    Pixel_T lowestImage2X = m_pairs.begin()->second.first;
+    Pixel_T lowestImage2Y = m_pairs.begin()->second.second;
+    for(const auto& eachPixel : m_pairs)
+    {
+      lowestImage1X = eachPixel.first.first < lowestImage1X ? eachPixel.first.first : lowestImage1X;
+      lowestImage1Y = eachPixel.first.second < lowestImage1Y ? eachPixel.first.second : lowestImage1Y;
+      lowestImage2X = eachPixel.second.first < lowestImage2X ? eachPixel.second.first : lowestImage2X;
+      lowestImage2Y = eachPixel.second.second < lowestImage2Y ? eachPixel.second.second : lowestImage2Y;
+    }
+
+    for(const auto& eachPixel : m_pairs)
+    {
+      img1.insert_or_assign({eachPixel.first.first - lowestImage1X, eachPixel.first.second - lowestImage1Y}, imageGrid.at(m_image1_key).GetValue(eachPixel.first));
+      img2.insert_or_assign({eachPixel.second.first - lowestImage2X, eachPixel.second.second - lowestImage2Y}, imageGrid.at(m_image2_key).GetValue(eachPixel.second));
+    }
+
+    ImageGrid overlapGrid;
+    overlapGrid.insert_or_assign(this->m_image1_key, ImageImpl{img1});
+    overlapGrid.insert_or_assign(this->m_image2_key, ImageImpl{img2});
+    ImageImpl::Print(overlapGrid);
+  }
+
+  static std::vector<OverlapImpl> DetermineOverlaps(const ImageGrid& imageGrid,  const float overlapPercentage)
+  {
+    std::vector<OverlapImpl> overlaps{};
+    size_t width, height, overlapDim, r, c;
+
+    for(const auto& eachImage : imageGrid)
+    {
+      std::tie(width, height) = eachImage.second.GetDimensions();
+
+      r = eachImage.first.first;
+      c = eachImage.first.second;
+      auto rightImage{imageGrid.find(std::make_pair(r, c + 1))};
+      auto bottomImage{imageGrid.find(std::make_pair(r + 1, c))};
+
+      if(rightImage != imageGrid.end())
+      {
+        OverlapPairs coords;
+        overlapDim = static_cast<size_t>(width * overlapPercentage);
+        for(size_t eachX = width - overlapDim; eachX < width; ++eachX)
+        {
+          for(size_t eachY = 0; eachY < height; ++eachY)
+          {
+            coords.insert({std::make_pair(eachX, eachY), std::make_pair(eachX + overlapDim - width, eachY)});
+          }
+        }
+        overlaps.push_back(OverlapImpl(std::make_pair(r, c), std::make_pair(r, c + 1), coords));
+      }
+      if(bottomImage != imageGrid.end())
+      {
+        OverlapPairs coords;
+        overlapDim = static_cast<size_t>(height * overlapPercentage);
+        for(size_t eachX = 0; eachX < width; ++eachX)
+        {
+          for(size_t eachY = height - overlapDim; eachY < height; ++eachY)
+          {
+            coords.insert({std::make_pair(eachX, eachY + overlapDim - height), std::make_pair(eachX, eachY)});
+          }
+        }
+        overlaps.push_back(OverlapImpl(std::make_pair(r, c), std::make_pair(r + 1, c), coords));
+      }
+    }
+    return overlaps;
+  }
+};
+
+class CostFunction : public itk::SingleValuedCostFunction
+{
+public:
+  // LOL this probably won't work...
+  static CostFunction::Pointer New()
+  {
+    return itk::SmartPointer<Self>();
+  }
+
+  // TODO Make this work as the call back function for the Amoeba Optimizer
+  // NOTE Which means the error calculation step should be substituted
+  // NOTE with a call to find the Convolution of the two FFT's on each overlap
+  const std::pair<Results, bool> operator()(const Simplex& simplex, const ImageGrid& imageGrid, const std::vector<OverlapImpl>& overlaps, const float lowTolerance, const float highTolerance)
+  {
+    bool converged = false;
+    Results results;
+
+    size_t matchedValues = 0;
+    const float matchPercentage = 0.9f;
+    const size_t desiredCoverage = static_cast<size_t>(overlaps[0].GetOverlapPairs().size() * matchPercentage);
+    float error = 0.0f;
+
+    // TODO The application of the transform will likely have to go in here
+    SimplexImageMap map{};
+    // TODO Parallelize this
+    for(const auto& eachTransform : simplex)
+    {
+      ImageGrid eachGrid;
+      // TODO Parallelize this
+      for(const auto& eachImage : imageGrid)
+      {
+        // Create an image grid where all images have been transformed by
+        // that simplex and add it to the tests vector
+        ImageImpl s = eachImage.second;
+        ImageImpl t = s.Transform(eachTransform);
+        eachGrid.insert_or_assign(eachImage.first, eachImage.second.Transform(eachTransform));
+      }
+      map.insert_or_assign(eachTransform, eachGrid);
+    }
+
+    for(const auto& eachPermutation : map) // TODO Parallelize this
+    {
+      error = 0.0f;
+      matchedValues = 0;
+
+      // NOTE This should effectively be replaced by obtaining the
+      // convolution of the FFT of two overlap regions
+      // NOTE Or use this area to call a callback that's passed in as a parameter
+      // to the Optimize function
+      for(const auto& eachOverlap : overlaps) // TODO Parallelize this
+      {
+        auto found1 = eachPermutation.second.find(eachOverlap.Image1Key());
+        auto found2 = eachPermutation.second.find(eachOverlap.Image2Key());
+
+        // Check if the length of the image/overlaps satisfies the desiredCoverage
+        // And that the images could be obtained
+        if(found1 == eachPermutation.second.end() ||
+           found1->second.NumPixels() < desiredCoverage ||
+           found2 == eachPermutation.second.end() ||
+           found2->second.NumPixels() < desiredCoverage)
+        {
+          continue;
+        }
+        size_t img1Pixels = found1->second.NumPixels();
+        size_t img2Pixels = found2->second.NumPixels();
+        qDebug() << img1Pixels << img2Pixels;
+
+        for(const auto& eachOverlapPixel : eachOverlap.GetOverlapPairs())
+        {
+          if (found1->second.PixelExists(eachOverlapPixel.first) && found2->second.PixelExists(eachOverlapPixel.second))
+          {
+            matchedValues += 1;
+            // Right now this optimizes the cost function
+            error += static_cast<float>(pow(abs(found1->second.GetValue(eachOverlapPixel.first) - found2->second.GetValue(eachOverlapPixel.second)), 2));
+          }
+        }
+      }
+
+      if(matchedValues < desiredCoverage)
+      {
+        continue;
+      }
+
+      // Insert the results of the error for that specific simplex
+      results.insert_or_assign(eachPermutation.first, error);
+      if(error < lowTolerance)
+      {
+        converged = true;
+        break;
+      }
+    }
+
+    // If there are results, check if they converged
+    if (!results.empty())
+    {
+      // Get the max error
+      std::pair<Transform, Error_T> maxElement = *std::max_element(results.begin(), results.end(), [](std::pair<Transform, Error_T> i, std::pair<Transform, Error_T> j) { return i.second < j.second; });
+
+      // Get the min error
+      std::pair<Transform, Error_T> minElement = *std::min_element(results.begin(), results.end(), [](std::pair<Transform, Error_T> i, std::pair<Transform, Error_T> j) { return i.second < j.second; });
+
+      // Converged if the error between max and min is small
+      if(abs(maxElement.second - minElement.second) < highTolerance)
+      {
+        converged = true;
+      }
+    }
+    return std::make_pair(results, converged);
+  }
+};
 
 // -----------------------------------------------------------------------------
 //
@@ -178,255 +603,6 @@ void Blend::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Blend::registerImages(const QString& file1Name, const QString& file2Name)
-{
-  // The types of each one of the components in the registration methods should
-  // be instantiated. First, we select the image dimension and the type for
-  // representing image pixels.
-  constexpr uint8_t Dimension = 2;
-  using Pixel_T = float;
-
-  //  The types of the input images are instantiated by the following lines.
-  using FixedImageType = itk::Image<Pixel_T, Dimension>;
-  using MovingImageType = itk::Image<Pixel_T, Dimension>;
-  using InterpolatorType = itk::NearestNeighborInterpolateImageFunction<MovingImageType, double>;
-  using OptimizerType = itk::AmoebaOptimizer;
-
-  // NOTE This will likely have to change
-  using TransformType = itk::AffineTransform<double, Dimension>;
-
-  // NOTE This will likely have to change
-  // NOTE Change to a metric that will behave like the ITK FFTConvolution
-  using MetricType = itk::MatchCardinalityImageToImageMetric<FixedImageType, MovingImageType>;
-
-  // NOTE This will likely have to change
-  //  The registration method type is instantiated using the types of the
-  //  fixed and moving images. This class is responsible for interconnecting
-  //  all the components we have described so far.
-  using RegistrationType = itk::ImageRegistrationMethod<FixedImageType, MovingImageType>;
-
-  MetricType::Pointer metric = MetricType::New();
-  metric->MeasureMatchesOff();
-
-  TransformType::Pointer transform = TransformType::New();
-  OptimizerType::Pointer optimizer = OptimizerType::New();
-  InterpolatorType::Pointer interpolator = InterpolatorType::New();
-
-  RegistrationType::Pointer registration = RegistrationType::New();
-  registration->SetMetric(metric);
-  registration->SetOptimizer(optimizer);
-  registration->SetTransform(transform);
-  registration->SetInterpolator(interpolator);
-
-  // NOTE This sets up the images to be registered!
-  //  In this example, the fixed and moving images are read from files. This
-  //  requires the \doxygen{ImageRegistrationMethod} to acquire its inputs to
-  //  the output of the readers.
-  //
-  itk::ImageFileReader<FixedImageType>::Pointer fixedImageReader = itk::ImageFileReader<FixedImageType>::New();
-  itk::ImageFileReader<MovingImageType>::Pointer movingImageReader = itk::ImageFileReader<MovingImageType>::New();
-  fixedImageReader->SetFileName(file1Name.toStdString());
-  movingImageReader->SetFileName(file2Name.toStdString());
-  registration->SetFixedImage(fixedImageReader->GetOutput());
-  registration->SetMovingImage(movingImageReader->GetOutput());
-
-  fixedImageReader->Update();
-  movingImageReader->Update();
-
-  // NOTE This is likely where some stuff will have to go on using the m_OverlapPercentage
-  // so that only the desired portions of the images are analyzed
-  //  The registration can be restricted to consider only a particular region
-  //  of the fixed image as input to the metric computation. This region is
-  //  defined by the \code{SetFixedImageRegion()} method.  You could use this
-  //  feature to reduce the computational time of the registration or to avoid
-  //  unwanted objects present in the image affecting the registration outcome.
-  //  In this example we use the full available content of the image. This
-  //  region is identified by the \code{BufferedRegion} of the fixed image.
-  //  Note that for this region to be valid the reader must first invoke its
-  //  \code{Update()} method.
-  registration->SetFixedImageRegion(fixedImageReader->GetOutput()->GetBufferedRegion());
-
-  // NOTE WHHHAAAATTTT????
-  // Here we initialize the transform to make sure that the center of
-  // rotation is set to the center of mass of the object in the fixed image.
-  using TransformInitializerType = itk::CenteredTransformInitializer<TransformType, FixedImageType, MovingImageType>;
-  TransformInitializerType::Pointer initializer = TransformInitializerType::New();
-  initializer->SetTransform(transform);
-  initializer->SetFixedImage(fixedImageReader->GetOutput());
-  initializer->SetMovingImage(movingImageReader->GetOutput());
-  initializer->MomentsOn();
-  initializer->InitializeTransform();
-
-  //  The parameters of the transform are initialized by passing them in an
-  //  array. This can be used to setup an initial known correction of the
-  //  misalignment. In this particular case, a translation transform is
-  //  being used for the registration. The array of parameters for this
-  //  transform is simply composed of the rotation matrix and the translation
-  //  values along each dimension.
-  using ParametersType = RegistrationType::ParametersType;
-  ParametersType initialParameters = transform->GetParameters();
-  double tx = 0.0;
-  double ty = 0.0;
-//  if(argc > 6)
-//  {
-//    tx = std::stod(argv[5]);
-//    ty = std::stod(argv[6]);
-//  }
-  initialParameters[4] = tx; // Initial offset in mm along X
-  initialParameters[5] = ty; // Initial offset in mm along Y
-  registration->SetInitialTransformParameters(initialParameters);
-
-  //  The ImageRegistrationMethod class orchestrates the ensemble to make sure
-  // that everything is in place before control is passed to the optimizer.
-  const unsigned int numberOfParameters = transform->GetNumberOfParameters();
-  OptimizerType::ParametersType simplexDelta(numberOfParameters);
-  // This parameter is tightly coupled to the translationScale below
-  constexpr double stepInParametricSpace = 0.01;
-  simplexDelta.Fill(stepInParametricSpace);
-  optimizer->AutomaticInitialSimplexOff();
-  optimizer->SetInitialSimplexDelta(simplexDelta);
-  optimizer->SetParametersConvergenceTolerance(1e-4); // about 0.005 degrees
-  optimizer->SetFunctionConvergenceTolerance(1e-6);   // variation in metric value
-  optimizer->SetMaximumNumberOfIterations(m_MaxIterations);
-  // This parameter is tightly coupled to the stepInParametricSpace above.
-  double translationScale = 1.0 / 1000.0;
-  using OptimizerScalesType = OptimizerType::ScalesType;
-  OptimizerScalesType optimizerScales(numberOfParameters);
-  optimizerScales[0] = 1.0;
-  optimizerScales[1] = 1.0;
-  optimizerScales[2] = 1.0;
-  optimizerScales[3] = 1.0;
-  optimizerScales[4] = translationScale;
-  optimizerScales[5] = translationScale;
-  optimizer->SetScales(optimizerScales);
-
-  //  The registration process is triggered by an invocation of the \code{Update()} method.
-  try
-  {
-    registration->Initialize();
-//    std::cout << "Initial Metric value  = " << metric->GetValue(initialParameters) << std::endl;
-    registration->Update();
-//    std::cout << "Optimizer stop condition = " << registration->GetOptimizer()->GetStopConditionDescription() << std::endl;
-  } catch(itk::ExceptionObject& err)
-  {
-    QString ss = QObject::tr("An error occurred registering some images. Skipping...");
-    setErrorCondition(-66700, ss);
-    notifyStatusMessage(ss);
-    return;
-  }
-
-  //  The result of the registration process is an array of parameters that
-  //  defines the spatial transformation in an unique way. This final result is
-  //  obtained using the \code{GetLastTransformParameters()} method.
-  ParametersType finalParameters = registration->GetLastTransformParameters();
-
-  // TODO A transform with better parameters can be used to better distort the
-  // image. There will be more than just translation components
-  //  In the case of the \doxygen{AffineTransform}, there is a straightforward
-  //  interpretation of the parameters.  The last two elements of the array
-  //  corresponds to a translation along one spatial dimension.
-  const double TranslationAlongX = finalParameters[4];
-  const double TranslationAlongY = finalParameters[5];
-
-  //  The optimizer can be queried for the actual number of iterations
-  //  performed to reach convergence.
-  const unsigned int numberOfIterations = optimizer->GetOptimizer()->get_num_evaluations();
-
-  //  The value of the image metric corresponding to the last set of parameters
-  //  can be obtained with the \code{GetValue()} method of the optimizer. Since
-  //  the AmoebaOptimizer does not yet support a call to GetValue(), we will
-  //  simply re-evaluate the metric at the final parameters.
-  const double bestValue = metric->GetValue(finalParameters);
-//  std::cout << "Result = " << std::endl;
-//  std::cout << " Translation X = " << TranslationAlongX << std::endl;
-//  std::cout << " Translation Y = " << TranslationAlongY << std::endl;
-//  std::cout << " Iterations    = " << numberOfIterations << std::endl;
-//  std::cout << " Metric value  = " << bestValue << std::endl;
-
-  // NOTE Is anything after this necessary?
-
-  //  It is common, as the last step of a registration task, to use the
-  //  resulting transform to map the moving image into the fixed image space.
-  //  This is easily done with the \doxygen{ResampleImageFilter}. Please
-  //  refer to Section~\ref{sec:ResampleImageFilter} for details on the use
-  //  of this filter.  First, a ResampleImageFilter type is instantiated
-  //  using the image types. It is convenient to use the fixed image type as
-  //  the output type since it is likely that the transformed moving image
-  //  will be compared with the fixed image.
-  using ResampleFilterType = itk::ResampleImageFilter<MovingImageType, FixedImageType>;
-
-  //  A transform of the same type used in the registration process should be
-  //  created and initialized with the parameters resulting from the
-  //  registration process.
-  TransformType::Pointer finalTransform = TransformType::New();
-  finalTransform->SetParameters(finalParameters);
-  finalTransform->SetFixedParameters(transform->GetFixedParameters());
-//  finalTransform->Print(std::cout);
-
-  //  Then a resampling filter is created and the corresponding transform and
-  //  moving image connected as inputs.
-  //
-  ResampleFilterType::Pointer resample = ResampleFilterType::New();
-  resample->SetTransform(finalTransform);
-  resample->SetInput(movingImageReader->GetOutput());
-
-  //  As described in Section \ref{sec:ResampleImageFilter}, the
-  //  ResampleImageFilter requires additional parameters to be
-  //  specified, in particular, the spacing, origin and size of the output
-  //  image. The default pixel value is also set to the standard label
-  //  for "unknown" or background. Finally, we need to set the
-  //  interpolator to be the same type of interpolator as the
-  //  registration method used (nearest neighbor).
-  FixedImageType::Pointer fixedImage = fixedImageReader->GetOutput();
-  resample->SetSize(fixedImage->GetLargestPossibleRegion().GetSize());
-  resample->SetOutputOrigin(fixedImage->GetOrigin());
-  resample->SetOutputSpacing(fixedImage->GetSpacing());
-  resample->SetOutputDirection(fixedImage->GetDirection());
-  resample->SetDefaultPixelValue(0);
-  resample->SetInterpolator(interpolator);
-
-  //  The output of the filter is passed to a writer that will store the
-  //  image in a file. An \doxygen{CastImageFilter} is used to convert the
-  //  pixel type of the resampled image to the final type used by the
-  //  writer. The cast and writer filters are instantiated below.
-  using OutputPixelType = unsigned short;
-  using OutputImageType = itk::Image<OutputPixelType, Dimension>;
-  using CastFilterType = itk::CastImageFilter<FixedImageType, OutputImageType>;
-  using WriterType = itk::ImageFileWriter<OutputImageType>;
-
-  //  The filters are created by invoking their \code{New()}
-  //  method.
-  WriterType::Pointer writer = WriterType::New();
-  CastFilterType::Pointer caster = CastFilterType::New();
-//  writer->SetFileName(argv[3]);
-  //  The \code{Update()} method of the writer is invoked in order to trigger
-  //  the execution of the pipeline.
-  caster->SetInput(resample->GetOutput());
-  writer->SetInput(caster->GetOutput());
-  writer->Update();
-
-  //  The fixed image and the transformed moving image can easily be compared
-  //  using the \code{SquaredDifferenceImageFilter}. This pixel-wise
-  //  filter computes the squared value of the difference between homologous
-  //  pixels of its input images.
-  using DifferenceFilterType = itk::SquaredDifferenceImageFilter<FixedImageType, FixedImageType, OutputImageType>;
-  DifferenceFilterType::Pointer difference = DifferenceFilterType::New();
-  difference->SetInput1(fixedImageReader->GetOutput());
-  difference->SetInput2(resample->GetOutput());
-
-  //  Its output can be passed to another writer.
-  WriterType::Pointer writer2 = WriterType::New();
-  writer2->SetInput(difference->GetOutput());
-//  if(argc > 4)
-//  {
-//    writer2->SetFileName(argv[4]);
-//    writer2->Update();
-//  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void Blend::execute()
 {
   initialize();
@@ -451,17 +627,75 @@ void Blend::execute()
     return;
   }
 
-  // Wouldn't it be better to register all images at once?
-  // Can image registration mathematically only occur between two images at a time?
-  // If more than one image registration can occur at once, it could mean
-  // this registration approach is unoptimized
+  ImageGrid imageGrid{ImageImpl::DataContainerArrayToImageGrid(this->getDataContainerArray(), m_AttributeMatrixName, m_DataAttributeArrayName, m_XAttributeArrayName, m_YAttributeArrayName)};
 
-  // TODO Set up data containers pairs to be registered (file names from m_ChosenContainers, overlap pairs, etc.)
-  std::vector<std::pair<QString, QString>> overlapPairs;
+//  ImageImpl::Print(imageGrid);
 
-  for (const auto& eachPair : overlapPairs) {
-    registerImages(eachPair.first, eachPair.second);
+  qDebug() << "Gathering overlaps...";
+  std::vector<OverlapImpl> overlaps{OverlapImpl::DetermineOverlaps(imageGrid, m_OverlapPercentage)};
+  qDebug() << "Overlaps gathered!";
+
+//  for(const auto& eachOverlap : overlaps)
+//  {
+//    eachOverlap.Print(imageGrid);
+//    qDebug() << "\n";
+//  }
+
+  Results results{};
+
+  // These should probably be parametized
+  const double lowTolerance = 1.0f;
+  const double highTolerance = 5.0f;
+
+  // TODO Set up the amoeba optimizer
+  //  itk::AmoebaOptimizer::Pointer optimizer = itk::AmoebaOptimizer::New();
+  itk::AmoebaOptimizer::Pointer optimizer = itk::AmoebaOptimizer::New();
+  optimizer->SetMaximumNumberOfIterations(m_MaxIterations);
+  optimizer->SetFunctionConvergenceTolerance(lowTolerance);
+  optimizer->SetParametersConvergenceTolerance(highTolerance);
+
+  // TODO Programmatically set the initial values for optimization
+  const size_t ind_len = static_cast<size_t>(pow(m_Degree, 2) + 2 * m_Degree + 1);
+  itk::AmoebaOptimizer::ParametersType params{2 * ind_len};
+  float value = 0.0f;
+  for(size_t x = 0; x < 2 * ind_len; ++x)
+  {
+    value = 0.0f;
+    if(x == 1 || x == ind_len + 2)
+    {
+      value = increment;
+    }
+    if(x == 2)
+    {
+      value = increment;
+    }
+    if(x == ind_len + 1)
+    {
+      value = -increment;
+    }
+    params[x] = value;
   }
+
+  optimizer->SetInitialPosition(params);
+
+  // Assign the CostFunction as the CostFunction of the optimizer
+  CostFunction::Pointer costFunction = CostFunction::New();
+  optimizer->SetCostFunction(costFunction.GetPointer());
+
+  // Start the optimization!
+  bool converged = false;
+  optimizer->StartOptimization();
+
+  // Optimization complete!
+  // Get the transform and value following the optimization
+  itk::AmoebaOptimizer::ParametersType a = optimizer->GetCurrentPosition();
+  Transform out(a.Size());
+  for (const auto& eachCoeff : a) {
+    out.push_back(eachCoeff);
+  }
+  optimizer->GetValue();
+
+  // TODO Get number of iterations the optimizer executed
 
   // TODO
   // Set up new Attribute matrix with results of filter

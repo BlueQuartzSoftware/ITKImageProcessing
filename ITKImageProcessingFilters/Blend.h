@@ -35,14 +35,29 @@
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 
-#include "ITKImageProcessingVersion.h"
-#include "ITKImageProcessingConstants.h"
 #include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
+
+
+// Avoiding polluting the global namespace with filter specific names
+namespace BlendFilter
+{
+class OverlapImpl;
+class ImageImpl;
+
+using Error_T = float;
+using Cell_T = size_t;
+using TransformCoeff_T = float;
+using Transform = std::vector<TransformCoeff_T>;
+using Results = std::map<Transform, Error_T>;
+using Simplex = std::vector<Transform>;
+using ImageGrid = std::map<std::pair<Cell_T, Cell_T>, ImageImpl>;
+using SimplexImageMap = std::map<Transform, ImageGrid>;
+} // namespace BlendFilter
 
 /**
  * @brief The Blend class. See [Filter documentation](@ref blend) for details.
  */
-class ITKImageProcessing_EXPORT Blend : public AbstractFilter\
+class ITKImageProcessing_EXPORT Blend : public AbstractFilter
 {
 Q_OBJECT
 
@@ -59,10 +74,11 @@ protected:
   */
   void initialize();
 
-  /**
-  * @brief Registers images using an ITK's Amoeba implementation
-  **/
-  void registerImages(const QString&, const QString&);
+  enum class OverlapMethod : unsigned int
+  {
+    Percent = 0,
+    Origins = 1
+  };
 
 public:
   SIMPL_SHARED_POINTERS(Blend)
