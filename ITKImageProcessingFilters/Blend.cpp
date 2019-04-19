@@ -386,114 +386,129 @@ public:
   }
 };
 
-class CostFunction : public itk::SingleValuedCostFunction
+class SimpleCostFunction : public itk::SingleValuedCostFunction
 {
 public:
-  // LOL this probably won't work...
-  static CostFunction::Pointer New()
+  itkNewMacro(SimpleCostFunction);
+
+  SimpleCostFunction() = default;
+
+  void GetDerivative(const ParametersType&, DerivativeType&) const override
   {
-    return itk::SmartPointer<Self>();
+    // TODO
+    // THROW AN EXCEPTION
+  }
+
+  uint32_t GetNumberOfParameters() const override
+  {
+    return 2;
+  }
+
+  // TODO
+  MeasureType GetValue(const ParametersType& parameters) const override
+  {
+    MeasureType residual = 0.0f;
+    // TODO
+
+    return residual;
+  }
+
+  // TODO
+  ParametersType GetInitialValues()
+  {
+    ParametersType initValues{};
+
+    return initValues;
+  }
+};
+
+class FFTConvolutionCostFunction : public itk::SingleValuedCostFunction
+{
+  size_t m_degree = 2;
+  std::vector<OverlapImpl> m_overlaps;
+  ImageGrid m_imageGrid;
+
+public:
+  itkNewMacro(FFTConvolutionCostFunction);
+
+  // TODO Set up constructors that will set class instances of the imageGrid,
+  // the number of coefficients, and the overlaps
+  // Or...just initialize everything with an initialize method
+
+  void SetPolynomialDegree(size_t degree) { m_degree = degree; }
+
+  void SetImageGrid(ImageGrid imageGrid) { m_imageGrid = imageGrid; }
+
+  void SetOverlaps(std::vector<OverlapImpl> overlaps) { m_overlaps = overlaps; }
+
+  // TODO
+  void GetDerivative(const ParametersType&, DerivativeType&) const override
+  {
+    // THROW AN EXCEPTION
+  }
+
+  // TODO
+  uint32_t GetNumberOfParameters() const override { }
+
+  ParametersType GetInitialValues()
+  {
+    const size_t ind_len = static_cast<size_t>(pow(m_degree, 2) + 2 * m_degree + 1);
+    ParametersType params{2 * ind_len};
+    float value = 0.0f;
+    float increment = 0.1f;
+    for(size_t x = 0; x < 2 * ind_len; ++x)
+    {
+      value = 0.0f;
+      if(x == 1 || x == ind_len + 2)
+      {
+        value = increment;
+      }
+      if(x == 2)
+      {
+        value = increment;
+      }
+      if(x == ind_len + 1)
+      {
+        value = -increment;
+      }
+      params[x] = value;
+    }
+    return params;
   }
 
   // TODO Make this work as the call back function for the Amoeba Optimizer
-  // NOTE Which means the error calculation step should be substituted
-  // NOTE with a call to find the Convolution of the two FFT's on each overlap
-  const std::pair<Results, bool> operator()(const Simplex& simplex, const ImageGrid& imageGrid, const std::vector<OverlapImpl>& overlaps, const float lowTolerance, const float highTolerance)
+  MeasureType GetValue(const ParametersType& parameters) const override
   {
-    bool converged = false;
-    Results results;
-
-    size_t matchedValues = 0;
-    const float matchPercentage = 0.9f;
-    const size_t desiredCoverage = static_cast<size_t>(overlaps[0].GetOverlapPairs().size() * matchPercentage);
-    float error = 0.0f;
-
-    // TODO The application of the transform will likely have to go in here
-    SimplexImageMap map{};
-    // TODO Parallelize this
-    for(const auto& eachTransform : simplex)
+    // Should be initialized to a very large number?
+    MeasureType residual = 0.0f;
+    // Convert the parameters into a vector that can be passed into an Image.Transform()
+    std::vector<TransformCoeff_T> transform(parameters.size());
+    for (const auto& eachParameter : parameters) {
+      // Make sure that the std::vector doesn't reorder these!
+      transform.push_back(eachParameter);
+    }
+    
+    // Perform the distortion on all images in the imageGrid
+    ImageGrid distortedGrid;
+    for(const auto& eachImage : m_imageGrid) // TODO Parallelize this
     {
-      ImageGrid eachGrid;
-      // TODO Parallelize this
-      for(const auto& eachImage : imageGrid)
-      {
-        // Create an image grid where all images have been transformed by
-        // that simplex and add it to the tests vector
-        ImageImpl s = eachImage.second;
-        ImageImpl t = s.Transform(eachTransform);
-        eachGrid.insert_or_assign(eachImage.first, eachImage.second.Transform(eachTransform));
-      }
-      map.insert_or_assign(eachTransform, eachGrid);
+      distortedGrid.insert_or_assign(eachImage.first, eachImage.second.Transform(transform));
     }
 
-    for(const auto& eachPermutation : map) // TODO Parallelize this
+    for(const auto& eachOverlap : m_overlaps) // TODO Parallelize this
     {
-      error = 0.0f;
-      matchedValues = 0;
+      auto found1 = distortedGrid.find(eachOverlap.Image1Key());
+      auto found2 = distortedGrid.find(eachOverlap.Image2Key());
 
       // NOTE This should effectively be replaced by obtaining the
       // convolution of the FFT of two overlap regions
       // NOTE Or use this area to call a callback that's passed in as a parameter
       // to the Optimize function
-      for(const auto& eachOverlap : overlaps) // TODO Parallelize this
-      {
-        auto found1 = eachPermutation.second.find(eachOverlap.Image1Key());
-        auto found2 = eachPermutation.second.find(eachOverlap.Image2Key());
 
-        // Check if the length of the image/overlaps satisfies the desiredCoverage
-        // And that the images could be obtained
-        if(found1 == eachPermutation.second.end() ||
-           found1->second.NumPixels() < desiredCoverage ||
-           found2 == eachPermutation.second.end() ||
-           found2->second.NumPixels() < desiredCoverage)
-        {
-          continue;
-        }
-        size_t img1Pixels = found1->second.NumPixels();
-        size_t img2Pixels = found2->second.NumPixels();
-        qDebug() << img1Pixels << img2Pixels;
-
-        for(const auto& eachOverlapPixel : eachOverlap.GetOverlapPairs())
-        {
-          if (found1->second.PixelExists(eachOverlapPixel.first) && found2->second.PixelExists(eachOverlapPixel.second))
-          {
-            matchedValues += 1;
-            // Right now this optimizes the cost function
-            error += static_cast<float>(pow(abs(found1->second.GetValue(eachOverlapPixel.first) - found2->second.GetValue(eachOverlapPixel.second)), 2));
-          }
-        }
-      }
-
-      if(matchedValues < desiredCoverage)
-      {
-        continue;
-      }
-
-      // Insert the results of the error for that specific simplex
-      results.insert_or_assign(eachPermutation.first, error);
-      if(error < lowTolerance)
-      {
-        converged = true;
-        break;
-      }
+      // TODO Assign the residual to some calculation done to the output
+      // of the FFTConvolution filter
     }
-
-    // If there are results, check if they converged
-    if (!results.empty())
-    {
-      // Get the max error
-      std::pair<Transform, Error_T> maxElement = *std::max_element(results.begin(), results.end(), [](std::pair<Transform, Error_T> i, std::pair<Transform, Error_T> j) { return i.second < j.second; });
-
-      // Get the min error
-      std::pair<Transform, Error_T> minElement = *std::min_element(results.begin(), results.end(), [](std::pair<Transform, Error_T> i, std::pair<Transform, Error_T> j) { return i.second < j.second; });
-
-      // Converged if the error between max and min is small
-      if(abs(maxElement.second - minElement.second) < highTolerance)
-      {
-        converged = true;
-      }
-    }
-    return std::make_pair(results, converged);
+    return residual;
   }
 };
 
@@ -627,70 +642,40 @@ void Blend::execute()
     return;
   }
 
-  ImageGrid imageGrid{ImageImpl::DataContainerArrayToImageGrid(this->getDataContainerArray(), m_AttributeMatrixName, m_DataAttributeArrayName, m_XAttributeArrayName, m_YAttributeArrayName)};
-
-//  ImageImpl::Print(imageGrid);
-
-  qDebug() << "Gathering overlaps...";
-  std::vector<OverlapImpl> overlaps{OverlapImpl::DetermineOverlaps(imageGrid, m_OverlapPercentage)};
-  qDebug() << "Overlaps gathered!";
-
-//  for(const auto& eachOverlap : overlaps)
-//  {
-//    eachOverlap.Print(imageGrid);
-//    qDebug() << "\n";
-//  }
-
-  Results results{};
-
   // These should probably be parametized
   const double lowTolerance = 1.0f;
   const double highTolerance = 5.0f;
 
-  // TODO Set up the amoeba optimizer
-  //  itk::AmoebaOptimizer::Pointer optimizer = itk::AmoebaOptimizer::New();
   itk::AmoebaOptimizer::Pointer optimizer = itk::AmoebaOptimizer::New();
   optimizer->SetMaximumNumberOfIterations(m_MaxIterations);
   optimizer->SetFunctionConvergenceTolerance(lowTolerance);
   optimizer->SetParametersConvergenceTolerance(highTolerance);
 
-  // TODO Programmatically set the initial values for optimization
-  const size_t ind_len = static_cast<size_t>(pow(m_Degree, 2) + 2 * m_Degree + 1);
-  itk::AmoebaOptimizer::ParametersType params{2 * ind_len};
-  float value = 0.0f;
-  for(size_t x = 0; x < 2 * ind_len; ++x)
-  {
-    value = 0.0f;
-    if(x == 1 || x == ind_len + 2)
-    {
-      value = increment;
-    }
-    if(x == 2)
-    {
-      value = increment;
-    }
-    if(x == ind_len + 1)
-    {
-      value = -increment;
-    }
-    params[x] = value;
-  }
-
-  optimizer->SetInitialPosition(params);
-
-  // Assign the CostFunction as the CostFunction of the optimizer
-  CostFunction::Pointer costFunction = CostFunction::New();
-  optimizer->SetCostFunction(costFunction.GetPointer());
+  // This information will eventually reside in the cost function
+  ImageGrid imageGrid{ImageImpl::DataContainerArrayToImageGrid(this->getDataContainerArray(), m_AttributeMatrixName, m_DataAttributeArrayName, m_XAttributeArrayName, m_YAttributeArrayName)};
+  std::vector<OverlapImpl> overlaps{OverlapImpl::DetermineOverlaps(imageGrid, m_OverlapPercentage)};
+  // For now, the cost function is just going to be a simple 2nd order polynomial
+  // This will allow us to test the effectiveness of the AmoebaOptimizer
+  // prior to worrying about using a FFTConvolution filter as a way to generate
+  // the residual
+  // And it skirts around any iterative transforms being done, saving on computation time
+  using CostFunctionType = SimpleCostFunction;
+  CostFunctionType implementation;
+  optimizer->SetInitialPosition(implementation.GetInitialValues());
+  optimizer->SetCostFunction(&implementation);
 
   // Start the optimization!
-  bool converged = false;
   optimizer->StartOptimization();
+
+  // TODO Determine whether the solution truly converged
 
   // Optimization complete!
   // Get the transform and value following the optimization
   itk::AmoebaOptimizer::ParametersType a = optimizer->GetCurrentPosition();
   Transform out(a.Size());
-  for (const auto& eachCoeff : a) {
+  for (const auto& eachCoeff : a)
+  {
+    // Make sure that the std::vector doesn't reorder these!
     out.push_back(eachCoeff);
   }
   optimizer->GetValue();

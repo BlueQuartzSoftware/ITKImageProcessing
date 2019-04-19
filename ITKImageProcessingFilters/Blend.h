@@ -37,7 +37,6 @@
 
 #include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
-
 // Avoiding polluting the global namespace with filter specific names
 namespace BlendFilter
 {
