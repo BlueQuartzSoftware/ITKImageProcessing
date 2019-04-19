@@ -69,9 +69,6 @@ public:
   SIMPL_FILTER_NEW_MACRO(Blend)
   SIMPL_TYPE_MACRO_SUPER(Blend, AbstractFilter)
 
-  /* Rule of 5: All special member functions should be defined if any are defined.
-  * https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md#c21-if-you-define-or-delete-any-default-operation-define-or-delete-them-all
-  */
   Blend(const Blend&) = delete;             // Copy Constructor Not Implemented
   Blend& operator=(const Blend&) = delete;  // Copy Assignment Not Implemented
   Blend(Blend&&) = delete;                  // Move Constructor Not Implemented

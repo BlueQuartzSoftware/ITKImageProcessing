@@ -263,9 +263,6 @@ void Blend::registerImages(const QString& file1Name, const QString& file2Name)
   //  being used for the registration. The array of parameters for this
   //  transform is simply composed of the rotation matrix and the translation
   //  values along each dimension.
-  //
-  //  \index{itk::AffineTransform!GetNumberOfParameters()}
-  //  \index{itk::RegistrationMethod!SetInitialTransformParameters()}
   using ParametersType = RegistrationType::ParametersType;
   ParametersType initialParameters = transform->GetParameters();
   double tx = 0.0;
@@ -290,7 +287,7 @@ void Blend::registerImages(const QString& file1Name, const QString& file2Name)
   optimizer->SetInitialSimplexDelta(simplexDelta);
   optimizer->SetParametersConvergenceTolerance(1e-4); // about 0.005 degrees
   optimizer->SetFunctionConvergenceTolerance(1e-6);   // variation in metric value
-  optimizer->SetMaximumNumberOfIterations(200);
+  optimizer->SetMaximumNumberOfIterations(m_MaxIterations);
   // This parameter is tightly coupled to the stepInParametricSpace above.
   double translationScale = 1.0 / 1000.0;
   using OptimizerScalesType = OptimizerType::ScalesType;
