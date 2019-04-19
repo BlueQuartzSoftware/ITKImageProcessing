@@ -403,6 +403,90 @@ void ImportZenInfoMontage::flushCache()
 }
 
 // -----------------------------------------------------------------------------
+std::map<int32_t, std::vector<size_t>> burn(int32_t tolerance, std::vector<int32_t>& input)
+{
+  int32_t halfTol = tolerance / 2;
+  size_t count = input.size();
+  int32_t seed = input[0];
+  std::vector<bool> visited(input.size(), false);
+  std::map<int32_t, std::vector<size_t>> avg_indices;
+
+  bool completed = false;
+  while(!completed)
+  {
+    std::vector<size_t> values;
+    for(size_t i = 0; i < count; i++)
+    {
+      // const BoundsType& bound = bounds.at(i);
+      if(input[i] < seed + halfTol && input[i] > seed - halfTol)
+      {
+        values.push_back(i);
+        visited[i] = true;
+      }
+    }
+
+    int32_t avg = 0;
+    for(const auto& v : values)
+    {
+      avg = avg + input.at(v);
+    }
+    avg = avg / values.size();
+    avg_indices[avg] = values;
+    seed = 0;
+    completed = true;
+    for(size_t i = 0; i < count; i++)
+    {
+      if(!visited[i])
+      {
+        seed = input[i];
+        completed = false;
+        break;
+      }
+    }
+  }
+  return avg_indices;
+}
+
+// -----------------------------------------------------------------------------
+void ImportZenInfoMontage::findTileIndices(int32_t tolerance, std::vector<BoundsType>& bounds)
+{
+  std::vector<int32_t> xValues(bounds.size());
+  std::vector<int32_t> yValues(bounds.size());
+
+  for(size_t i = 0; i < bounds.size(); i++)
+  {
+    xValues[i] = bounds.at(i).StartX;
+    yValues[i] = bounds.at(i).StartY;
+  }
+
+  std::map<int32_t, std::vector<size_t>> avg_indices = burn(tolerance, xValues);
+  int32_t index = 0;
+  for(auto& iter : avg_indices)
+  {
+    const std::vector<size_t>& indices = iter.second;
+    for(const auto& i : indices)
+    {
+      bounds.at(i).Col = index;
+    }
+    index++;
+  }
+  m_ColumnCount = index;
+
+  avg_indices = burn(100, yValues);
+  index = 0;
+  for(auto& iter : avg_indices)
+  {
+    const std::vector<size_t>& indices = iter.second;
+    for(const auto& i : indices)
+    {
+      bounds.at(i).Row = index;
+    }
+    index++;
+  }
+  m_RowCount = index;
+}
+
+// -----------------------------------------------------------------------------
 void ImportZenInfoMontage::generateCache(QDomElement& exportDocument)
 {
   QDomNodeList imageList = exportDocument.elementsByTagName(Zeiss::ZenXml::Image);
@@ -446,28 +530,11 @@ void ImportZenInfoMontage::generateCache(QDomElement& exportDocument)
     bounds[i] = bound;
   }
 
-  // Sort the bounds so that they are in raster order with X moving fastest.
-  std::sort(bounds.begin(), bounds.end(), compareBound);
-
-  // Figure out the Row/Col index for each bound object
-  int32_t curCol = 0;
-  int32_t curRow = 0;
-
-  m_ColumnCount = xValuesSet.size();
-  m_RowCount = yValuesSet.size();
+  findTileIndices(m_Tolerance, bounds);
 
   // Set the Row and Column values into each BoundType object
   for(auto& bound : bounds)
   {
-    bound.Col = curCol;
-    bound.Row = curRow;
-    curCol++;
-    if(curCol == m_ColumnCount)
-    {
-      curCol = 0;
-      curRow++;
-    }
-
     // Get the meta information from disk
     DataArrayPath dap(::k_DCName, ::k_AMName, ::k_AAName);
     AbstractFilter::Pointer imageImportFilter = createImageImportFiler(bound.Filename, dap);

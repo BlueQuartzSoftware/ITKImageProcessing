@@ -282,12 +282,20 @@ protected:
    */
   void generateDataStructure();
 
+  /**
+   * @brief findTileIndices
+   * @param tolerance The tolerance value to group the coordinates by.
+   * @param bounds The vector of BoundType objects representing one per tile.
+   */
+  void findTileIndices(int32_t tolerance, std::vector<BoundsType>& bounds);
+
 private:
   QScopedPointer<ImportZenInfoMontagePrivate> const d_ptr;
 
   int m_RowCount = -1;
   int m_ColumnCount = -1;
   QStringList m_FilenameList;
+  int32_t m_Tolerance = 100;
 
 public:
   /* Rule of 5: All special member functions should be defined if any are defined.
