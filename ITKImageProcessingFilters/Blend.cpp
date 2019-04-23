@@ -421,6 +421,8 @@ public:
   }
 };
 
+// NOTE It may make sense for this to inherit from the MultiValuedCostFunction
+// given how I think the GetValue function will need to be implemented
 class FFTConvolutionCostFunction : public itk::SingleValuedCostFunction
 {
   size_t m_degree = 2;
@@ -430,21 +432,19 @@ class FFTConvolutionCostFunction : public itk::SingleValuedCostFunction
 public:
   itkNewMacro(FFTConvolutionCostFunction);
 
-  // TODO Set up constructors that will set class instances of the imageGrid,
-  // the number of coefficients, and the overlaps
-  // Or...just initialize everything with an initialize method
+  void Initialize(size_t degree, float overlapPercentage,
+                  DataContainerArrayShPtr dca,
+                  const QString& amName, const QString& dataAAName,
+                  const QString& xAAName, const QString& yAAName)
+  {
+    m_degree = degree;
+    m_imageGrid = ImageImpl::DataContainerArrayToImageGrid(dca, amName, dataAAName, xAAName, yAAName);
+    m_overlaps = OverlapImpl::DetermineOverlaps(m_imageGrid, overlapPercentage);
+  }
 
-  void SetPolynomialDegree(size_t degree) { m_degree = degree; }
-
-  void SetImageGrid(ImageGrid imageGrid) { m_imageGrid = imageGrid; }
-
-  // TODO
-  void SetOverlaps(std::vector<OverlapImpl> overlaps) { /*m_overlaps = overlaps;*/ }
-
-  // TODO
   void GetDerivative(const ParametersType&, DerivativeType&) const override
   {
-    // THROW AN EXCEPTION
+    throw std::exception("Derivatives are not implemented for the optimization type");
   }
 
   // TODO
@@ -656,8 +656,6 @@ void Blend::execute()
 //  ImageGrid imageGrid{ImageImpl::DataContainerArrayToImageGrid(this->getDataContainerArray(), m_AttributeMatrixName, m_DataAttributeArrayName, m_XAttributeArrayName, m_YAttributeArrayName)};
 //  std::vector<OverlapImpl> overlaps{OverlapImpl::DetermineOverlaps(imageGrid, m_OverlapPercentage)};
 
-  // For now, the cost function is just going to be a simple 2nd order polynomial
-  // And it skirts around any iterative transforms being done, saving on computation time
 //  using CostFunctionType = FFTConvolutionCostFunction;
   using CostFunctionType = SimpleCostFunction;
   CostFunctionType implementation;
@@ -669,7 +667,6 @@ void Blend::execute()
 
   // TODO Determine whether the solution truly converged
 
-  // Optimization complete!
   // Get the transform and value following the optimization
   itk::AmoebaOptimizer::ParametersType a = optimizer->GetCurrentPosition();
   Transform out(a.Size());
