@@ -388,37 +388,36 @@ public:
 
 class SimpleCostFunction : public itk::SingleValuedCostFunction
 {
+  // A simple cost function that whose minimum should be at (-B/2, C)
+  static const int8_t m_StartValue = -10;
+  static const int8_t m_EndValue = 10;
+  static const uint8_t m_NumValues = m_EndValue - m_StartValue;
+  static const int8_t m_B = -2;
+  static const int8_t m_C = 1;
+  static constexpr double m_initialX = 7.0;
+
 public:
   itkNewMacro(SimpleCostFunction);
 
-  SimpleCostFunction() = default;
-
   void GetDerivative(const ParametersType&, DerivativeType&) const override
   {
-    // TODO
-    // THROW AN EXCEPTION
+    throw std::exception("Derivatives are not implemented for the optimization type");
   }
 
-  uint32_t GetNumberOfParameters() const override
-  {
-    return 2;
-  }
+  uint32_t GetNumberOfParameters() const override { return 1; }
 
-  // TODO
   MeasureType GetValue(const ParametersType& parameters) const override
   {
-    MeasureType residual = 0.0f;
-    // TODO
-
-    return residual;
+    double x = parameters[0];
+    MeasureType value = x * x + x * m_B + m_C;
+    return value;
   }
 
-  // TODO
   ParametersType GetInitialValues()
   {
-    ParametersType initValues{};
-
-    return initValues;
+    ParametersType initParams(GetNumberOfParameters());
+    initParams[0] = m_initialX;
+    return initParams;
   }
 };
 
@@ -439,7 +438,8 @@ public:
 
   void SetImageGrid(ImageGrid imageGrid) { m_imageGrid = imageGrid; }
 
-  void SetOverlaps(std::vector<OverlapImpl> overlaps) { m_overlaps = overlaps; }
+  // TODO
+  void SetOverlaps(std::vector<OverlapImpl> overlaps) { /*m_overlaps = overlaps;*/ }
 
   // TODO
   void GetDerivative(const ParametersType&, DerivativeType&) const override
@@ -482,9 +482,8 @@ public:
     // Should be initialized to a very large number?
     MeasureType residual = 0.0f;
     // Convert the parameters into a vector that can be passed into an Image.Transform()
-    std::vector<TransformCoeff_T> transform(parameters.size());
+    Transform transform(parameters.size());
     for (const auto& eachParameter : parameters) {
-      // Make sure that the std::vector doesn't reorder these!
       transform.push_back(eachParameter);
     }
     
@@ -643,8 +642,8 @@ void Blend::execute()
   }
 
   // These should probably be parametized
-  const double lowTolerance = 1.0f;
-  const double highTolerance = 5.0f;
+  const double lowTolerance = 0.01f;
+  const double highTolerance = 0.01f;
 
   itk::AmoebaOptimizer::Pointer optimizer = itk::AmoebaOptimizer::New();
   optimizer->SetMaximumNumberOfIterations(m_MaxIterations);
@@ -652,13 +651,14 @@ void Blend::execute()
   optimizer->SetParametersConvergenceTolerance(highTolerance);
 
   // This information will eventually reside in the cost function
-  ImageGrid imageGrid{ImageImpl::DataContainerArrayToImageGrid(this->getDataContainerArray(), m_AttributeMatrixName, m_DataAttributeArrayName, m_XAttributeArrayName, m_YAttributeArrayName)};
-  std::vector<OverlapImpl> overlaps{OverlapImpl::DetermineOverlaps(imageGrid, m_OverlapPercentage)};
+  // i.e. The information used as arguments to these contructors should belong
+  // in the constructor for the FFTConvolutionCostFunction
+//  ImageGrid imageGrid{ImageImpl::DataContainerArrayToImageGrid(this->getDataContainerArray(), m_AttributeMatrixName, m_DataAttributeArrayName, m_XAttributeArrayName, m_YAttributeArrayName)};
+//  std::vector<OverlapImpl> overlaps{OverlapImpl::DetermineOverlaps(imageGrid, m_OverlapPercentage)};
+
   // For now, the cost function is just going to be a simple 2nd order polynomial
-  // This will allow us to test the effectiveness of the AmoebaOptimizer
-  // prior to worrying about using a FFTConvolution filter as a way to generate
-  // the residual
   // And it skirts around any iterative transforms being done, saving on computation time
+//  using CostFunctionType = FFTConvolutionCostFunction;
   using CostFunctionType = SimpleCostFunction;
   CostFunctionType implementation;
   optimizer->SetInitialPosition(implementation.GetInitialValues());
@@ -675,10 +675,9 @@ void Blend::execute()
   Transform out(a.Size());
   for (const auto& eachCoeff : a)
   {
-    // Make sure that the std::vector doesn't reorder these!
     out.push_back(eachCoeff);
   }
-  optimizer->GetValue();
+  itk::AmoebaOptimizer::MeasureType value = optimizer->GetValue();
 
   // TODO Get number of iterations the optimizer executed
 

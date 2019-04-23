@@ -88,7 +88,7 @@ class BlendTest
   static const size_t m_res_height = 10;
 
   static const int m_d = 1;
-  static const int m_max_iterations = 10;
+  static const int m_max_iterations = 100;
 
   static const int m_theta_degrees = 90;
   static constexpr float m_n = 0.0f;

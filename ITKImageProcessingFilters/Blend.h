@@ -93,8 +93,8 @@ public:
   SIMPL_FILTER_PARAMETER(QStringList, ChosenDataContainers)
   Q_PROPERTY(QStringList ChosenDataContainers READ getChosenDataContainers WRITE setChosenDataContainers)
 
-  SIMPL_FILTER_PARAMETER(int, MaxIterations)
-  Q_PROPERTY(int MaxIterations READ getMaxIterations WRITE setMaxIterations)
+  SIMPL_FILTER_PARAMETER(uint64_t, MaxIterations)
+  Q_PROPERTY(uint64_t MaxIterations READ getMaxIterations WRITE setMaxIterations)
 
   SIMPL_FILTER_PARAMETER(int, OverlapMethod)
   Q_PROPERTY(int OverlapMethod READ getOverlapMethod WRITE setOverlapMethod)

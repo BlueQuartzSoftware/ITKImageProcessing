@@ -18,6 +18,12 @@ set(TEST_NAMES
   ImportVectorImageStackTest
   ITKMedianImageTest
 
+#  ITKImageProcessingReaderTest
+#  ITKImageProcessingWriterTest
+#  ITKImportImageStackTest
+#  ImportVectorImageStackTest
+
+#  ITKMedianImageTest
 )
 
 if(ITK_VERSION_MAJOR EQUAL 4)
