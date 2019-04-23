@@ -1,0 +1,19 @@
+version: 2
+jobs:
+  build:
+    machine: true
+    steps:
+      - checkout
+      - run:
+         name: Pull Docker images
+         command: |
+           docker info
+           docker pull dream3d/data
+           docker rm "$(docker ps --filter 'name=dream3d-data' -q -a)" || true
+           docker pull dream3d/dream3d
+      - run:
+         name: Build and test
+         no_output_timeout: 2.0h
+         command: |
+           ./Test/Docker/run.sh
+
