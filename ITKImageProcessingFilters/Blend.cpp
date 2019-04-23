@@ -48,369 +48,33 @@
 #include "itkAmoebaOptimizer.h"
 #include <itkFFTConvolutionImageFilter.h>
 
-using namespace BlendFilter;
-
-using Coord_T = size_t;
-template <class DataType>
-using DataPairs = std::vector<std::pair<DataType, DataType>>;
-
+// TODO Set Image Type with filter parameter
 using GrayScaleColor = uint8_t;
 using RGBColor = std::tuple<uint8_t, uint8_t, uint8_t>;
-// TODO Set Image Type with filter parameter
-using Image_T = GrayScaleColor;
-using Pixel_T = size_t;
-using PixelCoord = std::pair<Pixel_T, Pixel_T>;
-using Image = std::map<PixelCoord, Image_T>;
-using ImageArray = std::vector<std::vector<Image_T>>;
 
-using OverlapPairs = std::set<std::pair<PixelCoord, PixelCoord>>;
-
-class BlendFilter::ImageImpl
-{
-  Image m_image;
-  size_t m_res_width;
-  size_t m_res_height;
-
-  static Image DataContainerToImage(DataContainerShPtr dc, const QString& amName, const QString& dataAAName, const QString& xAAName, const QString& yAAName)
-  {
-    Image img{};
-    std::tuple<size_t, size_t, size_t> dims = dc->getGeometryAs<ImageGeom>()->getDimensions();
-    AttributeMatrixShPtr am = dc->getAttributeMatrix(amName);
-    UInt8ArrayType::Pointer dataAA = am->getAttributeArrayAs<UInt8ArrayType>(dataAAName);
-    FloatArrayType::Pointer xAA = am->getAttributeArrayAs<FloatArrayType>(xAAName);
-    FloatArrayType::Pointer yAA = am->getAttributeArrayAs<FloatArrayType>(yAAName);
-
-    for(size_t pxlIdx = 0; pxlIdx < std::get<0>(dims) * std::get<1>(dims); ++pxlIdx)
-    {
-      auto x = xAA->getValue(pxlIdx);
-      auto y = yAA->getValue(pxlIdx);
-      auto v = dataAA->getValue(pxlIdx);
-      img[std::make_pair(xAA->getValue(pxlIdx), yAA->getValue(pxlIdx))] = dataAA->getValue(pxlIdx);
-    }
-    return img;
-  }
-
-public:
-  ImageImpl(const ImageImpl&) = default;
-  ImageImpl(ImageImpl&&) = default;
-  ImageImpl& operator=(const ImageImpl& other) = default;
-  ImageImpl& operator=(ImageImpl&&) = default;
-
-  ImageImpl(const Image& image)
-  : m_image{image}
-  {
-    size_t maxX = 0;
-    size_t maxY = 0;
-    float x = 0;
-    float y = 0;
-    for(const auto& eachPixel : m_image)
-    {
-      x = eachPixel.first.first;
-      y = eachPixel.first.second;
-      maxX = roundf(x) > maxX ? roundf(x) : maxX;
-      maxY = roundf(y) > maxY ? roundf(y) : maxY;
-    }
-    m_res_width = maxX + 1;
-    m_res_height = maxY + 1;
-  }
-
-  ImageImpl(const DataContainerShPtr& dc, const QString& amName, const QString& dataAAName, const QString& xAAName, const QString& yAAName)
-  : ImageImpl(DataContainerToImage(dc, amName, dataAAName, xAAName, yAAName))
-  {
-  }
-
-  template <class T>
-  static DataPairs<T> make_product(size_t listOneSize, size_t listOneStart, size_t listTwoSize, size_t listTwoStart)
-  {
-    DataPairs<T> product{};
-    for(size_t listOneIndex = listOneStart; listOneIndex < listOneSize; listOneIndex++)
-    {
-      for(size_t listTwoIndex = listTwoStart; listTwoIndex < listTwoSize; listTwoIndex++)
-      {
-        product.push_back(std::make_pair(listTwoIndex, listOneIndex));
-      }
-    }
-    return product;
-  }
-
-  template <class T>
-  static DataPairs<T> make_product(size_t listOneSize, size_t listTwoSize)
-  {
-    return make_product<T>(listOneSize, 0, listTwoSize, 0);
-  }
-
-  std::pair<size_t, size_t> GetDimensions() const
-  {
-    return std::make_pair(m_res_width, m_res_height);
-  }
-
-  template <class T> static std::pair<T, T> NameToGridCoords(QString name)
-  {
-    // NOTE Ideally, 'R' and 'C' would be parameterized and maybe obtained from
-    // the Blend filter class itself, but this feels like a violation of SOLID
-    // Regardless, these values should be parameterized SOMEWHERE
-    int cLength = name.size() - name.indexOf('C') - 1;
-    T r = static_cast<T>(name.midRef(name.indexOf('R') + 1, name.size() - cLength - 2).toULong());
-    T c = static_cast<T>(name.rightRef(cLength).toULong());
-
-    return std::make_pair(r, c);
-  }
-
-  size_t NumPixels() const
-  {
-    return m_image.size();
-  }
-
-  bool PixelExists(PixelCoord pixelCoord) const
-  {
-    return m_image.find(pixelCoord) != m_image.end();
-  }
-
-  Image_T GetValue(PixelCoord pixelCoord) const
-  {
-    return m_image.at(pixelCoord);
-  }
-
-  static ImageGrid DataContainerArrayToImageGrid(DataContainerArrayShPtr dca, const QString& amName, const QString& dataAAName, const QString& xAAName, const QString& yAAName)
-  {
-    ImageGrid images{};
-    for(const auto& eachDC : dca->getDataContainers())
-    {
-      images.insert_or_assign(NameToGridCoords<Cell_T>(eachDC->getName()), DataContainerToImage(eachDC, amName, dataAAName, xAAName, yAAName));
-    }
-    return images;
-  }
-
-  ImageImpl Transform(std::vector<float> a) const
-  {
-    const float tolerance = 0.05f;
-    const float lastXIndex = m_res_width - 1 + tolerance;
-    const float lastYIndex = m_res_height - 1 + tolerance;
-    const size_t coeff_len = a.size() / 2;
-    const size_t d = roundf(sqrt(coeff_len));
-    const DataPairs<size_t> i_j = make_product<size_t>(d, d);
-
-    const float x_trans = (m_res_width - 1) / 2.0f;
-    const float y_trans = (m_res_height - 1) / 2.0f;
-    float x = 0;
-    float y = 0;
-    float u_v = 0;
-    float term = 0;
-
-    std::pair<int, int> eachIJ{};
-
-    Image distortedImage{};
-    for(const auto& pixel : m_image)
-    {
-      x = x_trans;
-      y = y_trans;
-      for(size_t idx = 0; idx < a.size(); ++idx)
-      {
-        eachIJ = i_j[idx - (idx >= i_j.size() ? i_j.size() : 0)];
-
-        u_v = pow((pixel.first.first - x_trans), eachIJ.first) * pow((pixel.first.second - y_trans), eachIJ.second);
-
-        term = u_v * a[idx];
-        idx < coeff_len ? x += term : y += term;
-      }
-
-      // This check effectively "clips" data
-      if(x >= -tolerance && x <= lastXIndex && y >= -tolerance && y <= lastYIndex)
-      {
-        distortedImage[std::make_pair(roundf(x), roundf(y))] = this->m_image.at(pixel.first);
-      }
-    }
-    return ImageImpl(distortedImage);
-  }
-
-  static void Print(const ImageGrid& imageGrid)
-  {
-    QString stream;
-    // Get the number of rows in the grid - this should work as long as a map is used (highest R value will be last)
-    Cell_T tileRows = imageGrid.rbegin()->first.first + 1;
-
-    for(Cell_T tileRowIdx = 0; tileRowIdx < tileRows; ++tileRowIdx)
-    {
-      // Get the maximum height
-      size_t max_height = 0;
-
-      // Populate the images in this row
-      std::vector<ImageArray> imageRow{};
-      for(const auto& eachImage : imageGrid)
-      {
-        // Get the dimensions of the image
-        size_t width = 0, height = 0;
-        std::tie(width, height) = eachImage.second.GetDimensions();
-        max_height = height > max_height ? height : max_height;
-        if(eachImage.first.first == tileRowIdx)
-        {
-          ImageArray imgArray(height, std::vector<Image_T>(width, 0));
-          for(const auto& eachPixel : eachImage.second.m_image)
-          {
-            // Use nearest-neighbor sampling to convert raw x, y pixels into integers
-            // Iterate through all of the pixels in the image
-            // When converting to array, pixel origin comes from lower-left
-            // corner - and need translated to origin in upper-left corner
-            imgArray[height - roundf(eachPixel.first.second) - 1][roundf(eachPixel.first.first)] = eachPixel.second;
-          }
-          imageRow.push_back(imgArray);
-        }
-      }
-
-      for(size_t row_idx = 0; row_idx < max_height; ++row_idx)
-      {
-        for(const auto& eachImage : imageRow)
-        {
-          // This could result in misaligned images if all heights are not the same
-          // Or in a worst-case, throw an out-of-index exception
-          // FIXME Should instead have a more robust way of lining up rows
-          // And skipping that image if it does not have the desired row_idx
-          for(const auto& eachCol : eachImage[row_idx])
-          {
-            stream += QString::number(eachCol) + " ";
-          }
-          stream += "  ";
-        }
-        stream += "\n";
-      }
-      stream += "\n";
-    }
-    qDebug().noquote() << stream.trimmed();
-  }
-};
-
-class BlendFilter::OverlapImpl
-{
-  std::pair<Cell_T, Cell_T> m_image1_key;
-  std::pair<Cell_T, Cell_T> m_image2_key;
-  OverlapPairs m_pairs;
-
-public:
-  OverlapImpl() = delete;
-  OverlapImpl(const OverlapImpl&) = delete;
-  OverlapImpl(OverlapImpl&&) = default;
-  OverlapImpl& operator=(const OverlapImpl&) = delete;
-  OverlapImpl& operator=(OverlapImpl&&) = delete;
-
-  OverlapImpl(std::pair<Cell_T, Cell_T> image1Key, std::pair<Cell_T, Cell_T> image2Key, OverlapPairs pairs)
-  {
-    m_image1_key = image1Key;
-    m_image2_key = image2Key;
-    m_pairs = pairs;
-  }
-
-  OverlapPairs GetOverlapPairs() const
-  {
-    return m_pairs;
-  }
-
-  std::pair<Cell_T, Cell_T> Image1Key() const
-  {
-    return m_image1_key;
-  }
-
-  std::pair<Cell_T, Cell_T> Image2Key() const
-  {
-    return m_image2_key;
-  }
-
-  void Print(ImageGrid imageGrid) const
-  {
-    Image img1{}, img2{};
-    Pixel_T lowestImage1X = m_pairs.begin()->first.first;
-    Pixel_T lowestImage1Y = m_pairs.begin()->first.second;
-    Pixel_T lowestImage2X = m_pairs.begin()->second.first;
-    Pixel_T lowestImage2Y = m_pairs.begin()->second.second;
-    for(const auto& eachPixel : m_pairs)
-    {
-      lowestImage1X = eachPixel.first.first < lowestImage1X ? eachPixel.first.first : lowestImage1X;
-      lowestImage1Y = eachPixel.first.second < lowestImage1Y ? eachPixel.first.second : lowestImage1Y;
-      lowestImage2X = eachPixel.second.first < lowestImage2X ? eachPixel.second.first : lowestImage2X;
-      lowestImage2Y = eachPixel.second.second < lowestImage2Y ? eachPixel.second.second : lowestImage2Y;
-    }
-
-    for(const auto& eachPixel : m_pairs)
-    {
-      img1.insert_or_assign({eachPixel.first.first - lowestImage1X, eachPixel.first.second - lowestImage1Y}, imageGrid.at(m_image1_key).GetValue(eachPixel.first));
-      img2.insert_or_assign({eachPixel.second.first - lowestImage2X, eachPixel.second.second - lowestImage2Y}, imageGrid.at(m_image2_key).GetValue(eachPixel.second));
-    }
-
-    ImageGrid overlapGrid;
-    overlapGrid.insert_or_assign(this->m_image1_key, ImageImpl{img1});
-    overlapGrid.insert_or_assign(this->m_image2_key, ImageImpl{img2});
-    ImageImpl::Print(overlapGrid);
-  }
-
-  static std::vector<OverlapImpl> DetermineOverlaps(const ImageGrid& imageGrid,  const float overlapPercentage)
-  {
-    std::vector<OverlapImpl> overlaps{};
-    size_t width, height, overlapDim, r, c;
-
-    for(const auto& eachImage : imageGrid)
-    {
-      std::tie(width, height) = eachImage.second.GetDimensions();
-
-      r = eachImage.first.first;
-      c = eachImage.first.second;
-      auto rightImage{imageGrid.find(std::make_pair(r, c + 1))};
-      auto bottomImage{imageGrid.find(std::make_pair(r + 1, c))};
-
-      if(rightImage != imageGrid.end())
-      {
-        OverlapPairs coords;
-        overlapDim = static_cast<size_t>(width * overlapPercentage);
-        for(size_t eachX = width - overlapDim; eachX < width; ++eachX)
-        {
-          for(size_t eachY = 0; eachY < height; ++eachY)
-          {
-            coords.insert({std::make_pair(eachX, eachY), std::make_pair(eachX + overlapDim - width, eachY)});
-          }
-        }
-        overlaps.push_back(OverlapImpl(std::make_pair(r, c), std::make_pair(r, c + 1), coords));
-      }
-      if(bottomImage != imageGrid.end())
-      {
-        OverlapPairs coords;
-        overlapDim = static_cast<size_t>(height * overlapPercentage);
-        for(size_t eachX = 0; eachX < width; ++eachX)
-        {
-          for(size_t eachY = height - overlapDim; eachY < height; ++eachY)
-          {
-            coords.insert({std::make_pair(eachX, eachY + overlapDim - height), std::make_pair(eachX, eachY)});
-          }
-        }
-        overlaps.push_back(OverlapImpl(std::make_pair(r, c), std::make_pair(r + 1, c), coords));
-      }
-    }
-    return overlaps;
-  }
-};
-
+// A simple cost function that whose minimum should be at (-B/2, C)
 class SimpleCostFunction : public itk::SingleValuedCostFunction
 {
-  // A simple cost function that whose minimum should be at (-B/2, C)
-  static const int8_t m_StartValue = -10;
-  static const int8_t m_EndValue = 10;
-  static const uint8_t m_NumValues = m_EndValue - m_StartValue;
+  static const int8_t m_NumParams = 1;
   static const int8_t m_B = -2;
   static const int8_t m_C = 1;
   static constexpr double m_initialX = 7.0;
 
 public:
-  itkNewMacro(SimpleCostFunction);
+  itkNewMacro(SimpleCostFunction)
+
+  void Initialize() {}
 
   void GetDerivative(const ParametersType&, DerivativeType&) const override
   {
     throw std::exception("Derivatives are not implemented for the optimization type");
   }
 
-  uint32_t GetNumberOfParameters() const override { return 1; }
+  uint32_t GetNumberOfParameters() const override { return m_NumParams; }
 
   MeasureType GetValue(const ParametersType& parameters) const override
   {
-    double x = parameters[0];
-    MeasureType value = x * x + x * m_B + m_C;
-    return value;
+    return parameters[0] * parameters[0] + parameters[0] * m_B + m_C;
   }
 
   ParametersType GetInitialValues()
@@ -421,25 +85,174 @@ public:
   }
 };
 
-// NOTE It may make sense for this to inherit from the MultiValuedCostFunction
-// given how I think the GetValue function will need to be implemented
-class FFTConvolutionCostFunction : public itk::SingleValuedCostFunction
+// Cost function => f(x, y) = (a - x^2) + b(y - x^2)^2
+class MultiParamCostFunction : public itk::SingleValuedCostFunction
 {
-  size_t m_degree = 2;
-  std::vector<OverlapImpl> m_overlaps;
-  ImageGrid m_imageGrid;
+  static const int8_t m_NumParams = 2;
+  static const int8_t m_A = 1;
+  static const int8_t m_B = 100;
+  static constexpr double m_initialX = -1.0;
+  static constexpr double m_initialY = -1.0;
 
 public:
-  itkNewMacro(FFTConvolutionCostFunction);
+  itkNewMacro(MultiParamCostFunction)
 
-  void Initialize(size_t degree, float overlapPercentage,
+  void Initialize() {}
+
+  void GetDerivative(const ParametersType&, DerivativeType&) const override
+  {
+    throw std::exception("Derivatives are not implemented for the optimization type");
+  }
+
+  uint32_t GetNumberOfParameters() const override { return m_NumParams; }
+
+  MeasureType GetValue(const ParametersType& parameters) const override
+  {
+    return pow((m_A - parameters[0]), 2) + m_B * pow(( parameters[1] - parameters[0] * parameters[0] ), 2);
+  }
+
+  ParametersType GetInitialValues()
+  {
+    ParametersType initParams(GetNumberOfParameters());
+    initParams[0] = m_initialX;
+    initParams[1] = m_initialY;
+    return initParams;
+  }
+};
+
+class FFTConvolutionCostFunction : public itk::SingleValuedCostFunction
+{
+  static const uint8_t IMAGE_DIMENSIONS = 2;
+  using Cell_T = size_t;
+  using Image_T = GrayScaleColor;
+  using PixelCoord = itk::Index<IMAGE_DIMENSIONS>;
+  using ITKImage = itk::Image<Image_T, IMAGE_DIMENSIONS>;
+  using GridKey = std::pair<Cell_T, Cell_T>;
+  using GridPair = std::pair<GridKey, GridKey>;
+  using RegionPair = std::pair<ITKImage::RegionType, ITKImage::RegionType>;
+  using OverlapPair = std::pair<GridPair, RegionPair>;
+  using ImageGrid = std::map<std::pair<Cell_T, Cell_T>, ITKImage::Pointer>;
+
+  int m_degree = 2;
+  std::vector<std::pair<size_t, size_t>> m_IJ;
+  std::vector<OverlapPair> m_overlaps;
+  ImageGrid m_imageGrid;
+  itk::FFTConvolutionImageFilter<ITKImage>::Pointer m_filter;
+
+public:
+  itkNewMacro(FFTConvolutionCostFunction)
+
+  void Initialize(int degree, float overlapPercentage,
                   DataContainerArrayShPtr dca,
                   const QString& amName, const QString& dataAAName,
                   const QString& xAAName, const QString& yAAName)
   {
+    m_filter = itk::FFTConvolutionImageFilter<ITKImage>::New();
     m_degree = degree;
-    m_imageGrid = ImageImpl::DataContainerArrayToImageGrid(dca, amName, dataAAName, xAAName, yAAName);
-    m_overlaps = OverlapImpl::DetermineOverlaps(m_imageGrid, overlapPercentage);
+    for(size_t listOneIndex = 0; listOneIndex < m_degree; listOneIndex++)
+    {
+      for(size_t listTwoIndex = 0; listTwoIndex < m_degree; listTwoIndex++)
+      {
+        m_IJ.push_back(std::make_pair(listTwoIndex, listOneIndex));
+      }
+    }
+
+    // Cache a bunch of stuff
+    GridKey imageKey;
+    std::tuple<size_t, size_t, size_t> dims;
+    size_t width, height, overlapDim;
+    int cLength;
+    QString name;
+    PixelCoord idx;
+
+    ITKImage::Pointer eachImage;
+    PixelCoord imageOrigin;
+    ITKImage::SizeType imageSize;
+    PixelCoord kernelOrigin;
+    ITKImage::SizeType kernelSize;
+
+    AttributeMatrixShPtr am;
+    m_imageGrid.clear();
+    // Populate and assign eachImage to m_imageGrid
+    for(const auto& eachDC : dca->getDataContainers())
+    {
+      am = eachDC->getAttributeMatrix(amName);
+      dims = eachDC->getGeometryAs<ImageGeom>()->getDimensions();
+      width = std::get<0>(dims);
+      height = std::get<1>(dims);
+
+      imageOrigin[0] = 0;
+      imageOrigin[1] = 0;
+      imageSize[0] = width;
+      imageSize[1] = height;
+      eachImage = ITKImage::New();
+      eachImage->SetRegions(ITKImage::RegionType(imageOrigin, imageSize));
+      eachImage->Allocate();
+      for(size_t pxlIdx = 0; pxlIdx < (width * height); ++pxlIdx)
+      {
+        idx[0] = am->getAttributeArrayAs<Int64ArrayType>(xAAName)->getValue(pxlIdx);
+        idx[1] = am->getAttributeArrayAs<Int64ArrayType>(yAAName)->getValue(pxlIdx);
+        eachImage->SetPixel(idx, am->getAttributeArrayAs<UInt8ArrayType>(dataAAName)->getValue(pxlIdx));
+      }
+
+      // TODO Parameterize 'R' and 'C'
+      name = eachDC->getName();
+      cLength = name.size() - name.indexOf('C') - 1;
+      imageKey = std::make_pair(
+        static_cast<Cell_T>(name.midRef(name.indexOf('R') + 1, name.size() - cLength - 2).toULong()),
+        static_cast<Cell_T>(name.rightRef(cLength).toULong())
+      );
+      m_imageGrid.insert_or_assign(imageKey, eachImage);
+    }
+
+    // Populate m_overlaps
+    m_overlaps.clear();
+    for (const auto& eachImage : m_imageGrid) {
+      auto rightImage{m_imageGrid.find(std::make_pair(eachImage.first.first, eachImage.first.second + 1))};
+      auto bottomImage{m_imageGrid.find(std::make_pair(eachImage.first.first + 1, eachImage.first.second))};
+      if(rightImage != m_imageGrid.end())
+      {
+        overlapDim = static_cast<size_t>(roundf(width * overlapPercentage));
+        imageOrigin[0] = static_cast<itk::IndexValueType>(width - overlapDim);
+        imageOrigin[1] = 0;
+        imageSize[0] = overlapDim;
+        imageSize[1] = height;
+
+        kernelOrigin[0] = 0;
+        kernelOrigin[1] = 0;
+        kernelSize[0] = overlapDim;
+        kernelSize[1] = height;
+
+        m_overlaps.push_back(std::make_pair(
+          std::make_pair(eachImage.first, rightImage->first),
+          std::make_pair(
+            ITKImage::RegionType(imageOrigin, imageSize),
+            ITKImage::RegionType(kernelOrigin, kernelSize)
+          )
+        ));
+      }
+      if(bottomImage != m_imageGrid.end())
+      {
+        overlapDim = static_cast<size_t>(roundf(height * overlapPercentage));
+        imageOrigin[0] = 0;
+        imageOrigin[1] = 0;
+        imageSize[0] = width;
+        imageSize[1] = overlapDim;
+
+        kernelOrigin[0] = static_cast<itk::IndexValueType>(height - overlapDim);
+        kernelOrigin[1] = 0;
+        kernelSize[0] = width;
+        kernelSize[1] = overlapDim;
+
+        m_overlaps.push_back(std::make_pair(
+          std::make_pair(eachImage.first, bottomImage->first),
+          std::make_pair(
+            ITKImage::RegionType(imageOrigin, imageSize),
+            ITKImage::RegionType(kernelOrigin, kernelSize)
+          )
+        ));
+      }
+    }
   }
 
   void GetDerivative(const ParametersType&, DerivativeType&) const override
@@ -447,19 +260,22 @@ public:
     throw std::exception("Derivatives are not implemented for the optimization type");
   }
 
-  // TODO
-  uint32_t GetNumberOfParameters() const override { }
-
-  ParametersType GetInitialValues()
+  uint32_t GetNumberOfParameters() const override
   {
-    const size_t ind_len = static_cast<size_t>(pow(m_degree, 2) + 2 * m_degree + 1);
-    ParametersType params{2 * ind_len};
-    float value = 0.0f;
-    float increment = 0.1f;
-    for(size_t x = 0; x < 2 * ind_len; ++x)
+    return static_cast<uint32_t>(2 * (m_degree * m_degree + 2 * m_degree + 1));
+  }
+
+  ParametersType GetInitialValues() const
+  {
+    const uint32_t numCoeffs = GetNumberOfParameters();
+    const uint32_t half = numCoeffs / 2;
+    ParametersType params{numCoeffs};
+    double value = 0.0;
+    double increment = 0.1;
+    for(size_t x = 0; x < numCoeffs; ++x)
     {
-      value = 0.0f;
-      if(x == 1 || x == ind_len + 2)
+      value = 0.0;
+      if(x == 1 || x == half + 2)
       {
         value = increment;
       }
@@ -467,7 +283,7 @@ public:
       {
         value = increment;
       }
-      if(x == ind_len + 1)
+      if(x == half + 1)
       {
         value = -increment;
       }
@@ -476,40 +292,122 @@ public:
     return params;
   }
 
-  // TODO Make this work as the call back function for the Amoeba Optimizer
   MeasureType GetValue(const ParametersType& parameters) const override
   {
-    // Should be initialized to a very large number?
-    MeasureType residual = 0.0f;
-    // Convert the parameters into a vector that can be passed into an Image.Transform()
-    Transform transform(parameters.size());
-    for (const auto& eachParameter : parameters) {
-      transform.push_back(eachParameter);
-    }
-    
-    // Perform the distortion on all images in the imageGrid
+    const double tolerance = 0.05;
     ImageGrid distortedGrid;
+
+    // Cache a bunch of stuff
+    ITKImage::RegionType bufferedRegion;
+    ITKImage::SizeType dims;
+    size_t width;
+    size_t height;
+    double lastXIndex;
+    double lastYIndex;
+
+    double x_trans;
+    double y_trans;
+    double x = 0;
+    double y = 0;
+    double u_v = 0;
+    double term = 0;
+
+    std::pair<int, int> eachIJ{};
+    PixelCoord eachPixel;
+    ITKImage::Pointer distortedImage;
+
+    // Apply the Transform to each image in the image grid
     for(const auto& eachImage : m_imageGrid) // TODO Parallelize this
     {
-      distortedGrid.insert_or_assign(eachImage.first, eachImage.second.Transform(transform));
+      bufferedRegion = eachImage.second->GetBufferedRegion();
+      dims = bufferedRegion.GetSize();
+      width = dims[0];
+      height = dims[1];
+      lastXIndex = width - 1 + tolerance;
+      lastYIndex = height - 1 + tolerance;
+
+      x_trans = (width - 1) / 2.0;
+      y_trans = (height - 1) / 2.0;
+
+      distortedImage = ITKImage::New();
+      distortedImage->SetRegions(bufferedRegion);
+      distortedImage->Allocate(); // NOTE Does SetBufferedRegion already allocate?
+
+      // Iterate through the pixels in eachImage and apply the transform
+      // TODO Parallelize this
+      itk::ImageRegionIterator<ITKImage> it(eachImage.second, bufferedRegion);
+      for(it.GoToBegin(); !it.IsAtEnd(); ++it)
+      {
+        PixelCoord pixel = it.GetIndex();
+        x = x_trans;
+        y = y_trans;
+        // TODO Parallelize this
+        for(size_t idx = 0; idx < parameters.size(); ++idx)
+        {
+          eachIJ = m_IJ[idx - (idx >= m_IJ.size() ? m_IJ.size() : 0)];
+
+          u_v = pow((pixel[0] - x_trans), eachIJ.first) * pow((pixel[1] - y_trans), eachIJ.second);
+
+          term = u_v * parameters[idx];
+          idx < ( m_IJ.size() / 2 ) ? x += term : y += term;
+        }
+
+        // This check effectively "clips" data
+        if(x >= -tolerance && x <= lastXIndex && y >= -tolerance && y <= lastYIndex)
+        {
+          eachPixel[0] = round(x);
+          eachPixel[1] = round(y);
+          distortedImage->SetPixel(eachPixel, eachImage.second->GetPixel(eachPixel));
+        }
+      }
+      distortedGrid.insert_or_assign(eachImage.first, distortedImage);
     }
 
-    for(const auto& eachOverlap : m_overlaps) // TODO Parallelize this
+    // Find the FFT Convolution and accumulate the maximum value from each overlap
+    ITKImage::Pointer image;
+    ITKImage::Pointer kernel;
+    ITKImage::Pointer fftConvolve;
+    MeasureType residual = 0.0; // NOTE Should this be initialized to a very large number?
+    // NOTE Can't be easily parallelized if multiple threads are changing cached
+    // memory like 'residual', not to mention the pointers...
+    for(const auto& eachOverlap : m_overlaps) // TODO Parallelize this?
     {
-      auto found1 = distortedGrid.find(eachOverlap.Image1Key());
-      auto found2 = distortedGrid.find(eachOverlap.Image2Key());
+      image = distortedGrid.at(eachOverlap.first.first);
+      image->SetRequestedRegion(eachOverlap.second.first);
+      image->GetRequestedRegion().IsInside(eachOverlap.second.first);
+      m_filter->SetInput(image);
 
-      // NOTE This should effectively be replaced by obtaining the
-      // convolution of the FFT of two overlap regions
-      // NOTE Or use this area to call a callback that's passed in as a parameter
-      // to the Optimize function
+      kernel = distortedGrid.at(eachOverlap.first.second);
+      kernel->SetRequestedRegion(eachOverlap.second.second);
+      kernel->GetRequestedRegion().IsInside(eachOverlap.second.second);
+      m_filter->SetKernelImage(kernel);
 
-      // TODO Assign the residual to some calculation done to the output
-      // of the FFTConvolution filter
+      m_filter->Update();
+      fftConvolve = m_filter->GetOutput();
+      residual += *std::max_element(
+        fftConvolve->GetBufferPointer(),
+        fftConvolve->GetBufferPointer() + fftConvolve->GetPixelContainer()->Size()
+      );
     }
-    return residual;
+    return sqrt(residual);
   }
 };
+
+uint Blend::GetIterationsFromStopDescription(const QString& stopDescription) const
+{
+  if (GetConvergenceFromStopDescription(stopDescription))
+  {
+    const QString startStr = "have been met in ";
+    const int startIdx = stopDescription.indexOf(startStr) + startStr.length();
+    return stopDescription.midRef(startIdx, stopDescription.indexOf(" iterations") - startIdx).toUInt();
+  }
+  return 0;
+}
+
+bool Blend::GetConvergenceFromStopDescription(const QString& stopDescription) const
+{
+  return stopDescription.contains("have been met");
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -629,57 +527,62 @@ void Blend::execute()
   if(getWarningCode() < 0)
   {
     QString ss = QObject::tr("Some warning message");
-    setWarningCondition(-88888888, ss);
+    setWarningCondition(-66400, ss);
     notifyStatusMessage(ss);
   }
 
   if(getErrorCode() < 0)
   {
     QString ss = QObject::tr("Some error message");
-    setErrorCondition(-99999999, ss);
+    setErrorCondition(-66500, ss);
     notifyStatusMessage(ss);
     return;
   }
 
   // These should probably be parametized
-  const double lowTolerance = 0.01f;
-  const double highTolerance = 0.01f;
+  const double lowTolerance = 1E-2;
+  const double highTolerance = 1E-2;
 
-  itk::AmoebaOptimizer::Pointer optimizer = itk::AmoebaOptimizer::New();
-  optimizer->SetMaximumNumberOfIterations(m_MaxIterations);
-  optimizer->SetFunctionConvergenceTolerance(lowTolerance);
-  optimizer->SetParametersConvergenceTolerance(highTolerance);
+  itk::AmoebaOptimizer::Pointer m_optimizer = itk::AmoebaOptimizer::New();
+  m_optimizer->SetMaximumNumberOfIterations(m_MaxIterations);
+  m_optimizer->SetFunctionConvergenceTolerance(lowTolerance);
+  m_optimizer->SetParametersConvergenceTolerance(highTolerance);
 
-  // This information will eventually reside in the cost function
-  // i.e. The information used as arguments to these contructors should belong
-  // in the constructor for the FFTConvolutionCostFunction
-//  ImageGrid imageGrid{ImageImpl::DataContainerArrayToImageGrid(this->getDataContainerArray(), m_AttributeMatrixName, m_DataAttributeArrayName, m_XAttributeArrayName, m_YAttributeArrayName)};
-//  std::vector<OverlapImpl> overlaps{OverlapImpl::DetermineOverlaps(imageGrid, m_OverlapPercentage)};
-
+//  using CostFunctionType = SimpleCostFunction;
+  using CostFunctionType = MultiParamCostFunction;
 //  using CostFunctionType = FFTConvolutionCostFunction;
-  using CostFunctionType = SimpleCostFunction;
   CostFunctionType implementation;
-  optimizer->SetInitialPosition(implementation.GetInitialValues());
-  optimizer->SetCostFunction(&implementation);
+  implementation.Initialize(
+//    m_Degree, m_OverlapPercentage, getDataContainerArray(),
+//    m_AttributeMatrixName, m_DataAttributeArrayName, m_XAttributeArrayName, m_YAttributeArrayName
+  );
+  m_optimizer->SetInitialPosition(implementation.GetInitialValues());
+  m_optimizer->SetCostFunction(&implementation);
 
-  // Start the optimization!
-  optimizer->StartOptimization();
+  m_optimizer->StartOptimization();
 
-  // TODO Determine whether the solution truly converged
-
-  // Get the transform and value following the optimization
-  itk::AmoebaOptimizer::ParametersType a = optimizer->GetCurrentPosition();
-  Transform out(a.Size());
-  for (const auto& eachCoeff : a)
+  // Can get rid of this after debugging is done for filter
+  QString a;
+  for (const auto& eachCoeff : m_optimizer->GetCurrentPosition())
   {
-    out.push_back(eachCoeff);
+    a += QString::number(eachCoeff) + ", ";
   }
-  itk::AmoebaOptimizer::MeasureType value = optimizer->GetValue();
+  qDebug() << "Position: [ " << a.leftRef(a.length() - 2) << " ]";
+  qDebug() << "Value: " << m_optimizer->GetValue();
 
-  // TODO Get number of iterations the optimizer executed
+  // Determine whether the solution truly converged
+  QString stopReason = QString::fromStdString(m_optimizer->GetStopConditionDescription());
+  if (!GetConvergenceFromStopDescription(stopReason))
+  {
+    setErrorCondition(-66800, stopReason);
+    notifyStatusMessage(stopReason);
+    return;
+  }
 
-  // TODO
-  // Set up new Attribute matrix with results of filter
+  // Can get rid of this after debugging is done for filter
+  qDebug() << "Number of Iterations: " << GetIterationsFromStopDescription(stopReason);
+
+  // TODO Set up new Attribute matrix with results of filter
   // Should contain the transformation matrix (a)
   // And a data array with a single element for the iterations run
 }

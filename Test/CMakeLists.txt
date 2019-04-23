@@ -32,8 +32,8 @@ elseif(ITK_VERSION_MAJOR EQUAL 5)
   # Put ITK 5 Specific Modyles in here
   set( TEST_NAMES
       ${TEST_NAMES}
-      ITKImportFijiMontageTest
-      ITKImportRoboMetMontageTest
+#      ITKImportFijiMontageTest
+#      ITKImportRoboMetMontageTest
 
       # ITKPCMTileRegistrationTest
       # ITKStitchMontageTest

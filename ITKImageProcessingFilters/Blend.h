@@ -37,22 +37,6 @@
 
 #include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
-// Avoiding polluting the global namespace with filter specific names
-namespace BlendFilter
-{
-class OverlapImpl;
-class ImageImpl;
-
-using Error_T = float;
-using Cell_T = size_t;
-using TransformCoeff_T = float;
-using Transform = std::vector<TransformCoeff_T>;
-using Results = std::map<Transform, Error_T>;
-using Simplex = std::vector<Transform>;
-using ImageGrid = std::map<std::pair<Cell_T, Cell_T>, ImageImpl>;
-using SimplexImageMap = std::map<Transform, ImageGrid>;
-} // namespace BlendFilter
-
 /**
  * @brief The Blend class. See [Filter documentation](@ref blend) for details.
  */
@@ -93,8 +77,8 @@ public:
   SIMPL_FILTER_PARAMETER(QStringList, ChosenDataContainers)
   Q_PROPERTY(QStringList ChosenDataContainers READ getChosenDataContainers WRITE setChosenDataContainers)
 
-  SIMPL_FILTER_PARAMETER(uint64_t, MaxIterations)
-  Q_PROPERTY(uint64_t MaxIterations READ getMaxIterations WRITE setMaxIterations)
+  SIMPL_FILTER_PARAMETER(uint, MaxIterations)
+  Q_PROPERTY(uint MaxIterations READ getMaxIterations WRITE setMaxIterations)
 
   SIMPL_FILTER_PARAMETER(int, OverlapMethod)
   Q_PROPERTY(int OverlapMethod READ getOverlapMethod WRITE setOverlapMethod)
@@ -116,6 +100,10 @@ public:
 
   SIMPL_FILTER_PARAMETER(QString, DataAttributeArrayName)
   Q_PROPERTY(QString DataAttributeArrayName READ getDataAttributeArrayName WRITE setDataAttributeArrayName)
+
+  bool GetConvergenceFromStopDescription(const QString&) const;
+
+  uint GetIterationsFromStopDescription(const QString&) const;
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class

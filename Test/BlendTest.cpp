@@ -48,8 +48,8 @@
 #include "UnitTestSupport.hpp"
 
 #include <array>
-#include <cmath>
 #include <map>
+#include <cmath>
 #ifndef M_PI
 #define M_PI (3.141592653f)
 #endif
@@ -84,21 +84,21 @@ class BlendTest
   static const int m_tileRows = 2;
   static const int m_tileColumns = 2;
 
-  static const size_t m_res_width = 10;
-  static const size_t m_res_height = 10;
+  static const size_t m_resWidth = 10;
+  static const size_t m_resHeight = 10;
 
   static const int m_d = 1;
-  static const int m_max_iterations = 100;
+  static const int m_maxIterations = 10000;
 
-  static const int m_theta_degrees = 90;
+  static const int m_thetaDegrees = 90;
   static constexpr float m_n = 0.0f;
   static constexpr float m_m = 1.0f;
-  static constexpr float m_theta = M_PI * m_theta_degrees / 180;
+  static constexpr float m_theta = M_PI * m_thetaDegrees / 180;
+  static constexpr float m_errTolerance = 2.0f;
 
-  static constexpr float m_overlap_percentage = 0.25f;
-  const int m_x_overlapDimension = roundf(m_res_width * m_overlap_percentage);
-  const int m_y_overlapDimension = roundf(m_res_height * m_overlap_percentage);
-  const float m_a_stepSize = 0.1;
+  static constexpr float m_overlapPercentage = 0.25f;
+  const size_t m_x_overlapDimension = static_cast<size_t>(roundf(m_resWidth * m_overlapPercentage));
+  const size_t m_y_overlapDimension = static_cast<size_t>(roundf(m_resHeight * m_overlapPercentage));
 
   static const int m_arrLength = 8;
   const std::vector<float> m_identity{0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0};
@@ -123,12 +123,12 @@ class BlendTest
     return data;
   }
 
-  template <class T> DataPair<T> make_product(size_t listOneSize, size_t listTwoSize) const
+  template <class T> DataPair<T> make_product(T listOneSize, T listTwoSize) const
   {
     DataPair<T> product{};
-    for(int listOneIndex = 0; listOneIndex < listOneSize; listOneIndex++)
+    for(T listOneIndex = 0; listOneIndex < listOneSize; listOneIndex++)
     {
-      for(int listTwoIndex = 0; listTwoIndex < listTwoSize; listTwoIndex++)
+      for(T listTwoIndex = 0; listTwoIndex < listTwoSize; listTwoIndex++)
       {
         product.push_back(std::make_pair(listTwoIndex, listOneIndex));
       }
@@ -139,14 +139,14 @@ class BlendTest
   Image Transform(Image image, std::vector<float> a) const
   {
     const float tolerance = 0.05f;
-    const float lastXIndex = m_res_width - 1 + tolerance;
-    const float lastYIndex = m_res_height - 1 + tolerance;
-    const int coeff_len = a.size() / 2;
-    const int d = roundf(sqrt(coeff_len));
+    const float lastXIndex = m_resWidth - 1 + tolerance;
+    const float lastYIndex = m_resHeight - 1 + tolerance;
+    const size_t coeff_len = static_cast<size_t>(a.size() / 2);
+    const int d = static_cast<int>(round(sqrt(coeff_len)));
     const DataPair<int> i_j = make_product<int>(d, d);
 
-    const float x_trans = (m_res_width - 1) / 2.0f;
-    const float y_trans = (m_res_height - 1) / 2.0f;
+    const float x_trans = (m_resWidth - 1) / 2.0f;
+    const float y_trans = (m_resHeight - 1) / 2.0f;
     float x = 0;
     float y = 0;
     float u_v = 0;
@@ -159,7 +159,7 @@ class BlendTest
     {
       x = x_trans;
       y = y_trans;
-      for(int idx = 0; idx < a.size(); ++idx)
+      for(size_t idx = 0; idx < a.size(); ++idx)
       {
         eachIJ = i_j[idx - (idx >= i_j.size() ? i_j.size() : 0)];
 
@@ -202,8 +202,8 @@ class BlendTest
       size_t sz = img.size();
 
       UInt8ArrayType::Pointer imageData = UInt8ArrayType::CreateArray(sz, m_dataAAName);
-      FloatArrayType::Pointer xPixels = FloatArrayType::CreateArray(sz, m_XAAName);
-      FloatArrayType::Pointer yPixels = FloatArrayType::CreateArray(sz, m_YAAName);
+      Int64ArrayType::Pointer xPixels = Int64ArrayType::CreateArray(sz, m_XAAName);
+      Int64ArrayType::Pointer yPixels = Int64ArrayType::CreateArray(sz, m_YAAName);
       size_t pixelIdx = 0;
       for(const auto& eachPixel : img)
       {
@@ -222,7 +222,7 @@ class BlendTest
       // Set the up the geometry for the data container
       ImageGeom::Pointer imgGeo = ImageGeom::CreateGeometry(m_geoName);
       imgGeo->setOrigin(0.0f, 0.0f, 0.0f);
-      imgGeo->setDimensions(m_res_width, m_res_height, 0.0f);
+      imgGeo->setDimensions(m_resWidth, m_resHeight, 0.0f);
 
       // Set up the data container to hold the attribute matrix
       QString gridCoordsAsString = GridCoordsToName(eachImage.first);
@@ -237,30 +237,9 @@ class BlendTest
     return dca;
   }
 
-  ImageGrid DataContainerArrayToImageGrid(const DataContainerArrayShPtr dca) const
-  {
-    ImageGrid images{};
-    for(const auto& eachDC : dca->getDataContainers())
-    {
-      AttributeMatrixShPtr am = eachDC->getAttributeMatrix(m_AMName);
-      UInt8ArrayType::Pointer dataAA = am->getAttributeArrayAs<UInt8ArrayType>(m_dataAAName);
-      FloatArrayType::Pointer xAA = am->getAttributeArrayAs<FloatArrayType>(m_XAAName);
-      FloatArrayType::Pointer yAA = am->getAttributeArrayAs<FloatArrayType>(m_YAAName);
-
-      Image img{};
-      for(size_t pxlIdx = 0; pxlIdx < m_res_width * m_res_height; ++pxlIdx)
-      {
-        img[std::make_pair(xAA->getValue(pxlIdx), yAA->getValue(pxlIdx))] = dataAA->getValue(pxlIdx);
-      }
-
-      images[NameToGridCoords<Cell_T>(eachDC->getName())] = img;
-    }
-    return images;
-  }
-
   ImageArray ImageToArray(const Image& image) const
   {
-    ImageArray imgArray(m_res_height, std::vector<Image_T>(m_res_width, 0));
+    ImageArray imgArray(m_resHeight, std::vector<Image_T>(m_resWidth, 0));
 
     for(const auto& eachPixel : image)
     {
@@ -268,7 +247,7 @@ class BlendTest
       // Iterate through all of the pixels in the image
       // When converting to array, pixel origin comes from lower-left
       // corner - and need translated to origin in upper-left corner
-      imgArray[m_res_height - roundf(eachPixel.first.second) - 1][roundf(eachPixel.first.first)] = eachPixel.second;
+      imgArray[m_resHeight - static_cast<size_t>(roundf(eachPixel.first.second)) - 1][static_cast<size_t>(roundf(eachPixel.first.first))] = eachPixel.second;
     }
 
     return imgArray;
@@ -278,7 +257,7 @@ class BlendTest
   {
     QString stream;
 
-    for(int tileRowIdx = 0; tileRowIdx < m_tileRows; ++tileRowIdx)
+    for(size_t tileRowIdx = 0; tileRowIdx < m_tileRows; ++tileRowIdx)
     {
       std::vector<ImageArray> imageRow{};
       for(const auto& eachImage : imageGrid)
@@ -289,7 +268,7 @@ class BlendTest
         }
       }
 
-      for(int row_idx = 0; row_idx < m_res_height; ++row_idx)
+      for(size_t row_idx = 0; row_idx < m_resHeight; ++row_idx)
       {
         for(const auto& eachImage : imageRow)
         {
@@ -307,21 +286,21 @@ class BlendTest
   }
 
   // TODO
-  int CompareImages(const ImageGrid& blendedImages) const
+  bool CompareTransform(const std::vector<float>& transform) const
   {
-    int failedImages = 0;
-    return failedImages;
+    float error = 0;
+
+    return error > m_errTolerance;
   }
 
   void SetUp()
   {
     DataPair<int> tiles{make_product<int>(m_tileRows, m_tileColumns)};
-    DataPair<Image_T> pixels{make_product<Image_T>(m_res_width, m_res_height)};
+    DataPair<Image_T> pixels{make_product<Image_T>(m_resWidth, m_resHeight)};
 
-    qDebug() << "Generating images...";
     for(const auto& eachTile : tiles)
     {
-      std::vector<int> data{GenData(pixels.size())};
+      std::vector<int> data{GenData(static_cast<int>(pixels.size()))};
       int pixelIndex = 0;
       Image img{};
       for(const auto& eachPixel : pixels)
@@ -331,7 +310,6 @@ class BlendTest
       m_originalImages[eachTile] = img;
     }
 
-    qDebug() << "Generating overlaps...";
     for(auto& eachImage : m_originalImages)
     {
       // Skip the top-left image
@@ -340,65 +318,62 @@ class BlendTest
         continue;
       }
 
-      int r = eachImage.first.first;
-      int c = eachImage.first.second;
+      size_t r = eachImage.first.first;
+      size_t c = eachImage.first.second;
       auto upperImage{m_originalImages.find(std::make_pair(r - 1, c))};
       auto lefterImage{m_originalImages.find(std::make_pair(r, c - 1))};
 
       // Overlap Data
       for(auto& eachPixel : eachImage.second)
       {
-        int x = eachPixel.first.first;
-        int y = eachPixel.first.second;
+        size_t x = eachPixel.first.first;
+        size_t y = eachPixel.first.second;
         // Overlap the data if inside the horizontal overlap region
         if(x < m_x_overlapDimension && lefterImage != m_originalImages.end())
         {
-          eachPixel.second = lefterImage->second[std::make_pair(m_res_width - m_x_overlapDimension + x, y)];
+          eachPixel.second = lefterImage->second[std::make_pair(m_resWidth - m_x_overlapDimension + x, y)];
         }
         // Overlap the data if inside the vertical overlap region
-        if(y >= m_res_height - m_y_overlapDimension && upperImage != m_originalImages.end())
+        if(y >= m_resHeight - m_y_overlapDimension && upperImage != m_originalImages.end())
         {
-          eachPixel.second = upperImage->second[std::make_pair(x, m_y_overlapDimension + y - m_res_height)];
+          eachPixel.second = upperImage->second[std::make_pair(x, m_y_overlapDimension + y - m_resHeight)];
         }
       }
     }
 
-    qDebug() << "Distorting original images...";
     for(const auto& eachImage : m_originalImages)
     {
       m_distortedImages[eachImage.first] = Transform(eachImage.second, m_a);
     }
 
-    qDebug() << "Setting up Blend filter properties...";
-    m_blendFilter->setProperty("MaxIterations", QVariant(m_max_iterations));
+    m_blendFilter->setProperty("MaxIterations", QVariant(m_maxIterations));
     m_blendFilter->setProperty("Degree", QVariant(m_d));
     m_blendFilter->setProperty("OverlapMethod", QVariant(0));
-    m_blendFilter->setProperty("OverlapPercentage", QVariant(m_overlap_percentage));
+    m_blendFilter->setProperty("OverlapPercentage", QVariant(m_overlapPercentage));
     m_blendFilter->setProperty("DataAttributeArrayName", QVariant(m_dataAAName));
     m_blendFilter->setProperty("AttributeMatrixName", QVariant(m_AMName));
     m_blendFilter->setProperty("XAttributeArrayName", QVariant(m_XAAName));
     m_blendFilter->setProperty("YAttributeArrayName", QVariant(m_YAAName));
 
     // Assign the data container array to the Blend filter
-    qDebug() << "Assigning images to the Blend filter...";
     m_blendFilter->setDataContainerArray(ImageGridToDataContainerArray(m_distortedImages));
   }
 
   int RunTest()
   {
     qDebug() << "Attempting to blend...\n";
-    // Run the filter's execute method
     m_blendFilter->execute();
-
-    // Get the blended images from the data container array of the filter
-    ImageGrid blendedImages{DataContainerArrayToImageGrid(m_blendFilter->getDataContainerArray())};
 
     // Check that the algorithm converged and the compare the
     // reverted image data to the original images
-    int failedImages = CompareImages(blendedImages);
     int errorCode = m_blendFilter->getErrorCode();
+    DREAM3D_REQUIRE_EQUAL(errorCode, 0)
 
-    DREAM3D_REQUIRE_EQUAL(failedImages + errorCode, 0)
+    // TODO Get the resulting coefficient array from the the new data structures
+    // output from the filter
+    std::vector<float> transform{};
+    bool outOfTolerance = CompareTransform(transform);
+    DREAM3D_REQUIRE_EQUAL(outOfTolerance, true)
 
     return EXIT_SUCCESS;
   }
