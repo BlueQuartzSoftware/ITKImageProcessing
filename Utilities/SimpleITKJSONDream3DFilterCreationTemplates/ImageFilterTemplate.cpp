@@ -117,7 +117,7 @@ ${FilterInternal}
 AbstractFilter::Pointer ${FilterName}::newFilterInstance(bool copyFilterParameters) const
 {
   ${FilterName}::Pointer filter = ${FilterName}::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

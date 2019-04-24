@@ -153,3 +153,40 @@ if(${${PLUGIN_NAME}_ENABLE_SCIFIO})
 endif()
 
 add_dependencies(${PLUGIN_NAME}UnitTest ${PLUGIN_NAME}Gui)
+
+
+#------------------------------------------------------------------------------
+# If Python is enabled, then enable the Python unit tests for this plugin
+if(SIMPL_ENABLE_PYTHON)
+    get_property(SIMPL_ANACONDA_OUTPUT_DIR GLOBAL PROPERTY SIMPL_ANACONDA_OUTPUT_DIR)
+    get_property(SIMPL_PYTHON_TEST_SCRIPT GLOBAL PROPERTY SIMPL_PYTHON_TEST_SCRIPT)
+    get_property(PYTHON_SITE_PACKAGES_NAME GLOBAL PROPERTY PYTHON_SITE_PACKAGES_NAME)
+
+    #------------------------------
+    # Initialize the PYTHON_TEST_INPUT_DIR variable to point to the "Testing Directory"
+    file(TO_CMAKE_PATH "${${PLUGIN_NAME}Test_SOURCE_DIR}/Python" PYTHON_TEST_INPUT_DIR)
+    #------------------------------
+    # These names should match the names "EXACTLY" (including capitalization).
+    # NO Spaces in the names (which means no spaces in the variable names)
+    set(PLUGIN_PYTHON_TESTS
+
+    )
+
+    foreach(test ${PLUGIN_PYTHON_TESTS})
+        set(SIMPL_PYTHON_TEST_DRIVER "${SIMPL_ANACONDA_OUTPUT_DIR}/UnitTest/${PLUGIN_NAME}/${test}.sh")
+
+        configure_file(${SIMPL_PYTHON_TEST_SCRIPT}
+                        "${SIMPL_PYTHON_TEST_DRIVER}" @ONLY)
+
+        add_test(NAME ${PLUGIN_NAME}_${test} COMMAND "${SIMPL_PYTHON_TEST_DRIVER}" )
+    endforeach(test ${PLUGIN_PYTHON_TESTS})
+    #------------------------------
+    # Also setup a unit test for the base python unit test file that is generated as part
+    # of the Pybind11 generated codes
+    set(PYTHON_TEST_INPUT_DIR "${SIMPL_ANACONDA_OUTPUT_DIR}/UnitTest/${PLUGIN_NAME}")
+    set(SIMPL_PYTHON_TEST_DRIVER "${SIMPL_ANACONDA_OUTPUT_DIR}/UnitTest/${PLUGIN_NAME}/${PLUGIN_NAME}.sh")
+    set(test "${PLUGIN_NAME}_UnitTest")
+    configure_file(${SIMPL_PYTHON_TEST_SCRIPT}  "${SIMPL_PYTHON_TEST_DRIVER}" @ONLY)
+    add_test(NAME ${PLUGIN_NAME}_Python_UnitTest COMMAND "${SIMPL_PYTHON_TEST_DRIVER}" )
+endif()
+

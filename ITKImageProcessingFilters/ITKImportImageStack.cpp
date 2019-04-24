@@ -239,20 +239,18 @@ void ITKImportImageStack::dataCheck()
   // Extract the Geometry and update the geometry
   DataContainer::Pointer dc = dca->getDataContainer(getDataContainerName());
   ImageGeom::Pointer imageGeom = dc->getGeometryAs<ImageGeom>();
-  size_t x, y, z;
-  std::tie(x, y, z) = imageGeom->getDimensions();
-  z = fileList.size();
-  imageGeom->setDimensions(x, y, z);
-  imageGeom->setOrigin(m_Origin[0], m_Origin[1], m_Origin[2]);
-  imageGeom->setSpacing(m_Spacing[0], m_Spacing[1], m_Spacing[2]);
+  SizeVec3Type dims = imageGeom->getDimensions();
+  dims[2] = fileList.size();
+  imageGeom->setDimensions(dims);
+  imageGeom->setOrigin(m_Origin);
+  imageGeom->setSpacing(m_Spacing);
   m->setGeometry(imageGeom);
   dc->setGeometry(IGeometry::NullPointer());
 
   // Extract the Cell Attribute Matrix that was created and resize it for the number of Tuples that we have
   // and add it to the actual DataContainer that this filter created.
   AttributeMatrix::Pointer cellAttrMat = dc->getAttributeMatrix(getCellAttributeMatrixName());
-  QVector<size_t> tDims = {x, y, z};
-  cellAttrMat->resizeAttributeArrays(tDims);
+  cellAttrMat->resizeAttributeArrays(dims.toContainer<QVector<size_t>>());
   m->insertOrAssign(cellAttrMat);
   // The data array that was embedded in the Cell Attribute Matrix just got resized so we should not have to do
   // anything else at this point.
@@ -284,9 +282,8 @@ void readImageStack(ITKImportImageStack* filter, const QVector<QString>& fileLis
 
   DataContainer::Pointer dc = filter->getDataContainerArray()->getDataContainer(dcName);
   ImageGeom::Pointer imageGeom = dc->getGeometryAs<ImageGeom>();
-  size_t xDim, yDim, zDim;
-  std::tie(xDim, yDim, zDim) = imageGeom->getDimensions();
-  size_t tuplesPerSlice = xDim * yDim;
+  SizeVec3Type dims = imageGeom->getDimensions();
+  size_t tuplesPerSlice = dims[0] * dims[1];
   AttributeMatrix::Pointer cellAttrMatr = dc->getAttributeMatrix(attrMatName);
   using DataArrayType = DataArray<TPixel>;
   using DataArrayPointerType = typename DataArrayType::Pointer;
@@ -333,7 +330,7 @@ void readImageStack(ITKImportImageStack* filter, const QVector<QString>& fileLis
     }
 
     // Compute the Tuple Index we are at:
-    size_t tupleIndex = (slice * xDim * yDim);
+    size_t tupleIndex = (slice * dims[0] * dims[1]);
     // get the current Slice data...
     DataArrayPointerType tempData = dca->getDataContainer(dcName)->getAttributeMatrix(attrMatName)->getAttributeArrayAs<DataArrayType>(arrayName);
     // Copy that into the output array...

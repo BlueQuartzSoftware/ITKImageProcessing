@@ -371,9 +371,8 @@ void ITKImageWriter::execute()
     return;
   }
 
-  size_t dims[3] = {0, 0, 0};
   ImageGeom::Pointer currentGeom = container->getGeometryAs<ImageGeom>();
-  std::tie(dims[0], dims[1], dims[2]) = currentGeom->getDimensions();
+  SizeVec3Type dims = currentGeom->getDimensions();
 
   DataContainerArray::Pointer dca = DataContainerArray::New();
   DataContainer::Pointer dc = DataContainer::New(container->getName());

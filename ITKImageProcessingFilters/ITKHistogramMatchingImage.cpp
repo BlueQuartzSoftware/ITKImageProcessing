@@ -88,7 +88,7 @@ size_t ITKHistogramMatchingImage::getImageDimension(const DataArrayPath& path)
   ImageGeom::Pointer imageGeometry = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, path.getDataContainerName());
   if(imageGeometry.get() != nullptr)
   {
-    std::tie(tDims[0], tDims[1], tDims[2]) = imageGeometry->getDimensions();
+    tDims = imageGeometry->getDimensions().toContainer<QVector<size_t>>();
   }
   else
   {

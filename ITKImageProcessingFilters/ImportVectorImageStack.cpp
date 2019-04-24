@@ -260,14 +260,13 @@ void ImportVectorImageStack::dataCheck()
       {
         // Get the geometry that was read from the ITKReadImage Filter
         ImageGeom::Pointer image = imageReaderDC->getGeometryAs<ImageGeom>();
-        size_t xDim = 0, yDim = 0, zDim = 0;
-        std::tie(xDim, yDim, zDim) = image->getDimensions();
+        SizeVec3Type dims = image->getDimensions();
         // Adjust the Z Dimension of the ImageGeometry and save it in our current Data Container.
-        zDim = static_cast<size_t>(totalIndex);
-        image->setDimensions(std::make_tuple(xDim, yDim, zDim));
+        dims[2] = static_cast<size_t>(totalIndex);
+        image->setDimensions(dims);
         m->setGeometry(image);
         // Set the number of tuples in the Cell AttributeMatrix
-        am->setTupleDimensions({xDim, yDim, zDim});
+        am->setTupleDimensions(dims.toContainer<QVector<size_t>>());
       }
       // Now figure out if the image was 8bit or 16 bit. The ONLY 2 types we are supporting
       // are 8 bit and 16 bit GrayScale images
