@@ -116,7 +116,7 @@ void ITKSobelEdgeDetectionImage::filterInternal()
 AbstractFilter::Pointer ITKSobelEdgeDetectionImage::newFilterInstance(bool copyFilterParameters) const
 {
   ITKSobelEdgeDetectionImage::Pointer filter = ITKSobelEdgeDetectionImage::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

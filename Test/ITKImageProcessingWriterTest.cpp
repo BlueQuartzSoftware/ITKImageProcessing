@@ -139,18 +139,13 @@ public:
   // -----------------------------------------------------------------------------
   bool CompareImageGeometries(const ImageGeom::Pointer& inputImageGeometry, const ImageGeom::Pointer& baselineImageGeometry)
   {
-    FloatVec3Type inputResolution;
-    FloatVec3Type baselineResolution;
-    inputImageGeometry->getSpacing(inputResolution);
-    baselineImageGeometry->getSpacing(baselineResolution);
-    FloatVec3Type inputOrigin;
-    FloatVec3Type baselineOrigin;
-    inputImageGeometry->getOrigin(inputOrigin);
-    baselineImageGeometry->getOrigin(baselineOrigin);
-    size_t inputDimensions[3];
-    size_t baselineDimensions[3];
-    std::tie(inputDimensions[0], inputDimensions[1], inputDimensions[2]) = inputImageGeometry->getDimensions();
-    std::tie(baselineDimensions[0], baselineDimensions[1], baselineDimensions[2]) = baselineImageGeometry->getDimensions();
+
+    FloatVec3Type inputResolution = inputImageGeometry->getSpacing();
+    FloatVec3Type baselineResolution = baselineImageGeometry->getSpacing();
+    FloatVec3Type inputOrigin = inputImageGeometry->getOrigin();
+    FloatVec3Type baselineOrigin = baselineImageGeometry->getOrigin();
+    SizeVec3Type inputDimensions = inputImageGeometry->getDimensions();
+    SizeVec3Type baselineDimensions = baselineImageGeometry->getDimensions();
     for(int i = 0; i < 3; i++)
     {
       // float tol = 1e-6;

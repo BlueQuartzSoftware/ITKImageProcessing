@@ -492,8 +492,8 @@ void ITKStitchMontage::createFijiDataStructure()
       continue;
     }
     ImageGeom::Pointer image = dcItem->getGeometryAs<ImageGeom>();
-    SIMPL::Tuple3SVec dimensions = image->getDimensions();
-    SIMPL::Tuple3FVec origin = image->getOrigin();
+    SizeVec3Type dimensions = image->getDimensions();
+    FloatVec3Type origin = image->getOrigin();
 
     // Extract row and column data from the data container name
     QString filename = ""; // Need to find this?

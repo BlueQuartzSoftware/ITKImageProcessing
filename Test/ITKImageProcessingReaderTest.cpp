@@ -307,12 +307,9 @@ void RemoveTestFiles()
     DREAM3D_REQUIRE_NE(imageGeometry.get(), 0);
 
     float tol = 1e-6;
-    FloatVec3Type resolution;
-    imageGeometry->getSpacing(resolution);
-    FloatVec3Type origin;
-    imageGeometry->getOrigin(origin);
-    size_t dimensions[3] = {0, 0, 0};
-    std::tie(dimensions[0], dimensions[1], dimensions[2]) = imageGeometry->getDimensions();
+    FloatVec3Type resolution = imageGeometry->getSpacing();
+    FloatVec3Type origin = imageGeometry->getOrigin();
+    SizeVec3Type dimensions = imageGeometry->getDimensions();
     for(size_t i = 0; i < Dimension; i++)
     {
       float imageSpacing = expectedImage->GetSpacing()[i];

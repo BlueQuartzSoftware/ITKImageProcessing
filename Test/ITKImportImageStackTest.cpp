@@ -281,10 +281,8 @@ AbstractFilter::Pointer GetFilterByName(const QString& filterName)
     ImageGeom::Pointer imageGeometry = std::dynamic_pointer_cast<ImageGeom>(geometry);
     DREAM3D_REQUIRE_NE(imageGeometry.get(), 0);
 
-    FloatVec3Type spacing;
-    imageGeometry->getSpacing(spacing);
-    FloatVec3Type origin;
-    imageGeometry->getOrigin(origin);
+    FloatVec3Type spacing = imageGeometry->getSpacing();
+    FloatVec3Type origin = imageGeometry->getOrigin();
 
     DREAM3D_COMPARE_FLOATS(&origin[0], &inputOrigin[0], 5);
     DREAM3D_COMPARE_FLOATS(&origin[1], &inputOrigin[1], 5);
@@ -294,12 +292,11 @@ AbstractFilter::Pointer GetFilterByName(const QString& filterName)
     DREAM3D_COMPARE_FLOATS(&spacing[1], &inputspacing[1], 5);
     DREAM3D_COMPARE_FLOATS(&spacing[2], &inputspacing[2], 5);
 
-    size_t dimensions[Dimension];
-    size_t expectedDimensions[Dimension];
+    SizeVec3Type dimensions = imageGeometry->getDimensions();
+    SizeVec3Type expectedDimensions;
     expectedDimensions[0] = 524;
     expectedDimensions[1] = 390;
     expectedDimensions[2] = 3;
-    std::tie(dimensions[0], dimensions[1], dimensions[2]) = imageGeometry->getDimensions();
     for(size_t i = 0; i < Dimension; ++i)
     {
       DREAM3D_REQUIRE_EQUAL(dimensions[i], expectedDimensions[i]);
