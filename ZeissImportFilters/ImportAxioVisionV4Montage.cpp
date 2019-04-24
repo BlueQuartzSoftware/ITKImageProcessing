@@ -492,12 +492,11 @@ void ImportAxioVisionV4Montage::parseImages(QDomElement& root, const ZeissTagsXm
     ImageGeom::Pointer image = initializeImageGeom(root, photoTagsSection);
     dc->setGeometry(image);
 
-    image->getSpacing(minSpacing);
+    minSpacing = image->getSpacing();
 
-    float xOrigin = 0.0f, yOrigin = 0.0f, zOrigin = 0.0f;
-    std::tie(xOrigin, yOrigin, zOrigin) = image->getOrigin();
-    minCoord[0] = std::min(xOrigin, minCoord[0]);
-    minCoord[1] = std::min(yOrigin, minCoord[1]);
+    FloatVec3Type origin = image->getOrigin();
+    minCoord[0] = std::min(origin[0], minCoord[0]);
+    minCoord[1] = std::min(origin[1], minCoord[1]);
     minCoord[2] = 0.0f;
 
     geometries.emplace_back(image);
@@ -544,11 +543,8 @@ void ImportAxioVisionV4Montage::parseImages(QDomElement& root, const ZeissTagsXm
 
     for(const auto& image : geometries)
     {
-      FloatVec3Type currentOrigin;
-      image->getOrigin(currentOrigin);
-
-      FloatVec3Type currentSpacing;
-      image->getSpacing(currentSpacing);
+      FloatVec3Type currentOrigin = image->getOrigin();
+      FloatVec3Type currentSpacing = image->getSpacing();
 
       for(size_t i = 0; i < 3; i++)
       {

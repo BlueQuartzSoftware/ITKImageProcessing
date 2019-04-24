@@ -559,8 +559,7 @@ void ImportZenInfoMontage::generateCache(QDomElement& exportDocument)
 
       // Get the spacing from the geometry
       ImageGeom::Pointer fromImageGeom = fromDca->getGeometryAs<ImageGeom>();
-      FloatVec3Type spacing;
-      fromImageGeom->getSpacing(spacing);
+      FloatVec3Type spacing = fromImageGeom->getSpacing();
       if(m_ChangeSpacing)
       {
         bound.SpacingX = m_Spacing[0];
@@ -576,8 +575,7 @@ void ImportZenInfoMontage::generateCache(QDomElement& exportDocument)
       minSpacing[1] = bound.SpacingY;
       minSpacing[2] = 1.0;
 
-      FloatVec3Type origin;
-      fromImageGeom->getOrigin(origin);
+      FloatVec3Type origin = fromImageGeom->getOrigin();
       minCoord[0] = std::min(origin[0], minCoord[0]);
       minCoord[1] = std::min(origin[1], minCoord[1]);
       minCoord[2] = 0.0f;
@@ -632,11 +630,8 @@ void ImportZenInfoMontage::generateCache(QDomElement& exportDocument)
 
     for(const auto& image : geometries)
     {
-      FloatVec3Type currentOrigin;
-      image->getOrigin(currentOrigin);
-
-      FloatVec3Type currentSpacing;
-      image->getSpacing(currentSpacing);
+      FloatVec3Type currentOrigin = image->getOrigin();
+      FloatVec3Type currentSpacing = image->getSpacing();
 
       for(size_t i = 0; i < 3; i++)
       {
@@ -746,12 +741,9 @@ void ImportZenInfoMontage::readImages()
     ImageGeom::Pointer image = dc->getGeometryAs<ImageGeom>();
 
     // Create the Image Geometry
-    SizeVec3Type dims;
-    image->getDimensions(dims);
-    FloatVec3Type origin;
-    image->getOrigin(origin);
-    FloatVec3Type spacing;
-    image->getSpacing(spacing);
+    SizeVec3Type dims = image->getDimensions();
+    // FloatVec3Type origin = image->getOrigin();
+    // FloatVec3Type spacing = image->getSpacing();
 
     std::vector<size_t> tDims = {dims[0], dims[1], dims[2]};
     // The Cell AttributeMatrix is also already created at this point

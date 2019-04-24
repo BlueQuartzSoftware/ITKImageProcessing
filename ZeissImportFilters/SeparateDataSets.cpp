@@ -214,14 +214,11 @@ void SeparateDataSets::execute()
 
     ImageGeom::Pointer originalGeom = origDCPtr->getGeometryAs<ImageGeom>();
     ImageGeom::Pointer newGeom = ImageGeom::New();
-    size_t dims[3] = {0, 0, 0};
-    std::tie(dims[0], dims[1], dims[2]) = originalGeom->getDimensions();
+    SizeVec3Type dims = originalGeom->getDimensions();
     newGeom->setDimensions(dims);
-    FloatVec3Type spacing;
-    originalGeom->getSpacing(spacing);
+    // FloatVec3Type spacing = originalGeom->getSpacing();
     newGeom->setSpacing(FloatVec3Type(scaleFactorForX, scaleFactorForY, 0.0f));
-    FloatVec3Type origin;
-    originalGeom->getOrigin(origin);
+    FloatVec3Type origin = originalGeom->getOrigin();
     newGeom->setOrigin(FloatVec3Type(stagePositionX, stagePositionY, origin[2]));
     newGeom->setName(originalGeom->getName());
     newDCPtr->setGeometry(newGeom);

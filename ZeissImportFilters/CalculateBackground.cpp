@@ -211,8 +211,7 @@ void calculateOutputValues(CalculateBackground* filter)
   backgroundArray.initializeWithZeros();
 
   typename GeomType::Pointer outputGeom = outputDc->getGeometryAs<GeomType>();
-  SizeVec3Type dims;
-  outputGeom->getDimensions(dims);
+  // SizeVec3Type dims = outputGeom->getDimensions();
 
   typename AccumDataArrayType::Pointer accumulateArrayPtr = AccumDataArrayType::CreateArray(backgroundArrayPtr->getNumberOfTuples(), "Accumulation Array", true);
   accumulateArrayPtr->initializeWithZeros();
@@ -655,8 +654,7 @@ void CalculateBackground::dataCheck()
 
   outputDc->setGeometry(outputGridGeom);
 
-  QVector<size_t> tDims = {0, 0, 0};
-  std::tie(tDims[0], tDims[1], tDims[2]) = outputGridGeom->getDimensions();
+  QVector<size_t> tDims = outputGridGeom->getDimensions().toContainer<QVector<size_t>>();
   AttributeMatrix::Pointer outputAttrMat = outputDc->createNonPrereqAttributeMatrix(this, getBackgroundCellAttributeMatrixPath(), tDims, AttributeMatrix::Type::Cell, AttributeMatrixID20);
 
   if(m_BackgroundCellAttributeMatrixPath.getAttributeMatrixName() != m_BackgroundImageArrayPath.getAttributeMatrixName())
