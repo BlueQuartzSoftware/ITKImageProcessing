@@ -164,7 +164,7 @@ if(SIMPL_ENABLE_PYTHON)
 
     #------------------------------
     # Initialize the PYTHON_TEST_INPUT_DIR variable to point to the "Testing Directory"
-    file(TO_CMAKE_PATH "${${PLUGIN_NAME}Test_SOURCE_DIR}/Python" PYTHON_TEST_INPUT_DIR)
+    file(TO_NATIVE_PATH "${${PLUGIN_NAME}Test_SOURCE_DIR}/Python" PYTHON_TEST_INPUT_DIR)
     #------------------------------
     # These names should match the names "EXACTLY" (including capitalization).
     # NO Spaces in the names (which means no spaces in the variable names)
@@ -188,7 +188,7 @@ if(SIMPL_ENABLE_PYTHON)
     # Also setup a unit test for the base python unit test file that is generated as part
     # of the Pybind11 generated codes
     set(PYTHON_TEST_INPUT_DIR "${SIMPL_ANACONDA_OUTPUT_DIR}/UnitTest/${PLUGIN_NAME}")
-    set(SIMPL_PYTHON_TEST_DRIVER "${SIMPL_ANACONDA_OUTPUT_DIR}/UnitTest/${PLUGIN_NAME}/${PLUGIN_NAME}.sh")
+    set(SIMPL_PYTHON_TEST_DRIVER "${SIMPL_ANACONDA_OUTPUT_DIR}/UnitTest/${PLUGIN_NAME}/${PLUGIN_NAME}.${TEST_SCRIPT_FILE_EXT}")
     set(test "${PLUGIN_NAME}_UnitTest")
     configure_file(${SIMPL_PYTHON_TEST_SCRIPT}  "${SIMPL_PYTHON_TEST_DRIVER}" @ONLY)
     add_test(NAME PY_${PLUGIN_NAME}_UnitTest COMMAND "${SIMPL_PYTHON_TEST_DRIVER}" )
