@@ -140,10 +140,10 @@ public:
   bool CompareImageGeometries(const ImageGeom::Pointer& inputImageGeometry, const ImageGeom::Pointer& baselineImageGeometry)
   {
 
-    FloatVec3Type inputResolution = inputImageGeometry->getSpacing();
-    FloatVec3Type baselineResolution = baselineImageGeometry->getSpacing();
-    FloatVec3Type inputOrigin = inputImageGeometry->getOrigin();
-    FloatVec3Type baselineOrigin = baselineImageGeometry->getOrigin();
+    //    FloatVec3Type inputResolution = inputImageGeometry->getSpacing();
+    //    FloatVec3Type baselineResolution = baselineImageGeometry->getSpacing();
+    //    FloatVec3Type inputOrigin = inputImageGeometry->getOrigin();
+    //    FloatVec3Type baselineOrigin = baselineImageGeometry->getOrigin();
     SizeVec3Type inputDimensions = inputImageGeometry->getDimensions();
     SizeVec3Type baselineDimensions = baselineImageGeometry->getDimensions();
     for(int i = 0; i < 3; i++)
@@ -155,6 +155,8 @@ public:
       // DREAM3D_COMPARE_FLOATS(&inputOrigin[i], &baselineOrigin[i], tol);
 
       DREAM3D_REQUIRE_EQUAL(inputDimensions[i], baselineDimensions[i]);
+      //      DREAM3D_REQUIRE_EQUAL(inputResolution[i], baselineResolution[i]);
+      //      DREAM3D_REQUIRE_EQUAL(inputOrigin[i], baselineOrigin[i]);
     }
     return true;
   }
@@ -480,17 +482,18 @@ public:
     namesGenerator->SetStartIndex(k_MinIndex);
     namesGenerator->SetEndIndex(k_MaxIndex); // There should be 96 slices: 90 + 3*2 (see CreateTestData)
     std::vector<std::string> listFileNames = namesGenerator->GetFileNames();
-    for(size_t ii = 0; ii < listFileNames.size(); ii++)
+    // for(size_t ii = 0; ii < listFileNames.size(); ii++)
+    for(const auto& fileName : listFileNames)
     {
       // Check that all files exist
-      QFileInfo check_file(listFileNames[ii].c_str());
+      QFileInfo check_file(fileName.c_str());
       if(!check_file.exists())
       {
-        std::cout << listFileNames[ii] << " Does not exist" << std::endl;
+        std::cout << fileName << " Does not exist" << std::endl;
       }
       DREAM3D_REQUIRE((check_file.exists() && check_file.isFile()));
       // Remove file
-      this->FilesToRemove << QString(listFileNames[ii].c_str());
+      this->FilesToRemove << QString(fileName.c_str());
     }
     return EXIT_SUCCESS;
   }
