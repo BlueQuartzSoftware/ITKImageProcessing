@@ -342,7 +342,7 @@ void AxioVisionV4ToTileConfiguration::parseImages(QDomElement& root, ZeissTagsXm
     std::array<float, 3> origin;
     origin[0] = MetaXmlUtils::GetFloatEntry(this, photoTagsSection.get(), Zeiss::MetaXML::StagePositionXId);
     origin[1] = MetaXmlUtils::GetFloatEntry(this, photoTagsSection.get(), Zeiss::MetaXML::StagePositionYId);
-    origin[3] = 0.0f;
+    origin[2] = 0.0f;
 
     allOrigins.push_back(origin);
 
