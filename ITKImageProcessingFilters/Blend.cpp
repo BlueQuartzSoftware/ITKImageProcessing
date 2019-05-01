@@ -70,7 +70,10 @@ public:
     throw std::exception("Derivatives are not implemented for the optimization type");
   }
 
-  uint32_t GetNumberOfParameters() const override { return m_NumParams; }
+  uint32_t GetNumberOfParameters() const override
+  {
+    return m_NumParams;
+  }
 
   MeasureType GetValue(const ParametersType& parameters) const override
   {
@@ -85,14 +88,28 @@ public:
   }
 };
 
-// Cost function => f(x, y) = (a - x^2) + b(y - x^2)^2
 class MultiParamCostFunction : public itk::SingleValuedCostFunction
 {
-  static const int8_t m_NumParams = 2;
+  static const int8_t m_NumParams = 4;
   static const int8_t m_A = 1;
-  static const int8_t m_B = 100;
+  static const int8_t m_B = 2;
+  static const int8_t m_C = 3;
+  static const int8_t m_D = 4;
+  static const int8_t m_E = 5;
+  static constexpr double m_initialW = -1.0;
   static constexpr double m_initialX = -1.0;
   static constexpr double m_initialY = -1.0;
+  static constexpr double m_initialZ = -1.0;
+
+  MeasureType Rosenbrock(const ParametersType& parameters) const
+  {
+    return pow((m_A - parameters[0]), 2) + m_B * pow((parameters[1] - parameters[0] * parameters[0]), 2);
+  }
+
+  MeasureType GenericOptimization(const ParametersType& parameters) const
+  {
+    return pow((parameters[0] - m_A), 2) + pow((parameters[1] - m_B), 2) + pow((parameters[2] - m_C), 2) + pow((parameters[3] - m_D), 2) + m_E;
+  }
 
 public:
   itkNewMacro(MultiParamCostFunction)
@@ -104,18 +121,24 @@ public:
     throw std::exception("Derivatives are not implemented for the optimization type");
   }
 
-  uint32_t GetNumberOfParameters() const override { return m_NumParams; }
+  uint32_t GetNumberOfParameters() const override
+  {
+    return m_NumParams;
+  }
 
   MeasureType GetValue(const ParametersType& parameters) const override
   {
-    return pow((m_A - parameters[0]), 2) + m_B * pow(( parameters[1] - parameters[0] * parameters[0] ), 2);
+    // return Rosenbrock(parameters);
+    return GenericOptimization(parameters);
   }
 
   ParametersType GetInitialValues()
   {
     ParametersType initParams(GetNumberOfParameters());
-    initParams[0] = m_initialX;
-    initParams[1] = m_initialY;
+    initParams[0] = m_initialW;
+    initParams[1] = m_initialX;
+    initParams[2] = m_initialY;
+    initParams[3] = m_initialZ;
     return initParams;
   }
 };
@@ -133,7 +156,7 @@ class FFTConvolutionCostFunction : public itk::SingleValuedCostFunction
   using OverlapPair = std::pair<GridPair, RegionPair>;
   using ImageGrid = std::map<std::pair<Cell_T, Cell_T>, ITKImage::Pointer>;
 
-  int m_degree = 2;
+  size_t m_degree = 2;
   std::vector<std::pair<size_t, size_t>> m_IJ;
   std::vector<OverlapPair> m_overlaps;
   ImageGrid m_imageGrid;
@@ -142,10 +165,7 @@ class FFTConvolutionCostFunction : public itk::SingleValuedCostFunction
 public:
   itkNewMacro(FFTConvolutionCostFunction)
 
-  void Initialize(int degree, float overlapPercentage,
-                  DataContainerArrayShPtr dca,
-                  const QString& amName, const QString& dataAAName,
-                  const QString& xAAName, const QString& yAAName)
+  void Initialize(size_t degree, float overlapPercentage, DataContainerArrayShPtr dca, const QString& amName, const QString& dataAAName, const QString& xAAName, const QString& yAAName)
   {
     m_filter = itk::FFTConvolutionImageFilter<ITKImage>::New();
     m_degree = degree;
@@ -198,16 +218,14 @@ public:
       // TODO Parameterize 'R' and 'C'
       name = eachDC->getName();
       cLength = name.size() - name.indexOf('C') - 1;
-      imageKey = std::make_pair(
-        static_cast<Cell_T>(name.midRef(name.indexOf('R') + 1, name.size() - cLength - 2).toULong()),
-        static_cast<Cell_T>(name.rightRef(cLength).toULong())
-      );
+      imageKey = std::make_pair(static_cast<Cell_T>(name.midRef(name.indexOf('R') + 1, name.size() - cLength - 2).toULong()), static_cast<Cell_T>(name.rightRef(cLength).toULong()));
       m_imageGrid.insert_or_assign(imageKey, eachImage);
     }
 
     // Populate m_overlaps
     m_overlaps.clear();
-    for (const auto& eachImage : m_imageGrid) {
+    for(const auto& eachImage : m_imageGrid)
+    {
       auto rightImage{m_imageGrid.find(std::make_pair(eachImage.first.first, eachImage.first.second + 1))};
       auto bottomImage{m_imageGrid.find(std::make_pair(eachImage.first.first + 1, eachImage.first.second))};
       if(rightImage != m_imageGrid.end())
@@ -223,13 +241,8 @@ public:
         kernelSize[0] = overlapDim;
         kernelSize[1] = height;
 
-        m_overlaps.push_back(std::make_pair(
-          std::make_pair(eachImage.first, rightImage->first),
-          std::make_pair(
-            ITKImage::RegionType(imageOrigin, imageSize),
-            ITKImage::RegionType(kernelOrigin, kernelSize)
-          )
-        ));
+        m_overlaps.push_back(
+            std::make_pair(std::make_pair(eachImage.first, rightImage->first), std::make_pair(ITKImage::RegionType(imageOrigin, imageSize), ITKImage::RegionType(kernelOrigin, kernelSize))));
       }
       if(bottomImage != m_imageGrid.end())
       {
@@ -244,13 +257,8 @@ public:
         kernelSize[0] = width;
         kernelSize[1] = overlapDim;
 
-        m_overlaps.push_back(std::make_pair(
-          std::make_pair(eachImage.first, bottomImage->first),
-          std::make_pair(
-            ITKImage::RegionType(imageOrigin, imageSize),
-            ITKImage::RegionType(kernelOrigin, kernelSize)
-          )
-        ));
+        m_overlaps.push_back(
+            std::make_pair(std::make_pair(eachImage.first, bottomImage->first), std::make_pair(ITKImage::RegionType(imageOrigin, imageSize), ITKImage::RegionType(kernelOrigin, kernelSize))));
       }
     }
   }
@@ -349,14 +357,14 @@ public:
           u_v = pow((pixel[0] - x_trans), eachIJ.first) * pow((pixel[1] - y_trans), eachIJ.second);
 
           term = u_v * parameters[idx];
-          idx < ( m_IJ.size() / 2 ) ? x += term : y += term;
+          idx < (m_IJ.size() / 2) ? x += term : y += term;
         }
 
         // This check effectively "clips" data
         if(x >= -tolerance && x <= lastXIndex && y >= -tolerance && y <= lastYIndex)
         {
-          eachPixel[0] = round(x);
-          eachPixel[1] = round(y);
+          eachPixel[0] = static_cast<int64_t>(round(x));
+          eachPixel[1] = static_cast<int64_t>(round(y));
           distortedImage->SetPixel(eachPixel, eachImage.second->GetPixel(eachPixel));
         }
       }
@@ -384,10 +392,7 @@ public:
 
       m_filter->Update();
       fftConvolve = m_filter->GetOutput();
-      residual += *std::max_element(
-        fftConvolve->GetBufferPointer(),
-        fftConvolve->GetBufferPointer() + fftConvolve->GetPixelContainer()->Size()
-      );
+      residual += *std::max_element(fftConvolve->GetBufferPointer(), fftConvolve->GetBufferPointer() + fftConvolve->GetPixelContainer()->Size());
     }
     return sqrt(residual);
   }
@@ -395,13 +400,13 @@ public:
 
 uint Blend::GetIterationsFromStopDescription(const QString& stopDescription) const
 {
-  if (GetConvergenceFromStopDescription(stopDescription))
+  if(GetConvergenceFromStopDescription(stopDescription))
   {
     const QString startStr = "have been met in ";
     const int startIdx = stopDescription.indexOf(startStr) + startStr.length();
     return stopDescription.midRef(startIdx, stopDescription.indexOf(" iterations") - startIdx).toUInt();
   }
-  return 0;
+  return m_MaxIterations;
 }
 
 bool Blend::GetConvergenceFromStopDescription(const QString& stopDescription) const
@@ -413,7 +418,6 @@ bool Blend::GetConvergenceFromStopDescription(const QString& stopDescription) co
 //
 // -----------------------------------------------------------------------------
 Blend::Blend()
-: m_OverlapMethod(0)
 {
   initialize();
 }
@@ -454,10 +458,6 @@ void Blend::setupFilterParameters()
   IntFilterParameter::Pointer degree{
       IntFilterParameter::New("Degree", "Degree", 1, FilterParameter::Category::Parameter, std::bind(&Blend::setDegree, this, std::placeholders::_1), std::bind(&Blend::getDegree, this))};
 
-  LinkedChoicesFilterParameter::Pointer overlapMethod{LinkedChoicesFilterParameter::New("Overlap Method", "OverlapMethod", 0, FilterParameter::Parameter,
-                                                                                        std::bind(&Blend::setOverlapMethod, this, std::placeholders::_1), std::bind(&Blend::getOverlapMethod, this),
-                                                                                        {"Percent", "Origins"}, {"OverlapPercentage"})};
-
   FloatFilterParameter::Pointer overlapPercentage{FloatFilterParameter::New("Overlap Percentage", "OverlapPercentage", 0.0f, FilterParameter::Category::Parameter,
                                                                             std::bind(&Blend::setOverlapPercentage, this, std::placeholders::_1), std::bind(&Blend::getOverlapPercentage, this), 0)};
 
@@ -477,7 +477,6 @@ void Blend::setupFilterParameters()
   //  parameters.push_back(dcs);
   parameters.push_back(maxIterations);
   parameters.push_back(degree);
-  parameters.push_back(overlapMethod);
   parameters.push_back(overlapPercentage);
   parameters.push_back(amName);
   parameters.push_back(xAAName);
@@ -548,43 +547,64 @@ void Blend::execute()
   m_optimizer->SetFunctionConvergenceTolerance(lowTolerance);
   m_optimizer->SetParametersConvergenceTolerance(highTolerance);
 
-//  using CostFunctionType = SimpleCostFunction;
+  //  using CostFunctionType = SimpleCostFunction;
   using CostFunctionType = MultiParamCostFunction;
-//  using CostFunctionType = FFTConvolutionCostFunction;
+  //  using CostFunctionType = FFTConvolutionCostFunction;
   CostFunctionType implementation;
   implementation.Initialize(
-//    m_Degree, m_OverlapPercentage, getDataContainerArray(),
-//    m_AttributeMatrixName, m_DataAttributeArrayName, m_XAttributeArrayName, m_YAttributeArrayName
+      //    m_Degree, m_OverlapPercentage, getDataContainerArray(),
+      //    m_AttributeMatrixName, m_DataAttributeArrayName, m_XAttributeArrayName, m_YAttributeArrayName
   );
-  m_optimizer->SetInitialPosition(implementation.GetInitialValues());
+  itk::AmoebaOptimizer::ParametersType initialParams = implementation.GetInitialValues();
+  std::list<double> guess;
+  for(const auto& eachCoeff : initialParams)
+  {
+    guess.push_back(eachCoeff);
+  }
+  m_optimizer->SetInitialPosition(initialParams);
   m_optimizer->SetCostFunction(&implementation);
 
   m_optimizer->StartOptimization();
 
+  QString stopReason = QString::fromStdString(m_optimizer->GetStopConditionDescription());
+
   // Can get rid of this after debugging is done for filter
-  QString a;
-  for (const auto& eachCoeff : m_optimizer->GetCurrentPosition())
+  std::list<double> transform;
+  for(const auto& eachCoeff : m_optimizer->GetCurrentPosition())
   {
-    a += QString::number(eachCoeff) + ", ";
+    transform.push_back(eachCoeff);
   }
-  qDebug() << "Position: [ " << a.leftRef(a.length() - 2) << " ]";
+  qDebug() << "Initial Position: [ " << guess << " ]";
+  qDebug() << "Final Position: [ " << transform << " ]";
+  qDebug() << "Number of Iterations: " << GetIterationsFromStopDescription(stopReason);
   qDebug() << "Value: " << m_optimizer->GetValue();
 
+  // Set up new Data Container/Attribute matrix with results of filter
+  UInt32ArrayType::Pointer iterationsAA;
+  iterationsAA->push_back(GetIterationsFromStopDescription(stopReason));
+  iterationsAA->setName("Iterations");
+  DoubleArrayType::Pointer valueAA;
+  valueAA->push_back(m_optimizer->GetValue());
+  valueAA->setName("Residual");
+  DoubleArrayType::Pointer transformAA;
+  transformAA->setArray(transform);
+  transformAA->setName("Transform");
+  AttributeMatrixShPtr blendAM;
+  blendAM->addOrReplaceAttributeArray(iterationsAA);
+  blendAM->addOrReplaceAttributeArray(transformAA);
+  blendAM->setName("Transform Matrix");
+  DataContainerShPtr blendDC;
+  blendDC->addOrReplaceAttributeMatrix(blendAM);
+  blendDC->setName("Blend Data");
+  getDataContainerArray()->addOrReplaceDataContainer(blendDC);
+
   // Determine whether the solution truly converged
-  QString stopReason = QString::fromStdString(m_optimizer->GetStopConditionDescription());
-  if (!GetConvergenceFromStopDescription(stopReason))
+  if(!GetConvergenceFromStopDescription(stopReason))
   {
     setErrorCondition(-66800, stopReason);
     notifyStatusMessage(stopReason);
     return;
   }
-
-  // Can get rid of this after debugging is done for filter
-  qDebug() << "Number of Iterations: " << GetIterationsFromStopDescription(stopReason);
-
-  // TODO Set up new Attribute matrix with results of filter
-  // Should contain the transformation matrix (a)
-  // And a data array with a single element for the iterations run
 }
 
 // -----------------------------------------------------------------------------

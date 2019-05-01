@@ -51,7 +51,7 @@
 #include <map>
 #include <cmath>
 #ifndef M_PI
-#define M_PI (3.141592653f)
+#define M_PI (3.141592653)
 #endif
 
 class BlendTest
@@ -60,7 +60,7 @@ class BlendTest
   using GrayScaleColor = uint8_t;
   using RGBColor = std::tuple<uint8_t, uint8_t, uint8_t>;
   using Image_T = GrayScaleColor;
-  using PixelCoord = std::pair<size_t, size_t>;
+  using PixelCoord = std::pair<int64_t, int64_t>;
   using Image = std::map<PixelCoord, Image_T>;
   using ImageGrid = std::map<std::pair<Cell_T, Cell_T>, Image>;
   using ImageArray = std::vector<std::vector<Image_T>>;
@@ -75,50 +75,53 @@ class BlendTest
   const QString m_YAAName = "Y Coords";
   const QString m_AMName = "Image";
   const QString m_geoName = "Image";
+  const QString m_outDCName = "Blend Data";
+  const QString m_outAMName = "Transform Matrix";
+  const QString m_outAAName = "Transform";
   AbstractFilter::Pointer m_blendFilter;
   ImageGrid m_originalImages{};
   ImageGrid m_distortedImages{};
 
-  const int m_data[10]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+  const uint8_t m_data[10]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 
   static const int m_tileRows = 2;
   static const int m_tileColumns = 2;
 
-  static const size_t m_resWidth = 10;
-  static const size_t m_resHeight = 10;
+  static const int64_t m_resWidth = 10;
+  static const int64_t m_resHeight = 10;
 
   static const int m_d = 1;
   static const int m_maxIterations = 10000;
 
   static const int m_thetaDegrees = 90;
-  static constexpr float m_n = 0.0f;
-  static constexpr float m_m = 1.0f;
-  static constexpr float m_theta = M_PI * m_thetaDegrees / 180;
-  static constexpr float m_errTolerance = 2.0f;
+  static constexpr double m_n = 0.0;
+  static constexpr double m_m = 1.0;
+  static constexpr double m_theta = M_PI * m_thetaDegrees / 180;
+  static constexpr double m_errTolerance = 2.0;
 
   static constexpr float m_overlapPercentage = 0.25f;
-  const size_t m_x_overlapDimension = static_cast<size_t>(roundf(m_resWidth * m_overlapPercentage));
-  const size_t m_y_overlapDimension = static_cast<size_t>(roundf(m_resHeight * m_overlapPercentage));
+  const int64_t m_x_overlapDimension = static_cast<int64_t>(roundf(m_resWidth * m_overlapPercentage));
+  const int64_t m_y_overlapDimension = static_cast<int64_t>(roundf(m_resHeight * m_overlapPercentage));
 
   static const int m_arrLength = 8;
-  const std::vector<float> m_identity{0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0};
-  const std::vector<float> m_translation{m_n, 1.0, 0.0, 0.0, m_m, 0.0, 1.0, 0.0};
-  const std::vector<float> m_rotation{
+  const std::vector<double> m_identity{0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0};
+  const std::vector<double> m_translation{m_n, 1.0, 0.0, 0.0, m_m, 0.0, 1.0, 0.0};
+  const std::vector<double> m_rotation{
       0.0, cos(m_theta), -sin(m_theta), 0.0, 0.0, sin(m_theta), cos(m_theta), 0.0,
   };
-  const std::vector<float> m_rotation_uv{
+  const std::vector<double> m_rotation_uv{
       0, cos(m_theta), -sin(m_theta), 1.0, 0, sin(m_theta), cos(m_theta), 1.0,
   };
-  const std::vector<float> m_trial{0.0, 0.0, -1.0, 0.0, 0.0, 1.0, 0.0, 0.0};
+  const std::vector<double> m_trial{0.0, 0.0, -1.0, 0.0, 0.0, 1.0, 0.0, 0.0};
 
-  const std::vector<float> m_a{m_rotation};
+  const std::vector<double> m_a{m_rotation};
 
-  std::vector<int> GenData(int numElements) const
+  template <class T> std::vector<T> GenData(size_t numElements) const
   {
-    std::vector<int> data{};
-    for(int eachIndex = 0; eachIndex < numElements; eachIndex++)
+    std::vector<T> data(numElements);
+    for(size_t eachIndex = 0; eachIndex < numElements; eachIndex++)
     {
-      data.push_back(m_data[rand() % 10]);
+      data[eachIndex] = m_data[rand() % 10];
     }
     return data;
   }
@@ -136,21 +139,21 @@ class BlendTest
     return product;
   }
 
-  Image Transform(Image image, std::vector<float> a) const
+  Image Transform(Image image, std::vector<double> a) const
   {
-    const float tolerance = 0.05f;
-    const float lastXIndex = m_resWidth - 1 + tolerance;
-    const float lastYIndex = m_resHeight - 1 + tolerance;
+    const double tolerance = 0.05;
+    const double lastXIndex = m_resWidth - 1 + tolerance;
+    const double lastYIndex = m_resHeight - 1 + tolerance;
     const size_t coeff_len = static_cast<size_t>(a.size() / 2);
     const int d = static_cast<int>(round(sqrt(coeff_len)));
     const DataPair<int> i_j = make_product<int>(d, d);
 
-    const float x_trans = (m_resWidth - 1) / 2.0f;
-    const float y_trans = (m_resHeight - 1) / 2.0f;
-    float x = 0;
-    float y = 0;
-    float u_v = 0;
-    float term = 0;
+    const double x_trans = (m_resWidth - 1) / 2.0;
+    const double y_trans = (m_resHeight - 1) / 2.0;
+    double x = 0;
+    double y = 0;
+    double u_v = 0;
+    double term = 0;
 
     std::pair<int, int> eachIJ{};
 
@@ -173,7 +176,7 @@ class BlendTest
       // This check effectively "clips" data
       if(x >= -tolerance && x <= lastXIndex && y >= -tolerance && y <= lastYIndex)
       {
-        distortedImage[std::make_pair(roundf(x), roundf(y))] = image[pixel.first];
+        distortedImage[std::make_pair(round(x), round(y))] = image[pixel.first];
       }
     }
     return distortedImage;
@@ -285,10 +288,13 @@ class BlendTest
     qDebug().noquote() << stream;
   }
 
-  // TODO
-  bool CompareTransform(const std::vector<float>& transform) const
+  bool CompareTransform(const DoubleArrayType::Pointer& transform) const
   {
-    float error = 0;
+    double error = 0;
+    for(size_t coeffIdx = 0; coeffIdx < transform->size(); ++coeffIdx)
+    {
+      error += abs(transform->getValue(coeffIdx) - m_a[coeffIdx]);
+    }
 
     return error > m_errTolerance;
   }
@@ -300,8 +306,8 @@ class BlendTest
 
     for(const auto& eachTile : tiles)
     {
-      std::vector<int> data{GenData(static_cast<int>(pixels.size()))};
-      int pixelIndex = 0;
+      std::vector<uint8_t> data{GenData<uint8_t>(pixels.size())};
+      size_t pixelIndex = 0;
       Image img{};
       for(const auto& eachPixel : pixels)
       {
@@ -326,8 +332,8 @@ class BlendTest
       // Overlap Data
       for(auto& eachPixel : eachImage.second)
       {
-        size_t x = eachPixel.first.first;
-        size_t y = eachPixel.first.second;
+        int64_t x = eachPixel.first.first;
+        int64_t y = eachPixel.first.second;
         // Overlap the data if inside the horizontal overlap region
         if(x < m_x_overlapDimension && lefterImage != m_originalImages.end())
         {
@@ -371,7 +377,7 @@ class BlendTest
 
     // TODO Get the resulting coefficient array from the the new data structures
     // output from the filter
-    std::vector<float> transform{};
+    DoubleArrayType::Pointer transform = m_blendFilter->getDataContainerArray()->getDataContainer(m_outDCName)->getAttributeMatrix(m_outAMName)->getAttributeArrayAs<DoubleArrayType>(m_outAAName);
     bool outOfTolerance = CompareTransform(transform);
     DREAM3D_REQUIRE_EQUAL(outOfTolerance, true)
 
