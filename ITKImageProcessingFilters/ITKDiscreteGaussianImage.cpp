@@ -4,20 +4,19 @@
  * Your License or Copyright can go here
  */
 
-#include "ITKImageProcessing/ITKImageProcessingFilters/ITKDiscreteGaussianImage.h"
-#include "SIMPLib/ITK/SimpleITKEnums.h"
-
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/IntFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
-
 #include "SIMPLib/Geometry/ImageGeom.h"
-
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
+#include "SIMPLib/ITK/SimpleITKEnums.h"
 #include "SIMPLib/ITK/itkDream3DImage.h"
+
+#include "ITKImageProcessing/ITKImageProcessingFilters/ITKDiscreteGaussianImage.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -44,7 +43,7 @@ void ITKDiscreteGaussianImage::setupFilterParameters()
   FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Variance", Variance, FilterParameter::Parameter, ITKDiscreteGaussianImage));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("MaximumKernelWidth", MaximumKernelWidth, FilterParameter::Parameter, ITKDiscreteGaussianImage));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("MaximumKernelWidth", MaximumKernelWidth, FilterParameter::Parameter, ITKDiscreteGaussianImage));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("MaximumError", MaximumError, FilterParameter::Parameter, ITKDiscreteGaussianImage));
   parameters.push_back(SIMPL_NEW_BOOL_FP("UseImageSpacing", UseImageSpacing, FilterParameter::Parameter, ITKDiscreteGaussianImage));
 
@@ -90,9 +89,9 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   clearWarningCode();
 
   // Check consistency of parameters
-  this->CheckVectorEntry<double, FloatVec3Type>(m_Variance, "Variance", false);
-  this->CheckIntegerEntry<unsigned int, double>(m_MaximumKernelWidth, "MaximumKernelWidth", true);
-  this->CheckVectorEntry<double, FloatVec3Type>(m_MaximumError, "MaximumError", false);
+  this->CheckVectorEntry<float, FloatVec3Type>(m_Variance, "Variance", false);
+  this->CheckIntegerEntry<uint32_t, int32_t>(m_MaximumKernelWidth, "MaximumKernelWidth", true);
+  this->CheckVectorEntry<float, FloatVec3Type>(m_MaximumError, "MaximumError", false);
 
   ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
@@ -109,12 +108,13 @@ void ITKDiscreteGaussianImage::dataCheckInternal()
 //
 // -----------------------------------------------------------------------------
 
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKDiscreteGaussianImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKDiscreteGaussianImage::filter()
 {
-  typedef itk::Dream3DImage<InputPixelType, Dimension> InputImageType;
-  typedef itk::Dream3DImage<OutputPixelType, Dimension> OutputImageType;
+  using InputImageType = itk::Dream3DImage<InputPixelType, Dimension>;
+  using OutputImageType = itk::Dream3DImage<OutputPixelType, Dimension>;
   // define filter
-  typedef itk::DiscreteGaussianImageFilter<InputImageType, OutputImageType> FilterType;
+  using FilterType = itk::DiscreteGaussianImageFilter<InputImageType, OutputImageType>;
   typename FilterType::Pointer filter = FilterType::New();
   filter->SetVariance(CastVec3ToITK<FloatVec3Type, typename FilterType::ArrayType, typename FilterType::ArrayType::ValueType>(m_Variance, FilterType::ArrayType::Dimension));
   filter->SetMaximumKernelWidth(static_cast<unsigned int>(m_MaximumKernelWidth));

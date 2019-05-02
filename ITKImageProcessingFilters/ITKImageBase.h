@@ -331,7 +331,7 @@ protected:
         return true;
       }
       QString errorMessage = "Wrong data type in %1. Expected %2. Try CastImageFilter or RescaleImageFilter to convert input data to a supported type.";
-      QString stringTypes = QStringList(types.toList()).join(",");
+      QString stringTypes = types.toList().join(",");
       setErrorCondition(-12, errorMessage.arg(path.serialize()).arg(stringTypes));
     }
     // If no data container, return false, but do not set any error condition.

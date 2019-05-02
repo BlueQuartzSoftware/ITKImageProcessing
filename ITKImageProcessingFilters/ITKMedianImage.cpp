@@ -99,10 +99,10 @@ void ITKMedianImage::dataCheckInternal()
 
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKMedianImage::filter()
 {
-  typedef itk::Dream3DImage<InputPixelType, Dimension> InputImageType;
-  typedef itk::Dream3DImage<OutputPixelType, Dimension> OutputImageType;
+  using InputImageType = itk::Dream3DImage<InputPixelType, Dimension>;
+  using OutputImageType = itk::Dream3DImage<OutputPixelType, Dimension>;
   // define filter
-  typedef itk::MedianImageFilter<InputImageType, OutputImageType> FilterType;
+  using FilterType = itk::MedianImageFilter<InputImageType, OutputImageType>;
   typename FilterType::Pointer filter = FilterType::New();
   filter->SetRadius(CastVec3ToITK<FloatVec3Type, typename FilterType::RadiusType, typename FilterType::RadiusType::SizeValueType>(m_Radius, FilterType::RadiusType::Dimension));
   this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
