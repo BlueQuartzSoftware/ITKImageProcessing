@@ -37,10 +37,11 @@
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
 #include "SIMPLib/FilterParameters/FilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatFilterParameter.h"
+#include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedChoicesFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
-//#include "SIMPLib/FilterParameters/MultiDataContainerSelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/MultiDataContainerSelectionFilterParameter.h"
 
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
@@ -88,30 +89,33 @@ public:
   }
 };
 
-class FFTConvolutionCostFunction : public itk::SingleValuedCostFunction
+template<class Image_T> class FFTConvolutionCostFunction : public itk::SingleValuedCostFunction
 {
   static const uint8_t IMAGE_DIMENSIONS = 2;
   using Cell_T = size_t;
-  using Image_T = GrayScaleColor;
   using PixelCoord = itk::Index<IMAGE_DIMENSIONS>;
   using ITKImage = itk::Image<Image_T, IMAGE_DIMENSIONS>;
   using GridKey = std::pair<Cell_T, Cell_T>;
   using GridPair = std::pair<GridKey, GridKey>;
-  using RegionPair = std::pair<ITKImage::RegionType, ITKImage::RegionType>;
+  using RegionPair = std::pair<typename ITKImage::RegionType, typename ITKImage::RegionType>;
   using OverlapPair = std::pair<GridPair, RegionPair>;
-  using ImageGrid = std::map<std::pair<Cell_T, Cell_T>, ITKImage::Pointer>;
+  using ImageGrid = std::map<std::pair<Cell_T, Cell_T>, typename ITKImage::Pointer>;
 
+  QChar m_rowChar = 'R';
+  QChar m_colChar = 'C';
   size_t m_degree = 2;
   std::vector<std::pair<size_t, size_t>> m_IJ;
   std::vector<OverlapPair> m_overlaps;
   ImageGrid m_imageGrid;
-  itk::FFTConvolutionImageFilter<ITKImage>::Pointer m_filter;
+  typename itk::FFTConvolutionImageFilter<ITKImage>::Pointer m_filter;
 
 public:
   itkNewMacro(FFTConvolutionCostFunction)
 
-  void Initialize(size_t degree, float overlapPercentage, DataContainerArrayShPtr dca, const QString& amName, const QString& dataAAName, const QString& xAAName, const QString& yAAName)
+  void Initialize(QStringList chosenDataContainers, QChar rowChar, QChar colChar, size_t degree, float overlapPercentage, DataContainerArrayShPtr dca, const QString& amName, const QString& dataAAName, const QString& xAAName, const QString& yAAName)
   {
+    m_rowChar = rowChar;
+    m_colChar = colChar;
     m_filter = itk::FFTConvolutionImageFilter<ITKImage>::New();
     m_degree = degree;
     for(size_t listOneIndex = 0; listOneIndex < m_degree; listOneIndex++)
@@ -130,17 +134,21 @@ public:
     QString name;
     PixelCoord idx;
 
-    ITKImage::Pointer eachImage;
+    typename ITKImage::Pointer eachImage;
     PixelCoord imageOrigin;
-    ITKImage::SizeType imageSize;
+    typename ITKImage::SizeType imageSize;
     PixelCoord kernelOrigin;
-    ITKImage::SizeType kernelSize;
+    typename ITKImage::SizeType kernelSize;
 
     AttributeMatrixShPtr am;
     m_imageGrid.clear();
     // Populate and assign eachImage to m_imageGrid
     for(const auto& eachDC : dca->getDataContainers())
     {
+      if (!chosenDataContainers.contains(eachDC->getName()))
+      {
+        continue;
+      }
       am = eachDC->getAttributeMatrix(amName);
       dims = eachDC->getGeometryAs<ImageGeom>()->getDimensions();
       width = std::get<0>(dims);
@@ -160,10 +168,9 @@ public:
         eachImage->SetPixel(idx, am->getAttributeArrayAs<UInt8ArrayType>(dataAAName)->getValue(pxlIdx));
       }
 
-      // TODO Parameterize 'R' and 'C'
       name = eachDC->getName();
-      cLength = name.size() - name.indexOf('C') - 1;
-      imageKey = std::make_pair(static_cast<Cell_T>(name.midRef(name.indexOf('R') + 1, name.size() - cLength - 2).toULong()), static_cast<Cell_T>(name.rightRef(cLength).toULong()));
+      cLength = name.size() - name.indexOf(m_colChar) - 1;
+      imageKey = std::make_pair(static_cast<Cell_T>(name.midRef(name.indexOf(m_rowChar) + 1, name.size() - cLength - 2).toULong()), static_cast<Cell_T>(name.rightRef(cLength).toULong()));
       m_imageGrid.insert_or_assign(imageKey, eachImage);
     }
 
@@ -224,8 +231,8 @@ public:
     ImageGrid distortedGrid;
 
     // Cache a bunch of stuff
-    ITKImage::RegionType bufferedRegion;
-    ITKImage::SizeType dims;
+    typename ITKImage::RegionType bufferedRegion;
+    typename ITKImage::SizeType dims;
     size_t width;
     size_t height;
     double lastXIndex;
@@ -240,7 +247,7 @@ public:
 
     std::pair<int, int> eachIJ{};
     PixelCoord eachPixel;
-    ITKImage::Pointer distortedImage;
+    typename ITKImage::Pointer distortedImage;
 
     // Apply the Transform to each image in the image grid
     for(const auto& eachImage : m_imageGrid) // TODO Parallelize this
@@ -257,18 +264,16 @@ public:
 
       distortedImage = ITKImage::New();
       distortedImage->SetRegions(bufferedRegion);
-      distortedImage->Allocate(); // NOTE Does SetBufferedRegion already allocate?
+      distortedImage->Allocate();
 
       // Iterate through the pixels in eachImage and apply the transform
-      // TODO Parallelize this
       itk::ImageRegionIterator<ITKImage> it(eachImage.second, bufferedRegion);
-      for(it.GoToBegin(); !it.IsAtEnd(); ++it)
+      for(it.GoToBegin(); !it.IsAtEnd(); ++it) // TODO Parallelize this
       {
         PixelCoord pixel = it.GetIndex();
         x = x_trans;
         y = y_trans;
-        // TODO Parallelize this
-        for(size_t idx = 0; idx < parameters.size(); ++idx)
+        for(size_t idx = 0; idx < parameters.size(); ++idx) // TODO Parallelize this
         {
           eachIJ = m_IJ[idx - (idx >= m_IJ.size() ? m_IJ.size() : 0)];
 
@@ -290,27 +295,22 @@ public:
     }
 
     // Find the FFT Convolution and accumulate the maximum value from each overlap
-    ITKImage::Pointer image;
-    ITKImage::Pointer kernel;
-    ITKImage::Pointer fftConvolve;
-    MeasureType residual = 0.0; // NOTE Should this be initialized to a very large number?
-    // NOTE Can't be easily parallelized if multiple threads are changing cached
-    // memory like 'residual', not to mention the pointers...
-    for(const auto& eachOverlap : m_overlaps) // TODO Parallelize this?
+    std::atomic<MeasureType> residual{0.0};
+    for(const auto& eachOverlap : m_overlaps) // TODO Parallelize this
     {
-      image = distortedGrid.at(eachOverlap.first.first);
+      typename ITKImage::Pointer image = distortedGrid.at(eachOverlap.first.first);
       image->SetRequestedRegion(eachOverlap.second.first);
       image->GetRequestedRegion().IsInside(eachOverlap.second.first);
       m_filter->SetInput(image);
 
-      kernel = distortedGrid.at(eachOverlap.first.second);
+      typename ITKImage::Pointer kernel = distortedGrid.at(eachOverlap.first.second);
       kernel->SetRequestedRegion(eachOverlap.second.second);
       kernel->GetRequestedRegion().IsInside(eachOverlap.second.second);
       m_filter->SetKernelImage(kernel);
 
       m_filter->Update();
-      fftConvolve = m_filter->GetOutput();
-      residual += *std::max_element(fftConvolve->GetBufferPointer(), fftConvolve->GetBufferPointer() + fftConvolve->GetPixelContainer()->Size());
+      typename ITKImage::Pointer fftConvolve = m_filter->GetOutput();
+      residual = residual + *std::max_element(fftConvolve->GetBufferPointer(), fftConvolve->GetBufferPointer() + fftConvolve->GetPixelContainer()->Size());
     }
     return sqrt(residual);
   }
@@ -353,21 +353,6 @@ void Blend::initialize()
   setErrorCondition(0, "");
   setWarningCondition(0, "");
   setCancel(false);
-
-  UInt64ArrayType::Pointer iterationsAA;
-  iterationsAA->setName(m_iterationsAAName);
-  DoubleArrayType::Pointer valueAA;
-  valueAA->setName(m_valueAAName);
-  DoubleArrayType::Pointer transformAA;
-  transformAA->setName(m_transformAAName);
-  AttributeMatrixShPtr blendAM;
-  blendAM->addOrReplaceAttributeArray(iterationsAA);
-  blendAM->addOrReplaceAttributeArray(transformAA);
-  blendAM->setName(m_transformAMName);
-  DataContainerShPtr blendDC;
-  blendDC->addOrReplaceAttributeMatrix(blendAM);
-  blendDC->setName(m_blendDCName);
-  getDataContainerArray()->addOrReplaceDataContainer(blendDC);
 }
 
 // -----------------------------------------------------------------------------
@@ -377,13 +362,13 @@ void Blend::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
 
-  //  MultiDataContainerSelectionFilterParameter::Pointer dcs{
-  //    MultiDataContainerSelectionFilterParameter::New(
-  //      "Chosen Data Containers", "ChosenDataContainers",
-  //      getChosenDataContainers(), FilterParameter::Category::RequiredArray,
-  //      std::bind(&Blend::setChosenDataContainers, this, std::placeholders::_1),
-  //      std::bind(&Blend::getChosenDataContainers, this), {}
-  //  )};
+  MultiDataContainerSelectionFilterParameter::Pointer dcs{
+    MultiDataContainerSelectionFilterParameter::New(
+      "Chosen Data Containers", "ChosenDataContainers",
+      getChosenDataContainers(), FilterParameter::Category::RequiredArray,
+      std::bind(&Blend::setChosenDataContainers, this, std::placeholders::_1),
+      std::bind(&Blend::getChosenDataContainers, this), {}
+  )};
 
   IntFilterParameter::Pointer maxIterations{IntFilterParameter::New("Max Iterations", "MaxIterations", 1000, FilterParameter::Category::Parameter,
                                                                     std::bind(&Blend::setMaxIterations, this, std::placeholders::_1), std::bind(&Blend::getMaxIterations, this))};
@@ -394,7 +379,13 @@ void Blend::setupFilterParameters()
   FloatFilterParameter::Pointer overlapPercentage{FloatFilterParameter::New("Overlap Percentage", "OverlapPercentage", 0.0f, FilterParameter::Category::Parameter,
                                                                             std::bind(&Blend::setOverlapPercentage, this, std::placeholders::_1), std::bind(&Blend::getOverlapPercentage, this), 0)};
 
-  StringFilterParameter::Pointer initialGuess{StringFilterParameter::New("Initial Simplex Guess", "InitialSimplexGuess", {}, FilterParameter::Category::Parameter,
+  DoubleFilterParameter::Pointer lowTolerance{DoubleFilterParameter::New("Low Tolerance", "LowTolerance", 1E-2, FilterParameter::Category::Parameter,
+                                                                            std::bind(&Blend::setLowTolerance, this, std::placeholders::_1), std::bind(&Blend::getLowTolerance, this), 0)};
+
+  DoubleFilterParameter::Pointer highTolerance{DoubleFilterParameter::New("High Tolerance", "High Tolerance", 1E-2, FilterParameter::Category::Parameter,
+                                                                            std::bind(&Blend::setHighTolerance, this, std::placeholders::_1), std::bind(&Blend::getHighTolerance, this), 0)};
+
+  StringFilterParameter::Pointer initialGuess{StringFilterParameter::New("Initial Simplex Guess", "InitialSimplexGuess", "0.1; 0.1; 0.1; 0.1; 0.1; 0.1; 0.1; 0.1", FilterParameter::Category::Parameter,
                                                                    std::bind(&Blend::setInitialSimplexGuess, this, std::placeholders::_1), std::bind(&Blend::getInitialSimplexGuess, this), {})};
 
   StringFilterParameter::Pointer amName{StringFilterParameter::New("Attribute Matrix Name", "AttributeMatrixName", {}, FilterParameter::Category::Parameter,
@@ -408,6 +399,14 @@ void Blend::setupFilterParameters()
 
   StringFilterParameter::Pointer dataAAName{StringFilterParameter::New("Attribute Array Name", "AttributeArrayName", {}, FilterParameter::Category::Parameter,
                                                                        std::bind(&Blend::setDataAttributeArrayName, this, std::placeholders::_1), std::bind(&Blend::getDataAttributeArrayName, this),
+                                                                       {})};
+
+  StringFilterParameter::Pointer rowChar{StringFilterParameter::New("Row Character", "RowCharacter", "R", FilterParameter::Category::Parameter,
+                                                                       std::bind(&Blend::setRowCharacter, this, std::placeholders::_1), std::bind(&Blend::getRowCharacter, this),
+                                                                       {})};
+
+  StringFilterParameter::Pointer colChar{StringFilterParameter::New("Column Character", "ColumnCharacter", "C", FilterParameter::Category::Parameter,
+                                                                       std::bind(&Blend::setColumnCharacter, this, std::placeholders::_1), std::bind(&Blend::getColumnCharacter, this),
                                                                        {})};
 
   //  parameters.push_back(dcs);
@@ -474,6 +473,14 @@ void Blend::execute()
   initialize();
   dataCheck();
 
+  DataContainerShPtr blendDC = getDataContainerArray()->createNonPrereqDataContainer(this, DataArrayPath(m_blendDCName, m_transformAMName, ""));
+  AttributeMatrixShPtr blendAM = blendDC->createAndAddAttributeMatrix({1}, m_transformAMName, AttributeMatrix::Type::Generic);
+
+  blendAM->createAndAddAttributeArray<UInt64ArrayType>(this, m_iterationsAAName, 0, {1});
+  blendAM->createAndAddAttributeArray<DoubleArrayType>(this, m_transformAAName, 0, {m_initialGuess.size()});
+  blendAM->createAndAddAttributeArray<DoubleArrayType>(this, m_valueAAName, 0, {1});
+  getDataContainerArray()->addOrReplaceDataContainer(blendDC);
+
   if(getErrorCode() < 0 || getCancel())
   {
     return;
@@ -481,15 +488,10 @@ void Blend::execute()
 
   if(getWarningCode() < 0)
   {
-    // TODO
-    QString ss = QObject::tr("Some warning message");
+    QString ss = QObject::tr("An unknown warning occurred");
     setWarningCondition(-66400, ss);
     notifyStatusMessage(ss);
   }
-
-  // These should probably be parametized
-  const double lowTolerance = 1E-2;
-  const double highTolerance = 1E-2;
 
   itk::AmoebaOptimizer::ParametersType initialParams(m_initialGuess.size());
   for (size_t idx = 0; idx < m_initialGuess.size(); ++idx)
@@ -499,16 +501,17 @@ void Blend::execute()
 
   itk::AmoebaOptimizer::Pointer m_optimizer = itk::AmoebaOptimizer::New();
   m_optimizer->SetMaximumNumberOfIterations(m_MaxIterations);
-  m_optimizer->SetFunctionConvergenceTolerance(lowTolerance);
-  m_optimizer->SetParametersConvergenceTolerance(highTolerance);
+  m_optimizer->SetFunctionConvergenceTolerance(m_LowTolerance);
+  m_optimizer->SetParametersConvergenceTolerance(m_HighTolerance);
   m_optimizer->SetInitialPosition(initialParams);
 
   using CostFunctionType = MultiParamCostFunction;
-  //  using CostFunctionType = FFTConvolutionCostFunction;
+//  using CostFunctionType = FFTConvolutionCostFunction<GrayScaleColor>;
   CostFunctionType implementation;
   implementation.Initialize(
     std::vector<double>{1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0}
-    //    m_Degree, m_OverlapPercentage, getDataContainerArray(),
+    //    m_ChosenDataContainers, m_RowCharacter, m_ColumnCharacter, m_Degree, m_OverlapPercentage,
+    //    getDataContainerArray(),
     //    m_AttributeMatrixName, m_DataAttributeArrayName, m_XAttributeArrayName, m_YAttributeArrayName
   );
   m_optimizer->SetCostFunction(&implementation);
@@ -526,11 +529,6 @@ void Blend::execute()
   qDebug() << "Number of Iterations: " << GetIterationsFromStopDescription(stopReason);
   qDebug() << "Value: " << m_optimizer->GetValue();
 
-  AttributeMatrixShPtr transformAM = getDataContainerArray()->getDataContainer(m_blendDCName)->getAttributeMatrix(m_transformAMName);
-  transformAM->getAttributeArrayAs<UInt64ArrayType>(m_iterationsAAName)->push_back(GetIterationsFromStopDescription(stopReason));
-  transformAM->getAttributeArrayAs<DoubleArrayType>(m_valueAAName)->push_back(m_optimizer->GetValue());
-  transformAM->getAttributeArrayAs<DoubleArrayType>(m_transformAAName)->setArray(transform);
-
   // Determine whether the solution truly converged
   if(!GetConvergenceFromStopDescription(stopReason))
   {
@@ -538,6 +536,11 @@ void Blend::execute()
     notifyStatusMessage(stopReason);
     return;
   }
+
+  AttributeMatrixShPtr transformAM = getDataContainerArray()->getDataContainer(m_blendDCName)->getAttributeMatrix(m_transformAMName);
+  transformAM->getAttributeArrayAs<UInt64ArrayType>(m_iterationsAAName)->push_back(GetIterationsFromStopDescription(stopReason));
+  transformAM->getAttributeArrayAs<DoubleArrayType>(m_valueAAName)->push_back(m_optimizer->GetValue());
+  transformAM->getAttributeArrayAs<DoubleArrayType>(m_transformAAName)->setArray(transform);
 }
 
 // -----------------------------------------------------------------------------

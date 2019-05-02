@@ -84,6 +84,12 @@ public:
   SIMPL_FILTER_PARAMETER(float, OverlapPercentage)
   Q_PROPERTY(float OverlapPercentage READ getOverlapPercentage WRITE setOverlapPercentage)
 
+  SIMPL_FILTER_PARAMETER(double, LowTolerance)
+  Q_PROPERTY(double LowTolerance READ getLowTolerance WRITE setLowTolerance)
+
+  SIMPL_FILTER_PARAMETER(double, HighTolerance)
+  Q_PROPERTY(double HighTolerance READ getHighTolerance WRITE setHighTolerance)
+
   SIMPL_FILTER_PARAMETER(int, Degree)
   Q_PROPERTY(int Degree READ getDegree WRITE setDegree)
 
@@ -101,6 +107,12 @@ public:
 
   SIMPL_FILTER_PARAMETER(QString, DataAttributeArrayName)
   Q_PROPERTY(QString DataAttributeArrayName READ getDataAttributeArrayName WRITE setDataAttributeArrayName)
+
+  SIMPL_FILTER_PARAMETER(QString, RowCharacter)
+  Q_PROPERTY(QString RowCharacter READ getRowCharacter WRITE setRowCharacter)
+
+  SIMPL_FILTER_PARAMETER(QString, ColumnCharacter)
+  Q_PROPERTY(QString ColumnCharacter READ getColumnCharacter WRITE setColumnCharacter)
 
   bool GetConvergenceFromStopDescription(const QString&) const;
 

@@ -97,24 +97,27 @@ class BlendTest
   static constexpr double m_n = 0.0;
   static constexpr double m_m = 1.0;
   static constexpr double m_theta = M_PI * m_thetaDegrees / 180;
-  static constexpr double m_errTolerance = 2.0;
+  static constexpr double m_errTolerance = 3.0;
 
   static constexpr float m_overlapPercentage = 0.25f;
   const int64_t m_x_overlapDimension = static_cast<int64_t>(roundf(m_resWidth * m_overlapPercentage));
   const int64_t m_y_overlapDimension = static_cast<int64_t>(roundf(m_resHeight * m_overlapPercentage));
 
+  static constexpr double m_lowTolerance = 1E-2;
+  static constexpr double m_highTolerance = 1E-2;
+
   static const int m_arrLength = 8;
   const std::vector<double> m_identity{0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0};
   const std::vector<double> m_translation{m_n, 1.0, 0.0, 0.0, m_m, 0.0, 1.0, 0.0};
   const std::vector<double> m_rotation{
-      0.0, cos(m_theta), -sin(m_theta), 0.0, 0.0, sin(m_theta), cos(m_theta), 0.0,
+      0.0, cos(m_theta), -sin(m_theta), 0.0, 0.0, sin(m_theta), cos(m_theta), 0.0
   };
   const std::vector<double> m_rotation_uv{
-      0, cos(m_theta), -sin(m_theta), 1.0, 0, sin(m_theta), cos(m_theta), 1.0,
+      0, cos(m_theta), -sin(m_theta), 1.0, 0, sin(m_theta), cos(m_theta), 1.0
   };
-  const std::vector<double> m_trial{0.0, 0.0, -1.0, 0.0, 0.0, 1.0, 0.0, 0.0};
+  const std::vector<double> m_poly{1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0};
+  const std::vector<double> m_a{m_poly};
 
-  const std::vector<double> m_a{m_rotation};
   const QString m_i{"1.0; 2.0; 3.0; 4.0; 5.0; 6.0; 7.0; 8.0"};
 
   template <class T> DataPair<T> make_product(T listOneSize, T listTwoSize) const
@@ -173,50 +176,6 @@ class BlendTest
     return distortedImage;
   }
 
-  ImageArray ImageToArray(const Image& image) const
-  {
-    ImageArray imgArray(m_resHeight, std::vector<Image_T>(m_resWidth, 0));
-
-    for(const auto& eachPixel : image)
-    {
-      imgArray[m_resHeight - static_cast<size_t>(roundf(eachPixel.first.second)) - 1][static_cast<size_t>(roundf(eachPixel.first.first))] = eachPixel.second;
-    }
-
-    return imgArray;
-  }
-
-  void Print(const ImageGrid& imageGrid) const
-  {
-    QString stream;
-
-    for(size_t tileRowIdx = 0; tileRowIdx < m_tileRows; ++tileRowIdx)
-    {
-      std::vector<ImageArray> imageRow{};
-      for(const auto& eachImage : imageGrid)
-      {
-        if(eachImage.first.first == tileRowIdx)
-        {
-          imageRow.push_back(ImageToArray(eachImage.second));
-        }
-      }
-
-      for(size_t row_idx = 0; row_idx < m_resHeight; ++row_idx)
-      {
-        for(const auto& eachImage : imageRow)
-        {
-          for(const auto& eachCol : eachImage[row_idx])
-          {
-            stream += QString::number(eachCol) + " ";
-          }
-          stream += "  ";
-        }
-        stream += "\n";
-      }
-      stream += "\n";
-    }
-    qDebug().noquote() << stream;
-  }
-
   bool CompareTransform(const DoubleArrayType::Pointer& transform) const
   {
     double error = 0;
@@ -224,7 +183,7 @@ class BlendTest
     {
       error += abs(transform->getValue(coeffIdx) - m_a[coeffIdx]);
     }
-
+    qDebug() << "Error: " << error;
     return error > m_errTolerance;
   }
 
@@ -286,15 +245,7 @@ class BlendTest
       m_distortedImages[eachImage.first] = Transform(eachImage.second, m_a);
     }
 
-    m_blendFilter->setProperty("MaxIterations", QVariant(m_maxIterations));
-    m_blendFilter->setProperty("Degree", QVariant(m_d));
-    m_blendFilter->setProperty("InitialSimplexGuess", QVariant(m_i));
-    m_blendFilter->setProperty("OverlapPercentage", QVariant(m_overlapPercentage));
-    m_blendFilter->setProperty("DataAttributeArrayName", QVariant(m_dataAAName));
-    m_blendFilter->setProperty("AttributeMatrixName", QVariant(m_AMName));
-    m_blendFilter->setProperty("XAttributeArrayName", QVariant(m_XAAName));
-    m_blendFilter->setProperty("YAttributeArrayName", QVariant(m_YAAName));
-
+    QStringList chosenDataContainers;
     DataContainerArrayShPtr dca = DataContainerArray::New();
     for(const auto& eachImage : m_distortedImages)
     {
@@ -330,9 +281,21 @@ class BlendTest
       imageDC->setGeometry(imgGeo);
       imageDC->addOrReplaceAttributeMatrix(imageAM);
 
-      // Add the DC to the data container array
+      chosenDataContainers.push_back(gridCoordsAsString);
       dca->addOrReplaceDataContainer(imageDC);
     }
+
+    m_blendFilter->setProperty("ChosenDataContainers", QVariant(chosenDataContainers));
+    m_blendFilter->setProperty("MaxIterations", QVariant(m_maxIterations));
+    m_blendFilter->setProperty("Degree", QVariant(m_d));
+    m_blendFilter->setProperty("InitialSimplexGuess", QVariant(m_i));
+    m_blendFilter->setProperty("OverlapPercentage", QVariant(m_overlapPercentage));
+    m_blendFilter->setProperty("LowTolerance", QVariant(m_lowTolerance));
+    m_blendFilter->setProperty("HighTolerance", QVariant(m_highTolerance));
+    m_blendFilter->setProperty("DataAttributeArrayName", QVariant(m_dataAAName));
+    m_blendFilter->setProperty("AttributeMatrixName", QVariant(m_AMName));
+    m_blendFilter->setProperty("XAttributeArrayName", QVariant(m_XAAName));
+    m_blendFilter->setProperty("YAttributeArrayName", QVariant(m_YAAName));
 
     // Assign the data container array to the Blend filter
     m_blendFilter->setDataContainerArray(dca);
@@ -342,14 +305,10 @@ class BlendTest
   {
     m_blendFilter->execute();
 
-    // Check that the algorithm converged and the compare the
-    // reverted image data to the original images
-    int errorCode = m_blendFilter->getErrorCode();
-    DREAM3D_REQUIRE_EQUAL(errorCode, 0)
-
+    DREAM3D_REQUIRE_EQUAL(m_blendFilter->getErrorCode(), 0)
     DoubleArrayType::Pointer transform = m_blendFilter->getDataContainerArray()->getDataContainer(m_outDCName)->getAttributeMatrix(m_outAMName)->getAttributeArrayAs<DoubleArrayType>(m_outAAName);
     bool outOfTolerance = CompareTransform(transform);
-    DREAM3D_REQUIRE_EQUAL(outOfTolerance, true)
+    DREAM3D_REQUIRE_EQUAL(outOfTolerance, false)
 
     return EXIT_SUCCESS;
   }
