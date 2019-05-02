@@ -52,69 +52,17 @@
 using GrayScaleColor = uint8_t;
 using RGBColor = std::tuple<uint8_t, uint8_t, uint8_t>;
 
-// A simple cost function that whose minimum should be at (-B/2, C)
-class SimpleCostFunction : public itk::SingleValuedCostFunction
-{
-  static const int8_t m_NumParams = 1;
-  static const int8_t m_B = -2;
-  static const int8_t m_C = 1;
-  static constexpr double m_initialX = 7.0;
-
-public:
-  itkNewMacro(SimpleCostFunction)
-
-  void Initialize() {}
-
-  void GetDerivative(const ParametersType&, DerivativeType&) const override
-  {
-    throw std::exception("Derivatives are not implemented for the optimization type");
-  }
-
-  uint32_t GetNumberOfParameters() const override
-  {
-    return m_NumParams;
-  }
-
-  MeasureType GetValue(const ParametersType& parameters) const override
-  {
-    return parameters[0] * parameters[0] + parameters[0] * m_B + m_C;
-  }
-
-  ParametersType GetInitialValues()
-  {
-    ParametersType initParams(GetNumberOfParameters());
-    initParams[0] = m_initialX;
-    return initParams;
-  }
-};
-
 class MultiParamCostFunction : public itk::SingleValuedCostFunction
 {
-  static const int8_t m_NumParams = 4;
-  static const int8_t m_A = 1;
-  static const int8_t m_B = 2;
-  static const int8_t m_C = 3;
-  static const int8_t m_D = 4;
-  static const int8_t m_E = 5;
-  static constexpr double m_initialW = -1.0;
-  static constexpr double m_initialX = -1.0;
-  static constexpr double m_initialY = -1.0;
-  static constexpr double m_initialZ = -1.0;
-
-  MeasureType Rosenbrock(const ParametersType& parameters) const
-  {
-    return pow((m_A - parameters[0]), 2) + m_B * pow((parameters[1] - parameters[0] * parameters[0]), 2);
-  }
-
-  MeasureType GenericOptimization(const ParametersType& parameters) const
-  {
-    return pow((parameters[0] - m_A), 2) + pow((parameters[1] - m_B), 2) + pow((parameters[2] - m_C), 2) + pow((parameters[3] - m_D), 2) + m_E;
-  }
+  std::vector<double> m_mins{};
 
 public:
   itkNewMacro(MultiParamCostFunction)
 
-  void Initialize() {}
+  void Initialize(std::vector<double> mins)
+  {
+    m_mins = mins;
+  }
 
   void GetDerivative(const ParametersType&, DerivativeType&) const override
   {
@@ -123,23 +71,20 @@ public:
 
   uint32_t GetNumberOfParameters() const override
   {
-    return m_NumParams;
+    return static_cast<uint32_t>(m_mins.size());
   }
 
   MeasureType GetValue(const ParametersType& parameters) const override
   {
-    // return Rosenbrock(parameters);
-    return GenericOptimization(parameters);
-  }
-
-  ParametersType GetInitialValues()
-  {
-    ParametersType initParams(GetNumberOfParameters());
-    initParams[0] = m_initialW;
-    initParams[1] = m_initialX;
-    initParams[2] = m_initialY;
-    initParams[3] = m_initialZ;
-    return initParams;
+    MeasureType residual = 0.0;
+    size_t numParams = parameters.size();
+    for (size_t idx = 0; idx < numParams; ++idx)
+    {
+      double minValue = m_mins[idx];
+      double paramValue = parameters[idx];
+      residual += (idx == numParams - 1) ? minValue : pow(paramValue - minValue, 2);
+    }
+    return residual;
   }
 };
 
@@ -271,33 +216,6 @@ public:
   uint32_t GetNumberOfParameters() const override
   {
     return static_cast<uint32_t>(2 * (m_degree * m_degree + 2 * m_degree + 1));
-  }
-
-  ParametersType GetInitialValues() const
-  {
-    const uint32_t numCoeffs = GetNumberOfParameters();
-    const uint32_t half = numCoeffs / 2;
-    ParametersType params{numCoeffs};
-    double value = 0.0;
-    double increment = 0.1;
-    for(size_t x = 0; x < numCoeffs; ++x)
-    {
-      value = 0.0;
-      if(x == 1 || x == half + 2)
-      {
-        value = increment;
-      }
-      if(x == 2)
-      {
-        value = increment;
-      }
-      if(x == half + 1)
-      {
-        value = -increment;
-      }
-      params[x] = value;
-    }
-    return params;
   }
 
   MeasureType GetValue(const ParametersType& parameters) const override
@@ -435,6 +353,21 @@ void Blend::initialize()
   setErrorCondition(0, "");
   setWarningCondition(0, "");
   setCancel(false);
+
+  UInt64ArrayType::Pointer iterationsAA;
+  iterationsAA->setName(m_iterationsAAName);
+  DoubleArrayType::Pointer valueAA;
+  valueAA->setName(m_valueAAName);
+  DoubleArrayType::Pointer transformAA;
+  transformAA->setName(m_transformAAName);
+  AttributeMatrixShPtr blendAM;
+  blendAM->addOrReplaceAttributeArray(iterationsAA);
+  blendAM->addOrReplaceAttributeArray(transformAA);
+  blendAM->setName(m_transformAMName);
+  DataContainerShPtr blendDC;
+  blendDC->addOrReplaceAttributeMatrix(blendAM);
+  blendDC->setName(m_blendDCName);
+  getDataContainerArray()->addOrReplaceDataContainer(blendDC);
 }
 
 // -----------------------------------------------------------------------------
@@ -460,6 +393,9 @@ void Blend::setupFilterParameters()
 
   FloatFilterParameter::Pointer overlapPercentage{FloatFilterParameter::New("Overlap Percentage", "OverlapPercentage", 0.0f, FilterParameter::Category::Parameter,
                                                                             std::bind(&Blend::setOverlapPercentage, this, std::placeholders::_1), std::bind(&Blend::getOverlapPercentage, this), 0)};
+
+  StringFilterParameter::Pointer initialGuess{StringFilterParameter::New("Initial Simplex Guess", "InitialSimplexGuess", {}, FilterParameter::Category::Parameter,
+                                                                   std::bind(&Blend::setInitialSimplexGuess, this, std::placeholders::_1), std::bind(&Blend::getInitialSimplexGuess, this), {})};
 
   StringFilterParameter::Pointer amName{StringFilterParameter::New("Attribute Matrix Name", "AttributeMatrixName", {}, FilterParameter::Category::Parameter,
                                                                    std::bind(&Blend::setAttributeMatrixName, this, std::placeholders::_1), std::bind(&Blend::getAttributeMatrixName, this), {})};
@@ -493,8 +429,27 @@ void Blend::dataCheck()
 {
   setErrorCondition(0, "");
   setWarningCondition(0, "");
-  //  OverlapMethod overlapMethod = static_cast<OverlapMethod>(m_OverlapMethod);
-  // Check bounds of m_overlapPercent
+
+  for (const auto& eachCoeff: m_InitialSimplexGuess.split(";"))
+  {
+    bool coerced = false;
+    m_initialGuess.push_back(eachCoeff.toDouble(&coerced));
+    if (!coerced)
+    {
+      setErrorCondition(-66500, "A coefficient could not be translated into a floating-point precision number");
+    }
+  }
+
+  size_t len = static_cast<size_t>(2 * m_Degree * m_Degree + 4 * m_Degree + 2);
+  if (len != m_initialGuess.size())
+  {
+    setErrorCondition(-66500, "Number of coefficients in initial guess is not compatible with degree number");
+  }
+
+  if (m_OverlapPercentage < 0.0f || m_OverlapPercentage >= 1.00f)
+  {
+    setErrorCondition(-66500, "Overlap Percentage should be a floating-point precision number between 0.0 and 1.0");
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -518,85 +473,63 @@ void Blend::execute()
 {
   initialize();
   dataCheck();
-  if(getCancel())
+
+  if(getErrorCode() < 0 || getCancel())
   {
     return;
   }
 
   if(getWarningCode() < 0)
   {
+    // TODO
     QString ss = QObject::tr("Some warning message");
     setWarningCondition(-66400, ss);
     notifyStatusMessage(ss);
-  }
-
-  if(getErrorCode() < 0)
-  {
-    QString ss = QObject::tr("Some error message");
-    setErrorCondition(-66500, ss);
-    notifyStatusMessage(ss);
-    return;
   }
 
   // These should probably be parametized
   const double lowTolerance = 1E-2;
   const double highTolerance = 1E-2;
 
+  itk::AmoebaOptimizer::ParametersType initialParams(m_initialGuess.size());
+  for (size_t idx = 0; idx < m_initialGuess.size(); ++idx)
+  {
+    initialParams[idx] = m_initialGuess[idx];
+  }
+
   itk::AmoebaOptimizer::Pointer m_optimizer = itk::AmoebaOptimizer::New();
   m_optimizer->SetMaximumNumberOfIterations(m_MaxIterations);
   m_optimizer->SetFunctionConvergenceTolerance(lowTolerance);
   m_optimizer->SetParametersConvergenceTolerance(highTolerance);
+  m_optimizer->SetInitialPosition(initialParams);
 
-  //  using CostFunctionType = SimpleCostFunction;
   using CostFunctionType = MultiParamCostFunction;
   //  using CostFunctionType = FFTConvolutionCostFunction;
   CostFunctionType implementation;
   implementation.Initialize(
-      //    m_Degree, m_OverlapPercentage, getDataContainerArray(),
-      //    m_AttributeMatrixName, m_DataAttributeArrayName, m_XAttributeArrayName, m_YAttributeArrayName
+    std::vector<double>{1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0}
+    //    m_Degree, m_OverlapPercentage, getDataContainerArray(),
+    //    m_AttributeMatrixName, m_DataAttributeArrayName, m_XAttributeArrayName, m_YAttributeArrayName
   );
-  itk::AmoebaOptimizer::ParametersType initialParams = implementation.GetInitialValues();
-  std::list<double> guess;
-  for(const auto& eachCoeff : initialParams)
-  {
-    guess.push_back(eachCoeff);
-  }
-  m_optimizer->SetInitialPosition(initialParams);
   m_optimizer->SetCostFunction(&implementation);
-
   m_optimizer->StartOptimization();
 
   QString stopReason = QString::fromStdString(m_optimizer->GetStopConditionDescription());
-
   // Can get rid of this after debugging is done for filter
   std::list<double> transform;
   for(const auto& eachCoeff : m_optimizer->GetCurrentPosition())
   {
     transform.push_back(eachCoeff);
   }
-  qDebug() << "Initial Position: [ " << guess << " ]";
+  qDebug() << "Initial Position: [ " << m_initialGuess << " ]";
   qDebug() << "Final Position: [ " << transform << " ]";
   qDebug() << "Number of Iterations: " << GetIterationsFromStopDescription(stopReason);
   qDebug() << "Value: " << m_optimizer->GetValue();
 
-  // Set up new Data Container/Attribute matrix with results of filter
-  UInt32ArrayType::Pointer iterationsAA;
-  iterationsAA->push_back(GetIterationsFromStopDescription(stopReason));
-  iterationsAA->setName("Iterations");
-  DoubleArrayType::Pointer valueAA;
-  valueAA->push_back(m_optimizer->GetValue());
-  valueAA->setName("Residual");
-  DoubleArrayType::Pointer transformAA;
-  transformAA->setArray(transform);
-  transformAA->setName("Transform");
-  AttributeMatrixShPtr blendAM;
-  blendAM->addOrReplaceAttributeArray(iterationsAA);
-  blendAM->addOrReplaceAttributeArray(transformAA);
-  blendAM->setName("Transform Matrix");
-  DataContainerShPtr blendDC;
-  blendDC->addOrReplaceAttributeMatrix(blendAM);
-  blendDC->setName("Blend Data");
-  getDataContainerArray()->addOrReplaceDataContainer(blendDC);
+  AttributeMatrixShPtr transformAM = getDataContainerArray()->getDataContainer(m_blendDCName)->getAttributeMatrix(m_transformAMName);
+  transformAM->getAttributeArrayAs<UInt64ArrayType>(m_iterationsAAName)->push_back(GetIterationsFromStopDescription(stopReason));
+  transformAM->getAttributeArrayAs<DoubleArrayType>(m_valueAAName)->push_back(m_optimizer->GetValue());
+  transformAM->getAttributeArrayAs<DoubleArrayType>(m_transformAAName)->setArray(transform);
 
   // Determine whether the solution truly converged
   if(!GetConvergenceFromStopDescription(stopReason))

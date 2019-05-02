@@ -115,16 +115,7 @@ class BlendTest
   const std::vector<double> m_trial{0.0, 0.0, -1.0, 0.0, 0.0, 1.0, 0.0, 0.0};
 
   const std::vector<double> m_a{m_rotation};
-
-  template <class T> std::vector<T> GenData(size_t numElements) const
-  {
-    std::vector<T> data(numElements);
-    for(size_t eachIndex = 0; eachIndex < numElements; eachIndex++)
-    {
-      data[eachIndex] = m_data[rand() % 10];
-    }
-    return data;
-  }
+  const QString m_i{"1.0; 2.0; 3.0; 4.0; 5.0; 6.0; 7.0; 8.0"};
 
   template <class T> DataPair<T> make_product(T listOneSize, T listTwoSize) const
   {
@@ -182,74 +173,12 @@ class BlendTest
     return distortedImage;
   }
 
-  template <class T> QString GridCoordsToName(std::pair<T, T> coords) const
-  {
-    return m_rowChar + QString::number(coords.first) + m_colChar + QString::number(coords.second);
-  }
-
-  template <class T> std::pair<T, T> NameToGridCoords(QString name) const
-  {
-    int cLength = name.size() - name.indexOf(m_colChar) - 1;
-    T r = static_cast<T>(name.midRef(name.indexOf(m_rowChar) + 1, name.size() - cLength - 2).toULong());
-    T c = static_cast<T>(name.rightRef(cLength).toULong());
-
-    return std::make_pair(r, c);
-  }
-
-  DataContainerArrayShPtr ImageGridToDataContainerArray(const ImageGrid& imageGrid) const
-  {
-    DataContainerArrayShPtr dca = DataContainerArray::New();
-    for(const auto& eachImage : imageGrid)
-    {
-      Image img = eachImage.second;
-      size_t sz = img.size();
-
-      UInt8ArrayType::Pointer imageData = UInt8ArrayType::CreateArray(sz, m_dataAAName);
-      Int64ArrayType::Pointer xPixels = Int64ArrayType::CreateArray(sz, m_XAAName);
-      Int64ArrayType::Pointer yPixels = Int64ArrayType::CreateArray(sz, m_YAAName);
-      size_t pixelIdx = 0;
-      for(const auto& eachPixel : img)
-      {
-        imageData->setValue(pixelIdx, eachPixel.second);
-        xPixels->setValue(pixelIdx, eachPixel.first.first);
-        yPixels->setValue(pixelIdx, eachPixel.first.second);
-        pixelIdx++;
-      }
-
-      // Set up the attribute matrix to hold the data arrays
-      AttributeMatrixShPtr imageAM = AttributeMatrix::New({sz}, m_AMName, AttributeMatrix::Type::Cell);
-      imageAM->addOrReplaceAttributeArray(imageData);
-      imageAM->addOrReplaceAttributeArray(xPixels);
-      imageAM->addOrReplaceAttributeArray(yPixels);
-
-      // Set the up the geometry for the data container
-      ImageGeom::Pointer imgGeo = ImageGeom::CreateGeometry(m_geoName);
-      imgGeo->setOrigin(0.0f, 0.0f, 0.0f);
-      imgGeo->setDimensions(m_resWidth, m_resHeight, 0.0f);
-
-      // Set up the data container to hold the attribute matrix
-      QString gridCoordsAsString = GridCoordsToName(eachImage.first);
-      DataContainerShPtr imageDC = DataContainer::New(gridCoordsAsString);
-      imageDC->setGeometry(imgGeo);
-      imageDC->addOrReplaceAttributeMatrix(imageAM);
-
-      // Add the DC to the data container array
-      dca->addOrReplaceDataContainer(imageDC);
-    }
-
-    return dca;
-  }
-
   ImageArray ImageToArray(const Image& image) const
   {
     ImageArray imgArray(m_resHeight, std::vector<Image_T>(m_resWidth, 0));
 
     for(const auto& eachPixel : image)
     {
-      // Use nearest-neighbor sampling to convert raw x, y pixels into integers
-      // Iterate through all of the pixels in the image
-      // When converting to array, pixel origin comes from lower-left
-      // corner - and need translated to origin in upper-left corner
       imgArray[m_resHeight - static_cast<size_t>(roundf(eachPixel.first.second)) - 1][static_cast<size_t>(roundf(eachPixel.first.first))] = eachPixel.second;
     }
 
@@ -306,7 +235,12 @@ class BlendTest
 
     for(const auto& eachTile : tiles)
     {
-      std::vector<uint8_t> data{GenData<uint8_t>(pixels.size())};
+
+      std::vector<uint8_t> data(pixels.size());
+      for(size_t eachIndex = 0; eachIndex < pixels.size(); eachIndex++)
+      {
+        data[eachIndex] = m_data[rand() % 10];
+      }
       size_t pixelIndex = 0;
       Image img{};
       for(const auto& eachPixel : pixels)
@@ -354,20 +288,58 @@ class BlendTest
 
     m_blendFilter->setProperty("MaxIterations", QVariant(m_maxIterations));
     m_blendFilter->setProperty("Degree", QVariant(m_d));
-    m_blendFilter->setProperty("OverlapMethod", QVariant(0));
+    m_blendFilter->setProperty("InitialSimplexGuess", QVariant(m_i));
     m_blendFilter->setProperty("OverlapPercentage", QVariant(m_overlapPercentage));
     m_blendFilter->setProperty("DataAttributeArrayName", QVariant(m_dataAAName));
     m_blendFilter->setProperty("AttributeMatrixName", QVariant(m_AMName));
     m_blendFilter->setProperty("XAttributeArrayName", QVariant(m_XAAName));
     m_blendFilter->setProperty("YAttributeArrayName", QVariant(m_YAAName));
 
+    DataContainerArrayShPtr dca = DataContainerArray::New();
+    for(const auto& eachImage : m_distortedImages)
+    {
+      Image img = eachImage.second;
+      size_t sz = img.size();
+
+      UInt8ArrayType::Pointer imageData = UInt8ArrayType::CreateArray(sz, m_dataAAName);
+      Int64ArrayType::Pointer xPixels = Int64ArrayType::CreateArray(sz, m_XAAName);
+      Int64ArrayType::Pointer yPixels = Int64ArrayType::CreateArray(sz, m_YAAName);
+      size_t pixelIdx = 0;
+      for(const auto& eachPixel : img)
+      {
+        imageData->setValue(pixelIdx, eachPixel.second);
+        xPixels->setValue(pixelIdx, eachPixel.first.first);
+        yPixels->setValue(pixelIdx, eachPixel.first.second);
+        pixelIdx++;
+      }
+
+      // Set up the attribute matrix to hold the data arrays
+      AttributeMatrixShPtr imageAM = AttributeMatrix::New({sz}, m_AMName, AttributeMatrix::Type::Cell);
+      imageAM->addOrReplaceAttributeArray(imageData);
+      imageAM->addOrReplaceAttributeArray(xPixels);
+      imageAM->addOrReplaceAttributeArray(yPixels);
+
+      // Set the up the geometry for the data container
+      ImageGeom::Pointer imgGeo = ImageGeom::CreateGeometry(m_geoName);
+      imgGeo->setOrigin(0.0f, 0.0f, 0.0f);
+      imgGeo->setDimensions(m_resWidth, m_resHeight, 0.0f);
+
+      // Set up the data container to hold the attribute matrix
+      QString gridCoordsAsString = m_rowChar + QString::number(eachImage.first.first) + m_colChar + QString::number(eachImage.first.second);
+      DataContainerShPtr imageDC = DataContainer::New(gridCoordsAsString);
+      imageDC->setGeometry(imgGeo);
+      imageDC->addOrReplaceAttributeMatrix(imageAM);
+
+      // Add the DC to the data container array
+      dca->addOrReplaceDataContainer(imageDC);
+    }
+
     // Assign the data container array to the Blend filter
-    m_blendFilter->setDataContainerArray(ImageGridToDataContainerArray(m_distortedImages));
+    m_blendFilter->setDataContainerArray(dca);
   }
 
   int RunTest()
   {
-    qDebug() << "Attempting to blend...\n";
     m_blendFilter->execute();
 
     // Check that the algorithm converged and the compare the
@@ -375,8 +347,6 @@ class BlendTest
     int errorCode = m_blendFilter->getErrorCode();
     DREAM3D_REQUIRE_EQUAL(errorCode, 0)
 
-    // TODO Get the resulting coefficient array from the the new data structures
-    // output from the filter
     DoubleArrayType::Pointer transform = m_blendFilter->getDataContainerArray()->getDataContainer(m_outDCName)->getAttributeMatrix(m_outAMName)->getAttributeArrayAs<DoubleArrayType>(m_outAAName);
     bool outOfTolerance = CompareTransform(transform);
     DREAM3D_REQUIRE_EQUAL(outOfTolerance, true)

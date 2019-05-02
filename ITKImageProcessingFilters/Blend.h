@@ -45,6 +45,13 @@ class ITKImageProcessing_EXPORT Blend : public AbstractFilter
 Q_OBJECT
 
 protected:
+  std::vector<double> m_initialGuess{};
+  const QString m_iterationsAAName = "Iterations";
+  const QString m_valueAAName = "Residual";
+  const QString m_transformAAName = "Transform";
+  const QString m_transformAMName = "Transform Matrix";
+  const QString m_blendDCName = "Blend Data";
+
   Blend();
 
   /**
@@ -56,12 +63,6 @@ protected:
   * @brief Initializes all the private instance variables.
   */
   void initialize();
-
-  enum class OverlapMethod : unsigned int
-  {
-    Percent = 0,
-    Origins = 1
-  };
 
 public:
   SIMPL_SHARED_POINTERS(Blend)
@@ -85,6 +86,9 @@ public:
 
   SIMPL_FILTER_PARAMETER(int, Degree)
   Q_PROPERTY(int Degree READ getDegree WRITE setDegree)
+
+  SIMPL_FILTER_PARAMETER(QString, InitialSimplexGuess)
+  Q_PROPERTY(QString InitialSimplexGuess READ getInitialSimplexGuess WRITE setInitialSimplexGuess)
 
   SIMPL_FILTER_PARAMETER(QString, AttributeMatrixName)
   Q_PROPERTY(QString AttributeMatrixName READ getAttributeMatrixName WRITE setAttributeMatrixName)
