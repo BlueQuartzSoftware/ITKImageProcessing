@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ExportDocument>
+  <Image>
+    <Filename>SampleMosaic_p0.bmp</Filename>
+    <Bounds StartX="0" SizeX="1292" StartY="0" SizeY="968" StartC="0" StartS="0" StartB="0" StartM="0" />
+    <Zoom>1</Zoom>
+    <Z>8.398 µm</Z>
+    <T>0 ps</T>
+  </Image>
+  <Image>
+    <Filename>SampleMosaic_p1.bmp</Filename>
+    <Bounds StartX="1228" SizeX="1292" StartY="0" SizeY="968" StartC="0" StartS="0" StartB="0" StartM="1" />
+    <Zoom>1</Zoom>
+    <Z>6.679 µm</Z>
+    <T>0 ps</T>
+  </Image>
+  <Image>
+    <Filename>SampleMosaic_p2.bmp</Filename>
+    <Bounds StartX="1228" SizeX="1292" StartY="920" SizeY="968" StartC="0" StartS="0" StartB="0" StartM="2" />
+    <Zoom>1</Zoom>
+    <Z>6.895 µm</Z>
+    <T>0 ps</T>
+  </Image>
+  <Image>
+    <Filename>SampleMosaic_p3.bmp</Filename>
+    <Bounds StartX="0" SizeX="1292" StartY="920" SizeY="968" StartC="0" StartS="0" StartB="0" StartM="3" />
+    <Zoom>1</Zoom>
+    <Z>7.111 µm</Z>
+    <T>0 ps</T>
+  </Image>
+  <Image>
+    <Filename>SampleMosaic_p4.bmp</Filename>
+    <Bounds StartX="0" SizeX="1292" StartY="1840" SizeY="968" StartC="0" StartS="0" StartB="0" StartM="4" />
+    <Zoom>1</Zoom>
+    <Z>7.327 µm</Z>
+    <T>0 ps</T>
+  </Image>
+  <Image>
+    <Filename>SampleMosaic_p5.bmp</Filename>
+    <Bounds StartX="1228" SizeX="1292" StartY="1840" SizeY="968" StartC="0" StartS="0" StartB="0" StartM="5" />
+    <Zoom>1</Zoom>
+    <Z>7.543 µm</Z>
+    <T>0 ps</T>
+  </Image>
+  
+</ExportDocument>

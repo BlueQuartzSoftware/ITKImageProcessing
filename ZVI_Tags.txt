@@ -1,0 +1,528 @@
+222 Compression
+257 DateMappingTable
+258 Black Value
+259 White value
+260 ImageDataMappingAutoRange
+261 Image Thumbnail
+262 Gamma Value
+264 ImageOverExposure
+265 ImageRelativeTime1
+266 ImageRelativeTime2
+267 ImageRelativeTime3
+268 ImageRelativeTime4
+300 ImageRelativeTime
+301 ImageBaseTimeFirst
+301 ImageBaseTime1
+302 ImageBaseTime2
+303 ImageBaseTime3
+304 ImageBaseTime4
+515 Image Width (Pixel)
+516 Image Height (Pixel)
+517 ImageCountRaw
+518 Pixel Type
+519 Number Raw Images
+520 Image Size
+521 CompressionFactorForSave
+522 DocumentSaveFlags
+523 Acquisition pause annotation
+530 Document Subtype
+531 Acquisition Bit Depth
+534 Z-Stack single representative
+769 Scale Factor For X
+770 Scale Unit for X
+771 Scale Width
+772 Scale Factor For Y
+773 Scale Unit for Y
+774 Scale Height
+775 Scale Factor For Z
+776 Scale Unit for Z
+777 Scale Depth
+778 Scaling Parent
+1001 Date
+1002 Code
+1003 Source
+1004 Message
+1025 CameraImageAcquisitionTime
+1026 8-bit Acquisition
+1027 Camera Bit Depth
+1029 MonoReferenceLow
+1030 MonoReferenceHigh
+1031 RedReferenceLow
+1032 RedReferenceHigh
+1033 GreenReferenceLow
+1034 GreenReferenceHigh
+1035 BlueReferenceLow
+1036 BlueReferenceHigh
+1041 Framegrabber Name
+1042 Camera
+1044 CameraTriggerSignalType
+1045 CameraTriggerEnable
+1046 GrabberTimeout
+1281 MultiChannelEnabled
+1282 Multichannel Colour
+1283 Multichannel Weight
+1284 Channel Name
+1536 DocumentInformationGroup
+1537 Title
+1538 Author
+1539 Keywords
+1540 Comments
+1541 Sample ID
+1542 Subject
+1543 RevisionNumber
+1544 Save Folder
+1545 FileLink
+1546 Document Type
+1547 Storage Media
+1548 File ID
+1549 Reference
+1550 File Date
+1551 File Size
+1553 Filename
+1554 FileAttributes
+1792 ProjectGroup
+1793 Acquisition Date
+1794 Last modified by
+1795 User Company
+1796 User Company Logo
+1797 Image
+1800 User ID
+1801 User Name
+1802 User City
+1803 User Address
+1804 User Country
+1805 User Phone
+1806 User Fax
+2049 Objective Name
+2050 Optovar
+2051 Reflector
+2052 Condenser Contrast
+2053 Transmitted Light Filter 1
+2054 Transmitted Light Filter 2
+2055 Reflected Light Shutter
+2056 Condenser Front Lens
+2057 Excitation Filer Name
+2060 Transmitted Light Fieldstop Aperture
+2061 Reflected Light Aperture
+2062 Condenser N.A.
+2063 Light Path
+2064 HalogenLampOn
+2065 Halogen Lamp Mode
+2066 Halogen Lamp Voltage
+2068 Fluorescence Lamp Level
+2069 Fluorescence Lamp Intensity
+2070 Light Manager is Enabled
+2072 Focus Position
+2073 Stage Position X
+2074 Stage Position Y
+2075 Microscope Name
+2076 Objective Magnification
+2077 Objective N.A.
+2078 Microscope Illumination
+2079 External Shutter 1
+2080 External Shutter 2
+2081 External Shutter 3
+2082 External Filter Wheel 1 Name
+2083 External Filter Wheel 2 Name
+2084 Parfocal Correction
+2086 External Shutter 4
+2087 External Shutter 5
+2088 External Shutter 6
+2089 External Filter Wheel 3 Name
+2090 External Filter Wheel 4 Name
+2103 Objective Turret Position
+2104 Objective Contrast Method
+2105 Objective Immersion Type
+2107 Reflector Position
+2109 Transmitted Light Filter 1 Position
+2110 Transmitted Light Filter 2 Position
+2112 Excitation Filter Position
+2113 Lamp Mirror Position (ERSETZT DURCH 241!)
+2114 External Filter Wheel 1 Position
+2115 External Filter Wheel 2 Position
+2116 External Filter Wheel 3 Position
+2117 External Filter Wheel 4 Position
+2118 Lightmanager Mode
+2119 Halogen Lamp Calibration
+2120 CondenserNAGoSpeed
+2121 TransmittedLightFieldstopGoSpeed
+2122 OptovarGoSpeed
+2123 Focus calibrated
+2124 FocusBasicPosition
+2125 FocusPower
+2126 FocusBacklash
+2127 FocusMeasurementOrigin
+2128 FocusMeasurementDistance
+2129 FocusSpeed
+2130 FocusGoSpeed
+2131 Focus Distance
+2132 FocusInitPosition
+2133 Stage calibrated
+2134 StagePower
+2135 StageXBacklash
+2136 StageYBacklash
+2137 Stage Speed X
+2138 Stage Speed Y
+2139 Stage Speed
+2140 Stage Go Speed X
+2141 Stage Go Speed Y
+2142 Stage Step Distance X
+2143 Stage Step Distance Y
+2144 Stage Initialisation Position X
+2145 Stage Initialisation Position Y
+2146 MicroscopeMagnification
+2147 Reflector Magnification
+2148 Lamp Mirror Position
+2149 FocusDepth
+2150 Microscope Type
+2151 Objective Working Distance
+2152 ReflectedLightApertureGoSpeed
+2153 External Shutter
+2154 Objective Immersion Stop
+2155 Focus Start Speed
+2156 Focus Acceleration
+2157 Reflected Light Fieldstop
+2158 ReflectedLightFieldstopGoSpeed
+2159 Reflected Light Filter 1
+2160 Reflected Light Filter 2
+2161 Reflected Light Filter 1 Position
+2162 Reflected Light Filter 2 Position
+2163 Transmitted Light Attenuator
+2164 Reflected Light Attenuator
+2165 Transmitted Light Shutter
+2166 TransmittedLightAttenuatorGoSpeed
+2167 ReflectedLightAttenuatorGoSpeed
+2176 TransmittedLightVirtualFilterPosition
+2177 Transmitted Light Virtual Filter
+2178 ReflectedLightVirtualFilterPosition
+2179 Reflected Light Virtual Filter
+2180 Reflected Light Halogen Lamp Mode
+2181 Reflected Light Halogen Lamp Voltage
+2182 Reflected Light Halogen Lamp Colour Temperature
+2183 Contrastmanager Mode
+2184 Dazzle Protection Active
+2195 Zoom
+2196 ZoomGoSpeed
+2197 Light Zoom
+2198 LightZoomGoSpeed
+2199 Lightzoom Coupled
+2200 Transmitted Light Halogen Lamp Mode
+2201 Transmitted Light Halogen Lamp Voltage
+2202 Transmitted Light Halogen Lamp Colour Temperature
+2203 Reflected Coldlight Mode
+2204 Reflected Coldlight Intensity
+2205 Reflected Coldlight Colour Temperature
+2206 Transmitted Coldlight Mode
+2207 Transmitted Coldlight Intensity
+2208 Transmitted Coldlight Colour Temperature
+2209 Infinityspace Portchanger Position
+2210 Beamsplitter Infinity Space
+2211 TwoTv VisCamChanger Position
+2212 Beamsplitter Ocular
+2213 TwoTv CamerasChanger Position
+2214 Beamsplitter Cameras
+2215 Ocular Shutter
+2216 TwoTv CamerasChanger Cube
+2217 LightWaveLength
+2218 Ocular Magnification
+2219 Camera Adapter Magnification
+2220 Microscope Port
+2221 Ocular Total Magnification
+2222 Field of View
+2223 Ocular
+2224 CameraAdapter
+2225 StageJoystickEnabled
+2226 ContrastmanagerContrastMethod
+2229 CamerasChanger BeamSplitter Type
+2235 Rearport Slider Position
+2236 Rearport Source
+2237 Beamsplitter Type Infinity Space
+2238 Fluorescence Attenuator
+2239 Fluorescence Attenuator Position
+2307 Camera Framestart Left
+2308 Camera Framestart Top
+2309 Camera Frame Width
+2310 Camera Frame Height
+2311 Camera Binning
+2312 CameraFrameFull
+2313 CameraFramePixelDistance
+2318 DataFormatUseScaling
+2319 CameraFrameImageOrientation
+2320 VideoMonochromeSignalType
+2321 VideoColorSignalType
+2322 MeteorChannelInput
+2323 MeteorChannelSync
+2324 WhiteBalanceEnabled
+2325 CameraWhiteBalanceRed
+2326 CameraWhiteBalanceGreen
+2327 CameraWhiteBalanceBlue
+2331 CameraFrameScalingFactor
+2562 Meteor Camera Type
+2564 Exposure Time [ms]
+2568 CameraExposureTimeAutoCalculate
+2569 Meteor Gain Value
+2571 Meteor Gain Automatic
+2572 MeteorAdjustHue
+2573 MeteorAdjustSaturation
+2574 MeteorAdjustRedLow
+2575 MeteorAdjustGreenLow
+2576 Meteor Blue Low
+2577 MeteorAdjustRedHigh
+2578 MeteorAdjustGreenHigh
+2579 Meteor Blue High
+2582 CameraExposureTimeCalculationControl
+2585 AxioCamFadingCorrectionEnable
+2587 CameraLiveImage
+2588 CameraLiveEnabled
+2589 LiveImageSyncObjectName
+2590 CameraLiveSpeed
+2591 CameraImage
+2592 CameraImageWidth
+2593 CameraImageHeight
+2594 CameraImagePixelType
+2595 CameraImageShMemoryName
+2596 CameraLiveImageWidth
+2597 CameraLiveImageHeight
+2598 CameraLiveImagePixelType
+2599 CameraLiveImageShMemoryName
+2600 CameraLiveMaximumSpeed
+2601 CameraLiveBinning
+2602 CameraLiveGainValue
+2603 CameraLiveExposureTimeValue
+2604 CameraLiveScalingFactor
+2817 Image Index U
+2818 Image Index V
+2819 Image Index Z
+2820 ImageIndex C
+2821 Image Index T
+2822 Image Tile Index
+2823 Image acquisition Index
+2824 ImageCount Tiles
+2825 ImageCount A
+2827 ImageIndex S
+2828 Image Index Raw
+2832 Image Count Z
+2833 Image Count C
+2834 Image Count T
+2838 Image Count U
+2839 Image Count V
+2840 Image Count S
+2841 Original Stage Position X
+2842 Original Stage Position Y
+3088 LayerDrawFlags
+3334 Remaining Time
+3585 User Field 1
+3586 User Field 2
+3587 User Field 3
+3588 User Field 4
+3589 User Field 5
+3590 User Field 6
+3591 User Field 7
+3592 User Field 8
+3593 User Field 9
+3594 User Field 10
+3840 ID
+3841 Name
+3842 Value
+5501 PvCamClockingMode
+8193 Autofocus Status Report
+8194 Autofocus Position
+8195 Autofocus Position Offset
+8196 Autofocus Empty Field Threshold
+8197 Autofocus Calibration Name
+8198 Autofocus Current Calibration Item
+65537 CameraFrameFullWidth
+65538 CameraFrameFullHeight
+65541 AxioCam Shutter Signal
+65542 AxioCam Delay Time
+65543 AxioCam Shutter Control
+65544 AxioCamBlackRefIsCalculated
+65545 AxioCam Black Reference
+65547 Camera Shading Correction
+65550 AxioCam Enhance Color
+65551 AxioCam NIR Mode
+65552 CameraShutterCloseDelay
+65553 CameraWhiteBalanceAutoCalculate
+65556 AxioCamNIRModeAvailable
+65557 AxioCamFadingCorrectionAvailable
+65559 AxioCamEnhanceColorAvailable
+65565 MeteorVideoNorm
+65566 MeteorAdjustWhiteReference
+65567 Meteor Black Reference
+65568 MeteorChannelInputCountMono
+65570 MeteorChannelInputCountRGB
+65571 MeteorEnableVCR
+65572 Meteor Brightness
+65573 Meteor Contrast
+65575 AxioCamSelector
+65576 AxioCam Type
+65577 AxioCamInfo
+65580 AxioCam Resolution
+65581 AxioCam Colour Model
+65582 AxioCamMicroScanning
+65585 Amplification Index
+65586 DeviceCommand
+65587 BeamLocation
+65588 ComponentType
+65589 ControllerType
+65590 CameraWhiteBalanceCalculationRedPaint
+65591 CameraWhiteBalanceCalculationBluePaint
+65592 CameraWhiteBalanceSetRed
+65593 CameraWhiteBalanceSetGreen
+65594 CameraWhiteBalanceSetBlue
+65595 CameraWhiteBalanceSetTargetRed
+65596 CameraWhiteBalanceSetTargetGreen
+65597 CameraWhiteBalanceSetTargetBlue
+65598 ApotomeCamCalibrationMode
+65599 ApoTome Grid Position
+65600 ApotomeCamScannerPosition
+65601 ApoTome Full Phase Shift
+65602 ApoTome Grid Name
+65603 ApoTome Staining
+65604 ApoTome Processing Mode
+65605 ApotomeCamLiveCombineMode
+65606 ApoTome Filter Name
+65607 Apotome Filter Strength
+65608 ApotomeCamFilterHarmonics
+65609 ApoTome Grating Period
+65610 ApoTome Auto Shutter Used
+65611 ApotomeCamStatus
+65612 ApotomeCamNormalize
+65613 ApotomeCamSettingsManager
+65614 DeepviewCamSupervisorMode
+65615 DeepView Processing
+65616 DeepviewCamFilterName
+65617 DeepviewCamStatus
+65618 DeepviewCamSettingsManager
+65619 DeviceScalingName
+65620 CameraShadingIsCalculated
+65621 CameraShadingCalculationName
+65622 CameraShadingAutoCalculate
+65623 CameraTriggerAvailable
+65626 CameraShutterAvailable
+65627 AxioCamShutterMicroScanningEnable
+65628 ApotomeCamLiveFocus
+65629 DeviceInitStatus
+65630 DeviceErrorStatus
+65631 ApotomeCamSliderInGridPosition
+65632 Orca NIR Mode Used
+65633 Orca Analog Gain
+65634 Orca Analog Offset
+65635 Orca Binning
+65636 Orca Bit Depth
+65637 ApoTome Averaging Count
+65638 DeepView DoF
+65639 DeepView EDoF
+65643 DeepView Slider Name
+65644 RoperCamGain
+65646 RoperCamPixelClock
+65647 RoperCamTemperature
+65648 CameraImageMemUnitNames
+65649 ApotomeCamLivePhase
+65650 DualAxioCamAlgorithmType
+65651 ApotomeCamDecay
+65652 ApotomeCamEpsilon
+65653 AxioCamHSBufferNumber
+65654 AxioCamHSFrameTime
+65655 AxioCamAnalogGainEnable
+65656 AxioCamAnalogGainAvailable
+65657 ApotomeCamPhaseAngles
+65658 ApotomeCamImageFormat
+65659 CameraShadingCount
+65660 CameraImageRawSize
+65661 ApotomeCamBurstMode
+65662 ApotomeCamGenericCameraName
+65663 AcquisitionDevice
+65664 ApotomeGratingPeriodMeasured
+65665 CameraLutEnable
+65666 AxioCamSaturation
+65667 CameraColorCorrection
+65668 CameraColorProcessingEnable
+65669 CameraAnalogGain
+65670 CameraWhiteBalanceTargetPosX
+65671 CameraWhiteBalanceTargetPosY
+65672 CameraShutterSignalPort
+65673 AxioCamICSaturation
+65674 ApotomeCamCamCalibMode
+65675 ApotomeCamCamCalibValue
+65676 ApotomeCamAdminCalibMode
+65677 ApotomeCamIsAdmin
+65678 ApotomeCamPw
+65679 ApotomeCamAdminName
+65680 CameraShutterLiveEnable
+65681 CameraExposureTimeAutoLiveEnable
+65682 CameraEMGain
+65683 ApotomeCamHardwareVersion
+65684 ApotomeCamGridPosition
+65685 ApotomeCamAutoGrid
+65703 OrcaCamNumberOfScanMode
+65704 OrcaCamScanMode
+65705 OrcaCamEMCCDMode
+65706 OrcaCamEMCCDGain
+65707 OrcaCamFastAcq
+65708 OrcaCamMinExposureTime
+65709 OrcaCamNumberOfPhotonImagingMode
+65710 OrcaCamPhotonImagingMode
+65711 OrcaCamDirectEMGainAvailable
+65712 OrcaCamDirectEMGain
+65713 OrcaCamEMGainProtectionAvailable
+65714 OrcaCamEMGainProtection
+65716 CameraEMGainMinimum
+65717 CameraEMGainMaximum
+65718 CameraEMGainAvailable
+65719 CameraEMGainEnabled
+65736 YokogawaSynchronize
+65737 YokogawaIsInSync
+65738 YokogawaStatus
+65739 YokogawaKeepInSync
+65740 YokogawaIsBusy
+65741 YokogawaStopDisc
+65742 YokogawaCamExposureTime
+65743 YokogawaMode
+65744 YokogawaDepth
+65745 YokogawaCamReserved12
+65746 YokogawaCamReserved13
+65747 YokogawaCamReserved14
+65748 YokogawaCamReserved15
+65749 YokogawaCamReserved16
+65750 YokogawaCamReserved17
+65751 YokogawaCamReserved18
+65752 YokogawaCamReserved19
+65753 YokogawaCamReserved20
+65754 AuroxCamStatus
+65755 AuroxCamInputMode
+65756 AuroxCamLiveMode
+65757 AuroxCamCalibrationMode
+65758 AuroxCamGenericCameraName
+65759 AuroxCamButtonMode
+65760 AuroxCamDepth
+65761 AuroxCamCenter
+65762 AuroxCamFactor
+65763 AuroxCamCreateRegistration
+65764 AuroxCamRegistrationValid
+65765 AuroxCamRegistrationError
+65766 AuroxCamShadingImageMode
+65767 AuroxCamShadingImageAvailable
+65768 AuroxCamQuality
+65769 AuroxCamCutLeft
+65770 AuroxCamCutTop
+65771 AuroxCamCutRight
+65772 AuroxCamCutBottom
+65773 AuroxCamMean
+65774 AuroxCamNormalize
+65775 AuroxCamUseShading
+65776 AuroxCamShadingValid
+65777 AuroxCamNotification
+65778 AuroxCamCalibrationID
+65779 AuroxCamSimpleCalibMode
+65780 AuroxCamCalibrationName
+65781 AuroxCamRes6
+65781 AuroxCamCFactor
+65782 AuroxCamRegistrationCenter
+65783 AuroxCamCalibrationID2
+65784 AuroxCamAveraging
+65785 AuroxCamUniqueID
+65786 AuroxCamAutoNormalize
+65787 AuroxCamReserved3
+65788 AuroxCamReserved4
+65789 AuroxCamReserved5

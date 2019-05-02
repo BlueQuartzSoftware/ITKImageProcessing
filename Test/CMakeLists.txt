@@ -11,8 +11,12 @@ set(TEST_NAMES
   ITKImageProcessingWriterTest
   ITKImportImageStackTest
   ImportVectorImageStackTest
-
   ITKMedianImageTest
+
+  # These are from ZeissImport
+  ImportZenInfoMontageTest
+  AxioVisionV4ToTileConfigurationTest
+  ImportAxioVisionV4MontageTest
 )
 
 if(ITK_VERSION_MAJOR EQUAL 4)
@@ -169,7 +173,6 @@ if(SIMPL_ENABLE_PYTHON)
     # These names should match the names "EXACTLY" (including capitalization).
     # NO Spaces in the names (which means no spaces in the variable names)
     set(PLUGIN_PYTHON_TESTS
-
     )
 
     set(TEST_SCRIPT_FILE_EXT "sh")

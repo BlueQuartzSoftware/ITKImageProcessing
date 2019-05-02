@@ -3,3 +3,4 @@ cmp_IDE_SOURCE_PROPERTIES( "Generated/Qt_Qrc" "${${PLUGIN_NAME}_Generated_RC_SRC
 foreach(h ${${PLUGIN_NAME}_Generated_RC_SRCS})
   set_property(SOURCE ${h} PROPERTY SKIP_AUTOMOC ON)
 endforeach()
+

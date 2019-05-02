@@ -208,6 +208,12 @@ cmp_IDE_SOURCE_PROPERTIES( "Generated/Qt_Qrc" "${${PLUGIN_NAME}_Generated_RC_SRC
 
 
 # --------------------------------------------------------------------
+#
+# --------------------------------------------------------------------
+include(${ZeissImport_SOURCE_DIR}/ZeissXml/SourceList.cmake)
+
+ 
+# --------------------------------------------------------------------
 # Create a shared library that contains just code dependent on SIMPL but
 # NOT any widget codes. This must be this way for Python bindings.
 set(plug_target_name ${PLUGIN_NAME}Server)
@@ -237,10 +243,14 @@ target_sources(${plug_target_name}
   # -- Add in the DLL Export Header File
   ${${PLUGIN_NAME}_BINARY_DIR}/${PLUGIN_NAME}DLLExport.h
 
-)
 
-#-------------------------------
-#
+  # -- Add in the XML Parsing sources
+  ${ZeissXml_SRCS}
+  ${ZeissXml_HDRS}
+ )
+
+#------------------------------- 
+# 
 target_include_directories(${plug_target_name}
                           PUBLIC
                               ${${PLUGIN_NAME}_BINARY_DIR}
@@ -272,6 +282,7 @@ PluginProperties(TARGET_NAME ${plug_target_name}
 
 target_link_libraries(${plug_target_name}
                     Qt5::Core
+                    Qt5::Xml
                     SIMPLib
                     ${ITK_LIBRARIES}
 )
@@ -350,7 +361,6 @@ if(EXISTS ${${PLUGIN_NAME}_SOURCE_DIR}/Data/${PLUGIN_NAME})
           DESTINATION Data
           COMPONENT Applications )
 endif()
-
 # -- Include the GUI Plugin codes
 include(${${PLUGIN_NAME}_SOURCE_DIR}/Gui/CMakeLists.txt)
 

@@ -1,0 +1,13 @@
+# File Written by DREAM.3D based on values from the _meta.xml
+# Files are ordered Columns moving fastest, then rows.
+# Coordinate values are in pixel coords.
+# Define the number of dimensions we are working on.
+dim = 2
+
+# Define the image coordinates
+05MAR09_run2_64-Raw_p0.bmp; ; (0, 0)
+05MAR09_run2_64-Raw_p1.bmp; ; (1227.55, 0)
+05MAR09_run2_64-Raw_p3.bmp; ; (0.23675, 920.01)
+05MAR09_run2_64-Raw_p2.bmp; ; (1227.55, 919.774)
+05MAR09_run2_64-Raw_p4.bmp; ; (0.23675, 1839.55)
+05MAR09_run2_64-Raw_p5.bmp; ; (1227.31, 1839.55)

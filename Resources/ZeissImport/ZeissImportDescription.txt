@@ -1,0 +1,16 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+  <title>TransformationPhase Description</title>
+</head>
+<body>
+<h3>ZeissImport Plugin</h3>
+
+<p>This plugin contains filters that implement algorithms to import a montage of images acquired through the Zeiss Axiovision software.</p>
+
+<h4>Funding Sources</h4>
+ Codes were written in direct support of United States Air Force Prime Contract FA8650-10-D-5210
+
+</body>
+</html>

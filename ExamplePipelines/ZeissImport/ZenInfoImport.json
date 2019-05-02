@@ -1,0 +1,51 @@
+{
+    "0": {
+        "CellAttributeMatrixName": "Tile Data",
+        "ChangeOrigin": 0,
+        "ChangeSpacing": 0,
+        "ColorWeights": {
+            "x": 0.21250000596046448,
+            "y": 0.715399980545044,
+            "z": 0.07209999859333038
+        },
+        "ConvertToGrayScale": 1,
+        "DataContainerName": {
+            "Attribute Matrix Name": "",
+            "Data Array Name": "",
+            "Data Container Name": "Zeiss Zen Montage"
+        },
+        "FilterVersion": "1.0.161",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Zeiss Zen Info Import",
+        "Filter_Name": "ImportZenInfoMontage",
+        "Filter_Uuid": "{774ec947-eed6-5eb2-a01b-ee6470e61521}",
+        "ImageDataArrayName": "ImageData",
+        "InputFile": "Data/ZeissImport/SampleMosaic/SampleMosaic_Info.xml",
+        "MontageInformation": "Columns=2  Rows=3  Num. Images=6\nOrigin: 0, 0, 0  Spacing: 1, 1, 1",
+        "Origin": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+        },
+        "Spacing": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+        }
+    },
+    "1": {
+        "FilterVersion": "2.0.67",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Write DREAM.3D Data File",
+        "Filter_Name": "DataContainerWriter",
+        "Filter_Uuid": "{3fcd4c43-9d75-5b86-aad4-4441bc914f37}",
+        "OutputFile": "Data/Output/ZeissImport/ZenSampleMosaic.dream3d",
+        "WriteTimeSeries": 0,
+        "WriteXdmfFile": 1
+    },
+    "PipelineBuilder": {
+        "Name": "Zen Info XML Import",
+        "Number_Filters": 2,
+        "Version": 6
+    }
+}
