@@ -95,7 +95,7 @@ public:
     m_Resolution.setY(0.50f);
     m_Resolution.setZ(1.25f);
     var.setValue(m_Resolution);
-    propWasSet = import->setProperty("Resolution", var);
+    propWasSet = import->setProperty("Spacing", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
 
     FileListInfo_t fli;

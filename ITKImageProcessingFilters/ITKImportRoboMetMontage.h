@@ -32,7 +32,7 @@ class ITKImageProcessing_EXPORT ITKImportRoboMetMontage : public AbstractFilter
   Q_OBJECT
   
   PYB11_CREATE_BINDINGS(ITKImportRoboMetMontage SUPERCLASS AbstractFilter)
-  PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
+  PYB11_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
   PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
   PYB11_PROPERTY(int SliceNumber READ getSliceNumber WRITE setSliceNumber)
   PYB11_PROPERTY(QString MetaDataAttributeMatrixName READ getMetaDataAttributeMatrixName WRITE setMetaDataAttributeMatrixName)
@@ -91,7 +91,7 @@ public:
   SIMPL_FILTER_PARAMETER(QString, ImageFileExtension)
   Q_PROPERTY(QString ImageFileExtension READ getImageFileExtension WRITE setImageFileExtension)
 
-  typedef QMap<QString, ITKImageReader::Pointer> ReaderMap;
+  using ReaderMap = QMap<QString, ITKImageReader::Pointer>;
 
   SIMPL_PIMPL_PROPERTY_DECL(QString, RoboMetConfigFilePathCache)
   SIMPL_PIMPL_PROPERTY_DECL(QDateTime, LastRead)
