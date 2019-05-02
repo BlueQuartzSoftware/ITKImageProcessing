@@ -405,16 +405,16 @@ void ITKPCMTileRegistration::createFijiDataStructure()
     int row = rowCol_Split[0].toInt();
     int col = rowCol_Split[1].toInt();
     itk::Tile2D tile;
-    if((std::get<0>(origin) == 0.0f && std::get<1>(origin) == 0.0f) || getManualTileOverlap())
+    if((origin[0] == 0.0f && origin[1] == 0.0f) || getManualTileOverlap())
     {
-      tile.Position[0] = col * (tileOverlapFactor * std::get<0>(dimensions));
-      tile.Position[1] = row * (tileOverlapFactor * std::get<1>(dimensions));
+      tile.Position[0] = col * (tileOverlapFactor * dimensions[0]);
+      tile.Position[1] = row * (tileOverlapFactor * dimensions[1]);
       image->setOrigin(tile.Position[0], tile.Position[1], 0.0f);
     }
     else
     {
-      tile.Position[0] = std::get<0>(origin);
-      tile.Position[1] = std::get<1>(origin);
+      tile.Position[0] = origin[0];
+      tile.Position[1] = origin[1];
     }
     tile.FileName = ""; // This code gets its data from memory, not from a file
 
