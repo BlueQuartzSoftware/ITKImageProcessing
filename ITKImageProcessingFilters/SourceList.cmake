@@ -14,6 +14,12 @@ SIMPL_START_FILTER_GROUP(
 #---------
 # List your public filters here
 set(_PublicFilters
+# These are from ZeissImport Plugin
+    CalculateBackground
+    ImportAxioVisionV4Montage
+    AxioVisionV4ToTileConfiguration
+    ImportZenInfoMontage
+# These are from ITKImageProcessing Plugin
     ITKImageReader
     ITKImageWriter
     ITKImportImageStack
