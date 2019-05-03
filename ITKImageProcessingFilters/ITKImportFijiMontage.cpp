@@ -35,21 +35,12 @@
 
 #include "ITKImportFijiMontage.h"
 
-#include <QtCore/QDir>
-#include <QtCore/QDateTime>
-
-#include "itkParseTileConfiguration.h"
-
 #include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/FileListInfoFilterParameter.h"
+#include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
-#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
-#include "SIMPLib/Geometry/ImageGeom.h"
-#include "SIMPLib/ITK/itkReadImageImpl.hpp"
-#include "SIMPLib/Utilities/FilePathGenerator.h"
 
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
@@ -66,8 +57,6 @@ class ITKImportFijiMontagePrivate
   ITKImportFijiMontagePrivate(ITKImportFijiMontage* ptr);
   QString m_FijiConfigFilePathCache;
   QDateTime m_LastRead;
-  ITKImportFijiMontage::ImageReaderVector m_ImageReaderCache;
-  ITKImportFijiMontage::TileDataVector m_TileDataCache;
 };
 
 // -----------------------------------------------------------------------------
@@ -83,13 +72,9 @@ ITKImportFijiMontagePrivate::ITKImportFijiMontagePrivate(ITKImportFijiMontage* p
 //
 // -----------------------------------------------------------------------------
 ITKImportFijiMontage::ITKImportFijiMontage()
-: m_DataContainerPrefix(SIMPL::Defaults::ImageDataContainerName + "_")
-, m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName)
-, m_AttributeArrayName("ImageTile")
+: ITKImportMontage()
 , m_FijiConfigFilePath("")
 , d_ptr(new ITKImportFijiMontagePrivate(this))
-, m_RowCount(0)
-, m_ColumnCount(0)
 {
 
 }
@@ -104,26 +89,6 @@ ITKImportFijiMontage::~ITKImportFijiMontage() = default;
 // -----------------------------------------------------------------------------
 SIMPL_PIMPL_PROPERTY_DEF(ITKImportFijiMontage, QString, FijiConfigFilePathCache)
 SIMPL_PIMPL_PROPERTY_DEF(ITKImportFijiMontage, QDateTime, LastRead)
-SIMPL_PIMPL_PROPERTY_DEF(ITKImportFijiMontage, ITKImportFijiMontage::ImageReaderVector, ImageReaderCache)
-SIMPL_PIMPL_PROPERTY_DEF(ITKImportFijiMontage, ITKImportFijiMontage::TileDataVector, TileDataCache)
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void ITKImportFijiMontage::appendImageReaderToCache(const ITKImageReader::Pointer &reader)
-{
-  Q_D(ITKImportFijiMontage);
-  d->m_ImageReaderCache.push_back(reader);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void ITKImportFijiMontage::appendImageTileToCache(const itk::FijiImageTileData &tileData)
-{
-  Q_D(ITKImportFijiMontage);
-  d->m_TileDataCache.push_back(tileData);
-}
 
 // -----------------------------------------------------------------------------
 //
@@ -143,9 +108,18 @@ void ITKImportFijiMontage::setupFilterParameters()
   FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Fiji Configuration File", FijiConfigFilePath, FilterParameter::Parameter, ITKImportFijiMontage, "", "*.txt"));
 
-  parameters.push_back(SIMPL_NEW_STRING_FP("Data Container Prefix", DataContainerPrefix, FilterParameter::CreatedArray, ITKImportFijiMontage));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Cell Attribute Matrix", CellAttributeMatrixName, FilterParameter::CreatedArray, ITKImportFijiMontage));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Image Array Name", AttributeArrayName, FilterParameter::CreatedArray, ITKImportFijiMontage));
+  QStringList linkedProps("Origin");
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Override Origin", ChangeOrigin, FilterParameter::Parameter, ITKImportMontage, linkedProps));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Origin", Origin, FilterParameter::Parameter, ITKImportMontage));
+
+  linkedProps.clear();
+  linkedProps << "Spacing";
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Override Spacing", ChangeSpacing, FilterParameter::Parameter, ITKImportMontage, linkedProps));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Spacing", Spacing, FilterParameter::Parameter, ITKImportMontage));
+
+  parameters.push_back(SIMPL_NEW_STRING_FP("Data Container Prefix", DataContainerPrefix, FilterParameter::CreatedArray, ITKImportMontage));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Cell Attribute Matrix", CellAttributeMatrixName, FilterParameter::CreatedArray, ITKImportMontage));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Image Array Name", AttributeArrayName, FilterParameter::CreatedArray, ITKImportMontage));
   setFilterParameters(parameters);
 }
 
@@ -187,8 +161,7 @@ void ITKImportFijiMontage::dataCheck()
   // Only parse the fiji config file again if the cache is outdated
   if (!getInPreflight() || getFijiConfigFilePath() != getFijiConfigFilePathCache() || !getLastRead().isValid() || lastModified.msecsTo(getLastRead()) < 0)
   {
-    setImageReaderCache(ImageReaderVector());
-    setTileDataCache(TileDataVector());
+    setMontageCacheVector(MontageCacheVector());
 
     // Parse Fiji Config File
     itk::FijiConfigurationFileReader fijiFileReader;
@@ -214,8 +187,8 @@ void ITKImportFijiMontage::dataCheck()
       return;
     }
 
-    m_RowCount = fijiFileData.size();
-    m_ColumnCount = fijiFileData[0].size();
+    setRowCount(fijiFileData.size());
+    setColumnCount(fijiFileData[0].size());
 
     QVector<size_t> cDims(1, 1);
 
@@ -240,7 +213,7 @@ void ITKImportFijiMontage::dataCheck()
           notifyStatusMessage(tr("[%1/%2]: Reading image '%3'").arg(currentImageCount).arg(totalImageCount).arg(imageFi.fileName()));
         }
 
-        readImageFile(fijiImageData);
+        readImageFile(fijiImageData.filePath, fijiImageData.coords, fijiImageData.row, fijiImageData.col);
         currentImageCount++;
       }
     }
@@ -251,90 +224,13 @@ void ITKImportFijiMontage::dataCheck()
   }
   else
   {
-    ImageReaderVector imageReaderCache = getImageReaderCache();
-    TileDataVector tileDataCache = getTileDataCache();
-    for (int i = 0; i < imageReaderCache.size(); i++)
-    {
-      itk::FijiImageTileData imageTileData = tileDataCache[i];
-
-      QString rowColIdString = tr("r%1c%2").arg(imageTileData.row).arg(imageTileData.col);
-      QString dcName = tr("%1_%2").arg(getDataContainerPrefix()).arg(rowColIdString);
-
-      ITKImageReader::Pointer reader = imageReaderCache[i];
-      reader->setDataContainerName(DataArrayPath(dcName, "", ""));
-      reader->setCellAttributeMatrixName(getCellAttributeMatrixName());
-      reader->setImageDataArrayName(getAttributeArrayName());
-      reader->setDataContainerArray(DataContainerArray::New());
-      if (getInPreflight())
-      {
-        reader->preflight();
-      }
-      else
-      {
-        reader->execute();
-      }
-
-      DataContainerArray::Pointer filterDca = reader->getDataContainerArray();
-      DataContainerArray::Container dcs = filterDca->getDataContainers();
-      for (DataContainer::Pointer dc : dcs)
-      {
-        getDataContainerArray()->addOrReplaceDataContainer(dc);
-
-        QPointF coords = imageTileData.coords;
-
-        ImageGeom::Pointer geom = dc->getGeometryAs<ImageGeom>();
-
-        geom->setOrigin(coords.x(), coords.y(), 1.0f);
-      }
-    }
+    readImagesFromCache();
   }
-}
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void ITKImportFijiMontage::readImageFile(itk::FijiImageTileData imageTileData)
-{
-  QString imageFilePath = imageTileData.filePath;
-  QFileInfo fi(imageFilePath);
-  QString rowColIdString = tr("r%1c%2").arg(imageTileData.row).arg(imageTileData.col);
-  QPointF coords = imageTileData.coords;
-
-  QString dcName = tr("%1_%2").arg(getDataContainerPrefix()).arg(rowColIdString);
-
-  ITKImageReader::Pointer reader = ITKImageReader::New();
-  reader->setFileName(fi.filePath());
-  reader->setDataContainerName(DataArrayPath(dcName, "", ""));
-  reader->setCellAttributeMatrixName(getCellAttributeMatrixName());
-  reader->setImageDataArrayName(getAttributeArrayName());
-
-  if (getInPreflight())
+  if(getChangeOrigin() || getChangeSpacing())
   {
-    reader->preflight();
+    adjustOriginAndSpacing();
   }
-  else
-  {
-    reader->execute();
-  }
-
-  DataContainerArray::Pointer filterDca = reader->getDataContainerArray();
-  DataContainerArray::Container dcs = filterDca->getDataContainers();
-  for (DataContainer::Pointer dc : dcs)
-  {
-    getDataContainerArray()->addOrReplaceDataContainer(dc);
-  }
-
-  DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, dcName);
-  if(getErrorCode() < 0)
-  {
-    return;
-  }
-
-  ImageGeom::Pointer geom = m->getGeometryAs<ImageGeom>();
-  geom->setOrigin(coords.x(), coords.y(), 1.0f);
-
-  appendImageReaderToCache(reader);
-  appendImageTileToCache(imageTileData);
 }
 
 // -----------------------------------------------------------------------------

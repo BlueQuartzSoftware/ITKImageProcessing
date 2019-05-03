@@ -196,12 +196,6 @@ void ITKStitchMontage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_INT_VEC3_FP("Montage Size (Cols, Rows)", MontageSize, FilterParameter::Parameter, ITKStitchMontage));
 
   {
-    QStringList linkedProps;
-    linkedProps << "TileOverlap";
-    parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Manual Tile Overlap", ManualTileOverlap, FilterParameter::Parameter, ITKStitchMontage, linkedProps));
-  }
-
-  {
     MultiDataContainerSelectionFilterParameter::RequirementType req =
         MultiDataContainerSelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_MDC_SELECTION_FP("Image Data Containers", ImageDataContainers, FilterParameter::RequiredArray, ITKStitchMontage, req));
@@ -212,8 +206,6 @@ void ITKStitchMontage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_STRING_FP("Montage Data Container Name", MontageDataContainerName, FilterParameter::CreatedArray, ITKStitchMontage));
   parameters.push_back(SIMPL_NEW_STRING_FP("Montage Attribute Matrix Name", MontageAttributeMatrixName, FilterParameter::CreatedArray, ITKStitchMontage));
   parameters.push_back(SIMPL_NEW_STRING_FP("Montage Data Array Name", MontageDataArrayName, FilterParameter::CreatedArray, ITKStitchMontage));
-
-  parameters.push_back(SIMPL_NEW_FLOAT_FP("Tile Overlap (Percent)", TileOverlap, FilterParameter::RequiredArray, ITKStitchMontage));
 
   setFilterParameters(parameters);
 }
@@ -320,13 +312,6 @@ void ITKStitchMontage::dataCheck()
       return;
     }
     tileImageGeom = image; // Be sure we capture at least one of the input Image Geometries that is valid.. we need it later down the code...
-
-    if(getManualTileOverlap() && (getTileOverlap() < 0.0f || getTileOverlap() > 100.0f))
-    {
-      QString ss = QObject::tr("Tile Overlap must be between 0.0 and 100.0.");
-      setErrorCondition(-11006, ss);
-      return;
-    }
   }
 
   if(getMontageDataContainerName().isEmpty())
@@ -479,8 +464,6 @@ void ITKStitchMontage::createFijiDataStructure()
     stageTile.resize(m_xMontageSize);
   }
 
-  float tileOverlapFactor = ((100.0 - getTileOverlap()) / 100.0);
-
   QVector<size_t> cDims;
   while(dcNameIter.hasNext())
   {
@@ -509,17 +492,8 @@ void ITKStitchMontage::createFijiDataStructure()
     int row = rowCol_Split[0].toInt();
     int col = rowCol_Split[1].toInt();
     itk::Tile2D tile;
-    if((origin[0] == 0.0f && origin[1] == 0.0f) || getManualTileOverlap())
-    {
-      tile.Position[0] = col * (tileOverlapFactor * dimensions[0]);
-      tile.Position[1] = row * (tileOverlapFactor * dimensions[1]);
-      image->setOrigin(tile.Position[0], tile.Position[1], 0.0f);
-    }
-    else
-    {
-      tile.Position[0] = origin[0];
-      tile.Position[1] = origin[1];
-    }
+    tile.Position[0] = origin[0];
+    tile.Position[1] = origin[1];
     tile.FileName = ""; // This code gets its data from memory, not from a file
 
     m_StageTiles[row][col] = tile;
