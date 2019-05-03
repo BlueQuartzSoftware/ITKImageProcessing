@@ -184,8 +184,7 @@ void ITKImportMontage::readImageFile(const QString &filePath, QPointF coords, in
   ImageGeom::Pointer geom = m->getGeometryAs<ImageGeom>();
   geom->setOrigin(coords.x(), coords.y(), 1.0f);
 
-  FloatVec3Type spacing;
-  geom->getSpacing(spacing);
+  FloatVec3Type spacing = geom->getSpacing();
 
   appendToCache(reader, filePath, coords, row, col, spacing);
 }
@@ -261,11 +260,9 @@ void ITKImportMontage::adjustOriginAndSpacing()
     DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(dcName);
     ImageGeom::Pointer imageGeom = dc->getGeometryAs<ImageGeom>();
 
-    FloatVec3Type currentOrigin;
-    imageGeom->getOrigin(currentOrigin);
+    FloatVec3Type currentOrigin = imageGeom->getOrigin();
 
-    FloatVec3Type currentSpacing;
-    imageGeom->getSpacing(currentSpacing);
+    FloatVec3Type currentSpacing = imageGeom->getSpacing();
 
     for(size_t i = 0; i < 3; i++)
     {
