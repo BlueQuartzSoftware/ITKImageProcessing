@@ -40,7 +40,7 @@
 #include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/DataArrays/StringDataArray.h"
 
-#include "ZeissImport/ZeissXml/ZeissTagMapping.h"
+#include "ITKImageProcessing/ZeissXml/ZeissTagMapping.h"
 
 
 // -----------------------------------------------------------------------------

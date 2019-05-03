@@ -41,9 +41,9 @@
 #include "SIMPLib/Geometry/IGeometryGrid.h"
 #include "SIMPLib/SIMPLib.h"
 
-#include "ZeissImport/ZeissXml/ZeissTagsXmlSection.h"
+#include "ITKImageProcessing/ZeissXml/ZeissTagsXmlSection.h"
 
-#include "ZeissImport/ZeissImportDLLExport.h"
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @class CalculateBackground CalculateBackground.h ZeissImport/CalculateBackgrounds/CalculateBackground.h
@@ -52,7 +52,7 @@
  * @date
  * @version 1.0
  */
-class ZeissImport_EXPORT CalculateBackground : public AbstractFilter
+class ITKImageProcessing_EXPORT CalculateBackground : public AbstractFilter
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(CalculateBackground SUPERCLASS AbstractFilter)

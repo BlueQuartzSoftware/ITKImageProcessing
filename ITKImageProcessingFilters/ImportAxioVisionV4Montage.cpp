@@ -56,9 +56,9 @@
 #include "SIMPLib/Filtering/FilterManager.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 
-#include "ZeissImport/ZeissImportConstants.h"
-#include "ZeissImport/ZeissImportVersion.h"
-#include "ZeissImport/ZeissXml/ZeissTagMapping.h"
+#include "ITKImageProcessing/ITKImageProcessingConstants.h"
+#include "ITKImageProcessing/ITKImageProcessingVersion.h"
+#include "ITKImageProcessing/ZeissXml/ZeissTagMapping.h"
 #include "MetaXmlUtils.h"
 
 #define ZIF_PRINT_DBG_MSGS 0
@@ -230,7 +230,7 @@ void ImportAxioVisionV4Montage::dataCheck()
     return;
   }
 
-  QString filtName = ZeissImportConstants::ImageProcessingFilters::k_ReadImageFilterClassName;
+  QString filtName = ITKImageProcessingConstants::ImageProcessingFilters::k_ReadImageFilterClassName;
   FilterManager* fm = FilterManager::Instance();
   IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filtName);
   if(nullptr != filterFactory.get())
@@ -346,7 +346,7 @@ void ImportAxioVisionV4Montage::readMetaXml(QIODevice* device)
 
     root = domDocument.documentElement();
 
-    QDomElement tags = root.firstChildElement(ZeissImportConstants::Xml::Tags);
+    QDomElement tags = root.firstChildElement(ITKImageProcessingConstants::Xml::Tags);
     if(tags.isNull())
     {
       QString ss = QObject::tr("Could not find the <ROOT><Tags> element. Aborting Parsing. Is the file a Zeiss _meta.xml file");
@@ -443,7 +443,7 @@ void ImportAxioVisionV4Montage::parseImages(QDomElement& root, const ZeissTagsXm
       return;
     }
     // Get the TAGS section
-    QDomElement tags = photoEle.firstChildElement(ZeissImportConstants::Xml::Tags);
+    QDomElement tags = photoEle.firstChildElement(ITKImageProcessingConstants::Xml::Tags);
     if(tags.isNull())
     {
       QString ss = QObject::tr("Could not find the <ROOT><%1><Tags> element. Aborting Parsing. Is the file a Zeiss _meta.xml file").arg(pTag);
@@ -633,7 +633,7 @@ void ImportAxioVisionV4Montage::importImage(DataContainer* dc, const QString& im
   imagePath = fi.absoluteDir().path() + "/" + imagePath;
   //   std::string sPath = imagePath.toStdString();
 
-  QString filtName = ZeissImportConstants::ImageProcessingFilters::k_ReadImageFilterClassName;
+  QString filtName = ITKImageProcessingConstants::ImageProcessingFilters::k_ReadImageFilterClassName;
   FilterManager* fm = FilterManager::Instance();
   IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filtName);
   if(nullptr != filterFactory.get())
@@ -708,7 +708,7 @@ void ImportAxioVisionV4Montage::importImage(DataContainer* dc, const QString& im
   else
   {
     QString ss = QObject::tr("Error trying to instantiate the '%1' filter which is typically included in the 'ImageProcessing' plugin.")
-                     .arg(ZeissImportConstants::ImageProcessingFilters::k_ReadImageFilterClassName);
+                     .arg(ITKImageProcessingConstants::ImageProcessingFilters::k_ReadImageFilterClassName);
     setErrorCondition(-70019, ss);
     return;
   }
@@ -795,15 +795,15 @@ ImageGeom::Pointer ImportAxioVisionV4Montage::initializeImageGeom(const QDomElem
   // Initialize the Spacing of the geometry
   bool ok = false;
   FloatVec3Type scaling = {1.0f, 1.0f, 1.0f};
-  QDomElement scalingDom = root.firstChildElement(ZeissImportConstants::Xml::Scaling).firstChildElement("Factor_0");
+  QDomElement scalingDom = root.firstChildElement(ITKImageProcessingConstants::Xml::Scaling).firstChildElement("Factor_0");
   scaling[0] = scalingDom.text().toFloat(&ok);
-  scalingDom = root.firstChildElement(ZeissImportConstants::Xml::Scaling).firstChildElement("Factor_1");
+  scalingDom = root.firstChildElement(ITKImageProcessingConstants::Xml::Scaling).firstChildElement("Factor_1");
   scaling[1] = scalingDom.text().toFloat(&ok);
   image->setSpacing(scaling);
 
   //#######################################################################
   // Initialize the Length Units of the geometry
-  QDomElement unitsDom = root.firstChildElement(ZeissImportConstants::Xml::Scaling).firstChildElement("Type_0");
+  QDomElement unitsDom = root.firstChildElement(ITKImageProcessingConstants::Xml::Scaling).firstChildElement("Type_0");
   int xUnits = unitsDom.text().toInt(&ok);
   // We are going to assume that the units in both the X and Y are the same. Why would they be different?
   IGeometry::LengthUnit lengthUnit = ZeissUnitMapping::Instance()->convertToIGeometryLengthUnit(xUnits);
@@ -816,9 +816,22 @@ ImageGeom::Pointer ImportAxioVisionV4Montage::initializeImageGeom(const QDomElem
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+AbstractFilter::Pointer ImportAxioVisionV4Montage::newFilterInstance(bool copyFilterParameters) const
+{
+  ImportAxioVisionV4Montage::Pointer filter = ImportAxioVisionV4Montage::New();
+  if(copyFilterParameters)
+  {
+    copyFilterParameterInstanceVariables(filter.get());
+  }
+  return filter;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString ImportAxioVisionV4Montage::getCompiledLibraryName() const
 {
-  return ZeissImportConstants::ZeissImportBaseName;
+  return ITKImageProcessingConstants::ITKImageProcessingBaseName;;
 }
 
 // -----------------------------------------------------------------------------
@@ -826,7 +839,7 @@ const QString ImportAxioVisionV4Montage::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 const QString ImportAxioVisionV4Montage::getBrandingString() const
 {
-  return ZeissImportConstants::ZeissImportPluginDisplayName;
+  return ITKImageProcessingConstants::ITKImageProcessingPluginDisplayName;
 }
 
 // -----------------------------------------------------------------------------
@@ -836,7 +849,7 @@ const QString ImportAxioVisionV4Montage::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
-  vStream << ZeissImport::Version::Major() << "." << ZeissImport::Version::Minor() << "." << ZeissImport::Version::Patch();
+  vStream << ITKImageProcessing::Version::Major() << "." << ITKImageProcessing::Version::Minor() << "." << ITKImageProcessing::Version::Patch();
   return version;
 }
 
@@ -846,6 +859,14 @@ const QString ImportAxioVisionV4Montage::getFilterVersion() const
 const QString ImportAxioVisionV4Montage::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ImportAxioVisionV4Montage::getSubGroupName() const
+{
+  return SIMPL::FilterSubGroups::ImportFilters;
 }
 
 // -----------------------------------------------------------------------------
@@ -862,25 +883,4 @@ const QString ImportAxioVisionV4Montage::getHumanLabel() const
 const QUuid ImportAxioVisionV4Montage::getUuid()
 {
   return QUuid("{411b008c-006f-51b2-ba05-99e51a01af3c}");
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-const QString ImportAxioVisionV4Montage::getSubGroupName() const
-{
-  return SIMPL::FilterSubGroups::ImportFilters;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-AbstractFilter::Pointer ImportAxioVisionV4Montage::newFilterInstance(bool copyFilterParameters) const
-{
-  ImportAxioVisionV4Montage::Pointer filter = ImportAxioVisionV4Montage::New();
-  if(copyFilterParameters)
-  {
-    copyFilterParameterInstanceVariables(filter.get());
-  }
-  return filter;
 }

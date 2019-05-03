@@ -42,12 +42,12 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/SIMPLib.h"
 
-#include "ZeissImport/ZeissXml/ZeissTagsXmlSection.h"
+#include "ITKImageProcessing/ZeissXml/ZeissTagsXmlSection.h"
 
 // our PIMPL private class
 class ImportAxioVisionV4MontagePrivate;
 
-#include "ZeissImport/ZeissImportDLLExport.h"
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @class ImportAxioVisionV4Montage ImportAxioVisionV4Montage.h ZeissImport/ImportAxioVisionV4Montages/ImportAxioVisionV4Montage.h
@@ -56,7 +56,7 @@ class ImportAxioVisionV4MontagePrivate;
  * @date
  * @version 1.0
  */
-class ZeissImport_EXPORT ImportAxioVisionV4Montage : public AbstractFilter
+class ITKImageProcessing_EXPORT ImportAxioVisionV4Montage : public AbstractFilter
 {
   Q_OBJECT
   // clang-format off

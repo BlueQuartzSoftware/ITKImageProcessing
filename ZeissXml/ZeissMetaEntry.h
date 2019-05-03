@@ -34,7 +34,7 @@
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/IDataArray.h"
 
-#include "ZeissImport/ZeissImportConstants.h"
+#include "ITKImageProcessing/ITKImageProcessingConstants.h"
 
 #ifdef ZEISS_HDF_SUPPORT
 #include "H5Support/H5Lite.h"

@@ -39,9 +39,7 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
-#include "ZeissImport/ZeissImportDLLExport.h"
-#include "ZeissImport/ZeissImportPlugin.h"
-
+#include "ITKImageProcessing/ITKImageProcessingPlugin.h"
 // our PIMPL private class
 class ImportZenInfoMontagePrivate;
 
@@ -66,7 +64,7 @@ using BoundsType = struct
 /**
  * @brief The ImportZenInfoMontage class. See [Filter documentation](@ref importzeninfomontage) for details.
  */
-class ZeissImport_EXPORT ImportZenInfoMontage : public AbstractFilter
+class ITKImageProcessing_EXPORT ImportZenInfoMontage : public AbstractFilter
 {
   Q_OBJECT
   // clang-format off

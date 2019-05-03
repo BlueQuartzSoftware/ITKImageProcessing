@@ -67,9 +67,9 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Geometry/RectGridGeom.h"
 
-#include "ZeissImport/ZeissImportConstants.h"
-#include "ZeissImport/ZeissImportVersion.h"
-#include "ZeissImport/ZeissXml/ZeissTagMapping.h"
+#include "ITKImageProcessing/ITKImageProcessingConstants.h"
+#include "ITKImageProcessing/ITKImageProcessingVersion.h"
+#include "ITKImageProcessing/ZeissXml/ZeissTagMapping.h"
 
 
 #include <Eigen/Dense>
@@ -820,9 +820,22 @@ void CalculateBackground::notifyFeatureCompleted(const QString& dcName)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+AbstractFilter::Pointer CalculateBackground::newFilterInstance(bool copyFilterParameters) const
+{
+  CalculateBackground::Pointer filter = CalculateBackground::New();
+  if(copyFilterParameters)
+  {
+    copyFilterParameterInstanceVariables(filter.get());
+  }
+  return filter;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString CalculateBackground::getCompiledLibraryName() const
 {
-  return ZeissImportConstants::ZeissImportBaseName;
+  return ITKImageProcessingConstants::ITKImageProcessingBaseName;;
 }
 
 // -----------------------------------------------------------------------------
@@ -830,7 +843,7 @@ const QString CalculateBackground::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 const QString CalculateBackground::getBrandingString() const
 {
-  return "ZeissImport";
+  return ITKImageProcessingConstants::ITKImageProcessingPluginDisplayName;
 }
 
 // -----------------------------------------------------------------------------
@@ -840,7 +853,7 @@ const QString CalculateBackground::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
-  vStream << ZeissImport::Version::Major() << "." << ZeissImport::Version::Minor() << "." << ZeissImport::Version::Patch();
+  vStream << ITKImageProcessing::Version::Major() << "." << ITKImageProcessing::Version::Minor() << "." << ITKImageProcessing::Version::Patch();
   return version;
 }
 
@@ -849,7 +862,15 @@ const QString CalculateBackground::getFilterVersion() const
 // -----------------------------------------------------------------------------
 const QString CalculateBackground::getGroupName() const
 {
-  return SIMPL::FilterGroups::Unsupported;
+  return SIMPL::FilterGroups::ProcessingFilters;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString CalculateBackground::getSubGroupName() const
+{
+  return SIMPL::FilterSubGroups::ImageFilters;
 }
 
 // -----------------------------------------------------------------------------
@@ -867,76 +888,3 @@ const QUuid CalculateBackground::getUuid()
 {
   return QUuid("{a48f7a51-0ca9-584f-a0ca-4bfebdc41d7c}");
 }
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-const QString CalculateBackground::getSubGroupName() const
-{
-  return SIMPL::FilterSubGroups::ImageFilters;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-AbstractFilter::Pointer CalculateBackground::newFilterInstance(bool copyFilterParameters) const
-{
-  CalculateBackground::Pointer filter = CalculateBackground::New();
-  if(copyFilterParameters)
-  {
-    copyFilterParameterInstanceVariables(filter.get());
-  }
-  return filter;
-}
-
-#if 0
-    // This block was previously disabled and divided on both sides of the for loop copying values into the output array.
-    // The first part performs required work for polynomial operations.
-    // The first part is required for SubtractBackground and DivideBackground operations.
-    if(getPolynomial())
-    {
-      int xval = 0;
-      int yval = 0;
-      // Fit the background to a second order polynomial
-      // p are the coefficients p[0] + p[1]*x + p[2]*y +p[3]*xy + p[4]*x^2 + p[5]*y^2
-      Eigen::MatrixXd A(numTuples, ZeissImportConstants::PolynomialOrder::NumConsts2ndOrder);
-      Eigen::VectorXd B(numTuples);
-
-      for(size_t i = 0; i < numTuples; ++i)
-      {
-        xval = static_cast<int>(i / dims[0]);
-        yval = static_cast<int>(i % dims[0]);
-        B(i) = static_cast<double>(accumArray[i]);
-        A(i, 0) = 1.0;
-        A(i, 1) = static_cast<double>(xval);
-        A(i, 2) = static_cast<double>(yval);
-        A(i, 3) = static_cast<double>(xval * yval);
-        A(i, 4) = static_cast<double>(xval * xval);
-        A(i, 5) = static_cast<double>(yval * yval);
-      }
-
-      notifyStatusMessage("Fitting a polynomial to data. May take a while to solve if images are large");
-      Eigen::VectorXd p = A.colPivHouseholderQr().solve(B);
-
-      QVector<size_t> tDims(3);
-      tDims[0] = dims[0];
-      tDims[1] = dims[1];
-      tDims[2] = dims[2];
-
-      //  m->getAttributeMatrix(getBackgroundCellAttributeMatrixPath())->resizeAttributeArrays(tDims);
-      //  if(nullptr != m_BackgroundImagePtr.lock())                          /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-      //  { m_BackgroundImage = m_BackgroundImagePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-
-      Eigen::VectorXd Bcalc(numTuples);
-      double average = 0;
-
-      Bcalc = A * p;
-      average = Bcalc.mean();
-      Bcalc = Bcalc - Eigen::VectorXd::Constant(numTuples, average);
-
-      for(int i = 0; i < numTuples; ++i)
-      {
-        accumArray[i] = Bcalc(i);
-      }
-    } // Polynomial
-#endif

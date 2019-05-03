@@ -48,7 +48,7 @@
 #include "UnitTestSupport.hpp"
 
 #include "ZeissImportTestFileLocations.h"
-#include "ZeissImport/ZeissImportConstants.h"
+#include "ITKImageProcessing/ITKImageProcessingConstants.h"
 
 
 // -----------------------------------------------------------------------------
@@ -67,7 +67,7 @@ void RemoveTestFiles()
 void TestFilterAvailability()
 {
   // Now instantiate the PhWriter Filter from the FilterManager
-  QString filtName = ZeissImportConstants::ImageProcessingFilters::k_ReadImageFilterClassName;
+  QString filtName = ITKImageProcessingConstants::ImageProcessingFilters::k_ReadImageFilterClassName;
   FilterManager* fm = FilterManager::Instance();
   IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filtName);
   if (nullptr == filterFactory.get() )
@@ -77,7 +77,7 @@ void TestFilterAvailability()
     DREAM3D_TEST_THROW_EXCEPTION(ss.str())
   }
 
-  filtName = ZeissImportConstants::ImageProcessingFilters::k_RgbToGrayFilterClassName;
+  filtName = ITKImageProcessingConstants::ImageProcessingFilters::k_RgbToGrayFilterClassName;
   fm = FilterManager::Instance();
   filterFactory = fm->getFactoryFromClassName(filtName);
   if (nullptr == filterFactory.get() )

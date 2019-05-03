@@ -30,8 +30,8 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "ZeissTagMapping.h"
-#include "ZeissImport/ZeissXml/ZeissMetaEntry.h"
-#include "ZeissImport/ZeissXml/ZeissMetaFactory.h"
+#include "ITKImageProcessing/ZeissXml/ZeissMetaEntry.h"
+#include "ITKImageProcessing/ZeissXml/ZeissMetaFactory.h"
 
 
 // -----------------------------------------------------------------------------

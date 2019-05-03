@@ -7,8 +7,8 @@
 #include <QtCore/QMetaProperty>
 
 
-#include "ZeissImport/ZeissImportConstants.h"
-#include "ZeissImport/Test/TestFileLocations.h"
+#include "ITKImageProcessing/ITKImageProcessingConstants.h"
+#include "ITKImageProcessing/Test/TestFileLocations.h"
 
 
 // -----------------------------------------------------------------------------
@@ -16,7 +16,7 @@
 // -----------------------------------------------------------------------------
 QString getZVITagsFile()
 {
-  return ZeissImportConstants::Tools::TagsTextFile;
+  return ITKImageProcessingConstants::Tools::TagsTextFile;
 }
 
 // -----------------------------------------------------------------------------
@@ -281,9 +281,9 @@ void makeCPPFile(const QString filename)
 int main(int argc, char* argv[])
 {
 
-  makeHeaderFile(ZeissImportConstants::Tools::ZeissTagMappingConstantsFile);
+  makeHeaderFile(ITKImageProcessingConstants::Tools::ZeissTagMappingConstantsFile);
 
-  makeCPPFile(ZeissImportConstants::Tools::ZeissInitIdNameMapFile);
+  makeCPPFile(ITKImageProcessingConstants::Tools::ZeissInitIdNameMapFile);
 
   return 0;
 }

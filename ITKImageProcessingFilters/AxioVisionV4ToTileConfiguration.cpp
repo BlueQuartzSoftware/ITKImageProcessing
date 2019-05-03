@@ -45,12 +45,12 @@
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 
-#include "ZeissImport/ZeissImportConstants.h"
-#include "ZeissImport/ZeissImportVersion.h"
-#include "ZeissImport/ZeissXml/ZeissTagsXmlSection.h"
-#include "ZeissImport/ZeissImportFilters/MetaXmlUtils.h"
-#include "ZeissImport/ZeissXml/ZeissTagMappingConstants.h"
-#include "ZeissImport/ZeissXml/ZeissTagsXmlSection.h"
+#include "ITKImageProcessing/ITKImageProcessingConstants.h"
+#include "ITKImageProcessing/ITKImageProcessingVersion.h"
+#include "ITKImageProcessing/ZeissXml/ZeissTagsXmlSection.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/MetaXmlUtils.h"
+#include "ITKImageProcessing/ZeissXml/ZeissTagMappingConstants.h"
+#include "ITKImageProcessing/ZeissXml/ZeissTagsXmlSection.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -185,7 +185,7 @@ void AxioVisionV4ToTileConfiguration::readMetaXml(QIODevice* device)
 
   root = domDocument.documentElement();
 
-  QDomElement tags = root.firstChildElement(ZeissImportConstants::Xml::Tags);
+  QDomElement tags = root.firstChildElement(ITKImageProcessingConstants::Xml::Tags);
   if(tags.isNull())
   {
     QString ss = QObject::tr("Could not find the <ROOT><Tags> element. Aborting Parsing. Is the file a Zeiss _meta.xml file");
@@ -283,7 +283,7 @@ void AxioVisionV4ToTileConfiguration::parseImages(QDomElement& root, ZeissTagsXm
       return;
     }
     // Get the TAGS section
-    QDomElement tags = photoEle.firstChildElement(ZeissImportConstants::Xml::Tags);
+    QDomElement tags = photoEle.firstChildElement(ITKImageProcessingConstants::Xml::Tags);
     if(tags.isNull())
     {
       QString ss = QObject::tr("Could not find the <ROOT><%1><Tags> element. Aborting Parsing. Is the file a Zeiss _meta.xml file").arg(pTag);
@@ -354,9 +354,9 @@ void AxioVisionV4ToTileConfiguration::parseImages(QDomElement& root, ZeissTagsXm
     // Get the Spacing of the geometry
     bool ok = false;
     std::array<float, 3> scaling = {{1.0f, 1.0f, 1.0f}};
-    QDomElement scalingDom = root.firstChildElement(ZeissImportConstants::Xml::Scaling).firstChildElement("Factor_0");
+    QDomElement scalingDom = root.firstChildElement(ITKImageProcessingConstants::Xml::Scaling).firstChildElement("Factor_0");
     scaling[0] = scalingDom.text().toFloat(&ok);
-    scalingDom = root.firstChildElement(ZeissImportConstants::Xml::Scaling).firstChildElement("Factor_1");
+    scalingDom = root.firstChildElement(ITKImageProcessingConstants::Xml::Scaling).firstChildElement("Factor_1");
     scaling[1] = scalingDom.text().toFloat(&ok);
     scaling[2] = 1.0;
 
@@ -409,8 +409,8 @@ AbstractFilter::Pointer AxioVisionV4ToTileConfiguration::newFilterInstance(bool 
 //
 // -----------------------------------------------------------------------------
 const QString AxioVisionV4ToTileConfiguration::getCompiledLibraryName() const
-{ 
-  return ZeissImportConstants::ZeissImportBaseName;
+{
+  return ITKImageProcessingConstants::ITKImageProcessingBaseName;
 }
 
 // -----------------------------------------------------------------------------
@@ -418,7 +418,7 @@ const QString AxioVisionV4ToTileConfiguration::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 const QString AxioVisionV4ToTileConfiguration::getBrandingString() const
 {
-  return ZeissImportConstants::ZeissImportPluginDisplayName;
+  return ITKImageProcessingConstants::ITKImageProcessingPluginDisplayName;
 }
 
 // -----------------------------------------------------------------------------
@@ -428,7 +428,7 @@ const QString AxioVisionV4ToTileConfiguration::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  ZeissImport::Version::Major() << "." << ZeissImport::Version::Minor() << "." << ZeissImport::Version::Patch();
+  vStream <<  ITKImageProcessing::Version::Major() << "." << ITKImageProcessing::Version::Minor() << "." << ITKImageProcessing::Version::Patch();
   return version;
 }
 

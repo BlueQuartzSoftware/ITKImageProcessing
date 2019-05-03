@@ -75,7 +75,7 @@ AbstractFilter::Pointer ITKImageProcessingBase::newFilterInstance(bool copyFilte
 // -----------------------------------------------------------------------------
 const QString ITKImageProcessingBase::getHumanLabel() const
 {
-  return "ITK::ITK Image Processing Base";
+  return "ITK::Image Processing Base";
 }
 
 // -----------------------------------------------------------------------------

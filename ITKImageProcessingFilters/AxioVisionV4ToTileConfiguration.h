@@ -39,7 +39,7 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 
 
-#include "ZeissImport/ZeissImportPlugin.h"
+#include "ITKImageProcessing/ITKImageProcessingPlugin.h"
 
 class ZeissTagsXmlSection;
 class QIODevice;
@@ -47,146 +47,147 @@ class QIODevice;
 /**
  * @brief The AxioVisionV4ToTileConfiguration class. See [Filter documentation](@ref metaxmltofijiconfig) for details.
  */
-class ZeissImport_EXPORT AxioVisionV4ToTileConfiguration : public AbstractFilter
+class ITKImageProcessing_EXPORT AxioVisionV4ToTileConfiguration : public AbstractFilter
 {
   Q_OBJECT
 
-  public:
-    SIMPL_SHARED_POINTERS(AxioVisionV4ToTileConfiguration)
-    SIMPL_FILTER_NEW_MACRO(AxioVisionV4ToTileConfiguration)
-    SIMPL_TYPE_MACRO_SUPER(AxioVisionV4ToTileConfiguration, AbstractFilter)
+  PYB11_CREATE_BINDINGS(AxioVisionV4ToTileConfiguration SUPERCLASS AbstractFilter)
+  PYB11_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
+  PYB11_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
 
-    ~AxioVisionV4ToTileConfiguration() override;
+public:
+  SIMPL_SHARED_POINTERS(AxioVisionV4ToTileConfiguration)
+  SIMPL_FILTER_NEW_MACRO(AxioVisionV4ToTileConfiguration)
+  SIMPL_TYPE_MACRO_SUPER(AxioVisionV4ToTileConfiguration, AbstractFilter)
 
-    SIMPL_FILTER_PARAMETER(QString, InputFile)
-    Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
+  ~AxioVisionV4ToTileConfiguration() override;
 
-    SIMPL_FILTER_PARAMETER(QString, OutputFile)
-    Q_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
+  SIMPL_FILTER_PARAMETER(QString, InputFile)
+  Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
+  SIMPL_FILTER_PARAMETER(QString, OutputFile)
+  Q_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
 
-    /**
-     * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
-     */
-    const QString getCompiledLibraryName() const override;
+  /**
+   * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
+   */
+  const QString getCompiledLibraryName() const override;
 
-    /**
-     * @brief getBrandingString Returns the branding string for the filter, which is a tag
-     * used to denote the filter's association with specific plugins
-     * @return Branding string
-    */
-    const QString getBrandingString() const override;
+  /**
+   * @brief getBrandingString Returns the branding string for the filter, which is a tag
+   * used to denote the filter's association with specific plugins
+   * @return Branding string
+   */
+  const QString getBrandingString() const override;
 
-    /**
-     * @brief getFilterVersion Returns a version string for this filter. Default
-     * value is an empty string.
-     * @return
-     */
-    const QString getFilterVersion() const override;
+  /**
+   * @brief getFilterVersion Returns a version string for this filter. Default
+   * value is an empty string.
+   * @return
+   */
+  const QString getFilterVersion() const override;
 
-    /**
-     * @brief newFilterInstance Reimplemented from @see AbstractFilter class
-     */
-    AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) const override;
+  /**
+   * @brief newFilterInstance Reimplemented from @see AbstractFilter class
+   */
+  AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) const override;
 
-    /**
-     * @brief getGroupName Reimplemented from @see AbstractFilter class
-     */
-    const QString getGroupName() const override;
+  /**
+   * @brief getGroupName Reimplemented from @see AbstractFilter class
+   */
+  const QString getGroupName() const override;
 
-    /**
-     * @brief getSubGroupName Reimplemented from @see AbstractFilter class
-     */
-    const QString getSubGroupName() const override;
+  /**
+   * @brief getSubGroupName Reimplemented from @see AbstractFilter class
+   */
+  const QString getSubGroupName() const override;
 
-    /**
-     * @brief getUuid Return the unique identifier for this filter.
-     * @return A QUuid object.
-     */
-    const QUuid getUuid() override;
-  
-    /**
-     * @brief getHumanLabel Reimplemented from @see AbstractFilter class
-     */
-    const QString getHumanLabel() const override;
+  /**
+   * @brief getUuid Return the unique identifier for this filter.
+   * @return A QUuid object.
+   */
+  const QUuid getUuid() override;
 
-    /**
-     * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    void setupFilterParameters() override;
+  /**
+   * @brief getHumanLabel Reimplemented from @see AbstractFilter class
+   */
+  const QString getHumanLabel() const override;
 
-    /**
-     * @brief execute Reimplemented from @see AbstractFilter class
-     */
-    void execute() override;
+  /**
+   * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  void setupFilterParameters() override;
 
-    /**
-    * @brief preflight Reimplemented from @see AbstractFilter class
-    */
-    void preflight() override;
+  /**
+   * @brief execute Reimplemented from @see AbstractFilter class
+   */
+  void execute() override;
 
-  signals:
-    /**
-     * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
-     * be pushed from a user-facing control (such as a widget)
-     * @param filter Filter instance pointer 
-     */
-    void updateFilterParameters(AbstractFilter* filter);
+  /**
+   * @brief preflight Reimplemented from @see AbstractFilter class
+   */
+  void preflight() override;
 
-    /**
-     * @brief parametersChanged Emitted when any Filter parameter is changed internally
-     */
-    void parametersChanged();
+signals:
+  /**
+   * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
+   * be pushed from a user-facing control (such as a widget)
+   * @param filter Filter instance pointer
+   */
+  void updateFilterParameters(AbstractFilter* filter);
 
-    /**
-     * @brief preflightAboutToExecute Emitted just before calling dataCheck()
-     */
-    void preflightAboutToExecute();
+  /**
+   * @brief parametersChanged Emitted when any Filter parameter is changed internally
+   */
+  void parametersChanged();
 
-    /**
-     * @brief preflightExecuted Emitted just after calling dataCheck()
-     */
-    void preflightExecuted();
+  /**
+   * @brief preflightAboutToExecute Emitted just before calling dataCheck()
+   */
+  void preflightAboutToExecute();
 
-  protected:
-    AxioVisionV4ToTileConfiguration();
+  /**
+   * @brief preflightExecuted Emitted just after calling dataCheck()
+   */
+  void preflightExecuted();
 
-    /**
-    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
-    */
-    void dataCheck();
+protected:
+  AxioVisionV4ToTileConfiguration();
 
-    /**
-    * @brief Initializes all the private instance variables.
-    */
-    void initialize();
+  /**
+   * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+   */
+  void dataCheck();
 
-    /**
-     * @brief readMetaXml
-     * @param device
-     */
-    void readMetaXml(QIODevice* device);
+  /**
+   * @brief Initializes all the private instance variables.
+   */
+  void initialize();
 
-    /**
-     * @brief parseImages
-     * @param root
-     * @param rootTagsSection
-     */
-   void parseImages(QDomElement& root, ZeissTagsXmlSection* rootTagsSection);
+  /**
+   * @brief readMetaXml
+   * @param device
+   */
+  void readMetaXml(QIODevice* device);
 
-   void initializeImageGeom(const QDomElement& root, ZeissTagsXmlSection* photoTagsSection, QTextStream& out);
+  /**
+   * @brief parseImages
+   * @param root
+   * @param rootTagsSection
+   */
+  void parseImages(QDomElement& root, ZeissTagsXmlSection* rootTagsSection);
 
-  private:
+  void initializeImageGeom(const QDomElement& root, ZeissTagsXmlSection* photoTagsSection, QTextStream& out);
 
-  
-  public:
-    /* Rule of 5: All special member functions should be defined if any are defined.
-    * https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md#c21-if-you-define-or-delete-any-default-operation-define-or-delete-them-all
-    */
-    AxioVisionV4ToTileConfiguration(const AxioVisionV4ToTileConfiguration&) = delete;             // Copy Constructor Not Implemented
-    AxioVisionV4ToTileConfiguration& operator=(const AxioVisionV4ToTileConfiguration&) = delete;  // Copy Assignment Not Implemented
-    AxioVisionV4ToTileConfiguration(AxioVisionV4ToTileConfiguration&&) = delete;                  // Move Constructor Not Implemented
-    AxioVisionV4ToTileConfiguration& operator=(AxioVisionV4ToTileConfiguration&&) = delete;       // Move Assignment Not Implemented
+private:
+public:
+  /* Rule of 5: All special member functions should be defined if any are defined.
+   * https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md#c21-if-you-define-or-delete-any-default-operation-define-or-delete-them-all
+   */
+  AxioVisionV4ToTileConfiguration(const AxioVisionV4ToTileConfiguration&) = delete;            // Copy Constructor Not Implemented
+  AxioVisionV4ToTileConfiguration& operator=(const AxioVisionV4ToTileConfiguration&) = delete; // Copy Assignment Not Implemented
+  AxioVisionV4ToTileConfiguration(AxioVisionV4ToTileConfiguration&&) = delete;                 // Move Constructor Not Implemented
+  AxioVisionV4ToTileConfiguration& operator=(AxioVisionV4ToTileConfiguration&&) = delete;      // Move Assignment Not Implemented
 
 };
 

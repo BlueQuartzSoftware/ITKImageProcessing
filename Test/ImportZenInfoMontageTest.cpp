@@ -14,13 +14,12 @@
 #include "SIMPLib/Filtering/FilterFactory.hpp"
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
-
 #include "SIMPLib/Filtering/QMetaObjectUtilities.h"
 
 #include "UnitTestSupport.hpp"
 
-#include "ZeissImport/ZeissImportFilters/ImportZenInfoMontage.h"
-#include "ZeissImportTestFileLocations.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/ImportZenInfoMontage.h"
+#include "ITKImageProcessingTestFileLocations.h"
 
 class ImportZenInfoMontageTest
 {

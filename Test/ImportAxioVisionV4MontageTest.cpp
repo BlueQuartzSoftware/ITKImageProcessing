@@ -19,8 +19,8 @@
 
 #include "UnitTestSupport.hpp"
 
-#include "ZeissImport/ZeissImportFilters/ImportAxioVisionV4Montage.h"
-#include "ZeissImportTestFileLocations.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/ImportAxioVisionV4Montage.h"
+#include "ITKImageProcessingTestFileLocations.h"
 
 class ImportAxioVisionV4MontageTest
 {

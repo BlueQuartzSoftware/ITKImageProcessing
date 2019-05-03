@@ -36,8 +36,8 @@
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 
-#include "ZeissImport/ZeissImportConstants.h"
-#include "ZeissImport/ZeissImportVersion.h"
+#include "ITKImageProcessing/ITKImageProcessingConstants.h"
+#include "ITKImageProcessing/ITKImageProcessingVersion.h"
 
 enum createdPathID : RenameDataPath::DataID_t
 {
@@ -289,7 +289,7 @@ AbstractFilter::Pointer SeparateDataSets::newFilterInstance(bool copyFilterParam
 // -----------------------------------------------------------------------------
 const QString SeparateDataSets::getCompiledLibraryName() const
 { 
-  return ZeissImportConstants::ZeissImportBaseName;
+  return ITKImageProcessingConstants::ZeissImportBaseName;
 }
 
 // -----------------------------------------------------------------------------
@@ -297,7 +297,7 @@ const QString SeparateDataSets::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 const QString SeparateDataSets::getBrandingString() const
 {
-  return ZeissImportConstants::ZeissImportPluginDisplayName;
+  return ITKImageProcessingConstants::ZeissImportPluginDisplayName;
 }
 
 // -----------------------------------------------------------------------------
@@ -307,7 +307,7 @@ const QString SeparateDataSets::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  ZeissImport::Version::Major() << "." << ZeissImport::Version::Minor() << "." << ZeissImport::Version::Patch();
+  vStream <<  ITKImageProcessing::Version::Major() << "." << ITKImageProcessing::Version::Minor() << "." << ITKImageProcessing::Version::Patch();
   return version;
 }
 

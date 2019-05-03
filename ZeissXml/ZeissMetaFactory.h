@@ -30,7 +30,7 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #pragma once
 
-#include "ZeissImport/ZeissXml/ZeissMetaEntry.h"
+#include "ITKImageProcessing/ZeissXml/ZeissMetaEntry.h"
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"

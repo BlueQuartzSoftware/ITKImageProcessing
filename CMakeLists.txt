@@ -1,6 +1,6 @@
 set(PLUGIN_NAME ITKImageProcessing)
 set(${PLUGIN_NAME}_VERSION "1.0")
-set(${PLUGIN_NAME}_VERSION_MAJOR "1")
+set(${PLUGIN_NAME}_VERSION_MAJOR "2")
 set(${PLUGIN_NAME}_VERSION_MINOR "0")
 get_filename_component(${PLUGIN_NAME}_SOURCE_DIR "${CMAKE_CURRENT_LIST_DIR}" ABSOLUTE)
 set(ITKImageProcessing_BINARY_DIR "${PROJECT_BINARY_DIR}/Plugins/${PLUGIN_NAME}")
@@ -210,7 +210,7 @@ cmp_IDE_SOURCE_PROPERTIES( "Generated/Qt_Qrc" "${${PLUGIN_NAME}_Generated_RC_SRC
 # --------------------------------------------------------------------
 #
 # --------------------------------------------------------------------
-include(${ZeissImport_SOURCE_DIR}/ZeissXml/SourceList.cmake)
+include(${${PLUGIN_NAME}_SOURCE_DIR}/ZeissXml/SourceList.cmake)
 
  
 # --------------------------------------------------------------------

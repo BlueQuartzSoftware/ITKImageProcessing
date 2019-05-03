@@ -31,8 +31,8 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "MetaXmlUtils.h"
-#include "ZeissImport/ZeissImportConstants.h"
-#include "ZeissImport/ZeissImportVersion.h"
+#include "ITKImageProcessing/ITKImageProcessingConstants.h"
+#include "ITKImageProcessing/ITKImageProcessingVersion.h"
 
 static const QString k_AttributeArrayNames("AttributeArrayNames");
 static const QString k_DataContaineNameDefaultName("Tile");
@@ -230,7 +230,7 @@ void ImportZenInfoMontage::dataCheck()
     return;
   }
 
-  QString filtName = ZeissImportConstants::ImageProcessingFilters::k_ReadImageFilterClassName;
+  QString filtName = ITKImageProcessingConstants::ImageProcessingFilters::k_ReadImageFilterClassName;
   FilterManager* fm = FilterManager::Instance();
   IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filtName);
   if(nullptr != filterFactory.get())
@@ -810,13 +810,13 @@ AbstractFilter::Pointer ImportZenInfoMontage::createImageImportFiler(const QStri
   QFileInfo fi = QFileInfo(getInputFile());
   QString imagePath = fi.absoluteDir().path() + "/" + imageFileName;
 
-  QString filtName = ZeissImportConstants::ImageProcessingFilters::k_ReadImageFilterClassName;
+  QString filtName = ITKImageProcessingConstants::ImageProcessingFilters::k_ReadImageFilterClassName;
   FilterManager* fm = FilterManager::Instance();
   IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filtName);
   if(nullptr == filterFactory.get())
   {
     QString ss = QObject::tr("Error trying to instantiate the '%1' filter which is typically included in the 'ITKImageProcessing' plugin.")
-                     .arg(ZeissImportConstants::ImageProcessingFilters::k_ReadImageFilterClassName);
+                     .arg(ITKImageProcessingConstants::ImageProcessingFilters::k_ReadImageFilterClassName);
     setErrorCondition(-70019, ss);
     return AbstractFilter::NullPointer();
   }
@@ -912,7 +912,7 @@ AbstractFilter::Pointer ImportZenInfoMontage::newFilterInstance(bool copyFilterP
 // -----------------------------------------------------------------------------
 const QString ImportZenInfoMontage::getCompiledLibraryName() const
 {
-  return ZeissImportConstants::ZeissImportBaseName;
+  return ITKImageProcessingConstants::ITKImageProcessingBaseName;
 }
 
 // -----------------------------------------------------------------------------
@@ -920,7 +920,7 @@ const QString ImportZenInfoMontage::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 const QString ImportZenInfoMontage::getBrandingString() const
 {
-  return "ZeissImport";
+  return ITKImageProcessingConstants::ITKImageProcessingPluginDisplayName;
 }
 
 // -----------------------------------------------------------------------------
@@ -930,7 +930,7 @@ const QString ImportZenInfoMontage::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
-  vStream << ZeissImport::Version::Major() << "." << ZeissImport::Version::Minor() << "." << ZeissImport::Version::Patch();
+  vStream << ITKImageProcessing::Version::Major() << "." << ITKImageProcessing::Version::Minor() << "." << ITKImageProcessing::Version::Patch();
   return version;
 }
 

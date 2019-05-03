@@ -35,8 +35,8 @@
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
-#include "ZeissImport/ZeissImportConstants.h"
-#include "ZeissImport/ZeissXml/ZeissMetaEntry.h"
+#include "ITKImageProcessing/ITKImageProcessingConstants.h"
+#include "ITKImageProcessing/ZeissXml/ZeissMetaEntry.h"
 
 /**
  * @brief The ZeissTagsXmlSection class

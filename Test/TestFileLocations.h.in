@@ -81,46 +81,35 @@ namespace UnitTest
    const QString TestFile1("@TEST_TEMP_DIR@/TestFile1.txt");
    const QString TestFile2("@TEST_TEMP_DIR@/TestFile2.txt");
   }// namespace ITKBinaryThresholdTest
-  
-} // namespace UnitTest
 
 
-namespace UnitTest
-{
+  namespace AxioVisionV4ToTileConfigurationTest
+  {
+  const QString InputFile("@ITKImageProcessing_SOURCE_DIR@/Test/TestFiles/_meta.xml");
+  const QString ExemplarOutputFile("@ITKImageProcessing_SOURCE_DIR@/Test/TestFiles/TileConfiguration.txt");
+  const QString OutputFile("@TEST_TEMP_DIR@/TileConfiguration.txt");
+  } // namespace AxioVisionV4ToTileConfiguration
 
-const QString DataDir("@DREAM3D_DATA_DIR@");
-const QString TestTempDir("@TEST_TEMP_DIR@");
-const QString DREAM3DProjDir("@DREAM3DProj_SOURCE_DIR@");
+  namespace ImportZenInfoMontageTest
+  {
+  const QString ZenInfoFile("@ITKImageProcessing_SOURCE_DIR@/Data/ZeissImport/SampleMosaic/SampleMosaic_Info.xml");
+  const QString OutputDREAM3DFile("@TEST_TEMP_DIR@/ZenInfoImportTest.dream3d");
+  } // namespace ImportZenInfoMontageTest
 
-namespace AxioVisionV4ToTileConfigurationTest
-{
-const QString InputFile("@ZeissImport_SOURCE_DIR@/Test/TestFiles/_meta.xml");
-const QString ExemplarOutputFile("@ZeissImport_SOURCE_DIR@/Test/TestFiles/TileConfiguration.txt");
-const QString OutputFile("@TEST_TEMP_DIR@/TileConfiguration.txt");
-} // namespace AxioVisionV4ToTileConfiguration
-
-namespace ImportZenInfoMontageTest
-{
-const QString ZenInfoFile("@ZeissImport_SOURCE_DIR@/Data/ZeissImport/SampleMosaic/SampleMosaic_Info.xml");
-const QString OutputDREAM3DFile("@TEST_TEMP_DIR@/ZenInfoImportTest.dream3d");
-} // namespace ImportZenInfoMontageTest
-
-namespace ImportAxioVisionV4MontageTest
-{
-const QString AxioVisionMetaXmlFile("@ZeissImport_SOURCE_DIR@/Data/ZeissImport/SampleMosaic/_meta.xml");
-const QString OutputDREAM3DFile("@TEST_TEMP_DIR@/AxioVisionMetaXmlTest.dream3d");
-} // namespace ImportAxioVisionV4MontageTest
+  namespace ImportAxioVisionV4MontageTest
+  {
+  const QString AxioVisionMetaXmlFile("@ITKImageProcessing_SOURCE_DIR@/Data/ZeissImport/SampleMosaic/_meta.xml");
+  const QString OutputDREAM3DFile("@TEST_TEMP_DIR@/AxioVisionMetaXmlTest.dream3d");
+  } // namespace ImportAxioVisionV4MontageTest
 
 } // namespace UnitTest
 
 namespace ZeissImport
 {
-namespace Tools
-{
-const QString TagsTextFile("@ZeissImport_SOURCE_DIR@/ZVI_Tags.txt");
-const QString ZeissTagMappingConstantsFile("@ZeissImport_SOURCE_DIR@/ZeissXML/ZeissTagMappingConstants.h");
-const QString ZeissInitIdNameMapFile("@ZeissImport_SOURCE_DIR@/ZeissXML/ZeissTagMapping_InitMaps.cpp");
-} // namespace Tools
+  namespace Tools
+  {
+  const QString TagsTextFile("@ITKImageProcessing_SOURCE_DIR@/ZVI_Tags.txt");
+  const QString ZeissTagMappingConstantsFile("@ITKImageProcessing_SOURCE_DIR@/ZeissXML/ZeissTagMappingConstants.h");
+  const QString ZeissInitIdNameMapFile("@ITKImageProcessing_SOURCE_DIR@/ZeissXML/ZeissTagMapping_InitMaps.cpp");
+  } // namespace Tools
 } // namespace ZeissImport
-
-#endif
