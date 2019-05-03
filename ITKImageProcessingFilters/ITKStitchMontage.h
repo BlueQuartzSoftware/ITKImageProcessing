@@ -66,7 +66,6 @@ class ITKImageProcessing_EXPORT ITKStitchMontage : public AbstractFilter
   PYB11_PROPERTY(QStringList, ImageDataContainers READ getImageDataContainers WRITE setImageDataContainers)
   PYB11_PROPERTY(QString CommonAttributeMatrixName READ getCommonAttributeMatrixName WRITE setCommonAttributeMatrixName)
   PYB11_PROPERTY(QString CommonDataArrayName READ getCommonDataArrayName WRITE setCommonDataArrayName)
-  PYB11_PROPERTY(float TileOverlap READ getTileOverlap WRITE setTileOverlap)
 public:
   SIMPL_SHARED_POINTERS(ITKStitchMontage)
   SIMPL_FILTER_NEW_MACRO(ITKStitchMontage)
@@ -97,12 +96,6 @@ public:
 
   SIMPL_FILTER_PARAMETER(QString, MontageDataArrayName)
   Q_PROPERTY(QString MontageDataArrayName READ getMontageDataArrayName WRITE setMontageDataArrayName)
-
-  SIMPL_FILTER_PARAMETER(bool, ManualTileOverlap)
-  Q_PROPERTY(bool ManualTileOverlap READ getManualTileOverlap WRITE setManualTileOverlap)
-
-  SIMPL_FILTER_PARAMETER(float, TileOverlap)
-  Q_PROPERTY(float TileOverlap READ getTileOverlap WRITE setTileOverlap)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class

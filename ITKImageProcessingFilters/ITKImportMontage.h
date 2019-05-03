@@ -35,37 +35,76 @@
 
 #pragma once
 
-#include "SIMPLib/ITK/itkFijiConfigurationFileReader.hpp"
+#include <QtCore/QPointF>
 
-#include "ITKImageProcessing/ITKImageProcessingFilters/ITKImportMontage.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+
+#include "ITKImageProcessing/ITKImageProcessingFilters/ITKImageReader.h"
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 // our PIMPL private class
-class ITKImportFijiMontagePrivate;
+class ITKImportMontagePrivate;
+
+struct ITKMontageCache
+{
+  ITKImageReader::Pointer imageReader;
+  QString filePath;
+  int row;
+  int col;
+  QPointF coords;
+};
 
 /**
- * @brief The ITKImportFijiMontage class. See [Filter documentation](@ref ITKImportFijiMontage) for details.
+ * @brief The ITKImportMontage class. See [Filter documentation](@ref ITKImportMontage) for details.
  */
-class ITKImageProcessing_EXPORT ITKImportFijiMontage : public ITKImportMontage
+class ITKImageProcessing_EXPORT ITKImportMontage : public AbstractFilter
 {
   Q_OBJECT
-  PYB11_CREATE_BINDINGS(ITKImportFijiMontage SUPERCLASS ITKImportMontage)
-  PYB11_PROPERTY(QString FijiConfigFilePath READ getFijiConfigFilePath WRITE setFijiConfigFilePath)
-  Q_DECLARE_PRIVATE(ITKImportFijiMontage)
+  PYB11_CREATE_BINDINGS(ITKImportMontage SUPERCLASS AbstractFilter)
+  PYB11_PROPERTY(QString DataContainerPrefix READ getDataContainerPrefix WRITE setDataContainerPrefix)
+  PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
+  PYB11_PROPERTY(QString AttributeArrayName READ getAttributeArrayName WRITE setAttributeArrayName)
+  PYB11_PROPERTY(bool ChangeOrigin READ getChangeOrigin WRITE setChangeOrigin)
+  PYB11_PROPERTY(FloatVec3Type Origin READ getOrigin WRITE setOrigin)
+  PYB11_PROPERTY(bool ChangeSpacing READ getChangeSpacing WRITE setChangeSpacing)
+  PYB11_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
+  Q_DECLARE_PRIVATE(ITKImportMontage)
 public:
-  SIMPL_SHARED_POINTERS(ITKImportFijiMontage)
-  SIMPL_FILTER_NEW_MACRO(ITKImportFijiMontage)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKImportFijiMontage, ITKImportMontage)
+  SIMPL_SHARED_POINTERS(ITKImportMontage)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKImportMontage, AbstractFilter)
 
-  ~ITKImportFijiMontage() override;
+  ~ITKImportMontage() override;
 
-  SIMPL_FILTER_PARAMETER(QString, FijiConfigFilePath)
-  Q_PROPERTY(QString FijiConfigFilePath READ getFijiConfigFilePath WRITE setFijiConfigFilePath)
+  SIMPL_FILTER_PARAMETER(QString, DataContainerPrefix)
+  Q_PROPERTY(QString DataContainerPrefix READ getDataContainerPrefix WRITE setDataContainerPrefix)
 
-  typedef std::vector<ITKImageReader::Pointer> ImageReaderVector;
-  typedef std::vector<itk::FijiImageTileData> TileDataVector;
+  SIMPL_FILTER_PARAMETER(QString, CellAttributeMatrixName)
+  Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
-  SIMPL_PIMPL_PROPERTY_DECL(QString, FijiConfigFilePathCache)
-  SIMPL_PIMPL_PROPERTY_DECL(QDateTime, LastRead)
+  SIMPL_FILTER_PARAMETER(QString, AttributeArrayName)
+  Q_PROPERTY(QString AttributeArrayName READ getAttributeArrayName WRITE setAttributeArrayName)
+
+  SIMPL_FILTER_PARAMETER(bool, ChangeOrigin)
+  Q_PROPERTY(bool ChangeOrigin READ getChangeOrigin WRITE setChangeOrigin)
+
+  SIMPL_FILTER_PARAMETER(FloatVec3Type, Origin)
+  Q_PROPERTY(FloatVec3Type Origin READ getOrigin WRITE setOrigin)
+
+  SIMPL_FILTER_PARAMETER(bool, ChangeSpacing)
+  Q_PROPERTY(bool ChangeSpacing READ getChangeSpacing WRITE setChangeSpacing)
+
+  SIMPL_FILTER_PARAMETER(FloatVec3Type, Spacing)
+  Q_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
+
+  SIMPL_GET_PROPERTY(int, RowCount)
+  Q_PROPERTY(int RowCount READ getRowCount)
+
+  SIMPL_GET_PROPERTY(int, ColumnCount)
+  Q_PROPERTY(int ColumnCount READ getColumnCount)
+
+  typedef std::vector<ITKMontageCache> MontageCacheVector;
+
+  SIMPL_PIMPL_PROPERTY_DECL(MontageCacheVector, MontageCacheVector)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -85,11 +124,6 @@ public:
    * @return
    */
   const QString getFilterVersion() const override;
-
-  /**
-   * @brief newFilterInstance Reimplemented from @see AbstractFilter class
-   */
-  AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) const override;
 
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
@@ -151,7 +185,10 @@ signals:
   void preflightExecuted();
 
 protected:
-  ITKImportFijiMontage();
+  SIMPL_SET_PROPERTY(int, RowCount)
+  SIMPL_SET_PROPERTY(int, ColumnCount)
+
+  ITKImportMontage();
 
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
@@ -163,13 +200,45 @@ protected:
    */
   void initialize();
 
+  /**
+   * @brief appendToCache
+   * @param reader
+   * @param filePath
+   * @param coords
+   * @param row
+   * @param col
+   */
+  void appendToCache(const ITKImageReader::Pointer &reader, const QString &filePath, QPointF coords, int row, int col, FloatVec3Type spacing);
+
+  /**
+   * @brief readImageFile
+   * @param filePath
+   * @param coords
+   * @param row
+   * @param col
+   */
+  void readImageFile(const QString &filePath, QPointF coords, int row, int col);
+
+  /**
+   * @brief readImagesFromCache
+   */
+  void readImagesFromCache();
+
+  /**
+   * @brief adjustOriginAndSpacing
+   */
+  void adjustOriginAndSpacing();
+
 private:
-  QScopedPointer<ITKImportFijiMontagePrivate> const d_ptr;
+  QScopedPointer<ITKImportMontagePrivate> const d_ptr;
+
+  int m_RowCount = 0;
+  int m_ColumnCount = 0;
 
 public :
-  ITKImportFijiMontage(const ITKImportFijiMontage&) = delete; // Copy Constructor Not Implemented
-  ITKImportFijiMontage(ITKImportFijiMontage&&) = delete;                   // Move Constructor Not Implemented
-  ITKImportFijiMontage& operator=(const ITKImportFijiMontage&) = delete;   // Copy Assignment Not Implemented
-  ITKImportFijiMontage& operator=(ITKImportFijiMontage&&) = delete;        // Move Assignment Not Implemented
+  ITKImportMontage(const ITKImportMontage&) = delete; // Copy Constructor Not Implemented
+  ITKImportMontage(ITKImportMontage&&) = delete;                   // Move Constructor Not Implemented
+  ITKImportMontage& operator=(const ITKImportMontage&) = delete;   // Copy Assignment Not Implemented
+  ITKImportMontage& operator=(ITKImportMontage&&) = delete;        // Move Assignment Not Implemented
 };
 

@@ -6,20 +6,7 @@
 
 #include <QtCore/QFile>
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
-#include "SIMPLib/DataArrays/StringDataArray.h"
-#include "SIMPLib/FilterParameters/FileListInfoFilterParameter.h"
-#include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
-#include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/SIMPLib.h"
-
-#include "SIMPLib/ITK/itkImageReaderHelper.h"
-
-#include <itkImageFileReader.h>
-
-#include "ITKImageProcessing/ITKImageProcessingFilters/ITKImageReader.h"
-
-#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/ITKImportMontage.h"
 
  // our PIMPL private class
 class ITKImportRoboMetMontagePrivate;
@@ -27,21 +14,15 @@ class ITKImportRoboMetMontagePrivate;
 /**
  * @brief The ITKImportRoboMetMontage class. See [Filter documentation](@ref ITKImportRoboMetMontage) for details.
  */
-class ITKImageProcessing_EXPORT ITKImportRoboMetMontage : public AbstractFilter
+class ITKImageProcessing_EXPORT ITKImportRoboMetMontage : public ITKImportMontage
 {
   Q_OBJECT
   
   PYB11_CREATE_BINDINGS(ITKImportRoboMetMontage SUPERCLASS AbstractFilter)
-  PYB11_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
-  PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
   PYB11_PROPERTY(int SliceNumber READ getSliceNumber WRITE setSliceNumber)
   PYB11_PROPERTY(QString MetaDataAttributeMatrixName READ getMetaDataAttributeMatrixName WRITE setMetaDataAttributeMatrixName)
-  PYB11_PROPERTY(FloatVec3Type Origin READ getOrigin WRITE setOrigin)
-  PYB11_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
   PYB11_PROPERTY(QString RegistrationFile READ getRegistrationFile WRITE setRegistrationFile)
-  PYB11_PROPERTY(QString AttributeArrayName READ getAttributeArrayName WRITE setAttributeArrayName)
   PYB11_PROPERTY(QString ImageFilePrefix READ getImageFilePrefix WRITE setImageFilePrefix)
-  PYB11_PROPERTY(QString ImageFileSuffix READ getImageFileSuffix WRITE setImageFileSuffix)
   PYB11_PROPERTY(QString ImageFileExtension READ getImageFileExtension WRITE setImageFileExtension)
    
   Q_DECLARE_PRIVATE(ITKImportRoboMetMontage)
@@ -58,35 +39,17 @@ public:
 
   SIMPL_INSTANCE_STRING_PROPERTY(ErrorMessage)
 
-  SIMPL_FILTER_PARAMETER(QString, DataContainerName)
-  Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
-
-  SIMPL_FILTER_PARAMETER(QString, CellAttributeMatrixName)
-  Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
-
   SIMPL_FILTER_PARAMETER(int, SliceNumber)
   Q_PROPERTY(int SliceNumber READ getSliceNumber WRITE setSliceNumber)
 
   SIMPL_FILTER_PARAMETER(QString, MetaDataAttributeMatrixName)
   Q_PROPERTY(QString MetaDataAttributeMatrixName READ getMetaDataAttributeMatrixName WRITE setMetaDataAttributeMatrixName)
 
-  SIMPL_FILTER_PARAMETER(FloatVec3Type, Origin)
-  Q_PROPERTY(FloatVec3Type Origin READ getOrigin WRITE setOrigin)
-
-  SIMPL_FILTER_PARAMETER(FloatVec3Type, Spacing)
-  Q_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
-
   SIMPL_FILTER_PARAMETER(QString, RegistrationFile)
   Q_PROPERTY(QString RegistrationFile READ getRegistrationFile WRITE setRegistrationFile)
 
-  SIMPL_FILTER_PARAMETER(QString, AttributeArrayName)
-  Q_PROPERTY(QString AttributeArrayName READ getAttributeArrayName WRITE setAttributeArrayName)
-
   SIMPL_FILTER_PARAMETER(QString, ImageFilePrefix)
   Q_PROPERTY(QString ImageFilePrefix READ getImageFilePrefix WRITE setImageFilePrefix)
-
-  SIMPL_FILTER_PARAMETER(QString, ImageFileSuffix)
-  Q_PROPERTY(QString ImageFileSuffix READ getImageFileSuffix WRITE setImageFileSuffix)
 
   SIMPL_FILTER_PARAMETER(QString, ImageFileExtension)
   Q_PROPERTY(QString ImageFileExtension READ getImageFileExtension WRITE setImageFileExtension)
@@ -95,19 +58,6 @@ public:
 
   SIMPL_PIMPL_PROPERTY_DECL(QString, RoboMetConfigFilePathCache)
   SIMPL_PIMPL_PROPERTY_DECL(QDateTime, LastRead)
-  SIMPL_PIMPL_GET_PROPERTY_DECL(ReaderMap, ReaderCache)
-
-  /**
-   * @brief setReaderCacheValue
-   * @param filePath
-   * @param reader
-   */
-  void setReaderCacheValue(const QString &filePath, const ITKImageReader::Pointer &reader);
-
-  /**
-   * @brief clearReaderCache
-   */
-  void clearReaderCache();
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -197,10 +147,9 @@ protected:
 
   /**
    * @brief parseFijiConfigFile Parses the Fiji file with the configuration coordinates
-   * @param reader QFile to read
    * @return Integer error value
    */
-  int32_t parseRoboMetConfigFile(const QString &filePath);
+  int32_t parseRoboMetConfigFile();
 
   /**
    * @brief parseRobometConfigFile Parses the Robomet file with the configuration coordinates
@@ -230,24 +179,13 @@ private:
   int32_t m_NumImages;
   std::vector<QString> m_RegisteredFilePaths;
   QMap<QString, QPointF> m_CoordsMap;
-  QMap<QString, QString> m_RowColIdMap;
-
-  /**
-   * @brief readDataFile
-   * @param filePath
-   */
-  void readImageFile(const QString &filePath);
+  std::vector<int> m_Rows;
+  std::vector<int> m_Columns;
 
   /**
    * @brief clearParsingCache
    */
   void clearParsingCache();
-
-  /**
-   * @brief Include the declarations of the ITKImageReader helper functions that are common
-   * to a few different filters across different plugins.
-   */
-  ITK_IMAGE_READER_HELPER_ImageDataArrayName() ITK_IMAGE_READER_HELPER_DECL()
 
 public :
   ITKImportRoboMetMontage(const ITKImportRoboMetMontage&) = delete; // Copy Constructor Not Implemented
