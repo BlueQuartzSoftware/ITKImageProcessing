@@ -49,10 +49,6 @@
 #include "itkAmoebaOptimizer.h"
 #include <itkFFTConvolutionImageFilter.h>
 
-// TODO Set Image Type with filter parameter
-using GrayScaleColor = uint8_t;
-using RGBColor = std::tuple<uint8_t, uint8_t, uint8_t>;
-
 class MultiParamCostFunction : public itk::SingleValuedCostFunction
 {
   std::vector<double> m_mins{};
@@ -442,12 +438,28 @@ void Blend::dataCheck()
   size_t len = static_cast<size_t>(2 * m_Degree * m_Degree + 4 * m_Degree + 2);
   if (len != m_initialGuess.size())
   {
-    setErrorCondition(-66500, "Number of coefficients in initial guess is not compatible with degree number");
+    setErrorCondition(-66400, "Number of coefficients in initial guess is not compatible with degree number");
   }
 
   if (m_OverlapPercentage < 0.0f || m_OverlapPercentage >= 1.00f)
   {
     setErrorCondition(-66500, "Overlap Percentage should be a floating-point precision number between 0.0 and 1.0");
+  }
+
+  // TODO Once all types are verified to be the same for each of the chosen
+  // data containers, we can then instantiate the FFTConvolutionCostFunction with the
+  // appropriate template parameter type
+  QString typeName = getDataContainerArray()->getDataContainers()[0]->getAttributeMatrix(m_AttributeMatrixName)->getAttributeArray(m_DataAttributeArrayName)->getTypeAsString();
+  for (const auto& eachDC : getDataContainerArray()->getDataContainers())
+  {
+    if (!m_ChosenDataContainers.contains(eachDC->getName()))
+    {
+      continue;
+    }
+    else if (eachDC->getAttributeMatrix(m_AttributeMatrixName)->getAttributeArray(m_DataAttributeArrayName)->getTypeAsString() != typeName)
+    {
+      setErrorCondition(-66600, "Not all data attribute arrays are the same type");
+    }
   }
 }
 
@@ -473,14 +485,6 @@ void Blend::execute()
   initialize();
   dataCheck();
 
-  DataContainerShPtr blendDC = getDataContainerArray()->createNonPrereqDataContainer(this, DataArrayPath(m_blendDCName, m_transformAMName, ""));
-  AttributeMatrixShPtr blendAM = blendDC->createAndAddAttributeMatrix({1}, m_transformAMName, AttributeMatrix::Type::Generic);
-
-  blendAM->createAndAddAttributeArray<UInt64ArrayType>(this, m_iterationsAAName, 0, {1});
-  blendAM->createAndAddAttributeArray<DoubleArrayType>(this, m_transformAAName, 0, {m_initialGuess.size()});
-  blendAM->createAndAddAttributeArray<DoubleArrayType>(this, m_valueAAName, 0, {1});
-  getDataContainerArray()->addOrReplaceDataContainer(blendDC);
-
   if(getErrorCode() < 0 || getCancel())
   {
     return;
@@ -492,6 +496,14 @@ void Blend::execute()
     setWarningCondition(-66400, ss);
     notifyStatusMessage(ss);
   }
+
+  DataContainerShPtr blendDC = getDataContainerArray()->createNonPrereqDataContainer(this, DataArrayPath(m_blendDCName, m_transformAMName, ""));
+  AttributeMatrixShPtr blendAM = blendDC->createAndAddAttributeMatrix({1}, m_transformAMName, AttributeMatrix::Type::Generic);
+
+  blendAM->createAndAddAttributeArray<UInt64ArrayType>(this, m_iterationsAAName, 0, {1});
+  blendAM->createAndAddAttributeArray<DoubleArrayType>(this, m_transformAAName, 0, {m_initialGuess.size()});
+  blendAM->createAndAddAttributeArray<DoubleArrayType>(this, m_valueAAName, 0, {1});
+  getDataContainerArray()->addOrReplaceDataContainer(blendDC);
 
   itk::AmoebaOptimizer::ParametersType initialParams(m_initialGuess.size());
   for (size_t idx = 0; idx < m_initialGuess.size(); ++idx)
@@ -529,7 +541,6 @@ void Blend::execute()
   qDebug() << "Number of Iterations: " << GetIterationsFromStopDescription(stopReason);
   qDebug() << "Value: " << m_optimizer->GetValue();
 
-  // Determine whether the solution truly converged
   if(!GetConvergenceFromStopDescription(stopReason))
   {
     setErrorCondition(-66800, stopReason);
