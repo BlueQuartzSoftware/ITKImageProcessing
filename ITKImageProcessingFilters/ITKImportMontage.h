@@ -102,7 +102,7 @@ public:
   SIMPL_GET_PROPERTY(int, ColumnCount)
   Q_PROPERTY(int ColumnCount READ getColumnCount)
 
-  typedef std::vector<ITKMontageCache> MontageCacheVector;
+  using MontageCacheVector = std::vector<ITKMontageCache>;
 
   SIMPL_PIMPL_PROPERTY_DECL(MontageCacheVector, MontageCacheVector)
 

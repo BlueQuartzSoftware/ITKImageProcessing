@@ -71,13 +71,10 @@ ITKImportMontage::ITKImportMontage()
 : m_DataContainerPrefix(SIMPL::Defaults::ImageDataContainerName + "_")
 , m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName)
 , m_AttributeArrayName("ImageTile")
-, d_ptr(new ITKImportMontagePrivate(this))
-, m_RowCount(0)
-, m_ColumnCount(0)
 , m_ChangeOrigin(false)
 , m_ChangeSpacing(false)
+, d_ptr(new ITKImportMontagePrivate(this))
 {
-
 }
 
 // -----------------------------------------------------------------------------
