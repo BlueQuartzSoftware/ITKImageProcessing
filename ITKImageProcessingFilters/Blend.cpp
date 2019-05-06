@@ -49,6 +49,8 @@
 #include "itkAmoebaOptimizer.h"
 #include <itkFFTConvolutionImageFilter.h>
 
+using PixelValue_T = double;
+
 class MultiParamCostFunction : public itk::SingleValuedCostFunction
 {
   std::vector<double> m_mins{};
@@ -63,7 +65,7 @@ public:
 
   void GetDerivative(const ParametersType&, DerivativeType&) const override
   {
-    throw std::exception("Derivatives are not implemented for the optimization type");
+	throw std::exception();
   }
 
   uint32_t GetNumberOfParameters() const override
@@ -90,29 +92,27 @@ template<class Image_T> class FFTConvolutionCostFunction : public itk::SingleVal
   static const uint8_t IMAGE_DIMENSIONS = 2;
   using Cell_T = size_t;
   using PixelCoord = itk::Index<IMAGE_DIMENSIONS>;
-  using ITKImage = itk::Image<Image_T, IMAGE_DIMENSIONS>;
+  using InputImage = itk::Image<Image_T, IMAGE_DIMENSIONS>;
+  using OutputImage = itk::Image<uint8_t, IMAGE_DIMENSIONS>;
   using GridKey = std::pair<Cell_T, Cell_T>;
   using GridPair = std::pair<GridKey, GridKey>;
-  using RegionPair = std::pair<typename ITKImage::RegionType, typename ITKImage::RegionType>;
+  using RegionPair = std::pair<typename InputImage::RegionType, typename InputImage::RegionType>;
   using OverlapPair = std::pair<GridPair, RegionPair>;
-  using ImageGrid = std::map<std::pair<Cell_T, Cell_T>, typename ITKImage::Pointer>;
+  using ImageGrid = std::map<std::pair<Cell_T, Cell_T>, typename InputImage::Pointer>;
+  using FilterType =  itk::FFTConvolutionImageFilter<InputImage, InputImage, OutputImage>;
 
-  QChar m_rowChar = 'R';
-  QChar m_colChar = 'C';
   size_t m_degree = 2;
   std::vector<std::pair<size_t, size_t>> m_IJ;
   std::vector<OverlapPair> m_overlaps;
   ImageGrid m_imageGrid;
-  typename itk::FFTConvolutionImageFilter<ITKImage>::Pointer m_filter;
+  typename FilterType::Pointer m_filter;
 
 public:
   itkNewMacro(FFTConvolutionCostFunction)
 
   void Initialize(QStringList chosenDataContainers, QChar rowChar, QChar colChar, size_t degree, float overlapPercentage, DataContainerArrayShPtr dca, const QString& amName, const QString& dataAAName, const QString& xAAName, const QString& yAAName)
   {
-    m_rowChar = rowChar;
-    m_colChar = colChar;
-    m_filter = itk::FFTConvolutionImageFilter<ITKImage>::New();
+    m_filter = FilterType::New();
     m_degree = degree;
     for(size_t listOneIndex = 0; listOneIndex < m_degree; listOneIndex++)
     {
@@ -122,7 +122,7 @@ public:
       }
     }
 
-    // Cache a bunch of stuff
+    // Cache loop variables
     GridKey imageKey;
     std::tuple<size_t, size_t, size_t> dims;
     size_t width, height, overlapDim;
@@ -130,14 +130,17 @@ public:
     QString name;
     PixelCoord idx;
 
-    typename ITKImage::Pointer eachImage;
+    typename InputImage::Pointer eachImage;
     PixelCoord imageOrigin;
-    typename ITKImage::SizeType imageSize;
+    imageOrigin[0] = 0;
+    imageOrigin[1] = 0;
+    typename InputImage::SizeType imageSize;
     PixelCoord kernelOrigin;
-    typename ITKImage::SizeType kernelSize;
+    typename InputImage::SizeType kernelSize;
 
     AttributeMatrixShPtr am;
     m_imageGrid.clear();
+
     // Populate and assign eachImage to m_imageGrid
     for(const auto& eachDC : dca->getDataContainers())
     {
@@ -150,23 +153,34 @@ public:
       width = std::get<0>(dims);
       height = std::get<1>(dims);
 
-      imageOrigin[0] = 0;
-      imageOrigin[1] = 0;
       imageSize[0] = width;
       imageSize[1] = height;
-      eachImage = ITKImage::New();
-      eachImage->SetRegions(ITKImage::RegionType(imageOrigin, imageSize));
+      eachImage = InputImage::New();
+      eachImage->SetRegions(InputImage::RegionType(imageOrigin, imageSize));
       eachImage->Allocate();
       for(size_t pxlIdx = 0; pxlIdx < (width * height); ++pxlIdx)
       {
+        DataArray<PixelValue_T>::Pointer da = am->getAttributeArrayAs<DataArray<PixelValue_T>>(dataAAName);
+        // TODO Validate this gets the appropriate data to set for that pixel
+        // NOTE Uses a 1D array with multiple components juxtaposed
+        // Will need to create a data structure that can be filled by iterating
+        // over the first through the last components
+        int numComponents = da->getNumberOfComponents();
+        size_t sz = da->getComponentDimensions()[0];
+        std::vector<PixelValue_T> valueArray(sz);
+        for (size_t eachCompIdx = 0; eachCompIdx < sz; ++eachCompIdx)
+        {
+          // TODO
+        }
+
         idx[0] = am->getAttributeArrayAs<Int64ArrayType>(xAAName)->getValue(pxlIdx);
         idx[1] = am->getAttributeArrayAs<Int64ArrayType>(yAAName)->getValue(pxlIdx);
-        eachImage->SetPixel(idx, am->getAttributeArrayAs<UInt8ArrayType>(dataAAName)->getValue(pxlIdx));
+        eachImage->SetPixel(idx, valueArray);
       }
 
       name = eachDC->getName();
-      cLength = name.size() - name.indexOf(m_colChar) - 1;
-      imageKey = std::make_pair(static_cast<Cell_T>(name.midRef(name.indexOf(m_rowChar) + 1, name.size() - cLength - 2).toULong()), static_cast<Cell_T>(name.rightRef(cLength).toULong()));
+      cLength = name.size() - name.indexOf(colChar) - 1;
+      imageKey = std::make_pair(static_cast<Cell_T>(name.midRef(name.indexOf(rowChar) + 1, name.size() - cLength - 2).toULong()), static_cast<Cell_T>(name.rightRef(cLength).toULong()));
       m_imageGrid.insert_or_assign(imageKey, eachImage);
     }
 
@@ -190,7 +204,8 @@ public:
         kernelSize[1] = height;
 
         m_overlaps.push_back(
-            std::make_pair(std::make_pair(eachImage.first, rightImage->first), std::make_pair(ITKImage::RegionType(imageOrigin, imageSize), ITKImage::RegionType(kernelOrigin, kernelSize))));
+            std::make_pair(std::make_pair(eachImage.first, rightImage->first), std::make_pair(InputImage::RegionType(imageOrigin, imageSize), InputImage::RegionType(kernelOrigin, kernelSize)))
+        );
       }
       if(bottomImage != m_imageGrid.end())
       {
@@ -206,14 +221,15 @@ public:
         kernelSize[1] = overlapDim;
 
         m_overlaps.push_back(
-            std::make_pair(std::make_pair(eachImage.first, bottomImage->first), std::make_pair(ITKImage::RegionType(imageOrigin, imageSize), ITKImage::RegionType(kernelOrigin, kernelSize))));
+          std::make_pair(std::make_pair(eachImage.first, bottomImage->first), std::make_pair(InputImage::RegionType(imageOrigin, imageSize), InputImage::RegionType(kernelOrigin, kernelSize)))
+        );
       }
     }
   }
 
   void GetDerivative(const ParametersType&, DerivativeType&) const override
   {
-    throw std::exception("Derivatives are not implemented for the optimization type");
+	throw std::exception();
   }
 
   uint32_t GetNumberOfParameters() const override
@@ -227,8 +243,8 @@ public:
     ImageGrid distortedGrid;
 
     // Cache a bunch of stuff
-    typename ITKImage::RegionType bufferedRegion;
-    typename ITKImage::SizeType dims;
+    typename InputImage::RegionType bufferedRegion;
+    typename InputImage::SizeType dims;
     size_t width;
     size_t height;
     double lastXIndex;
@@ -243,7 +259,7 @@ public:
 
     std::pair<int, int> eachIJ{};
     PixelCoord eachPixel;
-    typename ITKImage::Pointer distortedImage;
+    typename InputImage::Pointer distortedImage;
 
     // Apply the Transform to each image in the image grid
     for(const auto& eachImage : m_imageGrid) // TODO Parallelize this
@@ -258,12 +274,12 @@ public:
       x_trans = (width - 1) / 2.0;
       y_trans = (height - 1) / 2.0;
 
-      distortedImage = ITKImage::New();
+      distortedImage = InputImage::New();
       distortedImage->SetRegions(bufferedRegion);
       distortedImage->Allocate();
 
       // Iterate through the pixels in eachImage and apply the transform
-      itk::ImageRegionIterator<ITKImage> it(eachImage.second, bufferedRegion);
+      itk::ImageRegionIterator<InputImage> it(eachImage.second, bufferedRegion);
       for(it.GoToBegin(); !it.IsAtEnd(); ++it) // TODO Parallelize this
       {
         PixelCoord pixel = it.GetIndex();
@@ -284,6 +300,9 @@ public:
         {
           eachPixel[0] = static_cast<int64_t>(round(x));
           eachPixel[1] = static_cast<int64_t>(round(y));
+          // The value obtained with eachImage.second->GetPixel(eachPixel) could have
+          // its "contrast" adjusted based on its radial location from the center of
+          // the image at this step to compensate for error encountered from radial effects
           distortedImage->SetPixel(eachPixel, eachImage.second->GetPixel(eachPixel));
         }
       }
@@ -294,18 +313,18 @@ public:
     std::atomic<MeasureType> residual{0.0};
     for(const auto& eachOverlap : m_overlaps) // TODO Parallelize this
     {
-      typename ITKImage::Pointer image = distortedGrid.at(eachOverlap.first.first);
+      typename InputImage::Pointer image = distortedGrid.at(eachOverlap.first.first);
       image->SetRequestedRegion(eachOverlap.second.first);
       image->GetRequestedRegion().IsInside(eachOverlap.second.first);
       m_filter->SetInput(image);
 
-      typename ITKImage::Pointer kernel = distortedGrid.at(eachOverlap.first.second);
+      typename InputImage::Pointer kernel = distortedGrid.at(eachOverlap.first.second);
       kernel->SetRequestedRegion(eachOverlap.second.second);
       kernel->GetRequestedRegion().IsInside(eachOverlap.second.second);
       m_filter->SetKernelImage(kernel);
 
       m_filter->Update();
-      typename ITKImage::Pointer fftConvolve = m_filter->GetOutput();
+      typename OutputImage::Pointer fftConvolve = m_filter->GetOutput();
       residual = residual + *std::max_element(fftConvolve->GetBufferPointer(), fftConvolve->GetBufferPointer() + fftConvolve->GetPixelContainer()->Size());
     }
     return sqrt(residual);
@@ -446,9 +465,6 @@ void Blend::dataCheck()
     setErrorCondition(-66500, "Overlap Percentage should be a floating-point precision number between 0.0 and 1.0");
   }
 
-  // TODO Once all types are verified to be the same for each of the chosen
-  // data containers, we can then instantiate the FFTConvolutionCostFunction with the
-  // appropriate template parameter type
   QString typeName = getDataContainerArray()->getDataContainers()[0]->getAttributeMatrix(m_AttributeMatrixName)->getAttributeArray(m_DataAttributeArrayName)->getTypeAsString();
   for (const auto& eachDC : getDataContainerArray()->getDataContainers())
   {
@@ -460,6 +476,8 @@ void Blend::dataCheck()
     {
       setErrorCondition(-66600, "Not all data attribute arrays are the same type");
     }
+    // TODO If any data array of the data to be blended has a component dimension > 1
+    // There needs to be an error thrown
   }
 }
 
@@ -518,7 +536,10 @@ void Blend::execute()
   m_optimizer->SetInitialPosition(initialParams);
 
   using CostFunctionType = MultiParamCostFunction;
-//  using CostFunctionType = FFTConvolutionCostFunction<GrayScaleColor>;
+  // TODO Figure out the type/dimensions that need to be passed in as the template parameter
+  // for the FFTConvolutionCostFunction
+  // Probably something like std::vector<double>
+//  using CostFunctionType = FFTConvolutionCostFunction<std::vector<double>>;
   CostFunctionType implementation;
   implementation.Initialize(
     std::vector<double>{1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0}
