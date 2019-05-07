@@ -39,6 +39,7 @@
 #include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
+#include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 
@@ -109,8 +110,10 @@ void ITKImportFijiMontage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Fiji Configuration File", FijiConfigFilePath, FilterParameter::Parameter, ITKImportFijiMontage, "", "*.txt"));
 
   QStringList linkedProps("Origin");
+  linkedProps.push_back("UsePixelCoordinates");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Override Origin", ChangeOrigin, FilterParameter::Parameter, ITKImportMontage, linkedProps));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Origin", Origin, FilterParameter::Parameter, ITKImportMontage));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Pixel Coordinates", UsePixelCoordinates, FilterParameter::Parameter, ITKImportMontage));
 
   linkedProps.clear();
   linkedProps << "Spacing";

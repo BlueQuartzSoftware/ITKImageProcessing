@@ -68,6 +68,9 @@ class ITKImageProcessing_EXPORT ITKImportMontage : public AbstractFilter
   PYB11_PROPERTY(FloatVec3Type Origin READ getOrigin WRITE setOrigin)
   PYB11_PROPERTY(bool ChangeSpacing READ getChangeSpacing WRITE setChangeSpacing)
   PYB11_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
+  PYB11_PROPERTY(QString MontageInformation READ getMontageInformation)
+  PYB11_PROPERTY(int RowCount READ getRowCount)
+  PYB11_PROPERTY(int ColumnCount READ getColumnCount)
   Q_DECLARE_PRIVATE(ITKImportMontage)
 public:
   SIMPL_SHARED_POINTERS(ITKImportMontage)
@@ -90,6 +93,9 @@ public:
   SIMPL_FILTER_PARAMETER(FloatVec3Type, Origin)
   Q_PROPERTY(FloatVec3Type Origin READ getOrigin WRITE setOrigin)
 
+  SIMPL_FILTER_PARAMETER(bool, UsePixelCoordinates)
+  Q_PROPERTY(bool UsePixelCoordinates READ getUsePixelCoordinates WRITE setUsePixelCoordinates)
+
   SIMPL_FILTER_PARAMETER(bool, ChangeSpacing)
   Q_PROPERTY(bool ChangeSpacing READ getChangeSpacing WRITE setChangeSpacing)
 
@@ -102,9 +108,10 @@ public:
   SIMPL_GET_PROPERTY(int, ColumnCount)
   Q_PROPERTY(int ColumnCount READ getColumnCount)
 
-  using MontageCacheVector = std::vector<ITKMontageCache>;
+  SIMPL_GET_PROPERTY(QString, MontageInformation)
+  Q_PROPERTY(QString MontageInformation READ getMontageInformation)
 
-  SIMPL_PIMPL_PROPERTY_DECL(MontageCacheVector, MontageCacheVector)
+  using MontageCacheVector = std::vector<ITKMontageCache>;
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -231,6 +238,8 @@ protected:
 
 private:
   QScopedPointer<ITKImportMontagePrivate> const d_ptr;
+
+  QString m_MontageInformation;
 
   int m_RowCount = 0;
   int m_ColumnCount = 0;

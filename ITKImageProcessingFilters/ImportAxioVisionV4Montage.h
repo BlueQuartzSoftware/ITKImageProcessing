@@ -125,6 +125,9 @@ public:
   SIMPL_FILTER_PARAMETER(FloatVec3Type, Spacing)
   Q_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
 
+  SIMPL_FILTER_PARAMETER(bool, UsePixelCoordinates)
+  Q_PROPERTY(bool UsePixelCoordinates READ getUsePixelCoordinates WRITE setUsePixelCoordinates)
+
   SIMPL_GET_PROPERTY(int32_t, RowCount)
   Q_PROPERTY(int32_t RowCount READ getRowCount)
 
