@@ -113,6 +113,8 @@ public:
 
   using MontageCacheVector = std::vector<ITKMontageCache>;
 
+  SIMPL_PIMPL_PROPERTY_DECL(ITKImportMontage::MontageCacheVector, MontageCacheVector)
+
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
