@@ -72,6 +72,7 @@ ITKImportMontage::ITKImportMontage()
 , m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName)
 , m_AttributeArrayName("ImageTile")
 , m_ChangeOrigin(false)
+, m_UsePixelCoordinates(false)
 , m_ChangeSpacing(false)
 , d_ptr(new ITKImportMontagePrivate(this))
 {
@@ -264,15 +265,31 @@ void ITKImportMontage::adjustOriginAndSpacing()
     for(size_t i = 0; i < 3; i++)
     {
       float delta = currentOrigin[i] - d->montageMinCoord[i];
-      // Convert to Pixel Coords
-      delta = delta / currentSpacing[i];
-      // Convert to the override origin
-      delta = delta * overrideSpacing[i];
+      if (m_UsePixelCoordinates)
+      {
+        // Convert to Pixel Coords
+        delta = delta / currentSpacing[i];
+      }
+//      // Convert to the override origin
+//      delta = delta * overrideSpacing[i];
       currentOrigin[i] = overrideOrigin[i] + delta;
+      if (m_UsePixelCoordinates)
+      {
+        // Convert back to physical coords
+        currentOrigin[i] = currentOrigin[i] * currentSpacing[i];
+      }
     }
     imageGeom->setOrigin(currentOrigin.data());
     imageGeom->setSpacing(overrideSpacing.data());
   }
+
+  QString montageInfo;
+  QTextStream ss(&montageInfo);
+  ss << "Columns=" << m_ColumnCount << "  Rows=" << m_RowCount << "  Num. Images=" << montageCacheVector.size();
+
+  ss << "\nOrigin: " << overrideOrigin[0] << ", " << overrideOrigin[1] << ", " << overrideOrigin[2];
+  ss << "  Spacing: " << overrideSpacing[0] << ", " << overrideSpacing[1] << ", " << overrideSpacing[2];
+  m_MontageInformation = montageInfo;
 }
 
 // -----------------------------------------------------------------------------

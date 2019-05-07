@@ -154,8 +154,10 @@ void ImportAxioVisionV4Montage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_BOOL_FP("Import All MetaData", ImportAllMetaData, FilterParameter::Parameter, ImportAxioVisionV4Montage));
 
   QStringList linkedProps("Origin");
+  linkedProps.push_back("UsePixelCoordinates");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Change Origin", ChangeOrigin, FilterParameter::Parameter, ImportAxioVisionV4Montage, linkedProps));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Origin", Origin, FilterParameter::Parameter, ImportAxioVisionV4Montage));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Pixel Coordinates", UsePixelCoordinates, FilterParameter::Parameter, ImportAxioVisionV4Montage));
 
   linkedProps.clear();
   linkedProps << "Spacing";
@@ -549,11 +551,19 @@ void ImportAxioVisionV4Montage::parseImages(QDomElement& root, const ZeissTagsXm
       for(size_t i = 0; i < 3; i++)
       {
         float delta = currentOrigin[i] - minCoord[i];
-        // Convert to Pixel Coords
-        delta = delta / currentSpacing[i];
-        // Convert to the override origin
-        delta = delta * overrideSpacing[i];
+        if (m_UsePixelCoordinates)
+        {
+          // Convert to Pixel Coords
+          delta = delta / currentSpacing[i];
+        }
+        //      // Convert to the override origin
+        //      delta = delta * overrideSpacing[i];
         currentOrigin[i] = overrideOrigin[i] + delta;
+        if (m_UsePixelCoordinates)
+        {
+          // Convert back to physical coords
+          currentOrigin[i] = currentOrigin[i] * currentSpacing[i];
+        }
       }
       image->setOrigin(currentOrigin.data());
       image->setSpacing(overrideSpacing.data());
