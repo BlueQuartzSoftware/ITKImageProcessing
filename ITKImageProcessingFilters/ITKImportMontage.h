@@ -108,8 +108,8 @@ public:
   SIMPL_GET_PROPERTY(int, ColumnCount)
   Q_PROPERTY(int ColumnCount READ getColumnCount)
 
-  SIMPL_FILTER_PARAMETER(QString, LengthUnit)
-  Q_PROPERTY(QString LengthUnit READ getLengthUnit WRITE setLengthUnit)
+  SIMPL_FILTER_PARAMETER(int32_t, LengthUnit)
+  Q_PROPERTY(int32_t LengthUnit READ getLengthUnit WRITE setLengthUnit)
 
   SIMPL_GET_PROPERTY(QString, MontageInformation)
   Q_PROPERTY(QString MontageInformation READ getMontageInformation)
