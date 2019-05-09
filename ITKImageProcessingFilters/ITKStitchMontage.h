@@ -97,6 +97,8 @@ public:
   SIMPL_FILTER_PARAMETER(QString, MontageDataArrayName)
   Q_PROPERTY(QString MontageDataArrayName READ getMontageDataArrayName WRITE setMontageDataArrayName)
 
+  SIMPL_FILTER_PARAMETER(int32_t, LengthUnit)
+  Q_PROPERTY(int32_t LengthUnit READ getLengthUnit WRITE setLengthUnit)
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */

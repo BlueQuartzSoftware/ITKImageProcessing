@@ -74,6 +74,7 @@ ITKImportMontage::ITKImportMontage()
 , m_ChangeOrigin(false)
 , m_UsePixelCoordinates(false)
 , m_ChangeSpacing(false)
+, m_LengthUnit(static_cast<int32_t>(IGeometry::LengthUnit::Unspecified))
 , d_ptr(new ITKImportMontagePrivate(this))
 {
 }
@@ -182,6 +183,8 @@ void ITKImportMontage::readImageFile(const QString &filePath, QPointF coords, in
   ImageGeom::Pointer geom = m->getGeometryAs<ImageGeom>();
   geom->setOrigin(coords.x(), coords.y(), 1.0f);
 
+  geom->setUnits(static_cast<IGeometry::LengthUnit>(m_LengthUnit));
+
   FloatVec3Type spacing = geom->getSpacing();
 
   appendToCache(reader, filePath, coords, row, col, spacing);
@@ -225,6 +228,8 @@ void ITKImportMontage::readImagesFromCache()
       ImageGeom::Pointer geom = dc->getGeometryAs<ImageGeom>();
 
       geom->setOrigin(coords.x(), coords.y(), 1.0f);
+
+      geom->setUnits(static_cast<IGeometry::LengthUnit>(m_LengthUnit));
     }
   }
 }

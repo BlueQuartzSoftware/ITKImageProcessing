@@ -557,6 +557,7 @@ template <typename PixelType, typename MontageType, typename Resampler> void ITK
   using TransformType = itk::TranslationTransform<double, Dimension>;
 
   typename MontageType::TileIndexType ind;
+  bool lengthUnitSet = false;
   for(unsigned y = 0; y < m_yMontageSize; y++)
   {
     ind[1] = y;
@@ -568,6 +569,12 @@ template <typename PixelType, typename MontageType, typename Resampler> void ITK
       DataContainer::Pointer imageDC = GetImageDataContainer(y, x);
       // Check the resolution and fix if necessary
       ImageGeom::Pointer geom = imageDC->getGeometryAs<ImageGeom>();
+
+      if(!lengthUnitSet)
+      {
+        m_LengthUnit = static_cast<int32_t>(geom->getUnits());
+        lengthUnitSet = true;
+      }
 
       toITK->SetInput(imageDC);
       toITK->SetInPlace(true);
@@ -647,6 +654,9 @@ template <typename PixelType, typename OriginalImageType> void ITKStitchMontage:
   toDream3DFilter->SetDataArrayName(dataArrayPath.getDataArrayName().toStdString());
   toDream3DFilter->SetDataContainer(container);
   toDream3DFilter->Update();
+
+  ImageGeom::Pointer geom = container->getGeometryAs<ImageGeom>();
+  geom->setUnits(static_cast<IGeometry::LengthUnit>(m_LengthUnit));
 }
 
 // -----------------------------------------------------------------------------
