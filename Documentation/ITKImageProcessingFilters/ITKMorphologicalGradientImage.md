@@ -1,5 +1,5 @@
-ITK::Morphological Gradient Image Filter (KW) 
-=============================
+# ITK::Morphological Gradient Image Filter (KW)  #
+
 
 ## Group (Subgroup) ##
 

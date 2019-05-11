@@ -1,5 +1,5 @@
-ITK::Adaptive Histogram Equalization Image Filter (KW) 
-=====================================
+# ITK::Adaptive Histogram Equalization Image Filter (KW)  #
+
 
 ## Group (Subgroup) ##
 

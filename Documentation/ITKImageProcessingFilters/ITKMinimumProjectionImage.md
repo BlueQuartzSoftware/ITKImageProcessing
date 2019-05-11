@@ -1,5 +1,5 @@
-ITK::Minimum Projection Image Filter (KW) 
-=========================
+# ITK::Minimum Projection Image Filter (KW)  #
+
 
 ## Group (Subgroup) ##
 

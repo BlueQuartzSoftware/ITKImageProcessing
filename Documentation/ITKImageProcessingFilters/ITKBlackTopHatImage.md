@@ -1,5 +1,5 @@
-ITK::Black Top Hat Image Filter (KW) 
-===================
+# ITK::Black Top Hat Image Filter (KW)  #
+
 
 ## Group (Subgroup) ##
 

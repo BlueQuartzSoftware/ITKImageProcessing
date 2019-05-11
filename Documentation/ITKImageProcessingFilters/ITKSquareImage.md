@@ -1,5 +1,5 @@
-ITK::Square Image Filter (KW) 
-==============
+# ITK::Square Image Filter (KW)  #
+
 
 ## Group (Subgroup) ##
 

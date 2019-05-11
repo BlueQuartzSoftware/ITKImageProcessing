@@ -1,5 +1,5 @@
-ITK::White Top Hat Image Filter (KW) 
-===================
+# ITK::White Top Hat Image Filter (KW)  #
+
 
 ## Group (Subgroup) ##
 

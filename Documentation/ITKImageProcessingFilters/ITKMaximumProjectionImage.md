@@ -1,5 +1,5 @@
-ITK::Maximum Projection Image Filter (KW) 
-=========================
+# ITK::Maximum Projection Image Filter (KW)  #
+
 
 ## Group (Subgroup) ##
 

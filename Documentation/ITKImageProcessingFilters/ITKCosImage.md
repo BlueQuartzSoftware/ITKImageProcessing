@@ -1,5 +1,5 @@
-ITK::Cos Image Filter (KW) 
-===========
+# ITK::Cos Image Filter (KW)  #
+
 
 ## Group (Subgroup) ##
 

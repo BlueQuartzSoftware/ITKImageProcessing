@@ -1,5 +1,5 @@
-ITK::Otsu Multiple Thresholds Image Filter (KW) 
-==============================
+# ITK::Otsu Multiple Thresholds Image Filter (KW)  #
+
 
 ## Group (Subgroup) ##
 

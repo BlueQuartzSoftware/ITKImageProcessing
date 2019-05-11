@@ -1,5 +1,5 @@
-ITK::Zero Crossing Image Filter (KW) 
-====================
+# ITK::Zero Crossing Image Filter (KW)  #
+
 
 ## Group (Subgroup) ##
 

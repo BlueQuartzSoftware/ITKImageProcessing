@@ -1,5 +1,5 @@
-ITK::Log Image Filter (KW) 
-===========
+# ITK::Log Image Filter (KW)  #
+
 
 ## Group (Subgroup) ##
 

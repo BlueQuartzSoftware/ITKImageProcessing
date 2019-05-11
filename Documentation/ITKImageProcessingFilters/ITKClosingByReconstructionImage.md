@@ -1,5 +1,5 @@
-ITK::Closing By Reconstruction Image Filter (KW) 
-===============================
+# ITK::Closing By Reconstruction Image Filter (KW)  #
+
 
 ## Group (Subgroup) ##
 

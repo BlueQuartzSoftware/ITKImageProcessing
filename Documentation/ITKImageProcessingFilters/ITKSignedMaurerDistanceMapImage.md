@@ -1,5 +1,5 @@
-ITK::Signed Maurer Distance Map Image Filter (KW) 
-===============================
+# ITK::Signed Maurer Distance Map Image Filter (KW)  #
+
 
 ## Group (Subgroup) ##
 

@@ -1,5 +1,5 @@
-ITK::Danielsson Distance Map Image Filter (KW) 
-=============================
+# ITK::Danielsson Distance Map Image Filter (KW)  #
+
 
 ## Group (Subgroup) ##
 

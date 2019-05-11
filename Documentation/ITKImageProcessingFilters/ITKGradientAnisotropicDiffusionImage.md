@@ -1,5 +1,5 @@
-ITK::Gradient Anisotropic Diffusion Image Filter (KW) 
-====================================
+# ITK::Gradient Anisotropic Diffusion Image Filter (KW)  #
+
 
 ## Group (Subgroup) ##
 

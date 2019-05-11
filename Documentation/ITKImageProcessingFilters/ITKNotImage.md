@@ -1,5 +1,5 @@
-ITK::Not Image Filter (KW) 
-===========
+# ITK::Not Image Filter (KW)  #
+
 
 ## Group (Subgroup) ##
 

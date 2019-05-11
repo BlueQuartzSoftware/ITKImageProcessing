@@ -1,5 +1,5 @@
-ITK::Binary Dilate Image Filter (KW) 
-====================
+# ITK::Binary Dilate Image Filter (KW)  #
+
 
 ## Group (Subgroup) ##
 

@@ -1,5 +1,5 @@
-ITK::Mean Projection Image Filter (KW) 
-======================
+# ITK::Mean Projection Image Filter (KW)  #
+
 
 ## Group (Subgroup) ##
 

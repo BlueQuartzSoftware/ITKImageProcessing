@@ -1,5 +1,5 @@
-ITK::Bilateral Image Filter (KW) 
-=================
+# ITK::Bilateral Image Filter (KW)  #
+
 
 ## Group (Subgroup) ##
 

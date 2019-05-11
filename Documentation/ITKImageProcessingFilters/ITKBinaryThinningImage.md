@@ -1,5 +1,5 @@
-ITK::Binary Thinning Image Filter (KW) 
-======================
+# ITK::Binary Thinning Image Filter (KW)  #
+
 
 ## Group (Subgroup) ##
 

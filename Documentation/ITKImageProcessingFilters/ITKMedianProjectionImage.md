@@ -1,5 +1,5 @@
-ITK::Median Projection Image Filter (KW) 
-========================
+# ITK::Median Projection Image Filter (KW)  #
+
 
 ## Group (Subgroup) ##
 

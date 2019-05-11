@@ -1,5 +1,5 @@
-ITK::Exp Negative Image Filter (KW) 
-===================
+# ITK::Exp Negative Image Filter (KW)  #
+
 
 ## Group (Subgroup) ##
 

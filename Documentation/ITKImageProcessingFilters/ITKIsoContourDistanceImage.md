@@ -1,5 +1,5 @@
-ITK::Iso Contour Distance Image Filter (KW) 
-==========================
+# ITK::Iso Contour Distance Image Filter (KW)  #
+
 
 ## Group (Subgroup) ##
 

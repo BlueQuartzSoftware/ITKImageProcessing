@@ -1,5 +1,5 @@
-ITK::Curvature Flow Image Filter (KW) 
-=====================
+# ITK::Curvature Flow Image Filter (KW)  #
+
 
 ## Group (Subgroup) ##
 

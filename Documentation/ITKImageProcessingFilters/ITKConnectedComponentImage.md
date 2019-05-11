@@ -1,5 +1,5 @@
-ITK::Connected Component Image Filter (KW) 
-==========================
+# ITK::Connected Component Image Filter (KW)  #
+
 
 ## Group (Subgroup) ##
 

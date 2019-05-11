@@ -1,5 +1,5 @@
-ITK::Label Contour Image Filter (KW) 
-====================
+# ITK::Label Contour Image Filter (KW)  #
+
 
 ## Group (Subgroup) ##
 

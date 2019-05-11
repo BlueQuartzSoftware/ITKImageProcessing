@@ -1,5 +1,5 @@
-ITK::Approximate Signed Distance Map Image Filter (KW) 
-====================================
+# ITK::Approximate Signed Distance Map Image Filter (KW)  #
+
 
 ## Group (Subgroup) ##
 

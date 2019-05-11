@@ -1,5 +1,5 @@
-ITK::Sobel Edge Detection Image Filter (KW) 
-==========================
+# ITK::Sobel Edge Detection Image Filter (KW)  #
+
 
 ## Group (Subgroup) ##
 

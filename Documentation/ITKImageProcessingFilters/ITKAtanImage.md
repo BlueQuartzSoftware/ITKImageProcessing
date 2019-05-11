@@ -1,5 +1,5 @@
-ITK::Atan Image Filter (KW) 
-============
+# ITK::Atan Image Filter (KW)  #
+
 
 ## Group (Subgroup) ##
 

@@ -1,5 +1,5 @@
-ITK::H Minima Image Filter (KW) 
-===============
+# ITK::H Minima Image Filter (KW)  #
+
 
 ## Group (Subgroup) ##
 

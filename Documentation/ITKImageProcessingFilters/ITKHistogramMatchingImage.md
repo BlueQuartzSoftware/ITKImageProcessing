@@ -1,5 +1,5 @@
-ITK::Histogram Matching Image Filter (KW) 
-=========================
+# ITK::Histogram Matching Image Filter (KW)  #
+
 
 ## Group (Subgroup) ##
 

@@ -1,5 +1,5 @@
-ITK::Shot Noise Image Filter (KW) 
-=================
+# ITK::Shot Noise Image Filter (KW)  #
+
 
 ## Group (Subgroup) ##
 
