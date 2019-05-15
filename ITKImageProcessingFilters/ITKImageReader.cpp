@@ -33,6 +33,8 @@
 
 #include "ITKImageReader.h"
 
+#include <QtCore/QFileInfo>
+
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
@@ -140,11 +142,17 @@ void ITKImageReader::initialize()
 void ITKImageReader::dataCheck()
 {
   // check file name exists
-  QString filename = getFileName();
-  if(filename.isEmpty())
+  QFileInfo fi(getFileName());
+
+  if(getFileName().isEmpty())
   {
-    setErrorCondition(-1, "Invalid filename.");
-    return;
+    QString ss = QObject::tr("The input file must be set");
+    setErrorCondition(-387, ss);
+  }
+  else if(!fi.exists())
+  {
+    QString ss = QObject::tr("The input file does not exist: %1").arg(getFileName());
+    setErrorCondition(-388, ss);
   }
 
   if(getDataContainerName().isEmpty())

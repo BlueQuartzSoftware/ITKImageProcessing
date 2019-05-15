@@ -334,5 +334,5 @@ const QString ITKImportFijiMontage::getSubGroupName() const
 // -----------------------------------------------------------------------------
 const QString ITKImportFijiMontage::getHumanLabel() const
 {
-  return "Import Fiji Montage";
+  return "ITK::Import Fiji Montage";
 }

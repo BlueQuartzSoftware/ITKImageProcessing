@@ -1,8 +1,8 @@
-# Calculate Background #
+# Illumination Correction #
 
 ## Group (Subgroup) ##
 
-ZeissImport (Processing)
+ITKImageProcessing (Processing)
 
 ## Description ##
 

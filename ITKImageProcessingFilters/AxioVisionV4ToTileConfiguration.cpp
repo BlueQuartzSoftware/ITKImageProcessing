@@ -453,7 +453,7 @@ const QString AxioVisionV4ToTileConfiguration::getSubGroupName() const
 // -----------------------------------------------------------------------------
 const QString AxioVisionV4ToTileConfiguration::getHumanLabel() const
 { 
-  return "Convert AxioVision To Tile Configuration file";
+  return "ITK::Convert AxioVision To Tile Configuration file";
 }
 
 

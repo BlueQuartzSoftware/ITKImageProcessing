@@ -782,5 +782,5 @@ const QString ITKPCMTileRegistration::getSubGroupName() const
 // -----------------------------------------------------------------------------
 const QString ITKPCMTileRegistration::getHumanLabel() const
 {
-  return "Generate Montage Configuration";
+  return "ITK::Generate Montage Configuration";
 }

@@ -791,5 +791,5 @@ const QString ITKStitchMontage::getSubGroupName() const
 // -----------------------------------------------------------------------------
 const QString ITKStitchMontage::getHumanLabel() const
 {
-  return "Stitch Montage";
+  return "ITK::Stitch Montage";
 }

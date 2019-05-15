@@ -72,6 +72,7 @@ class ITKImageProcessing_EXPORT ITKImportMontage : public AbstractFilter
   PYB11_PROPERTY(int RowCount READ getRowCount)
   PYB11_PROPERTY(int ColumnCount READ getColumnCount)
   Q_DECLARE_PRIVATE(ITKImportMontage)
+
 public:
   SIMPL_SHARED_POINTERS(ITKImportMontage)
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKImportMontage, AbstractFilter)

@@ -35,6 +35,7 @@
 #include <QtCore/QString>
 #include <QtXml/QDomDocument>
 
+#include "SIMPLib/Common/SIMPLArray.hpp"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/StringDataArray.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
@@ -42,12 +43,11 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 #include "ITKImageProcessing/ZeissXml/ZeissTagsXmlSection.h"
 
 // our PIMPL private class
 class ImportAxioVisionV4MontagePrivate;
-
-#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @class ImportAxioVisionV4Montage ImportAxioVisionV4Montage.h ZeissImport/ImportAxioVisionV4Montages/ImportAxioVisionV4Montage.h
@@ -62,12 +62,11 @@ class ITKImageProcessing_EXPORT ImportAxioVisionV4Montage : public AbstractFilte
   // clang-format off
   PYB11_CREATE_BINDINGS(ImportAxioVisionV4Montage SUPERCLASS AbstractFilter)
   PYB11_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
-  PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
+  PYB11_PROPERTY(DataArrayPath DataContainerPath READ getDataContainerPath WRITE setDataContainerPath)
   PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
   PYB11_PROPERTY(QString ImageDataArrayName READ getImageDataArrayName WRITE setImageDataArrayName)
   PYB11_PROPERTY(bool ConvertToGrayScale READ getConvertToGrayScale WRITE setConvertToGrayScale)
   PYB11_PROPERTY(FloatVec3Type ColorWeights READ getColorWeights WRITE setColorWeights)
-  PYB11_PROPERTY(bool FileWasRead READ getFileWasRead WRITE setFileWasRead)
   PYB11_PROPERTY(bool ChangeOrigin READ getChangeOrigin WRITE setChangeOrigin)
   PYB11_PROPERTY(FloatVec3Type Origin READ getOrigin WRITE setOrigin)
   PYB11_PROPERTY(bool ChangeSpacing READ getChangeSpacing WRITE setChangeSpacing)
@@ -76,10 +75,26 @@ class ITKImageProcessing_EXPORT ImportAxioVisionV4Montage : public AbstractFilte
   PYB11_PROPERTY(int32_t ColumnCount READ getColumnCount)
   PYB11_PROPERTY(QStringList FilenameList READ getFilenameList)
 
+  PYB11_PROPERTY(bool ImportAllMetaData READ getImportAllMetaData WRITE setImportAllMetaData)
+  PYB11_PROPERTY(QString MetaDataAttributeMatrixName getMetaDataAttributeMatrixName WRITE setMetaDataAttributeMatrixName)
+
+
   Q_DECLARE_PRIVATE(ImportAxioVisionV4Montage)
   // clang-format on
 
 public:
+  using BoundsType = struct
+  {
+    QString Filename;
+    SizeVec3Type Dims;
+    FloatVec3Type Origin;
+    FloatVec3Type Spacing;
+    int32_t Row;
+    int32_t Col;
+    IDataArray::Pointer ImageDataProxy;
+    AttributeMatrix::Pointer MetaData;
+  };
+
   SIMPL_SHARED_POINTERS(ImportAxioVisionV4Montage)
   SIMPL_FILTER_NEW_MACRO(ImportAxioVisionV4Montage)
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ImportAxioVisionV4Montage, AbstractFilter)
@@ -89,8 +104,8 @@ public:
   SIMPL_FILTER_PARAMETER(QString, InputFile)
   Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, DataContainerName)
-  Q_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, DataContainerPath)
+  Q_PROPERTY(DataArrayPath DataContainerPath READ getDataContainerPath WRITE setDataContainerPath)
 
   SIMPL_FILTER_PARAMETER(QString, CellAttributeMatrixName)
   Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
@@ -110,9 +125,6 @@ public:
   SIMPL_FILTER_PARAMETER(FloatVec3Type, ColorWeights)
   Q_PROPERTY(FloatVec3Type ColorWeights READ getColorWeights WRITE setColorWeights)
 
-  SIMPL_INSTANCE_PROPERTY(bool, FileWasRead)
-  Q_PROPERTY(bool FileWasRead READ getFileWasRead)
-
   SIMPL_FILTER_PARAMETER(bool, ChangeOrigin)
   Q_PROPERTY(bool ChangeOrigin READ getChangeOrigin WRITE setChangeOrigin)
 
@@ -125,9 +137,6 @@ public:
   SIMPL_FILTER_PARAMETER(FloatVec3Type, Spacing)
   Q_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
 
-  SIMPL_FILTER_PARAMETER(bool, UsePixelCoordinates)
-  Q_PROPERTY(bool UsePixelCoordinates READ getUsePixelCoordinates WRITE setUsePixelCoordinates)
-
   SIMPL_GET_PROPERTY(int32_t, RowCount)
   Q_PROPERTY(int32_t RowCount READ getRowCount)
 
@@ -137,8 +146,8 @@ public:
   QString getMontageInformation();
   Q_PROPERTY(QString MontageInformation READ getMontageInformation)
 
-  SIMPL_GET_PROPERTY(QStringList, FilenameList)
-  Q_PROPERTY(QStringList FilenameList READ getFilenameList)
+  SIMPL_INSTANCE_PROPERTY(bool, FileWasRead)
+  Q_PROPERTY(bool FileWasRead READ getFileWasRead)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -201,9 +210,9 @@ public:
   void preflight() override;
 
   SIMPL_PIMPL_PROPERTY_DECL(QDomElement, Root)
-  SIMPL_PIMPL_PROPERTY_DECL(ZeissTagsXmlSection::Pointer, RootTagsSection)
   SIMPL_PIMPL_PROPERTY_DECL(QString, InputFile_Cache)
-  SIMPL_PIMPL_PROPERTY_DECL(QDateTime, LastRead)
+  SIMPL_PIMPL_PROPERTY_DECL(QDateTime, TimeStamp_Cache)
+  SIMPL_PIMPL_PROPERTY_DECL(std::vector<BoundsType>, BoundsCache)
 
 signals:
   /**
@@ -242,18 +251,26 @@ protected:
   void initialize();
 
   /**
+   * @brief flushCache
+   */
+  void flushCache();
+
+  /**
    * @brief readMetaXml
    * @param device
    * @return
    */
-  void readMetaXml(QIODevice* device);
-
+  void generateCache(QDomElement& root);
 
   /**
-   * @brief parseImages
-   * @param rootTags
+   * @brief readImages
    */
-  void parseImages(QDomElement& root, const ZeissTagsXmlSection::Pointer& rootTagsSection);
+  void readImages();
+
+  /**
+   * @brief generateDataStructure
+   */
+  void generateDataStructure();
 
   /**
    * @brief getImageScaling
@@ -278,22 +295,6 @@ protected:
    */
 
   void addRootMetaData(const AttributeMatrix::Pointer& metaAm, const ZeissTagsXmlSection::Pointer& rootTagsSection, int index);
-
-  /**
-   * @brief generateDataArrays
-   * @param imageName
-   * @param pTag
-   * @param dcName
-   */
-  void importImage(DataContainer* dc, const QString& imageName, const QString& pTag, int imageIndex);
-
-  /**
-   * @brief convertToGrayScale
-   * @param imageName
-   * @param pTag
-   * @param dcName
-   */
-  void convertToGrayScale(DataContainer* dc, const QString& imageName, const QString& pTag);
 
 private:
   QScopedPointer<ImportAxioVisionV4MontagePrivate> const d_ptr;

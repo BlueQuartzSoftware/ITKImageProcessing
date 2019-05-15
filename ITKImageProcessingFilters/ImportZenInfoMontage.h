@@ -43,24 +43,6 @@
 // our PIMPL private class
 class ImportZenInfoMontagePrivate;
 
-using BoundsType = struct
-{
-  QString Filename;
-  int32_t StartX;
-  int32_t SizeX;
-  int32_t StartY;
-  int32_t SizeY;
-  int32_t StartC;
-  int32_t StartS;
-  int32_t StartB;
-  int32_t StartM;
-  int32_t Row;
-  int32_t Col;
-  float SpacingX;
-  float SpacingY;
-  IDataArray::Pointer ImageDataProxy;
-};
-
 /**
  * @brief The ImportZenInfoMontage class. See [Filter documentation](@ref importzeninfomontage) for details.
  */
@@ -70,12 +52,11 @@ class ITKImageProcessing_EXPORT ImportZenInfoMontage : public AbstractFilter
   // clang-format off
   PYB11_CREATE_BINDINGS(ImportZenInfoMontage SUPERCLASS AbstractFilter)
   PYB11_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
-  PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
+  PYB11_PROPERTY(DataArrayPath DataContainerPath READ getDataContainerPath WRITE setDataContainerPath)
   PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
   PYB11_PROPERTY(QString ImageDataArrayName READ getImageDataArrayName WRITE setImageDataArrayName)
   PYB11_PROPERTY(bool ConvertToGrayScale READ getConvertToGrayScale WRITE setConvertToGrayScale)
   PYB11_PROPERTY(FloatVec3Type ColorWeights READ getColorWeights WRITE setColorWeights)
-  PYB11_PROPERTY(bool FileWasRead READ getFileWasRead WRITE setFileWasRead)
   PYB11_PROPERTY(bool ChangeOrigin READ getChangeOrigin WRITE setChangeOrigin)
   PYB11_PROPERTY(FloatVec3Type Origin READ getOrigin WRITE setOrigin)
   PYB11_PROPERTY(bool ChangeSpacing READ getChangeSpacing WRITE setChangeSpacing)
@@ -89,6 +70,21 @@ class ITKImageProcessing_EXPORT ImportZenInfoMontage : public AbstractFilter
   // clang-format on
 
 public:
+  using BoundsType = struct
+  {
+    QString Filename;
+    SizeVec3Type Dims;
+    FloatVec3Type Origin;
+    FloatVec3Type Spacing;
+    int32_t StartC;
+    int32_t StartS;
+    int32_t StartB;
+    int32_t StartM;
+    int32_t Row;
+    int32_t Col;
+    IDataArray::Pointer ImageDataProxy;
+  };
+
   SIMPL_SHARED_POINTERS(ImportZenInfoMontage)
   SIMPL_FILTER_NEW_MACRO(ImportZenInfoMontage)
   SIMPL_TYPE_MACRO_SUPER(ImportZenInfoMontage, AbstractFilter)
@@ -98,8 +94,8 @@ public:
   SIMPL_FILTER_PARAMETER(QString, InputFile)
   Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, DataContainerName)
-  Q_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, DataContainerPath)
+  Q_PROPERTY(DataArrayPath DataContainerPath READ getDataContainerPath WRITE setDataContainerPath)
 
   SIMPL_FILTER_PARAMETER(QString, CellAttributeMatrixName)
   Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
@@ -260,20 +256,6 @@ protected:
    * @param rootTags
    */
   void readImages();
-
-  /**
-   * @brief importImage
-   * @param dc
-   * @param imageFileName
-   */
-  AbstractFilter::Pointer createImageImportFiler(const QString& imageFileName, const DataArrayPath& daPath);
-
-  /**
-   * @brief ImportZenInfoMontage::createColorToGrayScaleFilter
-   * @param daPath
-   * @return
-   */
-  AbstractFilter::Pointer createColorToGrayScaleFilter(const DataArrayPath& daPath);
 
   /**
    * @brief generateDataStructure

@@ -40,6 +40,18 @@
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
 
+namespace
+{
+
+const QString k_AttributeArrayNames("AttributeArrayNames");
+const QString k_DataContaineNameDefaultName("Mosaic");
+const QString k_TileAttributeMatrixDefaultName("Tile Data");
+const QString k_TileDataArrayDefaultName("Image Data");
+const QString k_GrayScaleTempArrayName("gray_scale_temp");
+const QString k_AxioVisionMetaData("RoboMet MetaData");
+
+} // namespace
+
 /* ############## Start Private Implementation ############################### */
 // -----------------------------------------------------------------------------
 //
@@ -68,15 +80,18 @@ ITKImportMontagePrivate::ITKImportMontagePrivate(ITKImportMontage* ptr)
 //
 // -----------------------------------------------------------------------------
 ITKImportMontage::ITKImportMontage()
-: m_DataContainerPrefix(SIMPL::Defaults::ImageDataContainerName + "_")
-, m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName)
-, m_AttributeArrayName("ImageTile")
+: m_DataContainerPrefix(::k_DataContaineNameDefaultName)
+, m_CellAttributeMatrixName(::k_TileAttributeMatrixDefaultName)
+, m_AttributeArrayName(::k_TileDataArrayDefaultName)
 , m_ChangeOrigin(false)
 , m_UsePixelCoordinates(false)
 , m_ChangeSpacing(false)
 , m_LengthUnit(static_cast<int32_t>(IGeometry::LengthUnit::Unspecified))
 , d_ptr(new ITKImportMontagePrivate(this))
 {
+  // m_ColorWeights = FloatVec3Type(0.2125f, 0.7154f, 0.0721f);
+  m_Origin = FloatVec3Type(0.0f, 0.0f, 0.0f);
+  m_Spacing = FloatVec3Type(1.0f, 1.0f, 1.0f);
 }
 
 // -----------------------------------------------------------------------------
@@ -148,6 +163,10 @@ void ITKImportMontage::dataCheck()
 void ITKImportMontage::readImageFile(const QString &filePath, QPointF coords, int row, int col)
 {
   QFileInfo fi(filePath);
+  if(!fi.exists())
+  {
+    return;
+  }
   QString rowColIdString = tr("r%1c%2").arg(row).arg(col);
 
   QString dcName = tr("%1_%2").arg(getDataContainerPrefix()).arg(rowColIdString);
@@ -196,10 +215,8 @@ void ITKImportMontage::readImageFile(const QString &filePath, QPointF coords, in
 void ITKImportMontage::readImagesFromCache()
 {
   MontageCacheVector montageCacheVector = getMontageCacheVector();
-  for (int i = 0; i < montageCacheVector.size(); i++)
+  for(const auto& montageCache : montageCacheVector)
   {
-    ITKMontageCache montageCache = montageCacheVector[i];
-
     QString rowColIdString = tr("r%1c%2").arg(montageCache.row).arg(montageCache.col);
     QString dcName = tr("%1_%2").arg(getDataContainerPrefix()).arg(rowColIdString);
 
@@ -219,7 +236,7 @@ void ITKImportMontage::readImagesFromCache()
 
     DataContainerArray::Pointer filterDca = reader->getDataContainerArray();
     DataContainerArray::Container dcs = filterDca->getDataContainers();
-    for (DataContainer::Pointer dc : dcs)
+    for(const DataContainer::Pointer& dc : dcs)
     {
       getDataContainerArray()->addOrReplaceDataContainer(dc);
 
@@ -254,9 +271,8 @@ void ITKImportMontage::adjustOriginAndSpacing()
   }
 
   MontageCacheVector montageCacheVector = getMontageCacheVector();
-  for (int i = 0; i < montageCacheVector.size(); i++)
+  for(const auto& montageCache : montageCacheVector)
   {
-    ITKMontageCache montageCache = montageCacheVector[i];
     QString rowColIdString = tr("r%1c%2").arg(montageCache.row).arg(montageCache.col);
     QString dcName = tr("%1_%2").arg(getDataContainerPrefix()).arg(rowColIdString);
 
