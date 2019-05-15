@@ -99,12 +99,6 @@ public:
   SIMPL_FILTER_PARAMETER(QString, AttributeMatrixName)
   Q_PROPERTY(QString AttributeMatrixName READ getAttributeMatrixName WRITE setAttributeMatrixName)
 
-  SIMPL_FILTER_PARAMETER(QString, XAttributeArrayName)
-  Q_PROPERTY(QString XAttributeArrayName READ getXAttributeArrayName WRITE setXAttributeArrayName)
-
-  SIMPL_FILTER_PARAMETER(QString, YAttributeArrayName)
-  Q_PROPERTY(QString YAttributeArrayName READ getYAttributeArrayName WRITE setYAttributeArrayName)
-
   SIMPL_FILTER_PARAMETER(QString, DataAttributeArrayName)
   Q_PROPERTY(QString DataAttributeArrayName READ getDataAttributeArrayName WRITE setDataAttributeArrayName)
 

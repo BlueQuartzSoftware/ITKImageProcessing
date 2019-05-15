@@ -49,6 +49,9 @@
 #include "itkAmoebaOptimizer.h"
 #include <itkFFTConvolutionImageFilter.h>
 
+using Grayscale_T = uint8_t;
+using PixelValue_T = double;
+
 // This class was used as a testing class to observe the behavior of the Amoeba optimizer
 // It can be removed if not working on understanding how the Amoeba optimizer works
 class MultiParamCostFunction : public itk::SingleValuedCostFunction
@@ -90,62 +93,60 @@ public:
 class FFTConvolutionCostFunction : public itk::SingleValuedCostFunction
 {
   static const uint8_t IMAGE_DIMENSIONS = 2;
-  using PixelValue_T = double;
-  using Pixel = itk::RGBPixel<uint8_t>;
   using Cell_T = size_t;
   using PixelCoord = itk::Index<IMAGE_DIMENSIONS>;
-  using InputImage = itk::Image<Pixel, IMAGE_DIMENSIONS>;
-  using OutputImage = itk::Image<Pixel, IMAGE_DIMENSIONS>;
+  using InputImage = itk::Image<PixelValue_T, IMAGE_DIMENSIONS>;
+  using OutputImage = itk::Image<PixelValue_T, IMAGE_DIMENSIONS>;
   using GridKey = std::pair<Cell_T, Cell_T>;
   using GridPair = std::pair<GridKey, GridKey>;
   using RegionPair = std::pair<InputImage::RegionType, InputImage::RegionType>;
   using OverlapPair = std::pair<GridPair, RegionPair>;
   using ImageGrid = std::map<std::pair<Cell_T, Cell_T>, InputImage::Pointer>;
-  using FilterType =  itk::FFTConvolutionImageFilter<InputImage, InputImage, OutputImage>;
+  using Filter = itk::FFTConvolutionImageFilter<InputImage, InputImage, OutputImage>;
 
   int m_degree = 2;
   std::vector<std::pair<size_t, size_t>> m_IJ;
   std::vector<OverlapPair> m_overlaps;
   ImageGrid m_imageGrid;
-  FilterType::Pointer m_filter;
+  Filter::Pointer m_filter = Filter::New();
 
-  // NOTE The m_overlaps is a vector of pairs, with the first index being the
+  // The m_overlaps is a vector of pairs, with the first index being the
   // grid location of an overlap region (i.e. 'Row 0, Column: 1; Row: 1, Column: 1')
   // and the second index being the ITK RegionTypes that define the overlap regions
+
+  // If using Dave's algorithm, the m_IJ array just uses:
+  // m_IJ = [ u v u^2 v^2 uv u^2*v u*v^2 ]
+  // i.e. It doesn't need to be programmatically generated using the degree of
+  // a polynomial here, it can just be hard coded
+  // Here, u and v are just x and y of the image pre-warp (or post-warp, depending on convention used)
+  // In contrast, a generic polynomial would use an array like:
+  // b = sum(from i = 0, j = 0) to degree) of a_ij * u^i * v^j
+  // m_IJ = [ 1 u v uv u^2 v^2 u^2*v u*v^2 ... ]
 
 public:
   itkNewMacro(FFTConvolutionCostFunction)
 
-  void Initialize(const QStringList& chosenDataContainers, const QString& rowChar, const QString& colChar, int degree, float overlapPercentage, DataContainerArrayShPtr dca, const QString& amName, const QString& dataAAName, const QString& xAAName, const QString& yAAName)
+  void Initialize(const QStringList& chosenDataContainers, const QString& rowChar, const QString& colChar, int degree, float overlapPercentage, DataContainerArrayShPtr dca, const QString& amName, const QString& dataAAName)
   {
-//    m_filter = FilterType::New();
-    // If using Dave's algorithm, the m_IJ array just uses:
-    //; m_IJ[0] = u
-    //; m_IJ[1] = v
-    //; m_IJ[2] = u^2
-    //; m_IJ[3] = v^2
-    //; m_IJ[4] = uv
-    //; m_IJ[5] = u^2*v
-    //; m_IJ[6] = u*v^2
-    // i.e. It doesn't need to be programmatically generated using the degree of
-    // a polynomial here, it can just be hard coded
-    // Here, u and v are just x and y of the image pre-warp (or post-warp, depending on convention used)
     m_degree = degree;
-    for(int listOneIndex = 0; listOneIndex < m_degree; listOneIndex++)
+
+    // Populate the m_IJ based on the degree selected
+    for(int listOneIndex = 0; listOneIndex <= m_degree; listOneIndex++)
     {
-      for(int listTwoIndex = 0; listTwoIndex < m_degree; listTwoIndex++)
+      for(int listTwoIndex = 0; listTwoIndex <= m_degree; listTwoIndex++)
       {
         m_IJ.push_back(std::make_pair(listTwoIndex, listOneIndex));
       }
     }
 
-    // Cache loop variables
+    // Cache loop variables - better to not do this if the loops are parallelized though
     GridKey imageKey;
     SizeVec3Type dims;
-    size_t width, height, overlapDim;
+    size_t width, height, comps, overlapDim;
     int cLength;
     QString name;
     PixelCoord idx;
+    size_t pxlIdx;
 
     InputImage::Pointer eachImage;
     PixelCoord imageOrigin;
@@ -156,7 +157,7 @@ public:
     InputImage::SizeType kernelSize;
 
     AttributeMatrixShPtr am;
-    DataArray<PixelValue_T>::Pointer da;
+    DataArray<Grayscale_T>::Pointer da;
     m_imageGrid.clear();
 
     // Populate and assign eachImage to m_imageGrid
@@ -167,7 +168,8 @@ public:
         continue;
       }
       am = eachDC->getAttributeMatrix(amName);
-      da = am->getAttributeArrayAs<DataArray<PixelValue_T>>(dataAAName);
+      da = am->getAttributeArrayAs<DataArray<Grayscale_T>>(dataAAName);
+      comps = da->getNumberOfComponents();
       dims = eachDC->getGeometryAs<ImageGeom>()->getDimensions();
       width = dims.getX();
       height = dims.getY();
@@ -177,25 +179,27 @@ public:
       eachImage = InputImage::New();
       eachImage->SetRegions(InputImage::RegionType(imageOrigin, imageSize));
       eachImage->Allocate();
-      for(size_t pxlIdx = 0; pxlIdx < (width * height); ++pxlIdx) // TODO Parallelize this
-      {
-        size_t sz = da->getComponentDimensions()[0];
-        Pixel valueArray;
-        for (size_t eachCompIdx = 0; eachCompIdx < sz; ++eachCompIdx)
-        {
-          // TODO Get the index for the value knowing the component (RGB) and pixel index
-          size_t idx = 0;
-          valueArray.SetRed(da->getValue(idx));
-        }
 
-        idx[0] = am->getAttributeArrayAs<Int64ArrayType>(xAAName)->getValue(pxlIdx);
-        idx[1] = am->getAttributeArrayAs<Int64ArrayType>(yAAName)->getValue(pxlIdx);
-        eachImage->SetPixel(idx, valueArray);
+      // A colored image could be used in a Fourier Transform as discussed in this paper:
+      // https://ieeexplore.ieee.org/document/723451
+      // NOTE Could this be parallelized?
+      for (size_t pxlHeightIdx = 0; pxlHeightIdx < height; ++pxlHeightIdx)
+      {
+        for (size_t pxlWidthIdx = 0; pxlWidthIdx < width; ++pxlWidthIdx)
+        {
+          // Get the pixel index from the current pxlWidthIdx and pxlHeightIdx
+          pxlIdx = (pxlWidthIdx + pxlHeightIdx * width) * comps;
+          idx[0] = pxlWidthIdx;
+          idx[1] = pxlHeightIdx;
+          eachImage->SetPixel(idx, da->getValue(pxlIdx));
+        }
       }
 
       name = eachDC->getName();
+      // NOTE For row/column string indicators with a length greater than one,
+      // it would probably be more robust to 'lastIndexOf'
       cLength = name.size() - name.indexOf(colChar) - 1;
-      imageKey = std::make_pair(static_cast<Cell_T>(name.midRef(name.indexOf(rowChar) + 1, name.size() - cLength - 2).toULong()), static_cast<Cell_T>(name.rightRef(cLength).toULong()));
+      imageKey = std::make_pair(name.midRef(name.indexOf(rowChar) + 1, name.size() - cLength - 2).toULong(), name.rightRef(cLength).toULong());
       m_imageGrid.insert_or_assign(imageKey, eachImage);
     }
 
@@ -257,9 +261,10 @@ public:
     const double tolerance = 0.05;
     ImageGrid distortedGrid;
 
-    // Cache a bunch of stuff
-    typename InputImage::RegionType bufferedRegion;
-    typename InputImage::SizeType dims;
+    // Cache loop variables - better to not do this if the loops are parallelized though
+    GridKey imageKey;
+    InputImage::RegionType bufferedRegion;
+    InputImage::SizeType dims;
     size_t width;
     size_t height;
     double lastXIndex;
@@ -274,7 +279,7 @@ public:
 
     std::pair<int, int> eachIJ{};
     PixelCoord eachPixel;
-    typename InputImage::Pointer distortedImage;
+    InputImage::Pointer distortedImage;
 
     // Apply the Transform to each image in the image grid
     for(const auto& eachImage : m_imageGrid) // TODO Parallelize this
@@ -300,7 +305,7 @@ public:
         PixelCoord pixel = it.GetIndex();
         x = x_trans;
         y = y_trans;
-        // NOTE Dave's method uses an m_IJ matrix described above
+        // Dave's method uses an m_IJ matrix described above
         // and so a different method of grabbing the appropriate index from the m_IJ
         // will be needed if using that static array
         for(size_t idx = 0; idx < parameters.size(); ++idx) // TODO Parallelize this
@@ -316,7 +321,7 @@ public:
 
           term = u_v * parameters[idx];
           // This recorrects the centering translation to the appropriate x or y value
-          idx < (m_IJ.size() / 2) ? x += term : y += term;
+          idx < m_IJ.size() - 1 ? x += term : y += term;
         }
 
         // This check effectively "clips" data and the cast and round
@@ -338,19 +343,21 @@ public:
     std::atomic<MeasureType> residual{0.0};
     for(const auto& eachOverlap : m_overlaps) // TODO Parallelize this
     {
-      typename InputImage::Pointer image = distortedGrid.at(eachOverlap.first.first);
+      // Set the filter's image to the overlap region of the image
+      InputImage::Pointer image = distortedGrid.at(eachOverlap.first.first);
       image->SetRequestedRegion(eachOverlap.second.first);
-//      m_filter->SetInput(image);
+      m_filter->SetInput(image);
 
-      typename InputImage::Pointer kernel = distortedGrid.at(eachOverlap.first.second);
+      // Set the filter's kernel to the overlap region of the kernel
+      InputImage::Pointer kernel = distortedGrid.at(eachOverlap.first.second);
       kernel->SetRequestedRegion(eachOverlap.second.second);
-//      m_filter->SetKernelImage(kernel);
+      m_filter->SetKernelImage(kernel);
 
       // Run the filter
-//      m_filter->Update();
-//      typename OutputImage::Pointer fftConvolve = m_filter->GetOutput();
+      m_filter->Update();
+      OutputImage::Pointer fftConvolve = m_filter->GetOutput();
       // Increment by the maximum value of the output of the fftConvolve
-//      residual = residual + *std::max_element(fftConvolve->GetBufferPointer(), fftConvolve->GetBufferPointer() + fftConvolve->GetPixelContainer()->Size());
+      residual = residual + *std::max_element(fftConvolve->GetBufferPointer(), fftConvolve->GetBufferPointer() + fftConvolve->GetPixelContainer()->Size());
     }
     // The value to minimize is the square of the sum of the maximum value of the fft convolution
     return sqrt(residual);
@@ -432,12 +439,6 @@ void Blend::setupFilterParameters()
   StringFilterParameter::Pointer amName{StringFilterParameter::New("Attribute Matrix Name", "AttributeMatrixName", {}, FilterParameter::Category::Parameter,
                                                                    std::bind(&Blend::setAttributeMatrixName, this, std::placeholders::_1), std::bind(&Blend::getAttributeMatrixName, this), {})};
 
-  StringFilterParameter::Pointer xAAName{StringFilterParameter::New("Attribute Array Name", "AttributeArrayName", {}, FilterParameter::Category::Parameter,
-                                                                    std::bind(&Blend::setXAttributeArrayName, this, std::placeholders::_1), std::bind(&Blend::getXAttributeArrayName, this), {})};
-
-  StringFilterParameter::Pointer yAAName{StringFilterParameter::New("Attribute Array Name", "AttributeArrayName", {}, FilterParameter::Category::Parameter,
-                                                                    std::bind(&Blend::setYAttributeArrayName, this, std::placeholders::_1), std::bind(&Blend::getYAttributeArrayName, this), {})};
-
   StringFilterParameter::Pointer dataAAName{StringFilterParameter::New("Attribute Array Name", "AttributeArrayName", {}, FilterParameter::Category::Parameter,
                                                                        std::bind(&Blend::setDataAttributeArrayName, this, std::placeholders::_1), std::bind(&Blend::getDataAttributeArrayName, this),
                                                                        {})};
@@ -455,8 +456,6 @@ void Blend::setupFilterParameters()
   parameters.push_back(degree);
   parameters.push_back(overlapPercentage);
   parameters.push_back(amName);
-  parameters.push_back(xAAName);
-  parameters.push_back(yAAName);
   parameters.push_back(dataAAName);
 
   setFilterParameters(parameters);
@@ -505,12 +504,32 @@ void Blend::dataCheck()
     {
       continue;
     }
-    else if (eachDC->getAttributeMatrix(m_AttributeMatrixName)->getAttributeArray(m_DataAttributeArrayName)->getTypeAsString() != typeName)
+
+    DataArray<Grayscale_T>::Pointer da = eachDC->getAttributeMatrix(m_AttributeMatrixName)->getAttributeArrayAs<DataArray<Grayscale_T>>(m_DataAttributeArrayName);
+    if (da->getComponentDimensions().size() > 1)
     {
-      setErrorCondition(-66700, "Not all data attribute arrays are the same type");
+      setErrorCondition(-66700, "Data array has unexpected dimensions");
     }
-    // TODO If any data array of the data to be blended has a component dimension > 1
-    // There needs to be an error thrown
+    else if (da->getTypeAsString() != typeName)
+    {
+      setErrorCondition(-66800, "Not all data attribute arrays are the same type");
+    }
+
+    // If any component of each pixel is not equal to all the others then the image is not grayscaled
+    // A warning should be thrown because the filter will then effectively only blend the red component
+    size_t numComps = da->getNumberOfComponents();
+    for (size_t pixelIdx = 0; pixelIdx < da->getNumberOfTuples(); ++pixelIdx)
+    {
+      Grayscale_T testPixel = da->getValue(pixelIdx);
+      for (size_t compIdx = 1; compIdx < numComps; ++compIdx)
+      {
+        Grayscale_T actualPixel = da->getValue(pixelIdx + compIdx);
+        if (actualPixel != testPixel)
+        {
+          setWarningCondition(-66900, "Not all components of the pixels are the same value. Images should be grayscaled before being filtered.");
+        }
+      }
+    }
   }
 }
 
@@ -583,8 +602,7 @@ void Blend::execute()
       // The line below is used for testing the MultiParamCostFunction
 //    std::vector<double>{1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0}
         m_ChosenDataContainers, m_RowCharacter, m_ColumnCharacter, m_Degree, m_OverlapPercentage,
-        getDataContainerArray(),
-        m_AttributeMatrixName, m_DataAttributeArrayName, m_XAttributeArrayName, m_YAttributeArrayName
+        getDataContainerArray(), m_AttributeMatrixName, m_DataAttributeArrayName
   );
   m_optimizer->SetCostFunction(&implementation);
   m_optimizer->StartOptimization();
@@ -593,12 +611,13 @@ void Blend::execute()
   // to be obtained, but until then, we have to do some string parsing from the
   // optimizer's stop description
   QString stopReason = QString::fromStdString(m_optimizer->GetStopConditionDescription());
-  // Can get rid of these qDebug lines after debugging is done for filter
   std::list<double> transform;
   for(const auto& eachCoeff : m_optimizer->GetCurrentPosition())
   {
     transform.push_back(eachCoeff);
   }
+
+  // Can get rid of these qDebug lines after debugging is done for filter
   qDebug() << "Initial Position: [ " << m_initialGuess << " ]";
   qDebug() << "Final Position: [ " << transform << " ]";
   qDebug() << "Number of Iterations: " << GetIterationsFromStopDescription(stopReason);
