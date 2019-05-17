@@ -175,7 +175,7 @@ void ITKImportImageStack::dataCheck()
   if(!fi.exists())
   {
     QString ss = QObject::tr("The input directory does not exist: %1").arg(m_InputFileListInfo.InputPath);
-    setErrorCondition(-388, ss);
+    setErrorCondition(-64501, ss);
   }
 
   DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName(), DataContainerID);

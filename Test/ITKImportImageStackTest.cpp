@@ -110,7 +110,7 @@ AbstractFilter::Pointer GetFilterByName(const QString& filterName)
     }
 
     reader->execute();
-    DREAM3D_REQUIRED(reader->getErrorCode(), ==, -64500);
+    DREAM3D_REQUIRED(reader->getErrorCode(), ==, -64501);
     DREAM3D_REQUIRED(reader->getWarningCode(), >=, 0);
     return EXIT_SUCCESS;
   }

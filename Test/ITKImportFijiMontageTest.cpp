@@ -33,9 +33,12 @@
 
 #include "ITKTestBase.h"
 
+#include "SIMPLib/CoreFilters/DataContainerWriter.h"
 #include "SIMPLib/FilterParameters/FileListInfoFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/Filtering/FilterPipeline.h"
+
+#include "ITKImageProcessing/ITKImageProcessingFilters/ITKImportFijiMontage.h"
 
 class ITKImportFijiMontageTest : public ITKTestBase
 {
@@ -51,7 +54,7 @@ class ITKImportFijiMontageTest : public ITKTestBase
 public:
   ITKImportFijiMontageTest() = default;
 
-  virtual ~ITKImportFijiMontageTest() = default;
+  ~ITKImportFijiMontageTest() override = default;
 
   ITKImportFijiMontageTest(const ITKImportFijiMontageTest&) = delete;            // Copy Constructor Not Implemented
   ITKImportFijiMontageTest(ITKImportFijiMontageTest&&) = delete;                 // Move Constructor
@@ -72,16 +75,12 @@ public:
     DREAM3D_REQUIRE_VALID_POINTER(filterFactory.get());
     AbstractFilter::Pointer import = filterFactory->create();
 
-    var.setValue(DataArrayPath(m_DataContainerName, "", ""));
+    var.setValue(m_DataContainerName);
     propWasSet = import->setProperty("DataContainerPrefix", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
 
     var.setValue(m_CellAMName);
     propWasSet = import->setProperty("CellAttributeMatrixName", var);
-    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
-
-    var.setValue(m_MetaDataAMName);
-    propWasSet = import->setProperty("MetaDataAttributeMatrixName", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
 
     m_Origin[0] = 0.0f;
@@ -109,22 +108,18 @@ public:
     fli.FileSuffix = "";
     fli.FileExtension = "tif";
 
-    var.setValue(fli);
-    propWasSet = import->setProperty("InputFileListInfo", var);
-    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
-
     QString registrationFile = QString("%1/TileConfiguration.registered.txt").arg(UnitTest::ITKImageProcessingDataDir);
     var.setValue(registrationFile);
-    propWasSet = import->setProperty("RegistrationFile", var);
+    propWasSet = import->setProperty("FijiConfigFilePath", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
 
-    var.setValue(m_RegistrationCoordinatesArrayName);
-    propWasSet = import->setProperty("RegistrationCoordinatesArrayName", var);
-    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+    //    var.setValue(m_RegistrationCoordinatesArrayName);
+    //    propWasSet = import->setProperty("RegistrationCoordinatesArrayName", var);
+    //    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
 
-    var.setValue(m_ArrayNamesArrayName);
-    propWasSet = import->setProperty("AttributeArrayNamesArrayName", var);
-    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+    //    var.setValue(m_ArrayNamesArrayName);
+    //    propWasSet = import->setProperty("AttributeArrayNamesArrayName", var);
+    //    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
 
     // Create a DataContainerWriter Filter instance
     filtName = "DataContainerWriter";
