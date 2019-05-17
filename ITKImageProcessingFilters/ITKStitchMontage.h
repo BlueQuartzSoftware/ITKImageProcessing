@@ -63,9 +63,14 @@ class ITKImageProcessing_EXPORT ITKStitchMontage : public AbstractFilter
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKStitchMontage SUPERCLASS AbstractFilter)
   PYB11_PROPERTY(IntVec3Type MontageSize READ getMontageSize WRITE setMontageSize)
-  PYB11_PROPERTY(QStringList, ImageDataContainers READ getImageDataContainers WRITE setImageDataContainers)
+  PYB11_PROPERTY(QStringList ImageDataContainers READ getImageDataContainers WRITE setImageDataContainers)
   PYB11_PROPERTY(QString CommonAttributeMatrixName READ getCommonAttributeMatrixName WRITE setCommonAttributeMatrixName)
+  PYB11_PROPERTY(bool StitchMontage READ getStitchMontage WRITE setStitchMontage)
   PYB11_PROPERTY(QString CommonDataArrayName READ getCommonDataArrayName WRITE setCommonDataArrayName)
+  PYB11_PROPERTY(QString MontageDataContainerName READ getMontageDataContainerName WRITE setMontageDataContainerName)
+  PYB11_PROPERTY(QString MontageAttributeMatrixName READ getMontageAttributeMatrixName WRITE setMontageAttributeMatrixName)
+  PYB11_PROPERTY(QString MontageDataArrayName READ getMontageDataArrayName WRITE setMontageDataArrayName)
+
 public:
   SIMPL_SHARED_POINTERS(ITKStitchMontage)
   SIMPL_FILTER_NEW_MACRO(ITKStitchMontage)
@@ -97,8 +102,6 @@ public:
   SIMPL_FILTER_PARAMETER(QString, MontageDataArrayName)
   Q_PROPERTY(QString MontageDataArrayName READ getMontageDataArrayName WRITE setMontageDataArrayName)
 
-  SIMPL_FILTER_PARAMETER(int32_t, LengthUnit)
-  Q_PROPERTY(int32_t LengthUnit READ getLengthUnit WRITE setLengthUnit)
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */

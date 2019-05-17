@@ -46,16 +46,16 @@
 #include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
- * @class CalculateBackground CalculateBackground.h ZeissImport/CalculateBackgrounds/CalculateBackground.h
+ * @class IlluminationCorrection IlluminationCorrection.h ZeissImport/IlluminationCorrections/IlluminationCorrection.h
  * @brief
  * @author
  * @date
  * @version 1.0
  */
-class ITKImageProcessing_EXPORT CalculateBackground : public AbstractFilter
+class ITKImageProcessing_EXPORT IlluminationCorrection : public AbstractFilter
 {
   Q_OBJECT
-  PYB11_CREATE_BINDINGS(CalculateBackground SUPERCLASS AbstractFilter)
+  PYB11_CREATE_BINDINGS(IlluminationCorrection SUPERCLASS AbstractFilter)
   PYB11_PROPERTY(QStringList DataContainers READ getDataContainers WRITE setDataContainers)
   PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
   PYB11_PROPERTY(QString ImageDataArrayName READ getImageDataArrayName WRITE setImageDataArrayName)
@@ -68,20 +68,18 @@ class ITKImageProcessing_EXPORT CalculateBackground : public AbstractFilter
   PYB11_PROPERTY(DataArrayPath BackgroundCellAttributeMatrixPath READ getBackgroundCellAttributeMatrixPath WRITE setBackgroundCellAttributeMatrixPath)
   PYB11_PROPERTY(DataArrayPath BackgroundImageArrayPath READ getBackgroundImageArrayPath WRITE setBackgroundImageArrayPath)
 
-  PYB11_PROPERTY(uint32_t lowThresh READ getlowThresh WRITE setlowThresh)
-  PYB11_PROPERTY(uint32_t highThresh READ gethighThresh WRITE sethighThresh)
-  PYB11_PROPERTY(bool SubtractBackground READ getSubtractBackground WRITE setSubtractBackground)
-  PYB11_PROPERTY(bool DivideBackground READ getDivideBackground WRITE setDivideBackground)
-
+  PYB11_PROPERTY(uint32_t LowThreshold READ getLowThreshold WRITE setLowThreshold)
+  PYB11_PROPERTY(uint32_t HighThreshold READ getHighThreshold WRITE setHighThreshold)
+  PYB11_PROPERTY(bool ApplyCorrection READ getApplyCorrection WRITE setApplyCorrection)
   PYB11_PROPERTY(bool ApplyMedianFilter READ getApplyMedianFilter WRITE setApplyMedianFilter)
-  PYB11_PROPERTY(FloatVec3Type Radius READ getRadius WRITE setRadius)
+  PYB11_PROPERTY(FloatVec3Type MedianRadius READ getMedianRadius WRITE setMedianRadius)
 
 public:
-  SIMPL_SHARED_POINTERS(CalculateBackground)
-  SIMPL_FILTER_NEW_MACRO(CalculateBackground)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(CalculateBackground, AbstractFilter)
+  SIMPL_SHARED_POINTERS(IlluminationCorrection)
+  SIMPL_FILTER_NEW_MACRO(IlluminationCorrection)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(IlluminationCorrection, AbstractFilter)
 
-  ~CalculateBackground() override;
+  ~IlluminationCorrection() override;
 
   SIMPL_INSTANCE_STRING_PROPERTY(DataContainerName)
 
@@ -115,23 +113,20 @@ public:
   SIMPL_FILTER_PARAMETER(DataArrayPath, BackgroundImageArrayPath)
   Q_PROPERTY(DataArrayPath BackgroundImageArrayPath READ getBackgroundImageArrayPath WRITE setBackgroundImageArrayPath)
 
-  SIMPL_FILTER_PARAMETER(uint32_t, lowThresh)
-  Q_PROPERTY(uint32_t lowThresh READ getlowThresh WRITE setlowThresh)
+  SIMPL_FILTER_PARAMETER(uint32_t, LowThreshold)
+  Q_PROPERTY(uint32_t LowThreshold READ getLowThreshold WRITE setLowThreshold)
 
-  SIMPL_FILTER_PARAMETER(uint32_t, highThresh)
-  Q_PROPERTY(uint32_t highThresh READ gethighThresh WRITE sethighThresh)
+  SIMPL_FILTER_PARAMETER(uint32_t, HighThreshold)
+  Q_PROPERTY(uint32_t HighThreshold READ getHighThreshold WRITE setHighThreshold)
 
-  SIMPL_FILTER_PARAMETER(bool, SubtractBackground)
-  Q_PROPERTY(int SubtractBackground READ getSubtractBackground WRITE setSubtractBackground)
-
-  SIMPL_FILTER_PARAMETER(bool, DivideBackground)
-  Q_PROPERTY(int DivideBackground READ getDivideBackground WRITE setDivideBackground)
+  SIMPL_FILTER_PARAMETER(bool, ApplyCorrection)
+  Q_PROPERTY(int ApplyCorrection READ getApplyCorrection WRITE setApplyCorrection)
 
   SIMPL_FILTER_PARAMETER(bool, ApplyMedianFilter)
   Q_PROPERTY(bool ApplyMedianFilter READ getApplyMedianFilter WRITE setApplyMedianFilter)
 
-  SIMPL_FILTER_PARAMETER(FloatVec3Type, Radius)
-  Q_PROPERTY(FloatVec3Type Radius READ getRadius WRITE setRadius)
+  SIMPL_FILTER_PARAMETER(FloatVec3Type, MedianRadius)
+  Q_PROPERTY(FloatVec3Type MedianRadius READ getMedianRadius WRITE setMedianRadius)
 
   /**
    * @brief notifyFeatureCompleted
@@ -237,7 +232,7 @@ protected:
     RectGridGeom
   };
 
-  CalculateBackground();
+  IlluminationCorrection();
 
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
@@ -327,9 +322,9 @@ private:
   QMutex m_NotifyMessage;
 
 public:
-  CalculateBackground(const CalculateBackground&) = delete;            // Copy Constructor Not Implemented
-  CalculateBackground(CalculateBackground&&) = delete;                 // Move Constructor Not Implemented
-  CalculateBackground& operator=(const CalculateBackground&) = delete; // Copy Assignment Not Implemented
-  CalculateBackground& operator=(CalculateBackground&&) = delete;      // Move Assignment Not Implemented
+  IlluminationCorrection(const IlluminationCorrection&) = delete;            // Copy Constructor Not Implemented
+  IlluminationCorrection(IlluminationCorrection&&) = delete;                 // Move Constructor Not Implemented
+  IlluminationCorrection& operator=(const IlluminationCorrection&) = delete; // Copy Assignment Not Implemented
+  IlluminationCorrection& operator=(IlluminationCorrection&&) = delete;      // Move Assignment Not Implemented
 };
 

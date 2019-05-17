@@ -547,5 +547,5 @@ const QString ITKImageWriter::getSubGroupName() const
 // -----------------------------------------------------------------------------
 const QString ITKImageWriter::getHumanLabel() const
 {
-  return "ITK::Image Writer";
+  return "ITK::Image Export";
 }

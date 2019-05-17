@@ -14,39 +14,78 @@ class ITKImportRoboMetMontagePrivate;
 /**
  * @brief The ITKImportRoboMetMontage class. See [Filter documentation](@ref ITKImportRoboMetMontage) for details.
  */
-class ITKImageProcessing_EXPORT ITKImportRoboMetMontage : public ITKImportMontage
+class ITKImageProcessing_EXPORT ITKImportRoboMetMontage : public AbstractFilter
 {
   Q_OBJECT
   
   PYB11_CREATE_BINDINGS(ITKImportRoboMetMontage SUPERCLASS AbstractFilter)
+  PYB11_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
+  PYB11_PROPERTY(DataArrayPath DataContainerPath READ getDataContainerPath WRITE setDataContainerPath)
+  PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
+  PYB11_PROPERTY(QString ImageDataArrayName READ getImageDataArrayName WRITE setImageDataArrayName)
+  PYB11_PROPERTY(bool ConvertToGrayScale READ getConvertToGrayScale WRITE setConvertToGrayScale)
+  PYB11_PROPERTY(FloatVec3Type ColorWeights READ getColorWeights WRITE setColorWeights)
+  PYB11_PROPERTY(bool ChangeOrigin READ getChangeOrigin WRITE setChangeOrigin)
+  PYB11_PROPERTY(FloatVec3Type Origin READ getOrigin WRITE setOrigin)
+  PYB11_PROPERTY(bool ChangeSpacing READ getChangeSpacing WRITE setChangeSpacing)
+  PYB11_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
+
   PYB11_PROPERTY(int SliceNumber READ getSliceNumber WRITE setSliceNumber)
-  PYB11_PROPERTY(QString MetaDataAttributeMatrixName READ getMetaDataAttributeMatrixName WRITE setMetaDataAttributeMatrixName)
-  PYB11_PROPERTY(QString RegistrationFile READ getRegistrationFile WRITE setRegistrationFile)
   PYB11_PROPERTY(QString ImageFilePrefix READ getImageFilePrefix WRITE setImageFilePrefix)
   PYB11_PROPERTY(QString ImageFileExtension READ getImageFileExtension WRITE setImageFileExtension)
-   
+
   Q_DECLARE_PRIVATE(ITKImportRoboMetMontage)
 public:
+  using BoundsType = struct
+  {
+    QString Filename;
+    SizeVec3Type Dims;
+    FloatVec3Type Origin;
+    FloatVec3Type Spacing;
+    int32_t Row;
+    int32_t Col;
+    IDataArray::Pointer ImageDataProxy;
+    //   AttributeMatrix::Pointer MetaData;
+  };
+
   SIMPL_SHARED_POINTERS(ITKImportRoboMetMontage)
   SIMPL_FILTER_NEW_MACRO(ITKImportRoboMetMontage)
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKImportRoboMetMontage, AbstractFilter)
 
   ~ITKImportRoboMetMontage() override;
-  /**
-   * @brief These get filled out if there are errors. Negative values are error codes
-   */
-  SIMPL_INSTANCE_PROPERTY(int, ErrorCode)
 
-  SIMPL_INSTANCE_STRING_PROPERTY(ErrorMessage)
+  SIMPL_FILTER_PARAMETER(QString, InputFile)
+  Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
+
+  SIMPL_FILTER_PARAMETER(DataArrayPath, DataContainerPath)
+  Q_PROPERTY(DataArrayPath DataContainerPath READ getDataContainerPath WRITE setDataContainerPath)
+
+  SIMPL_FILTER_PARAMETER(QString, CellAttributeMatrixName)
+  Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
+
+  SIMPL_FILTER_PARAMETER(QString, ImageDataArrayName)
+  Q_PROPERTY(QString ImageDataArrayName READ getImageDataArrayName WRITE setImageDataArrayName)
+
+  SIMPL_FILTER_PARAMETER(bool, ConvertToGrayScale)
+  Q_PROPERTY(bool ConvertToGrayScale READ getConvertToGrayScale WRITE setConvertToGrayScale)
+
+  SIMPL_FILTER_PARAMETER(FloatVec3Type, ColorWeights)
+  Q_PROPERTY(FloatVec3Type ColorWeights READ getColorWeights WRITE setColorWeights)
+
+  SIMPL_FILTER_PARAMETER(bool, ChangeOrigin)
+  Q_PROPERTY(bool ChangeOrigin READ getChangeOrigin WRITE setChangeOrigin)
+
+  SIMPL_FILTER_PARAMETER(FloatVec3Type, Origin)
+  Q_PROPERTY(FloatVec3Type Origin READ getOrigin WRITE setOrigin)
+
+  SIMPL_FILTER_PARAMETER(bool, ChangeSpacing)
+  Q_PROPERTY(bool ChangeSpacing READ getChangeSpacing WRITE setChangeSpacing)
+
+  SIMPL_FILTER_PARAMETER(FloatVec3Type, Spacing)
+  Q_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
 
   SIMPL_FILTER_PARAMETER(int, SliceNumber)
   Q_PROPERTY(int SliceNumber READ getSliceNumber WRITE setSliceNumber)
-
-  SIMPL_FILTER_PARAMETER(QString, MetaDataAttributeMatrixName)
-  Q_PROPERTY(QString MetaDataAttributeMatrixName READ getMetaDataAttributeMatrixName WRITE setMetaDataAttributeMatrixName)
-
-  SIMPL_FILTER_PARAMETER(QString, RegistrationFile)
-  Q_PROPERTY(QString RegistrationFile READ getRegistrationFile WRITE setRegistrationFile)
 
   SIMPL_FILTER_PARAMETER(QString, ImageFilePrefix)
   Q_PROPERTY(QString ImageFilePrefix READ getImageFilePrefix WRITE setImageFilePrefix)
@@ -54,10 +93,11 @@ public:
   SIMPL_FILTER_PARAMETER(QString, ImageFileExtension)
   Q_PROPERTY(QString ImageFileExtension READ getImageFileExtension WRITE setImageFileExtension)
 
-  using ReaderMap = QMap<QString, ITKImageReader::Pointer>;
+  QString getMontageInformation();
+  Q_PROPERTY(QString MontageInformation READ getMontageInformation)
 
-  SIMPL_PIMPL_PROPERTY_DECL(QString, RoboMetConfigFilePathCache)
-  SIMPL_PIMPL_PROPERTY_DECL(QDateTime, LastRead)
+  SIMPL_INSTANCE_PROPERTY(bool, FileWasRead)
+  Q_PROPERTY(bool FileWasRead READ getFileWasRead)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -119,6 +159,10 @@ public:
    */
   void preflight() override;
 
+  SIMPL_PIMPL_PROPERTY_DECL(QString, InputFile_Cache)
+  SIMPL_PIMPL_PROPERTY_DECL(QDateTime, TimeStamp_Cache)
+  SIMPL_PIMPL_PROPERTY_DECL(std::vector<BoundsType>, BoundsCache)
+
 signals:
   /**
    * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
@@ -146,12 +190,6 @@ protected:
   ITKImportRoboMetMontage();
 
   /**
-   * @brief parseFijiConfigFile Parses the Fiji file with the configuration coordinates
-   * @return Integer error value
-   */
-  int32_t parseRoboMetConfigFile();
-
-  /**
    * @brief parseRobometConfigFile Parses the Robomet file with the configuration coordinates
    * @param reader QFile to read
    * @return Integer error value
@@ -169,23 +207,38 @@ protected:
   void initialize();
 
   /**
+   * @brief flushCache
+   */
+  void flushCache();
+
+  /**
+   * @brief readMetaXml
+   * @param device
+   * @return
+   */
+  void generateCache();
+
+  /**
+   * @brief readImages
+   */
+  void readImages();
+
+  /**
+   * @brief generateDataStructure
+   */
+  void generateDataStructure();
+
+  /**
    * @brief Get the file path for an image file
    */
   QString getImageFilePath(const QString &filePath, int imageNumber, int row, int col);
 
 private:
   QScopedPointer<ITKImportRoboMetMontagePrivate> const d_ptr;
-	
-  int32_t m_NumImages;
-  std::vector<QString> m_RegisteredFilePaths;
-  QMap<QString, QPointF> m_CoordsMap;
-  std::vector<int> m_Rows;
-  std::vector<int> m_Columns;
 
-  /**
-   * @brief clearParsingCache
-   */
-  void clearParsingCache();
+  int32_t m_NumImages = -1;
+  int m_RowCount = -1;
+  int m_ColumnCount = -1;
 
 public :
   ITKImportRoboMetMontage(const ITKImportRoboMetMontage&) = delete; // Copy Constructor Not Implemented

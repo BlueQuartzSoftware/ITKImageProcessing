@@ -15,7 +15,7 @@ SIMPL_START_FILTER_GROUP(
 # List your public filters here
 set(_PublicFilters
 # These are from ZeissImport Plugin
-    CalculateBackground
+    IlluminationCorrection
     ImportAxioVisionV4Montage
     AxioVisionV4ToTileConfiguration
     ImportZenInfoMontage
@@ -27,6 +27,7 @@ set(_PublicFilters
     ImportVectorImageStack
     ITKDiscreteGaussianImage
     ITKMedianImage
+    ITKRefineTileCoordinates
 )
 
 if(ITK_VERSION_MAJOR EQUAL 4)
@@ -198,6 +199,8 @@ endforeach()
 # ADD_SIMPL_SUPPORT_HEADER(${${PLUGIN_NAME}_SOURCE_DIR} ${_filterGroupName} itkDream3DFilterInterruption.h)
 # ADD_SIMPL_SUPPORT_HEADER(${${PLUGIN_NAME}_SOURCE_DIR} ${_filterGroupName} Dream3DTemplateAliasMacro.h)
 ADD_SIMPL_SUPPORT_CLASS(${${PLUGIN_NAME}_SOURCE_DIR} ${_filterGroupName} ITKImageBase)
+ADD_SIMPL_SUPPORT_CLASS(${${PLUGIN_NAME}_SOURCE_DIR} ${_filterGroupName} util/DetermineStitching)
+ADD_SIMPL_SUPPORT_CLASS(${${PLUGIN_NAME}_SOURCE_DIR} ${_filterGroupName} util/MontageImportHelper)
 
 ADD_SIMPL_SUPPORT_SOURCE(${${PLUGIN_NAME}_SOURCE_DIR} ${_filterGroupName} MetaXmlUtils.cpp)
 ADD_SIMPL_SUPPORT_HEADER(${${PLUGIN_NAME}_SOURCE_DIR} ${_filterGroupName} MetaXmlUtils.h)

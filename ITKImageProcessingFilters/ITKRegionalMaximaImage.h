@@ -11,16 +11,18 @@
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
-#include "ITKImageProcessingBase.h"
+#include <itkRegionalMaximaImageFilter.h>
+
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
 
 // Auto includes
-#include <SIMPLib/FilterParameters/BooleanFilterParameter.h>
-#include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
-#include <itkRegionalMaximaImageFilter.h>
+#include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
 
+
+#include "ITKImageProcessingBase.h"
 #include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**

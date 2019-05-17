@@ -30,22 +30,16 @@
 #include "SIMPLib/Filtering/FilterManager.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 
-#include "MetaXmlUtils.h"
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/ITKImageReader.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/util/MontageImportHelper.h"
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
-
-static const QString k_AttributeArrayNames("AttributeArrayNames");
-static const QString k_DataContaineNameDefaultName("Tile");
-static const QString k_TileAttributeMatrixDefaultName("Tile Data");
-static const QString k_GrayScaleTempArrayName("gray_scale_temp");
-static const QString k_AxioVisionMetaData("Zen MetaData");
+#include "MetaXmlUtils.h"
 
 namespace
 {
 const QString k_DCName("ZenInfo");
-const QString k_AMName("CellAM");
-const QString k_AAName("ImageData");
-const QString k_AAGrayScaleName("GrayImageData");
+const QString k_MetaDataName("Zen MetaData");
 } // namespace
 
 enum createdPathID : RenameDataPath::DataID_t
@@ -54,17 +48,17 @@ enum createdPathID : RenameDataPath::DataID_t
 };
 
 // -----------------------------------------------------------------------------
-bool compareBound(BoundsType& b0, BoundsType& b1)
+bool compareBound(ImportZenInfoMontage::BoundsType& b0, ImportZenInfoMontage::BoundsType& b1)
 {
-  if(b0.StartY > b1.StartY)
+  if(b0.Origin[1] > b1.Origin[1])
   {
     return false;
   }
-  if(b0.StartY < b1.StartY)
+  if(b0.Origin[1] < b1.Origin[1])
   {
     return true;
   }
-  return (b0.StartX < b1.StartX);
+  return (b0.Origin[0] < b1.Origin[0]);
 }
 
 /* ############## Start Private Implementation ############################### */
@@ -80,7 +74,7 @@ class ImportZenInfoMontagePrivate
 
   QDomElement m_Root;
   QString m_InputFile_Cache;
-  DataArrayPath m_DataContainerName;
+  DataArrayPath m_DataContainerPath;
   QString m_CellAttributeMatrixName;
   QString m_ImageDataArrayName;
   bool m_ChangeOrigin = false;
@@ -91,7 +85,7 @@ class ImportZenInfoMontagePrivate
   FloatVec3Type m_ColorWeights;
   QDateTime m_TimeStamp_Cache;
   QString m_MontageInformation;
-  std::vector<BoundsType> m_BoundsCache;
+  std::vector<ImportZenInfoMontage::BoundsType> m_BoundsCache;
 };
 
 // -----------------------------------------------------------------------------
@@ -111,17 +105,14 @@ ImportZenInfoMontagePrivate::ImportZenInfoMontagePrivate(ImportZenInfoMontage* p
 // -----------------------------------------------------------------------------
 ImportZenInfoMontage::ImportZenInfoMontage()
 : m_InputFile("")
-, m_DataContainerName(k_DataContaineNameDefaultName)
-, m_CellAttributeMatrixName(k_TileAttributeMatrixDefaultName)
-, m_ImageDataArrayName("Image Data")
+, m_DataContainerPath(ITKImageProcessing::Montage::k_DataContaineNameDefaultName)
+, m_CellAttributeMatrixName(ITKImageProcessing::Montage::k_TileAttributeMatrixDefaultName)
+, m_ImageDataArrayName(ITKImageProcessing::Montage::k_TileDataArrayDefaultName)
 , m_ConvertToGrayScale(false)
-, m_ImportAllMetaData(false)
-, m_FileWasRead(false)
 , m_ChangeOrigin(false)
 , m_ChangeSpacing(true)
 , d_ptr(new ImportZenInfoMontagePrivate(this))
 {
-
   m_ColorWeights = FloatVec3Type(0.2125f, 0.7154f, 0.0721f);
   m_Origin = FloatVec3Type(0.0f, 0.0f, 0.0f);
   m_Spacing = FloatVec3Type(1.0f, 1.0f, 1.0f);
@@ -135,7 +126,7 @@ ImportZenInfoMontage::~ImportZenInfoMontage() = default;
 SIMPL_PIMPL_PROPERTY_DEF(ImportZenInfoMontage, QDomElement, Root)
 SIMPL_PIMPL_PROPERTY_DEF(ImportZenInfoMontage, QString, InputFile_Cache)
 SIMPL_PIMPL_PROPERTY_DEF(ImportZenInfoMontage, QDateTime, TimeStamp_Cache)
-SIMPL_PIMPL_PROPERTY_DEF(ImportZenInfoMontage, std::vector<BoundsType>, BoundsCache)
+SIMPL_PIMPL_PROPERTY_DEF(ImportZenInfoMontage, std::vector<ImportZenInfoMontage::BoundsType>, BoundsCache)
 
 // -----------------------------------------------------------------------------
 //
@@ -159,24 +150,23 @@ void ImportZenInfoMontage::setupFilterParameters()
   param->setReadOnly(true);
   parameters.push_back(param);
 
-  // parameters.push_back(SIMPL_NEW_BOOL_FP("Import All MetaData", ImportAllMetaData, FilterParameter::Parameter, ImportZenInfoMontage));
-
   QStringList linkedProps("Origin");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Change Origin", ChangeOrigin, FilterParameter::Parameter, ImportZenInfoMontage, linkedProps));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Origin", Origin, FilterParameter::Parameter, ImportZenInfoMontage));
 
-  linkedProps.clear();
-  linkedProps << "Spacing";
-  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Change Spacing", ChangeSpacing, FilterParameter::Parameter, ImportZenInfoMontage, linkedProps));
-  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Spacing", Spacing, FilterParameter::Parameter, ImportZenInfoMontage));
+  // Changing the Spacing makes NO sense because the origins in the XML file are in Pixel Coordinates so the spacing MUST be 1.0
+  //  linkedProps.clear();
+  //  linkedProps << "Spacing";
+  //  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Change Spacing", ChangeSpacing, FilterParameter::Parameter, ImportZenInfoMontage, linkedProps));
+  //  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Spacing", Spacing, FilterParameter::Parameter, ImportZenInfoMontage));
 
   linkedProps.clear();
   linkedProps << "ColorWeights";
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Convert To GrayScale", ConvertToGrayScale, FilterParameter::Parameter, ImportZenInfoMontage, linkedProps));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Color Weighting", ColorWeights, FilterParameter::Parameter, ImportZenInfoMontage));
 
-  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("DataContainer Prefix", DataContainerName, FilterParameter::CreatedArray, ImportZenInfoMontage));
-  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Cell Attribute Matrix Name", CellAttributeMatrixName, DataContainerName, FilterParameter::CreatedArray, ImportZenInfoMontage));
+  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("DataContainer Prefix", DataContainerPath, FilterParameter::CreatedArray, ImportZenInfoMontage));
+  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Cell Attribute Matrix Name", CellAttributeMatrixName, DataContainerPath, FilterParameter::CreatedArray, ImportZenInfoMontage));
   parameters.push_back(SIMPL_NEW_STRING_FP("Image DataArray Name", ImageDataArrayName, FilterParameter::CreatedArray, ImportZenInfoMontage));
 
   setFilterParameters(parameters);
@@ -209,7 +199,7 @@ void ImportZenInfoMontage::dataCheck()
     setErrorCondition(-395, ss);
   }
 
-  if(getDataContainerName().isEmpty())
+  if(getDataContainerPath().isEmpty())
   {
     ss = QObject::tr("The Data Container Name cannot be empty.");
     setErrorCondition(-392, ss);
@@ -230,26 +220,6 @@ void ImportZenInfoMontage::dataCheck()
     return;
   }
 
-  QString filtName = ITKImageProcessingConstants::ImageProcessingFilters::k_ReadImageFilterClassName;
-  FilterManager* fm = FilterManager::Instance();
-  IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filtName);
-  if(nullptr != filterFactory.get())
-  {
-    // If we get this far, the Factory is good so creating the filter should not fail unless something has
-    // horribly gone wrong in which case the system is going to come down quickly after this.
-    AbstractFilter::Pointer filter = filterFactory->create();
-    if(nullptr == filter.get())
-    {
-      ss = QObject::tr("The '%1' filter is not Available, did the ITKImageProcessing Plugin Load.").arg(filtName);
-      setErrorCondition(-391, ss);
-    }
-  }
-
-  if(getErrorCode() < 0)
-  {
-    return;
-  }
-
   DataContainerArray::Pointer dca = getDataContainerArray();
   if(nullptr == dca.get())
   {
@@ -262,18 +232,15 @@ void ImportZenInfoMontage::dataCheck()
   // data structure that is needed.
   QFile xmlFile(getInputFile());
   QString errorStr;
-  int errorLine;
-  int errorColumn;
+  int errorLine = -1;
+  int errorColumn = -1;
 
   QDateTime timeStamp(fi.lastModified());
 
-  QDomDocument domDocument;
-  QDomElement exportDocument;
 
   // clang-format off
- 
   if(m_InputFile ==  d_ptr->m_InputFile_Cache
-    && m_DataContainerName == d_ptr->m_DataContainerName
+    && m_DataContainerPath == d_ptr->m_DataContainerPath
     && m_CellAttributeMatrixName == d_ptr->m_CellAttributeMatrixName
     && m_ImageDataArrayName == d_ptr->m_ImageDataArrayName
     && m_ChangeOrigin == d_ptr->m_ChangeOrigin
@@ -289,14 +256,14 @@ void ImportZenInfoMontage::dataCheck()
   {
     // We are reading from the cache, so set the FileWasRead flag to false
     m_FileWasRead = false;
-    exportDocument = getRoot();
+    // exportDocument = getRoot();
   }
-
   else
   {
     flushCache();
     // We are reading from the file, so set the FileWasRead flag to true
     m_FileWasRead = true;
+    QDomDocument domDocument;
 
     if(!domDocument.setContent(&xmlFile, true, &errorStr, &errorLine, &errorColumn))
     {
@@ -305,7 +272,7 @@ void ImportZenInfoMontage::dataCheck()
       return;
     }
 
-    exportDocument = domDocument.documentElement();
+    QDomElement exportDocument = domDocument.documentElement();
 
     if(exportDocument.tagName() != Zeiss::ZenXml::ExportDocument)
     {
@@ -316,7 +283,7 @@ void ImportZenInfoMontage::dataCheck()
 
     d_ptr->m_Root = exportDocument;
     d_ptr->m_InputFile_Cache = m_InputFile;
-    d_ptr->m_DataContainerName = m_DataContainerName;
+    d_ptr->m_DataContainerPath = m_DataContainerPath;
     d_ptr->m_CellAttributeMatrixName = m_CellAttributeMatrixName;
     d_ptr->m_ImageDataArrayName = m_ImageDataArrayName;
     d_ptr->m_ChangeOrigin = m_ChangeOrigin;
@@ -391,7 +358,7 @@ void ImportZenInfoMontage::flushCache()
   setRoot(QDomElement());
 
   d_ptr->m_InputFile_Cache = "";
-  d_ptr->m_DataContainerName = DataArrayPath();
+  d_ptr->m_DataContainerPath = DataArrayPath();
   d_ptr->m_CellAttributeMatrixName = "";
   d_ptr->m_ImageDataArrayName = "";
   d_ptr->m_ChangeOrigin = false;
@@ -456,8 +423,8 @@ void ImportZenInfoMontage::findTileIndices(int32_t tolerance, std::vector<Bounds
 
   for(size_t i = 0; i < bounds.size(); i++)
   {
-    xValues[i] = bounds.at(i).StartX;
-    yValues[i] = bounds.at(i).StartY;
+    xValues[i] = bounds.at(i).Origin[0];
+    yValues[i] = bounds.at(i).Origin[1];
   }
 
   std::map<int32_t, std::vector<size_t>> avg_indices = burn(tolerance, xValues);
@@ -503,7 +470,6 @@ void ImportZenInfoMontage::generateCache(QDomElement& exportDocument)
 
   FloatVec3Type minCoord = {std::numeric_limits<float>::max(), std::numeric_limits<float>::max(), std::numeric_limits<float>::max()};
   FloatVec3Type minSpacing = {std::numeric_limits<float>::max(), std::numeric_limits<float>::max(), std::numeric_limits<float>::max()};
-  std::vector<ImageGeom::Pointer> geometries;
 
   bool ok = false;
   for(int32_t i = 0; i < imageList.count(); i++)
@@ -511,38 +477,60 @@ void ImportZenInfoMontage::generateCache(QDomElement& exportDocument)
     QDomElement imageElement = imageList.at(i).toElement();
 
     QDomElement filenameElement = imageElement.firstChildElement(Zeiss::ZenXml::Filename).toElement();
-    QString fileName = filenameElement.text();
+    QString imageFileName = filenameElement.text();
     QDomElement boundsElement = imageElement.firstChildElement(Zeiss::ZenXml::Bounds).toElement();
 
-    BoundsType bound;
-    bound.Filename = fileName;
-    bound.StartX = boundsElement.attribute(Zeiss::ZenXml::StartX).toInt(&ok);
-    xValuesSet.insert(bound.StartX);
-    bound.SizeX = boundsElement.attribute(Zeiss::ZenXml::SizeX).toInt(&ok);
+    QFileInfo fi = QFileInfo(getInputFile());
+    QString imagePath = fi.absoluteDir().path() + "/" + imageFileName;
+    fi = QFileInfo(imagePath);
+    if(!fi.exists())
+    {
+      setErrorCondition(-222, QString("Montage Tile File does not exist.'%1'").arg(imagePath));
+    }
 
-    bound.StartY = boundsElement.attribute(Zeiss::ZenXml::StartY).toInt(&ok);
-    yValuesSet.insert(bound.StartY);
-    bound.SizeY = boundsElement.attribute(Zeiss::ZenXml::SizeY).toInt(&ok);
+    BoundsType bound;
+    bound.Filename = fi.absoluteFilePath();
+
+    bound.Origin[0] = boundsElement.attribute(Zeiss::ZenXml::StartX).toInt(&ok);
+    xValuesSet.insert(bound.Origin[0]);
+    bound.Dims[0] = boundsElement.attribute(Zeiss::ZenXml::SizeX).toInt(&ok);
+
+    bound.Origin[1] = boundsElement.attribute(Zeiss::ZenXml::StartY).toInt(&ok);
+    yValuesSet.insert(bound.Origin[1]);
+    bound.Dims[1] = boundsElement.attribute(Zeiss::ZenXml::SizeY).toInt(&ok);
+
+    bound.Dims[2] = 0;
+    bound.Origin[2] = 0.0f;
+    bound.Spacing[2] = 1.0f;
+
+    if(m_ChangeSpacing)
+    {
+      bound.Spacing = m_Spacing;
+    }
 
     bound.StartC = boundsElement.attribute(Zeiss::ZenXml::StartC).toInt(&ok);
     bound.StartS = boundsElement.attribute(Zeiss::ZenXml::StartS).toInt(&ok);
     bound.StartB = boundsElement.attribute(Zeiss::ZenXml::StartB).toInt(&ok);
     bound.StartM = boundsElement.attribute(Zeiss::ZenXml::StartM).toInt(&ok);
+
+    // Do some accounting here for spacing/origin calculations later on...
+    minSpacing = bound.Spacing;
+    minCoord[0] = std::min(bound.Origin[0], minCoord[0]);
+    minCoord[1] = std::min(bound.Origin[1], minCoord[1]);
+    minCoord[2] = 0.0f;
+    // Finally set the bound into the bounds vector
     bounds[i] = bound;
   }
 
   findTileIndices(m_Tolerance, bounds);
 
-  // Set the Row and Column values into each BoundType object
+  // std::vector<ImageGeom::Pointer> geometries;
+
+  // Get the meta information from disk for each image
   for(auto& bound : bounds)
   {
-    // Get the meta information from disk
-    DataArrayPath dap(::k_DCName, ::k_AMName, ::k_AAName);
-    AbstractFilter::Pointer imageImportFilter = createImageImportFiler(bound.Filename, dap);
-    if(nullptr == imageImportFilter.get())
-    {
-      continue;
-    }
+    DataArrayPath dap(::k_DCName, ITKImageProcessing::Montage::k_AMName, ITKImageProcessing::Montage::k_AAName);
+    AbstractFilter::Pointer imageImportFilter = MontageImportHelper::CreateImageImportFilter(this, bound.Filename, dap);
     imageImportFilter->preflight();
     if(imageImportFilter->getErrorCode() < 0)
     {
@@ -553,41 +541,16 @@ void ImportZenInfoMontage::generateCache(QDomElement& exportDocument)
     DataContainerArray::Pointer importImageDca = imageImportFilter->getDataContainerArray();
     {
       DataContainer::Pointer fromDca = importImageDca->getDataContainer(::k_DCName);
-      AttributeMatrix::Pointer fromCellAttrMat = fromDca->getAttributeMatrix(::k_AMName);
-      IDataArray::Pointer fromImageData = fromCellAttrMat->getAttributeArray(::k_AAName);
+      AttributeMatrix::Pointer fromCellAttrMat = fromDca->getAttributeMatrix(ITKImageProcessing::Montage::k_AMName);
+      IDataArray::Pointer fromImageData = fromCellAttrMat->getAttributeArray(ITKImageProcessing::Montage::k_AAName);
       fromImageData->setName(getImageDataArrayName());
-
-      // Get the spacing from the geometry
-      ImageGeom::Pointer fromImageGeom = fromDca->getGeometryAs<ImageGeom>();
-      FloatVec3Type spacing = fromImageGeom->getSpacing();
-      if(m_ChangeSpacing)
-      {
-        bound.SpacingX = m_Spacing[0];
-        bound.SpacingY = m_Spacing[1];
-      }
-      else
-      {
-        bound.SpacingX = spacing[0];
-        bound.SpacingY = spacing[1];
-      }
       bound.ImageDataProxy = fromImageData;
-      minSpacing[0] = bound.SpacingX;
-      minSpacing[1] = bound.SpacingY;
-      minSpacing[2] = 1.0;
-
-      FloatVec3Type origin = fromImageGeom->getOrigin();
-      minCoord[0] = std::min(origin[0], minCoord[0]);
-      minCoord[1] = std::min(origin[1], minCoord[1]);
-      minCoord[2] = 0.0f;
-
-      geometries.emplace_back(fromImageGeom);
     }
 
     if(getConvertToGrayScale())
     {
-      DataArrayPath daPath(::k_DCName, ::k_AMName, k_AAName);
-      AbstractFilter::Pointer grayScaleFilter = createColorToGrayScaleFilter(daPath);
-      connect(grayScaleFilter.get(), SIGNAL(messageGenerated(const AbstractMessage::Pointer&)), this, SIGNAL(messageGenerated(const AbstractMessage::Pointer&)));
+      DataArrayPath daPath(::k_DCName, ITKImageProcessing::Montage::k_AMName, ITKImageProcessing::Montage::k_AAName);
+      AbstractFilter::Pointer grayScaleFilter = MontageImportHelper::CreateColorToGrayScaleFilter(this, dap, getColorWeights(), ITKImageProcessing::Montage::k_GrayScaleTempArrayName);
       grayScaleFilter->setDataContainerArray(importImageDca);
       grayScaleFilter->preflight();
       if(grayScaleFilter->getErrorCode() < 0)
@@ -598,10 +561,10 @@ void ImportZenInfoMontage::generateCache(QDomElement& exportDocument)
 
       DataContainerArray::Pointer colorToGrayDca = grayScaleFilter->getDataContainerArray();
       DataContainer::Pointer fromDca = colorToGrayDca->getDataContainer(::k_DCName);
-      AttributeMatrix::Pointer fromCellAttrMat = fromDca->getAttributeMatrix(::k_AMName);
+      AttributeMatrix::Pointer fromCellAttrMat = fromDca->getAttributeMatrix(ITKImageProcessing::Montage::k_AMName);
       // Remove the RGB Attribute Array so we can rename the gray scale AttributeArray
-      IDataArray::Pointer rgbImageArray = fromCellAttrMat->removeAttributeArray(::k_AAName);
-      QString grayScaleArrayName = k_GrayScaleTempArrayName + ::k_AAName;
+      IDataArray::Pointer rgbImageArray = fromCellAttrMat->removeAttributeArray(ITKImageProcessing::Montage::k_AAName);
+      QString grayScaleArrayName = ITKImageProcessing::Montage::k_GrayScaleTempArrayName + ITKImageProcessing::Montage::k_AAName;
       IDataArray::Pointer fromGrayScaleData = fromCellAttrMat->removeAttributeArray(grayScaleArrayName);
       fromGrayScaleData->setName(getImageDataArrayName());
       bound.ImageDataProxy = fromGrayScaleData;
@@ -618,38 +581,24 @@ void ImportZenInfoMontage::generateCache(QDomElement& exportDocument)
   // Now adjust the origin/spacing if needed
   if(getChangeOrigin() || getChangeSpacing())
   {
-
     if(getChangeOrigin())
     {
-      overrideOrigin = {m_Origin[0], m_Origin[1], m_Origin[2]};
+      overrideOrigin = m_Origin;
     }
     if(getChangeSpacing())
     {
-      overrideSpacing = {m_Spacing[0], m_Spacing[1], m_Spacing[2]};
+      overrideSpacing = m_Spacing;
     }
-
-    for(const auto& image : geometries)
+    FloatVec3Type delta = {minCoord[0] - overrideOrigin[0], minCoord[1] - overrideOrigin[1], minCoord[2] - overrideOrigin[2]};
+    for(auto& bound : bounds)
     {
-      FloatVec3Type currentOrigin = image->getOrigin();
-      FloatVec3Type currentSpacing = image->getSpacing();
-
-      for(size_t i = 0; i < 3; i++)
-      {
-        float delta = currentOrigin[i] - minCoord[i];
-        // Convert to Pixel Coords
-        delta = delta / currentSpacing[i];
-        // Convert to the override origin
-        delta = delta * overrideSpacing[i];
-        currentOrigin[i] = overrideOrigin[i] + delta;
-      }
-      image->setOrigin(currentOrigin.data());
-      image->setSpacing(overrideSpacing.data());
+      // BoundsType& bound = bounds.at(i);
+      std::transform(bound.Origin.begin(), bound.Origin.end(), delta.begin(), bound.Origin.begin(), std::minus<float>());
     }
   }
   ss << "\nOrigin: " << overrideOrigin[0] << ", " << overrideOrigin[1] << ", " << overrideOrigin[2];
   ss << "  Spacing: " << overrideSpacing[0] << ", " << overrideSpacing[1] << ", " << overrideSpacing[2];
   d_ptr->m_MontageInformation = montageInfo;
-
   setBoundsCache(bounds);
 }
 
@@ -668,7 +617,7 @@ void ImportZenInfoMontage::generateDataStructure()
   for(const auto& bound : bounds)
   {
     // Create our DataContainer Name using a Prefix and a rXXcYY format.
-    QString dcName = getDataContainerName().getDataContainerName();
+    QString dcName = getDataContainerPath().getDataContainerName();
     QTextStream dcNameStream(&dcName);
     dcNameStream << "_r";
     dcNameStream.setFieldWidth(charPaddingCount);
@@ -685,11 +634,11 @@ void ImportZenInfoMontage::generateDataStructure()
 
     // Create the Image Geometry
     ImageGeom::Pointer image = ImageGeom::CreateGeometry(dcName);
-    SizeVec3Type dims(bound.SizeX, bound.SizeY, 1);
+    SizeVec3Type dims(bound.Dims[0], bound.Dims[1], 1);
     image->setDimensions(dims);
-    FloatVec3Type origin(bound.StartX, bound.StartY, 0.0f);
+    FloatVec3Type origin(bound.Origin[0], bound.Origin[1], 0.0f);
     image->setOrigin(origin);
-    FloatVec3Type spacing(bound.SpacingX, bound.SpacingY, 1.0);
+    FloatVec3Type spacing(bound.Spacing[0], bound.Spacing[1], 1.0);
     image->setSpacing(spacing);
 
     dc->setGeometry(image);
@@ -723,7 +672,7 @@ void ImportZenInfoMontage::readImages()
     out << "Importing " << bound.Filename;
     notifyStatusMessage(msg);
     // Create our DataContainer Name using a Prefix and a rXXcYY format.
-    QString dcName = getDataContainerName().getDataContainerName();
+    QString dcName = getDataContainerPath().getDataContainerName();
     QTextStream dcNameStream(&dcName);
     dcNameStream << "_r";
     dcNameStream.setFieldWidth(charPaddingCount);
@@ -749,8 +698,8 @@ void ImportZenInfoMontage::readImages()
     // The Cell AttributeMatrix is also already created at this point
     AttributeMatrix::Pointer cellAttrMat = dc->getAttributeMatrix(getCellAttributeMatrixName());
     // Instantiate the Image Import Filter to actually read the image into a data array
-    DataArrayPath dap(::k_DCName, ::k_AMName, getImageDataArrayName()); // This is just a temp path for the subfilter to use
-    AbstractFilter::Pointer imageImportFilter = createImageImportFiler(bound.Filename, dap);
+    DataArrayPath dap(::k_DCName, ITKImageProcessing::Montage::k_AMName, getImageDataArrayName()); // This is just a temp path for the subfilter to use
+    AbstractFilter::Pointer imageImportFilter = MontageImportHelper::CreateImageImportFilter(this, bound.Filename, dap);
     if(nullptr == imageImportFilter.get())
     {
       continue;
@@ -765,12 +714,12 @@ void ImportZenInfoMontage::readImages()
     // Now transfer the image data from the actual image data read from disk into our existing Attribute Matrix
     DataContainerArray::Pointer importImageDca = imageImportFilter->getDataContainerArray();
     DataContainer::Pointer fromDc = importImageDca->getDataContainer(::k_DCName);
-    AttributeMatrix::Pointer fromCellAttrMat = fromDc->getAttributeMatrix(::k_AMName);
+    AttributeMatrix::Pointer fromCellAttrMat = fromDc->getAttributeMatrix(ITKImageProcessing::Montage::k_AMName);
     // IDataArray::Pointer fromImageData = fromCellAttrMat->getAttributeArray(getImageDataArrayName());
 
     if(getConvertToGrayScale())
     {
-      AbstractFilter::Pointer grayScaleFilter = createColorToGrayScaleFilter(dap);
+      AbstractFilter::Pointer grayScaleFilter = MontageImportHelper::CreateColorToGrayScaleFilter(this, dap, getColorWeights(), ITKImageProcessing::Montage::k_GrayScaleTempArrayName);
       grayScaleFilter->setDataContainerArray(importImageDca); // Use the Data COntainer array that was use for the import. It is setup and ready to go
       connect(grayScaleFilter.get(), SIGNAL(messageGenerated(const AbstractMessage::Pointer&)), this, SIGNAL(messageGenerated(const AbstractMessage::Pointer&)));
       grayScaleFilter->execute();
@@ -782,12 +731,12 @@ void ImportZenInfoMontage::readImages()
 
       DataContainerArray::Pointer c2gDca = grayScaleFilter->getDataContainerArray();
       DataContainer::Pointer c2gDc = c2gDca->getDataContainer(::k_DCName);
-      AttributeMatrix::Pointer c2gAttrMat = c2gDc->getAttributeMatrix(::k_AMName);
+      AttributeMatrix::Pointer c2gAttrMat = c2gDc->getAttributeMatrix(ITKImageProcessing::Montage::k_AMName);
 
-      QString grayScaleArrayName = k_GrayScaleTempArrayName + getImageDataArrayName();
+      QString grayScaleArrayName = ITKImageProcessing::Montage::k_GrayScaleTempArrayName + getImageDataArrayName();
       // IDataArray::Pointer fromGrayScaleData = fromCellAttrMat->getAttributeArray(grayScaleArrayName);
 
-      IDataArray::Pointer rgbImageArray = c2gAttrMat->removeAttributeArray(::k_AAName);
+      IDataArray::Pointer rgbImageArray = c2gAttrMat->removeAttributeArray(ITKImageProcessing::Montage::k_AAName);
       IDataArray::Pointer gray = c2gAttrMat->removeAttributeArray(grayScaleArrayName);
       gray->setName(getImageDataArrayName());
       cellAttrMat->addOrReplaceAttributeArray(gray);
@@ -799,99 +748,6 @@ void ImportZenInfoMontage::readImages()
       cellAttrMat->addOrReplaceAttributeArray(gray);
     }
   }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-AbstractFilter::Pointer ImportZenInfoMontage::createImageImportFiler(const QString& imageFileName, const DataArrayPath& daPath)
-{
-
-  QFileInfo fi = QFileInfo(getInputFile());
-  QString imagePath = fi.absoluteDir().path() + "/" + imageFileName;
-
-  QString filtName = ITKImageProcessingConstants::ImageProcessingFilters::k_ReadImageFilterClassName;
-  FilterManager* fm = FilterManager::Instance();
-  IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filtName);
-  if(nullptr == filterFactory.get())
-  {
-    QString ss = QObject::tr("Error trying to instantiate the '%1' filter which is typically included in the 'ITKImageProcessing' plugin.")
-                     .arg(ITKImageProcessingConstants::ImageProcessingFilters::k_ReadImageFilterClassName);
-    setErrorCondition(-70019, ss);
-    return AbstractFilter::NullPointer();
-  }
-
-  // If we get this far, the Factory is good so creating the filter should not fail unless something has
-  // horribly gone wrong in which case the system is going to come down quickly after this.
-  AbstractFilter::Pointer filter = filterFactory->create();
-
-  // Connect up the Error/Warning/Progress object so the filter can report those things
-  connect(filter.get(), SIGNAL(messageGenerated(const AbstractMessage::Pointer&)), this, SIGNAL(messageGenerated(const AbstractMessage::Pointer&)));
-  DataContainerArrayShPtr dca = DataContainerArray::New();
-
-  filter->setDataContainerArray(dca); // AbstractFilter implements this so no problem
-
-  // Add to filename list
-  m_FilenameList.push_back(imagePath);
-
-  bool propWasSet = filter->setProperty("FileName", imagePath);
-  if(!propWasSet)
-  {
-    QString ss = QObject::tr("Error Setting Property '%1' into filter '%2' which is a subfilter called by %3. The property was not set which could mean the property was not exposed with a "
-                             "Q_PROPERTY macro. Please notify the developers.")
-                     .arg("InputFileName", filtName, getHumanLabel());
-    setErrorCondition(-70015, ss);
-  }
-  QVariant var;
-  var.setValue(daPath);
-  propWasSet = filter->setProperty("DataContainerName", var);
-  if(!propWasSet)
-  {
-    QString ss = QObject::tr("Error Setting Property '%1' into filter '%2' which is a subfilter called by %3. The property was not set which could mean the property was not exposed with a "
-                             "Q_PROPERTY macro. Please notify the developers.")
-                     .arg("DataContainerName", filtName, getHumanLabel());
-    setErrorCondition(-70016, ss);
-  }
-
-  propWasSet = filter->setProperty("CellAttributeMatrixName", daPath.getAttributeMatrixName());
-  if(!propWasSet)
-  {
-    QString ss = QObject::tr("Error Setting Property '%1' into filter '%2' which is a subfilter called by %3. The property was not set which could mean the property was not exposed with a "
-                             "Q_PROPERTY macro. Please notify the developers.")
-                     .arg("CellAttributeMatrixName", filtName, getHumanLabel());
-    setErrorCondition(-70017, ss);
-  }
-
-  propWasSet = filter->setProperty("ImageDataArrayName", daPath.getDataArrayName());
-  if(!propWasSet)
-  {
-    QString ss = QObject::tr("Error Setting Property '%1' into filter '%2' which is a subfilter called by %3. The property was not set which could mean the property was not exposed with a "
-                             "Q_PROPERTY macro. Please notify the developers.")
-                     .arg("ImageDataArrayName", filtName, getHumanLabel());
-    setErrorCondition(-70018, ss);
-  }
-
-  return filter;
-}
-
-// -----------------------------------------------------------------------------
-AbstractFilter::Pointer ImportZenInfoMontage::createColorToGrayScaleFilter(const DataArrayPath& daPath)
-{
-  ConvertColorToGrayScale::Pointer filter = ConvertColorToGrayScale::New();
-
-  // Connect up the Error/Warning/Progress object so the filter can report those things
-  connect(filter.get(), SIGNAL(messageGenerated(const AbstractMessage::Pointer&)), this, SIGNAL(messageGenerated(const AbstractMessage::Pointer&)));
-
-  filter->setDataContainerArray(getDataContainerArray());
-  filter->setConversionAlgorithm(0);
-  filter->setColorWeights(getColorWeights());
-  QVector<DataArrayPath> inputDataArrayVector = {daPath};
-  filter->setInputDataArrayVector(inputDataArrayVector);
-  filter->setCreateNewAttributeMatrix(false);
-  filter->setOutputAttributeMatrixName(getCellAttributeMatrixName());
-  filter->setOutputArrayPrefix(k_GrayScaleTempArrayName);
-
-  return filter;
 }
 
 // -----------------------------------------------------------------------------
@@ -955,7 +811,7 @@ const QString ImportZenInfoMontage::getSubGroupName() const
 // -----------------------------------------------------------------------------
 const QString ImportZenInfoMontage::getHumanLabel() const
 {
-  return "Zeiss Zen Info Import";
+  return "ITK::Zeiss Zen Import";
 }
 
 // -----------------------------------------------------------------------------

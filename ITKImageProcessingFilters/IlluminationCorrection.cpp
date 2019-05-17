@@ -28,7 +28,7 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "CalculateBackground.h"
+#include "IlluminationCorrection.h"
 
 #include <cstring>
 #include <numeric>
@@ -68,9 +68,10 @@
 #include "SIMPLib/Geometry/RectGridGeom.h"
 
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/ITKImageWriter.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/ITKMedianImage.h"
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
 #include "ITKImageProcessing/ZeissXml/ZeissTagMapping.h"
-
 
 #include <Eigen/Dense>
 
@@ -86,13 +87,10 @@ enum createdPathID : RenameDataPath::DataID_t
 
 namespace
 {
-const QString k_MedianFilter("ITKMedianImage");
-const QString k_ImageWriterFilter("ITKImageWriter");
-const QString k_BackgroundDataContainerLabel("Created Data Container (Background)");
-const QString k_BackgroundAttributeMatrixLabel("Created Attribute Matrix (Background)");
-const QString k_BackgroundAttributeArrayLabel("Created Image Array Name (Background)");
-
-const QString k_OutputProcessedImageLabel("Corrected Output Tile Image Name");
+const QString k_BackgroundDataContainerLabel("Created Data Container (Corrected)");
+const QString k_BackgroundAttributeMatrixLabel("Created Attribute Matrix (Corrected)");
+const QString k_BackgroundAttributeArrayLabel("Created Image Array Name (Corrected)");
+const QString k_OutputProcessedImageLabel("Corrected Image Name");
 
 template <typename OutArrayType, typename AccumType>
 class ProcessInputImagesImpl
@@ -100,7 +98,7 @@ class ProcessInputImagesImpl
 public:
   using AccumDataArrayType = DataArray<AccumType>;
 
-  ProcessInputImagesImpl(CalculateBackground* filter, QString dcName, AccumType average, const AccumDataArrayType& accumArray)
+  ProcessInputImagesImpl(IlluminationCorrection* filter, QString dcName, AccumType average, const AccumDataArrayType& accumArray)
   : m_Filter(filter)
   , m_DcName(std::move(dcName))
   , m_Average(average)
@@ -152,39 +150,25 @@ public:
     }
     if(m_Filter->getExportCorrectedImages())
     {
-      FilterManager* filtManager = FilterManager::Instance();
-      IFilterFactory::Pointer factory = filtManager->getFactoryFromClassName(::k_ImageWriterFilter);
-      if(nullptr != factory.get())
+      ITKImageWriter::Pointer imageWriter = ITKImageWriter::New();
+      imageWriter->setDataContainerArray(m_Filter->getDataContainerArray());
+      QString outputPath = QString("%1/%2%3").arg(m_Filter->getOutputPath()).arg(m_DcName).arg(m_Filter->getFileExtension());
+      imageWriter->setFileName(outputPath);
+      DataArrayPath dap(m_DcName, m_Filter->getCellAttributeMatrixName(), m_Filter->getCorrectedImageDataArrayName());
+      imageWriter->setImageArrayPath(dap);
+      imageWriter->setPlane(0);
+
+      imageWriter->execute();
+      if(imageWriter->getErrorCode() < 0)
       {
-        AbstractFilter::Pointer imageWriter = factory->create();
-        if(nullptr != imageWriter.get())
-        {
-          imageWriter->setDataContainerArray(m_Filter->getDataContainerArray());
-          QString outputPath = QString("%1/%2%3").arg(m_Filter->getOutputPath()).arg(m_DcName).arg(m_Filter->getFileExtension());
-
-          QVariant var(outputPath);
-          bool propSet = imageWriter->setProperty("FileName", var);
-
-          DataArrayPath dap(m_DcName, m_Filter->getCellAttributeMatrixName(), m_Filter->getCorrectedImageDataArrayName());
-          var.setValue(dap);
-          propSet = imageWriter->setProperty("ImageArrayPath", var);
-
-          var.setValue(0);
-          propSet = imageWriter->setProperty("Plane", var);
-
-          imageWriter->execute();
-          if(imageWriter->getErrorCode() < 0)
-          {
-            m_Filter->setErrorCondition(imageWriter->getErrorCode(), QString("%1 Filter could not write image to path '%2'").arg(::k_ImageWriterFilter).arg(outputPath));
-          }
-        }
+        m_Filter->setErrorCondition(imageWriter->getErrorCode(), QString("%1 Filter could not write image to path '%2'").arg(imageWriter->ClassName()).arg(outputPath));
       }
     }
     m_Filter->notifyFeatureCompleted(m_DcName);
   }
 
 private:
-  CalculateBackground* m_Filter = nullptr;
+  IlluminationCorrection* m_Filter = nullptr;
   QString m_DcName;
   AccumType m_Average;
   const DataArray<AccumType>& m_AccumArray;
@@ -194,7 +178,7 @@ private:
  * @brief Calculates the output values using the templated output IDataArray output type
  */
 template <typename OutArrayType, typename GeomType, typename AccumType>
-void calculateOutputValues(CalculateBackground* filter)
+void calculateOutputValues(IlluminationCorrection* filter)
 {
 
   using OutputDataArrayType = DataArray<OutArrayType>;
@@ -222,8 +206,8 @@ void calculateOutputValues(CalculateBackground* filter)
   countArrayPtr->initializeWithZeros();
   SizeTArrayType& counter = *(countArrayPtr);
 
-  int32_t lowThresh = filter->getlowThresh();
-  int32_t highThresh = filter->gethighThresh();
+  int32_t LowThreshold = filter->getLowThreshold();
+  int32_t HighThreshold = filter->getHighThreshold();
 
   QString progressMessage = QString("Calculating Background Image...");
   filter->notifyStatusMessage(progressMessage);
@@ -236,7 +220,7 @@ void calculateOutputValues(CalculateBackground* filter)
 
     for(size_t t = 0; t < numTuples; t++)
     {
-      if(imageArray[t] >= lowThresh && imageArray[t] <= highThresh)
+      if(imageArray[t] >= LowThreshold && imageArray[t] <= HighThreshold)
       {
         accumArray[t] += imageArray[t];
         counter[t]++;
@@ -261,40 +245,23 @@ void calculateOutputValues(CalculateBackground* filter)
     QString progressMessage = QString("Applying Median Filter to Background Image...");
     filter->notifyStatusMessage(progressMessage);
 
-    FilterManager* filtManager = FilterManager::Instance();
-    IFilterFactory::Pointer factory = filtManager->getFactoryFromClassName(::k_MedianFilter);
-    if(nullptr != factory.get())
-    {
-      AbstractFilter::Pointer imageProcessingFilter = factory->create();
-      if(nullptr != imageProcessingFilter.get())
-      {
-        DataContainerArray::Pointer dca = filter->getDataContainerArray();
-        DataArrayPath outPath = filter->getBackgroundImageArrayPath();
-        DataContainer::Pointer outDc = dca->getDataContainer(outPath.getDataContainerName());
-        AttributeMatrix::Pointer outAm = outDc->getAttributeMatrix(outPath.getAttributeMatrixName());
-        IDataArray::Pointer outArray = outAm->removeAttributeArray(outPath.getDataArrayName());
-        outAm->addOrReplaceAttributeArray(accumulateArrayPtr);
+    ITKMedianImage::Pointer imageProcessingFilter = ITKMedianImage::New();
+    DataContainerArray::Pointer dca = filter->getDataContainerArray();
+    DataArrayPath outPath = filter->getBackgroundImageArrayPath();
+    DataContainer::Pointer outDc = dca->getDataContainer(outPath.getDataContainerName());
+    AttributeMatrix::Pointer outAm = outDc->getAttributeMatrix(outPath.getAttributeMatrixName());
+    IDataArray::Pointer outArray = outAm->removeAttributeArray(outPath.getDataArrayName());
+    outAm->addOrReplaceAttributeArray(accumulateArrayPtr);
 
-        QVariant var;
+    imageProcessingFilter->setDataContainerArray(filter->getDataContainerArray());
+    outPath.setDataArrayName(accumulateArrayPtr->getName());
 
-        imageProcessingFilter->setDataContainerArray(filter->getDataContainerArray());
-        outPath.setDataArrayName(accumulateArrayPtr->getName());
-        var.setValue(outPath);
-        bool propSet = imageProcessingFilter->setProperty("SelectedCellArrayPath", var);
+    imageProcessingFilter->setSelectedCellArrayPath(outPath);
+    imageProcessingFilter->setSaveAsNewArray(false);
+    imageProcessingFilter->setRadius(filter->getMedianRadius());
+    imageProcessingFilter->execute();
+    outAm->addOrReplaceAttributeArray(outArray); // Put the original back into the Attr Mat
 
-        propSet = imageProcessingFilter->setProperty("SaveAsNewArray", false);
-
-        var.setValue(filter->getRadius());
-        propSet = imageProcessingFilter->setProperty("Radius", var);
-
-        imageProcessingFilter->execute();
-        outAm->addOrReplaceAttributeArray(outArray); // Put the original back into the Attr Mat
-      }
-    }
-    else
-    {
-      filter->setErrorCondition(-53009, QString("%1 filter not found.").arg(::k_MedianFilter));
-    }
   } // Median
 
   // Assign output array values
@@ -304,9 +271,9 @@ void calculateOutputValues(CalculateBackground* filter)
   }
 
   AccumType average = std::accumulate(accumArray.begin(), accumArray.end(), static_cast<AccumType>(0)) / accumArray.getNumberOfTuples();
-  
-  // Divide Background
-  if(filter->getDivideBackground())
+
+  // Apply Correction
+  if(filter->getApplyCorrection())
   {
     QString progressMessage = QString("Generating Corrected Images...");
     filter->notifyStatusMessage(progressMessage);
@@ -339,7 +306,7 @@ void calculateOutputValues(CalculateBackground* filter)
     g->wait();
 #endif
 
-  } // Divide Background
+  } // Apply Correction
 }
 
 } // namespace
@@ -347,100 +314,97 @@ void calculateOutputValues(CalculateBackground* filter)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-CalculateBackground::CalculateBackground()
+IlluminationCorrection::IlluminationCorrection()
 : m_DataContainers("")
-, m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName)
-, m_ImageDataArrayName("Image Data")
-, m_CorrectedImageDataArrayName("Corrected Image")
-, m_ExportCorrectedImages(true)
+, m_CellAttributeMatrixName(ITKImageProcessing::Montage::k_TileAttributeMatrixDefaultName)
+, m_ImageDataArrayName(ITKImageProcessing::Montage::k_TileDataArrayDefaultName)
+, m_CorrectedImageDataArrayName(ITKImageProcessing::Montage::k_TileCorrectedDefaultName)
+, m_ExportCorrectedImages(false)
 , m_OutputPath("")
 , m_FileExtension(".tif")
-, m_BackgroundDataContainerPath("Background")
-, m_BackgroundCellAttributeMatrixPath("Background", "Background Data", "")
-, m_BackgroundImageArrayPath("Background", "Background Data", "Background Image")
-, m_lowThresh(20000)
-, m_highThresh(65535)
-, m_SubtractBackground(false)
-, m_DivideBackground(false)
+, m_BackgroundDataContainerPath(ITKImageProcessing::Montage::k_BackgroundDataContainerDefaultName)
+, m_BackgroundCellAttributeMatrixPath(ITKImageProcessing::Montage::k_BackgroundDataContainerDefaultName, ITKImageProcessing::Montage::k_BackgroundAttributeMatrixDefaultName, "")
+, m_BackgroundImageArrayPath(ITKImageProcessing::Montage::k_BackgroundDataContainerDefaultName, ITKImageProcessing::Montage::k_BackgroundAttributeMatrixDefaultName,
+                             ITKImageProcessing::Montage::k_BackgroundDataArrayDefaultName)
+, m_LowThreshold(20000)
+, m_HighThreshold(65535)
+, m_ApplyCorrection(false)
 {
   m_ApplyMedianFilter = true;
-  m_Radius = {10.0f, 10.0f, 1.0f};
+  m_MedianRadius = {10.0f, 10.0f, 1.0f};
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-CalculateBackground::~CalculateBackground() = default;
+IlluminationCorrection::~IlluminationCorrection() = default;
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CalculateBackground::setupFilterParameters()
+void IlluminationCorrection::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
 
   MultiDataContainerSelectionFilterParameter::RequirementType req;
   req.dcGeometryTypes.push_back(IGeometry::Type::Image);
   req.dcGeometryTypes.push_back(IGeometry::Type::RectGrid);
-  parameters.push_back(SIMPL_NEW_MDC_SELECTION_FP("Select Image Data Containers", DataContainers, FilterParameter::Parameter, CalculateBackground, req));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Input Attribute Matrix Name", CellAttributeMatrixName, FilterParameter::RequiredArray, CalculateBackground));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Input Image Array Name", ImageDataArrayName, FilterParameter::RequiredArray, CalculateBackground));
-  parameters.push_back(SIMPL_NEW_STRING_FP(::k_OutputProcessedImageLabel, CorrectedImageDataArrayName, FilterParameter::CreatedArray, CalculateBackground));
+  parameters.push_back(SIMPL_NEW_MDC_SELECTION_FP("Select Image Data Containers", DataContainers, FilterParameter::Parameter, IlluminationCorrection, req));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Input Attribute Matrix Name", CellAttributeMatrixName, FilterParameter::RequiredArray, IlluminationCorrection));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Input Image Array Name", ImageDataArrayName, FilterParameter::RequiredArray, IlluminationCorrection));
+  parameters.push_back(SIMPL_NEW_STRING_FP(::k_OutputProcessedImageLabel, CorrectedImageDataArrayName, FilterParameter::CreatedArray, IlluminationCorrection));
 
-  parameters.push_back(SeparatorFilterParameter::New("Created Background Image Names", FilterParameter::CreatedArray));
+  parameters.push_back(SeparatorFilterParameter::New("Created Background Image Name", FilterParameter::CreatedArray));
 
-  parameters.push_back(SIMPL_NEW_DC_CREATION_FP(::k_BackgroundDataContainerLabel, BackgroundDataContainerPath, FilterParameter::CreatedArray, CalculateBackground));
+  parameters.push_back(SIMPL_NEW_DC_CREATION_FP(::k_BackgroundDataContainerLabel, BackgroundDataContainerPath, FilterParameter::CreatedArray, IlluminationCorrection));
   AttributeMatrixCreationFilterParameter::RequirementType cellAmReq;
   cellAmReq.dcGeometryTypes.push_back(IGeometry::Type::Image);
   cellAmReq.dcGeometryTypes.push_back(IGeometry::Type::RectGrid);
-  parameters.push_back(SIMPL_NEW_AM_CREATION_FP(::k_BackgroundAttributeMatrixLabel, BackgroundCellAttributeMatrixPath, FilterParameter::CreatedArray, CalculateBackground, cellAmReq));
+  parameters.push_back(SIMPL_NEW_AM_CREATION_FP(::k_BackgroundAttributeMatrixLabel, BackgroundCellAttributeMatrixPath, FilterParameter::CreatedArray, IlluminationCorrection, cellAmReq));
 
   DataArrayCreationFilterParameter::RequirementType imageReq;
   imageReq.dcGeometryTypes.push_back(IGeometry::Type::Image);
   imageReq.dcGeometryTypes.push_back(IGeometry::Type::RectGrid);
   imageReq.amTypes.push_back(AttributeMatrix::Type::Cell);
-  parameters.push_back(SIMPL_NEW_DA_CREATION_FP(::k_BackgroundAttributeArrayLabel, BackgroundImageArrayPath, FilterParameter::CreatedArray, CalculateBackground, imageReq));
+  parameters.push_back(SIMPL_NEW_DA_CREATION_FP(::k_BackgroundAttributeArrayLabel, BackgroundImageArrayPath, FilterParameter::CreatedArray, IlluminationCorrection, imageReq));
 
-  parameters.push_back(SIMPL_NEW_INTEGER_FP("Lowest allowed Image value (Image Value)", lowThresh, FilterParameter::Parameter, CalculateBackground));
-  parameters.push_back(SIMPL_NEW_INTEGER_FP("Highest allowed Image value (Image Value)", highThresh, FilterParameter::Parameter, CalculateBackground));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Lowest allowed Image value (Image Value)", LowThreshold, FilterParameter::Parameter, IlluminationCorrection));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Highest allowed Image value (Image Value)", HighThreshold, FilterParameter::Parameter, IlluminationCorrection));
 
-  // Only allow the Median Filter property if the required filter is available
-  FilterManager* filtManager = FilterManager::Instance();
-  IFilterFactory::Pointer factory = filtManager->getFactoryFromClassName(::k_MedianFilter);
   QStringList linkedProps;
-  if(nullptr != factory.get())
-  {
-    parameters.push_back(SeparatorFilterParameter::New("Background Image Processing", FilterParameter::Parameter));
 
-    linkedProps.clear();
-    linkedProps << "Radius";
-
-    parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Apply Median Filter to background Image", ApplyMedianFilter, FilterParameter::Parameter, CalculateBackground, linkedProps));
-    parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Radius", Radius, FilterParameter::Parameter, CalculateBackground));
-  }
+  parameters.push_back(SeparatorFilterParameter::New("Background Image Processing", FilterParameter::Parameter));
+  linkedProps.clear();
+  linkedProps << "MedianRadius";
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Apply median filter to background image", ApplyMedianFilter, FilterParameter::Parameter, IlluminationCorrection, linkedProps));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("MedianRadius", MedianRadius, FilterParameter::Parameter, IlluminationCorrection));
 
   parameters.push_back(SeparatorFilterParameter::New("Process Input Images", FilterParameter::Parameter));
-  parameters.push_back(SIMPL_NEW_BOOL_FP("Apply Background Correction to Input Images", DivideBackground, FilterParameter::Parameter, CalculateBackground));
+  linkedProps.clear();
+  linkedProps << "CorrectedImageDataArrayName"
+              << "ExportCorrectedImages";
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Apply Background Correction to Input Images", ApplyCorrection, FilterParameter::Parameter, IlluminationCorrection, linkedProps));
+
   linkedProps.clear();
   linkedProps << "OutputPath"
               << "FileExtension";
-  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Export Corrected Images", ExportCorrectedImages, FilterParameter::Parameter, CalculateBackground, linkedProps));
-  parameters.push_back(SIMPL_NEW_OUTPUT_PATH_FP("Output Path", OutputPath, FilterParameter::Parameter, CalculateBackground, "*", "*", 0));
-  parameters.push_back(SIMPL_NEW_STRING_FP("File Extension", FileExtension, FilterParameter::Parameter, CalculateBackground, 0));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Export Corrected Images", ExportCorrectedImages, FilterParameter::Parameter, IlluminationCorrection, linkedProps));
+  parameters.push_back(SIMPL_NEW_OUTPUT_PATH_FP("Output Path", OutputPath, FilterParameter::Parameter, IlluminationCorrection, "*", "*", 0));
+  parameters.push_back(SIMPL_NEW_STRING_FP("File Extension", FileExtension, FilterParameter::Parameter, IlluminationCorrection, 0));
   setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CalculateBackground::initialize()
+void IlluminationCorrection::initialize()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-CalculateBackground::ArrayType CalculateBackground::getArrayType()
+IlluminationCorrection::ArrayType IlluminationCorrection::getArrayType()
 {
   DataContainerArray::Pointer dca = getDataContainerArray();
   const QVector<size_t> cDims = {1};
@@ -493,7 +457,7 @@ CalculateBackground::ArrayType CalculateBackground::getArrayType()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-CalculateBackground::GeomType CalculateBackground::getGeomType()
+IlluminationCorrection::GeomType IlluminationCorrection::getGeomType()
 {
   DataContainerArray::Pointer dca = getDataContainerArray();
   for(const auto& dcName : m_DataContainers)
@@ -524,7 +488,7 @@ CalculateBackground::GeomType CalculateBackground::getGeomType()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CalculateBackground::dataCheck()
+void IlluminationCorrection::dataCheck()
 {
   clearErrorCode();
   clearWarningCode();
@@ -560,52 +524,55 @@ void CalculateBackground::dataCheck()
 
   // CheckInputArrays() templated on array and geometry types.
   ArrayType arrayType = getArrayType();
-  if(arrayType == CalculateBackground::ArrayType::Error)
+  if(arrayType == IlluminationCorrection::ArrayType::Error)
   {
     return;
   }
   GeomType geomType = getGeomType();
-  if(geomType == CalculateBackground::GeomType::Error)
+  if(geomType == IlluminationCorrection::GeomType::Error)
   {
     return;
   }
 
-  if(arrayType == ArrayType::UInt8 && (m_lowThresh > std::numeric_limits<uint8_t>::max() || m_highThresh > std::numeric_limits<uint8_t>::max()))
+  if(arrayType == ArrayType::UInt8 && (m_LowThreshold > std::numeric_limits<uint8_t>::max() || m_HighThreshold > std::numeric_limits<uint8_t>::max()))
   {
     setWarningCondition(53000, "Either the Lower or Upper threshold values are larger than the larges possibly value for UInt8. Valid values are between [0, 255]");
   }
-  if(arrayType == ArrayType::UInt16 && (m_lowThresh > std::numeric_limits<uint16_t>::max() || m_highThresh > std::numeric_limits<uint16_t>::max()))
+  if(arrayType == ArrayType::UInt16 && (m_LowThreshold > std::numeric_limits<uint16_t>::max() || m_HighThreshold > std::numeric_limits<uint16_t>::max()))
   {
     setWarningCondition(53001, "Either the Lower or Upper threshold values are larger than the larges possibly value for UInt8. Valid values are between [0, 65535]");
   }
-  if(m_lowThresh > m_highThresh)
+  if(m_LowThreshold > m_HighThreshold)
   {
     setErrorCondition(-53030, "The lower threshold is greater than the upper threshold.");
   }
 
   // Create all the 'Corrected Input Images'
-  for(const auto& dcName : m_DataContainers)
+  if(getApplyCorrection())
   {
-    DataContainer::Pointer dc = dca->getDataContainer(dcName);
-    if(nullptr != dc)
+    for(const auto& dcName : m_DataContainers)
     {
-      AttributeMatrix::Pointer am = dc->getAttributeMatrix(getCellAttributeMatrixName());
-      if(nullptr != am)
+      DataContainer::Pointer dc = dca->getDataContainer(dcName);
+      if(nullptr != dc)
       {
-        switch(arrayType)
+        AttributeMatrix::Pointer am = dc->getAttributeMatrix(getCellAttributeMatrixName());
+        if(nullptr != am)
         {
-        case ArrayType::UInt8:
-          am->createNonPrereqArray<UInt8ArrayType>(this, getCorrectedImageDataArrayName(), 0, {1});
-          break;
-        case ArrayType::UInt16:
-          am->createNonPrereqArray<UInt16ArrayType>(this, getCorrectedImageDataArrayName(), 0, {1});
-          break;
-        case ArrayType::Float32:
-          am->createNonPrereqArray<FloatArrayType>(this, getCorrectedImageDataArrayName(), 0, {1});
-          break;
-        default:
-          setErrorCondition(-53010, "Could create the corrected image Attribute Array because the Input array type is not UInt8, UInt16 or Float");
-          break;
+          switch(arrayType)
+          {
+          case ArrayType::UInt8:
+            am->createNonPrereqArray<UInt8ArrayType>(this, getCorrectedImageDataArrayName(), 0, {1});
+            break;
+          case ArrayType::UInt16:
+            am->createNonPrereqArray<UInt16ArrayType>(this, getCorrectedImageDataArrayName(), 0, {1});
+            break;
+          case ArrayType::Float32:
+            am->createNonPrereqArray<FloatArrayType>(this, getCorrectedImageDataArrayName(), 0, {1});
+            break;
+          default:
+            setErrorCondition(-53010, "Could create the corrected image Attribute Array because the Input array type is not UInt8, UInt16 or Float");
+            break;
+          }
         }
       }
     }
@@ -667,7 +634,6 @@ void CalculateBackground::dataCheck()
   {
   case ArrayType::UInt8:
     outputAttrMat->createNonPrereqArray<UInt8ArrayType>(this, m_BackgroundImageArrayPath.getDataArrayName(), 0, cDims, DataArrayID30);
-
     break;
   case ArrayType::UInt16:
     outputAttrMat->createNonPrereqArray<UInt16ArrayType>(this, m_BackgroundImageArrayPath.getDataArrayName(), 0, cDims, DataArrayID30);
@@ -684,7 +650,7 @@ void CalculateBackground::dataCheck()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CalculateBackground::preflight()
+void IlluminationCorrection::preflight()
 {
   // These are the REQUIRED lines of CODE to make sure the filter behaves correctly
   setInPreflight(true);              // Set the fact that we are preflighting.
@@ -698,7 +664,7 @@ void CalculateBackground::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CalculateBackground::execute()
+void IlluminationCorrection::execute()
 {
   // typically run your dataCheck function to make sure you can get that far and all your variables are initialized
   dataCheck();
@@ -733,7 +699,7 @@ void CalculateBackground::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IGeometryGrid::Pointer CalculateBackground::checkInputArrays(ArrayType arrayType, GeomType geomType)
+IGeometryGrid::Pointer IlluminationCorrection::checkInputArrays(ArrayType arrayType, GeomType geomType)
 {
   if(geomType != GeomType::ImageGeom && geomType != GeomType::RectGridGeom)
   {
@@ -772,7 +738,7 @@ IGeometryGrid::Pointer CalculateBackground::checkInputArrays(ArrayType arrayType
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CalculateBackground::calculateOutputValues(ArrayType arrayType, GeomType geomType)
+void IlluminationCorrection::calculateOutputValues(ArrayType arrayType, GeomType geomType)
 {
 
   if(geomType != GeomType::ImageGeom && geomType != GeomType::RectGridGeom)
@@ -810,7 +776,7 @@ void CalculateBackground::calculateOutputValues(ArrayType arrayType, GeomType ge
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CalculateBackground::notifyFeatureCompleted(const QString& dcName)
+void IlluminationCorrection::notifyFeatureCompleted(const QString& dcName)
 {
   QMutexLocker locker(&m_NotifyMessage);
   QString ss = QObject::tr("%1 Correction Completed").arg(dcName);
@@ -820,9 +786,9 @@ void CalculateBackground::notifyFeatureCompleted(const QString& dcName)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer CalculateBackground::newFilterInstance(bool copyFilterParameters) const
+AbstractFilter::Pointer IlluminationCorrection::newFilterInstance(bool copyFilterParameters) const
 {
-  CalculateBackground::Pointer filter = CalculateBackground::New();
+  IlluminationCorrection::Pointer filter = IlluminationCorrection::New();
   if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
@@ -833,7 +799,7 @@ AbstractFilter::Pointer CalculateBackground::newFilterInstance(bool copyFilterPa
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CalculateBackground::getCompiledLibraryName() const
+const QString IlluminationCorrection::getCompiledLibraryName() const
 {
   return ITKImageProcessingConstants::ITKImageProcessingBaseName;;
 }
@@ -841,7 +807,7 @@ const QString CalculateBackground::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CalculateBackground::getBrandingString() const
+const QString IlluminationCorrection::getBrandingString() const
 {
   return ITKImageProcessingConstants::ITKImageProcessingPluginDisplayName;
 }
@@ -849,7 +815,7 @@ const QString CalculateBackground::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CalculateBackground::getFilterVersion() const
+const QString IlluminationCorrection::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -860,7 +826,7 @@ const QString CalculateBackground::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CalculateBackground::getGroupName() const
+const QString IlluminationCorrection::getGroupName() const
 {
   return SIMPL::FilterGroups::ProcessingFilters;
 }
@@ -868,7 +834,7 @@ const QString CalculateBackground::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CalculateBackground::getSubGroupName() const
+const QString IlluminationCorrection::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::ImageFilters;
 }
@@ -876,15 +842,15 @@ const QString CalculateBackground::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CalculateBackground::getHumanLabel() const
+const QString IlluminationCorrection::getHumanLabel() const
 {
-  return "Calculate Background";
+  return "ITK::Illumination Correction";
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid CalculateBackground::getUuid()
+const QUuid IlluminationCorrection::getUuid()
 {
   return QUuid("{a48f7a51-0ca9-584f-a0ca-4bfebdc41d7c}");
 }

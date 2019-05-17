@@ -66,12 +66,12 @@ class ImportAxioVisionV4MontageTest
       DREAM3D_REQUIRED(err, ==, -388)
 
       filter->setInputFile(UnitTest::ImportAxioVisionV4MontageTest::AxioVisionMetaXmlFile);
-      filter->setDataContainerName(DataArrayPath());
+      filter->setDataContainerPath(DataArrayPath());
       filter->preflight();
       err = filter->getErrorCode();
       DREAM3D_REQUIRED(err, ==, -392)
 
-      filter->setDataContainerName(DataArrayPath("DataContainer"));
+      filter->setDataContainerPath(DataArrayPath("DataContainer"));
       filter->setCellAttributeMatrixName("");
       filter->preflight();
       err = filter->getErrorCode();

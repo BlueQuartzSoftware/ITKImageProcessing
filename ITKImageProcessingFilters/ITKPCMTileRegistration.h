@@ -63,7 +63,7 @@ class ITKImageProcessing_EXPORT ITKPCMTileRegistration : public AbstractFilter
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKPCMTileRegistration SUPERCLASS AbstractFilter)
   PYB11_PROPERTY(IntVec3Type MontageSize READ getMontageSize WRITE setMontageSize)
-  PYB11_PROPERTY(QStringList, ImageDataContainers READ getImageDataContainers WRITE setImageDataContainers)
+  PYB11_PROPERTY(QStringList ImageDataContainers READ getImageDataContainers WRITE setImageDataContainers)
   PYB11_PROPERTY(QString CommonAttributeMatrixName READ getCommonAttributeMatrixName WRITE setCommonAttributeMatrixName)
   PYB11_PROPERTY(QString CommonDataArrayName READ getCommonDataArrayName WRITE setCommonDataArrayName)
   PYB11_PROPERTY(float TileOverlap READ getTileOverlap WRITE setTileOverlap)

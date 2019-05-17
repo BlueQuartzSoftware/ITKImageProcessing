@@ -57,17 +57,19 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/ITKImageReader.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/util/MontageImportHelper.h"
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
 #include "ITKImageProcessing/ZeissXml/ZeissTagMapping.h"
 #include "MetaXmlUtils.h"
 
 #define ZIF_PRINT_DBG_MSGS 0
 
-static const QString k_AttributeArrayNames("AttributeArrayNames");
-static const QString k_DataContaineNameDefaultName("Tile");
-static const QString k_TileAttributeMatrixDefaultName("Tile Data");
-static const QString k_GrayScaleTempArrayName("gray_scale_temp");
-static const QString k_AxioVisionMetaData("AxioVision MetaData");
+namespace
+{
+const QString k_DCName("AxioVisionInfo");
+const QString k_MetaDataName("AxioVision MetaData");
+} // namespace
 
 enum createdPathID : RenameDataPath::DataID_t
 {
@@ -85,11 +87,24 @@ class ImportAxioVisionV4MontagePrivate
   ImportAxioVisionV4Montage* const q_ptr;
   ImportAxioVisionV4MontagePrivate(ImportAxioVisionV4Montage* ptr);
 
-  QDomElement m_Root;
   ZeissTagsXmlSection::Pointer m_RootTagsSection;
+
+  QDomElement m_Root;
   QString m_InputFile_Cache;
-  QDateTime m_LastRead;
+  DataArrayPath m_DataContainerPath;
+  QString m_CellAttributeMatrixName;
+  QString m_ImageDataArrayName;
+  bool m_ChangeOrigin = false;
+  bool m_ChangeSpacing = false;
+  bool m_ConvertToGrayScale = false;
+  FloatVec3Type m_Origin;
+  FloatVec3Type m_Spacing;
+  FloatVec3Type m_ColorWeights;
+  QDateTime m_TimeStamp_Cache;
   QString m_MontageInformation;
+  bool m_ImportAllMetaData = false;
+  QString m_MetaDataAttributeMatrixName;
+  std::vector<ImportAxioVisionV4Montage::BoundsType> m_BoundsCache;
 };
 
 // -----------------------------------------------------------------------------
@@ -99,7 +114,7 @@ ImportAxioVisionV4MontagePrivate::ImportAxioVisionV4MontagePrivate(ImportAxioVis
 : q_ptr(ptr)
 , m_Root(QDomElement())
 , m_InputFile_Cache("")
-, m_LastRead(QDateTime())
+, m_TimeStamp_Cache(QDateTime())
 {
 }
 
@@ -110,21 +125,17 @@ ImportAxioVisionV4MontagePrivate::ImportAxioVisionV4MontagePrivate(ImportAxioVis
 // -----------------------------------------------------------------------------
 ImportAxioVisionV4Montage::ImportAxioVisionV4Montage()
 : m_InputFile("")
-, m_DataContainerName(k_DataContaineNameDefaultName)
-, m_CellAttributeMatrixName(k_TileAttributeMatrixDefaultName)
-, m_ImageDataArrayName("Image Data")
-, m_MetaDataAttributeMatrixName(k_AxioVisionMetaData)
+, m_DataContainerPath(ITKImageProcessing::Montage::k_DataContaineNameDefaultName)
+, m_CellAttributeMatrixName(ITKImageProcessing::Montage::k_TileAttributeMatrixDefaultName)
+, m_ImageDataArrayName(ITKImageProcessing::Montage::k_TileDataArrayDefaultName)
+, m_MetaDataAttributeMatrixName(::k_MetaDataName)
 , m_ConvertToGrayScale(false)
 , m_ImportAllMetaData(false)
-, m_FileWasRead(false)
 , m_ChangeOrigin(false)
 , m_ChangeSpacing(false)
 , d_ptr(new ImportAxioVisionV4MontagePrivate(this))
 {
-  m_ColorWeights[0] = 0.2125f;
-  m_ColorWeights[1] = 0.7154f;
-  m_ColorWeights[2] = 0.0721f;
-
+  m_ColorWeights = FloatVec3Type(0.2125f, 0.7154f, 0.0721f);
   m_Origin = FloatVec3Type(0.0f, 0.0f, 0.0f);
   m_Spacing = FloatVec3Type(1.0f, 1.0f, 1.0f);
 }
@@ -134,10 +145,20 @@ ImportAxioVisionV4Montage::ImportAxioVisionV4Montage()
 // -----------------------------------------------------------------------------
 ImportAxioVisionV4Montage::~ImportAxioVisionV4Montage() = default;
 
-SIMPL_PIMPL_PROPERTY_DEF(ImportAxioVisionV4Montage, QString, InputFile_Cache)
-SIMPL_PIMPL_PROPERTY_DEF(ImportAxioVisionV4Montage, QDateTime, LastRead)
 SIMPL_PIMPL_PROPERTY_DEF(ImportAxioVisionV4Montage, QDomElement, Root)
-SIMPL_PIMPL_PROPERTY_DEF(ImportAxioVisionV4Montage, ZeissTagsXmlSection::Pointer, RootTagsSection)
+SIMPL_PIMPL_PROPERTY_DEF(ImportAxioVisionV4Montage, QString, InputFile_Cache)
+SIMPL_PIMPL_PROPERTY_DEF(ImportAxioVisionV4Montage, QDateTime, TimeStamp_Cache)
+SIMPL_PIMPL_PROPERTY_DEF(ImportAxioVisionV4Montage, std::vector<ImportAxioVisionV4Montage::BoundsType>, BoundsCache)
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ImportAxioVisionV4Montage::initialize()
+{
+  clearErrorCode();
+  clearWarningCode();
+  setCancel(false);
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -154,10 +175,8 @@ void ImportAxioVisionV4Montage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_BOOL_FP("Import All MetaData", ImportAllMetaData, FilterParameter::Parameter, ImportAxioVisionV4Montage));
 
   QStringList linkedProps("Origin");
-  linkedProps.push_back("UsePixelCoordinates");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Change Origin", ChangeOrigin, FilterParameter::Parameter, ImportAxioVisionV4Montage, linkedProps));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Origin", Origin, FilterParameter::Parameter, ImportAxioVisionV4Montage));
-  parameters.push_back(SIMPL_NEW_BOOL_FP("Pixel Coordinates", UsePixelCoordinates, FilterParameter::Parameter, ImportAxioVisionV4Montage));
 
   linkedProps.clear();
   linkedProps << "Spacing";
@@ -169,19 +188,12 @@ void ImportAxioVisionV4Montage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Convert To GrayScale", ConvertToGrayScale, FilterParameter::Parameter, ImportAxioVisionV4Montage, linkedProps));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Color Weighting", ColorWeights, FilterParameter::Parameter, ImportAxioVisionV4Montage));
 
-  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("DataContainer Prefix", DataContainerName, FilterParameter::CreatedArray, ImportAxioVisionV4Montage));
+  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("DataContainer Prefix", DataContainerPath, FilterParameter::CreatedArray, ImportAxioVisionV4Montage));
   parameters.push_back(SIMPL_NEW_STRING_FP("Cell Attribute Matrix Name", CellAttributeMatrixName, FilterParameter::CreatedArray, ImportAxioVisionV4Montage));
   parameters.push_back(SIMPL_NEW_STRING_FP("Image DataArray Name", ImageDataArrayName, FilterParameter::CreatedArray, ImportAxioVisionV4Montage));
   parameters.push_back(SIMPL_NEW_STRING_FP("MetaData AttributeMatrix Name", MetaDataAttributeMatrixName, FilterParameter::CreatedArray, ImportAxioVisionV4Montage));
 
   setFilterParameters(parameters);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void ImportAxioVisionV4Montage::initialize()
-{
 }
 
 // -----------------------------------------------------------------------------
@@ -211,7 +223,7 @@ void ImportAxioVisionV4Montage::dataCheck()
     setErrorCondition(-395, ss);
   }
 
-  if(getDataContainerName().isEmpty())
+  if(getDataContainerPath().isEmpty())
   {
     ss = QObject::tr("The Data Container Name cannot be empty.");
     setErrorCondition(-392, ss);
@@ -232,25 +244,6 @@ void ImportAxioVisionV4Montage::dataCheck()
     return;
   }
 
-  QString filtName = ITKImageProcessingConstants::ImageProcessingFilters::k_ReadImageFilterClassName;
-  FilterManager* fm = FilterManager::Instance();
-  IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filtName);
-  if(nullptr != filterFactory.get())
-  {
-    // If we get this far, the Factory is good so creating the filter should not fail unless something has
-    // horribly gone wrong in which case the system is going to come down quickly after this.
-    AbstractFilter::Pointer filter = filterFactory->create();
-    if(nullptr == filter.get())
-    {
-      ss = QObject::tr("The '%1' filter is not Available, did the ITKImageProcessing Plugin Load.").arg(filtName);
-      setErrorCondition(-391, ss);
-    }
-  }
-  if(getErrorCode() < 0)
-  {
-    return;
-  }
-
   DataContainerArray::Pointer dca = getDataContainerArray();
   if(nullptr == dca.get())
   {
@@ -262,7 +255,78 @@ void ImportAxioVisionV4Montage::dataCheck()
   // Parse the XML file to get all the meta-data information and create all the
   // data structure that is needed.
   QFile xmlFile(getInputFile());
-  readMetaXml(&xmlFile);
+
+  QString errorStr;
+  int errorLine = -1;
+  int errorColumn = -1;
+
+  QDateTime timeStamp(fi.lastModified());
+
+  QDomDocument domDocument;
+  QDomElement root;
+
+  // clang-format off
+  if(m_InputFile ==  d_ptr->m_InputFile_Cache
+    && m_DataContainerPath == d_ptr->m_DataContainerPath
+    && m_CellAttributeMatrixName == d_ptr->m_CellAttributeMatrixName
+    && m_ImageDataArrayName == d_ptr->m_ImageDataArrayName
+    && m_ChangeOrigin == d_ptr->m_ChangeOrigin
+    && m_ChangeSpacing == d_ptr->m_ChangeSpacing 
+    && m_ConvertToGrayScale == d_ptr->m_ConvertToGrayScale
+    && m_Origin == d_ptr->m_Origin
+    && m_Spacing == d_ptr->m_Spacing
+    && m_ColorWeights == d_ptr->m_ColorWeights
+    && d_ptr->m_TimeStamp_Cache.isValid()
+    && timeStamp == d_ptr->m_TimeStamp_Cache
+    && d_ptr->m_ImportAllMetaData == m_ImportAllMetaData
+    && d_ptr->m_MetaDataAttributeMatrixName == m_MetaDataAttributeMatrixName
+  )
+  // clang-format on
+  {
+    // We are reading from the cache, so set the FileWasRead flag to false
+    m_FileWasRead = false;
+    //    root = getRoot();
+  }
+  else
+  {
+    flushCache();
+    // We are reading from the file, so set the FileWasRead flag to true
+    m_FileWasRead = true;
+
+    if(!domDocument.setContent(&xmlFile, true, &errorStr, &errorLine, &errorColumn))
+    {
+      QString ss = QObject::tr("Parse error at line %1, column %2:\n%3").arg(errorLine).arg(errorColumn).arg(errorStr);
+      setErrorCondition(-71000, ss);
+      return;
+    }
+
+    root = domDocument.documentElement();
+    setRoot(root);
+    QDomElement tags = root.firstChildElement(ITKImageProcessingConstants::Xml::Tags);
+    if(tags.isNull())
+    {
+      QString ss = QObject::tr("Could not find the <ROOT><Tags> element. Aborting Parsing. Is the file a Zeiss _meta.xml file");
+      setErrorCondition(-71001, ss);
+      return;
+    }
+
+    d_ptr->m_Root = root;
+    d_ptr->m_InputFile_Cache = m_InputFile;
+    d_ptr->m_DataContainerPath = m_DataContainerPath;
+    d_ptr->m_CellAttributeMatrixName = m_CellAttributeMatrixName;
+    d_ptr->m_ImageDataArrayName = m_ImageDataArrayName;
+    d_ptr->m_ChangeOrigin = m_ChangeOrigin;
+    d_ptr->m_ChangeSpacing = m_ChangeSpacing;
+    d_ptr->m_ConvertToGrayScale = m_ConvertToGrayScale;
+    d_ptr->m_Origin = m_Origin;
+    d_ptr->m_Spacing = m_Spacing;
+    d_ptr->m_ColorWeights = m_ColorWeights;
+    setTimeStamp_Cache(timeStamp);
+
+    generateCache(root);
+  }
+
+  generateDataStructure();
 }
 
 // -----------------------------------------------------------------------------
@@ -296,6 +360,8 @@ void ImportAxioVisionV4Montage::execute()
   clearErrorCode();
   clearWarningCode();
 
+  readImages();
+
   /* If some error occurs this code snippet can report the error up the call chain*/
   if(err < 0)
   {
@@ -303,6 +369,30 @@ void ImportAxioVisionV4Montage::execute()
     setErrorCondition(-90000, ss);
     return;
   }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ImportAxioVisionV4Montage::flushCache()
+{
+
+  setTimeStamp_Cache(QDateTime());
+  setRoot(QDomElement());
+
+  d_ptr->m_InputFile_Cache = "";
+  d_ptr->m_DataContainerPath = DataArrayPath();
+  d_ptr->m_CellAttributeMatrixName = "";
+  d_ptr->m_ImageDataArrayName = "";
+  d_ptr->m_ChangeOrigin = false;
+  d_ptr->m_ChangeSpacing = false;
+  d_ptr->m_ConvertToGrayScale = false;
+  d_ptr->m_Origin = FloatVec3Type(0.0f, 0.0f, 0.0f);
+  d_ptr->m_Spacing = FloatVec3Type(1.0f, 1.0f, 1.0f);
+  d_ptr->m_ColorWeights = FloatVec3Type(0.2125f, 0.7154f, 0.0721f);
+  d_ptr->m_BoundsCache.clear();
+  d_ptr->m_ImportAllMetaData = false;
+  d_ptr->m_MetaDataAttributeMatrixName = "";
 }
 
 // -----------------------------------------------------------------------------
@@ -314,76 +404,15 @@ QString ImportAxioVisionV4Montage::getMontageInformation()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ImportAxioVisionV4Montage::readMetaXml(QIODevice* device)
+void ImportAxioVisionV4Montage::generateCache(QDomElement& root)
 {
-  QString errorStr;
-  int errorLine;
-  int errorColumn;
-
-  QFileInfo fi(getInputFile());
-  QDateTime lastModified(fi.lastModified());
-
-  QDomDocument domDocument;
-  QDomElement root;
-  ZeissTagsXmlSection::Pointer rootTagsSection;
-
-  if(getInputFile() == getInputFile_Cache() && getLastRead().isValid() && lastModified.msecsTo(getLastRead()) >= 0)
+  // First parse the <ROOT><Tags> section to get the values of how many images we are going to have
+  QDomElement tags = root.firstChildElement(ITKImageProcessingConstants::Xml::Tags);
+  ZeissTagsXmlSection::Pointer rootTagsSection = MetaXmlUtils::ParseTagsSection(this, tags);
+  if(nullptr == rootTagsSection.get())
   {
-    // We are reading from the cache, so set the FileWasRead flag to false
-    m_FileWasRead = false;
-    root = getRoot();
-    rootTagsSection = getRootTagsSection();
+    return;
   }
-  else
-  {
-    // We are reading from the file, so set the FileWasRead flag to true
-    m_FileWasRead = true;
-
-    if(!domDocument.setContent(device, true, &errorStr, &errorLine, &errorColumn))
-    {
-      QString ss = QObject::tr("Parse error at line %1, column %2:\n%3").arg(errorLine).arg(errorColumn).arg(errorStr);
-      setErrorCondition(-70000, ss);
-      return;
-    }
-
-    root = domDocument.documentElement();
-
-    QDomElement tags = root.firstChildElement(ITKImageProcessingConstants::Xml::Tags);
-    if(tags.isNull())
-    {
-      QString ss = QObject::tr("Could not find the <ROOT><Tags> element. Aborting Parsing. Is the file a Zeiss _meta.xml file");
-      setErrorCondition(-70001, ss);
-      return;
-    }
-
-    // First parse the <ROOT><Tags> section to get the values of how many images we are going to have
-    rootTagsSection = MetaXmlUtils::ParseTagsSection(this, tags);
-    if(nullptr == rootTagsSection.get())
-    {
-      return;
-    }
-
-    // Set the data into the cache
-    setRootTagsSection(rootTagsSection);
-
-    QDomElement rootCopy = root.cloneNode().toElement();
-    setRoot(rootCopy);
-
-    // Set the file path and time stamp into the cache
-    setLastRead(QDateTime::currentDateTime());
-    setInputFile_Cache(getInputFile());
-  }
-
-  // Now parse each of the <pXXX> tags
-  parseImages(root, rootTagsSection);
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void ImportAxioVisionV4Montage::parseImages(QDomElement& root, const ZeissTagsXmlSection::Pointer& rootTagsSection)
-{
 
   int32_t imageCount = MetaXmlUtils::GetInt32Entry(this, rootTagsSection.get(), Zeiss::MetaXML::ImageCountRawId);
   if(getErrorCode() < 0)
@@ -410,17 +439,15 @@ void ImportAxioVisionV4Montage::parseImages(QDomElement& root, const ZeissTagsXm
   // Figure out the max padding digits for both the imageCount (we need that to generate the proper xml tag) and
   // the row/col values because we need to have a consistent numbering format for later filters.
   int imageCountPadding = MetaXmlUtils::CalculatePaddingDigits(imageCount);
-  int32_t rowCountPadding = MetaXmlUtils::CalculatePaddingDigits(m_RowCount);
-  int32_t colCountPadding = MetaXmlUtils::CalculatePaddingDigits(m_ColumnCount);
-  int charPaddingCount = std::max(rowCountPadding, colCountPadding);
+  // int32_t rowCountPadding = MetaXmlUtils::CalculatePaddingDigits(m_RowCount);
+  // int32_t colCountPadding = MetaXmlUtils::CalculatePaddingDigits(m_ColumnCount);
+  // int charPaddingCount = std::max(rowCountPadding, colCountPadding);
   FloatVec3Type minCoord = {std::numeric_limits<float>::max(), std::numeric_limits<float>::max(), std::numeric_limits<float>::max()};
   FloatVec3Type minSpacing = {std::numeric_limits<float>::max(), std::numeric_limits<float>::max(), std::numeric_limits<float>::max()};
 
-  DataContainerArray::Pointer dca = getDataContainerArray();
-
-  std::vector<ImageGeom::Pointer> geometries;
-
-  // Loop over every image in the _meta[0]ml file
+  std::vector<ImageGeom::Pointer> geometries(imageCount);
+  std::vector<BoundsType> bounds(imageCount);
+  // Loop over every image in the _meta.xml file
   for(int p = 0; p < imageCount; p++)
   {
     // Generate the xml tag that is for this image
@@ -433,7 +460,7 @@ void ImportAxioVisionV4Montage::parseImages(QDomElement& root, const ZeissTagsXm
     out << p;
 
     // Send a status update on the progress
-    QString msg = QString("%1: Importing file %2 of %3").arg(getHumanLabel()).arg(p).arg(imageCount);
+    QString msg = QString("%1: Caching meta data for file %2 of %3").arg(getHumanLabel()).arg(p).arg(imageCount);
     notifyStatusMessage(msg);
 
     // Drill down into the XML document....
@@ -473,26 +500,9 @@ void ImportAxioVisionV4Montage::parseImages(QDomElement& root, const ZeissTagsXm
     {
       return;
     }
-
-    // Create our DataContainer Name using a Prefix and a rXXcYY format.
-    QString dcName = getDataContainerName().getDataContainerName();
-    QTextStream dcNameStream(&dcName);
-    dcNameStream << "_r";
-    dcNameStream.setFieldWidth(charPaddingCount);
-    dcNameStream.setFieldAlignment(QTextStream::AlignRight);
-    dcNameStream.setPadChar('0');
-    dcNameStream << rowIndex;
-    dcNameStream.setFieldWidth(0);
-    dcNameStream << "c";
-    dcNameStream.setFieldWidth(charPaddingCount);
-    dcNameStream << colIndex;
-
-    // Create the DataContainer with a name based on the ROW & COLUMN indices
-    DataContainer::Pointer dc = dca->createNonPrereqDataContainer<AbstractFilter>(this, dcName);
-
     // Create the Image Geometry
     ImageGeom::Pointer image = initializeImageGeom(root, photoTagsSection);
-    dc->setGeometry(image);
+    geometries[p] = image;
 
     minSpacing = image->getSpacing();
 
@@ -501,25 +511,82 @@ void ImportAxioVisionV4Montage::parseImages(QDomElement& root, const ZeissTagsXm
     minCoord[1] = std::min(origin[1], minCoord[1]);
     minCoord[2] = 0.0f;
 
-    geometries.emplace_back(image);
+    QFileInfo fi(imageName);
+    QString imagePath = fi.completeBaseName() + "_" + pTag + "." + fi.suffix();
+    fi = QFileInfo(getInputFile());
+    imagePath = fi.absoluteDir().path() + "/" + imagePath;
+    fi = QFileInfo(imagePath);
+    if(!fi.exists())
+    {
+      setErrorCondition(-224, QString("Montage Tile File does not exist.'%1'").arg(imagePath));
+    }
+
+    BoundsType bound;
+    bound.Filename = imagePath;
+    bound.Dims = image->getDimensions();
+    bound.Origin = image->getOrigin();
+    bound.Spacing = image->getSpacing();
+    bound.Col = colIndex;
+    bound.Row = rowIndex;
 
     if(getImportAllMetaData())
     {
-      QVector<size_t> dims = {1};
-      AttributeMatrix::Pointer metaAm = dc->createAndAddAttributeMatrix(dims, getMetaDataAttributeMatrixName(), AttributeMatrix::Type::Generic);
+      std::vector<size_t> dims = {1};
+      AttributeMatrix::Pointer metaAm = AttributeMatrix::Create(dims, getMetaDataAttributeMatrixName(), AttributeMatrix::Type::Generic);
       ZeissTagsXmlSection::MetaDataType tagMap = photoTagsSection->getMetaDataMap();
       for(const auto& value : tagMap)
       {
         IDataArray::Pointer dataArray = value->createDataArray(!getInPreflight());
         metaAm->insertOrAssign(dataArray);
       }
+      bound.MetaData = metaAm;
     }
-    // Read the image into a data array
-    importImage(dc.get(), imageName, pTag, p);
+
+    bounds[p] = bound;
+  }
+
+  // Get the meta information from disk for each image
+  for(auto& bound : bounds)
+  {
+    DataArrayPath dap(::k_DCName, ITKImageProcessing::Montage::k_AMName, ITKImageProcessing::Montage::k_AAName);
+    AbstractFilter::Pointer imageImportFilter = MontageImportHelper::CreateImageImportFilter(this, bound.Filename, dap);
+    imageImportFilter->preflight();
+    if(imageImportFilter->getErrorCode() < 0)
+    {
+      setErrorCondition(imageImportFilter->getErrorCode(), "Error Preflighting Image Import Filter.");
+      continue;
+    }
+
+    DataContainerArray::Pointer importImageDca = imageImportFilter->getDataContainerArray();
+    {
+      DataContainer::Pointer fromDca = importImageDca->getDataContainer(::k_DCName);
+      AttributeMatrix::Pointer fromCellAttrMat = fromDca->getAttributeMatrix(ITKImageProcessing::Montage::k_AMName);
+      IDataArray::Pointer fromImageData = fromCellAttrMat->getAttributeArray(ITKImageProcessing::Montage::k_AAName);
+      fromImageData->setName(getImageDataArrayName());
+      bound.ImageDataProxy = fromImageData;
+    }
 
     if(getConvertToGrayScale())
     {
-      convertToGrayScale(dc.get(), imageName, pTag);
+      DataArrayPath daPath(::k_DCName, ITKImageProcessing::Montage::k_AMName, ITKImageProcessing::Montage::k_AAName);
+      AbstractFilter::Pointer grayScaleFilter = MontageImportHelper::CreateColorToGrayScaleFilter(this, daPath, getColorWeights(), ITKImageProcessing::Montage::k_GrayScaleTempArrayName);
+      grayScaleFilter->setDataContainerArray(importImageDca);
+      grayScaleFilter->preflight();
+      if(grayScaleFilter->getErrorCode() < 0)
+      {
+        setErrorCondition(grayScaleFilter->getErrorCode(), "Error Preflighting Color to GrayScale filter");
+        continue;
+      }
+
+      DataContainerArray::Pointer colorToGrayDca = grayScaleFilter->getDataContainerArray();
+      DataContainer::Pointer fromDca = colorToGrayDca->getDataContainer(::k_DCName);
+      AttributeMatrix::Pointer fromCellAttrMat = fromDca->getAttributeMatrix(ITKImageProcessing::Montage::k_AMName);
+      // Remove the RGB Attribute Array so we can rename the gray scale AttributeArray
+      IDataArray::Pointer rgbImageArray = fromCellAttrMat->removeAttributeArray(ITKImageProcessing::Montage::k_AAName);
+      QString grayScaleArrayName = ITKImageProcessing::Montage::k_GrayScaleTempArrayName + ITKImageProcessing::Montage::k_AAName;
+      IDataArray::Pointer fromGrayScaleData = fromCellAttrMat->removeAttributeArray(grayScaleArrayName);
+      fromGrayScaleData->setName(getImageDataArrayName());
+      bound.ImageDataProxy = fromGrayScaleData;
     }
   }
 
@@ -533,16 +600,14 @@ void ImportAxioVisionV4Montage::parseImages(QDomElement& root, const ZeissTagsXm
   // Now adjust the origin/spacing if needed
   if(getChangeOrigin() || getChangeSpacing())
   {
-
     if(getChangeOrigin())
     {
-      overrideOrigin = {m_Origin[0], m_Origin[1], m_Origin[2]};
+      overrideOrigin = m_Origin;
     }
     if(getChangeSpacing())
     {
-      overrideSpacing = {m_Spacing[0], m_Spacing[1], m_Spacing[2]};
+      overrideSpacing = m_Spacing;
     }
-
     for(const auto& image : geometries)
     {
       FloatVec3Type currentOrigin = image->getOrigin();
@@ -551,19 +616,11 @@ void ImportAxioVisionV4Montage::parseImages(QDomElement& root, const ZeissTagsXm
       for(size_t i = 0; i < 3; i++)
       {
         float delta = currentOrigin[i] - minCoord[i];
-        if (m_UsePixelCoordinates)
-        {
-          // Convert to Pixel Coords
-          delta = delta / currentSpacing[i];
-        }
-        //      // Convert to the override origin
-        //      delta = delta * overrideSpacing[i];
+        // Convert to Pixel Coords
+        delta = delta / currentSpacing[i];
+        // Convert to the override origin
+        delta = delta * overrideSpacing[i];
         currentOrigin[i] = overrideOrigin[i] + delta;
-        if (m_UsePixelCoordinates)
-        {
-          // Convert back to physical coords
-          currentOrigin[i] = currentOrigin[i] * currentSpacing[i];
-        }
       }
       image->setOrigin(currentOrigin.data());
       image->setSpacing(overrideSpacing.data());
@@ -572,6 +629,57 @@ void ImportAxioVisionV4Montage::parseImages(QDomElement& root, const ZeissTagsXm
   ss << "\nOrigin: " << overrideOrigin[0] << ", " << overrideOrigin[1] << ", " << overrideOrigin[2];
   ss << "  Spacing: " << overrideSpacing[0] << ", " << overrideSpacing[1] << ", " << overrideSpacing[2];
   d_ptr->m_MontageInformation = montageInfo;
+  setBoundsCache(bounds);
+}
+
+// -----------------------------------------------------------------------------
+void ImportAxioVisionV4Montage::generateDataStructure()
+{
+  std::vector<BoundsType>& bounds = d_ptr->m_BoundsCache;
+
+  DataContainerArray::Pointer dca = getDataContainerArray();
+
+  // int imageCountPadding = MetaXmlUtils::CalculatePaddingDigits(bounds.size());
+  int32_t rowCountPadding = MetaXmlUtils::CalculatePaddingDigits(m_RowCount);
+  int32_t colCountPadding = MetaXmlUtils::CalculatePaddingDigits(m_ColumnCount);
+  int charPaddingCount = std::max(rowCountPadding, colCountPadding);
+
+  for(const auto& bound : bounds)
+  {
+    // Create our DataContainer Name using a Prefix and a rXXcYY format.
+    QString dcName = getDataContainerPath().getDataContainerName();
+    QTextStream dcNameStream(&dcName);
+    dcNameStream << "_r";
+    dcNameStream.setFieldWidth(charPaddingCount);
+    dcNameStream.setFieldAlignment(QTextStream::AlignRight);
+    dcNameStream.setPadChar('0');
+    dcNameStream << bound.Row;
+    dcNameStream.setFieldWidth(0);
+    dcNameStream << "c";
+    dcNameStream.setFieldWidth(charPaddingCount);
+    dcNameStream << bound.Col;
+
+    // Create the DataContainer with a name based on the ROW & COLUMN indices
+    DataContainer::Pointer dc = dca->createNonPrereqDataContainer<AbstractFilter>(this, dcName);
+
+    // Create the Image Geometry
+    ImageGeom::Pointer image = ImageGeom::CreateGeometry(dcName);
+    image->setDimensions(bound.Dims);
+    image->setOrigin(bound.Origin);
+    image->setSpacing(bound.Spacing);
+
+    dc->setGeometry(image);
+
+    using StdVecSizeType = std::vector<size_t>;
+    // Create the Cell Attribute Matrix into which the image data would be read
+    AttributeMatrix::Pointer cellAttrMat = AttributeMatrix::Create(bound.Dims.toContainer<StdVecSizeType>(), getCellAttributeMatrixName(), AttributeMatrix::Type::Cell);
+    dc->addOrReplaceAttributeMatrix(cellAttrMat);
+    cellAttrMat->addOrReplaceAttributeArray(bound.ImageDataProxy);
+    if(getImportAllMetaData())
+    {
+      dc->addOrReplaceAttributeMatrix(bound.MetaData);
+    }
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -628,144 +736,99 @@ void ImportAxioVisionV4Montage::addRootMetaData(const AttributeMatrix::Pointer& 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ImportAxioVisionV4Montage::importImage(DataContainer* dc, const QString& imageName, const QString& pTag, int imageIndex)
+void ImportAxioVisionV4Montage::readImages()
 {
+  std::vector<BoundsType>& bounds = d_ptr->m_BoundsCache;
+  // Import Each Image
+  DataContainerArray::Pointer dca = getDataContainerArray();
 
-  QFileInfo fi(imageName);
-  QString imagePath = fi.completeBaseName() + "_" + pTag + "." + fi.suffix();
-  // QString dataArrayName = fi.completeBaseName() + "_" + pTag;
-  QString imageDataArrayNamme = getImageDataArrayName();
+  //  int imageCountPadding = MetaXmlUtils::CalculatePaddingDigits(bounds.size());
+  int32_t rowCountPadding = MetaXmlUtils::CalculatePaddingDigits(m_RowCount);
+  int32_t colCountPadding = MetaXmlUtils::CalculatePaddingDigits(m_ColumnCount);
+  int charPaddingCount = std::max(rowCountPadding, colCountPadding);
 
-  // Add this Array name to the DataArray that will ensure the correct ordering
-  // attributeArrayNames->setValue(imageIndex, dataArrayName);
-
-  fi = QFileInfo(getInputFile());
-  imagePath = fi.absoluteDir().path() + "/" + imagePath;
-  //   std::string sPath = imagePath.toStdString();
-
-  QString filtName = ITKImageProcessingConstants::ImageProcessingFilters::k_ReadImageFilterClassName;
-  FilterManager* fm = FilterManager::Instance();
-  IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filtName);
-  if(nullptr != filterFactory.get())
+  for(const auto& bound : bounds)
   {
-    // If we get this far, the Factory is good so creating the filter should not fail unless something has
-    // horribly gone wrong in which case the system is going to come down quickly after this.
-    AbstractFilter::Pointer filter = filterFactory->create();
+    QString msg;
+    QTextStream out(&msg);
+    out << "Importing " << bound.Filename;
+    notifyStatusMessage(msg);
+    // Create our DataContainer Name using a Prefix and a rXXcYY format.
+    QString dcName = getDataContainerPath().getDataContainerName();
+    QTextStream dcNameStream(&dcName);
+    dcNameStream << "_r";
+    dcNameStream.setFieldWidth(charPaddingCount);
+    dcNameStream.setFieldAlignment(QTextStream::AlignRight);
+    dcNameStream.setPadChar('0');
+    dcNameStream << bound.Row;
+    dcNameStream.setFieldWidth(0);
+    dcNameStream << "c";
+    dcNameStream.setFieldWidth(charPaddingCount);
+    dcNameStream << bound.Col;
 
-    // Connect up the Error/Warning/Progress object so the filter can report those things
-    connect(filter.get(), SIGNAL(messageGenerated(const AbstractMessage::Pointer&)), this, SIGNAL(messageGenerated(const AbstractMessage::Pointer&)));
-    DataContainerArray::Pointer dca = DataContainerArray::New();
+    // The DataContainer with a name based on the ROW & COLUMN indices is already created in the preflight
+    DataContainer::Pointer dc = dca->getDataContainer(dcName);
+    // So is the Geometry
+    ImageGeom::Pointer image = dc->getGeometryAs<ImageGeom>();
 
-    filter->setDataContainerArray(dca); // AbstractFilter implements this so no problem
-	
-	// Add to filename list
-	m_FilenameList.push_back(imagePath);
+    // Create the Image Geometry
+    SizeVec3Type dims = image->getDimensions();
+    // FloatVec3Type origin = image->getOrigin();
+    // FloatVec3Type spacing = image->getSpacing();
 
-    bool propWasSet = filter->setProperty("FileName", imagePath);
-    if(!propWasSet)
+    std::vector<size_t> tDims = {dims[0], dims[1], dims[2]};
+    // The Cell AttributeMatrix is also already created at this point
+    AttributeMatrix::Pointer cellAttrMat = dc->getAttributeMatrix(getCellAttributeMatrixName());
+    // Instantiate the Image Import Filter to actually read the image into a data array
+    DataArrayPath dap(::k_DCName, ITKImageProcessing::Montage::k_AMName, getImageDataArrayName()); // This is just a temp path for the subfilter to use
+    AbstractFilter::Pointer imageImportFilter = MontageImportHelper::CreateImageImportFilter(this, bound.Filename, dap);
+    if(nullptr == imageImportFilter.get())
     {
-      QString ss = QObject::tr("Error Setting Property '%1' into filter '%2' which is a subfilter called by %3. The property was not set which could mean the property was not exposed with a "
-                               "Q_PROPERTY macro. Please notify the developers.")
-                       .arg("InputFileName", filtName, getHumanLabel());
-      setErrorCondition(-70015, ss);
+      continue;
     }
-    QVariant var;
-    var.setValue(DataArrayPath(dc->getName(), "", ""));
-    propWasSet = filter->setProperty("DataContainerName", var);
-    if(!propWasSet)
+    // This same filter was used to preflight so as long as nothing changes on disk this really should work....
+    imageImportFilter->execute();
+    if(imageImportFilter->getErrorCode() < 0)
     {
-      QString ss = QObject::tr("Error Setting Property '%1' into filter '%2' which is a subfilter called by %3. The property was not set which could mean the property was not exposed with a "
-                               "Q_PROPERTY macro. Please notify the developers.")
-                       .arg("DataContainerName", filtName, getHumanLabel());
-      setErrorCondition(-70016, ss);
+      setErrorCondition(imageImportFilter->getErrorCode(), "Error Executing Image Import Filter.");
+      continue;
     }
+    // Now transfer the image data from the actual image data read from disk into our existing Attribute Matrix
+    DataContainerArray::Pointer importImageDca = imageImportFilter->getDataContainerArray();
+    DataContainer::Pointer fromDc = importImageDca->getDataContainer(::k_DCName);
+    AttributeMatrix::Pointer fromCellAttrMat = fromDc->getAttributeMatrix(ITKImageProcessing::Montage::k_AMName);
+    // IDataArray::Pointer fromImageData = fromCellAttrMat->getAttributeArray(getImageDataArrayName());
 
-    propWasSet = filter->setProperty("CellAttributeMatrixName", getCellAttributeMatrixName());
-    if(!propWasSet)
+    if(getConvertToGrayScale())
     {
-      QString ss = QObject::tr("Error Setting Property '%1' into filter '%2' which is a subfilter called by %3. The property was not set which could mean the property was not exposed with a "
-                               "Q_PROPERTY macro. Please notify the developers.")
-                       .arg("CellAttributeMatrixName", filtName, getHumanLabel());
-      setErrorCondition(-70017, ss);
-    }
+      AbstractFilter::Pointer grayScaleFilter = MontageImportHelper::CreateColorToGrayScaleFilter(this, dap, getColorWeights(), ITKImageProcessing::Montage::k_GrayScaleTempArrayName);
+      grayScaleFilter->setDataContainerArray(importImageDca); // Use the Data COntainer array that was use for the import. It is setup and ready to go
+      connect(grayScaleFilter.get(), SIGNAL(messageGenerated(const AbstractMessage::Pointer&)), this, SIGNAL(messageGenerated(const AbstractMessage::Pointer&)));
+      grayScaleFilter->execute();
+      if(grayScaleFilter->getErrorCode() < 0)
+      {
+        setErrorCondition(grayScaleFilter->getErrorCode(), "Error Executing Color to GrayScale filter");
+        continue;
+      }
 
-    propWasSet = filter->setProperty("ImageDataArrayName", imageDataArrayNamme);
-    if(!propWasSet)
-    {
-      QString ss = QObject::tr("Error Setting Property '%1' into filter '%2' which is a subfilter called by %3. The property was not set which could mean the property was not exposed with a "
-                               "Q_PROPERTY macro. Please notify the developers.")
-                       .arg("ImageDataArrayName", filtName, getHumanLabel());
-      setErrorCondition(-70018, ss);
-    }
+      DataContainerArray::Pointer c2gDca = grayScaleFilter->getDataContainerArray();
+      DataContainer::Pointer c2gDc = c2gDca->getDataContainer(::k_DCName);
+      AttributeMatrix::Pointer c2gAttrMat = c2gDc->getAttributeMatrix(ITKImageProcessing::Montage::k_AMName);
 
-    if(getInPreflight())
-    {
-      filter->preflight();
+      QString grayScaleArrayName = ITKImageProcessing::Montage::k_GrayScaleTempArrayName + getImageDataArrayName();
+      // IDataArray::Pointer fromGrayScaleData = fromCellAttrMat->getAttributeArray(grayScaleArrayName);
+
+      IDataArray::Pointer rgbImageArray = c2gAttrMat->removeAttributeArray(ITKImageProcessing::Montage::k_AAName);
+      IDataArray::Pointer gray = c2gAttrMat->removeAttributeArray(grayScaleArrayName);
+      gray->setName(getImageDataArrayName());
+      cellAttrMat->addOrReplaceAttributeArray(gray);
     }
     else
     {
-      filter->execute();
+      // Copy the IDataArray (which contains the image data) from the temp data container array into our persistent data structure
+      IDataArray::Pointer gray = fromCellAttrMat->removeAttributeArray(getImageDataArrayName());
+      cellAttrMat->addOrReplaceAttributeArray(gray);
     }
-
-    if(getErrorCode() >= 0 && filter->getErrorCode() >= 0)
-    {
-      QString targetName = dc->getName();
-      DataContainer::Pointer fromDca = dca->getDataContainer(targetName);
-      AttributeMatrix::Pointer cellAttrMat = fromDca->getAttributeMatrix(getCellAttributeMatrixName());
-      dc->addOrReplaceAttributeMatrix(cellAttrMat);
-    }
-  }
-  else
-  {
-    QString ss = QObject::tr("Error trying to instantiate the '%1' filter which is typically included in the 'ImageProcessing' plugin.")
-                     .arg(ITKImageProcessingConstants::ImageProcessingFilters::k_ReadImageFilterClassName);
-    setErrorCondition(-70019, ss);
-    return;
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -------------------------------------------------------------------------
-void ImportAxioVisionV4Montage::convertToGrayScale(DataContainer* dc, const QString& imageName, const QString& pTag)
-{
-
-  DataArrayPath dap(dc->getName(), getCellAttributeMatrixName(), getImageDataArrayName());
-
-  ConvertColorToGrayScale::Pointer filter = ConvertColorToGrayScale::New();
-
-  // Connect up the Error/Warning/Progress object so the filter can report those things
-  connect(filter.get(), SIGNAL(messageGenerated(const AbstractMessage::Pointer&)), this, SIGNAL(messageGenerated(const AbstractMessage::Pointer&)));
-
-  filter->setDataContainerArray(getDataContainerArray()); // AbstractFilter implements this so no problem
-  filter->setConversionAlgorithm(0);
-  filter->setColorWeights(getColorWeights());
-  QVector<DataArrayPath> inputDataArrayVector = {dap};
-  filter->setInputDataArrayVector(inputDataArrayVector);
-  filter->setCreateNewAttributeMatrix(false);
-  filter->setOutputAttributeMatrixName(getCellAttributeMatrixName());
-  filter->setOutputArrayPrefix(k_GrayScaleTempArrayName);
-
-  if(getInPreflight())
-  {
-    filter->preflight();
-  }
-  else
-  {
-    filter->execute();
-  }
-
-  if(filter->getErrorCode() >= 0)
-  {
-    AttributeMatrix::Pointer am = dc->getAttributeMatrix(getCellAttributeMatrixName());
-    IDataArray::Pointer rgb = am->removeAttributeArray(getImageDataArrayName());
-    IDataArray::Pointer gray = am->removeAttributeArray(k_GrayScaleTempArrayName + getImageDataArrayName());
-    gray->setName(rgb->getName());
-    am->insertOrAssign(gray);
-  }
-  else
-  {
-    setErrorCondition(filter->getErrorCode(), "Grayscale conversion failed. The data must be RGB or RGBA to convert.");
   }
 }
 
@@ -884,7 +947,7 @@ const QString ImportAxioVisionV4Montage::getSubGroupName() const
 // -----------------------------------------------------------------------------
 const QString ImportAxioVisionV4Montage::getHumanLabel() const
 {
-  return "Zeiss AxioVision Import (V4)";
+  return "ITK::Zeiss AxioVision Import (V4)";
 }
 
 // -----------------------------------------------------------------------------

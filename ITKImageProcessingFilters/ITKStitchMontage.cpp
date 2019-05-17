@@ -169,7 +169,16 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKStitchMontage::ITKStitchMontage() = default;
+ITKStitchMontage::ITKStitchMontage()
+: m_MontageSize(IntVec3Type(0, 0, 0))
+, m_CommonAttributeMatrixName(ITKImageProcessing::Montage::k_TileAttributeMatrixDefaultName)
+, m_StitchMontage(false)
+, m_CommonDataArrayName(ITKImageProcessing::Montage::k_TileDataArrayDefaultName)
+, m_MontageDataContainerName(ITKImageProcessing::Montage::k_MontageDataContainerDefaultName)
+, m_MontageAttributeMatrixName(ITKImageProcessing::Montage::k_MontageAttributeMatrixDefaultName)
+, m_MontageDataArrayName(ITKImageProcessing::Montage::k_MontageDataArrayDefaultName)
+{
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -475,7 +484,7 @@ void ITKStitchMontage::createFijiDataStructure()
       continue;
     }
     ImageGeom::Pointer image = dcItem->getGeometryAs<ImageGeom>();
-    SizeVec3Type dimensions = image->getDimensions();
+    //   SizeVec3Type dimensions = image->getDimensions();
     FloatVec3Type origin = image->getOrigin();
 
     // Extract row and column data from the data container name
@@ -557,7 +566,6 @@ template <typename PixelType, typename MontageType, typename Resampler> void ITK
   using TransformType = itk::TranslationTransform<double, Dimension>;
 
   typename MontageType::TileIndexType ind;
-  bool lengthUnitSet = false;
   for(unsigned y = 0; y < m_yMontageSize; y++)
   {
     ind[1] = y;
@@ -569,12 +577,6 @@ template <typename PixelType, typename MontageType, typename Resampler> void ITK
       DataContainer::Pointer imageDC = GetImageDataContainer(y, x);
       // Check the resolution and fix if necessary
       ImageGeom::Pointer geom = imageDC->getGeometryAs<ImageGeom>();
-
-      if(!lengthUnitSet)
-      {
-        m_LengthUnit = static_cast<int32_t>(geom->getUnits());
-        lengthUnitSet = true;
-      }
 
       toITK->SetInput(imageDC);
       toITK->SetInPlace(true);
@@ -654,9 +656,6 @@ template <typename PixelType, typename OriginalImageType> void ITKStitchMontage:
   toDream3DFilter->SetDataArrayName(dataArrayPath.getDataArrayName().toStdString());
   toDream3DFilter->SetDataContainer(container);
   toDream3DFilter->Update();
-
-  ImageGeom::Pointer geom = container->getGeometryAs<ImageGeom>();
-  geom->setUnits(static_cast<IGeometry::LengthUnit>(m_LengthUnit));
 }
 
 // -----------------------------------------------------------------------------
@@ -791,5 +790,5 @@ const QString ITKStitchMontage::getSubGroupName() const
 // -----------------------------------------------------------------------------
 const QString ITKStitchMontage::getHumanLabel() const
 {
-  return "Stitch Montage";
+  return "ITK::Stitch Montage";
 }

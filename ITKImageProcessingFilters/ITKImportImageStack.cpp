@@ -171,6 +171,13 @@ void ITKImportImageStack::dataCheck()
     setErrorCondition(-64500, ss);
   }
 
+  QFileInfo fi(m_InputFileListInfo.InputPath);
+  if(!fi.exists())
+  {
+    QString ss = QObject::tr("The input directory does not exist: %1").arg(m_InputFileListInfo.InputPath);
+    setErrorCondition(-388, ss);
+  }
+
   DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName(), DataContainerID);
   if(getErrorCode() < 0 || nullptr == m.get())
   {
