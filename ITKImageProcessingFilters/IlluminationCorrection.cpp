@@ -87,19 +87,9 @@ enum createdPathID : RenameDataPath::DataID_t
 
 namespace
 {
-const QString k_DataContaineNameDefaultName("Mosaic");
-const QString k_TileAttributeMatrixDefaultName("Tile Data");
-const QString k_TileDataArrayDefaultName("Image Data");
-const QString k_TileCorrectedDefaultName("Corrected Image");
-
-const QString k_BackgroundDataContainerLabel("Created Data Container (Background)");
-const QString k_BackgroundAttributeMatrixLabel("Created Attribute Matrix (Background)");
-const QString k_BackgroundAttributeArrayLabel("Created Image Array Name (Background)");
-
-const QString k_BackgroundDataContainerDefaultName("Illumination Correction");
-const QString k_BackgroundAttributeMatrixDefaultName("Illumination Data");
-const QString k_BackgroundDataArrayDefaultName("Image Data");
-
+const QString k_BackgroundDataContainerLabel("Created Data Container (Corrected)");
+const QString k_BackgroundAttributeMatrixLabel("Created Attribute Matrix (Corrected)");
+const QString k_BackgroundAttributeArrayLabel("Created Image Array Name (Corrected)");
 const QString k_OutputProcessedImageLabel("Corrected Image Name");
 
 template <typename OutArrayType, typename AccumType>
@@ -326,15 +316,16 @@ void calculateOutputValues(IlluminationCorrection* filter)
 // -----------------------------------------------------------------------------
 IlluminationCorrection::IlluminationCorrection()
 : m_DataContainers("")
-, m_CellAttributeMatrixName(::k_TileAttributeMatrixDefaultName)
-, m_ImageDataArrayName(::k_TileDataArrayDefaultName)
-, m_CorrectedImageDataArrayName(::k_TileCorrectedDefaultName)
+, m_CellAttributeMatrixName(ITKImageProcessing::Montage::k_TileAttributeMatrixDefaultName)
+, m_ImageDataArrayName(ITKImageProcessing::Montage::k_TileDataArrayDefaultName)
+, m_CorrectedImageDataArrayName(ITKImageProcessing::Montage::k_TileCorrectedDefaultName)
 , m_ExportCorrectedImages(false)
 , m_OutputPath("")
 , m_FileExtension(".tif")
-, m_BackgroundDataContainerPath(::k_BackgroundDataContainerDefaultName)
-, m_BackgroundCellAttributeMatrixPath(::k_BackgroundDataContainerDefaultName, ::k_BackgroundAttributeMatrixDefaultName, "")
-, m_BackgroundImageArrayPath(::k_BackgroundDataContainerDefaultName, ::k_BackgroundAttributeMatrixDefaultName, ::k_BackgroundDataArrayDefaultName)
+, m_BackgroundDataContainerPath(ITKImageProcessing::Montage::k_BackgroundDataContainerDefaultName)
+, m_BackgroundCellAttributeMatrixPath(ITKImageProcessing::Montage::k_BackgroundDataContainerDefaultName, ITKImageProcessing::Montage::k_BackgroundAttributeMatrixDefaultName, "")
+, m_BackgroundImageArrayPath(ITKImageProcessing::Montage::k_BackgroundDataContainerDefaultName, ITKImageProcessing::Montage::k_BackgroundAttributeMatrixDefaultName,
+                             ITKImageProcessing::Montage::k_BackgroundDataArrayDefaultName)
 , m_LowThreshold(20000)
 , m_HighThreshold(65535)
 , m_ApplyCorrection(false)
@@ -380,8 +371,6 @@ void IlluminationCorrection::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Lowest allowed Image value (Image Value)", LowThreshold, FilterParameter::Parameter, IlluminationCorrection));
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Highest allowed Image value (Image Value)", HighThreshold, FilterParameter::Parameter, IlluminationCorrection));
 
-  // Only allow the Median Filter property if the required filter is available
-  FilterManager* filtManager = FilterManager::Instance();
   QStringList linkedProps;
 
   parameters.push_back(SeparatorFilterParameter::New("Background Image Processing", FilterParameter::Parameter));

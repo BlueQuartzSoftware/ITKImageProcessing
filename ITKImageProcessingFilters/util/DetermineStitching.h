@@ -412,13 +412,13 @@ public:
 #if WRITE_DEBUG_IMAGES
     using WriterType = itk::ImageFileWriter<ImageType>;
 
-    QString imagePath = QDir::homePath() + QDir::separator() + "Desktop" + QDir::separator() + "fixedImageWindow.tiff";
+    QString imagePath = QDir::homePath() + QDir::separator() + "Desktop" + QDir::separator() + "ImageWindow_Fixed.tif";
     typename WriterType::Pointer writer = WriterType::New();
     writer->SetFileName(imagePath.toLatin1().constData());
     writer->SetInput(fixedImageWindow2);
     writer->Update();
 
-    imagePath = QDir::homePath() + QDir::separator() + "Desktop" + QDir::separator() + "CurrentImageWindow.tiff";
+    imagePath = QDir::homePath() + QDir::separator() + "Desktop" + QDir::separator() + "ImageWindow_Moving.tif";
     typename WriterType::Pointer writer2 = WriterType::New();
     writer2->SetFileName(imagePath.toLatin1().constData());
     writer2->SetInput(currentImageWindow2);
@@ -450,16 +450,24 @@ public:
     //    std::cout << "The Maximum intensity value is : " << maximumResult << std::endl;
     //    std::cout << "Its index position is : " << calculator->GetIndexOfMaximum() << std::endl;
     //    std::cout << "Real Max" << xcoutputImage->GetPixel(calculator->GetIndexOfMaximum()) << std::endl;
-
-    newXYOrigin[0] = float(calculator->GetIndexOfMaximum()[0]) - float(fixedImageWindow2->GetLargestPossibleRegion().GetSize()[0]);
-    newXYOrigin[1] = float(calculator->GetIndexOfMaximum()[1]) - float(fixedImageWindow2->GetLargestPossibleRegion().GetSize()[1]);
+    if(calculator->GetMinimum() == calculator->GetMaximum())
+    {
+      newXYOrigin[0] = 0.0f;
+      newXYOrigin[1] = 0.0f;
+    }
+    else
+    {
+      newXYOrigin[0] = float(calculator->GetIndexOfMaximum()[0]) - float(fixedImageWindow2->GetLargestPossibleRegion().GetSize()[0]);
+      newXYOrigin[1] = float(calculator->GetIndexOfMaximum()[1]) - float(fixedImageWindow2->GetLargestPossibleRegion().GetSize()[1]);
+    }
     newXYOrigin[2] = calculator->GetMaximum(); // add this for when more than one image pair has to be xcorrelated - want ot use this value to find best fit location
 
     // xcoutputImage->SetPixel(calculator->GetIndexOfMaximum(), 0); //just testing to make the brightest pixel dark so I could see which one it is
 #if WRITE_DEBUG_IMAGES
     using nWriterType = itk::ImageFileWriter<ImageProcessingConstants::FloatImageType>;
     nWriterType::Pointer writer3 = nWriterType::New();
-    writer3->SetFileName("/tmp/imageXC.tiff");
+    imagePath = QDir::homePath() + QDir::separator() + "Desktop" + QDir::separator() + "ImageWindow_CrossCorrelation.tif";
+    writer3->SetFileName(imagePath.toLatin1().constData());
     writer3->SetInput(xcoutputImage);
     writer3->Update();
 #endif

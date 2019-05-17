@@ -63,7 +63,6 @@ class ITKImageProcessing_EXPORT ImportZenInfoMontage : public AbstractFilter
   PYB11_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
   PYB11_PROPERTY(int32_t RowCount READ getRowCount)
   PYB11_PROPERTY(int32_t ColumnCount READ getColumnCount)
-  PYB11_PROPERTY(QStringList FilenameList READ getFilenameList)
 
   Q_DECLARE_PRIVATE(ImportZenInfoMontage)
 
@@ -106,14 +105,8 @@ public:
   SIMPL_FILTER_PARAMETER(bool, ConvertToGrayScale)
   Q_PROPERTY(bool ConvertToGrayScale READ getConvertToGrayScale WRITE setConvertToGrayScale)
 
-  SIMPL_FILTER_PARAMETER(bool, ImportAllMetaData)
-  Q_PROPERTY(bool ImportAllMetaData READ getImportAllMetaData WRITE setImportAllMetaData)
-
   SIMPL_FILTER_PARAMETER(FloatVec3Type, ColorWeights)
   Q_PROPERTY(FloatVec3Type ColorWeights READ getColorWeights WRITE setColorWeights)
-
-  SIMPL_INSTANCE_PROPERTY(bool, FileWasRead)
-  Q_PROPERTY(bool FileWasRead READ getFileWasRead)
 
   SIMPL_FILTER_PARAMETER(bool, ChangeOrigin)
   Q_PROPERTY(bool ChangeOrigin READ getChangeOrigin WRITE setChangeOrigin)
@@ -271,7 +264,7 @@ protected:
 
 private:
   QScopedPointer<ImportZenInfoMontagePrivate> const d_ptr;
-
+  bool m_FileWasRead = false;
   int m_RowCount = -1;
   int m_ColumnCount = -1;
   QStringList m_FilenameList;

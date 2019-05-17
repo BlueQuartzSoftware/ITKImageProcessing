@@ -139,8 +139,18 @@ const QString k_AAGrayScaleName("GrayImageData");
 const QString k_AttributeArrayNames("AttributeArrayNames");
 const QString k_DataContaineNameDefaultName("Mosaic");
 const QString k_TileAttributeMatrixDefaultName("Tile Data");
-const QString k_TileDataArrayDefaultName("Image Data");
+const QString k_TileDataArrayDefaultName("Image");
 const QString k_GrayScaleTempArrayName("gray_scale_temp");
+
+const QString k_MontageDataContainerDefaultName("Mosaic");
+const QString k_MontageAttributeMatrixDefaultName("Mosaic Data");
+const QString k_MontageDataArrayDefaultName("Image");
+
+const QString k_TileCorrectedDefaultName("Corrected Image");
+
+const QString k_BackgroundDataContainerDefaultName("Illumination Correction");
+const QString k_BackgroundAttributeMatrixDefaultName("Illumination Data");
+const QString k_BackgroundDataArrayDefaultName("Image");
 
 } // namespace Montage
 

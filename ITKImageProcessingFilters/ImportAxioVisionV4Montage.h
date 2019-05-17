@@ -73,7 +73,6 @@ class ITKImageProcessing_EXPORT ImportAxioVisionV4Montage : public AbstractFilte
   PYB11_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
   PYB11_PROPERTY(int32_t RowCount READ getRowCount)
   PYB11_PROPERTY(int32_t ColumnCount READ getColumnCount)
-  PYB11_PROPERTY(QStringList FilenameList READ getFilenameList)
 
   PYB11_PROPERTY(bool ImportAllMetaData READ getImportAllMetaData WRITE setImportAllMetaData)
   PYB11_PROPERTY(QString MetaDataAttributeMatrixName getMetaDataAttributeMatrixName WRITE setMetaDataAttributeMatrixName)

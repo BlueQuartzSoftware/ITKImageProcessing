@@ -109,7 +109,6 @@ ImportZenInfoMontage::ImportZenInfoMontage()
 , m_CellAttributeMatrixName(ITKImageProcessing::Montage::k_TileAttributeMatrixDefaultName)
 , m_ImageDataArrayName(ITKImageProcessing::Montage::k_TileDataArrayDefaultName)
 , m_ConvertToGrayScale(false)
-, m_ImportAllMetaData(false)
 , m_ChangeOrigin(false)
 , m_ChangeSpacing(true)
 , d_ptr(new ImportZenInfoMontagePrivate(this))
@@ -150,8 +149,6 @@ void ImportZenInfoMontage::setupFilterParameters()
   PreflightUpdatedValueFilterParameter::Pointer param = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Montage Information", MontageInformation, FilterParameter::Parameter, ImportZenInfoMontage);
   param->setReadOnly(true);
   parameters.push_back(param);
-
-  // parameters.push_back(SIMPL_NEW_BOOL_FP("Import All MetaData", ImportAllMetaData, FilterParameter::Parameter, ImportZenInfoMontage));
 
   QStringList linkedProps("Origin");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Change Origin", ChangeOrigin, FilterParameter::Parameter, ImportZenInfoMontage, linkedProps));

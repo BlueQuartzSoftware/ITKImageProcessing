@@ -174,11 +174,10 @@ protected:
     RectGridGeom
   };
 
+  /**
+   * @brief ITKRefineTileCoordinates
+   */
   ITKRefineTileCoordinates();
-
-  QVector<qint32> extractIntegerValues(QString arrayName);
-  QVector<float> extractFloatValues(QString arrayName);
-  QVector<float> extractGlobalIndices(QString DataArrayName, QString resolution);
 
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
