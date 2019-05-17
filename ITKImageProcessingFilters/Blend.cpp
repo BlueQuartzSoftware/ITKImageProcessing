@@ -114,14 +114,19 @@ class FFTConvolutionCostFunction : public itk::SingleValuedCostFunction
   // grid location of an overlap region (i.e. 'Row 0, Column: 1; Row: 1, Column: 1')
   // and the second index being the ITK RegionTypes that define the overlap regions
 
-  // If using Dave's algorithm, the m_IJ array just uses:
-  // m_IJ = [ u v u^2 v^2 uv u^2*v u*v^2 ]
+  // If using Dave's algorithm, the u_v array just uses:
+  // u_v = [ u v u^2 v^2 uv u^2*v u*v^2 ]
+  // Note that there is no translation coefficient here (a coefficient of 1)
   // i.e. It doesn't need to be programmatically generated using the degree of
-  // a polynomial here, it can just be hard coded
-  // Here, u and v are just x and y of the image pre-warp (or post-warp, depending on convention used)
+  // a polynomial, it can just be hard coded
+  // Here, u and v are just x and y of the image pre-warp coordinates (or post-warp, depending on convention used)
   // In contrast, a generic polynomial would use an array like:
   // b = sum(from i = 0, j = 0) to degree) of a_ij * u^i * v^j
-  // m_IJ = [ 1 u v uv u^2 v^2 u^2*v u*v^2 ... ]
+  // u_v = [ 1 u v uv u^2 v^2 u^2*v u*v^2 ... ]
+  // For a degree of 1, an m_IJ matrix would look like:
+  // m_IJ = [(0, 0), (1, 0), (0, 1), (1, 1)]
+  // Of each pair, the first is the i (the value to raise the u coordinate to)
+  // and the second is the j (the value to raise the v coordinate to)
 
 public:
   itkNewMacro(FFTConvolutionCostFunction)
@@ -207,10 +212,14 @@ public:
     m_overlaps.clear();
     for(const auto& eachImage : m_imageGrid)
     {
+      width = eachImage.second->GetBufferedRegion().GetSize()[0];
+      height = eachImage.second->GetBufferedRegion().GetSize()[1];
+
       auto rightImage{m_imageGrid.find(std::make_pair(eachImage.first.first, eachImage.first.second + 1))};
       auto bottomImage{m_imageGrid.find(std::make_pair(eachImage.first.first + 1, eachImage.first.second))};
       if(rightImage != m_imageGrid.end())
       {
+        // NOTE The height dimension for horizontally overlapping images should be the same
         overlapDim = static_cast<size_t>(roundf(width * overlapPercentage));
         imageOrigin[0] = static_cast<itk::IndexValueType>(width - overlapDim);
         imageOrigin[1] = 0;
@@ -228,6 +237,7 @@ public:
       }
       if(bottomImage != m_imageGrid.end())
       {
+        // NOTE The width dimension for vertically overlapping images should be the same
         overlapDim = static_cast<size_t>(roundf(height * overlapPercentage));
         imageOrigin[0] = 0;
         imageOrigin[1] = 0;
@@ -260,6 +270,13 @@ public:
   {
     const double tolerance = 0.05;
     ImageGrid distortedGrid;
+
+    // Debugging section - can remove for production
+    std::vector<double> transform_matrix{};
+    for (const auto& eachParam : parameters)
+    {
+      transform_matrix.push_back(eachParam);
+    }
 
     // Cache loop variables - better to not do this if the loops are parallelized though
     GridKey imageKey;
@@ -345,18 +362,29 @@ public:
     {
       // Set the filter's image to the overlap region of the image
       InputImage::Pointer image = distortedGrid.at(eachOverlap.first.first);
+
+      // NOTE It may be useful for debugging purposes to write the image to a file here
+
       image->SetRequestedRegion(eachOverlap.second.first);
       m_filter->SetInput(image);
 
       // Set the filter's kernel to the overlap region of the kernel
       InputImage::Pointer kernel = distortedGrid.at(eachOverlap.first.second);
+
+      // NOTE It may be useful for debugging purposes to write the kernel to a file here
+
       kernel->SetRequestedRegion(eachOverlap.second.second);
       m_filter->SetKernelImage(kernel);
 
       // Run the filter
       m_filter->Update();
       OutputImage::Pointer fftConvolve = m_filter->GetOutput();
+
+      // NOTE It may be useful for debugging purposes to write the output image to a file here
+
       // Increment by the maximum value of the output of the fftConvolve
+      // NOTE This methodology of getting the max element from the fftConvolve
+      // output might require a deeper look
       residual = residual + *std::max_element(fftConvolve->GetBufferPointer(), fftConvolve->GetBufferPointer() + fftConvolve->GetPixelContainer()->Size());
     }
     // The value to minimize is the square of the sum of the maximum value of the fft convolution

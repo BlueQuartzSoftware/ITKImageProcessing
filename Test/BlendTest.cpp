@@ -100,8 +100,11 @@ class BlendTest
   // Or by actually running the filter and getting the initial guess with
   // a very small actual error inside the filter
   // Note that Dave's work utilizes a custom polynomial function with some terms ignored
-  const std::vector<double> m_answer{0.0, 0.0, -1.0, 0.0, 0.0, 1.0, 0.0, 0.0};
-  const QString m_initial{"0.0; 0.0; -1.0; 0.0; 0.0; 1.0; 0.0; 0.0"};
+  // NOTE The images I've used have been rotated 90 degrees counterclockwise
+  // Which means the transform to correct the 'distortion' should be a rotation
+  // transform that rotates them 90 degrees clockwise
+  const std::vector<double> m_answer{0.0, 0.0, 1.0, 0.0, 0.0, -1.0, 0.0, 0.0};
+  const QString m_initial{"0.0; 0.0; 1.0; 0.0; 0.0; -1.0; 0.0; 0.0"};
 
   void ReadImage(AbstractFilter::Pointer readerFilter, const QString& imagePath, const QString& imageName,
                  DataArrayPath& dap)
