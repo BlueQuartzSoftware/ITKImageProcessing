@@ -160,6 +160,30 @@ endif()
 
 add_dependencies(${PLUGIN_NAME}UnitTest ${PLUGIN_NAME}Gui)
 
+set(TEST_SCRIPT_FILE_EXT "sh")
+set(EXE_EXT "")
+if(WIN32)
+  set(TEST_SCRIPT_FILE_EXT "bat")
+  set(EXE_EXT ".exe")
+endif()
+# !!! NO Spaces in the following names. NO subdirectories either
+# The names MUST match the names of the files on DISK including cApiTaliZation
+set(PREBUILT_PIPELINE_NAMES
+  "AxioVisionV4Import"
+  "Fiji_Import"
+  "ZenInfoImport"
+  "RobometImport"
+)
+set(PREBUILT_SUPPORT_DIR "${${PLUGIN_NAME}_SOURCE_DIR}/ExamplePipelines/${PLUGIN_NAME}")
+
+foreach(test ${PREBUILT_PIPELINE_NAMES} )
+  set(Example_PIPELINE_FILE "${${PLUGIN_NAME}_SOURCE_DIR}/ExamplePipelines/${PLUGIN_NAME}/${test}.json")
+  set(SIMPL_CTEST_TEST_DRIVER "${${PLUGIN_NAME}Test_BINARY_DIR}/PrebuiltPipelineTests/${test}.${TEST_SCRIPT_FILE_EXT}")
+  configure_file(${DREAM3DProj_SOURCE_DIR}/Test/ctest_pipeline_driver.${TEST_SCRIPT_FILE_EXT} "${SIMPL_CTEST_TEST_DRIVER}" @ONLY)
+  string(REPLACE "/" "_" test "${test}")
+  add_test(NAME ${PLUGIN_NAME}_Example_${test} COMMAND "${SIMPL_CTEST_TEST_DRIVER}" )
+endforeach()
+
 
 #------------------------------------------------------------------------------
 # If Python is enabled, then enable the Python unit tests for this plugin

@@ -1,8 +1,8 @@
-# ImportZenInfoMontage #
+# Import Zeiss ZenInfo Montage #
 
 ## Group (Subgroup) ##
 
-ZeissImport (ZeissImport)
+Import/Export (Import)
 
 ## Description ##
 
@@ -22,6 +22,8 @@ This filter imports in a set of tiled images collected by a Zeiss montaging micr
 Please note that this xml file is distinctly different from the Zeiss AxioVision "*_meta.xml" files that are produced from the Zeiss AxioVision software.
 
 The generated data containers will have the pattern of "Prefix_rXXcXX" where the XX is a possibly padded integer indicating either the row or column index that the data container belongs.
+
+Utilizes the *itkReadImage* and *ColorToGrayScale* filters
 
 **The origin values for each image are most probably given in Pixel coordinates and NOT physical units. The user should most likely over ride the spacing value and set all spacing values to 1.0**
 
@@ -51,9 +53,16 @@ The generated data containers will have the pattern of "Prefix_rXXcXX" where the
 
 This filter will create one data container for each image tile that is in the xml file. That created Data Container will have a Cell Attribute Matrix which will also hold a single Attribute Array of the same type of the image (unless the user selects to convert images to Gray Scale images.)
 
+| Kind | Default Name | Type | Component Dimensions | Description |
+|------|--------------|------|----------------------|-------------|
+| **Data Container** | Data Container Name | N/A | N/A |  |
+| ImageGeometry |  | N/A | N/A |  |
+| Cell AttributeMatrix |  | N/A | N/A |  |
+| Image Data |  | N/A | N/A |  |
+
 ## Example Pipelines ##
 
-Prebuilt Pipelines / Examples / ZeissImport / Zen Info XML Import
+Prebuilt Pipelines / Examples / ITKImageProcessing / ZenInfo Import
 
 ## License & Copyright ##
 

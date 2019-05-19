@@ -1,42 +1,40 @@
-# Import Registered Image Montage #
-
+# Import Fiji Montage #
 
 ## Group (Subgroup) ##
 
-ITKImageProcessing (Input)
-
+Import/Export (Import)
 
 ## Description ##
 
-Imports multiple images for the purpose of montage assembly. These images must be 8 bit greyscale, and have the same X pixel dimensions and the same Y pixel dimensions. Each image is stored in it's own attribute array. This filter allows for the import of a registration file that has the registered XY coordinates for each image.
+Imports multiple images for the purpose of montage assembly. Each image is stored in it's own *DataContaner/AttributeMatrix/AttributeArray* where the name of the *DataContainer* is based off the row & column index of the montage. The filter assumes that the Configuration File is in the same folder as the images. The created *AttributeMatrix* and *AttributeArray* will have the same name. The image files **MUST** be located in the same directory as the Fiji Configuration File.
 
-Utilizes the *itkReadImage* filter.
+Utilizes the *itkReadImage* and *ColorToGrayScale* filters
 
 ## Example Registration File ##
 
-
     # Define the number of dimensions we are working on
-    dim = 2
+    dim = 2                         <===== THIS LINE IS REQUIRED
 
-    # Define the image coordinates
-    slice_11.tif; ; (0.0, 0.0)
-    slice_12.tif; ; (471.2965233276666, -0.522608066434236)
-    slice_13.tif; ; (944.5992124792093, -0.7247005913413109)
-    slice_14.tif; ; (1419.6556996952306, -0.9362629861595396)
-    slice_15.tif; ; (1894.5906379078629, -1.1529111881475664)
-    slice_16.tif; ; (2369.039471380481, -1.9017522091702983)
-    slice_17.tif; ; (2843.7532978452855, -2.5246588293146055)
+    # Define the image coordinates  <===== THIS LINE IS REQUIRED
+    SampleMosaic_p0.bmp; ; (0, 0)
+    SampleMosaic_p1.bmp; ; (1227.55, 0)
+    SampleMosaic_p3.bmp; ; (0.23675, 920.01)
+    SampleMosaic_p2.bmp; ; (1227.55, 919.774)
+    SampleMosaic_p4.bmp; ; (0.23675, 1839.55)
+    SampleMosaic_p5.bmp; ; (1227.31, 1839.55)
 
+The configuration above would result in a data structure as shown in the following image:
+
+![Images/ItkImportFijiConfigFile.png](Images/ItkImportFijiConfigFile.png)
 
 ## Parameters ##
 
 | Name             |  Type  |
 |------------------|--------|
-| Input File List | VectorFileListInfo type |
-| Registration File Path | String |
+| Input Fiji Tile Configuration File | String |
 | Origin | float x 3 |
-| Resolution | float x 3 |
-| Data Container Name | String |
+| Convert to GrayScale | bool |
+| Data Container Prefix | String |
 | Cell Attribute Matrix Name | String |
 | Data Array Name | String |
 
@@ -49,6 +47,8 @@ NONE
 NONE
 
 ## Created Objects ##
+
+This filter will create one data container for each image tile that is in the xml file. That created Data Container will have a Cell Attribute Matrix which will also hold a single Attribute Array of the same type of the image (unless the user selects to convert images to Gray Scale images.)
 
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|------|----------------------|-------------|
@@ -68,7 +68,7 @@ NONE
 
 ## Example Pipelines ##
 
-
+Prebuilt Pipelines / Examples / ITKImageProcessing / Fiji Import
 
 ## License & Copyright ##
 

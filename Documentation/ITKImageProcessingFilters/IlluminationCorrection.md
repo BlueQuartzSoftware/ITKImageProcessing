@@ -6,9 +6,9 @@ ITKImageProcessing (Processing)
 
 ## Description ##
 
-This filter takes a series of grayscale images (8 bit or 16 bit) in a given set of Data Containers averages them. The image content only contributes to the average if the value at a given pixel is between the lowest and highest allowed image value set by the user. The user can optionally apply a median filter to the resulting background image. The user can optionally apply the background correction to the input images. The user can optionally export the corrected images to a directory on the file system. 
+This filter takes a series of grayscale images (8 bit or 16 bit) in a given set of Data Containers averages them. The image content only contributes to the average if the value at a given pixel is between the lowest and highest allowed image value set by the user. The user can optionally apply a median filter to the resulting background image. The user can optionally apply the background correction to the input images. The user can optionally export the corrected images to a directory on the file system.
 
-If the user selects Subtract Background from Current Images, the background will be subtracted, and the new images will overwrite the original images in the attribute matrix.
+If the user selects Subtract Background from Current Images, the background will be subtracted, and new image data will be created.
 
 ## Parameters ##
 
@@ -19,7 +19,7 @@ If the user selects Subtract Background from Current Images, the background will
 | Highest Allowed Image Value | int |
 | Apply Median Filter to background Image | bool |
 | Median Radius | Float [3] |
-| Apply Background Correction to Input Images | bool |
+| Apply Illumination Correction to Input Images | bool |
 
 ## Required Objects ##
 

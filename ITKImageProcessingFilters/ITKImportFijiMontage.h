@@ -45,27 +45,81 @@ class ITKImportFijiMontagePrivate;
 /**
  * @brief The ITKImportFijiMontage class. See [Filter documentation](@ref ITKImportFijiMontage) for details.
  */
-class ITKImageProcessing_EXPORT ITKImportFijiMontage : public ITKImportMontage
+class ITKImageProcessing_EXPORT ITKImportFijiMontage : public AbstractFilter
 {
   Q_OBJECT
+
   PYB11_CREATE_BINDINGS(ITKImportFijiMontage SUPERCLASS ITKImportMontage)
-  PYB11_PROPERTY(QString FijiConfigFilePath READ getFijiConfigFilePath WRITE setFijiConfigFilePath)
+
+  PYB11_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
+  PYB11_PROPERTY(DataArrayPath DataContainerPath READ getDataContainerPath WRITE setDataContainerPath)
+  PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
+  PYB11_PROPERTY(QString ImageDataArrayName READ getImageDataArrayName WRITE setImageDataArrayName)
+  PYB11_PROPERTY(bool ConvertToGrayScale READ getConvertToGrayScale WRITE setConvertToGrayScale)
+  PYB11_PROPERTY(FloatVec3Type ColorWeights READ getColorWeights WRITE setColorWeights)
+  PYB11_PROPERTY(bool ChangeOrigin READ getChangeOrigin WRITE setChangeOrigin)
+  PYB11_PROPERTY(FloatVec3Type Origin READ getOrigin WRITE setOrigin)
+  PYB11_PROPERTY(bool ChangeSpacing READ getChangeSpacing WRITE setChangeSpacing)
+  PYB11_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
+
   Q_DECLARE_PRIVATE(ITKImportFijiMontage)
+
 public:
+  using BoundsType = struct
+  {
+    QString Filename;
+    SizeVec3Type Dims;
+    FloatVec3Type Origin;
+    FloatVec3Type Spacing;
+    int32_t Row;
+    int32_t Col;
+    IDataArray::Pointer ImageDataProxy;
+  };
+
   SIMPL_SHARED_POINTERS(ITKImportFijiMontage)
   SIMPL_FILTER_NEW_MACRO(ITKImportFijiMontage)
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKImportFijiMontage, ITKImportMontage)
 
   ~ITKImportFijiMontage() override;
 
-  SIMPL_FILTER_PARAMETER(QString, FijiConfigFilePath)
-  Q_PROPERTY(QString FijiConfigFilePath READ getFijiConfigFilePath WRITE setFijiConfigFilePath)
+  SIMPL_FILTER_PARAMETER(QString, InputFile)
+  Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
-  typedef std::vector<ITKImageReader::Pointer> ImageReaderVector;
-  typedef std::vector<itk::FijiImageTileData> TileDataVector;
+  SIMPL_FILTER_PARAMETER(DataArrayPath, DataContainerPath)
+  Q_PROPERTY(DataArrayPath DataContainerPath READ getDataContainerPath WRITE setDataContainerPath)
 
-  SIMPL_PIMPL_PROPERTY_DECL(QString, FijiConfigFilePathCache)
-  SIMPL_PIMPL_PROPERTY_DECL(QDateTime, LastRead)
+  SIMPL_FILTER_PARAMETER(QString, CellAttributeMatrixName)
+  Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
+
+  SIMPL_FILTER_PARAMETER(QString, ImageDataArrayName)
+  Q_PROPERTY(QString ImageDataArrayName READ getImageDataArrayName WRITE setImageDataArrayName)
+
+  SIMPL_FILTER_PARAMETER(bool, ConvertToGrayScale)
+  Q_PROPERTY(bool ConvertToGrayScale READ getConvertToGrayScale WRITE setConvertToGrayScale)
+
+  SIMPL_FILTER_PARAMETER(FloatVec3Type, ColorWeights)
+  Q_PROPERTY(FloatVec3Type ColorWeights READ getColorWeights WRITE setColorWeights)
+
+  SIMPL_FILTER_PARAMETER(bool, ChangeOrigin)
+  Q_PROPERTY(bool ChangeOrigin READ getChangeOrigin WRITE setChangeOrigin)
+
+  SIMPL_FILTER_PARAMETER(FloatVec3Type, Origin)
+  Q_PROPERTY(FloatVec3Type Origin READ getOrigin WRITE setOrigin)
+
+  SIMPL_FILTER_PARAMETER(bool, ChangeSpacing)
+  Q_PROPERTY(bool ChangeSpacing READ getChangeSpacing WRITE setChangeSpacing)
+
+  SIMPL_FILTER_PARAMETER(FloatVec3Type, Spacing)
+  Q_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
+
+  SIMPL_GET_PROPERTY(int32_t, RowCount)
+  Q_PROPERTY(int32_t RowCount READ getRowCount)
+
+  SIMPL_GET_PROPERTY(int32_t, ColumnCount)
+  Q_PROPERTY(int32_t ColumnCount READ getColumnCount)
+
+  QString getMontageInformation();
+  Q_PROPERTY(QString MontageInformation READ getMontageInformation)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -127,6 +181,10 @@ public:
    */
   void preflight() override;
 
+  SIMPL_PIMPL_PROPERTY_DECL(QString, InputFile_Cache)
+  SIMPL_PIMPL_PROPERTY_DECL(QDateTime, TimeStamp_Cache)
+  SIMPL_PIMPL_PROPERTY_DECL(std::vector<BoundsType>, BoundsCache)
+
 signals:
   /**
    * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
@@ -154,6 +212,13 @@ protected:
   ITKImportFijiMontage();
 
   /**
+   * @brief ITKImportFijiMontage::parseConfigFile
+   * @param filePath
+   * @return
+   */
+  std::vector<ITKImportFijiMontage::BoundsType> parseConfigFile(const QString& filePath);
+
+  /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
    */
   void dataCheck();
@@ -163,10 +228,44 @@ protected:
    */
   void initialize();
 
+  /**
+   * @brief flushCache
+   */
+  void flushCache();
+
+  /**
+   * @brief readMetaXml
+   * @param device
+   * @return
+   */
+  void generateCache();
+
+  /**
+   * @brief readImages
+   */
+  void readImages();
+
+  /**
+   * @brief generateDataStructure
+   */
+  void generateDataStructure();
+
+  /**
+   * @brief ITKImportFijiMontage::findTileIndices
+   * @param tolerance
+   * @param bounds
+   */
+  void findTileIndices(int32_t tolerance, std::vector<ITKImportFijiMontage::BoundsType>& bounds);
+
 private:
   QScopedPointer<ITKImportFijiMontagePrivate> const d_ptr;
+  bool m_FileWasRead = false;
+  int m_RowCount = -1;
+  int m_ColumnCount = -1;
+  QStringList m_FilenameList;
+  int32_t m_Tolerance = 100;
 
-public :
+public:
   ITKImportFijiMontage(const ITKImportFijiMontage&) = delete; // Copy Constructor Not Implemented
   ITKImportFijiMontage(ITKImportFijiMontage&&) = delete;                   // Move Constructor Not Implemented
   ITKImportFijiMontage& operator=(const ITKImportFijiMontage&) = delete;   // Copy Assignment Not Implemented

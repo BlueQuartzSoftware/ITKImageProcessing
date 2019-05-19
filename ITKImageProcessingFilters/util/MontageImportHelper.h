@@ -59,6 +59,14 @@ public:
    */
   static ConvertColorToGrayScale::Pointer CreateColorToGrayScaleFilter(AbstractFilter* filter, const DataArrayPath& daPath, const FloatVec3Type& colorWeights, const QString& outputArrayName);
 
+  /**
+   * @brief burn
+   * @param tolerance
+   * @param input
+   * @return
+   */
+  static std::map<int32_t, std::vector<size_t>> Burn(int32_t tolerance, std::vector<int32_t>& input);
+
 protected:
   MontageImportHelper();
   ~MontageImportHelper();

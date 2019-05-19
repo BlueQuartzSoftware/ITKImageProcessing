@@ -1,0 +1,91 @@
+{
+    "0": {
+        "CellAttributeMatrixName": "Tile Data",
+        "ChangeOrigin": 0,
+        "ChangeSpacing": 0,
+        "ColorWeights": {
+            "x": 0.21250000596046448,
+            "y": 0.715399980545044,
+            "z": 0.07209999859333038
+        },
+        "ConvertToGrayScale": 1,
+        "DataContainerPath": {
+            "Attribute Matrix Name": "",
+            "Data Array Name": "",
+            "Data Container Name": "Mosaic"
+        },
+        "FilterVersion": "2.0.797",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "ITK::Zeiss AxioVision Import (V4)",
+        "Filter_Name": "ImportAxioVisionV4Montage",
+        "Filter_Uuid": "{411b008c-006f-51b2-ba05-99e51a01af3c}",
+        "ImageDataArrayName": "Image",
+        "ImportAllMetaData": 1,
+        "InputFile": "Data/Montage/SampleMosaic/_meta.xml",
+        "MetaDataAttributeMatrixName": "AxioVision MetaData",
+        "Origin": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+        },
+        "Spacing": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+        }
+    },
+    "1": {
+        "CommonAttributeMatrixName": "Tile Data",
+        "CommonDataArrayName": "Image",
+        "FilterVersion": "2.0.797",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "ITK::Stitch Montage",
+        "Filter_Name": "ITKStitchMontage",
+        "Filter_Uuid": "{fa4efd40-f4a6-5524-9fc6-e1f8bbb2c42f}",
+        "ImageDataContainers": [
+            "Mosaic_r0c0",
+            "Mosaic_r0c1",
+            "Mosaic_r1c0",
+            "Mosaic_r1c1",
+            "Mosaic_r2c0",
+            "Mosaic_r2c1"
+        ],
+        "MontageAttributeMatrixName": "Mosaic Data",
+        "MontageDataArrayName": "Image",
+        "MontageDataContainerName": "Mosaic",
+        "MontageSize": {
+            "x": 2,
+            "y": 3,
+            "z": 0
+        }
+    },
+    "2": {
+        "FileName": "Data/Output/Montage/AxioVision_Montage.png",
+        "FilterVersion": "2.0.797",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "ITK::Image Export",
+        "Filter_Name": "ITKImageWriter",
+        "Filter_Uuid": "{11473711-f94d-5d96-b749-ec36a81ad338}",
+        "ImageArrayPath": {
+            "Attribute Matrix Name": "Mosaic Data",
+            "Data Array Name": "Image",
+            "Data Container Name": "Mosaic"
+        },
+        "Plane": 0
+    },
+    "3": {
+        "FilterVersion": "2.0.112",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Write DREAM.3D Data File",
+        "Filter_Name": "DataContainerWriter",
+        "Filter_Uuid": "{3fcd4c43-9d75-5b86-aad4-4441bc914f37}",
+        "OutputFile": "Data/Output/Montage/AxioVisionImport.dream3d",
+        "WriteTimeSeries": 0,
+        "WriteXdmfFile": 1
+    },
+    "PipelineBuilder": {
+        "Name": "AxioVisionV4 Import",
+        "Number_Filters": 4,
+        "Version": 6
+    }
+}

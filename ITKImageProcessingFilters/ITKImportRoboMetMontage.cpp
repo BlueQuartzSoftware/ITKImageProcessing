@@ -277,56 +277,6 @@ void ITKImportRoboMetMontage::dataCheck()
   }
 
   generateDataStructure();
-
-#if 0
-  // Parse Robomet Config File
-  QDateTime lastModified(fi.lastModified());
-  size_t totalImageCount = m_RegisteredFilePaths.size();
-
-  clearParsingCache();
-
-  // Only parse the robomet config file again if the cache is outdated
-  if(!getInPreflight() || getInputFile() != getRoboMetConfigFilePathCache() || !getLastRead().isValid() || lastModified.msecsTo(getLastRead()) < 0)
-  {
-    setMontageCacheVector(MontageCacheVector());
-    clearParsingCache();
-
-    err = parseRoboMetConfigFile();
-    if(err < 0)
-    {
-      return;
-    }
-
-    QVector<size_t> cDims(1, 1);
-
-    for(int i = 0; i < m_RegisteredFilePaths.size(); i++)
-    {
-      if(getCancel())
-      {
-        return;
-      }
-
-      QString registeredFilePath = m_RegisteredFilePaths[i];
-      QFileInfo imageFi(registeredFilePath);
-      notifyStatusMessage(tr("[%1/%2]: Reading image '%3'").arg(i + 1).arg(totalImageCount).arg(imageFi.fileName()));
-
-      readImageFile(registeredFilePath, m_CoordsMap[registeredFilePath], m_Rows[i], m_Columns[i]);
-    }
-
-    // Set the new data into the cache
-    setLastRead(QDateTime::currentDateTime());
-    setRoboMetConfigFilePathCache(getInputFile());
-  }
-  else
-  {
-    readImagesFromCache();
-  }
-
-  if(getChangeOrigin() || getChangeSpacing())
-  {
-    adjustOriginAndSpacing();
-  }
-#endif
 }
 
 // -----------------------------------------------------------------------------
