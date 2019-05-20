@@ -196,7 +196,7 @@ void ITKImportRoboMetMontage::dataCheck()
 
   if(m_InputFile.isEmpty())
   {
-    QString ss = QObject::tr("The registration file must be set"));
+    QString ss = QObject::tr("The registration file must be set");
     setErrorCondition(-2002, ss);
     return;
   }
