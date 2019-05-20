@@ -35,9 +35,9 @@
 #include <QtCore/QCoreApplication>
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
-#include "SIMPLib/FilterParameters/StringFilterParameter.h"
-#include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
+#include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Filtering/FilterFactory.hpp"
 #include "SIMPLib/Filtering/FilterManager.h"
 #include "SIMPLib/Filtering/FilterPipeline.h"
@@ -106,8 +106,7 @@ class BlendTest
   const std::vector<double> m_answer{0.0, 0.0, 1.0, 0.0, 0.0, -1.0, 0.0, 0.0};
   const QString m_initial{"0.0; 0.0; 1.0; 0.0; 0.0; -1.0; 0.0; 0.0"};
 
-  void ReadImage(AbstractFilter::Pointer readerFilter, const QString& imagePath, const QString& imageName,
-                 DataArrayPath& dap)
+  void ReadImage(AbstractFilter::Pointer readerFilter, const QString& imagePath, const QString& imageName, DataArrayPath& dap)
   {
     dap.setDataContainerName(imageName);
     readerFilter->setProperty("FileName", QVariant(imagePath));

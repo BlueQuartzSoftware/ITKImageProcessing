@@ -35,13 +35,13 @@
 #include "SIMPLib/Common/Constants.h"
 
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
+#include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
 #include "SIMPLib/FilterParameters/FilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatFilterParameter.h"
-#include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedChoicesFilterParameter.h"
-#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/MultiDataContainerSelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
@@ -61,14 +61,14 @@ class MultiParamCostFunction : public itk::SingleValuedCostFunction
 public:
   itkNewMacro(MultiParamCostFunction)
 
-  void Initialize(std::vector<double> mins)
+      void Initialize(std::vector<double> mins)
   {
     m_mins = mins;
   }
 
   void GetDerivative(const ParametersType&, DerivativeType&) const override
   {
-	throw std::exception();
+    throw std::exception();
   }
 
   uint32_t GetNumberOfParameters() const override
@@ -80,7 +80,7 @@ public:
   {
     MeasureType residual = 0.0;
     size_t numParams = parameters.size();
-    for (size_t idx = 0; idx < numParams; ++idx)
+    for(size_t idx = 0; idx < numParams; ++idx)
     {
       double minValue = m_mins[idx];
       double paramValue = parameters[idx];
@@ -131,7 +131,8 @@ class FFTConvolutionCostFunction : public itk::SingleValuedCostFunction
 public:
   itkNewMacro(FFTConvolutionCostFunction)
 
-  void Initialize(const QStringList& chosenDataContainers, const QString& rowChar, const QString& colChar, int degree, float overlapPercentage, DataContainerArrayShPtr dca, const QString& amName, const QString& dataAAName)
+      void Initialize(const QStringList& chosenDataContainers, const QString& rowChar, const QString& colChar, int degree, float overlapPercentage, DataContainerArrayShPtr dca, const QString& amName,
+                      const QString& dataAAName)
   {
     m_degree = degree;
 
@@ -168,7 +169,7 @@ public:
     // Populate and assign eachImage to m_imageGrid
     for(const auto& eachDC : dca->getDataContainers()) // TODO Parallelize this
     {
-      if (!chosenDataContainers.contains(eachDC->getName()))
+      if(!chosenDataContainers.contains(eachDC->getName()))
       {
         continue;
       }
@@ -188,9 +189,9 @@ public:
       // A colored image could be used in a Fourier Transform as discussed in this paper:
       // https://ieeexplore.ieee.org/document/723451
       // NOTE Could this be parallelized?
-      for (size_t pxlHeightIdx = 0; pxlHeightIdx < height; ++pxlHeightIdx)
+      for(size_t pxlHeightIdx = 0; pxlHeightIdx < height; ++pxlHeightIdx)
       {
-        for (size_t pxlWidthIdx = 0; pxlWidthIdx < width; ++pxlWidthIdx)
+        for(size_t pxlWidthIdx = 0; pxlWidthIdx < width; ++pxlWidthIdx)
         {
           // Get the pixel index from the current pxlWidthIdx and pxlHeightIdx
           pxlIdx = (pxlWidthIdx + pxlHeightIdx * width) * comps;
@@ -232,8 +233,7 @@ public:
         kernelSize[1] = height;
 
         m_overlaps.push_back(
-            std::make_pair(std::make_pair(eachImage.first, rightImage->first), std::make_pair(InputImage::RegionType(imageOrigin, imageSize), InputImage::RegionType(kernelOrigin, kernelSize)))
-        );
+            std::make_pair(std::make_pair(eachImage.first, rightImage->first), std::make_pair(InputImage::RegionType(imageOrigin, imageSize), InputImage::RegionType(kernelOrigin, kernelSize))));
       }
       if(bottomImage != m_imageGrid.end())
       {
@@ -250,15 +250,14 @@ public:
         kernelSize[1] = overlapDim;
 
         m_overlaps.push_back(
-          std::make_pair(std::make_pair(eachImage.first, bottomImage->first), std::make_pair(InputImage::RegionType(imageOrigin, imageSize), InputImage::RegionType(kernelOrigin, kernelSize)))
-        );
+            std::make_pair(std::make_pair(eachImage.first, bottomImage->first), std::make_pair(InputImage::RegionType(imageOrigin, imageSize), InputImage::RegionType(kernelOrigin, kernelSize))));
       }
     }
   }
 
   void GetDerivative(const ParametersType&, DerivativeType&) const override
   {
-	throw std::exception();
+    throw std::exception();
   }
 
   uint32_t GetNumberOfParameters() const override
@@ -273,7 +272,7 @@ public:
 
     // Debugging section - can remove for production
     std::vector<double> transform_matrix{};
-    for (const auto& eachParam : parameters)
+    for(const auto& eachParam : parameters)
     {
       transform_matrix.push_back(eachParam);
     }
@@ -475,11 +474,11 @@ void Blend::dataCheck()
 
   // Need to make sure that the filter parameter for the initial guess
   // can be cast into actual numeric data
-  for (const auto& eachCoeff: m_InitialSimplexGuess.split(";"))
+  for(const auto& eachCoeff : m_InitialSimplexGuess.split(";"))
   {
     bool coerced = false;
     m_initialGuess.push_back(eachCoeff.toDouble(&coerced));
-    if (!coerced)
+    if(!coerced)
     {
       setErrorCondition(-66500, "A coefficient could not be translated into a floating-point precision number");
     }
@@ -489,13 +488,13 @@ void Blend::dataCheck()
   // Otherwise, there is a direct correlation between the degree of the transform polynomial
   // and how many coefficients should reside in the initial guess
   size_t len = static_cast<size_t>(2 * m_Degree * m_Degree + 4 * m_Degree + 2);
-  if (len != m_initialGuess.size())
+  if(len != m_initialGuess.size())
   {
     setErrorCondition(-66400, "Number of coefficients in initial guess is not compatible with degree number");
   }
 
   // Overlap percentages below 0% and above 100% don't make any sense
-  if (m_OverlapPercentage < 0.0f || m_OverlapPercentage >= 1.00f)
+  if(m_OverlapPercentage < 0.0f || m_OverlapPercentage >= 1.00f)
   {
     setErrorCondition(-66600, "Overlap Percentage should be a floating-point precision number between 0.0 and 1.0");
   }
@@ -520,19 +519,19 @@ void Blend::dataCheck()
 
   // All of the types in the chosen data container's image data arrays should be the same
   QString typeName = getDataContainerArray()->getDataContainers()[0]->getAttributeMatrix(m_AttributeMatrixName)->getAttributeArray(m_DataAttributeArrayName)->getTypeAsString();
-  for (const auto& eachDC : getDataContainerArray()->getDataContainers())
+  for(const auto& eachDC : getDataContainerArray()->getDataContainers())
   {
-    if (!m_ChosenDataContainers.contains(eachDC->getName()))
+    if(!m_ChosenDataContainers.contains(eachDC->getName()))
     {
       continue;
     }
 
     DataArray<Grayscale_T>::Pointer da = eachDC->getAttributeMatrix(m_AttributeMatrixName)->getAttributeArrayAs<DataArray<Grayscale_T>>(m_DataAttributeArrayName);
-    if (da->getComponentDimensions().size() > 1)
+    if(da->getComponentDimensions().size() > 1)
     {
       setErrorCondition(-66700, "Data array has unexpected dimensions");
     }
-    else if (da->getTypeAsString() != typeName)
+    else if(da->getTypeAsString() != typeName)
     {
       setErrorCondition(-66800, "Not all data attribute arrays are the same type");
     }
@@ -540,13 +539,13 @@ void Blend::dataCheck()
     // If any component of each pixel is not equal to all the others then the image is not grayscaled
     // A warning should be thrown because the filter will then effectively only blend the red component
     size_t numComps = da->getNumberOfComponents();
-    for (size_t pixelIdx = 0; pixelIdx < da->getNumberOfTuples(); ++pixelIdx)
+    for(size_t pixelIdx = 0; pixelIdx < da->getNumberOfTuples(); ++pixelIdx)
     {
       Grayscale_T testPixel = da->getValue(pixelIdx);
-      for (size_t compIdx = 1; compIdx < numComps; ++compIdx)
+      for(size_t compIdx = 1; compIdx < numComps; ++compIdx)
       {
         Grayscale_T actualPixel = da->getValue(pixelIdx + compIdx);
-        if (actualPixel != testPixel)
+        if(actualPixel != testPixel)
         {
           setWarningCondition(-66900, "Not all components of the pixels are the same value. Images should be grayscaled before being filtered.");
         }
@@ -606,7 +605,7 @@ void Blend::execute()
 
   // The optimizer needs an initial guess; this is supplied through a filter parameter
   itk::AmoebaOptimizer::ParametersType initialParams(m_initialGuess.size());
-  for (size_t idx = 0; idx < m_initialGuess.size(); ++idx)
+  for(size_t idx = 0; idx < m_initialGuess.size(); ++idx)
   {
     initialParams[idx] = m_initialGuess[idx];
   }
@@ -617,15 +616,13 @@ void Blend::execute()
   m_optimizer->SetParametersConvergenceTolerance(m_HighTolerance);
   m_optimizer->SetInitialPosition(initialParams);
 
-//  using CostFunctionType = MultiParamCostFunction;
+  //  using CostFunctionType = MultiParamCostFunction;
   using CostFunctionType = FFTConvolutionCostFunction;
   CostFunctionType implementation;
   implementation.Initialize(
       // The line below is used for testing the MultiParamCostFunction
-//    std::vector<double>{1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0}
-        m_ChosenDataContainers, m_RowCharacter, m_ColumnCharacter, m_Degree, m_OverlapPercentage,
-        getDataContainerArray(), m_AttributeMatrixName, m_DataAttributeArrayName
-  );
+      //    std::vector<double>{1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0}
+      m_ChosenDataContainers, m_RowCharacter, m_ColumnCharacter, m_Degree, m_OverlapPercentage, getDataContainerArray(), m_AttributeMatrixName, m_DataAttributeArrayName);
   m_optimizer->SetCostFunction(&implementation);
   m_optimizer->StartOptimization();
 
