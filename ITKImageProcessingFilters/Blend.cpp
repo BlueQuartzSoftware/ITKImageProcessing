@@ -412,6 +412,14 @@ bool Blend::GetConvergenceFromStopDescription(const QString& stopDescription) co
 //
 // -----------------------------------------------------------------------------
 Blend::Blend()
+: m_MaxIterations(1000)
+, m_Degree(1)
+, m_OverlapPercentage(0.0f)
+, m_LowTolerance(1E-2)
+, m_HighTolerance(1E-2)
+, m_InitialSimplexGuess("0.1;0.1;0.1;0.1;0.1;0.1;0.1;0.1")
+, m_RowCharacter("R")
+, m_ColumnCharacter("C")
 {
   initialize();
 }
@@ -426,8 +434,8 @@ Blend::~Blend() = default;
 // -----------------------------------------------------------------------------
 void Blend::initialize()
 {
-  setErrorCondition(0, "");
-  setWarningCondition(0, "");
+  clearErrorCode();
+  clearWarningCode();
   setCancel(false);
 }
 
@@ -438,53 +446,21 @@ void Blend::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
 
-  MultiDataContainerSelectionFilterParameter::Pointer dcs{
-    MultiDataContainerSelectionFilterParameter::New(
-      "Chosen Data Containers", "ChosenDataContainers",
-      getChosenDataContainers(), FilterParameter::Category::RequiredArray,
-      std::bind(&Blend::setChosenDataContainers, this, std::placeholders::_1),
-      std::bind(&Blend::getChosenDataContainers, this), {}
-  )};
+  {
+    MultiDataContainerSelectionFilterParameter::RequirementType req;
+    parameters.push_back(SIMPL_NEW_MDC_SELECTION_FP("Chosen Data Containers", ChosenDataContainers, FilterParameter::Category::RequiredArray, Blend, req));
+  }
 
-  IntFilterParameter::Pointer maxIterations{IntFilterParameter::New("Max Iterations", "MaxIterations", 1000, FilterParameter::Category::Parameter,
-                                                                    std::bind(&Blend::setMaxIterations, this, std::placeholders::_1), std::bind(&Blend::getMaxIterations, this))};
-
-  IntFilterParameter::Pointer degree{
-      IntFilterParameter::New("Degree", "Degree", 1, FilterParameter::Category::Parameter, std::bind(&Blend::setDegree, this, std::placeholders::_1), std::bind(&Blend::getDegree, this))};
-
-  FloatFilterParameter::Pointer overlapPercentage{FloatFilterParameter::New("Overlap Percentage", "OverlapPercentage", 0.0f, FilterParameter::Category::Parameter,
-                                                                            std::bind(&Blend::setOverlapPercentage, this, std::placeholders::_1), std::bind(&Blend::getOverlapPercentage, this), 0)};
-
-  DoubleFilterParameter::Pointer lowTolerance{DoubleFilterParameter::New("Low Tolerance", "LowTolerance", 1E-2, FilterParameter::Category::Parameter,
-                                                                            std::bind(&Blend::setLowTolerance, this, std::placeholders::_1), std::bind(&Blend::getLowTolerance, this), 0)};
-
-  DoubleFilterParameter::Pointer highTolerance{DoubleFilterParameter::New("High Tolerance", "High Tolerance", 1E-2, FilterParameter::Category::Parameter,
-                                                                            std::bind(&Blend::setHighTolerance, this, std::placeholders::_1), std::bind(&Blend::getHighTolerance, this), 0)};
-
-  StringFilterParameter::Pointer initialGuess{StringFilterParameter::New("Initial Simplex Guess", "InitialSimplexGuess", "0.1; 0.1; 0.1; 0.1; 0.1; 0.1; 0.1; 0.1", FilterParameter::Category::Parameter,
-                                                                   std::bind(&Blend::setInitialSimplexGuess, this, std::placeholders::_1), std::bind(&Blend::getInitialSimplexGuess, this), {})};
-
-  StringFilterParameter::Pointer amName{StringFilterParameter::New("Attribute Matrix Name", "AttributeMatrixName", {}, FilterParameter::Category::Parameter,
-                                                                   std::bind(&Blend::setAttributeMatrixName, this, std::placeholders::_1), std::bind(&Blend::getAttributeMatrixName, this), {})};
-
-  StringFilterParameter::Pointer dataAAName{StringFilterParameter::New("Attribute Array Name", "AttributeArrayName", {}, FilterParameter::Category::Parameter,
-                                                                       std::bind(&Blend::setDataAttributeArrayName, this, std::placeholders::_1), std::bind(&Blend::getDataAttributeArrayName, this),
-                                                                       {})};
-
-  StringFilterParameter::Pointer rowChar{StringFilterParameter::New("Row Character", "RowCharacter", "R", FilterParameter::Category::Parameter,
-                                                                       std::bind(&Blend::setRowCharacter, this, std::placeholders::_1), std::bind(&Blend::getRowCharacter, this),
-                                                                       {})};
-
-  StringFilterParameter::Pointer colChar{StringFilterParameter::New("Column Character", "ColumnCharacter", "C", FilterParameter::Category::Parameter,
-                                                                       std::bind(&Blend::setColumnCharacter, this, std::placeholders::_1), std::bind(&Blend::getColumnCharacter, this),
-                                                                       {})};
-
-  //  parameters.push_back(dcs);
-  parameters.push_back(maxIterations);
-  parameters.push_back(degree);
-  parameters.push_back(overlapPercentage);
-  parameters.push_back(amName);
-  parameters.push_back(dataAAName);
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Max Iterations", MaxIterations, FilterParameter::Category::Parameter, Blend));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Degree", Degree, FilterParameter::Category::Parameter, Blend));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("Overlap Percentage", OverlapPercentage, FilterParameter::Category::Parameter, Blend));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Low Tolerance", LowTolerance, FilterParameter::Category::Parameter, Blend));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("High Tolerance", HighTolerance, FilterParameter::Category::Parameter, Blend));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Initial Simplex Guess", InitialSimplexGuess, FilterParameter::Category::Parameter, Blend));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Attribute Matrix Name", AttributeMatrixName, FilterParameter::Category::Parameter, Blend));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Data Attribute Array Name", DataAttributeArrayName, FilterParameter::Category::Parameter, Blend));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Row Character", RowCharacter, FilterParameter::Category::Parameter, Blend));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Column Character", ColumnCharacter, FilterParameter::Category::Parameter, Blend));
 
   setFilterParameters(parameters);
 }
@@ -494,8 +470,8 @@ void Blend::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void Blend::dataCheck()
 {
-  setErrorCondition(0, "");
-  setWarningCondition(0, "");
+  clearErrorCode();
+  clearWarningCode();
 
   // Need to make sure that the filter parameter for the initial guess
   // can be cast into actual numeric data
@@ -522,6 +498,24 @@ void Blend::dataCheck()
   if (m_OverlapPercentage < 0.0f || m_OverlapPercentage >= 1.00f)
   {
     setErrorCondition(-66600, "Overlap Percentage should be a floating-point precision number between 0.0 and 1.0");
+  }
+
+  // Requirements to avoid crashing
+  if(getDataContainerArray()->getDataContainers().size() <= 0)
+  {
+    setErrorCondition(-66710, "At least one DataContainer required");
+    return;
+  }
+  DataContainer::Pointer dc = getDataContainerArray()->getDataContainers()[0];
+  if(nullptr == dc->getAttributeMatrix(m_AttributeMatrixName))
+  {
+    setErrorCondition(-66720, QString("AttributeMatrix: %1 required").arg(m_AttributeMatrixName));
+    return;
+  }
+  if(nullptr == getDataContainerArray()->getDataContainers()[0]->getAttributeMatrix(m_AttributeMatrixName)->getAttributeArray(m_DataAttributeArrayName))
+  {
+    setErrorCondition(-66730, QString("DataArray: %1 required").arg(m_DataAttributeArrayName));
+    return;
   }
 
   // All of the types in the chosen data container's image data arrays should be the same
