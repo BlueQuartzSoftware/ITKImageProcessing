@@ -64,83 +64,46 @@ public:
   // -----------------------------------------------------------------------------
   //
   // -----------------------------------------------------------------------------
+  void RemoveTestFiles()
+  {
+#if REMOVE_TEST_FILES
+    QFile::remove(UnitTest::ImportFijiConfigTest::OutputDREAM3DFile);
+#endif
+  }
+
+  // -----------------------------------------------------------------------------
+  //
+  // -----------------------------------------------------------------------------
   void TestITKImportFijiMontageTest()
   {
-    QVariant var;
-    bool propWasSet = false;
-    FilterManager* fm = FilterManager::Instance();
-
-    QString filtName = "ITKImportFijiMontage";
-    IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filtName);
-    DREAM3D_REQUIRE_VALID_POINTER(filterFactory.get());
-    AbstractFilter::Pointer import = filterFactory->create();
-
-    var.setValue(m_DataContainerName);
-    propWasSet = import->setProperty("DataContainerPrefix", var);
-    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
-
-    var.setValue(m_CellAMName);
-    propWasSet = import->setProperty("CellAttributeMatrixName", var);
-    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
-
-    m_Origin[0] = 0.0f;
-    m_Origin[1] = 0.0f;
-    m_Origin[2] = 0.0f;
-    var.setValue(m_Origin);
-    propWasSet = import->setProperty("Origin", var);
-    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
-
-    m_Spacing[0] = 0.25f;
-    m_Spacing[1] = 0.50f;
-    m_Spacing[2] = 1.25f;
-    var.setValue(m_Spacing);
-    propWasSet = import->setProperty("Spacing", var);
-    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
-
-    FileListInfo_t fli;
-    fli.PaddingDigits = 2;
-    fli.Ordering = 0;
-    fli.StartIndex = 11;
-    fli.EndIndex = 26;
-    fli.IncrementIndex = 1;
-    fli.InputPath = UnitTest::DataDir + "/Data/Image";
-    fli.FilePrefix = "slice_";
-    fli.FileSuffix = "";
-    fli.FileExtension = "tif";
-
-    QString registrationFile = QString("%1/TileConfiguration.registered.txt").arg(UnitTest::ITKImageProcessingDataDir);
-    var.setValue(registrationFile);
-    propWasSet = import->setProperty("FijiConfigFilePath", var);
-    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
-
-    //    var.setValue(m_RegistrationCoordinatesArrayName);
-    //    propWasSet = import->setProperty("RegistrationCoordinatesArrayName", var);
-    //    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
-
-    //    var.setValue(m_ArrayNamesArrayName);
-    //    propWasSet = import->setProperty("AttributeArrayNamesArrayName", var);
-    //    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+    ITKImportFijiMontage::Pointer import = ITKImportFijiMontage::New();
+    import->setInputFile(UnitTest::ImportFijiConfigTest::InputFile);
+    import->setDataContainerPath(DataArrayPath(m_DataContainerName, "", ""));
+    import->setCellAttributeMatrixName(m_CellAMName);
+    import->setImageDataArrayName("Image Data");
+    import->setConvertToGrayScale(true);
+    import->setChangeOrigin(true);
+    import->setOrigin(FloatVec3Type(234.34f, 948.389f, 100.98f));
+    import->setChangeSpacing(true);
+    import->setSpacing(FloatVec3Type(0.25f, 0.50f, 1.25f));
 
     // Create a DataContainerWriter Filter instance
-    filtName = "DataContainerWriter";
-    filterFactory = fm->getFactoryFromClassName(filtName);
-    DREAM3D_REQUIRE_VALID_POINTER(filterFactory.get());
-    AbstractFilter::Pointer writer = filterFactory->create();
-
-    QString output = QString("%1/ITKImportFijiMontageTest.dream3d").arg(UnitTest::TestTempDir);
-    FilesToRemove << output;
-    var.setValue(output);
-    propWasSet = writer->setProperty("OutputFile", var);
-    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+    DataContainerWriter::Pointer writer = DataContainerWriter::New();
+    writer->setOutputFile(UnitTest::ImportFijiConfigTest::OutputDREAM3DFile);
 
     // Create a Pipeline and execute it.
     FilterPipeline::Pointer pipeline = FilterPipeline::New();
     pipeline->pushBack(import);
     pipeline->pushBack(writer);
-    pipeline->execute();
 
+    pipeline->preflightPipeline();
     // Check for errors during the execution.
     int err = pipeline->getErrorCode();
+    DREAM3D_REQUIRE_EQUAL(err, 0)
+
+    pipeline->execute();
+    // Check for errors during the execution.
+    err = pipeline->getErrorCode();
     DREAM3D_REQUIRE_EQUAL(err, 0)
   }
 
@@ -156,9 +119,6 @@ public:
 
     DREAM3D_REGISTER_TEST(TestITKImportFijiMontageTest());
 
-    if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
-    {
-      DREAM3D_REGISTER_TEST(this->RemoveTestFiles())
-    }
+    DREAM3D_REGISTER_TEST(RemoveTestFiles())
   }
 };

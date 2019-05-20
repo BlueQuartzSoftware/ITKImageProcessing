@@ -92,17 +92,33 @@ namespace UnitTest
 
   namespace ImportZenInfoMontageTest
   {
-  const QString ZenInfoFile("@ITKImageProcessing_SOURCE_DIR@/Data/ZeissImport/SampleMosaic/SampleMosaic_Info.xml");
+  const QString ZenInfoFile("@ITKImageProcessing_SOURCE_DIR@/Data/ITKImageProcessing/Montage/SampleMosaic/SampleMosaic_Info.xml");
   const QString OutputDREAM3DFile("@TEST_TEMP_DIR@/ZenInfoImportTest.dream3d");
   } // namespace ImportZenInfoMontageTest
 
   namespace ImportAxioVisionV4MontageTest
   {
-  const QString AxioVisionMetaXmlFile("@ITKImageProcessing_SOURCE_DIR@/Data/ZeissImport/SampleMosaic/_meta.xml");
+  const QString AxioVisionMetaXmlFile("@ITKImageProcessing_SOURCE_DIR@/Data/ITKImageProcessing/Montage/SampleMosaic/_meta.xml");
   const QString OutputDREAM3DFile("@TEST_TEMP_DIR@/AxioVisionMetaXmlTest.dream3d");
   } // namespace ImportAxioVisionV4MontageTest
 
-} // namespace UnitTest
+  namespace ImportFijiConfigTest
+  {
+  const QString InputFile("@ITKImageProcessing_SOURCE_DIR@/Data/ITKImageProcessing/Montage/SampleMosaic/TileConfiguration.txt");
+  const QString OutputDREAM3DFile("@TEST_TEMP_DIR@/FijiConfigTest.dream3d");
+  } // namespace ImportFijiConfigTest
+
+  namespace ImportRobometMontage
+  {
+  // Input File & Constants
+  const QString InputFile("@ITKImageProcessing_SOURCE_DIR@/Data/ITKImageProcessing/Montage/0938410_ Mosaic Focus Details.csv");
+  const QString InputFilePrefix("0938410_");
+  const QString InputFileExtension("bmp");
+  // Output Files
+  const QString OutputDREAM3DFile("@TEST_TEMP_DIR@/RoboMetImportTest.dream3d");
+  } // namespace ImportRobometMontage
+
+  } // namespace UnitTest
 
 namespace ZeissImport
 {

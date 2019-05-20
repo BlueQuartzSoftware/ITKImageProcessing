@@ -169,11 +169,18 @@ endif()
 # !!! NO Spaces in the following names. NO subdirectories either
 # The names MUST match the names of the files on DISK including cApiTaliZation
 set(PREBUILT_PIPELINE_NAMES
-  "AxioVisionV4Import"
-  "Fiji_Import"
-  "ZenInfoImport"
-  "RobometImport"
+
 )
+if(ITK_VERSION_MAJOR EQUAL 5)
+  set(PREBUILT_PIPELINE_NAMES
+    ${PREBUILT_PIPELINE_NAMES}
+    "AxioVisionV4Import"
+    "Fiji_Import"
+    "ZenInfoImport"
+    "RobometImport"
+  )
+endif()
+
 set(PREBUILT_SUPPORT_DIR "${${PLUGIN_NAME}_SOURCE_DIR}/ExamplePipelines/${PLUGIN_NAME}")
 
 foreach(test ${PREBUILT_PIPELINE_NAMES} )

@@ -53,55 +53,56 @@ class ITKImportRoboMetMontageTest : public ITKTestBase
 public:
   ITKImportRoboMetMontageTest() = default;
 
-  virtual ~ITKImportRoboMetMontageTest() = default;
+  ~ITKImportRoboMetMontageTest() override = default;
 
   ITKImportRoboMetMontageTest(const ITKImportRoboMetMontageTest&) = delete;            // Copy Constructor Not Implemented
   ITKImportRoboMetMontageTest(ITKImportRoboMetMontageTest&&) = delete;                 // Move Constructor
   ITKImportRoboMetMontageTest& operator=(const ITKImportRoboMetMontageTest&) = delete; // Copy Assignment Not Implemented
   ITKImportRoboMetMontageTest& operator=(ITKImportRoboMetMontageTest&&) = delete;      // Move Assignment
+  // -----------------------------------------------------------------------------
+  //
+  // -----------------------------------------------------------------------------
+  void RemoveTestFiles()
+  {
+#if REMOVE_TEST_FILES
+    QFile::remove(UnitTest::ImportRobometMontage::OutputDREAM3DFile);
+#endif
+  }
 
   // -----------------------------------------------------------------------------
   //
   // -----------------------------------------------------------------------------
   void TestITKImportRoboMetMontageTest()
   {
-    FilterPipeline::Pointer pipeline = FilterPipeline::New();
-
     ITKImportRoboMetMontage::Pointer import = ITKImportRoboMetMontage::New();
 
-    QString registrationFile = QString("%1/ZeissImport/0938410_ Mosaic Focus Details.csv").arg(UnitTest::ITKImageProcessingDataDir);
-    import->setInputFile(registrationFile);
+    import->setInputFile(UnitTest::ImportRobometMontage::InputFile);
 
     import->setChangeOrigin(false);
     import->setChangeSpacing(false);
     import->setConvertToGrayScale(false);
     import->setDataContainerPath(DataArrayPath("Mosaic", "", ""));
     import->setImageDataArrayName("Image");
-    import->setImageFileExtension("bmp");
-    import->setImageFilePrefix("0938410_");
+    import->setImageFileExtension(UnitTest::ImportRobometMontage::InputFileExtension);
+    import->setImageFilePrefix(UnitTest::ImportRobometMontage::InputFilePrefix);
     import->setSliceNumber(0);
 
-    m_Origin.setX(0.0f);
-    m_Origin.setY(0.0f);
-    m_Origin.setZ(0.0f);
-    import->setOrigin(m_Origin);
-
-    m_Resolution.setX(0.25f);
-    m_Resolution.setY(0.50f);
-    m_Resolution.setZ(1.25f);
-    import->setSpacing(m_Resolution);
-    pipeline->pushBack(import);
-
     DataContainerWriter::Pointer writer = DataContainerWriter::New();
-    QString output = QString("%1/ITKImportRoboMetMontageTest.dream3d").arg(UnitTest::TestTempDir);
-    writer->setOutputFile(output);
-    FilesToRemove << output;
+    writer->setOutputFile(UnitTest::ImportRobometMontage::OutputDREAM3DFile);
+
+    // Create a Pipeline and execute it.
+    FilterPipeline::Pointer pipeline = FilterPipeline::New();
+    pipeline->pushBack(import);
     pipeline->pushBack(writer);
 
-    pipeline->execute();
-
+    pipeline->preflightPipeline();
     // Check for errors during the execution.
     int err = pipeline->getErrorCode();
+    DREAM3D_REQUIRE_EQUAL(err, 0)
+
+    pipeline->execute();
+    // Check for errors during the execution.
+    err = pipeline->getErrorCode();
     DREAM3D_REQUIRE_EQUAL(err, 0)
   }
 
@@ -118,9 +119,6 @@ public:
 
     DREAM3D_REGISTER_TEST(TestITKImportRoboMetMontageTest());
 
-    if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
-    {
-      DREAM3D_REGISTER_TEST(this->RemoveTestFiles())
-    }
+    DREAM3D_REGISTER_TEST(RemoveTestFiles())
   }
 };

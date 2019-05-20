@@ -19,6 +19,7 @@ set(_PublicFilters
     ImportAxioVisionV4Montage
     AxioVisionV4ToTileConfiguration
     ImportZenInfoMontage
+
 # These are from ITKImageProcessing Plugin
     ITKImageReader
     ITKImageWriter
@@ -27,17 +28,20 @@ set(_PublicFilters
     ITKDiscreteGaussianImage
     ITKMedianImage
     ITKRefineTileCoordinates
+    ITKImportFijiMontage
+    ITKImportRoboMetMontage
 )
 
 if(ITK_VERSION_MAJOR EQUAL 4)
   # Put ITK 4 Specific Modules in here
-elseif(ITK_VERSION_MAJOR EQUAL 5)
-  # Put ITK 5 Specific Modyles in here
   set( _PublicFilters 
       ${_PublicFilters} 
-      ITKImportFijiMontage
-      ITKImportRoboMetMontage
 
+    )
+elseif(ITK_VERSION_MAJOR EQUAL 5)
+  # Put ITK 5 Specific Modules in here
+  set( _PublicFilters 
+      ${_PublicFilters} 
       ITKPCMTileRegistration
       ITKStitchMontage
   )
