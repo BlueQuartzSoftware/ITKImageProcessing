@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2016 BlueQuartz Software, LLC
+* Copyright (c) 2019-2019 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -27,24 +27,49 @@
 * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *
 * The code contained herein was partially funded by the followig contracts:
-*    United States Air Force Prime Contract FA8650-07-D-5800
-*    United States Air Force Prime Contract FA8650-10-D-5210
-*    United States Prime Contract Navy N00173-07-C-2068
+*    United States Air Force Prime Contract FA8650-15-D-5231
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "ITKImportFijiMontage.h"
 
+#include <vector>
+
+#include <QtCore/QFileInfo>
+#include <QtCore/QFile>
+#include <QtCore/QStringList>
+#include <QtCore/QDir>
+
+
 #include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
+#include "SIMPLib/CoreFilters/ConvertColorToGrayScale.h"
+#include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
+#include "SIMPLib/FilterParameters/FloatFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
-#include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
+#include "SIMPLib/FilterParameters/PreflightUpdatedValueFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/ITKImageReader.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/util/MontageImportHelper.h"
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
+#include "MetaXmlUtils.h"
+
+namespace
+{
+const QString k_DCName("ZenInfo");
+const QString k_MetaDataName("Zen MetaData");
+} // namespace
+
+enum createdPathID : RenameDataPath::DataID_t
+{
+  //  DataContainerID = 1
+};
 
 /* ############## Start Private Implementation ############################### */
 // -----------------------------------------------------------------------------
@@ -56,8 +81,20 @@ class ITKImportFijiMontagePrivate
   Q_DECLARE_PUBLIC(ITKImportFijiMontage)
   ITKImportFijiMontage* const q_ptr;
   ITKImportFijiMontagePrivate(ITKImportFijiMontage* ptr);
-  QString m_FijiConfigFilePathCache;
-  QDateTime m_LastRead;
+
+  QString m_InputFile_Cache;
+  DataArrayPath m_DataContainerPath;
+  QString m_CellAttributeMatrixName;
+  QString m_ImageDataArrayName;
+  bool m_ChangeOrigin = false;
+  bool m_ChangeSpacing = false;
+  bool m_ConvertToGrayScale = false;
+  FloatVec3Type m_Origin;
+  FloatVec3Type m_Spacing;
+  FloatVec3Type m_ColorWeights;
+  QDateTime m_TimeStamp_Cache;
+  QString m_MontageInformation;
+  std::vector<ITKImportFijiMontage::BoundsType> m_BoundsCache;
 };
 
 // -----------------------------------------------------------------------------
@@ -65,19 +102,31 @@ class ITKImportFijiMontagePrivate
 // -----------------------------------------------------------------------------
 ITKImportFijiMontagePrivate::ITKImportFijiMontagePrivate(ITKImportFijiMontage* ptr)
 : q_ptr(ptr)
-, m_FijiConfigFilePathCache("")
+, m_InputFile_Cache("")
+, m_TimeStamp_Cache(QDateTime())
 {
 }
 
+/* ############## Start Public Implementation ############################### */
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 ITKImportFijiMontage::ITKImportFijiMontage()
-: ITKImportMontage()
-, m_FijiConfigFilePath("")
+: m_InputFile("")
+, m_DataContainerPath(ITKImageProcessing::Montage::k_DataContaineNameDefaultName)
+, m_CellAttributeMatrixName(ITKImageProcessing::Montage::k_TileAttributeMatrixDefaultName)
+, m_ImageDataArrayName(ITKImageProcessing::Montage::k_TileDataArrayDefaultName)
+, m_ConvertToGrayScale(false)
+, m_ChangeOrigin(false)
+, m_ChangeSpacing(false)
 , d_ptr(new ITKImportFijiMontagePrivate(this))
 {
-
+  m_ColorWeights = FloatVec3Type(0.2125f, 0.7154f, 0.0721f);
+  m_Origin = FloatVec3Type(0.0f, 0.0f, 0.0f);
+  m_Spacing = FloatVec3Type(1.0f, 1.0f, 1.0f);
 }
 
 // -----------------------------------------------------------------------------
@@ -88,8 +137,9 @@ ITKImportFijiMontage::~ITKImportFijiMontage() = default;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SIMPL_PIMPL_PROPERTY_DEF(ITKImportFijiMontage, QString, FijiConfigFilePathCache)
-SIMPL_PIMPL_PROPERTY_DEF(ITKImportFijiMontage, QDateTime, LastRead)
+SIMPL_PIMPL_PROPERTY_DEF(ITKImportFijiMontage, QString, InputFile_Cache)
+SIMPL_PIMPL_PROPERTY_DEF(ITKImportFijiMontage, QDateTime, TimeStamp_Cache)
+SIMPL_PIMPL_PROPERTY_DEF(ITKImportFijiMontage, std::vector<ITKImportFijiMontage::BoundsType>, BoundsCache)
 
 // -----------------------------------------------------------------------------
 //
@@ -107,22 +157,31 @@ void ITKImportFijiMontage::initialize()
 void ITKImportFijiMontage::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
-  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Fiji Configuration File", FijiConfigFilePath, FilterParameter::Parameter, ITKImportFijiMontage, "", "*.txt"));
+  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Zen Export File (*_info.xml)", InputFile, FilterParameter::Parameter, ITKImportFijiMontage, "*.xml"));
+
+  PreflightUpdatedValueFilterParameter::Pointer param = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Montage Information", MontageInformation, FilterParameter::Parameter, ITKImportFijiMontage);
+  param->setReadOnly(true);
+  parameters.push_back(param);
 
   QStringList linkedProps("Origin");
-  linkedProps.push_back("UsePixelCoordinates");
-  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Override Origin", ChangeOrigin, FilterParameter::Parameter, ITKImportMontage, linkedProps));
-  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Origin", Origin, FilterParameter::Parameter, ITKImportMontage));
-  parameters.push_back(SIMPL_NEW_BOOL_FP("Pixel Coordinates", UsePixelCoordinates, FilterParameter::Parameter, ITKImportMontage));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Change Origin", ChangeOrigin, FilterParameter::Parameter, ITKImportFijiMontage, linkedProps));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Origin", Origin, FilterParameter::Parameter, ITKImportFijiMontage));
+
+  // Changing the Spacing makes NO sense because the origins in the XML file are in Pixel Coordinates so the spacing MUST be 1.0
+  //  linkedProps.clear();
+  //  linkedProps << "Spacing";
+  //  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Change Spacing", ChangeSpacing, FilterParameter::Parameter, ITKImportFijiMontage, linkedProps));
+  //  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Spacing", Spacing, FilterParameter::Parameter, ITKImportFijiMontage));
 
   linkedProps.clear();
-  linkedProps << "Spacing";
-  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Override Spacing", ChangeSpacing, FilterParameter::Parameter, ITKImportMontage, linkedProps));
-  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Spacing", Spacing, FilterParameter::Parameter, ITKImportMontage));
+  linkedProps << "ColorWeights";
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Convert To GrayScale", ConvertToGrayScale, FilterParameter::Parameter, ITKImportFijiMontage, linkedProps));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Color Weighting", ColorWeights, FilterParameter::Parameter, ITKImportFijiMontage));
 
-  parameters.push_back(SIMPL_NEW_STRING_FP("Data Container Prefix", DataContainerPrefix, FilterParameter::CreatedArray, ITKImportMontage));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Cell Attribute Matrix", CellAttributeMatrixName, FilterParameter::CreatedArray, ITKImportMontage));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Image Array Name", AttributeArrayName, FilterParameter::CreatedArray, ITKImportMontage));
+  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("DataContainer Prefix", DataContainerPath, FilterParameter::CreatedArray, ITKImportFijiMontage));
+  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Cell Attribute Matrix Name", CellAttributeMatrixName, DataContainerPath, FilterParameter::CreatedArray, ITKImportFijiMontage));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Image DataArray Name", ImageDataArrayName, FilterParameter::CreatedArray, ITKImportFijiMontage));
+
   setFilterParameters(parameters);
 }
 
@@ -133,107 +192,99 @@ void ITKImportFijiMontage::dataCheck()
 {
   clearErrorCode();
   clearWarningCode();
-  initialize();
 
   QString ss;
-
-  if(getFijiConfigFilePath().isEmpty())
+  QFileInfo fi(getInputFile());
+  if(getInputFile().isEmpty())
   {
-    QString ss = QObject::tr("The fiji configuration file must be set").arg(getHumanLabel());
-    setErrorCondition(-2000, ss);
+    ss = QObject::tr("%1 needs the Input File Set and it was not.").arg(ClassName());
+    setErrorCondition(-387, ss);
+  }
+  else if(!fi.exists())
+  {
+    ss = QObject::tr("The input file '%1' does not exist.").arg(getInputFile());
+    setErrorCondition(-388, ss);
+  }
+
+  if(fi.isDir())
+  {
+    ss = QObject::tr("The input path '%1' is a directory. Please select an XML file.").arg(getInputFile());
+    setErrorCondition(-395, ss);
+  }
+
+  if(getDataContainerPath().isEmpty())
+  {
+    ss = QObject::tr("The Data Container Name cannot be empty.");
+    setErrorCondition(-392, ss);
+  }
+  if(getCellAttributeMatrixName().isEmpty())
+  {
+    ss = QObject::tr("The Attribute Matrix Name cannot be empty.");
+    setErrorCondition(-393, ss);
+  }
+  if(getImageDataArrayName().isEmpty())
+  {
+    ss = QObject::tr("The Image Data Array Name cannot be empty.");
+    setErrorCondition(-394, ss);
+  }
+
+  if(getErrorCode() < 0)
+  {
     return;
   }
 
-  QFileInfo fi(getFijiConfigFilePath());
-  if (fi.suffix() != "txt")
+  DataContainerArray::Pointer dca = getDataContainerArray();
+  if(nullptr == dca.get())
   {
-    QString ss = QObject::tr("Configuration file is not in Fiji format (*.txt).");
-    setErrorCondition(-2001, ss);
+    ss = QObject::tr("%1 needs a valid DataContainerArray").arg(ClassName());
+    setErrorCondition(-390, ss);
     return;
   }
 
-  if(!fi.exists())
+  QDateTime timeStamp(fi.lastModified());
+
+  // clang-format off
+  if(m_InputFile ==  d_ptr->m_InputFile_Cache
+    && m_DataContainerPath == d_ptr->m_DataContainerPath
+    && m_CellAttributeMatrixName == d_ptr->m_CellAttributeMatrixName
+    && m_ImageDataArrayName == d_ptr->m_ImageDataArrayName
+    && m_ChangeOrigin == d_ptr->m_ChangeOrigin
+    && m_ChangeSpacing == d_ptr->m_ChangeSpacing 
+    && m_ConvertToGrayScale == d_ptr->m_ConvertToGrayScale
+    && m_Origin == d_ptr->m_Origin
+    && m_Spacing == d_ptr->m_Spacing
+    && m_ColorWeights == d_ptr->m_ColorWeights
+    && d_ptr->m_TimeStamp_Cache.isValid()
+    && timeStamp == d_ptr->m_TimeStamp_Cache
+  )
+  // clang-format on
   {
-    QString ss = QObject::tr("The fiji configuration file does not exist");
-    setErrorCondition(-2002, ss);
-    return;
-  }
-
-  QDateTime lastModified(fi.lastModified());
-
-  // Only parse the fiji config file again if the cache is outdated
-  if (!getInPreflight() || getFijiConfigFilePath() != getFijiConfigFilePathCache() || !getLastRead().isValid() || lastModified.msecsTo(getLastRead()) < 0)
-  {
-    setMontageCacheVector(MontageCacheVector());
-
-    // Parse Fiji Config File
-    itk::FijiConfigurationFileReader fijiFileReader;
-    itk::FijiFileData fijiFileData = fijiFileReader.parseFijiConfigFile(getFijiConfigFilePath());
-    if(fijiFileReader.getErrorCode() < 0)
-    {
-      QString ss = fijiFileReader.getErrorMessage();
-      setErrorCondition(fijiFileReader.getErrorCode(), ss);
-      return;
-    }
-
-    if (fijiFileData.size() <= 0)
-    {
-      QString ss = "Fiji file does not contain at least 1 tile row.  Please choose a Fiji file that contains at least 1 tile row.";
-      setErrorCondition(-2003, ss);
-      return;
-    }
-
-    if (fijiFileData[0].size() <= 0)
-    {
-      QString ss = "Fiji file does not contain at least 1 tile column.  Please choose a Fiji file that contains at least 1 tile column.";
-      setErrorCondition(-2004, ss);
-      return;
-    }
-
-    setRowCount(fijiFileData.size());
-    setColumnCount(fijiFileData[0].size());
-
-    QVector<size_t> cDims(1, 1);
-
-    size_t totalImageCount = fijiFileData.size() * fijiFileData[0].size();
-    int currentImageCount = 1;
-    for (int row = 0; row < fijiFileData.size(); row++)
-    {
-      itk::FijiRowData fijiRowData = fijiFileData[row];
-      for (int col = 0; col < fijiRowData.size(); col++)
-      {
-        itk::FijiImageTileData fijiImageData = fijiRowData[col];
-
-        if(getCancel())
-        {
-          return;
-        }
-
-        if (!getInPreflight())
-        {
-          QString imagePath = fijiImageData.filePath;
-          QFileInfo imageFi(imagePath);
-          notifyStatusMessage(tr("[%1/%2]: Reading image '%3'").arg(currentImageCount).arg(totalImageCount).arg(imageFi.fileName()));
-        }
-
-        readImageFile(fijiImageData.filePath, fijiImageData.coords, fijiImageData.row, fijiImageData.col);
-        currentImageCount++;
-      }
-    }
-
-    // Set the new data into the cache
-    setLastRead(QDateTime::currentDateTime());
-    setFijiConfigFilePathCache(getFijiConfigFilePath());
+    // We are reading from the cache, so set the FileWasRead flag to false
+    m_FileWasRead = false;
+    // exportDocument = getRoot();
   }
   else
   {
-    readImagesFromCache();
+    flushCache();
+    // We are reading from the file, so set the FileWasRead flag to true
+    m_FileWasRead = true;
+
+    d_ptr->m_InputFile_Cache = m_InputFile;
+    d_ptr->m_DataContainerPath = m_DataContainerPath;
+    d_ptr->m_CellAttributeMatrixName = m_CellAttributeMatrixName;
+    d_ptr->m_ImageDataArrayName = m_ImageDataArrayName;
+    d_ptr->m_ChangeOrigin = m_ChangeOrigin;
+    d_ptr->m_ChangeSpacing = m_ChangeSpacing;
+    d_ptr->m_ConvertToGrayScale = m_ConvertToGrayScale;
+    d_ptr->m_Origin = m_Origin;
+    d_ptr->m_Spacing = m_Spacing;
+    d_ptr->m_ColorWeights = m_ColorWeights;
+    setTimeStamp_Cache(timeStamp);
+
+    generateCache();
   }
 
-  if(getChangeOrigin() || getChangeSpacing())
-  {
-    adjustOriginAndSpacing();
-  }
+  generateDataStructure();
 }
 
 // -----------------------------------------------------------------------------
@@ -254,16 +305,431 @@ void ITKImportFijiMontage::preflight()
 // -----------------------------------------------------------------------------
 void ITKImportFijiMontage::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
+  int err = 0;
+  // typically run your dataCheck function to make sure you can get that far and all your variables are initialized
   dataCheck();
+  // Check to make sure you made it through the data check. Errors would have been reported already so if something
+  // happens to fail in the dataCheck() then we simply return
   if(getErrorCode() < 0)
   {
     return;
   }
+  clearErrorCode();
+  clearWarningCode();
 
-  /* Let the GUI know we are done with this filter */
-  notifyStatusMessage("Complete");
+  readImages();
+
+  /* If some error occurs this code snippet can report the error up the call chain*/
+  if(err < 0)
+  {
+    QString ss = QObject::tr("Error Importing Fiji Montage.");
+    setErrorCondition(-91000, ss);
+    return;
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ITKImportFijiMontage::generateCache()
+{
+  // This next function will set the FileName (Partial), Row, Col for each "bound" object
+  std::vector<BoundsType> bounds = parseConfigFile(getInputFile());
+
+  FloatVec3Type minCoord = {std::numeric_limits<float>::max(), std::numeric_limits<float>::max(), std::numeric_limits<float>::max()};
+  FloatVec3Type minSpacing = {std::numeric_limits<float>::max(), std::numeric_limits<float>::max(), std::numeric_limits<float>::max()};
+  std::vector<ImageGeom::Pointer> geometries;
+
+  // Get the meta information from disk for each image
+  for(auto& bound : bounds)
+  {
+    // This will update the FileName to the absolutePath
+    QFileInfo fi(getInputFile());
+    QString absolutePath = fi.absolutePath() + QDir::separator() + bound.Filename;
+    bound.Filename = absolutePath;
+
+    DataArrayPath dap(::k_DCName, ITKImageProcessing::Montage::k_AMName, ITKImageProcessing::Montage::k_AAName);
+    AbstractFilter::Pointer imageImportFilter = MontageImportHelper::CreateImageImportFilter(this, bound.Filename, dap);
+    imageImportFilter->preflight();
+    if(imageImportFilter->getErrorCode() < 0)
+    {
+      setErrorCondition(imageImportFilter->getErrorCode(), "Error Preflighting Image Import Filter.");
+      continue;
+    }
+
+    DataContainerArray::Pointer importImageDca = imageImportFilter->getDataContainerArray();
+    {
+      DataContainer::Pointer fromDc = importImageDca->getDataContainer(::k_DCName);
+      AttributeMatrix::Pointer fromCellAttrMat = fromDc->getAttributeMatrix(ITKImageProcessing::Montage::k_AMName);
+      IDataArray::Pointer fromImageData = fromCellAttrMat->getAttributeArray(ITKImageProcessing::Montage::k_AAName);
+      fromImageData->setName(getImageDataArrayName());
+      bound.ImageDataProxy = fromImageData;
+
+      // Set the Origin based on the values from the Fiji Config File
+      // Set the spacing to the default 1,1,1
+      ImageGeom::Pointer imageGeom = fromDc->getGeometryAs<ImageGeom>();
+      bound.Dims = imageGeom->getDimensions();
+      imageGeom->setSpacing(bound.Spacing);
+      imageGeom->setOrigin(bound.Origin);
+      minSpacing = imageGeom->getSpacing();
+      //
+      minCoord[0] = std::min(bound.Origin[0], minCoord[0]);
+      minCoord[1] = std::min(bound.Origin[1], minCoord[1]);
+      minCoord[2] = 0.0f;
+      geometries.push_back(imageGeom);
+    }
+
+    if(getConvertToGrayScale())
+    {
+      DataArrayPath daPath(::k_DCName, ITKImageProcessing::Montage::k_AMName, ITKImageProcessing::Montage::k_AAName);
+      AbstractFilter::Pointer grayScaleFilter = MontageImportHelper::CreateColorToGrayScaleFilter(this, daPath, getColorWeights(), ITKImageProcessing::Montage::k_GrayScaleTempArrayName);
+      grayScaleFilter->setDataContainerArray(importImageDca);
+      grayScaleFilter->preflight();
+      if(grayScaleFilter->getErrorCode() < 0)
+      {
+        setErrorCondition(grayScaleFilter->getErrorCode(), "Error Preflighting Color to GrayScale filter");
+        continue;
+      }
+
+      DataContainerArray::Pointer colorToGrayDca = grayScaleFilter->getDataContainerArray();
+      DataContainer::Pointer fromDc = colorToGrayDca->getDataContainer(::k_DCName);
+      AttributeMatrix::Pointer fromCellAttrMat = fromDc->getAttributeMatrix(ITKImageProcessing::Montage::k_AMName);
+      // Remove the RGB Attribute Array so we can rename the gray scale AttributeArray
+      IDataArray::Pointer rgbImageArray = fromCellAttrMat->removeAttributeArray(ITKImageProcessing::Montage::k_AAName);
+      QString grayScaleArrayName = ITKImageProcessing::Montage::k_GrayScaleTempArrayName + ITKImageProcessing::Montage::k_AAName;
+      IDataArray::Pointer fromGrayScaleData = fromCellAttrMat->removeAttributeArray(grayScaleArrayName);
+      fromGrayScaleData->setName(getImageDataArrayName());
+      bound.ImageDataProxy = fromGrayScaleData;
+    }
+  }
+
+  QString montageInfo;
+  QTextStream ss(&montageInfo);
+  ss << "Columns=" << m_ColumnCount << "  Rows=" << m_RowCount << "  Num. Images=" << (m_ColumnCount * m_RowCount);
+
+  FloatVec3Type overrideOrigin = minCoord;
+  FloatVec3Type overrideSpacing = minSpacing;
+
+  // Now adjust the origin/spacing if needed
+  if(getChangeOrigin() || getChangeSpacing())
+  {
+
+    if(getChangeOrigin())
+    {
+      overrideOrigin = m_Origin;
+    }
+    if(getChangeSpacing())
+    {
+      overrideSpacing = m_Spacing;
+    }
+    FloatVec3Type delta = {minCoord[0] - overrideOrigin[0], minCoord[1] - overrideOrigin[1], minCoord[2] - overrideOrigin[2]};
+    for(size_t i = 0; i < geometries.size(); i++)
+    {
+      ImageGeom::Pointer imageGeom = geometries[i];
+      BoundsType& bound = bounds.at(i);
+      std::transform(bound.Origin.begin(), bound.Origin.end(), delta.begin(), bound.Origin.begin(), std::minus<float>());
+      imageGeom->setOrigin(bound.Origin); // Sync up the ImageGeom with the calculated values
+      imageGeom->setSpacing(overrideSpacing);
+    }
+  }
+  ss << "\nOrigin: " << overrideOrigin[0] << ", " << overrideOrigin[1] << ", " << overrideOrigin[2];
+  ss << "  Spacing: " << overrideSpacing[0] << ", " << overrideSpacing[1] << ", " << overrideSpacing[2];
+  d_ptr->m_MontageInformation = montageInfo;
+  setBoundsCache(bounds);
+}
+
+// -----------------------------------------------------------------------------
+void ITKImportFijiMontage::generateDataStructure()
+{
+  std::vector<BoundsType>& bounds = d_ptr->m_BoundsCache;
+
+  DataContainerArray::Pointer dca = getDataContainerArray();
+
+  // int imageCountPadding = MetaXmlUtils::CalculatePaddingDigits(bounds.size());
+  int32_t rowCountPadding = MetaXmlUtils::CalculatePaddingDigits(m_RowCount);
+  int32_t colCountPadding = MetaXmlUtils::CalculatePaddingDigits(m_ColumnCount);
+  int charPaddingCount = std::max(rowCountPadding, colCountPadding);
+
+  for(const auto& bound : bounds)
+  {
+    // Create our DataContainer Name using a Prefix and a rXXcYY format.
+    QString dcName = getDataContainerPath().getDataContainerName();
+    QTextStream dcNameStream(&dcName);
+    dcNameStream << "_r";
+    dcNameStream.setFieldWidth(charPaddingCount);
+    dcNameStream.setFieldAlignment(QTextStream::AlignRight);
+    dcNameStream.setPadChar('0');
+    dcNameStream << bound.Row;
+    dcNameStream.setFieldWidth(0);
+    dcNameStream << "c";
+    dcNameStream.setFieldWidth(charPaddingCount);
+    dcNameStream << bound.Col;
+
+    // Create the DataContainer with a name based on the ROW & COLUMN indices
+    DataContainer::Pointer dc = dca->createNonPrereqDataContainer<AbstractFilter>(this, dcName);
+    if(getErrorCode() < 0)
+    {
+      continue;
+    }
+
+    // Create the Image Geometry
+    ImageGeom::Pointer image = ImageGeom::CreateGeometry(dcName);
+    image->setDimensions(bound.Dims);
+    image->setOrigin(bound.Origin);
+    image->setSpacing(bound.Spacing);
+
+    dc->setGeometry(image);
+
+    using StdVecSizeType = std::vector<size_t>;
+    // Create the Cell Attribute Matrix into which the image data would be read
+    AttributeMatrix::Pointer cellAttrMat = AttributeMatrix::Create(bound.Dims.toContainer<StdVecSizeType>(), getCellAttributeMatrixName(), AttributeMatrix::Type::Cell);
+    dc->addOrReplaceAttributeMatrix(cellAttrMat);
+    cellAttrMat->addOrReplaceAttributeArray(bound.ImageDataProxy);
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ITKImportFijiMontage::readImages()
+{
+  std::vector<BoundsType>& bounds = d_ptr->m_BoundsCache;
+  // Import Each Image
+  DataContainerArray::Pointer dca = getDataContainerArray();
+
+  //  int imageCountPadding = MetaXmlUtils::CalculatePaddingDigits(bounds.size());
+  int32_t rowCountPadding = MetaXmlUtils::CalculatePaddingDigits(m_RowCount);
+  int32_t colCountPadding = MetaXmlUtils::CalculatePaddingDigits(m_ColumnCount);
+  int charPaddingCount = std::max(rowCountPadding, colCountPadding);
+
+  for(const auto& bound : bounds)
+  {
+    QString msg;
+    QTextStream out(&msg);
+    out << "Importing " << bound.Filename;
+    notifyStatusMessage(msg);
+    // Create our DataContainer Name using a Prefix and a rXXcYY format.
+    QString dcName = getDataContainerPath().getDataContainerName();
+    QTextStream dcNameStream(&dcName);
+    dcNameStream << "_r";
+    dcNameStream.setFieldWidth(charPaddingCount);
+    dcNameStream.setFieldAlignment(QTextStream::AlignRight);
+    dcNameStream.setPadChar('0');
+    dcNameStream << bound.Row;
+    dcNameStream.setFieldWidth(0);
+    dcNameStream << "c";
+    dcNameStream.setFieldWidth(charPaddingCount);
+    dcNameStream << bound.Col;
+
+    // The DataContainer with a name based on the ROW & COLUMN indices is already created in the preflight
+    DataContainer::Pointer dc = dca->getDataContainer(dcName);
+    // So is the Geometry
+    ImageGeom::Pointer image = dc->getGeometryAs<ImageGeom>();
+
+    // Create the Image Geometry
+    SizeVec3Type dims = image->getDimensions();
+    // FloatVec3Type origin = image->getOrigin();
+    // FloatVec3Type spacing = image->getSpacing();
+
+    std::vector<size_t> tDims = {dims[0], dims[1], dims[2]};
+    // The Cell AttributeMatrix is also already created at this point
+    AttributeMatrix::Pointer cellAttrMat = dc->getAttributeMatrix(getCellAttributeMatrixName());
+    // Instantiate the Image Import Filter to actually read the image into a data array
+    DataArrayPath dap(::k_DCName, ITKImageProcessing::Montage::k_AMName, getImageDataArrayName()); // This is just a temp path for the subfilter to use
+    AbstractFilter::Pointer imageImportFilter = MontageImportHelper::CreateImageImportFilter(this, bound.Filename, dap);
+    if(nullptr == imageImportFilter.get())
+    {
+      continue;
+    }
+    // This same filter was used to preflight so as long as nothing changes on disk this really should work....
+    imageImportFilter->execute();
+    if(imageImportFilter->getErrorCode() < 0)
+    {
+      setErrorCondition(imageImportFilter->getErrorCode(), "Error Executing Image Import Filter.");
+      continue;
+    }
+    // Now transfer the image data from the actual image data read from disk into our existing Attribute Matrix
+    DataContainerArray::Pointer importImageDca = imageImportFilter->getDataContainerArray();
+    DataContainer::Pointer fromDc = importImageDca->getDataContainer(::k_DCName);
+    AttributeMatrix::Pointer fromCellAttrMat = fromDc->getAttributeMatrix(ITKImageProcessing::Montage::k_AMName);
+    // IDataArray::Pointer fromImageData = fromCellAttrMat->getAttributeArray(getImageDataArrayName());
+
+    if(getConvertToGrayScale())
+    {
+      AbstractFilter::Pointer grayScaleFilter = MontageImportHelper::CreateColorToGrayScaleFilter(this, dap, getColorWeights(), ITKImageProcessing::Montage::k_GrayScaleTempArrayName);
+      grayScaleFilter->setDataContainerArray(importImageDca); // Use the Data COntainer array that was use for the import. It is setup and ready to go
+      connect(grayScaleFilter.get(), SIGNAL(messageGenerated(const AbstractMessage::Pointer&)), this, SIGNAL(messageGenerated(const AbstractMessage::Pointer&)));
+      grayScaleFilter->execute();
+      if(grayScaleFilter->getErrorCode() < 0)
+      {
+        setErrorCondition(grayScaleFilter->getErrorCode(), "Error Executing Color to GrayScale filter");
+        continue;
+      }
+
+      DataContainerArray::Pointer c2gDca = grayScaleFilter->getDataContainerArray();
+      DataContainer::Pointer c2gDc = c2gDca->getDataContainer(::k_DCName);
+      AttributeMatrix::Pointer c2gAttrMat = c2gDc->getAttributeMatrix(ITKImageProcessing::Montage::k_AMName);
+
+      QString grayScaleArrayName = ITKImageProcessing::Montage::k_GrayScaleTempArrayName + getImageDataArrayName();
+      // IDataArray::Pointer fromGrayScaleData = fromCellAttrMat->getAttributeArray(grayScaleArrayName);
+
+      IDataArray::Pointer rgbImageArray = c2gAttrMat->removeAttributeArray(ITKImageProcessing::Montage::k_AAName);
+      IDataArray::Pointer gray = c2gAttrMat->removeAttributeArray(grayScaleArrayName);
+      gray->setName(getImageDataArrayName());
+      cellAttrMat->addOrReplaceAttributeArray(gray);
+    }
+    else
+    {
+      // Copy the IDataArray (which contains the image data) from the temp data container array into our persistent data structure
+      IDataArray::Pointer gray = fromCellAttrMat->removeAttributeArray(getImageDataArrayName());
+      cellAttrMat->addOrReplaceAttributeArray(gray);
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ITKImportFijiMontage::flushCache()
+{
+  setTimeStamp_Cache(QDateTime());
+
+  d_ptr->m_InputFile_Cache = "";
+  d_ptr->m_DataContainerPath = DataArrayPath();
+  d_ptr->m_CellAttributeMatrixName = "";
+  d_ptr->m_ImageDataArrayName = "";
+  d_ptr->m_ChangeOrigin = false;
+  d_ptr->m_ChangeSpacing = false;
+  d_ptr->m_ConvertToGrayScale = false;
+  d_ptr->m_Origin = FloatVec3Type(0.0f, 0.0f, 0.0f);
+  d_ptr->m_Spacing = FloatVec3Type(1.0f, 1.0f, 1.0f);
+  d_ptr->m_ColorWeights = FloatVec3Type(0.2125f, 0.7154f, 0.0721f);
+  d_ptr->m_BoundsCache.clear();
+}
+
+// -----------------------------------------------------------------------------
+QString ITKImportFijiMontage::getMontageInformation()
+{
+  return d_ptr->m_MontageInformation;
+}
+
+// -----------------------------------------------------------------------------
+void ITKImportFijiMontage::findTileIndices(int32_t tolerance, std::vector<ITKImportFijiMontage::BoundsType>& bounds)
+{
+  std::vector<int32_t> xValues(bounds.size());
+  std::vector<int32_t> yValues(bounds.size());
+
+  for(size_t i = 0; i < bounds.size(); i++)
+  {
+    xValues[i] = bounds.at(i).Origin[0];
+    yValues[i] = bounds.at(i).Origin[1];
+  }
+
+  std::map<int32_t, std::vector<size_t>> avg_indices = MontageImportHelper::Burn(tolerance, xValues);
+  int32_t index = 0;
+  for(auto& iter : avg_indices)
+  {
+    const std::vector<size_t>& indices = iter.second;
+    for(const auto& i : indices)
+    {
+      bounds.at(i).Col = index;
+    }
+    index++;
+  }
+  m_ColumnCount = index;
+
+  avg_indices = MontageImportHelper::Burn(tolerance, yValues);
+  index = 0;
+  for(auto& iter : avg_indices)
+  {
+    const std::vector<size_t>& indices = iter.second;
+    for(const auto& i : indices)
+    {
+      bounds.at(i).Row = index;
+    }
+    index++;
+  }
+  m_RowCount = index;
+}
+
+// -----------------------------------------------------------------------------
+std::vector<ITKImportFijiMontage::BoundsType> ITKImportFijiMontage::parseConfigFile(const QString& filePath)
+{
+  QString contents;
+  QFileInfo fi(filePath);
+
+  // Read the Source File
+  QFile source(filePath);
+  source.open(QFile::ReadOnly);
+  contents = source.readAll();
+  source.close();
+
+  QStringList list = contents.split(QRegExp("\\n"));
+  QStringListIterator sourceLines(list);
+  bool dimFound = false;
+  bool dataFound = false;
+
+  while(sourceLines.hasNext())
+  {
+    QString line = sourceLines.next().trimmed();
+
+    if(line.startsWith("dim =")) // found the dimensions
+    {
+      dimFound = true;
+      // Should check that the value = 2
+    }
+    if(line.startsWith("# Define the image coordinates"))
+    {
+      // Found the start of the data
+      dataFound = true;
+      break;
+    }
+    if(line.startsWith("#")) // comment line
+    {
+      continue;
+    }
+  }
+
+  std::vector<ITKImportFijiMontage::BoundsType> bounds;
+  if(!dimFound || !dataFound)
+  {
+    return bounds;
+  }
+
+  // slice_12.tif; ; (471.2965233276666, -0.522608066434236)
+  while(sourceLines.hasNext())
+  {
+    QString line = sourceLines.next().trimmed();
+    if(line.isEmpty())
+    {
+      continue;
+    }
+    QStringList tokens = line.split(";");
+    if(tokens.count() != 3)
+    {
+      continue;
+    }
+    ITKImportFijiMontage::BoundsType bound;
+    bound.Filename = tokens.at(0);
+
+    QString coords = tokens.at(2).trimmed();
+    coords = coords.replace("(", "");
+    coords = coords.replace(")", "");
+    tokens = coords.split(",");
+    if(tokens.count() != 2)
+    {
+      continue;
+    }
+    float x = tokens.at(0).toFloat();
+    float y = tokens.at(1).toFloat();
+    bound.Origin = FloatVec3Type(x, y, 0.0f);
+    bound.Spacing = FloatVec3Type(1.0f, 1.0f, 1.0f);
+    bounds.push_back(bound);
+  }
+
+  findTileIndices(m_Tolerance, bounds);
+
+  return bounds;
 }
 
 // -----------------------------------------------------------------------------

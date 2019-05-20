@@ -19,6 +19,7 @@ set(_PublicFilters
     ImportAxioVisionV4Montage
     AxioVisionV4ToTileConfiguration
     ImportZenInfoMontage
+
 # These are from ITKImageProcessing Plugin
     Blend
     ITKImageReader
@@ -28,17 +29,20 @@ set(_PublicFilters
     ITKDiscreteGaussianImage
     ITKMedianImage
     ITKRefineTileCoordinates
+    ITKImportFijiMontage
+    ITKImportRoboMetMontage
 )
 
 if(ITK_VERSION_MAJOR EQUAL 4)
   # Put ITK 4 Specific Modules in here
-elseif(ITK_VERSION_MAJOR EQUAL 5)
-  # Put ITK 5 Specific Modyles in here
   set( _PublicFilters 
       ${_PublicFilters} 
-      ITKImportFijiMontage
-      ITKImportRoboMetMontage
 
+    )
+elseif(ITK_VERSION_MAJOR EQUAL 5)
+  # Put ITK 5 Specific Modules in here
+  set( _PublicFilters 
+      ${_PublicFilters} 
       ITKPCMTileRegistration
       ITKStitchMontage
   )
@@ -201,6 +205,7 @@ endforeach()
 ADD_SIMPL_SUPPORT_CLASS(${${PLUGIN_NAME}_SOURCE_DIR} ${_filterGroupName} ITKImageBase)
 ADD_SIMPL_SUPPORT_CLASS(${${PLUGIN_NAME}_SOURCE_DIR} ${_filterGroupName} util/DetermineStitching)
 ADD_SIMPL_SUPPORT_CLASS(${${PLUGIN_NAME}_SOURCE_DIR} ${_filterGroupName} util/MontageImportHelper)
+# ADD_SIMPL_SUPPORT_CLASS(${${PLUGIN_NAME}_SOURCE_DIR} ${_filterGroupName} util/FijiTileConfigParser)
 
 ADD_SIMPL_SUPPORT_SOURCE(${${PLUGIN_NAME}_SOURCE_DIR} ${_filterGroupName} MetaXmlUtils.cpp)
 ADD_SIMPL_SUPPORT_HEADER(${${PLUGIN_NAME}_SOURCE_DIR} ${_filterGroupName} MetaXmlUtils.h)

@@ -346,7 +346,7 @@ if(EXISTS ${${PLUGIN_NAME}_SOURCE_DIR}/Data/${PLUGIN_NAME})
   #-------------------------------------------------------------------------------
   # Copy the Data Folder to the build directory
   add_custom_target(${PLUGIN_NAME}DataFolderCopy ALL
-              COMMAND ${CMAKE_COMMAND} -E copy_directory ${${PLUGIN_NAME}_SOURCE_DIR}/Data
+              COMMAND ${CMAKE_COMMAND} -E copy_directory ${${PLUGIN_NAME}_SOURCE_DIR}/Data/${PLUGIN_NAME}
               ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/${CMAKE_CFG_INTDIR}/Data
               COMMENT "Copying ${PLUGIN_NAME} Data Folder into Binary Directory")
   set_target_properties(${PLUGIN_NAME}DataFolderCopy PROPERTIES FOLDER ZZ_COPY_FILES)

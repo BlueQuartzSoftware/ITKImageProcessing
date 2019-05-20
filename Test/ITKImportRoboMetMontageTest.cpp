@@ -33,6 +33,8 @@
 
 #include "ITKTestBase.h"
 
+#include "ITKImageProcessing/ITKImageProcessingFilters/ITKImportRoboMetMontage.h"
+#include "SIMPLib/CoreFilters/DataContainerWriter.h"
 #include "SIMPLib/FilterParameters/FileListInfoFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/Filtering/FilterPipeline.h"
@@ -51,101 +53,56 @@ class ITKImportRoboMetMontageTest : public ITKTestBase
 public:
   ITKImportRoboMetMontageTest() = default;
 
-  virtual ~ITKImportRoboMetMontageTest() = default;
+  ~ITKImportRoboMetMontageTest() override = default;
 
   ITKImportRoboMetMontageTest(const ITKImportRoboMetMontageTest&) = delete;            // Copy Constructor Not Implemented
   ITKImportRoboMetMontageTest(ITKImportRoboMetMontageTest&&) = delete;                 // Move Constructor
   ITKImportRoboMetMontageTest& operator=(const ITKImportRoboMetMontageTest&) = delete; // Copy Assignment Not Implemented
   ITKImportRoboMetMontageTest& operator=(ITKImportRoboMetMontageTest&&) = delete;      // Move Assignment
+  // -----------------------------------------------------------------------------
+  //
+  // -----------------------------------------------------------------------------
+  void RemoveTestFiles()
+  {
+#if REMOVE_TEST_FILES
+    QFile::remove(UnitTest::ImportRobometMontage::OutputDREAM3DFile);
+#endif
+  }
 
   // -----------------------------------------------------------------------------
   //
   // -----------------------------------------------------------------------------
   void TestITKImportRoboMetMontageTest()
   {
-    QVariant var;
-    bool propWasSet = false;
-    FilterManager* fm = FilterManager::Instance();
+    ITKImportRoboMetMontage::Pointer import = ITKImportRoboMetMontage::New();
 
-    QString filtName = "ITKImportRoboMetMontage";
-    IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filtName);
-    DREAM3D_REQUIRE_VALID_POINTER(filterFactory.get());
-    AbstractFilter::Pointer import = filterFactory->create();
+    import->setInputFile(UnitTest::ImportRobometMontage::InputFile);
 
-    var.setValue(m_DataContainerName);
-    propWasSet = import->setProperty("DataContainerName", var);
-    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+    import->setChangeOrigin(false);
+    import->setChangeSpacing(false);
+    import->setConvertToGrayScale(false);
+    import->setDataContainerPath(DataArrayPath("Mosaic", "", ""));
+    import->setImageDataArrayName("Image");
+    import->setImageFileExtension(UnitTest::ImportRobometMontage::InputFileExtension);
+    import->setImageFilePrefix(UnitTest::ImportRobometMontage::InputFilePrefix);
+    import->setSliceNumber(0);
 
-    var.setValue(m_CellAMName);
-    propWasSet = import->setProperty("CellAttributeMatrixName", var);
-    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
-
-    var.setValue(m_MetaDataAMName);
-    propWasSet = import->setProperty("MetaDataAttributeMatrixName", var);
-    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
-
-    m_Origin.setX(0.0f);
-    m_Origin.setY(0.0f);
-    m_Origin.setZ(0.0f);
-    var.setValue(m_Origin);
-    propWasSet = import->setProperty("Origin", var);
-    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
-
-    m_Resolution.setX(0.25f);
-    m_Resolution.setY(0.50f);
-    m_Resolution.setZ(1.25f);
-    var.setValue(m_Resolution);
-    propWasSet = import->setProperty("Spacing", var);
-    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
-
-    FileListInfo_t fli;
-    fli.PaddingDigits = 2;
-    fli.Ordering = 0;
-    fli.StartIndex = 11;
-    fli.EndIndex = 26;
-    fli.IncrementIndex = 1;
-    fli.InputPath = UnitTest::DataDir + "/Data/Image";
-    fli.FilePrefix = "slice_";
-    fli.FileSuffix = "";
-    fli.FileExtension = "tif";
-
-    var.setValue(fli);
-    propWasSet = import->setProperty("InputFileListInfo", var);
-    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
-
-    QString registrationFile = QString("%1/TileConfiguration.registered.txt").arg(UnitTest::ITKImageProcessingDataDir);
-    var.setValue(registrationFile);
-    propWasSet = import->setProperty("RegistrationFile", var);
-    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
-
-    var.setValue(m_RegistrationCoordinatesArrayName);
-    propWasSet = import->setProperty("RegistrationCoordinatesArrayName", var);
-    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
-
-    var.setValue(m_ArrayNamesArrayName);
-    propWasSet = import->setProperty("AttributeArrayNamesArrayName", var);
-    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
-
-    // Create a DataContainerWriter Filter instance
-    filtName = "DataContainerWriter";
-    filterFactory = fm->getFactoryFromClassName(filtName);
-    DREAM3D_REQUIRE_VALID_POINTER(filterFactory.get());
-    AbstractFilter::Pointer writer = filterFactory->create();
-
-    QString output = QString("%1/ITKImportRoboMetMontageTest.dream3d").arg(UnitTest::TestTempDir);
-    FilesToRemove << output;
-    var.setValue(output);
-    propWasSet = writer->setProperty("OutputFile", var);
-    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+    DataContainerWriter::Pointer writer = DataContainerWriter::New();
+    writer->setOutputFile(UnitTest::ImportRobometMontage::OutputDREAM3DFile);
 
     // Create a Pipeline and execute it.
     FilterPipeline::Pointer pipeline = FilterPipeline::New();
     pipeline->pushBack(import);
     pipeline->pushBack(writer);
-    pipeline->execute();
 
+    pipeline->preflightPipeline();
     // Check for errors during the execution.
     int err = pipeline->getErrorCode();
+    DREAM3D_REQUIRE_EQUAL(err, 0)
+
+    pipeline->execute();
+    // Check for errors during the execution.
+    err = pipeline->getErrorCode();
     DREAM3D_REQUIRE_EQUAL(err, 0)
   }
 
@@ -162,9 +119,6 @@ public:
 
     DREAM3D_REGISTER_TEST(TestITKImportRoboMetMontageTest());
 
-    if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
-    {
-      DREAM3D_REGISTER_TEST(this->RemoveTestFiles())
-    }
+    DREAM3D_REGISTER_TEST(RemoveTestFiles())
   }
 };

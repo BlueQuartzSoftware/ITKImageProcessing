@@ -207,7 +207,7 @@ void RemoveTestFiles()
     }
 
     reader->execute();
-    DREAM3D_REQUIRED(reader->getErrorCode(), ==, -1);
+    DREAM3D_REQUIRED(reader->getErrorCode(), ==, -5);
     DREAM3D_REQUIRED(reader->getWarningCode(), >=, 0);
     return EXIT_SUCCESS;
   }

@@ -31,49 +31,23 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #pragma once
 
-#include "SIMPLib/CoreFilters/ConvertColorToGrayScale.h"
+#include <QtCore/QString>
 
-#include "ITKImageProcessing/ITKImageProcessingFilters/ITKImageReader.h"
-#include "ITKImageProcessing/ITKImageProcessingPlugin.h"
+#include "SIMPLib/ITK/itkFijiConfigurationFileReader.hpp"
 
-class ITKImageProcessing_EXPORT MontageImportHelper
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
+
+class ITKImageProcessing_EXPORT FijiTileConfigParser
 {
+public:
+  FijiTileConfigParser();
+  ~FijiTileConfigParser();
 
 public:
-  /**
-   * @brief CreateImageImportFilter
-   * @param filter
-   * @param imageFileName
-   * @param daPath
-   * @return
-   */
-  static ITKImageReader::Pointer CreateImageImportFilter(AbstractFilter* filter, const QString& imageFileName, const DataArrayPath& daPath);
+  FijiTileConfigParser(const FijiTileConfigParser&) = delete;            // Copy Constructor Not Implemented
+  FijiTileConfigParser(FijiTileConfigParser&&) = delete;                 // Move Constructor Not Implemented
+  FijiTileConfigParser& operator=(const FijiTileConfigParser&) = delete; // Copy Assignment Not Implemented
+  FijiTileConfigParser& operator=(FijiTileConfigParser&&) = delete;      // Move Assignment Not Implemented
 
-  /**
-   * @brief CreateColorToGrayScaleFilter
-   * @param filter
-   * @param daPath
-   * @param colorWeights
-   * @param outputArrayName
-   * @return
-   */
-  static ConvertColorToGrayScale::Pointer CreateColorToGrayScaleFilter(AbstractFilter* filter, const DataArrayPath& daPath, const FloatVec3Type& colorWeights, const QString& outputArrayName);
-
-  /**
-   * @brief burn
-   * @param tolerance
-   * @param input
-   * @return
-   */
-  static std::map<int32_t, std::vector<size_t>> Burn(int32_t tolerance, std::vector<int32_t>& input);
-
-protected:
-  MontageImportHelper();
-  ~MontageImportHelper();
-
-public:
-  MontageImportHelper(const MontageImportHelper&) = delete;            // Copy Constructor Not Implemented
-  MontageImportHelper(MontageImportHelper&&) = delete;                 // Move Constructor Not Implemented
-  MontageImportHelper& operator=(const MontageImportHelper&) = delete; // Copy Assignment Not Implemented
-  MontageImportHelper& operator=(MontageImportHelper&&) = delete;      // Move Assignment Not Implemented
+  static itk::FijiFileData ParseFile(const QString& filepath);
 };

@@ -29,51 +29,62 @@
  *
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#pragma once
+#include "FijiTileConfigParser.h"
 
-#include "SIMPLib/CoreFilters/ConvertColorToGrayScale.h"
+#include <QtCore/QFile>
+#include <QtCore/QFileInfo>
+#include <QtCore/QStringList>
 
-#include "ITKImageProcessing/ITKImageProcessingFilters/ITKImageReader.h"
-#include "ITKImageProcessing/ITKImageProcessingPlugin.h"
+FijiTileConfigParser::FijiTileConfigParser() = default;
+FijiTileConfigParser::~FijiTileConfigParser() = default;
 
-class ITKImageProcessing_EXPORT MontageImportHelper
+itk::FijiFileData FijiTileConfigParser::ParseFile(const QString& filepath)
 {
+  itk::FijiFileData fileData;
 
-public:
-  /**
-   * @brief CreateImageImportFilter
-   * @param filter
-   * @param imageFileName
-   * @param daPath
-   * @return
-   */
-  static ITKImageReader::Pointer CreateImageImportFilter(AbstractFilter* filter, const QString& imageFileName, const DataArrayPath& daPath);
+  QString contents;
+  QFileInfo fi(filepath);
 
-  /**
-   * @brief CreateColorToGrayScaleFilter
-   * @param filter
-   * @param daPath
-   * @param colorWeights
-   * @param outputArrayName
-   * @return
-   */
-  static ConvertColorToGrayScale::Pointer CreateColorToGrayScaleFilter(AbstractFilter* filter, const DataArrayPath& daPath, const FloatVec3Type& colorWeights, const QString& outputArrayName);
+  // Read the Source File
+  QFile source(filepath);
+  source.open(QFile::ReadOnly);
+  contents = source.readAll();
+  source.close();
 
-  /**
-   * @brief burn
-   * @param tolerance
-   * @param input
-   * @return
-   */
-  static std::map<int32_t, std::vector<size_t>> Burn(int32_t tolerance, std::vector<int32_t>& input);
+  QStringList list = contents.split(QRegExp("\\n"));
+  QStringListIterator sourceLines(list);
+  bool dimFound = false;
+  bool dataFound = false;
 
-protected:
-  MontageImportHelper();
-  ~MontageImportHelper();
+  while(sourceLines.hasNext())
+  {
+    QString line = sourceLines.next().trimmed();
+    if(line.startsWith("#")) // comment line
+    {
+      continue;
+    }
+    if(line.startsWith("dim =")) // found the dimensions
+    {
+      dimFound = true;
+      // Should check that the value = 2
+    }
+    if(line.startsWith("# Define the image coordinates"))
+    {
+      // Found the start of the data
+      dataFound = true;
+    }
+  }
 
-public:
-  MontageImportHelper(const MontageImportHelper&) = delete;            // Copy Constructor Not Implemented
-  MontageImportHelper(MontageImportHelper&&) = delete;                 // Move Constructor Not Implemented
-  MontageImportHelper& operator=(const MontageImportHelper&) = delete; // Copy Assignment Not Implemented
-  MontageImportHelper& operator=(MontageImportHelper&&) = delete;      // Move Assignment Not Implemented
-};
+  if(!dimFound || !dataFound)
+  {
+    return fileData;
+  }
+  // slice_12.tif; ; (471.2965233276666, -0.522608066434236)
+  itk::TileLayout2D stageTiles;
+  while(sourceLines.hasNext())
+  {
+    QString line = sourceLines.next().trimmed();
+    QStringList tokens = line.split(";");
+  }
+  // Now start parsing the data
+}

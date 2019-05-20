@@ -371,51 +371,6 @@ void ImportZenInfoMontage::flushCache()
 }
 
 // -----------------------------------------------------------------------------
-std::map<int32_t, std::vector<size_t>> burn(int32_t tolerance, std::vector<int32_t>& input)
-{
-  int32_t halfTol = tolerance / 2;
-  size_t count = input.size();
-  int32_t seed = input[0];
-  std::vector<bool> visited(input.size(), false);
-  std::map<int32_t, std::vector<size_t>> avg_indices;
-
-  bool completed = false;
-  while(!completed)
-  {
-    std::vector<size_t> values;
-    for(size_t i = 0; i < count; i++)
-    {
-      // const BoundsType& bound = bounds.at(i);
-      if(input[i] < seed + halfTol && input[i] > seed - halfTol)
-      {
-        values.push_back(i);
-        visited[i] = true;
-      }
-    }
-
-    int32_t avg = 0;
-    for(const auto& v : values)
-    {
-      avg = avg + input.at(v);
-    }
-    avg = avg / values.size();
-    avg_indices[avg] = values;
-    seed = 0;
-    completed = true;
-    for(size_t i = 0; i < count; i++)
-    {
-      if(!visited[i])
-      {
-        seed = input[i];
-        completed = false;
-        break;
-      }
-    }
-  }
-  return avg_indices;
-}
-
-// -----------------------------------------------------------------------------
 void ImportZenInfoMontage::findTileIndices(int32_t tolerance, std::vector<BoundsType>& bounds)
 {
   std::vector<int32_t> xValues(bounds.size());
@@ -427,7 +382,7 @@ void ImportZenInfoMontage::findTileIndices(int32_t tolerance, std::vector<Bounds
     yValues[i] = bounds.at(i).Origin[1];
   }
 
-  std::map<int32_t, std::vector<size_t>> avg_indices = burn(tolerance, xValues);
+  std::map<int32_t, std::vector<size_t>> avg_indices = MontageImportHelper::Burn(tolerance, xValues);
   int32_t index = 0;
   for(auto& iter : avg_indices)
   {
@@ -440,7 +395,7 @@ void ImportZenInfoMontage::findTileIndices(int32_t tolerance, std::vector<Bounds
   }
   m_ColumnCount = index;
 
-  avg_indices = burn(100, yValues);
+  avg_indices = MontageImportHelper::Burn(tolerance, yValues);
   index = 0;
   for(auto& iter : avg_indices)
   {
