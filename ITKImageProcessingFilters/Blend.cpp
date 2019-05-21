@@ -32,7 +32,12 @@
 
 #include "Blend.h"
 
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
+#include "tbb/queuing_mutex.h"
+#endif
+
 #include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/Common/SIMPLRange.hpp"
 
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
 #include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
@@ -42,6 +47,8 @@
 #include "SIMPLib/FilterParameters/LinkedChoicesFilterParameter.h"
 #include "SIMPLib/FilterParameters/MultiDataContainerSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/Utilities/ParallelData2DAlgorithm.h"
+#include "SIMPLib/Utilities/ParallelTaskAlgorithm.h"
 
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
@@ -51,6 +58,8 @@
 
 using Grayscale_T = uint8_t;
 using PixelValue_T = double;
+using MutexType = tbb::queuing_mutex;
+using ScopedLockType = MutexType::scoped_lock;
 
 // This class was used as a testing class to observe the behavior of the Amoeba optimizer
 // It can be removed if not working on understanding how the Amoeba optimizer works
@@ -59,9 +68,9 @@ class MultiParamCostFunction : public itk::SingleValuedCostFunction
   std::vector<double> m_mins{};
 
 public:
-  itkNewMacro(MultiParamCostFunction)
+  itkNewMacro(MultiParamCostFunction);
 
-      void Initialize(std::vector<double> mins)
+  void Initialize(std::vector<double> mins)
   {
     m_mins = mins;
   }
@@ -90,8 +99,59 @@ public:
   }
 };
 
+class FFTImageInitializer
+{
+public:
+  static const uint8_t IMAGE_DIMENSIONS = 2;
+  using PixelCoord = itk::Index<IMAGE_DIMENSIONS>;
+  using InputImage = itk::Image<PixelValue_T, IMAGE_DIMENSIONS>;
+  using DataArrayType = DataArray<Grayscale_T>;
+
+  // =============================================================================
+  FFTImageInitializer(const InputImage::Pointer& image, size_t width, const DataArrayType::Pointer& dataArray)
+  : m_Image(image)
+  , m_Width(width)
+  , m_DataArray(dataArray)
+  , m_Comps(dataArray->getNumberOfComponents())
+  {
+  }
+
+  // =============================================================================
+  virtual ~FFTImageInitializer() = default;
+
+  // =============================================================================
+  void setPixel(size_t pxlWidthIdx, size_t pxlHeightIdx) const
+  {
+    // Get the pixel index from the current pxlWidthIdx and pxlHeightIdx
+    size_t pxlIdx = (pxlWidthIdx + pxlHeightIdx * m_Width) * m_Comps;
+    PixelCoord idx;
+    idx[0] = pxlWidthIdx;
+    idx[1] = pxlHeightIdx;
+    m_Image->SetPixel(idx, m_DataArray->getValue(pxlIdx));
+  }
+
+  // =============================================================================
+  void operator()(const SIMPLRange2D& range) const
+  {
+    for(size_t y = range.minRow(); y < range.maxRow(); y++)
+    {
+      for(size_t x = range.minCol(); x < range.maxCol(); x++)
+      {
+        setPixel(x, y);
+      }
+    }
+  }
+
+private:
+  InputImage::Pointer m_Image;
+  size_t m_Width;
+  DataArrayType::Pointer m_DataArray;
+  size_t m_Comps;
+};
+
 class FFTConvolutionCostFunction : public itk::SingleValuedCostFunction
 {
+public:
   static const uint8_t IMAGE_DIMENSIONS = 2;
   using Cell_T = size_t;
   using PixelCoord = itk::Index<IMAGE_DIMENSIONS>;
@@ -101,14 +161,9 @@ class FFTConvolutionCostFunction : public itk::SingleValuedCostFunction
   using GridPair = std::pair<GridKey, GridKey>;
   using RegionPair = std::pair<InputImage::RegionType, InputImage::RegionType>;
   using OverlapPair = std::pair<GridPair, RegionPair>;
-  using ImageGrid = std::map<std::pair<Cell_T, Cell_T>, InputImage::Pointer>;
+  using OverlapPairs = std::vector<OverlapPair>;
+  using ImageGrid = std::map<GridKey, InputImage::Pointer>;
   using Filter = itk::FFTConvolutionImageFilter<InputImage, InputImage, OutputImage>;
-
-  int m_degree = 2;
-  std::vector<std::pair<size_t, size_t>> m_IJ;
-  std::vector<OverlapPair> m_overlaps;
-  ImageGrid m_imageGrid;
-  Filter::Pointer m_filter = Filter::New();
 
   // The m_overlaps is a vector of pairs, with the first index being the
   // grid location of an overlap region (i.e. 'Row 0, Column: 1; Row: 1, Column: 1')
@@ -129,10 +184,10 @@ class FFTConvolutionCostFunction : public itk::SingleValuedCostFunction
   // and the second is the j (the value to raise the v coordinate to)
 
 public:
-  itkNewMacro(FFTConvolutionCostFunction)
+  itkNewMacro(FFTConvolutionCostFunction);
 
-      void Initialize(const QStringList& chosenDataContainers, const QString& rowChar, const QString& colChar, int degree, float overlapPercentage, DataContainerArrayShPtr dca, const QString& amName,
-                      const QString& dataAAName)
+  void Initialize(const QStringList& chosenDataContainers, const QString& rowChar, const QString& colChar, int degree, float overlapPercentage, DataContainerArrayShPtr dca, const QString& amName,
+                  const QString& dataAAName)
   {
     m_degree = degree;
 
@@ -145,250 +200,302 @@ public:
       }
     }
 
-    // Cache loop variables - better to not do this if the loops are parallelized though
-    GridKey imageKey;
-    SizeVec3Type dims;
-    size_t width, height, comps, overlapDim;
-    int cLength;
-    QString name;
-    PixelCoord idx;
-    size_t pxlIdx;
-
-    InputImage::Pointer eachImage;
-    PixelCoord imageOrigin;
-    imageOrigin[0] = 0;
-    imageOrigin[1] = 0;
-    InputImage::SizeType imageSize;
-    PixelCoord kernelOrigin;
-    InputImage::SizeType kernelSize;
-
-    AttributeMatrixShPtr am;
-    DataArray<Grayscale_T>::Pointer da;
     m_imageGrid.clear();
 
+    ParallelTaskAlgorithm taskAlg;
     // Populate and assign eachImage to m_imageGrid
-    for(const auto& eachDC : dca->getDataContainers()) // TODO Parallelize this
+    for(const auto& eachDC : dca->getDataContainers()) // Parallelize this
     {
       if(!chosenDataContainers.contains(eachDC->getName()))
       {
         continue;
       }
-      am = eachDC->getAttributeMatrix(amName);
-      da = am->getAttributeArrayAs<DataArray<Grayscale_T>>(dataAAName);
-      comps = da->getNumberOfComponents();
-      dims = eachDC->getGeometryAs<ImageGeom>()->getDimensions();
-      width = dims.getX();
-      height = dims.getY();
-
-      imageSize[0] = width;
-      imageSize[1] = height;
-      eachImage = InputImage::New();
-      eachImage->SetRegions(InputImage::RegionType(imageOrigin, imageSize));
-      eachImage->Allocate();
-
-      // A colored image could be used in a Fourier Transform as discussed in this paper:
-      // https://ieeexplore.ieee.org/document/723451
-      // NOTE Could this be parallelized?
-      for(size_t pxlHeightIdx = 0; pxlHeightIdx < height; ++pxlHeightIdx)
-      {
-        for(size_t pxlWidthIdx = 0; pxlWidthIdx < width; ++pxlWidthIdx)
-        {
-          // Get the pixel index from the current pxlWidthIdx and pxlHeightIdx
-          pxlIdx = (pxlWidthIdx + pxlHeightIdx * width) * comps;
-          idx[0] = pxlWidthIdx;
-          idx[1] = pxlHeightIdx;
-          eachImage->SetPixel(idx, da->getValue(pxlIdx));
-        }
-      }
-
-      name = eachDC->getName();
-      // NOTE For row/column string indicators with a length greater than one,
-      // it would probably be more robust to 'lastIndexOf'
-      cLength = name.size() - name.indexOf(colChar) - 1;
-      imageKey = std::make_pair(name.midRef(name.indexOf(rowChar) + 1, name.size() - cLength - 2).toULong(), name.rightRef(cLength).toULong());
-      m_imageGrid.insert_or_assign(imageKey, eachImage);
+      std::function<void(void)> fn = std::bind(&FFTConvolutionCostFunction::InitializeDataContainer, this, eachDC, rowChar, colChar, amName, dataAAName);
+      taskAlg.execute(fn);
     }
+    taskAlg.wait();
 
     // Populate m_overlaps
     m_overlaps.clear();
     for(const auto& eachImage : m_imageGrid)
     {
-      width = eachImage.second->GetBufferedRegion().GetSize()[0];
-      height = eachImage.second->GetBufferedRegion().GetSize()[1];
+      std::function<void (void)> fn = std::bind(&FFTConvolutionCostFunction::InitializeOverlaps, this, eachImage, overlapPercentage);
+      taskAlg.execute(fn);
+    }
+    taskAlg.wait();
+  }
 
-      auto rightImage{m_imageGrid.find(std::make_pair(eachImage.first.first, eachImage.first.second + 1))};
-      auto bottomImage{m_imageGrid.find(std::make_pair(eachImage.first.first + 1, eachImage.first.second))};
-      if(rightImage != m_imageGrid.end())
-      {
-        // NOTE The height dimension for horizontally overlapping images should be the same
-        overlapDim = static_cast<size_t>(roundf(width * overlapPercentage));
-        imageOrigin[0] = static_cast<itk::IndexValueType>(width - overlapDim);
-        imageOrigin[1] = 0;
-        imageSize[0] = overlapDim;
-        imageSize[1] = height;
+  // =============================================================================
+  void InitializeDataContainer(const DataContainer::Pointer& dc, const QString& rowChar, const QString& colChar, const QString& amName, const QString& dataAAName)
+  {
+    static MutexType mutex;
+    AttributeMatrix::Pointer am = dc->getAttributeMatrix(amName);
+    DataArray<Grayscale_T>::Pointer da = am->getAttributeArrayAs<DataArray<Grayscale_T>>(dataAAName);
+    size_t comps = da->getNumberOfComponents();
+    SizeVec3Type dims = dc->getGeometryAs<ImageGeom>()->getDimensions();
+    size_t width = dims.getX();
+    size_t height = dims.getY();
 
-        kernelOrigin[0] = 0;
-        kernelOrigin[1] = 0;
-        kernelSize[0] = overlapDim;
-        kernelSize[1] = height;
+    InputImage::SizeType imageSize;
+    imageSize[0] = width;
+    imageSize[1] = height;
+    
+    PixelCoord imageOrigin;
+    imageOrigin[0] = 0;
+    imageOrigin[1] = 0;
+    
+    InputImage::Pointer eachImage = InputImage::New();
+    eachImage->SetRegions(InputImage::RegionType(imageOrigin, imageSize));
+    eachImage->Allocate();
 
-        m_overlaps.push_back(
-            std::make_pair(std::make_pair(eachImage.first, rightImage->first), std::make_pair(InputImage::RegionType(imageOrigin, imageSize), InputImage::RegionType(kernelOrigin, kernelSize))));
-      }
-      if(bottomImage != m_imageGrid.end())
-      {
-        // NOTE The width dimension for vertically overlapping images should be the same
-        overlapDim = static_cast<size_t>(roundf(height * overlapPercentage));
-        imageOrigin[0] = 0;
-        imageOrigin[1] = 0;
-        imageSize[0] = width;
-        imageSize[1] = overlapDim;
+    // A colored image could be used in a Fourier Transform as discussed in this paper:
+    // https://ieeexplore.ieee.org/document/723451
+    // NOTE Could this be parallelized?
+    ParallelData2DAlgorithm dataAlg;
+    dataAlg.setRange(0, 0, height, width);
+    dataAlg.execute(FFTImageInitializer(eachImage, width, da));
 
-        kernelOrigin[0] = static_cast<itk::IndexValueType>(height - overlapDim);
-        kernelOrigin[1] = 0;
-        kernelSize[0] = width;
-        kernelSize[1] = overlapDim;
+    QString name = dc->getName();
+    // NOTE For row/column string indicators with a length greater than one,
+    // it would probably be more robust to 'lastIndexOf'
+    int cLength = name.size() - name.indexOf(colChar) - 1;
+    GridKey imageKey = std::make_pair(name.midRef(name.indexOf(rowChar) + 1, name.size() - cLength - 2).toULong(), name.rightRef(cLength).toULong());
+    ScopedLockType lock(mutex);
+    m_imageGrid[imageKey] = eachImage;
+  }
 
-        m_overlaps.push_back(
-            std::make_pair(std::make_pair(eachImage.first, bottomImage->first), std::make_pair(InputImage::RegionType(imageOrigin, imageSize), InputImage::RegionType(kernelOrigin, kernelSize))));
-      }
+  // =============================================================================
+  void InitializeOverlaps(const ImageGrid::value_type& image, float overlapPercentage)
+  {
+    static MutexType mutex;
+    const size_t width = image.second->GetBufferedRegion().GetSize()[0];
+    const size_t height = image.second->GetBufferedRegion().GetSize()[1];
+    size_t overlapDim;
+
+    PixelCoord imageOrigin;
+    InputImage::SizeType imageSize;
+    PixelCoord kernelOrigin;
+    InputImage::SizeType kernelSize;
+
+    auto rightImage{ m_imageGrid.find(std::make_pair(image.first.first, image.first.second + 1)) };
+    auto bottomImage{ m_imageGrid.find(std::make_pair(image.first.first + 1, image.first.second)) };
+    if(rightImage != m_imageGrid.end())
+    {
+      // NOTE The height dimension for horizontally overlapping images should be the same
+      size_t overlapDim = static_cast<size_t>(roundf(width * overlapPercentage));
+      imageOrigin[0] = static_cast<itk::IndexValueType>(width - overlapDim);
+      imageOrigin[1] = 0;
+      imageSize[0] = overlapDim;
+      imageSize[1] = height;
+
+      kernelOrigin[0] = 0;
+      kernelOrigin[1] = 0;
+      kernelSize[0] = overlapDim;
+      kernelSize[1] = height;
+
+      GridPair position = std::make_pair(image.first, rightImage->first);
+      RegionPair region = std::make_pair(InputImage::RegionType(imageOrigin, imageSize), InputImage::RegionType(kernelOrigin, kernelSize));
+      OverlapPair overlap = std::make_pair(position, region);
+      ScopedLockType lock(mutex);
+      m_overlaps.push_back(overlap);
+    }
+    if(bottomImage != m_imageGrid.end())
+    {
+      // NOTE The width dimension for vertically overlapping images should be the same
+      overlapDim = static_cast<size_t>(roundf(height * overlapPercentage));
+      imageOrigin[0] = 0;
+      imageOrigin[1] = 0;
+      imageSize[0] = width;
+      imageSize[1] = overlapDim;
+
+      kernelOrigin[0] = static_cast<itk::IndexValueType>(height - overlapDim);
+      kernelOrigin[1] = 0;
+      kernelSize[0] = width;
+      kernelSize[1] = overlapDim;
+
+      GridPair position = std::make_pair(image.first, bottomImage->first);
+      RegionPair region = std::make_pair(InputImage::RegionType(imageOrigin, imageSize), InputImage::RegionType(kernelOrigin, kernelSize));
+      OverlapPair overlap = std::make_pair(position, region);
+      ScopedLockType lock(mutex);
+      m_overlaps.push_back(overlap);
     }
   }
 
+  // =============================================================================
   void GetDerivative(const ParametersType&, DerivativeType&) const override
   {
     throw std::exception();
   }
 
+  // =============================================================================
   uint32_t GetNumberOfParameters() const override
   {
     return static_cast<uint32_t>(2 * (m_degree * m_degree + 2 * m_degree + 1));
   }
 
+  // =============================================================================
   MeasureType GetValue(const ParametersType& parameters) const override
   {
-    const double tolerance = 0.05;
     ImageGrid distortedGrid;
-
-    // Debugging section - can remove for production
-    std::vector<double> transform_matrix{};
-    for(const auto& eachParam : parameters)
-    {
-      transform_matrix.push_back(eachParam);
-    }
-
-    // Cache loop variables - better to not do this if the loops are parallelized though
-    GridKey imageKey;
-    InputImage::RegionType bufferedRegion;
-    InputImage::SizeType dims;
-    size_t width;
-    size_t height;
-    double lastXIndex;
-    double lastYIndex;
-
-    double x_trans;
-    double y_trans;
-    double x = 0;
-    double y = 0;
-    double u_v = 0;
-    double term = 0;
-
-    std::pair<int, int> eachIJ{};
-    PixelCoord eachPixel;
-    InputImage::Pointer distortedImage;
+    ParallelTaskAlgorithm taskAlg;
+    std::function<void(void)> fn;
 
     // Apply the Transform to each image in the image grid
-    for(const auto& eachImage : m_imageGrid) // TODO Parallelize this
+    for(const auto& eachImage : m_imageGrid) // Parallelize this
     {
-      bufferedRegion = eachImage.second->GetBufferedRegion();
-      dims = bufferedRegion.GetSize();
-      width = dims[0];
-      height = dims[1];
-      lastXIndex = width - 1 + tolerance;
-      lastYIndex = height - 1 + tolerance;
-
-      x_trans = (width - 1) / 2.0;
-      y_trans = (height - 1) / 2.0;
-
-      distortedImage = InputImage::New();
-      distortedImage->SetRegions(bufferedRegion);
-      distortedImage->Allocate();
-
-      // Iterate through the pixels in eachImage and apply the transform
-      itk::ImageRegionIterator<InputImage> it(eachImage.second, bufferedRegion);
-      for(it.GoToBegin(); !it.IsAtEnd(); ++it) // TODO Parallelize this
-      {
-        PixelCoord pixel = it.GetIndex();
-        x = x_trans;
-        y = y_trans;
-        // Dave's method uses an m_IJ matrix described above
-        // and so a different method of grabbing the appropriate index from the m_IJ
-        // will be needed if using that static array
-        for(size_t idx = 0; idx < parameters.size(); ++idx) // TODO Parallelize this
-        {
-          // eachIJ is a pair, the first index is the applied exponent to u
-          // the second index is the applied exponent to v
-          eachIJ = m_IJ[idx - (idx >= m_IJ.size() ? m_IJ.size() : 0)];
-
-          // The subtraction step here translates the coordinates so the center of the image
-          // is at the origin
-          // This allows for rotations to occur in a predictable way
-          u_v = pow((pixel[0] - x_trans), eachIJ.first) * pow((pixel[1] - y_trans), eachIJ.second);
-
-          term = u_v * parameters[idx];
-          // This recorrects the centering translation to the appropriate x or y value
-          idx < m_IJ.size() - 1 ? x += term : y += term;
-        }
-
-        // This check effectively "clips" data and the cast and round
-        // effectively perform a nearest neighbor sampling
-        if(x >= -tolerance && x <= lastXIndex && y >= -tolerance && y <= lastYIndex)
-        {
-          eachPixel[0] = static_cast<int64_t>(round(x));
-          eachPixel[1] = static_cast<int64_t>(round(y));
-          // The value obtained with eachImage.second->GetPixel(eachPixel) could have
-          // its "contrast" adjusted based on its radial location from the center of
-          // the image at this step to compensate for error encountered from radial effects
-          distortedImage->SetPixel(eachPixel, eachImage.second->GetPixel(eachPixel));
-        }
-      }
-      distortedGrid.insert_or_assign(eachImage.first, distortedImage);
+      fn = std::bind(&FFTConvolutionCostFunction::applyTransformation, this, parameters, eachImage, std::ref(distortedGrid));
+      taskAlg.execute(fn);
     }
+    taskAlg.wait();
 
-    // Find the FFT Convolution and accumulate the maximum value from each overlap
     std::atomic<MeasureType> residual{0.0};
-    for(const auto& eachOverlap : m_overlaps) // TODO Parallelize this
+    // Find the FFT Convolution and accumulate the maximum value from each overlap
+    for(const auto& eachOverlap : m_overlaps) // Parallelize this
     {
-      // Set the filter's image to the overlap region of the image
-      InputImage::Pointer image = distortedGrid.at(eachOverlap.first.first);
-
-      // NOTE It may be useful for debugging purposes to write the image to a file here
-
-      image->SetRequestedRegion(eachOverlap.second.first);
-      m_filter->SetInput(image);
-
-      // Set the filter's kernel to the overlap region of the kernel
-      InputImage::Pointer kernel = distortedGrid.at(eachOverlap.first.second);
-
-      // NOTE It may be useful for debugging purposes to write the kernel to a file here
-
-      kernel->SetRequestedRegion(eachOverlap.second.second);
-      m_filter->SetKernelImage(kernel);
-
-      // Run the filter
-      m_filter->Update();
-      OutputImage::Pointer fftConvolve = m_filter->GetOutput();
-
-      // NOTE It may be useful for debugging purposes to write the output image to a file here
-
-      // Increment by the maximum value of the output of the fftConvolve
-      // NOTE This methodology of getting the max element from the fftConvolve
-      // output might require a deeper look
-      residual = residual + *std::max_element(fftConvolve->GetBufferPointer(), fftConvolve->GetBufferPointer() + fftConvolve->GetPixelContainer()->Size());
+      findFFTConvolutionAndMaxValue(eachOverlap, distortedGrid, residual);
+      //std::function<void (void)> fn = std::bind(&FFTConvolutionCostFunction::findFFTConvolutionAndMaxValue, this, eachOverlap, distortedGrid, residual);
+      //taskAlg.execute(fn);
     }
+
     // The value to minimize is the square of the sum of the maximum value of the fft convolution
-    return sqrt(residual);
+    MeasureType result = sqrt(residual);
+    return result;
   }
+
+  // =============================================================================
+  void applyTransformation(const ParametersType& parameters, const ImageGrid::value_type& eachImage, ImageGrid& distortedGrid) const
+  {
+    static MutexType mutex;
+    ParallelTaskAlgorithm taskAlg;
+    std::function<void(void)> fn;
+
+    const double tolerance = 0.05;
+
+    InputImage::RegionType bufferedRegion = eachImage.second->GetBufferedRegion();
+
+    typename InputImage::Pointer distortedImage = InputImage::New();
+    distortedImage->SetRegions(bufferedRegion);
+    distortedImage->Allocate();
+
+    // Iterate through the pixels in eachImage and apply the transform
+    itk::ImageRegionIterator<InputImage> it(eachImage.second, bufferedRegion);
+    for(it.GoToBegin(); !it.IsAtEnd(); ++it) // Parallelize this
+    {
+      fn = std::bind(&FFTConvolutionCostFunction::applyTransformationPixel, this, tolerance, parameters, eachImage.second, distortedImage, bufferedRegion, it);
+      taskAlg.execute(fn);
+    }
+    taskAlg.wait();
+
+    GridKey distortedKey = eachImage.first;
+    ScopedLockType lock(mutex);
+    distortedGrid[distortedKey] = distortedImage;
+  }
+
+  // =============================================================================
+  void applyTransformationPixel(double tolerance, const ParametersType& parameters, const InputImage::Pointer& inputImage, const InputImage::Pointer& distortedImage,
+                                const InputImage::RegionType& bufferedRegion, const itk::ImageRegionIterator<InputImage>& iter) const
+  {
+    static MutexType mutex;
+    ParallelTaskAlgorithm taskAlg;
+    std::function<void(void)> fn;
+
+    const InputImage::SizeType dims = bufferedRegion.GetSize();
+    const size_t width = dims[0];
+    const size_t height = dims[1];
+    const double lastXIndex = width - 1 + tolerance;
+    const double lastYIndex = height - 1 + tolerance;
+
+    const double x_trans = (width - 1) / 2.0;
+    const double y_trans = (height - 1) / 2.0;
+
+    PixelCoord pixel = iter.GetIndex();
+    double x = x_trans;
+    double y = y_trans;
+    // Dave's method uses an m_IJ matrix described above
+    // and so a different method of grabbing the appropriate index from the m_IJ
+    // will be needed if using that static array
+    for(size_t idx = 0; idx < parameters.size(); ++idx) // Parallelize this
+    {
+      fn = std::bind(&FFTConvolutionCostFunction::calculatePixelCoordinates, this, parameters, pixel, idx, x_trans, y_trans, x, y);
+      taskAlg.execute(fn);
+    }
+    taskAlg.wait();
+
+    // This check effectively "clips" data and the cast and round
+    // effectively perform a nearest neighbor sampling
+    if(x >= -tolerance && x <= lastXIndex && y >= -tolerance && y <= lastYIndex)
+    {
+      PixelCoord eachPixel;
+      eachPixel[0] = static_cast<int64_t>(round(x));
+      eachPixel[1] = static_cast<int64_t>(round(y));
+      // The value obtained with eachImage.second->GetPixel(eachPixel) could have
+      // its "contrast" adjusted based on its radial location from the center of
+      // the image at this step to compensate for error encountered from radial effects
+      ScopedLockType lock(mutex);
+      distortedImage->SetPixel(eachPixel, inputImage->GetPixel(eachPixel));
+    }
+  }
+
+  // =============================================================================
+  void calculatePixelCoordinates(const ParametersType& parameters, const PixelCoord& pixel, size_t idx, double x_trans, double y_trans, double& x_ref, double& y_ref) const
+  {
+    // eachIJ is a pair, the first index is the applied exponent to u
+    // the second index is the applied exponent to v
+    std::pair<int, int> eachIJ = m_IJ[idx - (idx >= m_IJ.size() ? m_IJ.size() : 0)];
+
+    // The subtraction step here translates the coordinates so the center of the image
+    // is at the origin
+    // This allows for rotations to occur in a predictable way
+    const double u_v = pow((pixel[0] - x_trans), eachIJ.first) * pow((pixel[1] - y_trans), eachIJ.second);
+
+    const double term = u_v * parameters[idx];
+    // This recorrects the centering translation to the appropriate x or y value
+    idx < m_IJ.size() - 1 ? x_ref += term : y_ref += term;
+  }
+
+  // =============================================================================
+  void findFFTConvolutionAndMaxValue(const OverlapPair& overlap, ImageGrid& distortedGrid, std::atomic<MeasureType>& residual) const
+  {
+    static MutexType mutex;
+    // Set the filter's image to the overlap region of the image
+    auto imageKey = overlap.first.first;
+    InputImage::Pointer image = distortedGrid.at(imageKey);
+    Filter::Pointer filter = Filter::New();
+
+    // NOTE It may be useful for debugging purposes to write the image to a file here
+
+    auto kernelKey = overlap.first.second;
+    auto imageRegion = overlap.second.first;
+    image->SetRequestedRegion(imageRegion);
+    filter->SetInput(image);
+
+    // Set the filter's kernel to the overlap region of the kernel
+    InputImage::Pointer kernel = distortedGrid.at(kernelKey);
+
+    // NOTE It may be useful for debugging purposes to write the kernel to a file here
+
+    kernel->SetRequestedRegion(overlap.second.second);
+    filter->SetKernelImage(kernel);
+
+    // Run the filter
+    filter->Update();
+    OutputImage::Pointer fftConvolve = filter->GetOutput();
+
+    // NOTE It may be useful for debugging purposes to write the output image to a file here
+
+    // Increment by the maximum value of the output of the fftConvolve
+    // NOTE This methodology of getting the max element from the fftConvolve
+    // output might require a deeper look
+    MeasureType maxValue = *std::max_element(fftConvolve->GetBufferPointer(), fftConvolve->GetBufferPointer() + fftConvolve->GetPixelContainer()->Size());
+    ScopedLockType lock(mutex);
+    residual = residual + maxValue;
+  }
+
+private:
+  int m_degree = 2;
+  std::vector<std::pair<size_t, size_t>> m_IJ;
+  OverlapPairs m_overlaps;
+  ImageGrid m_imageGrid;
 };
 
 uint Blend::GetIterationsFromStopDescription(const QString& stopDescription) const
@@ -636,11 +743,14 @@ void Blend::execute()
     transform.push_back(eachCoeff);
   }
 
+  // cache value
+  auto value = m_optimizer->GetValue();
+
   // Can get rid of these qDebug lines after debugging is done for filter
   qDebug() << "Initial Position: [ " << m_initialGuess << " ]";
   qDebug() << "Final Position: [ " << transform << " ]";
   qDebug() << "Number of Iterations: " << GetIterationsFromStopDescription(stopReason);
-  qDebug() << "Value: " << m_optimizer->GetValue();
+  qDebug() << "Value: " << value;
 
   // If the optimization didn't converge, set an error...
   if(!GetConvergenceFromStopDescription(stopReason))
@@ -653,7 +763,7 @@ void Blend::execute()
   // ...otherwise, set the appropriate values of the filter's output data arrays
   AttributeMatrixShPtr transformAM = getDataContainerArray()->getDataContainer(m_blendDCName)->getAttributeMatrix(m_transformAMName);
   transformAM->getAttributeArrayAs<UInt64ArrayType>(m_iterationsAAName)->push_back(GetIterationsFromStopDescription(stopReason));
-  transformAM->getAttributeArrayAs<DoubleArrayType>(m_valueAAName)->push_back(m_optimizer->GetValue());
+  transformAM->getAttributeArrayAs<DoubleArrayType>(m_valueAAName)->push_back(value);
   transformAM->getAttributeArrayAs<DoubleArrayType>(m_transformAAName)->setArray(transform);
 }
 
