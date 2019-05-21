@@ -204,6 +204,7 @@ endforeach()
 # ADD_SIMPL_SUPPORT_HEADER(${${PLUGIN_NAME}_SOURCE_DIR} ${_filterGroupName} Dream3DTemplateAliasMacro.h)
 ADD_SIMPL_SUPPORT_CLASS(${${PLUGIN_NAME}_SOURCE_DIR} ${_filterGroupName} ITKImageBase)
 ADD_SIMPL_SUPPORT_CLASS(${${PLUGIN_NAME}_SOURCE_DIR} ${_filterGroupName} util/DetermineStitching)
+ADD_SIMPL_SUPPORT_CLASS(${${PLUGIN_NAME}_SOURCE_DIR} ${_filterGroupName} util/FFTConvolutionCostFunction)
 ADD_SIMPL_SUPPORT_CLASS(${${PLUGIN_NAME}_SOURCE_DIR} ${_filterGroupName} util/MontageImportHelper)
 # ADD_SIMPL_SUPPORT_CLASS(${${PLUGIN_NAME}_SOURCE_DIR} ${_filterGroupName} util/FijiTileConfigParser)
 
