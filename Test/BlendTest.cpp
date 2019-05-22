@@ -31,8 +31,12 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include <QFile>
+#include <array>
+#include <cmath>
+#include <map>
+
 #include <QtCore/QCoreApplication>
+#include <QtCore/QFile>
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
@@ -41,71 +45,32 @@
 #include "SIMPLib/Filtering/FilterFactory.hpp"
 #include "SIMPLib/Filtering/FilterManager.h"
 #include "SIMPLib/Filtering/FilterPipeline.h"
+#include "SIMPLib/Filtering/QMetaObjectUtilities.h"
+#include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
 #include "SIMPLib/SIMPLib.h"
 
-#include "SIMPLib/Filtering/QMetaObjectUtilities.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/util/FFTConvolutionCostFunction.h"
+#include "ITKImageProcessing/Test/UnitTestSupport.hpp"
 
-#include "SIMPLib/Geometry/ImageGeom.h"
-#include "UnitTestSupport.hpp"
-
-#include <array>
-#include <cmath>
-#include <map>
 #ifndef M_PI
 #define M_PI (3.141592653)
 #endif
 
 class BlendTest
 {
-  const QString m_filtName = "Blend";
-  const QString m_ImageReaderClassName = "ITKImageReader";
+public:
+  BlendTest() = default;
+  ~BlendTest() = default;
+  BlendTest(const BlendTest&) = delete;            // Copy Constructor
+  BlendTest(BlendTest&&) = delete;                 // Move Constructor
+  BlendTest& operator=(const BlendTest&) = delete; // Copy Assignment
+  BlendTest& operator=(BlendTest&&) = delete;      // Move Assignment
 
-  // NOTE This should change to read the path of the DREAM3D_SDK CMake variable
-  const QString m_Image1Path = "C:\\Users\\mmarine\\Desktop\\EBSD_Alg\\2209p230908A\\Images\\Grayscale\\R0C0.jpg";
-  const QString m_Image2Path = "C:\\Users\\mmarine\\Desktop\\EBSD_Alg\\2209p230908A\\Images\\Grayscale\\R0C1.jpg";
-  const QString m_Image3Path = "C:\\Users\\mmarine\\Desktop\\EBSD_Alg\\2209p230908A\\Images\\Grayscale\\R1C0.jpg";
-  const QString m_Image4Path = "C:\\Users\\mmarine\\Desktop\\EBSD_Alg\\2209p230908A\\Images\\Grayscale\\R1C1.jpg";
-  const QString m_Image1Name = "R0C0";
-  const QString m_Image2Name = "R0C1";
-  const QString m_Image3Name = "R1C0";
-  const QString m_Image4Name = "R1C1";
-  const QString m_cellAMName = "CellData";
-  const QString m_imageAAName = "ImageData";
-  const QChar m_rowChar = 'R';
-  const QChar m_colChar = 'C';
-
-  const QString m_dataAAName = m_imageAAName;
-  const QString m_AMName = m_cellAMName;
-  const QString m_outDCName = "Blend Data";
-  const QString m_outAMName = "Transform Matrix";
-  const QString m_outAAName = "Transform";
-  AbstractFilter::Pointer m_blendFilter;
-
-  // An affine transform will use degree 1 - Dave's algorithm assumes a degree 2
-  // Correcting barrel/fish-eye/lens distortion requires degree 2 or higher
-  static const int m_d = 1;
-  static const int m_maxIterations = 10000;
-
-  static constexpr double m_errTolerance = 3.0;
-  static constexpr float m_overlapPercentage = 0.25f;
-  static constexpr double m_lowTolerance = 1E-2;
-  static constexpr double m_highTolerance = 1E-2;
-
-  // THIS ISN'T THE ACTUAL KNOWN TRANSFORMATION MATRIX
-  // For one, this assumes a polynomial of degree 1 (i.e. an affine transform)
-  // The real answer will probably utilize a polynomial of degree 2 (and have upwards of 16 coefficients!)
-  // The answer would need to be obtained from Dave's work on these images
-  // Or by actually running the filter and getting the initial guess with
-  // a very small actual error inside the filter
-  // Note that Dave's work utilizes a custom polynomial function with some terms ignored
-  // NOTE The images I've used have been rotated 90 degrees counterclockwise
-  // Which means the transform to correct the 'distortion' should be a rotation
-  // transform that rotates them 90 degrees clockwise
-  const std::vector<double> m_answer{0.0, 0.0, 1.0, 0.0, 0.0, -1.0, 0.0, 0.0};
-  const QString m_initial{"0.0; 0.0; 1.0; 0.0; 0.0; -1.0; 0.0; 0.0"};
-
+  // -----------------------------------------------------------------------------
+  //
+  // -----------------------------------------------------------------------------
   void ReadImage(AbstractFilter::Pointer readerFilter, const QString& imagePath, const QString& imageName, DataArrayPath& dap)
   {
     dap.setDataContainerName(imageName);
@@ -115,79 +80,180 @@ class BlendTest
     DREAM3D_REQUIRE(readerFilter->getDataContainerArray()->doesDataContainerExist(imageName) == true)
   }
 
-  int RunTest()
+  // -----------------------------------------------------------------------------
+  //
+  // -----------------------------------------------------------------------------
+  int ImportTestData()
   {
-    m_blendFilter->execute();
+    // NOTE This should change to read the path of the DREAM3D_SDK CMake variable
+    const QString image1Path = "C:\\Users\\mmarine\\Desktop\\EBSD_Alg\\2209p230908A\\Images\\Grayscale\\R0C0.jpg";
+    const QString image2Path = "C:\\Users\\mmarine\\Desktop\\EBSD_Alg\\2209p230908A\\Images\\Grayscale\\R0C1.jpg";
+    const QString image3Path = "C:\\Users\\mmarine\\Desktop\\EBSD_Alg\\2209p230908A\\Images\\Grayscale\\R1C0.jpg";
+    const QString image4Path = "C:\\Users\\mmarine\\Desktop\\EBSD_Alg\\2209p230908A\\Images\\Grayscale\\R1C1.jpg";
+    const QString image1Name = "R0C0";
+    const QString image2Name = "R0C1";
+    const QString image3Name = "R1C0";
+    const QString image4Name = "R1C1";
 
-    DREAM3D_REQUIRE_EQUAL(m_blendFilter->getErrorCode(), 0)
-    DoubleArrayType::Pointer transform = m_blendFilter->getDataContainerArray()->getDataContainer(m_outDCName)->getAttributeMatrix(m_outAMName)->getAttributeArrayAs<DoubleArrayType>(m_outAAName);
+    DREAM3D_REQUIRE_EQUAL(QFile::exists(image1Path), true)
+    DREAM3D_REQUIRE_EQUAL(QFile::exists(image2Path), true)
+    DREAM3D_REQUIRE_EQUAL(QFile::exists(image3Path), true)
+    DREAM3D_REQUIRE_EQUAL(QFile::exists(image4Path), true)
+
+    AbstractFilter::Pointer readerFilter = FilterManager::Instance()->getFactoryFromClassName("ITKImageReader")->create();
+    DREAM3D_REQUIRE(readerFilter.get() != nullptr)
+
+    DataArrayPath dap("", "CellData", "ImageData");
+    ReadImage(readerFilter, image1Path, image1Name, dap);
+    ReadImage(readerFilter, image2Path, image2Name, dap);
+    ReadImage(readerFilter, image3Path, image3Name, dap);
+    ReadImage(readerFilter, image4Path, image4Name, dap);
+
+    m_ImageReaderDca = readerFilter->getDataContainerArray();
+
+    return EXIT_SUCCESS;
+  }
+
+  // -----------------------------------------------------------------------------
+  //
+  // -----------------------------------------------------------------------------
+  int InitBlendFilter()
+  {
+    IFilterFactory::Pointer blendFactory = FilterManager::Instance()->getFactoryFromClassName("Blend");
+    DREAM3D_REQUIRE(blendFactory.get() != nullptr)
+
+    m_BlendFilter = blendFactory->create();
+    DREAM3D_REQUIRE(m_BlendFilter.get() != nullptr)
+
+    QStringList chosenDataContainers;
+    for(const auto& dc : m_ImageReaderDca->getDataContainers())
+    {
+      chosenDataContainers.push_back(dc->getName());
+    }
+    DREAM3D_REQUIRE_EQUAL(chosenDataContainers.size(), 4)
+
+    const QChar rowChar = 'R';
+    const QChar colChar = 'C';
+
+    // An affine transform will use degree 1 - Dave's algorithm assumes a degree 2
+    // Correcting barrel/fish-eye/lens distortion requires degree 2 or higher
+    const int degree = 1;
+    const int maxIterations = 10000;
+
+    const QString initialGuess = {"0.0; 0.0; 1.0; 0.0; 0.0; -1.0; 0.0; 0.0"};
+    const float overlapPercentage = 0.25f;
+    const QString dataArrayName = "ImageData";
+    const QString attrMatrName = "CellData";
+    const double lowTolerance = 1E-2;
+    const double highTolerance = 1E-2;
+
+    m_BlendFilter->setProperty("RowCharacter", QVariant(rowChar));
+    m_BlendFilter->setProperty("ColumnCharacter", QVariant(colChar));
+    m_BlendFilter->setProperty("MaxIterations", QVariant(maxIterations));
+    m_BlendFilter->setProperty("Degree", QVariant(degree));
+    m_BlendFilter->setProperty("InitialSimplexGuess", QVariant(initialGuess));
+    m_BlendFilter->setProperty("OverlapPercentage", QVariant(overlapPercentage));
+    m_BlendFilter->setProperty("LowTolerance", QVariant(lowTolerance));
+    m_BlendFilter->setProperty("HighTolerance", QVariant(highTolerance));
+    m_BlendFilter->setProperty("DataAttributeArrayName", QVariant(dataArrayName));
+    m_BlendFilter->setProperty("AttributeMatrixName", QVariant(attrMatrName));
+    m_BlendFilter->setProperty("ChosenDataContainers", QVariant(chosenDataContainers));
+    m_BlendFilter->setDataContainerArray(m_ImageReaderDca);
+
+    return EXIT_SUCCESS;
+  }
+
+  // -----------------------------------------------------------------------------
+  //
+  // -----------------------------------------------------------------------------
+  int TestFFTConvolutionCostFunction()
+  {
+    const QChar rowChar = m_BlendFilter->property("RowCharacter").toChar();
+    const QChar colChar = m_BlendFilter->property("ColumnCharacter").toChar();
+    const int degree = m_BlendFilter->property("Degree").toInt();
+    const float overlapPercentage = m_BlendFilter->property("OverlapPercentage").toFloat();
+    const QStringList dcNames = m_BlendFilter->property("ChosenDataContainers").toStringList();
+    const QString attrMatName = m_BlendFilter->property("AttributeMatrixName").toString();
+    const QString dataArrayName = m_BlendFilter->property("DataAttributeArrayName").toString();
+
+    // The line below is used for testing the MultiParamCostFunction
+    //    std::vector<double>{1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0}
+    FFTConvolutionCostFunction costFunction;
+    costFunction.Initialize(dcNames, rowChar, colChar, degree, overlapPercentage, m_ImageReaderDca, attrMatName, dataArrayName);
+
+    using GridKeys = QVector<FFTConvolutionCostFunction::GridKey>;
+    GridKeys gridKeys;
+    const FFTConvolutionCostFunction::ImageGrid imageGrid = costFunction.getImageGrid();
+    for(const auto& gridValues : imageGrid)
+    {
+      gridKeys.push_back(gridValues.first);
+    }
+
+    DREAM3D_REQUIRE(gridKeys.contains(std::make_pair(0, 0)))
+    DREAM3D_REQUIRE(gridKeys.contains(std::make_pair(0, 1)))
+    DREAM3D_REQUIRE(gridKeys.contains(std::make_pair(1, 1)))
+    DREAM3D_REQUIRE(gridKeys.contains(std::make_pair(1, 0)))
+
+    // TODO: Test GetValue method
+
+    return EXIT_SUCCESS;
+  }
+
+  // -----------------------------------------------------------------------------
+  //
+  // -----------------------------------------------------------------------------
+  int ExecuteBlendTest()
+  {
+    const double errTolerance = 3.0;
+
+    // THIS ISN'T THE ACTUAL KNOWN TRANSFORMATION MATRIX
+    // For one, this assumes a polynomial of degree 1 (i.e. an affine transform)
+    // The real answer will probably utilize a polynomial of degree 2 (and have upwards of 16 coefficients!)
+    // The answer would need to be obtained from Dave's work on these images
+    // Or by actually running the filter and getting the initial guess with
+    // a very small actual error inside the filter
+    // Note that Dave's work utilizes a custom polynomial function with some terms ignored
+    // NOTE The images I've used have been rotated 90 degrees counterclockwise
+    // Which means the transform to correct the 'distortion' should be a rotation
+    // transform that rotates them 90 degrees clockwise
+    const std::vector<double> expectedAnswer = {0.0, 0.0, 1.0, 0.0, 0.0, -1.0, 0.0, 0.0};
+
+    m_BlendFilter->execute();
+
+    DREAM3D_REQUIRE_EQUAL(m_BlendFilter->getErrorCode(), 0)
+    DataContainer::Pointer dc = m_BlendFilter->getDataContainerArray()->getDataContainer("Blend Data");
+    DREAM3D_REQUIRE(dc.get() != nullptr)
+    AttributeMatrix::Pointer am = dc->getAttributeMatrix("Transform Matrix");
+    DREAM3D_REQUIRE(am.get() != nullptr)
+    DoubleArrayType::Pointer transformArray = am->getAttributeArrayAs<DoubleArrayType>("Transform");
+    DREAM3D_REQUIRE(transformArray.get() != nullptr)
 
     double error = 0;
-    for(size_t coeffIdx = 0; coeffIdx < transform->size(); ++coeffIdx)
+    for(size_t coeffIdx = 0; coeffIdx < transformArray->size(); ++coeffIdx)
     {
-      error += abs(transform->getValue(coeffIdx) - m_answer[coeffIdx]);
+      error += abs(transformArray->getValue(coeffIdx) - expectedAnswer[coeffIdx]);
     }
-    bool outOfTolerance = error > m_errTolerance;
+    bool outOfTolerance = error > errTolerance;
     DREAM3D_REQUIRE_EQUAL(outOfTolerance, false)
 
     return EXIT_SUCCESS;
   }
 
-public:
-  BlendTest(const BlendTest&) = delete;            // Copy Constructor
-  BlendTest(BlendTest&&) = delete;                 // Move Constructor
-  BlendTest& operator=(const BlendTest&) = delete; // Copy Assignment
-  BlendTest& operator=(BlendTest&&) = delete;      // Move Assignment
-
-  ~BlendTest() = default;
-  BlendTest()
-  {
-    IFilterFactory::Pointer blendFactory = FilterManager::Instance()->getFactoryFromClassName(m_filtName);
-    DREAM3D_REQUIRE(blendFactory.get() != nullptr)
-
-    m_blendFilter = blendFactory->create();
-    DREAM3D_REQUIRE(m_blendFilter.get() != nullptr)
-  }
-
+  // -----------------------------------------------------------------------------
+  //
+  // -----------------------------------------------------------------------------
   void operator()()
   {
+    std::cout << "---------------- BlendTest ---------------------" << std::endl;
     int err = EXIT_SUCCESS;
 
-    DREAM3D_REQUIRE_EQUAL(QFile::exists(m_Image1Path), true)
-    DREAM3D_REQUIRE_EQUAL(QFile::exists(m_Image2Path), true)
-    DREAM3D_REQUIRE_EQUAL(QFile::exists(m_Image3Path), true)
-    DREAM3D_REQUIRE_EQUAL(QFile::exists(m_Image4Path), true)
-
-    AbstractFilter::Pointer readerFilter = FilterManager::Instance()->getFactoryFromClassName(m_ImageReaderClassName)->create();
-
-    DataArrayPath dap;
-    dap.setDataArrayName(m_imageAAName);
-    dap.setAttributeMatrixName(m_cellAMName);
-
-    ReadImage(readerFilter, m_Image1Path, m_Image1Name, dap);
-    ReadImage(readerFilter, m_Image2Path, m_Image2Name, dap);
-    ReadImage(readerFilter, m_Image3Path, m_Image3Name, dap);
-    ReadImage(readerFilter, m_Image4Path, m_Image4Name, dap);
-
-    QStringList chosenDataContainers;
-    for(const auto& eachDC : readerFilter->getDataContainerArray()->getDataContainers())
-    {
-      chosenDataContainers.push_back(eachDC->getName());
-    }
-
-    m_blendFilter->setProperty("RowCharacter", QVariant(m_rowChar));
-    m_blendFilter->setProperty("ColumnCharacter", QVariant(m_colChar));
-    m_blendFilter->setProperty("MaxIterations", QVariant(m_maxIterations));
-    m_blendFilter->setProperty("Degree", QVariant(m_d));
-    m_blendFilter->setProperty("InitialSimplexGuess", QVariant(m_initial));
-    m_blendFilter->setProperty("OverlapPercentage", QVariant(m_overlapPercentage));
-    m_blendFilter->setProperty("LowTolerance", QVariant(m_lowTolerance));
-    m_blendFilter->setProperty("HighTolerance", QVariant(m_highTolerance));
-    m_blendFilter->setProperty("DataAttributeArrayName", QVariant(m_dataAAName));
-    m_blendFilter->setProperty("AttributeMatrixName", QVariant(m_AMName));
-    m_blendFilter->setProperty("ChosenDataContainers", QVariant(chosenDataContainers));
-    m_blendFilter->setDataContainerArray(readerFilter->getDataContainerArray());
-
-    DREAM3D_REGISTER_TEST(RunTest())
+    DREAM3D_REGISTER_TEST(ImportTestData())
+    DREAM3D_REGISTER_TEST(InitBlendFilter())
+    DREAM3D_REGISTER_TEST(TestFFTConvolutionCostFunction())
+    DREAM3D_REGISTER_TEST(ExecuteBlendTest())
   }
+
+private:
+  AbstractFilter::Pointer m_BlendFilter;
+  DataContainerArray::Pointer m_ImageReaderDca;
 };
