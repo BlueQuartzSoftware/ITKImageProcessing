@@ -132,8 +132,8 @@ public:
     }
     DREAM3D_REQUIRE_EQUAL(chosenDataContainers.size(), 4)
 
-    const QChar rowChar = 'R';
-    const QChar colChar = 'C';
+    const QString rowChar = 'R';
+    const QString colChar = 'C';
 
     // An affine transform will use degree 1 - Dave's algorithm assumes a degree 2
     // Correcting barrel/fish-eye/lens distortion requires degree 2 or higher
@@ -168,8 +168,8 @@ public:
   // -----------------------------------------------------------------------------
   int TestFFTConvolutionCostFunction()
   {
-    const QChar rowChar = m_BlendFilter->property("RowCharacter").toChar();
-    const QChar colChar = m_BlendFilter->property("ColumnCharacter").toChar();
+    const QString rowChar = 'R';
+    const QString colChar = 'C';
     const int degree = m_BlendFilter->property("Degree").toInt();
     const float overlapPercentage = m_BlendFilter->property("OverlapPercentage").toFloat();
     const QStringList dcNames = m_BlendFilter->property("ChosenDataContainers").toStringList();
@@ -189,10 +189,15 @@ public:
       gridKeys.push_back(gridValues.first);
     }
 
-    DREAM3D_REQUIRE(gridKeys.contains(std::make_pair(0, 0)))
-    DREAM3D_REQUIRE(gridKeys.contains(std::make_pair(0, 1)))
-    DREAM3D_REQUIRE(gridKeys.contains(std::make_pair(1, 1)))
-    DREAM3D_REQUIRE(gridKeys.contains(std::make_pair(1, 0)))
+    FFTConvolutionCostFunction::GridKey key00 = std::make_pair(0, 0);
+    FFTConvolutionCostFunction::GridKey key01 = std::make_pair(0, 1);
+    FFTConvolutionCostFunction::GridKey key11 = std::make_pair(1, 1);
+    FFTConvolutionCostFunction::GridKey key10 = std::make_pair(1, 0);
+
+    DREAM3D_REQUIRE(gridKeys.contains(key00))
+    DREAM3D_REQUIRE(gridKeys.contains(key01))
+    DREAM3D_REQUIRE(gridKeys.contains(key11))
+    DREAM3D_REQUIRE(gridKeys.contains(key10))
 
     // TODO: Test GetValue method
 

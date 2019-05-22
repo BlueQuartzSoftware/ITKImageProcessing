@@ -144,10 +144,10 @@ void Blend::dataCheck()
 
   // Need to make sure that the filter parameter for the initial guess
   // can be cast into actual numeric data
-  for(const auto& eachCoeff : m_InitialSimplexGuess.split(";"))
+  for(const auto& coeff : m_InitialSimplexGuess.split(";"))
   {
     bool coerced = false;
-    m_initialGuess.push_back(eachCoeff.toDouble(&coerced));
+    m_InitialGuess.push_back(coeff.toDouble(&coerced));
     if(!coerced)
     {
       setErrorCondition(-66500, "A coefficient could not be translated into a floating-point precision number");
@@ -158,7 +158,7 @@ void Blend::dataCheck()
   // Otherwise, there is a direct correlation between the degree of the transform polynomial
   // and how many coefficients should reside in the initial guess
   size_t len = static_cast<size_t>(2 * m_Degree * m_Degree + 4 * m_Degree + 2);
-  if(len != m_initialGuess.size())
+  if(len != m_InitialGuess.size())
   {
     setErrorCondition(-66400, "Number of coefficients in initial guess is not compatible with degree number");
   }
@@ -189,14 +189,14 @@ void Blend::dataCheck()
 
   // All of the types in the chosen data container's image data arrays should be the same
   QString typeName = getDataContainerArray()->getDataContainers()[0]->getAttributeMatrix(m_AttributeMatrixName)->getAttributeArray(m_DataAttributeArrayName)->getTypeAsString();
-  for(const auto& eachDC : getDataContainerArray()->getDataContainers())
+  for(const auto& dc : getDataContainerArray()->getDataContainers())
   {
-    if(!m_ChosenDataContainers.contains(eachDC->getName()))
+    if(!m_ChosenDataContainers.contains(dc->getName()))
     {
       continue;
     }
 
-    DataArray<Grayscale_T>::Pointer da = eachDC->getAttributeMatrix(m_AttributeMatrixName)->getAttributeArrayAs<DataArray<Grayscale_T>>(m_DataAttributeArrayName);
+    DataArray<Grayscale_T>::Pointer da = dc->getAttributeMatrix(m_AttributeMatrixName)->getAttributeArrayAs<DataArray<Grayscale_T>>(m_DataAttributeArrayName);
     if(da->getComponentDimensions().size() > 1)
     {
       setErrorCondition(-66700, "Data array has unexpected dimensions");
@@ -259,8 +259,8 @@ void Blend::execute()
   }
 
   // Create a new data container to hold the output of this filter
-  DataContainerShPtr blendDC = getDataContainerArray()->createNonPrereqDataContainer(this, DataArrayPath(m_blendDCName, m_transformAMName, ""));
-  AttributeMatrixShPtr blendAM = blendDC->createAndAddAttributeMatrix({1}, m_transformAMName, AttributeMatrix::Type::Generic);
+  DataContainerShPtr blendDC = getDataContainerArray()->createNonPrereqDataContainer(this, DataArrayPath(m_BlendDCName, m_TransformAMName, ""));
+  AttributeMatrixShPtr blendAM = blendDC->createAndAddAttributeMatrix({1}, m_TransformAMName, AttributeMatrix::Type::Generic);
 
   // The data container holds a single output attribute matrix with 3 data arrays
   // One for the number of iterations taken
@@ -268,16 +268,16 @@ void Blend::execute()
   // One for the output of the transform (the optimized value that is the
   // minimization of the square root of the sum for each overlap
   // of the max of a convolution of two overlapping FFT'd images
-  blendAM->createAndAddAttributeArray<UInt64ArrayType>(this, m_iterationsAAName, 0, {1});
-  blendAM->createAndAddAttributeArray<DoubleArrayType>(this, m_transformAAName, 0, {m_initialGuess.size()});
-  blendAM->createAndAddAttributeArray<DoubleArrayType>(this, m_valueAAName, 0, {1});
+  blendAM->createAndAddAttributeArray<UInt64ArrayType>(this, m_IterationsAAName, 0, {1});
+  blendAM->createAndAddAttributeArray<DoubleArrayType>(this, m_TransformAAName, 0, {m_InitialGuess.size()});
+  blendAM->createAndAddAttributeArray<DoubleArrayType>(this, m_ValueAAName, 0, {1});
   getDataContainerArray()->addOrReplaceDataContainer(blendDC);
 
   // The optimizer needs an initial guess; this is supplied through a filter parameter
-  itk::AmoebaOptimizer::ParametersType initialParams(m_initialGuess.size());
-  for(size_t idx = 0; idx < m_initialGuess.size(); ++idx)
+  itk::AmoebaOptimizer::ParametersType initialParams(m_InitialGuess.size());
+  for(size_t idx = 0; idx < m_InitialGuess.size(); ++idx)
   {
-    initialParams[idx] = m_initialGuess[idx];
+    initialParams[idx] = m_InitialGuess[idx];
   }
 
   itk::AmoebaOptimizer::Pointer m_optimizer = itk::AmoebaOptimizer::New();
@@ -285,7 +285,7 @@ void Blend::execute()
   m_optimizer->SetFunctionConvergenceTolerance(m_LowTolerance);
   m_optimizer->SetParametersConvergenceTolerance(m_HighTolerance);
   m_optimizer->SetInitialPosition(initialParams);
-
+  
   //  using CostFunctionType = MultiParamCostFunction;
   using CostFunctionType = FFTConvolutionCostFunction;
   CostFunctionType implementation;
@@ -301,16 +301,16 @@ void Blend::execute()
   // optimizer's stop description
   QString stopReason = QString::fromStdString(m_optimizer->GetStopConditionDescription());
   std::list<double> transform;
-  for(const auto& eachCoeff : m_optimizer->GetCurrentPosition())
+  for(const auto& coeff : m_optimizer->GetCurrentPosition())
   {
-    transform.push_back(eachCoeff);
+    transform.push_back(coeff);
   }
 
   // cache value
   auto value = m_optimizer->GetValue();
 
   // Can get rid of these qDebug lines after debugging is done for filter
-  qDebug() << "Initial Position: [ " << m_initialGuess << " ]";
+  qDebug() << "Initial Position: [ " << m_InitialGuess << " ]";
   qDebug() << "Final Position: [ " << transform << " ]";
   qDebug() << "Number of Iterations: " << GetIterationsFromStopDescription(stopReason);
   qDebug() << "Value: " << value;
@@ -318,16 +318,18 @@ void Blend::execute()
   // If the optimization didn't converge, set an error...
   if(!GetConvergenceFromStopDescription(stopReason))
   {
-    setErrorCondition(-66800, stopReason);
+    setErrorCondition(-66850, stopReason);
     notifyStatusMessage(stopReason);
+    // Write the stop reason to the console
+    qDebug() << "Stop Reason: " << stopReason;
     return;
   }
 
   // ...otherwise, set the appropriate values of the filter's output data arrays
-  AttributeMatrixShPtr transformAM = getDataContainerArray()->getDataContainer(m_blendDCName)->getAttributeMatrix(m_transformAMName);
-  transformAM->getAttributeArrayAs<UInt64ArrayType>(m_iterationsAAName)->push_back(GetIterationsFromStopDescription(stopReason));
-  transformAM->getAttributeArrayAs<DoubleArrayType>(m_valueAAName)->push_back(value);
-  transformAM->getAttributeArrayAs<DoubleArrayType>(m_transformAAName)->setArray(transform);
+  AttributeMatrixShPtr transformAM = getDataContainerArray()->getDataContainer(m_BlendDCName)->getAttributeMatrix(m_TransformAMName);
+  transformAM->getAttributeArrayAs<UInt64ArrayType>(m_IterationsAAName)->push_back(GetIterationsFromStopDescription(stopReason));
+  transformAM->getAttributeArrayAs<DoubleArrayType>(m_ValueAAName)->push_back(value);
+  transformAM->getAttributeArrayAs<DoubleArrayType>(m_TransformAAName)->setArray(transform);
 }
 
 // -----------------------------------------------------------------------------

@@ -111,7 +111,7 @@ private:
 // -----------------------------------------------------------------------------
 void MultiParamCostFunction::Initialize(std::vector<double> mins)
 {
-  m_mins = mins;
+  m_Mins = mins;
 }
 
 // -----------------------------------------------------------------------------
@@ -127,7 +127,7 @@ void MultiParamCostFunction::GetDerivative(const ParametersType&, DerivativeType
 // -----------------------------------------------------------------------------
 uint32_t MultiParamCostFunction::GetNumberOfParameters() const
 {
-  return static_cast<uint32_t>(m_mins.size());
+  return static_cast<uint32_t>(m_Mins.size());
 }
 
 // -----------------------------------------------------------------------------
@@ -139,7 +139,7 @@ MultiParamCostFunction::MeasureType MultiParamCostFunction::GetValue(const Param
   size_t numParams = parameters.size();
   for(size_t idx = 0; idx < numParams; ++idx)
   {
-    double minValue = m_mins[idx];
+    double minValue = m_Mins[idx];
     double paramValue = parameters[idx];
     residual += (idx == numParams - 1) ? minValue : pow(paramValue - minValue, 2);
   }
@@ -149,40 +149,40 @@ MultiParamCostFunction::MeasureType MultiParamCostFunction::GetValue(const Param
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FFTConvolutionCostFunction::Initialize(const QStringList& chosenDataContainers, const QString& rowChar, const QString& colChar, int degree, float overlapPercentage, DataContainerArrayShPtr dca,
-                                            const QString& amName, const QString& dataAAName)
+void FFTConvolutionCostFunction::Initialize(const QStringList& chosenDataContainers, const QString& rowChar, const QString& colChar, int degree, float overlapPercentage,
+                                            const DataContainerArrayShPtr& dca, const QString& amName, const QString& daName)
 {
-  m_degree = degree;
+  m_Degree = degree;
 
   // Populate the m_IJ based on the degree selected
-  for(int listOneIndex = 0; listOneIndex <= m_degree; listOneIndex++)
+  for(int listOneIndex = 0; listOneIndex <= m_Degree; listOneIndex++)
   {
-    for(int listTwoIndex = 0; listTwoIndex <= m_degree; listTwoIndex++)
+    for(int listTwoIndex = 0; listTwoIndex <= m_Degree; listTwoIndex++)
     {
       m_IJ.push_back(std::make_pair(listTwoIndex, listOneIndex));
     }
   }
 
-  m_imageGrid.clear();
+  m_ImageGrid.clear();
 
   ParallelTaskAlgorithm taskAlg;
   // Populate and assign eachImage to m_imageGrid
-  for(const auto& eachDC : dca->getDataContainers()) // Parallelize this
+  for(const auto& dc : dca->getDataContainers()) // Parallelize this
   {
-    if(!chosenDataContainers.contains(eachDC->getName()))
+    if(!chosenDataContainers.contains(dc->getName()))
     {
       continue;
     }
-    std::function<void(void)> fn = std::bind(&FFTConvolutionCostFunction::InitializeDataContainer, this, eachDC, rowChar, colChar, amName, dataAAName);
+    std::function<void(void)> fn = std::bind(&FFTConvolutionCostFunction::InitializeDataContainer, this, dc, rowChar, colChar, amName, daName);
     taskAlg.execute(fn);
   }
   taskAlg.wait();
 
   // Populate m_overlaps
-  m_overlaps.clear();
-  for(const auto& eachImage : m_imageGrid)
+  m_Overlaps.clear();
+  for(const auto& image : m_ImageGrid)
   {
-    std::function<void(void)> fn = std::bind(&FFTConvolutionCostFunction::InitializeOverlaps, this, eachImage, overlapPercentage);
+    std::function<void(void)> fn = std::bind(&FFTConvolutionCostFunction::InitializeOverlaps, this, image, overlapPercentage);
     taskAlg.execute(fn);
   }
   taskAlg.wait();
@@ -191,11 +191,11 @@ void FFTConvolutionCostFunction::Initialize(const QStringList& chosenDataContain
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FFTConvolutionCostFunction::InitializeDataContainer(const DataContainer::Pointer& dc, const QString& rowChar, const QString& colChar, const QString& amName, const QString& dataAAName)
+void FFTConvolutionCostFunction::InitializeDataContainer(const DataContainer::Pointer& dc, const QString& rowChar, const QString& colChar, const QString& amName, const QString& daName)
 {
   static MutexType mutex;
   AttributeMatrix::Pointer am = dc->getAttributeMatrix(amName);
-  DataArray<Grayscale_T>::Pointer da = am->getAttributeArrayAs<DataArray<Grayscale_T>>(dataAAName);
+  DataArray<Grayscale_T>::Pointer da = am->getAttributeArrayAs<DataArray<Grayscale_T>>(daName);
   size_t comps = da->getNumberOfComponents();
   SizeVec3Type dims = dc->getGeometryAs<ImageGeom>()->getDimensions();
   size_t width = dims.getX();
@@ -224,9 +224,12 @@ void FFTConvolutionCostFunction::InitializeDataContainer(const DataContainer::Po
   // NOTE For row/column string indicators with a length greater than one,
   // it would probably be more robust to 'lastIndexOf'
   int cLength = name.size() - name.indexOf(colChar) - 1;
-  GridKey imageKey = std::make_pair(name.midRef(name.indexOf(rowChar) + 1, name.size() - cLength - 2).toULong(), name.rightRef(cLength).toULong());
+  
+  size_t row = name.midRef(name.indexOf(rowChar) + 1, name.size() - cLength - 2).toULong();
+  size_t col = name.rightRef(cLength).toULong();
+  GridKey imageKey = std::make_pair(row, col);
   ScopedLockType lock(mutex);
-  m_imageGrid[imageKey] = eachImage;
+  m_ImageGrid[imageKey] = eachImage;
 }
 
 // -----------------------------------------------------------------------------
@@ -244,9 +247,9 @@ void FFTConvolutionCostFunction::InitializeOverlaps(const ImageGrid::value_type&
   PixelCoord kernelOrigin;
   InputImage::SizeType kernelSize;
 
-  auto rightImage{m_imageGrid.find(std::make_pair(image.first.first, image.first.second + 1))};
-  auto bottomImage{m_imageGrid.find(std::make_pair(image.first.first + 1, image.first.second))};
-  if(rightImage != m_imageGrid.end())
+  auto rightImage{m_ImageGrid.find(std::make_pair(image.first.first, image.first.second + 1))};
+  auto bottomImage{m_ImageGrid.find(std::make_pair(image.first.first + 1, image.first.second))};
+  if(rightImage != m_ImageGrid.end())
   {
     // NOTE The height dimension for horizontally overlapping images should be the same
     size_t overlapDim = static_cast<size_t>(roundf(width * overlapPercentage));
@@ -264,9 +267,9 @@ void FFTConvolutionCostFunction::InitializeOverlaps(const ImageGrid::value_type&
     RegionPair region = std::make_pair(InputImage::RegionType(imageOrigin, imageSize), InputImage::RegionType(kernelOrigin, kernelSize));
     OverlapPair overlap = std::make_pair(position, region);
     ScopedLockType lock(mutex);
-    m_overlaps.push_back(overlap);
+    m_Overlaps.push_back(overlap);
   }
-  if(bottomImage != m_imageGrid.end())
+  if(bottomImage != m_ImageGrid.end())
   {
     // NOTE The width dimension for vertically overlapping images should be the same
     overlapDim = static_cast<size_t>(roundf(height * overlapPercentage));
@@ -284,7 +287,7 @@ void FFTConvolutionCostFunction::InitializeOverlaps(const ImageGrid::value_type&
     RegionPair region = std::make_pair(InputImage::RegionType(imageOrigin, imageSize), InputImage::RegionType(kernelOrigin, kernelSize));
     OverlapPair overlap = std::make_pair(position, region);
     ScopedLockType lock(mutex);
-    m_overlaps.push_back(overlap);
+    m_Overlaps.push_back(overlap);
   }
 }
 
@@ -301,7 +304,7 @@ void FFTConvolutionCostFunction::GetDerivative(const ParametersType&, Derivative
 // -----------------------------------------------------------------------------
 uint32_t FFTConvolutionCostFunction::GetNumberOfParameters() const
 {
-  return static_cast<uint32_t>(2 * (m_degree * m_degree + 2 * m_degree + 1));
+  return static_cast<uint32_t>(2 * (m_Degree * m_Degree + 2 * m_Degree + 1));
 }
 
 // -----------------------------------------------------------------------------
@@ -314,7 +317,7 @@ FFTConvolutionCostFunction::MeasureType FFTConvolutionCostFunction::GetValue(con
   std::function<void(void)> fn;
 
   // Apply the Transform to each image in the image grid
-  for(const auto& eachImage : m_imageGrid) // Parallelize this
+  for(const auto& eachImage : m_ImageGrid) // Parallelize this
   {
     fn = std::bind(&FFTConvolutionCostFunction::applyTransformation, this, parameters, eachImage, std::ref(distortedGrid));
     taskAlg.execute(fn);
@@ -323,7 +326,7 @@ FFTConvolutionCostFunction::MeasureType FFTConvolutionCostFunction::GetValue(con
 
   std::atomic<MeasureType> residual{0.0};
   // Find the FFT Convolution and accumulate the maximum value from each overlap
-  for(const auto& eachOverlap : m_overlaps) // Parallelize this
+  for(const auto& eachOverlap : m_Overlaps) // Parallelize this
   {
     findFFTConvolutionAndMaxValue(eachOverlap, distortedGrid, residual);
     // std::function<void (void)> fn = std::bind(&FFTConvolutionCostFunction::findFFTConvolutionAndMaxValue, this, eachOverlap, distortedGrid, residual);
@@ -477,5 +480,5 @@ void FFTConvolutionCostFunction::findFFTConvolutionAndMaxValue(const OverlapPair
 // -----------------------------------------------------------------------------
 FFTConvolutionCostFunction::ImageGrid FFTConvolutionCostFunction::getImageGrid() const
 {
-  return m_imageGrid;
+  return m_ImageGrid;
 }

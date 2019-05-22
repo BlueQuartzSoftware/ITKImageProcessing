@@ -85,7 +85,7 @@ public:
   MeasureType GetValue(const ParametersType& parameters) const override;
 
 private:
-  std::vector<double> m_mins{};
+  std::vector<double> m_Mins;
 };
 
 /**
@@ -138,10 +138,10 @@ public:
    * @param overlapPercentage
    * @param dca
    * @param amName
-   * @param dataAAName
+   * @param daName
    */
-  void Initialize(const QStringList& chosenDataContainers, const QString& rowChar, const QString& colChar, int degree, float overlapPercentage, DataContainerArrayShPtr dca, const QString& amName,
-                  const QString& dataAAName);
+  void Initialize(const QStringList& chosenDataContainers, const QString& rowChar, const QString& colChar, int degree, float overlapPercentage, const DataContainerArrayShPtr& dca,
+                  const QString& amName, const QString& daName);
 
   /**
    * @brief This method is called by Initialize as a parallel task algorithm operating on each DataContainer.
@@ -149,9 +149,9 @@ public:
    * @param rowChar
    * @param colChar
    * @param amName
-   * @param dataAAName
+   * @param daName
    */
-  void InitializeDataContainer(const DataContainer::Pointer& dc, const QString& rowChar, const QString& colChar, const QString& amName, const QString& dataAAName);
+  void InitializeDataContainer(const DataContainer::Pointer& dc, const QString& rowChar, const QString& colChar, const QString& amName, const QString& daName);
 
   /**
    * @brief This method is called by Initialize as a parallel task algorithm operating on each image in the ImageGrid to calculate the overlap amounts.
@@ -227,8 +227,8 @@ public:
   ImageGrid getImageGrid() const;
 
 private:
-  int m_degree = 2;
+  int m_Degree = 2;
   std::vector<std::pair<size_t, size_t>> m_IJ;
-  OverlapPairs m_overlaps;
-  ImageGrid m_imageGrid;
+  OverlapPairs m_Overlaps;
+  ImageGrid m_ImageGrid;
 };

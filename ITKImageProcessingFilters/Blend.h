@@ -44,26 +44,6 @@ class ITKImageProcessing_EXPORT Blend : public AbstractFilter
 {
   Q_OBJECT
 
-protected:
-  std::vector<double> m_initialGuess{};
-  const QString m_iterationsAAName = "Iterations";
-  const QString m_valueAAName = "Residual";
-  const QString m_transformAAName = "Transform";
-  const QString m_transformAMName = "Transform Matrix";
-  const QString m_blendDCName = "Blend Data";
-
-  Blend();
-
-  /**
-   * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
-   */
-  void dataCheck();
-
-  /**
-   * @brief Initializes all the private instance variables.
-   */
-  void initialize();
-
 public:
   SIMPL_SHARED_POINTERS(Blend)
   SIMPL_FILTER_NEW_MACRO(Blend)
@@ -194,4 +174,25 @@ signals:
    * @brief preflightExecuted Emitted just after calling dataCheck()
    */
   void preflightExecuted();
+
+protected:
+  Blend();
+
+  /**
+   * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+   */
+  void dataCheck();
+
+  /**
+   * @brief Initializes all the private instance variables.
+   */
+  void initialize();
+
+private:
+  std::vector<double> m_InitialGuess;
+  const QString m_IterationsAAName = "Iterations";
+  const QString m_ValueAAName = "Residual";
+  const QString m_TransformAAName = "Transform";
+  const QString m_TransformAMName = "Transform Matrix";
+  const QString m_BlendDCName = "Blend Data";
 };
