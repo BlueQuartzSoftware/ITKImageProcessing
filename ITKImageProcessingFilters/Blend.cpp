@@ -142,6 +142,7 @@ void Blend::dataCheck()
   clearErrorCode();
   clearWarningCode();
 
+  m_InitialGuess.clear();
   // Need to make sure that the filter parameter for the initial guess
   // can be cast into actual numeric data
   for(const auto& coeff : m_InitialSimplexGuess.split(";"))
