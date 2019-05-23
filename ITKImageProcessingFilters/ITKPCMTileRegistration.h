@@ -61,12 +61,14 @@ using CompositeTransform = itk::CompositeTransform<double, 3>;
 class ITKImageProcessing_EXPORT ITKPCMTileRegistration : public AbstractFilter
 {
   Q_OBJECT
+
   PYB11_CREATE_BINDINGS(ITKPCMTileRegistration SUPERCLASS AbstractFilter)
-  PYB11_PROPERTY(IntVec3Type MontageSize READ getMontageSize WRITE setMontageSize)
-  PYB11_PROPERTY(QStringList ImageDataContainers READ getImageDataContainers WRITE setImageDataContainers)
+  PYB11_PROPERTY(IntVec3Type MontageStart READ getMontageStart WRITE setMontageStart)
+  PYB11_PROPERTY(IntVec3Type MontageEnd READ getMontageEnd WRITE setMontageEnd)
+  PYB11_PROPERTY(QString DataContainerPrefix READ getDataContainerPrefix WRITE setDataContainerPrefix)
   PYB11_PROPERTY(QString CommonAttributeMatrixName READ getCommonAttributeMatrixName WRITE setCommonAttributeMatrixName)
   PYB11_PROPERTY(QString CommonDataArrayName READ getCommonDataArrayName WRITE setCommonDataArrayName)
-  PYB11_PROPERTY(float TileOverlap READ getTileOverlap WRITE setTileOverlap)
+
 public:
   SIMPL_SHARED_POINTERS(ITKPCMTileRegistration)
   SIMPL_FILTER_NEW_MACRO(ITKPCMTileRegistration)
@@ -74,23 +76,20 @@ public:
 
   ~ITKPCMTileRegistration() override;
 
-  SIMPL_FILTER_PARAMETER(IntVec3Type, MontageSize)
-  Q_PROPERTY(IntVec3Type MontageSize READ getMontageSize WRITE setMontageSize)
+  SIMPL_FILTER_PARAMETER(IntVec3Type, MontageStart)
+  Q_PROPERTY(IntVec3Type MontageStart READ getMontageStart WRITE setMontageStart)
 
-  SIMPL_FILTER_PARAMETER(QStringList, ImageDataContainers)
-  Q_PROPERTY(QStringList ImageDataContainers READ getImageDataContainers WRITE setImageDataContainers)
+  SIMPL_FILTER_PARAMETER(IntVec3Type, MontageEnd)
+  Q_PROPERTY(IntVec3Type MontageEnd READ getMontageEnd WRITE setMontageEnd)
+
+  SIMPL_FILTER_PARAMETER(QString, DataContainerPrefix)
+  Q_PROPERTY(QString DataContainerPrefix READ getDataContainerPrefix WRITE setDataContainerPrefix)
 
   SIMPL_FILTER_PARAMETER(QString, CommonAttributeMatrixName)
   Q_PROPERTY(QString CommonAttributeMatrixName READ getCommonAttributeMatrixName WRITE setCommonAttributeMatrixName)
 
   SIMPL_FILTER_PARAMETER(QString, CommonDataArrayName)
   Q_PROPERTY(QString CommonDataArrayName READ getCommonDataArrayName WRITE setCommonDataArrayName)
-
-  SIMPL_FILTER_PARAMETER(bool, ManualTileOverlap)
-  Q_PROPERTY(bool ManualTileOverlap READ getManualTileOverlap WRITE setManualTileOverlap)
-
-  SIMPL_FILTER_PARAMETER(float, TileOverlap)
-  Q_PROPERTY(float TileOverlap READ getTileOverlap WRITE setTileOverlap)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -189,11 +188,6 @@ protected:
   void initialize();
 
   /**
-   * @brief Create the Fiji data structure
-   */
-  void createFijiDataStructure();
-
-  /**
    * @brief registerGrayscaleMontage
    * @param peakMethodToUse
    * @param streamSubdivisions
@@ -224,9 +218,10 @@ private:
   static constexpr unsigned Dimension = 2;
   itk::TileLayout2D m_StageTiles;
   itk::TileLayout2D m_ActualTiles;
-  unsigned int m_xMontageSize;
-  unsigned int m_yMontageSize;
-  QString m_dataContainerPrefix;
+  //  unsigned int m_xMontageStart;
+  //  unsigned int m_yMontageStart;
+  //  QString m_dataContainerPrefix;
+  std::vector<DataContainer::Pointer> m_DataContainers;
 
   /**
    * @brief createMontage

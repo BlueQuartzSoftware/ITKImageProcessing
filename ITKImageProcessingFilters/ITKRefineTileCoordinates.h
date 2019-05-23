@@ -23,15 +23,12 @@ class ITKImageProcessing_EXPORT ITKRefineTileCoordinates : public AbstractFilter
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKRefineTileCoordinates SUPERCLASS AbstractFilter)
-
+  PYB11_PROPERTY(IntVec3Type MontageSize READ getMontageSize WRITE setMontageSize)
   PYB11_PROPERTY(QStringList DataContainers READ getDataContainers WRITE setDataContainers)
-  PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
-  PYB11_PROPERTY(QString ImageDataArrayName READ getImageDataArrayName WRITE setImageDataArrayName)
-
+  PYB11_PROPERTY(QString CommonAttributeMatrixName READ getCommonAttributeMatrixName WRITE setCommonAttributeMatrixName)
+  PYB11_PROPERTY(QString CommonDataArrayName READ getCommonDataArrayName WRITE setCommonDataArrayName)
   PYB11_PROPERTY(int ImportMode READ getImportMode WRITE setImportMode)
-  PYB11_PROPERTY(int XTileDim READ getXTileDim WRITE setXTileDim)
-  PYB11_PROPERTY(int YTileDim READ getYTileDim WRITE setYTileDim)
-  PYB11_PROPERTY(float OverlapPer READ getOverlapPer WRITE setOverlapPer)
+  PYB11_PROPERTY(float TileOverlap READ getTileOverlap WRITE setTileOverlap)
   PYB11_PROPERTY(bool ApplyRefinedOrigin READ getApplyRefinedOrigin WRITE setApplyRefinedOrigin)
 
 public:
@@ -41,44 +38,26 @@ public:
 
   ~ITKRefineTileCoordinates() override;
 
+  SIMPL_FILTER_PARAMETER(IntVec3Type, MontageSize)
+  Q_PROPERTY(IntVec3Type MontageSize READ getMontageSize WRITE setMontageSize)
+
   SIMPL_FILTER_PARAMETER(QStringList, DataContainers)
   Q_PROPERTY(QStringList DataContainers READ getDataContainers WRITE setDataContainers)
 
-  SIMPL_FILTER_PARAMETER(QString, CellAttributeMatrixName)
-  Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
+  SIMPL_FILTER_PARAMETER(QString, CommonAttributeMatrixName)
+  Q_PROPERTY(QString CommonAttributeMatrixName READ getCommonAttributeMatrixName WRITE setCommonAttributeMatrixName)
 
-  SIMPL_FILTER_PARAMETER(QString, ImageDataArrayName)
-  Q_PROPERTY(QString ImageDataArrayName READ getImageDataArrayName WRITE setImageDataArrayName)
+  SIMPL_FILTER_PARAMETER(QString, CommonDataArrayName)
+  Q_PROPERTY(QString CommonDataArrayName READ getCommonDataArrayName WRITE setCommonDataArrayName)
 
   SIMPL_FILTER_PARAMETER(int, ImportMode)
   Q_PROPERTY(int ImportMode READ getImportMode WRITE setImportMode)
 
-  SIMPL_FILTER_PARAMETER(int, XTileDim)
-  Q_PROPERTY(int XTileDim READ getXTileDim WRITE setXTileDim)
-
-  SIMPL_FILTER_PARAMETER(int, YTileDim)
-  Q_PROPERTY(int YTileDim READ getYTileDim WRITE setYTileDim)
-
-  SIMPL_FILTER_PARAMETER(float, OverlapPer)
-  Q_PROPERTY(float OverlapPer READ getOverlapPer WRITE setOverlapPer)
+  SIMPL_FILTER_PARAMETER(float, TileOverlap)
+  Q_PROPERTY(float TileOverlap READ getTileOverlap WRITE setTileOverlap)
 
   SIMPL_FILTER_PARAMETER(bool, ApplyRefinedOrigin)
   Q_PROPERTY(bool ApplyRefinedOrigin READ getApplyRefinedOrigin WRITE setApplyRefinedOrigin)
-
-  //  SIMPL_FILTER_PARAMETER(bool, UseZeissMetaData)
-  //  Q_PROPERTY(bool UseZeissMetaData READ getUseZeissMetaData WRITE setUseZeissMetaData)
-
-  //  SIMPL_FILTER_PARAMETER(DataArrayPath, MetaDataAttributeMatrixName)
-  //  Q_PROPERTY(DataArrayPath MetaDataAttributeMatrixName READ getMetaDataAttributeMatrixName WRITE setMetaDataAttributeMatrixName)
-
-  //  SIMPL_FILTER_PARAMETER(QString, TileCalculatedInfoAttributeMatrixName)
-  //  Q_PROPERTY(QString TileCalculatedInfoAttributeMatrixName READ getTileCalculatedInfoAttributeMatrixName WRITE setTileCalculatedInfoAttributeMatrixName)
-
-  //  SIMPL_FILTER_PARAMETER(QString, StitchedCoordinatesArrayName)
-  //  Q_PROPERTY(QString StitchedCoordinatesArrayName READ getStitchedCoordinatesArrayName WRITE setStitchedCoordinatesArrayName)
-
-  //  SIMPL_FILTER_PARAMETER(QString, StitchedArrayNames)
-  //  Q_PROPERTY(QString StitchedArrayNames READ getStitchedArrayNames WRITE setStitchedArrayNames)
 
   /**
    * @brief getCompiledLibraryName Returns the name of the Library that this filter is a part of

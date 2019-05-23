@@ -321,6 +321,10 @@ void ImportAxioVisionV4Montage::dataCheck()
     d_ptr->m_Origin = m_Origin;
     d_ptr->m_Spacing = m_Spacing;
     d_ptr->m_ColorWeights = m_ColorWeights;
+    d_ptr->m_TimeStamp_Cache = timeStamp;
+    d_ptr->m_ImportAllMetaData = m_ImportAllMetaData;
+    d_ptr->m_MetaDataAttributeMatrixName = m_MetaDataAttributeMatrixName;
+
     setTimeStamp_Cache(timeStamp);
 
     generateCache(root);
@@ -608,22 +612,22 @@ void ImportAxioVisionV4Montage::generateCache(QDomElement& root)
     {
       overrideSpacing = m_Spacing;
     }
-    for(const auto& image : geometries)
+    for(auto& bound : bounds)
     {
-      FloatVec3Type currentOrigin = image->getOrigin();
-      FloatVec3Type currentSpacing = image->getSpacing();
+      //  FloatVec3Type currentOrigin = bound.Origin;
+      // FloatVec3Type currentSpacing = bound.Spacing;
 
       for(size_t i = 0; i < 3; i++)
       {
-        float delta = currentOrigin[i] - minCoord[i];
+        float delta = bound.Origin[i] - minCoord[i];
         // Convert to Pixel Coords
-        delta = delta / currentSpacing[i];
+        delta = delta / bound.Spacing[i];
         // Convert to the override origin
         delta = delta * overrideSpacing[i];
-        currentOrigin[i] = overrideOrigin[i] + delta;
+        bound.Origin[i] = overrideOrigin[i] + delta;
       }
-      image->setOrigin(currentOrigin.data());
-      image->setSpacing(overrideSpacing.data());
+      //  bound.Origin = currentOrigin;
+      bound.Spacing = overrideSpacing;
     }
   }
   ss << "\nOrigin: " << overrideOrigin[0] << ", " << overrideOrigin[1] << ", " << overrideOrigin[2];
