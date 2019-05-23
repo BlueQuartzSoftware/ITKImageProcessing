@@ -35,7 +35,6 @@
 
 #include "itkImage.h"
 
-#include "ImageProcessing/ImageProcessingHelpers.hpp"
 #include "SIMPLib/ITK/itkBridge.h"
 
 // -----------------------------------------------------------------------------
