@@ -221,12 +221,17 @@ void FFTConvolutionCostFunction::InitializeDataContainer(const DataContainer::Po
   dataAlg.execute(FFTImageInitializer(eachImage, width, da));
 
   QString name = dc->getName();
+  int rowCharIndex = name.indexOf(rowChar);
+  int colCharIndex = name.indexOf(colChar);
   // NOTE For row/column string indicators with a length greater than one,
   // it would probably be more robust to 'lastIndexOf'
-  int cLength = name.size() - name.indexOf(colChar) - 1;
+  int cLength = name.size() - colCharIndex - 1;
+  int rLength = name.size() - cLength - 2;
   
-  size_t row = name.midRef(name.indexOf(rowChar) + 1, name.size() - cLength - 2).toULong();
-  size_t col = name.rightRef(cLength).toULong();
+  QStringRef rowStr = name.midRef(rowCharIndex + 1, rLength);
+  QStringRef colStr = name.rightRef(cLength);
+  size_t row = rowStr.toULong();
+  size_t col = colStr.toULong();
   GridKey imageKey = std::make_pair(row, col);
   ScopedLockType lock(mutex);
   m_ImageGrid[imageKey] = eachImage;

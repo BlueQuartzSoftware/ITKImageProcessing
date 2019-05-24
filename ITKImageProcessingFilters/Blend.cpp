@@ -55,8 +55,8 @@
 #include "SIMPLib/Utilities/ParallelTaskAlgorithm.h"
 
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
-#include "ITKImageProcessing/ITKImageProcessingVersion.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/util/FFTConvolutionCostFunction.h"
+#include "ITKImageProcessing/ITKImageProcessingVersion.h"
 
 using Grayscale_T = uint8_t;
 using PixelValue_T = double;
@@ -176,20 +176,8 @@ void Blend::dataCheck()
     setErrorCondition(-66710, "At least one DataContainer required");
     return;
   }
-  DataContainer::Pointer dc = getDataContainerArray()->getDataContainers()[0];
-  if(nullptr == dc->getAttributeMatrix(m_AttributeMatrixName))
-  {
-    setErrorCondition(-66720, QString("AttributeMatrix: %1 required").arg(m_AttributeMatrixName));
-    return;
-  }
-  if(nullptr == getDataContainerArray()->getDataContainers()[0]->getAttributeMatrix(m_AttributeMatrixName)->getAttributeArray(m_DataAttributeArrayName))
-  {
-    setErrorCondition(-66730, QString("DataArray: %1 required").arg(m_DataAttributeArrayName));
-    return;
-  }
 
   // All of the types in the chosen data container's image data arrays should be the same
-  QString typeName = getDataContainerArray()->getDataContainers()[0]->getAttributeMatrix(m_AttributeMatrixName)->getAttributeArray(m_DataAttributeArrayName)->getTypeAsString();
   for(const auto& dc : getDataContainerArray()->getDataContainers())
   {
     if(!m_ChosenDataContainers.contains(dc->getName()))
@@ -197,7 +185,21 @@ void Blend::dataCheck()
       continue;
     }
 
-    DataArray<Grayscale_T>::Pointer da = dc->getAttributeMatrix(m_AttributeMatrixName)->getAttributeArrayAs<DataArray<Grayscale_T>>(m_DataAttributeArrayName);
+    AttributeMatrix::Pointer am = dc->getAttributeMatrix(m_AttributeMatrixName);
+    if(nullptr == am)
+    {
+      setErrorCondition(-66720, QString("AttributeMatrix: %1 required").arg(m_AttributeMatrixName));
+      return;
+    }
+    
+    DataArray<Grayscale_T>::Pointer da = am->getAttributeArrayAs<DataArray<Grayscale_T>>(m_DataAttributeArrayName);
+    if(nullptr == da)
+    {
+      setErrorCondition(-66730, QString("DataArray: %1 required").arg(m_DataAttributeArrayName));
+      return;
+    }
+
+    QString typeName = da->getTypeAsString();
     if(da->getComponentDimensions().size() > 1)
     {
       setErrorCondition(-66700, "Data array has unexpected dimensions");
@@ -207,18 +209,23 @@ void Blend::dataCheck()
       setErrorCondition(-66800, "Not all data attribute arrays are the same type");
     }
 
-    // If any component of each pixel is not equal to all the others then the image is not grayscaled
-    // A warning should be thrown because the filter will then effectively only blend the red component
-    size_t numComps = da->getNumberOfComponents();
-    for(size_t pixelIdx = 0; pixelIdx < da->getNumberOfTuples(); ++pixelIdx)
+    // DataArray values cannot be accessed in preflight when the array is empty
+    if(!getInPreflight())
     {
-      Grayscale_T testPixel = da->getValue(pixelIdx);
-      for(size_t compIdx = 1; compIdx < numComps; ++compIdx)
+      // If any component of each pixel is not equal to all the others then the image is not grayscaled
+      // A warning should be thrown because the filter will then effectively only blend the red component
+      size_t numComps = da->getNumberOfComponents();
+      for(size_t pixelIdx = 0; pixelIdx < da->getNumberOfTuples(); ++pixelIdx)
       {
-        Grayscale_T actualPixel = da->getValue(pixelIdx + compIdx);
-        if(actualPixel != testPixel)
+        Grayscale_T testPixel = da->getValue(pixelIdx);
+        for(size_t compIdx = 1; compIdx < numComps; ++compIdx)
         {
-          setWarningCondition(-66900, "Not all components of the pixels are the same value. Images should be grayscaled before being filtered.");
+          Grayscale_T actualPixel = da->getValue(pixelIdx + compIdx);
+          if(actualPixel != testPixel)
+          {
+            setWarningCondition(-66900, "Not all components of the pixels are the same value. Images should be grayscaled before being filtered.");
+            return;
+          }
         }
       }
     }
@@ -252,13 +259,6 @@ void Blend::execute()
     return;
   }
 
-  if(getWarningCode() < 0)
-  {
-    QString ss = QObject::tr("An unknown warning occurred");
-    setWarningCondition(-66400, ss);
-    notifyStatusMessage(ss);
-  }
-
   // Create a new data container to hold the output of this filter
   DataContainerShPtr blendDC = getDataContainerArray()->createNonPrereqDataContainer(this, DataArrayPath(m_BlendDCName, m_TransformAMName, ""));
   AttributeMatrixShPtr blendAM = blendDC->createAndAddAttributeMatrix({1}, m_TransformAMName, AttributeMatrix::Type::Generic);
@@ -281,12 +281,12 @@ void Blend::execute()
     initialParams[idx] = m_InitialGuess[idx];
   }
 
-  itk::AmoebaOptimizer::Pointer m_optimizer = itk::AmoebaOptimizer::New();
-  m_optimizer->SetMaximumNumberOfIterations(m_MaxIterations);
-  m_optimizer->SetFunctionConvergenceTolerance(m_LowTolerance);
-  m_optimizer->SetParametersConvergenceTolerance(m_HighTolerance);
-  m_optimizer->SetInitialPosition(initialParams);
-  
+  itk::AmoebaOptimizer::Pointer optimizer = itk::AmoebaOptimizer::New();
+  optimizer->SetMaximumNumberOfIterations(m_MaxIterations);
+  optimizer->SetFunctionConvergenceTolerance(m_LowTolerance);
+  optimizer->SetParametersConvergenceTolerance(m_HighTolerance);
+  optimizer->SetInitialPosition(initialParams);
+
   //  using CostFunctionType = MultiParamCostFunction;
   using CostFunctionType = FFTConvolutionCostFunction;
   CostFunctionType implementation;
@@ -294,26 +294,27 @@ void Blend::execute()
       // The line below is used for testing the MultiParamCostFunction
       //    std::vector<double>{1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0}
       m_ChosenDataContainers, m_RowCharacter, m_ColumnCharacter, m_Degree, m_OverlapPercentage, getDataContainerArray(), m_AttributeMatrixName, m_DataAttributeArrayName);
-  m_optimizer->SetCostFunction(&implementation);
-  m_optimizer->StartOptimization();
+  optimizer->SetCostFunction(&implementation);
+  optimizer->StartOptimization();
 
   // Newer versions of the optimizer allow for easier methods of output information
   // to be obtained, but until then, we have to do some string parsing from the
   // optimizer's stop description
-  QString stopReason = QString::fromStdString(m_optimizer->GetStopConditionDescription());
+  QString stopReason = QString::fromStdString(optimizer->GetStopConditionDescription());
   std::list<double> transform;
-  for(const auto& coeff : m_optimizer->GetCurrentPosition())
+  for(const auto& coeff : optimizer->GetCurrentPosition())
   {
     transform.push_back(coeff);
   }
 
   // cache value
-  auto value = m_optimizer->GetValue();
+  auto value = optimizer->GetValue();
+  auto numIterations = GetIterationsFromStopDescription(stopReason);
 
   // Can get rid of these qDebug lines after debugging is done for filter
   qDebug() << "Initial Position: [ " << m_InitialGuess << " ]";
   qDebug() << "Final Position: [ " << transform << " ]";
-  qDebug() << "Number of Iterations: " << GetIterationsFromStopDescription(stopReason);
+  qDebug() << "Number of Iterations: " << numIterations;
   qDebug() << "Value: " << value;
 
   // If the optimization didn't converge, set an error...
@@ -328,7 +329,7 @@ void Blend::execute()
 
   // ...otherwise, set the appropriate values of the filter's output data arrays
   AttributeMatrixShPtr transformAM = getDataContainerArray()->getDataContainer(m_BlendDCName)->getAttributeMatrix(m_TransformAMName);
-  transformAM->getAttributeArrayAs<UInt64ArrayType>(m_IterationsAAName)->push_back(GetIterationsFromStopDescription(stopReason));
+  transformAM->getAttributeArrayAs<UInt64ArrayType>(m_IterationsAAName)->push_back(numIterations);
   transformAM->getAttributeArrayAs<DoubleArrayType>(m_ValueAAName)->push_back(value);
   transformAM->getAttributeArrayAs<DoubleArrayType>(m_TransformAAName)->setArray(transform);
 }
