@@ -4,6 +4,7 @@
 
 #pragma once
 
+
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
@@ -18,6 +19,11 @@
 #include <itkNumericTraits.h>
 
 #include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
+
+// There is a known overflow for the templates but the code seems to work correctly so disable the warning
+#if (_MSC_VER >= 1)
+#pragma warning(disable:4756)
+#endif
 
 /**
  * @brief The ITKImageBase class. See [Filter documentation](@ref ITKImageBase) for details.
