@@ -331,11 +331,11 @@ FFTConvolutionCostFunction::MeasureType FFTConvolutionCostFunction::GetValue(con
 
   std::atomic<MeasureType> residual{0.0};
   // Find the FFT Convolution and accumulate the maximum value from each overlap
-  for(const auto& eachOverlap : m_Overlaps) // Parallelize this
+  for(const auto& overlap : m_Overlaps) // Parallelize this
   {
-    findFFTConvolutionAndMaxValue(eachOverlap, distortedGrid, residual);
-    // std::function<void (void)> fn = std::bind(&FFTConvolutionCostFunction::findFFTConvolutionAndMaxValue, this, eachOverlap, distortedGrid, residual);
-    // taskAlg.execute(fn);
+    // findFFTConvolutionAndMaxValue(overlap, distortedGrid, residual);
+    std::function<void (void)> fn = std::bind(&FFTConvolutionCostFunction::findFFTConvolutionAndMaxValue, this, overlap, distortedGrid, std::ref(residual));
+    taskAlg.execute(fn);
   }
 
   // The value to minimize is the square of the sum of the maximum value of the fft convolution
@@ -346,7 +346,7 @@ FFTConvolutionCostFunction::MeasureType FFTConvolutionCostFunction::GetValue(con
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FFTConvolutionCostFunction::applyTransformation(const ParametersType& parameters, const ImageGrid::value_type& eachImage, ImageGrid& distortedGrid) const
+void FFTConvolutionCostFunction::applyTransformation(const ParametersType& parameters, const ImageGrid::value_type& inputImage, ImageGrid& distortedGrid) const
 {
   static MutexType mutex;
   ParallelTaskAlgorithm taskAlg;
@@ -354,22 +354,22 @@ void FFTConvolutionCostFunction::applyTransformation(const ParametersType& param
 
   const double tolerance = 0.05;
 
-  InputImage::RegionType bufferedRegion = eachImage.second->GetBufferedRegion();
+  InputImage::RegionType bufferedRegion = inputImage.second->GetBufferedRegion();
 
   typename InputImage::Pointer distortedImage = InputImage::New();
   distortedImage->SetRegions(bufferedRegion);
   distortedImage->Allocate();
 
   // Iterate through the pixels in eachImage and apply the transform
-  itk::ImageRegionIterator<InputImage> it(eachImage.second, bufferedRegion);
+  itk::ImageRegionIterator<InputImage> it(inputImage.second, bufferedRegion);
   for(it.GoToBegin(); !it.IsAtEnd(); ++it) // Parallelize this
   {
-    fn = std::bind(&FFTConvolutionCostFunction::applyTransformationPixel, this, tolerance, parameters, eachImage.second, distortedImage, bufferedRegion, it);
+    fn = std::bind(&FFTConvolutionCostFunction::applyTransformationPixel, this, tolerance, parameters, inputImage.second, distortedImage, bufferedRegion, it);
     taskAlg.execute(fn);
   }
   taskAlg.wait();
 
-  GridKey distortedKey = eachImage.first;
+  GridKey distortedKey = inputImage.first;
   ScopedLockType lock(mutex);
   distortedGrid[distortedKey] = distortedImage;
 }
@@ -447,13 +447,13 @@ void FFTConvolutionCostFunction::findFFTConvolutionAndMaxValue(const OverlapPair
 {
   static MutexType mutex;
   // Set the filter's image to the overlap region of the image
-  auto imageKey = overlap.first.first;
+  GridKey imageKey = overlap.first.first;
   InputImage::Pointer image = distortedGrid.at(imageKey);
   Filter::Pointer filter = Filter::New();
 
   // NOTE It may be useful for debugging purposes to write the image to a file here
 
-  auto kernelKey = overlap.first.second;
+  GridKey kernelKey = overlap.first.second;
   auto imageRegion = overlap.second.first;
   image->SetRequestedRegion(imageRegion);
   filter->SetInput(image);
