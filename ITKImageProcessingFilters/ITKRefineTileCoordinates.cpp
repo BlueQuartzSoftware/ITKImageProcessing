@@ -32,36 +32,14 @@ enum createdPathID : RenameDataPath::DataID_t
   DataArrayID32 = 32,
 };
 
-namespace
-{
-// const QString k_DataContaineNameDefaultName("Mosaic");
-// const QString k_TileAttributeMatrixDefaultName("Tile Data");
-// const QString k_TileDataArrayDefaultName("Image Data");
-// const QString k_TileCorrectedDefaultName("Corrected Image");
-
-// const QString k_BackgroundDataContainerLabel("Created Data Container (Background)");
-// const QString k_BackgroundAttributeMatrixLabel("Created Attribute Matrix (Background)");
-// const QString k_BackgroundAttributeArrayLabel("Created Image Array Name (Background)");
-
-// const QString k_BackgroundDataContainerDefaultName("Illumination Correction");
-// const QString k_BackgroundAttributeMatrixDefaultName("Illumination Data");
-// const QString k_BackgroundDataArrayDefaultName("Image Data");
-
-// const QString k_OutputProcessedImageLabel("Corrected Image Name");
-
-} // namespace
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 ITKRefineTileCoordinates::ITKRefineTileCoordinates()
 : m_DataContainers("")
-, m_CellAttributeMatrixName(ITKImageProcessing::Montage::k_TileAttributeMatrixDefaultName)
-, m_ImageDataArrayName(ITKImageProcessing::Montage::k_TileDataArrayDefaultName)
-, m_ImportMode(0)
-, m_XTileDim(-1)
-, m_YTileDim(-1)
-, m_OverlapPer(10.0f)
+, m_CommonAttributeMatrixName(ITKImageProcessing::Montage::k_TileAttributeMatrixDefaultName)
+, m_CommonDataArrayName(ITKImageProcessing::Montage::k_TileDataArrayDefaultName)
+, m_TileOverlap(10.0f)
 {
 }
 
@@ -78,9 +56,7 @@ void ITKRefineTileCoordinates::setupFilterParameters()
   FilterParameterVectorType parameters;
 
   parameters.push_back(SeparatorFilterParameter::New("Mosaic Layout", FilterParameter::RequiredArray));
-  parameters.push_back(SIMPL_NEW_INTEGER_FP("Num. Column Tiles", XTileDim, FilterParameter::RequiredArray, ITKRefineTileCoordinates));
-  parameters.push_back(SIMPL_NEW_INTEGER_FP("Num. Row Tiles", YTileDim, FilterParameter::RequiredArray, ITKRefineTileCoordinates));
-
+  parameters.push_back(SIMPL_NEW_INT_VEC3_FP("Montage Size (Cols, Rows)", MontageSize, FilterParameter::Parameter, ITKRefineTileCoordinates));
   {
     LinkedChoicesFilterParameter::Pointer parameter = LinkedChoicesFilterParameter::New();
     parameter->setHumanLabel("Import Mode");
@@ -100,7 +76,7 @@ void ITKRefineTileCoordinates::setupFilterParameters()
     parameters.push_back(parameter);
   }
 
-  parameters.push_back(SIMPL_NEW_FLOAT_FP("Overlap Percentage (Estimate):", OverlapPer, FilterParameter::RequiredArray, ITKRefineTileCoordinates));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("Tile Overlap (Percent)", TileOverlap, FilterParameter::RequiredArray, ITKRefineTileCoordinates));
   parameters.push_back(SIMPL_NEW_BOOL_FP("Apply Refined Origin to Geometries", ApplyRefinedOrigin, FilterParameter::Parameter, ITKRefineTileCoordinates));
 
   MultiDataContainerSelectionFilterParameter::RequirementType req;
@@ -108,8 +84,8 @@ void ITKRefineTileCoordinates::setupFilterParameters()
   req.dcGeometryTypes.push_back(IGeometry::Type::RectGrid);
   parameters.push_back(SeparatorFilterParameter::New("Input Image Setup", FilterParameter::RequiredArray));
   parameters.push_back(SIMPL_NEW_MDC_SELECTION_FP("Select Image Data Containers", DataContainers, FilterParameter::Parameter, ITKRefineTileCoordinates, req));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Input Attribute Matrix Name", CellAttributeMatrixName, FilterParameter::RequiredArray, ITKRefineTileCoordinates));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Input Image Array Name", ImageDataArrayName, FilterParameter::RequiredArray, ITKRefineTileCoordinates));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Common Attribute Matrix", CommonAttributeMatrixName, FilterParameter::RequiredArray, ITKRefineTileCoordinates));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Common Data Array", CommonDataArrayName, FilterParameter::RequiredArray, ITKRefineTileCoordinates));
 
   // parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
   //  parameters.push_back( SIMPL_NEW_AM_WITH_LINKED_DC_FP("Stitched Attribute Matrix", TileCalculatedInfoAttributeMatrixName, AttributeMatrixName,
@@ -141,7 +117,7 @@ ITKRefineTileCoordinates::ArrayType ITKRefineTileCoordinates::getArrayType()
 
   for(const auto& dcName : m_DataContainers)
   {
-    DataArrayPath imageArrayPath(dcName, m_CellAttributeMatrixName, m_ImageDataArrayName);
+    DataArrayPath imageArrayPath(dcName, m_CommonAttributeMatrixName, m_CommonDataArrayName);
     if(!getDataContainerArray()->doesAttributeArrayExist(imageArrayPath))
     {
       QString msg = QString("The Attribute Array path that was generated does not point to an existing Attribute Array. Please set the 'Input Attribute Matrix Name' and 'Input Image Array Name' to "
@@ -152,7 +128,7 @@ ITKRefineTileCoordinates::ArrayType ITKRefineTileCoordinates::getArrayType()
     }
     AttributeMatrix::Pointer am = dca->getAttributeMatrix(imageArrayPath);
 
-    IDataArray::Pointer da = am->getChildByName(m_ImageDataArrayName);
+    IDataArray::Pointer da = am->getChildByName(m_CommonDataArrayName);
     if(da->getComponentDimensions() != cDims)
     {
       QString msg;
@@ -231,13 +207,13 @@ void ITKRefineTileCoordinates::dataCheck()
     return;
   }
 
-  if(m_CellAttributeMatrixName.isEmpty())
+  if(m_CommonAttributeMatrixName.isEmpty())
   {
     setErrorCondition(-53007, "The 'Input Attribute Matrix Name' must contain a valid name. Each Data Container should contain an AttributeMatrix of type Cell with this name.");
     return;
   }
 
-  if(m_ImageDataArrayName.isEmpty())
+  if(m_CommonDataArrayName.isEmpty())
   {
     setErrorCondition(-53008, "The 'Input Image Array Name' must contain a valid name. The Attribute Matrix should have an Attribute Array of the given name.");
     return;
@@ -290,8 +266,8 @@ void executeRefinement(ITKRefineTileCoordinates* filter)
     DataContainer::Pointer dc = dca.getDataContainer(dcName);
     imageGeom = dc->getGeometryAs<ImageGeom>();
 
-    AttributeMatrix::Pointer am = dc->getAttributeMatrix(filter->getCellAttributeMatrixName());
-    IDataArray::Pointer iData = am->getAttributeArray(filter->getImageDataArrayName());
+    AttributeMatrix::Pointer am = dc->getAttributeMatrix(filter->getCommonAttributeMatrixName());
+    IDataArray::Pointer iData = am->getAttributeArray(filter->getCommonDataArrayName());
 
     DataArrayPointerType imageData = std::dynamic_pointer_cast<DataArrayType>(iData);
     if(nullptr == imageData)
@@ -311,8 +287,9 @@ void executeRefinement(ITKRefineTileCoordinates* filter)
   FloatVec3Type origin; // Default constructor gives us 0,0,0
   FloatVec3Type spacing = imageGeom->getSpacing();
   // Otherwise, we're not using the zeiss data method so call this and let everything work itself out
-  FloatArrayType::Pointer coordsPtr = DetermineStitching::FindGlobalOrigins<T, 3>(filter, filter->getXTileDim(), filter->getYTileDim(), filter->getImportMode(), filter->getOverlapPer(), pointers,
-                                                                                  udims, origin, spacing, dataContainerNames);
+  IntVec3Type tileDims = filter->getMontageSize();
+  FloatArrayType::Pointer coordsPtr =
+      DetermineStitching::FindGlobalOrigins<T, 3>(filter, tileDims[0], tileDims[1], filter->getImportMode(), filter->getTileOverlap(), pointers, udims, origin, spacing, dataContainerNames);
 
   // Check for cancel...
   if(filter->getCancel())
