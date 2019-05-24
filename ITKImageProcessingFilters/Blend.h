@@ -82,12 +82,6 @@ public:
   SIMPL_FILTER_PARAMETER(QString, DataAttributeArrayName)
   Q_PROPERTY(QString DataAttributeArrayName READ getDataAttributeArrayName WRITE setDataAttributeArrayName)
 
-  SIMPL_FILTER_PARAMETER(QString, RowCharacter)
-  Q_PROPERTY(QString RowCharacter READ getRowCharacter WRITE setRowCharacter)
-
-  SIMPL_FILTER_PARAMETER(QString, ColumnCharacter)
-  Q_PROPERTY(QString ColumnCharacter READ getColumnCharacter WRITE setColumnCharacter)
-
   bool GetConvergenceFromStopDescription(const QString&) const;
 
   uint GetIterationsFromStopDescription(const QString&) const;

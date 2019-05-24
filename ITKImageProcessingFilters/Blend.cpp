@@ -87,8 +87,6 @@ Blend::Blend()
 , m_LowTolerance(1E-2)
 , m_HighTolerance(1E-2)
 , m_InitialSimplexGuess("0.1;0.1;0.1;0.1;0.1;0.1;0.1;0.1")
-, m_RowCharacter("R")
-, m_ColumnCharacter("C")
 {
   initialize();
 }
@@ -128,8 +126,6 @@ void Blend::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_STRING_FP("Initial Simplex Guess", InitialSimplexGuess, FilterParameter::Category::Parameter, Blend));
   parameters.push_back(SIMPL_NEW_STRING_FP("Attribute Matrix Name", AttributeMatrixName, FilterParameter::Category::Parameter, Blend));
   parameters.push_back(SIMPL_NEW_STRING_FP("Data Attribute Array Name", DataAttributeArrayName, FilterParameter::Category::Parameter, Blend));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Row Character", RowCharacter, FilterParameter::Category::Parameter, Blend));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Column Character", ColumnCharacter, FilterParameter::Category::Parameter, Blend));
 
   setFilterParameters(parameters);
 }
@@ -293,7 +289,7 @@ void Blend::execute()
   implementation.Initialize(
       // The line below is used for testing the MultiParamCostFunction
       //    std::vector<double>{1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0}
-      m_ChosenDataContainers, m_RowCharacter, m_ColumnCharacter, m_Degree, m_OverlapPercentage, getDataContainerArray(), m_AttributeMatrixName, m_DataAttributeArrayName);
+      m_ChosenDataContainers, "r", "c", m_Degree, m_OverlapPercentage, getDataContainerArray(), m_AttributeMatrixName, m_DataAttributeArrayName);
   optimizer->SetCostFunction(&implementation);
   optimizer->StartOptimization();
 
