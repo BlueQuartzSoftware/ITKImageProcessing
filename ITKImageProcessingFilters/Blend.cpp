@@ -48,6 +48,7 @@
 #include "SIMPLib/FilterParameters/FloatFilterParameter.h"
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedChoicesFilterParameter.h"
+#include "SIMPLib/FilterParameters/MontageSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/MultiDataContainerSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
@@ -113,11 +114,7 @@ void Blend::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
 
-  {
-    MultiDataContainerSelectionFilterParameter::RequirementType req;
-    parameters.push_back(SIMPL_NEW_MDC_SELECTION_FP("Chosen Data Containers", ChosenDataContainers, FilterParameter::Category::RequiredArray, Blend, req));
-  }
-
+  parameters.push_back(SIMPL_NEW_MONTAGE_SELECTION_FP("Montage Data Containers", MontageSelection, FilterParameter::Category::Parameter, Blend));
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Max Iterations", MaxIterations, FilterParameter::Category::Parameter, Blend));
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Degree", Degree, FilterParameter::Category::Parameter, Blend));
   parameters.push_back(SIMPL_NEW_FLOAT_FP("Overlap Percentage", OverlapPercentage, FilterParameter::Category::Parameter, Blend));
@@ -173,10 +170,12 @@ void Blend::dataCheck()
     return;
   }
 
+  QStringList dcNames = getMontageSelection().getDataContainerNamesCombOrder();
+
   // All of the types in the chosen data container's image data arrays should be the same
   for(const auto& dc : getDataContainerArray()->getDataContainers())
   {
-    if(!m_ChosenDataContainers.contains(dc->getName()))
+    if(!dcNames.contains(dc->getName()))
     {
       continue;
     }
@@ -283,13 +282,15 @@ void Blend::execute()
   optimizer->SetParametersConvergenceTolerance(m_HighTolerance);
   optimizer->SetInitialPosition(initialParams);
 
+  QStringList dcNames = getMontageSelection().getDataContainerNamesCombOrder();
+
   //  using CostFunctionType = MultiParamCostFunction;
   using CostFunctionType = FFTConvolutionCostFunction;
   CostFunctionType implementation;
   implementation.Initialize(
       // The line below is used for testing the MultiParamCostFunction
       //    std::vector<double>{1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0}
-      m_ChosenDataContainers, "r", "c", m_Degree, m_OverlapPercentage, getDataContainerArray(), m_AttributeMatrixName, m_DataAttributeArrayName);
+      dcNames, "r", "c", m_Degree, m_OverlapPercentage, getDataContainerArray(), m_AttributeMatrixName, m_DataAttributeArrayName);
   optimizer->SetCostFunction(&implementation);
   optimizer->StartOptimization();
 

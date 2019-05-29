@@ -170,7 +170,7 @@
 //
 // -----------------------------------------------------------------------------
 ITKStitchMontage::ITKStitchMontage()
-: m_MontageSize(IntVec3Type(0, 0, 0))
+: m_MontageSize(IntVec2Type(0, 0))
 , m_CommonAttributeMatrixName(ITKImageProcessing::Montage::k_TileAttributeMatrixDefaultName)
 , m_StitchMontage(false)
 , m_CommonDataArrayName(ITKImageProcessing::Montage::k_TileDataArrayDefaultName)
@@ -202,7 +202,7 @@ void ITKStitchMontage::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
 
-  parameters.push_back(SIMPL_NEW_INT_VEC3_FP("Montage Size (Cols, Rows)", MontageSize, FilterParameter::Parameter, ITKStitchMontage));
+  parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage Size (Cols, Rows)", MontageSize, FilterParameter::Parameter, ITKStitchMontage));
 
   {
     MultiDataContainerSelectionFilterParameter::RequirementType req =

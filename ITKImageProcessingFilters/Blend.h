@@ -34,6 +34,7 @@
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Utilities/MontageSelection.h"
 
 #include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
@@ -55,8 +56,8 @@ public:
   Blend& operator=(Blend&&) = delete;      // Move Assignment Not Implemented
   ~Blend() override;
 
-  SIMPL_FILTER_PARAMETER(QStringList, ChosenDataContainers)
-  Q_PROPERTY(QStringList ChosenDataContainers READ getChosenDataContainers WRITE setChosenDataContainers)
+  SIMPL_FILTER_PARAMETER(MontageSelection, MontageSelection)
+  Q_PROPERTY(MontageSelection MontageSelection READ getMontageSelection WRITE setMontageSelection)
 
   SIMPL_FILTER_PARAMETER(uint, MaxIterations)
   Q_PROPERTY(uint MaxIterations READ getMaxIterations WRITE setMaxIterations)

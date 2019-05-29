@@ -39,7 +39,7 @@
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataContainers/DataContainerArrayProxy.h"
-#include "SIMPLib/FilterParameters/IntVec3FilterParameter.h"
+#include "SIMPLib/FilterParameters/IntVec2FilterParameter.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/Geometry/CompositeTransformContainer.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
@@ -62,7 +62,7 @@ class ITKImageProcessing_EXPORT ITKStitchMontage : public AbstractFilter
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKStitchMontage SUPERCLASS AbstractFilter)
-  PYB11_PROPERTY(IntVec3Type MontageSize READ getMontageSize WRITE setMontageSize)
+  PYB11_PROPERTY(IntVec2Type MontageSize READ getMontageSize WRITE setMontageSize)
   PYB11_PROPERTY(QStringList ImageDataContainers READ getImageDataContainers WRITE setImageDataContainers)
   PYB11_PROPERTY(QString CommonAttributeMatrixName READ getCommonAttributeMatrixName WRITE setCommonAttributeMatrixName)
   PYB11_PROPERTY(bool StitchMontage READ getStitchMontage WRITE setStitchMontage)
@@ -78,8 +78,8 @@ public:
 
   ~ITKStitchMontage() override;
 
-  SIMPL_FILTER_PARAMETER(IntVec3Type, MontageSize)
-  Q_PROPERTY(IntVec3Type MontageSize READ getMontageSize WRITE setMontageSize)
+  SIMPL_FILTER_PARAMETER(IntVec2Type, MontageSize)
+  Q_PROPERTY(IntVec2Type MontageSize READ getMontageSize WRITE setMontageSize)
 
   SIMPL_FILTER_PARAMETER(QStringList, ImageDataContainers)
   Q_PROPERTY(QStringList ImageDataContainers READ getImageDataContainers WRITE setImageDataContainers)
