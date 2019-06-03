@@ -380,7 +380,7 @@ void ImportAxioVisionV4Montage::execute()
 // -----------------------------------------------------------------------------
 void ImportAxioVisionV4Montage::flushCache()
 {
-
+  m_GeneratedFileList.clear();
   setTimeStamp_Cache(QDateTime());
   setRoot(QDomElement());
 
@@ -524,6 +524,7 @@ void ImportAxioVisionV4Montage::generateCache(QDomElement& root)
     {
       setErrorCondition(-224, QString("Montage Tile File does not exist.'%1'").arg(imagePath));
     }
+    m_GeneratedFileList.push_back(imagePath);
 
     BoundsType bound;
     bound.Filename = imagePath;

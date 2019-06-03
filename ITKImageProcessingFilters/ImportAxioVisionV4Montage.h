@@ -145,9 +145,6 @@ public:
   QString getMontageInformation();
   Q_PROPERTY(QString MontageInformation READ getMontageInformation)
 
-  SIMPL_INSTANCE_PROPERTY(bool, FileWasRead)
-  Q_PROPERTY(bool FileWasRead READ getFileWasRead)
-
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
@@ -207,6 +204,12 @@ public:
    * @brief preflight Reimplemented from @see AbstractFilter class
    */
   void preflight() override;
+
+  SIMPL_INSTANCE_PROPERTY(bool, FileWasRead)
+  Q_PROPERTY(bool FileWasRead READ getFileWasRead)
+
+  SIMPL_INSTANCE_PROPERTY(QStringList, GeneratedFileList)
+  Q_PROPERTY(QStringList GeneratedFileList READ getGeneratedFileList)
 
   SIMPL_PIMPL_PROPERTY_DECL(QDomElement, Root)
   SIMPL_PIMPL_PROPERTY_DECL(QString, InputFile_Cache)
