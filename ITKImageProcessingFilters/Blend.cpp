@@ -40,7 +40,7 @@
 #include <itkFFTConvolutionImageFilter.h>
 
 #include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/Common/SIMPLRange.hpp"
+#include "SIMPLib/Common/SIMPLRange.h"
 
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
 #include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
