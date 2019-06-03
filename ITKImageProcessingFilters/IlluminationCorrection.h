@@ -38,6 +38,7 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/Filtering/FilterFactory.hpp"
 #include "SIMPLib/Filtering/FilterManager.h"
+#include "SIMPLib/FilterParameters/MontageSelectionFilterParameter.h"
 #include "SIMPLib/Geometry/IGeometryGrid.h"
 #include "SIMPLib/SIMPLib.h"
 
@@ -56,7 +57,7 @@ class ITKImageProcessing_EXPORT IlluminationCorrection : public AbstractFilter
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(IlluminationCorrection SUPERCLASS AbstractFilter)
-  PYB11_PROPERTY(QStringList DataContainers READ getDataContainers WRITE setDataContainers)
+  PYB11_PROPERTY(MontageSelection MontageSelection READ getMontageSelection WRITE setMontageSelection)
   PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
   PYB11_PROPERTY(QString ImageDataArrayName READ getImageDataArrayName WRITE setImageDataArrayName)
   PYB11_PROPERTY(QString CorrectedImageDataArrayName READ getCorrectedImageDataArrayName WRITE setCorrectedImageDataArrayName)
@@ -83,8 +84,8 @@ public:
 
   SIMPL_INSTANCE_STRING_PROPERTY(DataContainerName)
 
-  SIMPL_FILTER_PARAMETER(QStringList, DataContainers)
-  Q_PROPERTY(QStringList DataContainers READ getDataContainers WRITE setDataContainers)
+  SIMPL_FILTER_PARAMETER(MontageSelection, MontageSelection)
+  Q_PROPERTY(MontageSelection MontageSelection READ getMontageSelection WRITE setMontageSelection)
 
   SIMPL_FILTER_PARAMETER(QString, CellAttributeMatrixName)
   Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
@@ -283,8 +284,9 @@ protected:
     QVector<size_t> cDims = { 1 };
     typename GeometryType::Pointer outputGridGeom = GeometryType::NullPointer();
 
+    QStringList dcNames = m_MontageSelection.getDataContainerNamesCombOrder();
     // Ensure each DataContainer has the proper path to the image data and the image data is grayscale
-    for(const auto& dcName : m_DataContainers)
+    for(const auto& dcName : dcNames)
     {
       DataArrayPath imageArrayPath(dcName, m_CellAttributeMatrixName, m_ImageDataArrayName);
       typename DataArrayType::Pointer imageData = dca->getPrereqArrayFromPath<DataArrayType, AbstractFilter>(this, imageArrayPath, cDims);

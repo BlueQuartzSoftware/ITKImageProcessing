@@ -212,7 +212,8 @@ void calculateOutputValues(IlluminationCorrection* filter)
   QString progressMessage = QString("Calculating Background Image...");
   filter->notifyStatusMessage(progressMessage);
 
-  for(const auto& dcName : filter->getDataContainers())
+  QStringList dcNames = filter->getMontageSelection().getDataContainerNamesCombOrder();
+  for(const auto& dcName : dcNames)
   {
     DataArrayPath imageArrayPath(dcName, filter->getCellAttributeMatrixName(), filter->getImageDataArrayName());
     OutputDataArrayPointerType imageArrayPtr = dca->getAttributeMatrix(imageArrayPath)->getAttributeArrayAs<OutputDataArrayType>(imageArrayPath.getDataArrayName());
@@ -286,7 +287,8 @@ void calculateOutputValues(IlluminationCorrection* filter)
     int32_t threadCount = 0;
 #endif
 
-    for(const auto& dcName : filter->getDataContainers())
+    QStringList dcNames = filter->getMontageSelection().getDataContainerNamesCombOrder();
+    for(const auto& dcName : dcNames)
     {
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
       g->run(ProcessInputImagesImpl<OutArrayType, AccumType>(filter, dcName, average, accumArray));
@@ -315,8 +317,7 @@ void calculateOutputValues(IlluminationCorrection* filter)
 //
 // -----------------------------------------------------------------------------
 IlluminationCorrection::IlluminationCorrection()
-: m_DataContainers("")
-, m_CellAttributeMatrixName(ITKImageProcessing::Montage::k_TileAttributeMatrixDefaultName)
+: m_CellAttributeMatrixName(ITKImageProcessing::Montage::k_TileAttributeMatrixDefaultName)
 , m_ImageDataArrayName(ITKImageProcessing::Montage::k_TileDataArrayDefaultName)
 , m_CorrectedImageDataArrayName(ITKImageProcessing::Montage::k_TileCorrectedDefaultName)
 , m_ExportCorrectedImages(false)
@@ -346,10 +347,7 @@ void IlluminationCorrection::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
 
-  MultiDataContainerSelectionFilterParameter::RequirementType req;
-  req.dcGeometryTypes.push_back(IGeometry::Type::Image);
-  req.dcGeometryTypes.push_back(IGeometry::Type::RectGrid);
-  parameters.push_back(SIMPL_NEW_MDC_SELECTION_FP("Select Image Data Containers", DataContainers, FilterParameter::Parameter, IlluminationCorrection, req));
+  parameters.push_back(SIMPL_NEW_MONTAGE_SELECTION_FP("Montage Selection", MontageSelection, FilterParameter::Parameter, IlluminationCorrection));
   parameters.push_back(SIMPL_NEW_STRING_FP("Input Attribute Matrix Name", CellAttributeMatrixName, FilterParameter::RequiredArray, IlluminationCorrection));
   parameters.push_back(SIMPL_NEW_STRING_FP("Input Image Array Name", ImageDataArrayName, FilterParameter::RequiredArray, IlluminationCorrection));
   parameters.push_back(SIMPL_NEW_STRING_FP(::k_OutputProcessedImageLabel, CorrectedImageDataArrayName, FilterParameter::CreatedArray, IlluminationCorrection));
@@ -409,7 +407,8 @@ IlluminationCorrection::ArrayType IlluminationCorrection::getArrayType()
   DataContainerArray::Pointer dca = getDataContainerArray();
   const QVector<size_t> cDims = {1};
 
-  for(const auto& dcName : m_DataContainers)
+  const QStringList dcNames = getMontageSelection().getDataContainerNamesCombOrder();
+  for(const auto& dcName : dcNames)
   {
     DataArrayPath imageArrayPath(dcName, m_CellAttributeMatrixName, m_ImageDataArrayName);
     if(!getDataContainerArray()->doesAttributeArrayExist(imageArrayPath))
@@ -460,7 +459,8 @@ IlluminationCorrection::ArrayType IlluminationCorrection::getArrayType()
 IlluminationCorrection::GeomType IlluminationCorrection::getGeomType()
 {
   DataContainerArray::Pointer dca = getDataContainerArray();
-  for(const auto& dcName : m_DataContainers)
+  const QStringList dcNames = getMontageSelection().getDataContainerNamesCombOrder();
+  for(const auto& dcName : dcNames)
   {
     IGeometryGrid::Pointer gridGeom = dca->getDataContainer(dcName)->getGeometryAs<IGeometryGrid>();
     if(nullptr == gridGeom)
@@ -494,8 +494,10 @@ void IlluminationCorrection::dataCheck()
   clearWarningCode();
   initialize();
 
+  const QStringList dcNames = getMontageSelection().getDataContainerNamesCombOrder();
+
   // Check for empty list. If list is empty then the OutputGeometry was never formed and it wont help to go on..
-  if(m_DataContainers.isEmpty())
+  if(dcNames.isEmpty())
   {
     setErrorCondition(-53006, "At least one DataContainer must be selected.");
     return;
@@ -550,7 +552,8 @@ void IlluminationCorrection::dataCheck()
   // Create all the 'Corrected Input Images'
   if(getApplyCorrection())
   {
-    for(const auto& dcName : m_DataContainers)
+    const QStringList dcNames = getMontageSelection().getDataContainerNamesCombOrder();
+    for(const auto& dcName : dcNames)
     {
       DataContainer::Pointer dc = dca->getDataContainer(dcName);
       if(nullptr != dc)
