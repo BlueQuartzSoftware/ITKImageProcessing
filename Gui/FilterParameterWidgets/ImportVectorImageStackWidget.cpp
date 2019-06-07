@@ -41,8 +41,6 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QFileInfoList>
 #include <QtCore/QString>
-#include <QtCore/QThread>
-#include <QtCore/QUrl>
 #include <QtGui/QKeyEvent>
 #include <QtGui/QPainter>
 #include <QtWidgets/QFileDialog>

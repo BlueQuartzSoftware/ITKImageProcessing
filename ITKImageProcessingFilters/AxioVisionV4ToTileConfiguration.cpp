@@ -35,7 +35,6 @@
 #include <array>
 #include <fstream>
 
-#include <QtCore/QDir>
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
 #include <QtXml/QDomDocument>

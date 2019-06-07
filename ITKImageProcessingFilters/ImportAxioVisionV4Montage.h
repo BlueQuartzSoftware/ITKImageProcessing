@@ -33,7 +33,8 @@
 
 #include <QtCore/QDateTime>
 #include <QtCore/QString>
-#include <QtXml/QDomDocument>
+
+#include <QtXml/QDomElement>
 
 #include "SIMPLib/Common/SIMPLArray.hpp"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"

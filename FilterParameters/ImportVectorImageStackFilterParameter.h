@@ -38,7 +38,6 @@
 #include "SIMPLib/FilterParameters/FilterParameter.h"
 
 #include <QtCore/QJsonObject>
-#include <QtCore/QJsonValue>
 
 typedef struct
 {

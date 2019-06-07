@@ -9,10 +9,8 @@
 
 #include <QtCore/QDir>
 #include <QtCore/QFileInfo>
-#include <QtCore/QSharedPointer>
 #include <QtCore/QString>
 #include <QtCore/QTextStream>
-#include <QtCore/QVector>
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/CoreFilters/ConvertColorToGrayScale.h"

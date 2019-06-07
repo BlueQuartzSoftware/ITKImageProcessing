@@ -32,7 +32,6 @@
 
 #include <QtCore/QMutex>
 #include <QtCore/QString>
-#include <QtXml/QDomDocument>
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"

@@ -37,10 +37,8 @@
 
 #include <QtCore/QDir>
 #include <QtCore/QFileInfo>
-#include <QtCore/QSharedPointer>
 #include <QtCore/QString>
 #include <QtCore/QTextStream>
-#include <QtCore/QVector>
 
 #include "SIMPLib/CoreFilters/ConvertColorToGrayScale.h"
 #include "SIMPLib/DataArrays/StringDataArray.h"
