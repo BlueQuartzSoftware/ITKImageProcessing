@@ -35,11 +35,7 @@
 
 #pragma once
 
-#include <QtCore/QSettings>
 #include <QtCore/QString>
-#include <QtCore/QStringList>
-#include <QtCore/QUrl>
-#include <QtCore/QVector>
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"

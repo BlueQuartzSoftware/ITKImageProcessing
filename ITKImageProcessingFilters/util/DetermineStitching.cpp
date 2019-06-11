@@ -31,7 +31,6 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "DetermineStitching.h"
 
-#include <QtCore/QDir>
 
 #include "itkImage.h"
 

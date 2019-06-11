@@ -4,7 +4,6 @@
 
 #include "ImportImageMontage.h"
 
-#include <QtCore/QDir>
 #include <QtCore/QFileInfo>
 
 // Include the factory

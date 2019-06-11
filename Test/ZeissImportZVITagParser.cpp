@@ -1,10 +1,7 @@
 
-#include <QtCore/QCoreApplication>
 #include <QtCore/QString>
 #include <QtCore/QTextStream>
-#include <QtCore/QDir>
 #include <QtCore/QFile>
-#include <QtCore/QMetaProperty>
 
 
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"

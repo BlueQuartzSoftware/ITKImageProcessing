@@ -33,7 +33,7 @@
 
 #include <QtCore/QDateTime>
 #include <QtCore/QString>
-#include <QtXml/QDomDocument>
+#include <QtXml/QDomElement>
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"

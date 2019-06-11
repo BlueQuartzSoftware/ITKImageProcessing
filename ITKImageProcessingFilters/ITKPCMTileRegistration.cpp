@@ -38,7 +38,6 @@
 #include <algorithm>
 #include <type_traits>
 
-#include <QtCore/QDir>
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Common/TemplateHelpers.h"

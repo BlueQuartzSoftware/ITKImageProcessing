@@ -32,7 +32,7 @@
 #pragma once
 
 #include <QtCore/QTextStream>
-#include <QtXml/QDomDocument>
+#include <QtXml/QDomElement>
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"

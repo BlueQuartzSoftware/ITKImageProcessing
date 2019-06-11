@@ -42,9 +42,7 @@
 #endif
 
 #include <QtCore/QDir>
-#include <QtCore/QFileInfo>
 #include <QtCore/QMutexLocker>
-#include <QtCore/QSharedPointer>
 #include <QtCore/QString>
 #include <QtCore/QTextStream>
 #include <QtCore/QVector>

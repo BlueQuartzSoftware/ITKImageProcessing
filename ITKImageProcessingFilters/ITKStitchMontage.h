@@ -35,7 +35,6 @@
 
 #pragma once
 
-#include <QtCore/QFile>
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataContainers/DataContainerArrayProxy.h"

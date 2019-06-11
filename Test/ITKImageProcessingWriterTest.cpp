@@ -30,7 +30,6 @@
  *    United States Air Force Prime Contract FA8650-10-D-5210
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include <QtCore/QCoreApplication>
 #include <QtCore/QFile>
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
