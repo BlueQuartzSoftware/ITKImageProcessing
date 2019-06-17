@@ -47,6 +47,7 @@
 #include "SIMPLib/Filtering/FilterPipeline.h"
 #include "SIMPLib/Filtering/QMetaObjectUtilities.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/Montages/GridMontage.h"
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
 #include "SIMPLib/SIMPLib.h"
@@ -57,6 +58,11 @@
 #ifndef M_PI
 #define M_PI (3.141592653)
 #endif
+
+namespace
+{
+  const QString MontageName = "Grid Montage";
+}
 
 class BlendTest
 {
@@ -78,6 +84,32 @@ public:
     readerFilter->setProperty("DataContainerName", QVariant::fromValue(dap));
     readerFilter->execute();
     DREAM3D_REQUIRE(readerFilter->getDataContainerArray()->doesDataContainerExist(imageName) == true)
+  }
+
+  // -----------------------------------------------------------------------------
+  //
+  // -----------------------------------------------------------------------------
+  void CreateGridMontage(const DataContainerArray::Pointer& dca)
+  {
+    
+    GridMontage::Pointer gridMontage = GridMontage::New(::MontageName, 2, 2, 1);
+    GridTileIndex index = gridMontage->getTileIndex(0, 0);
+    DataContainer::Pointer tileDC = dca->getDataContainer("R0C0");
+    gridMontage->setDataContainer(index, tileDC);
+
+    index = gridMontage->getTileIndex(0, 1);
+    tileDC = dca->getDataContainer("R0C1");
+    gridMontage->setDataContainer(index, tileDC);
+
+    index = gridMontage->getTileIndex(1, 0);
+    tileDC = dca->getDataContainer("R1C0");
+    gridMontage->setDataContainer(index, tileDC);
+
+    index = gridMontage->getTileIndex(1, 1);
+    tileDC = dca->getDataContainer("R1C1");
+    gridMontage->setDataContainer(index, tileDC);
+
+    DREAM3D_REQUIRE(dca->addMontage(gridMontage) == true);
   }
 
   // -----------------------------------------------------------------------------
@@ -111,6 +143,8 @@ public:
 
     m_ImageReaderDca = readerFilter->getDataContainerArray();
 
+    CreateGridMontage(m_ImageReaderDca);
+
     return EXIT_SUCCESS;
   }
 
@@ -125,15 +159,8 @@ public:
     m_BlendFilter = blendFactory->create();
     DREAM3D_REQUIRE(m_BlendFilter.get() != nullptr)
 
-    QStringList chosenDataContainers;
-    for(const auto& dc : m_ImageReaderDca->getDataContainers())
-    {
-      chosenDataContainers.push_back(dc->getName());
-    }
-    DREAM3D_REQUIRE_EQUAL(chosenDataContainers.size(), 4)
-
-    const QString rowChar = 'R';
-    const QString colChar = 'C';
+    QString montageName = ::MontageName;
+    DREAM3D_REQUIRE(m_ImageReaderDca->getMontage(::MontageName) != nullptr)
 
     // An affine transform will use degree 1 - Dave's algorithm assumes a degree 2
     // Correcting barrel/fish-eye/lens distortion requires degree 2 or higher
@@ -147,8 +174,6 @@ public:
     const double lowTolerance = 1E-2;
     const double highTolerance = 1E-2;
 
-    m_BlendFilter->setProperty("RowCharacter", QVariant(rowChar));
-    m_BlendFilter->setProperty("ColumnCharacter", QVariant(colChar));
     m_BlendFilter->setProperty("MaxIterations", QVariant(maxIterations));
     m_BlendFilter->setProperty("Degree", QVariant(degree));
     m_BlendFilter->setProperty("InitialSimplexGuess", QVariant(initialGuess));
@@ -157,7 +182,7 @@ public:
     m_BlendFilter->setProperty("HighTolerance", QVariant(highTolerance));
     m_BlendFilter->setProperty("DataAttributeArrayName", QVariant(dataArrayName));
     m_BlendFilter->setProperty("AttributeMatrixName", QVariant(attrMatrName));
-    m_BlendFilter->setProperty("ChosenDataContainers", QVariant(chosenDataContainers));
+    m_BlendFilter->setProperty("MontageName", montageName);
     m_BlendFilter->setDataContainerArray(m_ImageReaderDca);
 
     return EXIT_SUCCESS;
@@ -172,7 +197,7 @@ public:
     const QString colChar = 'C';
     const int degree = m_BlendFilter->property("Degree").toInt();
     const float overlapPercentage = m_BlendFilter->property("OverlapPercentage").toFloat();
-    const QStringList dcNames = m_BlendFilter->property("ChosenDataContainers").toStringList();
+    const QStringList dcNames = m_ImageReaderDca->getMontage(::MontageName)->getDataContainerNames();
     const QString attrMatName = m_BlendFilter->property("AttributeMatrixName").toString();
     const QString dataArrayName = m_BlendFilter->property("DataAttributeArrayName").toString();
 

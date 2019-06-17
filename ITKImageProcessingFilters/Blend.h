@@ -56,8 +56,8 @@ public:
   Blend& operator=(Blend&&) = delete;      // Move Assignment Not Implemented
   ~Blend() override;
 
-  SIMPL_FILTER_PARAMETER(MontageSelection, MontageSelection)
-  Q_PROPERTY(MontageSelection MontageSelection READ getMontageSelection WRITE setMontageSelection)
+  SIMPL_FILTER_PARAMETER(QString, MontageName)
+  Q_PROPERTY(QString MontageName READ getMontageName WRITE setMontageName)
 
   SIMPL_FILTER_PARAMETER(uint, MaxIterations)
   Q_PROPERTY(uint MaxIterations READ getMaxIterations WRITE setMaxIterations)

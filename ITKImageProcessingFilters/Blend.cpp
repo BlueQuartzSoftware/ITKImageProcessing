@@ -49,6 +49,7 @@
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedChoicesFilterParameter.h"
 #include "SIMPLib/FilterParameters/MontageSelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/MontageStructureSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/MultiDataContainerSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
@@ -114,7 +115,7 @@ void Blend::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
 
-  parameters.push_back(SIMPL_NEW_MONTAGE_SELECTION_FP("Montage Data Containers", MontageSelection, FilterParameter::Category::Parameter, Blend));
+  parameters.push_back(SIMPL_NEW_MONTAGE_STRUCTURE_SELECTION_FP("Montage Name", MontageName, FilterParameter::Category::Parameter, Blend));
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Max Iterations", MaxIterations, FilterParameter::Category::Parameter, Blend));
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Degree", Degree, FilterParameter::Category::Parameter, Blend));
   parameters.push_back(SIMPL_NEW_FLOAT_FP("Overlap Percentage", OverlapPercentage, FilterParameter::Category::Parameter, Blend));
@@ -170,15 +171,16 @@ void Blend::dataCheck()
     return;
   }
 
-  QStringList dcNames = getMontageSelection().getDataContainerNamesCombOrder();
+  AbstractMontageShPtr montage = getDataContainerArray()->getMontage(getMontageName());
+  if(nullptr == montage)
+  {
+    setErrorCondition(-66750, QString("Montage: %1 required").arg(getMontageName()));
+    return;
+  }
 
   // All of the types in the chosen data container's image data arrays should be the same
-  for(const auto& dc : getDataContainerArray()->getDataContainers())
+  for(const auto& dc : montage->getDataContainers())
   {
-    if(!dcNames.contains(dc->getName()))
-    {
-      continue;
-    }
 
     AttributeMatrix::Pointer am = dc->getAttributeMatrix(m_AttributeMatrixName);
     if(nullptr == am)
@@ -282,7 +284,12 @@ void Blend::execute()
   optimizer->SetParametersConvergenceTolerance(m_HighTolerance);
   optimizer->SetInitialPosition(initialParams);
 
-  QStringList dcNames = getMontageSelection().getDataContainerNamesCombOrder();
+
+  QStringList dcNames;
+  if(getDataContainerArray()->getMontage(getMontageName()))
+  {
+    dcNames = getDataContainerArray()->getMontage(getMontageName())->getDataContainerNames();
+  }
 
   //  using CostFunctionType = MultiParamCostFunction;
   using CostFunctionType = FFTConvolutionCostFunction;
