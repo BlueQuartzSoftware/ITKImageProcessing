@@ -1,4 +1,3 @@
-#pragma once
 /* ============================================================================
  * Copyright (c) 2019 BlueQuartz Software, LLC
  * All rights reserved.
@@ -30,6 +29,8 @@
  *
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -80,8 +81,23 @@ public:
   SIMPL_FILTER_PARAMETER(QString, AttributeMatrixName)
   Q_PROPERTY(QString AttributeMatrixName READ getAttributeMatrixName WRITE setAttributeMatrixName)
 
-  SIMPL_FILTER_PARAMETER(QString, DataAttributeArrayName)
-  Q_PROPERTY(QString DataAttributeArrayName READ getDataAttributeArrayName WRITE setDataAttributeArrayName)
+  SIMPL_FILTER_PARAMETER(QString, IPFColorsArrayName)
+  Q_PROPERTY(QString IPFColorsArrayName READ getIPFColorsArrayName WRITE setIPFColorsArrayName)
+
+  SIMPL_FILTER_PARAMETER(QString, BlendDCName)
+  Q_PROPERTY(QString TransformMatrixName READ getTransformMatrixName WRITE setTransformMatrixName)
+
+  SIMPL_FILTER_PARAMETER(QString, TransformMatrixName)
+  Q_PROPERTY(QString TransformMatrixName READ getTransformMatrixName WRITE setTransformMatrixName)
+
+  SIMPL_FILTER_PARAMETER(QString, TransformArrayName)
+  Q_PROPERTY(QString TransformArrayName READ getTransformArrayName WRITE setTransformArrayName)
+
+  //SIMPL_FILTER_PARAMETER(QString, NumIterationsArrayName)
+  //Q_PROPERTY(QString NumIterationsArrayName READ getNumIterationsArrayName WRITE setNumIterationsArrayName)
+
+  SIMPL_FILTER_PARAMETER(QString, ResidualArrayName)
+  Q_PROPERTY(QString ResidualArrayName READ getResidualArrayName WRITE setResidualArrayName)
 
   bool GetConvergenceFromStopDescription(const QString&) const;
 
@@ -183,11 +199,22 @@ protected:
    */
   void initialize();
 
+  /**
+   * @brief Returns the name used for the internal grayscale array.
+   * @return
+   */
+  QString getGrayscaleArrayName() const;
+
+  /**
+   * @brief Generates internal grayscale array.
+   */
+  void generateGrayscaleIPF();
+
+  /**
+   * @brief Removes internal grayscale array.
+   */
+  void deleteGrayscaleIPF();
+
 private:
   std::vector<double> m_InitialGuess;
-  const QString m_IterationsAAName = "Iterations";
-  const QString m_ValueAAName = "Residual";
-  const QString m_TransformAAName = "Transform";
-  const QString m_TransformAMName = "Transform Matrix";
-  const QString m_BlendDCName = "Blend Data";
 };

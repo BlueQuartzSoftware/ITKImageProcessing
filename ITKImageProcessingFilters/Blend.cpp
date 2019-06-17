@@ -38,10 +38,12 @@
 
 #include "itkAmoebaOptimizer.h"
 #include <itkFFTConvolutionImageFilter.h>
+#include <itkWarpImageFilter.h>
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Common/SIMPLRange.h"
 
+#include "SIMPLib/CoreFilters/ConvertColorToGrayScale.h"
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
 #include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
 #include "SIMPLib/FilterParameters/FilterParameter.h"
@@ -62,6 +64,11 @@
 
 using Grayscale_T = uint8_t;
 using PixelValue_T = double;
+
+namespace
+{
+  const QString InternalGrayscalePrefex = "_INTERNAL_Grayscale_";
+}
 
 uint Blend::GetIterationsFromStopDescription(const QString& stopDescription) const
 {
@@ -89,6 +96,11 @@ Blend::Blend()
 , m_LowTolerance(1E-2)
 , m_HighTolerance(1E-2)
 , m_InitialSimplexGuess("0.1;0.1;0.1;0.1;0.1;0.1;0.1;0.1")
+, m_BlendDCName("Blend Data")
+, m_TransformMatrixName("Transform Matrix")
+, m_TransformArrayName("Transform")
+//, m_NumIterationsArrayName("Iterations")
+, m_ResidualArrayName("Residual")
 {
   initialize();
 }
@@ -123,7 +135,13 @@ void Blend::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("High Tolerance", HighTolerance, FilterParameter::Category::Parameter, Blend));
   parameters.push_back(SIMPL_NEW_STRING_FP("Initial Simplex Guess", InitialSimplexGuess, FilterParameter::Category::Parameter, Blend));
   parameters.push_back(SIMPL_NEW_STRING_FP("Attribute Matrix Name", AttributeMatrixName, FilterParameter::Category::Parameter, Blend));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Data Attribute Array Name", DataAttributeArrayName, FilterParameter::Category::Parameter, Blend));
+  parameters.push_back(SIMPL_NEW_STRING_FP("IPF Colors Array Name", IPFColorsArrayName, FilterParameter::Category::Parameter, Blend));
+
+  parameters.push_back(SIMPL_NEW_STRING_FP("Data Container", BlendDCName, FilterParameter::Category::CreatedArray, Blend));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Transform Matrix", TransformMatrixName, FilterParameter::Category::CreatedArray, Blend));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Transform Array", TransformArrayName, FilterParameter::Category::CreatedArray, Blend));
+  //parameters.push_back(SIMPL_NEW_STRING_FP("Number of Iterations", NumIterationsArrayName, FilterParameter::Category::CreatedArray, Blend));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Residual Values", ResidualArrayName, FilterParameter::Category::CreatedArray, Blend));
 
   setFilterParameters(parameters);
 }
@@ -189,10 +207,10 @@ void Blend::dataCheck()
       return;
     }
     
-    DataArray<Grayscale_T>::Pointer da = am->getAttributeArrayAs<DataArray<Grayscale_T>>(m_DataAttributeArrayName);
+    DataArray<Grayscale_T>::Pointer da = am->getAttributeArrayAs<DataArray<Grayscale_T>>(m_IPFColorsArrayName);
     if(nullptr == da)
     {
-      setErrorCondition(-66730, QString("DataArray: %1 required").arg(m_DataAttributeArrayName));
+      setErrorCondition(-66730, QString("DataArray: %1 required").arg(m_IPFColorsArrayName));
       return;
     }
 
@@ -205,28 +223,22 @@ void Blend::dataCheck()
     {
       setErrorCondition(-66800, "Not all data attribute arrays are the same type");
     }
-
-    // DataArray values cannot be accessed in preflight when the array is empty
-    if(!getInPreflight())
-    {
-      // If any component of each pixel is not equal to all the others then the image is not grayscaled
-      // A warning should be thrown because the filter will then effectively only blend the red component
-      size_t numComps = da->getNumberOfComponents();
-      for(size_t pixelIdx = 0; pixelIdx < da->getNumberOfTuples(); ++pixelIdx)
-      {
-        Grayscale_T testPixel = da->getValue(pixelIdx);
-        for(size_t compIdx = 1; compIdx < numComps; ++compIdx)
-        {
-          Grayscale_T actualPixel = da->getValue(pixelIdx + compIdx);
-          if(actualPixel != testPixel)
-          {
-            setWarningCondition(-66900, "Not all components of the pixels are the same value. Images should be grayscaled before being filtered.");
-            return;
-          }
-        }
-      }
-    }
   }
+
+  // The data container holds a single output attribute matrix with 3 data arrays
+  // One for the number of iterations taken
+  // One for the transform array
+  // One for the output of the transform (the optimized value that is the
+  // minimization of the square root of the sum for each overlap
+  // of the max of a convolution of two overlapping FFT'd images
+
+  // Create a new data container to hold the output of this filter
+  DataContainerShPtr blendDC = getDataContainerArray()->createNonPrereqDataContainer(this, DataArrayPath(m_BlendDCName, "", ""));
+  AttributeMatrixShPtr blendAM = blendDC->createNonPrereqAttributeMatrix(this, m_TransformMatrixName, { 1 }, AttributeMatrix::Type::Generic);
+
+  // blendAM->createAndAddAttributeArray<UInt64ArrayType>(this, m_IterationsAAName, 0, {1});
+  blendAM->createNonPrereqArray<DoubleArrayType>(this, m_TransformArrayName, 0, { m_InitialGuess.size() });
+  blendAM->createNonPrereqArray<DoubleArrayType>(this, m_ResidualArrayName, 0, { 1 });
 }
 
 // -----------------------------------------------------------------------------
@@ -256,20 +268,9 @@ void Blend::execute()
     return;
   }
 
-  // Create a new data container to hold the output of this filter
-  DataContainerShPtr blendDC = getDataContainerArray()->createNonPrereqDataContainer(this, DataArrayPath(m_BlendDCName, m_TransformAMName, ""));
-  AttributeMatrixShPtr blendAM = blendDC->createAndAddAttributeMatrix({1}, m_TransformAMName, AttributeMatrix::Type::Generic);
-
-  // The data container holds a single output attribute matrix with 3 data arrays
-  // One for the number of iterations taken
-  // One for the transform array
-  // One for the output of the transform (the optimized value that is the
-  // minimization of the square root of the sum for each overlap
-  // of the max of a convolution of two overlapping FFT'd images
-  blendAM->createAndAddAttributeArray<UInt64ArrayType>(this, m_IterationsAAName, 0, {1});
-  blendAM->createAndAddAttributeArray<DoubleArrayType>(this, m_TransformAAName, 0, {m_InitialGuess.size()});
-  blendAM->createAndAddAttributeArray<DoubleArrayType>(this, m_ValueAAName, 0, {1});
-  getDataContainerArray()->addOrReplaceDataContainer(blendDC);
+  // Generate internal grayscale values
+  generateGrayscaleIPF();
+  const QString grayscaleArrayName = getGrayscaleArrayName();
 
   // The optimizer needs an initial guess; this is supplied through a filter parameter
   itk::AmoebaOptimizer::ParametersType initialParams(m_InitialGuess.size());
@@ -297,7 +298,7 @@ void Blend::execute()
   implementation.Initialize(
       // The line below is used for testing the MultiParamCostFunction
       //    std::vector<double>{1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0}
-      dcNames, "r", "c", m_Degree, m_OverlapPercentage, getDataContainerArray(), m_AttributeMatrixName, m_DataAttributeArrayName);
+      dcNames, "r", "c", m_Degree, m_OverlapPercentage, getDataContainerArray(), m_AttributeMatrixName, grayscaleArrayName);
   optimizer->SetCostFunction(&implementation);
   optimizer->StartOptimization();
 
@@ -332,10 +333,69 @@ void Blend::execute()
   }
 
   // ...otherwise, set the appropriate values of the filter's output data arrays
-  AttributeMatrixShPtr transformAM = getDataContainerArray()->getDataContainer(m_BlendDCName)->getAttributeMatrix(m_TransformAMName);
-  transformAM->getAttributeArrayAs<UInt64ArrayType>(m_IterationsAAName)->push_back(numIterations);
-  transformAM->getAttributeArrayAs<DoubleArrayType>(m_ValueAAName)->push_back(value);
-  transformAM->getAttributeArrayAs<DoubleArrayType>(m_TransformAAName)->setArray(transform);
+  AttributeMatrixShPtr transformAM = getDataContainerArray()->getDataContainer(m_BlendDCName)->getAttributeMatrix(m_TransformMatrixName);
+  //transformAM->getAttributeArrayAs<UInt64ArrayType>(m_IterationsAAName)->push_back(numIterations);
+  transformAM->getAttributeArrayAs<DoubleArrayType>(m_ResidualArrayName)->push_back(value);
+  transformAM->getAttributeArrayAs<DoubleArrayType>(m_TransformArrayName)->setArray(transform);
+
+  // Remove internal arrays
+  deleteGrayscaleIPF();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString Blend::getGrayscaleArrayName() const
+{
+  return ::InternalGrayscalePrefex + m_IPFColorsArrayName;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void Blend::generateGrayscaleIPF()
+{
+  ConvertColorToGrayScale::Pointer conversionFilter = ConvertColorToGrayScale::New();
+  conversionFilter->setConversionAlgorithm(static_cast<int>(ConvertColorToGrayScale::ConversionType::Luminosity));
+  conversionFilter->setOutputArrayPrefix(::InternalGrayscalePrefex);
+
+  AbstractMontage::Pointer montage = getDataContainerArray()->getMontage(getMontageName());
+  AbstractMontage::CollectionType dcs = montage->getDataContainers();
+  for(const auto& dc : dcs)
+  {
+    // Find IPF Colors
+    AttributeMatrix::Pointer am = dc->getAttributeMatrix(m_AttributeMatrixName);
+    DataArray<Grayscale_T>::Pointer ipfArray = am->getAttributeArrayAs<DataArray<Grayscale_T>>(m_IPFColorsArrayName);
+
+    // Create internal grayscale version
+    conversionFilter->setDataContainerArray(getDataContainerArray());
+    QVector<DataArrayPath> dataArrayPaths;
+    dataArrayPaths.push_back(DataArrayPath(dc->getName(), m_AttributeMatrixName, m_IPFColorsArrayName));
+    conversionFilter->setInputDataArrayVector(dataArrayPaths);
+
+    conversionFilter->execute();
+    int err = conversionFilter->getErrorCode();
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void Blend::deleteGrayscaleIPF()
+{
+  AbstractMontage::Pointer montage =  getDataContainerArray()->getMontage(getMontageName());
+  AbstractMontage::CollectionType dcs = montage->getDataContainers();
+  for(const auto& dc : dcs)
+  {
+    // Find internal IPF grayscale
+    AttributeMatrix::Pointer am = dc->getAttributeMatrix(m_AttributeMatrixName);
+
+    const QString internalArrayName = getGrayscaleArrayName();
+    if(am->hasChildWithName(internalArrayName))
+    {
+      am->removeAttributeArray(internalArrayName);
+    }
+  }
 }
 
 // -----------------------------------------------------------------------------
