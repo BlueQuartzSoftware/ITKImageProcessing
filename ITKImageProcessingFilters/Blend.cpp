@@ -38,7 +38,6 @@
 
 #include "itkAmoebaOptimizer.h"
 #include <itkFFTConvolutionImageFilter.h>
-#include <itkWarpImageFilter.h>
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Common/SIMPLRange.h"
@@ -340,6 +339,10 @@ void Blend::execute()
 
   // Remove internal arrays
   deleteGrayscaleIPF();
+
+  // Apply transform to dewarp data
+  std::vector<double> transformVector{ std::begin(transform), std::end(transform) };
+  warpDataContainers(transformVector);
 }
 
 // -----------------------------------------------------------------------------
@@ -394,6 +397,206 @@ void Blend::deleteGrayscaleIPF()
     if(am->hasChildWithName(internalArrayName))
     {
       am->removeAttributeArray(internalArrayName);
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+itk::Image<double, 2>::Pointer generateKernelImage(const std::vector<double> & transformVector)
+{
+  using KernelType = itk::Image<double, 2>;
+  KernelType::Pointer kernelImage = KernelType::New();
+  KernelType::IndexType start;
+  start[0] = 0;
+  start[1] = 0;
+  start[2] = 0;
+  KernelType::SizeType size;
+  size[0] = 3;
+  size[1] = 3;
+  size[2] = 0;
+  KernelType::RegionType region;
+  region.SetSize(size);
+  region.SetIndex(start);
+  kernelImage->SetRegions(region);
+  kernelImage->Allocate();
+
+  KernelType::IndexType index;
+  index[0] = 0;
+  index[1] = 0;
+  kernelImage->SetPixel(index, transformVector[0]);
+
+  index[0] = 0;
+  index[1] = 1;
+  kernelImage->SetPixel(index, transformVector[1]);
+
+  index[0] = 0;
+  index[1] = 2;
+  kernelImage->SetPixel(index, transformVector[2]);
+
+  index[0] = 1;
+  index[1] = 0;
+  kernelImage->SetPixel(index, transformVector[3]);
+
+  index[0] = 1;
+  index[1] = 1;
+  kernelImage->SetPixel(index, 1);
+
+  index[0] = 1;
+  index[1] = 2;
+  kernelImage->SetPixel(index, transformVector[4]);
+
+  index[0] = 2;
+  index[1] = 0;
+  kernelImage->SetPixel(index, transformVector[5]);
+
+  index[0] = 2;
+  index[1] = 1;
+  kernelImage->SetPixel(index, transformVector[6]);
+
+  index[0] = 2;
+  index[1] = 2;
+  kernelImage->SetPixel(index, transformVector[7]);
+
+  return kernelImage;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+template<typename T>
+void transformDataArray(const itk::Image<double, 2>::Pointer& kernelImage, const SizeVec3Type& dimensions, const DataArray<T>::Pointer& da)
+{
+  using PixelType = T;
+  using ImageType = itk::Image<PixelType, 2>;
+  using KernelType = itk::Image<double, 2>;
+  using ConvolutionFilterType = itk::FFTConvolutionImageFilter<ImageType, KernelType>;
+  using PixelContainer = ImageType::PixelContainer;
+  
+  ImageType::Pointer inputImage = ImageType::New();
+  ImageType::IndexType start;
+  ImageType::SizeType size;
+  for(size_t i = 0; i < 3; i++)
+  {
+    start[i] = 0;
+    size[i] = dimensions[i];
+  }
+  ImageType::RegionType region;
+  region.SetSize(size);
+  region.SetIndex(start);
+  inputImage->SetRegions(region);
+  inputImage->Allocate();
+
+  PixelContainer* inputPixelContainer = inputImage->GetPixelContainer();
+  inputPixelContainer->SetImportPointer(da->getPointer(0), da->getNumberOfTuples(), false);
+  inputImage->SetPixelContainer(inputPixelContainer);
+  
+  ConvolutionFilterType::Pointer convolutionFilter = ConvolutionFilterType::New();
+  convolutionFilter->SetInputImage(inputImage);
+  convolutionFilter->SetKernelImage(kernelImage);
+  convolutionFilter->Update();
+  
+  ImageType::Pointer outputImage = convolutionFilter->GetOutput();
+  PixelType* pixelArray = outputImage->GetPixelContainer()->GetImportPointer();
+  PixelType* arrayPtr = da->getPointer(0);
+  std::copy(std::begin(pixelArray), std::begin(pixelArray) + da->getNumberOfTuples(), std::begin(arrayPtr));
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void transformIDataArray(const itk::Image<double, 2>::Pointer& kernelImage, const SizeVec3Type& dimensions, const IDataArray::Pointer& da)
+{
+  if(std::dynamic_pointer_cast<Int8ArrayType>(da))
+  {
+    Int8ArrayType::Pointer array = std::dynamic_pointer_cast<Int8ArrayType>(da);
+    transformDataArray<int8_t>(kernelImage, dimensions, array);
+  }
+  else if(std::dynamic_pointer_cast<UInt8ArrayType>(da))
+  {
+    UInt8ArrayType::Pointer array = std::dynamic_pointer_cast<UInt8ArrayType>(da);
+    transformDataArray<uint8_t>(kernelImage, dimensions, array);
+  }
+  else if(std::dynamic_pointer_cast<Int16ArrayType>(da))
+  {
+    Int16ArrayType::Pointer array = std::dynamic_pointer_cast<Int16ArrayType>(da);
+    transformDataArray<int16_t>(kernelImage, dimensions, array);
+  }
+  else if(std::dynamic_pointer_cast<UInt16ArrayType>(da))
+  {
+    UInt16ArrayType::Pointer array = std::dynamic_pointer_cast<UInt16ArrayType>(da);
+    transformDataArray<uint16_t>(kernelImage, dimensions, array);
+  }
+  else if(std::dynamic_pointer_cast<Int32ArrayType>(da))
+  {
+    Int32ArrayType::Pointer array = std::dynamic_pointer_cast<Int32ArrayType>(da);
+    transformDataArray<int32_t>(kernelImage, dimensions, array);
+  }
+  else if(std::dynamic_pointer_cast<UInt32ArrayType>(da))
+  {
+    UInt32ArrayType::Pointer array = std::dynamic_pointer_cast<UInt32ArrayType>(da);
+    transformDataArray<uint32_t>(kernelImage, dimensions, array);
+  }
+  else if(std::dynamic_pointer_cast<Int64ArrayType>(da))
+  {
+    Int64ArrayType::Pointer array = std::dynamic_pointer_cast<Int64ArrayType>(da);
+    transformDataArray<int64_t>(kernelImage, dimensions, array);
+  }
+  else if(std::dynamic_pointer_cast<UInt64ArrayType>(da))
+  {
+    UInt64ArrayType::Pointer array = std::dynamic_pointer_cast<UInt64ArrayType>(da);
+    transformDataArray<uint64_t>(kernelImage, dimensions, array);
+  }
+  else if(std::dynamic_pointer_cast<BoolArrayType>(da))
+  {
+    BoolArrayType::Pointer array = std::dynamic_pointer_cast<BoolArrayType>(da);
+    transformDataArray<bool>(kernelImage, dimensions, array);
+  }
+  else if(std::dynamic_pointer_cast<FloatArrayType>(da))
+  {
+    FloatArrayType::Pointer array = std::dynamic_pointer_cast<FloatArrayType>(da);
+    transformDataArray<float>(kernelImage, dimensions, array);
+  }
+  else if(std::dynamic_pointer_cast<DoubleArrayType>(da))
+  {
+    DoubleArrayType::Pointer array = std::dynamic_pointer_cast<DoubleArrayType>(da);
+    transformDataArray<double>(kernelImage, dimensions, array);
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void Blend::warpDataContainers(const std::vector<double>& transformVector)
+{
+  // Duplicate the DataContainers used and Warp them based on the transform kernel generated.
+
+  // TODO: Warp DataContainers
+  constexpr unsigned int Dimension = 2;
+  using VectorComponentType = float;
+  using VectorPixelType = itk::Vector<VectorComponentType, Dimension>;
+  using PixelType = unsigned char;
+  using ImageType = itk::Image<PixelType, Dimension>;
+  using DisplacementFieldType = itk::Image<VectorPixelType, Dimension>;
+  using KernelType = itk::Image<double, 2>;
+
+  // Create the kernel image
+  KernelType::Pointer kernelImage = generateKernelImage(transformVector);
+
+  AbstractMontage::Pointer montage = getDataContainerArray()->getMontage(m_MontageName);
+  for(const auto& dc : *montage)
+  {
+    ImageGeom::Pointer imageGeom = dc->getGeometryAs<ImageGeom>();
+    SizeVec3Type dimensions = imageGeom->getDimensions();
+
+    DataContainer::Pointer dCopy = dc->deepCopy();
+    for(const auto& am : *dCopy)
+    {
+      for(const auto& da : *am)
+      {
+        transformIDataArray(kernelImage, dimensions, da);
+      }
     }
   }
 }

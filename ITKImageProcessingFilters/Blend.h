@@ -215,6 +215,12 @@ protected:
    */
   void deleteGrayscaleIPF();
 
+  /**
+   * @brief Creates new DataContainers and warps the data by the FFT Convolution kernel generated.
+   * @param transformVector
+   */
+  void warpDataContainers(const std::vector<double>& transformVector);
+
 private:
   std::vector<double> m_InitialGuess;
 };
