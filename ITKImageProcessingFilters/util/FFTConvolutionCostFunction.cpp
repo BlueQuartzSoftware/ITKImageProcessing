@@ -32,10 +32,13 @@
 
 #include "FFTConvolutionCostFunction.h"
 
+#include <algorithm>
+
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
 #include "tbb/queuing_mutex.h"
 #endif
 
+#include "SIMPLib/Montages/GridMontage.h"
 #include "SIMPLib/Utilities/ParallelData2DAlgorithm.h"
 #include "SIMPLib/Utilities/ParallelTaskAlgorithm.h"
 
@@ -149,7 +152,7 @@ MultiParamCostFunction::MeasureType MultiParamCostFunction::GetValue(const Param
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FFTConvolutionCostFunction::Initialize(const QStringList& chosenDataContainers, const QString& rowChar, const QString& colChar, int degree, float overlapPercentage,
+void FFTConvolutionCostFunction::Initialize(const GridMontageShPtr& montage, int degree, float overlapPercentage,
                                             const DataContainerArrayShPtr& dca, const QString& amName, const QString& daName)
 {
   m_Degree = degree;
@@ -165,18 +168,28 @@ void FFTConvolutionCostFunction::Initialize(const QStringList& chosenDataContain
 
   m_ImageGrid.clear();
 
+  const size_t numRows = montage->getRowCount();
+  const size_t numCols = montage->getColumnCount();
+  
+  // Populate and assign each image to m_imageGrid
   ParallelTaskAlgorithm taskAlg;
-  // Populate and assign eachImage to m_imageGrid
-  for(const auto& dc : dca->getDataContainers()) // Parallelize this
+  for(size_t row = 0; row < numRows; row++)
   {
-    if(!chosenDataContainers.contains(dc->getName()))
+    for(size_t col = 0; col < numCols; col++)
     {
-      continue;
+      std::function<void(void)> fn = std::bind(&FFTConvolutionCostFunction::InitializeDataContainer, this, montage, row, col, amName, daName);
+      taskAlg.execute(fn);
     }
-    std::function<void(void)> fn = std::bind(&FFTConvolutionCostFunction::InitializeDataContainer, this, dc, rowChar, colChar, amName, daName);
-    taskAlg.execute(fn);
   }
   taskAlg.wait();
+
+  size_t x = numCols > 0 ? 1 : 0;
+  size_t y = numRows > 0 ? 1 : 0;
+  GridKey key = std::make_pair(x, y);
+  InputImage::RegionType bufferedRegion = m_ImageGrid[key]->GetBufferedRegion();
+  const InputImage::SizeType dims = bufferedRegion.GetSize();
+  m_ImageDim_x = dims[0];
+  m_ImageDim_y = dims[1];
 
   // Populate m_overlaps
   m_Overlaps.clear();
@@ -191,9 +204,12 @@ void FFTConvolutionCostFunction::Initialize(const QStringList& chosenDataContain
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FFTConvolutionCostFunction::InitializeDataContainer(const DataContainer::Pointer& dc, const QString& rowChar, const QString& colChar, const QString& amName, const QString& daName)
+void FFTConvolutionCostFunction::InitializeDataContainer(const GridMontageShPtr& montage, size_t row, size_t column, const QString& amName, const QString& daName)
 {
   static MutexType mutex;
+
+  GridTileIndex index = montage->getTileIndex(row, column);
+  DataContainer::Pointer dc = montage->getDataContainer(index);
   AttributeMatrix::Pointer am = dc->getAttributeMatrix(amName);
   DataArray<Grayscale_T>::Pointer da = am->getAttributeArrayAs<DataArray<Grayscale_T>>(daName);
   size_t comps = da->getNumberOfComponents();
@@ -209,32 +225,20 @@ void FFTConvolutionCostFunction::InitializeDataContainer(const DataContainer::Po
   imageOrigin[0] = 0;
   imageOrigin[1] = 0;
 
-  InputImage::Pointer eachImage = InputImage::New();
-  eachImage->SetRegions(InputImage::RegionType(imageOrigin, imageSize));
-  eachImage->Allocate();
+  InputImage::Pointer itkImage = InputImage::New();
+  itkImage->SetRegions(InputImage::RegionType(imageOrigin, imageSize));
+  itkImage->Allocate();
 
   // A colored image could be used in a Fourier Transform as discussed in this paper:
   // https://ieeexplore.ieee.org/document/723451
   // NOTE Could this be parallelized?
   ParallelData2DAlgorithm dataAlg;
   dataAlg.setRange(0, 0, height, width);
-  dataAlg.execute(FFTImageInitializer(eachImage, width, da));
+  dataAlg.execute(FFTImageInitializer(itkImage, width, da));
 
-  QString name = dc->getName();
-  int rowCharIndex = name.indexOf(rowChar);
-  int colCharIndex = name.indexOf(colChar);
-  // NOTE For row/column string indicators with a length greater than one,
-  // it would probably be more robust to 'lastIndexOf'
-  int cLength = name.size() - colCharIndex - 1;
-  int rLength = name.size() - cLength - 2;
-  
-  QStringRef rowStr = name.midRef(rowCharIndex + 1, rLength);
-  QStringRef colStr = name.rightRef(cLength);
-  size_t row = rowStr.toULong();
-  size_t col = colStr.toULong();
-  GridKey imageKey = std::make_pair(row, col);
+  GridKey imageKey = std::make_pair(row, column);
   ScopedLockType lock(mutex);
-  m_ImageGrid[imageKey] = eachImage;
+  m_ImageGrid[imageKey] = itkImage;
 }
 
 // -----------------------------------------------------------------------------
@@ -309,7 +313,7 @@ void FFTConvolutionCostFunction::GetDerivative(const ParametersType&, Derivative
 // -----------------------------------------------------------------------------
 uint32_t FFTConvolutionCostFunction::GetNumberOfParameters() const
 {
-  return static_cast<uint32_t>(2 * (m_Degree * m_Degree + 2 * m_Degree + 1));
+  return 14; // Locked for Degree = 2.  Not all values have corresponding parameters.
 }
 
 // -----------------------------------------------------------------------------
@@ -333,9 +337,7 @@ FFTConvolutionCostFunction::MeasureType FFTConvolutionCostFunction::GetValue(con
   // Find the FFT Convolution and accumulate the maximum value from each overlap
   for(const auto& overlap : m_Overlaps) // Parallelize this
   {
-    // findFFTConvolutionAndMaxValue(overlap, distortedGrid, residual);
-    std::function<void (void)> fn = std::bind(&FFTConvolutionCostFunction::findFFTConvolutionAndMaxValue, this, overlap, distortedGrid, std::ref(residual));
-    taskAlg.execute(fn);
+    findFFTConvolutionAndMaxValue(overlap, distortedGrid, residual);
   }
 
   // The value to minimize is the square of the sum of the maximum value of the fft convolution
@@ -352,7 +354,7 @@ void FFTConvolutionCostFunction::applyTransformation(const ParametersType& param
   ParallelTaskAlgorithm taskAlg;
   std::function<void(void)> fn;
 
-  const double tolerance = 0.05;
+  const double tolerance = 0.1;
 
   InputImage::RegionType bufferedRegion = inputImage.second->GetBufferedRegion();
 
@@ -378,34 +380,25 @@ void FFTConvolutionCostFunction::applyTransformation(const ParametersType& param
 //
 // -----------------------------------------------------------------------------
 void FFTConvolutionCostFunction::applyTransformationPixel(double tolerance, const ParametersType& parameters, const InputImage::Pointer& inputImage, const InputImage::Pointer& distortedImage,
-                                                          const InputImage::RegionType& bufferedRegion, const itk::ImageRegionIterator<InputImage>& iter) const
+                                                          const InputImage::RegionType& bufferedRegion, itk::ImageRegionIterator<InputImage> iter) const
 {
   static MutexType mutex;
   ParallelTaskAlgorithm taskAlg;
   std::function<void(void)> fn;
 
-  const InputImage::SizeType dims = bufferedRegion.GetSize();
-  const size_t width = dims[0];
-  const size_t height = dims[1];
-  const double lastXIndex = width - 1 + tolerance;
-  const double lastYIndex = height - 1 + tolerance;
+  const double lastXIndex = bufferedRegion.GetSize()[0] - 1 + tolerance;
+  const double lastYIndex = bufferedRegion.GetSize()[1] - 1 + tolerance;
 
-  const double x_trans = (width - 1) / 2.0;
-  const double y_trans = (height - 1) / 2.0;
+  const double x_trans = (m_ImageDim_x - 1) / 2.0;
+  const double y_trans = (m_ImageDim_y - 1) / 2.0;
 
   PixelCoord pixel = iter.GetIndex();
-  double x = x_trans;
-  double y = y_trans;
   // Dave's method uses an m_IJ matrix described above
   // and so a different method of grabbing the appropriate index from the m_IJ
   // will be needed if using that static array
-  for(size_t idx = 0; idx < parameters.size(); ++idx) // Parallelize this
-  {
-    fn = std::bind(&FFTConvolutionCostFunction::calculatePixelCoordinates, this, parameters, pixel, idx, x_trans, y_trans, x, y);
-    taskAlg.execute(fn);
-  }
-  taskAlg.wait();
+  calculatePixelCoordinates(parameters, inputImage, distortedImage, pixel, x_trans, y_trans, tolerance, lastXIndex, lastYIndex);
 
+#if 0
   // This check effectively "clips" data and the cast and round
   // effectively perform a nearest neighbor sampling
   if(x >= -tolerance && x <= lastXIndex && y >= -tolerance && y <= lastYIndex)
@@ -419,17 +412,42 @@ void FFTConvolutionCostFunction::applyTransformationPixel(double tolerance, cons
     ScopedLockType lock(mutex);
     distortedImage->SetPixel(eachPixel, inputImage->GetPixel(eachPixel));
   }
+#endif
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FFTConvolutionCostFunction::calculatePixelCoordinates(const ParametersType& parameters, const PixelCoord& pixel, size_t idx, double x_trans, double y_trans, double& x_ref, double& y_ref) const
+void FFTConvolutionCostFunction::calculatePixelCoordinates(const ParametersType& parameters, const InputImage::Pointer& inputImage, const InputImage::Pointer& distortedImage, const PixelCoord& newPixel, double x_trans, double y_trans, double tolerance, double lastXIndex, double lastYIndex) const
 {
+  static MutexType mutex;
+
   // eachIJ is a pair, the first index is the applied exponent to u
   // the second index is the applied exponent to v
-  std::pair<int, int> eachIJ = m_IJ[idx - (idx >= m_IJ.size() ? m_IJ.size() : 0)];
+  //std::pair<int, int> eachIJ = m_IJ[idx - (idx >= m_IJ.size() ? m_IJ.size() : 0)];
 
+  const std::array<double, 2> newPrime = { newPixel[0] - x_trans, newPixel[1] - y_trans };
+  const double newXPrimeSqr = newPrime[0] * newPrime[0];
+  const double newYPrimeSqr = newPrime[1] * newPrime[1];
+
+  std::array<double, 2> oldPrime;
+  oldPrime[0] = parameters[0] * newPrime[0] + parameters[1] * newPrime[1] + parameters[2] * newXPrimeSqr + parameters[3] * newYPrimeSqr + parameters[4] * newPrime[0] * newPrime[1] +
+                parameters[5] * newXPrimeSqr * newPrime[1] + parameters[6] * newPrime[0] * newYPrimeSqr;
+  oldPrime[1] = parameters[7] * newPrime[0] + parameters[8] * newPrime[1] + parameters[9] * newXPrimeSqr + parameters[10] * newYPrimeSqr + parameters[11] * newPrime[0] * newPrime[1] +
+                parameters[12] * newXPrimeSqr * newPrime[1] + parameters[13] * newPrime[0] * newYPrimeSqr;
+
+  auto inputSize = inputImage->GetBufferedRegion().GetSize();
+  const int64_t width = inputSize[0];
+  const int64_t height = inputSize[1];
+
+  const int64_t oldXUnbound = static_cast<int64_t>(round(oldPrime[0] + x_trans));
+  const int64_t oldYUnbound = static_cast<int64_t>(round(oldPrime[1] + y_trans));
+
+  PixelCoord oldPixel;
+  oldPixel[0] = std::min(std::max<int64_t>(oldXUnbound, 0), width - 1);
+  oldPixel[1] = std::min(std::max<int64_t>(oldYUnbound, 0), height - 1);
+
+#if 0
   // The subtraction step here translates the coordinates so the center of the image
   // is at the origin
   // This allows for rotations to occur in a predictable way
@@ -438,6 +456,16 @@ void FFTConvolutionCostFunction::calculatePixelCoordinates(const ParametersType&
   const double term = u_v * parameters[idx];
   // This recorrects the centering translation to the appropriate x or y value
   idx < m_IJ.size() - 1 ? x_ref += term : y_ref += term;
+#endif
+
+  if(oldPixel[0] >= -tolerance && oldPixel[0] <= lastXIndex && oldPixel[1] >= -tolerance && oldPixel[1] <= lastYIndex)
+  {
+    // The value obtained with eachImage.second->GetPixel(eachPixel) could have
+    // its "contrast" adjusted based on its radial location from the center of
+    // the image at this step to compensate for error encountered from radial effects
+    ScopedLockType lock(mutex);
+    distortedImage->SetPixel(newPixel, inputImage->GetPixel(oldPixel));
+  }
 }
 
 // -----------------------------------------------------------------------------

@@ -193,6 +193,7 @@ public:
   // -----------------------------------------------------------------------------
   int TestFFTConvolutionCostFunction()
   {
+    /*
     const QString rowChar = 'R';
     const QString colChar = 'C';
     const int degree = m_BlendFilter->property("Degree").toInt();
@@ -204,7 +205,7 @@ public:
     // The line below is used for testing the MultiParamCostFunction
     //    std::vector<double>{1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0}
     FFTConvolutionCostFunction costFunction;
-    costFunction.Initialize(dcNames, rowChar, colChar, degree, overlapPercentage, m_ImageReaderDca, attrMatName, dataArrayName);
+    costFunction.Initialize(montage, degree, overlapPercentage, m_ImageReaderDca, attrMatName, dataArrayName);
 
     using GridKeys = QVector<FFTConvolutionCostFunction::GridKey>;
     GridKeys gridKeys;
@@ -225,8 +226,11 @@ public:
     DREAM3D_REQUIRE(gridKeys.contains(key10))
 
     // TODO: Test GetValue method
-
+    
     return EXIT_SUCCESS;
+    */
+
+    return EXIT_FAILURE;
   }
 
   // -----------------------------------------------------------------------------

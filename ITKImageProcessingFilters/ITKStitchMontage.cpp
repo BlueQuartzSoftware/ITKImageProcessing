@@ -290,6 +290,12 @@ void ITKStitchMontage::dataCheck()
     return;
   }
 
+  if(nullptr == imageDataAM)
+  {
+    setErrorCondition(-11004, "Attribute Matrix not found");
+    return;
+  }
+
   QVector<size_t> imageDataTupleDims = imageDataAM->getTupleDimensions();
   if(imageDataTupleDims.size() < 2)
   {

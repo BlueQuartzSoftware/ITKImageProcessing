@@ -34,6 +34,7 @@
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
 #include "tbb/queuing_mutex.h"
+using MutexType = tbb::queuing_mutex;
 #endif
 
 #include "itkAmoebaOptimizer.h"
@@ -54,6 +55,7 @@
 #include "SIMPLib/FilterParameters/MultiDataContainerSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/Montages/GridMontage.h"
 #include "SIMPLib/Utilities/ParallelData2DAlgorithm.h"
 #include "SIMPLib/Utilities/ParallelTaskAlgorithm.h"
 
@@ -66,7 +68,7 @@ using PixelValue_T = double;
 
 namespace
 {
-  const QString InternalGrayscalePrefex = "_INTERNAL_Grayscale_";
+const QString InternalGrayscalePrefex = "_INTERNAL_Grayscale_";
 }
 
 uint Blend::GetIterationsFromStopDescription(const QString& stopDescription) const
@@ -90,7 +92,7 @@ bool Blend::GetConvergenceFromStopDescription(const QString& stopDescription) co
 // -----------------------------------------------------------------------------
 Blend::Blend()
 : m_MaxIterations(1000)
-, m_Degree(1)
+//, m_Degree(2)
 , m_OverlapPercentage(0.0f)
 , m_LowTolerance(1E-2)
 , m_HighTolerance(1E-2)
@@ -128,7 +130,7 @@ void Blend::setupFilterParameters()
 
   parameters.push_back(SIMPL_NEW_MONTAGE_STRUCTURE_SELECTION_FP("Montage Name", MontageName, FilterParameter::Category::Parameter, Blend));
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Max Iterations", MaxIterations, FilterParameter::Category::Parameter, Blend));
-  parameters.push_back(SIMPL_NEW_INTEGER_FP("Degree", Degree, FilterParameter::Category::Parameter, Blend));
+  // parameters.push_back(SIMPL_NEW_INTEGER_FP("Degree", Degree, FilterParameter::Category::Parameter, Blend));
   parameters.push_back(SIMPL_NEW_FLOAT_FP("Overlap Percentage", OverlapPercentage, FilterParameter::Category::Parameter, Blend));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Low Tolerance", LowTolerance, FilterParameter::Category::Parameter, Blend));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("High Tolerance", HighTolerance, FilterParameter::Category::Parameter, Blend));
@@ -139,7 +141,7 @@ void Blend::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_STRING_FP("Data Container", BlendDCName, FilterParameter::Category::CreatedArray, Blend));
   parameters.push_back(SIMPL_NEW_STRING_FP("Transform Matrix", TransformMatrixName, FilterParameter::Category::CreatedArray, Blend));
   parameters.push_back(SIMPL_NEW_STRING_FP("Transform Array", TransformArrayName, FilterParameter::Category::CreatedArray, Blend));
-  //parameters.push_back(SIMPL_NEW_STRING_FP("Number of Iterations", NumIterationsArrayName, FilterParameter::Category::CreatedArray, Blend));
+  // parameters.push_back(SIMPL_NEW_STRING_FP("Number of Iterations", NumIterationsArrayName, FilterParameter::Category::CreatedArray, Blend));
   parameters.push_back(SIMPL_NEW_STRING_FP("Residual Values", ResidualArrayName, FilterParameter::Category::CreatedArray, Blend));
 
   setFilterParameters(parameters);
@@ -169,7 +171,8 @@ void Blend::dataCheck()
   // This step would not be necessary if using Dave's strict polynomial array
   // Otherwise, there is a direct correlation between the degree of the transform polynomial
   // and how many coefficients should reside in the initial guess
-  size_t len = static_cast<size_t>(2 * m_Degree * m_Degree + 4 * m_Degree + 2);
+  // size_t len = static_cast<size_t>(2 * m_Degree * m_Degree + 4 * m_Degree + 2);
+  size_t len = 14;
   if(len != m_InitialGuess.size())
   {
     setErrorCondition(-66400, "Number of coefficients in initial guess is not compatible with degree number");
@@ -205,7 +208,7 @@ void Blend::dataCheck()
       setErrorCondition(-66720, QString("AttributeMatrix: %1 required").arg(m_AttributeMatrixName));
       return;
     }
-    
+
     DataArray<Grayscale_T>::Pointer da = am->getAttributeArrayAs<DataArray<Grayscale_T>>(m_IPFColorsArrayName);
     if(nullptr == da)
     {
@@ -233,11 +236,11 @@ void Blend::dataCheck()
 
   // Create a new data container to hold the output of this filter
   DataContainerShPtr blendDC = getDataContainerArray()->createNonPrereqDataContainer(this, DataArrayPath(m_BlendDCName, "", ""));
-  AttributeMatrixShPtr blendAM = blendDC->createNonPrereqAttributeMatrix(this, m_TransformMatrixName, { 1 }, AttributeMatrix::Type::Generic);
+  AttributeMatrixShPtr blendAM = blendDC->createNonPrereqAttributeMatrix(this, m_TransformMatrixName, {1}, AttributeMatrix::Type::Generic);
 
   // blendAM->createAndAddAttributeArray<UInt64ArrayType>(this, m_IterationsAAName, 0, {1});
-  blendAM->createNonPrereqArray<DoubleArrayType>(this, m_TransformArrayName, 0, { m_InitialGuess.size() });
-  blendAM->createNonPrereqArray<DoubleArrayType>(this, m_ResidualArrayName, 0, { 1 });
+  blendAM->createNonPrereqArray<DoubleArrayType>(this, m_TransformArrayName, 0, {m_InitialGuess.size()});
+  blendAM->createNonPrereqArray<DoubleArrayType>(this, m_ResidualArrayName, 0, {1});
 }
 
 // -----------------------------------------------------------------------------
@@ -284,12 +287,7 @@ void Blend::execute()
   optimizer->SetParametersConvergenceTolerance(m_HighTolerance);
   optimizer->SetInitialPosition(initialParams);
 
-
-  QStringList dcNames;
-  if(getDataContainerArray()->getMontage(getMontageName()))
-  {
-    dcNames = getDataContainerArray()->getMontage(getMontageName())->getDataContainerNames();
-  }
+  GridMontageShPtr gridMontage = std::dynamic_pointer_cast<GridMontage>(getDataContainerArray()->getMontage(getMontageName()));
 
   //  using CostFunctionType = MultiParamCostFunction;
   using CostFunctionType = FFTConvolutionCostFunction;
@@ -297,7 +295,7 @@ void Blend::execute()
   implementation.Initialize(
       // The line below is used for testing the MultiParamCostFunction
       //    std::vector<double>{1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0}
-      dcNames, "r", "c", m_Degree, m_OverlapPercentage, getDataContainerArray(), m_AttributeMatrixName, grayscaleArrayName);
+      gridMontage, m_Degree, m_OverlapPercentage, getDataContainerArray(), m_AttributeMatrixName, grayscaleArrayName);
   optimizer->SetCostFunction(&implementation);
   optimizer->StartOptimization();
 
@@ -333,7 +331,7 @@ void Blend::execute()
 
   // ...otherwise, set the appropriate values of the filter's output data arrays
   AttributeMatrixShPtr transformAM = getDataContainerArray()->getDataContainer(m_BlendDCName)->getAttributeMatrix(m_TransformMatrixName);
-  //transformAM->getAttributeArrayAs<UInt64ArrayType>(m_IterationsAAName)->push_back(numIterations);
+  // transformAM->getAttributeArrayAs<UInt64ArrayType>(m_IterationsAAName)->push_back(numIterations);
   transformAM->getAttributeArrayAs<DoubleArrayType>(m_ResidualArrayName)->push_back(value);
   transformAM->getAttributeArrayAs<DoubleArrayType>(m_TransformArrayName)->setArray(transform);
 
@@ -386,7 +384,7 @@ void Blend::generateGrayscaleIPF()
 // -----------------------------------------------------------------------------
 void Blend::deleteGrayscaleIPF()
 {
-  AbstractMontage::Pointer montage =  getDataContainerArray()->getMontage(getMontageName());
+  AbstractMontage::Pointer montage = getDataContainerArray()->getMontage(getMontageName());
   AbstractMontage::CollectionType dcs = montage->getDataContainers();
   for(const auto& dc : dcs)
   {
@@ -401,167 +399,161 @@ void Blend::deleteGrayscaleIPF()
   }
 }
 
+#if 0
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-itk::Image<double, 2>::Pointer generateKernelImage(const std::vector<double> & transformVector)
+size_t flatten(const SizeVec2Type& xyPos, const SizeVec3Type& dimensions)
 {
-  using KernelType = itk::Image<double, 2>;
-  KernelType::Pointer kernelImage = KernelType::New();
-  KernelType::IndexType start;
-  start[0] = 0;
-  start[1] = 0;
-  start[2] = 0;
-  KernelType::SizeType size;
-  size[0] = 3;
-  size[1] = 3;
-  size[2] = 0;
-  KernelType::RegionType region;
-  region.SetSize(size);
-  region.SetIndex(start);
-  kernelImage->SetRegions(region);
-  kernelImage->Allocate();
+  const size_t row = xyPos[1];
+  const size_t col = xyPos[0];
+  const size_t depth = 0;
 
-  KernelType::IndexType index;
-  index[0] = 0;
-  index[1] = 0;
-  kernelImage->SetPixel(index, transformVector[0]);
+  const size_t numRows = dimensions[0];
+  const size_t numCols = dimensions[1];
 
-  index[0] = 0;
-  index[1] = 1;
-  kernelImage->SetPixel(index, transformVector[1]);
-
-  index[0] = 0;
-  index[1] = 2;
-  kernelImage->SetPixel(index, transformVector[2]);
-
-  index[0] = 1;
-  index[1] = 0;
-  kernelImage->SetPixel(index, transformVector[3]);
-
-  index[0] = 1;
-  index[1] = 1;
-  kernelImage->SetPixel(index, 1);
-
-  index[0] = 1;
-  index[1] = 2;
-  kernelImage->SetPixel(index, transformVector[4]);
-
-  index[0] = 2;
-  index[1] = 0;
-  kernelImage->SetPixel(index, transformVector[5]);
-
-  index[0] = 2;
-  index[1] = 1;
-  kernelImage->SetPixel(index, transformVector[6]);
-
-  index[0] = 2;
-  index[1] = 2;
-  kernelImage->SetPixel(index, transformVector[7]);
-
-  return kernelImage;
+  return col + row * numCols;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename T>
-void transformDataArray(const itk::Image<double, 2>::Pointer& kernelImage, const SizeVec3Type& dimensions, const DataArray<T>::Pointer& da)
+template <typename T>
+void transformDataPixel(size_t width, size_t height, double x_trans, double y_trans, const SizeVec2Type& newPixel, const std::vector<double>& transformVector, const SizeVec3Type& dimensions, typename const DataArray<T>::Pointer& da, typename const DataArray<T>::Pointer& tempDACopy)
 {
-  using PixelType = T;
-  using ImageType = itk::Image<PixelType, 2>;
-  using KernelType = itk::Image<double, 2>;
-  using ConvolutionFilterType = itk::FFTConvolutionImageFilter<ImageType, KernelType>;
-  using PixelContainer = ImageType::PixelContainer;
-  
-  ImageType::Pointer inputImage = ImageType::New();
-  ImageType::IndexType start;
-  ImageType::SizeType size;
-  for(size_t i = 0; i < 3; i++)
+  // static MutexType mutex;
+
+  const std::array<double, 2> newPrime = { newPixel[0] - x_trans, newPixel[1] - y_trans };
+  const double newXPrimeSqr = newPrime[0] * newPrime[0];
+  const double newYPrimeSqr = newPrime[1] * newPrime[1];
+
+  std::array<double, 2> oldPrime;
+  oldPrime[0] = transformVector[0] * newPrime[0] + transformVector[1] * newPrime[1] + transformVector[2] * newXPrimeSqr + transformVector[3] * newYPrimeSqr +
+    transformVector[4] * newPrime[0] * newPrime[1] + transformVector[5] * newXPrimeSqr * newPrime[1] + transformVector[6] * newPrime[0] * newYPrimeSqr;
+  oldPrime[1] = transformVector[7] * newPrime[0] + transformVector[8] * newPrime[1] + transformVector[9] * newXPrimeSqr + transformVector[10] * newYPrimeSqr +
+    transformVector[11] * newPrime[0] * newPrime[1] + transformVector[12] * newXPrimeSqr * newPrime[1] + transformVector[13] * newPrime[0] * newYPrimeSqr;
+
+  const int64_t oldXUnbound = static_cast<int64_t>(round(oldPrime[0] + x_trans));
+  const int64_t oldYUnbound = static_cast<int64_t>(round(oldPrime[1] + y_trans));
+
+  SizeVec2Type oldPixel;
+  oldPixel[0] = std::min(std::max<size_t>(oldXUnbound, 0), width - 1);
+  oldPixel[1] = std::min(std::max<size_t>(oldYUnbound, 0), height - 1);
+
+  size_t newIndex = flatten(newPixel, dimensions);
+  size_t oldIndex = flatten(oldPixel, dimensions);
+
+  // ScopedLockType lock(mutex);
+  auto compDims = tempDACopy->getComponentDimensions();
+  size_t numComponents = std::accumulate(compDims.begin(), compDims.end(), 0);
+  T* oldTuplePtr = tempDACopy->getTuplePointer(oldIndex);
+  typename std::vector<T> oldTuple(oldTuplePtr, oldTuplePtr + numComponents);
+
+  da->setTuple(newIndex, oldTuple);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+template <typename T>
+void transformDataArray(const std::vector<double>& transformVector, const SizeVec3Type& dimensions, typename const DataArray<T>::Pointer& da)
+{
+#if 1
+  // Do not resize items that do not match the geometry.
+  size_t flattenedDims = std::accumulate(dimensions.begin(), dimensions.end(), 0);
+  size_t numComps = da->getNumberOfComponents();
+  size_t totalItems = da->getArray().size();
+  if(totalItems / numComps != flattenedDims)
   {
-    start[i] = 0;
-    size[i] = dimensions[i];
+    return;
   }
-  ImageType::RegionType region;
-  region.SetSize(size);
-  region.SetIndex(start);
-  inputImage->SetRegions(region);
-  inputImage->Allocate();
+#endif
 
-  PixelContainer* inputPixelContainer = inputImage->GetPixelContainer();
-  inputPixelContainer->SetImportPointer(da->getPointer(0), da->getNumberOfTuples(), false);
-  inputImage->SetPixelContainer(inputPixelContainer);
-  
-  ConvolutionFilterType::Pointer convolutionFilter = ConvolutionFilterType::New();
-  convolutionFilter->SetInputImage(inputImage);
-  convolutionFilter->SetKernelImage(kernelImage);
-  convolutionFilter->Update();
-  
-  ImageType::Pointer outputImage = convolutionFilter->GetOutput();
-  PixelType* pixelArray = outputImage->GetPixelContainer()->GetImportPointer();
-  PixelType* arrayPtr = da->getPointer(0);
-  std::copy(std::begin(pixelArray), std::begin(pixelArray) + da->getNumberOfTuples(), std::begin(arrayPtr));
+  typename DataArray<T>::Pointer daCopy = std::dynamic_pointer_cast<DataArray<T>>(da->deepCopy());
+
+  const size_t width = dimensions[0];
+  const size_t height = dimensions[1];
+
+  const double x_trans = dimensions[1] / 2.0;
+  const double y_trans = dimensions[0] / 2.0;
+
+  ParallelTaskAlgorithm taskAlg;
+  std::function<void(void)> fn;
+
+  // Loop over pixels
+  for(size_t x = 0; x < width; x++)
+  {
+    for(size_t y = 0; y < height; y++)
+    {
+      SizeVec2Type newPixel{ x, y };
+
+      fn = std::bind(&transformDataPixel<T>, width, height, x_trans, y_trans, newPixel, transformVector, dimensions, da, daCopy);
+      taskAlg.execute(fn);
+      //transformDataPixel(width, height, x_trans, y_trans, newPixel, transformVector, dimensions, da, daCopy);
+    }
+  }
+  taskAlg.wait();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void transformIDataArray(const itk::Image<double, 2>::Pointer& kernelImage, const SizeVec3Type& dimensions, const IDataArray::Pointer& da)
+void transformIDataArray(const std::vector<double>& transformVector, const SizeVec3Type& dimensions, const IDataArray::Pointer& da)
 {
   if(std::dynamic_pointer_cast<Int8ArrayType>(da))
   {
     Int8ArrayType::Pointer array = std::dynamic_pointer_cast<Int8ArrayType>(da);
-    transformDataArray<int8_t>(kernelImage, dimensions, array);
+    transformDataArray<int8_t>(transformVector, dimensions, array);
   }
   else if(std::dynamic_pointer_cast<UInt8ArrayType>(da))
   {
     UInt8ArrayType::Pointer array = std::dynamic_pointer_cast<UInt8ArrayType>(da);
-    transformDataArray<uint8_t>(kernelImage, dimensions, array);
+    transformDataArray<uint8_t>(transformVector, dimensions, array);
   }
   else if(std::dynamic_pointer_cast<Int16ArrayType>(da))
   {
     Int16ArrayType::Pointer array = std::dynamic_pointer_cast<Int16ArrayType>(da);
-    transformDataArray<int16_t>(kernelImage, dimensions, array);
+    transformDataArray<int16_t>(transformVector, dimensions, array);
   }
   else if(std::dynamic_pointer_cast<UInt16ArrayType>(da))
   {
     UInt16ArrayType::Pointer array = std::dynamic_pointer_cast<UInt16ArrayType>(da);
-    transformDataArray<uint16_t>(kernelImage, dimensions, array);
+    transformDataArray<uint16_t>(transformVector, dimensions, array);
   }
   else if(std::dynamic_pointer_cast<Int32ArrayType>(da))
   {
     Int32ArrayType::Pointer array = std::dynamic_pointer_cast<Int32ArrayType>(da);
-    transformDataArray<int32_t>(kernelImage, dimensions, array);
+    transformDataArray<int32_t>(transformVector, dimensions, array);
   }
   else if(std::dynamic_pointer_cast<UInt32ArrayType>(da))
   {
     UInt32ArrayType::Pointer array = std::dynamic_pointer_cast<UInt32ArrayType>(da);
-    transformDataArray<uint32_t>(kernelImage, dimensions, array);
+    transformDataArray<uint32_t>(transformVector, dimensions, array);
   }
   else if(std::dynamic_pointer_cast<Int64ArrayType>(da))
   {
     Int64ArrayType::Pointer array = std::dynamic_pointer_cast<Int64ArrayType>(da);
-    transformDataArray<int64_t>(kernelImage, dimensions, array);
+    transformDataArray<int64_t>(transformVector, dimensions, array);
   }
   else if(std::dynamic_pointer_cast<UInt64ArrayType>(da))
   {
     UInt64ArrayType::Pointer array = std::dynamic_pointer_cast<UInt64ArrayType>(da);
-    transformDataArray<uint64_t>(kernelImage, dimensions, array);
+    transformDataArray<uint64_t>(transformVector, dimensions, array);
   }
-  else if(std::dynamic_pointer_cast<BoolArrayType>(da))
-  {
-    BoolArrayType::Pointer array = std::dynamic_pointer_cast<BoolArrayType>(da);
-    transformDataArray<bool>(kernelImage, dimensions, array);
-  }
+  //else if(std::dynamic_pointer_cast<BoolArrayType>(da))
+  //{
+  //  BoolArrayType::Pointer array = std::dynamic_pointer_cast<BoolArrayType>(da);
+  //  transformDataArray<bool>(transformVector, dimensions, array);
+  //}
   else if(std::dynamic_pointer_cast<FloatArrayType>(da))
   {
     FloatArrayType::Pointer array = std::dynamic_pointer_cast<FloatArrayType>(da);
-    transformDataArray<float>(kernelImage, dimensions, array);
+    transformDataArray<float>(transformVector, dimensions, array);
   }
   else if(std::dynamic_pointer_cast<DoubleArrayType>(da))
   {
     DoubleArrayType::Pointer array = std::dynamic_pointer_cast<DoubleArrayType>(da);
-    transformDataArray<double>(kernelImage, dimensions, array);
+    transformDataArray<double>(transformVector, dimensions, array);
   }
 }
 
@@ -570,20 +562,7 @@ void transformIDataArray(const itk::Image<double, 2>::Pointer& kernelImage, cons
 // -----------------------------------------------------------------------------
 void Blend::warpDataContainers(const std::vector<double>& transformVector)
 {
-  // Duplicate the DataContainers used and Warp them based on the transform kernel generated.
-
-  // TODO: Warp DataContainers
-  constexpr unsigned int Dimension = 2;
-  using VectorComponentType = float;
-  using VectorPixelType = itk::Vector<VectorComponentType, Dimension>;
-  using PixelType = unsigned char;
-  using ImageType = itk::Image<PixelType, Dimension>;
-  using DisplacementFieldType = itk::Image<VectorPixelType, Dimension>;
-  using KernelType = itk::Image<double, 2>;
-
-  // Create the kernel image
-  KernelType::Pointer kernelImage = generateKernelImage(transformVector);
-
+  // Duplicate the DataContainers used and Warp them based on the transformVector generated.
   AbstractMontage::Pointer montage = getDataContainerArray()->getMontage(m_MontageName);
   for(const auto& dc : *montage)
   {
@@ -591,15 +570,17 @@ void Blend::warpDataContainers(const std::vector<double>& transformVector)
     SizeVec3Type dimensions = imageGeom->getDimensions();
 
     DataContainer::Pointer dCopy = dc->deepCopy();
-    for(const auto& am : *dCopy)
+    AttributeMatrix::Pointer am = dCopy->getAttributeMatrix(m_AttributeMatrixName);
+    //for(const auto& am : *dCopy)
     {
       for(const auto& da : *am)
       {
-        transformIDataArray(kernelImage, dimensions, da);
+        transformIDataArray(transformVector, dimensions, da);
       }
     }
   }
 }
+#endif
 
 // -----------------------------------------------------------------------------
 //

@@ -72,8 +72,8 @@ public:
   SIMPL_FILTER_PARAMETER(double, HighTolerance)
   Q_PROPERTY(double HighTolerance READ getHighTolerance WRITE setHighTolerance)
 
-  SIMPL_FILTER_PARAMETER(int, Degree)
-  Q_PROPERTY(int Degree READ getDegree WRITE setDegree)
+  //SIMPL_FILTER_PARAMETER(int, Degree)
+  //Q_PROPERTY(int Degree READ getDegree WRITE setDegree)
 
   SIMPL_FILTER_PARAMETER(QString, InitialSimplexGuess)
   Q_PROPERTY(QString InitialSimplexGuess READ getInitialSimplexGuess WRITE setInitialSimplexGuess)
@@ -223,4 +223,5 @@ protected:
 
 private:
   std::vector<double> m_InitialGuess;
+  int m_Degree = 2;
 };

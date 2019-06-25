@@ -47,6 +47,9 @@
 using Grayscale_T = uint8_t;
 using PixelValue_T = double;
 
+class GridMontage;
+using GridMontageShPtr = std::shared_ptr<GridMontage>;
+
 /**
  * @class FFTConvolutionCostFunction FFTConvolutionCostFunction.h ITKImageProcessingFilters/util/FFTConvolutionCostFunction.h
  * @brief This class was used as a testing class to observe the behavior of the Amoeba optimizer
@@ -140,18 +143,16 @@ public:
    * @param amName
    * @param daName
    */
-  void Initialize(const QStringList& chosenDataContainers, const QString& rowChar, const QString& colChar, int degree, float overlapPercentage, const DataContainerArrayShPtr& dca,
+  void Initialize(const GridMontageShPtr& montage, int degree, float overlapPercentage, const DataContainerArrayShPtr& dca,
                   const QString& amName, const QString& daName);
 
   /**
    * @brief This method is called by Initialize as a parallel task algorithm operating on each DataContainer.
-   * @param dc
-   * @param rowChar
-   * @param colChar
+   * @param montage
    * @param amName
    * @param daName
    */
-  void InitializeDataContainer(const DataContainer::Pointer& dc, const QString& rowChar, const QString& colChar, const QString& amName, const QString& daName);
+  void InitializeDataContainer(const GridMontageShPtr& montage, size_t row, size_t column, const QString& amName, const QString& daName);
 
   /**
    * @brief This method is called by Initialize as a parallel task algorithm operating on each image in the ImageGrid to calculate the overlap amounts.
@@ -198,7 +199,7 @@ public:
    * @param iter
    */
   void applyTransformationPixel(double tolerance, const ParametersType& parameters, const InputImage::Pointer& inputImage, const InputImage::Pointer& distortedImage,
-                                const InputImage::RegionType& bufferedRegion, const itk::ImageRegionIterator<InputImage>& iter) const;
+                                const InputImage::RegionType& bufferedRegion, itk::ImageRegionIterator<InputImage> iter) const;
 
   /**
    * @brief This method is called by applyTransformationPixel as a parallel task calculating pixel coordinates.
@@ -210,7 +211,7 @@ public:
    * @param x_ref
    * @param y_ref
    */
-  void calculatePixelCoordinates(const ParametersType& parameters, const PixelCoord& pixel, size_t idx, double x_trans, double y_trans, double& x_ref, double& y_ref) const;
+  void calculatePixelCoordinates(const ParametersType& parameters, const InputImage::Pointer& inputImage, const InputImage::Pointer& distortedImage, const PixelCoord& pixel, double x_trans, double y_trans, double tolerance, double lastXIndex, double lastYIndex) const;
 
   /**
    * @brief This method is called by GetValue to find the FFT Convolution and accumulate the maximum value from each overlap.
@@ -231,4 +232,6 @@ private:
   std::vector<std::pair<size_t, size_t>> m_IJ;
   OverlapPairs m_Overlaps;
   ImageGrid m_ImageGrid;
+  double m_ImageDim_x;
+  double m_ImageDim_y;
 };
