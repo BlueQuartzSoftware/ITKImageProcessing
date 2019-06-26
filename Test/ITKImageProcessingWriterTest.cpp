@@ -102,7 +102,7 @@ public:
     ImageGeom::Pointer imageGeometry = ImageGeom::CreateGeometry(SIMPL::Geometry::ImageGeometry);
     QVector<float> origin(3, 0);
     QVector<float> spacing(3, 1);
-    QVector<size_t> dimensions(3, 1);
+    std::vector<size_t> dimensions(3, 1);
     for(int32_t i = 0; i < Dimension; i++)
     {
       origin[i] = 1.23f + static_cast<float>(i);
@@ -113,7 +113,7 @@ public:
     imageGeometry->setOrigin(origin.data());
     imageGeometry->setDimensions(dimensions.data());
     container->setGeometry(imageGeometry);
-    QVector<size_t> arrayDimensions(1, 0);
+    std::vector<size_t> arrayDimensions(1, 0);
     arrayDimensions[0] = 1;
     AttributeMatrix::Pointer matrixArray = container->createAndAddAttributeMatrix(dimensions, path.getAttributeMatrixName(), AttributeMatrix::Type::Cell);
     typename DataArray<PixelType>::Pointer data = DataArray<PixelType>::CreateArray(dimensions, arrayDimensions, path.getDataArrayName(), true);
@@ -176,8 +176,8 @@ public:
     // Compare number of attributes
     DREAM3D_REQUIRE_EQUAL(baselineMatrix->getNumberOfTuples(), inputMatrix->getNumberOfTuples());
     DREAM3D_REQUIRE_EQUAL(baselineMatrix->getNumAttributeArrays(), inputMatrix->getNumAttributeArrays());
-    QVector<size_t> baselineTupleDimensions = baselineMatrix->getTupleDimensions();
-    QVector<size_t> inputTupleDimensions = inputMatrix->getTupleDimensions();
+    std::vector<size_t> baselineTupleDimensions = baselineMatrix->getTupleDimensions();
+    std::vector<size_t> inputTupleDimensions = inputMatrix->getTupleDimensions();
     DREAM3D_REQUIRE_EQUAL(inputTupleDimensions.size(), inputTupleDimensions.size());
     for(size_t ii = 0; ii < inputTupleDimensions.size(); ii++)
     {

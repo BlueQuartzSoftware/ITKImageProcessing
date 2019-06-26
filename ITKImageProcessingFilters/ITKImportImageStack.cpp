@@ -257,7 +257,7 @@ void ITKImportImageStack::dataCheck()
   // Extract the Cell Attribute Matrix that was created and resize it for the number of Tuples that we have
   // and add it to the actual DataContainer that this filter created.
   AttributeMatrix::Pointer cellAttrMat = dc->getAttributeMatrix(getCellAttributeMatrixName());
-  cellAttrMat->resizeAttributeArrays(dims.toContainer<QVector<size_t>>());
+  cellAttrMat->resizeAttributeArrays(dims.toContainer<std::vector<size_t>>());
   m->insertOrAssign(cellAttrMat);
   // The data array that was embedded in the Cell Attribute Matrix just got resized so we should not have to do
   // anything else at this point.

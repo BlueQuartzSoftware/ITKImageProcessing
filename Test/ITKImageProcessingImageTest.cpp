@@ -165,7 +165,7 @@ int CreateDream3DDataToImageFilters()
 
   int GetComponentsDimensions()
   {
-    QVector<size_t> cDims;
+    std::vector<size_t> cDims;
     QString error;
     cDims = ITKDream3DHelper::GetComponentsDimensions<unsigned char>();
     if(cDims.size() != 1 || cDims[0] != 1)

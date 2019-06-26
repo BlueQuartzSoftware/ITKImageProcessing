@@ -83,12 +83,12 @@ void ITKHistogramMatchingImage::readFilterParameters(AbstractFilterParametersRea
 // -----------------------------------------------------------------------------
 size_t ITKHistogramMatchingImage::getImageDimension(const DataArrayPath& path)
 {
-  QVector<size_t> tDims(3, -1);
+  std::vector<size_t> tDims(3, -1);
   QString errorMessage;
   ImageGeom::Pointer imageGeometry = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, path.getDataContainerName());
   if(imageGeometry.get() != nullptr)
   {
-    tDims = imageGeometry->getDimensions().toContainer<QVector<size_t>>();
+    tDims = imageGeometry->getDimensions().toContainer<std::vector<size_t>>();
   }
   else
   {
@@ -135,8 +135,8 @@ void ITKHistogramMatchingImage::CompareImagePixelTypes(const DataArrayPath& path
     return;
   }
   // Compare that pixel types are the same
-  QVector<size_t> cDims1 = ptr1->getComponentDimensions();
-  QVector<size_t> cDims2 = ptr2->getComponentDimensions();
+  std::vector<size_t> cDims1 = ptr1->getComponentDimensions();
+  std::vector<size_t> cDims2 = ptr2->getComponentDimensions();
   if(cDims1.size() != cDims2.size())
   {
     QString errorMessage("Both images must have components of the same size.\nFound %1 and %2");

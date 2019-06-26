@@ -159,7 +159,7 @@ void ImportVectorImageStack::dataCheck()
     return;
   }
   DataArrayPath dap(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), QString(""));
-  QVector<size_t> tDims = {0};
+  std::vector<size_t> tDims = {0};
   AttributeMatrix::Pointer am = m->createNonPrereqAttributeMatrix(this, dap, tDims, AttributeMatrix::Type::Cell, AttributeMatrixID21);
 
   bool hasMissingFiles = false;
@@ -204,7 +204,7 @@ void ImportVectorImageStack::dataCheck()
   int totalIndex = m_InputFileListInfo.EndIndex - m_InputFileListInfo.StartIndex + 1;
   auto totalComp = static_cast<size_t>(m_InputFileListInfo.EndComponent - m_InputFileListInfo.StartComponent + 1);
 
-  QVector<size_t> cDims = {totalComp};
+  std::vector<size_t> cDims = {totalComp};
   // for(int i = 0; i < totalIndex; ++i)
   int i = 0;
   {
@@ -266,7 +266,7 @@ void ImportVectorImageStack::dataCheck()
         image->setDimensions(dims);
         m->setGeometry(image);
         // Set the number of tuples in the Cell AttributeMatrix
-        am->setTupleDimensions(dims.toContainer<QVector<size_t>>());
+        am->setTupleDimensions(dims.toContainer<std::vector<size_t>>());
       }
       // Now figure out if the image was 8bit or 16 bit. The ONLY 2 types we are supporting
       // are 8 bit and 16 bit GrayScale images

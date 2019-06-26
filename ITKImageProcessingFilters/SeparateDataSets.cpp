@@ -139,7 +139,7 @@ void SeparateDataSets::execute()
   }
 
   int err = 0;
-  QVector<size_t> cDims = { 1 };
+  std::vector<size_t> cDims = {1};
   StringDataArray::Pointer attrArrayNamesPtr = origMetaDataAM->getPrereqArray<StringDataArray, AbstractFilter>(this, "AttributeArrayNames", err, cDims);
   if(getErrorCode() < 0)
   {
@@ -247,7 +247,7 @@ void SeparateDataSets::execute()
       newMetaDataPtr->copyTuple(i, 0);
       newMetaDataPtr->resizeTuples(1);
     }
-    newMetaDataAM->setTupleDimensions(QVector<size_t>(1, 1));
+    newMetaDataAM->setTupleDimensions(std::vector<size_t>(1, 1));
 
     newDCPtr->addOrReplaceAttributeMatrix(newMetaDataAM);
     newDCPtr->addOrReplaceAttributeMatrix(newDataSetAM);

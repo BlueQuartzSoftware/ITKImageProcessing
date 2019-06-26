@@ -95,7 +95,7 @@ protected:
     {
       return;
     }
-    QVector<size_t> outputDims = ITKDream3DHelper::GetComponentsDimensions<OutputPixelType>();
+    std::vector<size_t> outputDims = ITKDream3DHelper::GetComponentsDimensions<OutputPixelType>();
     if(m_SaveAsNewArray)
     {
       DataArrayPath tempPath;

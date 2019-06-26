@@ -146,7 +146,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
       setErrorCondition(-3, "No container.");
       return;
     }
-    QVector<size_t> dims = ITKDream3DHelper::GetComponentsDimensions<OutputPixelType>();
+    std::vector<size_t> dims = ITKDream3DHelper::GetComponentsDimensions<OutputPixelType>();
     DataContainer::Pointer dcMask = getMaskContainerArray()->getDataContainer(dap.getDataContainerName());
     typename toDream3DType::Pointer toDream3D = toDream3DType::New();
     toDream3D->SetInput(cast->GetOutput());
@@ -196,7 +196,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   }
   typename OutputImageType::PixelType v;
   size_t NumberOfComponents = 1;
-  QVector<size_t> cDims = ITKDream3DHelper::GetComponentsDimensions<InputPixelType>();
+  std::vector<size_t> cDims = ITKDream3DHelper::GetComponentsDimensions<InputPixelType>();
   for(int ii = 0; ii < cDims.size(); ii++)
   {
     NumberOfComponents *= cDims[ii];

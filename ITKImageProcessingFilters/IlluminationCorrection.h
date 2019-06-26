@@ -279,7 +279,7 @@ protected:
   std::shared_ptr<GeometryType> checkInputArrays()
   {
     DataContainerArray::Pointer dca = getDataContainerArray();
-    QVector<size_t> cDims = { 1 };
+    std::vector<size_t> cDims = {1};
     typename GeometryType::Pointer outputGridGeom = GeometryType::NullPointer();
 
     // Ensure each DataContainer has the proper path to the image data and the image data is grayscale
