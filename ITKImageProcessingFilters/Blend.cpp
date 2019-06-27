@@ -339,8 +339,10 @@ void Blend::execute()
   deleteGrayscaleIPF();
 
   // Apply transform to dewarp data
+  double x_trans = implementation.getImageDimX();
+  double y_trans = implementation.getImageDimY();
   std::vector<double> transformVector{ std::begin(transform), std::end(transform) };
-  warpDataContainers(transformVector);
+  warpDataContainers(transformVector, x_trans, y_trans);
 }
 
 // -----------------------------------------------------------------------------
@@ -399,7 +401,7 @@ void Blend::deleteGrayscaleIPF()
   }
 }
 
-#if 0
+#if 1
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -409,8 +411,8 @@ size_t flatten(const SizeVec2Type& xyPos, const SizeVec3Type& dimensions)
   const size_t col = xyPos[0];
   const size_t depth = 0;
 
-  const size_t numRows = dimensions[0];
-  const size_t numCols = dimensions[1];
+  const size_t numRows = dimensions[1];
+  const size_t numCols = dimensions[0];
 
   return col + row * numCols;
 }
@@ -436,6 +438,11 @@ void transformDataPixel(size_t width, size_t height, double x_trans, double y_tr
   const int64_t oldXUnbound = static_cast<int64_t>(round(oldPrime[0] + x_trans));
   const int64_t oldYUnbound = static_cast<int64_t>(round(oldPrime[1] + y_trans));
 
+  if(oldXUnbound < 0 || oldYUnbound < 0)
+  {
+    return;
+  }
+
   SizeVec2Type oldPixel;
   oldPixel[0] = std::min(std::max<size_t>(oldXUnbound, 0), width - 1);
   oldPixel[1] = std::min(std::max<size_t>(oldYUnbound, 0), height - 1);
@@ -443,10 +450,20 @@ void transformDataPixel(size_t width, size_t height, double x_trans, double y_tr
   size_t newIndex = flatten(newPixel, dimensions);
   size_t oldIndex = flatten(oldPixel, dimensions);
 
+  if((oldIndex >= da->getNumberOfTuples()) || (newIndex >= da->getNumberOfTuples()))
+  {
+    return;
+  }
+
   // ScopedLockType lock(mutex);
   auto compDims = tempDACopy->getComponentDimensions();
   size_t numComponents = std::accumulate(compDims.begin(), compDims.end(), 0);
   T* oldTuplePtr = tempDACopy->getTuplePointer(oldIndex);
+  //T* newTuplePtr = da->getTuplePointer(newIndex);
+  //for(size_t i = 0; i < numComponents; i++)
+  //{
+  //  newTuplePtr[i] = oldTuplePtr[i];
+  //}
   typename std::vector<T> oldTuple(oldTuplePtr, oldTuplePtr + numComponents);
 
   da->setTuple(newIndex, oldTuple);
@@ -456,13 +473,13 @@ void transformDataPixel(size_t width, size_t height, double x_trans, double y_tr
 //
 // -----------------------------------------------------------------------------
 template <typename T>
-void transformDataArray(const std::vector<double>& transformVector, const SizeVec3Type& dimensions, typename const DataArray<T>::Pointer& da)
+void transformDataArray(const std::vector<double>& transformVector, const SizeVec3Type& dimensions, double x_trans, double y_trans, typename const DataArray<T>::Pointer& da)
 {
 #if 1
   // Do not resize items that do not match the geometry.
-  size_t flattenedDims = std::accumulate(dimensions.begin(), dimensions.end(), 0);
+  size_t flattenedDims = std::accumulate(dimensions.begin(), dimensions.end(), 1, std::multiplies<double>());
   size_t numComps = da->getNumberOfComponents();
-  size_t totalItems = da->getArray().size();
+  size_t totalItems = da->getNumberOfTuples() * numComps;
   if(totalItems / numComps != flattenedDims)
   {
     return;
@@ -473,9 +490,6 @@ void transformDataArray(const std::vector<double>& transformVector, const SizeVe
 
   const size_t width = dimensions[0];
   const size_t height = dimensions[1];
-
-  const double x_trans = dimensions[1] / 2.0;
-  const double y_trans = dimensions[0] / 2.0;
 
   ParallelTaskAlgorithm taskAlg;
   std::function<void(void)> fn;
@@ -489,7 +503,6 @@ void transformDataArray(const std::vector<double>& transformVector, const SizeVe
 
       fn = std::bind(&transformDataPixel<T>, width, height, x_trans, y_trans, newPixel, transformVector, dimensions, da, daCopy);
       taskAlg.execute(fn);
-      //transformDataPixel(width, height, x_trans, y_trans, newPixel, transformVector, dimensions, da, daCopy);
     }
   }
   taskAlg.wait();
@@ -498,69 +511,69 @@ void transformDataArray(const std::vector<double>& transformVector, const SizeVe
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void transformIDataArray(const std::vector<double>& transformVector, const SizeVec3Type& dimensions, const IDataArray::Pointer& da)
+void transformIDataArray(const std::vector<double>& transformVector, const SizeVec3Type& dimensions, double x_trans, double y_trans, const IDataArray::Pointer& da)
 {
   if(std::dynamic_pointer_cast<Int8ArrayType>(da))
   {
     Int8ArrayType::Pointer array = std::dynamic_pointer_cast<Int8ArrayType>(da);
-    transformDataArray<int8_t>(transformVector, dimensions, array);
+    transformDataArray<int8_t>(transformVector, dimensions, x_trans, y_trans, array);
   }
   else if(std::dynamic_pointer_cast<UInt8ArrayType>(da))
   {
     UInt8ArrayType::Pointer array = std::dynamic_pointer_cast<UInt8ArrayType>(da);
-    transformDataArray<uint8_t>(transformVector, dimensions, array);
+    transformDataArray<uint8_t>(transformVector, dimensions, x_trans, y_trans, array);
   }
   else if(std::dynamic_pointer_cast<Int16ArrayType>(da))
   {
     Int16ArrayType::Pointer array = std::dynamic_pointer_cast<Int16ArrayType>(da);
-    transformDataArray<int16_t>(transformVector, dimensions, array);
+    transformDataArray<int16_t>(transformVector, dimensions, x_trans, y_trans, array);
   }
   else if(std::dynamic_pointer_cast<UInt16ArrayType>(da))
   {
     UInt16ArrayType::Pointer array = std::dynamic_pointer_cast<UInt16ArrayType>(da);
-    transformDataArray<uint16_t>(transformVector, dimensions, array);
+    transformDataArray<uint16_t>(transformVector, dimensions, x_trans, y_trans, array);
   }
   else if(std::dynamic_pointer_cast<Int32ArrayType>(da))
   {
     Int32ArrayType::Pointer array = std::dynamic_pointer_cast<Int32ArrayType>(da);
-    transformDataArray<int32_t>(transformVector, dimensions, array);
+    transformDataArray<int32_t>(transformVector, dimensions, x_trans, y_trans, array);
   }
   else if(std::dynamic_pointer_cast<UInt32ArrayType>(da))
   {
     UInt32ArrayType::Pointer array = std::dynamic_pointer_cast<UInt32ArrayType>(da);
-    transformDataArray<uint32_t>(transformVector, dimensions, array);
+    transformDataArray<uint32_t>(transformVector, dimensions, x_trans, y_trans, array);
   }
   else if(std::dynamic_pointer_cast<Int64ArrayType>(da))
   {
     Int64ArrayType::Pointer array = std::dynamic_pointer_cast<Int64ArrayType>(da);
-    transformDataArray<int64_t>(transformVector, dimensions, array);
+    transformDataArray<int64_t>(transformVector, dimensions, x_trans, y_trans, array);
   }
   else if(std::dynamic_pointer_cast<UInt64ArrayType>(da))
   {
     UInt64ArrayType::Pointer array = std::dynamic_pointer_cast<UInt64ArrayType>(da);
-    transformDataArray<uint64_t>(transformVector, dimensions, array);
+    transformDataArray<uint64_t>(transformVector, dimensions, x_trans, y_trans, array);
   }
   //else if(std::dynamic_pointer_cast<BoolArrayType>(da))
   //{
   //  BoolArrayType::Pointer array = std::dynamic_pointer_cast<BoolArrayType>(da);
-  //  transformDataArray<bool>(transformVector, dimensions, array);
+  //  transformDataArray<bool>(transformVector, dimensions, x_trans, y_trans, array);
   //}
   else if(std::dynamic_pointer_cast<FloatArrayType>(da))
   {
     FloatArrayType::Pointer array = std::dynamic_pointer_cast<FloatArrayType>(da);
-    transformDataArray<float>(transformVector, dimensions, array);
+    transformDataArray<float>(transformVector, dimensions, x_trans, y_trans, array);
   }
   else if(std::dynamic_pointer_cast<DoubleArrayType>(da))
   {
     DoubleArrayType::Pointer array = std::dynamic_pointer_cast<DoubleArrayType>(da);
-    transformDataArray<double>(transformVector, dimensions, array);
+    transformDataArray<double>(transformVector, dimensions, x_trans, y_trans, array);
   }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Blend::warpDataContainers(const std::vector<double>& transformVector)
+void Blend::warpDataContainers(const std::vector<double>& transformVector, double x_trans, double y_trans)
 {
   // Duplicate the DataContainers used and Warp them based on the transformVector generated.
   AbstractMontage::Pointer montage = getDataContainerArray()->getMontage(m_MontageName);
@@ -569,13 +582,13 @@ void Blend::warpDataContainers(const std::vector<double>& transformVector)
     ImageGeom::Pointer imageGeom = dc->getGeometryAs<ImageGeom>();
     SizeVec3Type dimensions = imageGeom->getDimensions();
 
-    DataContainer::Pointer dCopy = dc->deepCopy();
-    AttributeMatrix::Pointer am = dCopy->getAttributeMatrix(m_AttributeMatrixName);
+    //DataContainer::Pointer dCopy = dc->deepCopy();
+    AttributeMatrix::Pointer am = dc->getAttributeMatrix(m_AttributeMatrixName);
     //for(const auto& am : *dCopy)
     {
       for(const auto& da : *am)
       {
-        transformIDataArray(transformVector, dimensions, da);
+        transformIDataArray(transformVector, dimensions, x_trans, y_trans, da);
       }
     }
   }

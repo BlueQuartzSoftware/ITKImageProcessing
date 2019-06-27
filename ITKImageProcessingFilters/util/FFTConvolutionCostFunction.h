@@ -227,6 +227,9 @@ public:
    */
   ImageGrid getImageGrid() const;
 
+  double getImageDimX() const;
+  double getImageDimY() const;
+
 private:
   int m_Degree = 2;
   std::vector<std::pair<size_t, size_t>> m_IJ;

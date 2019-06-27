@@ -515,3 +515,19 @@ FFTConvolutionCostFunction::ImageGrid FFTConvolutionCostFunction::getImageGrid()
 {
   return m_ImageGrid;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+double FFTConvolutionCostFunction::getImageDimX() const
+{
+  return m_ImageDim_x;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+double FFTConvolutionCostFunction::getImageDimY() const
+{
+  return m_ImageDim_y;
+}

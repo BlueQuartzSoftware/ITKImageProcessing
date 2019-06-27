@@ -85,7 +85,7 @@ public:
   Q_PROPERTY(QString IPFColorsArrayName READ getIPFColorsArrayName WRITE setIPFColorsArrayName)
 
   SIMPL_FILTER_PARAMETER(QString, BlendDCName)
-  Q_PROPERTY(QString TransformMatrixName READ getTransformMatrixName WRITE setTransformMatrixName)
+  Q_PROPERTY(QString BlendDCName READ getBlendDCName WRITE setBlendDCName)
 
   SIMPL_FILTER_PARAMETER(QString, TransformMatrixName)
   Q_PROPERTY(QString TransformMatrixName READ getTransformMatrixName WRITE setTransformMatrixName)
@@ -219,7 +219,7 @@ protected:
    * @brief Creates new DataContainers and warps the data by the FFT Convolution kernel generated.
    * @param transformVector
    */
-  void warpDataContainers(const std::vector<double>& transformVector);
+  void warpDataContainers(const std::vector<double>& transformVector, double x_trans, double y_trans);
 
 private:
   std::vector<double> m_InitialGuess;
