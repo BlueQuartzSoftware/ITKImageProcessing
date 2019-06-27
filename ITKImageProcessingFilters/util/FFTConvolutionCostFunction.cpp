@@ -155,6 +155,7 @@ MultiParamCostFunction::MeasureType MultiParamCostFunction::GetValue(const Param
 void FFTConvolutionCostFunction::Initialize(const GridMontageShPtr& montage, int degree, float overlapPercentage,
                                             const DataContainerArrayShPtr& dca, const QString& amName, const QString& daName)
 {
+  m_Montage = montage;
   m_Degree = degree;
 
   // Populate the m_IJ based on the degree selected
@@ -167,6 +168,8 @@ void FFTConvolutionCostFunction::Initialize(const GridMontageShPtr& montage, int
   }
 
   m_ImageGrid.clear();
+
+  calculateImageDim(montage);
 
   const size_t numRows = montage->getRowCount();
   const size_t numCols = montage->getColumnCount();
@@ -183,20 +186,97 @@ void FFTConvolutionCostFunction::Initialize(const GridMontageShPtr& montage, int
   }
   taskAlg.wait();
 
-  size_t x = numCols > 0 ? 1 : 0;
-  size_t y = numRows > 0 ? 1 : 0;
-  GridKey key = std::make_pair(x, y);
-  InputImage::RegionType bufferedRegion = m_ImageGrid[key]->GetBufferedRegion();
-  const InputImage::SizeType dims = bufferedRegion.GetSize();
-  m_ImageDim_x = dims[0];
-  m_ImageDim_y = dims[1];
-
   // Populate m_overlaps
   m_Overlaps.clear();
   for(const auto& image : m_ImageGrid)
   {
     std::function<void(void)> fn = std::bind(&FFTConvolutionCostFunction::InitializeOverlaps, this, image, overlapPercentage);
     taskAlg.execute(fn);
+  }
+  taskAlg.wait();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FFTConvolutionCostFunction::calculateImageDim(const GridMontageShPtr& montage)
+{
+  size_t x = montage->getColumnCount() > 1 ? 1 : 0;
+  size_t y = montage->getRowCount() > 1 ? 1 : 0;
+  {
+    GridTileIndex xIndex = montage->getTileIndex(0, x);
+    DataContainer::Pointer dc = montage->getDataContainer(xIndex);
+    ImageGeom::Pointer geom = dc->getGeometryAs<ImageGeom>();
+    m_ImageDim_x = geom->getDimensions()[0];
+  }
+  {
+    GridTileIndex yIndex = montage->getTileIndex(y, 0);
+    DataContainer::Pointer dc = montage->getDataContainer(yIndex);
+    ImageGeom::Pointer geom = dc->getGeometryAs<ImageGeom>();
+    m_ImageDim_y = geom->getDimensions()[1];
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FFTConvolutionCostFunction::calculateNew2OldPixel(size_t row, size_t col, const ParametersType& parameters, double x_trans, double y_trans) const
+{
+  static MutexType mutex;
+  using PixelTyped = std::pair<double, double>;
+  using PixelTypei = std::pair<int64_t, int64_t>;
+
+  PixelTyped newPixel { row - y_trans, col - x_trans };
+
+  const std::array<double, 2> newPrime = { std::get<0>(newPixel), std::get<1>(newPixel) };
+  const double newXPrimeSqr = newPrime[0] * newPrime[0];
+  const double newYPrimeSqr = newPrime[1] * newPrime[1];
+
+  std::array<double, 2> oldPrime;
+  oldPrime[0] = parameters[0] * newPrime[0] + parameters[1] * newPrime[1] + parameters[2] * newXPrimeSqr + parameters[3] * newYPrimeSqr + parameters[4] * newPrime[0] * newPrime[1] +
+    parameters[5] * newXPrimeSqr * newPrime[1] + parameters[6] * newPrime[0] * newYPrimeSqr;
+  oldPrime[1] = parameters[7] * newPrime[0] + parameters[8] * newPrime[1] + parameters[9] * newXPrimeSqr + parameters[10] * newYPrimeSqr + parameters[11] * newPrime[0] * newPrime[1] +
+    parameters[12] * newXPrimeSqr * newPrime[1] + parameters[13] * newPrime[0] * newYPrimeSqr;
+
+  const int64_t oldXUnbound = static_cast<int64_t>(round(oldPrime[0] + x_trans));
+  const int64_t oldYUnbound = static_cast<int64_t>(round(oldPrime[1] + y_trans));
+  PixelTypei oldPixel{ oldXUnbound, oldYUnbound };
+
+  PixelTypei newPixeli{ static_cast<int64_t>(std::round(std::get<0>(newPixel))), static_cast<int64_t>(std::round(std::get<1>(newPixel))) };
+  ScopedLockType lock(mutex);
+  m_New2OldMap[newPixeli] = oldPixel;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FFTConvolutionCostFunction::calculateNew2OldMap(const ParametersType& parameters) const
+{
+  m_New2OldMap.clear();
+
+  int64_t startX = 0;
+  int64_t startY = 0;
+
+  GridTileIndex topLeftIndex = m_Montage->getTileIndex(0, 0);
+  ImageGeom::Pointer geom = m_Montage->getDataContainer(topLeftIndex)->getGeometryAs<ImageGeom>();
+  SizeVec3Type dims = geom->getDimensions();
+  startX = -std::max(startX, static_cast<int64_t>(dims[0]) - static_cast<int64_t>(m_ImageDim_x));
+  startY = -std::max(startY, static_cast<int64_t>(dims[1]) - static_cast<int64_t>(m_ImageDim_y));
+
+  const double x_trans = (m_ImageDim_x - 1) / 2.0;
+  const double y_trans = (m_ImageDim_y - 1) / 2.0;
+
+  ParallelTaskAlgorithm taskAlg;
+  std::function<void(void)> fn;
+
+  for(int64_t row = startY; row < m_ImageDim_y; row++)
+  {
+    for(int64_t col = startX; col < m_ImageDim_x; col++)
+    {
+      //calculateNew2OldPixel(row, col, parameters, x_trans, y_trans);
+      fn = std::bind(&FFTConvolutionCostFunction::calculateNew2OldPixel, this, row, col, parameters, x_trans, y_trans);
+      taskAlg.execute(fn);
+    }
   }
   taskAlg.wait();
 }
@@ -216,14 +296,27 @@ void FFTConvolutionCostFunction::InitializeDataContainer(const GridMontageShPtr&
   SizeVec3Type dims = dc->getGeometryAs<ImageGeom>()->getDimensions();
   size_t width = dims.getX();
   size_t height = dims.getY();
+  size_t xOrigin = 0;
+  size_t yOrigin = 0;
+
+  if(row == 0)
+  {
+    height = std::min(height, static_cast<size_t>(std::round(m_ImageDim_y)));
+    yOrigin = dims.getY() - height;
+  }
+  if(column == 0)
+  {
+    width = std::min(width, static_cast<size_t>(std::round(m_ImageDim_x)));
+    xOrigin = dims.getX() - width;
+  }
 
   InputImage::SizeType imageSize;
   imageSize[0] = width;
   imageSize[1] = height;
 
   PixelCoord imageOrigin;
-  imageOrigin[0] = 0;
-  imageOrigin[1] = 0;
+  imageOrigin[0] = xOrigin;
+  imageOrigin[1] = yOrigin;
 
   InputImage::Pointer itkImage = InputImage::New();
   itkImage->SetRegions(InputImage::RegionType(imageOrigin, imageSize));
@@ -233,7 +326,7 @@ void FFTConvolutionCostFunction::InitializeDataContainer(const GridMontageShPtr&
   // https://ieeexplore.ieee.org/document/723451
   // NOTE Could this be parallelized?
   ParallelData2DAlgorithm dataAlg;
-  dataAlg.setRange(0, 0, height, width);
+  dataAlg.setRange(yOrigin, xOrigin, height, width);
   dataAlg.execute(FFTImageInitializer(itkImage, width, da));
 
   GridKey imageKey = std::make_pair(row, column);
@@ -325,6 +418,8 @@ FFTConvolutionCostFunction::MeasureType FFTConvolutionCostFunction::GetValue(con
   ParallelTaskAlgorithm taskAlg;
   std::function<void(void)> fn;
 
+  calculateNew2OldMap(parameters);
+
   // Apply the Transform to each image in the image grid
   for(const auto& eachImage : m_ImageGrid) // Parallelize this
   {
@@ -354,7 +449,7 @@ void FFTConvolutionCostFunction::applyTransformation(const ParametersType& param
   ParallelTaskAlgorithm taskAlg;
   std::function<void(void)> fn;
 
-  const double tolerance = 0.1;
+  const double tolerance = 0.05;
 
   InputImage::RegionType bufferedRegion = inputImage.second->GetBufferedRegion();
 
@@ -422,30 +517,42 @@ void FFTConvolutionCostFunction::calculatePixelCoordinates(const ParametersType&
 {
   static MutexType mutex;
 
+  using PixelTypei = std::pair<int64_t, int64_t>;
+
   // eachIJ is a pair, the first index is the applied exponent to u
   // the second index is the applied exponent to v
   //std::pair<int, int> eachIJ = m_IJ[idx - (idx >= m_IJ.size() ? m_IJ.size() : 0)];
 
-  const std::array<double, 2> newPrime = { newPixel[0] - x_trans, newPixel[1] - y_trans };
-  const double newXPrimeSqr = newPrime[0] * newPrime[0];
-  const double newYPrimeSqr = newPrime[1] * newPrime[1];
+  //const std::array<double, 2> newPrime = { newPixel[0] - x_trans, newPixel[1] - y_trans };
+  //const double newXPrimeSqr = newPrime[0] * newPrime[0];
+  //const double newYPrimeSqr = newPrime[1] * newPrime[1];
 
-  std::array<double, 2> oldPrime;
-  oldPrime[0] = parameters[0] * newPrime[0] + parameters[1] * newPrime[1] + parameters[2] * newXPrimeSqr + parameters[3] * newYPrimeSqr + parameters[4] * newPrime[0] * newPrime[1] +
-                parameters[5] * newXPrimeSqr * newPrime[1] + parameters[6] * newPrime[0] * newYPrimeSqr;
-  oldPrime[1] = parameters[7] * newPrime[0] + parameters[8] * newPrime[1] + parameters[9] * newXPrimeSqr + parameters[10] * newYPrimeSqr + parameters[11] * newPrime[0] * newPrime[1] +
-                parameters[12] * newXPrimeSqr * newPrime[1] + parameters[13] * newPrime[0] * newYPrimeSqr;
+  //std::array<double, 2> oldPrime;
+  //oldPrime[0] = parameters[0] * newPrime[0] + parameters[1] * newPrime[1] + parameters[2] * newXPrimeSqr + parameters[3] * newYPrimeSqr + parameters[4] * newPrime[0] * newPrime[1] +
+  //              parameters[5] * newXPrimeSqr * newPrime[1] + parameters[6] * newPrime[0] * newYPrimeSqr;
+  //oldPrime[1] = parameters[7] * newPrime[0] + parameters[8] * newPrime[1] + parameters[9] * newXPrimeSqr + parameters[10] * newYPrimeSqr + parameters[11] * newPrime[0] * newPrime[1] +
+  //              parameters[12] * newXPrimeSqr * newPrime[1] + parameters[13] * newPrime[0] * newYPrimeSqr;
 
-  auto inputSize = inputImage->GetBufferedRegion().GetSize();
-  const int64_t width = inputSize[0];
-  const int64_t height = inputSize[1];
+  //auto inputSize = inputImage->GetBufferedRegion().GetSize();
+  //const int64_t width = inputSize[0];
+  //const int64_t height = inputSize[1];
+  auto inputIndex = inputImage->GetBufferedRegion().GetIndex();
+  const int64_t minX = inputIndex[0];
+  const int64_t minY = inputIndex[1];
 
-  const int64_t oldXUnbound = static_cast<int64_t>(round(oldPrime[0] + x_trans));
-  const int64_t oldYUnbound = static_cast<int64_t>(round(oldPrime[1] + y_trans));
+  PixelTypei newPixeli{ newPixel[0] - minX, newPixel[1] - minY };
+  PixelTypei oldPixeli = m_New2OldMap[newPixeli];
 
   PixelCoord oldPixel;
-  oldPixel[0] = std::min(std::max<int64_t>(oldXUnbound, 0), width - 1);
-  oldPixel[1] = std::min(std::max<int64_t>(oldYUnbound, 0), height - 1);
+  oldPixel[0] = std::get<0>(oldPixeli);
+  oldPixel[1] = std::get<1>(oldPixeli);
+
+  //const int64_t oldXUnbound = static_cast<int64_t>(round(oldPrime[0] + x_trans));
+  //const int64_t oldYUnbound = static_cast<int64_t>(round(oldPrime[1] + y_trans));
+
+  //PixelCoord oldPixel;
+  //oldPixel[0] = std::min(std::max<int64_t>(oldXUnbound, 0), width - 1);
+  //oldPixel[1] = std::min(std::max<int64_t>(oldYUnbound, 0), height - 1);
 
 #if 0
   // The subtraction step here translates the coordinates so the center of the image
@@ -458,13 +565,14 @@ void FFTConvolutionCostFunction::calculatePixelCoordinates(const ParametersType&
   idx < m_IJ.size() - 1 ? x_ref += term : y_ref += term;
 #endif
 
-  if(oldPixel[0] >= -tolerance && oldPixel[0] <= lastXIndex && oldPixel[1] >= -tolerance && oldPixel[1] <= lastYIndex)
+  if(oldPixel[0] >= minX -tolerance && oldPixel[0] <= lastXIndex && oldPixel[1] >= minY -tolerance && oldPixel[1] <= lastYIndex)
   {
     // The value obtained with eachImage.second->GetPixel(eachPixel) could have
     // its "contrast" adjusted based on its radial location from the center of
     // the image at this step to compensate for error encountered from radial effects
     ScopedLockType lock(mutex);
-    distortedImage->SetPixel(newPixel, inputImage->GetPixel(oldPixel));
+    auto oldPixelValue = inputImage->GetPixel(oldPixel);
+    distortedImage->SetPixel(newPixel, oldPixelValue);
   }
 }
 

@@ -231,10 +231,16 @@ public:
   double getImageDimY() const;
 
 private:
+  void calculateImageDim(const GridMontageShPtr& montage);
+  void calculateNew2OldMap(const ParametersType& parameters) const;
+  void calculateNew2OldPixel(size_t row, size_t col, const ParametersType& parameters, double x_trans, double y_trans) const;
+
+  GridMontageShPtr m_Montage = nullptr;
   int m_Degree = 2;
   std::vector<std::pair<size_t, size_t>> m_IJ;
   OverlapPairs m_Overlaps;
   ImageGrid m_ImageGrid;
   double m_ImageDim_x;
   double m_ImageDim_y;
+  mutable std::map<std::pair<int64_t, int64_t>, std::pair<int64_t, int64_t>> m_New2OldMap;
 };
