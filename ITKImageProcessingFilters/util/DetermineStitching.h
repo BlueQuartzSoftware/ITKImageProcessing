@@ -80,8 +80,8 @@ public:
     // The assumption is that we are working on a 2D image where the XY dims are in the 0 and 1 index of the udims variable
     size_t totalPoints = udims[0] * udims[1];
 
-    QVector<size_t> cDims(1, 2); // a dimension for the xvalues and one for the y values
-    QVector<size_t> tDims(1);
+    std::vector<size_t> cDims(1, 2); // a dimension for the xvalues and one for the y values
+    std::vector<size_t> tDims(1);
 
     int numTiles = xTileCount * yTileCount;
     tDims[0] = numTiles;
@@ -92,7 +92,7 @@ public:
     int32_t numXtiles = xTileCount;
 
     // Make sure the combIndexList is large enough to store every value
-    QVector<size_t> combIndexList(numTiles);
+    std::vector<size_t> combIndexList(numTiles);
 
     combIndexList = ReturnProperIndex(importMode, xTileCount, yTileCount);
 
@@ -322,14 +322,14 @@ public:
    * @param numYtiles
    * @return
    */
-  static QVector<size_t> ReturnIndexForCombOrder(QVector<qint32> xTileList, QVector<qint32> yTileList, size_t numXtiles, size_t numYtiles);
+  static std::vector<size_t> ReturnIndexForCombOrder(QVector<qint32> xTileList, QVector<qint32> yTileList, size_t numXtiles, size_t numYtiles);
 
   /**
    * @brief ReturnProperIndex
    * @param InputMode
    * @param Numtiles
    */
-  static QVector<size_t> ReturnProperIndex(int InputMode, int xDims, int yDims);
+  static std::vector<size_t> ReturnProperIndex(int InputMode, int xDims, int yDims);
 
   /**
    * @brief CropAndCrossCorrelate

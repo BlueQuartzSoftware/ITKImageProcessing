@@ -201,6 +201,7 @@ void ITKImageReader::execute()
   {
     return;
   }
+  notifyProgressMessage(100, QString("Importing %1").arg(getFileName()));
   DataArrayPath dap(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), getImageDataArrayName());
   readImage(dap, false);
 }

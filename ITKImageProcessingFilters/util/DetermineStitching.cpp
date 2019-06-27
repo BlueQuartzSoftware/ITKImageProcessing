@@ -64,10 +64,10 @@ T FindMaxValue(QVector<T> inputVector)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<size_t> DetermineStitching::ReturnIndexForCombOrder(QVector<qint32> xTileList, QVector<qint32> yTileList, size_t numXtiles, size_t numYtiles)
+std::vector<size_t> DetermineStitching::ReturnIndexForCombOrder(QVector<qint32> xTileList, QVector<qint32> yTileList, size_t numXtiles, size_t numYtiles)
 {
 
-  QVector<size_t> newIndices(xTileList.size(), 0);
+  std::vector<size_t> newIndices(xTileList.size(), 0);
   size_t count;
 
   for (size_t iter = 0; iter < xTileList.size(); iter++)
@@ -96,10 +96,10 @@ QVector<size_t> DetermineStitching::ReturnIndexForCombOrder(QVector<qint32> xTil
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<size_t> DetermineStitching::ReturnProperIndex(int InputMode, int xDims, int yDims)
+std::vector<size_t> DetermineStitching::ReturnProperIndex(int InputMode, int xDims, int yDims)
 {
   int numTiles = xDims * yDims;
-  QVector<size_t> newIndices(numTiles);
+  std::vector<size_t> newIndices(numTiles);
   // Current information about the combo box on the UI:
   // Index 0: Top Down Comb
   // Index 1: Top Down Snake

@@ -280,7 +280,7 @@ protected:
   std::shared_ptr<GeometryType> checkInputArrays()
   {
     DataContainerArray::Pointer dca = getDataContainerArray();
-    QVector<size_t> cDims = { 1 };
+    std::vector<size_t> cDims = {1};
     typename GeometryType::Pointer outputGridGeom = GeometryType::NullPointer();
 
     QStringList dcNames = m_MontageSelection.getDataContainerNamesCombOrder();

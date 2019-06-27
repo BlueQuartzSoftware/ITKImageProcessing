@@ -296,7 +296,7 @@ void ITKStitchMontage::dataCheck()
     return;
   }
 
-  QVector<size_t> imageDataTupleDims = imageDataAM->getTupleDimensions();
+  std::vector<size_t> imageDataTupleDims = imageDataAM->getTupleDimensions();
   if(imageDataTupleDims.size() < 2)
   {
     QString ss = QObject::tr("Image Data Array at path '%1' must have at least 2 tuple dimensions.").arg(testPath.serialize("/"));
@@ -375,7 +375,7 @@ void ITKStitchMontage::dataCheck()
            .arg(1);
   setWarningCondition(-3001, ss);
 
-  QVector<size_t> tDims = {montageArrayXSize, montageArrayYSize, 1};
+  std::vector<size_t> tDims = {montageArrayXSize, montageArrayYSize, 1};
 
   AttributeMatrix::Pointer am = dc->createNonPrereqAttributeMatrix(this, dap.getAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell);
   if(getErrorCode() < 0)
@@ -398,7 +398,7 @@ void ITKStitchMontage::dataCheck()
     return;
   }
 
-  IDataArray::Pointer da = imagePtr->createNewArray(montageArrayXSize * montageArrayYSize, QVector<size_t>(1, 1), getMontageDataArrayName(), !getInPreflight());
+  IDataArray::Pointer da = imagePtr->createNewArray(montageArrayXSize * montageArrayYSize, std::vector<size_t>(1, 1), getMontageDataArrayName(), !getInPreflight());
   am->addOrReplaceAttributeArray(da);
 
   ss = QObject::tr("The number of elements of montage data array '%1' is projected to be %2.  This is assuming "
@@ -478,7 +478,7 @@ void ITKStitchMontage::createFijiDataStructure()
     stageTile.resize(m_xMontageSize);
   }
 
-  QVector<size_t> cDims;
+  std::vector<size_t> cDims;
   while(dcNameIter.hasNext())
   {
     QString dcName = dcNameIter.next();

@@ -63,7 +63,7 @@ ITKVectorRescaleIntensityImageTest() = default;
     typedef itk::InPlaceImageToDream3DDataFilter<InputPixelType, ImageDimension> toDream3DType;
     DataContainer::Pointer container = containerArray->createNonPrereqDataContainer<AbstractFilter>(0, input_path.getDataContainerName());
     DREAM3D_REQUIRED(container.get(), !=, 0);
-    QVector<size_t> dims = ITKDream3DHelper::GetComponentsDimensions<OutputPixelType>();
+    std::vector<size_t> dims = ITKDream3DHelper::GetComponentsDimensions<OutputPixelType>();
     DataContainer::Pointer dc = containerArray->getDataContainer(input_path.getDataContainerName());
     toDream3DType::Pointer toDream3D = toDream3DType::New();
     toDream3D->SetInput(inputImage);

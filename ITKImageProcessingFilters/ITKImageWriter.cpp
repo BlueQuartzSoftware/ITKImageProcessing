@@ -382,11 +382,11 @@ void ITKImageWriter::execute()
 
   IDataArray::Pointer currentData = attributeMatrix->getAttributeArray(path.getDataArrayName());
   size_t nComp = currentData->getNumberOfComponents();
-  QVector<size_t> cDims = {static_cast<size_t>(currentData->getNumberOfComponents())};
+  std::vector<size_t> cDims = {static_cast<size_t>(currentData->getNumberOfComponents())};
 
   if(ITKImageWriter::XYPlane == m_Plane) // XY plane
   {
-    QVector<size_t> tDims = {dims[0], dims[1], 1};
+    std::vector<size_t> tDims = {dims[0], dims[1], 1};
     ITKIW_PREP_DC(dims[0], dims[1])
 
     for(size_t slice = 0; slice < dims[2]; ++slice)
@@ -404,7 +404,7 @@ void ITKImageWriter::execute()
   }
   else if(ITKImageWriter::XZPlane == m_Plane) // XZ plane
   {
-    QVector<size_t> tDims = {dims[0], dims[2], 1};
+    std::vector<size_t> tDims = {dims[0], dims[2], 1};
     ITKIW_PREP_DC(dims[2], dims[0])
 
     for(size_t slice = 0; slice < dims[1]; ++slice)
@@ -422,7 +422,7 @@ void ITKImageWriter::execute()
   }
   else if(ITKImageWriter::YZPlane == m_Plane) // YZ plane
   {
-    QVector<size_t> tDims = {dims[1], dims[2], 1};
+    std::vector<size_t> tDims = {dims[1], dims[2], 1};
     ITKIW_PREP_DC(dims[2], dims[1])
 
     for(size_t slice = 0; slice < dims[0]; ++slice) // X

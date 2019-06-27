@@ -482,7 +482,7 @@ void ITKImportFijiMontage::generateDataStructure()
 
     using StdVecSizeType = std::vector<size_t>;
     // Create the Cell Attribute Matrix into which the image data would be read
-    AttributeMatrix::Pointer cellAttrMat = AttributeMatrix::Create(bound.Dims.toContainer<StdVecSizeType>(), getCellAttributeMatrixName(), AttributeMatrix::Type::Cell);
+    AttributeMatrix::Pointer cellAttrMat = AttributeMatrix::New(bound.Dims.toContainer<StdVecSizeType>(), getCellAttributeMatrixName(), AttributeMatrix::Type::Cell);
     dc->addOrReplaceAttributeMatrix(cellAttrMat);
     cellAttrMat->addOrReplaceAttributeArray(bound.ImageDataProxy);
   }

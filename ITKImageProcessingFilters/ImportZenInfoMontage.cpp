@@ -598,7 +598,7 @@ void ImportZenInfoMontage::generateDataStructure()
 
     std::vector<size_t> tDims = {dims[0], dims[1], dims[2]};
     // Create the Cell Attribute Matrix into which the image data would be read
-    AttributeMatrix::Pointer cellAttrMat = AttributeMatrix::Create(tDims, getCellAttributeMatrixName(), AttributeMatrix::Type::Cell);
+    AttributeMatrix::Pointer cellAttrMat = AttributeMatrix::New(tDims, getCellAttributeMatrixName(), AttributeMatrix::Type::Cell);
     dc->addOrReplaceAttributeMatrix(cellAttrMat);
     cellAttrMat->addOrReplaceAttributeArray(bound.ImageDataProxy);
   }

@@ -150,8 +150,8 @@ void ImportImageMontage::dataCheck()
     m_InStream.close();
   }
 
-  QVector<size_t> tDims(1, m_NumImages);
-  QVector<size_t> cDims(1, 1);
+  std::vector<size_t> tDims(1, m_NumImages);
+  std::vector<size_t> cDims(1, 1);
   getDataContainerArray()
       ->getDataContainer(getDataContainerName())
       ->createNonPrereqAttributeMatrix(this, getMetaDataAttributeMatrixName(), tDims, AttributeMatrix::Type::MetaData, AttributeMatrixID21);
@@ -203,9 +203,9 @@ void ImportImageMontage::dataCheck()
         availableFileCount++;
       }
     }
-    mdAttrMat->setTupleDimensions(QVector<size_t>(1, availableFileCount));
+    mdAttrMat->setTupleDimensions(std::vector<size_t>(1, availableFileCount));
 
-    QVector<size_t> cDims(1, 1);
+    std::vector<size_t> cDims(1, 1);
 
     for(QVector<QString>::iterator filepath = fileList.begin(); filepath != fileList.end(); ++filepath)
     {

@@ -535,7 +535,7 @@ void ImportAxioVisionV4Montage::generateCache(QDomElement& root)
     if(getImportAllMetaData())
     {
       std::vector<size_t> dims = {1};
-      AttributeMatrix::Pointer metaAm = AttributeMatrix::Create(dims, getMetaDataAttributeMatrixName(), AttributeMatrix::Type::Generic);
+      AttributeMatrix::Pointer metaAm = AttributeMatrix::New(dims, getMetaDataAttributeMatrixName(), AttributeMatrix::Type::Generic);
       ZeissTagsXmlSection::MetaDataType tagMap = photoTagsSection->getMetaDataMap();
       for(const auto& value : tagMap)
       {
@@ -675,7 +675,7 @@ void ImportAxioVisionV4Montage::generateDataStructure()
 
     using StdVecSizeType = std::vector<size_t>;
     // Create the Cell Attribute Matrix into which the image data would be read
-    AttributeMatrix::Pointer cellAttrMat = AttributeMatrix::Create(bound.Dims.toContainer<StdVecSizeType>(), getCellAttributeMatrixName(), AttributeMatrix::Type::Cell);
+    AttributeMatrix::Pointer cellAttrMat = AttributeMatrix::New(bound.Dims.toContainer<StdVecSizeType>(), getCellAttributeMatrixName(), AttributeMatrix::Type::Cell);
     dc->addOrReplaceAttributeMatrix(cellAttrMat);
     cellAttrMat->addOrReplaceAttributeArray(bound.ImageDataProxy);
     if(getImportAllMetaData())

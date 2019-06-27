@@ -403,7 +403,7 @@ void IlluminationCorrection::initialize()
 IlluminationCorrection::ArrayType IlluminationCorrection::getArrayType()
 {
   DataContainerArray::Pointer dca = getDataContainerArray();
-  const QVector<size_t> cDims = {1};
+  const std::vector<size_t> cDims = {1};
 
   const QStringList dcNames = getMontageSelection().getDataContainerNamesCombOrder();
   for(const auto& dcName : dcNames)
@@ -520,7 +520,7 @@ void IlluminationCorrection::dataCheck()
   }
 
   DataContainerArray::Pointer dca = getDataContainerArray();
-  QVector<size_t> cDims = {1};
+  std::vector<size_t> cDims = {1};
 
   // CheckInputArrays() templated on array and geometry types.
   ArrayType arrayType = getArrayType();
@@ -622,7 +622,7 @@ void IlluminationCorrection::dataCheck()
 
   outputDc->setGeometry(outputGridGeom);
 
-  QVector<size_t> tDims = outputGridGeom->getDimensions().toContainer<QVector<size_t>>();
+  std::vector<size_t> tDims = outputGridGeom->getDimensions().toContainer<std::vector<size_t>>();
   AttributeMatrix::Pointer outputAttrMat = outputDc->createNonPrereqAttributeMatrix(this, getBackgroundCellAttributeMatrixPath(), tDims, AttributeMatrix::Type::Cell, AttributeMatrixID20);
 
   if(m_BackgroundCellAttributeMatrixPath.getAttributeMatrixName() != m_BackgroundImageArrayPath.getAttributeMatrixName())

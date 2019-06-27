@@ -113,7 +113,7 @@ void ITKRefineTileCoordinates::initialize()
 ITKRefineTileCoordinates::ArrayType ITKRefineTileCoordinates::getArrayType()
 {
   DataContainerArray::Pointer dca = getDataContainerArray();
-  const QVector<size_t> cDims = {1};
+  const std::vector<size_t> cDims = {1};
 
   for(const auto& dcName : m_DataContainers)
   {
@@ -220,7 +220,7 @@ void ITKRefineTileCoordinates::dataCheck()
   }
 
   DataContainerArray::Pointer dca = getDataContainerArray();
-  QVector<size_t> cDims = {1};
+  std::vector<size_t> cDims = {1};
 
   // CheckInputArrays() templated on array and geometry types.
   ArrayType arrayType = getArrayType();
@@ -316,7 +316,7 @@ void executeRefinement(ITKRefineTileCoordinates* filter)
   }
 
   DataContainer::Pointer dc = DataContainer::New("Tile Origins");
-  QVector<size_t> tDims = {coordsPtr->getNumberOfTuples()};
+  std::vector<size_t> tDims = {coordsPtr->getNumberOfTuples()};
   AttributeMatrix::Pointer resultCoords = AttributeMatrix::New(tDims, "Coordinates", AttributeMatrix::Type::Generic);
   dc->addOrReplaceAttributeMatrix(resultCoords);
   resultCoords->addOrReplaceAttributeArray(coordsPtr);

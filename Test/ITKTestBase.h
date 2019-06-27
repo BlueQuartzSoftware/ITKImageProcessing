@@ -138,7 +138,7 @@ public:
   }
 
   template <typename PixelType, unsigned int Dimensions>
-  int CompareImages(QVector<size_t> cDims, DataContainer::Pointer input_container, const DataArrayPath& input_path, DataContainer::Pointer baseline_container, const DataArrayPath& baseline_path,
+  int CompareImages(std::vector<size_t> cDims, DataContainer::Pointer input_container, const DataArrayPath& input_path, DataContainer::Pointer baseline_container, const DataArrayPath& baseline_path,
                     double tolerance)
   {
     // Vector images
@@ -186,7 +186,7 @@ public:
   }
 
   template <typename PixelType>
-  int CompareImages(size_t dimension, QVector<size_t> cDims, DataContainer::Pointer input_container, const DataArrayPath& input_path, DataContainer::Pointer baseline_container,
+  int CompareImages(size_t dimension, std::vector<size_t> cDims, DataContainer::Pointer input_container, const DataArrayPath& input_path, DataContainer::Pointer baseline_container,
                     const DataArrayPath& baseline_path, double tolerance)
   {
     if(dimension == 1)
@@ -201,7 +201,7 @@ public:
     }
   }
 
-  int GetDataArray(DataContainerArray::Pointer& containerArray, const DataArrayPath& path, DataContainer::Pointer& container, QVector<size_t>& tDims, QString& type, QVector<size_t>& cDims)
+  int GetDataArray(DataContainerArray::Pointer& containerArray, const DataArrayPath& path, DataContainer::Pointer& container, std::vector<size_t>& tDims, QString& type, std::vector<size_t>& cDims)
   {
     container = containerArray->getDataContainer(path.getDataContainerName());
     AttributeMatrix::Pointer matrix = containerArray->getAttributeMatrix(path);
@@ -225,15 +225,15 @@ public:
   {
     DataContainer::Pointer input_container;
     const int dimSize = 3;
-    QVector<size_t> input_tDims(dimSize, 0);
+    std::vector<size_t> input_tDims(dimSize, 0);
     QString input_type;
-    QVector<size_t> input_cDims;
+    std::vector<size_t> input_cDims;
     int res_i = GetDataArray(containerArray, input_path, input_container, input_tDims, input_type, input_cDims);
     DREAM3D_REQUIRE_EQUAL(res_i, 0);
     DataContainer::Pointer baseline_container;
-    QVector<size_t> baseline_tDims(dimSize, 0);
+    std::vector<size_t> baseline_tDims(dimSize, 0);
     QString baseline_type;
-    QVector<size_t> baseline_cDims;
+    std::vector<size_t> baseline_cDims;
     int res_b = GetDataArray(containerArray, baseline_path, baseline_container, baseline_tDims, baseline_type, baseline_cDims);
     DREAM3D_REQUIRE_EQUAL(res_b, 0);
     DREAM3D_REQUIRE_EQUAL(input_type, baseline_type);
@@ -400,7 +400,8 @@ public:
     }
   }
 
-  template <typename PixelType, unsigned int Dimensions> int GetMD5FromDataContainer(QVector<size_t> cDims, DataContainer::Pointer container, const DataArrayPath& path, QString& md5)
+  template <typename PixelType, unsigned int Dimensions>
+  int GetMD5FromDataContainer(std::vector<size_t> cDims, DataContainer::Pointer container, const DataArrayPath& path, QString& md5)
   {
     // Vector images
     if(cDims.size() > 1)
@@ -446,7 +447,8 @@ public:
     return EXIT_FAILURE;
   }
 
-  template <typename PixelType> int GetMD5FromDataContainer(size_t dimension, QVector<size_t> cDims, DataContainer::Pointer container, const DataArrayPath& path, QString& md5)
+  template <typename PixelType>
+  int GetMD5FromDataContainer(size_t dimension, std::vector<size_t> cDims, DataContainer::Pointer container, const DataArrayPath& path, QString& md5)
   {
     if(dimension == 1)
     {
@@ -464,9 +466,9 @@ public:
   {
     DataContainer::Pointer container;
     const int dimSize = 3;
-    QVector<size_t> tDims(dimSize, 0);
+    std::vector<size_t> tDims(dimSize, 0);
     QString data_type;
-    QVector<size_t> cDims;
+    std::vector<size_t> cDims;
     int res_i = GetDataArray(containerArray, path, container, tDims, data_type, cDims);
     DREAM3D_REQUIRE_EQUAL(res_i, 0);
     DataContainer::Pointer baseline_container;

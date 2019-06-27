@@ -143,7 +143,7 @@ protected:
     typename DataArray<ValueType>::WeakPointer cellArrayPtr;
     ValueType* cellArray;
 
-    QVector<size_t> dims = ITKDream3DHelper::GetComponentsDimensions<PixelType>();
+    std::vector<size_t> dims = ITKDream3DHelper::GetComponentsDimensions<PixelType>();
     cellArrayPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<ValueType>, AbstractFilter>(
         this, array_path, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if(nullptr != cellArrayPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
