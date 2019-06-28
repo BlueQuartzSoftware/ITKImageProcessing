@@ -219,7 +219,7 @@ protected:
    * @brief Creates new DataContainers and warps the data by the FFT Convolution kernel generated.
    * @param transformVector
    */
-  void warpDataContainers(const std::vector<double>& transformVector, double x_trans, double y_trans);
+  void warpDataContainers(const std::vector<double>& transformVector, double imageDimX, double imageDimY);
 
 private:
   std::vector<double> m_InitialGuess;

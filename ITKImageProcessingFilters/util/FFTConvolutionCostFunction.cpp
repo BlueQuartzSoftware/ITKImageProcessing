@@ -220,11 +220,9 @@ void FFTConvolutionCostFunction::calculateImageDim(const GridMontageShPtr& monta
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FFTConvolutionCostFunction::calculateNew2OldPixel(size_t row, size_t col, const ParametersType& parameters, double x_trans, double y_trans) const
+FFTConvolutionCostFunction::PixelTypei FFTConvolutionCostFunction::calculateNew2OldPixel(size_t row, size_t col, const ParametersType& parameters, double x_trans, double y_trans) const
 {
-  static MutexType mutex;
   using PixelTyped = std::pair<double, double>;
-  using PixelTypei = std::pair<int64_t, int64_t>;
 
   PixelTyped newPixel { row - y_trans, col - x_trans };
 
@@ -241,12 +239,10 @@ void FFTConvolutionCostFunction::calculateNew2OldPixel(size_t row, size_t col, c
   const int64_t oldXUnbound = static_cast<int64_t>(round(oldPrime[0] + x_trans));
   const int64_t oldYUnbound = static_cast<int64_t>(round(oldPrime[1] + y_trans));
   PixelTypei oldPixel{ oldXUnbound, oldYUnbound };
-
-  PixelTypei newPixeli{ static_cast<int64_t>(std::round(std::get<0>(newPixel))), static_cast<int64_t>(std::round(std::get<1>(newPixel))) };
-  ScopedLockType lock(mutex);
-  m_New2OldMap[newPixeli] = oldPixel;
+  return oldPixel;
 }
 
+#if 0
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -280,6 +276,7 @@ void FFTConvolutionCostFunction::calculateNew2OldMap(const ParametersType& param
   }
   taskAlg.wait();
 }
+#endif
 
 // -----------------------------------------------------------------------------
 //
@@ -418,8 +415,6 @@ FFTConvolutionCostFunction::MeasureType FFTConvolutionCostFunction::GetValue(con
   ParallelTaskAlgorithm taskAlg;
   std::function<void(void)> fn;
 
-  calculateNew2OldMap(parameters);
-
   // Apply the Transform to each image in the image grid
   for(const auto& eachImage : m_ImageGrid) // Parallelize this
   {
@@ -517,42 +512,23 @@ void FFTConvolutionCostFunction::calculatePixelCoordinates(const ParametersType&
 {
   static MutexType mutex;
 
-  using PixelTypei = std::pair<int64_t, int64_t>;
-
-  // eachIJ is a pair, the first index is the applied exponent to u
-  // the second index is the applied exponent to v
-  //std::pair<int, int> eachIJ = m_IJ[idx - (idx >= m_IJ.size() ? m_IJ.size() : 0)];
-
-  //const std::array<double, 2> newPrime = { newPixel[0] - x_trans, newPixel[1] - y_trans };
-  //const double newXPrimeSqr = newPrime[0] * newPrime[0];
-  //const double newYPrimeSqr = newPrime[1] * newPrime[1];
-
-  //std::array<double, 2> oldPrime;
-  //oldPrime[0] = parameters[0] * newPrime[0] + parameters[1] * newPrime[1] + parameters[2] * newXPrimeSqr + parameters[3] * newYPrimeSqr + parameters[4] * newPrime[0] * newPrime[1] +
-  //              parameters[5] * newXPrimeSqr * newPrime[1] + parameters[6] * newPrime[0] * newYPrimeSqr;
-  //oldPrime[1] = parameters[7] * newPrime[0] + parameters[8] * newPrime[1] + parameters[9] * newXPrimeSqr + parameters[10] * newYPrimeSqr + parameters[11] * newPrime[0] * newPrime[1] +
-  //              parameters[12] * newXPrimeSqr * newPrime[1] + parameters[13] * newPrime[0] * newYPrimeSqr;
-
-  //auto inputSize = inputImage->GetBufferedRegion().GetSize();
-  //const int64_t width = inputSize[0];
-  //const int64_t height = inputSize[1];
+  auto inputSize = inputImage->GetBufferedRegion().GetSize();
+  const int64_t width = inputSize[0];
+  const int64_t height = inputSize[1];
   auto inputIndex = inputImage->GetBufferedRegion().GetIndex();
   const int64_t minX = inputIndex[0];
   const int64_t minY = inputIndex[1];
 
-  PixelTypei newPixeli{ newPixel[0] - minX, newPixel[1] - minY };
-  PixelTypei oldPixeli = m_New2OldMap[newPixeli];
+  //PixelTypei newPixeli{ newPixel[0], newPixel[1] };
+  PixelTypei oldPixeli = calculateNew2OldPixel(newPixel[0], newPixel[1], parameters, x_trans + minX, y_trans + minY);
 
   PixelCoord oldPixel;
-  oldPixel[0] = std::get<0>(oldPixeli);
-  oldPixel[1] = std::get<1>(oldPixeli);
-
-  //const int64_t oldXUnbound = static_cast<int64_t>(round(oldPrime[0] + x_trans));
-  //const int64_t oldYUnbound = static_cast<int64_t>(round(oldPrime[1] + y_trans));
+  oldPixel[0] = oldPixeli[0];
+  oldPixel[1] = oldPixeli[1];
 
   //PixelCoord oldPixel;
-  //oldPixel[0] = std::min(std::max<int64_t>(oldXUnbound, 0), width - 1);
-  //oldPixel[1] = std::min(std::max<int64_t>(oldYUnbound, 0), height - 1);
+  oldPixel[0] = std::min(std::max<int64_t>(oldPixel[0], 0), width - 1);
+  oldPixel[1] = std::min(std::max<int64_t>(oldPixel[1], 0), height - 1);
 
 #if 0
   // The subtraction step here translates the coordinates so the center of the image
@@ -565,7 +541,9 @@ void FFTConvolutionCostFunction::calculatePixelCoordinates(const ParametersType&
   idx < m_IJ.size() - 1 ? x_ref += term : y_ref += term;
 #endif
 
-  if(oldPixel[0] >= minX -tolerance && oldPixel[0] <= lastXIndex && oldPixel[1] >= minY -tolerance && oldPixel[1] <= lastYIndex)
+  if(oldPixel[0] >= minX -tolerance && oldPixel[1] >= minY -tolerance)
+  //if(oldPixel[0] >= -tolerance && oldPixel[0] <= lastXIndex && oldPixel[1] >= -tolerance && oldPixel[1] <= lastYIndex)
+  //if(oldPixel[0] >= minX -tolerance && oldPixel[0] <= lastXIndex && oldPixel[1] >= minY -tolerance && oldPixel[1] <= lastYIndex)
   {
     // The value obtained with eachImage.second->GetPixel(eachPixel) could have
     // its "contrast" adjusted based on its radial location from the center of
@@ -573,6 +551,10 @@ void FFTConvolutionCostFunction::calculatePixelCoordinates(const ParametersType&
     ScopedLockType lock(mutex);
     auto oldPixelValue = inputImage->GetPixel(oldPixel);
     distortedImage->SetPixel(newPixel, oldPixelValue);
+  }
+  else
+  {
+    distortedImage->SetPixel(newPixel, 0);
   }
 }
 
@@ -639,3 +621,36 @@ double FFTConvolutionCostFunction::getImageDimY() const
 {
   return m_ImageDim_y;
 }
+
+#if 0
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool operator<(const std::pair<int64_t, int64_t>& lhs, const std::pair<int64_t, int64_t>& rhs)
+{
+  // First value
+  if(lhs.first < rhs.first)
+  {
+    return true;
+  }
+  if(lhs.first > rhs.first)
+  {
+    return false;
+  }
+  // Second value
+  if(lhs.second < rhs.second)
+  {
+    return true;
+  }
+
+  return false;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool operator==(const std::pair<int64_t, int64_t>& lhs, const std::pair<int64_t, int64_t>& rhs)
+{
+  return (lhs.first == rhs.first) && (lhs.second == rhs.second);
+}
+#endif

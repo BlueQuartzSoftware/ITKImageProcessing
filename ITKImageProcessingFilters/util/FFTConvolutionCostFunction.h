@@ -50,6 +50,11 @@ using PixelValue_T = double;
 class GridMontage;
 using GridMontageShPtr = std::shared_ptr<GridMontage>;
 
+#if 0
+bool operator<(const std::pair<int64_t, int64_t>& lhs, const std::pair<int64_t, int64_t>& rhs);
+bool operator==(const std::pair<int64_t, int64_t>& lhs, const std::pair<int64_t, int64_t>& rhs);
+#endif
+
 /**
  * @class FFTConvolutionCostFunction FFTConvolutionCostFunction.h ITKImageProcessingFilters/util/FFTConvolutionCostFunction.h
  * @brief This class was used as a testing class to observe the behavior of the Amoeba optimizer
@@ -111,6 +116,7 @@ public:
   using OverlapPairs = std::vector<OverlapPair>;
   using ImageGrid = std::map<GridKey, InputImage::Pointer>;
   using Filter = itk::FFTConvolutionImageFilter<InputImage, InputImage, OutputImage>;
+  using PixelTypei = std::array<int64_t, 2>;
 
   // The m_overlaps is a vector of pairs, with the first index being the
   // grid location of an overlap region (i.e. 'Row 0, Column: 1; Row: 1, Column: 1')
@@ -232,8 +238,8 @@ public:
 
 private:
   void calculateImageDim(const GridMontageShPtr& montage);
-  void calculateNew2OldMap(const ParametersType& parameters) const;
-  void calculateNew2OldPixel(size_t row, size_t col, const ParametersType& parameters, double x_trans, double y_trans) const;
+  //void calculateNew2OldMap(const ParametersType& parameters) const;
+  PixelTypei calculateNew2OldPixel(size_t row, size_t col, const ParametersType& parameters, double x_trans, double y_trans) const;
 
   GridMontageShPtr m_Montage = nullptr;
   int m_Degree = 2;
@@ -242,5 +248,5 @@ private:
   ImageGrid m_ImageGrid;
   double m_ImageDim_x;
   double m_ImageDim_y;
-  mutable std::map<std::pair<int64_t, int64_t>, std::pair<int64_t, int64_t>> m_New2OldMap;
+  //mutable std::map<PixelTypei, PixelTypei> m_New2OldMap;
 };

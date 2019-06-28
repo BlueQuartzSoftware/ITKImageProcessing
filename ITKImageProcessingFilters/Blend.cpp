@@ -339,10 +339,10 @@ void Blend::execute()
   deleteGrayscaleIPF();
 
   // Apply transform to dewarp data
-  double x_trans = implementation.getImageDimX();
-  double y_trans = implementation.getImageDimY();
+  double imageDimX = implementation.getImageDimX();
+  double imageDimY = implementation.getImageDimY();
   std::vector<double> transformVector{ std::begin(transform), std::end(transform) };
-  warpDataContainers(transformVector, x_trans, y_trans);
+  warpDataContainers(transformVector, imageDimX, imageDimY);
 }
 
 // -----------------------------------------------------------------------------
@@ -421,33 +421,31 @@ size_t flatten(const SizeVec2Type& xyPos, const SizeVec3Type& dimensions)
 //
 // -----------------------------------------------------------------------------
 template <typename T>
-void transformDataPixel(size_t width, size_t height, double x_trans, double y_trans, const SizeVec2Type& newPixel, const std::vector<double>& transformVector, const SizeVec3Type& dimensions, typename const DataArray<T>::Pointer& da, typename const DataArray<T>::Pointer& tempDACopy)
+void transformDataPixel(size_t width, size_t height, double x_trans, double y_trans, const SizeVec2Type& newPixeli, const std::vector<double>& transformVector, const SizeVec3Type& dimensions, typename const DataArray<T>::Pointer& da, typename const DataArray<T>::Pointer& tempDACopy)
 {
   // static MutexType mutex;
 
-  const std::array<double, 2> newPrime = { newPixel[0] - x_trans, newPixel[1] - y_trans };
+  using PixelTyped = std::array<double, 2>;
+
+  PixelTyped newPixel{ newPixeli[1] - y_trans, newPixeli[0] - x_trans };
+
+  const std::array<double, 2> newPrime = { std::get<0>(newPixel), std::get<1>(newPixel) };
   const double newXPrimeSqr = newPrime[0] * newPrime[0];
   const double newYPrimeSqr = newPrime[1] * newPrime[1];
 
   std::array<double, 2> oldPrime;
-  oldPrime[0] = transformVector[0] * newPrime[0] + transformVector[1] * newPrime[1] + transformVector[2] * newXPrimeSqr + transformVector[3] * newYPrimeSqr +
-    transformVector[4] * newPrime[0] * newPrime[1] + transformVector[5] * newXPrimeSqr * newPrime[1] + transformVector[6] * newPrime[0] * newYPrimeSqr;
-  oldPrime[1] = transformVector[7] * newPrime[0] + transformVector[8] * newPrime[1] + transformVector[9] * newXPrimeSqr + transformVector[10] * newYPrimeSqr +
-    transformVector[11] * newPrime[0] * newPrime[1] + transformVector[12] * newXPrimeSqr * newPrime[1] + transformVector[13] * newPrime[0] * newYPrimeSqr;
+  oldPrime[0] = transformVector[0] * newPrime[0] + transformVector[1] * newPrime[1] + transformVector[2] * newXPrimeSqr + transformVector[3] * newYPrimeSqr + transformVector[4] * newPrime[0] * newPrime[1] +
+    transformVector[5] * newXPrimeSqr * newPrime[1] + transformVector[6] * newPrime[0] * newYPrimeSqr;
+  oldPrime[1] = transformVector[7] * newPrime[0] + transformVector[8] * newPrime[1] + transformVector[9] * newXPrimeSqr + transformVector[10] * newYPrimeSqr + transformVector[11] * newPrime[0] * newPrime[1] +
+    transformVector[12] * newXPrimeSqr * newPrime[1] + transformVector[13] * newPrime[0] * newYPrimeSqr;
 
   const int64_t oldXUnbound = static_cast<int64_t>(round(oldPrime[0] + x_trans));
   const int64_t oldYUnbound = static_cast<int64_t>(round(oldPrime[1] + y_trans));
+  size_t oldX = static_cast<size_t>(std::max<int64_t>(oldXUnbound, 0));
+  size_t oldY = static_cast<size_t>(std::max<int64_t>(oldYUnbound, 0));
+  SizeVec2Type oldPixel{ oldX, oldY };
 
-  if(oldXUnbound < 0 || oldYUnbound < 0)
-  {
-    return;
-  }
-
-  SizeVec2Type oldPixel;
-  oldPixel[0] = std::min(std::max<size_t>(oldXUnbound, 0), width - 1);
-  oldPixel[1] = std::min(std::max<size_t>(oldYUnbound, 0), height - 1);
-
-  size_t newIndex = flatten(newPixel, dimensions);
+  size_t newIndex = flatten(newPixeli, dimensions);
   size_t oldIndex = flatten(oldPixel, dimensions);
 
   if((oldIndex >= da->getNumberOfTuples()) || (newIndex >= da->getNumberOfTuples()))
@@ -573,7 +571,7 @@ void transformIDataArray(const std::vector<double>& transformVector, const SizeV
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Blend::warpDataContainers(const std::vector<double>& transformVector, double x_trans, double y_trans)
+void Blend::warpDataContainers(const std::vector<double>& transformVector, double imageDimX, double imageDimY)
 {
   // Duplicate the DataContainers used and Warp them based on the transformVector generated.
   AbstractMontage::Pointer montage = getDataContainerArray()->getMontage(m_MontageName);
@@ -581,6 +579,12 @@ void Blend::warpDataContainers(const std::vector<double>& transformVector, doubl
   {
     ImageGeom::Pointer imageGeom = dc->getGeometryAs<ImageGeom>();
     SizeVec3Type dimensions = imageGeom->getDimensions();
+
+    double xDif = std::max<double>(dimensions[0] - imageDimX, 0);
+    double yDif = std::max<double>(dimensions[1] - imageDimY, 0);
+
+    double x_trans = (imageDimX - 1) / 2.0 - xDif;
+    double y_trans = (imageDimY - 1) / 2.0 - yDif;
 
     //DataContainer::Pointer dCopy = dc->deepCopy();
     AttributeMatrix::Pointer am = dc->getAttributeMatrix(m_AttributeMatrixName);
