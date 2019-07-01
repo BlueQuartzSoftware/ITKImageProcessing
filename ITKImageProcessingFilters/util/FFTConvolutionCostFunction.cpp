@@ -220,13 +220,11 @@ void FFTConvolutionCostFunction::calculateImageDim(const GridMontageShPtr& monta
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FFTConvolutionCostFunction::PixelTypei FFTConvolutionCostFunction::calculateNew2OldPixel(size_t row, size_t col, const ParametersType& parameters, double x_trans, double y_trans) const
+FFTConvolutionCostFunction::PixelTypei FFTConvolutionCostFunction::calculateNew2OldPixel(int64_t row, int64_t col, const ParametersType& parameters, double x_trans, double y_trans) const
 {
-  using PixelTyped = std::pair<double, double>;
+  using PixelTyped = std::array<double, 2>;
 
-  PixelTyped newPixel { row - y_trans, col - x_trans };
-
-  const std::array<double, 2> newPrime = { std::get<0>(newPixel), std::get<1>(newPixel) };
+  const PixelTyped newPrime = { col - x_trans, row - y_trans };
   const double newXPrimeSqr = newPrime[0] * newPrime[0];
   const double newYPrimeSqr = newPrime[1] * newPrime[1];
 
@@ -241,42 +239,6 @@ FFTConvolutionCostFunction::PixelTypei FFTConvolutionCostFunction::calculateNew2
   PixelTypei oldPixel{ oldXUnbound, oldYUnbound };
   return oldPixel;
 }
-
-#if 0
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void FFTConvolutionCostFunction::calculateNew2OldMap(const ParametersType& parameters) const
-{
-  m_New2OldMap.clear();
-
-  int64_t startX = 0;
-  int64_t startY = 0;
-
-  GridTileIndex topLeftIndex = m_Montage->getTileIndex(0, 0);
-  ImageGeom::Pointer geom = m_Montage->getDataContainer(topLeftIndex)->getGeometryAs<ImageGeom>();
-  SizeVec3Type dims = geom->getDimensions();
-  startX = -std::max(startX, static_cast<int64_t>(dims[0]) - static_cast<int64_t>(m_ImageDim_x));
-  startY = -std::max(startY, static_cast<int64_t>(dims[1]) - static_cast<int64_t>(m_ImageDim_y));
-
-  const double x_trans = (m_ImageDim_x - 1) / 2.0;
-  const double y_trans = (m_ImageDim_y - 1) / 2.0;
-
-  ParallelTaskAlgorithm taskAlg;
-  std::function<void(void)> fn;
-
-  for(int64_t row = startY; row < m_ImageDim_y; row++)
-  {
-    for(int64_t col = startX; col < m_ImageDim_x; col++)
-    {
-      //calculateNew2OldPixel(row, col, parameters, x_trans, y_trans);
-      fn = std::bind(&FFTConvolutionCostFunction::calculateNew2OldPixel, this, row, col, parameters, x_trans, y_trans);
-      taskAlg.execute(fn);
-    }
-  }
-  taskAlg.wait();
-}
-#endif
 
 // -----------------------------------------------------------------------------
 //
@@ -423,7 +385,7 @@ FFTConvolutionCostFunction::MeasureType FFTConvolutionCostFunction::GetValue(con
   }
   taskAlg.wait();
 
-  std::atomic<MeasureType> residual{0.0};
+  MeasureType residual = 0.0;
   // Find the FFT Convolution and accumulate the maximum value from each overlap
   for(const auto& overlap : m_Overlaps) // Parallelize this
   {
@@ -487,22 +449,6 @@ void FFTConvolutionCostFunction::applyTransformationPixel(double tolerance, cons
   // and so a different method of grabbing the appropriate index from the m_IJ
   // will be needed if using that static array
   calculatePixelCoordinates(parameters, inputImage, distortedImage, pixel, x_trans, y_trans, tolerance, lastXIndex, lastYIndex);
-
-#if 0
-  // This check effectively "clips" data and the cast and round
-  // effectively perform a nearest neighbor sampling
-  if(x >= -tolerance && x <= lastXIndex && y >= -tolerance && y <= lastYIndex)
-  {
-    PixelCoord eachPixel;
-    eachPixel[0] = static_cast<int64_t>(round(x));
-    eachPixel[1] = static_cast<int64_t>(round(y));
-    // The value obtained with eachImage.second->GetPixel(eachPixel) could have
-    // its "contrast" adjusted based on its radial location from the center of
-    // the image at this step to compensate for error encountered from radial effects
-    ScopedLockType lock(mutex);
-    distortedImage->SetPixel(eachPixel, inputImage->GetPixel(eachPixel));
-  }
-#endif
 }
 
 // -----------------------------------------------------------------------------
@@ -530,17 +476,6 @@ void FFTConvolutionCostFunction::calculatePixelCoordinates(const ParametersType&
   oldPixel[0] = std::min(std::max<int64_t>(oldPixel[0], 0), width - 1);
   oldPixel[1] = std::min(std::max<int64_t>(oldPixel[1], 0), height - 1);
 
-#if 0
-  // The subtraction step here translates the coordinates so the center of the image
-  // is at the origin
-  // This allows for rotations to occur in a predictable way
-  const double u_v = pow((pixel[0] - x_trans), eachIJ.first) * pow((pixel[1] - y_trans), eachIJ.second);
-
-  const double term = u_v * parameters[idx];
-  // This recorrects the centering translation to the appropriate x or y value
-  idx < m_IJ.size() - 1 ? x_ref += term : y_ref += term;
-#endif
-
   if(oldPixel[0] >= minX -tolerance && oldPixel[1] >= minY -tolerance)
   //if(oldPixel[0] >= -tolerance && oldPixel[0] <= lastXIndex && oldPixel[1] >= -tolerance && oldPixel[1] <= lastYIndex)
   //if(oldPixel[0] >= minX -tolerance && oldPixel[0] <= lastXIndex && oldPixel[1] >= minY -tolerance && oldPixel[1] <= lastYIndex)
@@ -552,16 +487,12 @@ void FFTConvolutionCostFunction::calculatePixelCoordinates(const ParametersType&
     auto oldPixelValue = inputImage->GetPixel(oldPixel);
     distortedImage->SetPixel(newPixel, oldPixelValue);
   }
-  else
-  {
-    distortedImage->SetPixel(newPixel, 0);
-  }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FFTConvolutionCostFunction::findFFTConvolutionAndMaxValue(const OverlapPair& overlap, ImageGrid& distortedGrid, std::atomic<MeasureType>& residual) const
+void FFTConvolutionCostFunction::findFFTConvolutionAndMaxValue(const OverlapPair& overlap, ImageGrid& distortedGrid, MeasureType& residual) const
 {
   static MutexType mutex;
   // Set the filter's image to the overlap region of the image
@@ -595,7 +526,7 @@ void FFTConvolutionCostFunction::findFFTConvolutionAndMaxValue(const OverlapPair
   // output might require a deeper look
   MeasureType maxValue = *std::max_element(fftConvolve->GetBufferPointer(), fftConvolve->GetBufferPointer() + fftConvolve->GetPixelContainer()->Size());
   ScopedLockType lock(mutex);
-  residual = residual + maxValue;
+  residual += maxValue;
 }
 
 // -----------------------------------------------------------------------------
@@ -621,36 +552,3 @@ double FFTConvolutionCostFunction::getImageDimY() const
 {
   return m_ImageDim_y;
 }
-
-#if 0
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-bool operator<(const std::pair<int64_t, int64_t>& lhs, const std::pair<int64_t, int64_t>& rhs)
-{
-  // First value
-  if(lhs.first < rhs.first)
-  {
-    return true;
-  }
-  if(lhs.first > rhs.first)
-  {
-    return false;
-  }
-  // Second value
-  if(lhs.second < rhs.second)
-  {
-    return true;
-  }
-
-  return false;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-bool operator==(const std::pair<int64_t, int64_t>& lhs, const std::pair<int64_t, int64_t>& rhs)
-{
-  return (lhs.first == rhs.first) && (lhs.second == rhs.second);
-}
-#endif

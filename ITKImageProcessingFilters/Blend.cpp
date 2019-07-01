@@ -32,6 +32,8 @@
 
 #include "Blend.h"
 
+#define CLAMP_INDEX
+
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
 #include "tbb/queuing_mutex.h"
 using MutexType = tbb::queuing_mutex;
@@ -49,11 +51,13 @@ using MutexType = tbb::queuing_mutex;
 #include "SIMPLib/FilterParameters/FilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatFilterParameter.h"
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedChoicesFilterParameter.h"
 #include "SIMPLib/FilterParameters/MontageSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/MontageStructureSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/MultiDataContainerSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Montages/GridMontage.h"
 #include "SIMPLib/Utilities/ParallelData2DAlgorithm.h"
@@ -102,6 +106,7 @@ Blend::Blend()
 , m_TransformArrayName("Transform")
 //, m_NumIterationsArrayName("Iterations")
 , m_ResidualArrayName("Residual")
+, m_TransformPrefix("Transformed_")
 {
   initialize();
 }
@@ -138,11 +143,19 @@ void Blend::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_STRING_FP("Attribute Matrix Name", AttributeMatrixName, FilterParameter::Category::Parameter, Blend));
   parameters.push_back(SIMPL_NEW_STRING_FP("IPF Colors Array Name", IPFColorsArrayName, FilterParameter::Category::Parameter, Blend));
 
-  parameters.push_back(SIMPL_NEW_STRING_FP("Data Container", BlendDCName, FilterParameter::Category::CreatedArray, Blend));
+  //SIMPL_NEW_LINKED_BOOL_FP
+  parameters.push_back(SeparatorFilterParameter::New("Transformation Arrays", FilterParameter::CreatedArray));
+  QStringList linkedProps{ "BlendDCName", "TransformMatrixName", "TransformArrayName", "ResidualArrayName" };
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Create Transformation Container", CreateTransformContainer, FilterParameter::CreatedArray, Blend, linkedProps));
+
+  parameters.push_back(SIMPL_NEW_STRING_FP("Transform Container", BlendDCName, FilterParameter::Category::CreatedArray, Blend));
   parameters.push_back(SIMPL_NEW_STRING_FP("Transform Matrix", TransformMatrixName, FilterParameter::Category::CreatedArray, Blend));
   parameters.push_back(SIMPL_NEW_STRING_FP("Transform Array", TransformArrayName, FilterParameter::Category::CreatedArray, Blend));
   // parameters.push_back(SIMPL_NEW_STRING_FP("Number of Iterations", NumIterationsArrayName, FilterParameter::Category::CreatedArray, Blend));
   parameters.push_back(SIMPL_NEW_STRING_FP("Residual Values", ResidualArrayName, FilterParameter::Category::CreatedArray, Blend));
+
+  parameters.push_back(SeparatorFilterParameter::New("Created Transformation", FilterParameter::CreatedArray));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Transformed Data Container Prefix", TransformPrefix, FilterParameter::Category::CreatedArray, Blend));
 
   setFilterParameters(parameters);
 }
@@ -234,13 +247,26 @@ void Blend::dataCheck()
   // minimization of the square root of the sum for each overlap
   // of the max of a convolution of two overlapping FFT'd images
 
-  // Create a new data container to hold the output of this filter
-  DataContainerShPtr blendDC = getDataContainerArray()->createNonPrereqDataContainer(this, DataArrayPath(m_BlendDCName, "", ""));
-  AttributeMatrixShPtr blendAM = blendDC->createNonPrereqAttributeMatrix(this, m_TransformMatrixName, {1}, AttributeMatrix::Type::Generic);
+  if(m_CreateTransformContainer)
+  {
+    // Create a new data container to hold the output of this filter
+    DataContainerShPtr blendDC = getDataContainerArray()->createNonPrereqDataContainer(this, DataArrayPath(m_BlendDCName, "", ""));
+    AttributeMatrixShPtr blendAM = blendDC->createNonPrereqAttributeMatrix(this, m_TransformMatrixName, { 1 }, AttributeMatrix::Type::Generic);
 
-  // blendAM->createAndAddAttributeArray<UInt64ArrayType>(this, m_IterationsAAName, 0, {1});
-  blendAM->createNonPrereqArray<DoubleArrayType>(this, m_TransformArrayName, 0, {m_InitialGuess.size()});
-  blendAM->createNonPrereqArray<DoubleArrayType>(this, m_ResidualArrayName, 0, {1});
+    // blendAM->createAndAddAttributeArray<UInt64ArrayType>(this, m_IterationsAAName, 0, {1});
+    blendAM->createNonPrereqArray<DoubleArrayType>(this, m_TransformArrayName, 0, { m_InitialGuess.size() });
+    blendAM->createNonPrereqArray<DoubleArrayType>(this, m_ResidualArrayName, 0, { 1 });
+  }
+
+  QStringList dcNames = montage->getDataContainerNames();
+  for(const QString& dcName : dcNames)
+  {
+    DataContainerShPtr dc = getDataContainerArray()->getDataContainer(dcName);
+    DataContainerShPtr dcCopy = DataContainer::New(m_TransformPrefix + dc->getName());
+    dcCopy->setGeometry(dc->getGeometry()->deepCopy());
+    dcCopy->insertOrAssign(dc->getAttributeMatrix(m_AttributeMatrixName)->deepCopy());
+    getDataContainerArray()->insertOrAssign(dcCopy);
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -421,13 +447,14 @@ size_t flatten(const SizeVec2Type& xyPos, const SizeVec3Type& dimensions)
 //
 // -----------------------------------------------------------------------------
 template <typename T>
-void transformDataPixel(size_t width, size_t height, double x_trans, double y_trans, const SizeVec2Type& newPixeli, const std::vector<double>& transformVector, const SizeVec3Type& dimensions, typename const DataArray<T>::Pointer& da, typename const DataArray<T>::Pointer& tempDACopy)
+void transformDataPixel(double x_trans, double y_trans, const SizeVec2Type& newPixeli, const std::vector<double>& transformVector, const SizeVec3Type& dimensions, typename const DataArray<T>::Pointer& da, typename const DataArray<T>::Pointer& tempDACopy)
 {
   // static MutexType mutex;
 
   using PixelTyped = std::array<double, 2>;
 
-  PixelTyped newPixel{ newPixeli[1] - y_trans, newPixeli[0] - x_trans };
+  //PixelTyped newPixel{ newPixeli[1] - y_trans, newPixeli[0] - x_trans };
+  PixelTyped newPixel{ newPixeli[0] - x_trans, newPixeli[1] - y_trans };
 
   const std::array<double, 2> newPrime = { std::get<0>(newPixel), std::get<1>(newPixel) };
   const double newXPrimeSqr = newPrime[0] * newPrime[0];
@@ -441,9 +468,20 @@ void transformDataPixel(size_t width, size_t height, double x_trans, double y_tr
 
   const int64_t oldXUnbound = static_cast<int64_t>(round(oldPrime[0] + x_trans));
   const int64_t oldYUnbound = static_cast<int64_t>(round(oldPrime[1] + y_trans));
+
+#ifndef CLAMP_INDEX
+  // Cannot flatten invalid { X,Y } positions
+  if(oldXUnbound < 0 || oldYUnbound < 0)
+  {
+    return;
+  }
+  SizeVec2Type oldPixel{ oldXUnbound, oldYUnbound };
+#else
+
   size_t oldX = static_cast<size_t>(std::max<int64_t>(oldXUnbound, 0));
   size_t oldY = static_cast<size_t>(std::max<int64_t>(oldYUnbound, 0));
   SizeVec2Type oldPixel{ oldX, oldY };
+#endif
 
   size_t newIndex = flatten(newPixeli, dimensions);
   size_t oldIndex = flatten(oldPixel, dimensions);
@@ -499,7 +537,7 @@ void transformDataArray(const std::vector<double>& transformVector, const SizeVe
     {
       SizeVec2Type newPixel{ x, y };
 
-      fn = std::bind(&transformDataPixel<T>, width, height, x_trans, y_trans, newPixel, transformVector, dimensions, da, daCopy);
+      fn = std::bind(&transformDataPixel<T>, x_trans, y_trans, newPixel, transformVector, dimensions, da, daCopy);
       taskAlg.execute(fn);
     }
   }
@@ -575,8 +613,9 @@ void Blend::warpDataContainers(const std::vector<double>& transformVector, doubl
 {
   // Duplicate the DataContainers used and Warp them based on the transformVector generated.
   AbstractMontage::Pointer montage = getDataContainerArray()->getMontage(m_MontageName);
-  for(const auto& dc : *montage)
+  for(const auto& dcOrig : *montage)
   {
+    DataContainerShPtr dc = getDataContainerArray()->getDataContainer(m_TransformPrefix + dcOrig->getName());
     ImageGeom::Pointer imageGeom = dc->getGeometryAs<ImageGeom>();
     SizeVec3Type dimensions = imageGeom->getDimensions();
 
@@ -586,9 +625,7 @@ void Blend::warpDataContainers(const std::vector<double>& transformVector, doubl
     double x_trans = (imageDimX - 1) / 2.0 - xDif;
     double y_trans = (imageDimY - 1) / 2.0 - yDif;
 
-    //DataContainer::Pointer dCopy = dc->deepCopy();
     AttributeMatrix::Pointer am = dc->getAttributeMatrix(m_AttributeMatrixName);
-    //for(const auto& am : *dCopy)
     {
       for(const auto& da : *am)
       {

@@ -50,11 +50,6 @@ using PixelValue_T = double;
 class GridMontage;
 using GridMontageShPtr = std::shared_ptr<GridMontage>;
 
-#if 0
-bool operator<(const std::pair<int64_t, int64_t>& lhs, const std::pair<int64_t, int64_t>& rhs);
-bool operator==(const std::pair<int64_t, int64_t>& lhs, const std::pair<int64_t, int64_t>& rhs);
-#endif
-
 /**
  * @class FFTConvolutionCostFunction FFTConvolutionCostFunction.h ITKImageProcessingFilters/util/FFTConvolutionCostFunction.h
  * @brief This class was used as a testing class to observe the behavior of the Amoeba optimizer
@@ -225,7 +220,7 @@ public:
    * @param distortedGrid
    * @param residual
    */
-  void findFFTConvolutionAndMaxValue(const OverlapPair& overlap, ImageGrid& distortedGrid, std::atomic<MeasureType>& residual) const;
+  void findFFTConvolutionAndMaxValue(const OverlapPair& overlap, ImageGrid& distortedGrid, MeasureType& residual) const;
 
   /**
    * @brief Returns the ImageGrid value.
@@ -233,13 +228,35 @@ public:
    */
   ImageGrid getImageGrid() const;
 
+  /**
+   * @brief Returns the target tile width.
+   * @return
+   */
   double getImageDimX() const;
+
+  /**
+   * @brief Returns the target tile height.
+   * @return
+   */
   double getImageDimY() const;
 
 private:
+  /**
+   * @brief Calculates the ImageDim_x and ImageDim_y values for a montage.
+   * @param montage
+   */
   void calculateImageDim(const GridMontageShPtr& montage);
-  //void calculateNew2OldMap(const ParametersType& parameters) const;
-  PixelTypei calculateNew2OldPixel(size_t row, size_t col, const ParametersType& parameters, double x_trans, double y_trans) const;
+  
+  /**
+   * @brief Returns the pixel index for the given row, column, parameters, and translation amount.
+   * @param row
+   * @param col
+   * @param parameters
+   * @param x_trans
+   * @param y_trans
+   * @return
+   */
+  PixelTypei calculateNew2OldPixel(int64_t row, int64_t col, const ParametersType& parameters, double x_trans, double y_trans) const;
 
   GridMontageShPtr m_Montage = nullptr;
   int m_Degree = 2;
@@ -248,5 +265,4 @@ private:
   ImageGrid m_ImageGrid;
   double m_ImageDim_x;
   double m_ImageDim_y;
-  //mutable std::map<PixelTypei, PixelTypei> m_New2OldMap;
 };

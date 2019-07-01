@@ -84,6 +84,9 @@ public:
   SIMPL_FILTER_PARAMETER(QString, IPFColorsArrayName)
   Q_PROPERTY(QString IPFColorsArrayName READ getIPFColorsArrayName WRITE setIPFColorsArrayName)
 
+  SIMPL_FILTER_PARAMETER(bool, CreateTransformContainer)
+  Q_PROPERTY(bool CreateTransformContainer READ getCreateTransformContainer WRITE setCreateTransformContainer)
+
   SIMPL_FILTER_PARAMETER(QString, BlendDCName)
   Q_PROPERTY(QString BlendDCName READ getBlendDCName WRITE setBlendDCName)
 
@@ -93,11 +96,11 @@ public:
   SIMPL_FILTER_PARAMETER(QString, TransformArrayName)
   Q_PROPERTY(QString TransformArrayName READ getTransformArrayName WRITE setTransformArrayName)
 
-  //SIMPL_FILTER_PARAMETER(QString, NumIterationsArrayName)
-  //Q_PROPERTY(QString NumIterationsArrayName READ getNumIterationsArrayName WRITE setNumIterationsArrayName)
-
   SIMPL_FILTER_PARAMETER(QString, ResidualArrayName)
   Q_PROPERTY(QString ResidualArrayName READ getResidualArrayName WRITE setResidualArrayName)
+
+  SIMPL_FILTER_PARAMETER(QString, TransformPrefix)
+  Q_PROPERTY(QString TransformPrefix READ getTransformPrefix WRITE setTransformPrefix)
 
   bool GetConvergenceFromStopDescription(const QString&) const;
 
