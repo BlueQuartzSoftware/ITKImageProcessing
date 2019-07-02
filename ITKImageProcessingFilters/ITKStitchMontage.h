@@ -86,9 +86,6 @@ public:
   SIMPL_FILTER_PARAMETER(QString, CommonAttributeMatrixName)
   Q_PROPERTY(QString CommonAttributeMatrixName READ getCommonAttributeMatrixName WRITE setCommonAttributeMatrixName)
 
-  SIMPL_FILTER_PARAMETER(bool, StitchMontage)
-  Q_PROPERTY(bool StitchMontage READ getStitchMontage WRITE setStitchMontage)
-
   SIMPL_FILTER_PARAMETER(QString, CommonDataArrayName)
   Q_PROPERTY(QString CommonDataArrayName READ getCommonDataArrayName WRITE setCommonDataArrayName)
 
