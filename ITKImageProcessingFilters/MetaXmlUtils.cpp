@@ -49,7 +49,7 @@ ZeissTagsXmlSectionPtr MetaXmlUtils::ParseTagsSection(AbstractFilter* filter, QD
   int count = -1;
   bool ok = false;
 
-  QDomElement countEle = tags.firstChildElement(ITKImageProcessingConstants::Xml::Count);
+  QDomElement countEle = tags.namedItem(ITKImageProcessingConstants::Xml::Count).toElement();
 
   count = countEle.text().toInt(&ok, 10);
   if(!ok)
@@ -69,8 +69,8 @@ ZeissTagsXmlSectionPtr MetaXmlUtils::ParseTagsSection(AbstractFilter* filter, QD
     QString Vx = QString("V%1").arg(c);
     QString Ix = QString("I%1").arg(c);
 
-    QDomElement vxEle = tags.firstChildElement(Vx);
-    QDomElement ixEle = tags.firstChildElement(Ix);
+    QDomElement vxEle = tags.namedItem(Vx).toElement();
+    QDomElement ixEle = tags.namedItem(Ix).toElement();
 
     qint32 idValue = ixEle.text().toInt(&ok, 10);
     AbstractZeissMetaData::Pointer ptr = ZeissTagMapping::instance()->metaDataForId(idValue, vxEle.text());
