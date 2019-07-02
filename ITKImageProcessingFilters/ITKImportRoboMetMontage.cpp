@@ -116,6 +116,7 @@ ITKImportRoboMetMontage::ITKImportRoboMetMontage()
 , m_ConvertToGrayScale(false)
 , m_ChangeOrigin(false)
 , m_ChangeSpacing(false)
+, m_LengthUnit(-1)
 , d_ptr(new ITKImportRoboMetMontagePrivate(this))
 {
   m_NumImages = 0;
