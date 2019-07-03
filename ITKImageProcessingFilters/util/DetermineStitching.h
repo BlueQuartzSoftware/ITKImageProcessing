@@ -86,8 +86,8 @@ public:
     int numTiles = xTileCount * yTileCount;
     tDims[0] = numTiles;
 
-    FloatArrayType::Pointer xyStitchedGlobalListPtr = FloatArrayType::CreateArray(tDims, cDims, "xyGlobalList");
-    FloatArrayType::Pointer xyStitchedGlobalListPtr_orig = FloatArrayType::CreateArray(tDims, cDims, "xyGlobalList_orig");
+    FloatArrayType::Pointer xyStitchedGlobalListPtr = FloatArrayType::CreateArray(tDims, cDims, "xyGlobalList", true);
+    FloatArrayType::Pointer xyStitchedGlobalListPtr_orig = FloatArrayType::CreateArray(tDims, cDims, "xyGlobalList_orig", true);
 
     int32_t numXtiles = xTileCount;
 
