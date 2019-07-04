@@ -351,7 +351,7 @@ QString ImportZenInfoMontage::getMontageInformation()
 // -----------------------------------------------------------------------------
 void ImportZenInfoMontage::flushCache()
 {
-
+  m_FilenameList.clear();
   setTimeStamp_Cache(QDateTime());
   setRoot(QDomElement());
 
@@ -440,6 +440,7 @@ void ImportZenInfoMontage::generateCache(QDomElement& exportDocument)
     {
       setErrorCondition(-222, QString("Montage Tile File does not exist.'%1'").arg(imagePath));
     }
+    m_FilenameList.push_back(imagePath);
 
     BoundsType bound;
     bound.Filename = fi.absoluteFilePath();
