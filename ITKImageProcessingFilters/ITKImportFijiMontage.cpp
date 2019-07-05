@@ -527,6 +527,8 @@ void ITKImportFijiMontage::readImages()
     // So is the Geometry
     ImageGeom::Pointer image = dc->getGeometryAs<ImageGeom>();
 
+    image->setUnits(static_cast<IGeometry::LengthUnit>(m_LengthUnit));
+
     // Create the Image Geometry
     SizeVec3Type dims = image->getDimensions();
     // FloatVec3Type origin = image->getOrigin();
