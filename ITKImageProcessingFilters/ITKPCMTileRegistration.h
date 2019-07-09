@@ -38,7 +38,6 @@
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataContainers/DataContainerArrayProxy.h"
-#include "SIMPLib/FilterParameters/IntVec3FilterParameter.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/Geometry/CompositeTransformContainer.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
@@ -62,8 +61,8 @@ class ITKImageProcessing_EXPORT ITKPCMTileRegistration : public AbstractFilter
   Q_OBJECT
 
   PYB11_CREATE_BINDINGS(ITKPCMTileRegistration SUPERCLASS AbstractFilter)
-  PYB11_PROPERTY(IntVec3Type MontageStart READ getMontageStart WRITE setMontageStart)
-  PYB11_PROPERTY(IntVec3Type MontageEnd READ getMontageEnd WRITE setMontageEnd)
+  PYB11_PROPERTY(IntVec2Type MontageStart READ getMontageStart WRITE setMontageStart)
+  PYB11_PROPERTY(IntVec2Type MontageEnd READ getMontageEnd WRITE setMontageEnd)
   PYB11_PROPERTY(QString DataContainerPrefix READ getDataContainerPrefix WRITE setDataContainerPrefix)
   PYB11_PROPERTY(QString CommonAttributeMatrixName READ getCommonAttributeMatrixName WRITE setCommonAttributeMatrixName)
   PYB11_PROPERTY(QString CommonDataArrayName READ getCommonDataArrayName WRITE setCommonDataArrayName)
@@ -75,11 +74,11 @@ public:
 
   ~ITKPCMTileRegistration() override;
 
-  SIMPL_FILTER_PARAMETER(IntVec3Type, MontageStart)
-  Q_PROPERTY(IntVec3Type MontageStart READ getMontageStart WRITE setMontageStart)
+  SIMPL_FILTER_PARAMETER(IntVec2Type, MontageStart)
+  Q_PROPERTY(IntVec2Type MontageStart READ getMontageStart WRITE setMontageStart)
 
-  SIMPL_FILTER_PARAMETER(IntVec3Type, MontageEnd)
-  Q_PROPERTY(IntVec3Type MontageEnd READ getMontageEnd WRITE setMontageEnd)
+  SIMPL_FILTER_PARAMETER(IntVec2Type, MontageEnd)
+  Q_PROPERTY(IntVec2Type MontageEnd READ getMontageEnd WRITE setMontageEnd)
 
   SIMPL_FILTER_PARAMETER(QString, DataContainerPrefix)
   Q_PROPERTY(QString DataContainerPrefix READ getDataContainerPrefix WRITE setDataContainerPrefix)

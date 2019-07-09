@@ -63,6 +63,8 @@ class ITKImageProcessing_EXPORT ITKImportRoboMetMontage : public AbstractFilter
   PYB11_PROPERTY(QString ImageFilePrefix READ getImageFilePrefix WRITE setImageFilePrefix)
   PYB11_PROPERTY(QString ImageFileExtension READ getImageFileExtension WRITE setImageFileExtension)
   PYB11_PROPERTY(int32_t LengthUnit READ getLengthUnit WRITE setLengthUnit)
+  PYB11_PROPERTY(IntVec2Type MontageStart READ getMontageStart WRITE setMontageStart)
+  PYB11_PROPERTY(IntVec2Type MontageEnd READ getMontageEnd WRITE setMontageEnd)
 
   Q_DECLARE_PRIVATE(ITKImportRoboMetMontage)
 public:
@@ -86,6 +88,12 @@ public:
 
   SIMPL_FILTER_PARAMETER(QString, InputFile)
   Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
+
+  SIMPL_FILTER_PARAMETER(IntVec2Type, MontageStart)
+  Q_PROPERTY(IntVec2Type MontageStart READ getMontageStart WRITE setMontageStart)
+
+  SIMPL_FILTER_PARAMETER(IntVec2Type, MontageEnd)
+  Q_PROPERTY(IntVec2Type MontageEnd READ getMontageEnd WRITE setMontageEnd)
 
   SIMPL_FILTER_PARAMETER(DataArrayPath, DataContainerPath)
   Q_PROPERTY(DataArrayPath DataContainerPath READ getDataContainerPath WRITE setDataContainerPath)

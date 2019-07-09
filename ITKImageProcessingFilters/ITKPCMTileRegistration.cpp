@@ -43,6 +43,7 @@
 #include "SIMPLib/Common/TemplateHelpers.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatFilterParameter.h"
+#include "SIMPLib/FilterParameters/IntVec2FilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/MultiDataContainerSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
@@ -150,7 +151,7 @@ itk::NumericTraits<float> nmfloat;
 
 namespace
 {
-QString generateDataContainerName(const QString& dataContainerPrefix, const IntVec3Type& montageStart, const IntVec3Type& montageEnd, int32_t row, int32_t col)
+QString generateDataContainerName(const QString& dataContainerPrefix, const IntVec2Type& montageStart, const IntVec2Type& montageEnd, int32_t row, int32_t col)
 {
   IntVec3Type montageSize;
   std::transform(montageStart.begin(), montageStart.end(), montageEnd.begin(), montageSize.begin(), [](int32_t a, int32_t b) -> int32_t { return a + b + 1; });
@@ -185,8 +186,8 @@ ITKPCMTileRegistration::ITKPCMTileRegistration()
 , m_CommonDataArrayName(ITKImageProcessing::Montage::k_TileDataArrayDefaultName)
 //, m_TileOverlap(10.0f)
 {
-  m_MontageStart = IntVec3Type(0, 0, 0);
-  m_MontageEnd = IntVec3Type(0, 0, 0);
+  m_MontageStart = IntVec2Type(0, 0);
+  m_MontageEnd = IntVec2Type(0, 0);
 }
 // -----------------------------------------------------------------------------
 //
@@ -210,8 +211,8 @@ void ITKPCMTileRegistration::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
 
-  parameters.push_back(SIMPL_NEW_INT_VEC3_FP("Montage Start (Col, Row) [Inclusive, Zero Based]", MontageStart, FilterParameter::Parameter, ITKPCMTileRegistration));
-  parameters.push_back(SIMPL_NEW_INT_VEC3_FP("Montage End (Col, Row) [Inclusive, Zero Based]", MontageEnd, FilterParameter::Parameter, ITKPCMTileRegistration));
+  parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage Start (Col, Row) [Inclusive, Zero Based]", MontageStart, FilterParameter::Parameter, ITKPCMTileRegistration));
+  parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage End (Col, Row) [Inclusive, Zero Based]", MontageEnd, FilterParameter::Parameter, ITKPCMTileRegistration));
 
   parameters.push_back(SIMPL_NEW_STRING_FP("Data Container Prefix", DataContainerPrefix, FilterParameter::RequiredArray, ITKPCMTileRegistration));
 
@@ -230,8 +231,7 @@ void ITKPCMTileRegistration::dataCheck()
   clearWarningCode();
   initialize();
 
-  QString ss;
-  IntVec3Type montageSize;
+  IntVec2Type montageSize;
   std::transform(m_MontageStart.begin(), m_MontageStart.end(), m_MontageEnd.begin(), montageSize.begin(), [](int32_t a, int32_t b) -> int32_t { return a + b + 1; });
   int32_t rowCount = montageSize[1];
   int32_t colCount = montageSize[0];

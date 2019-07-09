@@ -42,6 +42,7 @@
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
+#include "SIMPLib/FilterParameters/IntVec2FilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/PreflightUpdatedValueFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
@@ -123,6 +124,8 @@ ITKImportRoboMetMontage::ITKImportRoboMetMontage()
   m_ColorWeights = FloatVec3Type(0.2125f, 0.7154f, 0.0721f);
   m_Origin = FloatVec3Type(0.0f, 0.0f, 0.0f);
   m_Spacing = FloatVec3Type(1.0f, 1.0f, 1.0f);
+  m_MontageStart = IntVec2Type(0, 0);
+  m_MontageEnd = IntVec2Type(0, 0);
 }
 
 // -----------------------------------------------------------------------------
@@ -158,6 +161,9 @@ void ITKImportRoboMetMontage::setupFilterParameters()
   PreflightUpdatedValueFilterParameter::Pointer param = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Montage Information", MontageInformation, FilterParameter::Parameter, ITKImportRoboMetMontage);
   param->setReadOnly(true);
   parameters.push_back(param);
+
+  parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage Start (Col, Row) [Inclusive, Zero Based]", MontageStart, FilterParameter::Parameter, ITKImportRoboMetMontage));
+  parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage End (Col, Row) [Inclusive, Zero Based]", MontageEnd, FilterParameter::Parameter, ITKImportRoboMetMontage));
 
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Slice Number", SliceNumber, FilterParameter::Parameter, ITKImportRoboMetMontage));
   parameters.push_back(SIMPL_NEW_STRING_FP("Image File Prefix", ImageFilePrefix, FilterParameter::Parameter, ITKImportRoboMetMontage));
@@ -228,6 +234,18 @@ void ITKImportRoboMetMontage::dataCheck()
   {
     QString ss = QObject::tr("The image file extension must be set");
     setErrorCondition(-2005, ss);
+    return;
+  }
+
+  IntVec2Type montageSize;
+  std::transform(m_MontageStart.begin(), m_MontageStart.end(), m_MontageEnd.begin(), montageSize.begin(), [](int32_t a, int32_t b) -> int32_t { return a + b + 1; });
+  int32_t rowCount = montageSize[1];
+  int32_t colCount = montageSize[0];
+
+  if(colCount <= 0 || rowCount <= 0)
+  {
+    QString ss = QObject::tr("The Montage Size x and y values must be greater than 0");
+    setErrorCondition(-396, ss);
     return;
   }
 
@@ -564,6 +582,11 @@ void ITKImportRoboMetMontage::generateDataStructure()
 
   for(const auto& bound : bounds)
   {
+    if (bound.Row < m_MontageStart[1] || bound.Row > m_MontageEnd[1] || bound.Col < m_MontageStart[0] || bound.Col > m_MontageEnd[0])
+    {
+      continue;
+    }
+
     // Create our DataContainer Name using a Prefix and a rXXcYY format.
     QString dcName = getDataContainerPath().getDataContainerName();
     QTextStream dcNameStream(&dcName);

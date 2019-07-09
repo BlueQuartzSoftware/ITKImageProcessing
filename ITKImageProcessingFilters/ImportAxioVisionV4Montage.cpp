@@ -48,6 +48,7 @@
 #include "SIMPLib/FilterParameters/FloatFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
+#include "SIMPLib/FilterParameters/IntVec2FilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/PreflightUpdatedValueFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
@@ -136,6 +137,8 @@ ImportAxioVisionV4Montage::ImportAxioVisionV4Montage()
   m_ColorWeights = FloatVec3Type(0.2125f, 0.7154f, 0.0721f);
   m_Origin = FloatVec3Type(0.0f, 0.0f, 0.0f);
   m_Spacing = FloatVec3Type(1.0f, 1.0f, 1.0f);
+  m_MontageStart = IntVec2Type(0, 0);
+  m_MontageEnd = IntVec2Type(0, 0);
 }
 
 // -----------------------------------------------------------------------------
@@ -169,6 +172,9 @@ void ImportAxioVisionV4Montage::setupFilterParameters()
   PreflightUpdatedValueFilterParameter::Pointer param = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Montage Information", MontageInformation, FilterParameter::Parameter, ImportAxioVisionV4Montage);
   param->setReadOnly(true);
   parameters.push_back(param);
+
+  parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage Start (Col, Row) [Inclusive, Zero Based]", MontageStart, FilterParameter::Parameter, ImportAxioVisionV4Montage));
+  parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage End (Col, Row) [Inclusive, Zero Based]", MontageEnd, FilterParameter::Parameter, ImportAxioVisionV4Montage));
 
   parameters.push_back(SIMPL_NEW_BOOL_FP("Import All MetaData", ImportAllMetaData, FilterParameter::Parameter, ImportAxioVisionV4Montage));
 
@@ -219,6 +225,18 @@ void ImportAxioVisionV4Montage::dataCheck()
   {
     ss = QObject::tr("The input path '%1' is a directory. Please select an XML file.").arg(getInputFile());
     setErrorCondition(-395, ss);
+  }
+
+  IntVec2Type montageSize;
+  std::transform(m_MontageStart.begin(), m_MontageStart.end(), m_MontageEnd.begin(), montageSize.begin(), [](int32_t a, int32_t b) -> int32_t { return a + b + 1; });
+  int32_t rowCount = montageSize[1];
+  int32_t colCount = montageSize[0];
+
+  if(colCount <= 0 || rowCount <= 0)
+  {
+    QString ss = QObject::tr("The Montage Size x and y values must be greater than 0");
+    setErrorCondition(-396, ss);
+    return;
   }
 
   if(getDataContainerPath().isEmpty())
@@ -649,6 +667,11 @@ void ImportAxioVisionV4Montage::generateDataStructure()
 
   for(const auto& bound : bounds)
   {
+    if (bound.Row < m_MontageStart[1] || bound.Row > m_MontageEnd[1] || bound.Col < m_MontageStart[0] || bound.Col > m_MontageEnd[0])
+    {
+      continue;
+    }
+
     // Create our DataContainer Name using a Prefix and a rXXcYY format.
     QString dcName = getDataContainerPath().getDataContainerName();
     QTextStream dcNameStream(&dcName);
