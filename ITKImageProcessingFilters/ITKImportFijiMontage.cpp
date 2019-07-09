@@ -424,7 +424,6 @@ void ITKImportFijiMontage::generateCache()
   QString montageInfo;
   QTextStream ss(&montageInfo);
   ss << "Columns=" << m_ColumnCount << "  Rows=" << m_RowCount << "  Num. Images=" << (m_ColumnCount * m_RowCount);
-  m_MontageEnd = IntVec2Type(m_ColumnCount - 1, m_RowCount - 1);
 
   FloatVec3Type overrideOrigin = minCoord;
   FloatVec3Type overrideSpacing = minSpacing;

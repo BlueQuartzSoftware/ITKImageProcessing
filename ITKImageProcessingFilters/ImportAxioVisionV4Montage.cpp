@@ -614,7 +614,6 @@ void ImportAxioVisionV4Montage::generateCache(QDomElement& root)
   QString montageInfo;
   QTextStream ss(&montageInfo);
   ss << "Columns=" << m_ColumnCount << "  Rows=" << m_RowCount << "  Num. Images=" << imageCount;
-  m_MontageEnd = IntVec2Type(m_ColumnCount - 1, m_RowCount - 1);
 
   FloatVec3Type overrideOrigin = minCoord;
   FloatVec3Type overrideSpacing = minSpacing;
