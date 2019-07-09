@@ -161,7 +161,7 @@ void ITKImportFijiMontage::initialize()
 void ITKImportFijiMontage::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
-  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Zen Export File (*_info.xml)", InputFile, FilterParameter::Parameter, ITKImportFijiMontage, "*.xml"));
+  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Fiji Configuration File", InputFile, FilterParameter::Parameter, ITKImportFijiMontage, "*.txt"));
 
   PreflightUpdatedValueFilterParameter::Pointer param = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Montage Information", MontageInformation, FilterParameter::Parameter, ITKImportFijiMontage);
   param->setReadOnly(true);
