@@ -253,7 +253,6 @@ void ImportZenInfoMontage::dataCheck()
 
   QDateTime timeStamp(fi.lastModified());
 
-
   // clang-format off
   if(m_InputFile ==  d_ptr->m_InputFile_Cache
     && m_DataContainerPath == d_ptr->m_DataContainerPath
@@ -322,12 +321,12 @@ void ImportZenInfoMontage::dataCheck()
 void ImportZenInfoMontage::preflight()
 {
   // These are the REQUIRED lines of CODE to make sure the filter behaves correctly
-  setInPreflight(true); // Set the fact that we are preflighting.
-  emit preflightAboutToExecute(); // Emit this signal so that other widgets can do one file update
+  setInPreflight(true);              // Set the fact that we are preflighting.
+  emit preflightAboutToExecute();    // Emit this signal so that other widgets can do one file update
   emit updateFilterParameters(this); // Emit this signal to have the widgets push their values down to the filter
-  dataCheck(); // Run our DataCheck to make sure everthing is setup correctly
-  emit preflightExecuted(); // We are done preflighting this filter
-  setInPreflight(false); // Inform the system this filter is NOT in preflight mode anymore.
+  dataCheck();                       // Run our DataCheck to make sure everthing is setup correctly
+  emit preflightExecuted();          // We are done preflighting this filter
+  setInPreflight(false);             // Inform the system this filter is NOT in preflight mode anymore.
 }
 
 // -----------------------------------------------------------------------------
@@ -589,7 +588,7 @@ void ImportZenInfoMontage::generateDataStructure()
 
   for(const auto& bound : bounds)
   {
-    if (bound.Row < m_MontageStart[1] || bound.Row > m_MontageEnd[1] || bound.Col < m_MontageStart[0] || bound.Col > m_MontageEnd[0])
+    if(bound.Row < m_MontageStart[1] || bound.Row > m_MontageEnd[1] || bound.Col < m_MontageStart[0] || bound.Col > m_MontageEnd[0])
     {
       continue;
     }

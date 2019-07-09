@@ -668,7 +668,7 @@ void ImportAxioVisionV4Montage::generateDataStructure()
 
   for(const auto& bound : bounds)
   {
-    if (bound.Row < m_MontageStart[1] || bound.Row > m_MontageEnd[1] || bound.Col < m_MontageStart[0] || bound.Col > m_MontageEnd[0])
+    if(bound.Row < m_MontageStart[1] || bound.Row > m_MontageEnd[1] || bound.Col < m_MontageStart[0] || bound.Col > m_MontageEnd[0])
     {
       continue;
     }
@@ -931,7 +931,7 @@ AbstractFilter::Pointer ImportAxioVisionV4Montage::newFilterInstance(bool copyFi
 // -----------------------------------------------------------------------------
 const QString ImportAxioVisionV4Montage::getCompiledLibraryName() const
 {
-  return ITKImageProcessingConstants::ITKImageProcessingBaseName;;
+  return ITKImageProcessingConstants::ITKImageProcessingBaseName;
 }
 
 // -----------------------------------------------------------------------------
