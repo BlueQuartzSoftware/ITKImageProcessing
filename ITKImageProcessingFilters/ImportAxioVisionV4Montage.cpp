@@ -775,6 +775,11 @@ void ImportAxioVisionV4Montage::readImages()
 
   for(const auto& bound : bounds)
   {
+    if(bound.Row < m_MontageStart[1] || bound.Row > m_MontageEnd[1] || bound.Col < m_MontageStart[0] || bound.Col > m_MontageEnd[0])
+    {
+      continue;
+    }
+
     QString msg;
     QTextStream out(&msg);
     out << "Importing " << bound.Filename;
