@@ -37,11 +37,11 @@
 
 #include <sstream>
 
-
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Common/TemplateHelpers.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatFilterParameter.h"
+#include "SIMPLib/FilterParameters/IntVec2FilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/MultiDataContainerSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
@@ -83,9 +83,8 @@
   }                                                                                                                                                                                                    \
   else                                                                                                                                                                                                 \
   {                                                                                                                                                                                                    \
-    filter->setErrorCondition(TemplateHelpers::Errors::UnsupportedImageType,                                                                                                                                                \
-                               "The input array's image type is not recognized.  Supported image types"                                                                                                \
-                               " are grayscale (1-component), RGB (3-component), and RGBA (4-component)");                                                                                                                         \
+    filter->setErrorCondition(TemplateHelpers::Errors::UnsupportedImageType, "The input array's image type is not recognized.  Supported image types"                                                  \
+                                                                             " are grayscale (1-component), RGB (3-component), and RGBA (4-component)");                                               \
   }
 
 #define EXECUTE_ACCUMULATETYPE_FUNCTION_TEMPLATE(DATATYPE, filter, call, inputData, ...)                                                                                                               \
@@ -104,9 +103,8 @@
   }                                                                                                                                                                                                    \
   else                                                                                                                                                                                                 \
   {                                                                                                                                                                                                    \
-    filter->setErrorCondition(TemplateHelpers::Errors::UnsupportedImageType,                                                                                                                                                \
-                               "The input array's image type is not recognized.  Supported image types"                                                                                                \
-                               " are grayscale (1-component), RGB (3-component), and RGBA (4-component)");                                                                                                                         \
+    filter->setErrorCondition(TemplateHelpers::Errors::UnsupportedImageType, "The input array's image type is not recognized.  Supported image types"                                                  \
+                                                                             " are grayscale (1-component), RGB (3-component), and RGBA (4-component)");                                               \
   }
 
 #define EXECUTE_DATATYPE_FUNCTION_TEMPLATE(filter, call, inputData, ...)                                                                                                                               \
@@ -160,7 +158,7 @@
   }                                                                                                                                                                                                    \
   else                                                                                                                                                                                                 \
   {                                                                                                                                                                                                    \
-    filter->setErrorCondition(TemplateHelpers::Errors::UnsupportedDataType, "The input array's data type is not supported");                                                 \
+    filter->setErrorCondition(TemplateHelpers::Errors::UnsupportedDataType, "The input array's data type is not supported");                                                                           \
   }
 
 #define EXECUTE_STITCH_FUNCTION_TEMPLATE(filter, call, inputData, ...) EXECUTE_DATATYPE_FUNCTION_TEMPLATE(filter, call, inputData, __VA_ARGS__)
@@ -169,7 +167,8 @@
 //
 // -----------------------------------------------------------------------------
 ITKStitchMontage::ITKStitchMontage()
-: m_MontageSize(IntVec3Type(0, 0, 0))
+: m_MontageStart(IntVec2Type(0, 0))
+, m_MontageEnd(IntVec2Type(0, 0))
 , m_CommonAttributeMatrixName(ITKImageProcessing::Montage::k_TileAttributeMatrixDefaultName)
 , m_CommonDataArrayName(ITKImageProcessing::Montage::k_TileDataArrayDefaultName)
 , m_MontageDataContainerName(ITKImageProcessing::Montage::k_MontageDataContainerDefaultName)
@@ -200,7 +199,8 @@ void ITKStitchMontage::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
 
-  parameters.push_back(SIMPL_NEW_INT_VEC3_FP("Montage Size (Cols, Rows)", MontageSize, FilterParameter::Parameter, ITKStitchMontage));
+  parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage Start (Col, Row) [Inclusive, Zero Based]", MontageStart, FilterParameter::Parameter, ITKStitchMontage));
+  parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage End (Col, Row) [Inclusive, Zero Based]", MontageEnd, FilterParameter::Parameter, ITKStitchMontage));
 
   {
     MultiDataContainerSelectionFilterParameter::RequirementType req =
@@ -229,15 +229,14 @@ void ITKStitchMontage::dataCheck()
   QString ss;
   int err = 0;
 
-  m_xMontageSize = m_MontageSize.getX();
-  m_yMontageSize = m_MontageSize.getY();
+  std::transform(m_MontageStart.begin(), m_MontageStart.end(), m_MontageEnd.begin(), m_MontageSize.begin(), [](int32_t a, int32_t b) -> int32_t { return a + b + 1; });
+  int32_t rowCount = m_MontageSize[1];
+  int32_t colCount = m_MontageSize[0];
 
-  int totalMontageSize = m_xMontageSize*m_yMontageSize;
-
-  if(m_xMontageSize <= 0 || m_yMontageSize <= 0)
+  if(colCount <= 0 || rowCount <= 0)
   {
     QString ss = QObject::tr("The Montage Size x and y values must be greater than 0");
-    setErrorCondition(-11000, ss);
+    setErrorCondition(-396, ss);
     return;
   }
 
@@ -251,10 +250,14 @@ void ITKStitchMontage::dataCheck()
     return;
   }
 
-  if (totalMontageSize != selectedDCCount)
+  int totalMontageSize = std::accumulate(m_MontageSize.begin(), m_MontageSize.end(), 1, std::multiplies<>());
+
+  if(totalMontageSize != selectedDCCount)
   {
     QString ss = QObject::tr("The number of selected data containers (%1) does not match the number of data "
-                             "containers expected by the montage size dimensions specified (%2)").arg(selectedDCCount).arg(totalMontageSize);
+                             "containers expected by the montage size dimensions specified (%2)")
+                     .arg(selectedDCCount)
+                     .arg(totalMontageSize);
     setErrorCondition(-11002, ss);
     return;
   }
@@ -350,8 +353,8 @@ void ITKStitchMontage::dataCheck()
     return;
   }
 
-  size_t montageArrayXSize = imageDataTupleDims[0] * m_xMontageSize;
-  size_t montageArrayYSize = imageDataTupleDims[1] * m_yMontageSize;
+  size_t montageArrayXSize = imageDataTupleDims[0] * colCount;
+  size_t montageArrayYSize = imageDataTupleDims[1] * rowCount;
 
   ImageGeom::Pointer imageGeom = ImageGeom::New();
   imageGeom->setName("MontageGeometry");
@@ -396,8 +399,7 @@ void ITKStitchMontage::dataCheck()
 
   ss = QObject::tr("The number of elements of montage data array '%1' is projected to be %2.  This is assuming "
                    "0% overlap between tiles, so the actual geometry dimensions after executing the stitching algorithm may be smaller.")
-           .arg(da->getName())
-           .arg(QLocale::system().toString(static_cast<int>(da->getNumberOfTuples())));
+           .arg(da->getName(), QLocale::system().toString(static_cast<int>(da->getNumberOfTuples())));
   setWarningCondition(-3004, ss);
 }
 
@@ -459,16 +461,20 @@ void ITKStitchMontage::createFijiDataStructure()
   QMutableListIterator<QString> dcNameIter(m_ImageDataContainers);
   QStringList dcList;
   bool dataContainerPrefixChanged = false;
-  if(m_ImageDataContainers.size() != (m_xMontageSize * m_yMontageSize))
+
+  int32_t rowCount = m_MontageSize[1];
+  int32_t colCount = m_MontageSize[0];
+
+  if(m_ImageDataContainers.size() != (colCount * rowCount))
   {
     return;
   }
 
-  m_StageTiles.resize(m_yMontageSize);
+  m_StageTiles.resize(rowCount);
   // for(unsigned i = 0; i < m_yMontageSize; i++)
   for(auto& stageTile : m_StageTiles)
   {
-    stageTile.resize(m_xMontageSize);
+    stageTile.resize(colCount);
   }
 
   std::vector<size_t> cDims;
@@ -486,7 +492,7 @@ void ITKStitchMontage::createFijiDataStructure()
     FloatVec3Type origin = image->getOrigin();
 
     // Extract row and column data from the data container name
-    QString filename = ""; // Need to find this?
+    //    QString filename = ""; // Need to find this?
     int indexOfUnderscore = dcName.lastIndexOf("_");
     if(!dataContainerPrefixChanged)
     {
@@ -513,7 +519,8 @@ void ITKStitchMontage::createFijiDataStructure()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename PixelType, typename AccumulatePixelType> void ITKStitchMontage::stitchMontage(int peakMethodToUse, unsigned streamSubdivisions)
+template <typename PixelType, typename AccumulatePixelType>
+void ITKStitchMontage::stitchMontage(int peakMethodToUse, unsigned streamSubdivisions)
 {
   using ScalarPixelType = typename itk::NumericTraits<PixelType>::ValueType;
   using ScalarImageType = itk::Dream3DImage<ScalarPixelType, Dimension>;
@@ -537,7 +544,8 @@ template <typename PixelType, typename AccumulatePixelType> void ITKStitchMontag
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename PixelType, typename Resampler> typename Resampler::Pointer ITKStitchMontage::createResampler()
+template <typename PixelType, typename Resampler>
+typename Resampler::Pointer ITKStitchMontage::createResampler()
 {
   // using ScalarPixelType = typename itk::NumericTraits<PixelType>::ValueType;
   // using ScalarImageType = itk::Dream3DImage<ScalarPixelType, Dimension>;
@@ -546,11 +554,14 @@ template <typename PixelType, typename Resampler> typename Resampler::Pointer IT
   // resampleF->SetMontage(montage); // doesn't compile, because montage is expected
   // to be templated using itk::Image, not itk::Dream3DImage
 
-//  typename ScalarImageType::SpacingType sp;
-//  sp.Fill(1.0); // assume unit spacing
+  //  typename ScalarImageType::SpacingType sp;
+  //  sp.Fill(1.0); // assume unit spacing
 
-  resampler->SetMontageSize({m_xMontageSize, m_yMontageSize});
-//  resampler->SetForcedSpacing(sp);
+  unsigned int rowCount = m_MontageSize[1];
+  unsigned int colCount = m_MontageSize[0];
+
+  resampler->SetMontageSize({colCount, rowCount});
+  //  resampler->SetForcedSpacing(sp);
 
   return resampler;
 }
@@ -558,16 +569,17 @@ template <typename PixelType, typename Resampler> typename Resampler::Pointer IT
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename PixelType, typename MontageType, typename Resampler> void ITKStitchMontage::initializeResampler(typename Resampler::Pointer resampler)
+template <typename PixelType, typename MontageType, typename Resampler>
+void ITKStitchMontage::initializeResampler(typename Resampler::Pointer resampler)
 {
   using OriginalImageType = itk::Dream3DImage<PixelType, Dimension>;
   using TransformType = itk::TranslationTransform<double, Dimension>;
 
   typename MontageType::TileIndexType ind;
-  for(unsigned y = 0; y < m_yMontageSize; y++)
+  for(unsigned y = m_MontageStart[1]; y < m_MontageEnd[1]; y++)
   {
     ind[1] = y;
-    for(unsigned x = 0; x < m_xMontageSize; x++)
+    for(unsigned x = m_MontageStart[0]; x < m_MontageEnd[0]; x++)
     {
       ind[0] = x;
       using toITKType = itk::InPlaceDream3DDataToImageFilter<PixelType, Dimension>;
@@ -614,7 +626,8 @@ template <typename PixelType, typename MontageType, typename Resampler> void ITK
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename PixelType, typename Resampler> void ITKStitchMontage::executeStitching(typename Resampler::Pointer resampler, unsigned streamSubdivisions)
+template <typename PixelType, typename Resampler>
+void ITKStitchMontage::executeStitching(typename Resampler::Pointer resampler, unsigned streamSubdivisions)
 {
   using OriginalImageType = itk::Dream3DImage<PixelType, Dimension>;
 
@@ -641,7 +654,8 @@ template <typename PixelType, typename Resampler> void ITKStitchMontage::execute
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename PixelType, typename OriginalImageType> void ITKStitchMontage::convertMontageToD3D(OriginalImageType* image)
+template <typename PixelType, typename OriginalImageType>
+void ITKStitchMontage::convertMontageToD3D(OriginalImageType* image)
 {
   DataArrayPath dataArrayPath(getMontageDataContainerName(), getMontageAttributeMatrixName(), getMontageDataArrayName());
   DataContainer::Pointer container = getDataContainerArray()->getDataContainer(dataArrayPath.getDataContainerName());
