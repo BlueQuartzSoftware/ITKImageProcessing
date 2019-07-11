@@ -116,6 +116,7 @@ ITKImportRoboMetMontage::ITKImportRoboMetMontage()
 , m_ConvertToGrayScale(false)
 , m_ChangeOrigin(false)
 , m_ChangeSpacing(false)
+, m_LengthUnit(-1)
 , d_ptr(new ITKImportRoboMetMontagePrivate(this))
 {
   m_NumImages = 0;
@@ -636,6 +637,8 @@ void ITKImportRoboMetMontage::readImages()
     DataContainer::Pointer dc = dca->getDataContainer(dcName);
     // So is the Geometry
     ImageGeom::Pointer image = dc->getGeometryAs<ImageGeom>();
+
+    image->setUnits(static_cast<IGeometry::LengthUnit>(m_LengthUnit));
 
     // Create the Image Geometry
     SizeVec3Type dims = image->getDimensions();

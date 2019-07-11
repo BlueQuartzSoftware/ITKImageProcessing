@@ -122,6 +122,7 @@ ITKImportFijiMontage::ITKImportFijiMontage()
 , m_ConvertToGrayScale(false)
 , m_ChangeOrigin(false)
 , m_ChangeSpacing(false)
+, m_LengthUnit(-1)
 , d_ptr(new ITKImportFijiMontagePrivate(this))
 {
   m_ColorWeights = FloatVec3Type(0.2125f, 0.7154f, 0.0721f);
@@ -525,6 +526,8 @@ void ITKImportFijiMontage::readImages()
     DataContainer::Pointer dc = dca->getDataContainer(dcName);
     // So is the Geometry
     ImageGeom::Pointer image = dc->getGeometryAs<ImageGeom>();
+
+    image->setUnits(static_cast<IGeometry::LengthUnit>(m_LengthUnit));
 
     // Create the Image Geometry
     SizeVec3Type dims = image->getDimensions();

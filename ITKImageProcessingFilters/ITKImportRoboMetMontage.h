@@ -62,6 +62,7 @@ class ITKImageProcessing_EXPORT ITKImportRoboMetMontage : public AbstractFilter
   PYB11_PROPERTY(int SliceNumber READ getSliceNumber WRITE setSliceNumber)
   PYB11_PROPERTY(QString ImageFilePrefix READ getImageFilePrefix WRITE setImageFilePrefix)
   PYB11_PROPERTY(QString ImageFileExtension READ getImageFileExtension WRITE setImageFileExtension)
+  PYB11_PROPERTY(int32_t LengthUnit READ getLengthUnit WRITE setLengthUnit)
 
   Q_DECLARE_PRIVATE(ITKImportRoboMetMontage)
 public:
@@ -127,6 +128,9 @@ public:
 
   SIMPL_INSTANCE_PROPERTY(bool, FileWasRead)
   Q_PROPERTY(bool FileWasRead READ getFileWasRead)
+
+  SIMPL_FILTER_PARAMETER(int32_t, LengthUnit)
+  Q_PROPERTY(int32_t LengthUnit READ getLengthUnit WRITE setLengthUnit)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class

@@ -171,7 +171,6 @@
 ITKStitchMontage::ITKStitchMontage()
 : m_MontageSize(IntVec2Type(0, 0))
 , m_CommonAttributeMatrixName(ITKImageProcessing::Montage::k_TileAttributeMatrixDefaultName)
-, m_StitchMontage(false)
 , m_CommonDataArrayName(ITKImageProcessing::Montage::k_TileDataArrayDefaultName)
 , m_MontageDataContainerName(ITKImageProcessing::Montage::k_MontageDataContainerDefaultName)
 , m_MontageAttributeMatrixName(ITKImageProcessing::Montage::k_MontageAttributeMatrixDefaultName)

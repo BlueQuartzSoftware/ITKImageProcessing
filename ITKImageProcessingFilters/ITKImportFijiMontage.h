@@ -59,6 +59,7 @@ class ITKImageProcessing_EXPORT ITKImportFijiMontage : public AbstractFilter
   PYB11_PROPERTY(FloatVec3Type Origin READ getOrigin WRITE setOrigin)
   PYB11_PROPERTY(bool ChangeSpacing READ getChangeSpacing WRITE setChangeSpacing)
   PYB11_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
+  PYB11_PROPERTY(int32_t LengthUnit READ getLengthUnit WRITE setLengthUnit)
 
   Q_DECLARE_PRIVATE(ITKImportFijiMontage)
 
@@ -115,6 +116,9 @@ public:
 
   SIMPL_GET_PROPERTY(int32_t, ColumnCount)
   Q_PROPERTY(int32_t ColumnCount READ getColumnCount)
+
+  SIMPL_FILTER_PARAMETER(int32_t, LengthUnit)
+  Q_PROPERTY(int32_t LengthUnit READ getLengthUnit WRITE setLengthUnit)
 
   QString getMontageInformation();
   Q_PROPERTY(QString MontageInformation READ getMontageInformation)

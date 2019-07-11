@@ -64,7 +64,6 @@ class ITKImageProcessing_EXPORT ITKStitchMontage : public AbstractFilter
   PYB11_PROPERTY(IntVec2Type MontageSize READ getMontageSize WRITE setMontageSize)
   PYB11_PROPERTY(QStringList ImageDataContainers READ getImageDataContainers WRITE setImageDataContainers)
   PYB11_PROPERTY(QString CommonAttributeMatrixName READ getCommonAttributeMatrixName WRITE setCommonAttributeMatrixName)
-  PYB11_PROPERTY(bool StitchMontage READ getStitchMontage WRITE setStitchMontage)
   PYB11_PROPERTY(QString CommonDataArrayName READ getCommonDataArrayName WRITE setCommonDataArrayName)
   PYB11_PROPERTY(QString MontageDataContainerName READ getMontageDataContainerName WRITE setMontageDataContainerName)
   PYB11_PROPERTY(QString MontageAttributeMatrixName READ getMontageAttributeMatrixName WRITE setMontageAttributeMatrixName)
@@ -85,9 +84,6 @@ public:
 
   SIMPL_FILTER_PARAMETER(QString, CommonAttributeMatrixName)
   Q_PROPERTY(QString CommonAttributeMatrixName READ getCommonAttributeMatrixName WRITE setCommonAttributeMatrixName)
-
-  SIMPL_FILTER_PARAMETER(bool, StitchMontage)
-  Q_PROPERTY(bool StitchMontage READ getStitchMontage WRITE setStitchMontage)
 
   SIMPL_FILTER_PARAMETER(QString, CommonDataArrayName)
   Q_PROPERTY(QString CommonDataArrayName READ getCommonDataArrayName WRITE setCommonDataArrayName)
