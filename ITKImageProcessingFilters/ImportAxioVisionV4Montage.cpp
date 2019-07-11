@@ -103,6 +103,8 @@ class ImportAxioVisionV4MontagePrivate
   QString m_MontageInformation;
   bool m_ImportAllMetaData = false;
   QString m_MetaDataAttributeMatrixName;
+  int32_t m_MaxRow = 0;
+  int32_t m_MaxCol = 0;
   std::vector<ImportAxioVisionV4Montage::BoundsType> m_BoundsCache;
 };
 
@@ -227,18 +229,6 @@ void ImportAxioVisionV4Montage::dataCheck()
     setErrorCondition(-395, ss);
   }
 
-  IntVec2Type montageSize;
-  std::transform(m_MontageStart.begin(), m_MontageStart.end(), m_MontageEnd.begin(), montageSize.begin(), [](int32_t a, int32_t b) -> int32_t { return a + b + 1; });
-  int32_t rowCount = montageSize[1];
-  int32_t colCount = montageSize[0];
-
-  if(colCount <= 0 || rowCount <= 0)
-  {
-    QString ss = QObject::tr("The Montage Size x and y values must be greater than 0");
-    setErrorCondition(-396, ss);
-    return;
-  }
-
   if(getDataContainerPath().isEmpty())
   {
     ss = QObject::tr("The Data Container Name cannot be empty.");
@@ -346,6 +336,43 @@ void ImportAxioVisionV4Montage::dataCheck()
     generateCache(root);
   }
 
+  if(m_MontageStart[0] > m_MontageEnd[0])
+  {
+    QString ss = QObject::tr("Montage Start Column (%1) must be equal or less than Montage End Column(%2)").arg(m_MontageStart[0]).arg(m_MontageEnd[0]);
+    setErrorCondition(-396, ss);
+    return;
+  }
+  if(m_MontageStart[1] > m_MontageEnd[1])
+  {
+    QString ss = QObject::tr("Montage Start Row (%1) must be equal or less than Montage End Row(%2)").arg(m_MontageStart[1]).arg(m_MontageEnd[1]);
+    setErrorCondition(-397, ss);
+    return;
+  }
+  if(m_MontageStart[0] < 0 || m_MontageEnd[0] < 0)
+  {
+    QString ss = QObject::tr("Montage Start Column (%1) and Montage End Column(%2) must be greater than Zero (0)").arg(m_MontageStart[0]).arg(m_MontageEnd[0]);
+    setErrorCondition(-398, ss);
+    return;
+  }
+  if(m_MontageStart[1] < 0 || m_MontageEnd[1] < 0)
+  {
+    QString ss = QObject::tr("Montage Start Row (%1) and Montage End Row(%2) must be greater than Zero (0)").arg(m_MontageStart[1]).arg(m_MontageEnd[1]);
+    setErrorCondition(-399, ss);
+    return;
+  }
+  if(m_MontageStart[0] > d_ptr->m_MaxCol || m_MontageEnd[0] > d_ptr->m_MaxCol)
+  {
+    QString ss = QObject::tr("Montage Start Column (%1) and Montage End Column(%2) must be <= %3").arg(m_MontageStart[0]).arg(m_MontageEnd[0]).arg(d_ptr->m_MaxCol);
+    setErrorCondition(-400, ss);
+    return;
+  }
+  if(m_MontageStart[1] > d_ptr->m_MaxRow || m_MontageEnd[1] > d_ptr->m_MaxRow)
+  {
+    QString ss = QObject::tr("Montage Start Row (%1) and Montage End Row(%2) must be <=").arg(m_MontageStart[1]).arg(m_MontageEnd[1]).arg(d_ptr->m_MaxRow);
+    setErrorCondition(-401, ss);
+    return;
+  }
+
   generateDataStructure();
 }
 
@@ -413,6 +440,8 @@ void ImportAxioVisionV4Montage::flushCache()
   d_ptr->m_BoundsCache.clear();
   d_ptr->m_ImportAllMetaData = false;
   d_ptr->m_MetaDataAttributeMatrixName = "";
+  d_ptr->m_MaxCol = 0;
+  d_ptr->m_MaxRow = 0;
 }
 
 // -----------------------------------------------------------------------------
@@ -562,7 +591,8 @@ void ImportAxioVisionV4Montage::generateCache(QDomElement& root)
       }
       bound.MetaData = metaAm;
     }
-
+    d_ptr->m_MaxCol = std::max(bound.Col, d_ptr->m_MaxCol);
+    d_ptr->m_MaxRow = std::max(bound.Row, d_ptr->m_MaxRow);
     bounds[p] = bound;
   }
 
@@ -613,7 +643,11 @@ void ImportAxioVisionV4Montage::generateCache(QDomElement& root)
 
   QString montageInfo;
   QTextStream ss(&montageInfo);
-  ss << "Columns=" << m_ColumnCount << "  Rows=" << m_RowCount << "  Num. Images=" << imageCount;
+  ss << "Max Column: " << m_ColumnCount - 1 << "  Max Row: " << m_RowCount - 1 << "  Image Count: " << imageCount;
+
+  int32_t importedCols = m_MontageEnd[0] - m_MontageStart[0] + 1;
+  int32_t importedRows = m_MontageEnd[1] - m_MontageStart[1] + 1;
+  ss << "\nImported Columns: " << importedCols << "  Imported Rows: " << importedRows << "  Imported Image Count: " << (importedCols * importedRows);
 
   FloatVec3Type overrideOrigin = minCoord;
   FloatVec3Type overrideSpacing = minSpacing;
@@ -648,7 +682,8 @@ void ImportAxioVisionV4Montage::generateCache(QDomElement& root)
     }
   }
   ss << "\nOrigin: " << overrideOrigin[0] << ", " << overrideOrigin[1] << ", " << overrideOrigin[2];
-  ss << "  Spacing: " << overrideSpacing[0] << ", " << overrideSpacing[1] << ", " << overrideSpacing[2];
+  ss << "\nSpacing: " << overrideSpacing[0] << ", " << overrideSpacing[1] << ", " << overrideSpacing[2];
+
   d_ptr->m_MontageInformation = montageInfo;
   setBoundsCache(bounds);
 }
