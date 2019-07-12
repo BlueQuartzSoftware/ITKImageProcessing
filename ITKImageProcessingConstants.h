@@ -138,6 +138,7 @@ const QString k_AAGrayScaleName("GrayImageData");
 
 const QString k_AttributeArrayNames("AttributeArrayNames");
 const QString k_DataContaineNameDefaultName("Mosaic");
+const QString k_DataContainerPrefixDefaultName("Mosaic_");
 const QString k_TileAttributeMatrixDefaultName("Tile Data");
 const QString k_TileDataArrayDefaultName("Image");
 const QString k_GrayScaleTempArrayName("gray_scale_temp");

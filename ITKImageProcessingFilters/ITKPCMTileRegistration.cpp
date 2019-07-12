@@ -38,7 +38,6 @@
 #include <algorithm>
 #include <type_traits>
 
-
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Common/TemplateHelpers.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -86,9 +85,8 @@
   }                                                                                                                                                                                                    \
   else                                                                                                                                                                                                 \
   {                                                                                                                                                                                                    \
-    filter->setErrorCondition(TemplateHelpers::Errors::UnsupportedImageType,                                                                                                                                                \
-                               "The input array's image type is not recognized.  Supported image types"                                                                                                \
-                               " are grayscale (1-component), RGB (3-component), and RGBA (4-component)");                                                                                                                         \
+    filter->setErrorCondition(TemplateHelpers::Errors::UnsupportedImageType, "The input array's image type is not recognized.  Supported image types"                                                  \
+                                                                             " are grayscale (1-component), RGB (3-component), and RGBA (4-component)");                                               \
   }
 
 #define EXECUTE_DATATYPE_FUNCTION_TEMPLATE(filter, rgb_call, grayscale_call, inputData, ...)                                                                                                           \
@@ -142,7 +140,7 @@
   }                                                                                                                                                                                                    \
   else                                                                                                                                                                                                 \
   {                                                                                                                                                                                                    \
-    filter->setErrorCondition(TemplateHelpers::Errors::UnsupportedDataType, "The input array's data type is not supported");                                                 \
+    filter->setErrorCondition(TemplateHelpers::Errors::UnsupportedDataType, "The input array's data type is not supported");                                                                           \
   }
 
 #define EXECUTE_REGISTER_FUNCTION_TEMPLATE(filter, rgb_call, grayscale_call, inputData, ...) EXECUTE_DATATYPE_FUNCTION_TEMPLATE(filter, rgb_call, grayscale_call, inputData, __VA_ARGS__)
@@ -181,7 +179,7 @@ QString generateDataContainerName(const QString& dataContainerPrefix, const IntV
 //
 // -----------------------------------------------------------------------------
 ITKPCMTileRegistration::ITKPCMTileRegistration()
-: m_DataContainerPrefix("")
+: m_DataContainerPrefix(ITKImageProcessing::Montage::k_DataContainerPrefixDefaultName)
 , m_CommonAttributeMatrixName(ITKImageProcessing::Montage::k_TileAttributeMatrixDefaultName)
 , m_CommonDataArrayName(ITKImageProcessing::Montage::k_TileDataArrayDefaultName)
 //, m_TileOverlap(10.0f)
@@ -245,7 +243,7 @@ void ITKPCMTileRegistration::dataCheck()
 
   if(getDataContainerPrefix().isEmpty())
   {
-    QString ss = QObject::tr("DataContainer Prefix Attribute Matrix is empty.");
+    QString ss = QObject::tr("Data Container Prefix is empty.");
     setErrorCondition(-11003, ss);
     return;
   }
@@ -372,7 +370,6 @@ typename MontageType::Pointer ITKPCMTileRegistration::createMontage(int peakMeth
   {
     y1 = 0;
   }
-
 
   // Create tile montage
   using SizeValueType = itk::Size<2>::SizeValueType;

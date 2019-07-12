@@ -62,7 +62,6 @@ class ITKImageProcessing_EXPORT ITKStitchMontage : public AbstractFilter
   PYB11_CREATE_BINDINGS(ITKStitchMontage SUPERCLASS AbstractFilter)
   PYB11_PROPERTY(IntVec2Type MontageStart READ getMontageStart WRITE setMontageStart)
   PYB11_PROPERTY(IntVec2Type MontageEnd READ getMontageEnd WRITE setMontageEnd)
-  PYB11_PROPERTY(QStringList ImageDataContainers READ getImageDataContainers WRITE setImageDataContainers)
   PYB11_PROPERTY(QString CommonAttributeMatrixName READ getCommonAttributeMatrixName WRITE setCommonAttributeMatrixName)
   PYB11_PROPERTY(QString CommonDataArrayName READ getCommonDataArrayName WRITE setCommonDataArrayName)
   PYB11_PROPERTY(QString MontageDataContainerName READ getMontageDataContainerName WRITE setMontageDataContainerName)
@@ -82,8 +81,8 @@ public:
   SIMPL_FILTER_PARAMETER(IntVec2Type, MontageEnd)
   Q_PROPERTY(IntVec2Type MontageEnd READ getMontageEnd WRITE setMontageEnd)
 
-  SIMPL_FILTER_PARAMETER(QStringList, ImageDataContainers)
-  Q_PROPERTY(QStringList ImageDataContainers READ getImageDataContainers WRITE setImageDataContainers)
+  SIMPL_FILTER_PARAMETER(QString, DataContainerPrefix)
+  Q_PROPERTY(QString DataContainerPrefix READ getDataContainerPrefix WRITE setDataContainerPrefix)
 
   SIMPL_FILTER_PARAMETER(QString, CommonAttributeMatrixName)
   Q_PROPERTY(QString CommonAttributeMatrixName READ getCommonAttributeMatrixName WRITE setCommonAttributeMatrixName)
@@ -197,11 +196,6 @@ protected:
   void initialize();
 
   /**
-   * @brief Create the Fiji data structure
-   */
-  void createFijiDataStructure();
-
-  /**
    * @brief Stitch the montage
    */
   template <typename PixelType, typename AccumulatePixelType>
@@ -222,10 +216,8 @@ protected:
 
 private:
   static constexpr unsigned Dimension = 2;
-  itk::TileLayout2D m_StageTiles;
-  itk::TileLayout2D m_ActualTiles;
-  QString m_dataContainerPrefix;
   IntVec2Type m_MontageSize;
+  std::vector<DataContainer::Pointer> m_ImageDataContainers;
 
   /**
    * @brief createResampler

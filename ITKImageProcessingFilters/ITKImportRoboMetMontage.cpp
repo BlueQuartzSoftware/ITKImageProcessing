@@ -91,7 +91,8 @@ class ITKImportRoboMetMontagePrivate
   int32_t m_SliceNumber = -1;
   QString m_ImageFilePrefix;
   QString m_ImageFileExtension;
-
+  int32_t m_MaxRow = 0;
+  int32_t m_MaxCol = 0;
   std::vector<ITKImportRoboMetMontage::BoundsType> m_BoundsCache;
 };
 
@@ -237,18 +238,6 @@ void ITKImportRoboMetMontage::dataCheck()
     return;
   }
 
-  IntVec2Type montageSize;
-  std::transform(m_MontageStart.begin(), m_MontageStart.end(), m_MontageEnd.begin(), montageSize.begin(), [](int32_t a, int32_t b) -> int32_t { return a + b + 1; });
-  int32_t rowCount = montageSize[1];
-  int32_t colCount = montageSize[0];
-
-  if(colCount <= 0 || rowCount <= 0)
-  {
-    QString ss = QObject::tr("The Montage Size x and y values must be greater than 0");
-    setErrorCondition(-396, ss);
-    return;
-  }
-
   if(getDataContainerPath().isEmpty())
   {
     ss = QObject::tr("The Data Container Name cannot be empty.");
@@ -322,6 +311,43 @@ void ITKImportRoboMetMontage::dataCheck()
     setTimeStamp_Cache(timeStamp);
 
     generateCache();
+  }
+
+  if(m_MontageStart[0] > m_MontageEnd[0])
+  {
+    QString ss = QObject::tr("Montage Start Column (%1) must be equal or less than Montage End Column(%2)").arg(m_MontageStart[0]).arg(m_MontageEnd[0]);
+    setErrorCondition(-396, ss);
+    return;
+  }
+  if(m_MontageStart[1] > m_MontageEnd[1])
+  {
+    QString ss = QObject::tr("Montage Start Row (%1) must be equal or less than Montage End Row(%2)").arg(m_MontageStart[1]).arg(m_MontageEnd[1]);
+    setErrorCondition(-397, ss);
+    return;
+  }
+  if(m_MontageStart[0] < 0 || m_MontageEnd[0] < 0)
+  {
+    QString ss = QObject::tr("Montage Start Column (%1) and Montage End Column(%2) must be greater than Zero (0)").arg(m_MontageStart[0]).arg(m_MontageEnd[0]);
+    setErrorCondition(-398, ss);
+    return;
+  }
+  if(m_MontageStart[1] < 0 || m_MontageEnd[1] < 0)
+  {
+    QString ss = QObject::tr("Montage Start Row (%1) and Montage End Row(%2) must be greater than Zero (0)").arg(m_MontageStart[1]).arg(m_MontageEnd[1]);
+    setErrorCondition(-399, ss);
+    return;
+  }
+  if(m_MontageStart[0] > d_ptr->m_MaxCol || m_MontageEnd[0] > d_ptr->m_MaxCol)
+  {
+    QString ss = QObject::tr("Montage Start Column (%1) and Montage End Column(%2) must be <= %3").arg(m_MontageStart[0]).arg(m_MontageEnd[0]).arg(d_ptr->m_MaxCol);
+    setErrorCondition(-400, ss);
+    return;
+  }
+  if(m_MontageStart[1] > d_ptr->m_MaxRow || m_MontageEnd[1] > d_ptr->m_MaxRow)
+  {
+    QString ss = QObject::tr("Montage Start Row (%1) and Montage End Row(%2) must be <=").arg(m_MontageStart[1]).arg(m_MontageEnd[1]).arg(d_ptr->m_MaxRow);
+    setErrorCondition(-401, ss);
+    return;
   }
 
   generateDataStructure();
@@ -464,6 +490,9 @@ void ITKImportRoboMetMontage::generateCache()
     bound.Col = col;
     bound.Row = row;
 
+    d_ptr->m_MaxCol = std::max(bound.Col, d_ptr->m_MaxCol);
+    d_ptr->m_MaxRow = std::max(bound.Row, d_ptr->m_MaxRow);
+
     bounds.push_back(bound);
   }
   // We use Zero based indexing so add 1 to get the counts
@@ -535,7 +564,11 @@ void ITKImportRoboMetMontage::generateCache()
 
   QString montageInfo;
   QTextStream ss(&montageInfo);
-  ss << "Columns=" << m_ColumnCount << "  Rows=" << m_RowCount << "  Num. Images=" << m_NumImages;
+  ss << "Max Column: " << m_ColumnCount - 1 << "  Max Row: " << m_RowCount - 1 << "  Image Count: " << m_NumImages;
+
+  int32_t importedCols = m_MontageEnd[0] - m_MontageStart[0] + 1;
+  int32_t importedRows = m_MontageEnd[1] - m_MontageStart[1] + 1;
+  ss << "\nImported Columns: " << importedCols << "  Imported Rows: " << importedRows << "  Imported Image Count: " << (importedCols * importedRows);
 
   FloatVec3Type overrideOrigin = minCoord;
   FloatVec3Type overrideSpacing = minSpacing;
@@ -557,13 +590,13 @@ void ITKImportRoboMetMontage::generateCache()
     {
       ImageGeom::Pointer imageGeom = geometries[i];
       BoundsType& bound = bounds.at(i);
-      std::transform(bound.Origin.begin(), bound.Origin.end(), delta.begin(), bound.Origin.begin(), std::minus<float>());
+      std::transform(bound.Origin.begin(), bound.Origin.end(), delta.begin(), bound.Origin.begin(), std::minus<>());
       imageGeom->setOrigin(bound.Origin); // Sync up the ImageGeom with the calculated values
       imageGeom->setSpacing(overrideSpacing);
     }
   }
   ss << "\nOrigin: " << overrideOrigin[0] << ", " << overrideOrigin[1] << ", " << overrideOrigin[2];
-  ss << "  Spacing: " << overrideSpacing[0] << ", " << overrideSpacing[1] << ", " << overrideSpacing[2];
+  ss << "\nSpacing: " << overrideSpacing[0] << ", " << overrideSpacing[1] << ", " << overrideSpacing[2];
   d_ptr->m_MontageInformation = montageInfo;
   setBoundsCache(bounds);
 }
@@ -700,7 +733,7 @@ void ITKImportRoboMetMontage::readImages()
     {
       AbstractFilter::Pointer grayScaleFilter = MontageImportHelper::CreateColorToGrayScaleFilter(this, dap, getColorWeights(), ITKImageProcessing::Montage::k_GrayScaleTempArrayName);
       grayScaleFilter->setDataContainerArray(importImageDca); // Use the Data COntainer array that was use for the import. It is setup and ready to go
-      connect(grayScaleFilter.get(), SIGNAL(messageGenerated(const AbstractMessage::Pointer&)), this, SIGNAL(messageGenerated(const AbstractMessage::Pointer&)));
+      connect(grayScaleFilter.get(), SIGNAL(messageGenerated(AbstractMessage::Pointer)), this, SIGNAL(messageGenerated(AbstractMessage::Pointer)));
       grayScaleFilter->execute();
       if(grayScaleFilter->getErrorCode() < 0)
       {
@@ -769,6 +802,8 @@ void ITKImportRoboMetMontage::flushCache()
   d_ptr->m_SliceNumber = -1;
   d_ptr->m_ImageFilePrefix.clear();
   d_ptr->m_ImageFileExtension.clear();
+  d_ptr->m_MaxCol = 0;
+  d_ptr->m_MaxRow = 0;
 }
 
 // -----------------------------------------------------------------------------
