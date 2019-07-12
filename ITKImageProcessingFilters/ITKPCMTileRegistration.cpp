@@ -60,6 +60,7 @@
 
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/MetaXmlUtils.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/util/MontageImportHelper.h"
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
 
 #include "itkImageFileWriter.h"
@@ -269,7 +270,7 @@ void ITKPCMTileRegistration::dataCheck()
     for(int32_t col = m_MontageStart[0]; col <= m_MontageEnd[0]; col++)
     {
       // Create our DataContainer Name using a Prefix and a rXXcYY format.
-      QString dcName = ::generateDataContainerName(getDataContainerPrefix(), m_MontageStart, m_MontageEnd, row, col);
+      QString dcName = MontageImportHelper::GenerateDataContainerName(getDataContainerPrefix(), m_MontageEnd, row, col);
 
       DataArrayPath testPath;
       testPath.setDataContainerName(dcName);
@@ -406,7 +407,7 @@ typename MontageType::Pointer ITKPCMTileRegistration::createGrayscaleMontage(int
       ind[0] = col - m_MontageStart[0];
 
       // Get our DataContainer Name using a Prefix and a rXXcYY format.
-      QString dcName = ::generateDataContainerName(getDataContainerPrefix(), m_MontageStart, m_MontageEnd, row, col);
+      QString dcName = MontageImportHelper::GenerateDataContainerName(getDataContainerPrefix(), m_MontageEnd, row, col);
       DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(dcName);
 
       using InPlaceDream3DToImageFileType = itk::InPlaceDream3DDataToImageFilter<ScalarPixelType, Dimension>;
@@ -449,7 +450,7 @@ typename MontageType::Pointer ITKPCMTileRegistration::createRGBMontage(int peakM
       ind[0] = col - m_MontageStart[0];
 
       // Get our DataContainer Name using a Prefix and a rXXcYY format.
-      QString dcName = ::generateDataContainerName(getDataContainerPrefix(), m_MontageStart, m_MontageEnd, row, col);
+      QString dcName = MontageImportHelper::GenerateDataContainerName(getDataContainerPrefix(), m_MontageEnd, row, col);
       DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(dcName);
 
       using InPlaceDream3DToImageFileType = itk::InPlaceDream3DDataToImageFilter<PixelType, Dimension>;
@@ -553,7 +554,7 @@ void ITKPCMTileRegistration::storeMontageTransforms(typename MontageType::Pointe
       const TransformType* regTr = montage->GetOutputTransform(ind);
 
       // Get our DataContainer Name using a Prefix and a rXXcYY format.
-      QString dcName = ::generateDataContainerName(getDataContainerPrefix(), m_MontageStart, m_MontageEnd, row, col);
+      QString dcName = MontageImportHelper::GenerateDataContainerName(getDataContainerPrefix(), m_MontageEnd, row, col);
       DataContainer::Pointer imageDC = getDataContainerArray()->getDataContainer(dcName);
 
       ImageGeom::Pointer image = imageDC->getGeometryAs<ImageGeom>();

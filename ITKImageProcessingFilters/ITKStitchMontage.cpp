@@ -61,7 +61,8 @@
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
 
-#include "MetaXmlUtils.h"
+#include "util/MontageImportHelper.h"
+
 #include "itkImageFileWriter.h"
 #include "itkStreamingImageFilter.h"
 #include "itkTileMergeImageFilter.h"
@@ -163,29 +164,6 @@
   }
 
 #define EXECUTE_STITCH_FUNCTION_TEMPLATE(filter, call, inputData, ...) EXECUTE_DATATYPE_FUNCTION_TEMPLATE(filter, call, inputData, __VA_ARGS__)
-
-namespace
-{
-QString generateDataContainerName(const QString& dataContainerPrefix, const IntVec2Type& montageStart, const IntVec2Type& montageEnd, int32_t row, int32_t col)
-{
-  int32_t rowCountPadding = MetaXmlUtils::CalculatePaddingDigits(montageEnd[1]);
-  int32_t colCountPadding = MetaXmlUtils::CalculatePaddingDigits(montageEnd[0]);
-  int charPaddingCount = std::max(rowCountPadding, colCountPadding);
-
-  QString dcName = dataContainerPrefix;
-  QTextStream dcNameStream(&dcName);
-  dcNameStream << "r";
-  dcNameStream.setFieldWidth(charPaddingCount);
-  dcNameStream.setFieldAlignment(QTextStream::AlignRight);
-  dcNameStream.setPadChar('0');
-  dcNameStream << row;
-  dcNameStream.setFieldWidth(0);
-  dcNameStream << "c";
-  dcNameStream.setFieldWidth(charPaddingCount);
-  dcNameStream << col;
-  return dcName;
-}
-} // namespace
 
 // -----------------------------------------------------------------------------
 //
@@ -310,7 +288,7 @@ void ITKStitchMontage::dataCheck()
     for(int32_t col = m_MontageStart[0]; col <= m_MontageEnd[0]; col++)
     {
       // Create our DataContainer Name using a Prefix and a rXXcYY format.
-      QString dcName = ::generateDataContainerName(getDataContainerPrefix(), m_MontageStart, m_MontageEnd, row, col);
+      QString dcName = MontageImportHelper::GenerateDataContainerName(getDataContainerPrefix(), m_MontageEnd, row, col);
 
       DataArrayPath testPath;
       testPath.setDataContainerName(dcName);

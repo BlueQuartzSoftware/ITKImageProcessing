@@ -29,16 +29,25 @@
  *
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
 #include "MontageImportHelper.h"
 
 #include <QtCore/QObject>
 
+#include "ITKImageProcessing/ITKImageProcessingFilters/MetaXmlUtils.h"
+
+// -----------------------------------------------------------------------------
+//
 // -----------------------------------------------------------------------------
 MontageImportHelper::MontageImportHelper() = default;
 
 // -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 MontageImportHelper::~MontageImportHelper() = default;
 
+// -----------------------------------------------------------------------------
+//
 // -----------------------------------------------------------------------------
 ITKImageReader::Pointer MontageImportHelper::CreateImageImportFilter(AbstractFilter* filter, const QString& imageFileName, const DataArrayPath& daPath)
 {
@@ -57,6 +66,8 @@ ITKImageReader::Pointer MontageImportHelper::CreateImageImportFilter(AbstractFil
   return imageReader;
 }
 
+// -----------------------------------------------------------------------------
+//
 // -----------------------------------------------------------------------------
 ConvertColorToGrayScale::Pointer MontageImportHelper::CreateColorToGrayScaleFilter(AbstractFilter* filter, const DataArrayPath& daPath, const FloatVec3Type& colorWeights,
                                                                                    const QString& outputArrayName)
@@ -78,6 +89,8 @@ ConvertColorToGrayScale::Pointer MontageImportHelper::CreateColorToGrayScaleFilt
   return rgbToGray;
 }
 
+// -----------------------------------------------------------------------------
+//
 // -----------------------------------------------------------------------------
 std::map<int32_t, std::vector<size_t>> MontageImportHelper::Burn(int32_t tolerance, std::vector<int32_t>& input)
 {
@@ -121,4 +134,27 @@ std::map<int32_t, std::vector<size_t>> MontageImportHelper::Burn(int32_t toleran
     }
   }
   return avg_indices;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString MontageImportHelper::GenerateDataContainerName(const QString& dataContainerPrefix, const IntVec2Type& montageMaxValues, int32_t row, int32_t col)
+{
+  int32_t rowCountPadding = MetaXmlUtils::CalculatePaddingDigits(montageMaxValues[1]);
+  int32_t colCountPadding = MetaXmlUtils::CalculatePaddingDigits(montageMaxValues[0]);
+  int charPaddingCount = std::max(rowCountPadding, colCountPadding);
+
+  QString dcName = dataContainerPrefix;
+  QTextStream dcNameStream(&dcName);
+  dcNameStream << "r";
+  dcNameStream.setFieldWidth(charPaddingCount);
+  dcNameStream.setFieldAlignment(QTextStream::AlignRight);
+  dcNameStream.setPadChar('0');
+  dcNameStream << row;
+  dcNameStream.setFieldWidth(0);
+  dcNameStream << "c";
+  dcNameStream.setFieldWidth(charPaddingCount);
+  dcNameStream << col;
+  return dcName;
 }
