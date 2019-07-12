@@ -454,10 +454,7 @@ void ITKImportFijiMontage::generateCache()
   QString montageInfo;
   QTextStream ss(&montageInfo);
   ss << "Max Column: " << m_ColumnCount - 1 << "  Max Row: " << m_RowCount - 1 << "  Image Count: " << m_ColumnCount * m_RowCount;
-
-  int32_t importedCols = m_MontageEnd[0] - m_MontageStart[0] + 1;
-  int32_t importedRows = m_MontageEnd[1] - m_MontageStart[1] + 1;
-  ss << "\nImported Columns: " << importedCols << "  Imported Rows: " << importedRows << "  Imported Image Count: " << (importedCols * importedRows);
+  ss << ITKImageProcessing::Montage::k_MontageInfoReplaceKeyword;
 
   FloatVec3Type overrideOrigin = minCoord;
   FloatVec3Type overrideSpacing = minSpacing;
@@ -676,7 +673,14 @@ void ITKImportFijiMontage::flushCache()
 // -----------------------------------------------------------------------------
 QString ITKImportFijiMontage::getMontageInformation()
 {
-  return d_ptr->m_MontageInformation;
+  QString info = d_ptr->m_MontageInformation;
+  QString montageInfo;
+  QTextStream ss(&montageInfo);
+  int32_t importedCols = m_MontageEnd[0] - m_MontageStart[0] + 1;
+  int32_t importedRows = m_MontageEnd[1] - m_MontageStart[1] + 1;
+  ss << "\nImported Columns: " << importedCols << "  Imported Rows: " << importedRows << "  Imported Image Count: " << (importedCols * importedRows);
+  info = info.replace(ITKImageProcessing::Montage::k_MontageInfoReplaceKeyword, montageInfo);
+  return info;
 }
 
 // -----------------------------------------------------------------------------
