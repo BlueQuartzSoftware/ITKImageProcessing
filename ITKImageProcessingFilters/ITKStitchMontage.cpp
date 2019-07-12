@@ -168,13 +168,8 @@ namespace
 {
 QString generateDataContainerName(const QString& dataContainerPrefix, const IntVec2Type& montageStart, const IntVec2Type& montageEnd, int32_t row, int32_t col)
 {
-  IntVec3Type montageSize;
-  std::transform(montageStart.begin(), montageStart.end(), montageEnd.begin(), montageSize.begin(), [](int32_t a, int32_t b) -> int32_t { return a + b + 1; });
-  int32_t rowCount = montageSize[1];
-  int32_t colCount = montageSize[0];
-
-  int32_t rowCountPadding = MetaXmlUtils::CalculatePaddingDigits(rowCount);
-  int32_t colCountPadding = MetaXmlUtils::CalculatePaddingDigits(colCount);
+  int32_t rowCountPadding = MetaXmlUtils::CalculatePaddingDigits(montageEnd[1]);
+  int32_t colCountPadding = MetaXmlUtils::CalculatePaddingDigits(montageEnd[0]);
   int charPaddingCount = std::max(rowCountPadding, colCountPadding);
 
   QString dcName = dataContainerPrefix;
