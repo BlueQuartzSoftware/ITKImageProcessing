@@ -515,10 +515,10 @@ void ITKStitchMontage::initializeResampler(typename Resampler::Pointer resampler
   typename MontageType::TileIndexType ind;
   for(unsigned y = m_MontageStart[1]; y <= m_MontageEnd[1]; y++)
   {
-    ind[1] = y;
+    ind[1] = y - m_MontageStart[1];
     for(unsigned x = m_MontageStart[0]; x <= m_MontageEnd[0]; x++)
     {
-      ind[0] = x;
+      ind[0] = x - m_MontageStart[0];
       using toITKType = itk::InPlaceDream3DDataToImageFilter<PixelType, Dimension>;
       typename toITKType::Pointer toITK = toITKType::New();
       DataContainer::Pointer imageDC = GetImageDataContainer(y, x);
