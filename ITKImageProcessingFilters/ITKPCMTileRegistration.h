@@ -35,7 +35,6 @@
 
 #pragma once
 
-
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataContainers/DataContainerArrayProxy.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -190,14 +189,16 @@ protected:
    * @param peakMethodToUse
    * @param streamSubdivisions
    */
-  template <typename PixelType> void registerGrayscaleMontage(int peakMethodToUse = 0, unsigned streamSubdivisions = 1);
+  template <typename PixelType>
+  void registerGrayscaleMontage(int peakMethodToUse = 0, unsigned streamSubdivisions = 1);
 
   /**
    * @brief registerRGBMontage
    * @param peakMethodToUse
    * @param streamSubdivisions
    */
-  template <typename PixelType> void registerRGBMontage(int peakMethodToUse = 0, unsigned streamSubdivisions = 1);
+  template <typename PixelType>
+  void registerRGBMontage(int peakMethodToUse = 0, unsigned streamSubdivisions = 1);
 
   /**
    * @brief Get the image from the appropriate data container
@@ -214,11 +215,6 @@ protected:
 
 private:
   static constexpr unsigned Dimension = 2;
-  itk::TileLayout2D m_StageTiles;
-  itk::TileLayout2D m_ActualTiles;
-  //  unsigned int m_xMontageStart;
-  //  unsigned int m_yMontageStart;
-  //  QString m_dataContainerPrefix;
   std::vector<DataContainer::Pointer> m_DataContainers;
 
   /**
@@ -226,32 +222,37 @@ private:
    * @param peakMethodToUse
    * @param streamSubdivisions
    */
-  template <typename PixelType, typename MontageType> typename MontageType::Pointer createMontage(int peakMethodToUse = 0);
+  template <typename PixelType, typename MontageType>
+  typename MontageType::Pointer createMontage(int peakMethodToUse = 0);
 
   /**
    * @brief createGrayscaleMontage
    * @param peakMethodToUse
    * @param streamSubdivisions
    */
-  template <typename PixelType, typename MontageType> typename MontageType::Pointer createGrayscaleMontage(int peakMethodToUse = 0);
+  template <typename PixelType, typename MontageType>
+  typename MontageType::Pointer createGrayscaleMontage(int peakMethodToUse = 0);
 
   /**
    * @brief createRGBMontage
    * @param peakMethodToUse
    * @param streamSubdivisions
    */
-  template <typename PixelType, typename MontageType> typename MontageType::Pointer createRGBMontage(int peakMethodToUse = 0);
+  template <typename PixelType, typename MontageType>
+  typename MontageType::Pointer createRGBMontage(int peakMethodToUse = 0);
 
   /**
    * @brief storeMontageTransforms
    */
-  template <typename MontageType> void storeMontageTransforms(typename MontageType::Pointer montage);
+  template <typename MontageType>
+  void storeMontageTransforms(typename MontageType::Pointer montage);
 
   /**
    * @brief executeMontageRegistration
    * @param montage
    */
-  template <typename MontageType> void executeMontageRegistration(typename MontageType::Pointer montage);
+  template <typename MontageType>
+  void executeMontageRegistration(typename MontageType::Pointer montage);
 
 public:
   ITKPCMTileRegistration(const ITKPCMTileRegistration&) = delete;            // Copy Constructor Not Implemented

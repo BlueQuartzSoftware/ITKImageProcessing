@@ -225,15 +225,28 @@ void ITKPCMTileRegistration::dataCheck()
   clearWarningCode();
   initialize();
 
-  IntVec2Type montageSize;
-  std::transform(m_MontageStart.begin(), m_MontageStart.end(), m_MontageEnd.begin(), montageSize.begin(), [](int32_t a, int32_t b) -> int32_t { return a + b + 1; });
-  int32_t rowCount = montageSize[1];
-  int32_t colCount = montageSize[0];
-
-  if(montageSize[0] <= 0 || montageSize[1] <= 0)
+  if(m_MontageStart[0] > m_MontageEnd[0])
   {
-    QString ss = QObject::tr("The Montage Size x and y values must be greater than 0");
-    setErrorCondition(-11000, ss);
+    QString ss = QObject::tr("Montage Start Column (%1) must be equal or less than Montage End Column(%2)").arg(m_MontageStart[0]).arg(m_MontageEnd[0]);
+    setErrorCondition(-11003, ss);
+    return;
+  }
+  if(m_MontageStart[1] > m_MontageEnd[1])
+  {
+    QString ss = QObject::tr("Montage Start Row (%1) must be equal or less than Montage End Row(%2)").arg(m_MontageStart[1]).arg(m_MontageEnd[1]);
+    setErrorCondition(-11004, ss);
+    return;
+  }
+  if(m_MontageStart[0] < 0 || m_MontageEnd[0] < 0)
+  {
+    QString ss = QObject::tr("Montage Start Column (%1) and Montage End Column(%2) must be greater than Zero (0)").arg(m_MontageStart[0]).arg(m_MontageEnd[0]);
+    setErrorCondition(-11005, ss);
+    return;
+  }
+  if(m_MontageStart[1] < 0 || m_MontageEnd[1] < 0)
+  {
+    QString ss = QObject::tr("Montage Start Row (%1) and Montage End Row(%2) must be greater than Zero (0)").arg(m_MontageStart[1]).arg(m_MontageEnd[1]);
+    setErrorCondition(-11006, ss);
     return;
   }
 
@@ -262,11 +275,9 @@ void ITKPCMTileRegistration::dataCheck()
 
   DataContainerArray::Pointer dca = getDataContainerArray();
   // This is for the Tile Data Structure that we need to build up
-  m_StageTiles.resize(rowCount);
 
   for(int32_t row = m_MontageStart[1]; row <= m_MontageEnd[1]; row++)
   {
-    m_StageTiles[row - m_MontageStart[1]].resize(colCount);
     for(int32_t col = m_MontageStart[0]; col <= m_MontageEnd[0]; col++)
     {
       // Create our DataContainer Name using a Prefix and a rXXcYY format.
@@ -295,14 +306,6 @@ void ITKPCMTileRegistration::dataCheck()
         return;
       }
       m_DataContainers.push_back(dc);
-
-      FloatVec3Type origin = image->getOrigin();
-
-      itk::Tile2D tile;
-      tile.FileName = "";
-      tile.Position[0] = static_cast<double>(origin[0]);
-      tile.Position[1] = static_cast<double>(origin[1]);
-      m_StageTiles[row - m_MontageStart[1]][col - m_MontageStart[0]] = tile;
     }
   }
 }
@@ -352,7 +355,7 @@ typename MontageType::Pointer ITKPCMTileRegistration::createMontage(int peakMeth
   using PCMType = itk::PhaseCorrelationImageRegistrationMethod<ScalarImageType, ScalarImageType>;
 
   IntVec3Type montageSize;
-  std::transform(m_MontageStart.begin(), m_MontageStart.end(), m_MontageEnd.begin(), montageSize.begin(), [](int32_t a, int32_t b) -> int32_t { return a + b + 1; });
+  std::transform(m_MontageStart.begin(), m_MontageStart.end(), m_MontageEnd.begin(), montageSize.begin(), [](int32_t a, int32_t b) -> int32_t { return b - a + 1; });
   int32_t rowCount = montageSize[1];
   int32_t colCount = montageSize[0];
 

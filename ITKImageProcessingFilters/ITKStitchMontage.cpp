@@ -272,10 +272,6 @@ void ITKStitchMontage::dataCheck()
     return;
   }
 
-  std::transform(m_MontageStart.begin(), m_MontageStart.end(), m_MontageEnd.begin(), m_MontageSize.begin(), [](int32_t a, int32_t b) -> int32_t { return a + b + 1; });
-  size_t rowCount = m_MontageSize[1];
-  size_t colCount = m_MontageSize[0];
-
   m_ImageDataContainers.clear();
 
   DataContainerArray::Pointer dca = getDataContainerArray();
@@ -362,6 +358,10 @@ void ITKStitchMontage::dataCheck()
   {
     return;
   }
+
+  std::transform(m_MontageStart.begin(), m_MontageStart.end(), m_MontageEnd.begin(), m_MontageSize.begin(), [](int32_t a, int32_t b) -> int32_t { return b - a + 1; });
+  size_t rowCount = m_MontageSize[1];
+  size_t colCount = m_MontageSize[0];
 
   size_t montageArrayXSize = tileTupleDims[0] * colCount;
   size_t montageArrayYSize = tileTupleDims[1] * rowCount;
