@@ -152,7 +152,7 @@ const QString k_TileCorrectedDefaultName("Corrected Image");
 const QString k_BackgroundDataContainerDefaultName("Illumination Correction");
 const QString k_BackgroundAttributeMatrixDefaultName("Illumination Data");
 const QString k_BackgroundDataArrayDefaultName("Image");
-
+const QString k_MontageInfoReplaceKeyword("@UPDATE_ROW_COLUMN@");
 } // namespace Montage
 
 } // namespace ITKImageProcessing
