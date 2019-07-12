@@ -59,6 +59,7 @@
 #include "SIMPLib/SIMPLibVersion.h"
 
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/util/MontageImportHelper.h"
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
 
 #include "util/MontageImportHelper.h"
@@ -521,7 +522,8 @@ void ITKStitchMontage::initializeResampler(typename Resampler::Pointer resampler
       ind[0] = x - m_MontageStart[0];
       using toITKType = itk::InPlaceDream3DDataToImageFilter<PixelType, Dimension>;
       typename toITKType::Pointer toITK = toITKType::New();
-      DataContainer::Pointer imageDC = GetImageDataContainer(y, x);
+      QString dcName = MontageImportHelper::GenerateDataContainerName(getDataContainerPrefix(), m_MontageEnd, y, x);
+      DataContainer::Pointer imageDC = getDataContainerArray()->getDataContainer(dcName);
       // Check the resolution and fix if necessary
       ImageGeom::Pointer geom = imageDC->getGeometryAs<ImageGeom>();
 
@@ -605,37 +607,6 @@ void ITKStitchMontage::convertMontageToD3D(OriginalImageType* image)
   toDream3DFilter->SetDataArrayName(dataArrayPath.getDataArrayName().toStdString());
   toDream3DFilter->SetDataContainer(container);
   toDream3DFilter->Update();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-DataContainer::Pointer ITKStitchMontage::GetImageDataContainer(int y, int x)
-{
-  DataContainerArray* dca = getDataContainerArray().get();
-  // Loop over the data containers until we find the proper data container
-  QStringList dcList;
-  for(const DataContainer::Pointer& dc : m_ImageDataContainers)
-  {
-    QString dcName = dc->getName();
-    dcList.push_back(dcName);
-    DataContainer::Pointer dcItem = dca->getPrereqDataContainer(this, dcName);
-    if(getErrorCode() < 0 || dcItem.get() == nullptr)
-    {
-      continue;
-    }
-
-    QString rowCol = dcName.right(dcName.size() - dcName.lastIndexOf("_") - 1);
-    rowCol = rowCol.right(rowCol.size() - 1);     // Remove 'r'
-    QStringList rowCol_Split = rowCol.split("c"); // Split by 'c'
-    int row = rowCol_Split[0].toInt();
-    int col = rowCol_Split[1].toInt();
-    if(row == y && col == x)
-    {
-      return dcItem;
-    }
-  }
-  return nullptr;
 }
 
 // -----------------------------------------------------------------------------

@@ -203,13 +203,6 @@ protected:
   void stitchMontage(int peakMethodToUse = 0, unsigned streamSubdivisions = 1);
 
   /**
-   * @brief Get the image from the appropriate data container
-   * @param y
-   * @param x
-   */
-  DataContainer::Pointer GetImageDataContainer(int y, int x);
-
-  /**
    * @brief Get the transform container from an affine transform
    * @param itkAffine
    */
