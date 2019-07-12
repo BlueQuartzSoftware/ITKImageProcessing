@@ -368,7 +368,7 @@ void ImportAxioVisionV4Montage::dataCheck()
   }
   if(m_MontageStart[1] > d_ptr->m_MaxRow || m_MontageEnd[1] > d_ptr->m_MaxRow)
   {
-    QString ss = QObject::tr("Montage Start Row (%1) and Montage End Row(%2) must be <=").arg(m_MontageStart[1]).arg(m_MontageEnd[1]).arg(d_ptr->m_MaxRow);
+    QString ss = QObject::tr("Montage Start Row (%1) and Montage End Row(%2) must be <= %3").arg(m_MontageStart[1]).arg(m_MontageEnd[1]).arg(d_ptr->m_MaxRow);
     setErrorCondition(-401, ss);
     return;
   }
