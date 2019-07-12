@@ -37,11 +37,11 @@
 
 #include <sstream>
 
-
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Common/TemplateHelpers.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatFilterParameter.h"
+#include "SIMPLib/FilterParameters/IntVec2FilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/MultiDataContainerSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
@@ -59,7 +59,10 @@
 #include "SIMPLib/SIMPLibVersion.h"
 
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/util/MontageImportHelper.h"
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
+
+#include "util/MontageImportHelper.h"
 
 #include "itkImageFileWriter.h"
 #include "itkStreamingImageFilter.h"
@@ -83,9 +86,8 @@
   }                                                                                                                                                                                                    \
   else                                                                                                                                                                                                 \
   {                                                                                                                                                                                                    \
-    filter->setErrorCondition(TemplateHelpers::Errors::UnsupportedImageType,                                                                                                                                                \
-                               "The input array's image type is not recognized.  Supported image types"                                                                                                \
-                               " are grayscale (1-component), RGB (3-component), and RGBA (4-component)");                                                                                                                         \
+    filter->setErrorCondition(TemplateHelpers::Errors::UnsupportedImageType, "The input array's image type is not recognized.  Supported image types"                                                  \
+                                                                             " are grayscale (1-component), RGB (3-component), and RGBA (4-component)");                                               \
   }
 
 #define EXECUTE_ACCUMULATETYPE_FUNCTION_TEMPLATE(DATATYPE, filter, call, inputData, ...)                                                                                                               \
@@ -104,9 +106,8 @@
   }                                                                                                                                                                                                    \
   else                                                                                                                                                                                                 \
   {                                                                                                                                                                                                    \
-    filter->setErrorCondition(TemplateHelpers::Errors::UnsupportedImageType,                                                                                                                                                \
-                               "The input array's image type is not recognized.  Supported image types"                                                                                                \
-                               " are grayscale (1-component), RGB (3-component), and RGBA (4-component)");                                                                                                                         \
+    filter->setErrorCondition(TemplateHelpers::Errors::UnsupportedImageType, "The input array's image type is not recognized.  Supported image types"                                                  \
+                                                                             " are grayscale (1-component), RGB (3-component), and RGBA (4-component)");                                               \
   }
 
 #define EXECUTE_DATATYPE_FUNCTION_TEMPLATE(filter, call, inputData, ...)                                                                                                                               \
@@ -160,7 +161,7 @@
   }                                                                                                                                                                                                    \
   else                                                                                                                                                                                                 \
   {                                                                                                                                                                                                    \
-    filter->setErrorCondition(TemplateHelpers::Errors::UnsupportedDataType, "The input array's data type is not supported");                                                 \
+    filter->setErrorCondition(TemplateHelpers::Errors::UnsupportedDataType, "The input array's data type is not supported");                                                                           \
   }
 
 #define EXECUTE_STITCH_FUNCTION_TEMPLATE(filter, call, inputData, ...) EXECUTE_DATATYPE_FUNCTION_TEMPLATE(filter, call, inputData, __VA_ARGS__)
@@ -169,7 +170,9 @@
 //
 // -----------------------------------------------------------------------------
 ITKStitchMontage::ITKStitchMontage()
-: m_MontageSize(IntVec3Type(0, 0, 0))
+: m_MontageStart(IntVec2Type(0, 0))
+, m_MontageEnd(IntVec2Type(0, 0))
+, m_DataContainerPrefix(ITKImageProcessing::Montage::k_DataContainerPrefixDefaultName)
 , m_CommonAttributeMatrixName(ITKImageProcessing::Montage::k_TileAttributeMatrixDefaultName)
 , m_CommonDataArrayName(ITKImageProcessing::Montage::k_TileDataArrayDefaultName)
 , m_MontageDataContainerName(ITKImageProcessing::Montage::k_MontageDataContainerDefaultName)
@@ -191,6 +194,7 @@ void ITKStitchMontage::initialize()
   clearErrorCode();
   clearWarningCode();
   setCancel(false);
+  m_ImageDataContainers.clear();
 }
 
 // -----------------------------------------------------------------------------
@@ -200,13 +204,10 @@ void ITKStitchMontage::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
 
-  parameters.push_back(SIMPL_NEW_INT_VEC3_FP("Montage Size (Cols, Rows)", MontageSize, FilterParameter::Parameter, ITKStitchMontage));
+  parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage Start (Col, Row) [Inclusive, Zero Based]", MontageStart, FilterParameter::Parameter, ITKStitchMontage));
+  parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage End (Col, Row) [Inclusive, Zero Based]", MontageEnd, FilterParameter::Parameter, ITKStitchMontage));
 
-  {
-    MultiDataContainerSelectionFilterParameter::RequirementType req =
-        MultiDataContainerSelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
-    parameters.push_back(SIMPL_NEW_MDC_SELECTION_FP("Image Data Containers", ImageDataContainers, FilterParameter::RequiredArray, ITKStitchMontage, req));
-  }
+  parameters.push_back(SIMPL_NEW_STRING_FP("Data Container Prefix", DataContainerPrefix, FilterParameter::RequiredArray, ITKStitchMontage));
   parameters.push_back(SIMPL_NEW_STRING_FP("Common Attribute Matrix", CommonAttributeMatrixName, FilterParameter::RequiredArray, ITKStitchMontage));
   parameters.push_back(SIMPL_NEW_STRING_FP("Common Data Array", CommonDataArrayName, FilterParameter::RequiredArray, ITKStitchMontage));
 
@@ -226,122 +227,131 @@ void ITKStitchMontage::dataCheck()
   clearWarningCode();
   initialize();
 
-  QString ss;
-  int err = 0;
-
-  m_xMontageSize = m_MontageSize.getX();
-  m_yMontageSize = m_MontageSize.getY();
-
-  int totalMontageSize = m_xMontageSize*m_yMontageSize;
-
-  if(m_xMontageSize <= 0 || m_yMontageSize <= 0)
+  if(getDataContainerPrefix().isEmpty())
   {
-    QString ss = QObject::tr("The Montage Size x and y values must be greater than 0");
+    QString ss = QObject::tr("Data Container Prefix is empty.");
     setErrorCondition(-11000, ss);
-    return;
-  }
-
-  int selectedDCCount = getImageDataContainers().size();
-
-  // Test to make sure at least one data container is selected
-  if(selectedDCCount < 1)
-  {
-    QString ss = QObject::tr("At least one Data Container must be selected");
-    setErrorCondition(-11001, ss);
-    return;
-  }
-
-  if (totalMontageSize != selectedDCCount)
-  {
-    QString ss = QObject::tr("The number of selected data containers (%1) does not match the number of data "
-                             "containers expected by the montage size dimensions specified (%2)").arg(selectedDCCount).arg(totalMontageSize);
-    setErrorCondition(-11002, ss);
     return;
   }
 
   if(getCommonAttributeMatrixName().isEmpty())
   {
     QString ss = QObject::tr("Common Attribute Matrix is empty.");
-    setErrorCondition(-11003, ss);
+    setErrorCondition(-11001, ss);
     return;
   }
 
   if(getCommonDataArrayName().isEmpty())
   {
     QString ss = QObject::tr("Common Data Array is empty.");
+    setErrorCondition(-11002, ss);
+    return;
+  }
+
+  if(m_MontageStart[0] > m_MontageEnd[0])
+  {
+    QString ss = QObject::tr("Montage Start Column (%1) must be equal or less than Montage End Column(%2)").arg(m_MontageStart[0]).arg(m_MontageEnd[0]);
+    setErrorCondition(-11003, ss);
+    return;
+  }
+  if(m_MontageStart[1] > m_MontageEnd[1])
+  {
+    QString ss = QObject::tr("Montage Start Row (%1) must be equal or less than Montage End Row(%2)").arg(m_MontageStart[1]).arg(m_MontageEnd[1]);
     setErrorCondition(-11004, ss);
     return;
   }
-
-  // Test to see that the image data containers are correct
-  int dcCount = m_ImageDataContainers.size();
-
-  QString dcName = m_ImageDataContainers[0];
-
-  DataArrayPath testPath;
-  testPath.setDataContainerName(dcName);
-  testPath.setAttributeMatrixName(getCommonAttributeMatrixName());
-  testPath.setDataArrayName(getCommonDataArrayName());
-
-  AttributeMatrix::Pointer imageDataAM = getDataContainerArray()->getPrereqAttributeMatrixFromPath(this, testPath, err);
-  if(getErrorCode() < 0 || err < 0)
+  if(m_MontageStart[0] < 0 || m_MontageEnd[0] < 0)
   {
-    return;
-  }
-
-  std::vector<size_t> imageDataTupleDims = imageDataAM->getTupleDimensions();
-  if(imageDataTupleDims.size() < 2)
-  {
-    QString ss = QObject::tr("Image Data Array at path '%1' must have at least 2 tuple dimensions.").arg(testPath.serialize("/"));
+    QString ss = QObject::tr("Montage Start Column (%1) and Montage End Column(%2) must be greater than Zero (0)").arg(m_MontageStart[0]).arg(m_MontageEnd[0]);
     setErrorCondition(-11005, ss);
     return;
   }
-
-  IDataArray::Pointer imagePtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, testPath);
-  if(getErrorCode() < 0)
+  if(m_MontageStart[1] < 0 || m_MontageEnd[1] < 0)
   {
+    QString ss = QObject::tr("Montage Start Row (%1) and Montage End Row(%2) must be greater than Zero (0)").arg(m_MontageStart[1]).arg(m_MontageEnd[1]);
+    setErrorCondition(-11006, ss);
     return;
   }
 
-  ImageGeom::Pointer tileImageGeom = ImageGeom::NullPointer();
-  for(int i = 0; i < dcCount; i++)
+  m_ImageDataContainers.clear();
+
+  DataContainerArray::Pointer dca = getDataContainerArray();
+
+  IDataArray::Pointer tilePtr = IDataArray::NullPointer();
+  ImageGeom::Pointer tileGeom = ImageGeom::NullPointer();
+  std::vector<size_t> tileTupleDims;
+  for(int32_t row = m_MontageStart[1]; row <= m_MontageEnd[1]; row++)
   {
-    QString dcName = m_ImageDataContainers[i];
-
-    DataArrayPath testPath;
-    testPath.setDataContainerName(dcName);
-    testPath.setAttributeMatrixName(getCommonAttributeMatrixName());
-    testPath.setDataArrayName(getCommonDataArrayName());
-
-    ImageGeom::Pointer image = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, testPath.getDataContainerName());
-    if(getErrorCode() < 0)
+    for(int32_t col = m_MontageStart[0]; col <= m_MontageEnd[0]; col++)
     {
-      return;
+      // Create our DataContainer Name using a Prefix and a rXXcYY format.
+      QString dcName = MontageImportHelper::GenerateDataContainerName(getDataContainerPrefix(), m_MontageEnd, row, col);
+
+      DataArrayPath testPath;
+      testPath.setDataContainerName(dcName);
+      testPath.setAttributeMatrixName(getCommonAttributeMatrixName());
+      testPath.setDataArrayName(getCommonDataArrayName());
+
+      int err = 0;
+
+      DataContainer::Pointer dc = dca->getPrereqDataContainer(this, testPath);
+      if(getErrorCode() < 0)
+      {
+        return;
+      }
+
+      AttributeMatrix::Pointer am = getDataContainerArray()->getPrereqAttributeMatrixFromPath(this, testPath, err);
+      if(getErrorCode() < 0 || err < 0)
+      {
+        return;
+      }
+
+      tileTupleDims = am->getTupleDimensions(); // Be sure we capture at least one of the input tile dimensions.. we need it later down the code...
+      if(tileTupleDims.size() < 2)
+      {
+        QString ss = QObject::tr("Image Data Array at path '%1' must have at least 2 tuple dimensions.").arg(testPath.serialize("/"));
+        setErrorCondition(-11007, ss);
+        return;
+      }
+
+      tilePtr = dca->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, testPath);
+      if(getErrorCode() < 0)
+      {
+        return;
+      }
+
+      tileGeom = dca->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, dcName);
+      if(getErrorCode() < 0)
+      {
+        return;
+      }
+
+      m_ImageDataContainers.push_back(dc);
     }
-    tileImageGeom = image; // Be sure we capture at least one of the input Image Geometries that is valid.. we need it later down the code...
   }
 
   if(getMontageDataContainerName().isEmpty())
   {
     QString ss = QObject::tr("Montage Data Container is empty.");
-    setErrorCondition(-11007, ss);
+    setErrorCondition(-11008, ss);
     return;
   }
 
   if(getMontageAttributeMatrixName().isEmpty())
   {
     QString ss = QObject::tr("Montage Attribute Matrix is empty.");
-    setErrorCondition(-11008, ss);
+    setErrorCondition(-11009, ss);
     return;
   }
 
   if(getMontageDataArrayName().isEmpty())
   {
     QString ss = QObject::tr("Montage Data Array is empty.");
-    setErrorCondition(-11009, ss);
+    setErrorCondition(-11010, ss);
     return;
   }
 
+  // Create the montage structure
   DataArrayPath dap(getMontageDataContainerName(), getMontageAttributeMatrixName(), getMontageDataArrayName());
 
   DataContainer::Pointer dc = getDataContainerArray()->createNonPrereqDataContainer(this, getMontageDataContainerName());
@@ -350,23 +360,27 @@ void ITKStitchMontage::dataCheck()
     return;
   }
 
-  size_t montageArrayXSize = imageDataTupleDims[0] * m_xMontageSize;
-  size_t montageArrayYSize = imageDataTupleDims[1] * m_yMontageSize;
+  std::transform(m_MontageStart.begin(), m_MontageStart.end(), m_MontageEnd.begin(), m_MontageSize.begin(), [](int32_t a, int32_t b) -> int32_t { return b - a + 1; });
+  size_t rowCount = m_MontageSize[1];
+  size_t colCount = m_MontageSize[0];
 
-  ImageGeom::Pointer imageGeom = ImageGeom::New();
-  imageGeom->setName("MontageGeometry");
-  imageGeom->setDimensions(montageArrayXSize, montageArrayYSize, 1);
-  imageGeom->setSpacing(tileImageGeom->getSpacing());
+  size_t montageArrayXSize = tileTupleDims[0] * colCount;
+  size_t montageArrayYSize = tileTupleDims[1] * rowCount;
 
-  dc->setGeometry(imageGeom);
+  ImageGeom::Pointer montageGeom = ImageGeom::New();
+  montageGeom->setName("MontageGeometry");
+  montageGeom->setDimensions(montageArrayXSize, montageArrayYSize, 1);
+  montageGeom->setSpacing(tileGeom->getSpacing());
 
-  ss = QObject::tr("The image geometry dimensions of data container '%1' are projected to be (%2, %3, %4).  This is assuming "
-                   "0% overlap between tiles, so the actual geometry dimensions after executing the stitching algorithm may be smaller.")
-           .arg(dc->getName())
-           .arg(montageArrayXSize)
-           .arg(montageArrayYSize)
-           .arg(1);
-  setWarningCondition(-3001, ss);
+  dc->setGeometry(montageGeom);
+
+  QString ss = QObject::tr("The image geometry dimensions of data container '%1' are projected to be (%2, %3, %4).  This is assuming "
+                           "0% overlap between tiles, so the actual geometry dimensions after executing the stitching algorithm may be smaller.")
+                   .arg(dc->getName())
+                   .arg(montageArrayXSize)
+                   .arg(montageArrayYSize)
+                   .arg(1);
+  setWarningCondition(-11011, ss);
 
   std::vector<size_t> tDims = {montageArrayXSize, montageArrayYSize, 1};
 
@@ -382,23 +396,22 @@ void ITKStitchMontage::dataCheck()
            .arg(montageArrayXSize)
            .arg(montageArrayYSize)
            .arg(1);
-  setWarningCondition(-3002, ss);
+  setWarningCondition(-11012, ss);
 
   if(getMontageDataArrayName().isEmpty())
   {
     QString ss = QObject::tr("The Montage Data Array Name field is empty.");
-    setErrorCondition(-3003, ss);
+    setErrorCondition(-11013, ss);
     return;
   }
 
-  IDataArray::Pointer da = imagePtr->createNewArray(montageArrayXSize * montageArrayYSize, std::vector<size_t>(1, 1), getMontageDataArrayName(), !getInPreflight());
+  IDataArray::Pointer da = tilePtr->createNewArray(montageArrayXSize * montageArrayYSize, std::vector<size_t>(1, 1), getMontageDataArrayName(), !getInPreflight());
   am->addOrReplaceAttributeArray(da);
 
   ss = QObject::tr("The number of elements of montage data array '%1' is projected to be %2.  This is assuming "
                    "0% overlap between tiles, so the actual geometry dimensions after executing the stitching algorithm may be smaller.")
-           .arg(da->getName())
-           .arg(QLocale::system().toString(static_cast<int>(da->getNumberOfTuples())));
-  setWarningCondition(-3004, ss);
+           .arg(da->getName(), QLocale::system().toString(static_cast<int>(da->getNumberOfTuples())));
+  setWarningCondition(-11014, ss);
 }
 
 // -----------------------------------------------------------------------------
@@ -427,24 +440,16 @@ void ITKStitchMontage::execute()
     return;
   }
 
-  createFijiDataStructure();
-  if(getErrorCode() < 0)
-  {
-    return;
-  }
+  // Pass to ITK and generate montage
+  // ITK returns a new Fiji data structure to DREAM3D
+  // Store FIJI DS into SIMPL Transform DS inside the Geometry
+  DataArrayPath dap(m_ImageDataContainers[0]->getName(), getCommonAttributeMatrixName(), getCommonDataArrayName());
+  DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(m_ImageDataContainers[0]->getName());
+  AttributeMatrix::Pointer am = dc->getAttributeMatrix(getCommonAttributeMatrixName());
+  IDataArray::Pointer da = am->getAttributeArray(getCommonDataArrayName());
 
-  if(!m_StageTiles.empty())
-  {
-    // Pass to ITK and generate montage
-    // ITK returns a new Fiji data structure to DREAM3D
-    // Store FIJI DS into SIMPL Transform DS inside the Geometry
-    DataArrayPath dap(m_ImageDataContainers[0], getCommonAttributeMatrixName(), getCommonDataArrayName());
-    DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(m_ImageDataContainers[0]);
-    AttributeMatrix::Pointer am = dc->getAttributeMatrix(getCommonAttributeMatrixName());
-    IDataArray::Pointer da = am->getAttributeArray(getCommonDataArrayName());
+  EXECUTE_STITCH_FUNCTION_TEMPLATE(this, stitchMontage, da);
 
-    EXECUTE_STITCH_FUNCTION_TEMPLATE(this, stitchMontage, da);
-  }
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");
 }
@@ -452,68 +457,8 @@ void ITKStitchMontage::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ITKStitchMontage::createFijiDataStructure()
-{
-  DataContainerArray* dca = getDataContainerArray().get();
-  // Loop over the data containers until we find the proper data container
-  QMutableListIterator<QString> dcNameIter(m_ImageDataContainers);
-  QStringList dcList;
-  bool dataContainerPrefixChanged = false;
-  if(m_ImageDataContainers.size() != (m_xMontageSize * m_yMontageSize))
-  {
-    return;
-  }
-
-  m_StageTiles.resize(m_yMontageSize);
-  // for(unsigned i = 0; i < m_yMontageSize; i++)
-  for(auto& stageTile : m_StageTiles)
-  {
-    stageTile.resize(m_xMontageSize);
-  }
-
-  std::vector<size_t> cDims;
-  while(dcNameIter.hasNext())
-  {
-    QString dcName = dcNameIter.next();
-    dcList.push_back(dcName);
-    DataContainer::Pointer dcItem = dca->getPrereqDataContainer(this, dcName);
-    if(getErrorCode() < 0 || dcItem.get() == nullptr)
-    {
-      continue;
-    }
-    ImageGeom::Pointer image = dcItem->getGeometryAs<ImageGeom>();
-    //   SizeVec3Type dimensions = image->getDimensions();
-    FloatVec3Type origin = image->getOrigin();
-
-    // Extract row and column data from the data container name
-    QString filename = ""; // Need to find this?
-    int indexOfUnderscore = dcName.lastIndexOf("_");
-    if(!dataContainerPrefixChanged)
-    {
-      m_dataContainerPrefix = dcName.left(indexOfUnderscore);
-      dataContainerPrefixChanged = true;
-    }
-    QString rowCol = dcName.right(dcName.size() - indexOfUnderscore - 1);
-    rowCol = rowCol.right(rowCol.size() - 1);     // Remove 'r'
-    QStringList rowCol_Split = rowCol.split("c"); // Split by 'c'
-    int row = rowCol_Split[0].toInt();
-    int col = rowCol_Split[1].toInt();
-    itk::Tile2D tile;
-    tile.Position[0] = origin[0];
-    tile.Position[1] = origin[1];
-    tile.FileName = ""; // This code gets its data from memory, not from a file
-
-    m_StageTiles[row][col] = tile;
-
-    int err = 0;
-    AttributeMatrix::Pointer am = dcItem->getPrereqAttributeMatrix(this, getCommonAttributeMatrixName(), err);
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-template <typename PixelType, typename AccumulatePixelType> void ITKStitchMontage::stitchMontage(int peakMethodToUse, unsigned streamSubdivisions)
+template <typename PixelType, typename AccumulatePixelType>
+void ITKStitchMontage::stitchMontage(int peakMethodToUse, unsigned streamSubdivisions)
 {
   using ScalarPixelType = typename itk::NumericTraits<PixelType>::ValueType;
   using ScalarImageType = itk::Dream3DImage<ScalarPixelType, Dimension>;
@@ -537,7 +482,8 @@ template <typename PixelType, typename AccumulatePixelType> void ITKStitchMontag
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename PixelType, typename Resampler> typename Resampler::Pointer ITKStitchMontage::createResampler()
+template <typename PixelType, typename Resampler>
+typename Resampler::Pointer ITKStitchMontage::createResampler()
 {
   // using ScalarPixelType = typename itk::NumericTraits<PixelType>::ValueType;
   // using ScalarImageType = itk::Dream3DImage<ScalarPixelType, Dimension>;
@@ -546,11 +492,14 @@ template <typename PixelType, typename Resampler> typename Resampler::Pointer IT
   // resampleF->SetMontage(montage); // doesn't compile, because montage is expected
   // to be templated using itk::Image, not itk::Dream3DImage
 
-//  typename ScalarImageType::SpacingType sp;
-//  sp.Fill(1.0); // assume unit spacing
+  //  typename ScalarImageType::SpacingType sp;
+  //  sp.Fill(1.0); // assume unit spacing
 
-  resampler->SetMontageSize({m_xMontageSize, m_yMontageSize});
-//  resampler->SetForcedSpacing(sp);
+  unsigned int rowCount = m_MontageSize[1];
+  unsigned int colCount = m_MontageSize[0];
+
+  resampler->SetMontageSize({colCount, rowCount});
+  //  resampler->SetForcedSpacing(sp);
 
   return resampler;
 }
@@ -558,21 +507,23 @@ template <typename PixelType, typename Resampler> typename Resampler::Pointer IT
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename PixelType, typename MontageType, typename Resampler> void ITKStitchMontage::initializeResampler(typename Resampler::Pointer resampler)
+template <typename PixelType, typename MontageType, typename Resampler>
+void ITKStitchMontage::initializeResampler(typename Resampler::Pointer resampler)
 {
   using OriginalImageType = itk::Dream3DImage<PixelType, Dimension>;
   using TransformType = itk::TranslationTransform<double, Dimension>;
 
   typename MontageType::TileIndexType ind;
-  for(unsigned y = 0; y < m_yMontageSize; y++)
+  for(unsigned y = m_MontageStart[1]; y <= m_MontageEnd[1]; y++)
   {
-    ind[1] = y;
-    for(unsigned x = 0; x < m_xMontageSize; x++)
+    ind[1] = y - m_MontageStart[1];
+    for(unsigned x = m_MontageStart[0]; x <= m_MontageEnd[0]; x++)
     {
-      ind[0] = x;
+      ind[0] = x - m_MontageStart[0];
       using toITKType = itk::InPlaceDream3DDataToImageFilter<PixelType, Dimension>;
       typename toITKType::Pointer toITK = toITKType::New();
-      DataContainer::Pointer imageDC = GetImageDataContainer(y, x);
+      QString dcName = MontageImportHelper::GenerateDataContainerName(getDataContainerPrefix(), m_MontageEnd, y, x);
+      DataContainer::Pointer imageDC = getDataContainerArray()->getDataContainer(dcName);
       // Check the resolution and fix if necessary
       ImageGeom::Pointer geom = imageDC->getGeometryAs<ImageGeom>();
 
@@ -614,16 +565,17 @@ template <typename PixelType, typename MontageType, typename Resampler> void ITK
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename PixelType, typename Resampler> void ITKStitchMontage::executeStitching(typename Resampler::Pointer resampler, unsigned streamSubdivisions)
+template <typename PixelType, typename Resampler>
+void ITKStitchMontage::executeStitching(typename Resampler::Pointer resampler, unsigned streamSubdivisions)
 {
   using OriginalImageType = itk::Dream3DImage<PixelType, Dimension>;
 
   notifyStatusMessage("Resampling tiles into the stitched image");
 
   itk::ProgressObserver::Pointer progressObs = itk::ProgressObserver::New();
-  progressObs->setFilter(this);
-  progressObs->setMessagePrefix("Stitching Tiles Together");
-  unsigned long progressObsTag = resampler->AddObserver(itk::ProgressEvent(), progressObs.get());
+  progressObs->SetFilter(this);
+  progressObs->SetMessagePrefix("Stitching Tiles Together");
+  unsigned long progressObsTag = resampler->AddObserver(itk::ProgressEvent(), progressObs);
 
   using Dream3DImageType = itk::Dream3DImage<PixelType, Dimension>;
   using StreamingFilterType = itk::StreamingImageFilter<OriginalImageType, Dream3DImageType>;
@@ -633,7 +585,6 @@ template <typename PixelType, typename Resampler> void ITKStitchMontage::execute
 
   streamingFilter->Update();
   notifyStatusMessage("Finished resampling tiles");
-  notifyStatusMessage("Converting into DREAM3D data structure");
 
   resampler->RemoveObserver(progressObsTag);
 }
@@ -641,7 +592,8 @@ template <typename PixelType, typename Resampler> void ITKStitchMontage::execute
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename PixelType, typename OriginalImageType> void ITKStitchMontage::convertMontageToD3D(OriginalImageType* image)
+template <typename PixelType, typename OriginalImageType>
+void ITKStitchMontage::convertMontageToD3D(OriginalImageType* image)
 {
   DataArrayPath dataArrayPath(getMontageDataContainerName(), getMontageAttributeMatrixName(), getMontageDataArrayName());
   DataContainer::Pointer container = getDataContainerArray()->getDataContainer(dataArrayPath.getDataContainerName());
@@ -654,38 +606,6 @@ template <typename PixelType, typename OriginalImageType> void ITKStitchMontage:
   toDream3DFilter->SetDataArrayName(dataArrayPath.getDataArrayName().toStdString());
   toDream3DFilter->SetDataContainer(container);
   toDream3DFilter->Update();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-DataContainer::Pointer ITKStitchMontage::GetImageDataContainer(int y, int x)
-{
-  DataContainerArray* dca = getDataContainerArray().get();
-  // Loop over the data containers until we find the proper data container
-  QMutableListIterator<QString> dcNameIter(m_ImageDataContainers);
-  QStringList dcList;
-  while(dcNameIter.hasNext())
-  {
-    QString dcName = dcNameIter.next();
-    dcList.push_back(dcName);
-    DataContainer::Pointer dcItem = dca->getPrereqDataContainer(this, dcName);
-    if(getErrorCode() < 0 || dcItem.get() == nullptr)
-    {
-      continue;
-    }
-
-    QString rowCol = dcName.right(dcName.size() - dcName.lastIndexOf("_") - 1);
-    rowCol = rowCol.right(rowCol.size() - 1);     // Remove 'r'
-    QStringList rowCol_Split = rowCol.split("c"); // Split by 'c'
-    int row = rowCol_Split[0].toInt();
-    int col = rowCol_Split[1].toInt();
-    if(row == y && col == x)
-    {
-      return dcItem;
-    }
-  }
-  return nullptr;
 }
 
 // -----------------------------------------------------------------------------

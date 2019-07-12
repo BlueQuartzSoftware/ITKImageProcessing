@@ -35,7 +35,6 @@
 
 #pragma once
 
-
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataContainers/DataContainerArrayProxy.h"
 #include "SIMPLib/FilterParameters/IntVec3FilterParameter.h"
@@ -61,8 +60,9 @@ class ITKImageProcessing_EXPORT ITKStitchMontage : public AbstractFilter
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ITKStitchMontage SUPERCLASS AbstractFilter)
-  PYB11_PROPERTY(IntVec3Type MontageSize READ getMontageSize WRITE setMontageSize)
-  PYB11_PROPERTY(QStringList ImageDataContainers READ getImageDataContainers WRITE setImageDataContainers)
+  PYB11_PROPERTY(IntVec2Type MontageStart READ getMontageStart WRITE setMontageStart)
+  PYB11_PROPERTY(IntVec2Type MontageEnd READ getMontageEnd WRITE setMontageEnd)
+  PYB11_PROPERTY(QString DataContainerPrefix READ getDataContainerPrefix WRITE setDataContainerPrefix)
   PYB11_PROPERTY(QString CommonAttributeMatrixName READ getCommonAttributeMatrixName WRITE setCommonAttributeMatrixName)
   PYB11_PROPERTY(QString CommonDataArrayName READ getCommonDataArrayName WRITE setCommonDataArrayName)
   PYB11_PROPERTY(QString MontageDataContainerName READ getMontageDataContainerName WRITE setMontageDataContainerName)
@@ -76,11 +76,14 @@ public:
 
   ~ITKStitchMontage() override;
 
-  SIMPL_FILTER_PARAMETER(IntVec3Type, MontageSize)
-  Q_PROPERTY(IntVec3Type MontageSize READ getMontageSize WRITE setMontageSize)
+  SIMPL_FILTER_PARAMETER(IntVec2Type, MontageStart)
+  Q_PROPERTY(IntVec2Type MontageStart READ getMontageStart WRITE setMontageStart)
 
-  SIMPL_FILTER_PARAMETER(QStringList, ImageDataContainers)
-  Q_PROPERTY(QStringList ImageDataContainers READ getImageDataContainers WRITE setImageDataContainers)
+  SIMPL_FILTER_PARAMETER(IntVec2Type, MontageEnd)
+  Q_PROPERTY(IntVec2Type MontageEnd READ getMontageEnd WRITE setMontageEnd)
+
+  SIMPL_FILTER_PARAMETER(QString, DataContainerPrefix)
+  Q_PROPERTY(QString DataContainerPrefix READ getDataContainerPrefix WRITE setDataContainerPrefix)
 
   SIMPL_FILTER_PARAMETER(QString, CommonAttributeMatrixName)
   Q_PROPERTY(QString CommonAttributeMatrixName READ getCommonAttributeMatrixName WRITE setCommonAttributeMatrixName)
@@ -194,21 +197,10 @@ protected:
   void initialize();
 
   /**
-   * @brief Create the Fiji data structure
-   */
-  void createFijiDataStructure();
-
-  /**
    * @brief Stitch the montage
    */
-  template <typename PixelType, typename AccumulatePixelType> void stitchMontage(int peakMethodToUse = 0, unsigned streamSubdivisions = 1);
-
-  /**
-   * @brief Get the image from the appropriate data container
-   * @param y
-   * @param x
-   */
-  DataContainer::Pointer GetImageDataContainer(int y, int x);
+  template <typename PixelType, typename AccumulatePixelType>
+  void stitchMontage(int peakMethodToUse = 0, unsigned streamSubdivisions = 1);
 
   /**
    * @brief Get the transform container from an affine transform
@@ -218,32 +210,33 @@ protected:
 
 private:
   static constexpr unsigned Dimension = 2;
-  itk::TileLayout2D m_StageTiles;
-  itk::TileLayout2D m_ActualTiles;
-  unsigned int m_xMontageSize;
-  unsigned int m_yMontageSize;
-  QString m_dataContainerPrefix;
+  IntVec2Type m_MontageSize;
+  std::vector<DataContainer::Pointer> m_ImageDataContainers;
 
   /**
    * @brief createResampler
    */
-  template <typename PixelType, typename Resampler> typename Resampler::Pointer createResampler();
+  template <typename PixelType, typename Resampler>
+  typename Resampler::Pointer createResampler();
 
   /**
    * @brief initializeResampler
    */
-  template <typename PixelType, typename MontageType, typename Resampler> void initializeResampler(typename Resampler::Pointer resampler);
+  template <typename PixelType, typename MontageType, typename Resampler>
+  void initializeResampler(typename Resampler::Pointer resampler);
 
   /**
    * @brief stitchMontageHelper
    * @param resampler
    */
-  template <typename PixelType, typename Resampler> void executeStitching(typename Resampler::Pointer resampler, unsigned streamSubdivisions);
+  template <typename PixelType, typename Resampler>
+  void executeStitching(typename Resampler::Pointer resampler, unsigned streamSubdivisions);
 
   /**
    * @brief convertMontageToD3D
    */
-  template <typename PixelType, typename OriginalImageType> void convertMontageToD3D(OriginalImageType* image);
+  template <typename PixelType, typename OriginalImageType>
+  void convertMontageToD3D(OriginalImageType* image);
 
 public:
   ITKStitchMontage(const ITKStitchMontage&) = delete;            // Copy Constructor Not Implemented

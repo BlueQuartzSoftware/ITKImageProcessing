@@ -67,6 +67,16 @@ public:
    */
   static std::map<int32_t, std::vector<size_t>> Burn(int32_t tolerance, std::vector<int32_t>& input);
 
+  /**
+   * @brief GenerateDataContainerName
+   * @param dataContainerPrefix
+   * @param montageMaxValues
+   * @param row
+   * @param col
+   * @return
+   */
+  static QString GenerateDataContainerName(const QString& dataContainerPrefix, const IntVec2Type& montageMaxValues, int32_t row, int32_t col);
+
 protected:
   MontageImportHelper();
   ~MontageImportHelper();

@@ -1,35 +1,35 @@
 /* ============================================================================
-* Copyright (c) 2019-2019 BlueQuartz Software, LLC
-*
-* Redistribution and use in source and binary forms, with or without modification,
-* are permitted provided that the following conditions are met:
-*
-* Redistributions of source code must retain the above copyright notice, this
-* list of conditions and the following disclaimer.
-*
-* Redistributions in binary form must reproduce the above copyright notice, this
-* list of conditions and the following disclaimer in the documentation and/or
-* other materials provided with the distribution.
-*
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
-* contributors may be used to endorse or promote products derived from this software
-* without specific prior written permission.
-*
-* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
-* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*
-* The code contained herein was partially funded by the followig contracts:
-*    United States Air Force Prime Contract FA8650-15-D-5231
-*
-* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+ * Copyright (c) 2019-2019 BlueQuartz Software, LLC
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this
+ * list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+ *
+ * Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+ * contributors may be used to endorse or promote products derived from this software
+ * without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+ * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * The code contained herein was partially funded by the followig contracts:
+ *    United States Air Force Prime Contract FA8650-15-D-5231
+ *
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #pragma once
 
@@ -60,6 +60,8 @@ class ITKImageProcessing_EXPORT ITKImportFijiMontage : public AbstractFilter
   PYB11_PROPERTY(bool ChangeSpacing READ getChangeSpacing WRITE setChangeSpacing)
   PYB11_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
   PYB11_PROPERTY(int32_t LengthUnit READ getLengthUnit WRITE setLengthUnit)
+  PYB11_PROPERTY(IntVec2Type MontageStart READ getMontageStart WRITE setMontageStart)
+  PYB11_PROPERTY(IntVec2Type MontageEnd READ getMontageEnd WRITE setMontageEnd)
 
   Q_DECLARE_PRIVATE(ITKImportFijiMontage)
 
@@ -83,6 +85,12 @@ public:
 
   SIMPL_FILTER_PARAMETER(QString, InputFile)
   Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
+
+  SIMPL_FILTER_PARAMETER(IntVec2Type, MontageStart)
+  Q_PROPERTY(IntVec2Type MontageStart READ getMontageStart WRITE setMontageStart)
+
+  SIMPL_FILTER_PARAMETER(IntVec2Type, MontageEnd)
+  Q_PROPERTY(IntVec2Type MontageEnd READ getMontageEnd WRITE setMontageEnd)
 
   SIMPL_FILTER_PARAMETER(DataArrayPath, DataContainerPath)
   Q_PROPERTY(DataArrayPath DataContainerPath READ getDataContainerPath WRITE setDataContainerPath)
@@ -268,9 +276,8 @@ private:
   int32_t m_Tolerance = 100;
 
 public:
-  ITKImportFijiMontage(const ITKImportFijiMontage&) = delete; // Copy Constructor Not Implemented
-  ITKImportFijiMontage(ITKImportFijiMontage&&) = delete;                   // Move Constructor Not Implemented
-  ITKImportFijiMontage& operator=(const ITKImportFijiMontage&) = delete;   // Copy Assignment Not Implemented
-  ITKImportFijiMontage& operator=(ITKImportFijiMontage&&) = delete;        // Move Assignment Not Implemented
+  ITKImportFijiMontage(const ITKImportFijiMontage&) = delete;            // Copy Constructor Not Implemented
+  ITKImportFijiMontage(ITKImportFijiMontage&&) = delete;                 // Move Constructor Not Implemented
+  ITKImportFijiMontage& operator=(const ITKImportFijiMontage&) = delete; // Copy Assignment Not Implemented
+  ITKImportFijiMontage& operator=(ITKImportFijiMontage&&) = delete;      // Move Assignment Not Implemented
 };
-
