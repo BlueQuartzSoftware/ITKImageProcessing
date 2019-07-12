@@ -471,7 +471,7 @@ def CheckTypeSupport(filter_members):
     for filter_member in filter_members:  # Expected to be a list
         if (filter_member['type'],filter_member['dim_vec']) not in ITKToDream3DType:
             print("Type not supported: %s (vector: %d)"%(filter_member['type'],filter_member['dim_vec']))
-            print filter_member
+            print(filter_member)
             return False
     return True
 
@@ -480,7 +480,7 @@ def CheckITKTypeSupport(filter_members):
         if 'itk_type' in filter_member:
             if filter_member['dim_vec'] > 0 and filter_member['itk_type'] not in itkVectorTypes:
                 print("itk_type not supported: %s "%filter_member['itk_type'])
-                print filter_member
+                print(filter_member)
                 return False
     return True
 
@@ -754,10 +754,10 @@ def VerifyFilterParameterTypes(filter_members,test_settings):
             continue
         if settings['type'] == '':
             print("No type in test for %s - searching..."%settings['parameter'])
-            print "settings:"+str(settings)
-            print "filter_members:"+str(filter_members)
+            print("settings:"+str(settings))
+            print("filter_members:"+str(filter_members))
             list_types = [ x['type'] for x in filter_members if x['name'] == settings['parameter'] ]
-            print list_types
+            print(list_types)
             if len(list_types) != 1:
                 print("No type in test for %s - No type found in filter_members."%settings['parameter'])
                 return 0
@@ -855,7 +855,7 @@ def main(argv=None):
             if len(filter_inputs):
                 filter_description['number_of_inputs'] = len(filter_inputs)
             filter_members=[]
-            print filter_members
+            print(filter_members)
             if not ExtractDescriptionList(members, filter_description['members'],\
                                           filter_members, options.extra_verbose, options.not_implemented):
                 continue
@@ -926,7 +926,7 @@ def main(argv=None):
                    not VerifyLimitations(members, filter_measurements, options.verbose) or\
                    not VerifyLimitations(tests, filter_tests, options.verbose) or\
                    not VerifyLimitations(tests_settings, filter_test_settings, options.verbose, True):
-                    print "VerifyLimitations Failed"
+                    print("VerifyLimitations Failed")
                     continue
             # Filter lists in fields
             FilterFields(general, [filter_description])
@@ -938,10 +938,10 @@ def main(argv=None):
             FilterFields(tests_settings, filter_test_measurements_results, True)
             # Check filter members type
             if not CheckTypeSupport(filter_members):
-                print "CheckTypeSupport Failed"
+                print("CheckTypeSupport Failed")
                 continue
             if not CheckITKTypeSupport(filter_members):
-                print "CheckITKTypeSupport Failed"
+                print("CheckITKTypeSupport Failed")
                 continue
             # Create Filter content
             # Initialization of replacement strings
@@ -1005,10 +1005,10 @@ def main(argv=None):
             filter_list.append(DREAM3DFilter['FilterName'])
         except KeyError as e:
             print('KeyError exception processing %s'%current_json)
-            print e
+            print(e)
             continue
         except:
-            print('Exception processing %s'%current_json)
+            print('Unknown exception processing %s'%current_json)
             continue
     # Print manual step: Add created filters to CMakeLists
     print("Add these filters to  ITKImageProcessingFilters/SourceList.cmake and Test/CMakeLists.txt:")
