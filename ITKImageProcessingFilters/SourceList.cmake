@@ -151,6 +151,7 @@ if(NOT ITKImageProcessing_LeanAndMean)
     ITKFFTNormalizedCorrelationImage
     ITKVectorRescaleIntensityImage
     ITKPatchBasedDenoisingImage
+    ITKProxTVImage
   )
 endif()
 

@@ -126,6 +126,7 @@ if(NOT ITKImageProcessing_LeanAndMean)
     ITKFFTNormalizedCorrelationImageTest
     ITKVectorRescaleIntensityImageTest
     ITKPatchBasedDenoisingImageTest
+    ITKProxTVImageTest
   )
 endif()
 

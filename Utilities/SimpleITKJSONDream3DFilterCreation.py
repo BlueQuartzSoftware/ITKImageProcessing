@@ -192,8 +192,8 @@ Dream3DTypeToMacro={
   'float':{'include':'SIMPLib/FilterParameters/FloatFilterParameter.h','macro':'SIMPL_NEW_FLOAT_FP','component':'float','read':'readValue'},
   'int':{'include':'SIMPLib/FilterParameters/IntFilterParameter.h','macro':'SIMPL_NEW_INTEGER_FP','component':'int','read':'readValue'},
   'bool':{'include':'SIMPLib/FilterParameters/BooleanFilterParameter.h','macro':'SIMPL_NEW_BOOL_FP','component':'bool','read':'readValue'},
-  'FloatVec3_t':{'include':'SIMPLib/FilterParameters/FloatVec3FilterParameter.h','macro':'SIMPL_NEW_FLOAT_VEC3_FP','component':'float','read':'readFloatVec3'},
-  'IntVec3_t':{'include':'SIMPLib/FilterParameters/IntVec3FilterParameter.h','macro':'SIMPL_NEW_INT_VEC3_FP','component':'int','read':'readIntVec3'}
+  'FloatVec3Type':{'include':'SIMPLib/FilterParameters/FloatVec3FilterParameter.h','macro':'SIMPL_NEW_FLOAT_VEC3_FP','component':'float','read':'readFloatVec3'},
+  'IntVec3Type':{'include':'SIMPLib/FilterParameters/IntVec3FilterParameter.h','macro':'SIMPL_NEW_INT_VEC3_FP','component':'int','read':'readIntVec3'}
 }
 
 TypeIsInt={
@@ -222,17 +222,17 @@ ITKToDream3DType={
   ('uint32_t',0):{'d3d':'double','std':'double'},
   ('uint8_t',0):{'d3d':'int','std':'int'},
   ('bool',0):{'d3d':'bool','std':'bool'},
-  ('double',1):{'d3d':'FloatVec3_t','std':'std::vector<double>'},
-  ('float',1):{'d3d':'FloatVec3_t','std':'std::vector<float>'},
-  ('int',1):{'d3d':'IntVec3_t','std':'std::vector<int>'},
-  ('unsigned int',1):{'d3d':'FloatVec3_t','std':'std::vector<unsigned int>'},
-  ('int64_t',1):{'d3d':'FloatVec3_t','std':'std::vector<int64_t>'},
-  ('uint32_t',1):{'d3d':'FloatVec3_t','std':'std::vector<uint32_t>'},
-  ('int32_t',1):{'d3d':'FloatVec3_t','std':'std::vector<int32_t>'},
-  ('bool',1):{'d3d':'IntVec3_t','std':'std::vector<bool>'},
-  ('std::vector<float>',1):{'d3d':'FloatVec3_t','std':'std::vector<float>'},
-  ('std::vector<uint64_t>',1):{'d3d':'FloatVec3_t','std':'std::vector<uint64_t>'},
-  ('std::vector<double>',1):{'d3d':'FloatVec3_t','std':'std::vector<double>'}
+  ('double',1):{'d3d':'FloatVec3Type','std':'std::vector<double>'},
+  ('float',1):{'d3d':'FloatVec3Type','std':'std::vector<float>'},
+  ('int',1):{'d3d':'IntVec3Type','std':'std::vector<int>'},
+  ('unsigned int',1):{'d3d':'FloatVec3Type','std':'std::vector<unsigned int>'},
+  ('int64_t',1):{'d3d':'FloatVec3Type','std':'std::vector<int64_t>'},
+  ('uint32_t',1):{'d3d':'FloatVec3Type','std':'std::vector<uint32_t>'},
+  ('int32_t',1):{'d3d':'FloatVec3Type','std':'std::vector<int32_t>'},
+  ('bool',1):{'d3d':'IntVec3Type','std':'std::vector<bool>'},
+  ('std::vector<float>',1):{'d3d':'FloatVec3Type','std':'std::vector<float>'},
+  ('std::vector<uint64_t>',1):{'d3d':'FloatVec3Type','std':'std::vector<uint64_t>'},
+  ('std::vector<double>',1):{'d3d':'FloatVec3Type','std':'std::vector<double>'}
 }
 
 VariantToType={
@@ -717,8 +717,8 @@ def GetDream3DFilterTests(filter_description, test, test_settings, filter_test_m
         testFunctionCode += '    }\n'
     testFunctionCode += '    filter->setDataContainerArray(containerArray);\n'
     testFunctionCode += '    filter->execute();\n'
-    testFunctionCode += '    DREAM3D_REQUIRED(filter->getErrorCondition(), >=, 0);\n'
-    testFunctionCode += '    DREAM3D_REQUIRED(filter->getWarningCondition(), >=, 0);\n'
+    testFunctionCode += '    DREAM3D_REQUIRED(filter->getErrorCode(), >=, 0);\n'
+    testFunctionCode += '    DREAM3D_REQUIRED(filter->getWarningCode(), >=, 0);\n'
     # Save filtered image for debugging purposes
     testFunctionCode += '    WriteImage("'+GetDREAM3DFilterName(filter_description['name'])+test['tag']+'.nrrd", containerArray, input_path);\n'
     if 'md5hash' in test and test['md5hash'] != '' and test['md5hash'] != None:

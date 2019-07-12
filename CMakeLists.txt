@@ -75,7 +75,7 @@ if(ITK_VERSION_MAJOR EQUAL 4)
 elseif(ITK_VERSION_MAJOR EQUAL 5)
   #message(STATUS "Using ITK v5")
   # Put ITK 5 Specific Modyles in here
-  set( ADDITIONAL_ITK_MODULES ${ADDITIONAL_ITK_MODULES} Montage)
+  set( ADDITIONAL_ITK_MODULES ${ADDITIONAL_ITK_MODULES} Montage TotalVariation)
 endif()
 
 option(${PLUGIN_NAME}_ENABLE_SCIFIO "Enable SCIFIO ITK Modules" OFF)

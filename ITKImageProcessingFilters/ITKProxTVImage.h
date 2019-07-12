@@ -17,23 +17,35 @@
 #include "SIMPLib/SIMPLib.h"
 
 // Auto includes
-${IncludeName}
+#include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
+#include <SIMPLib/FilterParameters/FloatVec3FilterParameter.h>
+#include <itkProxTVImageFilter.h>
+
 
 /**
- * @brief The ${FilterName} class. See [Filter documentation](@ref ${FilterName}) for details.
+ * @brief The ITKProxTVImage class. See [Filter documentation](@ref ITKProxTVImage) for details.
  */
-class ${FilterName} : public ITKImageProcessingBase
+class ITKProxTVImage : public ITKImageProcessingBase
 {
   Q_OBJECT
 
 public:
-  SIMPL_SHARED_POINTERS(${FilterName})
-  SIMPL_FILTER_NEW_MACRO(${FilterName})
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(${FilterName}, AbstractFilter)
+  SIMPL_SHARED_POINTERS(ITKProxTVImage)
+  SIMPL_FILTER_NEW_MACRO(ITKProxTVImage)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKProxTVImage, AbstractFilter)
 
-  ~${FilterName}() override;
+  ~ITKProxTVImage() override;
 
-${Parameters}
+  SIMPL_FILTER_PARAMETER(double, MaximumNumberOfIterations)
+  Q_PROPERTY(double MaximumNumberOfIterations READ getMaximumNumberOfIterations WRITE setMaximumNumberOfIterations)
+
+  SIMPL_FILTER_PARAMETER(FloatVec3Type, Weights)
+  Q_PROPERTY(FloatVec3Type Weights READ getWeights WRITE setWeights)
+
+  SIMPL_FILTER_PARAMETER(FloatVec3Type, Norms)
+  Q_PROPERTY(FloatVec3Type Norms READ getNorms WRITE setNorms)
+
+
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
    */
@@ -67,7 +79,7 @@ ${Parameters}
   void readFilterParameters(AbstractFilterParametersReader * reader, int index) override;
 
 protected:
-  ${FilterName}();
+  ITKProxTVImage();
 
   /**
    * @brief dataCheckInternal overloads dataCheckInternal in ITKImageBase and calls templated dataCheck
@@ -90,8 +102,8 @@ protected:
   template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
 
 private:
-  ${FilterName}(const ${FilterName}&) = delete;    // Copy Constructor Not Implemented
-  void operator=(const ${FilterName}&) = delete;   // Move assignment Not Implemented
+  ITKProxTVImage(const ITKProxTVImage&) = delete;    // Copy Constructor Not Implemented
+  void operator=(const ITKProxTVImage&) = delete;   // Move assignment Not Implemented
 };
 
 #ifdef __clang__
