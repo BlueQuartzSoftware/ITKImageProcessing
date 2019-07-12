@@ -573,9 +573,9 @@ void ITKStitchMontage::executeStitching(typename Resampler::Pointer resampler, u
   notifyStatusMessage("Resampling tiles into the stitched image");
 
   itk::ProgressObserver::Pointer progressObs = itk::ProgressObserver::New();
-  progressObs->setFilter(this);
-  progressObs->setMessagePrefix("Stitching Tiles Together");
-  unsigned long progressObsTag = resampler->AddObserver(itk::ProgressEvent(), progressObs.get());
+  progressObs->SetFilter(this);
+  progressObs->SetMessagePrefix("Stitching Tiles Together");
+  unsigned long progressObsTag = resampler->AddObserver(itk::ProgressEvent(), progressObs);
 
   using Dream3DImageType = itk::Dream3DImage<PixelType, Dimension>;
   using StreamingFilterType = itk::StreamingImageFilter<OriginalImageType, Dream3DImageType>;
@@ -585,7 +585,6 @@ void ITKStitchMontage::executeStitching(typename Resampler::Pointer resampler, u
 
   streamingFilter->Update();
   notifyStatusMessage("Finished resampling tiles");
-  notifyStatusMessage("Converting into DREAM3D data structure");
 
   resampler->RemoveObserver(progressObsTag);
 }

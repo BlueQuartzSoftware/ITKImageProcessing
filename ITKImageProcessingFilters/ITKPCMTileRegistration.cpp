@@ -148,29 +148,6 @@
 
 itk::NumericTraits<float> nmfloat;
 
-namespace
-{
-QString generateDataContainerName(const QString& dataContainerPrefix, const IntVec2Type& montageStart, const IntVec2Type& montageEnd, int32_t row, int32_t col)
-{
-  int32_t rowCountPadding = MetaXmlUtils::CalculatePaddingDigits(montageEnd[1]);
-  int32_t colCountPadding = MetaXmlUtils::CalculatePaddingDigits(montageEnd[0]);
-  int charPaddingCount = std::max(rowCountPadding, colCountPadding);
-
-  QString dcName = dataContainerPrefix;
-  QTextStream dcNameStream(&dcName);
-  dcNameStream << "r";
-  dcNameStream.setFieldWidth(charPaddingCount);
-  dcNameStream.setFieldAlignment(QTextStream::AlignRight);
-  dcNameStream.setPadChar('0');
-  dcNameStream << row;
-  dcNameStream.setFieldWidth(0);
-  dcNameStream << "c";
-  dcNameStream.setFieldWidth(charPaddingCount);
-  dcNameStream << col;
-  return dcName;
-}
-} // namespace
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -178,7 +155,6 @@ ITKPCMTileRegistration::ITKPCMTileRegistration()
 : m_DataContainerPrefix(ITKImageProcessing::Montage::k_DataContainerPrefixDefaultName)
 , m_CommonAttributeMatrixName(ITKImageProcessing::Montage::k_TileAttributeMatrixDefaultName)
 , m_CommonDataArrayName(ITKImageProcessing::Montage::k_TileDataArrayDefaultName)
-//, m_TileOverlap(10.0f)
 {
   m_MontageStart = IntVec2Type(0, 0);
   m_MontageEnd = IntVec2Type(0, 0);
@@ -527,13 +503,10 @@ void ITKPCMTileRegistration::executeMontageRegistration(typename MontageType::Po
   notifyStatusMessage("Doing the tile registrations");
 
   itk::ProgressObserver::Pointer progressObs = itk::ProgressObserver::New();
-  progressObs->setFilter(this);
-  progressObs->setMessagePrefix("Registering Tiles");
-  unsigned long progressObsTag = montage->AddObserver(itk::ProgressEvent(), progressObs.get());
-
+  progressObs->SetFilter(this);
+  progressObs->SetMessagePrefix("Registering Tiles");
+  montage->AddObserver(itk::ProgressEvent(), progressObs);
   montage->Update();
-
-  montage->RemoveObserver(progressObsTag);
   notifyStatusMessage("Finished the tile registrations");
 }
 
