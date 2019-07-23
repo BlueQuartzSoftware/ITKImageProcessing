@@ -75,6 +75,9 @@ public:
   //SIMPL_FILTER_PARAMETER(int, Degree)
   //Q_PROPERTY(int Degree READ getDegree WRITE setDegree)
 
+  SIMPL_FILTER_PARAMETER(bool, UseAmoebaOptimizer)
+  Q_PROPERTY(bool UseAmoebaOptimizer READ getUseAmoebaOptimizer WRITE setUseAmoebaOptimizer)
+
   SIMPL_FILTER_PARAMETER(QString, InitialSimplexGuess)
   Q_PROPERTY(QString InitialSimplexGuess READ getInitialSimplexGuess WRITE setInitialSimplexGuess)
 
@@ -223,6 +226,8 @@ protected:
    * @param transformVector
    */
   void warpDataContainers(const std::vector<double>& transformVector, double imageDimX, double imageDimY);
+
+  std::pair<double, double> getImageDims() const;
 
 private:
   std::vector<double> m_InitialGuess;

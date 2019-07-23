@@ -225,14 +225,25 @@ FFTConvolutionCostFunction::PixelTypei FFTConvolutionCostFunction::calculateNew2
   using PixelTyped = std::array<double, 2>;
 
   const PixelTyped newPrime = { col - x_trans, row - y_trans };
+  const double newXPrime = newPrime[0];
+  const double newYPrime = newPrime[1];
   const double newXPrimeSqr = newPrime[0] * newPrime[0];
   const double newYPrimeSqr = newPrime[1] * newPrime[1];
 
   std::array<double, 2> oldPrime;
+#if 0
+  // old' = (a0 * x') + (a1 * y') + (a2 * x'Sqr) + (a3 * y'Sqr) + (a4 * x'y') + (a5 * x'Sqry') + (a6 * x'y'Sqr)
   oldPrime[0] = parameters[0] * newPrime[0] + parameters[1] * newPrime[1] + parameters[2] * newXPrimeSqr + parameters[3] * newYPrimeSqr + parameters[4] * newPrime[0] * newPrime[1] +
     parameters[5] * newXPrimeSqr * newPrime[1] + parameters[6] * newPrime[0] * newYPrimeSqr;
   oldPrime[1] = parameters[7] * newPrime[0] + parameters[8] * newPrime[1] + parameters[9] * newXPrimeSqr + parameters[10] * newYPrimeSqr + parameters[11] * newPrime[0] * newPrime[1] +
     parameters[12] * newXPrimeSqr * newPrime[1] + parameters[13] * newPrime[0] * newYPrimeSqr;
+#else
+  // old' = (a0 * y') + (a1 * y'Sqr) + (a2 * x') + (a3 * x'y) + (a4 * x'y'Sqr)+ (a5 * x'Sqr) + (a6 * x'Sqry')
+  oldPrime[0] = parameters[0] * newYPrime + parameters[1] * newYPrimeSqr + parameters[2] * newXPrime + parameters[3] * newXPrime * newYPrime + parameters[4] * newXPrime * newYPrimeSqr +
+    parameters[5] * newXPrimeSqr + parameters[6] * newXPrimeSqr * newYPrime;
+  oldPrime[1] = parameters[7] * newYPrime + parameters[8] * newYPrimeSqr + parameters[9] * newXPrime + parameters[10] * newXPrime * newYPrime + parameters[11] * newXPrime * newYPrimeSqr +
+    parameters[12] * newXPrimeSqr + parameters[13] * newXPrimeSqr * newYPrime;
+#endif
 
   const int64_t oldXUnbound = static_cast<int64_t>(round(oldPrime[0] + x_trans));
   const int64_t oldYUnbound = static_cast<int64_t>(round(oldPrime[1] + y_trans));
@@ -252,7 +263,8 @@ void FFTConvolutionCostFunction::InitializeDataContainer(const GridMontageShPtr&
   AttributeMatrix::Pointer am = dc->getAttributeMatrix(amName);
   DataArray<Grayscale_T>::Pointer da = am->getAttributeArrayAs<DataArray<Grayscale_T>>(daName);
   size_t comps = da->getNumberOfComponents();
-  SizeVec3Type dims = dc->getGeometryAs<ImageGeom>()->getDimensions();
+  ImageGeom::Pointer imageGeom = dc->getGeometryAs<ImageGeom>();
+  SizeVec3Type dims = imageGeom->getDimensions();
   size_t width = dims.getX();
   size_t height = dims.getY();
   size_t xOrigin = 0;
@@ -394,7 +406,7 @@ FFTConvolutionCostFunction::MeasureType FFTConvolutionCostFunction::GetValue(con
 
   // The value to minimize is the square of the sum of the maximum value of the fft convolution
   MeasureType result = sqrt(residual);
-  return result;
+  return result != 0 ? 1 / result : result;
 }
 
 // -----------------------------------------------------------------------------
@@ -500,8 +512,6 @@ void FFTConvolutionCostFunction::findFFTConvolutionAndMaxValue(const OverlapPair
   InputImage::Pointer image = distortedGrid.at(imageKey);
   Filter::Pointer filter = Filter::New();
 
-  // NOTE It may be useful for debugging purposes to write the image to a file here
-
   GridKey kernelKey = overlap.first.second;
   auto imageRegion = overlap.second.first;
   image->SetRequestedRegion(imageRegion);
@@ -509,9 +519,6 @@ void FFTConvolutionCostFunction::findFFTConvolutionAndMaxValue(const OverlapPair
 
   // Set the filter's kernel to the overlap region of the kernel
   InputImage::Pointer kernel = distortedGrid.at(kernelKey);
-
-  // NOTE It may be useful for debugging purposes to write the kernel to a file here
-
   kernel->SetRequestedRegion(overlap.second.second);
   filter->SetKernelImage(kernel);
 
@@ -524,7 +531,9 @@ void FFTConvolutionCostFunction::findFFTConvolutionAndMaxValue(const OverlapPair
   // Increment by the maximum value of the output of the fftConvolve
   // NOTE This methodology of getting the max element from the fftConvolve
   // output might require a deeper look
-  MeasureType maxValue = *std::max_element(fftConvolve->GetBufferPointer(), fftConvolve->GetBufferPointer() + fftConvolve->GetPixelContainer()->Size());
+  PixelValue_T* bufferPtr = fftConvolve->GetBufferPointer();
+  itk::SizeValueType bufferSize = fftConvolve->GetPixelContainer()->Size();
+  MeasureType maxValue = *std::max_element(bufferPtr, bufferPtr + bufferSize);
   ScopedLockType lock(mutex);
   residual += maxValue;
 }

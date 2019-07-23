@@ -32,8 +32,6 @@
 
 #include "Blend.h"
 
-#define CLAMP_INDEX
-
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
 #include "tbb/queuing_mutex.h"
 using MutexType = tbb::queuing_mutex;
@@ -46,6 +44,7 @@ using MutexType = tbb::queuing_mutex;
 #include "SIMPLib/Common/SIMPLRange.h"
 
 #include "SIMPLib/CoreFilters/ConvertColorToGrayScale.h"
+#include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
 #include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
 #include "SIMPLib/FilterParameters/FilterParameter.h"
@@ -100,6 +99,7 @@ Blend::Blend()
 , m_OverlapPercentage(0.0f)
 , m_LowTolerance(1E-2)
 , m_HighTolerance(1E-2)
+, m_UseAmoebaOptimizer(false)
 , m_InitialSimplexGuess("0.1;0.1;0.1;0.1;0.1;0.1;0.1;0.1")
 , m_BlendDCName("Blend Data")
 , m_TransformMatrixName("Transform Matrix")
@@ -139,6 +139,7 @@ void Blend::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_FLOAT_FP("Overlap Percentage", OverlapPercentage, FilterParameter::Category::Parameter, Blend));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Low Tolerance", LowTolerance, FilterParameter::Category::Parameter, Blend));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("High Tolerance", HighTolerance, FilterParameter::Category::Parameter, Blend));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Use Amoeba Optimizer", UseAmoebaOptimizer, FilterParameter::Category::Parameter, Blend));
   parameters.push_back(SIMPL_NEW_STRING_FP("Initial Simplex Guess", InitialSimplexGuess, FilterParameter::Category::Parameter, Blend));
   parameters.push_back(SIMPL_NEW_STRING_FP("Attribute Matrix Name", AttributeMatrixName, FilterParameter::Category::Parameter, Blend));
   parameters.push_back(SIMPL_NEW_STRING_FP("IPF Colors Array Name", IPFColorsArrayName, FilterParameter::Category::Parameter, Blend));
@@ -214,6 +215,11 @@ void Blend::dataCheck()
   // All of the types in the chosen data container's image data arrays should be the same
   for(const auto& dc : montage->getDataContainers())
   {
+    if (nullptr == dc)
+    {
+      setErrorCondition(-66715, QString("Montage DataContainer cannot be null"));
+      return;
+    }
 
     AttributeMatrix::Pointer am = dc->getAttributeMatrix(m_AttributeMatrixName);
     if(nullptr == am)
@@ -299,75 +305,87 @@ void Blend::execute()
   // Generate internal grayscale values
   generateGrayscaleIPF();
   const QString grayscaleArrayName = getGrayscaleArrayName();
+  std::vector<double> transformVector;
+  double imageDimX;
+  double imageDimY;
 
-  // The optimizer needs an initial guess; this is supplied through a filter parameter
-  itk::AmoebaOptimizer::ParametersType initialParams(m_InitialGuess.size());
-  for(size_t idx = 0; idx < m_InitialGuess.size(); ++idx)
+  if(m_UseAmoebaOptimizer)
   {
-    initialParams[idx] = m_InitialGuess[idx];
-  }
+    // The optimizer needs an initial guess; this is supplied through a filter parameter
+    itk::AmoebaOptimizer::ParametersType initialParams(m_InitialGuess.size());
+    for (size_t idx = 0; idx < m_InitialGuess.size(); ++idx)
+    {
+      initialParams[idx] = m_InitialGuess[idx];
+    }
 
-  itk::AmoebaOptimizer::Pointer optimizer = itk::AmoebaOptimizer::New();
-  optimizer->SetMaximumNumberOfIterations(m_MaxIterations);
-  optimizer->SetFunctionConvergenceTolerance(m_LowTolerance);
-  optimizer->SetParametersConvergenceTolerance(m_HighTolerance);
-  optimizer->SetInitialPosition(initialParams);
+    itk::AmoebaOptimizer::Pointer optimizer = itk::AmoebaOptimizer::New();
+    optimizer->SetMaximumNumberOfIterations(m_MaxIterations);
+    optimizer->SetFunctionConvergenceTolerance(m_LowTolerance);
+    optimizer->SetParametersConvergenceTolerance(m_HighTolerance);
+    optimizer->SetInitialPosition(initialParams);
 
-  GridMontageShPtr gridMontage = std::dynamic_pointer_cast<GridMontage>(getDataContainerArray()->getMontage(getMontageName()));
+    GridMontageShPtr gridMontage = std::dynamic_pointer_cast<GridMontage>(getDataContainerArray()->getMontage(getMontageName()));
 
-  //  using CostFunctionType = MultiParamCostFunction;
-  using CostFunctionType = FFTConvolutionCostFunction;
-  CostFunctionType implementation;
-  implementation.Initialize(
+    //  using CostFunctionType = MultiParamCostFunction;
+    using CostFunctionType = FFTConvolutionCostFunction;
+    CostFunctionType implementation;
+    implementation.Initialize(
       // The line below is used for testing the MultiParamCostFunction
       //    std::vector<double>{1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0}
       gridMontage, m_Degree, m_OverlapPercentage, getDataContainerArray(), m_AttributeMatrixName, grayscaleArrayName);
-  optimizer->SetCostFunction(&implementation);
-  optimizer->StartOptimization();
+    optimizer->SetCostFunction(&implementation);
+    optimizer->StartOptimization();
 
-  // Newer versions of the optimizer allow for easier methods of output information
-  // to be obtained, but until then, we have to do some string parsing from the
-  // optimizer's stop description
-  QString stopReason = QString::fromStdString(optimizer->GetStopConditionDescription());
-  std::list<double> transform;
-  for(const auto& coeff : optimizer->GetCurrentPosition())
-  {
-    transform.push_back(coeff);
+    // Newer versions of the optimizer allow for easier methods of output information
+    // to be obtained, but until then, we have to do some string parsing from the
+    // optimizer's stop description
+    QString stopReason = QString::fromStdString(optimizer->GetStopConditionDescription());
+    std::list<double> transform;
+    for (const auto& coeff : optimizer->GetCurrentPosition())
+    {
+      transform.push_back(coeff);
+    }
+
+    // cache value
+    auto value = optimizer->GetValue();
+    auto numIterations = GetIterationsFromStopDescription(stopReason);
+
+    // Can get rid of these qDebug lines after debugging is done for filter
+    qDebug() << "Initial Position: [ " << m_InitialGuess << " ]";
+    qDebug() << "Final Position: [ " << transform << " ]";
+    qDebug() << "Number of Iterations: " << numIterations;
+    qDebug() << "Value: " << value;
+
+    // If the optimization didn't converge, set an error...
+    if (!GetConvergenceFromStopDescription(stopReason))
+    {
+      setErrorCondition(-66850, stopReason);
+      notifyStatusMessage(stopReason);
+      // Write the stop reason to the console
+      qDebug() << "Stop Reason: " << stopReason;
+      return;
+    }
+
+    // ...otherwise, set the appropriate values of the filter's output data arrays
+    AttributeMatrixShPtr transformAM = getDataContainerArray()->getDataContainer(m_BlendDCName)->getAttributeMatrix(m_TransformMatrixName);
+    // transformAM->getAttributeArrayAs<UInt64ArrayType>(m_IterationsAAName)->push_back(numIterations);
+    transformAM->getAttributeArrayAs<DoubleArrayType>(m_ResidualArrayName)->push_back(value);
+    transformAM->getAttributeArrayAs<DoubleArrayType>(m_TransformArrayName)->setArray(transform);
+
+    imageDimX = implementation.getImageDimX();
+    imageDimY = implementation.getImageDimY();
+    transformVector = { std::begin(transform), std::end(transform) };
   }
-
-  // cache value
-  auto value = optimizer->GetValue();
-  auto numIterations = GetIterationsFromStopDescription(stopReason);
-
-  // Can get rid of these qDebug lines after debugging is done for filter
-  qDebug() << "Initial Position: [ " << m_InitialGuess << " ]";
-  qDebug() << "Final Position: [ " << transform << " ]";
-  qDebug() << "Number of Iterations: " << numIterations;
-  qDebug() << "Value: " << value;
-
-  // If the optimization didn't converge, set an error...
-  if(!GetConvergenceFromStopDescription(stopReason))
+  else
   {
-    setErrorCondition(-66850, stopReason);
-    notifyStatusMessage(stopReason);
-    // Write the stop reason to the console
-    qDebug() << "Stop Reason: " << stopReason;
-    return;
+    std::tie(imageDimX, imageDimY) = getImageDims();
+    transformVector = { std::begin(m_InitialGuess), std::end(m_InitialGuess) };
   }
-
-  // ...otherwise, set the appropriate values of the filter's output data arrays
-  AttributeMatrixShPtr transformAM = getDataContainerArray()->getDataContainer(m_BlendDCName)->getAttributeMatrix(m_TransformMatrixName);
-  // transformAM->getAttributeArrayAs<UInt64ArrayType>(m_IterationsAAName)->push_back(numIterations);
-  transformAM->getAttributeArrayAs<DoubleArrayType>(m_ResidualArrayName)->push_back(value);
-  transformAM->getAttributeArrayAs<DoubleArrayType>(m_TransformArrayName)->setArray(transform);
 
   // Remove internal arrays
   deleteGrayscaleIPF();
 
   // Apply transform to dewarp data
-  double imageDimX = implementation.getImageDimX();
-  double imageDimY = implementation.getImageDimY();
-  std::vector<double> transformVector{ std::begin(transform), std::end(transform) };
   warpDataContainers(transformVector, imageDimX, imageDimY);
 }
 
@@ -433,73 +451,67 @@ void Blend::deleteGrayscaleIPF()
 // -----------------------------------------------------------------------------
 size_t flatten(const SizeVec2Type& xyPos, const SizeVec3Type& dimensions)
 {
-  const size_t row = xyPos[1];
-  const size_t col = xyPos[0];
-  const size_t depth = 0;
+  const size_t x = xyPos[0];
+  const size_t y = xyPos[1];
 
-  const size_t numRows = dimensions[1];
-  const size_t numCols = dimensions[0];
+  const size_t width = dimensions[0];
+  const size_t height = dimensions[1];
 
-  return col + row * numCols;
+  return x + y * width;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 template <typename T>
-void transformDataPixel(double x_trans, double y_trans, const SizeVec2Type& newPixeli, const std::vector<double>& transformVector, const SizeVec3Type& dimensions, typename const DataArray<T>::Pointer& da, typename const DataArray<T>::Pointer& tempDACopy)
+void transformDataPixel(double x_trans, double y_trans, const SizeVec2Type& newPixel, const std::vector<double>& transformVector, const SizeVec3Type& dimensions, typename const DataArray<T>::Pointer& da, typename const DataArray<T>::Pointer& tempDACopy)
 {
-  // static MutexType mutex;
-
   using PixelTyped = std::array<double, 2>;
-
-  //PixelTyped newPixel{ newPixeli[1] - y_trans, newPixeli[0] - x_trans };
-  PixelTyped newPixel{ newPixeli[0] - x_trans, newPixeli[1] - y_trans };
-
-  const std::array<double, 2> newPrime = { std::get<0>(newPixel), std::get<1>(newPixel) };
-  const double newXPrimeSqr = newPrime[0] * newPrime[0];
-  const double newYPrimeSqr = newPrime[1] * newPrime[1];
+  
+  const std::array<double, 2> newPrime = { newPixel[0] - x_trans, newPixel[1] - y_trans };
+  const double newXPrime = newPrime[0];
+  const double newYPrime = newPrime[1];
+  const double newXPrimeSqr = newXPrime * newXPrime;
+  const double newYPrimeSqr = newYPrime * newYPrime;
 
   std::array<double, 2> oldPrime;
-  oldPrime[0] = transformVector[0] * newPrime[0] + transformVector[1] * newPrime[1] + transformVector[2] * newXPrimeSqr + transformVector[3] * newYPrimeSqr + transformVector[4] * newPrime[0] * newPrime[1] +
-    transformVector[5] * newXPrimeSqr * newPrime[1] + transformVector[6] * newPrime[0] * newYPrimeSqr;
-  oldPrime[1] = transformVector[7] * newPrime[0] + transformVector[8] * newPrime[1] + transformVector[9] * newXPrimeSqr + transformVector[10] * newYPrimeSqr + transformVector[11] * newPrime[0] * newPrime[1] +
-    transformVector[12] * newXPrimeSqr * newPrime[1] + transformVector[13] * newPrime[0] * newYPrimeSqr;
+#if 0
+  // old' = (a0 * x') + (a1 * y') + (a2 * x'Sqr) + (a3 * y'Sqr) + (a4 * x'y') + (a5 * x'Sqry') + (a6 * x'y'Sqr)
+  oldPrime[0] = transformVector[0] * newXPrime + transformVector[1] * newYPrime + transformVector[2] * newXPrimeSqr + transformVector[3] * newYPrimeSqr + transformVector[4] * newXPrime * newYPrime +
+    transformVector[5] * newXPrimeSqr * newYPrime + transformVector[6] * newXPrime * newYPrimeSqr;
+  oldPrime[1] = transformVector[7] * newXPrime + transformVector[8] * newYPrime + transformVector[9] * newXPrimeSqr + transformVector[10] * newYPrimeSqr + transformVector[11] * newXPrime * newYPrime +
+    transformVector[12] * newXPrimeSqr * newYPrime + transformVector[13] * newXPrime * newYPrimeSqr;
+#else
+  // old' = (a0 * y') + (a1 * y'Sqr) + (a2 * x') + (a3 * x'y) + (a4 * x'y'Sqr)+ (a5 * x'Sqr) + (a6 * x'Sqry')
+  oldPrime[0] = transformVector[0] * newYPrime + transformVector[1] * newYPrimeSqr + transformVector[2] * newXPrime + transformVector[3] * newXPrime * newYPrime + transformVector[4] * newXPrime * newYPrimeSqr +
+    transformVector[5] * newXPrimeSqr + transformVector[6] * newXPrimeSqr * newYPrime; // transformVector[7] * newXPrimeSqr * newYPrimeSqr;
+  oldPrime[1] = transformVector[7] * newYPrime + transformVector[8] * newYPrimeSqr + transformVector[9] * newXPrime + transformVector[10] * newXPrime * newYPrime + transformVector[11] * newXPrime * newYPrimeSqr +
+    transformVector[12] * newXPrimeSqr + transformVector[13] * newXPrimeSqr * newYPrime; // transformVector[14] * newXPrimeSqr * newYPrimeSqr;
+#endif
 
   const int64_t oldXUnbound = static_cast<int64_t>(round(oldPrime[0] + x_trans));
   const int64_t oldYUnbound = static_cast<int64_t>(round(oldPrime[1] + y_trans));
 
-#ifndef CLAMP_INDEX
+  auto compDims = tempDACopy->getComponentDimensions();
+  size_t numComponents = std::accumulate(compDims.begin(), compDims.end(), 0);
+  size_t newIndex = flatten(newPixel, dimensions);
+
   // Cannot flatten invalid { X,Y } positions
-  if(oldXUnbound < 0 || oldYUnbound < 0)
+  if(oldXUnbound < 0 || oldYUnbound < 0 || oldXUnbound >= dimensions[0] || oldYUnbound >= dimensions[1])
   {
+    typename std::vector<T> blankTuple(numComponents, 0);
+    da->setTuple(newIndex, blankTuple);
     return;
   }
-  SizeVec2Type oldPixel{ oldXUnbound, oldYUnbound };
-#else
 
-  size_t oldX = static_cast<size_t>(std::max<int64_t>(oldXUnbound, 0));
-  size_t oldY = static_cast<size_t>(std::max<int64_t>(oldYUnbound, 0));
-  SizeVec2Type oldPixel{ oldX, oldY };
-#endif
-
-  size_t newIndex = flatten(newPixeli, dimensions);
+  SizeVec2Type oldPixel{ static_cast<size_t>(oldXUnbound), static_cast<size_t>(oldYUnbound) };
   size_t oldIndex = flatten(oldPixel, dimensions);
-
   if((oldIndex >= da->getNumberOfTuples()) || (newIndex >= da->getNumberOfTuples()))
   {
     return;
   }
 
-  // ScopedLockType lock(mutex);
-  auto compDims = tempDACopy->getComponentDimensions();
-  size_t numComponents = std::accumulate(compDims.begin(), compDims.end(), 0);
   T* oldTuplePtr = tempDACopy->getTuplePointer(oldIndex);
-  //T* newTuplePtr = da->getTuplePointer(newIndex);
-  //for(size_t i = 0; i < numComponents; i++)
-  //{
-  //  newTuplePtr[i] = oldTuplePtr[i];
-  //}
   typename std::vector<T> oldTuple(oldTuplePtr, oldTuplePtr + numComponents);
 
   da->setTuple(newIndex, oldTuple);
@@ -622,8 +634,8 @@ void Blend::warpDataContainers(const std::vector<double>& transformVector, doubl
     double xDif = std::max<double>(dimensions[0] - imageDimX, 0);
     double yDif = std::max<double>(dimensions[1] - imageDimY, 0);
 
-    double x_trans = (imageDimX - 1) / 2.0 - xDif;
-    double y_trans = (imageDimY - 1) / 2.0 - yDif;
+    double x_trans = (imageDimX - 1) / 2.0 + xDif;
+    double y_trans = (imageDimY - 1) / 2.0 + yDif;
 
     AttributeMatrix::Pointer am = dc->getAttributeMatrix(m_AttributeMatrixName);
     {
@@ -633,6 +645,41 @@ void Blend::warpDataContainers(const std::vector<double>& transformVector, doubl
       }
     }
   }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+std::pair<double, double> Blend::getImageDims() const
+{
+  AbstractMontage::Pointer absMontage = getDataContainerArray()->getMontage(m_MontageName);
+  GridMontage::Pointer gridMontage = std::dynamic_pointer_cast<GridMontage>(absMontage);
+  if(nullptr == gridMontage)
+  {
+    return { 0, 0 };
+  }
+
+  size_t targetColumn = gridMontage->getColumnCount() > 1 ? 1 : 0;
+  size_t targetRow = gridMontage->getRowCount() > 1 ? 1 : 0;
+
+  GridTileIndex tileX = gridMontage->getTileIndex(0, targetColumn);
+  ImageGeom::Pointer imgGeomX = gridMontage->getDataContainer(tileX)->getGeometryAs<ImageGeom>();
+  if(nullptr == imgGeomX)
+  {
+    return { 0,0 };
+  }
+
+  double imageDimX = imgGeomX->getDimensions()[0];
+
+  GridTileIndex tileY = gridMontage->getTileIndex(targetRow, 0);
+  ImageGeom::Pointer imgGeomY = gridMontage->getDataContainer(tileY)->getGeometryAs<ImageGeom>();
+  double imageDimY = imgGeomY->getDimensions()[1];
+  if(nullptr == imgGeomY)
+  {
+    return { 0,0 };
+  }
+
+  return { imageDimX, imageDimY };
 }
 #endif
 
