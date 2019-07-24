@@ -183,31 +183,87 @@ public:
   {
     std::vector<size_t> cDims;
     QString error;
-    cDims = ITKDream3DHelper::GetComponentsDimensions<unsigned char>();
+    cDims = ITKDream3DHelper::GetComponentsDimensions<uint8_t>();
     if(cDims.size() != 1 || cDims[0] != 1)
     {
       error = QString("Scalar images should have a component dimension of [1]. Found components of size %1 with first value %2").arg(cDims.size()).arg(cDims[0]);
       DREAM3D_TEST_THROW_EXCEPTION(error.toStdString());
     }
-    cDims = ITKDream3DHelper::GetComponentsDimensions<itk::RGBPixel<unsigned char>>();
+
+    {
+      const uint32_t vecDim = 36;
+      cDims = ITKDream3DHelper::GetComponentsDimensions<itk::Vector<uint8_t, vecDim>>();
+      if(cDims.size() != 1 || cDims[0] != 36)
+      {
+        error = QString("Vector images should have a component dimension of (%1,1). Found components of size %2 with first value %3").arg(vecDim).arg(cDims.size()).arg(cDims[0]);
+        DREAM3D_TEST_THROW_EXCEPTION(error.toStdString());
+      }
+    }
+
+    {
+      const uint32_t vecDim = 3;
+      cDims = ITKDream3DHelper::GetComponentsDimensions<itk::Vector<uint8_t, vecDim>>();
+      if(cDims.size() != 1 || cDims[0] != 3)
+      {
+        error = QString("Vector images should have a component dimension of (%1,1). Found components of size %2 with first value %3").arg(vecDim).arg(cDims.size()).arg(cDims[0]);
+        DREAM3D_TEST_THROW_EXCEPTION(error.toStdString());
+      }
+    }
+
+    {
+      const uint32_t vecDim = 2;
+      cDims = ITKDream3DHelper::GetComponentsDimensions<itk::Vector<uint8_t, vecDim>>();
+      if(cDims.size() != 1 || cDims[0] != 2)
+      {
+        error = QString("Vector images should have a component dimension of (%1,1). Found components of size %2 with first value %3").arg(vecDim).arg(cDims.size()).arg(cDims[0]);
+        DREAM3D_TEST_THROW_EXCEPTION(error.toStdString());
+      }
+    }
+
+    {
+      const uint32_t vecDim = 4;
+      cDims = ITKDream3DHelper::GetComponentsDimensions<itk::Vector<uint8_t, vecDim>>();
+      if(cDims.size() != 1 || cDims[0] != 4)
+      {
+        error = QString("Vector images should have a component dimension of (%1,1). Found components of size %2 with first value %3").arg(vecDim).arg(cDims.size()).arg(cDims[0]);
+        DREAM3D_TEST_THROW_EXCEPTION(error.toStdString());
+      }
+    }
+
+    {
+      const uint32_t vecDim = 11;
+      cDims = ITKDream3DHelper::GetComponentsDimensions<itk::Vector<uint8_t, vecDim>>();
+      if(cDims.size() != 1 || cDims[0] != 11)
+      {
+        error = QString("Vector images should have a component dimension of (%1,1). Found components of size %2 with first value %3").arg(vecDim).arg(cDims.size()).arg(cDims[0]);
+        DREAM3D_TEST_THROW_EXCEPTION(error.toStdString());
+      }
+    }
+
+    {
+      const uint32_t vecDim = 10;
+      cDims = ITKDream3DHelper::GetComponentsDimensions<itk::Vector<uint8_t, vecDim>>();
+      if(cDims.size() != 1 || cDims[0] != 10)
+      {
+        error = QString("Vector images should have a component dimension of (%1,1). Found components of size %2 with first value %3").arg(vecDim).arg(cDims.size()).arg(cDims[0]);
+        DREAM3D_TEST_THROW_EXCEPTION(error.toStdString());
+      }
+    }
+
+    cDims = ITKDream3DHelper::GetComponentsDimensions<itk::RGBPixel<uint8_t>>();
     if(cDims.size() != 1 || cDims[0] != 3)
     {
       error = QString("RGB images should have a component dimension of [3]. Found components of size %1 with first value %2").arg(cDims.size()).arg(cDims[0]);
       DREAM3D_TEST_THROW_EXCEPTION(error.toStdString());
     }
-    cDims = ITKDream3DHelper::GetComponentsDimensions<itk::RGBAPixel<unsigned char>>();
+
+    cDims = ITKDream3DHelper::GetComponentsDimensions<itk::RGBAPixel<uint8_t>>();
     if(cDims.size() != 1 || cDims[0] != 4)
     {
       error = QString("RGBA images should have a component dimension of [4]. Found components of size %1 with first value %2").arg(cDims.size()).arg(cDims[0]);
       DREAM3D_TEST_THROW_EXCEPTION(error.toStdString());
     }
-    const unsigned int vecDim = 3;
-    cDims = ITKDream3DHelper::GetComponentsDimensions<itk::Vector<unsigned char, vecDim>>();
-    if(cDims.size() != vecDim || cDims[0] != 1 || cDims[1] != 1 || cDims[2] != 1)
-    {
-      error = QString("Vector images should have a component dimension of (%1,1). Found components of size %2 with first value %3").arg(vecDim).arg(cDims.size()).arg(cDims[0]);
-      DREAM3D_TEST_THROW_EXCEPTION(error.toStdString());
-    }
+
     return EXIT_SUCCESS;
   }
 
