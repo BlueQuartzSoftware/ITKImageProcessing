@@ -78,8 +78,11 @@ public:
   SIMPL_FILTER_PARAMETER(bool, UseAmoebaOptimizer)
   Q_PROPERTY(bool UseAmoebaOptimizer READ getUseAmoebaOptimizer WRITE setUseAmoebaOptimizer)
 
-  SIMPL_FILTER_PARAMETER(QString, InitialSimplexGuess)
-  Q_PROPERTY(QString InitialSimplexGuess READ getInitialSimplexGuess WRITE setInitialSimplexGuess)
+  SIMPL_FILTER_PARAMETER(QString, PxStr)
+  Q_PROPERTY(QString PxStr READ getPxStr WRITE setPxStr)
+
+  SIMPL_FILTER_PARAMETER(QString, PyStr)
+  Q_PROPERTY(QString PyStr READ getPyStr WRITE setPyStr)
 
   SIMPL_FILTER_PARAMETER(QString, AttributeMatrixName)
   Q_PROPERTY(QString AttributeMatrixName READ getAttributeMatrixName WRITE setAttributeMatrixName)
@@ -230,6 +233,7 @@ protected:
   std::pair<double, double> getImageDims() const;
 
 private:
-  std::vector<double> m_InitialGuess;
+  std::vector<double> m_PxVec;
+  std::vector<double> m_PyVec;
   int m_Degree = 2;
 };

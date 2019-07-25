@@ -100,7 +100,8 @@ Blend::Blend()
 , m_LowTolerance(1E-2)
 , m_HighTolerance(1E-2)
 , m_UseAmoebaOptimizer(false)
-, m_InitialSimplexGuess("0.1;0.1;0.1;0.1;0.1;0.1;0.1;0.1")
+, m_PxStr("0.1;0.1;0.1;0.1;0.1;0.1;0.1")
+, m_PyStr("0.1;0.1;0.1;0.1;0.1;0.1;0.1")
 , m_BlendDCName("Blend Data")
 , m_TransformMatrixName("Transform Matrix")
 , m_TransformArrayName("Transform")
@@ -134,13 +135,20 @@ void Blend::setupFilterParameters()
   FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_MONTAGE_STRUCTURE_SELECTION_FP("Montage Name", MontageName, FilterParameter::Category::Parameter, Blend));
+
+  QStringList linkedAmoebaProps{ "MaxIterations", "OverlapPercentage", "LowTolerance", "HighTolerance" };
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Amoeba Optimizer", UseAmoebaOptimizer, FilterParameter::Parameter, Blend, linkedAmoebaProps));
+
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Max Iterations", MaxIterations, FilterParameter::Category::Parameter, Blend));
   // parameters.push_back(SIMPL_NEW_INTEGER_FP("Degree", Degree, FilterParameter::Category::Parameter, Blend));
   parameters.push_back(SIMPL_NEW_FLOAT_FP("Overlap Percentage", OverlapPercentage, FilterParameter::Category::Parameter, Blend));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Low Tolerance", LowTolerance, FilterParameter::Category::Parameter, Blend));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("High Tolerance", HighTolerance, FilterParameter::Category::Parameter, Blend));
-  parameters.push_back(SIMPL_NEW_BOOL_FP("Use Amoeba Optimizer", UseAmoebaOptimizer, FilterParameter::Category::Parameter, Blend));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Initial Simplex Guess", InitialSimplexGuess, FilterParameter::Category::Parameter, Blend));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Function Convergence Tolerance", LowTolerance, FilterParameter::Category::Parameter, Blend));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Parameter Convergence Tolerance", HighTolerance, FilterParameter::Category::Parameter, Blend));
+
+  //parameters.push_back(SIMPL_NEW_STRING_FP("Initial Simplex Guess", InitialSimplexGuess, FilterParameter::Category::Parameter, Blend));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Px", PxStr, FilterParameter::Category::Parameter, Blend));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Py", PyStr, FilterParameter::Category::Parameter, Blend));
+
   parameters.push_back(SIMPL_NEW_STRING_FP("Attribute Matrix Name", AttributeMatrixName, FilterParameter::Category::Parameter, Blend));
   parameters.push_back(SIMPL_NEW_STRING_FP("IPF Colors Array Name", IPFColorsArrayName, FilterParameter::Category::Parameter, Blend));
 
@@ -169,16 +177,29 @@ void Blend::dataCheck()
   clearErrorCode();
   clearWarningCode();
 
-  m_InitialGuess.clear();
   // Need to make sure that the filter parameter for the initial guess
   // can be cast into actual numeric data
-  for(const auto& coeff : m_InitialSimplexGuess.split(";"))
+  m_PxVec.clear();
+  for(const auto& coeff : m_PxStr.split(";"))
   {
     bool coerced = false;
-    m_InitialGuess.push_back(coeff.toDouble(&coerced));
+    m_PxVec.push_back(coeff.toDouble(&coerced));
     if(!coerced)
     {
-      setErrorCondition(-66500, "A coefficient could not be translated into a floating-point precision number");
+      setErrorCondition(-66500, "A Px coefficient could not be translated into a floating-point precision number");
+    }
+  }
+
+  // Need to make sure that the filter parameter for the initial guess
+  // can be cast into actual numeric data
+  m_PyVec.clear();
+  for (const auto& coeff : m_PyStr.split(";"))
+  {
+    bool coerced = false;
+    m_PyVec.push_back(coeff.toDouble(&coerced));
+    if (!coerced)
+    {
+      setErrorCondition(-66500, "A Py coefficient could not be translated into a floating-point precision number");
     }
   }
 
@@ -186,10 +207,14 @@ void Blend::dataCheck()
   // Otherwise, there is a direct correlation between the degree of the transform polynomial
   // and how many coefficients should reside in the initial guess
   // size_t len = static_cast<size_t>(2 * m_Degree * m_Degree + 4 * m_Degree + 2);
-  size_t len = 14;
-  if(len != m_InitialGuess.size())
+  size_t len = 7;
+  if(len != m_PxVec.size())
   {
-    setErrorCondition(-66400, "Number of coefficients in initial guess is not compatible with degree number");
+    setErrorCondition(-66400, "Number of coefficients in Px is not compatible with degree number");
+  }
+  if(len != m_PyVec.size())
+  {
+    setErrorCondition(-66400, "Number of coefficients in Py is not compatible with degree number");
   }
 
   // Overlap percentages below 0% and above 100% don't make any sense
@@ -217,7 +242,7 @@ void Blend::dataCheck()
   {
     if (nullptr == dc)
     {
-      setErrorCondition(-66715, QString("Montage DataContainer cannot be null"));
+      setErrorCondition(-66715, QString("Montage cannot contain null DataContainers"));
       return;
     }
 
@@ -260,7 +285,7 @@ void Blend::dataCheck()
     AttributeMatrixShPtr blendAM = blendDC->createNonPrereqAttributeMatrix(this, m_TransformMatrixName, { 1 }, AttributeMatrix::Type::Generic);
 
     // blendAM->createAndAddAttributeArray<UInt64ArrayType>(this, m_IterationsAAName, 0, {1});
-    blendAM->createNonPrereqArray<DoubleArrayType>(this, m_TransformArrayName, 0, { m_InitialGuess.size() });
+    blendAM->createNonPrereqArray<DoubleArrayType>(this, m_TransformArrayName, 0, { m_PxVec.size() + m_PyVec.size() });
     blendAM->createNonPrereqArray<DoubleArrayType>(this, m_ResidualArrayName, 0, { 1 });
   }
 
@@ -309,13 +334,16 @@ void Blend::execute()
   double imageDimX;
   double imageDimY;
 
+  std::vector<double> xyParameters(m_PxVec.begin(), m_PxVec.end());
+  xyParameters.insert(xyParameters.end(), m_PyVec.begin(), m_PyVec.end());
+
   if(m_UseAmoebaOptimizer)
   {
     // The optimizer needs an initial guess; this is supplied through a filter parameter
-    itk::AmoebaOptimizer::ParametersType initialParams(m_InitialGuess.size());
-    for (size_t idx = 0; idx < m_InitialGuess.size(); ++idx)
+    itk::AmoebaOptimizer::ParametersType initialParams(xyParameters.size());
+    for(size_t idx = 0; idx < xyParameters.size(); ++idx)
     {
-      initialParams[idx] = m_InitialGuess[idx];
+      initialParams[idx] = xyParameters[idx];
     }
 
     itk::AmoebaOptimizer::Pointer optimizer = itk::AmoebaOptimizer::New();
@@ -334,6 +362,7 @@ void Blend::execute()
       //    std::vector<double>{1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0}
       gridMontage, m_Degree, m_OverlapPercentage, getDataContainerArray(), m_AttributeMatrixName, grayscaleArrayName);
     optimizer->SetCostFunction(&implementation);
+    optimizer->MinimizeOff(); // Search for the greatest value
     optimizer->StartOptimization();
 
     // Newer versions of the optimizer allow for easier methods of output information
@@ -341,7 +370,7 @@ void Blend::execute()
     // optimizer's stop description
     QString stopReason = QString::fromStdString(optimizer->GetStopConditionDescription());
     std::list<double> transform;
-    for (const auto& coeff : optimizer->GetCurrentPosition())
+    for(const auto& coeff : optimizer->GetCurrentPosition())
     {
       transform.push_back(coeff);
     }
@@ -351,13 +380,14 @@ void Blend::execute()
     auto numIterations = GetIterationsFromStopDescription(stopReason);
 
     // Can get rid of these qDebug lines after debugging is done for filter
-    qDebug() << "Initial Position: [ " << m_InitialGuess << " ]";
+    qDebug() << "Initial Position: [ " << xyParameters << " ]";
     qDebug() << "Final Position: [ " << transform << " ]";
     qDebug() << "Number of Iterations: " << numIterations;
     qDebug() << "Value: " << value;
 
+#if 0
     // If the optimization didn't converge, set an error...
-    if (!GetConvergenceFromStopDescription(stopReason))
+    if(!GetConvergenceFromStopDescription(stopReason))
     {
       setErrorCondition(-66850, stopReason);
       notifyStatusMessage(stopReason);
@@ -365,26 +395,37 @@ void Blend::execute()
       qDebug() << "Stop Reason: " << stopReason;
       return;
     }
+#endif
 
     // ...otherwise, set the appropriate values of the filter's output data arrays
-    AttributeMatrixShPtr transformAM = getDataContainerArray()->getDataContainer(m_BlendDCName)->getAttributeMatrix(m_TransformMatrixName);
-    // transformAM->getAttributeArrayAs<UInt64ArrayType>(m_IterationsAAName)->push_back(numIterations);
-    transformAM->getAttributeArrayAs<DoubleArrayType>(m_ResidualArrayName)->push_back(value);
-    transformAM->getAttributeArrayAs<DoubleArrayType>(m_TransformArrayName)->setArray(transform);
+    if(m_CreateTransformContainer)
+    {
+      AttributeMatrixShPtr transformAM = getDataContainerArray()->getDataContainer(m_BlendDCName)->getAttributeMatrix(m_TransformMatrixName);
+      // transformAM->getAttributeArrayAs<UInt64ArrayType>(m_IterationsAAName)->push_back(numIterations);
+      transformAM->getAttributeArrayAs<DoubleArrayType>(m_ResidualArrayName)->push_back(value);
+      transformAM->getAttributeArrayAs<DoubleArrayType>(m_TransformArrayName)->setArray(transform);
+    }
 
-    imageDimX = implementation.getImageDimX();
-    imageDimY = implementation.getImageDimY();
+    //imageDimX = implementation.getImageDimX();
+    //imageDimY = implementation.getImageDimY();
     transformVector = { std::begin(transform), std::end(transform) };
   }
   else
   {
-    std::tie(imageDimX, imageDimY) = getImageDims();
-    transformVector = { std::begin(m_InitialGuess), std::end(m_InitialGuess) };
+    //std::tie(imageDimX, imageDimY) = getImageDims();
+    transformVector = { std::begin(xyParameters), std::end(xyParameters) };
+
+    if(m_CreateTransformContainer)
+    {
+      AttributeMatrixShPtr transformAM = getDataContainerArray()->getDataContainer(m_BlendDCName)->getAttributeMatrix(m_TransformMatrixName);
+      transformAM->getAttributeArrayAs<DoubleArrayType>(m_TransformArrayName)->setArray( { transformVector.begin(), transformVector.end() } );
+    }
   }
 
   // Remove internal arrays
   deleteGrayscaleIPF();
 
+  std::tie(imageDimX, imageDimY) = getImageDims();
   // Apply transform to dewarp data
   warpDataContainers(transformVector, imageDimX, imageDimY);
 }

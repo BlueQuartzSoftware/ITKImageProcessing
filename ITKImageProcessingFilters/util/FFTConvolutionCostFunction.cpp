@@ -64,9 +64,11 @@ public:
    * @param width
    * @param dataArray
    */
-  FFTImageInitializer(const InputImage::Pointer& image, size_t width, const DataArrayType::Pointer& dataArray)
+  FFTImageInitializer(const InputImage::Pointer& image, size_t width, size_t xOffset, size_t yOffset, const DataArrayType::Pointer& dataArray)
   : m_Image(image)
   , m_Width(width)
+  , m_XOffset(xOffset)
+  , m_YOffset(yOffset)
   , m_DataArray(dataArray)
   , m_Comps(dataArray->getNumberOfComponents())
   {
@@ -80,7 +82,7 @@ public:
   void setPixel(size_t pxlWidthIdx, size_t pxlHeightIdx) const
   {
     // Get the pixel index from the current pxlWidthIdx and pxlHeightIdx
-    size_t pxlIdx = (pxlWidthIdx + pxlHeightIdx * m_Width) * m_Comps;
+    size_t pxlIdx = ((pxlWidthIdx + m_XOffset) + (pxlHeightIdx + m_YOffset) * m_Width) * m_Comps;
     PixelCoord idx;
     idx[0] = pxlWidthIdx;
     idx[1] = pxlHeightIdx;
@@ -105,6 +107,8 @@ public:
 private:
   InputImage::Pointer m_Image;
   size_t m_Width;
+  size_t m_XOffset = 0;
+  size_t m_YOffset = 0;
   DataArrayType::Pointer m_DataArray;
   size_t m_Comps;
 };
@@ -286,8 +290,8 @@ void FFTConvolutionCostFunction::InitializeDataContainer(const GridMontageShPtr&
   imageSize[1] = height;
 
   PixelCoord imageOrigin;
-  imageOrigin[0] = xOrigin;
-  imageOrigin[1] = yOrigin;
+  imageOrigin[0] = 0;
+  imageOrigin[1] = 0;
 
   InputImage::Pointer itkImage = InputImage::New();
   itkImage->SetRegions(InputImage::RegionType(imageOrigin, imageSize));
@@ -297,8 +301,8 @@ void FFTConvolutionCostFunction::InitializeDataContainer(const GridMontageShPtr&
   // https://ieeexplore.ieee.org/document/723451
   // NOTE Could this be parallelized?
   ParallelData2DAlgorithm dataAlg;
-  dataAlg.setRange(yOrigin, xOrigin, height, width);
-  dataAlg.execute(FFTImageInitializer(itkImage, width, da));
+  dataAlg.setRange(0, 0, height, width);
+  dataAlg.execute(FFTImageInitializer(itkImage, dims.getX(), xOrigin, yOrigin, da));
 
   GridKey imageKey = std::make_pair(row, column);
   ScopedLockType lock(mutex);
@@ -325,16 +329,18 @@ void FFTConvolutionCostFunction::InitializeOverlaps(const ImageGrid::value_type&
   if(rightImage != m_ImageGrid.end())
   {
     // NOTE The height dimension for horizontally overlapping images should be the same
-    size_t overlapDim = static_cast<size_t>(roundf(width * overlapPercentage));
+    size_t overlapHeight = std::min(height, static_cast<size_t>(m_ImageDim_y));
+    //size_t originY = std::max(static_cast<size_t>(0), static_cast<size_t>(height - m_ImageDim_y));
+    size_t overlapDim = static_cast<size_t>(roundf(m_ImageDim_x * overlapPercentage));
     imageOrigin[0] = static_cast<itk::IndexValueType>(width - overlapDim);
-    imageOrigin[1] = 0;
+    imageOrigin[1] = 0; // Push to the bottom when the tile is taller than m_ImageDim_y
     imageSize[0] = overlapDim;
-    imageSize[1] = height;
+    imageSize[1] = overlapHeight;
 
     kernelOrigin[0] = 0;
     kernelOrigin[1] = 0;
     kernelSize[0] = overlapDim;
-    kernelSize[1] = height;
+    kernelSize[1] = overlapHeight;
 
     GridPair position = std::make_pair(image.first, rightImage->first);
     RegionPair region = std::make_pair(InputImage::RegionType(imageOrigin, imageSize), InputImage::RegionType(kernelOrigin, kernelSize));
@@ -345,15 +351,17 @@ void FFTConvolutionCostFunction::InitializeOverlaps(const ImageGrid::value_type&
   if(bottomImage != m_ImageGrid.end())
   {
     // NOTE The width dimension for vertically overlapping images should be the same
-    overlapDim = static_cast<size_t>(roundf(height * overlapPercentage));
-    imageOrigin[0] = 0;
-    imageOrigin[1] = 0;
-    imageSize[0] = width;
+    size_t overlapWidth = std::min(width, static_cast<size_t>(m_ImageDim_x));
+    //size_t originX = std::max(static_cast<size_t>(0), static_cast<size_t>(width - m_ImageDim_x));
+    overlapDim = static_cast<size_t>(roundf(m_ImageDim_y * overlapPercentage));
+    imageOrigin[0] = 0; // Push to the right when the tile is wider than m_ImageDim_x
+    imageOrigin[1] = static_cast<itk::IndexValueType>(height - overlapDim);
+    imageSize[0] = overlapWidth;
     imageSize[1] = overlapDim;
 
-    kernelOrigin[0] = static_cast<itk::IndexValueType>(height - overlapDim);
+    kernelOrigin[0] = 0;
     kernelOrigin[1] = 0;
-    kernelSize[0] = width;
+    kernelSize[0] = overlapWidth;
     kernelSize[1] = overlapDim;
 
     GridPair position = std::make_pair(image.first, bottomImage->first);
@@ -406,7 +414,7 @@ FFTConvolutionCostFunction::MeasureType FFTConvolutionCostFunction::GetValue(con
 
   // The value to minimize is the square of the sum of the maximum value of the fft convolution
   MeasureType result = sqrt(residual);
-  return result != 0 ? 1 / result : result;
+  return result;
 }
 
 // -----------------------------------------------------------------------------
@@ -488,9 +496,9 @@ void FFTConvolutionCostFunction::calculatePixelCoordinates(const ParametersType&
   oldPixel[0] = std::min(std::max<int64_t>(oldPixel[0], 0), width - 1);
   oldPixel[1] = std::min(std::max<int64_t>(oldPixel[1], 0), height - 1);
 
-  if(oldPixel[0] >= minX -tolerance && oldPixel[1] >= minY -tolerance)
+  //if(oldPixel[0] >= minX -tolerance && oldPixel[1] >= minY -tolerance)
   //if(oldPixel[0] >= -tolerance && oldPixel[0] <= lastXIndex && oldPixel[1] >= -tolerance && oldPixel[1] <= lastYIndex)
-  //if(oldPixel[0] >= minX -tolerance && oldPixel[0] <= lastXIndex && oldPixel[1] >= minY -tolerance && oldPixel[1] <= lastYIndex)
+  if(oldPixel[0] >= minX -tolerance && oldPixel[0] <= lastXIndex && oldPixel[1] >= minY -tolerance && oldPixel[1] <= lastYIndex)
   {
     // The value obtained with eachImage.second->GetPixel(eachPixel) could have
     // its "contrast" adjusted based on its radial location from the center of
