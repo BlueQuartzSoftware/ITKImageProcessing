@@ -612,6 +612,24 @@ static const int AuroxCamReserved3Id = 65787;
 static const int AuroxCamReserved4Id = 65788;
 static const int AuroxCamReserved5Id = 65789;
 
+static const int Factor_0Id = 20000;
+static const int Type_0Id = 20001;
+static const int Unit_0Id = 20002;
+static const int Origin_0Id = 20003;
+static const int Angle_0Id = 20004;
+
+static const int Factor_1Id = 20005;
+static const int Type_1Id = 20006;
+static const int Unit_1Id = 20007;
+static const int Origin_1Id = 20008;
+static const int Angle_1Id = 20009;
+
+static const int Factor_2Id = 20010;
+static const int Type_2Id = 20011;
+static const int Unit_2Id = 20012;
+static const int Origin_2Id = 20013;
+static const int Angle_2Id = 20014;
+
 const QString Compression("Compression");                                                                   // Gets Mapped to Id 222
 const QString DateMappingTable("DateMappingTable");                                                         // Gets Mapped to Id 257
 const QString BlackValue("BlackValue");                                                                     // Gets Mapped to Id 258
@@ -1140,5 +1158,24 @@ const QString AuroxCamAutoNormalize("AuroxCamAutoNormalize");                   
 const QString AuroxCamReserved3("AuroxCamReserved3");                                                       // Gets Mapped to Id 65787
 const QString AuroxCamReserved4("AuroxCamReserved4");                                                       // Gets Mapped to Id 65788
 const QString AuroxCamReserved5("AuroxCamReserved5");                                                       // Gets Mapped to Id 65789
+
+const QString Factor_0("Factor_0");
+const QString Type_0("Type_0");
+const QString Unit_0("Unit_0");
+const QString Origin_0("Origin_0");
+const QString Angle_0("Angle_2");
+
+const QString Factor_1("Factor_1");
+const QString Type_1("Type_1");
+const QString Unit_1("Unit_1");
+const QString Origin_1("Origin_1");
+const QString Angle_1("Angle_1");
+
+const QString Factor_2("Factor_2");
+const QString Type_2("Type_2");
+const QString Unit_2("Unit_2");
+const QString Origin_2("Origin_2");
+const QString Angle_2("Angle_2");
+
 } // namespace MetaXML
 }

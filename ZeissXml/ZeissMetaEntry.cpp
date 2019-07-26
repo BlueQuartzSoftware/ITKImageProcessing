@@ -148,11 +148,11 @@
     m_Value = value;                                                                                                                                                                                   \
     return true;                                                                                                                                                                                       \
   }                                                                                                                                                                                                    \
-  Type ClassName::getValue()                                                                                                                                                                           \
+  Type ClassName::getValue() const                                                                                                                                                                     \
   {                                                                                                                                                                                                    \
     return m_Value;                                                                                                                                                                                    \
   }                                                                                                                                                                                                    \
-  IDataArray::Pointer ClassName::createDataArray(bool allocate)                                                                                                                                        \
+  IDataArray::Pointer ClassName::createDataArray(bool allocate) const                                                                                                                                  \
   {                                                                                                                                                                                                    \
     ZeissTagMapping::Pointer tagMap = ZeissTagMapping::instance();                                                                                                                                     \
     QString tagName = tagMap->nameForId(this->getZeissIdTag());                                                                                                                                        \
@@ -169,9 +169,14 @@
     }                                                                                                                                                                                                  \
     return array;                                                                                                                                                                                      \
   }                                                                                                                                                                                                    \
-  void ClassName::printValue(std::ostream& out)                                                                                                                                                        \
+  void ClassName::printValue(std::ostream& out) const                                                                                                                                                  \
   {                                                                                                                                                                                                    \
     out << m_Value;                                                                                                                                                                                    \
+  }                                                                                                                                                                                                    \
+  QString ClassName::toString() const                                                                                                                                                                  \
+  {                                                                                                                                                                                                    \
+    QString s = QString::number(m_Value);                                                                                                                                                              \
+    return s;                                                                                                                                                                                          \
   }
 
 // -----------------------------------------------------------------------------
@@ -203,7 +208,7 @@ WriteHDF5Attribute_Implementation(Int32ZeissMetaEntry) ReadHDF5Attribute_DEFINIT
     // -----------------------------------------------------------------------------
     StringZeissMetaEntry::~StringZeissMetaEntry() = default;
 
-IDataArray::Pointer StringZeissMetaEntry::createDataArray(bool allocate)
+IDataArray::Pointer StringZeissMetaEntry::createDataArray(bool allocate) const
 {
   ZeissTagMapping::Pointer tagMap = ZeissTagMapping::instance();
   QString tagName = tagMap->nameForId(this->getZeissIdTag());
@@ -231,9 +236,14 @@ QString StringZeissMetaEntry::getValue()
   return m_Value;
 }
 
-void StringZeissMetaEntry::printValue(std::ostream& out)
+void StringZeissMetaEntry::printValue(std::ostream& out) const
 {
   out << m_Value.toStdString();
+}
+
+QString StringZeissMetaEntry::toString() const
+{
+  return m_Value;
 }
 
 #ifdef ZEISS_HDF_SUPPORT

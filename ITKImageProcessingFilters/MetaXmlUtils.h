@@ -55,6 +55,7 @@ class MetaXmlUtils
 
 
     static ZeissTagsXmlSectionPtr ParseTagsSection(AbstractFilter* filter, QDomElement& tags);
+    static ZeissTagsXmlSectionPtr ParseScalingSection(AbstractFilter* filter, QDomElement& tags);
 
     static int32_t GetInt32Entry(AbstractFilter* filter, ZeissTagsXmlSection *tagsSection, int idValue);
 

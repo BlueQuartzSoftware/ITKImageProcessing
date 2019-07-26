@@ -41,6 +41,8 @@
 #include "H5Support/H5Utilities.h"
 #endif
 
+using IDataArrayShPtrType = std::shared_ptr<IDataArray>;
+
 #define STATIC_NEW_METHODS(SuperClass, thisClass, type)                                                                                                                                                \
   static SuperClass::Pointer New(int32_t idTag, const QString& value)                                                                                                                                  \
   {                                                                                                                                                                                                    \
@@ -61,16 +63,14 @@
     return ptr;                                                                                                                                                                                        \
   }
 
-#define VALUE_DECLARATION(type)\
-virtual bool setValue(const QString &value);\
-bool setValue(type value);\
-type getValue();\
+#define VALUE_DECLARATION(type)                                                                                                                                                                        \
+  bool setValue(const QString& value) override;                                                                                                                                                        \
+  bool setValue(type value);                                                                                                                                                                           \
+  type getValue() const;
 
-#define HDF5_READ_WRITE_DECLARATIONS()\
-int writeHDF5Attribute(hid_t fileId, const QString &datasetPath);\
-int readHDF5Attribute(hid_t fileId, const QString &datasetPath);\
-
-
+#define HDF5_READ_WRITE_DECLARATIONS()                                                                                                                                                                 \
+  int writeHDF5Attribute(hid_t fileId, const QString& datasetPath) override;                                                                                                                           \
+  int readHDF5Attribute(hid_t fileId, const QString& datasetPath) override;
 
 // -----------------------------------------------------------------------------
 //
@@ -90,9 +90,11 @@ class AbstractZeissMetaData
     virtual int writeHDF5Attribute(hid_t fileId, const QString &datasetPath) = 0;
     virtual int readHDF5Attribute(hid_t fileId, const QString &datasetPath) = 0;
 #endif
-    virtual void printValue(std::ostream &out) = 0;
+    virtual void printValue(std::ostream& out) const = 0;
 
-    virtual IDataArray::Pointer createDataArray(bool allocate = true) = 0;
+    virtual QString toString() const = 0;
+
+    virtual IDataArrayShPtrType createDataArray(bool allocate = true) const = 0;
 
   protected:
     AbstractZeissMetaData() {m_ZeissIdTag = 0;}
@@ -111,7 +113,7 @@ class Int32ZeissMetaEntry : public AbstractZeissMetaData
 {
   public:
     SIMPL_SHARED_POINTERS(Int32ZeissMetaEntry)
-    SIMPL_TYPE_MACRO(Int32ZeissMetaEntry)
+    SIMPL_TYPE_MACRO_SUPER_OVERRIDE(Int32ZeissMetaEntry, AbstractZeissMetaData)
     SIMPL_STATIC_NEW_MACRO(Int32ZeissMetaEntry)
 
     Int32ZeissMetaEntry();
@@ -128,14 +130,13 @@ class Int32ZeissMetaEntry : public AbstractZeissMetaData
     HDF5_READ_WRITE_DECLARATIONS()
 #endif
 
-    void printValue(std::ostream& out) override;
+    void printValue(std::ostream& out) const override;
 
-    IDataArray::Pointer createDataArray(bool allocate = true) override;
+    QString toString() const override;
+
+    IDataArrayShPtrType createDataArray(bool allocate = true) const override;
 
   protected:
-
-
-
   private:
     int m_Value = 0;
 
@@ -153,7 +154,7 @@ class Int64ZeissMetaEntry : public AbstractZeissMetaData
 {
   public:
     SIMPL_SHARED_POINTERS(Int64ZeissMetaEntry)
-    SIMPL_TYPE_MACRO(Int64ZeissMetaEntry)
+    SIMPL_TYPE_MACRO_SUPER_OVERRIDE(Int64ZeissMetaEntry, AbstractZeissMetaData)
     SIMPL_STATIC_NEW_MACRO(Int64ZeissMetaEntry)
 
     STATIC_NEW_METHODS(AbstractZeissMetaData, Int64ZeissMetaEntry, int64_t)
@@ -168,9 +169,11 @@ class Int64ZeissMetaEntry : public AbstractZeissMetaData
 #ifdef ZEISS_HDF_SUPPORT
     HDF5_READ_WRITE_DECLARATIONS()
 #endif
-    void printValue(std::ostream& out) override;
+    void printValue(std::ostream& out) const override;
 
-    IDataArray::Pointer createDataArray(bool allocate = true) override;
+    QString toString() const override;
+
+    IDataArrayShPtrType createDataArray(bool allocate = true) const override;
 
   protected:
 
@@ -192,7 +195,7 @@ class FloatZeissMetaEntry : public AbstractZeissMetaData
 {
   public:
     SIMPL_SHARED_POINTERS(FloatZeissMetaEntry)
-    SIMPL_TYPE_MACRO(FloatZeissMetaEntry)
+    SIMPL_TYPE_MACRO_SUPER_OVERRIDE(FloatZeissMetaEntry, AbstractZeissMetaData)
     SIMPL_STATIC_NEW_MACRO(FloatZeissMetaEntry)
 
     STATIC_NEW_METHODS(AbstractZeissMetaData, FloatZeissMetaEntry, float)
@@ -208,9 +211,11 @@ class FloatZeissMetaEntry : public AbstractZeissMetaData
     HDF5_READ_WRITE_DECLARATIONS()
 #endif
 
-    void printValue(std::ostream& out) override;
+    void printValue(std::ostream& out) const override;
 
-    IDataArray::Pointer createDataArray(bool allocate = true) override;
+    QString toString() const override;
+
+    IDataArrayShPtrType createDataArray(bool allocate = true) const override;
 
   protected:
   private:
@@ -230,7 +235,7 @@ class StringZeissMetaEntry : public AbstractZeissMetaData
 {
   public:
     SIMPL_SHARED_POINTERS(StringZeissMetaEntry)
-    SIMPL_TYPE_MACRO(StringZeissMetaEntry)
+    SIMPL_TYPE_MACRO_SUPER_OVERRIDE(StringZeissMetaEntry, AbstractZeissMetaData)
     SIMPL_STATIC_NEW_MACRO(StringZeissMetaEntry)
 
     static AbstractZeissMetaData::Pointer New(int32_t idTag, const QString &value) {
@@ -252,9 +257,11 @@ class StringZeissMetaEntry : public AbstractZeissMetaData
     HDF5_READ_WRITE_DECLARATIONS()
 #endif
 
-    void printValue(std::ostream& out) override;
+    void printValue(std::ostream& out) const override;
 
-    IDataArray::Pointer createDataArray(bool allocate = true) override;
+    QString toString() const override;
+
+    IDataArrayShPtrType createDataArray(bool allocate = true) const override;
 
   protected:
     StringZeissMetaEntry()

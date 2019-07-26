@@ -96,6 +96,17 @@ namespace Xml
 static const QString Tags("Tags");
 static const QString Count("Count");
 static const QString Scaling("Scaling");
+
+static const QString Key("Key");
+static const QString Category("Category");
+
+static const QString Factor("Factor");
+static const QString Type("Type");
+static const QString Unit("Unit");
+static const QString Origin("Origin");
+static const QString Angle("Angle");
+static const QString Matrix("Matrix");
+
 } // namespace Xml
 
 namespace PolynomialOrder
