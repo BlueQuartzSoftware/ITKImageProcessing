@@ -30,6 +30,7 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #pragma once
 
+#include <map>
 
 #include "ITKImageProcessing/ZeissXml/ZeissMetaFactory.h"
 
@@ -37,7 +38,8 @@
 #include "SIMPLib/Geometry/IGeometry.h"
 #include "SIMPLib/SIMPLib.h"
 
-#include <map>
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
+
 
 using ZeissIdNameMap = QMap<int, QString>;
 using ZeissNameIdMap = QMap<QString, int>;
@@ -53,7 +55,7 @@ using ZeissFactoryMap = QMap<int, ZeissMetaFactory::Pointer>;
 * @date Jul 29, 2009
 * @version 1.0
 */
-class ZeissTagMapping
+class ITKImageProcessing_EXPORT ZeissTagMapping
 {
   public:
     SIMPL_SHARED_POINTERS(ZeissTagMapping)

@@ -37,11 +37,12 @@
 
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
 #include "ITKImageProcessing/ZeissXml/ZeissMetaEntry.h"
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief The ZeissTagsXmlSection class
  */
-class ZeissTagsXmlSection
+class ITKImageProcessing_EXPORT ZeissTagsXmlSection
 {
   public:
     SIMPL_SHARED_POINTERS(ZeissTagsXmlSection)

@@ -35,6 +35,7 @@
 #include "SIMPLib/DataArrays/IDataArray.h"
 
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 #ifdef ZEISS_HDF_SUPPORT
 #include "H5Support/H5Lite.h"
@@ -75,7 +76,7 @@ using IDataArrayShPtrType = std::shared_ptr<IDataArray>;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-class AbstractZeissMetaData
+class ITKImageProcessing_EXPORT AbstractZeissMetaData
 {
   public:
     SIMPL_SHARED_POINTERS(AbstractZeissMetaData)
@@ -109,7 +110,7 @@ class AbstractZeissMetaData
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-class Int32ZeissMetaEntry : public AbstractZeissMetaData
+class ITKImageProcessing_EXPORT Int32ZeissMetaEntry : public AbstractZeissMetaData
 {
   public:
     SIMPL_SHARED_POINTERS(Int32ZeissMetaEntry)
@@ -150,7 +151,7 @@ class Int32ZeissMetaEntry : public AbstractZeissMetaData
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-class Int64ZeissMetaEntry : public AbstractZeissMetaData
+class ITKImageProcessing_EXPORT Int64ZeissMetaEntry : public AbstractZeissMetaData
 {
   public:
     SIMPL_SHARED_POINTERS(Int64ZeissMetaEntry)
@@ -191,7 +192,7 @@ class Int64ZeissMetaEntry : public AbstractZeissMetaData
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-class FloatZeissMetaEntry : public AbstractZeissMetaData
+class ITKImageProcessing_EXPORT FloatZeissMetaEntry : public AbstractZeissMetaData
 {
   public:
     SIMPL_SHARED_POINTERS(FloatZeissMetaEntry)
@@ -231,7 +232,7 @@ class FloatZeissMetaEntry : public AbstractZeissMetaData
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-class StringZeissMetaEntry : public AbstractZeissMetaData
+class ITKImageProcessing_EXPORT StringZeissMetaEntry : public AbstractZeissMetaData
 {
   public:
     SIMPL_SHARED_POINTERS(StringZeissMetaEntry)

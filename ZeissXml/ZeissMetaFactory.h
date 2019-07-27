@@ -30,16 +30,18 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #pragma once
 
-#include "ITKImageProcessing/ZeissXml/ZeissMetaEntry.h"
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
+#include "ITKImageProcessing/ZeissXml/ZeissMetaEntry.h"
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-class ZeissMetaFactory
+class ITKImageProcessing_EXPORT ZeissMetaFactory
 {
   public:
     SIMPL_SHARED_POINTERS(ZeissMetaFactory);
@@ -60,7 +62,7 @@ class ZeissMetaFactory
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-class Int32ZeissMetaFactory : public ZeissMetaFactory
+class ITKImageProcessing_EXPORT Int32ZeissMetaFactory : public ZeissMetaFactory
 {
   public:
     SIMPL_SHARED_POINTERS(Int32ZeissMetaFactory);
@@ -81,7 +83,7 @@ class Int32ZeissMetaFactory : public ZeissMetaFactory
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-class Int64ZeissMetaFactory : public ZeissMetaFactory
+class ITKImageProcessing_EXPORT Int64ZeissMetaFactory : public ZeissMetaFactory
 {
   public:
     SIMPL_SHARED_POINTERS(Int64ZeissMetaFactory);
@@ -104,7 +106,7 @@ class Int64ZeissMetaFactory : public ZeissMetaFactory
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-class FloatZeissMetaFactory : public ZeissMetaFactory
+class ITKImageProcessing_EXPORT FloatZeissMetaFactory : public ZeissMetaFactory
 {
   public:
     SIMPL_SHARED_POINTERS(FloatZeissMetaFactory);
@@ -125,7 +127,7 @@ class FloatZeissMetaFactory : public ZeissMetaFactory
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-class StringZeissMetaFactory : public ZeissMetaFactory
+class ITKImageProcessing_EXPORT StringZeissMetaFactory : public ZeissMetaFactory
 {
   public:
     SIMPL_SHARED_POINTERS(StringZeissMetaFactory);

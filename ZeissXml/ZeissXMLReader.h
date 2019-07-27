@@ -40,6 +40,7 @@
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 #include "ZeissTagsXmlSection.h"
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
 * @class ZeissXMLReader ZeissXMLReader.h Importer/ZeissXMLReader.h
@@ -49,7 +50,7 @@
 * @date Oct 2007
 * @version $Revision: 1.1 $
 */
-class ZeissXMLReader : public ExpatEvtHandler
+class ITKImageProcessing_EXPORT ZeissXMLReader : public ExpatEvtHandler
 {
 public:
 
