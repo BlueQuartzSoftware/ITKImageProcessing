@@ -30,6 +30,7 @@ set(_PublicFilters
     ITKRefineTileCoordinates
     ITKImportFijiMontage
     ITKImportRoboMetMontage
+    AxioVisionV4ToJson
 )
 
 if(ITK_VERSION_MAJOR EQUAL 4)
