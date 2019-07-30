@@ -32,13 +32,10 @@
 
 #pragma once
 
-#include <QtXml/QDomElement>
-
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
-#include "ITKImageProcessing/ITKImageProcessingPlugin.h"
 #include "ITKImageProcessing/ZeissXml/ZeissTagsXmlSection.h"
 
 /**

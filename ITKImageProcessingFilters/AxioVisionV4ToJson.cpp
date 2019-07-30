@@ -33,10 +33,8 @@
 #include "AxioVisionV4ToJson.h"
 
 #include <QtCore/QFileInfo>
-#include <QtCore/QJsonArray>
 #include <QtCore/QJsonDocument>
 
-#include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 
@@ -241,9 +239,6 @@ QJsonObject AxioVisionV4ToJson::createJsonObject()
 
   int32_t imageCount = MetaXmlUtils::GetInt32Entry(this, rootTagsSection.get(), Zeiss::MetaXML::ImageCountRawId);
 
-  int32_t m_RowCount = MetaXmlUtils::GetInt32Entry(this, rootTagsSection.get(), Zeiss::MetaXML::ImageCountVId);
-
-  int32_t m_ColumnCount = MetaXmlUtils::GetInt32Entry(this, rootTagsSection.get(), Zeiss::MetaXML::ImageCountUId);
   int imageCountPadding = MetaXmlUtils::CalculatePaddingDigits(imageCount);
 
   // Loop over every image in the _meta.xml file

@@ -38,10 +38,6 @@
 #include <QtCore/QJsonDocument>
 #include <QtCore/QJsonObject>
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
-#include "SIMPLib/DataArrays/DataArray.hpp"
-#include "SIMPLib/SIMPLib.h"
-
 #include "UnitTestSupport.hpp"
 
 #include "ITKImageProcessing/ITKImageProcessingFilters/AxioVisionV4ToJson.h"
