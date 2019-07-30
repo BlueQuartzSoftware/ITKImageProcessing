@@ -33,15 +33,13 @@
 #include "ITKAxioVisionV4Converter.h"
 
 #include <QtCore/QFileInfo>
-#include <QtCore/QJsonDocument>
 
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/util/AxioVisionV4Converter.h"
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
-#include "ITKImageProcessing/ZeissXml/ZeissTagMapping.h"
-#include "MetaXmlUtils.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -152,143 +150,7 @@ void ITKAxioVisionV4Converter::execute()
     return;
   }
 
-  QJsonObject rootObj = createJsonObject();
-  QJsonDocument doc(rootObj);
-  QFile outputFile(getOutputFile());
-  QFileInfo fi(getOutputFile());
-  if(!outputFile.open(QFile::WriteOnly))
-  {
-    QString ss = QObject::tr("Could not open the output JSON File '%1' for writing.").arg(fi.fileName());
-    setErrorCondition(-3005, ss);
-    return;
-  }
-
-  outputFile.write(doc.toJson());
-  outputFile.close();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QJsonObject ITKAxioVisionV4Converter::createJsonObject()
-{
-  QJsonObject rootObj;
-
-  // Parse the XML file to get all the meta-data information and create all the
-  // data structure that is needed.
-  QFile xmlFile(getInputFile());
-  QDomDocument domDocument;
-
-  QString errorStr;
-  int errorLine = -1;
-  int errorColumn = -1;
-
-  if(!domDocument.setContent(&xmlFile, true, &errorStr, &errorLine, &errorColumn))
-  {
-    QString ss = QObject::tr("Parse error at line %1, column %2:\n%3").arg(errorLine).arg(errorColumn).arg(errorStr);
-    setErrorCondition(-71000, ss);
-    return {};
-  }
-  QDomElement root = domDocument.documentElement();
-
-  // First parse the <ROOT><Tags> section to get the values of how many images we are going to have
-  QDomElement tags = root.firstChildElement(ITKImageProcessingConstants::Xml::Tags);
-  if(tags.isNull())
-  {
-    QString ss = QObject::tr("Could not find the <ROOT><Tags> element. Aborting Parsing. Is the file a Zeiss _meta.xml file");
-    setErrorCondition(-3000, ss);
-    return {};
-  }
-
-  ZeissTagsXmlSection::Pointer rootTagsSection = MetaXmlUtils::ParseTagsSection(this, tags);
-  if(nullptr == rootTagsSection.get())
-  {
-    return {};
-  }
-
-  ZeissTagMapping::Pointer tagMapping = ZeissTagMapping::instance();
-
-  ZeissTagsXmlSection::MetaDataType tagMetaData = rootTagsSection->getMetaDataMap();
-  QJsonObject tagObj;
-  for(const auto& entry : tagMetaData)
-  {
-    int32_t tagId = entry->getZeissIdTag();
-    QString name = tagMapping->nameForId(tagId);
-    tagObj[name] = entry->toString();
-  }
-  rootObj["Tags"] = tagObj;
-
-  QDomElement scaling = root.firstChildElement(ITKImageProcessingConstants::Xml::Scaling);
-  ZeissTagsXmlSection::Pointer scalingTagsSection = MetaXmlUtils::ParseScalingSection(this, scaling);
-  if(nullptr == scalingTagsSection.get())
-  {
-    QString ss = QObject::tr("The Scaling Tags Section inside the input AxioVision XML File was null.");
-    setErrorCondition(-3001, ss);
-    return {};
-  }
-
-  tagMetaData = scalingTagsSection->getMetaDataMap();
-  QJsonObject scalingObj;
-  for(const auto& entry : tagMetaData)
-  {
-    int32_t tagId = entry->getZeissIdTag();
-    QString name = tagMapping->nameForId(tagId);
-    scalingObj[name] = entry->toString();
-  }
-  rootObj["Scaling"] = scalingObj;
-
-  int32_t imageCount = MetaXmlUtils::GetInt32Entry(this, rootTagsSection.get(), Zeiss::MetaXML::ImageCountRawId);
-
-  int imageCountPadding = MetaXmlUtils::CalculatePaddingDigits(imageCount);
-
-  // Loop over every image in the _meta.xml file
-  for(int p = 0; p < imageCount; p++)
-  {
-    // Generate the xml tag that is for this image
-    QString pTag;
-    QTextStream out(&pTag);
-    out << "p";
-    out.setFieldWidth(imageCountPadding);
-    out.setFieldAlignment(QTextStream::AlignRight);
-    out.setPadChar('0');
-    out << p;
-
-    // Drill down into the XML document....
-    QDomElement photoEle = root.firstChildElement(pTag);
-    if(photoEle.isNull())
-    {
-      QString ss = QObject::tr("Could not find the <ROOT><%1> element. Aborting Parsing. Is the file a Zeiss _meta.xml file").arg(pTag);
-      setErrorCondition(-3002, ss);
-      return {};
-    }
-    // Get the TAGS section
-    QDomElement tags = photoEle.firstChildElement(ITKImageProcessingConstants::Xml::Tags);
-    if(tags.isNull())
-    {
-      QString ss = QObject::tr("Could not find the <ROOT><%1><Tags> element. Aborting Parsing. Is the file a Zeiss _meta.xml file").arg(pTag);
-      setErrorCondition(-3003, ss);
-      return {};
-    }
-    // Now Parse the TAGS section
-    ZeissTagsXmlSection::Pointer photoTagsSection = MetaXmlUtils::ParseTagsSection(this, tags);
-    if(nullptr == photoTagsSection.get())
-    {
-      QString ss = QObject::tr("Error Parsing the <ROOT><%1><Tags> element. Aborting Parsing. Is the file a Zeiss AxioVision _meta.xml file").arg(pTag);
-      setErrorCondition(-3004, ss);
-      return {};
-    }
-    tagMetaData = photoTagsSection->getMetaDataMap();
-    QJsonObject pTagObj;
-    for(const auto& entry : tagMetaData)
-    {
-      int32_t tagId = entry->getZeissIdTag();
-      QString name = tagMapping->nameForId(tagId);
-      pTagObj[name] = entry->toString();
-    }
-    rootObj[pTag] = pTagObj;
-  }
-
-  return rootObj;
+  AxioVisionV4Converter::WriteToJson(getInputFile(), getOutputFile(), this);
 }
 
 // -----------------------------------------------------------------------------

@@ -36,7 +36,7 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
-#include "ITKImageProcessing/ZeissXml/ZeissTagsXmlSection.h"
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief The ITKAxioVisionV4Converter class. See [Filter documentation](@ref ITKAxioVisionV4Converter) for details.
@@ -158,11 +158,6 @@ protected:
    * @brief Initializes all the private instance variables.
    */
   void initialize();
-
-  /**
-   * @brief createJsonObject
-   */
-  QJsonObject createJsonObject();
 
 public:
   /* Rule of 5: All special member functions should be defined if any are defined.
