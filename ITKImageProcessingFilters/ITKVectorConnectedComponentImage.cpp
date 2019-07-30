@@ -5,16 +5,6 @@
  */
 
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKVectorConnectedComponentImage.h"
-#include "SIMPLib/ITK/SimpleITKEnums.h"
-
-#include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
-#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
-#include "SIMPLib/FilterParameters/StringFilterParameter.h"
-
-#include "SIMPLib/Geometry/ImageGeom.h"
 
 #define DREAM3D_USE_int8_t 0
 #define DREAM3D_USE_uint8_t 0
@@ -30,7 +20,15 @@
 #define DREAM3D_USE_Scalar 0
 #define DREAM3D_USE_Vector 1
 
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
+#include "SIMPLib/ITK/SimpleITKEnums.h"
 #include "SIMPLib/ITK/itkDream3DImage.h"
 
 // -----------------------------------------------------------------------------
@@ -92,7 +90,8 @@ void ITKVectorConnectedComponentImage::readFilterParameters(AbstractFilterParame
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKVectorConnectedComponentImage::dataCheck()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKVectorConnectedComponentImage::dataCheck()
 {
   clearErrorCode();
   clearWarningCode();
