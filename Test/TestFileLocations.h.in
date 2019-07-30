@@ -1,37 +1,37 @@
 #pragma once
 
 /* ============================================================================
-* Copyright (c) 2009-2019 BlueQuartz Software, LLC
-*
-* Redistribution and use in source and binary forms, with or without modification,
-* are permitted provided that the following conditions are met:
-*
-* Redistributions of source code must retain the above copyright notice, this
-* list of conditions and the following disclaimer.
-*
-* Redistributions in binary form must reproduce the above copyright notice, this
-* list of conditions and the following disclaimer in the documentation and/or
-* other materials provided with the distribution.
-*
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
-* contributors may be used to endorse or promote products derived from this software
-* without specific prior written permission.
-*
-* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
-* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*
-* The code contained herein was partially funded by the followig contracts:
-*    United States Air Force Prime Contract FA8650-10-D-5210
-*
-* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+ * Copyright (c) 2009-2019 BlueQuartz Software, LLC
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this
+ * list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+ *
+ * Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+ * contributors may be used to endorse or promote products derived from this software
+ * without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+ * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * The code contained herein was partially funded by the followig contracts:
+ *    United States Air Force Prime Contract FA8650-10-D-5210
+ *
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include <QtCore/QString>
 
@@ -45,87 +45,92 @@
  *
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  */
 
-
 namespace UnitTest
 {
 
-  const QString DataDir("@DREAM3D_DATA_DIR@");
-  const QString TestTempDir("@TEST_TEMP_DIR@");
-  const QString DREAM3DProjDir("@DREAM3DProj_SOURCE_DIR@");
-  const QString ITKImageProcessingSourceDir("@ITKImageProcessing_SOURCE_DIR@");
-  const QString ITKImageProcessingDataDir("@ITKImageProcessing_SOURCE_DIR@/Data");
+const QString DataDir("@DREAM3D_DATA_DIR@");
+const QString TestTempDir("@TEST_TEMP_DIR@");
+const QString DREAM3DProjDir("@DREAM3DProj_SOURCE_DIR@");
+const QString ITKImageProcessingSourceDir("@ITKImageProcessing_SOURCE_DIR@");
+const QString ITKImageProcessingDataDir("@ITKImageProcessing_SOURCE_DIR@/Data");
 
-  namespace ITKImageProcessingReaderTest
-  {
-    const QString METAIOInputTestFile("@TEST_TEMP_DIR@/METAIOFile.mha");
-    const QString TIFFIOInputTestFile("@TEST_TEMP_DIR@/TIFFIOFile.tif");
-    const QString PNGIOInputTestFile("@TEST_TEMP_DIR@/PNGIOFile.png");
-    const QString NRRDIOInputTestFile("@TEST_TEMP_DIR@/NRRDIOFile.nrrd");
-    const QString SCIFIOInputTestFile("@TEST_TEMP_DIR@/SCIFIOFile.tif");
-    const QString MRCIOInputTestFile("@TEST_TEMP_DIR@/MRCFile.mrc");
-    const QString NonExistentInputTestFile("@TEST_TEMP_DIR@/NotHere.ghost");
-  } // namespace ITKImageProcessingReaderTest
+namespace ITKImageProcessingReaderTest
+{
+const QString METAIOInputTestFile("@TEST_TEMP_DIR@/METAIOFile.mha");
+const QString TIFFIOInputTestFile("@TEST_TEMP_DIR@/TIFFIOFile.tif");
+const QString PNGIOInputTestFile("@TEST_TEMP_DIR@/PNGIOFile.png");
+const QString NRRDIOInputTestFile("@TEST_TEMP_DIR@/NRRDIOFile.nrrd");
+const QString SCIFIOInputTestFile("@TEST_TEMP_DIR@/SCIFIOFile.tif");
+const QString MRCIOInputTestFile("@TEST_TEMP_DIR@/MRCFile.mrc");
+const QString NonExistentInputTestFile("@TEST_TEMP_DIR@/NotHere.ghost");
+} // namespace ITKImageProcessingReaderTest
 
-  namespace ITKImportImageStackTest
-  {
-    const QString StackInputTestDir("@DREAM3D_DATA_DIR@/Data/Image");
-    } // namespace ITKImportImageStackTest
+namespace ITKImportImageStackTest
+{
+const QString StackInputTestDir("@DREAM3D_DATA_DIR@/Data/Image");
+} // namespace ITKImportImageStackTest
 
-  namespace ITKImageProcessingWriterTest
-  {
-    const QString OutputBaseFile("@TEST_TEMP_DIR@/OutputBaseFile");
-  } // namespace ITKImageProcessingWriterTest
+namespace ITKImageProcessingWriterTest
+{
+const QString OutputBaseFile("@TEST_TEMP_DIR@/OutputBaseFile");
+} // namespace ITKImageProcessingWriterTest
 
-  namespace ITKBinaryThresholdTest
-  {
-   const QString TestFile1("@TEST_TEMP_DIR@/TestFile1.txt");
-   const QString TestFile2("@TEST_TEMP_DIR@/TestFile2.txt");
-  }// namespace ITKBinaryThresholdTest
+namespace ITKBinaryThresholdTest
+{
+const QString TestFile1("@TEST_TEMP_DIR@/TestFile1.txt");
+const QString TestFile2("@TEST_TEMP_DIR@/TestFile2.txt");
+} // namespace ITKBinaryThresholdTest
 
+namespace AxioVisionV4ToTileConfigurationTest
+{
+const QString InputFile("@ITKImageProcessing_SOURCE_DIR@/Test/TestFiles/_meta.xml");
+const QString ExemplarOutputFile("@ITKImageProcessing_SOURCE_DIR@/Test/TestFiles/TileConfiguration.txt");
+const QString OutputFile("@TEST_TEMP_DIR@/TileConfiguration.txt");
+} // namespace AxioVisionV4ToTileConfigurationTest
 
-  namespace AxioVisionV4ToTileConfigurationTest
-  {
-  const QString InputFile("@ITKImageProcessing_SOURCE_DIR@/Test/TestFiles/_meta.xml");
-  const QString ExemplarOutputFile("@ITKImageProcessing_SOURCE_DIR@/Test/TestFiles/TileConfiguration.txt");
-  const QString OutputFile("@TEST_TEMP_DIR@/TileConfiguration.txt");
-  } // namespace AxioVisionV4ToTileConfiguration
+namespace AxioVisionV4ToJsonTest
+{
+const QString InputFile("@ITKImageProcessing_SOURCE_DIR@/Test/TestFiles/_meta.xml");
+const QString ExemplarOutputFile("@ITKImageProcessing_SOURCE_DIR@/Test/TestFiles/XMLConvertExemplary.json");
+const QString OutputFile("@TEST_TEMP_DIR@/XMLConvert.json");
+} // namespace AxioVisionV4ToJsonTest
 
-  namespace ImportZenInfoMontageTest
-  {
-  const QString ZenInfoFile("@ITKImageProcessing_SOURCE_DIR@/Data/ITKImageProcessing/Montage/SampleMosaic/SampleMosaic_Info.xml");
-  const QString OutputDREAM3DFile("@TEST_TEMP_DIR@/ZenInfoImportTest.dream3d");
-  } // namespace ImportZenInfoMontageTest
+namespace ImportZenInfoMontageTest
+{
+const QString ZenInfoFile("@ITKImageProcessing_SOURCE_DIR@/Data/ITKImageProcessing/Montage/SampleMosaic/SampleMosaic_Info.xml");
+const QString OutputDREAM3DFile("@TEST_TEMP_DIR@/ZenInfoImportTest.dream3d");
+} // namespace ImportZenInfoMontageTest
 
-  namespace ImportAxioVisionV4MontageTest
-  {
-  const QString AxioVisionMetaXmlFile("@ITKImageProcessing_SOURCE_DIR@/Data/ITKImageProcessing/Montage/SampleMosaic/_meta.xml");
-  const QString OutputDREAM3DFile("@TEST_TEMP_DIR@/AxioVisionMetaXmlTest.dream3d");
-  } // namespace ImportAxioVisionV4MontageTest
+namespace ImportAxioVisionV4MontageTest
+{
+const QString AxioVisionMetaXmlFile("@ITKImageProcessing_SOURCE_DIR@/Data/ITKImageProcessing/Montage/SampleMosaic/_meta.xml");
+const QString OutputDREAM3DFile("@TEST_TEMP_DIR@/AxioVisionMetaXmlTest.dream3d");
+} // namespace ImportAxioVisionV4MontageTest
 
-  namespace ImportFijiConfigTest
-  {
-  const QString InputFile("@ITKImageProcessing_SOURCE_DIR@/Data/ITKImageProcessing/Montage/SampleMosaic/TileConfiguration.txt");
-  const QString OutputDREAM3DFile("@TEST_TEMP_DIR@/FijiConfigTest.dream3d");
-  } // namespace ImportFijiConfigTest
+namespace ImportFijiConfigTest
+{
+const QString InputFile("@ITKImageProcessing_SOURCE_DIR@/Data/ITKImageProcessing/Montage/SampleMosaic/TileConfiguration.txt");
+const QString OutputDREAM3DFile("@TEST_TEMP_DIR@/FijiConfigTest.dream3d");
+} // namespace ImportFijiConfigTest
 
-  namespace ImportRobometMontage
-  {
-  // Input File & Constants
-  const QString InputFile("@ITKImageProcessing_SOURCE_DIR@/Data/ITKImageProcessing/Montage/0938410_ Mosaic Focus Details.csv");
-  const QString InputFilePrefix("0938410_");
-  const QString InputFileExtension("bmp");
-  // Output Files
-  const QString OutputDREAM3DFile("@TEST_TEMP_DIR@/RoboMetImportTest.dream3d");
-  } // namespace ImportRobometMontage
+namespace ImportRobometMontage
+{
+// Input File & Constants
+const QString InputFile("@ITKImageProcessing_SOURCE_DIR@/Data/ITKImageProcessing/Montage/0938410_ Mosaic Focus Details.csv");
+const QString InputFilePrefix("0938410_");
+const QString InputFileExtension("bmp");
+// Output Files
+const QString OutputDREAM3DFile("@TEST_TEMP_DIR@/RoboMetImportTest.dream3d");
+} // namespace ImportRobometMontage
 
-  } // namespace UnitTest
+} // namespace UnitTest
 
 namespace ZeissImport
 {
-  namespace Tools
-  {
-  const QString TagsTextFile("@ITKImageProcessing_SOURCE_DIR@/ZVI_Tags.txt");
-  const QString ZeissTagMappingConstantsFile("@ITKImageProcessing_SOURCE_DIR@/ZeissXML/ZeissTagMappingConstants.h");
-  const QString ZeissInitIdNameMapFile("@ITKImageProcessing_SOURCE_DIR@/ZeissXML/ZeissTagMapping_InitMaps.cpp");
-  } // namespace Tools
+namespace Tools
+{
+const QString TagsTextFile("@ITKImageProcessing_SOURCE_DIR@/ZVI_Tags.txt");
+const QString ZeissTagMappingConstantsFile("@ITKImageProcessing_SOURCE_DIR@/ZeissXML/ZeissTagMappingConstants.h");
+const QString ZeissInitIdNameMapFile("@ITKImageProcessing_SOURCE_DIR@/ZeissXML/ZeissTagMapping_InitMaps.cpp");
+} // namespace Tools
 } // namespace ZeissImport

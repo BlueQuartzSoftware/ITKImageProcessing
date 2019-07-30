@@ -1,24 +1,50 @@
-// -----------------------------------------------------------------------------
-// Insert your license & copyright information here
-// -----------------------------------------------------------------------------
+/* ============================================================================
+ * Copyright (c) 2019 BlueQuartz Software, LLC
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this
+ * list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+ *
+ * Neither the names of any of the BlueQuartz Software contributors
+ * may be used to endorse or promote products derived from this software without
+ * specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+ * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ *
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
 #pragma once
 
-#include <QtCore/QCoreApplication>
+#include <QtCore/QDir>
 #include <QtCore/QFile>
+#include <QtCore/QFileInfo>
+#include <QtCore/QJsonDocument>
+#include <QtCore/QJsonObject>
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
-#include "SIMPLib/Filtering/FilterFactory.hpp"
-#include "SIMPLib/Filtering/FilterManager.h"
-#include "SIMPLib/Filtering/FilterPipeline.h"
-#include "SIMPLib/Plugin/ISIMPLibPlugin.h"
-#include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
 #include "SIMPLib/SIMPLib.h"
-
-#include "SIMPLib/Filtering/QMetaObjectUtilities.h"
 
 #include "UnitTestSupport.hpp"
 
+#include "ITKImageProcessing/ITKImageProcessingFilters/AxioVisionV4ToJson.h"
 #include "ITKImageProcessingTestFileLocations.h"
 
 class AxioVisionV4ToJsonTest
@@ -38,27 +64,8 @@ public:
   void RemoveTestFiles()
   {
 #if REMOVE_TEST_FILES
-    //    QFile::remove(UnitTest::AxioVisionV4ToJsonTest::TestFile1);
-    //    QFile::remove(UnitTest::AxioVisionV4ToJsonTest::TestFile2);
+    QFile::remove(UnitTest::AxioVisionV4ToJsonTest::OutputFile);
 #endif
-  }
-
-  // -----------------------------------------------------------------------------
-  //
-  // -----------------------------------------------------------------------------
-  int TestFilterAvailability()
-  {
-    // Now instantiate the AxioVisionV4ToJsonTest Filter from the FilterManager
-    QString filtName = "AxioVisionV4ToJson";
-    FilterManager* fm = FilterManager::Instance();
-    IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filtName);
-    if(nullptr == filterFactory.get())
-    {
-      std::stringstream ss;
-      ss << "The AxioVisionV4ToJsonTest Requires the use of the " << filtName.toStdString() << " filter which is found in the ITKImageProcessing Plugin";
-      DREAM3D_TEST_THROW_EXCEPTION(ss.str())
-    }
-    return 0;
   }
 
   // -----------------------------------------------------------------------------
@@ -66,27 +73,56 @@ public:
   // -----------------------------------------------------------------------------
   int TestAxioVisionV4ToJsonTest()
   {
-    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    /* Please write AxioVisionV4ToJsonTest test code here.
-     *
-     * Your IO test files are:
-     * UnitTest::AxioVisionV4ToJsonTest::TestFile1
-     * UnitTest::AxioVisionV4ToJsonTest::TestFile2
-     *
-     * SIMPLib provides some macros that will throw exceptions when a test fails
-     * and thus report that during testing. These macros are located in the
-     * SIMPLib/Utilities/UnitTestSupport.hpp file. Some examples are:
-     *
-     * SIMPLib_REQUIRE_EQUAL(foo, 0)
-     * This means that if the variable foo is NOT equal to Zero then test will fail
-     * and the current test will exit immediately. If there are more tests registered
-     * with the SIMPLib_REGISTER_TEST() macro, the next test will execute. There are
-     * lots of examples in the SIMPLib/Test folder to look at.
-     */
-    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    AxioVisionV4ToJson::Pointer filter = AxioVisionV4ToJson::New();
+    filter->preflight();
+    DREAM3D_REQUIRE_EQUAL(filter->getErrorCode(), -387)
 
-    int foo = -1;
-    DREAM3D_REQUIRE_EQUAL(foo, 0)
+    QFileInfo fi(UnitTest::AxioVisionV4ToJsonTest::InputFile);
+    QString nonexistantFilePath = fi.path() + QDir::separator() + "junk.xml";
+    filter->setInputFile(nonexistantFilePath);
+    filter->preflight();
+    DREAM3D_REQUIRE_EQUAL(filter->getErrorCode(), -388)
+
+    filter->setInputFile(fi.path());
+    filter->preflight();
+    DREAM3D_REQUIRE_EQUAL(filter->getErrorCode(), -389)
+
+    filter->setInputFile(UnitTest::AxioVisionV4ToJsonTest::InputFile);
+    filter->preflight();
+    DREAM3D_REQUIRE_EQUAL(filter->getErrorCode(), -390)
+
+    fi.setFile(UnitTest::AxioVisionV4ToJsonTest::OutputFile);
+    filter->setOutputFile(fi.path());
+    filter->preflight();
+    DREAM3D_REQUIRE_EQUAL(filter->getErrorCode(), -391)
+
+    filter->setOutputFile(UnitTest::AxioVisionV4ToJsonTest::OutputFile);
+    filter->preflight();
+    DREAM3D_REQUIRE_EQUAL(filter->getErrorCode(), 0)
+
+    filter->execute();
+    DREAM3D_REQUIRE_EQUAL(filter->getErrorCode(), 0)
+
+    QFile outputFile(UnitTest::AxioVisionV4ToJsonTest::OutputFile);
+    DREAM3D_REQUIRE_EQUAL(outputFile.open(QFile::ReadOnly), true)
+    QFile exemplaryOutputFile(UnitTest::AxioVisionV4ToJsonTest::ExemplarOutputFile);
+    DREAM3D_REQUIRE_EQUAL(exemplaryOutputFile.open(QFile::ReadOnly), true)
+
+    QJsonParseError parseError;
+    QJsonDocument doc = QJsonDocument::fromJson(outputFile.readAll(), &parseError);
+    DREAM3D_REQUIRE_EQUAL(parseError.error, QJsonParseError::NoError)
+
+    QJsonDocument exemplaryDoc = QJsonDocument::fromJson(exemplaryOutputFile.readAll(), &parseError);
+    DREAM3D_REQUIRE_EQUAL(parseError.error, QJsonParseError::NoError)
+
+    QJsonObject jsonObj = doc.object();
+    QJsonObject exemplaryJsonObj = exemplaryDoc.object();
+
+    if(jsonObj != exemplaryJsonObj)
+    {
+      // The contents of the json file does not equal the contents of the exemplary json file
+      DREAM3D_REQUIRE_EQUAL(1, 0)
+    }
 
     return EXIT_SUCCESS;
   }
@@ -97,8 +133,6 @@ public:
   void operator()()
   {
     int err = EXIT_SUCCESS;
-
-    DREAM3D_REGISTER_TEST(TestFilterAvailability());
 
     DREAM3D_REGISTER_TEST(TestAxioVisionV4ToJsonTest())
 
