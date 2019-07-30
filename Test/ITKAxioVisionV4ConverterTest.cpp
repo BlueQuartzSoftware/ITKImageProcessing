@@ -40,19 +40,19 @@
 
 #include "UnitTestSupport.hpp"
 
-#include "ITKImageProcessing/ITKImageProcessingFilters/AxioVisionV4ToJson.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/ITKAxioVisionV4Converter.h"
 #include "ITKImageProcessingTestFileLocations.h"
 
-class AxioVisionV4ToJsonTest
+class ITKAxioVisionV4ConverterTest
 {
 
 public:
-  AxioVisionV4ToJsonTest() = default;
-  ~AxioVisionV4ToJsonTest() = default;
-  AxioVisionV4ToJsonTest(const AxioVisionV4ToJsonTest&) = delete;            // Copy Constructor
-  AxioVisionV4ToJsonTest(AxioVisionV4ToJsonTest&&) = delete;                 // Move Constructor
-  AxioVisionV4ToJsonTest& operator=(const AxioVisionV4ToJsonTest&) = delete; // Copy Assignment
-  AxioVisionV4ToJsonTest& operator=(AxioVisionV4ToJsonTest&&) = delete;      // Move Assignment
+  ITKAxioVisionV4ConverterTest() = default;
+  ~ITKAxioVisionV4ConverterTest() = default;
+  ITKAxioVisionV4ConverterTest(const ITKAxioVisionV4ConverterTest&) = delete;            // Copy Constructor
+  ITKAxioVisionV4ConverterTest(ITKAxioVisionV4ConverterTest&&) = delete;                 // Move Constructor
+  ITKAxioVisionV4ConverterTest& operator=(const ITKAxioVisionV4ConverterTest&) = delete; // Copy Assignment
+  ITKAxioVisionV4ConverterTest& operator=(ITKAxioVisionV4ConverterTest&&) = delete;      // Move Assignment
 
   // -----------------------------------------------------------------------------
   //
@@ -60,20 +60,20 @@ public:
   void RemoveTestFiles()
   {
 #if REMOVE_TEST_FILES
-    QFile::remove(UnitTest::AxioVisionV4ToJsonTest::OutputFile);
+    QFile::remove(UnitTest::ITKAxioVisionV4ConverterTest::OutputFile);
 #endif
   }
 
   // -----------------------------------------------------------------------------
   //
   // -----------------------------------------------------------------------------
-  int TestAxioVisionV4ToJsonTest()
+  int TestAxioVisionV4ToJson()
   {
-    AxioVisionV4ToJson::Pointer filter = AxioVisionV4ToJson::New();
+    ITKAxioVisionV4Converter::Pointer filter = ITKAxioVisionV4Converter::New();
     filter->preflight();
     DREAM3D_REQUIRE_EQUAL(filter->getErrorCode(), -387)
 
-    QFileInfo fi(UnitTest::AxioVisionV4ToJsonTest::InputFile);
+    QFileInfo fi(UnitTest::ITKAxioVisionV4ConverterTest::InputFile);
     QString nonexistantFilePath = fi.path() + QDir::separator() + "junk.xml";
     filter->setInputFile(nonexistantFilePath);
     filter->preflight();
@@ -83,25 +83,25 @@ public:
     filter->preflight();
     DREAM3D_REQUIRE_EQUAL(filter->getErrorCode(), -389)
 
-    filter->setInputFile(UnitTest::AxioVisionV4ToJsonTest::InputFile);
+    filter->setInputFile(UnitTest::ITKAxioVisionV4ConverterTest::InputFile);
     filter->preflight();
     DREAM3D_REQUIRE_EQUAL(filter->getErrorCode(), -390)
 
-    fi.setFile(UnitTest::AxioVisionV4ToJsonTest::OutputFile);
+    fi.setFile(UnitTest::ITKAxioVisionV4ConverterTest::OutputFile);
     filter->setOutputFile(fi.path());
     filter->preflight();
     DREAM3D_REQUIRE_EQUAL(filter->getErrorCode(), -391)
 
-    filter->setOutputFile(UnitTest::AxioVisionV4ToJsonTest::OutputFile);
+    filter->setOutputFile(UnitTest::ITKAxioVisionV4ConverterTest::OutputFile);
     filter->preflight();
     DREAM3D_REQUIRE_EQUAL(filter->getErrorCode(), 0)
 
     filter->execute();
     DREAM3D_REQUIRE_EQUAL(filter->getErrorCode(), 0)
 
-    QFile outputFile(UnitTest::AxioVisionV4ToJsonTest::OutputFile);
+    QFile outputFile(UnitTest::ITKAxioVisionV4ConverterTest::OutputFile);
     DREAM3D_REQUIRE_EQUAL(outputFile.open(QFile::ReadOnly), true)
-    QFile exemplaryOutputFile(UnitTest::AxioVisionV4ToJsonTest::ExemplarOutputFile);
+    QFile exemplaryOutputFile(UnitTest::ITKAxioVisionV4ConverterTest::ExemplarOutputFile);
     DREAM3D_REQUIRE_EQUAL(exemplaryOutputFile.open(QFile::ReadOnly), true)
 
     QJsonParseError parseError;
@@ -130,7 +130,7 @@ public:
   {
     int err = EXIT_SUCCESS;
 
-    DREAM3D_REGISTER_TEST(TestAxioVisionV4ToJsonTest())
+    DREAM3D_REGISTER_TEST(TestAxioVisionV4ToJson())
 
     DREAM3D_REGISTER_TEST(RemoveTestFiles())
   }

@@ -88,12 +88,12 @@ const QString ExemplarOutputFile("@ITKImageProcessing_SOURCE_DIR@/Test/TestFiles
 const QString OutputFile("@TEST_TEMP_DIR@/TileConfiguration.txt");
 } // namespace AxioVisionV4ToTileConfigurationTest
 
-namespace AxioVisionV4ToJsonTest
+namespace ITKAxioVisionV4ConverterTest
 {
 const QString InputFile("@ITKImageProcessing_SOURCE_DIR@/Test/TestFiles/_meta.xml");
 const QString ExemplarOutputFile("@ITKImageProcessing_SOURCE_DIR@/Test/TestFiles/XMLConvertExemplary.json");
 const QString OutputFile("@TEST_TEMP_DIR@/XMLConvert.json");
-} // namespace AxioVisionV4ToJsonTest
+} // namespace ITKAxioVisionV4ConverterTest
 
 namespace ImportZenInfoMontageTest
 {

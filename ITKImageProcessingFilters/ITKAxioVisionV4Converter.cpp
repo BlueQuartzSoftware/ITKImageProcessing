@@ -30,7 +30,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "AxioVisionV4ToJson.h"
+#include "ITKAxioVisionV4Converter.h"
 
 #include <QtCore/QFileInfo>
 #include <QtCore/QJsonDocument>
@@ -46,7 +46,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AxioVisionV4ToJson::AxioVisionV4ToJson()
+ITKAxioVisionV4Converter::ITKAxioVisionV4Converter()
 {
   initialize();
 }
@@ -54,12 +54,12 @@ AxioVisionV4ToJson::AxioVisionV4ToJson()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AxioVisionV4ToJson::~AxioVisionV4ToJson() = default;
+ITKAxioVisionV4Converter::~ITKAxioVisionV4Converter() = default;
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AxioVisionV4ToJson::initialize()
+void ITKAxioVisionV4Converter::initialize()
 {
   clearErrorCode();
   clearWarningCode();
@@ -69,12 +69,12 @@ void AxioVisionV4ToJson::initialize()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AxioVisionV4ToJson::setupFilterParameters()
+void ITKAxioVisionV4Converter::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
 
-  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("AxioVision XML File (_meta.xml)", InputFile, FilterParameter::Parameter, AxioVisionV4ToJson, "*.xml"));
-  parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("JSON File", OutputFile, FilterParameter::Parameter, AxioVisionV4ToJson, "*.json"));
+  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("AxioVision XML File (_meta.xml)", InputFile, FilterParameter::Parameter, ITKAxioVisionV4Converter, "*.xml"));
+  parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("JSON File", OutputFile, FilterParameter::Parameter, ITKAxioVisionV4Converter, "*.json"));
 
   setFilterParameters(parameters);
 }
@@ -82,7 +82,7 @@ void AxioVisionV4ToJson::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AxioVisionV4ToJson::dataCheck()
+void ITKAxioVisionV4Converter::dataCheck()
 {
   clearErrorCode();
   clearWarningCode();
@@ -129,7 +129,7 @@ void AxioVisionV4ToJson::dataCheck()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AxioVisionV4ToJson::preflight()
+void ITKAxioVisionV4Converter::preflight()
 {
   // These are the REQUIRED lines of CODE to make sure the filter behaves correctly
   setInPreflight(true);              // Set the fact that we are preflighting.
@@ -143,7 +143,7 @@ void AxioVisionV4ToJson::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AxioVisionV4ToJson::execute()
+void ITKAxioVisionV4Converter::execute()
 {
   initialize();
   dataCheck();
@@ -170,7 +170,7 @@ void AxioVisionV4ToJson::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QJsonObject AxioVisionV4ToJson::createJsonObject()
+QJsonObject ITKAxioVisionV4Converter::createJsonObject()
 {
   QJsonObject rootObj;
 
@@ -294,9 +294,9 @@ QJsonObject AxioVisionV4ToJson::createJsonObject()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer AxioVisionV4ToJson::newFilterInstance(bool copyFilterParameters) const
+AbstractFilter::Pointer ITKAxioVisionV4Converter::newFilterInstance(bool copyFilterParameters) const
 {
-  AxioVisionV4ToJson::Pointer filter = AxioVisionV4ToJson::New();
+  ITKAxioVisionV4Converter::Pointer filter = ITKAxioVisionV4Converter::New();
   if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
@@ -307,7 +307,7 @@ AbstractFilter::Pointer AxioVisionV4ToJson::newFilterInstance(bool copyFilterPar
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AxioVisionV4ToJson::getCompiledLibraryName() const
+const QString ITKAxioVisionV4Converter::getCompiledLibraryName() const
 {
   return ITKImageProcessingConstants::ITKImageProcessingBaseName;
 }
@@ -315,7 +315,7 @@ const QString AxioVisionV4ToJson::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AxioVisionV4ToJson::getBrandingString() const
+const QString ITKAxioVisionV4Converter::getBrandingString() const
 {
   return "ITKImageProcessing";
 }
@@ -323,7 +323,7 @@ const QString AxioVisionV4ToJson::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AxioVisionV4ToJson::getFilterVersion() const
+const QString ITKAxioVisionV4Converter::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -334,7 +334,7 @@ const QString AxioVisionV4ToJson::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AxioVisionV4ToJson::getGroupName() const
+const QString ITKAxioVisionV4Converter::getGroupName() const
 {
   return SIMPL::FilterGroups::Unsupported;
 }
@@ -342,7 +342,7 @@ const QString AxioVisionV4ToJson::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AxioVisionV4ToJson::getSubGroupName() const
+const QString ITKAxioVisionV4Converter::getSubGroupName() const
 {
   return "ITKImageProcessing";
 }
@@ -350,7 +350,7 @@ const QString AxioVisionV4ToJson::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AxioVisionV4ToJson::getHumanLabel() const
+const QString ITKAxioVisionV4Converter::getHumanLabel() const
 {
   return "ITK::Convert Zeiss AxioVision (V4) to Json";
 }
@@ -358,7 +358,7 @@ const QString AxioVisionV4ToJson::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid AxioVisionV4ToJson::getUuid()
+const QUuid ITKAxioVisionV4Converter::getUuid()
 {
   return QUuid("{8f37a0a3-aecd-5f87-b189-f2cc5229da51}");
 }

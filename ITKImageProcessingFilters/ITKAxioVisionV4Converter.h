@@ -39,23 +39,23 @@
 #include "ITKImageProcessing/ZeissXml/ZeissTagsXmlSection.h"
 
 /**
- * @brief The AxioVisionV4ToJson class. See [Filter documentation](@ref axiovisionv4tojson) for details.
+ * @brief The ITKAxioVisionV4Converter class. See [Filter documentation](@ref ITKAxioVisionV4Converter) for details.
  */
-class ITKImageProcessing_EXPORT AxioVisionV4ToJson : public AbstractFilter
+class ITKImageProcessing_EXPORT ITKAxioVisionV4Converter : public AbstractFilter
 {
   Q_OBJECT
   // clang-format off
-    PYB11_CREATE_BINDINGS(AxioVisionV4ToJson SUPERCLASS AbstractFilter)
+    PYB11_CREATE_BINDINGS(ITKAxioVisionV4Converter SUPERCLASS AbstractFilter)
     PYB11_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
     PYB11_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
   // clang-format on
 
 public:
-  SIMPL_SHARED_POINTERS(AxioVisionV4ToJson)
-  SIMPL_FILTER_NEW_MACRO(AxioVisionV4ToJson)
-  SIMPL_TYPE_MACRO_SUPER(AxioVisionV4ToJson, AbstractFilter)
+  SIMPL_SHARED_POINTERS(ITKAxioVisionV4Converter)
+  SIMPL_FILTER_NEW_MACRO(ITKAxioVisionV4Converter)
+  SIMPL_TYPE_MACRO_SUPER(ITKAxioVisionV4Converter, AbstractFilter)
 
-  ~AxioVisionV4ToJson() override;
+  ~ITKAxioVisionV4Converter() override;
 
   SIMPL_FILTER_PARAMETER(QString, InputFile)
   Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
@@ -147,7 +147,7 @@ signals:
   void preflightExecuted();
 
 protected:
-  AxioVisionV4ToJson();
+  ITKAxioVisionV4Converter();
 
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
@@ -168,8 +168,8 @@ public:
   /* Rule of 5: All special member functions should be defined if any are defined.
    * https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md#c21-if-you-define-or-delete-any-default-operation-define-or-delete-them-all
    */
-  AxioVisionV4ToJson(const AxioVisionV4ToJson&) = delete;            // Copy Constructor Not Implemented
-  AxioVisionV4ToJson& operator=(const AxioVisionV4ToJson&) = delete; // Copy Assignment Not Implemented
-  AxioVisionV4ToJson(AxioVisionV4ToJson&&) = delete;                 // Move Constructor Not Implemented
-  AxioVisionV4ToJson& operator=(AxioVisionV4ToJson&&) = delete;      // Move Assignment Not Implemented
+  ITKAxioVisionV4Converter(const ITKAxioVisionV4Converter&) = delete;            // Copy Constructor Not Implemented
+  ITKAxioVisionV4Converter& operator=(const ITKAxioVisionV4Converter&) = delete; // Copy Assignment Not Implemented
+  ITKAxioVisionV4Converter(ITKAxioVisionV4Converter&&) = delete;                 // Move Constructor Not Implemented
+  ITKAxioVisionV4Converter& operator=(ITKAxioVisionV4Converter&&) = delete;      // Move Assignment Not Implemented
 };
