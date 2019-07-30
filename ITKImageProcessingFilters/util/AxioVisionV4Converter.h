@@ -37,6 +37,8 @@
 #include <QtCore/QString>
 
 #include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/MetaXmlUtils.h"
+#include "ITKImageProcessing/ZeissXml/ZeissTagsXmlSection.h"
 
 class Observable;
 
@@ -49,17 +51,55 @@ public:
   ~AxioVisionV4Converter() override;
 
   /**
-   * @brief ConvertToJson
+   * @brief ImportAsText
    * @param axioVisionFile
+   * @param obs
    * @return
    */
-  static QJsonObject ConvertToJson(const QString& axioVisionFile, Observable* obs = nullptr);
+  static QString ImportAsText(const QString& axioVisionFile, Observable* obs = nullptr);
 
   /**
-   * @brief writeToJson
-   * @param filepath
+   * @brief ImportAsJson
+   * @param axioVisionFile
+   * @param obs
+   * @return
    */
-  static void WriteToJson(const QString& axioVisionFile, const QString& outputJsonFile, Observable* obs);
+  static QJsonObject ImportAsJson(const QString& axioVisionFile, Observable* obs = nullptr);
+
+  /**
+   * @brief ConvertToJsonFile
+   * @param axioVisionFile
+   * @param outputJsonFile
+   * @param obs
+   */
+  static void ConvertToJsonFile(const QString& axioVisionFile, const QString& outputJsonFile, Observable* obs = nullptr);
+
+  /**
+   * @brief ConvertToTextFile
+   * @param axioVisionFile
+   * @param outputTextFile
+   * @param obs
+   */
+  static void ConvertToTextFile(const QString& axioVisionFile, const QString& outputTextFile, Observable* obs = nullptr);
+
+private:
+  /**
+   * @brief GeneratePTag
+   * @param imageNumber
+   * @param padding
+   * @return
+   */
+  static QString GeneratePTag(int imageNumber, int padding);
+
+  /**
+   * @brief GetPTagMetadata
+   * @param imageNumber
+   * @param padding
+   * @param root
+   * @param obs
+   * @return
+   */
+  static ZeissTagsXmlSection::MetaDataType GetPTagMetadata(int imageNumber, int padding, const QDomElement& root, Observable* obs = nullptr);
 
 public:
   AxioVisionV4Converter(const AxioVisionV4Converter&) = delete;            // Copy Constructor Not Implemented

@@ -35,6 +35,7 @@
 #include <QtCore/QFileInfo>
 
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedChoicesFilterParameter.h"
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
@@ -72,7 +73,31 @@ void ITKAxioVisionV4Converter::setupFilterParameters()
   FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("AxioVision XML File (_meta.xml)", InputFile, FilterParameter::Parameter, ITKAxioVisionV4Converter, "*.xml"));
-  parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("JSON File", OutputFile, FilterParameter::Parameter, ITKAxioVisionV4Converter, "*.json"));
+
+  {
+    LinkedChoicesFilterParameter::Pointer parameter = LinkedChoicesFilterParameter::New();
+    parameter->setHumanLabel("Select the desired output file type");
+    parameter->setPropertyName("OutputFileType");
+    parameter->setSetterCallback(SIMPL_BIND_SETTER(ITKAxioVisionV4Converter, this, OutputFileType));
+    parameter->setGetterCallback(SIMPL_BIND_GETTER(ITKAxioVisionV4Converter, this, OutputFileType));
+    parameter->setDefaultValue(0); // Always start with the first selection
+
+    QVector<QString> choices;
+    choices.push_back("Json (*.json)");
+    choices.push_back("Text (*.txt)");
+    parameter->setChoices(choices);
+    QStringList linkedProps;
+    linkedProps << "JsonOutputFile"
+                << "TextOutputFile";
+
+    parameter->setLinkedProperties(linkedProps);
+    parameter->setEditable(false);
+    parameter->setCategory(FilterParameter::Parameter);
+    parameters.push_back(parameter);
+  }
+
+  parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("JSON File", JsonOutputFile, FilterParameter::Parameter, ITKAxioVisionV4Converter, "*.json", "", 0));
+  parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Text File", TextOutputFile, FilterParameter::Parameter, ITKAxioVisionV4Converter, "*.txt", "", 1));
 
   setFilterParameters(parameters);
 }
@@ -108,19 +133,40 @@ void ITKAxioVisionV4Converter::dataCheck()
     return;
   }
 
-  if(getOutputFile().isEmpty())
+  OutputFileTypeEnum fileTypeEnum = static_cast<OutputFileTypeEnum>(getOutputFileType());
+  if(fileTypeEnum == OutputFileTypeEnum::Json)
   {
-    ss = QObject::tr("%1 needs the output JSON File set and it was not.").arg(ClassName());
-    setErrorCondition(-390, ss);
-    return;
-  }
+    if(getJsonOutputFile().isEmpty())
+    {
+      ss = QObject::tr("%1 needs the output JSON file set and it was not.").arg(ClassName());
+      setErrorCondition(-390, ss);
+      return;
+    }
 
-  QFileInfo outputFi(getOutputFile());
-  if(outputFi.isDir())
+    QFileInfo outputFi(getJsonOutputFile());
+    if(outputFi.isDir())
+    {
+      ss = QObject::tr("The output JSON file path '%1' is a directory. Please select a JSON file.").arg(getJsonOutputFile());
+      setErrorCondition(-391, ss);
+      return;
+    }
+  }
+  else
   {
-    ss = QObject::tr("The output JSON File path '%1' is a directory. Please select a JSON file.").arg(getInputFile());
-    setErrorCondition(-391, ss);
-    return;
+    if(getTextOutputFile().isEmpty())
+    {
+      ss = QObject::tr("%1 needs the output text file set and it was not.").arg(ClassName());
+      setErrorCondition(-390, ss);
+      return;
+    }
+
+    QFileInfo outputFi(getTextOutputFile());
+    if(outputFi.isDir())
+    {
+      ss = QObject::tr("The output text file path '%1' is a directory. Please select a text file.").arg(getTextOutputFile());
+      setErrorCondition(-391, ss);
+      return;
+    }
   }
 }
 
@@ -150,7 +196,15 @@ void ITKAxioVisionV4Converter::execute()
     return;
   }
 
-  AxioVisionV4Converter::WriteToJson(getInputFile(), getOutputFile(), this);
+  OutputFileTypeEnum fileTypeEnum = static_cast<OutputFileTypeEnum>(getOutputFileType());
+  if(fileTypeEnum == OutputFileTypeEnum::Json)
+  {
+    AxioVisionV4Converter::ConvertToJsonFile(getInputFile(), getJsonOutputFile(), this);
+  }
+  else
+  {
+    AxioVisionV4Converter::ConvertToTextFile(getInputFile(), getTextOutputFile(), this);
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -214,7 +268,7 @@ const QString ITKAxioVisionV4Converter::getSubGroupName() const
 // -----------------------------------------------------------------------------
 const QString ITKAxioVisionV4Converter::getHumanLabel() const
 {
-  return "ITK::Convert Zeiss AxioVision (V4) to Json";
+  return "ITK::Convert Zeiss AxioVision (V4)";
 }
 
 // -----------------------------------------------------------------------------

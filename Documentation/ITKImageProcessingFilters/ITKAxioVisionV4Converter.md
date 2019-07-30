@@ -1,4 +1,4 @@
-# AxioVisionV4ToJson #
+# ITKAxioVisionV4Converter #
 
 ## Group (Subgroup) ##
 
@@ -6,14 +6,14 @@ ITKImageProcessing (ITKImageProcessing)
 
 ## Description ##
 
-This **Filter** converts a Zeiss AxioVision XML file into a JSON file.  The hierarchical structure of the Zeiss AxioVision XML file is retained in the output JSON file.
+This **Filter** converts a Zeiss AxioVision XML file into either a JSON file or a text file.  The hierarchical structure of the Zeiss AxioVision XML file is retained in the output JSON file.
 
 ## Parameters ##
 
 | Name | Type | Description |
 |------|------|------|
-| AxioVision XML File | QString | Input Zeiss AxioVision XML file |
-| JSON File | QString | Output JSON file |
+| InputFile | QString | Input Zeiss AxioVision XML file |
+| OutputFile | QString | Output JSON/Text file |
 
 ## Required Geometry ##
 

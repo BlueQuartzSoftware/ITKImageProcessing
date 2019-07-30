@@ -1,0 +1,627 @@
+####### Tags #######
+BlackValue	0
+Whitevalue	1
+GammaValue	1
+ImageRelativeTime1	12:00:00 AM
+ImageRelativeTime2	12:00:00 AM
+ImageRelativeTime3	12:00:00 AM
+ImageRelativeTime4	12:00:00 AM
+ImageRelativeTime	12:00:00 AM
+ImageWidthPixel	2520
+ImageHeightPixel	2808
+ImageCountRaw	6
+PixelType	8
+NumberRawImages	6
+ScaleFactorForX	1.05596620908131
+ScaleUnitforX	76
+ScaleWidth	2661.0348468849
+ScaleFactorForY	1.05596620908131
+ScaleUnitforY	76
+ScaleHeight	2965.15311510032
+ScaleFactorForZ	1
+ScaleUnitforZ	0
+CameraImageAcquisitionTime	3/5/2009 2:03:56 PM
+Camera	AxioCamMR5
+MultichannelColour	16777215
+MultichannelWeight	1
+ChannelName	Channel1
+DocumentType	Image
+Filename	05MAR09_run2_64-Raw.bmp
+Lastmodifiedby	Administrator
+ObjectiveName	EC Epiplan-Neofluar 10x/0.25 HD DIC M27
+Optovar	1
+Reflector	Pol Refl.light
+ReflectedLightShutter	2
+LightManagerisEnabled	0
+FocusPosition	2528.157
+StagePositionX	62049.5
+StagePositionY	52194.75
+MicroscopeName	Axio Observer.Z1
+ObjectiveMagnification	10
+ObjectiveN_A_	0.25
+MicroscopeIllumination	0
+ParfocalCorrection	-1
+ObjectiveTurretPosition	2
+ObjectiveContrastMethod	1
+ObjectiveImmersionType	1
+ReflectorPosition	3
+LightmanagerMode	2
+Focuscalibrated	-1
+Stagecalibrated	-1
+MicroscopeMagnification	6.3
+ReflectorMagnification	1
+FocusDepth	8.8
+MicroscopeType	64
+ObjectiveWorkingDistance	9000
+ReflectedLightHalogenLampMode	4
+ReflectedLightHalogenLampVoltage	6.00450097847358
+ContrastmanagerMode	3
+DazzleProtectionActive	-1
+CameraAdapterMagnification	0.63
+MicroscopePort	34
+OcularTotalMagnification	100
+CameraFramestartLeft	0
+CameraFramestartTop	0
+CameraFrameWidth	2584
+CameraFrameHeight	1936
+CameraBinning	2
+CameraFramePixelDistance	3.4
+CameraFrameImageOrientation	1
+CameraFrameScalingFactor	0.5
+ExposureTime_ms_	226.2
+CameraLiveScalingFactor	0.5
+ImageIndexU	0
+ImageIndexV	0
+ImageIndexZ	0
+ImageIndexC	0
+ImageIndexT	0
+ImageTileIndex	0
+ImageacquisitionIndex	0
+ImageIndexS	0
+ImageCountU	2
+ImageCountV	3
+OriginalStagePositionX	62049.5
+OriginalStagePositionY	52194.75
+AxioCamShutterSignal	0
+AxioCamDelayTime	0
+AxioCamShutterControl	0
+AxioCamBlackReference	0
+CameraShadingCorrection	1
+AxioCamEnhanceColor	0
+AxioCamNIRMode	0
+AxioCamSelector	0
+AxioCamType	8196
+AxioCamResolution	8706
+AxioCamColourModel	1
+AxioCamMicroScanning	0
+AmplificationIndex	0
+DeviceScalingName	AxioCamMRc5
+AxioCamAnalogGainEnable	0
+
+####### Scaling #######
+Factor_0	1.05597
+Type_0	76
+Unit_0	
+Origin_0	0
+Angle_2	0
+Factor_1	1.05597
+Type_1	76
+Unit_1	
+Origin_1	0
+Angle_1	0
+Factor_2	1
+Type_2	0
+Unit_2	
+Origin_2	0
+Angle_2	0
+
+####### p0 #######
+BlackValue	0
+Whitevalue	1
+GammaValue	1
+ImageRelativeTime1	12:00:00 AM
+ImageRelativeTime2	12:00:00 AM
+ImageRelativeTime3	12:00:00 AM
+ImageRelativeTime4	12:00:00 AM
+ImageRelativeTime	12:00:00 AM
+ImageWidthPixel	1292
+ImageHeightPixel	968
+PixelType	8
+CameraImageAcquisitionTime	3/5/2009 2:03:56 PM
+Camera	AxioCamMR5
+MultichannelColour	16777215
+MultichannelWeight	1
+ChannelName	Channel1
+ObjectiveName	EC Epiplan-Neofluar 10x/0.25 HD DIC M27
+Optovar	1
+Reflector	Pol Refl.light
+ReflectedLightShutter	2
+LightManagerisEnabled	0
+FocusPosition	2528.157
+StagePositionX	62049.5
+StagePositionY	52194.75
+MicroscopeName	Axio Observer.Z1
+ObjectiveMagnification	10
+ObjectiveN_A_	0.25
+MicroscopeIllumination	0
+ParfocalCorrection	-1
+ObjectiveTurretPosition	2
+ObjectiveContrastMethod	1
+ObjectiveImmersionType	1
+ReflectorPosition	3
+LightmanagerMode	2
+Focuscalibrated	-1
+Stagecalibrated	-1
+MicroscopeMagnification	6.3
+ReflectorMagnification	1
+FocusDepth	8.8
+MicroscopeType	64
+ObjectiveWorkingDistance	9000
+ReflectedLightHalogenLampMode	4
+ReflectedLightHalogenLampVoltage	6.00450097847358
+ContrastmanagerMode	3
+DazzleProtectionActive	-1
+CameraAdapterMagnification	0.63
+MicroscopePort	34
+OcularTotalMagnification	100
+CameraFramestartLeft	0
+CameraFramestartTop	0
+CameraFrameWidth	2584
+CameraFrameHeight	1936
+CameraBinning	2
+CameraFramePixelDistance	3.4
+CameraFrameImageOrientation	1
+CameraFrameScalingFactor	0.5
+ExposureTime_ms_	226.2
+CameraLiveScalingFactor	0.5
+ImageIndexU	0
+ImageIndexV	0
+ImageIndexZ	0
+ImageIndexC	0
+ImageIndexT	0
+ImageTileIndex	0
+ImageacquisitionIndex	0
+ImageIndexS	0
+OriginalStagePositionX	62049.5
+OriginalStagePositionY	52194.75
+AxioCamShutterSignal	0
+AxioCamDelayTime	0
+AxioCamShutterControl	0
+AxioCamBlackReference	0
+CameraShadingCorrection	1
+AxioCamEnhanceColor	0
+AxioCamNIRMode	0
+AxioCamSelector	0
+AxioCamType	8196
+AxioCamResolution	8706
+AxioCamColourModel	1
+AxioCamMicroScanning	0
+AmplificationIndex	0
+DeviceScalingName	AxioCamMRc5
+AxioCamAnalogGainEnable	0
+
+####### p1 #######
+BlackValue	0
+Whitevalue	1
+GammaValue	1
+ImageRelativeTime1	12:00:04 AM
+ImageRelativeTime2	12:00:04 AM
+ImageRelativeTime3	12:00:04 AM
+ImageRelativeTime4	12:00:04 AM
+ImageRelativeTime	12:00:04 AM
+ImageWidthPixel	1292
+ImageHeightPixel	968
+PixelType	8
+CameraImageAcquisitionTime	3/5/2009 2:04:00 PM
+Camera	AxioCamMR5
+MultichannelColour	16777215
+MultichannelWeight	1
+ChannelName	Channel1
+ObjectiveName	EC Epiplan-Neofluar 10x/0.25 HD DIC M27
+Optovar	1
+Reflector	Pol Refl.light
+ReflectedLightShutter	2
+LightManagerisEnabled	0
+FocusPosition	2531.177
+StagePositionX	63345.75
+StagePositionY	52194.75
+MicroscopeName	Axio Observer.Z1
+ObjectiveMagnification	10
+ObjectiveN_A_	0.25
+MicroscopeIllumination	0
+ParfocalCorrection	-1
+ObjectiveTurretPosition	2
+ObjectiveContrastMethod	1
+ObjectiveImmersionType	1
+ReflectorPosition	3
+LightmanagerMode	2
+Focuscalibrated	-1
+Stagecalibrated	-1
+MicroscopeMagnification	6.3
+ReflectorMagnification	1
+FocusDepth	8.8
+MicroscopeType	64
+ObjectiveWorkingDistance	9000
+ReflectedLightHalogenLampMode	4
+ReflectedLightHalogenLampVoltage	6.00450097847358
+ContrastmanagerMode	3
+DazzleProtectionActive	-1
+CameraAdapterMagnification	0.63
+MicroscopePort	34
+OcularTotalMagnification	100
+CameraFramestartLeft	0
+CameraFramestartTop	0
+CameraFrameWidth	2584
+CameraFrameHeight	1936
+CameraBinning	2
+CameraFramePixelDistance	3.4
+CameraFrameImageOrientation	1
+CameraFrameScalingFactor	0.5
+ExposureTime_ms_	226.2
+CameraLiveScalingFactor	0.5
+ImageIndexU	1
+ImageIndexV	0
+ImageIndexZ	0
+ImageIndexC	0
+ImageIndexT	0
+ImageTileIndex	1
+ImageacquisitionIndex	0
+ImageIndexS	0
+OriginalStagePositionX	63345.75
+OriginalStagePositionY	52194.75
+AxioCamShutterSignal	0
+AxioCamDelayTime	0
+AxioCamShutterControl	0
+AxioCamBlackReference	0
+CameraShadingCorrection	1
+AxioCamEnhanceColor	0
+AxioCamNIRMode	0
+AxioCamSelector	0
+AxioCamType	8196
+AxioCamResolution	8706
+AxioCamColourModel	1
+AxioCamMicroScanning	0
+AmplificationIndex	0
+DeviceScalingName	AxioCamMRc5
+AxioCamAnalogGainEnable	0
+
+####### p2 #######
+BlackValue	0
+Whitevalue	1
+GammaValue	1
+ImageRelativeTime1	12:00:08 AM
+ImageRelativeTime2	12:00:08 AM
+ImageRelativeTime3	12:00:08 AM
+ImageRelativeTime4	12:00:08 AM
+ImageRelativeTime	12:00:08 AM
+ImageWidthPixel	1292
+ImageHeightPixel	968
+PixelType	8
+CameraImageAcquisitionTime	3/5/2009 2:04:04 PM
+Camera	AxioCamMR5
+MultichannelColour	16777215
+MultichannelWeight	1
+ChannelName	Channel1
+ObjectiveName	EC Epiplan-Neofluar 10x/0.25 HD DIC M27
+Optovar	1
+Reflector	Pol Refl.light
+ReflectedLightShutter	2
+LightManagerisEnabled	0
+FocusPosition	2538.28
+StagePositionX	63345.75
+StagePositionY	53166
+MicroscopeName	Axio Observer.Z1
+ObjectiveMagnification	10
+ObjectiveN_A_	0.25
+MicroscopeIllumination	0
+ParfocalCorrection	-1
+ObjectiveTurretPosition	2
+ObjectiveContrastMethod	1
+ObjectiveImmersionType	1
+ReflectorPosition	3
+LightmanagerMode	2
+Focuscalibrated	-1
+Stagecalibrated	-1
+MicroscopeMagnification	6.3
+ReflectorMagnification	1
+FocusDepth	8.8
+MicroscopeType	64
+ObjectiveWorkingDistance	9000
+ReflectedLightHalogenLampMode	4
+ReflectedLightHalogenLampVoltage	6.00450097847358
+ContrastmanagerMode	3
+DazzleProtectionActive	-1
+CameraAdapterMagnification	0.63
+MicroscopePort	34
+OcularTotalMagnification	100
+CameraFramestartLeft	0
+CameraFramestartTop	0
+CameraFrameWidth	2584
+CameraFrameHeight	1936
+CameraBinning	2
+CameraFramePixelDistance	3.4
+CameraFrameImageOrientation	1
+CameraFrameScalingFactor	0.5
+ExposureTime_ms_	226.2
+CameraLiveScalingFactor	0.5
+ImageIndexU	1
+ImageIndexV	1
+ImageIndexZ	0
+ImageIndexC	0
+ImageIndexT	0
+ImageTileIndex	2
+ImageacquisitionIndex	0
+ImageIndexS	0
+OriginalStagePositionX	63345.75
+OriginalStagePositionY	53166
+AxioCamShutterSignal	0
+AxioCamDelayTime	0
+AxioCamShutterControl	0
+AxioCamBlackReference	0
+CameraShadingCorrection	1
+AxioCamEnhanceColor	0
+AxioCamNIRMode	0
+AxioCamSelector	0
+AxioCamType	8196
+AxioCamResolution	8706
+AxioCamColourModel	1
+AxioCamMicroScanning	0
+AmplificationIndex	0
+DeviceScalingName	AxioCamMRc5
+AxioCamAnalogGainEnable	0
+
+####### p3 #######
+BlackValue	0
+Whitevalue	1
+GammaValue	1
+ImageRelativeTime1	12:00:13 AM
+ImageRelativeTime2	12:00:13 AM
+ImageRelativeTime3	12:00:13 AM
+ImageRelativeTime4	12:00:13 AM
+ImageRelativeTime	12:00:13 AM
+ImageWidthPixel	1292
+ImageHeightPixel	968
+PixelType	8
+CameraImageAcquisitionTime	3/5/2009 2:04:09 PM
+Camera	AxioCamMR5
+MultichannelColour	16777215
+MultichannelWeight	1
+ChannelName	Channel1
+ObjectiveName	EC Epiplan-Neofluar 10x/0.25 HD DIC M27
+Optovar	1
+Reflector	Pol Refl.light
+ReflectedLightShutter	2
+LightManagerisEnabled	0
+FocusPosition	2537.303
+StagePositionX	62049.75
+StagePositionY	53166.25
+MicroscopeName	Axio Observer.Z1
+ObjectiveMagnification	10
+ObjectiveN_A_	0.25
+MicroscopeIllumination	0
+ParfocalCorrection	-1
+ObjectiveTurretPosition	2
+ObjectiveContrastMethod	1
+ObjectiveImmersionType	1
+ReflectorPosition	3
+LightmanagerMode	2
+Focuscalibrated	-1
+Stagecalibrated	-1
+MicroscopeMagnification	6.3
+ReflectorMagnification	1
+FocusDepth	8.8
+MicroscopeType	64
+ObjectiveWorkingDistance	9000
+ReflectedLightHalogenLampMode	4
+ReflectedLightHalogenLampVoltage	6.00450097847358
+ContrastmanagerMode	3
+DazzleProtectionActive	-1
+CameraAdapterMagnification	0.63
+MicroscopePort	34
+OcularTotalMagnification	100
+CameraFramestartLeft	0
+CameraFramestartTop	0
+CameraFrameWidth	2584
+CameraFrameHeight	1936
+CameraBinning	2
+CameraFramePixelDistance	3.4
+CameraFrameImageOrientation	1
+CameraFrameScalingFactor	0.5
+ExposureTime_ms_	226.2
+CameraLiveScalingFactor	0.5
+ImageIndexU	0
+ImageIndexV	1
+ImageIndexZ	0
+ImageIndexC	0
+ImageIndexT	0
+ImageTileIndex	3
+ImageacquisitionIndex	0
+ImageIndexS	0
+OriginalStagePositionX	62049.75
+OriginalStagePositionY	53166.25
+AxioCamShutterSignal	0
+AxioCamDelayTime	0
+AxioCamShutterControl	0
+AxioCamBlackReference	0
+CameraShadingCorrection	1
+AxioCamEnhanceColor	0
+AxioCamNIRMode	0
+AxioCamSelector	0
+AxioCamType	8196
+AxioCamResolution	8706
+AxioCamColourModel	1
+AxioCamMicroScanning	0
+AmplificationIndex	0
+DeviceScalingName	AxioCamMRc5
+AxioCamAnalogGainEnable	0
+
+####### p4 #######
+BlackValue	0
+Whitevalue	1
+GammaValue	1
+ImageRelativeTime1	12:00:17 AM
+ImageRelativeTime2	12:00:17 AM
+ImageRelativeTime3	12:00:17 AM
+ImageRelativeTime4	12:00:17 AM
+ImageRelativeTime	12:00:17 AM
+ImageWidthPixel	1292
+ImageHeightPixel	968
+PixelType	8
+CameraImageAcquisitionTime	3/5/2009 2:04:13 PM
+Camera	AxioCamMR5
+MultichannelColour	16777215
+MultichannelWeight	1
+ChannelName	Channel1
+ObjectiveName	EC Epiplan-Neofluar 10x/0.25 HD DIC M27
+Optovar	1
+Reflector	Pol Refl.light
+ReflectedLightShutter	2
+LightManagerisEnabled	0
+FocusPosition	2542.081
+StagePositionX	62049.75
+StagePositionY	54137.25
+MicroscopeName	Axio Observer.Z1
+ObjectiveMagnification	10
+ObjectiveN_A_	0.25
+MicroscopeIllumination	0
+ParfocalCorrection	-1
+ObjectiveTurretPosition	2
+ObjectiveContrastMethod	1
+ObjectiveImmersionType	1
+ReflectorPosition	3
+LightmanagerMode	2
+Focuscalibrated	-1
+Stagecalibrated	-1
+MicroscopeMagnification	6.3
+ReflectorMagnification	1
+FocusDepth	8.8
+MicroscopeType	64
+ObjectiveWorkingDistance	9000
+ReflectedLightHalogenLampMode	4
+ReflectedLightHalogenLampVoltage	6.00450097847358
+ContrastmanagerMode	3
+DazzleProtectionActive	-1
+CameraAdapterMagnification	0.63
+MicroscopePort	34
+OcularTotalMagnification	100
+CameraFramestartLeft	0
+CameraFramestartTop	0
+CameraFrameWidth	2584
+CameraFrameHeight	1936
+CameraBinning	2
+CameraFramePixelDistance	3.4
+CameraFrameImageOrientation	1
+CameraFrameScalingFactor	0.5
+ExposureTime_ms_	226.2
+CameraLiveScalingFactor	0.5
+ImageIndexU	0
+ImageIndexV	2
+ImageIndexZ	0
+ImageIndexC	0
+ImageIndexT	0
+ImageTileIndex	4
+ImageacquisitionIndex	0
+ImageIndexS	0
+OriginalStagePositionX	62049.75
+OriginalStagePositionY	54137.25
+AxioCamShutterSignal	0
+AxioCamDelayTime	0
+AxioCamShutterControl	0
+AxioCamBlackReference	0
+CameraShadingCorrection	1
+AxioCamEnhanceColor	0
+AxioCamNIRMode	0
+AxioCamSelector	0
+AxioCamType	8196
+AxioCamResolution	8706
+AxioCamColourModel	1
+AxioCamMicroScanning	0
+AmplificationIndex	0
+DeviceScalingName	AxioCamMRc5
+AxioCamAnalogGainEnable	0
+
+####### p5 #######
+BlackValue	0
+Whitevalue	1
+GammaValue	1
+ImageRelativeTime1	12:00:21 AM
+ImageRelativeTime2	12:00:21 AM
+ImageRelativeTime3	12:00:21 AM
+ImageRelativeTime4	12:00:21 AM
+ImageRelativeTime	12:00:21 AM
+ImageWidthPixel	1292
+ImageHeightPixel	968
+PixelType	8
+CameraImageAcquisitionTime	3/5/2009 2:04:17 PM
+Camera	AxioCamMR5
+MultichannelColour	16777215
+MultichannelWeight	1
+ChannelName	Channel1
+ObjectiveName	EC Epiplan-Neofluar 10x/0.25 HD DIC M27
+Optovar	1
+Reflector	Pol Refl.light
+ReflectedLightShutter	2
+LightManagerisEnabled	0
+FocusPosition	2557.314
+StagePositionX	63345.5
+StagePositionY	54137.25
+MicroscopeName	Axio Observer.Z1
+ObjectiveMagnification	10
+ObjectiveN_A_	0.25
+MicroscopeIllumination	0
+ParfocalCorrection	-1
+ObjectiveTurretPosition	2
+ObjectiveContrastMethod	1
+ObjectiveImmersionType	1
+ReflectorPosition	3
+LightmanagerMode	2
+Focuscalibrated	-1
+Stagecalibrated	-1
+MicroscopeMagnification	6.3
+ReflectorMagnification	1
+FocusDepth	8.8
+MicroscopeType	64
+ObjectiveWorkingDistance	9000
+ReflectedLightHalogenLampMode	4
+ReflectedLightHalogenLampVoltage	6.00450097847358
+ContrastmanagerMode	3
+DazzleProtectionActive	-1
+CameraAdapterMagnification	0.63
+MicroscopePort	34
+OcularTotalMagnification	100
+CameraFramestartLeft	0
+CameraFramestartTop	0
+CameraFrameWidth	2584
+CameraFrameHeight	1936
+CameraBinning	2
+CameraFramePixelDistance	3.4
+CameraFrameImageOrientation	1
+CameraFrameScalingFactor	0.5
+ExposureTime_ms_	226.2
+CameraLiveScalingFactor	0.5
+ImageIndexU	1
+ImageIndexV	2
+ImageIndexZ	0
+ImageIndexC	0
+ImageIndexT	0
+ImageTileIndex	5
+ImageacquisitionIndex	0
+ImageIndexS	0
+OriginalStagePositionX	63345.5
+OriginalStagePositionY	54137.25
+AxioCamShutterSignal	0
+AxioCamDelayTime	0
+AxioCamShutterControl	0
+AxioCamBlackReference	0
+CameraShadingCorrection	1
+AxioCamEnhanceColor	0
+AxioCamNIRMode	0
+AxioCamSelector	0
+AxioCamType	8196
+AxioCamResolution	8706
+AxioCamColourModel	1
+AxioCamMicroScanning	0
+AmplificationIndex	0
+DeviceScalingName	AxioCamMRc5
+AxioCamAnalogGainEnable	0
+

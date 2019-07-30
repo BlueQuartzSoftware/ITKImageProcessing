@@ -91,8 +91,10 @@ const QString OutputFile("@TEST_TEMP_DIR@/TileConfiguration.txt");
 namespace ITKAxioVisionV4ConverterTest
 {
 const QString InputFile("@ITKImageProcessing_SOURCE_DIR@/Test/TestFiles/_meta.xml");
-const QString ExemplarOutputFile("@ITKImageProcessing_SOURCE_DIR@/Test/TestFiles/XMLConvertExemplary.json");
-const QString OutputFile("@TEST_TEMP_DIR@/XMLConvert.json");
+const QString ExemplarJsonOutputFile("@ITKImageProcessing_SOURCE_DIR@/Test/TestFiles/XMLConvertExemplary.json");
+const QString JsonOutputFile("@TEST_TEMP_DIR@/XMLConvert.json");
+const QString ExemplarTextOutputFile("@ITKImageProcessing_SOURCE_DIR@/Test/TestFiles/XMLConvertExemplary.txt");
+const QString TextOutputFile("@TEST_TEMP_DIR@/XMLConvert.txt");
 } // namespace ITKAxioVisionV4ConverterTest
 
 namespace ImportZenInfoMontageTest

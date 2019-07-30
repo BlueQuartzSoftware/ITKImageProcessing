@@ -47,7 +47,9 @@ class ITKImageProcessing_EXPORT ITKAxioVisionV4Converter : public AbstractFilter
   // clang-format off
     PYB11_CREATE_BINDINGS(ITKAxioVisionV4Converter SUPERCLASS AbstractFilter)
     PYB11_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
-    PYB11_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
+    PYB11_PROPERTY(QString JsonOutputFile READ getJsonOutputFile WRITE setJsonOutputFile)
+    PYB11_PROPERTY(QString TextOutputFile READ getTextOutputFile WRITE setTextOutputFile)
+    PYB11_PROPERTY(int OutputFileType READ getOutputFileType WRITE setOutputFileType)
   // clang-format on
 
 public:
@@ -57,11 +59,25 @@ public:
 
   ~ITKAxioVisionV4Converter() override;
 
+  using EnumType = unsigned int;
+
+  enum class OutputFileTypeEnum : EnumType
+  {
+    Json = 0,
+    Text = 1
+  };
+
   SIMPL_FILTER_PARAMETER(QString, InputFile)
   Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
-  SIMPL_FILTER_PARAMETER(QString, OutputFile)
-  Q_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
+  SIMPL_FILTER_PARAMETER(QString, JsonOutputFile)
+  Q_PROPERTY(QString JsonOutputFile READ getJsonOutputFile WRITE setJsonOutputFile)
+
+  SIMPL_FILTER_PARAMETER(QString, TextOutputFile)
+  Q_PROPERTY(QString TextOutputFile READ getTextOutputFile WRITE setTextOutputFile)
+
+  SIMPL_FILTER_PARAMETER(int, OutputFileType)
+  Q_PROPERTY(int OutputFileType READ getOutputFileType WRITE setOutputFileType)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class

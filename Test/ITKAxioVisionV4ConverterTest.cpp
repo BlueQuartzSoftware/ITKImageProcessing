@@ -60,7 +60,8 @@ public:
   void RemoveTestFiles()
   {
 #if REMOVE_TEST_FILES
-    QFile::remove(UnitTest::ITKAxioVisionV4ConverterTest::OutputFile);
+    QFile::remove(UnitTest::ITKAxioVisionV4ConverterTest::JsonOutputFile);
+    QFile::remove(UnitTest::ITKAxioVisionV4ConverterTest::TextOutputFile);
 #endif
   }
 
@@ -70,6 +71,7 @@ public:
   int TestAxioVisionV4ToJson()
   {
     ITKAxioVisionV4Converter::Pointer filter = ITKAxioVisionV4Converter::New();
+    filter->setOutputFileType(0);
     filter->preflight();
     DREAM3D_REQUIRE_EQUAL(filter->getErrorCode(), -387)
 
@@ -87,21 +89,21 @@ public:
     filter->preflight();
     DREAM3D_REQUIRE_EQUAL(filter->getErrorCode(), -390)
 
-    fi.setFile(UnitTest::ITKAxioVisionV4ConverterTest::OutputFile);
-    filter->setOutputFile(fi.path());
+    fi.setFile(UnitTest::ITKAxioVisionV4ConverterTest::JsonOutputFile);
+    filter->setJsonOutputFile(fi.path());
     filter->preflight();
     DREAM3D_REQUIRE_EQUAL(filter->getErrorCode(), -391)
 
-    filter->setOutputFile(UnitTest::ITKAxioVisionV4ConverterTest::OutputFile);
+    filter->setJsonOutputFile(UnitTest::ITKAxioVisionV4ConverterTest::JsonOutputFile);
     filter->preflight();
     DREAM3D_REQUIRE_EQUAL(filter->getErrorCode(), 0)
 
     filter->execute();
     DREAM3D_REQUIRE_EQUAL(filter->getErrorCode(), 0)
 
-    QFile outputFile(UnitTest::ITKAxioVisionV4ConverterTest::OutputFile);
+    QFile outputFile(UnitTest::ITKAxioVisionV4ConverterTest::JsonOutputFile);
     DREAM3D_REQUIRE_EQUAL(outputFile.open(QFile::ReadOnly), true)
-    QFile exemplaryOutputFile(UnitTest::ITKAxioVisionV4ConverterTest::ExemplarOutputFile);
+    QFile exemplaryOutputFile(UnitTest::ITKAxioVisionV4ConverterTest::ExemplarJsonOutputFile);
     DREAM3D_REQUIRE_EQUAL(exemplaryOutputFile.open(QFile::ReadOnly), true)
 
     QJsonParseError parseError;
@@ -126,11 +128,65 @@ public:
   // -----------------------------------------------------------------------------
   //
   // -----------------------------------------------------------------------------
+  int TestAxioVisionV4ToText()
+  {
+    ITKAxioVisionV4Converter::Pointer filter = ITKAxioVisionV4Converter::New();
+    filter->setOutputFileType(1);
+    filter->preflight();
+    DREAM3D_REQUIRE_EQUAL(filter->getErrorCode(), -387)
+
+    QFileInfo fi(UnitTest::ITKAxioVisionV4ConverterTest::InputFile);
+    QString nonexistantFilePath = fi.path() + QDir::separator() + "junk.xml";
+    filter->setInputFile(nonexistantFilePath);
+    filter->preflight();
+    DREAM3D_REQUIRE_EQUAL(filter->getErrorCode(), -388)
+
+    filter->setInputFile(fi.path());
+    filter->preflight();
+    DREAM3D_REQUIRE_EQUAL(filter->getErrorCode(), -389)
+
+    filter->setInputFile(UnitTest::ITKAxioVisionV4ConverterTest::InputFile);
+    filter->preflight();
+    DREAM3D_REQUIRE_EQUAL(filter->getErrorCode(), -390)
+
+    fi.setFile(UnitTest::ITKAxioVisionV4ConverterTest::TextOutputFile);
+    filter->setTextOutputFile(fi.path());
+    filter->preflight();
+    DREAM3D_REQUIRE_EQUAL(filter->getErrorCode(), -391)
+
+    filter->setTextOutputFile(UnitTest::ITKAxioVisionV4ConverterTest::TextOutputFile);
+    filter->preflight();
+    DREAM3D_REQUIRE_EQUAL(filter->getErrorCode(), 0)
+
+    filter->execute();
+    DREAM3D_REQUIRE_EQUAL(filter->getErrorCode(), 0)
+
+    QFile outputFile(UnitTest::ITKAxioVisionV4ConverterTest::TextOutputFile);
+    DREAM3D_REQUIRE_EQUAL(outputFile.open(QFile::ReadOnly), true)
+    QFile exemplaryOutputFile(UnitTest::ITKAxioVisionV4ConverterTest::ExemplarTextOutputFile);
+    DREAM3D_REQUIRE_EQUAL(exemplaryOutputFile.open(QFile::ReadOnly), true)
+
+    QString str = outputFile.readAll();
+    QString exemplaryStr = exemplaryOutputFile.readAll();
+
+    if(str != exemplaryStr)
+    {
+      DREAM3D_REQUIRE_EQUAL(0, 1)
+    }
+
+    return EXIT_SUCCESS;
+  }
+
+  // -----------------------------------------------------------------------------
+  //
+  // -----------------------------------------------------------------------------
   void operator()()
   {
     int err = EXIT_SUCCESS;
 
     DREAM3D_REGISTER_TEST(TestAxioVisionV4ToJson())
+
+    DREAM3D_REGISTER_TEST(TestAxioVisionV4ToText())
 
     DREAM3D_REGISTER_TEST(RemoveTestFiles())
   }
