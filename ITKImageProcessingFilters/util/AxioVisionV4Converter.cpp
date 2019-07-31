@@ -56,7 +56,7 @@ AxioVisionV4Converter::~AxioVisionV4Converter() = default;
 QString AxioVisionV4Converter::ImportAsText(const QString& axioVisionFile, Observable* obs)
 {
   QString convertedText;
-  QString delimiter = "\t";
+  QString delimiter = "|";
 
   // Parse the XML file to get all the meta-data information and create all the
   // data structure that is needed.
@@ -101,7 +101,7 @@ QString AxioVisionV4Converter::ImportAsText(const QString& axioVisionFile, Obser
   ZeissTagMapping::Pointer tagMapping = ZeissTagMapping::instance();
 
   ZeissTagsXmlSection::MetaDataType tagMetaData = rootTagsSection->getMetaDataMap();
-  stream << "####### Tags #######\n";
+  stream << "####### Start Root Tags #######\n";
   for(const auto& entry : tagMetaData)
   {
     int32_t tagId = entry->getZeissIdTag();
@@ -109,6 +109,7 @@ QString AxioVisionV4Converter::ImportAsText(const QString& axioVisionFile, Obser
     stream << name << delimiter << entry->toString() << "\n";
   }
 
+  stream << "####### End Root Tags #######\n";
   stream << "\n";
 
   QDomElement scaling = root.firstChildElement(ITKImageProcessingConstants::Xml::Scaling);
@@ -124,7 +125,7 @@ QString AxioVisionV4Converter::ImportAsText(const QString& axioVisionFile, Obser
   }
 
   tagMetaData = scalingTagsSection->getMetaDataMap();
-  stream << "####### Scaling #######\n";
+  stream << "####### Start Scaling Tags #######\n";
   for(const auto& entry : tagMetaData)
   {
     int32_t tagId = entry->getZeissIdTag();
@@ -132,6 +133,7 @@ QString AxioVisionV4Converter::ImportAsText(const QString& axioVisionFile, Obser
     stream << name << delimiter << entry->toString() << "\n";
   }
 
+  stream << "####### End Scaling Tags #######\n";
   stream << "\n";
 
   int32_t imageCount = MetaXmlUtils::GetInt32Entry(nullptr, rootTagsSection.get(), Zeiss::MetaXML::ImageCountRawId);
@@ -144,13 +146,15 @@ QString AxioVisionV4Converter::ImportAsText(const QString& axioVisionFile, Obser
     tagMetaData = GetPTagMetadata(p, imageCountPadding, root, obs);
     QString pTag = GeneratePTag(p, imageCountPadding);
 
-    stream << "####### " << pTag << " #######\n";
+    stream << "####### Start " << pTag << " Tags #######\n";
     for(const auto& entry : tagMetaData)
     {
       int32_t tagId = entry->getZeissIdTag();
       QString name = tagMapping->nameForId(tagId);
       stream << name << delimiter << entry->toString() << "\n";
     }
+
+    stream << "####### End " << pTag << " Tags #######\n";
     stream << "\n";
   }
 
