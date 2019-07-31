@@ -143,8 +143,43 @@ QString AxioVisionV4Converter::ImportAsText(const QString& axioVisionFile, Obser
   // Loop over every image in the _meta.xml file
   for(int p = 0; p < imageCount; p++)
   {
-    tagMetaData = GetPTagMetadata(p, imageCountPadding, root, obs);
+    // Generate the xml tag that is for this image
     QString pTag = GeneratePTag(p, imageCountPadding);
+
+    // Drill down into the XML document....
+    QDomElement photoEle = root.firstChildElement(pTag);
+    if(photoEle.isNull())
+    {
+      if(obs != nullptr)
+      {
+        QString ss = QObject::tr("Could not find the <ROOT><%1> element. Aborting Parsing. Is the file a Zeiss _meta.xml file").arg(pTag);
+        obs->setErrorCondition(-3004, ss);
+      }
+      return {};
+    }
+    // Get the TAGS section
+    QDomElement tags = photoEle.firstChildElement(ITKImageProcessingConstants::Xml::Tags);
+    if(tags.isNull())
+    {
+      if(obs != nullptr)
+      {
+        QString ss = QObject::tr("Could not find the <ROOT><%1><Tags> element. Aborting Parsing. Is the file a Zeiss _meta.xml file").arg(pTag);
+        obs->setErrorCondition(-3005, ss);
+      }
+      return {};
+    }
+    // Now Parse the TAGS section
+    ZeissTagsXmlSection::Pointer photoTagsSection = MetaXmlUtils::ParseTagsSection(nullptr, tags);
+    if(nullptr == photoTagsSection.get())
+    {
+      if(obs != nullptr)
+      {
+        QString ss = QObject::tr("Error Parsing the <ROOT><%1><Tags> element. Aborting Parsing. Is the file a Zeiss AxioVision _meta.xml file").arg(pTag);
+        obs->setErrorCondition(-3006, ss);
+      }
+      return {};
+    }
+    ZeissTagsXmlSection::MetaDataType tagMetaData = photoTagsSection->getMetaDataMap();
 
     stream << "####### Start " << pTag << " #######\n";
     for(const auto& entry : tagMetaData)
@@ -164,6 +199,231 @@ QString AxioVisionV4Converter::ImportAsText(const QString& axioVisionFile, Obser
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+QDomDocument AxioVisionV4Converter::ImportAsXML(const QString& axioVisionFile, Observable* obs)
+{
+  // Parse the XML file to get all the meta-data information and create all the
+  // data structure that is needed.
+  QFile xmlFile(axioVisionFile);
+  QDomDocument domDocument;
+
+  QString errorStr;
+  int errorLine = -1;
+  int errorColumn = -1;
+
+  if(!domDocument.setContent(&xmlFile, true, &errorStr, &errorLine, &errorColumn))
+  {
+    if(obs != nullptr)
+    {
+      QString ss = QObject::tr("Parse error at line %1, column %2:\n%3").arg(errorLine).arg(errorColumn).arg(errorStr);
+      obs->setErrorCondition(-3000, ss);
+    }
+    return {};
+  }
+  QDomElement root = domDocument.documentElement();
+
+  // First parse the <ROOT><Tags> section to get the values of how many images we are going to have
+  QDomElement tags = root.firstChildElement(ITKImageProcessingConstants::Xml::Tags);
+  if(tags.isNull())
+  {
+    if(obs != nullptr)
+    {
+      QString ss = QObject::tr("Could not find the <ROOT><Tags> element. Aborting Parsing. Is the file a Zeiss _meta.xml file");
+      obs->setErrorCondition(-3001, ss);
+    }
+    return {};
+  }
+
+  bool ok = false;
+  QDomElement countEle = tags.namedItem(ITKImageProcessingConstants::Xml::Count).toElement();
+  int count = countEle.text().toInt(&ok, 10);
+  if(!ok)
+  {
+    QString ss = QObject::tr("Error Parsing 'Count' Tag in Root 'Tags' DOM element");
+    if(obs != nullptr)
+    {
+      obs->setErrorCondition(-70001, ss);
+    }
+    return {};
+  }
+
+  ZeissTagsXmlSection::Pointer rootTagsSection = MetaXmlUtils::ParseTagsSection(nullptr, tags);
+  if(nullptr == rootTagsSection.get())
+  {
+    return {};
+  }
+
+  ZeissTagMapping::Pointer tagMapping = ZeissTagMapping::instance();
+
+  for(int c = 0; c < count; c++)
+  {
+    QString Vx = QString("V%1").arg(c);
+    QString Ix = QString("I%1").arg(c);
+    QString Ax = QString("A%1").arg(c);
+
+    QDomElement vxEle = tags.namedItem(Vx).toElement();
+    QDomElement ixEle = tags.namedItem(Ix).toElement();
+    QDomElement axEle = tags.namedItem(Ax).toElement();
+
+    qint32 idValue = ixEle.text().toInt(&ok, 10);
+    QString value = vxEle.text();
+
+    QString key = tagMapping->nameForId(idValue);
+    if(!key.isEmpty())
+    {
+      QDomElement newVxEle = domDocument.createElement(key);
+      QDomText newVxEleText = domDocument.createTextNode(value);
+      newVxEle.appendChild(newVxEleText);
+      tags.insertBefore(newVxEle, ixEle);
+    }
+
+    tags.removeChild(vxEle);
+    tags.removeChild(ixEle);
+    tags.removeChild(axEle);
+  }
+
+  //  QDomElement scaling = root.firstChildElement(ITKImageProcessingConstants::Xml::Scaling);
+  //  ZeissTagsXmlSection::Pointer scalingTagsSection = MetaXmlUtils::ParseScalingSection(nullptr, scaling);
+  //  if(nullptr == scalingTagsSection.get())
+  //  {
+  //    if(obs != nullptr)
+  //    {
+  //      QString ss = QObject::tr("The Scaling Tags Section inside the input AxioVision XML File was null.");
+  //      obs->setErrorCondition(-3003, ss);
+  //    }
+  //    return {};
+  //  }
+
+  //  auto tagMetaData = scalingTagsSection->getMetaDataMap();
+  //  for(const auto& entry : tagMetaData)
+  //  {
+  //    int32_t tagId = entry->getZeissIdTag();
+  //    QString name = tagMapping->nameForId(tagId);
+  //    stream << name << delimiter << entry->toString() << "\n";
+  //  }
+
+  //  stream << "####### End Scaling #######\n";
+  //  stream << "\n";
+
+  int32_t imageCount = MetaXmlUtils::GetInt32Entry(nullptr, rootTagsSection.get(), Zeiss::MetaXML::ImageCountRawId);
+
+  int imageCountPadding = MetaXmlUtils::CalculatePaddingDigits(imageCount);
+
+  // Loop over every image in the _meta.xml file
+  for(int p = 0; p < imageCount; p++)
+  {
+    QString pTag = GeneratePTag(p, imageCountPadding);
+
+    // Drill down into the XML document....
+    QDomElement photoEle = root.firstChildElement(pTag);
+    if(photoEle.isNull())
+    {
+      if(obs != nullptr)
+      {
+        QString ss = QObject::tr("Could not find the <ROOT><%1> element. Aborting Parsing. Is the file a Zeiss _meta.xml file").arg(pTag);
+        obs->setErrorCondition(-3004, ss);
+      }
+      return {};
+    }
+    // Get the TAGS section
+    QDomElement tags = photoEle.firstChildElement(ITKImageProcessingConstants::Xml::Tags);
+    if(tags.isNull())
+    {
+      if(obs != nullptr)
+      {
+        QString ss = QObject::tr("Could not find the <ROOT><%1><Tags> element. Aborting Parsing. Is the file a Zeiss _meta.xml file").arg(pTag);
+        obs->setErrorCondition(-3005, ss);
+      }
+      return {};
+    }
+    // Now Parse the TAGS section
+    ZeissTagsXmlSection::Pointer photoTagsSection = MetaXmlUtils::ParseTagsSection(nullptr, tags);
+    if(nullptr == photoTagsSection.get())
+    {
+      if(obs != nullptr)
+      {
+        QString ss = QObject::tr("Error Parsing the <ROOT><%1><Tags> element. Aborting Parsing. Is the file a Zeiss AxioVision _meta.xml file").arg(pTag);
+        obs->setErrorCondition(-3006, ss);
+      }
+      return {};
+    }
+
+    bool ok = false;
+    QDomElement countEle = tags.namedItem(ITKImageProcessingConstants::Xml::Count).toElement();
+    int count = countEle.text().toInt(&ok, 10);
+    if(!ok)
+    {
+      QString ss = QObject::tr("Error Parsing 'Count' Tag in %1 'Tags' DOM element").arg(pTag);
+      if(obs != nullptr)
+      {
+        obs->setErrorCondition(-70001, ss);
+      }
+      return {};
+    }
+
+    ZeissTagsXmlSection::Pointer rootTagsSection = MetaXmlUtils::ParseTagsSection(nullptr, tags);
+    if(nullptr == rootTagsSection.get())
+    {
+      return {};
+    }
+
+    for(int c = 0; c < count; c++)
+    {
+      QString Vx = QString("V%1").arg(c);
+      QString Ix = QString("I%1").arg(c);
+      QString Ax = QString("A%1").arg(c);
+
+      QDomElement vxEle = tags.namedItem(Vx).toElement();
+      QDomElement ixEle = tags.namedItem(Ix).toElement();
+      QDomElement axEle = tags.namedItem(Ax).toElement();
+
+      qint32 idValue = ixEle.text().toInt(&ok, 10);
+      QString value = vxEle.text();
+
+      QString key = tagMapping->nameForId(idValue);
+      if(!key.isEmpty())
+      {
+        QDomElement newVxEle = domDocument.createElement(key);
+        QDomText newVxEleText = domDocument.createTextNode(value);
+        newVxEle.appendChild(newVxEleText);
+        tags.insertBefore(newVxEle, ixEle);
+      }
+
+      tags.removeChild(vxEle);
+      tags.removeChild(ixEle);
+      tags.removeChild(axEle);
+    }
+  }
+
+  return domDocument;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AxioVisionV4Converter::ConvertToHumanReadableXMLFile(const QString& axioVisionFile, const QString& outputXmlFile, Observable* obs)
+{
+  QDomDocument doc = ImportAsXML(axioVisionFile, obs);
+
+  QFile outputFile(outputXmlFile);
+  QFileInfo fi(outputXmlFile);
+  if(!outputFile.open(QIODevice::WriteOnly))
+  {
+    if(obs != nullptr)
+    {
+      QString ss = tr("Could not open the output XML file '%1' for writing.").arg(fi.fileName());
+      obs->setErrorCondition(-3005, ss);
+    }
+    return;
+  }
+
+  QTextStream stream(&outputFile);
+  stream << doc.toString();
+  outputFile.close();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void AxioVisionV4Converter::ConvertToTextFile(const QString& axioVisionFile, const QString& outputTextFile, Observable* obs)
 {
   QString text = ImportAsText(axioVisionFile, obs);
@@ -178,7 +438,7 @@ void AxioVisionV4Converter::ConvertToTextFile(const QString& axioVisionFile, con
   {
     if(obs != nullptr)
     {
-      QString ss = tr("Could not open the output text File '%1' for writing.").arg(fi.fileName());
+      QString ss = tr("Could not open the output text file '%1' for writing.").arg(fi.fileName());
       obs->setErrorCondition(-3005, ss);
     }
     return;
@@ -279,8 +539,44 @@ QJsonObject AxioVisionV4Converter::ImportAsJson(const QString& axioVisionFile, O
   // Loop over every image in the _meta.xml file
   for(int p = 0; p < imageCount; p++)
   {
-    tagMetaData = GetPTagMetadata(p, imageCountPadding, root, obs);
+    // Generate the xml tag that is for this image
     QString pTag = GeneratePTag(p, imageCountPadding);
+
+    // Drill down into the XML document....
+    QDomElement photoEle = root.firstChildElement(pTag);
+    if(photoEle.isNull())
+    {
+      if(obs != nullptr)
+      {
+        QString ss = QObject::tr("Could not find the <ROOT><%1> element. Aborting Parsing. Is the file a Zeiss _meta.xml file").arg(pTag);
+        obs->setErrorCondition(-3004, ss);
+      }
+      return {};
+    }
+    // Get the TAGS section
+    QDomElement tags = photoEle.firstChildElement(ITKImageProcessingConstants::Xml::Tags);
+    if(tags.isNull())
+    {
+      if(obs != nullptr)
+      {
+        QString ss = QObject::tr("Could not find the <ROOT><%1><Tags> element. Aborting Parsing. Is the file a Zeiss _meta.xml file").arg(pTag);
+        obs->setErrorCondition(-3005, ss);
+      }
+      return {};
+    }
+    // Now Parse the TAGS section
+    ZeissTagsXmlSection::Pointer photoTagsSection = MetaXmlUtils::ParseTagsSection(nullptr, tags);
+    if(nullptr == photoTagsSection.get())
+    {
+      if(obs != nullptr)
+      {
+        QString ss = QObject::tr("Error Parsing the <ROOT><%1><Tags> element. Aborting Parsing. Is the file a Zeiss AxioVision _meta.xml file").arg(pTag);
+        obs->setErrorCondition(-3006, ss);
+      }
+      return {};
+    }
+    ZeissTagsXmlSection::MetaDataType tagMetaData = photoTagsSection->getMetaDataMap();
+
     QJsonObject pTagObj;
     for(const auto& entry : tagMetaData)
     {
@@ -320,51 +616,6 @@ void AxioVisionV4Converter::ConvertToJsonFile(const QString& axioVisionFile, con
 
   outputFile.write(doc.toJson());
   outputFile.close();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-ZeissTagsXmlSection::MetaDataType AxioVisionV4Converter::GetPTagMetadata(int imageNumber, int padding, const QDomElement& root, Observable* obs)
-{
-  // Generate the xml tag that is for this image
-  QString pTag = GeneratePTag(imageNumber, padding);
-
-  // Drill down into the XML document....
-  QDomElement photoEle = root.firstChildElement(pTag);
-  if(photoEle.isNull())
-  {
-    if(obs != nullptr)
-    {
-      QString ss = QObject::tr("Could not find the <ROOT><%1> element. Aborting Parsing. Is the file a Zeiss _meta.xml file").arg(pTag);
-      obs->setErrorCondition(-3004, ss);
-    }
-    return {};
-  }
-  // Get the TAGS section
-  QDomElement tags = photoEle.firstChildElement(ITKImageProcessingConstants::Xml::Tags);
-  if(tags.isNull())
-  {
-    if(obs != nullptr)
-    {
-      QString ss = QObject::tr("Could not find the <ROOT><%1><Tags> element. Aborting Parsing. Is the file a Zeiss _meta.xml file").arg(pTag);
-      obs->setErrorCondition(-3005, ss);
-    }
-    return {};
-  }
-  // Now Parse the TAGS section
-  ZeissTagsXmlSection::Pointer photoTagsSection = MetaXmlUtils::ParseTagsSection(nullptr, tags);
-  if(nullptr == photoTagsSection.get())
-  {
-    if(obs != nullptr)
-    {
-      QString ss = QObject::tr("Error Parsing the <ROOT><%1><Tags> element. Aborting Parsing. Is the file a Zeiss AxioVision _meta.xml file").arg(pTag);
-      obs->setErrorCondition(-3006, ss);
-    }
-    return {};
-  }
-  ZeissTagsXmlSection::MetaDataType tagMetaData = photoTagsSection->getMetaDataMap();
-  return tagMetaData;
 }
 
 // -----------------------------------------------------------------------------

@@ -74,30 +74,7 @@ void ITKAxioVisionV4Converter::setupFilterParameters()
 
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("AxioVision XML File (_meta.xml)", InputFile, FilterParameter::Parameter, ITKAxioVisionV4Converter, "*.xml"));
 
-  {
-    LinkedChoicesFilterParameter::Pointer parameter = LinkedChoicesFilterParameter::New();
-    parameter->setHumanLabel("Select the desired output file type");
-    parameter->setPropertyName("OutputFileType");
-    parameter->setSetterCallback(SIMPL_BIND_SETTER(ITKAxioVisionV4Converter, this, OutputFileType));
-    parameter->setGetterCallback(SIMPL_BIND_GETTER(ITKAxioVisionV4Converter, this, OutputFileType));
-    parameter->setDefaultValue(0); // Always start with the first selection
-
-    QVector<QString> choices;
-    choices.push_back("Json (*.json)");
-    choices.push_back("Text (*.txt)");
-    parameter->setChoices(choices);
-    QStringList linkedProps;
-    linkedProps << "JsonOutputFile"
-                << "TextOutputFile";
-
-    parameter->setLinkedProperties(linkedProps);
-    parameter->setEditable(false);
-    parameter->setCategory(FilterParameter::Parameter);
-    parameters.push_back(parameter);
-  }
-
-  parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("JSON File", JsonOutputFile, FilterParameter::Parameter, ITKAxioVisionV4Converter, "*.json", "", 0));
-  parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Text File", TextOutputFile, FilterParameter::Parameter, ITKAxioVisionV4Converter, "*.txt", "", 1));
+  parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Output File", OutputFile, FilterParameter::Parameter, ITKAxioVisionV4Converter, "*.json *.txt *.xml", "Supported"));
 
   setFilterParameters(parameters);
 }
@@ -133,40 +110,30 @@ void ITKAxioVisionV4Converter::dataCheck()
     return;
   }
 
-  OutputFileTypeEnum fileTypeEnum = static_cast<OutputFileTypeEnum>(getOutputFileType());
-  if(fileTypeEnum == OutputFileTypeEnum::Json)
-  {
-    if(getJsonOutputFile().isEmpty())
-    {
-      ss = QObject::tr("%1 needs the output JSON file set and it was not.").arg(ClassName());
-      setErrorCondition(-390, ss);
-      return;
-    }
+  QFileInfo outputFi(getOutputFile());
+  QString ext = outputFi.completeSuffix();
 
-    QFileInfo outputFi(getJsonOutputFile());
-    if(outputFi.isDir())
-    {
-      ss = QObject::tr("The output JSON file path '%1' is a directory. Please select a JSON file.").arg(getJsonOutputFile());
-      setErrorCondition(-391, ss);
-      return;
-    }
+  if(getOutputFile().isEmpty())
+  {
+    ss = QObject::tr("%1 needs the output file set and it was not.").arg(ClassName());
+    setErrorCondition(-390, ss);
+    return;
   }
-  else
-  {
-    if(getTextOutputFile().isEmpty())
-    {
-      ss = QObject::tr("%1 needs the output text file set and it was not.").arg(ClassName());
-      setErrorCondition(-390, ss);
-      return;
-    }
 
-    QFileInfo outputFi(getTextOutputFile());
-    if(outputFi.isDir())
-    {
-      ss = QObject::tr("The output text file path '%1' is a directory. Please select a text file.").arg(getTextOutputFile());
-      setErrorCondition(-391, ss);
-      return;
-    }
+  if(outputFi.isDir())
+  {
+    ss = QObject::tr("The output file path '%1' is a directory. Please select a file.").arg(getOutputFile());
+    setErrorCondition(-391, ss);
+    return;
+  }
+
+  if(ext != "json" && ext != "txt" && ext != "xml")
+  {
+    ss = QObject::tr(
+             "%1 only supports JSON, Text, and XML formats for output files, but the output file path selected has a '.%2' extension.  Please select an output file path with the proper extension.")
+             .arg(ClassName(), ext);
+    setErrorCondition(-392, ss);
+    return;
   }
 }
 
@@ -196,14 +163,29 @@ void ITKAxioVisionV4Converter::execute()
     return;
   }
 
-  OutputFileTypeEnum fileTypeEnum = static_cast<OutputFileTypeEnum>(getOutputFileType());
-  if(fileTypeEnum == OutputFileTypeEnum::Json)
+  QFileInfo outputFi(getOutputFile());
+  QString ext = outputFi.completeSuffix();
+
+  if(ext == "json")
   {
-    AxioVisionV4Converter::ConvertToJsonFile(getInputFile(), getJsonOutputFile(), this);
+    AxioVisionV4Converter::ConvertToJsonFile(getInputFile(), getOutputFile(), this);
+  }
+  else if(ext == "txt")
+  {
+    AxioVisionV4Converter::ConvertToTextFile(getInputFile(), getOutputFile(), this);
+  }
+  else if(ext == "xml")
+  {
+    AxioVisionV4Converter::ConvertToHumanReadableXMLFile(getInputFile(), getOutputFile(), this);
   }
   else
   {
-    AxioVisionV4Converter::ConvertToTextFile(getInputFile(), getTextOutputFile(), this);
+    QString ss =
+        QObject::tr(
+            "%1 only supports JSON, Text, and XML formats for output files, but the output file path selected has a '.%2' extension.  Please select an output file path with the proper extension.")
+            .arg(ClassName(), ext);
+    setErrorCondition(-392, ss);
+    return;
   }
 }
 

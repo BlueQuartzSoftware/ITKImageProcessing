@@ -95,6 +95,8 @@ const QString ExemplarJsonOutputFile("@ITKImageProcessing_SOURCE_DIR@/Test/TestF
 const QString JsonOutputFile("@TEST_TEMP_DIR@/XMLConvert.json");
 const QString ExemplarTextOutputFile("@ITKImageProcessing_SOURCE_DIR@/Test/TestFiles/XMLConvertExemplary.txt");
 const QString TextOutputFile("@TEST_TEMP_DIR@/XMLConvert.txt");
+const QString ExemplarXmlOutputFile("@ITKImageProcessing_SOURCE_DIR@/Test/TestFiles/XMLConvertExemplary.xml");
+const QString XmlOutputFile("@TEST_TEMP_DIR@/XMLConvert.xml");
 } // namespace ITKAxioVisionV4ConverterTest
 
 namespace ImportZenInfoMontageTest

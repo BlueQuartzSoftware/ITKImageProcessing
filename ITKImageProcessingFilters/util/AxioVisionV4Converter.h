@@ -67,6 +67,14 @@ public:
   static QJsonObject ImportAsJson(const QString& axioVisionFile, Observable* obs = nullptr);
 
   /**
+   * @brief ImportAsXML
+   * @param axioVisionFile
+   * @param obs
+   * @return
+   */
+  static QDomDocument ImportAsXML(const QString& axioVisionFile, Observable* obs = nullptr);
+
+  /**
    * @brief ConvertToJsonFile
    * @param axioVisionFile
    * @param outputJsonFile
@@ -82,6 +90,14 @@ public:
    */
   static void ConvertToTextFile(const QString& axioVisionFile, const QString& outputTextFile, Observable* obs = nullptr);
 
+  /**
+   * @brief ConvertToHumanReadableXMLFile
+   * @param axioVisionFile
+   * @param outputXmlFile
+   * @param obs
+   */
+  static void ConvertToHumanReadableXMLFile(const QString& axioVisionFile, const QString& outputXmlFile, Observable* obs = nullptr);
+
 private:
   /**
    * @brief GeneratePTag
@@ -90,16 +106,6 @@ private:
    * @return
    */
   static QString GeneratePTag(int imageNumber, int padding);
-
-  /**
-   * @brief GetPTagMetadata
-   * @param imageNumber
-   * @param padding
-   * @param root
-   * @param obs
-   * @return
-   */
-  static ZeissTagsXmlSection::MetaDataType GetPTagMetadata(int imageNumber, int padding, const QDomElement& root, Observable* obs = nullptr);
 
 public:
   AxioVisionV4Converter(const AxioVisionV4Converter&) = delete;            // Copy Constructor Not Implemented
