@@ -1,4 +1,4 @@
-####### Start Root Tags #######
+####### Start Root #######
 BlackValue|0
 Whitevalue|1
 GammaValue|1
@@ -97,9 +97,9 @@ AxioCamMicroScanning|0
 AmplificationIndex|0
 DeviceScalingName|AxioCamMRc5
 AxioCamAnalogGainEnable|0
-####### End Root Tags #######
+####### End Root #######
 
-####### Start Scaling Tags #######
+####### Start Scaling #######
 Factor_0|1.05597
 Type_0|76
 Unit_0|
@@ -115,9 +115,9 @@ Type_2|0
 Unit_2|
 Origin_2|0
 Angle_2|0
-####### End Scaling Tags #######
+####### End Scaling #######
 
-####### Start p0 Tags #######
+####### Start p0 #######
 BlackValue|0
 Whitevalue|1
 GammaValue|1
@@ -201,9 +201,9 @@ AxioCamMicroScanning|0
 AmplificationIndex|0
 DeviceScalingName|AxioCamMRc5
 AxioCamAnalogGainEnable|0
-####### End p0 Tags #######
+####### End p0 #######
 
-####### Start p1 Tags #######
+####### Start p1 #######
 BlackValue|0
 Whitevalue|1
 GammaValue|1
@@ -287,9 +287,9 @@ AxioCamMicroScanning|0
 AmplificationIndex|0
 DeviceScalingName|AxioCamMRc5
 AxioCamAnalogGainEnable|0
-####### End p1 Tags #######
+####### End p1 #######
 
-####### Start p2 Tags #######
+####### Start p2 #######
 BlackValue|0
 Whitevalue|1
 GammaValue|1
@@ -373,9 +373,9 @@ AxioCamMicroScanning|0
 AmplificationIndex|0
 DeviceScalingName|AxioCamMRc5
 AxioCamAnalogGainEnable|0
-####### End p2 Tags #######
+####### End p2 #######
 
-####### Start p3 Tags #######
+####### Start p3 #######
 BlackValue|0
 Whitevalue|1
 GammaValue|1
@@ -459,9 +459,9 @@ AxioCamMicroScanning|0
 AmplificationIndex|0
 DeviceScalingName|AxioCamMRc5
 AxioCamAnalogGainEnable|0
-####### End p3 Tags #######
+####### End p3 #######
 
-####### Start p4 Tags #######
+####### Start p4 #######
 BlackValue|0
 Whitevalue|1
 GammaValue|1
@@ -545,9 +545,9 @@ AxioCamMicroScanning|0
 AmplificationIndex|0
 DeviceScalingName|AxioCamMRc5
 AxioCamAnalogGainEnable|0
-####### End p4 Tags #######
+####### End p4 #######
 
-####### Start p5 Tags #######
+####### Start p5 #######
 BlackValue|0
 Whitevalue|1
 GammaValue|1
@@ -631,5 +631,5 @@ AxioCamMicroScanning|0
 AmplificationIndex|0
 DeviceScalingName|AxioCamMRc5
 AxioCamAnalogGainEnable|0
-####### End p5 Tags #######
+####### End p5 #######
 

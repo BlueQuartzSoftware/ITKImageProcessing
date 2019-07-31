@@ -101,7 +101,7 @@ QString AxioVisionV4Converter::ImportAsText(const QString& axioVisionFile, Obser
   ZeissTagMapping::Pointer tagMapping = ZeissTagMapping::instance();
 
   ZeissTagsXmlSection::MetaDataType tagMetaData = rootTagsSection->getMetaDataMap();
-  stream << "####### Start Root Tags #######\n";
+  stream << "####### Start Root #######\n";
   for(const auto& entry : tagMetaData)
   {
     int32_t tagId = entry->getZeissIdTag();
@@ -109,7 +109,7 @@ QString AxioVisionV4Converter::ImportAsText(const QString& axioVisionFile, Obser
     stream << name << delimiter << entry->toString() << "\n";
   }
 
-  stream << "####### End Root Tags #######\n";
+  stream << "####### End Root #######\n";
   stream << "\n";
 
   QDomElement scaling = root.firstChildElement(ITKImageProcessingConstants::Xml::Scaling);
@@ -125,7 +125,7 @@ QString AxioVisionV4Converter::ImportAsText(const QString& axioVisionFile, Obser
   }
 
   tagMetaData = scalingTagsSection->getMetaDataMap();
-  stream << "####### Start Scaling Tags #######\n";
+  stream << "####### Start Scaling #######\n";
   for(const auto& entry : tagMetaData)
   {
     int32_t tagId = entry->getZeissIdTag();
@@ -133,7 +133,7 @@ QString AxioVisionV4Converter::ImportAsText(const QString& axioVisionFile, Obser
     stream << name << delimiter << entry->toString() << "\n";
   }
 
-  stream << "####### End Scaling Tags #######\n";
+  stream << "####### End Scaling #######\n";
   stream << "\n";
 
   int32_t imageCount = MetaXmlUtils::GetInt32Entry(nullptr, rootTagsSection.get(), Zeiss::MetaXML::ImageCountRawId);
@@ -146,7 +146,7 @@ QString AxioVisionV4Converter::ImportAsText(const QString& axioVisionFile, Obser
     tagMetaData = GetPTagMetadata(p, imageCountPadding, root, obs);
     QString pTag = GeneratePTag(p, imageCountPadding);
 
-    stream << "####### Start " << pTag << " Tags #######\n";
+    stream << "####### Start " << pTag << " #######\n";
     for(const auto& entry : tagMetaData)
     {
       int32_t tagId = entry->getZeissIdTag();
@@ -154,7 +154,7 @@ QString AxioVisionV4Converter::ImportAsText(const QString& axioVisionFile, Obser
       stream << name << delimiter << entry->toString() << "\n";
     }
 
-    stream << "####### End " << pTag << " Tags #######\n";
+    stream << "####### End " << pTag << " #######\n";
     stream << "\n";
   }
 
@@ -248,7 +248,7 @@ QJsonObject AxioVisionV4Converter::ImportAsJson(const QString& axioVisionFile, O
     QString name = tagMapping->nameForId(tagId);
     tagObj[name] = entry->toString();
   }
-  rootObj["Tags"] = tagObj;
+  rootObj["Root"] = tagObj;
 
   QDomElement scaling = root.firstChildElement(ITKImageProcessingConstants::Xml::Scaling);
   ZeissTagsXmlSection::Pointer scalingTagsSection = MetaXmlUtils::ParseScalingSection(nullptr, scaling);

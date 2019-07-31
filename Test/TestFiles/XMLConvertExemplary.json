@@ -1,21 +1,5 @@
 {
-    "Scaling": {
-        "Angle_1": "0",
-        "Angle_2": "0",
-        "Factor_0": "1.05597",
-        "Factor_1": "1.05597",
-        "Factor_2": "1",
-        "Origin_0": "0",
-        "Origin_1": "0",
-        "Origin_2": "0",
-        "Type_0": "76",
-        "Type_1": "76",
-        "Type_2": "0",
-        "Unit_0": "",
-        "Unit_1": "",
-        "Unit_2": ""
-    },
-    "Tags": {
+    "Root": {
         "AmplificationIndex": "0",
         "AxioCamAnalogGainEnable": "0",
         "AxioCamBlackReference": "0",
@@ -114,6 +98,22 @@
         "StagePositionY": "52194.75",
         "Stagecalibrated": "-1",
         "Whitevalue": "1"
+    },
+    "Scaling": {
+        "Angle_1": "0",
+        "Angle_2": "0",
+        "Factor_0": "1.05597",
+        "Factor_1": "1.05597",
+        "Factor_2": "1",
+        "Origin_0": "0",
+        "Origin_1": "0",
+        "Origin_2": "0",
+        "Type_0": "76",
+        "Type_1": "76",
+        "Type_2": "0",
+        "Unit_0": "",
+        "Unit_1": "",
+        "Unit_2": ""
     },
     "p0": {
         "AmplificationIndex": "0",
