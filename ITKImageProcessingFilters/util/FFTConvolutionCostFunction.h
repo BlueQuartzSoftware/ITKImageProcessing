@@ -50,6 +50,8 @@ using PixelValue_T = double;
 class GridMontage;
 using GridMontageShPtr = std::shared_ptr<GridMontage>;
 
+struct RegionBounds;
+
 /**
  * @class FFTConvolutionCostFunction FFTConvolutionCostFunction.h ITKImageProcessingFilters/util/FFTConvolutionCostFunction.h
  * @brief This class was used as a testing class to observe the behavior of the Amoeba optimizer
@@ -113,6 +115,9 @@ public:
   using Filter = itk::FFTConvolutionImageFilter<InputImage, InputImage, OutputImage>;
   using PixelTypei = std::array<int64_t, 2>;
 
+  
+  using CropMap = std::map<GridKey, RegionBounds>;
+
   // The m_overlaps is a vector of pairs, with the first index being the
   // grid location of an overlap region (i.e. 'Row 0, Column: 1; Row: 1, Column: 1')
   // and the second index being the ITK RegionTypes that define the overlap regions
@@ -160,7 +165,9 @@ public:
    * @param image
    * @param overlapPercentage
    */
-  void InitializeOverlaps(const ImageGrid::value_type& image, float overlapPercentage);
+  void InitializePercentageOverlaps(const ImageGrid::value_type& image, float overlapPercentage);
+
+  void InitializePositionalOverlaps(const GridMontageShPtr& montage, size_t row, size_t column);
 
   /**
    * @brief Override for itk::SingleValuedCostFunction::GetDerivative that throws an exception.
@@ -187,8 +194,9 @@ public:
    * @param parameters
    * @param eachImage
    * @param distortedGrid
+   * @param cropMap
    */
-  void applyTransformation(const ParametersType& parameters, const ImageGrid::value_type& eachImage, ImageGrid& distortedGrid) const;
+  void applyTransformation(const ParametersType& parameters, const ImageGrid::value_type& eachImage, ImageGrid& distortedGrid, CropMap& cropMap) const;
 
   /**
    * @brief This method is called by applyTransformation as a parallel task to apply the transform to each pixel.
@@ -200,7 +208,7 @@ public:
    * @param iter
    */
   void applyTransformationPixel(double tolerance, const ParametersType& parameters, const InputImage::Pointer& inputImage, const InputImage::Pointer& distortedImage,
-                                const InputImage::RegionType& bufferedRegion, itk::ImageRegionIterator<InputImage> iter) const;
+                                const InputImage::RegionType& bufferedRegion, itk::ImageRegionIterator<InputImage> iter, const GridKey& gridKey, CropMap& cropMap) const;
 
   /**
    * @brief This method is called by applyTransformationPixel as a parallel task calculating pixel coordinates.
@@ -212,7 +220,20 @@ public:
    * @param x_ref
    * @param y_ref
    */
-  void calculatePixelCoordinates(const ParametersType& parameters, const InputImage::Pointer& inputImage, const InputImage::Pointer& distortedImage, const PixelCoord& pixel, double x_trans, double y_trans, double tolerance, double lastXIndex, double lastYIndex) const;
+  void calculatePixelCoordinates(const ParametersType& parameters, const InputImage::Pointer& inputImage, const InputImage::Pointer& distortedImage, const GridKey& gridKey, CropMap& cropMap, const PixelCoord& pixel, double x_trans, double y_trans, double tolerance, double lastXIndex, double lastYIndex) const;
+
+  void adjustCropMap(const PixelCoord& pixel, const InputImage::Pointer& inputImage, const GridKey& gridKey, CropMap& cropMap) const;
+
+  void cropOverlap(OverlapPair& overlap, ImageGrid& distortedGrid, const CropMap& cropMap) const;
+
+  void cropDistortedGrid(const GridKey& gridKey, ImageGrid& distortedGrid, const CropMap& cropMap) const;
+
+  /**
+  * @brief Crops the OverlapPair using the provided ImageGrid and CropMap
+  */
+  void cropOverlapHorizontal(OverlapPair& overlap, const ImageGrid& distortedGrid, const CropMap& cropMap) const;
+
+  void cropOverlapVertical(OverlapPair& overlap, const ImageGrid& distortedGrid, const CropMap& cropMap) const;
 
   /**
    * @brief This method is called by GetValue to find the FFT Convolution and accumulate the maximum value from each overlap.

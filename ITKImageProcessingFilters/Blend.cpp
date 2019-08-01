@@ -341,9 +341,11 @@ void Blend::execute()
   {
     // The optimizer needs an initial guess; this is supplied through a filter parameter
     itk::AmoebaOptimizer::ParametersType initialParams(xyParameters.size());
+    itk::AmoebaOptimizer::ParametersType initialDelta(xyParameters.size());
     for(size_t idx = 0; idx < xyParameters.size(); ++idx)
     {
       initialParams[idx] = xyParameters[idx];
+      initialDelta[idx] = 0.001;
     }
 
     itk::AmoebaOptimizer::Pointer optimizer = itk::AmoebaOptimizer::New();
@@ -351,6 +353,8 @@ void Blend::execute()
     optimizer->SetFunctionConvergenceTolerance(m_LowTolerance);
     optimizer->SetParametersConvergenceTolerance(m_HighTolerance);
     optimizer->SetInitialPosition(initialParams);
+    optimizer->SetInitialSimplexDelta(initialDelta);
+    optimizer->SetOptimizeWithRestarts(true);
 
     GridMontageShPtr gridMontage = std::dynamic_pointer_cast<GridMontage>(getDataContainerArray()->getMontage(getMontageName()));
 
