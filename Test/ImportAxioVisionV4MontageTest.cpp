@@ -191,9 +191,9 @@ public:
 
     int32_t imageCount = MetaXmlUtils::GetInt32Entry(nullptr, rootTagsSection.get(), Zeiss::MetaXML::ImageCountRawId);
 
-    int32_t m_RowCount = MetaXmlUtils::GetInt32Entry(nullptr, rootTagsSection.get(), Zeiss::MetaXML::ImageCountVId);
+    //    int32_t m_RowCount = MetaXmlUtils::GetInt32Entry(nullptr, rootTagsSection.get(), Zeiss::MetaXML::ImageCountVId);
 
-    int32_t m_ColumnCount = MetaXmlUtils::GetInt32Entry(nullptr, rootTagsSection.get(), Zeiss::MetaXML::ImageCountUId);
+    //    int32_t m_ColumnCount = MetaXmlUtils::GetInt32Entry(nullptr, rootTagsSection.get(), Zeiss::MetaXML::ImageCountUId);
     int imageCountPadding = MetaXmlUtils::CalculatePaddingDigits(imageCount);
 
     // Loop over every image in the _meta.xml file
