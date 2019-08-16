@@ -224,9 +224,11 @@ public:
 
   void adjustCropMap(const PixelCoord& pixel, const InputImage::Pointer& inputImage, const GridKey& gridKey, CropMap& cropMap) const;
 
-  void cropOverlap(OverlapPair& overlap, ImageGrid& distortedGrid, const CropMap& cropMap) const;
+  void updateCropMapBounds(const InputImage::Pointer& inputImage, CropMap& cropMap) const;
 
-  void cropDistortedGrid(const GridKey& gridKey, ImageGrid& distortedGrid, const CropMap& cropMap) const;
+  void cropOverlap(OverlapPair& overlap, ImageGrid& distortedGrid, CropMap& cropMap) const;
+
+  void cropDistortedGrid(const GridKey& gridKey, ImageGrid& distortedGrid, CropMap& cropMap) const;
 
   /**
   * @brief Crops the OverlapPair using the provided ImageGrid and CropMap
@@ -281,6 +283,7 @@ private:
 
   GridMontageShPtr m_Montage = nullptr;
   int m_Degree = 2;
+  size_t m_OverlapAmt;
   std::vector<std::pair<size_t, size_t>> m_IJ;
   OverlapPairs m_Overlaps;
   ImageGrid m_ImageGrid;
