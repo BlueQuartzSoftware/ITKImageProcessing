@@ -177,7 +177,6 @@ endforeach()
 set(_PrivateFilters
   ITKImportMontage
   ITKImageProcessingBase
-  ImportImageMontage
 )
 
 #-----------------

@@ -461,8 +461,8 @@ template <typename PixelType, typename AccumulatePixelType>
 void ITKStitchMontage::stitchMontage(int peakMethodToUse, unsigned streamSubdivisions)
 {
   using ScalarPixelType = typename itk::NumericTraits<PixelType>::ValueType;
-  using ScalarImageType = itk::Dream3DImage<ScalarPixelType, Dimension>;
-  using OriginalImageType = itk::Dream3DImage<PixelType, Dimension>;
+  using ScalarImageType = itk::Image<ScalarPixelType, Dimension>;
+  using OriginalImageType = itk::Image<PixelType, Dimension>;
   using MontageType = itk::TileMontage<ScalarImageType>;
 
   // Create the resampler
@@ -486,11 +486,11 @@ template <typename PixelType, typename Resampler>
 typename Resampler::Pointer ITKStitchMontage::createResampler()
 {
   // using ScalarPixelType = typename itk::NumericTraits<PixelType>::ValueType;
-  // using ScalarImageType = itk::Dream3DImage<ScalarPixelType, Dimension>;
+  // using ScalarImageType = itk::Image<ScalarPixelType, Dimension>;
 
   typename Resampler::Pointer resampler = Resampler::New();
   // resampleF->SetMontage(montage); // doesn't compile, because montage is expected
-  // to be templated using itk::Image, not itk::Dream3DImage
+  // to be templated using itk::Image, not itk::Image
 
   //  typename ScalarImageType::SpacingType sp;
   //  sp.Fill(1.0); // assume unit spacing
@@ -510,7 +510,7 @@ typename Resampler::Pointer ITKStitchMontage::createResampler()
 template <typename PixelType, typename MontageType, typename Resampler>
 void ITKStitchMontage::initializeResampler(typename Resampler::Pointer resampler)
 {
-  using OriginalImageType = itk::Dream3DImage<PixelType, Dimension>;
+  using OriginalImageType = itk::Image<PixelType, Dimension>;
   using TransformType = itk::TranslationTransform<double, Dimension>;
 
   typename MontageType::TileIndexType ind;
@@ -568,7 +568,7 @@ void ITKStitchMontage::initializeResampler(typename Resampler::Pointer resampler
 template <typename PixelType, typename Resampler>
 void ITKStitchMontage::executeStitching(typename Resampler::Pointer resampler, unsigned streamSubdivisions)
 {
-  using OriginalImageType = itk::Dream3DImage<PixelType, Dimension>;
+  using OriginalImageType = itk::Image<PixelType, Dimension>;
 
   notifyStatusMessage("Resampling tiles into the stitched image");
 
@@ -577,7 +577,7 @@ void ITKStitchMontage::executeStitching(typename Resampler::Pointer resampler, u
   progressObs->SetMessagePrefix("Stitching Tiles Together");
   unsigned long progressObsTag = resampler->AddObserver(itk::ProgressEvent(), progressObs);
 
-  using Dream3DImageType = itk::Dream3DImage<PixelType, Dimension>;
+  using Dream3DImageType = itk::Image<PixelType, Dimension>;
   using StreamingFilterType = itk::StreamingImageFilter<OriginalImageType, Dream3DImageType>;
   typename StreamingFilterType::Pointer streamingFilter = StreamingFilterType::New();
   streamingFilter->SetInput(resampler->GetOutput());

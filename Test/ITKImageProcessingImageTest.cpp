@@ -110,7 +110,7 @@ public:
   template <typename PixelType, unsigned int Dimensions> void TestImages()
   {
     // Create image
-    using ImageType = typename itk::Dream3DImage<PixelType, Dimensions>;
+    using ImageType = typename itk::Image<PixelType, Dimensions>;
     typename ImageType::Pointer image = ImageType::New();
     typename ImageType::SizeType size;
     size.Fill(10);

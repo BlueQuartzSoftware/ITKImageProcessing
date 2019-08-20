@@ -194,13 +194,13 @@ protected:
   * @brief writeAs2DStack Writes 3D images as a stack of 2D images.
   */
   template <typename TPixel, unsigned int Dimensions> 
-  void writeAs2DStack(typename itk::Dream3DImage<TPixel, Dimensions>* image, unsigned long z_size);
+  void writeAs2DStack(typename itk::Image<TPixel, Dimensions>* image, unsigned long z_size);
 
   /**
   * @brief writeAsOneFile Writes images as one file.
   */
   template <typename TPixel, unsigned int Dimensions> 
-  void writeAsOneFile(typename itk::Dream3DImage<TPixel, Dimensions>* image);
+  void writeAsOneFile(typename itk::Image<TPixel, Dimensions>* image);
   
   private:
   /**

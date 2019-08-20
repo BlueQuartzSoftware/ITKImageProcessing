@@ -48,7 +48,7 @@ class ITKImageProcessing_EXPORT ITKImageProcessingPlugin : public QObject, publi
 {
   Q_OBJECT
   Q_INTERFACES(ISIMPLibPlugin)
-  Q_PLUGIN_METADATA(IID "com.your.domain.ITKImageProcessingPlugin")
+  Q_PLUGIN_METADATA(IID "net.bluequartz.dream3d.ITKImageProcessingPlugin")
 
 public:
   ITKImageProcessingPlugin();

@@ -128,8 +128,8 @@ void ITKMultiScaleHessianBasedObjectnessImage::dataCheckInternal()
 
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKMultiScaleHessianBasedObjectnessImage::filter()
 {
-  typedef itk::Dream3DImage<InputPixelType, Dimension> InputImageType;
-  typedef itk::Dream3DImage<OutputPixelType, Dimension> OutputImageType;
+  typedef itk::Image<InputPixelType, Dimension> InputImageType;
+  typedef itk::Image<OutputPixelType, Dimension> OutputImageType;
 
   typedef typename itk::NumericTraits<InputPixelType>::RealType RealType;
   typedef itk::SymmetricSecondRankTensor<RealType, Dimension> HessianPixelType;

@@ -111,8 +111,8 @@ void ITKDiscreteGaussianImage::dataCheckInternal()
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ITKDiscreteGaussianImage::filter()
 {
-  using InputImageType = itk::Dream3DImage<InputPixelType, Dimension>;
-  using OutputImageType = itk::Dream3DImage<OutputPixelType, Dimension>;
+  using InputImageType = itk::Image<InputPixelType, Dimension>;
+  using OutputImageType = itk::Image<OutputPixelType, Dimension>;
   // define filter
   using FilterType = itk::DiscreteGaussianImageFilter<InputImageType, OutputImageType>;
   typename FilterType::Pointer filter = FilterType::New();

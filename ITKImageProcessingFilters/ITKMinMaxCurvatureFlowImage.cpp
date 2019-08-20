@@ -107,7 +107,7 @@ void ITKMinMaxCurvatureFlowImage::dataCheckInternal()
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKMinMaxCurvatureFlowImage::filter()
 {
   typedef typename itk::NumericTraits<InputPixelType>::RealType FloatPixelType;
-  typedef itk::Dream3DImage<FloatPixelType, Dimension> FloatImageType;
+  typedef itk::Image<FloatPixelType, Dimension> FloatImageType;
   typedef itk::MinMaxCurvatureFlowImageFilter<FloatImageType, FloatImageType> FilterType;
 
   typename FilterType::Pointer filter = FilterType::New();

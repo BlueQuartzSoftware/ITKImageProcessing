@@ -327,7 +327,7 @@ template <typename PixelType, typename MontageType>
 typename MontageType::Pointer ITKPCMTileRegistration::createMontage(int peakMethodToUse)
 {
   using ScalarPixelType = typename itk::NumericTraits<PixelType>::ValueType;
-  using ScalarImageType = itk::Dream3DImage<ScalarPixelType, Dimension>;
+  using ScalarImageType = itk::Image<ScalarPixelType, Dimension>;
   using PCMType = itk::PhaseCorrelationImageRegistrationMethod<ScalarImageType, ScalarImageType>;
 
   IntVec3Type montageSize;
@@ -372,7 +372,7 @@ typename MontageType::Pointer ITKPCMTileRegistration::createGrayscaleMontage(int
 {
   using ScalarPixelType = typename itk::NumericTraits<PixelType>::ValueType;
   //	using PointType = itk::Point<double, Dimension>;
-  using ScalarImageType = itk::Dream3DImage<ScalarPixelType, Dimension>;
+  using ScalarImageType = itk::Image<ScalarPixelType, Dimension>;
 
   typename MontageType::Pointer montage = createMontage<PixelType, MontageType>(peakMethodToUse);
 
@@ -414,8 +414,8 @@ typename MontageType::Pointer ITKPCMTileRegistration::createRGBMontage(int peakM
 {
   using ScalarPixelType = typename itk::NumericTraits<PixelType>::ValueType;
   //	using PointType = itk::Point<double, Dimension>;
-  using ScalarImageType = itk::Dream3DImage<ScalarPixelType, Dimension>;
-  using OriginalImageType = itk::Dream3DImage<PixelType, Dimension>;
+  using ScalarImageType = itk::Image<ScalarPixelType, Dimension>;
+  using OriginalImageType = itk::Image<PixelType, Dimension>;
 
   typename MontageType::Pointer montage = createMontage<PixelType, MontageType>(peakMethodToUse);
 
@@ -462,7 +462,7 @@ template <typename PixelType>
 void ITKPCMTileRegistration::registerGrayscaleMontage(int peakMethodToUse, unsigned streamSubdivisions)
 {
   using ScalarPixelType = typename itk::NumericTraits<PixelType>::ValueType;
-  using ScalarImageType = itk::Dream3DImage<ScalarPixelType, Dimension>;
+  using ScalarImageType = itk::Image<ScalarPixelType, Dimension>;
   using MontageType = itk::TileMontage<ScalarImageType>;
 
   typename MontageType::Pointer montage = createGrayscaleMontage<PixelType, MontageType>(peakMethodToUse);
@@ -481,7 +481,7 @@ template <typename PixelType>
 void ITKPCMTileRegistration::registerRGBMontage(int peakMethodToUse, unsigned streamSubdivisions)
 {
   using ScalarPixelType = typename itk::NumericTraits<PixelType>::ValueType;
-  using ScalarImageType = itk::Dream3DImage<ScalarPixelType, Dimension>;
+  using ScalarImageType = itk::Image<ScalarPixelType, Dimension>;
   using MontageType = itk::TileMontage<ScalarImageType>;
 
   typename MontageType::Pointer montage = createRGBMontage<PixelType, MontageType>(peakMethodToUse);
