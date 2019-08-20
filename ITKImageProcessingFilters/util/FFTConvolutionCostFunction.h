@@ -106,6 +106,7 @@ public:
   using PixelCoord = itk::Index<IMAGE_DIMENSIONS>;
   using InputImage = itk::Image<PixelValue_T, IMAGE_DIMENSIONS>;
   using OutputImage = itk::Image<PixelValue_T, IMAGE_DIMENSIONS>;
+  using KernelImages = std::pair<InputImage::Pointer, InputImage::Pointer>;
   using GridKey = std::pair<Cell_T, Cell_T>;
   using GridPair = std::pair<GridKey, GridKey>;
   using RegionPair = std::pair<InputImage::RegionType, InputImage::RegionType>;
@@ -270,6 +271,8 @@ private:
    */
   void calculateImageDim(const GridMontageShPtr& montage);
   
+  KernelImages calculateKernelImages(const OverlapPair& overlap, ImageGrid& distortedGrid) const;
+
   /**
    * @brief Returns the pixel index for the given row, column, parameters, and translation amount.
    * @param row
@@ -283,7 +286,8 @@ private:
 
   GridMontageShPtr m_Montage = nullptr;
   int m_Degree = 2;
-  size_t m_OverlapAmt;
+  size_t m_OverlapXAmt;
+  size_t m_OverlapYAmt;
   std::vector<std::pair<size_t, size_t>> m_IJ;
   OverlapPairs m_Overlaps;
   ImageGrid m_ImageGrid;

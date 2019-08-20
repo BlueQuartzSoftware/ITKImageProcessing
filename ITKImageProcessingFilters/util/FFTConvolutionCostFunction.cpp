@@ -185,7 +185,8 @@ void FFTConvolutionCostFunction::Initialize(const GridMontageShPtr& montage, int
   m_ImageGrid.clear();
 
   calculateImageDim(montage);
-  m_OverlapAmt = m_ImageDim_y * overlapPercentage;
+  m_OverlapXAmt = m_ImageDim_x * overlapPercentage;
+  m_OverlapYAmt = m_ImageDim_y * overlapPercentage;
 
   const size_t numRows = montage->getRowCount();
   const size_t numCols = montage->getColumnCount();
@@ -773,10 +774,8 @@ void FFTConvolutionCostFunction::cropDistortedGrid(const GridKey& gridKey, Image
 
   InputImage::RegionType region(origin, size);
   CropFilter::Pointer cropFilter = CropFilter::New();
-  //cropFilter->SetDirectionCollapseToIdentity();
   cropFilter->SetExtractionRegion(region);
   cropFilter->SetInput(distortedIn);
-  //cropFilter->SetExtractionRegion(region);
   cropFilter->SetDirectionCollapseToIdentity();
   cropFilter->Update();
   distortedGrid[gridKey] = cropFilter->GetOutput();
@@ -806,35 +805,32 @@ void FFTConvolutionCostFunction::cropOverlapHorizontal(OverlapPair& overlap, con
   const RegionBounds& region2 = cropMap.at(gridPair.second);
 
   // Begin calculations
-  const size_t topBound = std::max(region1.topBound, region2.topBound);
-  const size_t overlapHeight = std::min(region1.bottomBound - region1.topBound, region2.bottomBound - region2.topBound);
-
-  const size_t upperOverlapWidth = m_OverlapAmt - (img1Size[0] - region1.rightBound);
-  const size_t lowerOverlapWidth = m_OverlapAmt - (region2.leftBound);
+  const size_t upperOverlapWidth = m_OverlapXAmt - (img1Size[0] - region1.rightBound);
+  const size_t lowerOverlapWidth = m_OverlapXAmt - (region2.leftBound);
 
   InputImage::RegionType leftRegion = regionPair.first;
   InputImage::RegionType rightRegion = regionPair.second;
 
   // Update first region
   {
-    PixelCoord kernelOrigin = regionPair.first.GetIndex();
-    InputImage::SizeType kernelSize = regionPair.first.GetSize();
+    PixelCoord kernelOrigin = leftRegion.GetIndex();
+    InputImage::SizeType kernelSize = leftRegion.GetSize();
 
-    kernelOrigin[1] = topBound;
+    kernelOrigin[1] = region1.topBound;
     kernelSize[0] = upperOverlapWidth;
-    kernelSize[1] = overlapHeight;
+    kernelSize[1] = region1.bottomBound - region1.topBound;
 
     leftRegion = InputImage::RegionType(kernelOrigin, kernelSize);
   }
   // Update second region
   {
-    PixelCoord kernelOrigin = regionPair.second.GetIndex();
-    InputImage::SizeType kernelSize = regionPair.second.GetSize();
+    PixelCoord kernelOrigin = rightRegion.GetIndex();
+    InputImage::SizeType kernelSize = rightRegion.GetSize();
 
     kernelOrigin[0] = region2.leftBound;
-    kernelOrigin[1] = topBound;
+    kernelOrigin[1] = region2.topBound;
     kernelSize[0] = lowerOverlapWidth;
-    kernelSize[1] = overlapHeight;
+    kernelSize[1] = region2.bottomBound - region2.topBound;
 
     rightRegion = InputImage::RegionType(kernelOrigin, kernelSize);
   }
@@ -848,8 +844,6 @@ void FFTConvolutionCostFunction::cropOverlapHorizontal(OverlapPair& overlap, con
 // -----------------------------------------------------------------------------
 void FFTConvolutionCostFunction::cropOverlapVertical(OverlapPair& overlap, const ImageGrid& distortedGrid, const CropMap& cropMap) const
 {
-  // TODO: Update
-
   using Size = itk::Size<IMAGE_DIMENSIONS>;
 
   GridPair gridPair = overlap.first;
@@ -869,34 +863,31 @@ void FFTConvolutionCostFunction::cropOverlapVertical(OverlapPair& overlap, const
   const RegionBounds& region2 = cropMap.at(gridPair.second);
 
   // Begin calculations
-  const size_t leftBound = std::max(region1.leftBound, region2.leftBound);
-  const size_t overlapWidth = std::min(region1.rightBound - region1.leftBound, region2.rightBound - region2.leftBound);
-
-  const size_t upperOverlapHeight = m_OverlapAmt - (img1Size[1] - region1.bottomBound);
-  const size_t lowerOverlapHeight = m_OverlapAmt - (region2.topBound);
+  const size_t upperOverlapHeight = m_OverlapYAmt - (img1Size[1] - region1.bottomBound);
+  const size_t lowerOverlapHeight = m_OverlapYAmt - (region2.topBound);
 
   InputImage::RegionType topRegion = regionPair.first;
   InputImage::RegionType botRegion = regionPair.second;
 
   // Update first region
   {
-    PixelCoord kernelOrigin = regionPair.first.GetIndex();
-    InputImage::SizeType kernelSize = regionPair.first.GetSize();
+    PixelCoord kernelOrigin = topRegion.GetIndex();
+    InputImage::SizeType kernelSize = topRegion.GetSize();
 
-    kernelOrigin[0] = leftBound;
-    kernelSize[0] = overlapWidth;
+    kernelOrigin[0] = region1.leftBound;
+    kernelSize[0] = region1.rightBound - region1.leftBound;
     kernelSize[1] = upperOverlapHeight;
     
     topRegion = InputImage::RegionType(kernelOrigin, kernelSize);
   }
   // Update second region
   {
-    PixelCoord kernelOrigin = regionPair.second.GetIndex();
-    InputImage::SizeType kernelSize = regionPair.second.GetSize();
+    PixelCoord kernelOrigin = botRegion.GetIndex();
+    InputImage::SizeType kernelSize = botRegion.GetSize();
 
-    kernelOrigin[0] = leftBound;
+    kernelOrigin[0] = region2.leftBound;
     kernelOrigin[1] = region2.topBound;
-    kernelSize[0] = overlapWidth;
+    kernelSize[0] = region2.rightBound - region2.leftBound;
     kernelSize[1] = lowerOverlapHeight;
 
     botRegion = InputImage::RegionType(kernelOrigin, kernelSize);
@@ -904,6 +895,44 @@ void FFTConvolutionCostFunction::cropOverlapVertical(OverlapPair& overlap, const
 
   regionPair = std::make_pair(topRegion, botRegion);
   overlap = std::make_pair(gridPair, regionPair);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+FFTConvolutionCostFunction::KernelImages FFTConvolutionCostFunction::calculateKernelImages(const OverlapPair& overlap, ImageGrid& distortedGrid) const
+{
+  using CropFilter = itk::ExtractImageFilter<InputImage, InputImage>;
+
+  GridKey imageKey = overlap.first.first;
+  InputImage::Pointer image = distortedGrid.at(imageKey);
+
+  GridKey kernelKey = overlap.first.second;
+  auto imageRegion = overlap.second.first;
+  image->SetRequestedRegion(imageRegion);
+
+  
+
+  RegionBounds bounds = cropMap[gridKey];
+  PixelCoord origin;
+  InputImage::SizeType size;
+  origin[0] = bounds.leftBound;
+  origin[1] = bounds.topBound;
+  size[0] = bounds.rightBound - bounds.leftBound;
+  size[1] = bounds.bottomBound - bounds.topBound;
+  InputImage::Pointer distortedIn = distortedGrid[gridKey];
+
+  // Crop filter
+  InputImage::RegionType region(origin, size);
+  CropFilter::Pointer cropFilter = CropFilter::New();
+  cropFilter->SetExtractionRegion(region);
+  cropFilter->SetInput(distortedIn);
+  cropFilter->SetDirectionCollapseToIdentity();
+  cropFilter->Update();
+
+
+  KernelImages output;
+  return output;
 }
 
 // -----------------------------------------------------------------------------
