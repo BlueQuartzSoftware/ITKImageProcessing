@@ -737,14 +737,13 @@ void FFTConvolutionCostFunction::updateCropMapBounds(const InputImage::Pointer& 
 // -----------------------------------------------------------------------------
 void FFTConvolutionCostFunction::cropOverlap(OverlapPair& overlap, ImageGrid& distortedGrid, CropMap& cropMap) const
 {
-  GridPair gridPair = overlap.first;
-  RegionPair& regionPair = overlap.second;
+  const GridPair& gridPair = overlap.first;
 
-  cropDistortedGrid(gridPair.first, distortedGrid, cropMap);
-  cropDistortedGrid(gridPair.second, distortedGrid, cropMap);
+  const GridKey& gridKey1 = gridPair.first;
+  const GridKey& gridKey2 = gridPair.second;
 
-  GridKey gridKey1 = gridPair.first;
-  GridKey gridKey2 = gridPair.second;
+  cropDistortedGrid(gridKey1, distortedGrid, cropMap);
+  cropDistortedGrid(gridKey2, distortedGrid, cropMap);
 
   if(gridKey1.first == gridKey2.first)
   {
@@ -778,7 +777,13 @@ void FFTConvolutionCostFunction::cropDistortedGrid(const GridKey& gridKey, Image
   cropFilter->SetInput(distortedIn);
   cropFilter->SetDirectionCollapseToIdentity();
   cropFilter->Update();
-  distortedGrid[gridKey] = cropFilter->GetOutput();
+
+  origin[0] = 0;
+  origin[1] = 0;
+  InputImage::RegionType cropRegion(origin, size);
+  InputImage::Pointer distortedOut = cropFilter->GetOutput();
+  distortedOut->SetRequestedRegion(cropRegion);
+  distortedGrid[gridKey] = distortedOut;
 }
 
 // -----------------------------------------------------------------------------
@@ -791,22 +796,22 @@ void FFTConvolutionCostFunction::cropOverlapHorizontal(OverlapPair& overlap, con
   GridPair gridPair = overlap.first;
   RegionPair& regionPair = overlap.second;
 
-  InputImage::RegionType distortedRegion1 = distortedGrid.at(gridPair.first)->GetRequestedRegion();
-  InputImage::RegionType distortedRegion2 = distortedGrid.at(gridPair.second)->GetRequestedRegion();
+  const InputImage::RegionType& distortedRegion1 = distortedGrid.at(gridPair.first)->GetRequestedRegion();
+  const InputImage::RegionType& distortedRegion2 = distortedGrid.at(gridPair.second)->GetRequestedRegion();
 
   // Convenience constants
-  const PixelCoord img1Origin = distortedRegion1.GetIndex();
-  const Size img1Size = distortedRegion1.GetSize();
+  const PixelCoord& img1Origin = distortedRegion1.GetIndex();
+  const Size& img1Size = distortedRegion1.GetSize();
 
-  const PixelCoord img2Origin = distortedRegion2.GetIndex();
-  const Size img2Size = distortedRegion2.GetSize();
+  const PixelCoord& img2Origin = distortedRegion2.GetIndex();
+  const Size& img2Size = distortedRegion2.GetSize();
 
   const RegionBounds& region1 = cropMap.at(gridPair.first);
   const RegionBounds& region2 = cropMap.at(gridPair.second);
 
   // Begin calculations
-  const size_t upperOverlapWidth = m_OverlapXAmt - (img1Size[0] - region1.rightBound);
-  const size_t lowerOverlapWidth = m_OverlapXAmt - (region2.leftBound);
+  const size_t upperOverlapWidth = std::max(static_cast<int64_t>(0), static_cast<int64_t>(m_OverlapXAmt) - static_cast<int64_t>((img1Size[0] - region1.rightBound)));
+  const size_t lowerOverlapWidth = std::max(static_cast<int64_t>(0), static_cast<int64_t>(m_OverlapXAmt) - static_cast<int64_t>((region2.leftBound)));
 
   InputImage::RegionType leftRegion = regionPair.first;
   InputImage::RegionType rightRegion = regionPair.second;
@@ -849,22 +854,22 @@ void FFTConvolutionCostFunction::cropOverlapVertical(OverlapPair& overlap, const
   GridPair gridPair = overlap.first;
   RegionPair& regionPair = overlap.second;
 
-  InputImage::RegionType distortedRegion1 = distortedGrid.at(gridPair.first)->GetRequestedRegion();
-  InputImage::RegionType distortedRegion2 = distortedGrid.at(gridPair.second)->GetRequestedRegion();
+  const InputImage::RegionType& distortedRegion1 = distortedGrid.at(gridPair.first)->GetRequestedRegion();
+  const InputImage::RegionType& distortedRegion2 = distortedGrid.at(gridPair.second)->GetRequestedRegion();
 
   // Convenience constants
-  const PixelCoord img1Origin = distortedRegion1.GetIndex();
-  const Size img1Size = distortedRegion1.GetSize();
+  const PixelCoord& img1Origin = distortedRegion1.GetIndex();
+  const Size& img1Size = distortedRegion1.GetSize();
 
-  const PixelCoord img2Origin = distortedRegion2.GetIndex();
-  const Size img2Size = distortedRegion2.GetSize();
+  const PixelCoord& img2Origin = distortedRegion2.GetIndex();
+  const Size& img2Size = distortedRegion2.GetSize();
 
   const RegionBounds& region1 = cropMap.at(gridPair.first);
   const RegionBounds& region2 = cropMap.at(gridPair.second);
 
   // Begin calculations
-  const size_t upperOverlapHeight = m_OverlapYAmt - (img1Size[1] - region1.bottomBound);
-  const size_t lowerOverlapHeight = m_OverlapYAmt - (region2.topBound);
+  const size_t upperOverlapHeight = std::max(static_cast<int64_t>(0), static_cast<int64_t>(m_OverlapYAmt) - static_cast<int64_t>((img1Size[1] - region1.bottomBound)));
+  const size_t lowerOverlapHeight = std::max(static_cast<int64_t>(0), static_cast<int64_t>(m_OverlapYAmt) - (region2.topBound));
 
   InputImage::RegionType topRegion = regionPair.first;
   InputImage::RegionType botRegion = regionPair.second;
@@ -905,33 +910,32 @@ FFTConvolutionCostFunction::KernelImages FFTConvolutionCostFunction::calculateKe
   using CropFilter = itk::ExtractImageFilter<InputImage, InputImage>;
 
   GridKey imageKey = overlap.first.first;
-  InputImage::Pointer image = distortedGrid.at(imageKey);
+  InputImage::Pointer baseImg = distortedGrid.at(imageKey);
+  auto imgRegion = overlap.second.first;
+  baseImg->SetRequestedRegion(imgRegion);
 
   GridKey kernelKey = overlap.first.second;
-  auto imageRegion = overlap.second.first;
-  image->SetRequestedRegion(imageRegion);
-
+  InputImage::Pointer kernelImg = distortedGrid[kernelKey];
+  auto kernelRegion = overlap.second.second;
+  kernelImg->SetRequestedRegion(kernelRegion);
   
-
-  RegionBounds bounds = cropMap[gridKey];
-  PixelCoord origin;
-  InputImage::SizeType size;
-  origin[0] = bounds.leftBound;
-  origin[1] = bounds.topBound;
-  size[0] = bounds.rightBound - bounds.leftBound;
-  size[1] = bounds.bottomBound - bounds.topBound;
-  InputImage::Pointer distortedIn = distortedGrid[gridKey];
-
   // Crop filter
-  InputImage::RegionType region(origin, size);
   CropFilter::Pointer cropFilter = CropFilter::New();
-  cropFilter->SetExtractionRegion(region);
-  cropFilter->SetInput(distortedIn);
+  cropFilter->SetExtractionRegion(imgRegion);
+  cropFilter->SetInput(baseImg);
   cropFilter->SetDirectionCollapseToIdentity();
   cropFilter->Update();
 
+  InputImage::Pointer out1 = cropFilter->GetOutput();
 
-  KernelImages output;
+  cropFilter->SetExtractionRegion(kernelRegion);
+  cropFilter->SetInput(kernelImg);
+  cropFilter->SetDirectionCollapseToIdentity();
+  cropFilter->Update();
+
+  InputImage::Pointer out2 = cropFilter->GetOutput();
+
+  KernelImages output = { out1, out2 };
   return output;
 }
 
@@ -941,26 +945,16 @@ FFTConvolutionCostFunction::KernelImages FFTConvolutionCostFunction::calculateKe
 void FFTConvolutionCostFunction::findFFTConvolutionAndMaxValue(const OverlapPair& overlap, ImageGrid& distortedGrid, MeasureType& residual) const
 {
   static MutexType mutex;
-  // Set the filter's image to the overlap region of the image
-  GridKey imageKey = overlap.first.first;
-  InputImage::Pointer image = distortedGrid.at(imageKey);
+
+  auto kernelImgs = calculateKernelImages(overlap, distortedGrid);
+
   Filter::Pointer filter = Filter::New();
-
-  GridKey kernelKey = overlap.first.second;
-  auto imageRegion = overlap.second.first;
-  image->SetRequestedRegion(imageRegion);
-  filter->SetInput(image);
-
-  // Set the filter's kernel to the overlap region of the kernel
-  InputImage::Pointer kernel = distortedGrid.at(kernelKey);
-  kernel->SetRequestedRegion(overlap.second.second);
-  filter->SetKernelImage(kernel);
+  filter->SetInput(kernelImgs.first);
+  filter->SetKernelImage(kernelImgs.second);
 
   // Run the filter
   filter->Update();
   OutputImage::Pointer fftConvolve = filter->GetOutput();
-
-  // NOTE It may be useful for debugging purposes to write the output image to a file here
 
   // Increment by the maximum value of the output of the fftConvolve
   // NOTE This methodology of getting the max element from the fftConvolve
