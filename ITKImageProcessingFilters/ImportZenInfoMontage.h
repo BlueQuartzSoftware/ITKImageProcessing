@@ -63,6 +63,8 @@ class ITKImageProcessing_EXPORT ImportZenInfoMontage : public AbstractFilter
   PYB11_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
   PYB11_PROPERTY(int32_t RowCount READ getRowCount)
   PYB11_PROPERTY(int32_t ColumnCount READ getColumnCount)
+  PYB11_PROPERTY(IntVec2Type MontageStart READ getMontageStart WRITE setMontageStart)
+  PYB11_PROPERTY(IntVec2Type MontageEnd READ getMontageEnd WRITE setMontageEnd)
 
   Q_DECLARE_PRIVATE(ImportZenInfoMontage)
 
@@ -92,6 +94,12 @@ public:
 
   SIMPL_FILTER_PARAMETER(QString, InputFile)
   Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
+
+  SIMPL_FILTER_PARAMETER(IntVec2Type, MontageStart)
+  Q_PROPERTY(IntVec2Type MontageStart READ getMontageStart WRITE setMontageStart)
+
+  SIMPL_FILTER_PARAMETER(IntVec2Type, MontageEnd)
+  Q_PROPERTY(IntVec2Type MontageEnd READ getMontageEnd WRITE setMontageEnd)
 
   SIMPL_FILTER_PARAMETER(DataArrayPath, DataContainerPath)
   Q_PROPERTY(DataArrayPath DataContainerPath READ getDataContainerPath WRITE setDataContainerPath)

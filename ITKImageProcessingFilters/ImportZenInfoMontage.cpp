@@ -21,6 +21,7 @@
 #include "SIMPLib/FilterParameters/FloatFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
+#include "SIMPLib/FilterParameters/IntVec2FilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/PreflightUpdatedValueFilterParameter.h"
@@ -83,6 +84,8 @@ class ImportZenInfoMontagePrivate
   FloatVec3Type m_ColorWeights;
   QDateTime m_TimeStamp_Cache;
   QString m_MontageInformation;
+  int32_t m_MaxRow = 0;
+  int32_t m_MaxCol = 0;
   std::vector<ImportZenInfoMontage::BoundsType> m_BoundsCache;
 };
 
@@ -114,6 +117,8 @@ ImportZenInfoMontage::ImportZenInfoMontage()
   m_ColorWeights = FloatVec3Type(0.2125f, 0.7154f, 0.0721f);
   m_Origin = FloatVec3Type(0.0f, 0.0f, 0.0f);
   m_Spacing = FloatVec3Type(1.0f, 1.0f, 1.0f);
+  m_MontageStart = IntVec2Type(0, 0);
+  m_MontageEnd = IntVec2Type(0, 0);
 }
 
 // -----------------------------------------------------------------------------
@@ -147,6 +152,9 @@ void ImportZenInfoMontage::setupFilterParameters()
   PreflightUpdatedValueFilterParameter::Pointer param = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Montage Information", MontageInformation, FilterParameter::Parameter, ImportZenInfoMontage);
   param->setReadOnly(true);
   parameters.push_back(param);
+
+  parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage Start (Col, Row) [Inclusive, Zero Based]", MontageStart, FilterParameter::Parameter, ImportZenInfoMontage));
+  parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage End (Col, Row) [Inclusive, Zero Based]", MontageEnd, FilterParameter::Parameter, ImportZenInfoMontage));
 
   QStringList linkedProps("Origin");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Change Origin", ChangeOrigin, FilterParameter::Parameter, ImportZenInfoMontage, linkedProps));
@@ -235,7 +243,6 @@ void ImportZenInfoMontage::dataCheck()
 
   QDateTime timeStamp(fi.lastModified());
 
-
   // clang-format off
   if(m_InputFile ==  d_ptr->m_InputFile_Cache
     && m_DataContainerPath == d_ptr->m_DataContainerPath
@@ -295,6 +302,43 @@ void ImportZenInfoMontage::dataCheck()
     generateCache(exportDocument);
   }
 
+  if(m_MontageStart[0] > m_MontageEnd[0])
+  {
+    QString ss = QObject::tr("Montage Start Column (%1) must be equal or less than Montage End Column(%2)").arg(m_MontageStart[0]).arg(m_MontageEnd[0]);
+    setErrorCondition(-396, ss);
+    return;
+  }
+  if(m_MontageStart[1] > m_MontageEnd[1])
+  {
+    QString ss = QObject::tr("Montage Start Row (%1) must be equal or less than Montage End Row(%2)").arg(m_MontageStart[1]).arg(m_MontageEnd[1]);
+    setErrorCondition(-397, ss);
+    return;
+  }
+  if(m_MontageStart[0] < 0 || m_MontageEnd[0] < 0)
+  {
+    QString ss = QObject::tr("Montage Start Column (%1) and Montage End Column(%2) must be greater than Zero (0)").arg(m_MontageStart[0]).arg(m_MontageEnd[0]);
+    setErrorCondition(-398, ss);
+    return;
+  }
+  if(m_MontageStart[1] < 0 || m_MontageEnd[1] < 0)
+  {
+    QString ss = QObject::tr("Montage Start Row (%1) and Montage End Row(%2) must be greater than Zero (0)").arg(m_MontageStart[1]).arg(m_MontageEnd[1]);
+    setErrorCondition(-399, ss);
+    return;
+  }
+  if(m_MontageStart[0] > d_ptr->m_MaxCol || m_MontageEnd[0] > d_ptr->m_MaxCol)
+  {
+    QString ss = QObject::tr("Montage Start Column (%1) and Montage End Column(%2) must be <= %3").arg(m_MontageStart[0]).arg(m_MontageEnd[0]).arg(d_ptr->m_MaxCol);
+    setErrorCondition(-400, ss);
+    return;
+  }
+  if(m_MontageStart[1] > d_ptr->m_MaxRow || m_MontageEnd[1] > d_ptr->m_MaxRow)
+  {
+    QString ss = QObject::tr("Montage Start Row (%1) and Montage End Row(%2) must be <= %3").arg(m_MontageStart[1]).arg(m_MontageEnd[1]).arg(d_ptr->m_MaxRow);
+    setErrorCondition(-401, ss);
+    return;
+  }
+
   generateDataStructure();
 }
 
@@ -304,12 +348,12 @@ void ImportZenInfoMontage::dataCheck()
 void ImportZenInfoMontage::preflight()
 {
   // These are the REQUIRED lines of CODE to make sure the filter behaves correctly
-  setInPreflight(true); // Set the fact that we are preflighting.
-  emit preflightAboutToExecute(); // Emit this signal so that other widgets can do one file update
+  setInPreflight(true);              // Set the fact that we are preflighting.
+  emit preflightAboutToExecute();    // Emit this signal so that other widgets can do one file update
   emit updateFilterParameters(this); // Emit this signal to have the widgets push their values down to the filter
-  dataCheck(); // Run our DataCheck to make sure everthing is setup correctly
-  emit preflightExecuted(); // We are done preflighting this filter
-  setInPreflight(false); // Inform the system this filter is NOT in preflight mode anymore.
+  dataCheck();                       // Run our DataCheck to make sure everthing is setup correctly
+  emit preflightExecuted();          // We are done preflighting this filter
+  setInPreflight(false);             // Inform the system this filter is NOT in preflight mode anymore.
 }
 
 // -----------------------------------------------------------------------------
@@ -343,7 +387,14 @@ void ImportZenInfoMontage::execute()
 // -----------------------------------------------------------------------------
 QString ImportZenInfoMontage::getMontageInformation()
 {
-  return d_ptr->m_MontageInformation;
+  QString info = d_ptr->m_MontageInformation;
+  QString montageInfo;
+  QTextStream ss(&montageInfo);
+  int32_t importedCols = m_MontageEnd[0] - m_MontageStart[0] + 1;
+  int32_t importedRows = m_MontageEnd[1] - m_MontageStart[1] + 1;
+  ss << "\nImported Columns: " << importedCols << "  Imported Rows: " << importedRows << "  Imported Image Count: " << (importedCols * importedRows);
+  info = info.replace(ITKImageProcessing::Montage::k_MontageInfoReplaceKeyword, montageInfo);
+  return info;
 }
 
 // -----------------------------------------------------------------------------
@@ -365,6 +416,8 @@ void ImportZenInfoMontage::flushCache()
   d_ptr->m_Origin = FloatVec3Type(0.0f, 0.0f, 0.0f);
   d_ptr->m_Spacing = FloatVec3Type(1.0f, 1.0f, 1.0f);
   d_ptr->m_ColorWeights = FloatVec3Type(0.2125f, 0.7154f, 0.0721f);
+  d_ptr->m_MaxCol = 0;
+  d_ptr->m_MaxRow = 0;
   d_ptr->m_BoundsCache.clear();
 }
 
@@ -472,6 +525,10 @@ void ImportZenInfoMontage::generateCache(QDomElement& exportDocument)
     minCoord[0] = std::min(bound.Origin[0], minCoord[0]);
     minCoord[1] = std::min(bound.Origin[1], minCoord[1]);
     minCoord[2] = 0.0f;
+
+    d_ptr->m_MaxCol = std::max(bound.Col, d_ptr->m_MaxCol);
+    d_ptr->m_MaxRow = std::max(bound.Row, d_ptr->m_MaxRow);
+
     // Finally set the bound into the bounds vector
     bounds[i] = bound;
   }
@@ -527,7 +584,8 @@ void ImportZenInfoMontage::generateCache(QDomElement& exportDocument)
 
   QString montageInfo;
   QTextStream ss(&montageInfo);
-  ss << "Columns=" << m_ColumnCount << "  Rows=" << m_RowCount << "  Num. Images=" << bounds.size();
+  ss << "Max Column: " << m_ColumnCount - 1 << "  Max Row: " << m_RowCount - 1 << "  Image Count: " << bounds.size();
+  ss << ITKImageProcessing::Montage::k_MontageInfoReplaceKeyword;
 
   FloatVec3Type overrideOrigin = minCoord;
   FloatVec3Type overrideSpacing = minSpacing;
@@ -547,11 +605,11 @@ void ImportZenInfoMontage::generateCache(QDomElement& exportDocument)
     for(auto& bound : bounds)
     {
       // BoundsType& bound = bounds.at(i);
-      std::transform(bound.Origin.begin(), bound.Origin.end(), delta.begin(), bound.Origin.begin(), std::minus<float>());
+      std::transform(bound.Origin.begin(), bound.Origin.end(), delta.begin(), bound.Origin.begin(), std::minus<>());
     }
   }
   ss << "\nOrigin: " << overrideOrigin[0] << ", " << overrideOrigin[1] << ", " << overrideOrigin[2];
-  ss << "  Spacing: " << overrideSpacing[0] << ", " << overrideSpacing[1] << ", " << overrideSpacing[2];
+  ss << "\nSpacing: " << overrideSpacing[0] << ", " << overrideSpacing[1] << ", " << overrideSpacing[2];
   d_ptr->m_MontageInformation = montageInfo;
   setBoundsCache(bounds);
 }
@@ -570,6 +628,11 @@ void ImportZenInfoMontage::generateDataStructure()
 
   for(const auto& bound : bounds)
   {
+    if(bound.Row < m_MontageStart[1] || bound.Row > m_MontageEnd[1] || bound.Col < m_MontageStart[0] || bound.Col > m_MontageEnd[0])
+    {
+      continue;
+    }
+
     // Create our DataContainer Name using a Prefix and a rXXcYY format.
     QString dcName = getDataContainerPath().getDataContainerName();
     QTextStream dcNameStream(&dcName);
@@ -621,6 +684,11 @@ void ImportZenInfoMontage::readImages()
 
   for(const auto& bound : bounds)
   {
+    if(bound.Row < m_MontageStart[1] || bound.Row > m_MontageEnd[1] || bound.Col < m_MontageStart[0] || bound.Col > m_MontageEnd[0])
+    {
+      continue;
+    }
+
     QString msg;
     QTextStream out(&msg);
     out << "Importing " << bound.Filename;

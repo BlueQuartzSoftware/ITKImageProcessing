@@ -48,6 +48,7 @@
 #include "SIMPLib/FilterParameters/FloatFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
+#include "SIMPLib/FilterParameters/IntVec2FilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/PreflightUpdatedValueFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
@@ -102,6 +103,8 @@ class ImportAxioVisionV4MontagePrivate
   QString m_MontageInformation;
   bool m_ImportAllMetaData = false;
   QString m_MetaDataAttributeMatrixName;
+  int32_t m_MaxRow = 0;
+  int32_t m_MaxCol = 0;
   std::vector<ImportAxioVisionV4Montage::BoundsType> m_BoundsCache;
 };
 
@@ -136,6 +139,8 @@ ImportAxioVisionV4Montage::ImportAxioVisionV4Montage()
   m_ColorWeights = FloatVec3Type(0.2125f, 0.7154f, 0.0721f);
   m_Origin = FloatVec3Type(0.0f, 0.0f, 0.0f);
   m_Spacing = FloatVec3Type(1.0f, 1.0f, 1.0f);
+  m_MontageStart = IntVec2Type(0, 0);
+  m_MontageEnd = IntVec2Type(0, 0);
 }
 
 // -----------------------------------------------------------------------------
@@ -169,6 +174,9 @@ void ImportAxioVisionV4Montage::setupFilterParameters()
   PreflightUpdatedValueFilterParameter::Pointer param = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Montage Information", MontageInformation, FilterParameter::Parameter, ImportAxioVisionV4Montage);
   param->setReadOnly(true);
   parameters.push_back(param);
+
+  parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage Start (Col, Row) [Inclusive, Zero Based]", MontageStart, FilterParameter::Parameter, ImportAxioVisionV4Montage));
+  parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage End (Col, Row) [Inclusive, Zero Based]", MontageEnd, FilterParameter::Parameter, ImportAxioVisionV4Montage));
 
   parameters.push_back(SIMPL_NEW_BOOL_FP("Import All MetaData", ImportAllMetaData, FilterParameter::Parameter, ImportAxioVisionV4Montage));
 
@@ -328,6 +336,43 @@ void ImportAxioVisionV4Montage::dataCheck()
     generateCache(root);
   }
 
+  if(m_MontageStart[0] > m_MontageEnd[0])
+  {
+    QString ss = QObject::tr("Montage Start Column (%1) must be equal or less than Montage End Column(%2)").arg(m_MontageStart[0]).arg(m_MontageEnd[0]);
+    setErrorCondition(-396, ss);
+    return;
+  }
+  if(m_MontageStart[1] > m_MontageEnd[1])
+  {
+    QString ss = QObject::tr("Montage Start Row (%1) must be equal or less than Montage End Row(%2)").arg(m_MontageStart[1]).arg(m_MontageEnd[1]);
+    setErrorCondition(-397, ss);
+    return;
+  }
+  if(m_MontageStart[0] < 0 || m_MontageEnd[0] < 0)
+  {
+    QString ss = QObject::tr("Montage Start Column (%1) and Montage End Column(%2) must be greater than Zero (0)").arg(m_MontageStart[0]).arg(m_MontageEnd[0]);
+    setErrorCondition(-398, ss);
+    return;
+  }
+  if(m_MontageStart[1] < 0 || m_MontageEnd[1] < 0)
+  {
+    QString ss = QObject::tr("Montage Start Row (%1) and Montage End Row(%2) must be greater than Zero (0)").arg(m_MontageStart[1]).arg(m_MontageEnd[1]);
+    setErrorCondition(-399, ss);
+    return;
+  }
+  if(m_MontageStart[0] > d_ptr->m_MaxCol || m_MontageEnd[0] > d_ptr->m_MaxCol)
+  {
+    QString ss = QObject::tr("Montage Start Column (%1) and Montage End Column(%2) must be <= %3").arg(m_MontageStart[0]).arg(m_MontageEnd[0]).arg(d_ptr->m_MaxCol);
+    setErrorCondition(-400, ss);
+    return;
+  }
+  if(m_MontageStart[1] > d_ptr->m_MaxRow || m_MontageEnd[1] > d_ptr->m_MaxRow)
+  {
+    QString ss = QObject::tr("Montage Start Row (%1) and Montage End Row(%2) must be <= %3").arg(m_MontageStart[1]).arg(m_MontageEnd[1]).arg(d_ptr->m_MaxRow);
+    setErrorCondition(-401, ss);
+    return;
+  }
+
   generateDataStructure();
 }
 
@@ -395,12 +440,21 @@ void ImportAxioVisionV4Montage::flushCache()
   d_ptr->m_BoundsCache.clear();
   d_ptr->m_ImportAllMetaData = false;
   d_ptr->m_MetaDataAttributeMatrixName = "";
+  d_ptr->m_MaxCol = 0;
+  d_ptr->m_MaxRow = 0;
 }
 
 // -----------------------------------------------------------------------------
 QString ImportAxioVisionV4Montage::getMontageInformation()
 {
-  return d_ptr->m_MontageInformation;
+  QString info = d_ptr->m_MontageInformation;
+  QString montageInfo;
+  QTextStream ss(&montageInfo);
+  int32_t importedCols = m_MontageEnd[0] - m_MontageStart[0] + 1;
+  int32_t importedRows = m_MontageEnd[1] - m_MontageStart[1] + 1;
+  ss << "\nImported Columns: " << importedCols << "  Imported Rows: " << importedRows << "  Imported Image Count: " << (importedCols * importedRows);
+  info = info.replace(ITKImageProcessing::Montage::k_MontageInfoReplaceKeyword, montageInfo);
+  return info;
 }
 
 // -----------------------------------------------------------------------------
@@ -544,7 +598,8 @@ void ImportAxioVisionV4Montage::generateCache(QDomElement& root)
       }
       bound.MetaData = metaAm;
     }
-
+    d_ptr->m_MaxCol = std::max(bound.Col, d_ptr->m_MaxCol);
+    d_ptr->m_MaxRow = std::max(bound.Row, d_ptr->m_MaxRow);
     bounds[p] = bound;
   }
 
@@ -595,8 +650,8 @@ void ImportAxioVisionV4Montage::generateCache(QDomElement& root)
 
   QString montageInfo;
   QTextStream ss(&montageInfo);
-  ss << "Columns=" << m_ColumnCount << "  Rows=" << m_RowCount << "  Num. Images=" << imageCount;
-
+  ss << "Max Column: " << m_ColumnCount - 1 << "  Max Row: " << m_RowCount - 1 << "  Image Count: " << imageCount;
+  ss << ITKImageProcessing::Montage::k_MontageInfoReplaceKeyword;
   FloatVec3Type overrideOrigin = minCoord;
   FloatVec3Type overrideSpacing = minSpacing;
 
@@ -630,7 +685,8 @@ void ImportAxioVisionV4Montage::generateCache(QDomElement& root)
     }
   }
   ss << "\nOrigin: " << overrideOrigin[0] << ", " << overrideOrigin[1] << ", " << overrideOrigin[2];
-  ss << "  Spacing: " << overrideSpacing[0] << ", " << overrideSpacing[1] << ", " << overrideSpacing[2];
+  ss << "\nSpacing: " << overrideSpacing[0] << ", " << overrideSpacing[1] << ", " << overrideSpacing[2];
+
   d_ptr->m_MontageInformation = montageInfo;
   setBoundsCache(bounds);
 }
@@ -649,6 +705,11 @@ void ImportAxioVisionV4Montage::generateDataStructure()
 
   for(const auto& bound : bounds)
   {
+    if(bound.Row < m_MontageStart[1] || bound.Row > m_MontageEnd[1] || bound.Col < m_MontageStart[0] || bound.Col > m_MontageEnd[0])
+    {
+      continue;
+    }
+
     // Create our DataContainer Name using a Prefix and a rXXcYY format.
     QString dcName = getDataContainerPath().getDataContainerName();
     QTextStream dcNameStream(&dcName);
@@ -752,6 +813,11 @@ void ImportAxioVisionV4Montage::readImages()
 
   for(const auto& bound : bounds)
   {
+    if(bound.Row < m_MontageStart[1] || bound.Row > m_MontageEnd[1] || bound.Col < m_MontageStart[0] || bound.Col > m_MontageEnd[0])
+    {
+      continue;
+    }
+
     QString msg;
     QTextStream out(&msg);
     out << "Importing " << bound.Filename;
@@ -806,7 +872,7 @@ void ImportAxioVisionV4Montage::readImages()
     {
       AbstractFilter::Pointer grayScaleFilter = MontageImportHelper::CreateColorToGrayScaleFilter(this, dap, getColorWeights(), ITKImageProcessing::Montage::k_GrayScaleTempArrayName);
       grayScaleFilter->setDataContainerArray(importImageDca); // Use the Data COntainer array that was use for the import. It is setup and ready to go
-      connect(grayScaleFilter.get(), SIGNAL(messageGenerated(const AbstractMessage::Pointer&)), this, SIGNAL(messageGenerated(const AbstractMessage::Pointer&)));
+      connect(grayScaleFilter.get(), SIGNAL(messageGenerated(AbstractMessage::Pointer)), this, SIGNAL(messageGenerated(AbstractMessage::Pointer)));
       grayScaleFilter->execute();
       if(grayScaleFilter->getErrorCode() < 0)
       {
@@ -907,7 +973,7 @@ AbstractFilter::Pointer ImportAxioVisionV4Montage::newFilterInstance(bool copyFi
 // -----------------------------------------------------------------------------
 const QString ImportAxioVisionV4Montage::getCompiledLibraryName() const
 {
-  return ITKImageProcessingConstants::ITKImageProcessingBaseName;;
+  return ITKImageProcessingConstants::ITKImageProcessingBaseName;
 }
 
 // -----------------------------------------------------------------------------

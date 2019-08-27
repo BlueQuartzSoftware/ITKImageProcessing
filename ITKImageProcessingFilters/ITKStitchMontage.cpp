@@ -627,9 +627,9 @@ template <typename PixelType, typename Resampler> void ITKStitchMontage::execute
   notifyStatusMessage("Resampling tiles into the stitched image");
 
   itk::ProgressObserver::Pointer progressObs = itk::ProgressObserver::New();
-  progressObs->setFilter(this);
-  progressObs->setMessagePrefix("Stitching Tiles Together");
-  unsigned long progressObsTag = resampler->AddObserver(itk::ProgressEvent(), progressObs.get());
+  progressObs->SetFilter(this);
+  progressObs->SetMessagePrefix("Stitching Tiles Together");
+  unsigned long progressObsTag = resampler->AddObserver(itk::ProgressEvent(), progressObs.GetPointer());
 
   using Dream3DImageType = itk::Dream3DImage<PixelType, Dimension>;
   using StreamingFilterType = itk::StreamingImageFilter<OriginalImageType, Dream3DImageType>;

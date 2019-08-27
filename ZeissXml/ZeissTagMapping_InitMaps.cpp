@@ -567,6 +567,21 @@ void ZeissTagMapping::initIdNameMap()
   _idNameMap[Zeiss::MetaXML::AuroxCamReserved4Id] = Zeiss::MetaXML::AuroxCamReserved4;
   _idNameMap[Zeiss::MetaXML::AuroxCamReserved5Id] = Zeiss::MetaXML::AuroxCamReserved5;
 
+  _idNameMap[Zeiss::MetaXML::Factor_0Id] = Zeiss::MetaXML::Factor_0;
+  _idNameMap[Zeiss::MetaXML::Type_0Id] = Zeiss::MetaXML::Type_0;
+  _idNameMap[Zeiss::MetaXML::Unit_0Id] = Zeiss::MetaXML::Unit_0;
+  _idNameMap[Zeiss::MetaXML::Origin_0Id] = Zeiss::MetaXML::Origin_0;
+  _idNameMap[Zeiss::MetaXML::Angle_0Id] = Zeiss::MetaXML::Angle_0;
+  _idNameMap[Zeiss::MetaXML::Factor_1Id] = Zeiss::MetaXML::Factor_1;
+  _idNameMap[Zeiss::MetaXML::Type_1Id] = Zeiss::MetaXML::Type_1;
+  _idNameMap[Zeiss::MetaXML::Unit_1Id] = Zeiss::MetaXML::Unit_1;
+  _idNameMap[Zeiss::MetaXML::Origin_1Id] = Zeiss::MetaXML::Origin_1;
+  _idNameMap[Zeiss::MetaXML::Angle_1Id] = Zeiss::MetaXML::Angle_1;
+  _idNameMap[Zeiss::MetaXML::Factor_2Id] = Zeiss::MetaXML::Factor_2;
+  _idNameMap[Zeiss::MetaXML::Type_2Id] = Zeiss::MetaXML::Type_2;
+  _idNameMap[Zeiss::MetaXML::Unit_2Id] = Zeiss::MetaXML::Unit_2;
+  _idNameMap[Zeiss::MetaXML::Origin_2Id] = Zeiss::MetaXML::Origin_2;
+  _idNameMap[Zeiss::MetaXML::Angle_2Id] = Zeiss::MetaXML::Angle_2;
 }
 
 // -----------------------------------------------------------------------------
@@ -1103,6 +1118,21 @@ void ZeissTagMapping::initNameIdMap()
   _nameIdMap[Zeiss::MetaXML::AuroxCamReserved4] = Zeiss::MetaXML::AuroxCamReserved4Id;
   _nameIdMap[Zeiss::MetaXML::AuroxCamReserved5] = Zeiss::MetaXML::AuroxCamReserved5Id;
 
+  _nameIdMap[Zeiss::MetaXML::Factor_0] = Zeiss::MetaXML::Factor_0Id;
+  _nameIdMap[Zeiss::MetaXML::Type_0] = Zeiss::MetaXML::Type_0Id;
+  _nameIdMap[Zeiss::MetaXML::Unit_0] = Zeiss::MetaXML::Unit_0Id;
+  _nameIdMap[Zeiss::MetaXML::Origin_0] = Zeiss::MetaXML::Origin_0Id;
+  _nameIdMap[Zeiss::MetaXML::Angle_0] = Zeiss::MetaXML::Angle_0Id;
+  _nameIdMap[Zeiss::MetaXML::Factor_1] = Zeiss::MetaXML::Factor_1Id;
+  _nameIdMap[Zeiss::MetaXML::Type_1] = Zeiss::MetaXML::Type_1Id;
+  _nameIdMap[Zeiss::MetaXML::Unit_1] = Zeiss::MetaXML::Unit_1Id;
+  _nameIdMap[Zeiss::MetaXML::Origin_1] = Zeiss::MetaXML::Origin_1Id;
+  _nameIdMap[Zeiss::MetaXML::Angle_1] = Zeiss::MetaXML::Angle_1Id;
+  _nameIdMap[Zeiss::MetaXML::Factor_2] = Zeiss::MetaXML::Factor_2Id;
+  _nameIdMap[Zeiss::MetaXML::Type_2] = Zeiss::MetaXML::Type_2Id;
+  _nameIdMap[Zeiss::MetaXML::Unit_2] = Zeiss::MetaXML::Unit_2Id;
+  _nameIdMap[Zeiss::MetaXML::Origin_2] = Zeiss::MetaXML::Origin_2Id;
+  _nameIdMap[Zeiss::MetaXML::Angle_2] = Zeiss::MetaXML::Angle_2Id;
 }
 
 // -----------------------------------------------------------------------------
@@ -1639,5 +1669,22 @@ void ZeissTagMapping::initFactoryMap()
   _idFactoryMap[Zeiss::MetaXML::AuroxCamReserved4Id] = StringZeissMetaFactory::NewZeissMetaFactory();
   _idFactoryMap[Zeiss::MetaXML::AuroxCamReserved5Id] = StringZeissMetaFactory::NewZeissMetaFactory();
 
+  _idFactoryMap[Zeiss::MetaXML::Factor_0Id] = FloatZeissMetaFactory::NewZeissMetaFactory();
+  _idFactoryMap[Zeiss::MetaXML::Type_0Id] = Int32ZeissMetaFactory::NewZeissMetaFactory();
+  _idFactoryMap[Zeiss::MetaXML::Unit_0Id] = StringZeissMetaFactory::NewZeissMetaFactory();
+  _idFactoryMap[Zeiss::MetaXML::Origin_0Id] = FloatZeissMetaFactory::NewZeissMetaFactory();
+  _idFactoryMap[Zeiss::MetaXML::Angle_0Id] = FloatZeissMetaFactory::NewZeissMetaFactory();
+
+  _idFactoryMap[Zeiss::MetaXML::Factor_1Id] = FloatZeissMetaFactory::NewZeissMetaFactory();
+  _idFactoryMap[Zeiss::MetaXML::Type_1Id] = Int32ZeissMetaFactory::NewZeissMetaFactory();
+  _idFactoryMap[Zeiss::MetaXML::Unit_1Id] = StringZeissMetaFactory::NewZeissMetaFactory();
+  _idFactoryMap[Zeiss::MetaXML::Origin_1Id] = FloatZeissMetaFactory::NewZeissMetaFactory();
+  _idFactoryMap[Zeiss::MetaXML::Angle_1Id] = FloatZeissMetaFactory::NewZeissMetaFactory();
+
+  _idFactoryMap[Zeiss::MetaXML::Factor_2Id] = FloatZeissMetaFactory::NewZeissMetaFactory();
+  _idFactoryMap[Zeiss::MetaXML::Type_2Id] = Int32ZeissMetaFactory::NewZeissMetaFactory();
+  _idFactoryMap[Zeiss::MetaXML::Unit_2Id] = StringZeissMetaFactory::NewZeissMetaFactory();
+  _idFactoryMap[Zeiss::MetaXML::Origin_2Id] = FloatZeissMetaFactory::NewZeissMetaFactory();
+  _idFactoryMap[Zeiss::MetaXML::Angle_2Id] = FloatZeissMetaFactory::NewZeissMetaFactory();
 }
 

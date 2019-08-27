@@ -96,6 +96,17 @@ namespace Xml
 static const QString Tags("Tags");
 static const QString Count("Count");
 static const QString Scaling("Scaling");
+
+static const QString Key("Key");
+static const QString Category("Category");
+
+static const QString Factor("Factor");
+static const QString Type("Type");
+static const QString Unit("Unit");
+static const QString Origin("Origin");
+static const QString Angle("Angle");
+static const QString Matrix("Matrix");
+
 } // namespace Xml
 
 namespace PolynomialOrder
@@ -138,6 +149,7 @@ const QString k_AAGrayScaleName("GrayImageData");
 
 const QString k_AttributeArrayNames("AttributeArrayNames");
 const QString k_DataContaineNameDefaultName("Mosaic");
+const QString k_DataContainerPrefixDefaultName("Mosaic_");
 const QString k_TileAttributeMatrixDefaultName("Tile Data");
 const QString k_TileDataArrayDefaultName("Image");
 const QString k_GrayScaleTempArrayName("gray_scale_temp");
@@ -151,7 +163,7 @@ const QString k_TileCorrectedDefaultName("Corrected Image");
 const QString k_BackgroundDataContainerDefaultName("Illumination Correction");
 const QString k_BackgroundAttributeMatrixDefaultName("Illumination Data");
 const QString k_BackgroundDataArrayDefaultName("Image");
-
+const QString k_MontageInfoReplaceKeyword("@UPDATE_ROW_COLUMN@");
 } // namespace Montage
 
 } // namespace ITKImageProcessing

@@ -515,9 +515,9 @@ void ITKPCMTileRegistration::executeMontageRegistration(typename MontageType::Po
   notifyStatusMessage("Doing the tile registrations");
 
   itk::ProgressObserver::Pointer progressObs = itk::ProgressObserver::New();
-  progressObs->setFilter(this);
-  progressObs->setMessagePrefix("Registering Tiles");
-  unsigned long progressObsTag = montage->AddObserver(itk::ProgressEvent(), progressObs.get());
+  progressObs->SetFilter(this);
+  progressObs->SetMessagePrefix("Registering Tiles");
+  unsigned long progressObsTag = montage->AddObserver(itk::ProgressEvent(), progressObs.GetPointer());
 
   montage->Update();
 

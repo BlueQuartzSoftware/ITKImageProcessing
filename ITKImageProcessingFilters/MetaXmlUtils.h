@@ -35,7 +35,7 @@
 
 #include <QtXml/QDomElement>
 
-
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 class AbstractFilter;
 class ZeissTagsXmlSection;
@@ -54,13 +54,14 @@ class MetaXmlUtils
     MetaXmlUtils& operator=(MetaXmlUtils&&) = delete;      // Move Assignment Not Implemented
 
 
-    static ZeissTagsXmlSectionPtr ParseTagsSection(AbstractFilter* filter, QDomElement& tags);
+    static ITKImageProcessing_EXPORT ZeissTagsXmlSectionPtr ParseTagsSection(AbstractFilter* filter, QDomElement& tags);
+    static ITKImageProcessing_EXPORT ZeissTagsXmlSectionPtr ParseScalingSection(AbstractFilter* filter, QDomElement& tags);
 
-    static int32_t GetInt32Entry(AbstractFilter* filter, ZeissTagsXmlSection *tagsSection, int idValue);
+    static ITKImageProcessing_EXPORT int32_t GetInt32Entry(AbstractFilter* filter, ZeissTagsXmlSection *tagsSection, int idValue);
 
-    static float GetFloatEntry(AbstractFilter* filter, ZeissTagsXmlSection* tagsSection, int idValue);
+    static ITKImageProcessing_EXPORT float GetFloatEntry(AbstractFilter* filter, ZeissTagsXmlSection* tagsSection, int idValue);
 
-    static int32_t CalculatePaddingDigits(int32_t count);
+    static ITKImageProcessing_EXPORT int32_t CalculatePaddingDigits(int32_t count);
 
   protected:
 
