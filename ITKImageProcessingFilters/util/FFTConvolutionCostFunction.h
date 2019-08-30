@@ -284,6 +284,22 @@ private:
    */
   PixelTypei calculateNew2OldPixel(int64_t row, int64_t col, const ParametersType& parameters, double x_trans, double y_trans) const;
 
+  /**
+   * @brief Checks if the regions of the given CropMap are valid.
+   * @param cropMap
+   * @return
+   */
+  bool isCropMapValid(const CropMap& cropMap) const;
+
+  /**
+   * @brief Checks if the given RegionBounds are valid.
+   * @param bounds
+   * @return
+   */
+  bool isRegionValid(const RegionBounds& bounds) const;
+
+  // --------------------------------------------------------------------------
+  // Variables
   GridMontageShPtr m_Montage = nullptr;
   int m_Degree = 2;
   size_t m_OverlapXAmt;

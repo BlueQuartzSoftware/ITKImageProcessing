@@ -532,6 +532,12 @@ FFTConvolutionCostFunction::MeasureType FFTConvolutionCostFunction::GetValue(con
   }
   taskAlg.wait();
 
+  if(!isCropMapValid(cropMap))
+  {
+    // This is optimizing for the greatest return value, thus invalid inputs require a smallest return
+    return std::numeric_limits<MeasureType>::min();
+  }
+
   // Crop overlap portions
   OverlapPairs copyOverlaps = m_Overlaps;
   for(auto& overlap : copyOverlaps)
@@ -549,6 +555,50 @@ FFTConvolutionCostFunction::MeasureType FFTConvolutionCostFunction::GetValue(con
   // The value to minimize is the square of the sum of the maximum value of the fft convolution
   MeasureType result = sqrt(residual);
   return result;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool FFTConvolutionCostFunction::isCropMapValid(const CropMap& cropMap) const
+{
+  for(auto cropValue : cropMap)
+  {
+    RegionBounds bounds = cropValue.second;
+    if(!isRegionValid(bounds))
+    {
+      return false;
+    }
+  }
+  return true;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool FFTConvolutionCostFunction::isRegionValid(const RegionBounds& bounds) const
+{
+  size_t minWidth = m_ImageDim_x - m_OverlapXAmt;
+  size_t minHeight = m_ImageDim_y - m_OverlapYAmt;
+
+  if(bounds.topBound > m_OverlapYAmt || bounds.topBound < 0)
+  {
+    return false;
+  }
+  if(bounds.bottomBound < minWidth || bounds.bottomBound > m_ImageDim_y)
+  {
+    return false;
+  }
+  if(bounds.leftBound > m_OverlapXAmt || bounds.leftBound < 0)
+  {
+    return false;
+  }
+  if(bounds.rightBound < minWidth || bounds.rightBound > m_ImageDim_x)
+  {
+    return false;
+  }
+
+  return true;
 }
 
 // -----------------------------------------------------------------------------
