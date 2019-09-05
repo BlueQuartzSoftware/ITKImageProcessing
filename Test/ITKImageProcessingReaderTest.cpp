@@ -44,7 +44,7 @@
 #include "UnitTestSupport.hpp"
 
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKImageReader.h"
-#include "SIMPLib/ITK/itkDream3DImage.h"
+
 
 #include "ITKImageProcessingTestFileLocations.h"
 

@@ -49,7 +49,7 @@
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
 #include "SIMPLib/ITK/itkDream3DFilterInterruption.h"
 #include "SIMPLib/ITK/itkDream3DITransformContainerToTransform.h"
-#include "SIMPLib/ITK/itkDream3DImage.h"
+
 #include "SIMPLib/ITK/itkDream3DTransformContainerToTransform.h"
 #include "SIMPLib/ITK/itkInPlaceDream3DDataToImageFilter.h"
 #include "SIMPLib/ITK/itkInPlaceImageToDream3DDataFilter.h"

@@ -10,7 +10,7 @@
 #include "SIMPLib/SIMPLib.h"
 
 #include "SIMPLib/ITK/itkDream3DFilterInterruption.h"
-#include "SIMPLib/ITK/itkDream3DImage.h"
+
 #include "SIMPLib/ITK/itkInPlaceDream3DDataToImageFilter.h"
 #include "SIMPLib/ITK/itkInPlaceImageToDream3DDataFilter.h"
 

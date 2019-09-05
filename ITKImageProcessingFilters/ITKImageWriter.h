@@ -33,11 +33,11 @@
 
 #pragma once
 
+#include "itkImage.h"
+
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
-
-#include "SIMPLib/ITK/itkDream3DImage.h"
 
 #include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
