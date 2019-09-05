@@ -44,6 +44,7 @@ elseif(ITK_VERSION_MAJOR EQUAL 5)
       ${_PublicFilters} 
       ITKPCMTileRegistration
       ITKStitchMontage
+      ITKProxTVImage
   )
 endif()
 
@@ -151,7 +152,6 @@ if(NOT ITKImageProcessing_LeanAndMean)
     ITKFFTNormalizedCorrelationImage
     ITKVectorRescaleIntensityImage
     ITKPatchBasedDenoisingImage
-    ITKProxTVImage
   )
 endif()
 
