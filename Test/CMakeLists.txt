@@ -29,6 +29,7 @@ elseif(ITK_VERSION_MAJOR EQUAL 5)
       ${TEST_NAMES}
       ITKImportFijiMontageTest
       ITKImportRoboMetMontageTest
+      ITKProxTVImageTest
 
       # ITKPCMTileRegistrationTest
       # ITKStitchMontageTest
@@ -126,7 +127,6 @@ if(NOT ITKImageProcessing_LeanAndMean)
     ITKFFTNormalizedCorrelationImageTest
     ITKVectorRescaleIntensityImageTest
     ITKPatchBasedDenoisingImageTest
-    ITKProxTVImageTest
   )
 endif()
 
