@@ -50,7 +50,6 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
 #include "SIMPLib/ITK/itkDream3DFilterInterruption.h"
-
 #include "SIMPLib/ITK/itkInPlaceDream3DDataToImageFilter.h"
 #include "SIMPLib/ITK/itkInPlaceImageToDream3DDataFilter.h"
 #include "SIMPLib/ITK/itkProgressObserver.hpp"
