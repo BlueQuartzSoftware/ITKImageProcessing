@@ -42,7 +42,7 @@ elseif(ITK_VERSION_MAJOR EQUAL 5)
   # Put ITK 5 Specific Modules in here
   set( _PublicFilters 
       ${_PublicFilters} 
-  #    ITKPCMTileRegistration
+      ITKPCMTileRegistration
       ITKStitchMontage
       ITKProxTVImage
   )

@@ -313,7 +313,7 @@ void ITKPCMTileRegistration::execute()
 
   IDataArray::Pointer da = m_DataContainers[0]->getAttributeMatrix(getCommonAttributeMatrixName())->getAttributeArray(getCommonDataArrayName());
 
-  EXECUTE_REGISTER_FUNCTION_TEMPLATE(this, registerRGBMontage, registerGrayscaleMontage, da);
+  EXECUTE_REGISTER_FUNCTION_TEMPLATE(this, registerRGBMontage, registerGrayscaleMontage, da)
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");
@@ -349,7 +349,7 @@ typename MontageType::Pointer ITKPCMTileRegistration::createMontage(int peakMeth
   using SizeValueType = itk::Size<2>::SizeValueType;
   typename MontageType::Pointer montage = MontageType::New();
   montage->SetMontageSize({static_cast<SizeValueType>(colCount), static_cast<SizeValueType>(rowCount)});
-  montage->GetModifiablePCM()->SetPaddingMethod(PCMType::PaddingMethod::MirrorWithExponentialDecay);
+  montage->SetPaddingMethod(PCMType::PaddingMethod::MirrorWithExponentialDecay);
   //  montage->SetOriginAdjustment(originAdjustment);
   //  montage->SetForcedSpacing(sp);
 
@@ -357,7 +357,7 @@ typename MontageType::Pointer ITKPCMTileRegistration::createMontage(int peakMeth
   using PeakFinderUnderlying = typename std::underlying_type<PeakInterpolationType>::type;
 
   auto peakMethod = static_cast<PeakFinderUnderlying>(peakMethodToUse);
-  montage->GetModifiablePCMOptimizer()->SetPeakInterpolationMethod(static_cast<PeakInterpolationType>(peakMethod));
+  montage->SetPeakInterpolationMethod(static_cast<PeakInterpolationType>(peakMethod));
   montage->Modified();
 
   return montage;
@@ -379,10 +379,10 @@ typename MontageType::Pointer ITKPCMTileRegistration::createGrayscaleMontage(int
   for(int32_t row = m_MontageStart[1]; row <= m_MontageEnd[1]; row++)
   {
     typename MontageType::TileIndexType ind;
-    ind[1] = row - m_MontageStart[1];
+    ind[1] = static_cast<::itk::SizeValueType>(row - m_MontageStart[1]);
     for(int32_t col = m_MontageStart[0]; col <= m_MontageEnd[0]; col++)
     {
-      ind[0] = col - m_MontageStart[0];
+      ind[0] = static_cast<::itk::SizeValueType>(col - m_MontageStart[0]);
 
       // Get our DataContainer Name using a Prefix and a rXXcYY format.
       QString dcName = MontageImportHelper::GenerateDataContainerName(getDataContainerPrefix(), m_MontageEnd, row, col);
@@ -422,10 +422,10 @@ typename MontageType::Pointer ITKPCMTileRegistration::createRGBMontage(int peakM
   for(int32_t row = m_MontageStart[1]; row <= m_MontageEnd[1]; row++)
   {
     typename MontageType::TileIndexType ind;
-    ind[1] = row - m_MontageStart[1];
+    ind[1] = static_cast<::itk::SizeValueType>(row - m_MontageStart[1]);
     for(int32_t col = m_MontageStart[0]; col <= m_MontageEnd[0]; col++)
     {
-      ind[0] = col - m_MontageStart[0];
+      ind[0] = static_cast<::itk::SizeValueType>(col - m_MontageStart[0]);
 
       // Get our DataContainer Name using a Prefix and a rXXcYY format.
       QString dcName = MontageImportHelper::GenerateDataContainerName(getDataContainerPrefix(), m_MontageEnd, row, col);
@@ -521,10 +521,10 @@ void ITKPCMTileRegistration::storeMontageTransforms(typename MontageType::Pointe
   for(int32_t row = m_MontageStart[1]; row <= m_MontageEnd[1]; row++)
   {
     typename MontageType::TileIndexType ind;
-    ind[1] = row - m_MontageStart[1];
+    ind[1] = static_cast<::itk::SizeValueType>(row - m_MontageStart[1]);
     for(int32_t col = m_MontageStart[0]; col <= m_MontageEnd[0]; col++)
     {
-      ind[0] = col - m_MontageStart[0];
+      ind[0] = static_cast<::itk::SizeValueType>(col - m_MontageStart[0]);
 
       const TransformType* regTr = montage->GetOutputTransform(ind);
 
