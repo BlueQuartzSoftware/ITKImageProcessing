@@ -16,7 +16,7 @@
 
 #include "SIMPLib/Geometry/ImageGeom.h"
 
-#include "SIMPLib/ITK/itkDream3DImage.h"
+
 #define DREAM3D_USE_RGB_RGBA 1
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
 

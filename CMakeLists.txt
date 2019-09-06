@@ -66,16 +66,19 @@ set(ADDITIONAL_ITK_MODULES
     ITKIOGE
     ITKIOMRC
     ITKTestKernel
-
     )
-
+get_property(ITK_VERSION_MAJOR GLOBAL PROPERTY ITK_VERSION_MAJOR)
 if(ITK_VERSION_MAJOR EQUAL 4)
   #message(STATUS "Using ITK v4")
   # Put ITK 4 Specific Modules in here
 elseif(ITK_VERSION_MAJOR EQUAL 5)
   #message(STATUS "Using ITK v5")
   # Put ITK 5 Specific Modyles in here
-  set( ADDITIONAL_ITK_MODULES ${ADDITIONAL_ITK_MODULES} Montage TotalVariation)
+  set( ADDITIONAL_ITK_MODULES ${ADDITIONAL_ITK_MODULES}
+          ITKTransform
+          Montage 
+          TotalVariation
+   )
 endif()
 
 option(${PLUGIN_NAME}_ENABLE_SCIFIO "Enable SCIFIO ITK Modules" OFF)
