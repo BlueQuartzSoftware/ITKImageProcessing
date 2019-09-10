@@ -341,11 +341,9 @@ void Blend::execute()
   {
     // The optimizer needs an initial guess; this is supplied through a filter parameter
     itk::AmoebaOptimizer::ParametersType initialParams(xyParameters.size());
-    itk::AmoebaOptimizer::ParametersType initialDelta(xyParameters.size());
     for(size_t idx = 0; idx < xyParameters.size(); ++idx)
     {
       initialParams[idx] = xyParameters[idx];
-      initialDelta[idx] = 0.001;
     }
 
     itk::AmoebaOptimizer::Pointer optimizer = itk::AmoebaOptimizer::New();
@@ -353,20 +351,16 @@ void Blend::execute()
     optimizer->SetFunctionConvergenceTolerance(m_LowTolerance);
     optimizer->SetParametersConvergenceTolerance(m_HighTolerance);
     optimizer->SetInitialPosition(initialParams);
-    optimizer->SetInitialSimplexDelta(initialDelta);
     optimizer->SetOptimizeWithRestarts(true);
 
     GridMontageShPtr gridMontage = std::dynamic_pointer_cast<GridMontage>(getDataContainerArray()->getMontage(getMontageName()));
 
-    //  using CostFunctionType = MultiParamCostFunction;
     using CostFunctionType = FFTConvolutionCostFunction;
     CostFunctionType implementation;
     implementation.Initialize(
-      // The line below is used for testing the MultiParamCostFunction
-      //    std::vector<double>{1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0}
       gridMontage, m_Degree, m_OverlapPercentage, getDataContainerArray(), m_AttributeMatrixName, grayscaleArrayName);
     optimizer->SetCostFunction(&implementation);
-    optimizer->MinimizeOff(); // Search for the greatest value
+    optimizer->MaximizeOn(); // Search for the greatest value
     optimizer->StartOptimization();
 
     // Newer versions of the optimizer allow for easier methods of output information
@@ -374,7 +368,8 @@ void Blend::execute()
     // optimizer's stop description
     QString stopReason = QString::fromStdString(optimizer->GetStopConditionDescription());
     std::list<double> transform;
-    for(const auto& coeff : optimizer->GetCurrentPosition())
+    itk::AmoebaOptimizer::ParametersType finalParams = optimizer->GetCurrentPosition();
+    for(const auto& coeff : finalParams)
     {
       transform.push_back(coeff);
     }
@@ -384,6 +379,24 @@ void Blend::execute()
     auto numIterations = GetIterationsFromStopDescription(stopReason);
 
     // Can get rid of these qDebug lines after debugging is done for filter
+    QString initParamStr = "Initial Position: [ ";
+    for(auto param : xyParameters)
+    {
+      initParamStr += QString::number(param) + "; ";
+    }
+    initParamStr += " ]";
+    notifyStatusMessage(initParamStr);
+
+    QString finalParamStr = "Final Position: [ ";
+    for(auto param : finalParams)
+    {
+      finalParamStr += QString::number(param) + "; ";
+    }
+    finalParamStr += " ]";
+    notifyStatusMessage(finalParamStr);
+
+    notifyStatusMessage(QString::fromStdString(optimizer->GetStopConditionDescription()));
+
     qDebug() << "Initial Position: [ " << xyParameters << " ]";
     qDebug() << "Final Position: [ " << transform << " ]";
     qDebug() << "Number of Iterations: " << numIterations;
@@ -410,8 +423,6 @@ void Blend::execute()
       transformAM->getAttributeArrayAs<DoubleArrayType>(m_TransformArrayName)->setArray(transform);
     }
 
-    //imageDimX = implementation.getImageDimX();
-    //imageDimY = implementation.getImageDimY();
     transformVector = { std::begin(transform), std::end(transform) };
   }
   else
@@ -520,19 +531,11 @@ void transformDataPixel(double x_trans, double y_trans, const SizeVec2Type& newP
   const double newYPrimeSqr = newYPrime * newYPrime;
 
   std::array<double, 2> oldPrime;
-#if 0
-  // old' = (a0 * x') + (a1 * y') + (a2 * x'Sqr) + (a3 * y'Sqr) + (a4 * x'y') + (a5 * x'Sqry') + (a6 * x'y'Sqr)
-  oldPrime[0] = transformVector[0] * newXPrime + transformVector[1] * newYPrime + transformVector[2] * newXPrimeSqr + transformVector[3] * newYPrimeSqr + transformVector[4] * newXPrime * newYPrime +
-    transformVector[5] * newXPrimeSqr * newYPrime + transformVector[6] * newXPrime * newYPrimeSqr;
-  oldPrime[1] = transformVector[7] * newXPrime + transformVector[8] * newYPrime + transformVector[9] * newXPrimeSqr + transformVector[10] * newYPrimeSqr + transformVector[11] * newXPrime * newYPrime +
-    transformVector[12] * newXPrimeSqr * newYPrime + transformVector[13] * newXPrime * newYPrimeSqr;
-#else
   // old' = (a0 * y') + (a1 * y'Sqr) + (a2 * x') + (a3 * x'y) + (a4 * x'y'Sqr)+ (a5 * x'Sqr) + (a6 * x'Sqry')
   oldPrime[0] = transformVector[0] * newYPrime + transformVector[1] * newYPrimeSqr + transformVector[2] * newXPrime + transformVector[3] * newXPrime * newYPrime + transformVector[4] * newXPrime * newYPrimeSqr +
     transformVector[5] * newXPrimeSqr + transformVector[6] * newXPrimeSqr * newYPrime; // transformVector[7] * newXPrimeSqr * newYPrimeSqr;
   oldPrime[1] = transformVector[7] * newYPrime + transformVector[8] * newYPrimeSqr + transformVector[9] * newXPrime + transformVector[10] * newXPrime * newYPrime + transformVector[11] * newXPrime * newYPrimeSqr +
     transformVector[12] * newXPrimeSqr + transformVector[13] * newXPrimeSqr * newYPrime; // transformVector[14] * newXPrimeSqr * newYPrimeSqr;
-#endif
 
   const int64_t oldXUnbound = static_cast<int64_t>(round(oldPrime[0] + x_trans));
   const int64_t oldYUnbound = static_cast<int64_t>(round(oldPrime[1] + y_trans));
@@ -568,7 +571,6 @@ void transformDataPixel(double x_trans, double y_trans, const SizeVec2Type& newP
 template <typename T>
 void transformDataArray(const std::vector<double>& transformVector, const SizeVec3Type& dimensions, double x_trans, double y_trans, typename const DataArray<T>::Pointer& da)
 {
-#if 1
   // Do not resize items that do not match the geometry.
   size_t flattenedDims = std::accumulate(dimensions.begin(), dimensions.end(), 1, std::multiplies<double>());
   size_t numComps = da->getNumberOfComponents();
@@ -577,7 +579,6 @@ void transformDataArray(const std::vector<double>& transformVector, const SizeVe
   {
     return;
   }
-#endif
 
   typename DataArray<T>::Pointer daCopy = std::dynamic_pointer_cast<DataArray<T>>(da->deepCopy());
 
@@ -646,11 +647,6 @@ void transformIDataArray(const std::vector<double>& transformVector, const SizeV
     UInt64ArrayType::Pointer array = std::dynamic_pointer_cast<UInt64ArrayType>(da);
     transformDataArray<uint64_t>(transformVector, dimensions, x_trans, y_trans, array);
   }
-  //else if(std::dynamic_pointer_cast<BoolArrayType>(da))
-  //{
-  //  BoolArrayType::Pointer array = std::dynamic_pointer_cast<BoolArrayType>(da);
-  //  transformDataArray<bool>(transformVector, dimensions, x_trans, y_trans, array);
-  //}
   else if(std::dynamic_pointer_cast<FloatArrayType>(da))
   {
     FloatArrayType::Pointer array = std::dynamic_pointer_cast<FloatArrayType>(da);

@@ -167,9 +167,7 @@ public:
    * @param overlapPercentage
    */
   void InitializePercentageOverlaps(const ImageGrid::value_type& image, float overlapPercentage);
-
-  void InitializePositionalOverlaps(const GridMontageShPtr& montage, size_t row, size_t column);
-
+  
   /**
    * @brief Override for itk::SingleValuedCostFunction::GetDerivative that throws an exception.
    * @param unused
@@ -271,8 +269,6 @@ private:
    */
   void calculateImageDim(const GridMontageShPtr& montage);
   
-  KernelImages calculateKernelImages(const OverlapPair& overlap, ImageGrid& distortedGrid) const;
-
   /**
    * @brief Returns the pixel index for the given row, column, parameters, and translation amount.
    * @param row
@@ -293,10 +289,11 @@ private:
 
   /**
    * @brief Checks if the given RegionBounds are valid.
+   * @param index
    * @param bounds
    * @return
    */
-  bool isRegionValid(const RegionBounds& bounds) const;
+  bool isRegionValid(const GridKey& index, const RegionBounds& bounds) const;
 
   // --------------------------------------------------------------------------
   // Variables

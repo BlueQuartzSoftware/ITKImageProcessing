@@ -205,22 +205,11 @@ void FFTConvolutionCostFunction::Initialize(const GridMontageShPtr& montage, int
 
   // Populate m_overlaps
   m_Overlaps.clear();
-#if 1
   for(const auto& image : m_ImageGrid)
   {
     std::function<void(void)> fn = std::bind(&FFTConvolutionCostFunction::InitializePercentageOverlaps, this, image, overlapPercentage);
     taskAlg.execute(fn);
   }
-#else
-  for(size_t row = 0; row < numRows; row++)
-  {
-    for(size_t col = 0; col < numCols; col++)
-    {
-      std::function<void(void)> fn = std::bind(&FFTConvolutionCostFunction::InitializePositionalOverlaps, this, montage, row, col);
-      taskAlg.execute(fn);
-    }
-  }
-#endif
   taskAlg.wait();
 }
 
@@ -259,19 +248,11 @@ FFTConvolutionCostFunction::PixelTypei FFTConvolutionCostFunction::calculateNew2
   const double newYPrimeSqr = newPrime[1] * newPrime[1];
 
   std::array<double, 2> oldPrime;
-#if 0
-  // old' = (a0 * x') + (a1 * y') + (a2 * x'Sqr) + (a3 * y'Sqr) + (a4 * x'y') + (a5 * x'Sqry') + (a6 * x'y'Sqr)
-  oldPrime[0] = parameters[0] * newPrime[0] + parameters[1] * newPrime[1] + parameters[2] * newXPrimeSqr + parameters[3] * newYPrimeSqr + parameters[4] * newPrime[0] * newPrime[1] +
-    parameters[5] * newXPrimeSqr * newPrime[1] + parameters[6] * newPrime[0] * newYPrimeSqr;
-  oldPrime[1] = parameters[7] * newPrime[0] + parameters[8] * newPrime[1] + parameters[9] * newXPrimeSqr + parameters[10] * newYPrimeSqr + parameters[11] * newPrime[0] * newPrime[1] +
-    parameters[12] * newXPrimeSqr * newPrime[1] + parameters[13] * newPrime[0] * newYPrimeSqr;
-#else
   // old' = (a0 * y') + (a1 * y'Sqr) + (a2 * x') + (a3 * x'y) + (a4 * x'y'Sqr)+ (a5 * x'Sqr) + (a6 * x'Sqry')
   oldPrime[0] = parameters[0] * newYPrime + parameters[1] * newYPrimeSqr + parameters[2] * newXPrime + parameters[3] * newXPrime * newYPrime + parameters[4] * newXPrime * newYPrimeSqr +
     parameters[5] * newXPrimeSqr + parameters[6] * newXPrimeSqr * newYPrime;
   oldPrime[1] = parameters[7] * newYPrime + parameters[8] * newYPrimeSqr + parameters[9] * newXPrime + parameters[10] * newXPrime * newYPrime + parameters[11] * newXPrime * newYPrimeSqr +
     parameters[12] * newXPrimeSqr + parameters[13] * newXPrimeSqr * newYPrime;
-#endif
 
   const int64_t oldXUnbound = static_cast<int64_t>(round(oldPrime[0] + x_trans));
   const int64_t oldYUnbound = static_cast<int64_t>(round(oldPrime[1] + y_trans));
@@ -354,7 +335,6 @@ void FFTConvolutionCostFunction::InitializePercentageOverlaps(const ImageGrid::v
   {
     // NOTE The height dimension for horizontally overlapping images should be the same
     size_t overlapHeight = std::min(height, static_cast<size_t>(m_ImageDim_y));
-    //size_t originY = std::max(static_cast<size_t>(0), static_cast<size_t>(height - m_ImageDim_y));
     size_t overlapDim = static_cast<size_t>(roundf(m_ImageDim_x * overlapPercentage));
     imageOrigin[0] = static_cast<itk::IndexValueType>(width - overlapDim);
     imageOrigin[1] = 0; // Push to the bottom when the tile is taller than m_ImageDim_y
@@ -376,7 +356,6 @@ void FFTConvolutionCostFunction::InitializePercentageOverlaps(const ImageGrid::v
   {
     // NOTE The width dimension for vertically overlapping images should be the same
     size_t overlapWidth = std::min(width, static_cast<size_t>(m_ImageDim_x));
-    //size_t originX = std::max(static_cast<size_t>(0), static_cast<size_t>(width - m_ImageDim_x));
     overlapDim = static_cast<size_t>(roundf(m_ImageDim_y * overlapPercentage));
     imageOrigin[0] = 0; // Push to the right when the tile is wider than m_ImageDim_x
     imageOrigin[1] = static_cast<itk::IndexValueType>(height - overlapDim);
@@ -418,89 +397,6 @@ ImageGeom::Pointer getImageGeomFromMontage(const GridMontageShPtr& montage, size
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FFTConvolutionCostFunction::InitializePositionalOverlaps(const GridMontageShPtr& montage, size_t row, size_t column)
-{
-  static MutexType mutex;
-
-  ImageGeom::Pointer imageGeom = getImageGeomFromMontage(montage, row, column);
-  SizeVec3Type dims = imageGeom->getDimensions();
-  FloatVec3Type origin = imageGeom->getOrigin();
-  size_t width = dims.getX();
-  size_t height = dims.getY();
-
-  const bool hasNextColumn = column < montage->getColumnCount() - 1;
-  const bool hasNextRow = row < montage->getRowCount() - 1;
-
-  if(hasNextColumn)
-  {
-    ImageGeom::Pointer nextGeom = getImageGeomFromMontage(montage, row, column + 1);
-    FloatVec3Type nextOrigin = nextGeom->getOrigin();
-    SizeVec3Type nextDims = nextGeom->getDimensions();
-
-    const itk::IndexValueType overlapAmt = static_cast<itk::IndexValueType>((origin[0] + width) - nextOrigin[0]);
-    const double top = std::min(origin.getY() + dims.getY(), nextOrigin.getY() + nextDims.getY());
-    const double bot = std::max(origin.getY(), nextOrigin.getY());
-
-    size_t overlapHeight = std::min(static_cast<size_t>(top - bot), static_cast<size_t>(m_ImageDim_y));
-
-    PixelCoord imageOrigin;
-    InputImage::SizeType imageSize;
-    imageOrigin[0] = static_cast<itk::IndexValueType>(width - overlapAmt);
-    imageOrigin[1] = (top - overlapHeight) - origin[1]; // Push to the bottom when the tile is taller than m_ImageDim_y
-    imageSize[0] = overlapAmt;
-    imageSize[1] = overlapHeight;
-
-    PixelCoord kernelOrigin;
-    InputImage::SizeType kernelSize;
-    kernelOrigin[0] = 0;
-    kernelOrigin[1] = bot - nextOrigin[1];
-    kernelSize[0] = overlapAmt;
-    kernelSize[1] = overlapHeight;
-
-    // Add overlap
-    GridPair position = std::make_pair(GridKey{ column, row }, GridKey{ column + 1, row });
-    RegionPair region = std::make_pair(InputImage::RegionType(imageOrigin, imageSize), InputImage::RegionType(kernelOrigin, kernelSize));
-    OverlapPair overlap = std::make_pair(position, region);
-    ScopedLockType lock(mutex);
-    m_Overlaps.push_back(overlap);
-  }
-  if(hasNextRow)
-  {
-    ImageGeom::Pointer nextGeom = getImageGeomFromMontage(montage, row + 1, column);
-    FloatVec3Type nextOrigin = nextGeom->getOrigin();
-    SizeVec3Type nextDims = nextGeom->getDimensions();
-
-    const itk::IndexValueType overlapAmt = static_cast<itk::IndexValueType>((nextOrigin[1] + nextDims[1]) - origin[1]);
-    const double left = std::max(origin[0], nextOrigin[0]);
-    const double right = std::min(origin[0] + width, nextOrigin[0] + nextDims[0]);
-    const double overlapWidth = std::min(static_cast<itk::IndexValueType>(right - left), static_cast<itk::IndexValueType>(m_ImageDim_x));
-
-    PixelCoord imageOrigin;
-    InputImage::SizeType imageSize;
-    imageOrigin[0] = (right - overlapWidth) - origin[1]; // Push to the right when the tile is wider than m_ImageDim_x
-    imageOrigin[1] = static_cast<itk::IndexValueType>(height - overlapAmt);
-    imageSize[0] = overlapWidth;
-    imageSize[1] = overlapAmt;
-
-    PixelCoord kernelOrigin;
-    InputImage::SizeType kernelSize;
-    kernelOrigin[0] = (right - overlapWidth) - nextOrigin[0];
-    kernelOrigin[1] = 0;
-    kernelSize[0] = overlapWidth;
-    kernelSize[1] = overlapAmt;
-
-    // Add overlap
-    GridPair position = std::make_pair(GridKey(column, row), GridKey(column, row + 1));
-    RegionPair region = std::make_pair(InputImage::RegionType(imageOrigin, imageSize), InputImage::RegionType(kernelOrigin, kernelSize));
-    OverlapPair overlap = std::make_pair(position, region);
-    ScopedLockType lock(mutex);
-    m_Overlaps.push_back(overlap);
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void FFTConvolutionCostFunction::GetDerivative(const ParametersType&, DerivativeType&) const
 {
   throw std::exception();
@@ -524,6 +420,8 @@ FFTConvolutionCostFunction::MeasureType FFTConvolutionCostFunction::GetValue(con
   ParallelTaskAlgorithm taskAlg;
   std::function<void(void)> fn;
 
+  std::vector<double> paramVec = { std::begin(parameters), std::end(parameters) };
+
   // Apply the Transform to each image in the image grid
   for(const auto& eachImage : m_ImageGrid) // Parallelize this
   {
@@ -534,6 +432,7 @@ FFTConvolutionCostFunction::MeasureType FFTConvolutionCostFunction::GetValue(con
 
   if(!isCropMapValid(cropMap))
   {
+    std::cout << "Invalid Parameters";
     // This is optimizing for the greatest return value, thus invalid inputs require a smallest return
     return std::numeric_limits<MeasureType>::min();
   }
@@ -552,6 +451,9 @@ FFTConvolutionCostFunction::MeasureType FFTConvolutionCostFunction::GetValue(con
     findFFTConvolutionAndMaxValue(overlap, distortedGrid, residual);
   }
 
+  std::cout << "Parameters: " << parameters;
+  std::cout << "Result " << residual;
+
   // The value to minimize is the square of the sum of the maximum value of the fft convolution
   MeasureType result = sqrt(residual);
   return result;
@@ -564,8 +466,9 @@ bool FFTConvolutionCostFunction::isCropMapValid(const CropMap& cropMap) const
 {
   for(auto cropValue : cropMap)
   {
-    RegionBounds bounds = cropValue.second;
-    if(!isRegionValid(bounds))
+    const GridKey& index = cropValue.first;
+    const RegionBounds& bounds = cropValue.second;
+    if(!isRegionValid(index, bounds))
     {
       return false;
     }
@@ -576,24 +479,44 @@ bool FFTConvolutionCostFunction::isCropMapValid(const CropMap& cropMap) const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool FFTConvolutionCostFunction::isRegionValid(const RegionBounds& bounds) const
+bool FFTConvolutionCostFunction::isRegionValid(const GridKey& index, const RegionBounds& bounds) const
 {
   size_t minWidth = m_ImageDim_x - m_OverlapXAmt;
   size_t minHeight = m_ImageDim_y - m_OverlapYAmt;
 
-  if(bounds.topBound > m_OverlapYAmt || bounds.topBound < 0)
+  size_t xOffset = 0;
+  size_t yOffset = 0;
+  
+  // Calculate offsets
+  bool isLeft = (index.first == 0);
+  bool isTop = (index.second == 0);
+  if(isLeft)
+  {
+    const auto& img = m_ImageGrid.at(index);
+    const auto& size = img->GetRequestedRegion().GetSize();
+    xOffset = std::max(0.0, size[0] - m_ImageDim_x);
+  }
+  if(isTop)
+  {
+    const auto& img = m_ImageGrid.at(index);
+    const auto& size = img->GetRequestedRegion().GetSize();
+    yOffset = std::max(0.0, size[1] - m_ImageDim_y);
+  }
+
+  // Check bounds
+  if(bounds.topBound >= (m_OverlapYAmt + yOffset) || bounds.topBound < 0)
   {
     return false;
   }
-  if(bounds.bottomBound < minWidth || bounds.bottomBound > m_ImageDim_y)
+  if(bounds.bottomBound <= (minHeight + yOffset) || bounds.bottomBound >= (m_ImageDim_y + yOffset))
   {
     return false;
   }
-  if(bounds.leftBound > m_OverlapXAmt || bounds.leftBound < 0)
+  if(bounds.leftBound >= (m_OverlapXAmt + xOffset) || bounds.leftBound < 0)
   {
     return false;
   }
-  if(bounds.rightBound < minWidth || bounds.rightBound > m_ImageDim_x)
+  if(bounds.rightBound <= (minWidth + xOffset) || bounds.rightBound >= (m_ImageDim_x + xOffset))
   {
     return false;
   }
@@ -685,14 +608,12 @@ void FFTConvolutionCostFunction::calculatePixelCoordinates(const ParametersType&
   const int64_t minX = inputIndex[0];
   const int64_t minY = inputIndex[1];
 
-  //PixelTypei newPixeli{ newPixel[0], newPixel[1] };
   PixelTypei oldPixeli = calculateNew2OldPixel(newPixel[0], newPixel[1], parameters, x_trans + minX, y_trans + minY);
 
   PixelCoord oldPixel;
   oldPixel[0] = oldPixeli[0];
   oldPixel[1] = oldPixeli[1];
 
-  //PixelCoord oldPixel;
   bool isValidX = oldPixel[0] >= 0 && oldPixel[0] <= width - 1;
   bool isValidY = oldPixel[1] >= 0 && oldPixel[1] <= height - 1;
   bool isValid = isValidX && isValidY;
@@ -704,8 +625,6 @@ void FFTConvolutionCostFunction::calculatePixelCoordinates(const ParametersType&
     return;
   }
 
-  //if(oldPixel[0] >= minX -tolerance && oldPixel[1] >= minY -tolerance)
-  //if(oldPixel[0] >= -tolerance && oldPixel[0] <= lastXIndex && oldPixel[1] >= -tolerance && oldPixel[1] <= lastYIndex)
   if(oldPixel[0] >= minX -tolerance && oldPixel[0] <= lastXIndex && oldPixel[1] >= minY -tolerance && oldPixel[1] <= lastYIndex)
   {
     // The value obtained with eachImage.second->GetPixel(eachPixel) could have
@@ -955,9 +874,9 @@ void FFTConvolutionCostFunction::cropOverlapVertical(OverlapPair& overlap, const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FFTConvolutionCostFunction::KernelImages FFTConvolutionCostFunction::calculateKernelImages(const OverlapPair& overlap, ImageGrid& distortedGrid) const
+void FFTConvolutionCostFunction::findFFTConvolutionAndMaxValue(const OverlapPair& overlap, ImageGrid& distortedGrid, MeasureType& residual) const
 {
-  using CropFilter = itk::ExtractImageFilter<InputImage, InputImage>;
+  static MutexType mutex;
 
   GridKey imageKey = overlap.first.first;
   InputImage::Pointer baseImg = distortedGrid.at(imageKey);
@@ -968,41 +887,10 @@ FFTConvolutionCostFunction::KernelImages FFTConvolutionCostFunction::calculateKe
   InputImage::Pointer kernelImg = distortedGrid[kernelKey];
   auto kernelRegion = overlap.second.second;
   kernelImg->SetRequestedRegion(kernelRegion);
-  
-  // Crop filter
-  CropFilter::Pointer cropFilter = CropFilter::New();
-  cropFilter->SetExtractionRegion(imgRegion);
-  cropFilter->SetInput(baseImg);
-  cropFilter->SetDirectionCollapseToIdentity();
-  cropFilter->Update();
-
-  InputImage::Pointer out1 = cropFilter->GetOutput();
-
-  cropFilter->SetExtractionRegion(kernelRegion);
-  cropFilter->SetInput(kernelImg);
-  cropFilter->SetDirectionCollapseToIdentity();
-  cropFilter->Update();
-
-  InputImage::Pointer out2 = cropFilter->GetOutput();
-
-  KernelImages output = { out1, out2 };
-  return output;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void FFTConvolutionCostFunction::findFFTConvolutionAndMaxValue(const OverlapPair& overlap, ImageGrid& distortedGrid, MeasureType& residual) const
-{
-  static MutexType mutex;
-
-  auto kernelImgs = calculateKernelImages(overlap, distortedGrid);
 
   Filter::Pointer filter = Filter::New();
-  filter->SetInput(kernelImgs.first);
-  filter->SetKernelImage(kernelImgs.second);
-
-  // Run the filter
+  filter->SetInput(baseImg);
+  filter->SetKernelImage(kernelImg);
   filter->Update();
   OutputImage::Pointer fftConvolve = filter->GetOutput();
 
@@ -1014,6 +902,8 @@ void FFTConvolutionCostFunction::findFFTConvolutionAndMaxValue(const OverlapPair
   MeasureType maxValue = *std::max_element(bufferPtr, bufferPtr + bufferSize);
   ScopedLockType lock(mutex);
   residual += maxValue;
+
+  std::cout << "Max Value: " << maxValue;
 }
 
 // -----------------------------------------------------------------------------
