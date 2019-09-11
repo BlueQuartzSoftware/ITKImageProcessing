@@ -18,7 +18,7 @@
 #include <itkCastImageFilter.h>
 
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
-#include "SIMPLib/ITK/itkDream3DImage.h"
+
 
 // -----------------------------------------------------------------------------
 //
@@ -104,9 +104,9 @@ void ITKFFTNormalizedCorrelationImage::dataCheckInternal()
 
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKFFTNormalizedCorrelationImage::filter()
 {
-  typedef itk::Dream3DImage<InputPixelType, Dimension> InputImageType;
+  typedef itk::Image<InputPixelType, Dimension> InputImageType;
   typedef itk::Image<OutputPixelType, Dimension> IntermediateImageType;
-  typedef itk::Dream3DImage<OutputPixelType, Dimension> OutputImageType;
+  typedef itk::Image<OutputPixelType, Dimension> OutputImageType;
 
   typedef itk::FFTNormalizedCorrelationImageFilter<InputImageType, IntermediateImageType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
@@ -115,7 +115,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   filter->SetRequiredFractionOfOverlappingPixels(static_cast<double>(m_RequiredFractionOfOverlappingPixels));
 
   // Set reference image.
-  typedef itk::Dream3DImage<InputPixelType, Dimension> InputImageType;
+  typedef itk::Image<InputPixelType, Dimension> InputImageType;
   typedef itk::InPlaceDream3DDataToImageFilter<InputPixelType, Dimension> toITKType;
   DataArrayPath dapMoving = getMovingCellArrayPath();
   DataContainer::Pointer dcMoving = getDataContainerArray()->getDataContainer(dapMoving.getDataContainerName());

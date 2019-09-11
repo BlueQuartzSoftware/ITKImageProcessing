@@ -46,7 +46,6 @@
 
 #include "itkAffineTransform.h"
 #include "itkCompositeTransform.h"
-#include "itkParseTileConfiguration.h"
 
 #include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 

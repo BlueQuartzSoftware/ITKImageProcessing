@@ -31,8 +31,8 @@ ITKVectorRescaleIntensityImageTest() = default;
 
     const unsigned int ImageDimension = 3;
 
-    typedef itk::Dream3DImage<InputPixelType, ImageDimension> InputImageType;
-    typedef itk::Dream3DImage<OutputPixelType, ImageDimension> OutputImageType;
+    typedef itk::Image<InputPixelType, ImageDimension> InputImageType;
+    typedef itk::Image<OutputPixelType, ImageDimension> OutputImageType;
 
     InputImageType::Pointer inputImage = InputImageType::New();
     InputImageType::RegionType region;

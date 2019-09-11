@@ -18,7 +18,6 @@ set(TEST_NAMES
   ITKImportImageStackTest
   ImportVectorImageStackTest
   ITKMedianImageTest
-
 )
 
 if(ITK_VERSION_MAJOR EQUAL 4)

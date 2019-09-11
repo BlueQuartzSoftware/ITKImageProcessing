@@ -14,7 +14,7 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
-#include "SIMPLib/ITK/itkDream3DImage.h"
+
 
 // -----------------------------------------------------------------------------
 //
@@ -207,8 +207,8 @@ void ITKHistogramMatchingImage::dataCheckInternal()
 
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKHistogramMatchingImage::filter()
 {
-  typedef itk::Dream3DImage<InputPixelType, Dimension> InputImageType;
-  typedef itk::Dream3DImage<OutputPixelType, Dimension> OutputImageType;
+  typedef itk::Image<InputPixelType, Dimension> InputImageType;
+  typedef itk::Image<OutputPixelType, Dimension> OutputImageType;
   // define filter
   typedef itk::HistogramMatchingImageFilter<InputImageType, OutputImageType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
@@ -216,7 +216,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   filter->SetNumberOfMatchPoints(static_cast<uint32_t>(m_NumberOfMatchPoints));
   filter->SetThresholdAtMeanIntensity(static_cast<bool>(m_ThresholdAtMeanIntensity));
   // Set reference image.
-  typedef itk::Dream3DImage<InputPixelType, Dimension> InputImageType;
+  typedef itk::Image<InputPixelType, Dimension> InputImageType;
   typedef itk::InPlaceDream3DDataToImageFilter<InputPixelType, Dimension> toITKType;
   DataArrayPath dap = getReferenceCellArrayPath();
   DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(dap.getDataContainerName());
