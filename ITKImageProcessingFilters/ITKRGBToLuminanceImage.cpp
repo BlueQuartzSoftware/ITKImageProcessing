@@ -16,7 +16,7 @@
 #define DREAM3D_USE_RGB_RGBA 1
 #define DREAM3D_USE_Scalar 0
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
-#include "SIMPLib/ITK/itkDream3DImage.h"
+
 
 // -----------------------------------------------------------------------------
 //
@@ -94,15 +94,15 @@ void ITKRGBToLuminanceImage::dataCheckInternal()
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKRGBToLuminanceImage::filter()
 {
   typedef typename itk::NumericTraits<InputPixelType>::ValueType ScalarPixelType;
-  typedef itk::Dream3DImage<ScalarPixelType, Dimension> OutputImageType;
+  typedef itk::Image<ScalarPixelType, Dimension> OutputImageType;
 
   typedef itk::RGBPixel<ScalarPixelType> RGBPixelType;
-  typedef itk::Dream3DImage<RGBPixelType, Dimension> RGBImageType;
+  typedef itk::Image<RGBPixelType, Dimension> RGBImageType;
   typedef itk::RGBToLuminanceImageFilter<RGBImageType, OutputImageType> RGBFilterType;
   typename RGBFilterType::Pointer rgbFilter = RGBFilterType::New();
 
   typedef itk::RGBAPixel<ScalarPixelType> RGBAPixelType;
-  typedef itk::Dream3DImage<RGBAPixelType, Dimension> RGBAImageType;
+  typedef itk::Image<RGBAPixelType, Dimension> RGBAImageType;
   typedef itk::RGBToLuminanceImageFilter<RGBAImageType, OutputImageType> RGBAFilterType;
   typename RGBAFilterType::Pointer rgbaFilter = RGBAFilterType::New();
 

@@ -85,7 +85,11 @@ int TestITKRelabelComponentImageno_sortingTest()
     WriteImage("ITKRelabelComponentImageno_sorting.nrrd", containerArray, input_path);
     QString md5Output;
     GetMD5FromDataContainer(containerArray, input_path, md5Output);
+#if defined(ITK_VERSION_MAJOR) && ITK_VERSION_MAJOR == 4
     DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("c8485314800c21580cc125fb240ada6d"));
+#else
+    DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("58af064e929f08f9d5bacc8be44ed92e "));
+#endif
     var = filter->property("NumberOfObjects");
     DREAM3D_REQUIRE_EQUAL(var.toUInt(), 2u);
     var = filter->property("OriginalNumberOfObjects");

@@ -95,7 +95,7 @@ public:
   template <typename PixelType, unsigned int Dimensions>
   int CompareImages(DataContainer::Pointer input_container, const DataArrayPath& input_path, DataContainer::Pointer baseline_container, const DataArrayPath& baseline_path, double tolerance)
   {
-    typedef itk::Dream3DImage<PixelType, Dimensions> ImageType;
+    typedef itk::Image<PixelType, Dimensions> ImageType;
     typedef itk::InPlaceDream3DDataToImageFilter<PixelType, Dimensions> ToITKType;
     typename ToITKType::Pointer toITK = ToITKType::New();
     // Convert input to ITK image
@@ -383,7 +383,7 @@ public:
   {
     try
     {
-      typedef itk::Dream3DImage<TPixel, Dimensions> ImageType;
+      typedef itk::Image<TPixel, Dimensions> ImageType;
       typedef itk::InPlaceDream3DDataToImageFilter<TPixel, Dimensions> ToITKType;
       typename ToITKType::Pointer toITK = ToITKType::New();
       toITK->SetInput(container);

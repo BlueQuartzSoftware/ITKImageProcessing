@@ -56,6 +56,9 @@
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
 #include "ITKImageProcessingPlugin.h"
 
+#include <itkImageFileReader.h>
+#include <itkImageIOBase.h>
+
 enum createdPathID : RenameDataPath::DataID_t
 {
   AttributeMatrixID21 = 21,

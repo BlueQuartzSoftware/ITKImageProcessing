@@ -16,7 +16,7 @@
 
 #include "SIMPLib/Geometry/ImageGeom.h"
 
-#include "SIMPLib/ITK/itkDream3DImage.h"
+
 #define DREAM3D_USE_RGB_RGBA 1
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
 
@@ -104,8 +104,8 @@ void ITKSaltAndPepperNoiseImage::dataCheckInternal()
 
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKSaltAndPepperNoiseImage::filter()
 {
-  typedef itk::Dream3DImage<InputPixelType, Dimension> InputImageType;
-  typedef itk::Dream3DImage<OutputPixelType, Dimension> OutputImageType;
+  typedef itk::Image<InputPixelType, Dimension> InputImageType;
+  typedef itk::Image<OutputPixelType, Dimension> OutputImageType;
   // define filter
   typedef itk::SaltAndPepperNoiseImageFilter<InputImageType, OutputImageType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();

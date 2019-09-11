@@ -10,7 +10,7 @@
 #include "SIMPLib/SIMPLib.h"
 
 #include "SIMPLib/ITK/itkDream3DFilterInterruption.h"
-#include "SIMPLib/ITK/itkDream3DImage.h"
+
 #include "SIMPLib/ITK/itkInPlaceDream3DDataToImageFilter.h"
 #include "SIMPLib/ITK/itkInPlaceImageToDream3DDataFilter.h"
 
@@ -172,7 +172,7 @@ protected:
     {
       DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(selectedArray.getDataContainerName());
 
-      using OutputImageType = itk::Dream3DImage<OutputPixelType, Dimension>;
+      using OutputImageType = itk::Image<OutputPixelType, Dimension>;
       using toITKType = itk::InPlaceDream3DDataToImageFilter<InputPixelType, Dimension>;
       // Create a Bridge to wrap an existing DREAM.3D array with an ItkImage container
       typename toITKType::Pointer toITK = toITKType::New();
@@ -250,7 +250,7 @@ protected:
       filter->SetInput(casterTo->GetOutput());
       filter->AddObserver(itk::ProgressEvent(), interruption);
 
-      using OutputImageType = itk::Dream3DImage<OutputPixelType, Dimension>;
+      using OutputImageType = itk::Image<OutputPixelType, Dimension>;
       using CasterFromType = itk::CastImageFilter<FloatImageType, OutputImageType>;
       typename CasterFromType::Pointer casterFrom = CasterFromType::New();
       casterFrom->SetInput(filter->GetOutput());

@@ -17,7 +17,7 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
-#include "SIMPLib/ITK/itkDream3DImage.h"
+
 
 // -----------------------------------------------------------------------------
 //
@@ -91,8 +91,8 @@ void ITKAsinImage::dataCheckInternal()
 
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKAsinImage::filter()
 {
-  typedef itk::Dream3DImage<InputPixelType, Dimension> InputImageType;
-  typedef itk::Dream3DImage<OutputPixelType, Dimension> OutputImageType;
+  typedef itk::Image<InputPixelType, Dimension> InputImageType;
+  typedef itk::Image<OutputPixelType, Dimension> OutputImageType;
   // define filter
   typedef itk::AsinImageFilter<InputImageType, OutputImageType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();

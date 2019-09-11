@@ -18,7 +18,6 @@ set(TEST_NAMES
   ITKImportImageStackTest
   ImportVectorImageStackTest
   ITKMedianImageTest
-
 )
 
 if(ITK_VERSION_MAJOR EQUAL 4)
@@ -29,6 +28,7 @@ elseif(ITK_VERSION_MAJOR EQUAL 5)
       ${TEST_NAMES}
       ITKImportFijiMontageTest
       ITKImportRoboMetMontageTest
+      ITKProxTVImageTest
 
       # ITKPCMTileRegistrationTest
       # ITKStitchMontageTest

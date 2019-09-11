@@ -232,7 +232,7 @@ bool ITKImageWriter::is2DFormat()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename TPixel, unsigned int Dimensions> void ITKImageWriter::writeAs2DStack(typename itk::Dream3DImage<TPixel, Dimensions>* image, unsigned long z_size)
+template <typename TPixel, unsigned int Dimensions> void ITKImageWriter::writeAs2DStack(typename itk::Image<TPixel, Dimensions>* image, unsigned long z_size)
 {
   typedef itk::NumericSeriesFileNames NamesGeneratorType;
   NamesGeneratorType::Pointer namesGenerator = NamesGeneratorType::New();
@@ -244,8 +244,8 @@ template <typename TPixel, unsigned int Dimensions> void ITKImageWriter::writeAs
   namesGenerator->SetIncrementIndex(1);
   namesGenerator->SetStartIndex(0);
   namesGenerator->SetEndIndex(z_size - 1);
-  typedef itk::Dream3DImage<TPixel, Dimensions> InputImageType;
-  typedef itk::Dream3DImage<TPixel, Dimensions - 1> OutputImageType;
+  typedef itk::Image<TPixel, Dimensions> InputImageType;
+  typedef itk::Image<TPixel, Dimensions - 1> OutputImageType;
   typedef itk::ImageSeriesWriter<InputImageType, OutputImageType> SeriesWriterType;
   typename SeriesWriterType::Pointer writer = SeriesWriterType::New();
   writer->SetInput(image);
@@ -257,9 +257,9 @@ template <typename TPixel, unsigned int Dimensions> void ITKImageWriter::writeAs
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename TPixel, unsigned int Dimensions> void ITKImageWriter::writeAsOneFile(typename itk::Dream3DImage<TPixel, Dimensions>* image)
+template <typename TPixel, unsigned int Dimensions> void ITKImageWriter::writeAsOneFile(typename itk::Image<TPixel, Dimensions>* image)
 {
-  typedef itk::Dream3DImage<TPixel, Dimensions> ImageType;
+  typedef itk::Image<TPixel, Dimensions> ImageType;
   typedef itk::ImageFileWriter<ImageType> FileWriterType;
   typename FileWriterType::Pointer writer = FileWriterType::New();
 
@@ -277,7 +277,7 @@ template <typename TPixel, unsigned int Dimensions> void ITKImageWriter::writeAs
 // -----------------------------------------------------------------------------
 template <typename TPixel, typename UnusedTPixel, unsigned int Dimensions> void ITKImageWriter::writeImage()
 {
-  using ImageType = itk::Dream3DImage<TPixel, Dimensions>;
+  using ImageType = itk::Image<TPixel, Dimensions>;
   using ToITKType = itk::InPlaceDream3DDataToImageFilter<TPixel, Dimensions>;
 
   DataArrayPath path = getImageArrayPath();

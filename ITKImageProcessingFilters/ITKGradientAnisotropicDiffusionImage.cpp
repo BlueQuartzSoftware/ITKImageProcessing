@@ -17,7 +17,7 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
-#include "SIMPLib/ITK/itkDream3DImage.h"
+
 
 // -----------------------------------------------------------------------------
 //
@@ -111,7 +111,7 @@ void ITKGradientAnisotropicDiffusionImage::dataCheckInternal()
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKGradientAnisotropicDiffusionImage::filter()
 {
   typedef typename itk::NumericTraits<InputPixelType>::RealType FloatPixelType;
-  typedef itk::Dream3DImage<FloatPixelType, Dimension> FloatImageType;
+  typedef itk::Image<FloatPixelType, Dimension> FloatImageType;
   typedef itk::GradientAnisotropicDiffusionImageFilter<FloatImageType, FloatImageType> FilterType;
 
   typename FilterType::Pointer filter = FilterType::New();
