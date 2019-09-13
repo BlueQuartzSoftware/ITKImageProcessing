@@ -95,7 +95,7 @@ bool Blend::GetConvergenceFromStopDescription(const QString& stopDescription) co
 // -----------------------------------------------------------------------------
 Blend::Blend()
 : m_MaxIterations(1000)
-//, m_Degree(2)
+, m_Degree(2)
 , m_OverlapPercentage(0.0f)
 , m_LowTolerance(1E-2)
 , m_HighTolerance(1E-2)
@@ -139,8 +139,8 @@ void Blend::setupFilterParameters()
   QStringList linkedAmoebaProps{ "MaxIterations", "OverlapPercentage", "LowTolerance", "HighTolerance" };
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Amoeba Optimizer", UseAmoebaOptimizer, FilterParameter::Parameter, Blend, linkedAmoebaProps));
 
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Degree", Degree, FilterParameter::Category::Parameter, Blend));
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Max Iterations", MaxIterations, FilterParameter::Category::Parameter, Blend));
-  // parameters.push_back(SIMPL_NEW_INTEGER_FP("Degree", Degree, FilterParameter::Category::Parameter, Blend));
   parameters.push_back(SIMPL_NEW_FLOAT_FP("Overlap Percentage", OverlapPercentage, FilterParameter::Category::Parameter, Blend));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Function Convergence Tolerance", LowTolerance, FilterParameter::Category::Parameter, Blend));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Parameter Convergence Tolerance", HighTolerance, FilterParameter::Category::Parameter, Blend));
@@ -177,6 +177,11 @@ void Blend::dataCheck()
   clearErrorCode();
   clearWarningCode();
 
+  if(m_Degree < 0)
+  {
+    setErrorCondition(-66509, "The degree must be non-negative");
+  }
+
   // Need to make sure that the filter parameter for the initial guess
   // can be cast into actual numeric data
   m_PxVec.clear();
@@ -186,7 +191,8 @@ void Blend::dataCheck()
     m_PxVec.push_back(coeff.toDouble(&coerced));
     if(!coerced)
     {
-      setErrorCondition(-66500, "A Px coefficient could not be translated into a floating-point precision number");
+      QString str = QString("A Px coefficient (%1) could not be translated into a floating-point precision number").arg(coeff);
+      setErrorCondition(-66500, str);
     }
   }
 
@@ -199,22 +205,24 @@ void Blend::dataCheck()
     m_PyVec.push_back(coeff.toDouble(&coerced));
     if (!coerced)
     {
-      setErrorCondition(-66500, "A Py coefficient could not be translated into a floating-point precision number");
+      QString str = QString("A Py coefficient (%1) could not be translated into a floating-point precision number").arg(coeff);
+      setErrorCondition(-66500, str);
     }
   }
 
   // This step would not be necessary if using Dave's strict polynomial array
   // Otherwise, there is a direct correlation between the degree of the transform polynomial
   // and how many coefficients should reside in the initial guess
-  // size_t len = static_cast<size_t>(2 * m_Degree * m_Degree + 4 * m_Degree + 2);
-  size_t len = 7;
+  size_t len = static_cast<size_t>(m_Degree * m_Degree + 2 * m_Degree + 1);
   if(len != m_PxVec.size())
   {
-    setErrorCondition(-66400, "Number of coefficients in Px is not compatible with degree number");
+    QString str = QString("Number of coefficients in Px (%1) is not compatible with degree number (req: %2)").arg(m_PxVec.size()).arg(len);
+    setErrorCondition(-66400, str);
   }
   if(len != m_PyVec.size())
   {
-    setErrorCondition(-66400, "Number of coefficients in Py is not compatible with degree number");
+    QString str = QString("Number of coefficients in Py (%1) is not compatible with degree number (req: %2)").arg(m_PyVec.size()).arg(len);
+    setErrorCondition(-66400, str);
   }
 
   // Overlap percentages below 0% and above 100% don't make any sense
@@ -520,22 +528,28 @@ size_t flatten(const SizeVec2Type& xyPos, const SizeVec3Type& dimensions)
 //
 // -----------------------------------------------------------------------------
 template <typename T>
-void transformDataPixel(double x_trans, double y_trans, const SizeVec2Type& newPixel, const std::vector<double>& transformVector, const SizeVec3Type& dimensions, typename const DataArray<T>::Pointer& da, typename const DataArray<T>::Pointer& tempDACopy)
+void transformDataPixel(int degree, double x_trans, double y_trans, const SizeVec2Type& newPixel, const std::vector<double>& transformVector, const SizeVec3Type& dimensions, typename const DataArray<T>::Pointer& da, typename const DataArray<T>::Pointer& tempDACopy)
 {
   using PixelTyped = std::array<double, 2>;
   
   const std::array<double, 2> newPrime = { newPixel[0] - x_trans, newPixel[1] - y_trans };
   const double newXPrime = newPrime[0];
   const double newYPrime = newPrime[1];
-  const double newXPrimeSqr = newXPrime * newXPrime;
-  const double newYPrimeSqr = newYPrime * newYPrime;
 
-  std::array<double, 2> oldPrime;
-  // old' = (a0 * y') + (a1 * y'Sqr) + (a2 * x') + (a3 * x'y) + (a4 * x'y'Sqr)+ (a5 * x'Sqr) + (a6 * x'Sqry')
-  oldPrime[0] = transformVector[0] * newYPrime + transformVector[1] * newYPrimeSqr + transformVector[2] * newXPrime + transformVector[3] * newXPrime * newYPrime + transformVector[4] * newXPrime * newYPrimeSqr +
-    transformVector[5] * newXPrimeSqr + transformVector[6] * newXPrimeSqr * newYPrime; // transformVector[7] * newXPrimeSqr * newYPrimeSqr;
-  oldPrime[1] = transformVector[7] * newYPrime + transformVector[8] * newYPrimeSqr + transformVector[9] * newXPrime + transformVector[10] * newXPrime * newYPrime + transformVector[11] * newXPrime * newYPrimeSqr +
-    transformVector[12] * newXPrimeSqr + transformVector[13] * newXPrimeSqr * newYPrime; // transformVector[14] * newXPrimeSqr * newYPrimeSqr;
+  std::array<double, 2> oldPrime{ 0.0, 0.0 };
+  // old' = // old' = Ei(Ej(aij * x^i * y^j)
+  const size_t yInit = (degree * degree + 2 * degree + 1);
+  for(size_t i = 0; i < degree; i++)
+  {
+    for(size_t j = 0; j < degree; j++)
+    {
+      const double xyParam = std::pow(newXPrime, i) * std::pow(newYPrime, j);
+      const size_t xOffset = i * degree + j;
+      const size_t yOffset = xOffset + yInit;
+      oldPrime[0] += transformVector[xOffset] * xyParam;
+      oldPrime[1] += transformVector[yOffset] * xyParam;
+    }
+  }
 
   const int64_t oldXUnbound = static_cast<int64_t>(round(oldPrime[0] + x_trans));
   const int64_t oldYUnbound = static_cast<int64_t>(round(oldPrime[1] + y_trans));
@@ -569,7 +583,7 @@ void transformDataPixel(double x_trans, double y_trans, const SizeVec2Type& newP
 //
 // -----------------------------------------------------------------------------
 template <typename T>
-void transformDataArray(const std::vector<double>& transformVector, const SizeVec3Type& dimensions, double x_trans, double y_trans, typename const DataArray<T>::Pointer& da)
+void transformDataArray(int degree, const std::vector<double>& transformVector, const SizeVec3Type& dimensions, double x_trans, double y_trans, typename const DataArray<T>::Pointer& da)
 {
   // Do not resize items that do not match the geometry.
   size_t flattenedDims = std::accumulate(dimensions.begin(), dimensions.end(), 1, std::multiplies<double>());
@@ -595,7 +609,7 @@ void transformDataArray(const std::vector<double>& transformVector, const SizeVe
     {
       SizeVec2Type newPixel{ x, y };
 
-      fn = std::bind(&transformDataPixel<T>, x_trans, y_trans, newPixel, transformVector, dimensions, da, daCopy);
+      fn = std::bind(&transformDataPixel<T>, degree, x_trans, y_trans, newPixel, transformVector, dimensions, da, daCopy);
       taskAlg.execute(fn);
     }
   }
@@ -605,57 +619,57 @@ void transformDataArray(const std::vector<double>& transformVector, const SizeVe
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void transformIDataArray(const std::vector<double>& transformVector, const SizeVec3Type& dimensions, double x_trans, double y_trans, const IDataArray::Pointer& da)
+void transformIDataArray(int degree, const std::vector<double>& transformVector, const SizeVec3Type& dimensions, double x_trans, double y_trans, const IDataArray::Pointer& da)
 {
   if(std::dynamic_pointer_cast<Int8ArrayType>(da))
   {
     Int8ArrayType::Pointer array = std::dynamic_pointer_cast<Int8ArrayType>(da);
-    transformDataArray<int8_t>(transformVector, dimensions, x_trans, y_trans, array);
+    transformDataArray<int8_t>(degree, transformVector, dimensions, x_trans, y_trans, array);
   }
   else if(std::dynamic_pointer_cast<UInt8ArrayType>(da))
   {
     UInt8ArrayType::Pointer array = std::dynamic_pointer_cast<UInt8ArrayType>(da);
-    transformDataArray<uint8_t>(transformVector, dimensions, x_trans, y_trans, array);
+    transformDataArray<uint8_t>(degree, transformVector, dimensions, x_trans, y_trans, array);
   }
   else if(std::dynamic_pointer_cast<Int16ArrayType>(da))
   {
     Int16ArrayType::Pointer array = std::dynamic_pointer_cast<Int16ArrayType>(da);
-    transformDataArray<int16_t>(transformVector, dimensions, x_trans, y_trans, array);
+    transformDataArray<int16_t>(degree, transformVector, dimensions, x_trans, y_trans, array);
   }
   else if(std::dynamic_pointer_cast<UInt16ArrayType>(da))
   {
     UInt16ArrayType::Pointer array = std::dynamic_pointer_cast<UInt16ArrayType>(da);
-    transformDataArray<uint16_t>(transformVector, dimensions, x_trans, y_trans, array);
+    transformDataArray<uint16_t>(degree, transformVector, dimensions, x_trans, y_trans, array);
   }
   else if(std::dynamic_pointer_cast<Int32ArrayType>(da))
   {
     Int32ArrayType::Pointer array = std::dynamic_pointer_cast<Int32ArrayType>(da);
-    transformDataArray<int32_t>(transformVector, dimensions, x_trans, y_trans, array);
+    transformDataArray<int32_t>(degree, transformVector, dimensions, x_trans, y_trans, array);
   }
   else if(std::dynamic_pointer_cast<UInt32ArrayType>(da))
   {
     UInt32ArrayType::Pointer array = std::dynamic_pointer_cast<UInt32ArrayType>(da);
-    transformDataArray<uint32_t>(transformVector, dimensions, x_trans, y_trans, array);
+    transformDataArray<uint32_t>(degree, transformVector, dimensions, x_trans, y_trans, array);
   }
   else if(std::dynamic_pointer_cast<Int64ArrayType>(da))
   {
     Int64ArrayType::Pointer array = std::dynamic_pointer_cast<Int64ArrayType>(da);
-    transformDataArray<int64_t>(transformVector, dimensions, x_trans, y_trans, array);
+    transformDataArray<int64_t>(degree, transformVector, dimensions, x_trans, y_trans, array);
   }
   else if(std::dynamic_pointer_cast<UInt64ArrayType>(da))
   {
     UInt64ArrayType::Pointer array = std::dynamic_pointer_cast<UInt64ArrayType>(da);
-    transformDataArray<uint64_t>(transformVector, dimensions, x_trans, y_trans, array);
+    transformDataArray<uint64_t>(degree, transformVector, dimensions, x_trans, y_trans, array);
   }
   else if(std::dynamic_pointer_cast<FloatArrayType>(da))
   {
     FloatArrayType::Pointer array = std::dynamic_pointer_cast<FloatArrayType>(da);
-    transformDataArray<float>(transformVector, dimensions, x_trans, y_trans, array);
+    transformDataArray<float>(degree, transformVector, dimensions, x_trans, y_trans, array);
   }
   else if(std::dynamic_pointer_cast<DoubleArrayType>(da))
   {
     DoubleArrayType::Pointer array = std::dynamic_pointer_cast<DoubleArrayType>(da);
-    transformDataArray<double>(transformVector, dimensions, x_trans, y_trans, array);
+    transformDataArray<double>(degree, transformVector, dimensions, x_trans, y_trans, array);
   }
 }
 
@@ -682,7 +696,7 @@ void Blend::warpDataContainers(const std::vector<double>& transformVector, doubl
     {
       for(const auto& da : *am)
       {
-        transformIDataArray(transformVector, dimensions, x_trans, y_trans, da);
+        transformIDataArray(m_Degree, transformVector, dimensions, x_trans, y_trans, da);
       }
     }
   }

@@ -54,47 +54,6 @@ struct RegionBounds;
 
 /**
  * @class FFTConvolutionCostFunction FFTConvolutionCostFunction.h ITKImageProcessingFilters/util/FFTConvolutionCostFunction.h
- * @brief This class was used as a testing class to observe the behavior of the Amoeba optimizer
- * It can be removed if not working on understanding how the Amoeba optimizer works.
- * It is derived from itk::SingleValuedCostFunction.
- */
-class ITKImageProcessing_EXPORT MultiParamCostFunction : public itk::SingleValuedCostFunction
-{
-public:
-  itkNewMacro(MultiParamCostFunction);
-
-  /**
-   * @brief Initializes the cost function based on a given set of values.
-   * @param mins
-   */
-  void Initialize(std::vector<double> mins);
-
-  /**
-   * @brief Override for itk::SingleValuedCostFunction::GetDerivative that throws an exception.
-   * @param unused
-   * @param unused
-   */
-  void GetDerivative(const ParametersType&, DerivativeType&) const override;
-
-  /**
-   * @brief Returns the number of parameters.
-   * @return
-   */
-  uint32_t GetNumberOfParameters() const override;
-
-  /**
-   * @brief Gets the MeasureType value for the given parameters
-   * @param parameters
-   * @return
-   */
-  MeasureType GetValue(const ParametersType& parameters) const override;
-
-private:
-  std::vector<double> m_Mins;
-};
-
-/**
- * @class FFTConvolutionCostFunction FFTConvolutionCostFunction.h ITKImageProcessingFilters/util/FFTConvolutionCostFunction.h
  * @brief The FFTConvolutionCostFunction class is used as the cost function for the Blend filter.
  * It is derived from itk::SingleValuedCostFunction.
  */
@@ -298,7 +257,7 @@ private:
   // --------------------------------------------------------------------------
   // Variables
   GridMontageShPtr m_Montage = nullptr;
-  int m_Degree = 2;
+  size_t m_Degree = 2;
   size_t m_OverlapXAmt;
   size_t m_OverlapYAmt;
   std::vector<std::pair<size_t, size_t>> m_IJ;

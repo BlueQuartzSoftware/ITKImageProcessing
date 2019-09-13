@@ -127,46 +127,6 @@ private:
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MultiParamCostFunction::Initialize(std::vector<double> mins)
-{
-  m_Mins = mins;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void MultiParamCostFunction::GetDerivative(const ParametersType&, DerivativeType&) const
-{
-  throw std::exception();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-uint32_t MultiParamCostFunction::GetNumberOfParameters() const
-{
-  return static_cast<uint32_t>(m_Mins.size());
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-MultiParamCostFunction::MeasureType MultiParamCostFunction::GetValue(const ParametersType& parameters) const
-{
-  MeasureType residual = 0.0;
-  size_t numParams = parameters.size();
-  for(size_t idx = 0; idx < numParams; ++idx)
-  {
-    double minValue = m_Mins[idx];
-    double paramValue = parameters[idx];
-    residual += (idx == numParams - 1) ? minValue : pow(paramValue - minValue, 2);
-  }
-  return residual;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void FFTConvolutionCostFunction::Initialize(const GridMontageShPtr& montage, int degree, float overlapPercentage,
                                             const DataContainerArrayShPtr& dca, const QString& amName, const QString& daName)
 {
@@ -247,12 +207,20 @@ FFTConvolutionCostFunction::PixelTypei FFTConvolutionCostFunction::calculateNew2
   const double newXPrimeSqr = newPrime[0] * newPrime[0];
   const double newYPrimeSqr = newPrime[1] * newPrime[1];
 
-  std::array<double, 2> oldPrime;
-  // old' = (a0 * y') + (a1 * y'Sqr) + (a2 * x') + (a3 * x'y) + (a4 * x'y'Sqr)+ (a5 * x'Sqr) + (a6 * x'Sqry')
-  oldPrime[0] = parameters[0] * newYPrime + parameters[1] * newYPrimeSqr + parameters[2] * newXPrime + parameters[3] * newXPrime * newYPrime + parameters[4] * newXPrime * newYPrimeSqr +
-    parameters[5] * newXPrimeSqr + parameters[6] * newXPrimeSqr * newYPrime;
-  oldPrime[1] = parameters[7] * newYPrime + parameters[8] * newYPrimeSqr + parameters[9] * newXPrime + parameters[10] * newXPrime * newYPrime + parameters[11] * newXPrime * newYPrimeSqr +
-    parameters[12] * newXPrimeSqr + parameters[13] * newXPrimeSqr * newYPrime;
+  std::array<double, 2> oldPrime = { 0.0, 0.0 };
+  // old' = Ei(Ej(aij * x^i * y^j)
+  size_t yInit = (m_Degree * m_Degree + 2 * m_Degree + 1);
+  for(size_t i = 0; i < m_Degree; i++)
+  {
+    for(size_t j = 0; j < m_Degree; j++)
+    {
+      const double xyParam = std::pow(newXPrime, i) * std::pow(newYPrime, j);
+      const size_t xOffset = i * m_Degree + j;
+      const size_t yOffset = xOffset + yInit;
+      oldPrime[0] += parameters[xOffset] * xyParam;
+      oldPrime[1] += parameters[yOffset] * xyParam;
+    }
+  }
 
   const int64_t oldXUnbound = static_cast<int64_t>(round(oldPrime[0] + x_trans));
   const int64_t oldYUnbound = static_cast<int64_t>(round(oldPrime[1] + y_trans));
@@ -407,7 +375,7 @@ void FFTConvolutionCostFunction::GetDerivative(const ParametersType&, Derivative
 // -----------------------------------------------------------------------------
 uint32_t FFTConvolutionCostFunction::GetNumberOfParameters() const
 {
-  return 14; // Locked for Degree = 2.  Not all values have corresponding parameters.
+  return static_cast<uint32_t>(2 * (m_Degree * m_Degree + 2 * m_Degree + 1));
 }
 
 // -----------------------------------------------------------------------------

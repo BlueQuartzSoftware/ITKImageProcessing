@@ -72,8 +72,8 @@ public:
   SIMPL_FILTER_PARAMETER(double, HighTolerance)
   Q_PROPERTY(double HighTolerance READ getHighTolerance WRITE setHighTolerance)
 
-  //SIMPL_FILTER_PARAMETER(int, Degree)
-  //Q_PROPERTY(int Degree READ getDegree WRITE setDegree)
+  SIMPL_FILTER_PARAMETER(int, Degree)
+  Q_PROPERTY(int Degree READ getDegree WRITE setDegree)
 
   SIMPL_FILTER_PARAMETER(bool, UseAmoebaOptimizer)
   Q_PROPERTY(bool UseAmoebaOptimizer READ getUseAmoebaOptimizer WRITE setUseAmoebaOptimizer)
@@ -235,5 +235,4 @@ protected:
 private:
   std::vector<double> m_PxVec;
   std::vector<double> m_PyVec;
-  int m_Degree = 2;
 };
