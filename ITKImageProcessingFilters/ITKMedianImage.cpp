@@ -17,7 +17,7 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
-#include "SIMPLib/ITK/itkDream3DImage.h"
+
 
 // -----------------------------------------------------------------------------
 //
@@ -99,8 +99,8 @@ void ITKMedianImage::dataCheckInternal()
 
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKMedianImage::filter()
 {
-  using InputImageType = itk::Dream3DImage<InputPixelType, Dimension>;
-  using OutputImageType = itk::Dream3DImage<OutputPixelType, Dimension>;
+  using InputImageType = itk::Image<InputPixelType, Dimension>;
+  using OutputImageType = itk::Image<OutputPixelType, Dimension>;
   // define filter
   using FilterType = itk::MedianImageFilter<InputImageType, OutputImageType>;
   typename FilterType::Pointer filter = FilterType::New();

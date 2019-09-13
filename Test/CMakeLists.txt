@@ -17,13 +17,6 @@ set(TEST_NAMES
   ITKImportImageStackTest
   ImportVectorImageStackTest
   ITKMedianImageTest
-
-#  ITKImageProcessingReaderTest
-#  ITKImageProcessingWriterTest
-#  ITKImportImageStackTest
-#  ImportVectorImageStackTest
-
-#  ITKMedianImageTest
 )
 
 if(ITK_VERSION_MAJOR EQUAL 4)
@@ -32,8 +25,9 @@ elseif(ITK_VERSION_MAJOR EQUAL 5)
   # Put ITK 5 Specific Modyles in here
   set( TEST_NAMES
       ${TEST_NAMES}
-#      ITKImportFijiMontageTest
-#      ITKImportRoboMetMontageTest
+      ITKImportFijiMontageTest
+      ITKImportRoboMetMontageTest
+      ITKProxTVImageTest
 
       # ITKPCMTileRegistrationTest
       # ITKStitchMontageTest

@@ -50,7 +50,6 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
 #include "SIMPLib/ITK/itkDream3DFilterInterruption.h"
-#include "SIMPLib/ITK/itkDream3DImage.h"
 #include "SIMPLib/ITK/itkInPlaceDream3DDataToImageFilter.h"
 #include "SIMPLib/ITK/itkInPlaceImageToDream3DDataFilter.h"
 #include "SIMPLib/ITK/itkProgressObserver.hpp"
@@ -314,7 +313,7 @@ void ITKPCMTileRegistration::execute()
 
   IDataArray::Pointer da = m_DataContainers[0]->getAttributeMatrix(getCommonAttributeMatrixName())->getAttributeArray(getCommonDataArrayName());
 
-  EXECUTE_REGISTER_FUNCTION_TEMPLATE(this, registerRGBMontage, registerGrayscaleMontage, da);
+  EXECUTE_REGISTER_FUNCTION_TEMPLATE(this, registerRGBMontage, registerGrayscaleMontage, da)
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");
@@ -327,7 +326,7 @@ template <typename PixelType, typename MontageType>
 typename MontageType::Pointer ITKPCMTileRegistration::createMontage(int peakMethodToUse)
 {
   using ScalarPixelType = typename itk::NumericTraits<PixelType>::ValueType;
-  using ScalarImageType = itk::Dream3DImage<ScalarPixelType, Dimension>;
+  using ScalarImageType = itk::Image<ScalarPixelType, Dimension>;
   using PCMType = itk::PhaseCorrelationImageRegistrationMethod<ScalarImageType, ScalarImageType>;
 
   IntVec2Type montageSize;
@@ -352,7 +351,7 @@ typename MontageType::Pointer ITKPCMTileRegistration::createMontage(int peakMeth
   using SizeValueType = itk::Size<2>::SizeValueType;
   typename MontageType::Pointer montage = MontageType::New();
   montage->SetMontageSize({static_cast<SizeValueType>(colCount), static_cast<SizeValueType>(rowCount)});
-  montage->GetModifiablePCM()->SetPaddingMethod(PCMType::PaddingMethod::MirrorWithExponentialDecay);
+  montage->SetPaddingMethod(PCMType::PaddingMethod::MirrorWithExponentialDecay);
   //  montage->SetOriginAdjustment(originAdjustment);
   //  montage->SetForcedSpacing(sp);
 
@@ -360,7 +359,7 @@ typename MontageType::Pointer ITKPCMTileRegistration::createMontage(int peakMeth
   using PeakFinderUnderlying = typename std::underlying_type<PeakInterpolationType>::type;
 
   auto peakMethod = static_cast<PeakFinderUnderlying>(peakMethodToUse);
-  montage->GetModifiablePCMOptimizer()->SetPeakInterpolationMethod(static_cast<PeakInterpolationType>(peakMethod));
+  montage->SetPeakInterpolationMethod(static_cast<PeakInterpolationType>(peakMethod));
   montage->Modified();
 
   return montage;
@@ -374,7 +373,7 @@ typename MontageType::Pointer ITKPCMTileRegistration::createGrayscaleMontage(int
 {
   using ScalarPixelType = typename itk::NumericTraits<PixelType>::ValueType;
   //	using PointType = itk::Point<double, Dimension>;
-  using ScalarImageType = itk::Dream3DImage<ScalarPixelType, Dimension>;
+  using ScalarImageType = itk::Image<ScalarPixelType, Dimension>;
 
   int rowStart = m_MontageSelection.getRowStart();
   int rowEnd = m_MontageSelection.getRowEnd();
@@ -387,10 +386,10 @@ typename MontageType::Pointer ITKPCMTileRegistration::createGrayscaleMontage(int
   for(int32_t row = rowStart; row <= rowEnd; row++)
   {
     typename MontageType::TileIndexType ind;
-    ind[1] = row - rowStart;
-    for(int32_t col = colStart; col <= colStart; col++)
+    ind[1] = static_cast<::itk::SizeValueType>(row - m_MontageStart[1]);
+    for(int32_t col = m_MontageStart[0]; col <= m_MontageEnd[0]; col++)
     {
-      ind[0] = col - colStart;
+      ind[0] = static_cast<::itk::SizeValueType>(col - m_MontageStart[0]);
 
       // Get our DataContainer Name using a Prefix and a rXXcYY format.
       QString dcName = m_MontageSelection.getDataContainerName(row, col);
@@ -421,8 +420,8 @@ typename MontageType::Pointer ITKPCMTileRegistration::createRGBMontage(int peakM
 {
   using ScalarPixelType = typename itk::NumericTraits<PixelType>::ValueType;
   //	using PointType = itk::Point<double, Dimension>;
-  using ScalarImageType = itk::Dream3DImage<ScalarPixelType, Dimension>;
-  using OriginalImageType = itk::Dream3DImage<PixelType, Dimension>;
+  using ScalarImageType = itk::Image<ScalarPixelType, Dimension>;
+  using OriginalImageType = itk::Image<PixelType, Dimension>;
 
   typename MontageType::Pointer montage = createMontage<PixelType, MontageType>(peakMethodToUse);
 
@@ -435,10 +434,10 @@ typename MontageType::Pointer ITKPCMTileRegistration::createRGBMontage(int peakM
   for(int32_t row = rowStart; row <= rowEnd; row++)
   {
     typename MontageType::TileIndexType ind;
-    ind[1] = row - rowStart;
-    for(int32_t col = colStart; col <= colEnd; col++)
+    ind[1] = static_cast<::itk::SizeValueType>(row - m_MontageStart[1]);
+    for(int32_t col = m_MontageStart[0]; col <= m_MontageEnd[0]; col++)
     {
-      ind[0] = col - colStart;
+      ind[0] = static_cast<::itk::SizeValueType>(col - m_MontageStart[0]);
 
       // Get our DataContainer Name using a Prefix and a rXXcYY format.
       QString dcName = m_MontageSelection.getDataContainerName(row, col);
@@ -474,7 +473,7 @@ template <typename PixelType>
 void ITKPCMTileRegistration::registerGrayscaleMontage(int peakMethodToUse, unsigned streamSubdivisions)
 {
   using ScalarPixelType = typename itk::NumericTraits<PixelType>::ValueType;
-  using ScalarImageType = itk::Dream3DImage<ScalarPixelType, Dimension>;
+  using ScalarImageType = itk::Image<ScalarPixelType, Dimension>;
   using MontageType = itk::TileMontage<ScalarImageType>;
 
   typename MontageType::Pointer montage = createGrayscaleMontage<PixelType, MontageType>(peakMethodToUse);
@@ -493,7 +492,7 @@ template <typename PixelType>
 void ITKPCMTileRegistration::registerRGBMontage(int peakMethodToUse, unsigned streamSubdivisions)
 {
   using ScalarPixelType = typename itk::NumericTraits<PixelType>::ValueType;
-  using ScalarImageType = itk::Dream3DImage<ScalarPixelType, Dimension>;
+  using ScalarImageType = itk::Image<ScalarPixelType, Dimension>;
   using MontageType = itk::TileMontage<ScalarImageType>;
 
   typename MontageType::Pointer montage = createRGBMontage<PixelType, MontageType>(peakMethodToUse);
@@ -542,10 +541,10 @@ void ITKPCMTileRegistration::storeMontageTransforms(typename MontageType::Pointe
   for(int32_t row = rowStart; row <= colStart; row++)
   {
     typename MontageType::TileIndexType ind;
-    ind[1] = row - rowStart;
-    for(int32_t col = colStart; col <= colEnd; col++)
+    ind[1] = static_cast<::itk::SizeValueType>(row - m_MontageStart[1]);
+    for(int32_t col = m_MontageStart[0]; col <= m_MontageEnd[0]; col++)
     {
-      ind[0] = col - colStart;
+      ind[0] = static_cast<::itk::SizeValueType>(col - m_MontageStart[0]);
 
       const TransformType* regTr = montage->GetOutputTransform(ind);
 

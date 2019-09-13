@@ -4,7 +4,7 @@ index 8d88251..4a9ba48 100644
 +++ b/ITKImageProcessingFilters/ITKSaltAndPepperNoiseImage.cpp
 @@ -19,7 +19,8 @@
  
- #include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
+
  #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
 -
 +#undef DREAM3D_USE_RGBA
@@ -18,7 +18,7 @@ index 5ed7c22..384c64b 100644
 +++ b/ITKImageProcessingFilters/ITKSmoothingRecursiveGaussianImage.cpp
 @@ -19,6 +19,8 @@
  
- #include "ITKImageProcessing/ITKImageProcessingFilters/itkDream3DImage.h"
+
  #include "ITKImageProcessing/ITKImageProcessingFilters/Dream3DTemplateAliasMacro.h"
 +#undef DREAM3D_USE_RGBA
 +#define DREAM3D_USE_RGBA 1

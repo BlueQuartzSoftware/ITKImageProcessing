@@ -16,7 +16,7 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
-#include "SIMPLib/ITK/itkDream3DImage.h"
+
 
 /* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
 enum createdPathID : RenameDataPath::DataID_t
@@ -109,8 +109,8 @@ void ITKMorphologicalWatershedFromMarkersImage::dataCheckInternal()
 // -----------------------------------------------------------------------------
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKMorphologicalWatershedFromMarkersImage::convertDataContainerType()
 {
-  typedef itk::Dream3DImage<InputPixelType, Dimension> InputImageType;
-  typedef itk::Dream3DImage<OutputPixelType, Dimension> OutputImageType;
+  typedef itk::Image<InputPixelType, Dimension> InputImageType;
+  typedef itk::Image<OutputPixelType, Dimension> OutputImageType;
   typedef itk::InPlaceDream3DDataToImageFilter<InputPixelType, Dimension> toITKType;
   typedef itk::InPlaceImageToDream3DDataFilter<OutputPixelType, Dimension> toDream3DType;
   typedef itk::CastImageFilter<InputImageType, OutputImageType> CastType;
@@ -158,8 +158,8 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
 // -----------------------------------------------------------------------------
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKMorphologicalWatershedFromMarkersImage::filter()
 {
-  typedef itk::Dream3DImage<InputPixelType, Dimension> InputImageType;
-  typedef itk::Dream3DImage<OutputPixelType, Dimension> OutputImageType;
+  typedef itk::Image<InputPixelType, Dimension> InputImageType;
+  typedef itk::Image<OutputPixelType, Dimension> OutputImageType;
   // define filter
   typedef itk::MorphologicalWatershedFromMarkersImageFilter<InputImageType, OutputImageType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();

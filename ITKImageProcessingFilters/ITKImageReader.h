@@ -38,7 +38,7 @@
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
-#include "SIMPLib/ITK/itkDream3DImage.h"
+
 #include "SIMPLib/ITK/itkImageReaderHelper.h"
 #include "SIMPLib/SIMPLib.h"
 

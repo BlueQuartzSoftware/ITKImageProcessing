@@ -18,7 +18,7 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
-#include "SIMPLib/ITK/itkDream3DImage.h"
+
 #include <itkFlatStructuringElement.h>
 
 
@@ -123,8 +123,8 @@ void ITKGrayscaleErodeImage::dataCheckInternal()
 
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKGrayscaleErodeImage::filter()
 {
-  typedef itk::Dream3DImage<InputPixelType, Dimension> InputImageType;
-  typedef itk::Dream3DImage<OutputPixelType, Dimension> OutputImageType;
+  typedef itk::Image<InputPixelType, Dimension> InputImageType;
+  typedef itk::Image<OutputPixelType, Dimension> OutputImageType;
   typedef itk::FlatStructuringElement<Dimension> StructuringElementType;
   typedef typename StructuringElementType::RadiusType RadiusType;
   RadiusType elementRadius = CastVec3ToITK<FloatVec3Type, RadiusType, typename RadiusType::SizeValueType>(m_KernelRadius, RadiusType::Dimension);

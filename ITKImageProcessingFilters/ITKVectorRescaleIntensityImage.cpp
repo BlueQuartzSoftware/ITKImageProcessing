@@ -19,7 +19,7 @@
 #define DREAM3D_USE_Scalar 0
 #define DREAM3D_USE_Vector 1
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
-#include "SIMPLib/ITK/itkDream3DImage.h"
+
 
 // -----------------------------------------------------------------------------
 //
@@ -140,10 +140,10 @@ void ITKVectorRescaleIntensityImage::dataCheckInternal()
 
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKVectorRescaleIntensityImage::filter()
 {
-  typedef itk::Dream3DImage<InputPixelType, Dimension> InputImageType;
+  typedef itk::Image<InputPixelType, Dimension> InputImageType;
   // OutputPixelType is based on scalar types. Create corresponding vector pixel type.
   typedef itk::Vector<OutputPixelType, InputPixelType::Dimension> VectorOutputPixelType;
-  typedef itk::Dream3DImage<VectorOutputPixelType, Dimension> OutputImageType;
+  typedef itk::Image<VectorOutputPixelType, Dimension> OutputImageType;
   // define filter
   typedef itk::VectorRescaleIntensityImageFilter<InputImageType, OutputImageType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();

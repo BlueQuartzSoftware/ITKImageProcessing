@@ -17,7 +17,7 @@
 #include <itkGaussianRandomSpatialNeighborSubsampler.h>
 
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
-#include "SIMPLib/ITK/itkDream3DImage.h"
+
 
 // -----------------------------------------------------------------------------
 //
@@ -151,7 +151,7 @@ void ITKPatchBasedDenoisingImage::dataCheckInternal()
 
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKPatchBasedDenoisingImage::filter()
 {
-  typedef itk::Dream3DImage<OutputPixelType, Dimension> RealImageType;
+  typedef itk::Image<OutputPixelType, Dimension> RealImageType;
   // define filter
   typedef itk::PatchBasedDenoisingImageFilter<RealImageType, RealImageType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
