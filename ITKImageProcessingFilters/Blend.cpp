@@ -527,6 +527,20 @@ size_t flatten(const SizeVec2Type& xyPos, const SizeVec3Type& dimensions)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+double pow(double base, size_t pow)
+{
+  double val = 1;
+  for(size_t i = 0; i < pow; i++)
+  {
+    val *= base;
+  }
+
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 template <typename T>
 void transformDataPixel(int degree, double x_trans, double y_trans, const SizeVec2Type& newPixel, const std::vector<double>& transformVector, const SizeVec3Type& dimensions, typename const DataArray<T>::Pointer& da, typename const DataArray<T>::Pointer& tempDACopy)
 {
@@ -536,18 +550,19 @@ void transformDataPixel(int degree, double x_trans, double y_trans, const SizeVe
   const double newXPrime = newPrime[0];
   const double newYPrime = newPrime[1];
 
+  // old' = Ei(Ej(aij * x^i * y^j)
   std::array<double, 2> oldPrime{ 0.0, 0.0 };
-  // old' = // old' = Ei(Ej(aij * x^i * y^j)
-  const size_t yInit = (degree * degree + 2 * degree + 1);
-  for(size_t i = 0; i < degree; i++)
+  const size_t yInit = (degree * degree) + (2 * degree + 1);
+  for(size_t i = 0; i <= degree; i++)
   {
-    for(size_t j = 0; j < degree; j++)
+    const double xVal = pow(newXPrime, i);
+    for(size_t j = 0; j <= degree; j++)
     {
-      const double xyParam = std::pow(newXPrime, i) * std::pow(newYPrime, j);
-      const size_t xOffset = i * degree + j;
+      const double yVal = pow(newYPrime, j);
+      const size_t xOffset = i * (degree+1) + j;
       const size_t yOffset = xOffset + yInit;
-      oldPrime[0] += transformVector[xOffset] * xyParam;
-      oldPrime[1] += transformVector[yOffset] * xyParam;
+      oldPrime[0] += transformVector[xOffset] * xVal * yVal;
+      oldPrime[1] += transformVector[yOffset] * xVal * yVal;
     }
   }
 

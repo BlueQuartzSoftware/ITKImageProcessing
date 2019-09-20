@@ -207,18 +207,18 @@ FFTConvolutionCostFunction::PixelTypei FFTConvolutionCostFunction::calculateNew2
   const double newXPrimeSqr = newPrime[0] * newPrime[0];
   const double newYPrimeSqr = newPrime[1] * newPrime[1];
 
-  std::array<double, 2> oldPrime = { 0.0, 0.0 };
   // old' = Ei(Ej(aij * x^i * y^j)
-  size_t yInit = (m_Degree * m_Degree + 2 * m_Degree + 1);
-  for(size_t i = 0; i < m_Degree; i++)
+  std::array<double, 2> oldPrime = { 0.0, 0.0 };
+  const size_t yInit = (m_Degree * m_Degree) + (2 * m_Degree + 1);
+  for(size_t i = 0; i <= m_Degree; i++)
   {
-    for(size_t j = 0; j < m_Degree; j++)
+    for(size_t j = 0; j <= m_Degree; j++)
     {
       const double xyParam = std::pow(newXPrime, i) * std::pow(newYPrime, j);
-      const size_t xOffset = i * m_Degree + j;
+      const size_t xOffset = i * (m_Degree+1) + j;
       const size_t yOffset = xOffset + yInit;
-      oldPrime[0] += parameters[xOffset] * xyParam;
-      oldPrime[1] += parameters[yOffset] * xyParam;
+      oldPrime[0] = oldPrime[0] + parameters[xOffset] * xyParam;
+      oldPrime[1] = oldPrime[1] + parameters[yOffset] * xyParam;
     }
   }
 
