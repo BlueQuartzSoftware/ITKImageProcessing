@@ -21,7 +21,7 @@ public:
   int TestITKProxTVImagedefaultsTest()
   {
 
-    QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/VM1111Shrink-RGB.png");
+    QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/BrainProtonDensitySlice.png");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
     this->ReadImage(input_filename, containerArray, input_path);
@@ -29,33 +29,23 @@ public:
     Observer obs;
     QObject obj;
 
-    ConvertColorToGrayScale::Pointer grayScale = ConvertColorToGrayScale::New();
-    grayScale->setInputDataArrayVector({input_path});
-    grayScale->setOutputArrayPrefix("GrayScale_");
-    grayScale->setDataContainerArray(containerArray);
-    obj.connect(grayScale.get(), SIGNAL(messageGenerated(const AbstractMessage::Pointer&)), &obs, SLOT(processPipelineMessage(const AbstractMessage::Pointer&)));
-
-    grayScale->execute();
-    DREAM3D_REQUIRED(grayScale->getErrorCode(), >=, 0)
-    DREAM3D_REQUIRED(grayScale->getWarningCode(), >=, 0)
-
     QString filtName = "ITKProxTVImage";
     FilterManager* fm = FilterManager::Instance();
     IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filtName);
     DREAM3D_REQUIRE_VALID_POINTER(filterFactory.get())
     AbstractFilter::Pointer filter = filterFactory->create();
-    QVariant var;
-    DataArrayPath dap(input_path);
-    dap.setDataArrayName("GrayScale_TestAttributeArrayName");
 
+    QVariant var;
     bool propWasSet;
-    var.setValue(dap);
+    var.setValue(input_path);
 
     propWasSet = filter->setProperty("SelectedCellArrayPath", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true)
-    var.setValue(false);
-    propWasSet = filter->setProperty("SaveAsNewArray", var);
-    DREAM3D_REQUIRE_EQUAL(propWasSet, true) filter->setDataContainerArray(containerArray);
+    filter->setDataContainerArray(containerArray);
+
+    var.setValue(2);
+    propWasSet = filter->setProperty("MaximumNumberOfIterations", var);
+    DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
     obj.connect(filter.get(), SIGNAL(messageGenerated(const AbstractMessage::Pointer&)), &obs, SLOT(processPipelineMessage(const AbstractMessage::Pointer&)));
     filter->execute();
@@ -79,7 +69,7 @@ public:
 
     DREAM3D_REGISTER_TEST(this->TestFilterAvailability("ITKProxTVImage"))
 
-    // DREAM3D_REGISTER_TEST(TestITKProxTVImagedefaultsTest())
+    DREAM3D_REGISTER_TEST(TestITKProxTVImagedefaultsTest())
 
     if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
     {
