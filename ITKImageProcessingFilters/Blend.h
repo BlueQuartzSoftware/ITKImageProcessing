@@ -78,6 +78,9 @@ public:
   SIMPL_FILTER_PARAMETER(bool, UseAmoebaOptimizer)
   Q_PROPERTY(bool UseAmoebaOptimizer READ getUseAmoebaOptimizer WRITE setUseAmoebaOptimizer)
 
+  SIMPL_FILTER_PARAMETER(bool, SpecifyInitialSimplex)
+  Q_PROPERTY(bool SpecifyInitialSimplex READ getSpecifyInitialSimplex WRITE setSpecifyInitialSimplex)
+
   SIMPL_FILTER_PARAMETER(QString, PxStr)
   Q_PROPERTY(QString PxStr READ getPxStr WRITE setPxStr)
 

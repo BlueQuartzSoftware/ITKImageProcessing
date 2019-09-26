@@ -72,10 +72,9 @@ public:
   using OverlapPair = std::pair<GridPair, RegionPair>;
   using OverlapPairs = std::vector<OverlapPair>;
   using ImageGrid = std::map<GridKey, InputImage::Pointer>;
-  using Filter = itk::FFTConvolutionImageFilter<InputImage, InputImage, OutputImage>;
+  using ConvolutionFilter = itk::FFTConvolutionImageFilter<InputImage, InputImage, OutputImage>;
   using PixelTypei = std::array<int64_t, 2>;
 
-  
   using CropMap = std::map<GridKey, RegionBounds>;
 
   // The m_overlaps is a vector of pairs, with the first index being the
@@ -109,8 +108,7 @@ public:
    * @param amName
    * @param daName
    */
-  void Initialize(const GridMontageShPtr& montage, int degree, float overlapPercentage, const DataContainerArrayShPtr& dca,
-                  const QString& amName, const QString& daName);
+  void Initialize(const GridMontageShPtr& montage, int degree, float overlapPercentage, const DataContainerArrayShPtr& dca, const QString& amName, const QString& daName);
 
   /**
    * @brief This method is called by Initialize as a parallel task algorithm operating on each DataContainer.
@@ -126,7 +124,7 @@ public:
    * @param overlapPercentage
    */
   void InitializePercentageOverlaps(const ImageGrid::value_type& image, float overlapPercentage);
-  
+
   /**
    * @brief Override for itk::SingleValuedCostFunction::GetDerivative that throws an exception.
    * @param unused
@@ -178,21 +176,58 @@ public:
    * @param x_ref
    * @param y_ref
    */
-  void calculatePixelCoordinates(const ParametersType& parameters, const InputImage::Pointer& inputImage, const InputImage::Pointer& distortedImage, const GridKey& gridKey, CropMap& cropMap, const PixelCoord& pixel, double x_trans, double y_trans, double tolerance, double lastXIndex, double lastYIndex) const;
+  void calculatePixelCoordinates(const ParametersType& parameters, const InputImage::Pointer& inputImage, const InputImage::Pointer& distortedImage, const GridKey& gridKey, CropMap& cropMap,
+                                 const PixelCoord& pixel, double x_trans, double y_trans, double tolerance, double lastXIndex, double lastYIndex) const;
 
+  /**
+   * @brief Adjusts the given CropMap so that the RegionBounds for the given GridKey excludes the provided pixel coordinate.
+   * @param pixel
+   * @param inputImage
+   * @param inputImage
+   * @param gridKey
+   * @param cropMap
+   */
   void adjustCropMap(const PixelCoord& pixel, const InputImage::Pointer& inputImage, const GridKey& gridKey, CropMap& cropMap) const;
 
+  /**
+   * @brief Updates the given CropMap bounds to match the bounds of the given Image.
+   * @param inputImage
+   * @param cropMap
+   */
   void updateCropMapBounds(const InputImage::Pointer& inputImage, CropMap& cropMap) const;
 
+  /**
+   * @brief Crops the provided ImageGrid based on the given OverlapPair and CropMap.
+   * The CropMap is used to determine the bounds of the other Image specified by the
+   * OverlapPair rather than its own matching Image.
+   * @param overlap
+   * @param distortedGrid
+   * @param cropMap
+   */
   void cropOverlap(OverlapPair& overlap, ImageGrid& distortedGrid, CropMap& cropMap) const;
 
+  /**
+   * @brief Crops the Image specified by the given GridKey and ImageGrid based on the CropMap.
+   * @param gridKey
+   * @param distortedGrid
+   * @param cropMap
+   */
   void cropDistortedGrid(const GridKey& gridKey, ImageGrid& distortedGrid, CropMap& cropMap) const;
 
   /**
-  * @brief Crops the OverlapPair using the provided ImageGrid and CropMap
-  */
+   * @brief Crops the OverlapPair using the provided ImageGrid and CropMap.
+   * @param overlap
+   * @param distortedGrid
+   * @param cropMap
+   */
   void cropOverlapHorizontal(OverlapPair& overlap, const ImageGrid& distortedGrid, const CropMap& cropMap) const;
 
+  /**
+   * @brief Crops the OverlapPair using the provided ImageGrid and CropMap.
+   * @param overlap
+   * @param distortedGrid
+   * @param cropMap
+   */
   void cropOverlapVertical(OverlapPair& overlap, const ImageGrid& distortedGrid, const CropMap& cropMap) const;
 
   /**
@@ -227,7 +262,7 @@ private:
    * @param montage
    */
   void calculateImageDim(const GridMontageShPtr& montage);
-  
+
   /**
    * @brief Returns the pixel index for the given row, column, parameters, and translation amount.
    * @param row
