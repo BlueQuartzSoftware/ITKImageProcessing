@@ -71,6 +71,7 @@ public:
   using RegionPair = std::pair<InputImage::RegionType, InputImage::RegionType>;
   using OverlapPair = std::pair<GridPair, RegionPair>;
   using OverlapPairs = std::vector<OverlapPair>;
+  using ImagePair = std::pair<InputImage::Pointer, InputImage::Pointer>;
   using ImageGrid = std::map<GridKey, InputImage::Pointer>;
   using ConvolutionFilter = itk::FFTConvolutionImageFilter<InputImage, InputImage, OutputImage>;
   using PixelTypei = std::array<int64_t, 2>;
@@ -121,9 +122,8 @@ public:
   /**
    * @brief This method is called by Initialize as a parallel task algorithm operating on each image in the ImageGrid to calculate the overlap amounts.
    * @param image
-   * @param overlapPercentage
    */
-  void InitializePercentageOverlaps(const ImageGrid::value_type& image, float overlapPercentage);
+  void InitializePercentageOverlaps(const ImageGrid::value_type& image);
 
   /**
    * @brief Override for itk::SingleValuedCostFunction::GetDerivative that throws an exception.
@@ -152,18 +152,17 @@ public:
    * @param distortedGrid
    * @param cropMap
    */
-  void applyTransformation(const ParametersType& parameters, const ImageGrid::value_type& eachImage, ImageGrid& distortedGrid, CropMap& cropMap) const;
+  void checkTransformation(const ParametersType& parameters, const ImageGrid::value_type& eachImage, CropMap& cropMap) const;
 
   /**
    * @brief This method is called by applyTransformation as a parallel task to apply the transform to each pixel.
    * @param tolerance
    * @param parameters
    * @param inputImage
-   * @param distortedImage
    * @param bufferedRegion
    * @param iter
    */
-  void applyTransformationPixel(double tolerance, const ParametersType& parameters, const InputImage::Pointer& inputImage, const InputImage::Pointer& distortedImage,
+  void applyTransformationPixel(double tolerance, const ParametersType& parameters, const InputImage::Pointer& inputImage,
                                 const InputImage::RegionType& bufferedRegion, itk::ImageRegionIterator<InputImage> iter, const GridKey& gridKey, CropMap& cropMap) const;
 
   /**
@@ -176,7 +175,7 @@ public:
    * @param x_ref
    * @param y_ref
    */
-  void calculatePixelCoordinates(const ParametersType& parameters, const InputImage::Pointer& inputImage, const InputImage::Pointer& distortedImage, const GridKey& gridKey, CropMap& cropMap,
+  void calculatePixelCoordinates(const ParametersType& parameters, const InputImage::Pointer& inputImage, const GridKey& gridKey, CropMap& cropMap,
                                  const PixelCoord& pixel, double x_trans, double y_trans, double tolerance, double lastXIndex, double lastYIndex) const;
 
   /**
@@ -204,39 +203,37 @@ public:
    * @param distortedGrid
    * @param cropMap
    */
-  void cropOverlap(OverlapPair& overlap, ImageGrid& distortedGrid, CropMap& cropMap) const;
-
-  /**
-   * @brief Crops the Image specified by the given GridKey and ImageGrid based on the CropMap.
-   * @param gridKey
-   * @param distortedGrid
-   * @param cropMap
-   */
-  void cropDistortedGrid(const GridKey& gridKey, ImageGrid& distortedGrid, CropMap& cropMap) const;
+  void cropOverlap(OverlapPair& overlap, CropMap& cropMap) const;
 
   /**
    * @brief Crops the OverlapPair using the provided ImageGrid and CropMap.
    * @param overlap
-   * @param distortedGrid
    * @param cropMap
    */
-  void cropOverlapHorizontal(OverlapPair& overlap, const ImageGrid& distortedGrid, const CropMap& cropMap) const;
+  void cropOverlapHorizontal(OverlapPair& overlap, const CropMap& cropMap) const;
 
   /**
    * @brief Crops the OverlapPair using the provided ImageGrid and CropMap.
    * @param overlap
-   * @param distortedGrid
    * @param cropMap
    */
-  void cropOverlapVertical(OverlapPair& overlap, const ImageGrid& distortedGrid, const CropMap& cropMap) const;
+  void cropOverlapVertical(OverlapPair& overlap, const CropMap& cropMap) const;
+
+  /**
+   * @brief Creates and returns a pair of images containing the overlap section based on the given parameters.
+   * @param overlap
+   * @param parameters
+   * @return
+   */
+  ImagePair createOverlapImages(const OverlapPair& overlap, const ParametersType& parameters) const;
 
   /**
    * @brief This method is called by GetValue to find the FFT Convolution and accumulate the maximum value from each overlap.
    * @param overlap
-   * @param distortedGrid
+   * @param parameters
    * @param residual
    */
-  void findFFTConvolutionAndMaxValue(const OverlapPair& overlap, ImageGrid& distortedGrid, MeasureType& residual) const;
+  void findFFTConvolutionAndMaxValue(const OverlapPair& overlap, const ParametersType& parameters, MeasureType& residual) const;
 
   /**
    * @brief Returns the ImageGrid value.
