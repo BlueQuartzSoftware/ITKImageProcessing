@@ -37,8 +37,9 @@
 using MutexType = tbb::queuing_mutex;
 #endif
 
-#include "itkAmoebaOptimizer.h"
+#include <itkAmoebaOptimizer.h>
 #include <itkFFTConvolutionImageFilter.h>
+#include <itkNumericTraits.h>
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Common/SIMPLRange.h"
@@ -50,6 +51,7 @@ using MutexType = tbb::queuing_mutex;
 #include "SIMPLib/FilterParameters/FilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatFilterParameter.h"
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
+#include "SIMPLib/FilterParameters/IntVec2FilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedChoicesFilterParameter.h"
 #include "SIMPLib/FilterParameters/MontageSelectionFilterParameter.h"
@@ -96,7 +98,7 @@ bool Blend::GetConvergenceFromStopDescription(const QString& stopDescription) co
 Blend::Blend()
 : m_MaxIterations(1000)
 , m_Degree(2)
-, m_OverlapPercentage(0.0f)
+, m_OverlapAmt({ 10, 10 })
 , m_LowTolerance(1E-2)
 , m_HighTolerance(1E-2)
 , m_UseAmoebaOptimizer(false)
@@ -138,11 +140,11 @@ void Blend::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_MONTAGE_STRUCTURE_SELECTION_FP("Montage Name", MontageName, FilterParameter::Category::Parameter, Blend));
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Degree", Degree, FilterParameter::Category::Parameter, Blend));
 
-  QStringList linkedAmoebaProps{"MaxIterations", "OverlapPercentage", "LowTolerance", "HighTolerance"};
+  QStringList linkedAmoebaProps{"MaxIterations", "OverlapAmt", "LowTolerance", "HighTolerance"};
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Amoeba Optimizer", UseAmoebaOptimizer, FilterParameter::Parameter, Blend, linkedAmoebaProps));
 
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Max Iterations", MaxIterations, FilterParameter::Category::Parameter, Blend));
-  parameters.push_back(SIMPL_NEW_FLOAT_FP("Overlap Percentage", OverlapPercentage, FilterParameter::Category::Parameter, Blend));
+  parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Overlap Amount (Width, Height)", OverlapAmt, FilterParameter::Category::Parameter, Blend));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Function Convergence Tolerance", LowTolerance, FilterParameter::Category::Parameter, Blend));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Parameter Convergence Tolerance", HighTolerance, FilterParameter::Category::Parameter, Blend));
 
@@ -245,10 +247,10 @@ void Blend::dataCheck()
     setErrorCondition(-66400, str);
   }
 
-  // Overlap percentages below 0% and above 100% don't make any sense
-  if(m_OverlapPercentage < 0.0f || m_OverlapPercentage >= 1.00f)
+  // Some overlap required
+  if(m_OverlapAmt[0] <= 0 || m_OverlapAmt[1] <= 0)
   {
-    setErrorCondition(-66600, "Overlap Percentage should be a floating-point precision number between 0.0 and 1.0");
+    setErrorCondition(-66600, "Overlap amount should be a greater than 0 in both dimensions");
   }
 
   // Requirements to avoid crashing
@@ -373,8 +375,29 @@ void Blend::execute()
     for(size_t idx = 0; idx < xyParameters.size(); ++idx)
     {
       initialParams[idx] = xyParameters[idx];
-      scales[idx] = 0.01;
+      scales[idx] = 0.001;
     }
+#if 0
+    constexpr double epsilon = itk::NumericTraits<double>::epsilon() + 1e-15;
+    for(size_t x = 0; x < m_Degree + 1; x++)
+    {
+      double xScale = x == 0 ? 1.0 : std::pow(0.1, x - 1);
+      for(size_t y = 0; y < m_Degree + 1; y++)
+      {
+        double yScale = y == 0 ? 1.0 : std::pow(0.1, y - 1);
+        size_t id = x * (m_Degree + 1) + y;
+        double minScale = std::min(xScale, yScale);
+        scales[id] = std::max(minScale, epsilon);
+      }
+    }
+    scales[0] = epsilon;
+    //scales[m_PxVec.size() - 1] = epsilon;
+    //scales[m_PxVec.size()] = epsilon;
+    scales[xyParameters.size() - 1] = epsilon;
+
+    //scales[m_Degree + 2] = 1;
+    //scales[m_PxVec.size() + 1] = 1;
+#endif
 
     itk::AmoebaOptimizer::Pointer optimizer = itk::AmoebaOptimizer::New();
     optimizer->SetMaximumNumberOfIterations(m_MaxIterations);
@@ -388,7 +411,7 @@ void Blend::execute()
 
     using CostFunctionType = FFTConvolutionCostFunction;
     CostFunctionType implementation;
-    implementation.Initialize(gridMontage, m_Degree, m_OverlapPercentage, getDataContainerArray(), m_AttributeMatrixName, grayscaleArrayName);
+    implementation.Initialize(gridMontage, m_Degree, m_OverlapAmt, getDataContainerArray(), m_AttributeMatrixName, grayscaleArrayName);
     optimizer->SetCostFunction(&implementation);
     optimizer->MaximizeOn(); // Search for the greatest value
     optimizer->StartOptimization();

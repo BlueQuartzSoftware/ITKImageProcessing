@@ -63,8 +63,8 @@ public:
   SIMPL_FILTER_PARAMETER(uint, MaxIterations)
   Q_PROPERTY(uint MaxIterations READ getMaxIterations WRITE setMaxIterations)
 
-  SIMPL_FILTER_PARAMETER(float, OverlapPercentage)
-  Q_PROPERTY(float OverlapPercentage READ getOverlapPercentage WRITE setOverlapPercentage)
+  SIMPL_FILTER_PARAMETER(IntVec2Type, OverlapAmt)
+  Q_PROPERTY(IntVec2Type OverlapAmt READ getOverlapAmt WRITE setOverlapAmt)
 
   SIMPL_FILTER_PARAMETER(double, LowTolerance)
   Q_PROPERTY(double LowTolerance READ getLowTolerance WRITE setLowTolerance)

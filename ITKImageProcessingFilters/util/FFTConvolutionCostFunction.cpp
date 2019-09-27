@@ -250,12 +250,13 @@ private:
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FFTConvolutionCostFunction::Initialize(const GridMontageShPtr& montage, int degree, float overlapPercentage, const DataContainerArrayShPtr& dca, const QString& amName, const QString& daName)
+void FFTConvolutionCostFunction::Initialize(const GridMontageShPtr& montage, int degree, const IntVec2Type& overlapAmt, const DataContainerArrayShPtr& dca, const QString& amName, const QString& daName)
 {
   m_Montage = montage;
   m_Degree = degree;
 
   // Populate the m_IJ based on the degree selected
+#if 0
   for(int listOneIndex = 0; listOneIndex <= m_Degree; listOneIndex++)
   {
     for(int listTwoIndex = 0; listTwoIndex <= m_Degree; listTwoIndex++)
@@ -263,12 +264,13 @@ void FFTConvolutionCostFunction::Initialize(const GridMontageShPtr& montage, int
       m_IJ.push_back(std::make_pair(listTwoIndex, listOneIndex));
     }
   }
+#endif
 
   m_ImageGrid.clear();
 
   calculateImageDim(montage);
-  m_OverlapXAmt = m_ImageDim_x * overlapPercentage;
-  m_OverlapYAmt = m_ImageDim_y * overlapPercentage;
+  m_OverlapXAmt = static_cast<size_t>(overlapAmt[0]);
+  m_OverlapYAmt = static_cast<size_t>(overlapAmt[1]);
 
   const size_t numRows = montage->getRowCount();
   const size_t numCols = montage->getColumnCount();
@@ -279,7 +281,6 @@ void FFTConvolutionCostFunction::Initialize(const GridMontageShPtr& montage, int
   {
     for(size_t col = 0; col < numCols; col++)
     {
-      //std::function<void(void)> fn = std::bind(&FFTConvolutionCostFunction::InitializeDataContainer, this, montage, row, col, amName, daName);
       taskAlg.execute(std::bind(&FFTConvolutionCostFunction::InitializeDataContainer, this, montage, row, col, amName, daName));
     }
   }
@@ -289,7 +290,6 @@ void FFTConvolutionCostFunction::Initialize(const GridMontageShPtr& montage, int
   m_Overlaps.clear();
   for(const auto& image : m_ImageGrid)
   {
-    //std::function<void(void)> fn = std::bind(&FFTConvolutionCostFunction::InitializePercentageOverlaps, this, image, overlapPercentage);
     taskAlg.execute(std::bind(&FFTConvolutionCostFunction::InitializePercentageOverlaps, this, image));
   }
   taskAlg.wait();
@@ -407,12 +407,11 @@ void FFTConvolutionCostFunction::InitializeDataContainer(const GridMontageShPtr&
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FFTConvolutionCostFunction::InitializePercentageOverlaps(const ImageGrid::value_type& image, float overlapPercentage)
+void FFTConvolutionCostFunction::InitializePercentageOverlaps(const ImageGrid::value_type& image)
 {
   static MutexType mutex;
   const size_t width = image.second->GetBufferedRegion().GetSize()[0];
   const size_t height = image.second->GetBufferedRegion().GetSize()[1];
-  size_t overlapDim;
 
   PixelCoord imageOrigin;
   InputImage::SizeType imageSize;
@@ -425,7 +424,7 @@ void FFTConvolutionCostFunction::InitializePercentageOverlaps(const ImageGrid::v
   {
     // NOTE The height dimension for horizontally overlapping images should be the same
     size_t overlapHeight = std::min(height, static_cast<size_t>(m_ImageDim_y));
-    size_t overlapDim = static_cast<size_t>(roundf(m_ImageDim_x * overlapPercentage));
+    const size_t& overlapDim = m_OverlapXAmt;
     imageOrigin[0] = static_cast<itk::IndexValueType>(width - overlapDim);
     imageOrigin[1] = 0; // Push to the bottom when the tile is taller than m_ImageDim_y
     imageSize[0] = overlapDim;
@@ -446,7 +445,7 @@ void FFTConvolutionCostFunction::InitializePercentageOverlaps(const ImageGrid::v
   {
     // NOTE The width dimension for vertically overlapping images should be the same
     size_t overlapWidth = std::min(width, static_cast<size_t>(m_ImageDim_x));
-    overlapDim = static_cast<size_t>(roundf(m_ImageDim_y * overlapPercentage));
+    const size_t& overlapDim = m_OverlapYAmt;
     imageOrigin[0] = 0; // Push to the right when the tile is wider than m_ImageDim_x
     imageOrigin[1] = static_cast<itk::IndexValueType>(height - overlapDim);
     imageSize[0] = overlapWidth;
@@ -507,12 +506,10 @@ FFTConvolutionCostFunction::MeasureType FFTConvolutionCostFunction::GetValue(con
 {
   CropMap cropMap;
   ParallelTaskAlgorithm taskAlg;
-  //std::function<void(void)> fn;
 
   // Apply the Transform to each image in the image grid
   for(const auto& eachImage : m_ImageGrid) // Parallelize this
   {
-    //fn = std::bind(&FFTConvolutionCostFunction::checkTransformation, this, parameters, eachImage, std::ref(cropMap));
     taskAlg.execute(std::bind(&FFTConvolutionCostFunction::checkTransformation, this, parameters, eachImage, std::ref(cropMap)));
   }
   taskAlg.wait();
@@ -619,7 +616,6 @@ void FFTConvolutionCostFunction::checkTransformation(const ParametersType& param
   static MutexType cropMutex;
   static MutexType distortedMutex;
   ParallelTaskAlgorithm taskAlg;
-  //std::function<void(void)> fn;
 
   const double tolerance = 0.05;
 
@@ -642,7 +638,6 @@ void FFTConvolutionCostFunction::checkTransformation(const ParametersType& param
   itk::ImageRegionIterator<InputImage> it(inputImage.second, bufferedRegion);
   for(it.GoToBegin(); !it.IsAtEnd(); ++it) // Parallelize this
   {
-    //fn = std::bind(&FFTConvolutionCostFunction::applyTransformationPixel, this, tolerance, parameters, inputImage.second, bufferedRegion, it, inputImage.first, std::ref(cropMap));
     taskAlg.execute(std::bind(&FFTConvolutionCostFunction::applyTransformationPixel, this, tolerance, parameters, inputImage.second, bufferedRegion, it, inputImage.first, std::ref(cropMap)));
   }
   taskAlg.wait();

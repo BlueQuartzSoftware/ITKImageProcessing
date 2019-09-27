@@ -104,12 +104,12 @@ public:
    * @param rowChar
    * @param colChar
    * @param degree
-   * @param overlapPercentage
+   * @param overlapAmt
    * @param dca
    * @param amName
    * @param daName
    */
-  void Initialize(const GridMontageShPtr& montage, int degree, float overlapPercentage, const DataContainerArrayShPtr& dca, const QString& amName, const QString& daName);
+  void Initialize(const GridMontageShPtr& montage, int degree, const IntVec2Type& overlapAmt, const DataContainerArrayShPtr& dca, const QString& amName, const QString& daName);
 
   /**
    * @brief This method is called by Initialize as a parallel task algorithm operating on each DataContainer.
