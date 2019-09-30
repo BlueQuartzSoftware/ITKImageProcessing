@@ -78,22 +78,6 @@ public:
 
   using CropMap = std::map<GridKey, RegionBounds>;
 
-  /**
-   * @brief ImageCluster used for keeping information about the montage being operated on
-   */
-  struct ImageCluster
-  {
-    size_t numCols;
-    size_t numRows;
-
-    size_t imgDimX;
-    size_t imgDimY;
-    size_t overlapX;
-    size_t overlapY;
-
-    std::vector<InputImage::Pointer> imageVector;
-  };
-
   // The m_overlaps is a vector of pairs, with the first index being the
   // grid location of an overlap region (i.e. 'Row 0, Column: 1; Row: 1, Column: 1')
   // and the second index being the ITK RegionTypes that define the overlap regions

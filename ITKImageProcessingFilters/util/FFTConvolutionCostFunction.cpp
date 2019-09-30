@@ -56,52 +56,6 @@ struct RegionBounds
   int64_t bottomBound = std::numeric_limits<int64_t>::max();
 };
 
-const FFTConvolutionCostFunction::InputImage::Pointer& GetImage(const FFTConvolutionCostFunction::ImageCluster& cluster, size_t col, size_t row)
-{
-  size_t index = col + row * cluster.numCols;
-  return cluster.imageVector[index];
-}
-
-bool ImgContainsPixelCoords(const FFTConvolutionCostFunction::ImageCluster& cluster, size_t col, size_t row, std::array<int64_t, 2> coords)
-{
-
-}
-
-constexpr std::array<int64_t, 2> GetOldPixelCoords(size_t x, size_t y, size_t imgDimX, size_t imgDimY, size_t degree, double* parameters)
-{
-  const double x_trans = (imgDimX - 1) / 2.0;
-  const double y_trans = (imgDimY - 1) / 2.0;
-  std::array<double, 2> newPrime{ x - x_trans, y - y_trans };
-  const double newXPrime = newPrime[0];
-  const double newYPrime = newPrime[1];
-
-  // old' = Ei(Ej(aij * x^i * y^j)
-  double oldXPrime = 0.0;
-  double oldYPrime = 0.0;
-  const size_t yInit = (degree * degree) + (2 * degree + 1);
-  for(size_t i = 0; i <= degree; i++)
-  {
-    for(size_t j = 0; j <= degree; j++)
-    {
-      const double xyParam = std::pow(newXPrime, i) * std::pow(newYPrime, j);
-      const size_t xOffset = i * (degree + 1) + j;
-      const size_t yOffset = xOffset + yInit;
-      oldXPrime += parameters[xOffset] * xyParam;
-      oldYPrime += parameters[yOffset] * xyParam;
-    }
-  }
-
-  const int64_t oldXUnbound = static_cast<int64_t>(round(oldXPrime + x_trans));
-  const int64_t oldYUnbound = static_cast<int64_t>(round(oldYPrime + y_trans));
-  return{ oldXUnbound, oldYUnbound };
-}
-
-PixelValue_T GetPixelValue(const FFTConvolutionCostFunction::ImageCluster& cluster, size_t col, size_t row, size_t x, size_t y, size_t degree, double* parameters)
-{
-  std::array<int64_t,2> pixelCoords = GetOldPixelCoords(x, y, cluster.imgDimX, cluster.imgDimY, degree, parameters);
-  const FFTConvolutionCostFunction::InputImage::Pointer& img = GetImage(cluster, col, row);
-}
-
 /**
  * @class FFTConvolutionCostFunction FFTConvolutionCostFunction.h ITKImageProcessingFilters/util/FFTConvolutionCostFunction.h
  * @brief The FFTImageInitializer class is for running the FFTConvolutionCostFunction
