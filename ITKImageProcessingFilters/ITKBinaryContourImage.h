@@ -11,9 +11,10 @@
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
+#include <memory>
+
 #include "ITKImageProcessingBase.h"
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
 
 // Auto includes
@@ -29,25 +30,75 @@
 class ITKImageProcessing_EXPORT ITKBinaryContourImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+
+#ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(ITKBinaryContourImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_SHARED_POINTERS(ITKBinaryContourImage)
+  PYB11_FILTER_NEW_MACRO(ITKBinaryContourImage)
+  PYB11_FILTER_PARAMETER(bool, FullyConnected)
+  PYB11_FILTER_PARAMETER(double, BackgroundValue)
+  PYB11_FILTER_PARAMETER(double, ForegroundValue)
   PYB11_PROPERTY(bool FullyConnected READ getFullyConnected WRITE setFullyConnected)
   PYB11_PROPERTY(double BackgroundValue READ getBackgroundValue WRITE setBackgroundValue)
   PYB11_PROPERTY(double ForegroundValue READ getForegroundValue WRITE setForegroundValue)
+#endif
 
 public:
-  SIMPL_SHARED_POINTERS(ITKBinaryContourImage)
-  SIMPL_FILTER_NEW_MACRO(ITKBinaryContourImage)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKBinaryContourImage, AbstractFilter)
+    using Self = ITKBinaryContourImage;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
+
+    static std::shared_ptr<ITKBinaryContourImage> New();
+
+    /**
+    * @brief Returns the name of the class for ITKBinaryContourImage
+    */
+    QString getNameOfClass() const override;
+    /**
+    * @brief Returns the name of the class for ITKBinaryContourImage
+    */
+    static QString ClassName();
+
 
   ~ITKBinaryContourImage() override;
 
-  SIMPL_FILTER_PARAMETER(bool, FullyConnected)
+    /**
+    * @brief Setter property for FullyConnected
+    */
+    void setFullyConnected(bool value); 
+    /**
+    * @brief Getter property for FullyConnected
+    * @return Value of FullyConnected
+    */
+    bool getFullyConnected() const;
+
   Q_PROPERTY(bool FullyConnected READ getFullyConnected WRITE setFullyConnected)
 
-  SIMPL_FILTER_PARAMETER(double, BackgroundValue)
+    /**
+    * @brief Setter property for BackgroundValue
+    */
+    void setBackgroundValue(double value); 
+    /**
+    * @brief Getter property for BackgroundValue
+    * @return Value of BackgroundValue
+    */
+    double getBackgroundValue() const;
+
   Q_PROPERTY(double BackgroundValue READ getBackgroundValue WRITE setBackgroundValue)
 
-  SIMPL_FILTER_PARAMETER(double, ForegroundValue)
+    /**
+    * @brief Setter property for ForegroundValue
+    */
+    void setForegroundValue(double value); 
+    /**
+    * @brief Getter property for ForegroundValue
+    * @return Value of ForegroundValue
+    */
+    double getForegroundValue() const;
+
   Q_PROPERTY(double ForegroundValue READ getForegroundValue WRITE setForegroundValue)
 
 
@@ -59,18 +110,18 @@ public:
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -110,6 +161,12 @@ public:
   ITKBinaryContourImage(ITKBinaryContourImage&&) = delete;         // Move Constructor Not Implemented
   ITKBinaryContourImage& operator=(const ITKBinaryContourImage&) = delete; // Copy Assignment Not Implemented
   ITKBinaryContourImage& operator=(ITKBinaryContourImage&&) = delete;      // Move Assignment Not Implemented
+
+  private:
+    bool m_FullyConnected = {};
+    double m_BackgroundValue = {};
+    double m_ForegroundValue = {};
+
 };
 
 #ifdef __clang__

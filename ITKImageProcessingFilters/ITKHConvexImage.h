@@ -11,9 +11,10 @@
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
+#include <memory>
+
 #include "ITKImageProcessingBase.h"
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
 
 // Auto includes
@@ -29,21 +30,61 @@
 class ITKImageProcessing_EXPORT ITKHConvexImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+
+#ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(ITKHConvexImage SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(ITKHConvexImage)
+  PYB11_FILTER_NEW_MACRO(ITKHConvexImage)
+  PYB11_FILTER_PARAMETER(double, Height)
+  PYB11_FILTER_PARAMETER(bool, FullyConnected)
   PYB11_PROPERTY(double Height READ getHeight WRITE setHeight)
   PYB11_PROPERTY(bool FullyConnected READ getFullyConnected WRITE setFullyConnected)
+#endif
 
 public:
-  SIMPL_SHARED_POINTERS(ITKHConvexImage)
-  SIMPL_FILTER_NEW_MACRO(ITKHConvexImage)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKHConvexImage, AbstractFilter)
+    using Self = ITKHConvexImage;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
+
+    static std::shared_ptr<ITKHConvexImage> New();
+
+    /**
+    * @brief Returns the name of the class for ITKHConvexImage
+    */
+    QString getNameOfClass() const override;
+    /**
+    * @brief Returns the name of the class for ITKHConvexImage
+    */
+    static QString ClassName();
+
 
   ~ITKHConvexImage() override;
 
-  SIMPL_FILTER_PARAMETER(double, Height)
+    /**
+    * @brief Setter property for Height
+    */
+    void setHeight(double value); 
+    /**
+    * @brief Getter property for Height
+    * @return Value of Height
+    */
+    double getHeight() const;
+
   Q_PROPERTY(double Height READ getHeight WRITE setHeight)
 
-  SIMPL_FILTER_PARAMETER(bool, FullyConnected)
+    /**
+    * @brief Setter property for FullyConnected
+    */
+    void setFullyConnected(bool value); 
+    /**
+    * @brief Getter property for FullyConnected
+    * @return Value of FullyConnected
+    */
+    bool getFullyConnected() const;
+
   Q_PROPERTY(bool FullyConnected READ getFullyConnected WRITE setFullyConnected)
 
   /**
@@ -54,18 +95,18 @@ public:
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -105,6 +146,11 @@ public:
   ITKHConvexImage(ITKHConvexImage&&) = delete;                 // Move Constructor Not Implemented
   ITKHConvexImage& operator=(const ITKHConvexImage&) = delete; // Copy Assignment Not Implemented
   ITKHConvexImage& operator=(ITKHConvexImage&&) = delete;      // Move Assignment Not Implemented
+
+  private:
+    double m_Height = {};
+    bool m_FullyConnected = {};
+
 };
 
 #ifdef __clang__

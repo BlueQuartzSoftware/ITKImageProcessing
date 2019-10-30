@@ -11,9 +11,10 @@
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
+#include <memory>
+
 #include "ITKImageProcessingBase.h"
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
 
 // Auto includes
@@ -29,29 +30,89 @@
 class ITKImageProcessing_EXPORT ITKThresholdMaximumConnectedComponentsImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+
+#ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(ITKThresholdMaximumConnectedComponentsImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_SHARED_POINTERS(ITKThresholdMaximumConnectedComponentsImage)
+  PYB11_FILTER_NEW_MACRO(ITKThresholdMaximumConnectedComponentsImage)
+  PYB11_FILTER_PARAMETER(double, MinimumObjectSizeInPixels)
+  PYB11_FILTER_PARAMETER(double, UpperBoundary)
+  PYB11_FILTER_PARAMETER(int, InsideValue)
+  PYB11_FILTER_PARAMETER(int, OutsideValue)
   PYB11_PROPERTY(double MinimumObjectSizeInPixels READ getMinimumObjectSizeInPixels WRITE setMinimumObjectSizeInPixels)
   PYB11_PROPERTY(double UpperBoundary READ getUpperBoundary WRITE setUpperBoundary)
   PYB11_PROPERTY(int InsideValue READ getInsideValue WRITE setInsideValue)
   PYB11_PROPERTY(int OutsideValue READ getOutsideValue WRITE setOutsideValue)
+#endif
 
 public:
-  SIMPL_SHARED_POINTERS(ITKThresholdMaximumConnectedComponentsImage)
-  SIMPL_FILTER_NEW_MACRO(ITKThresholdMaximumConnectedComponentsImage)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKThresholdMaximumConnectedComponentsImage, AbstractFilter)
+    using Self = ITKThresholdMaximumConnectedComponentsImage;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
+
+    static std::shared_ptr<ITKThresholdMaximumConnectedComponentsImage> New();
+
+    /**
+    * @brief Returns the name of the class for ITKThresholdMaximumConnectedComponentsImage
+    */
+    QString getNameOfClass() const override;
+    /**
+    * @brief Returns the name of the class for ITKThresholdMaximumConnectedComponentsImage
+    */
+    static QString ClassName();
+
 
   ~ITKThresholdMaximumConnectedComponentsImage() override;
 
-  SIMPL_FILTER_PARAMETER(double, MinimumObjectSizeInPixels)
+    /**
+    * @brief Setter property for MinimumObjectSizeInPixels
+    */
+    void setMinimumObjectSizeInPixels(double value); 
+    /**
+    * @brief Getter property for MinimumObjectSizeInPixels
+    * @return Value of MinimumObjectSizeInPixels
+    */
+    double getMinimumObjectSizeInPixels() const;
+
   Q_PROPERTY(double MinimumObjectSizeInPixels READ getMinimumObjectSizeInPixels WRITE setMinimumObjectSizeInPixels)
 
-  SIMPL_FILTER_PARAMETER(double, UpperBoundary)
+    /**
+    * @brief Setter property for UpperBoundary
+    */
+    void setUpperBoundary(double value); 
+    /**
+    * @brief Getter property for UpperBoundary
+    * @return Value of UpperBoundary
+    */
+    double getUpperBoundary() const;
+
   Q_PROPERTY(double UpperBoundary READ getUpperBoundary WRITE setUpperBoundary)
 
-  SIMPL_FILTER_PARAMETER(int, InsideValue)
+    /**
+    * @brief Setter property for InsideValue
+    */
+    void setInsideValue(int value); 
+    /**
+    * @brief Getter property for InsideValue
+    * @return Value of InsideValue
+    */
+    int getInsideValue() const;
+
   Q_PROPERTY(int InsideValue READ getInsideValue WRITE setInsideValue)
 
-  SIMPL_FILTER_PARAMETER(int, OutsideValue)
+    /**
+    * @brief Setter property for OutsideValue
+    */
+    void setOutsideValue(int value); 
+    /**
+    * @brief Getter property for OutsideValue
+    * @return Value of OutsideValue
+    */
+    int getOutsideValue() const;
+
   Q_PROPERTY(int OutsideValue READ getOutsideValue WRITE setOutsideValue)
 
 
@@ -63,18 +124,18 @@ public:
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -114,6 +175,13 @@ public:
   ITKThresholdMaximumConnectedComponentsImage(ITKThresholdMaximumConnectedComponentsImage&&) = delete;         // Move Constructor Not Implemented
   ITKThresholdMaximumConnectedComponentsImage& operator=(const ITKThresholdMaximumConnectedComponentsImage&) = delete; // Copy Assignment Not Implemented
   ITKThresholdMaximumConnectedComponentsImage& operator=(ITKThresholdMaximumConnectedComponentsImage&&) = delete;      // Move Assignment Not Implemented
+
+  private:
+    double m_MinimumObjectSizeInPixels = {};
+    double m_UpperBoundary = {};
+    int m_InsideValue = {};
+    int m_OutsideValue = {};
+
 };
 
 #ifdef __clang__

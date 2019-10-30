@@ -30,18 +30,19 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #pragma once
 
+#include <memory>
+
 #include <QtCore/QMutex>
 #include <QtCore/QString>
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/Filtering/FilterFactory.hpp"
 #include "SIMPLib/Filtering/FilterManager.h"
 #include "SIMPLib/Geometry/IGeometryGrid.h"
-#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 
 #include "ITKImageProcessing/ZeissXml/ZeissTagsXmlSection.h"
-
 #include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
@@ -54,7 +55,26 @@
 class ITKImageProcessing_EXPORT IlluminationCorrection : public AbstractFilter
 {
   Q_OBJECT
+
+#ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(IlluminationCorrection SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(IlluminationCorrection)
+  PYB11_FILTER_NEW_MACRO(IlluminationCorrection)
+  PYB11_FILTER_PARAMETER(QStringList, DataContainers)
+  PYB11_FILTER_PARAMETER(QString, CellAttributeMatrixName)
+  PYB11_FILTER_PARAMETER(QString, ImageDataArrayName)
+  PYB11_FILTER_PARAMETER(QString, CorrectedImageDataArrayName)
+  PYB11_FILTER_PARAMETER(bool, ExportCorrectedImages)
+  PYB11_FILTER_PARAMETER(QString, OutputPath)
+  PYB11_FILTER_PARAMETER(QString, FileExtension)
+  PYB11_FILTER_PARAMETER(DataArrayPath, BackgroundDataContainerPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, BackgroundCellAttributeMatrixPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, BackgroundImageArrayPath)
+  PYB11_FILTER_PARAMETER(uint32_t, LowThreshold)
+  PYB11_FILTER_PARAMETER(uint32_t, HighThreshold)
+  PYB11_FILTER_PARAMETER(bool, ApplyCorrection)
+  PYB11_FILTER_PARAMETER(bool, ApplyMedianFilter)
+  PYB11_FILTER_PARAMETER(FloatVec3Type, MedianRadius)
   PYB11_PROPERTY(QStringList DataContainers READ getDataContainers WRITE setDataContainers)
   PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
   PYB11_PROPERTY(QString ImageDataArrayName READ getImageDataArrayName WRITE setImageDataArrayName)
@@ -72,59 +92,219 @@ class ITKImageProcessing_EXPORT IlluminationCorrection : public AbstractFilter
   PYB11_PROPERTY(bool ApplyCorrection READ getApplyCorrection WRITE setApplyCorrection)
   PYB11_PROPERTY(bool ApplyMedianFilter READ getApplyMedianFilter WRITE setApplyMedianFilter)
   PYB11_PROPERTY(FloatVec3Type MedianRadius READ getMedianRadius WRITE setMedianRadius)
+#endif
 
 public:
-  SIMPL_SHARED_POINTERS(IlluminationCorrection)
-  SIMPL_FILTER_NEW_MACRO(IlluminationCorrection)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(IlluminationCorrection, AbstractFilter)
+    using Self = IlluminationCorrection;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
+
+    static std::shared_ptr<IlluminationCorrection> New();
+
+    /**
+    * @brief Returns the name of the class for IlluminationCorrection
+    */
+    QString getNameOfClass() const override;
+    /**
+    * @brief Returns the name of the class for IlluminationCorrection
+    */
+    static QString ClassName();
+
 
   ~IlluminationCorrection() override;
 
-  SIMPL_INSTANCE_STRING_PROPERTY(DataContainerName)
+    /**
+    * @brief Setter property for DataContainerName
+    */
+    void setDataContainerName(const QString& value) ;
+    /**
+    * @brief Getter property for DataContainerName
+    * @return Value of DataContainerName
+    */
+    QString getDataContainerName() const ;
 
-  SIMPL_FILTER_PARAMETER(QStringList, DataContainers)
+
+    /**
+    * @brief Setter property for DataContainers
+    */
+    void setDataContainers(const QStringList& value); 
+    /**
+    * @brief Getter property for DataContainers
+    * @return Value of DataContainers
+    */
+    QStringList getDataContainers() const;
+
   Q_PROPERTY(QStringList DataContainers READ getDataContainers WRITE setDataContainers)
 
-  SIMPL_FILTER_PARAMETER(QString, CellAttributeMatrixName)
+    /**
+    * @brief Setter property for CellAttributeMatrixName
+    */
+    void setCellAttributeMatrixName(const QString& value); 
+    /**
+    * @brief Getter property for CellAttributeMatrixName
+    * @return Value of CellAttributeMatrixName
+    */
+    QString getCellAttributeMatrixName() const;
+
   Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
-  SIMPL_FILTER_PARAMETER(QString, ImageDataArrayName)
+    /**
+    * @brief Setter property for ImageDataArrayName
+    */
+    void setImageDataArrayName(const QString& value); 
+    /**
+    * @brief Getter property for ImageDataArrayName
+    * @return Value of ImageDataArrayName
+    */
+    QString getImageDataArrayName() const;
+
   Q_PROPERTY(QString ImageDataArrayName READ getImageDataArrayName WRITE setImageDataArrayName)
 
-  SIMPL_FILTER_PARAMETER(QString, CorrectedImageDataArrayName)
+    /**
+    * @brief Setter property for CorrectedImageDataArrayName
+    */
+    void setCorrectedImageDataArrayName(const QString& value); 
+    /**
+    * @brief Getter property for CorrectedImageDataArrayName
+    * @return Value of CorrectedImageDataArrayName
+    */
+    QString getCorrectedImageDataArrayName() const;
+
   Q_PROPERTY(QString CorrectedImageDataArrayName READ getCorrectedImageDataArrayName WRITE setCorrectedImageDataArrayName)
 
-  SIMPL_FILTER_PARAMETER(bool, ExportCorrectedImages)
+    /**
+    * @brief Setter property for ExportCorrectedImages
+    */
+    void setExportCorrectedImages(bool value); 
+    /**
+    * @brief Getter property for ExportCorrectedImages
+    * @return Value of ExportCorrectedImages
+    */
+    bool getExportCorrectedImages() const;
+
   Q_PROPERTY(bool ExportCorrectedImages READ getExportCorrectedImages WRITE setExportCorrectedImages)
 
-  SIMPL_FILTER_PARAMETER(QString, OutputPath)
+    /**
+    * @brief Setter property for OutputPath
+    */
+    void setOutputPath(const QString& value); 
+    /**
+    * @brief Getter property for OutputPath
+    * @return Value of OutputPath
+    */
+    QString getOutputPath() const;
+
   Q_PROPERTY(QString OutputPath READ getOutputPath WRITE setOutputPath)
 
-  SIMPL_FILTER_PARAMETER(QString, FileExtension)
+    /**
+    * @brief Setter property for FileExtension
+    */
+    void setFileExtension(const QString& value); 
+    /**
+    * @brief Getter property for FileExtension
+    * @return Value of FileExtension
+    */
+    QString getFileExtension() const;
+
   Q_PROPERTY(QString FileExtension READ getFileExtension WRITE setFileExtension)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, BackgroundDataContainerPath)
+    /**
+    * @brief Setter property for BackgroundDataContainerPath
+    */
+    void setBackgroundDataContainerPath(const DataArrayPath& value); 
+    /**
+    * @brief Getter property for BackgroundDataContainerPath
+    * @return Value of BackgroundDataContainerPath
+    */
+    DataArrayPath getBackgroundDataContainerPath() const;
+
   Q_PROPERTY(DataArrayPath BackgroundDataContainerPath READ getBackgroundDataContainerPath WRITE setBackgroundDataContainerPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, BackgroundCellAttributeMatrixPath)
+    /**
+    * @brief Setter property for BackgroundCellAttributeMatrixPath
+    */
+    void setBackgroundCellAttributeMatrixPath(const DataArrayPath& value); 
+    /**
+    * @brief Getter property for BackgroundCellAttributeMatrixPath
+    * @return Value of BackgroundCellAttributeMatrixPath
+    */
+    DataArrayPath getBackgroundCellAttributeMatrixPath() const;
+
   Q_PROPERTY(DataArrayPath BackgroundCellAttributeMatrixPath READ getBackgroundCellAttributeMatrixPath WRITE setBackgroundCellAttributeMatrixPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, BackgroundImageArrayPath)
+    /**
+    * @brief Setter property for BackgroundImageArrayPath
+    */
+    void setBackgroundImageArrayPath(const DataArrayPath& value); 
+    /**
+    * @brief Getter property for BackgroundImageArrayPath
+    * @return Value of BackgroundImageArrayPath
+    */
+    DataArrayPath getBackgroundImageArrayPath() const;
+
   Q_PROPERTY(DataArrayPath BackgroundImageArrayPath READ getBackgroundImageArrayPath WRITE setBackgroundImageArrayPath)
 
-  SIMPL_FILTER_PARAMETER(uint32_t, LowThreshold)
+    /**
+    * @brief Setter property for LowThreshold
+    */
+    void setLowThreshold(uint32_t value); 
+    /**
+    * @brief Getter property for LowThreshold
+    * @return Value of LowThreshold
+    */
+    uint32_t getLowThreshold() const;
+
   Q_PROPERTY(uint32_t LowThreshold READ getLowThreshold WRITE setLowThreshold)
 
-  SIMPL_FILTER_PARAMETER(uint32_t, HighThreshold)
+    /**
+    * @brief Setter property for HighThreshold
+    */
+    void setHighThreshold(uint32_t value); 
+    /**
+    * @brief Getter property for HighThreshold
+    * @return Value of HighThreshold
+    */
+    uint32_t getHighThreshold() const;
+
   Q_PROPERTY(uint32_t HighThreshold READ getHighThreshold WRITE setHighThreshold)
 
-  SIMPL_FILTER_PARAMETER(bool, ApplyCorrection)
+    /**
+    * @brief Setter property for ApplyCorrection
+    */
+    void setApplyCorrection(bool value); 
+    /**
+    * @brief Getter property for ApplyCorrection
+    * @return Value of ApplyCorrection
+    */
+    bool getApplyCorrection() const;
+
   Q_PROPERTY(int ApplyCorrection READ getApplyCorrection WRITE setApplyCorrection)
 
-  SIMPL_FILTER_PARAMETER(bool, ApplyMedianFilter)
+    /**
+    * @brief Setter property for ApplyMedianFilter
+    */
+    void setApplyMedianFilter(bool value); 
+    /**
+    * @brief Getter property for ApplyMedianFilter
+    * @return Value of ApplyMedianFilter
+    */
+    bool getApplyMedianFilter() const;
+
   Q_PROPERTY(bool ApplyMedianFilter READ getApplyMedianFilter WRITE setApplyMedianFilter)
 
-  SIMPL_FILTER_PARAMETER(FloatVec3Type, MedianRadius)
+    /**
+    * @brief Setter property for MedianRadius
+    */
+    void setMedianRadius(const FloatVec3Type& value); 
+    /**
+    * @brief Getter property for MedianRadius
+    * @return Value of MedianRadius
+    */
+    FloatVec3Type getMedianRadius() const;
+
   Q_PROPERTY(FloatVec3Type MedianRadius READ getMedianRadius WRITE setMedianRadius)
 
   /**
@@ -136,21 +316,21 @@ public:
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
-  const QString getCompiledLibraryName() const override;
+  QString getCompiledLibraryName() const override;
 
   /**
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
    */
-  const QString getBrandingString() const override;
+  QString getBrandingString() const override;
 
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
    * @return
    */
-  const QString getFilterVersion() const override;
+  QString getFilterVersion() const override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -160,23 +340,23 @@ public:
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getGroupName() const override;
+  QString getGroupName() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -318,6 +498,23 @@ protected:
   }
 
 private:
+    QString m_DataContainerName = {};
+    QStringList m_DataContainers = {};
+    QString m_CellAttributeMatrixName = {};
+    QString m_ImageDataArrayName = {};
+    QString m_CorrectedImageDataArrayName = {};
+    bool m_ExportCorrectedImages = {};
+    QString m_OutputPath = {};
+    QString m_FileExtension = {};
+    DataArrayPath m_BackgroundDataContainerPath = {};
+    DataArrayPath m_BackgroundCellAttributeMatrixPath = {};
+    DataArrayPath m_BackgroundImageArrayPath = {};
+    uint32_t m_LowThreshold = {};
+    uint32_t m_HighThreshold = {};
+    bool m_ApplyCorrection = {};
+    bool m_ApplyMedianFilter = {};
+    FloatVec3Type m_MedianRadius = {};
+
   QMutex m_NotifyMessage;
 
 public:

@@ -11,9 +11,10 @@
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
+#include <memory>
+
 #include "ITKImageProcessingBase.h"
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
 
 // Auto includes
@@ -29,29 +30,89 @@
 class ITKImageProcessing_EXPORT ITKBinaryThresholdImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+
+#ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(ITKBinaryThresholdImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_SHARED_POINTERS(ITKBinaryThresholdImage)
+  PYB11_FILTER_NEW_MACRO(ITKBinaryThresholdImage)
+  PYB11_FILTER_PARAMETER(double, LowerThreshold)
+  PYB11_FILTER_PARAMETER(double, UpperThreshold)
+  PYB11_FILTER_PARAMETER(int, InsideValue)
+  PYB11_FILTER_PARAMETER(int, OutsideValue)
   PYB11_PROPERTY(double LowerThreshold READ getLowerThreshold WRITE setLowerThreshold)
   PYB11_PROPERTY(double UpperThreshold READ getUpperThreshold WRITE setUpperThreshold)
   PYB11_PROPERTY(int InsideValue READ getInsideValue WRITE setInsideValue)
   PYB11_PROPERTY(int OutsideValue READ getOutsideValue WRITE setOutsideValue)
+#endif
 
 public:
-  SIMPL_SHARED_POINTERS(ITKBinaryThresholdImage)
-  SIMPL_FILTER_NEW_MACRO(ITKBinaryThresholdImage)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKBinaryThresholdImage, AbstractFilter)
+    using Self = ITKBinaryThresholdImage;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
+
+    static std::shared_ptr<ITKBinaryThresholdImage> New();
+
+    /**
+    * @brief Returns the name of the class for ITKBinaryThresholdImage
+    */
+    QString getNameOfClass() const override;
+    /**
+    * @brief Returns the name of the class for ITKBinaryThresholdImage
+    */
+    static QString ClassName();
+
 
   ~ITKBinaryThresholdImage() override;
 
-  SIMPL_FILTER_PARAMETER(double, LowerThreshold)
+    /**
+    * @brief Setter property for LowerThreshold
+    */
+    void setLowerThreshold(double value); 
+    /**
+    * @brief Getter property for LowerThreshold
+    * @return Value of LowerThreshold
+    */
+    double getLowerThreshold() const;
+
   Q_PROPERTY(double LowerThreshold READ getLowerThreshold WRITE setLowerThreshold)
 
-  SIMPL_FILTER_PARAMETER(double, UpperThreshold)
+    /**
+    * @brief Setter property for UpperThreshold
+    */
+    void setUpperThreshold(double value); 
+    /**
+    * @brief Getter property for UpperThreshold
+    * @return Value of UpperThreshold
+    */
+    double getUpperThreshold() const;
+
   Q_PROPERTY(double UpperThreshold READ getUpperThreshold WRITE setUpperThreshold)
 
-  SIMPL_FILTER_PARAMETER(int, InsideValue)
+    /**
+    * @brief Setter property for InsideValue
+    */
+    void setInsideValue(int value); 
+    /**
+    * @brief Getter property for InsideValue
+    * @return Value of InsideValue
+    */
+    int getInsideValue() const;
+
   Q_PROPERTY(int InsideValue READ getInsideValue WRITE setInsideValue)
 
-  SIMPL_FILTER_PARAMETER(int, OutsideValue)
+    /**
+    * @brief Setter property for OutsideValue
+    */
+    void setOutsideValue(int value); 
+    /**
+    * @brief Getter property for OutsideValue
+    * @return Value of OutsideValue
+    */
+    int getOutsideValue() const;
+
   Q_PROPERTY(int OutsideValue READ getOutsideValue WRITE setOutsideValue)
 
 
@@ -63,18 +124,18 @@ public:
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -114,6 +175,13 @@ public:
   ITKBinaryThresholdImage(ITKBinaryThresholdImage&&) = delete;         // Move Constructor Not Implemented
   ITKBinaryThresholdImage& operator=(const ITKBinaryThresholdImage&) = delete; // Copy Assignment Not Implemented
   ITKBinaryThresholdImage& operator=(ITKBinaryThresholdImage&&) = delete;      // Move Assignment Not Implemented
+
+  private:
+    double m_LowerThreshold = {};
+    double m_UpperThreshold = {};
+    int m_InsideValue = {};
+    int m_OutsideValue = {};
+
 };
 
 #ifdef __clang__

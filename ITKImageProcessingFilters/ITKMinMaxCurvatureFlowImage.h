@@ -11,9 +11,10 @@
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
+#include <memory>
+
 #include "ITKImageProcessingBase.h"
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
 
 // Auto includes
@@ -29,25 +30,75 @@
 class ITKImageProcessing_EXPORT ITKMinMaxCurvatureFlowImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+
+#ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(ITKMinMaxCurvatureFlowImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_SHARED_POINTERS(ITKMinMaxCurvatureFlowImage)
+  PYB11_FILTER_NEW_MACRO(ITKMinMaxCurvatureFlowImage)
+  PYB11_FILTER_PARAMETER(double, TimeStep)
+  PYB11_FILTER_PARAMETER(double, NumberOfIterations)
+  PYB11_FILTER_PARAMETER(int, StencilRadius)
   PYB11_PROPERTY(double TimeStep READ getTimeStep WRITE setTimeStep)
   PYB11_PROPERTY(double NumberOfIterations READ getNumberOfIterations WRITE setNumberOfIterations)
   PYB11_PROPERTY(int StencilRadius READ getStencilRadius WRITE setStencilRadius)
+#endif
 
 public:
-  SIMPL_SHARED_POINTERS(ITKMinMaxCurvatureFlowImage)
-  SIMPL_FILTER_NEW_MACRO(ITKMinMaxCurvatureFlowImage)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKMinMaxCurvatureFlowImage, AbstractFilter)
+    using Self = ITKMinMaxCurvatureFlowImage;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
+
+    static std::shared_ptr<ITKMinMaxCurvatureFlowImage> New();
+
+    /**
+    * @brief Returns the name of the class for ITKMinMaxCurvatureFlowImage
+    */
+    QString getNameOfClass() const override;
+    /**
+    * @brief Returns the name of the class for ITKMinMaxCurvatureFlowImage
+    */
+    static QString ClassName();
+
 
   ~ITKMinMaxCurvatureFlowImage() override;
 
-  SIMPL_FILTER_PARAMETER(double, TimeStep)
+    /**
+    * @brief Setter property for TimeStep
+    */
+    void setTimeStep(double value); 
+    /**
+    * @brief Getter property for TimeStep
+    * @return Value of TimeStep
+    */
+    double getTimeStep() const;
+
   Q_PROPERTY(double TimeStep READ getTimeStep WRITE setTimeStep)
 
-  SIMPL_FILTER_PARAMETER(double, NumberOfIterations)
+    /**
+    * @brief Setter property for NumberOfIterations
+    */
+    void setNumberOfIterations(double value); 
+    /**
+    * @brief Getter property for NumberOfIterations
+    * @return Value of NumberOfIterations
+    */
+    double getNumberOfIterations() const;
+
   Q_PROPERTY(double NumberOfIterations READ getNumberOfIterations WRITE setNumberOfIterations)
 
-  SIMPL_FILTER_PARAMETER(int, StencilRadius)
+    /**
+    * @brief Setter property for StencilRadius
+    */
+    void setStencilRadius(int value); 
+    /**
+    * @brief Getter property for StencilRadius
+    * @return Value of StencilRadius
+    */
+    int getStencilRadius() const;
+
   Q_PROPERTY(int StencilRadius READ getStencilRadius WRITE setStencilRadius)
 
 
@@ -59,18 +110,18 @@ public:
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -110,6 +161,12 @@ public:
   ITKMinMaxCurvatureFlowImage(ITKMinMaxCurvatureFlowImage&&) = delete;         // Move Constructor Not Implemented
   ITKMinMaxCurvatureFlowImage& operator=(const ITKMinMaxCurvatureFlowImage&) = delete; // Copy Assignment Not Implemented
   ITKMinMaxCurvatureFlowImage& operator=(ITKMinMaxCurvatureFlowImage&&) = delete;      // Move Assignment Not Implemented
+
+  private:
+    double m_TimeStep = {};
+    double m_NumberOfIterations = {};
+    int m_StencilRadius = {};
+
 };
 
 #ifdef __clang__

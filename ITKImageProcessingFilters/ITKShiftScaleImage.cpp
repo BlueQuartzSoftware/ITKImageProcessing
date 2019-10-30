@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKShiftScaleImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -137,7 +139,7 @@ AbstractFilter::Pointer ITKShiftScaleImage::newFilterInstance(bool copyFilterPar
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKShiftScaleImage::getHumanLabel() const
+QString ITKShiftScaleImage::getHumanLabel() const
 {
   return "ITK::Shift Scale Image Filter";
 }
@@ -145,7 +147,7 @@ const QString ITKShiftScaleImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKShiftScaleImage::getUuid()
+QUuid ITKShiftScaleImage::getUuid() const
 {
   return QUuid("{31d325fa-e605-5415-85ab-ab93e8cbf32f}");
 }
@@ -153,7 +155,62 @@ const QUuid ITKShiftScaleImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKShiftScaleImage::getSubGroupName() const
+QString ITKShiftScaleImage::getSubGroupName() const
 {
   return "ITK IntensityTransformation";
 }
+
+// -----------------------------------------------------------------------------
+ITKShiftScaleImage::Pointer ITKShiftScaleImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKShiftScaleImage> ITKShiftScaleImage::New()
+{
+  struct make_shared_enabler : public ITKShiftScaleImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKShiftScaleImage::getNameOfClass() const
+{
+  return QString("ITKShiftScaleImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKShiftScaleImage::ClassName()
+{
+  return QString("ITKShiftScaleImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKShiftScaleImage::setShift(double value)
+{
+  m_Shift = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKShiftScaleImage::getShift() const
+{
+  return m_Shift;
+}
+
+// -----------------------------------------------------------------------------
+void ITKShiftScaleImage::setScale(double value)
+{
+  m_Scale = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKShiftScaleImage::getScale() const
+{
+  return m_Scale;
+}
+
+

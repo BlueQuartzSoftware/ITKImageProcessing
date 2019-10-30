@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKFFTNormalizedCorrelationImage.h"
 
 #include "SIMPLib/Common/Constants.h"
@@ -197,7 +199,7 @@ AbstractFilter::Pointer ITKFFTNormalizedCorrelationImage::newFilterInstance(bool
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKFFTNormalizedCorrelationImage::getHumanLabel() const
+QString ITKFFTNormalizedCorrelationImage::getHumanLabel() const
 {
   return "ITK::FFT Normalized Correlation Image";
 }
@@ -205,7 +207,7 @@ const QString ITKFFTNormalizedCorrelationImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKFFTNormalizedCorrelationImage::getUuid()
+QUuid ITKFFTNormalizedCorrelationImage::getUuid() const
 {
   return QUuid("{a0d962b7-9d5c-5abc-a078-1fe795df4663}");
 }
@@ -213,7 +215,74 @@ const QUuid ITKFFTNormalizedCorrelationImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKFFTNormalizedCorrelationImage::getSubGroupName() const
+QString ITKFFTNormalizedCorrelationImage::getSubGroupName() const
 {
   return "ITK Registration";
 }
+
+// -----------------------------------------------------------------------------
+ITKFFTNormalizedCorrelationImage::Pointer ITKFFTNormalizedCorrelationImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKFFTNormalizedCorrelationImage> ITKFFTNormalizedCorrelationImage::New()
+{
+  struct make_shared_enabler : public ITKFFTNormalizedCorrelationImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKFFTNormalizedCorrelationImage::getNameOfClass() const
+{
+  return QString("ITKFFTNormalizedCorrelationImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKFFTNormalizedCorrelationImage::ClassName()
+{
+  return QString("ITKFFTNormalizedCorrelationImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKFFTNormalizedCorrelationImage::setMovingCellArrayPath(const DataArrayPath& value)
+{
+  m_MovingCellArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath ITKFFTNormalizedCorrelationImage::getMovingCellArrayPath() const
+{
+  return m_MovingCellArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void ITKFFTNormalizedCorrelationImage::setRequiredNumberOfOverlappingPixels(double value)
+{
+  m_RequiredNumberOfOverlappingPixels = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKFFTNormalizedCorrelationImage::getRequiredNumberOfOverlappingPixels() const
+{
+  return m_RequiredNumberOfOverlappingPixels;
+}
+
+// -----------------------------------------------------------------------------
+void ITKFFTNormalizedCorrelationImage::setRequiredFractionOfOverlappingPixels(double value)
+{
+  m_RequiredFractionOfOverlappingPixels = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKFFTNormalizedCorrelationImage::getRequiredFractionOfOverlappingPixels() const
+{
+  return m_RequiredFractionOfOverlappingPixels;
+}
+
+

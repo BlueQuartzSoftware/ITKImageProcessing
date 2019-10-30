@@ -33,7 +33,12 @@
 
 #pragma once
 
+#include <memory>
+
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLArray.hpp"
+#include "SIMPLib/DataArrays/IDataArray.h"
 
 #include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
@@ -46,8 +51,21 @@ class ITKImportFijiMontagePrivate;
 class ITKImageProcessing_EXPORT ITKImportFijiMontage : public AbstractFilter
 {
   Q_OBJECT
-
+// clang-format off
+#ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(ITKImportFijiMontage SUPERCLASS ITKImportMontage)
+  PYB11_SHARED_POINTERS(ITKImportFijiMontage)
+  PYB11_FILTER_NEW_MACRO(ITKImportFijiMontage)
+  PYB11_FILTER_PARAMETER(QString, InputFile)
+  PYB11_FILTER_PARAMETER(DataArrayPath, DataContainerPath)
+  PYB11_FILTER_PARAMETER(QString, CellAttributeMatrixName)
+  PYB11_FILTER_PARAMETER(QString, ImageDataArrayName)
+  PYB11_FILTER_PARAMETER(bool, ConvertToGrayScale)
+  PYB11_FILTER_PARAMETER(FloatVec3Type, ColorWeights)
+  PYB11_FILTER_PARAMETER(bool, ChangeOrigin)
+  PYB11_FILTER_PARAMETER(FloatVec3Type, Origin)
+  PYB11_FILTER_PARAMETER(bool, ChangeSpacing)
+  PYB11_FILTER_PARAMETER(FloatVec3Type, Spacing)
 
   PYB11_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
   PYB11_PROPERTY(DataArrayPath DataContainerPath READ getDataContainerPath WRITE setDataContainerPath)
@@ -62,7 +80,8 @@ class ITKImageProcessing_EXPORT ITKImportFijiMontage : public AbstractFilter
   PYB11_PROPERTY(int32_t LengthUnit READ getLengthUnit WRITE setLengthUnit)
   PYB11_PROPERTY(IntVec2Type MontageStart READ getMontageStart WRITE setMontageStart)
   PYB11_PROPERTY(IntVec2Type MontageEnd READ getMontageEnd WRITE setMontageEnd)
-
+#endif
+  // clang-format on
   Q_DECLARE_PRIVATE(ITKImportFijiMontage)
 
 public:
@@ -77,55 +96,196 @@ public:
     IDataArray::Pointer ImageDataProxy;
   };
 
-  SIMPL_SHARED_POINTERS(ITKImportFijiMontage)
-  SIMPL_FILTER_NEW_MACRO(ITKImportFijiMontage)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKImportFijiMontage, AbstractFilter)
+  using Self = ITKImportFijiMontage;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<ITKImportFijiMontage> New();
+
+  /**
+   * @brief Returns the name of the class for ITKImportFijiMontage
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for ITKImportFijiMontage
+   */
+  static QString ClassName();
 
   ~ITKImportFijiMontage() override;
 
-  SIMPL_FILTER_PARAMETER(QString, InputFile)
+  /**
+   * @brief Setter property for InputFile
+   */
+  void setInputFile(const QString& value);
+  /**
+   * @brief Getter property for InputFile
+   * @return Value of InputFile
+   */
+  QString getInputFile() const;
+
   Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
-  SIMPL_FILTER_PARAMETER(IntVec2Type, MontageStart)
+  /**
+   * @brief Setter property for MontageStart
+   */
+  void setMontageStart(const IntVec2Type& value);
+  /**
+   * @brief Getter property for MontageStart
+   * @return Value of MontageStart
+   */
+  IntVec2Type getMontageStart() const;
+
   Q_PROPERTY(IntVec2Type MontageStart READ getMontageStart WRITE setMontageStart)
 
-  SIMPL_FILTER_PARAMETER(IntVec2Type, MontageEnd)
+  /**
+   * @brief Setter property for MontageEnd
+   */
+  void setMontageEnd(const IntVec2Type& value);
+  /**
+   * @brief Getter property for MontageEnd
+   * @return Value of MontageEnd
+   */
+  IntVec2Type getMontageEnd() const;
+
   Q_PROPERTY(IntVec2Type MontageEnd READ getMontageEnd WRITE setMontageEnd)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, DataContainerPath)
+  /**
+   * @brief Setter property for DataContainerPath
+   */
+  void setDataContainerPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for DataContainerPath
+   * @return Value of DataContainerPath
+   */
+  DataArrayPath getDataContainerPath() const;
+
   Q_PROPERTY(DataArrayPath DataContainerPath READ getDataContainerPath WRITE setDataContainerPath)
 
-  SIMPL_FILTER_PARAMETER(QString, CellAttributeMatrixName)
+  /**
+   * @brief Setter property for CellAttributeMatrixName
+   */
+  void setCellAttributeMatrixName(const QString& value);
+  /**
+   * @brief Getter property for CellAttributeMatrixName
+   * @return Value of CellAttributeMatrixName
+   */
+  QString getCellAttributeMatrixName() const;
+
   Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
-  SIMPL_FILTER_PARAMETER(QString, ImageDataArrayName)
+  /**
+   * @brief Setter property for ImageDataArrayName
+   */
+  void setImageDataArrayName(const QString& value);
+  /**
+   * @brief Getter property for ImageDataArrayName
+   * @return Value of ImageDataArrayName
+   */
+  QString getImageDataArrayName() const;
+
   Q_PROPERTY(QString ImageDataArrayName READ getImageDataArrayName WRITE setImageDataArrayName)
 
-  SIMPL_FILTER_PARAMETER(bool, ConvertToGrayScale)
+  /**
+   * @brief Setter property for ConvertToGrayScale
+   */
+  void setConvertToGrayScale(bool value);
+  /**
+   * @brief Getter property for ConvertToGrayScale
+   * @return Value of ConvertToGrayScale
+   */
+  bool getConvertToGrayScale() const;
+
   Q_PROPERTY(bool ConvertToGrayScale READ getConvertToGrayScale WRITE setConvertToGrayScale)
 
-  SIMPL_FILTER_PARAMETER(FloatVec3Type, ColorWeights)
+  /**
+   * @brief Setter property for ColorWeights
+   */
+  void setColorWeights(const FloatVec3Type& value);
+  /**
+   * @brief Getter property for ColorWeights
+   * @return Value of ColorWeights
+   */
+  FloatVec3Type getColorWeights() const;
+
   Q_PROPERTY(FloatVec3Type ColorWeights READ getColorWeights WRITE setColorWeights)
 
-  SIMPL_FILTER_PARAMETER(bool, ChangeOrigin)
+  /**
+   * @brief Setter property for ChangeOrigin
+   */
+  void setChangeOrigin(bool value);
+  /**
+   * @brief Getter property for ChangeOrigin
+   * @return Value of ChangeOrigin
+   */
+  bool getChangeOrigin() const;
+
   Q_PROPERTY(bool ChangeOrigin READ getChangeOrigin WRITE setChangeOrigin)
 
-  SIMPL_FILTER_PARAMETER(FloatVec3Type, Origin)
+  /**
+   * @brief Setter property for Origin
+   */
+  void setOrigin(const FloatVec3Type& value);
+  /**
+   * @brief Getter property for Origin
+   * @return Value of Origin
+   */
+  FloatVec3Type getOrigin() const;
+
   Q_PROPERTY(FloatVec3Type Origin READ getOrigin WRITE setOrigin)
 
-  SIMPL_FILTER_PARAMETER(bool, ChangeSpacing)
+  /**
+   * @brief Setter property for ChangeSpacing
+   */
+  void setChangeSpacing(bool value);
+  /**
+   * @brief Getter property for ChangeSpacing
+   * @return Value of ChangeSpacing
+   */
+  bool getChangeSpacing() const;
+
   Q_PROPERTY(bool ChangeSpacing READ getChangeSpacing WRITE setChangeSpacing)
 
-  SIMPL_FILTER_PARAMETER(FloatVec3Type, Spacing)
+  /**
+   * @brief Setter property for Spacing
+   */
+  void setSpacing(const FloatVec3Type& value);
+  /**
+   * @brief Getter property for Spacing
+   * @return Value of Spacing
+   */
+  FloatVec3Type getSpacing() const;
+
   Q_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
 
-  SIMPL_GET_PROPERTY(int32_t, RowCount)
+  /**
+   * @brief Getter property for RowCount
+   * @return Value of RowCount
+   */
+  int32_t getRowCount() const;
+
   Q_PROPERTY(int32_t RowCount READ getRowCount)
 
-  SIMPL_GET_PROPERTY(int32_t, ColumnCount)
+  /**
+   * @brief Getter property for ColumnCount
+   * @return Value of ColumnCount
+   */
+  int32_t getColumnCount() const;
+
   Q_PROPERTY(int32_t ColumnCount READ getColumnCount)
 
-  SIMPL_FILTER_PARAMETER(int32_t, LengthUnit)
+  /**
+   * @brief Setter property for LengthUnit
+   */
+  void setLengthUnit(int32_t value);
+  /**
+   * @brief Getter property for LengthUnit
+   * @return Value of LengthUnit
+   */
+  int32_t getLengthUnit() const;
+
   Q_PROPERTY(int32_t LengthUnit READ getLengthUnit WRITE setLengthUnit)
 
   QString getMontageInformation();
@@ -134,21 +294,21 @@ public:
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
-  const QString getCompiledLibraryName() const override;
+  QString getCompiledLibraryName() const override;
 
   /**
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
    */
-  const QString getBrandingString() const override;
+  QString getBrandingString() const override;
 
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
    * @return
    */
-  const QString getFilterVersion() const override;
+  QString getFilterVersion() const override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -158,23 +318,23 @@ public:
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getGroupName() const override;
+  QString getGroupName() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -191,9 +351,36 @@ public:
    */
   void preflight() override;
 
-  SIMPL_PIMPL_PROPERTY_DECL(QString, InputFile_Cache)
-  SIMPL_PIMPL_PROPERTY_DECL(QDateTime, TimeStamp_Cache)
-  SIMPL_PIMPL_PROPERTY_DECL(std::vector<BoundsType>, BoundsCache)
+  /**
+   * @brief Setter property for InputFile_Cache
+   */
+  void setInputFile_Cache(const QString& value);
+  /**
+   * @brief Getter property for InputFile_Cache
+   * @return Value of InputFile_Cache
+   */
+  QString getInputFile_Cache() const;
+
+  /**
+   * @brief Setter property for TimeStamp_Cache
+   */
+  void setTimeStamp_Cache(const QDateTime& value);
+  /**
+   * @brief Getter property for TimeStamp_Cache
+   * @return Value of TimeStamp_Cache
+   */
+  QDateTime getTimeStamp_Cache() const;
+
+  /**
+   * @brief Setter property for BoundsCache
+   */
+  void setBoundsCache(const std::vector<ITKImportFijiMontage::BoundsType>& value);
+  /**
+   * @brief Getter property for BoundsCache
+   * @return Value of BoundsCache
+   */
+  std::vector<BoundsType> getBoundsCache() const;
+
 
 signals:
   /**
@@ -268,6 +455,20 @@ protected:
   void findTileIndices(int32_t tolerance, std::vector<ITKImportFijiMontage::BoundsType>& bounds);
 
 private:
+    QString m_InputFile = {};
+    IntVec2Type m_MontageStart = {};
+    IntVec2Type m_MontageEnd = {};
+    DataArrayPath m_DataContainerPath = {};
+    QString m_CellAttributeMatrixName = {};
+    QString m_ImageDataArrayName = {};
+    bool m_ConvertToGrayScale = {};
+    FloatVec3Type m_ColorWeights = {};
+    bool m_ChangeOrigin = {};
+    FloatVec3Type m_Origin = {};
+    bool m_ChangeSpacing = {};
+    FloatVec3Type m_Spacing = {};
+    int32_t m_LengthUnit = {};
+
   QScopedPointer<ITKImportFijiMontagePrivate> const d_ptr;
   bool m_FileWasRead = false;
   int m_RowCount = -1;

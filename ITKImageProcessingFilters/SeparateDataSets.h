@@ -31,9 +31,10 @@
 
 #pragma once
 
+#include <memory>
+
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 #include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
@@ -45,36 +46,69 @@ class ITKImageProcessing_EXPORT SeparateDataSets : public AbstractFilter
   Q_OBJECT
 
   public:
-    SIMPL_SHARED_POINTERS(SeparateDataSets)
-    SIMPL_FILTER_NEW_MACRO(SeparateDataSets)
-    SIMPL_TYPE_MACRO_SUPER(SeparateDataSets, AbstractFilter)
+    using Self = SeparateDataSets;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
+
+    static std::shared_ptr<SeparateDataSets> New();
+
+    /**
+    * @brief Returns the name of the class for SeparateDataSets
+    */
+    QString getNameOfClass() const override;
+    /**
+    * @brief Returns the name of the class for SeparateDataSets
+    */
+    static QString ClassName();
+
 
     ~SeparateDataSets() override;
 
-    SIMPL_INSTANCE_PROPERTY(DataArrayPath, DatasetAMPath)
+    /**
+    * @brief Setter property for DatasetAMPath
+    */
+    void setDatasetAMPath(const DataArrayPath& value); 
+    /**
+    * @brief Getter property for DatasetAMPath
+    * @return Value of DatasetAMPath
+    */
+    DataArrayPath getDatasetAMPath() const;
+
     Q_PROPERTY(DataArrayPath DatasetAMPath READ getDatasetAMPath WRITE setDatasetAMPath)
 
-    SIMPL_INSTANCE_PROPERTY(DataArrayPath, MetadataAMPath)
+    /**
+    * @brief Setter property for MetadataAMPath
+    */
+    void setMetadataAMPath(const DataArrayPath& value); 
+    /**
+    * @brief Getter property for MetadataAMPath
+    * @return Value of MetadataAMPath
+    */
+    DataArrayPath getMetadataAMPath() const;
+
     Q_PROPERTY(DataArrayPath MetadataAMPath READ getMetadataAMPath WRITE setMetadataAMPath)
 
     /**
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
      */
-    const QString getCompiledLibraryName() const override;
+    QString getCompiledLibraryName() const override;
 
     /**
      * @brief getBrandingString Returns the branding string for the filter, which is a tag
      * used to denote the filter's association with specific plugins
      * @return Branding string
     */
-    const QString getBrandingString() const override;
+    QString getBrandingString() const override;
 
     /**
      * @brief getFilterVersion Returns a version string for this filter. Default
      * value is an empty string.
      * @return
      */
-    const QString getFilterVersion() const override;
+    QString getFilterVersion() const override;
 
     /**
      * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -84,23 +118,23 @@ class ITKImageProcessing_EXPORT SeparateDataSets : public AbstractFilter
     /**
      * @brief getGroupName Reimplemented from @see AbstractFilter class
      */
-    const QString getGroupName() const override;
+    QString getGroupName() const override;
 
     /**
      * @brief getSubGroupName Reimplemented from @see AbstractFilter class
      */
-    const QString getSubGroupName() const override;
+    QString getSubGroupName() const override;
 
     /**
      * @brief getUuid Return the unique identifier for this filter.
      * @return A QUuid object.
      */
-    const QUuid getUuid() override;
+    QUuid getUuid() const override;
 
     /**
      * @brief getHumanLabel Reimplemented from @see AbstractFilter class
      */
-    const QString getHumanLabel() const override;
+    QString getHumanLabel() const override;
 
     /**
      * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -158,4 +192,9 @@ class ITKImageProcessing_EXPORT SeparateDataSets : public AbstractFilter
     SeparateDataSets(SeparateDataSets&&) = delete;                 // Move Constructor Not Implemented
     SeparateDataSets& operator=(const SeparateDataSets&) = delete; // Copy Assignment Not Implemented
     SeparateDataSets& operator=(SeparateDataSets&&) = delete;      // Move Assignment Not Implemented
+
+  private:
+    DataArrayPath m_DatasetAMPath = {};
+    DataArrayPath m_MetadataAMPath = {};
+
 };

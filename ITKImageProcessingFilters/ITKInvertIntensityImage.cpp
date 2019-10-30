@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKInvertIntensityImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -133,7 +135,7 @@ AbstractFilter::Pointer ITKInvertIntensityImage::newFilterInstance(bool copyFilt
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKInvertIntensityImage::getHumanLabel() const
+QString ITKInvertIntensityImage::getHumanLabel() const
 {
   return "ITK::Invert Intensity Image Filter";
 }
@@ -141,7 +143,7 @@ const QString ITKInvertIntensityImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKInvertIntensityImage::getUuid()
+QUuid ITKInvertIntensityImage::getUuid() const
 {
   return QUuid("{c6e10fa5-5462-546b-b34b-0f0ea75a7e43}");
 }
@@ -149,7 +151,50 @@ const QUuid ITKInvertIntensityImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKInvertIntensityImage::getSubGroupName() const
+QString ITKInvertIntensityImage::getSubGroupName() const
 {
   return "ITK IntensityTransformation";
 }
+
+// -----------------------------------------------------------------------------
+ITKInvertIntensityImage::Pointer ITKInvertIntensityImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKInvertIntensityImage> ITKInvertIntensityImage::New()
+{
+  struct make_shared_enabler : public ITKInvertIntensityImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKInvertIntensityImage::getNameOfClass() const
+{
+  return QString("ITKInvertIntensityImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKInvertIntensityImage::ClassName()
+{
+  return QString("ITKInvertIntensityImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKInvertIntensityImage::setMaximum(double value)
+{
+  m_Maximum = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKInvertIntensityImage::getMaximum() const
+{
+  return m_Maximum;
+}
+
+

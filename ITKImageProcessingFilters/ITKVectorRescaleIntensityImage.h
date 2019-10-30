@@ -11,9 +11,10 @@
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
+#include <memory>
+
 #include "ITKImageProcessingBase.h"
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
 
 // Auto includes
@@ -28,21 +29,61 @@
 class ITKImageProcessing_EXPORT ITKVectorRescaleIntensityImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+
+#ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(ITKVectorRescaleIntensityImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_SHARED_POINTERS(ITKVectorRescaleIntensityImage)
+  PYB11_FILTER_NEW_MACRO(ITKVectorRescaleIntensityImage)
+  PYB11_FILTER_PARAMETER(double, OutputMaximumMagnitude)
+  PYB11_FILTER_PARAMETER(int, OutputType)
   PYB11_PROPERTY(double OutputMaximumMagnitude READ getOutputMaximumMagnitude WRITE setOutputMaximumMagnitude)
   PYB11_PROPERTY(int OutputType READ getOutputType WRITE setOutputType)
+#endif
 
 public:
-  SIMPL_SHARED_POINTERS(ITKVectorRescaleIntensityImage)
-  SIMPL_FILTER_NEW_MACRO(ITKVectorRescaleIntensityImage)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKVectorRescaleIntensityImage, AbstractFilter)
+    using Self = ITKVectorRescaleIntensityImage;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
+
+    static std::shared_ptr<ITKVectorRescaleIntensityImage> New();
+
+    /**
+    * @brief Returns the name of the class for ITKVectorRescaleIntensityImage
+    */
+    QString getNameOfClass() const override;
+    /**
+    * @brief Returns the name of the class for ITKVectorRescaleIntensityImage
+    */
+    static QString ClassName();
+
 
   ~ITKVectorRescaleIntensityImage() override;
 
-  SIMPL_FILTER_PARAMETER(double, OutputMaximumMagnitude)
+    /**
+    * @brief Setter property for OutputMaximumMagnitude
+    */
+    void setOutputMaximumMagnitude(double value); 
+    /**
+    * @brief Getter property for OutputMaximumMagnitude
+    * @return Value of OutputMaximumMagnitude
+    */
+    double getOutputMaximumMagnitude() const;
+
   Q_PROPERTY(double OutputMaximumMagnitude READ getOutputMaximumMagnitude WRITE setOutputMaximumMagnitude)
 
-  SIMPL_FILTER_PARAMETER(int, OutputType)
+    /**
+    * @brief Setter property for OutputType
+    */
+    void setOutputType(int value); 
+    /**
+    * @brief Getter property for OutputType
+    * @return Value of OutputType
+    */
+    int getOutputType() const;
+
   Q_PROPERTY(int OutputType READ getOutputType WRITE setOutputType)
 
   /**
@@ -53,18 +94,18 @@ public:
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -109,6 +150,11 @@ public:
   ITKVectorRescaleIntensityImage(ITKVectorRescaleIntensityImage&&) = delete;      // Move Constructor Not Implemented
   ITKVectorRescaleIntensityImage& operator=(const ITKVectorRescaleIntensityImage&) = delete; // Copy Assignment Not Implemented
   ITKVectorRescaleIntensityImage& operator=(ITKVectorRescaleIntensityImage&&) = delete;      // Move Assignment Not Implemented
+
+  private:
+    double m_OutputMaximumMagnitude = {};
+    int m_OutputType = {};
+
 };
 
 #ifdef __clang__

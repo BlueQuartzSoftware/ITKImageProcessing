@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKMultiScaleHessianBasedObjectnessImage.h"
 
 #include "SIMPLib/Common/Constants.h"
@@ -179,7 +181,7 @@ AbstractFilter::Pointer ITKMultiScaleHessianBasedObjectnessImage::newFilterInsta
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKMultiScaleHessianBasedObjectnessImage::getHumanLabel() const
+QString ITKMultiScaleHessianBasedObjectnessImage::getHumanLabel() const
 {
   return "ITK::Multi-scale Hessian Based Objectness Filter";
 }
@@ -187,7 +189,7 @@ const QString ITKMultiScaleHessianBasedObjectnessImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKMultiScaleHessianBasedObjectnessImage::getUuid()
+QUuid ITKMultiScaleHessianBasedObjectnessImage::getUuid() const
 {
   return QUuid("{c080e143-1895-5f71-9799-06b8c2d58faf}");
 }
@@ -195,7 +197,146 @@ const QUuid ITKMultiScaleHessianBasedObjectnessImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKMultiScaleHessianBasedObjectnessImage::getSubGroupName() const
+QString ITKMultiScaleHessianBasedObjectnessImage::getSubGroupName() const
 {
   return "ITK Edge";
 }
+
+// -----------------------------------------------------------------------------
+ITKMultiScaleHessianBasedObjectnessImage::Pointer ITKMultiScaleHessianBasedObjectnessImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKMultiScaleHessianBasedObjectnessImage> ITKMultiScaleHessianBasedObjectnessImage::New()
+{
+  struct make_shared_enabler : public ITKMultiScaleHessianBasedObjectnessImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKMultiScaleHessianBasedObjectnessImage::getNameOfClass() const
+{
+  return QString("ITKMultiScaleHessianBasedObjectnessImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKMultiScaleHessianBasedObjectnessImage::ClassName()
+{
+  return QString("ITKMultiScaleHessianBasedObjectnessImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKMultiScaleHessianBasedObjectnessImage::setObjectDimension(int value)
+{
+  m_ObjectDimension = value;
+}
+
+// -----------------------------------------------------------------------------
+int ITKMultiScaleHessianBasedObjectnessImage::getObjectDimension() const
+{
+  return m_ObjectDimension;
+}
+
+// -----------------------------------------------------------------------------
+void ITKMultiScaleHessianBasedObjectnessImage::setAlpha(double value)
+{
+  m_Alpha = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKMultiScaleHessianBasedObjectnessImage::getAlpha() const
+{
+  return m_Alpha;
+}
+
+// -----------------------------------------------------------------------------
+void ITKMultiScaleHessianBasedObjectnessImage::setBeta(double value)
+{
+  m_Beta = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKMultiScaleHessianBasedObjectnessImage::getBeta() const
+{
+  return m_Beta;
+}
+
+// -----------------------------------------------------------------------------
+void ITKMultiScaleHessianBasedObjectnessImage::setGamma(double value)
+{
+  m_Gamma = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKMultiScaleHessianBasedObjectnessImage::getGamma() const
+{
+  return m_Gamma;
+}
+
+// -----------------------------------------------------------------------------
+void ITKMultiScaleHessianBasedObjectnessImage::setScaleObjectnessMeasure(bool value)
+{
+  m_ScaleObjectnessMeasure = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ITKMultiScaleHessianBasedObjectnessImage::getScaleObjectnessMeasure() const
+{
+  return m_ScaleObjectnessMeasure;
+}
+
+// -----------------------------------------------------------------------------
+void ITKMultiScaleHessianBasedObjectnessImage::setBrightObject(bool value)
+{
+  m_BrightObject = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ITKMultiScaleHessianBasedObjectnessImage::getBrightObject() const
+{
+  return m_BrightObject;
+}
+
+// -----------------------------------------------------------------------------
+void ITKMultiScaleHessianBasedObjectnessImage::setSigmaMinimum(double value)
+{
+  m_SigmaMinimum = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKMultiScaleHessianBasedObjectnessImage::getSigmaMinimum() const
+{
+  return m_SigmaMinimum;
+}
+
+// -----------------------------------------------------------------------------
+void ITKMultiScaleHessianBasedObjectnessImage::setSigmaMaximum(double value)
+{
+  m_SigmaMaximum = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKMultiScaleHessianBasedObjectnessImage::getSigmaMaximum() const
+{
+  return m_SigmaMaximum;
+}
+
+// -----------------------------------------------------------------------------
+void ITKMultiScaleHessianBasedObjectnessImage::setNumberOfSigmaSteps(double value)
+{
+  m_NumberOfSigmaSteps = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKMultiScaleHessianBasedObjectnessImage::getNumberOfSigmaSteps() const
+{
+  return m_NumberOfSigmaSteps;
+}
+
+

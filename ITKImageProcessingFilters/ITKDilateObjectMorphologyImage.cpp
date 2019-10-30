@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKDilateObjectMorphologyImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -183,7 +185,7 @@ AbstractFilter::Pointer ITKDilateObjectMorphologyImage::newFilterInstance(bool c
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKDilateObjectMorphologyImage::getHumanLabel() const
+QString ITKDilateObjectMorphologyImage::getHumanLabel() const
 {
   return "ITK::Dilate Object Morphology Image Filter";
 }
@@ -191,7 +193,7 @@ const QString ITKDilateObjectMorphologyImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKDilateObjectMorphologyImage::getUuid()
+QUuid ITKDilateObjectMorphologyImage::getUuid() const
 {
   return QUuid("{dbf29c6d-461c-55e7-a6c4-56477d9da55b}");
 }
@@ -199,7 +201,74 @@ const QUuid ITKDilateObjectMorphologyImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKDilateObjectMorphologyImage::getSubGroupName() const
+QString ITKDilateObjectMorphologyImage::getSubGroupName() const
 {
   return "ITK BinaryMathematicalMorphology";
 }
+
+// -----------------------------------------------------------------------------
+ITKDilateObjectMorphologyImage::Pointer ITKDilateObjectMorphologyImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKDilateObjectMorphologyImage> ITKDilateObjectMorphologyImage::New()
+{
+  struct make_shared_enabler : public ITKDilateObjectMorphologyImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKDilateObjectMorphologyImage::getNameOfClass() const
+{
+  return QString("ITKDilateObjectMorphologyImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKDilateObjectMorphologyImage::ClassName()
+{
+  return QString("ITKDilateObjectMorphologyImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKDilateObjectMorphologyImage::setObjectValue(double value)
+{
+  m_ObjectValue = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKDilateObjectMorphologyImage::getObjectValue() const
+{
+  return m_ObjectValue;
+}
+
+// -----------------------------------------------------------------------------
+void ITKDilateObjectMorphologyImage::setKernelRadius(const FloatVec3Type& value)
+{
+  m_KernelRadius = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec3Type ITKDilateObjectMorphologyImage::getKernelRadius() const
+{
+  return m_KernelRadius;
+}
+
+// -----------------------------------------------------------------------------
+void ITKDilateObjectMorphologyImage::setKernelType(int value)
+{
+  m_KernelType = value;
+}
+
+// -----------------------------------------------------------------------------
+int ITKDilateObjectMorphologyImage::getKernelType() const
+{
+  return m_KernelType;
+}
+
+

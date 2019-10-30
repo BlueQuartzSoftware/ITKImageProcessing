@@ -4,6 +4,13 @@
 
 #pragma once
 
+#include <memory>
+
+#include "SIMPLib/SIMPLib.h"
+
+class IDataArray;
+using IDataArrayWkPtrType = std::weak_ptr<IDataArray>;
+
 #include "ITKImageBase.h"
 
 #include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
@@ -14,50 +21,98 @@
 class ITKImageProcessing_EXPORT ITKImageProcessingBase : public ITKImageBase
 {
   Q_OBJECT
+#ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(ITKImageProcessingBase SUPERCLASS ITKImageBase)
+  PYB11_SHARED_POINTERS(ITKImageProcessingBase)
+  PYB11_FILTER_NEW_MACRO(ITKImageProcessingBase)
+  PYB11_FILTER_PARAMETER(DataArrayPath, SelectedCellArrayPath)
+  PYB11_FILTER_PARAMETER(QString, NewCellArrayName)
+  PYB11_FILTER_PARAMETER(bool, SaveAsNewArray)
   PYB11_PROPERTY(DataArrayPath SelectedCellArrayPath READ getSelectedCellArrayPath WRITE setSelectedCellArrayPath)
   PYB11_PROPERTY(QString NewCellArrayName READ getNewCellArrayName WRITE setNewCellArrayName)
   PYB11_PROPERTY(bool SaveAsNewArray READ getSaveAsNewArray WRITE setSaveAsNewArray)
+#endif
 
 public:
-  SIMPL_SHARED_POINTERS(ITKImageProcessingBase)
-  SIMPL_FILTER_NEW_MACRO(ITKImageProcessingBase)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKImageProcessingBase, ITKImageBase)
+  using Self = ITKImageProcessingBase;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<ITKImageProcessingBase> New();
+
+  /**
+   * @brief Returns the name of the class for ITKImageProcessingBase
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for ITKImageProcessingBase
+   */
+  static QString ClassName();
 
   ~ITKImageProcessingBase() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, SelectedCellArrayPath)
+  /**
+   * @brief Setter property for SelectedCellArrayPath
+   */
+  void setSelectedCellArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for SelectedCellArrayPath
+   * @return Value of SelectedCellArrayPath
+   */
+  DataArrayPath getSelectedCellArrayPath() const;
+
   Q_PROPERTY(DataArrayPath SelectedCellArrayPath READ getSelectedCellArrayPath WRITE setSelectedCellArrayPath)
 
-  SIMPL_FILTER_PARAMETER(QString, NewCellArrayName)
+  /**
+   * @brief Setter property for NewCellArrayName
+   */
+  void setNewCellArrayName(const QString& value);
+  /**
+   * @brief Getter property for NewCellArrayName
+   * @return Value of NewCellArrayName
+   */
+  QString getNewCellArrayName() const;
+
   Q_PROPERTY(QString NewCellArrayName READ getNewCellArrayName WRITE setNewCellArrayName)
 
-  SIMPL_FILTER_PARAMETER(bool, SaveAsNewArray)
+  /**
+   * @brief Setter property for SaveAsNewArray
+   */
+  void setSaveAsNewArray(bool value);
+  /**
+   * @brief Getter property for SaveAsNewArray
+   * @return Value of SaveAsNewArray
+   */
+  bool getSaveAsNewArray() const;
+
   Q_PROPERTY(bool SaveAsNewArray READ getSaveAsNewArray WRITE setSaveAsNewArray)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
-  const QString getCompiledLibraryName() const override;
+  QString getCompiledLibraryName() const override;
 
   /**
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
-  */
-  const QString getBrandingString() const override;
+   */
+  QString getBrandingString() const override;
 
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
    * @return
    */
-  const QString getFilterVersion() const override;
+  QString getFilterVersion() const override;
 
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getGroupName() const override;
+  QString getGroupName() const override;
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
    */
@@ -66,7 +121,7 @@ public:
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  virtual const QString getHumanLabel() const override;
+  virtual QString getHumanLabel() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -84,7 +139,8 @@ protected:
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
    */
-  template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void dataCheck()
+  template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+  void dataCheck()
   {
     // typedef typename itk::NumericTraits<InputPixelType>::ValueType InputValueType;
     typedef typename itk::NumericTraits<OutputPixelType>::ValueType OutputValueType;
@@ -101,8 +157,8 @@ protected:
       DataArrayPath tempPath;
       tempPath.update(getSelectedCellArrayPath().getDataContainerName(), getSelectedCellArrayPath().getAttributeMatrixName(), getNewCellArrayName());
       m_NewCellArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<OutputValueType>, AbstractFilter, OutputValueType>(
-          this, tempPath, 0, outputDims);           /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-      if(nullptr != m_NewCellArrayPtr.lock())       /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+          this, tempPath, 0, outputDims);     /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+      if(nullptr != m_NewCellArrayPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
       {
         m_NewCellArray = m_NewCellArrayPtr.lock()->getVoidPointer(0);
       } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -115,9 +171,10 @@ protected:
   }
 
   /**
-  * @brief Applies the filter
-  */
-  template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension, typename FilterType> void filter(FilterType* filter)
+   * @brief Applies the filter
+   */
+  template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension, typename FilterType>
+  void filter(FilterType* filter)
   {
     std::string outputArrayName = getSelectedCellArrayPath().getDataArrayName().toStdString();
 
@@ -129,9 +186,10 @@ protected:
   }
 
   /**
-  * @brief Applies the filter, casting the input to float
-  */
-  template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension, typename FilterType, typename FloatImageType> void filterCastToFloat(FilterType* filter)
+   * @brief Applies the filter, casting the input to float
+   */
+  template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension, typename FilterType, typename FloatImageType>
+  void filterCastToFloat(FilterType* filter)
   {
     std::string outputArrayName = getSelectedCellArrayPath().getDataArrayName().toStdString();
 
@@ -148,7 +206,12 @@ protected:
   void initialize();
 
 private:
-  DEFINE_IDATAARRAY_VARIABLE(NewCellArray)
+  IDataArrayWkPtrType m_NewCellArrayPtr;
+  void* m_NewCellArray = nullptr;
+
+  DataArrayPath m_SelectedCellArrayPath = {};
+  QString m_NewCellArrayName = {};
+  bool m_SaveAsNewArray = {};
 
 public:
   ITKImageProcessingBase(const ITKImageProcessingBase&) = delete;            // Copy Constructor Not Implemented
@@ -156,4 +219,3 @@ public:
   ITKImageProcessingBase& operator=(const ITKImageProcessingBase&) = delete; // Copy Assignment Not Implemented
   ITKImageProcessingBase& operator=(ITKImageProcessingBase&&) = delete;      // Move Assignment Not Implemented
 };
-

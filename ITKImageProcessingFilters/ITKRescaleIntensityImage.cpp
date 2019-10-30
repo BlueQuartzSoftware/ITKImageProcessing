@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKRescaleIntensityImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -180,7 +182,7 @@ AbstractFilter::Pointer ITKRescaleIntensityImage::newFilterInstance(bool copyFil
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKRescaleIntensityImage::getHumanLabel() const
+QString ITKRescaleIntensityImage::getHumanLabel() const
 {
   return "ITK::Rescale Intensity Image Filter";
 }
@@ -188,7 +190,7 @@ const QString ITKRescaleIntensityImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKRescaleIntensityImage::getUuid()
+QUuid ITKRescaleIntensityImage::getUuid() const
 {
   return QUuid("{77bf2192-851d-5127-9add-634c1ef4f67f}");
 }
@@ -196,7 +198,74 @@ const QUuid ITKRescaleIntensityImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKRescaleIntensityImage::getSubGroupName() const
+QString ITKRescaleIntensityImage::getSubGroupName() const
 {
   return "ITK IntensityTransformation";
 }
+
+// -----------------------------------------------------------------------------
+ITKRescaleIntensityImage::Pointer ITKRescaleIntensityImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKRescaleIntensityImage> ITKRescaleIntensityImage::New()
+{
+  struct make_shared_enabler : public ITKRescaleIntensityImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKRescaleIntensityImage::getNameOfClass() const
+{
+  return QString("ITKRescaleIntensityImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKRescaleIntensityImage::ClassName()
+{
+  return QString("ITKRescaleIntensityImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKRescaleIntensityImage::setOutputMinimum(double value)
+{
+  m_OutputMinimum = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKRescaleIntensityImage::getOutputMinimum() const
+{
+  return m_OutputMinimum;
+}
+
+// -----------------------------------------------------------------------------
+void ITKRescaleIntensityImage::setOutputMaximum(double value)
+{
+  m_OutputMaximum = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKRescaleIntensityImage::getOutputMaximum() const
+{
+  return m_OutputMaximum;
+}
+
+// -----------------------------------------------------------------------------
+void ITKRescaleIntensityImage::setOutputType(int value)
+{
+  m_OutputType = value;
+}
+
+// -----------------------------------------------------------------------------
+int ITKRescaleIntensityImage::getOutputType() const
+{
+  return m_OutputType;
+}
+
+

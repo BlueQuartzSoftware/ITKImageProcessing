@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKCurvatureFlowImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -138,7 +140,7 @@ AbstractFilter::Pointer ITKCurvatureFlowImage::newFilterInstance(bool copyFilter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKCurvatureFlowImage::getHumanLabel() const
+QString ITKCurvatureFlowImage::getHumanLabel() const
 {
   return "ITK::Curvature Flow Image Filter";
 }
@@ -146,7 +148,7 @@ const QString ITKCurvatureFlowImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKCurvatureFlowImage::getUuid()
+QUuid ITKCurvatureFlowImage::getUuid() const
 {
   return QUuid("{653f26dd-a5ef-5c75-b6f6-bc096268f25e}");
 }
@@ -154,7 +156,62 @@ const QUuid ITKCurvatureFlowImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKCurvatureFlowImage::getSubGroupName() const
+QString ITKCurvatureFlowImage::getSubGroupName() const
 {
   return "ITK CurvatureFlow";
 }
+
+// -----------------------------------------------------------------------------
+ITKCurvatureFlowImage::Pointer ITKCurvatureFlowImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKCurvatureFlowImage> ITKCurvatureFlowImage::New()
+{
+  struct make_shared_enabler : public ITKCurvatureFlowImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKCurvatureFlowImage::getNameOfClass() const
+{
+  return QString("ITKCurvatureFlowImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKCurvatureFlowImage::ClassName()
+{
+  return QString("ITKCurvatureFlowImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKCurvatureFlowImage::setTimeStep(double value)
+{
+  m_TimeStep = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKCurvatureFlowImage::getTimeStep() const
+{
+  return m_TimeStep;
+}
+
+// -----------------------------------------------------------------------------
+void ITKCurvatureFlowImage::setNumberOfIterations(double value)
+{
+  m_NumberOfIterations = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKCurvatureFlowImage::getNumberOfIterations() const
+{
+  return m_NumberOfIterations;
+}
+
+

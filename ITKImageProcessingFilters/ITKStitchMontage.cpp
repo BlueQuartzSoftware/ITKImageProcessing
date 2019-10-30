@@ -33,6 +33,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "ITKStitchMontage.h"
 
 #include <sstream>
@@ -655,7 +657,7 @@ AbstractFilter::Pointer ITKStitchMontage::newFilterInstance(bool copyFilterParam
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKStitchMontage::getCompiledLibraryName() const
+QString ITKStitchMontage::getCompiledLibraryName() const
 {
   return ITKImageProcessingConstants::ITKImageProcessingBaseName;
 }
@@ -663,7 +665,7 @@ const QString ITKStitchMontage::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKStitchMontage::getBrandingString() const
+QString ITKStitchMontage::getBrandingString() const
 {
   return "ITKImageProcessing";
 }
@@ -671,7 +673,7 @@ const QString ITKStitchMontage::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKStitchMontage::getFilterVersion() const
+QString ITKStitchMontage::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -681,7 +683,7 @@ const QString ITKStitchMontage::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKStitchMontage::getGroupName() const
+QString ITKStitchMontage::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -689,7 +691,7 @@ const QString ITKStitchMontage::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKStitchMontage::getUuid()
+QUuid ITKStitchMontage::getUuid() const
 {
   return QUuid("{fa4efd40-f4a6-5524-9fc6-e1f8bbb2c42f}");
 }
@@ -697,7 +699,7 @@ const QUuid ITKStitchMontage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKStitchMontage::getSubGroupName() const
+QString ITKStitchMontage::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::GenerationFilters;
 }
@@ -705,7 +707,134 @@ const QString ITKStitchMontage::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKStitchMontage::getHumanLabel() const
+QString ITKStitchMontage::getHumanLabel() const
 {
   return "ITK::Stitch Montage";
 }
+
+// -----------------------------------------------------------------------------
+ITKStitchMontage::Pointer ITKStitchMontage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKStitchMontage> ITKStitchMontage::New()
+{
+  struct make_shared_enabler : public ITKStitchMontage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKStitchMontage::getNameOfClass() const
+{
+  return QString("ITKStitchMontage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKStitchMontage::ClassName()
+{
+  return QString("ITKStitchMontage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKStitchMontage::setMontageStart(const IntVec2Type& value)
+{
+  m_MontageStart = value;
+}
+
+// -----------------------------------------------------------------------------
+IntVec2Type ITKStitchMontage::getMontageStart() const
+{
+  return m_MontageStart;
+}
+
+// -----------------------------------------------------------------------------
+void ITKStitchMontage::setMontageEnd(const IntVec2Type& value)
+{
+  m_MontageEnd = value;
+}
+
+// -----------------------------------------------------------------------------
+IntVec2Type ITKStitchMontage::getMontageEnd() const
+{
+  return m_MontageEnd;
+}
+
+// -----------------------------------------------------------------------------
+void ITKStitchMontage::setDataContainerPrefix(const QString& value)
+{
+  m_DataContainerPrefix = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKStitchMontage::getDataContainerPrefix() const
+{
+  return m_DataContainerPrefix;
+}
+
+// -----------------------------------------------------------------------------
+void ITKStitchMontage::setCommonAttributeMatrixName(const QString& value)
+{
+  m_CommonAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKStitchMontage::getCommonAttributeMatrixName() const
+{
+  return m_CommonAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void ITKStitchMontage::setCommonDataArrayName(const QString& value)
+{
+  m_CommonDataArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKStitchMontage::getCommonDataArrayName() const
+{
+  return m_CommonDataArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void ITKStitchMontage::setMontageDataContainerName(const QString& value)
+{
+  m_MontageDataContainerName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKStitchMontage::getMontageDataContainerName() const
+{
+  return m_MontageDataContainerName;
+}
+
+// -----------------------------------------------------------------------------
+void ITKStitchMontage::setMontageAttributeMatrixName(const QString& value)
+{
+  m_MontageAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKStitchMontage::getMontageAttributeMatrixName() const
+{
+  return m_MontageAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void ITKStitchMontage::setMontageDataArrayName(const QString& value)
+{
+  m_MontageDataArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKStitchMontage::getMontageDataArrayName() const
+{
+  return m_MontageDataArrayName;
+}
+
+

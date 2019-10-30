@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKBinaryErodeImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -202,7 +204,7 @@ AbstractFilter::Pointer ITKBinaryErodeImage::newFilterInstance(bool copyFilterPa
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKBinaryErodeImage::getHumanLabel() const
+QString ITKBinaryErodeImage::getHumanLabel() const
 {
   return "ITK::Binary Erode Image Filter";
 }
@@ -210,7 +212,7 @@ const QString ITKBinaryErodeImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKBinaryErodeImage::getUuid()
+QUuid ITKBinaryErodeImage::getUuid() const
 {
   return QUuid("{522c5249-c048-579a-98dd-f7aadafc5578}");
 }
@@ -218,7 +220,98 @@ const QUuid ITKBinaryErodeImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKBinaryErodeImage::getSubGroupName() const
+QString ITKBinaryErodeImage::getSubGroupName() const
 {
   return "ITK BinaryMathematicalMorphology";
 }
+
+// -----------------------------------------------------------------------------
+ITKBinaryErodeImage::Pointer ITKBinaryErodeImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKBinaryErodeImage> ITKBinaryErodeImage::New()
+{
+  struct make_shared_enabler : public ITKBinaryErodeImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKBinaryErodeImage::getNameOfClass() const
+{
+  return QString("ITKBinaryErodeImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKBinaryErodeImage::ClassName()
+{
+  return QString("ITKBinaryErodeImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKBinaryErodeImage::setBackgroundValue(double value)
+{
+  m_BackgroundValue = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKBinaryErodeImage::getBackgroundValue() const
+{
+  return m_BackgroundValue;
+}
+
+// -----------------------------------------------------------------------------
+void ITKBinaryErodeImage::setForegroundValue(double value)
+{
+  m_ForegroundValue = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKBinaryErodeImage::getForegroundValue() const
+{
+  return m_ForegroundValue;
+}
+
+// -----------------------------------------------------------------------------
+void ITKBinaryErodeImage::setBoundaryToForeground(bool value)
+{
+  m_BoundaryToForeground = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ITKBinaryErodeImage::getBoundaryToForeground() const
+{
+  return m_BoundaryToForeground;
+}
+
+// -----------------------------------------------------------------------------
+void ITKBinaryErodeImage::setKernelRadius(const FloatVec3Type& value)
+{
+  m_KernelRadius = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec3Type ITKBinaryErodeImage::getKernelRadius() const
+{
+  return m_KernelRadius;
+}
+
+// -----------------------------------------------------------------------------
+void ITKBinaryErodeImage::setKernelType(int value)
+{
+  m_KernelType = value;
+}
+
+// -----------------------------------------------------------------------------
+int ITKBinaryErodeImage::getKernelType() const
+{
+  return m_KernelType;
+}
+
+

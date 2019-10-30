@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKGradientMagnitudeImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -133,7 +135,7 @@ AbstractFilter::Pointer ITKGradientMagnitudeImage::newFilterInstance(bool copyFi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKGradientMagnitudeImage::getHumanLabel() const
+QString ITKGradientMagnitudeImage::getHumanLabel() const
 {
   return "ITK::Gradient Magnitude Image Filter";
 }
@@ -141,7 +143,7 @@ const QString ITKGradientMagnitudeImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKGradientMagnitudeImage::getUuid()
+QUuid ITKGradientMagnitudeImage::getUuid() const
 {
   return QUuid("{3aa99151-e722-51a0-90ba-71e93347ab09}");
 }
@@ -149,7 +151,50 @@ const QUuid ITKGradientMagnitudeImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKGradientMagnitudeImage::getSubGroupName() const
+QString ITKGradientMagnitudeImage::getSubGroupName() const
 {
   return "ITK ImageGradient";
 }
+
+// -----------------------------------------------------------------------------
+ITKGradientMagnitudeImage::Pointer ITKGradientMagnitudeImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKGradientMagnitudeImage> ITKGradientMagnitudeImage::New()
+{
+  struct make_shared_enabler : public ITKGradientMagnitudeImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKGradientMagnitudeImage::getNameOfClass() const
+{
+  return QString("ITKGradientMagnitudeImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKGradientMagnitudeImage::ClassName()
+{
+  return QString("ITKGradientMagnitudeImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKGradientMagnitudeImage::setUseImageSpacing(bool value)
+{
+  m_UseImageSpacing = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ITKGradientMagnitudeImage::getUseImageSpacing() const
+{
+  return m_UseImageSpacing;
+}
+
+

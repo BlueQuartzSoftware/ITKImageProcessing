@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKHMaximaImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -133,7 +135,7 @@ AbstractFilter::Pointer ITKHMaximaImage::newFilterInstance(bool copyFilterParame
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKHMaximaImage::getHumanLabel() const
+QString ITKHMaximaImage::getHumanLabel() const
 {
   return "ITK::H Maxima Image Filter";
 }
@@ -141,7 +143,7 @@ const QString ITKHMaximaImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKHMaximaImage::getUuid()
+QUuid ITKHMaximaImage::getUuid() const
 {
   return QUuid("{932a6df4-212e-53a1-a2ab-c29bd376bb7b}");
 }
@@ -149,7 +151,50 @@ const QUuid ITKHMaximaImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKHMaximaImage::getSubGroupName() const
+QString ITKHMaximaImage::getSubGroupName() const
 {
   return "ITK BiasCorrection";
 }
+
+// -----------------------------------------------------------------------------
+ITKHMaximaImage::Pointer ITKHMaximaImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKHMaximaImage> ITKHMaximaImage::New()
+{
+  struct make_shared_enabler : public ITKHMaximaImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKHMaximaImage::getNameOfClass() const
+{
+  return QString("ITKHMaximaImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKHMaximaImage::ClassName()
+{
+  return QString("ITKHMaximaImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKHMaximaImage::setHeight(double value)
+{
+  m_Height = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKHMaximaImage::getHeight() const
+{
+  return m_Height;
+}
+
+

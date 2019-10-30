@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKBoundedReciprocalImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -124,7 +126,7 @@ AbstractFilter::Pointer ITKBoundedReciprocalImage::newFilterInstance(bool copyFi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKBoundedReciprocalImage::getHumanLabel() const
+QString ITKBoundedReciprocalImage::getHumanLabel() const
 {
   return "ITK::Bounded Reciprocal Image Filter";
 }
@@ -132,7 +134,7 @@ const QString ITKBoundedReciprocalImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKBoundedReciprocalImage::getUuid()
+QUuid ITKBoundedReciprocalImage::getUuid() const
 {
   return QUuid("{17f60a64-de93-59aa-a5e2-063e0aadafb7}");
 }
@@ -140,7 +142,38 @@ const QUuid ITKBoundedReciprocalImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKBoundedReciprocalImage::getSubGroupName() const
+QString ITKBoundedReciprocalImage::getSubGroupName() const
 {
   return "ITK IntensityTransformation";
 }
+
+// -----------------------------------------------------------------------------
+ITKBoundedReciprocalImage::Pointer ITKBoundedReciprocalImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKBoundedReciprocalImage> ITKBoundedReciprocalImage::New()
+{
+  struct make_shared_enabler : public ITKBoundedReciprocalImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKBoundedReciprocalImage::getNameOfClass() const
+{
+  return QString("ITKBoundedReciprocalImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKBoundedReciprocalImage::ClassName()
+{
+  return QString("ITKBoundedReciprocalImage");
+}
+
+

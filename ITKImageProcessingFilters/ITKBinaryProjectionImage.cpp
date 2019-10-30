@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKBinaryProjectionImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -142,7 +144,7 @@ AbstractFilter::Pointer ITKBinaryProjectionImage::newFilterInstance(bool copyFil
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKBinaryProjectionImage::getHumanLabel() const
+QString ITKBinaryProjectionImage::getHumanLabel() const
 {
   return "ITK::Binary Projection Image Filter";
 }
@@ -150,7 +152,7 @@ const QString ITKBinaryProjectionImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKBinaryProjectionImage::getUuid()
+QUuid ITKBinaryProjectionImage::getUuid() const
 {
   return QUuid("{606c3700-f793-5852-9a0f-3123bd212447}");
 }
@@ -158,7 +160,74 @@ const QUuid ITKBinaryProjectionImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKBinaryProjectionImage::getSubGroupName() const
+QString ITKBinaryProjectionImage::getSubGroupName() const
 {
   return "ITK ImageStatistics";
 }
+
+// -----------------------------------------------------------------------------
+ITKBinaryProjectionImage::Pointer ITKBinaryProjectionImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKBinaryProjectionImage> ITKBinaryProjectionImage::New()
+{
+  struct make_shared_enabler : public ITKBinaryProjectionImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKBinaryProjectionImage::getNameOfClass() const
+{
+  return QString("ITKBinaryProjectionImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKBinaryProjectionImage::ClassName()
+{
+  return QString("ITKBinaryProjectionImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKBinaryProjectionImage::setProjectionDimension(double value)
+{
+  m_ProjectionDimension = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKBinaryProjectionImage::getProjectionDimension() const
+{
+  return m_ProjectionDimension;
+}
+
+// -----------------------------------------------------------------------------
+void ITKBinaryProjectionImage::setForegroundValue(double value)
+{
+  m_ForegroundValue = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKBinaryProjectionImage::getForegroundValue() const
+{
+  return m_ForegroundValue;
+}
+
+// -----------------------------------------------------------------------------
+void ITKBinaryProjectionImage::setBackgroundValue(double value)
+{
+  m_BackgroundValue = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKBinaryProjectionImage::getBackgroundValue() const
+{
+  return m_BackgroundValue;
+}
+
+

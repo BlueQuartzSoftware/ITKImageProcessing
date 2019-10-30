@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKAtanImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -124,7 +126,7 @@ AbstractFilter::Pointer ITKAtanImage::newFilterInstance(bool copyFilterParameter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKAtanImage::getHumanLabel() const
+QString ITKAtanImage::getHumanLabel() const
 {
   return "ITK::Atan Image Filter";
 }
@@ -132,7 +134,7 @@ const QString ITKAtanImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKAtanImage::getUuid()
+QUuid ITKAtanImage::getUuid() const
 {
   return QUuid("{e938569d-3644-5d00-a4e0-ab327937457d}");
 }
@@ -140,7 +142,38 @@ const QUuid ITKAtanImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKAtanImage::getSubGroupName() const
+QString ITKAtanImage::getSubGroupName() const
 {
   return "ITK IntensityTransformation";
 }
+
+// -----------------------------------------------------------------------------
+ITKAtanImage::Pointer ITKAtanImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKAtanImage> ITKAtanImage::New()
+{
+  struct make_shared_enabler : public ITKAtanImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKAtanImage::getNameOfClass() const
+{
+  return QString("ITKAtanImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKAtanImage::ClassName()
+{
+  return QString("ITKAtanImage");
+}
+
+

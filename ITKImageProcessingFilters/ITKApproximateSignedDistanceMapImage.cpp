@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKApproximateSignedDistanceMapImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -137,7 +139,7 @@ AbstractFilter::Pointer ITKApproximateSignedDistanceMapImage::newFilterInstance(
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKApproximateSignedDistanceMapImage::getHumanLabel() const
+QString ITKApproximateSignedDistanceMapImage::getHumanLabel() const
 {
   return "ITK::Approximate Signed Distance Map Image Filter";
 }
@@ -145,7 +147,7 @@ const QString ITKApproximateSignedDistanceMapImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKApproximateSignedDistanceMapImage::getUuid()
+QUuid ITKApproximateSignedDistanceMapImage::getUuid() const
 {
   return QUuid("{066712e3-0378-566e-8236-1796c88d5e02}");
 }
@@ -153,7 +155,62 @@ const QUuid ITKApproximateSignedDistanceMapImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKApproximateSignedDistanceMapImage::getSubGroupName() const
+QString ITKApproximateSignedDistanceMapImage::getSubGroupName() const
 {
   return "ITK DistanceMap";
 }
+
+// -----------------------------------------------------------------------------
+ITKApproximateSignedDistanceMapImage::Pointer ITKApproximateSignedDistanceMapImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKApproximateSignedDistanceMapImage> ITKApproximateSignedDistanceMapImage::New()
+{
+  struct make_shared_enabler : public ITKApproximateSignedDistanceMapImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKApproximateSignedDistanceMapImage::getNameOfClass() const
+{
+  return QString("ITKApproximateSignedDistanceMapImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKApproximateSignedDistanceMapImage::ClassName()
+{
+  return QString("ITKApproximateSignedDistanceMapImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKApproximateSignedDistanceMapImage::setInsideValue(double value)
+{
+  m_InsideValue = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKApproximateSignedDistanceMapImage::getInsideValue() const
+{
+  return m_InsideValue;
+}
+
+// -----------------------------------------------------------------------------
+void ITKApproximateSignedDistanceMapImage::setOutsideValue(double value)
+{
+  m_OutsideValue = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKApproximateSignedDistanceMapImage::getOutsideValue() const
+{
+  return m_OutsideValue;
+}
+
+

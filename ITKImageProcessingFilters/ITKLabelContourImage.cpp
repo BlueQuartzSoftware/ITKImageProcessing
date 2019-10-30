@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKLabelContourImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -137,7 +139,7 @@ AbstractFilter::Pointer ITKLabelContourImage::newFilterInstance(bool copyFilterP
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKLabelContourImage::getHumanLabel() const
+QString ITKLabelContourImage::getHumanLabel() const
 {
   return "ITK::Label Contour Image Filter";
 }
@@ -145,7 +147,7 @@ const QString ITKLabelContourImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKLabelContourImage::getUuid()
+QUuid ITKLabelContourImage::getUuid() const
 {
   return QUuid("{668f0b90-b504-5fba-b648-7c9677e1f452}");
 }
@@ -153,7 +155,62 @@ const QUuid ITKLabelContourImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKLabelContourImage::getSubGroupName() const
+QString ITKLabelContourImage::getSubGroupName() const
 {
   return "ITK ImageLabel";
 }
+
+// -----------------------------------------------------------------------------
+ITKLabelContourImage::Pointer ITKLabelContourImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKLabelContourImage> ITKLabelContourImage::New()
+{
+  struct make_shared_enabler : public ITKLabelContourImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKLabelContourImage::getNameOfClass() const
+{
+  return QString("ITKLabelContourImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKLabelContourImage::ClassName()
+{
+  return QString("ITKLabelContourImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKLabelContourImage::setFullyConnected(bool value)
+{
+  m_FullyConnected = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ITKLabelContourImage::getFullyConnected() const
+{
+  return m_FullyConnected;
+}
+
+// -----------------------------------------------------------------------------
+void ITKLabelContourImage::setBackgroundValue(double value)
+{
+  m_BackgroundValue = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKLabelContourImage::getBackgroundValue() const
+{
+  return m_BackgroundValue;
+}
+
+

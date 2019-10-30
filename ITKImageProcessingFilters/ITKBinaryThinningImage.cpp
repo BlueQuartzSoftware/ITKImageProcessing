@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKBinaryThinningImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -124,7 +126,7 @@ AbstractFilter::Pointer ITKBinaryThinningImage::newFilterInstance(bool copyFilte
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKBinaryThinningImage::getHumanLabel() const
+QString ITKBinaryThinningImage::getHumanLabel() const
 {
   return "ITK::Binary Thinning Image Filter";
 }
@@ -132,7 +134,7 @@ const QString ITKBinaryThinningImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKBinaryThinningImage::getUuid()
+QUuid ITKBinaryThinningImage::getUuid() const
 {
   return QUuid("{dcceeb50-5924-5eae-88ea-34793cf545a9}");
 }
@@ -140,7 +142,38 @@ const QUuid ITKBinaryThinningImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKBinaryThinningImage::getSubGroupName() const
+QString ITKBinaryThinningImage::getSubGroupName() const
 {
   return "ITK BinaryMathematicalMorphology";
 }
+
+// -----------------------------------------------------------------------------
+ITKBinaryThinningImage::Pointer ITKBinaryThinningImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKBinaryThinningImage> ITKBinaryThinningImage::New()
+{
+  struct make_shared_enabler : public ITKBinaryThinningImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKBinaryThinningImage::getNameOfClass() const
+{
+  return QString("ITKBinaryThinningImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKBinaryThinningImage::ClassName()
+{
+  return QString("ITKBinaryThinningImage");
+}
+
+

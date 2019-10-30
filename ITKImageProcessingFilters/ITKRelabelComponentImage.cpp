@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKRelabelComponentImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -156,7 +158,7 @@ AbstractFilter::Pointer ITKRelabelComponentImage::newFilterInstance(bool copyFil
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKRelabelComponentImage::getHumanLabel() const
+QString ITKRelabelComponentImage::getHumanLabel() const
 {
   return "ITK::Relabel Component Image Filter";
 }
@@ -164,7 +166,7 @@ const QString ITKRelabelComponentImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKRelabelComponentImage::getUuid()
+QUuid ITKRelabelComponentImage::getUuid() const
 {
   return QUuid("{4398d76d-c9aa-5161-bb48-92dd9daaa352}");
 }
@@ -172,7 +174,110 @@ const QUuid ITKRelabelComponentImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKRelabelComponentImage::getSubGroupName() const
+QString ITKRelabelComponentImage::getSubGroupName() const
 {
   return "ITK SegmentationPostProcessing";
 }
+
+// -----------------------------------------------------------------------------
+ITKRelabelComponentImage::Pointer ITKRelabelComponentImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKRelabelComponentImage> ITKRelabelComponentImage::New()
+{
+  struct make_shared_enabler : public ITKRelabelComponentImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKRelabelComponentImage::getNameOfClass() const
+{
+  return QString("ITKRelabelComponentImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKRelabelComponentImage::ClassName()
+{
+  return QString("ITKRelabelComponentImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKRelabelComponentImage::setMinimumObjectSize(double value)
+{
+  m_MinimumObjectSize = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKRelabelComponentImage::getMinimumObjectSize() const
+{
+  return m_MinimumObjectSize;
+}
+
+// -----------------------------------------------------------------------------
+void ITKRelabelComponentImage::setSortByObjectSize(bool value)
+{
+  m_SortByObjectSize = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ITKRelabelComponentImage::getSortByObjectSize() const
+{
+  return m_SortByObjectSize;
+}
+
+// -----------------------------------------------------------------------------
+void ITKRelabelComponentImage::setNumberOfObjects(double value)
+{
+  m_NumberOfObjects = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKRelabelComponentImage::getNumberOfObjects() const
+{
+  return m_NumberOfObjects;
+}
+
+// -----------------------------------------------------------------------------
+void ITKRelabelComponentImage::setOriginalNumberOfObjects(double value)
+{
+  m_OriginalNumberOfObjects = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKRelabelComponentImage::getOriginalNumberOfObjects() const
+{
+  return m_OriginalNumberOfObjects;
+}
+
+// -----------------------------------------------------------------------------
+void ITKRelabelComponentImage::setSizeOfObjectsInPhysicalUnits(const FloatVec3Type& value)
+{
+  m_SizeOfObjectsInPhysicalUnits = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec3Type ITKRelabelComponentImage::getSizeOfObjectsInPhysicalUnits() const
+{
+  return m_SizeOfObjectsInPhysicalUnits;
+}
+
+// -----------------------------------------------------------------------------
+void ITKRelabelComponentImage::setSizeOfObjectsInPixels(const FloatVec3Type& value)
+{
+  m_SizeOfObjectsInPixels = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec3Type ITKRelabelComponentImage::getSizeOfObjectsInPixels() const
+{
+  return m_SizeOfObjectsInPixels;
+}
+
+

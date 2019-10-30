@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKShotNoiseImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -141,7 +143,7 @@ AbstractFilter::Pointer ITKShotNoiseImage::newFilterInstance(bool copyFilterPara
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKShotNoiseImage::getHumanLabel() const
+QString ITKShotNoiseImage::getHumanLabel() const
 {
   return "ITK::Shot Noise Image Filter";
 }
@@ -149,7 +151,7 @@ const QString ITKShotNoiseImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKShotNoiseImage::getUuid()
+QUuid ITKShotNoiseImage::getUuid() const
 {
   return QUuid("{97f20f54-276b-54f3-87c9-5eaf16e6c4df}");
 }
@@ -157,7 +159,62 @@ const QUuid ITKShotNoiseImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKShotNoiseImage::getSubGroupName() const
+QString ITKShotNoiseImage::getSubGroupName() const
 {
   return "ITK ImageNoise";
 }
+
+// -----------------------------------------------------------------------------
+ITKShotNoiseImage::Pointer ITKShotNoiseImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKShotNoiseImage> ITKShotNoiseImage::New()
+{
+  struct make_shared_enabler : public ITKShotNoiseImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKShotNoiseImage::getNameOfClass() const
+{
+  return QString("ITKShotNoiseImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKShotNoiseImage::ClassName()
+{
+  return QString("ITKShotNoiseImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKShotNoiseImage::setScale(double value)
+{
+  m_Scale = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKShotNoiseImage::getScale() const
+{
+  return m_Scale;
+}
+
+// -----------------------------------------------------------------------------
+void ITKShotNoiseImage::setSeed(double value)
+{
+  m_Seed = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKShotNoiseImage::getSeed() const
+{
+  return m_Seed;
+}
+
+

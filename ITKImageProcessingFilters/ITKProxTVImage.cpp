@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKProxTVImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -145,7 +147,7 @@ AbstractFilter::Pointer ITKProxTVImage::newFilterInstance(bool copyFilterParamet
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKProxTVImage::getHumanLabel() const
+QString ITKProxTVImage::getHumanLabel() const
 {
   return "ITK::Prox T V Image Filter";
 }
@@ -153,7 +155,7 @@ const QString ITKProxTVImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKProxTVImage::getUuid()
+QUuid ITKProxTVImage::getUuid() const
 {
   return QUuid("{d3856d4c-5651-5eab-8740-489a87fa8bdd}");
 }
@@ -161,7 +163,74 @@ const QUuid ITKProxTVImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKProxTVImage::getSubGroupName() const
+QString ITKProxTVImage::getSubGroupName() const
 {
   return "ITK NoModule";
 }
+
+// -----------------------------------------------------------------------------
+ITKProxTVImage::Pointer ITKProxTVImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKProxTVImage> ITKProxTVImage::New()
+{
+  struct make_shared_enabler : public ITKProxTVImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKProxTVImage::getNameOfClass() const
+{
+  return QString("ITKProxTVImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKProxTVImage::ClassName()
+{
+  return QString("ITKProxTVImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKProxTVImage::setMaximumNumberOfIterations(double value)
+{
+  m_MaximumNumberOfIterations = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKProxTVImage::getMaximumNumberOfIterations() const
+{
+  return m_MaximumNumberOfIterations;
+}
+
+// -----------------------------------------------------------------------------
+void ITKProxTVImage::setWeights(const FloatVec3Type& value)
+{
+  m_Weights = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec3Type ITKProxTVImage::getWeights() const
+{
+  return m_Weights;
+}
+
+// -----------------------------------------------------------------------------
+void ITKProxTVImage::setNorms(const FloatVec3Type& value)
+{
+  m_Norms = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec3Type ITKProxTVImage::getNorms() const
+{
+  return m_Norms;
+}
+
+

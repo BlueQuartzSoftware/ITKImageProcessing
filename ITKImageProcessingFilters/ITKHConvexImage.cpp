@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKHConvexImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -137,7 +139,7 @@ AbstractFilter::Pointer ITKHConvexImage::newFilterInstance(bool copyFilterParame
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKHConvexImage::getHumanLabel() const
+QString ITKHConvexImage::getHumanLabel() const
 {
   return "ITK::H Convex Image Filter";
 }
@@ -145,7 +147,7 @@ const QString ITKHConvexImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKHConvexImage::getUuid()
+QUuid ITKHConvexImage::getUuid() const
 {
   return QUuid("{8bc34707-04c0-5e83-8583-48ee19306a1d}");
 }
@@ -153,7 +155,62 @@ const QUuid ITKHConvexImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKHConvexImage::getSubGroupName() const
+QString ITKHConvexImage::getSubGroupName() const
 {
   return "ITK BiasCorrection";
 }
+
+// -----------------------------------------------------------------------------
+ITKHConvexImage::Pointer ITKHConvexImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKHConvexImage> ITKHConvexImage::New()
+{
+  struct make_shared_enabler : public ITKHConvexImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKHConvexImage::getNameOfClass() const
+{
+  return QString("ITKHConvexImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKHConvexImage::ClassName()
+{
+  return QString("ITKHConvexImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKHConvexImage::setHeight(double value)
+{
+  m_Height = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKHConvexImage::getHeight() const
+{
+  return m_Height;
+}
+
+// -----------------------------------------------------------------------------
+void ITKHConvexImage::setFullyConnected(bool value)
+{
+  m_FullyConnected = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ITKHConvexImage::getFullyConnected() const
+{
+  return m_FullyConnected;
+}
+
+

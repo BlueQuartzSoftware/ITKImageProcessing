@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKBinaryDilateImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -201,7 +203,7 @@ AbstractFilter::Pointer ITKBinaryDilateImage::newFilterInstance(bool copyFilterP
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKBinaryDilateImage::getHumanLabel() const
+QString ITKBinaryDilateImage::getHumanLabel() const
 {
   return "ITK::Binary Dilate Image Filter";
 }
@@ -209,7 +211,7 @@ const QString ITKBinaryDilateImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKBinaryDilateImage::getUuid()
+QUuid ITKBinaryDilateImage::getUuid() const
 {
   return QUuid("{f86167ad-a1a1-557b-97ea-92a3618baa8f}");
 }
@@ -217,7 +219,98 @@ const QUuid ITKBinaryDilateImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKBinaryDilateImage::getSubGroupName() const
+QString ITKBinaryDilateImage::getSubGroupName() const
 {
   return "ITK BinaryMathematicalMorphology";
 }
+
+// -----------------------------------------------------------------------------
+ITKBinaryDilateImage::Pointer ITKBinaryDilateImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKBinaryDilateImage> ITKBinaryDilateImage::New()
+{
+  struct make_shared_enabler : public ITKBinaryDilateImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKBinaryDilateImage::getNameOfClass() const
+{
+  return QString("ITKBinaryDilateImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKBinaryDilateImage::ClassName()
+{
+  return QString("ITKBinaryDilateImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKBinaryDilateImage::setBackgroundValue(double value)
+{
+  m_BackgroundValue = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKBinaryDilateImage::getBackgroundValue() const
+{
+  return m_BackgroundValue;
+}
+
+// -----------------------------------------------------------------------------
+void ITKBinaryDilateImage::setForegroundValue(double value)
+{
+  m_ForegroundValue = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKBinaryDilateImage::getForegroundValue() const
+{
+  return m_ForegroundValue;
+}
+
+// -----------------------------------------------------------------------------
+void ITKBinaryDilateImage::setBoundaryToForeground(bool value)
+{
+  m_BoundaryToForeground = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ITKBinaryDilateImage::getBoundaryToForeground() const
+{
+  return m_BoundaryToForeground;
+}
+
+// -----------------------------------------------------------------------------
+void ITKBinaryDilateImage::setKernelRadius(const FloatVec3Type& value)
+{
+  m_KernelRadius = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec3Type ITKBinaryDilateImage::getKernelRadius() const
+{
+  return m_KernelRadius;
+}
+
+// -----------------------------------------------------------------------------
+void ITKBinaryDilateImage::setKernelType(int value)
+{
+  m_KernelType = value;
+}
+
+// -----------------------------------------------------------------------------
+int ITKBinaryDilateImage::getKernelType() const
+{
+  return m_KernelType;
+}
+
+

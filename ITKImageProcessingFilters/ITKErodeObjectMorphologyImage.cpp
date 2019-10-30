@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKErodeObjectMorphologyImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -187,7 +189,7 @@ AbstractFilter::Pointer ITKErodeObjectMorphologyImage::newFilterInstance(bool co
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKErodeObjectMorphologyImage::getHumanLabel() const
+QString ITKErodeObjectMorphologyImage::getHumanLabel() const
 {
   return "ITK::Erode Object Morphology Image Filter";
 }
@@ -195,7 +197,7 @@ const QString ITKErodeObjectMorphologyImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKErodeObjectMorphologyImage::getUuid()
+QUuid ITKErodeObjectMorphologyImage::getUuid() const
 {
   return QUuid("{caea0698-4253-518b-ab3f-8ebc140d92ea}");
 }
@@ -203,7 +205,86 @@ const QUuid ITKErodeObjectMorphologyImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKErodeObjectMorphologyImage::getSubGroupName() const
+QString ITKErodeObjectMorphologyImage::getSubGroupName() const
 {
   return "ITK BinaryMathematicalMorphology";
 }
+
+// -----------------------------------------------------------------------------
+ITKErodeObjectMorphologyImage::Pointer ITKErodeObjectMorphologyImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKErodeObjectMorphologyImage> ITKErodeObjectMorphologyImage::New()
+{
+  struct make_shared_enabler : public ITKErodeObjectMorphologyImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKErodeObjectMorphologyImage::getNameOfClass() const
+{
+  return QString("ITKErodeObjectMorphologyImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKErodeObjectMorphologyImage::ClassName()
+{
+  return QString("ITKErodeObjectMorphologyImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKErodeObjectMorphologyImage::setObjectValue(double value)
+{
+  m_ObjectValue = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKErodeObjectMorphologyImage::getObjectValue() const
+{
+  return m_ObjectValue;
+}
+
+// -----------------------------------------------------------------------------
+void ITKErodeObjectMorphologyImage::setBackgroundValue(double value)
+{
+  m_BackgroundValue = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKErodeObjectMorphologyImage::getBackgroundValue() const
+{
+  return m_BackgroundValue;
+}
+
+// -----------------------------------------------------------------------------
+void ITKErodeObjectMorphologyImage::setKernelRadius(const FloatVec3Type& value)
+{
+  m_KernelRadius = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec3Type ITKErodeObjectMorphologyImage::getKernelRadius() const
+{
+  return m_KernelRadius;
+}
+
+// -----------------------------------------------------------------------------
+void ITKErodeObjectMorphologyImage::setKernelType(int value)
+{
+  m_KernelType = value;
+}
+
+// -----------------------------------------------------------------------------
+int ITKErodeObjectMorphologyImage::getKernelType() const
+{
+  return m_KernelType;
+}
+
+

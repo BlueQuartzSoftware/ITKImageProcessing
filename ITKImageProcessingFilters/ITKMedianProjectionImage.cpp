@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKMedianProjectionImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -134,7 +136,7 @@ AbstractFilter::Pointer ITKMedianProjectionImage::newFilterInstance(bool copyFil
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKMedianProjectionImage::getHumanLabel() const
+QString ITKMedianProjectionImage::getHumanLabel() const
 {
   return "ITK::Median Projection Image Filter";
 }
@@ -142,7 +144,7 @@ const QString ITKMedianProjectionImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKMedianProjectionImage::getUuid()
+QUuid ITKMedianProjectionImage::getUuid() const
 {
   return QUuid("{1a7e8483-5838-585c-8d71-e79f836133c4}");
 }
@@ -150,7 +152,50 @@ const QUuid ITKMedianProjectionImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKMedianProjectionImage::getSubGroupName() const
+QString ITKMedianProjectionImage::getSubGroupName() const
 {
   return "ITK ImageStatistics";
 }
+
+// -----------------------------------------------------------------------------
+ITKMedianProjectionImage::Pointer ITKMedianProjectionImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKMedianProjectionImage> ITKMedianProjectionImage::New()
+{
+  struct make_shared_enabler : public ITKMedianProjectionImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKMedianProjectionImage::getNameOfClass() const
+{
+  return QString("ITKMedianProjectionImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKMedianProjectionImage::ClassName()
+{
+  return QString("ITKMedianProjectionImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKMedianProjectionImage::setProjectionDimension(double value)
+{
+  m_ProjectionDimension = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKMedianProjectionImage::getProjectionDimension() const
+{
+  return m_ProjectionDimension;
+}
+
+

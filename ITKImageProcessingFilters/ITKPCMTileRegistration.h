@@ -35,13 +35,15 @@
 
 #pragma once
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include <memory>
+
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/DataContainers/DataContainerArrayProxy.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/Geometry/CompositeTransformContainer.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Geometry/TransformContainer.h"
-#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "itkAffineTransform.h"
 #include "itkCompositeTransform.h"
@@ -58,53 +60,122 @@ class ITKImageProcessing_EXPORT ITKPCMTileRegistration : public AbstractFilter
 {
   Q_OBJECT
 
+#ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(ITKPCMTileRegistration SUPERCLASS AbstractFilter)
-  PYB11_PROPERTY(IntVec2Type MontageStart READ getMontageStart WRITE setMontageStart)
-  PYB11_PROPERTY(IntVec2Type MontageEnd READ getMontageEnd WRITE setMontageEnd)
+  PYB11_SHARED_POINTERS(ITKPCMTileRegistration)
+  PYB11_FILTER_NEW_MACRO(ITKPCMTileRegistration)
+  PYB11_FILTER_PARAMETER(IntVec3Type, MontageStart)
+  PYB11_FILTER_PARAMETER(IntVec3Type, MontageEnd)
+  PYB11_FILTER_PARAMETER(QString, DataContainerPrefix)
+  PYB11_FILTER_PARAMETER(QString, CommonAttributeMatrixName)
+  PYB11_FILTER_PARAMETER(QString, CommonDataArrayName)
+  PYB11_PROPERTY(IntVec3Type MontageStart READ getMontageStart WRITE setMontageStart)
+  PYB11_PROPERTY(IntVec3Type MontageEnd READ getMontageEnd WRITE setMontageEnd)
   PYB11_PROPERTY(QString DataContainerPrefix READ getDataContainerPrefix WRITE setDataContainerPrefix)
   PYB11_PROPERTY(QString CommonAttributeMatrixName READ getCommonAttributeMatrixName WRITE setCommonAttributeMatrixName)
   PYB11_PROPERTY(QString CommonDataArrayName READ getCommonDataArrayName WRITE setCommonDataArrayName)
+#endif
 
 public:
-  SIMPL_SHARED_POINTERS(ITKPCMTileRegistration)
-  SIMPL_FILTER_NEW_MACRO(ITKPCMTileRegistration)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKPCMTileRegistration, AbstractFilter)
+    using Self = ITKPCMTileRegistration;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
+
+    static std::shared_ptr<ITKPCMTileRegistration> New();
+
+    /**
+    * @brief Returns the name of the class for ITKPCMTileRegistration
+    */
+    QString getNameOfClass() const override;
+    /**
+    * @brief Returns the name of the class for ITKPCMTileRegistration
+    */
+    static QString ClassName();
+
 
   ~ITKPCMTileRegistration() override;
 
-  SIMPL_FILTER_PARAMETER(IntVec2Type, MontageStart)
+    /**
+    * @brief Setter property for MontageStart
+    */
+    void setMontageStart(const IntVec2Type& value); 
+    /**
+    * @brief Getter property for MontageStart
+    * @return Value of MontageStart
+    */
+    IntVec2Type getMontageStart() const;
+
   Q_PROPERTY(IntVec2Type MontageStart READ getMontageStart WRITE setMontageStart)
 
-  SIMPL_FILTER_PARAMETER(IntVec2Type, MontageEnd)
+    /**
+    * @brief Setter property for MontageEnd
+    */
+    void setMontageEnd(const IntVec2Type& value); 
+    /**
+    * @brief Getter property for MontageEnd
+    * @return Value of MontageEnd
+    */
+    IntVec2Type getMontageEnd() const;
+
   Q_PROPERTY(IntVec2Type MontageEnd READ getMontageEnd WRITE setMontageEnd)
 
-  SIMPL_FILTER_PARAMETER(QString, DataContainerPrefix)
+    /**
+    * @brief Setter property for DataContainerPrefix
+    */
+    void setDataContainerPrefix(const QString& value); 
+    /**
+    * @brief Getter property for DataContainerPrefix
+    * @return Value of DataContainerPrefix
+    */
+    QString getDataContainerPrefix() const;
+
   Q_PROPERTY(QString DataContainerPrefix READ getDataContainerPrefix WRITE setDataContainerPrefix)
 
-  SIMPL_FILTER_PARAMETER(QString, CommonAttributeMatrixName)
+    /**
+    * @brief Setter property for CommonAttributeMatrixName
+    */
+    void setCommonAttributeMatrixName(const QString& value); 
+    /**
+    * @brief Getter property for CommonAttributeMatrixName
+    * @return Value of CommonAttributeMatrixName
+    */
+    QString getCommonAttributeMatrixName() const;
+
   Q_PROPERTY(QString CommonAttributeMatrixName READ getCommonAttributeMatrixName WRITE setCommonAttributeMatrixName)
 
-  SIMPL_FILTER_PARAMETER(QString, CommonDataArrayName)
+    /**
+    * @brief Setter property for CommonDataArrayName
+    */
+    void setCommonDataArrayName(const QString& value); 
+    /**
+    * @brief Getter property for CommonDataArrayName
+    * @return Value of CommonDataArrayName
+    */
+    QString getCommonDataArrayName() const;
+
   Q_PROPERTY(QString CommonDataArrayName READ getCommonDataArrayName WRITE setCommonDataArrayName)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
-  const QString getCompiledLibraryName() const override;
+  QString getCompiledLibraryName() const override;
 
   /**
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
    */
-  const QString getBrandingString() const override;
+  QString getBrandingString() const override;
 
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
    * @return
    */
-  const QString getFilterVersion() const override;
+  QString getFilterVersion() const override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -114,23 +185,23 @@ public:
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getGroupName() const override;
+  QString getGroupName() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -213,6 +284,12 @@ protected:
   typename TransformContainer::Pointer GetTransformContainerFromITKAffineTransform(const AffineType::Pointer& itkAffine);
 
 private:
+    IntVec2Type m_MontageStart = {};
+    IntVec2Type m_MontageEnd = {};
+    QString m_DataContainerPrefix = {};
+    QString m_CommonAttributeMatrixName = {};
+    QString m_CommonDataArrayName = {};
+
   static constexpr unsigned Dimension = 2;
   std::vector<DataContainer::Pointer> m_DataContainers;
 

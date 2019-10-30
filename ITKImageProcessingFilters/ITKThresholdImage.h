@@ -11,9 +11,10 @@
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
+#include <memory>
+
 #include "ITKImageProcessingBase.h"
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
 
 // Auto includes
@@ -28,25 +29,75 @@
 class ITKImageProcessing_EXPORT ITKThresholdImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+
+#ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(ITKThresholdImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_SHARED_POINTERS(ITKThresholdImage)
+  PYB11_FILTER_NEW_MACRO(ITKThresholdImage)
+  PYB11_FILTER_PARAMETER(double, Lower)
+  PYB11_FILTER_PARAMETER(double, Upper)
+  PYB11_FILTER_PARAMETER(double, OutsideValue)
   PYB11_PROPERTY(double Lower READ getLower WRITE setLower)
   PYB11_PROPERTY(double Upper READ getUpper WRITE setUpper)
   PYB11_PROPERTY(double OutsideValue READ getOutsideValue WRITE setOutsideValue)
+#endif
 
 public:
-  SIMPL_SHARED_POINTERS(ITKThresholdImage)
-  SIMPL_FILTER_NEW_MACRO(ITKThresholdImage)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKThresholdImage, AbstractFilter)
+    using Self = ITKThresholdImage;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
+
+    static std::shared_ptr<ITKThresholdImage> New();
+
+    /**
+    * @brief Returns the name of the class for ITKThresholdImage
+    */
+    QString getNameOfClass() const override;
+    /**
+    * @brief Returns the name of the class for ITKThresholdImage
+    */
+    static QString ClassName();
+
 
   ~ITKThresholdImage() override;
 
-  SIMPL_FILTER_PARAMETER(double, Lower)
+    /**
+    * @brief Setter property for Lower
+    */
+    void setLower(double value); 
+    /**
+    * @brief Getter property for Lower
+    * @return Value of Lower
+    */
+    double getLower() const;
+
   Q_PROPERTY(double Lower READ getLower WRITE setLower)
 
-  SIMPL_FILTER_PARAMETER(double, Upper)
+    /**
+    * @brief Setter property for Upper
+    */
+    void setUpper(double value); 
+    /**
+    * @brief Getter property for Upper
+    * @return Value of Upper
+    */
+    double getUpper() const;
+
   Q_PROPERTY(double Upper READ getUpper WRITE setUpper)
 
-  SIMPL_FILTER_PARAMETER(double, OutsideValue)
+    /**
+    * @brief Setter property for OutsideValue
+    */
+    void setOutsideValue(double value); 
+    /**
+    * @brief Getter property for OutsideValue
+    * @return Value of OutsideValue
+    */
+    double getOutsideValue() const;
+
   Q_PROPERTY(double OutsideValue READ getOutsideValue WRITE setOutsideValue)
 
 
@@ -58,18 +109,18 @@ public:
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -109,6 +160,12 @@ public:
   ITKThresholdImage(ITKThresholdImage&&) = delete;         // Move Constructor Not Implemented
   ITKThresholdImage& operator=(const ITKThresholdImage&) = delete; // Copy Assignment Not Implemented
   ITKThresholdImage& operator=(ITKThresholdImage&&) = delete;      // Move Assignment Not Implemented
+
+  private:
+    double m_Lower = {};
+    double m_Upper = {};
+    double m_OutsideValue = {};
+
 };
 
 #ifdef __clang__

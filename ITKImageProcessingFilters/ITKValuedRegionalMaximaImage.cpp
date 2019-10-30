@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKValuedRegionalMaximaImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -138,7 +140,7 @@ AbstractFilter::Pointer ITKValuedRegionalMaximaImage::newFilterInstance(bool cop
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKValuedRegionalMaximaImage::getHumanLabel() const
+QString ITKValuedRegionalMaximaImage::getHumanLabel() const
 {
   return "ITK::Valued Regional Maxima Image Filter";
 }
@@ -146,7 +148,7 @@ const QString ITKValuedRegionalMaximaImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKValuedRegionalMaximaImage::getUuid()
+QUuid ITKValuedRegionalMaximaImage::getUuid() const
 {
   return QUuid("{10aff542-81c5-5f09-9797-c7171c40b6a0}");
 }
@@ -154,7 +156,62 @@ const QUuid ITKValuedRegionalMaximaImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKValuedRegionalMaximaImage::getSubGroupName() const
+QString ITKValuedRegionalMaximaImage::getSubGroupName() const
 {
   return "ITK ITKMathematicalMorphology";
 }
+
+// -----------------------------------------------------------------------------
+ITKValuedRegionalMaximaImage::Pointer ITKValuedRegionalMaximaImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKValuedRegionalMaximaImage> ITKValuedRegionalMaximaImage::New()
+{
+  struct make_shared_enabler : public ITKValuedRegionalMaximaImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKValuedRegionalMaximaImage::getNameOfClass() const
+{
+  return QString("ITKValuedRegionalMaximaImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKValuedRegionalMaximaImage::ClassName()
+{
+  return QString("ITKValuedRegionalMaximaImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKValuedRegionalMaximaImage::setFullyConnected(bool value)
+{
+  m_FullyConnected = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ITKValuedRegionalMaximaImage::getFullyConnected() const
+{
+  return m_FullyConnected;
+}
+
+// -----------------------------------------------------------------------------
+void ITKValuedRegionalMaximaImage::setFlat(bool value)
+{
+  m_Flat = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ITKValuedRegionalMaximaImage::getFlat() const
+{
+  return m_Flat;
+}
+
+

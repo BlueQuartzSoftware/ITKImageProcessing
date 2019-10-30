@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKClosingByReconstructionImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -187,7 +189,7 @@ AbstractFilter::Pointer ITKClosingByReconstructionImage::newFilterInstance(bool 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKClosingByReconstructionImage::getHumanLabel() const
+QString ITKClosingByReconstructionImage::getHumanLabel() const
 {
   return "ITK::Closing By Reconstruction Image Filter";
 }
@@ -195,7 +197,7 @@ const QString ITKClosingByReconstructionImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKClosingByReconstructionImage::getUuid()
+QUuid ITKClosingByReconstructionImage::getUuid() const
 {
   return QUuid("{99a7aa3c-f945-5e77-875a-23b5231ab3f4}");
 }
@@ -203,7 +205,86 @@ const QUuid ITKClosingByReconstructionImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKClosingByReconstructionImage::getSubGroupName() const
+QString ITKClosingByReconstructionImage::getSubGroupName() const
 {
   return "ITK BiasCorrection";
 }
+
+// -----------------------------------------------------------------------------
+ITKClosingByReconstructionImage::Pointer ITKClosingByReconstructionImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKClosingByReconstructionImage> ITKClosingByReconstructionImage::New()
+{
+  struct make_shared_enabler : public ITKClosingByReconstructionImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKClosingByReconstructionImage::getNameOfClass() const
+{
+  return QString("ITKClosingByReconstructionImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKClosingByReconstructionImage::ClassName()
+{
+  return QString("ITKClosingByReconstructionImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKClosingByReconstructionImage::setFullyConnected(bool value)
+{
+  m_FullyConnected = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ITKClosingByReconstructionImage::getFullyConnected() const
+{
+  return m_FullyConnected;
+}
+
+// -----------------------------------------------------------------------------
+void ITKClosingByReconstructionImage::setPreserveIntensities(bool value)
+{
+  m_PreserveIntensities = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ITKClosingByReconstructionImage::getPreserveIntensities() const
+{
+  return m_PreserveIntensities;
+}
+
+// -----------------------------------------------------------------------------
+void ITKClosingByReconstructionImage::setKernelRadius(const FloatVec3Type& value)
+{
+  m_KernelRadius = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec3Type ITKClosingByReconstructionImage::getKernelRadius() const
+{
+  return m_KernelRadius;
+}
+
+// -----------------------------------------------------------------------------
+void ITKClosingByReconstructionImage::setKernelType(int value)
+{
+  m_KernelType = value;
+}
+
+// -----------------------------------------------------------------------------
+int ITKClosingByReconstructionImage::getKernelType() const
+{
+  return m_KernelType;
+}
+
+

@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKBinaryMorphologicalOpeningImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -198,7 +200,7 @@ AbstractFilter::Pointer ITKBinaryMorphologicalOpeningImage::newFilterInstance(bo
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKBinaryMorphologicalOpeningImage::getHumanLabel() const
+QString ITKBinaryMorphologicalOpeningImage::getHumanLabel() const
 {
   return "ITK::Binary Morphological Opening Image Filter";
 }
@@ -206,7 +208,7 @@ const QString ITKBinaryMorphologicalOpeningImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKBinaryMorphologicalOpeningImage::getUuid()
+QUuid ITKBinaryMorphologicalOpeningImage::getUuid() const
 {
   return QUuid("{704c801a-7549-54c4-9def-c4bb58d07fd1}");
 }
@@ -214,7 +216,86 @@ const QUuid ITKBinaryMorphologicalOpeningImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKBinaryMorphologicalOpeningImage::getSubGroupName() const
+QString ITKBinaryMorphologicalOpeningImage::getSubGroupName() const
 {
   return "ITK BinaryMathematicalMorphology";
 }
+
+// -----------------------------------------------------------------------------
+ITKBinaryMorphologicalOpeningImage::Pointer ITKBinaryMorphologicalOpeningImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKBinaryMorphologicalOpeningImage> ITKBinaryMorphologicalOpeningImage::New()
+{
+  struct make_shared_enabler : public ITKBinaryMorphologicalOpeningImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKBinaryMorphologicalOpeningImage::getNameOfClass() const
+{
+  return QString("ITKBinaryMorphologicalOpeningImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKBinaryMorphologicalOpeningImage::ClassName()
+{
+  return QString("ITKBinaryMorphologicalOpeningImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKBinaryMorphologicalOpeningImage::setBackgroundValue(double value)
+{
+  m_BackgroundValue = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKBinaryMorphologicalOpeningImage::getBackgroundValue() const
+{
+  return m_BackgroundValue;
+}
+
+// -----------------------------------------------------------------------------
+void ITKBinaryMorphologicalOpeningImage::setForegroundValue(double value)
+{
+  m_ForegroundValue = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKBinaryMorphologicalOpeningImage::getForegroundValue() const
+{
+  return m_ForegroundValue;
+}
+
+// -----------------------------------------------------------------------------
+void ITKBinaryMorphologicalOpeningImage::setKernelRadius(const FloatVec3Type& value)
+{
+  m_KernelRadius = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec3Type ITKBinaryMorphologicalOpeningImage::getKernelRadius() const
+{
+  return m_KernelRadius;
+}
+
+// -----------------------------------------------------------------------------
+void ITKBinaryMorphologicalOpeningImage::setKernelType(int value)
+{
+  m_KernelType = value;
+}
+
+// -----------------------------------------------------------------------------
+int ITKBinaryMorphologicalOpeningImage::getKernelType() const
+{
+  return m_KernelType;
+}
+
+

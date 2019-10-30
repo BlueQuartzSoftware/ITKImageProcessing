@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKBinaryMinMaxCurvatureFlowImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -146,7 +148,7 @@ AbstractFilter::Pointer ITKBinaryMinMaxCurvatureFlowImage::newFilterInstance(boo
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKBinaryMinMaxCurvatureFlowImage::getHumanLabel() const
+QString ITKBinaryMinMaxCurvatureFlowImage::getHumanLabel() const
 {
   return "ITK::Binary Min Max Curvature Flow Image Filter";
 }
@@ -154,7 +156,7 @@ const QString ITKBinaryMinMaxCurvatureFlowImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKBinaryMinMaxCurvatureFlowImage::getUuid()
+QUuid ITKBinaryMinMaxCurvatureFlowImage::getUuid() const
 {
   return QUuid("{bf3d443b-27b4-53b1-8950-a83bca5374ec}");
 }
@@ -162,7 +164,86 @@ const QUuid ITKBinaryMinMaxCurvatureFlowImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKBinaryMinMaxCurvatureFlowImage::getSubGroupName() const
+QString ITKBinaryMinMaxCurvatureFlowImage::getSubGroupName() const
 {
   return "ITK CurvatureFlow";
 }
+
+// -----------------------------------------------------------------------------
+ITKBinaryMinMaxCurvatureFlowImage::Pointer ITKBinaryMinMaxCurvatureFlowImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKBinaryMinMaxCurvatureFlowImage> ITKBinaryMinMaxCurvatureFlowImage::New()
+{
+  struct make_shared_enabler : public ITKBinaryMinMaxCurvatureFlowImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKBinaryMinMaxCurvatureFlowImage::getNameOfClass() const
+{
+  return QString("ITKBinaryMinMaxCurvatureFlowImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKBinaryMinMaxCurvatureFlowImage::ClassName()
+{
+  return QString("ITKBinaryMinMaxCurvatureFlowImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKBinaryMinMaxCurvatureFlowImage::setTimeStep(double value)
+{
+  m_TimeStep = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKBinaryMinMaxCurvatureFlowImage::getTimeStep() const
+{
+  return m_TimeStep;
+}
+
+// -----------------------------------------------------------------------------
+void ITKBinaryMinMaxCurvatureFlowImage::setNumberOfIterations(double value)
+{
+  m_NumberOfIterations = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKBinaryMinMaxCurvatureFlowImage::getNumberOfIterations() const
+{
+  return m_NumberOfIterations;
+}
+
+// -----------------------------------------------------------------------------
+void ITKBinaryMinMaxCurvatureFlowImage::setStencilRadius(int value)
+{
+  m_StencilRadius = value;
+}
+
+// -----------------------------------------------------------------------------
+int ITKBinaryMinMaxCurvatureFlowImage::getStencilRadius() const
+{
+  return m_StencilRadius;
+}
+
+// -----------------------------------------------------------------------------
+void ITKBinaryMinMaxCurvatureFlowImage::setThreshold(double value)
+{
+  m_Threshold = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKBinaryMinMaxCurvatureFlowImage::getThreshold() const
+{
+  return m_Threshold;
+}
+
+

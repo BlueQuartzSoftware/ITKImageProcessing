@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKBinaryMorphologicalClosingImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -198,7 +200,7 @@ AbstractFilter::Pointer ITKBinaryMorphologicalClosingImage::newFilterInstance(bo
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKBinaryMorphologicalClosingImage::getHumanLabel() const
+QString ITKBinaryMorphologicalClosingImage::getHumanLabel() const
 {
   return "ITK::Binary Morphological Closing Image Filter";
 }
@@ -206,7 +208,7 @@ const QString ITKBinaryMorphologicalClosingImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKBinaryMorphologicalClosingImage::getUuid()
+QUuid ITKBinaryMorphologicalClosingImage::getUuid() const
 {
   return QUuid("{1d8deea7-c6d0-5fa1-95cb-b14f19df97e8}");
 }
@@ -214,7 +216,86 @@ const QUuid ITKBinaryMorphologicalClosingImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKBinaryMorphologicalClosingImage::getSubGroupName() const
+QString ITKBinaryMorphologicalClosingImage::getSubGroupName() const
 {
   return "ITK BinaryMathematicalMorphology";
 }
+
+// -----------------------------------------------------------------------------
+ITKBinaryMorphologicalClosingImage::Pointer ITKBinaryMorphologicalClosingImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKBinaryMorphologicalClosingImage> ITKBinaryMorphologicalClosingImage::New()
+{
+  struct make_shared_enabler : public ITKBinaryMorphologicalClosingImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKBinaryMorphologicalClosingImage::getNameOfClass() const
+{
+  return QString("ITKBinaryMorphologicalClosingImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKBinaryMorphologicalClosingImage::ClassName()
+{
+  return QString("ITKBinaryMorphologicalClosingImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKBinaryMorphologicalClosingImage::setForegroundValue(double value)
+{
+  m_ForegroundValue = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKBinaryMorphologicalClosingImage::getForegroundValue() const
+{
+  return m_ForegroundValue;
+}
+
+// -----------------------------------------------------------------------------
+void ITKBinaryMorphologicalClosingImage::setSafeBorder(bool value)
+{
+  m_SafeBorder = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ITKBinaryMorphologicalClosingImage::getSafeBorder() const
+{
+  return m_SafeBorder;
+}
+
+// -----------------------------------------------------------------------------
+void ITKBinaryMorphologicalClosingImage::setKernelRadius(const FloatVec3Type& value)
+{
+  m_KernelRadius = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec3Type ITKBinaryMorphologicalClosingImage::getKernelRadius() const
+{
+  return m_KernelRadius;
+}
+
+// -----------------------------------------------------------------------------
+void ITKBinaryMorphologicalClosingImage::setKernelType(int value)
+{
+  m_KernelType = value;
+}
+
+// -----------------------------------------------------------------------------
+int ITKBinaryMorphologicalClosingImage::getKernelType() const
+{
+  return m_KernelType;
+}
+
+

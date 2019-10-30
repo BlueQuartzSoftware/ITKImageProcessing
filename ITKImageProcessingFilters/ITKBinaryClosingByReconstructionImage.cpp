@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKBinaryClosingByReconstructionImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -198,7 +200,7 @@ AbstractFilter::Pointer ITKBinaryClosingByReconstructionImage::newFilterInstance
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKBinaryClosingByReconstructionImage::getHumanLabel() const
+QString ITKBinaryClosingByReconstructionImage::getHumanLabel() const
 {
   return "ITK::Binary Closing By Reconstruction Image Filter";
 }
@@ -206,7 +208,7 @@ const QString ITKBinaryClosingByReconstructionImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKBinaryClosingByReconstructionImage::getUuid()
+QUuid ITKBinaryClosingByReconstructionImage::getUuid() const
 {
   return QUuid("{0cf0698d-65eb-58bb-9f89-51e875432197}");
 }
@@ -214,7 +216,86 @@ const QUuid ITKBinaryClosingByReconstructionImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKBinaryClosingByReconstructionImage::getSubGroupName() const
+QString ITKBinaryClosingByReconstructionImage::getSubGroupName() const
 {
   return "ITK BinaryMathematicalMorphology";
 }
+
+// -----------------------------------------------------------------------------
+ITKBinaryClosingByReconstructionImage::Pointer ITKBinaryClosingByReconstructionImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKBinaryClosingByReconstructionImage> ITKBinaryClosingByReconstructionImage::New()
+{
+  struct make_shared_enabler : public ITKBinaryClosingByReconstructionImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKBinaryClosingByReconstructionImage::getNameOfClass() const
+{
+  return QString("ITKBinaryClosingByReconstructionImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKBinaryClosingByReconstructionImage::ClassName()
+{
+  return QString("ITKBinaryClosingByReconstructionImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKBinaryClosingByReconstructionImage::setForegroundValue(double value)
+{
+  m_ForegroundValue = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKBinaryClosingByReconstructionImage::getForegroundValue() const
+{
+  return m_ForegroundValue;
+}
+
+// -----------------------------------------------------------------------------
+void ITKBinaryClosingByReconstructionImage::setFullyConnected(bool value)
+{
+  m_FullyConnected = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ITKBinaryClosingByReconstructionImage::getFullyConnected() const
+{
+  return m_FullyConnected;
+}
+
+// -----------------------------------------------------------------------------
+void ITKBinaryClosingByReconstructionImage::setKernelRadius(const FloatVec3Type& value)
+{
+  m_KernelRadius = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec3Type ITKBinaryClosingByReconstructionImage::getKernelRadius() const
+{
+  return m_KernelRadius;
+}
+
+// -----------------------------------------------------------------------------
+void ITKBinaryClosingByReconstructionImage::setKernelType(int value)
+{
+  m_KernelType = value;
+}
+
+// -----------------------------------------------------------------------------
+int ITKBinaryClosingByReconstructionImage::getKernelType() const
+{
+  return m_KernelType;
+}
+
+

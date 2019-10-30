@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKThresholdImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -141,7 +143,7 @@ AbstractFilter::Pointer ITKThresholdImage::newFilterInstance(bool copyFilterPara
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKThresholdImage::getHumanLabel() const
+QString ITKThresholdImage::getHumanLabel() const
 {
   return "ITK::Threshold Image Filter";
 }
@@ -149,7 +151,7 @@ const QString ITKThresholdImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKThresholdImage::getUuid()
+QUuid ITKThresholdImage::getUuid() const
 {
   return QUuid("{5845ee06-5c8a-5a74-80fb-c820bd8dfb75}");
 }
@@ -157,7 +159,74 @@ const QUuid ITKThresholdImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKThresholdImage::getSubGroupName() const
+QString ITKThresholdImage::getSubGroupName() const
 {
   return "ITK Thresholding";
 }
+
+// -----------------------------------------------------------------------------
+ITKThresholdImage::Pointer ITKThresholdImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKThresholdImage> ITKThresholdImage::New()
+{
+  struct make_shared_enabler : public ITKThresholdImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKThresholdImage::getNameOfClass() const
+{
+  return QString("ITKThresholdImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKThresholdImage::ClassName()
+{
+  return QString("ITKThresholdImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKThresholdImage::setLower(double value)
+{
+  m_Lower = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKThresholdImage::getLower() const
+{
+  return m_Lower;
+}
+
+// -----------------------------------------------------------------------------
+void ITKThresholdImage::setUpper(double value)
+{
+  m_Upper = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKThresholdImage::getUpper() const
+{
+  return m_Upper;
+}
+
+// -----------------------------------------------------------------------------
+void ITKThresholdImage::setOutsideValue(double value)
+{
+  m_OutsideValue = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKThresholdImage::getOutsideValue() const
+{
+  return m_OutsideValue;
+}
+
+

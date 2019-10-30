@@ -2,6 +2,8 @@
  * Your License or Copyright Information can go here
  */
 
+#include <memory>
+
 #include "ITKRefineTileCoordinates.h"
 
 #include <QtCore/QString>
@@ -19,6 +21,7 @@
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 
 #include "ITKImageProcessing/ITKImageProcessingFilters/util/DetermineStitching.h"
 
@@ -394,7 +397,7 @@ void ITKRefineTileCoordinates::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKRefineTileCoordinates::getCompiledLibraryName() const
+QString ITKRefineTileCoordinates::getCompiledLibraryName() const
 {
   return ITKImageProcessingConstants::ITKImageProcessingBaseName;
 }
@@ -402,7 +405,7 @@ const QString ITKRefineTileCoordinates::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKRefineTileCoordinates::getGroupName() const
+QString ITKRefineTileCoordinates::getGroupName() const
 {
   return SIMPL::FilterGroups::Unsupported;
 }
@@ -410,7 +413,7 @@ const QString ITKRefineTileCoordinates::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKRefineTileCoordinates::getHumanLabel() const
+QString ITKRefineTileCoordinates::getHumanLabel() const
 {
   return "ITK::Refine Tile Coordinates";
 }
@@ -418,7 +421,7 @@ const QString ITKRefineTileCoordinates::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKRefineTileCoordinates::getUuid()
+QUuid ITKRefineTileCoordinates::getUuid() const
 {
   return QUuid("{49b5feb1-ec05-5a26-af25-00053151d944}");
 }
@@ -426,7 +429,7 @@ const QUuid ITKRefineTileCoordinates::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKRefineTileCoordinates::getSubGroupName() const
+QString ITKRefineTileCoordinates::getSubGroupName() const
 {
   return "Misc";
 }
@@ -443,3 +446,118 @@ AbstractFilter::Pointer ITKRefineTileCoordinates::newFilterInstance(bool copyFil
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+ITKRefineTileCoordinates::Pointer ITKRefineTileCoordinates::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKRefineTileCoordinates> ITKRefineTileCoordinates::New()
+{
+  struct make_shared_enabler : public ITKRefineTileCoordinates  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKRefineTileCoordinates::getNameOfClass() const
+{
+  return QString("ITKRefineTileCoordinates");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKRefineTileCoordinates::ClassName()
+{
+  return QString("ITKRefineTileCoordinates");
+}
+
+// -----------------------------------------------------------------------------
+void ITKRefineTileCoordinates::setMontageSize(const IntVec3Type& value)
+{
+  m_MontageSize = value;
+}
+
+// -----------------------------------------------------------------------------
+IntVec3Type ITKRefineTileCoordinates::getMontageSize() const
+{
+  return m_MontageSize;
+}
+
+// -----------------------------------------------------------------------------
+void ITKRefineTileCoordinates::setDataContainers(const QStringList& value)
+{
+  m_DataContainers = value;
+}
+
+// -----------------------------------------------------------------------------
+QStringList ITKRefineTileCoordinates::getDataContainers() const
+{
+  return m_DataContainers;
+}
+
+// -----------------------------------------------------------------------------
+void ITKRefineTileCoordinates::setCommonAttributeMatrixName(const QString& value)
+{
+  m_CommonAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKRefineTileCoordinates::getCommonAttributeMatrixName() const
+{
+  return m_CommonAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void ITKRefineTileCoordinates::setCommonDataArrayName(const QString& value)
+{
+  m_CommonDataArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKRefineTileCoordinates::getCommonDataArrayName() const
+{
+  return m_CommonDataArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void ITKRefineTileCoordinates::setImportMode(int value)
+{
+  m_ImportMode = value;
+}
+
+// -----------------------------------------------------------------------------
+int ITKRefineTileCoordinates::getImportMode() const
+{
+  return m_ImportMode;
+}
+
+// -----------------------------------------------------------------------------
+void ITKRefineTileCoordinates::setTileOverlap(float value)
+{
+  m_TileOverlap = value;
+}
+
+// -----------------------------------------------------------------------------
+float ITKRefineTileCoordinates::getTileOverlap() const
+{
+  return m_TileOverlap;
+}
+
+// -----------------------------------------------------------------------------
+void ITKRefineTileCoordinates::setApplyRefinedOrigin(bool value)
+{
+  m_ApplyRefinedOrigin = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ITKRefineTileCoordinates::getApplyRefinedOrigin() const
+{
+  return m_ApplyRefinedOrigin;
+}
+
+

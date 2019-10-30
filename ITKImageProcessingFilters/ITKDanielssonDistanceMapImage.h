@@ -11,9 +11,10 @@
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
+#include <memory>
+
 #include "ITKImageProcessingBase.h"
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
 
 // Auto includes
@@ -28,25 +29,75 @@
 class ITKImageProcessing_EXPORT ITKDanielssonDistanceMapImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+
+#ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(ITKDanielssonDistanceMapImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_SHARED_POINTERS(ITKDanielssonDistanceMapImage)
+  PYB11_FILTER_NEW_MACRO(ITKDanielssonDistanceMapImage)
+  PYB11_FILTER_PARAMETER(bool, InputIsBinary)
+  PYB11_FILTER_PARAMETER(bool, SquaredDistance)
+  PYB11_FILTER_PARAMETER(bool, UseImageSpacing)
   PYB11_PROPERTY(bool InputIsBinary READ getInputIsBinary WRITE setInputIsBinary)
   PYB11_PROPERTY(bool SquaredDistance READ getSquaredDistance WRITE setSquaredDistance)
   PYB11_PROPERTY(bool UseImageSpacing READ getUseImageSpacing WRITE setUseImageSpacing)
+#endif
 
 public:
-  SIMPL_SHARED_POINTERS(ITKDanielssonDistanceMapImage)
-  SIMPL_FILTER_NEW_MACRO(ITKDanielssonDistanceMapImage)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKDanielssonDistanceMapImage, AbstractFilter)
+    using Self = ITKDanielssonDistanceMapImage;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
+
+    static std::shared_ptr<ITKDanielssonDistanceMapImage> New();
+
+    /**
+    * @brief Returns the name of the class for ITKDanielssonDistanceMapImage
+    */
+    QString getNameOfClass() const override;
+    /**
+    * @brief Returns the name of the class for ITKDanielssonDistanceMapImage
+    */
+    static QString ClassName();
+
 
   ~ITKDanielssonDistanceMapImage() override;
 
-  SIMPL_FILTER_PARAMETER(bool, InputIsBinary)
+    /**
+    * @brief Setter property for InputIsBinary
+    */
+    void setInputIsBinary(bool value); 
+    /**
+    * @brief Getter property for InputIsBinary
+    * @return Value of InputIsBinary
+    */
+    bool getInputIsBinary() const;
+
   Q_PROPERTY(bool InputIsBinary READ getInputIsBinary WRITE setInputIsBinary)
 
-  SIMPL_FILTER_PARAMETER(bool, SquaredDistance)
+    /**
+    * @brief Setter property for SquaredDistance
+    */
+    void setSquaredDistance(bool value); 
+    /**
+    * @brief Getter property for SquaredDistance
+    * @return Value of SquaredDistance
+    */
+    bool getSquaredDistance() const;
+
   Q_PROPERTY(bool SquaredDistance READ getSquaredDistance WRITE setSquaredDistance)
 
-  SIMPL_FILTER_PARAMETER(bool, UseImageSpacing)
+    /**
+    * @brief Setter property for UseImageSpacing
+    */
+    void setUseImageSpacing(bool value); 
+    /**
+    * @brief Getter property for UseImageSpacing
+    * @return Value of UseImageSpacing
+    */
+    bool getUseImageSpacing() const;
+
   Q_PROPERTY(bool UseImageSpacing READ getUseImageSpacing WRITE setUseImageSpacing)
 
 
@@ -58,18 +109,18 @@ public:
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -109,6 +160,12 @@ public:
   ITKDanielssonDistanceMapImage(ITKDanielssonDistanceMapImage&&) = delete;         // Move Constructor Not Implemented
   ITKDanielssonDistanceMapImage& operator=(const ITKDanielssonDistanceMapImage&) = delete; // Copy Assignment Not Implemented
   ITKDanielssonDistanceMapImage& operator=(ITKDanielssonDistanceMapImage&&) = delete;      // Move Assignment Not Implemented
+
+  private:
+    bool m_InputIsBinary = {};
+    bool m_SquaredDistance = {};
+    bool m_UseImageSpacing = {};
+
 };
 
 #ifdef __clang__

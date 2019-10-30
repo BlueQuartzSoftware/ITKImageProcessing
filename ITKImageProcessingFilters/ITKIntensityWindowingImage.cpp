@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKIntensityWindowingImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -145,7 +147,7 @@ AbstractFilter::Pointer ITKIntensityWindowingImage::newFilterInstance(bool copyF
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKIntensityWindowingImage::getHumanLabel() const
+QString ITKIntensityWindowingImage::getHumanLabel() const
 {
   return "ITK::Intensity Windowing Image Filter";
 }
@@ -153,7 +155,7 @@ const QString ITKIntensityWindowingImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKIntensityWindowingImage::getUuid()
+QUuid ITKIntensityWindowingImage::getUuid() const
 {
   return QUuid("{4faf4c59-6f29-53af-bc78-5aecffce0e37}");
 }
@@ -161,7 +163,86 @@ const QUuid ITKIntensityWindowingImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKIntensityWindowingImage::getSubGroupName() const
+QString ITKIntensityWindowingImage::getSubGroupName() const
 {
   return "ITK IntensityTransformation";
 }
+
+// -----------------------------------------------------------------------------
+ITKIntensityWindowingImage::Pointer ITKIntensityWindowingImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKIntensityWindowingImage> ITKIntensityWindowingImage::New()
+{
+  struct make_shared_enabler : public ITKIntensityWindowingImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKIntensityWindowingImage::getNameOfClass() const
+{
+  return QString("ITKIntensityWindowingImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKIntensityWindowingImage::ClassName()
+{
+  return QString("ITKIntensityWindowingImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKIntensityWindowingImage::setWindowMinimum(double value)
+{
+  m_WindowMinimum = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKIntensityWindowingImage::getWindowMinimum() const
+{
+  return m_WindowMinimum;
+}
+
+// -----------------------------------------------------------------------------
+void ITKIntensityWindowingImage::setWindowMaximum(double value)
+{
+  m_WindowMaximum = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKIntensityWindowingImage::getWindowMaximum() const
+{
+  return m_WindowMaximum;
+}
+
+// -----------------------------------------------------------------------------
+void ITKIntensityWindowingImage::setOutputMinimum(double value)
+{
+  m_OutputMinimum = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKIntensityWindowingImage::getOutputMinimum() const
+{
+  return m_OutputMinimum;
+}
+
+// -----------------------------------------------------------------------------
+void ITKIntensityWindowingImage::setOutputMaximum(double value)
+{
+  m_OutputMaximum = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKIntensityWindowingImage::getOutputMaximum() const
+{
+  return m_OutputMaximum;
+}
+
+

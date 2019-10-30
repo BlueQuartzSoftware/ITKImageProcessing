@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKExpNegativeImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -124,7 +126,7 @@ AbstractFilter::Pointer ITKExpNegativeImage::newFilterInstance(bool copyFilterPa
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKExpNegativeImage::getHumanLabel() const
+QString ITKExpNegativeImage::getHumanLabel() const
 {
   return "ITK::Exp Negative Image Filter";
 }
@@ -132,7 +134,7 @@ const QString ITKExpNegativeImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKExpNegativeImage::getUuid()
+QUuid ITKExpNegativeImage::getUuid() const
 {
   return QUuid("{634c2306-c1ee-5a45-a55c-f8286e36999a}");
 }
@@ -140,7 +142,38 @@ const QUuid ITKExpNegativeImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKExpNegativeImage::getSubGroupName() const
+QString ITKExpNegativeImage::getSubGroupName() const
 {
   return "ITK IntensityTransformation";
 }
+
+// -----------------------------------------------------------------------------
+ITKExpNegativeImage::Pointer ITKExpNegativeImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKExpNegativeImage> ITKExpNegativeImage::New()
+{
+  struct make_shared_enabler : public ITKExpNegativeImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKExpNegativeImage::getNameOfClass() const
+{
+  return QString("ITKExpNegativeImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKExpNegativeImage::ClassName()
+{
+  return QString("ITKExpNegativeImage");
+}
+
+

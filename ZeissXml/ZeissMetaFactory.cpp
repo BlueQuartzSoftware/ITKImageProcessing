@@ -60,3 +60,32 @@ AbstractZeissMetaData::Pointer StringZeissMetaFactory::createMetaEntry()
   return ptr;
 }
 
+// -----------------------------------------------------------------------------
+ZeissMetaFactory::Pointer ZeissMetaFactory::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+Int32ZeissMetaFactory::Pointer Int32ZeissMetaFactory::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+Int64ZeissMetaFactory::Pointer Int64ZeissMetaFactory::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+FloatZeissMetaFactory::Pointer FloatZeissMetaFactory::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+StringZeissMetaFactory::Pointer StringZeissMetaFactory::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}

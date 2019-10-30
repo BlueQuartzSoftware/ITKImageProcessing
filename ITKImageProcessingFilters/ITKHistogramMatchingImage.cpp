@@ -2,6 +2,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKHistogramMatchingImage.h"
 
 #include "SIMPLib/Common/Constants.h"
@@ -255,7 +257,7 @@ AbstractFilter::Pointer ITKHistogramMatchingImage::newFilterInstance(bool copyFi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKHistogramMatchingImage::getHumanLabel() const
+QString ITKHistogramMatchingImage::getHumanLabel() const
 {
   return "ITK::Histogram Matching Image Filter";
 }
@@ -263,7 +265,7 @@ const QString ITKHistogramMatchingImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKHistogramMatchingImage::getUuid()
+QUuid ITKHistogramMatchingImage::getUuid() const
 {
   return QUuid("{33ca886c-42b9-524a-984a-dab24f8bb74c}");
 }
@@ -271,7 +273,86 @@ const QUuid ITKHistogramMatchingImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKHistogramMatchingImage::getSubGroupName() const
+QString ITKHistogramMatchingImage::getSubGroupName() const
 {
   return "ITK IntensityTransformation";
 }
+
+// -----------------------------------------------------------------------------
+ITKHistogramMatchingImage::Pointer ITKHistogramMatchingImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKHistogramMatchingImage> ITKHistogramMatchingImage::New()
+{
+  struct make_shared_enabler : public ITKHistogramMatchingImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKHistogramMatchingImage::getNameOfClass() const
+{
+  return QString("ITKHistogramMatchingImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKHistogramMatchingImage::ClassName()
+{
+  return QString("ITKHistogramMatchingImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKHistogramMatchingImage::setReferenceCellArrayPath(const DataArrayPath& value)
+{
+  m_ReferenceCellArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath ITKHistogramMatchingImage::getReferenceCellArrayPath() const
+{
+  return m_ReferenceCellArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void ITKHistogramMatchingImage::setNumberOfHistogramLevels(double value)
+{
+  m_NumberOfHistogramLevels = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKHistogramMatchingImage::getNumberOfHistogramLevels() const
+{
+  return m_NumberOfHistogramLevels;
+}
+
+// -----------------------------------------------------------------------------
+void ITKHistogramMatchingImage::setNumberOfMatchPoints(double value)
+{
+  m_NumberOfMatchPoints = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKHistogramMatchingImage::getNumberOfMatchPoints() const
+{
+  return m_NumberOfMatchPoints;
+}
+
+// -----------------------------------------------------------------------------
+void ITKHistogramMatchingImage::setThresholdAtMeanIntensity(bool value)
+{
+  m_ThresholdAtMeanIntensity = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ITKHistogramMatchingImage::getThresholdAtMeanIntensity() const
+{
+  return m_ThresholdAtMeanIntensity;
+}
+
+

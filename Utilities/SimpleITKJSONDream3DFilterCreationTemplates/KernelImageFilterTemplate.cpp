@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/${FilterName}.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -191,3 +193,34 @@ const QString ${FilterName}::getSubGroupName() const
 {
   return "ITK ${ITKModule}";
 }
+
+// -----------------------------------------------------------------------------
+KernelImageFilterTemplate::Pointer KernelImageFilterTemplate::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<${FilterName}> KernelImageFilterTemplate::New()
+{
+  struct make_shared_enabler : public ${FilterName}  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString KernelImageFilterTemplate::getNameOfClass() const
+{
+  return QString("${FilterName}");
+}
+
+// -----------------------------------------------------------------------------
+QString KernelImageFilterTemplate::ClassName()
+{
+  return QString("${FilterName}");
+}
+
+

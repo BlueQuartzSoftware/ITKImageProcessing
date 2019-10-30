@@ -11,9 +11,10 @@
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
+#include <memory>
+
 #include "ITKImageProcessingBase.h"
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
 
 // Auto includes
@@ -29,21 +30,61 @@
 class ITKImageProcessing_EXPORT ITKSmoothingRecursiveGaussianImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+
+#ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(ITKSmoothingRecursiveGaussianImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_SHARED_POINTERS(ITKSmoothingRecursiveGaussianImage)
+  PYB11_FILTER_NEW_MACRO(ITKSmoothingRecursiveGaussianImage)
+  PYB11_FILTER_PARAMETER(FloatVec3Type, Sigma)
+  PYB11_FILTER_PARAMETER(bool, NormalizeAcrossScale)
   PYB11_PROPERTY(FloatVec3Type Sigma READ getSigma WRITE setSigma)
   PYB11_PROPERTY(bool NormalizeAcrossScale READ getNormalizeAcrossScale WRITE setNormalizeAcrossScale)
+#endif
 
 public:
-  SIMPL_SHARED_POINTERS(ITKSmoothingRecursiveGaussianImage)
-  SIMPL_FILTER_NEW_MACRO(ITKSmoothingRecursiveGaussianImage)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKSmoothingRecursiveGaussianImage, AbstractFilter)
+    using Self = ITKSmoothingRecursiveGaussianImage;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
+
+    static std::shared_ptr<ITKSmoothingRecursiveGaussianImage> New();
+
+    /**
+    * @brief Returns the name of the class for ITKSmoothingRecursiveGaussianImage
+    */
+    QString getNameOfClass() const override;
+    /**
+    * @brief Returns the name of the class for ITKSmoothingRecursiveGaussianImage
+    */
+    static QString ClassName();
+
 
   ~ITKSmoothingRecursiveGaussianImage() override;
 
-  SIMPL_FILTER_PARAMETER(FloatVec3Type, Sigma)
+    /**
+    * @brief Setter property for Sigma
+    */
+    void setSigma(const FloatVec3Type& value); 
+    /**
+    * @brief Getter property for Sigma
+    * @return Value of Sigma
+    */
+    FloatVec3Type getSigma() const;
+
   Q_PROPERTY(FloatVec3Type Sigma READ getSigma WRITE setSigma)
 
-  SIMPL_FILTER_PARAMETER(bool, NormalizeAcrossScale)
+    /**
+    * @brief Setter property for NormalizeAcrossScale
+    */
+    void setNormalizeAcrossScale(bool value); 
+    /**
+    * @brief Getter property for NormalizeAcrossScale
+    * @return Value of NormalizeAcrossScale
+    */
+    bool getNormalizeAcrossScale() const;
+
   Q_PROPERTY(bool NormalizeAcrossScale READ getNormalizeAcrossScale WRITE setNormalizeAcrossScale)
 
 
@@ -55,18 +96,18 @@ public:
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -106,6 +147,11 @@ public:
   ITKSmoothingRecursiveGaussianImage(ITKSmoothingRecursiveGaussianImage&&) = delete;         // Move Constructor Not Implemented
   ITKSmoothingRecursiveGaussianImage& operator=(const ITKSmoothingRecursiveGaussianImage&) = delete; // Copy Assignment Not Implemented
   ITKSmoothingRecursiveGaussianImage& operator=(ITKSmoothingRecursiveGaussianImage&&) = delete;      // Move Assignment Not Implemented
+
+  private:
+    FloatVec3Type m_Sigma = {};
+    bool m_NormalizeAcrossScale = {};
+
 };
 
 #ifdef __clang__

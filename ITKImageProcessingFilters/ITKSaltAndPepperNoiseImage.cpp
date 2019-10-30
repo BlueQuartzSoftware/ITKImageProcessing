@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKSaltAndPepperNoiseImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -142,7 +144,7 @@ AbstractFilter::Pointer ITKSaltAndPepperNoiseImage::newFilterInstance(bool copyF
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKSaltAndPepperNoiseImage::getHumanLabel() const
+QString ITKSaltAndPepperNoiseImage::getHumanLabel() const
 {
   return "ITK::Salt And Pepper Noise Image Filter";
 }
@@ -150,7 +152,7 @@ const QString ITKSaltAndPepperNoiseImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKSaltAndPepperNoiseImage::getUuid()
+QUuid ITKSaltAndPepperNoiseImage::getUuid() const
 {
   return QUuid("{602c270d-ec55-580c-9108-785ba8530964}");
 }
@@ -158,7 +160,62 @@ const QUuid ITKSaltAndPepperNoiseImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKSaltAndPepperNoiseImage::getSubGroupName() const
+QString ITKSaltAndPepperNoiseImage::getSubGroupName() const
 {
   return "ITK ImageNoise";
 }
+
+// -----------------------------------------------------------------------------
+ITKSaltAndPepperNoiseImage::Pointer ITKSaltAndPepperNoiseImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKSaltAndPepperNoiseImage> ITKSaltAndPepperNoiseImage::New()
+{
+  struct make_shared_enabler : public ITKSaltAndPepperNoiseImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKSaltAndPepperNoiseImage::getNameOfClass() const
+{
+  return QString("ITKSaltAndPepperNoiseImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKSaltAndPepperNoiseImage::ClassName()
+{
+  return QString("ITKSaltAndPepperNoiseImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKSaltAndPepperNoiseImage::setProbability(double value)
+{
+  m_Probability = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKSaltAndPepperNoiseImage::getProbability() const
+{
+  return m_Probability;
+}
+
+// -----------------------------------------------------------------------------
+void ITKSaltAndPepperNoiseImage::setSeed(double value)
+{
+  m_Seed = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKSaltAndPepperNoiseImage::getSeed() const
+{
+  return m_Seed;
+}
+
+

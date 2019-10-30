@@ -11,9 +11,10 @@
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
+#include <memory>
+
 #include "ITKImageProcessingBase.h"
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
 
 // Auto includes
@@ -29,9 +30,24 @@ class ITKImageProcessing_EXPORT ITKLog10Image : public ITKImageProcessingBase
   Q_OBJECT
 
 public:
-  SIMPL_SHARED_POINTERS(ITKLog10Image)
-  SIMPL_FILTER_NEW_MACRO(ITKLog10Image)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKLog10Image, AbstractFilter)
+    using Self = ITKLog10Image;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
+
+    static std::shared_ptr<ITKLog10Image> New();
+
+    /**
+    * @brief Returns the name of the class for ITKLog10Image
+    */
+    QString getNameOfClass() const override;
+    /**
+    * @brief Returns the name of the class for ITKLog10Image
+    */
+    static QString ClassName();
+
 
   ~ITKLog10Image() override;
 
@@ -43,18 +59,18 @@ public:
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -94,6 +110,9 @@ public:
   ITKLog10Image(ITKLog10Image&&) = delete;         // Move Constructor Not Implemented
   ITKLog10Image& operator=(const ITKLog10Image&) = delete; // Copy Assignment Not Implemented
   ITKLog10Image& operator=(ITKLog10Image&&) = delete;      // Move Assignment Not Implemented
+
+  private:
+
 };
 
 #ifdef __clang__

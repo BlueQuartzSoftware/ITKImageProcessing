@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKThresholdMaximumConnectedComponentsImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -148,7 +150,7 @@ AbstractFilter::Pointer ITKThresholdMaximumConnectedComponentsImage::newFilterIn
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKThresholdMaximumConnectedComponentsImage::getHumanLabel() const
+QString ITKThresholdMaximumConnectedComponentsImage::getHumanLabel() const
 {
   return "ITK::Threshold Maximum Connected Components Image Filter";
 }
@@ -156,7 +158,7 @@ const QString ITKThresholdMaximumConnectedComponentsImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKThresholdMaximumConnectedComponentsImage::getUuid()
+QUuid ITKThresholdMaximumConnectedComponentsImage::getUuid() const
 {
   return QUuid("{2a531add-79fd-5c07-98a6-f875d2ecef4e}");
 }
@@ -164,7 +166,86 @@ const QUuid ITKThresholdMaximumConnectedComponentsImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKThresholdMaximumConnectedComponentsImage::getSubGroupName() const
+QString ITKThresholdMaximumConnectedComponentsImage::getSubGroupName() const
 {
   return "ITK SegmentationPostProcessing";
 }
+
+// -----------------------------------------------------------------------------
+ITKThresholdMaximumConnectedComponentsImage::Pointer ITKThresholdMaximumConnectedComponentsImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKThresholdMaximumConnectedComponentsImage> ITKThresholdMaximumConnectedComponentsImage::New()
+{
+  struct make_shared_enabler : public ITKThresholdMaximumConnectedComponentsImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKThresholdMaximumConnectedComponentsImage::getNameOfClass() const
+{
+  return QString("ITKThresholdMaximumConnectedComponentsImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKThresholdMaximumConnectedComponentsImage::ClassName()
+{
+  return QString("ITKThresholdMaximumConnectedComponentsImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKThresholdMaximumConnectedComponentsImage::setMinimumObjectSizeInPixels(double value)
+{
+  m_MinimumObjectSizeInPixels = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKThresholdMaximumConnectedComponentsImage::getMinimumObjectSizeInPixels() const
+{
+  return m_MinimumObjectSizeInPixels;
+}
+
+// -----------------------------------------------------------------------------
+void ITKThresholdMaximumConnectedComponentsImage::setUpperBoundary(double value)
+{
+  m_UpperBoundary = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKThresholdMaximumConnectedComponentsImage::getUpperBoundary() const
+{
+  return m_UpperBoundary;
+}
+
+// -----------------------------------------------------------------------------
+void ITKThresholdMaximumConnectedComponentsImage::setInsideValue(int value)
+{
+  m_InsideValue = value;
+}
+
+// -----------------------------------------------------------------------------
+int ITKThresholdMaximumConnectedComponentsImage::getInsideValue() const
+{
+  return m_InsideValue;
+}
+
+// -----------------------------------------------------------------------------
+void ITKThresholdMaximumConnectedComponentsImage::setOutsideValue(int value)
+{
+  m_OutsideValue = value;
+}
+
+// -----------------------------------------------------------------------------
+int ITKThresholdMaximumConnectedComponentsImage::getOutsideValue() const
+{
+  return m_OutsideValue;
+}
+
+

@@ -37,7 +37,10 @@
 #include "H5Support/QH5Lite.h"
 #endif
 
+#include <QtCore/QDebug>
+
 #include "SIMPLib/DataArrays/DataArray.hpp"
+
 #include "SIMPLib/DataArrays/StringDataArray.h"
 
 #include "ITKImageProcessing/ZeissXml/ZeissTagMapping.h"
@@ -270,3 +273,134 @@ int StringZeissMetaEntry::writeHDF5Attribute(hid_t fileId, const QString& datase
 ReadHDF5Attribute_STR_DEFINITION(StringZeissMetaEntry)
 #endif
 
+    AbstractZeissMetaData::AbstractZeissMetaData() = default;
+
+// -----------------------------------------------------------------------------
+AbstractZeissMetaData::Pointer AbstractZeissMetaData::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+QString AbstractZeissMetaData::getNameOfClass() const
+{
+  return QString("AbstractZeissMetaData");
+}
+
+// -----------------------------------------------------------------------------
+QString AbstractZeissMetaData::ClassName()
+{
+  return QString("AbstractZeissMetaData");
+}
+
+// -----------------------------------------------------------------------------
+void AbstractZeissMetaData::setZeissIdTag(int32_t value)
+{
+  m_ZeissIdTag = value;
+}
+
+// -----------------------------------------------------------------------------
+int32_t AbstractZeissMetaData::getZeissIdTag() const
+{
+  return m_ZeissIdTag;
+}
+
+// -----------------------------------------------------------------------------
+Int32ZeissMetaEntry::Pointer Int32ZeissMetaEntry::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+QString Int32ZeissMetaEntry::getNameOfClass() const
+{
+  return QString("Int32ZeissMetaEntry");
+}
+
+// -----------------------------------------------------------------------------
+QString Int32ZeissMetaEntry::ClassName()
+{
+  return QString("Int32ZeissMetaEntry");
+}
+
+// -----------------------------------------------------------------------------
+Int32ZeissMetaEntry::Pointer Int32ZeissMetaEntry::New()
+{
+  Pointer sharedPtr(new(Int32ZeissMetaEntry));
+  return sharedPtr;
+}
+
+// -----------------------------------------------------------------------------
+Int64ZeissMetaEntry::Pointer Int64ZeissMetaEntry::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+QString Int64ZeissMetaEntry::getNameOfClass() const
+{
+  return QString("Int64ZeissMetaEntry");
+}
+
+// -----------------------------------------------------------------------------
+QString Int64ZeissMetaEntry::ClassName()
+{
+  return QString("Int64ZeissMetaEntry");
+}
+
+// -----------------------------------------------------------------------------
+Int64ZeissMetaEntry::Pointer Int64ZeissMetaEntry::New()
+{
+  Pointer sharedPtr(new(Int64ZeissMetaEntry));
+  return sharedPtr;
+}
+
+// -----------------------------------------------------------------------------
+FloatZeissMetaEntry::Pointer FloatZeissMetaEntry::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+QString FloatZeissMetaEntry::getNameOfClass() const
+{
+  return QString("FloatZeissMetaEntry");
+}
+
+// -----------------------------------------------------------------------------
+QString FloatZeissMetaEntry::ClassName()
+{
+  return QString("FloatZeissMetaEntry");
+}
+
+// -----------------------------------------------------------------------------
+FloatZeissMetaEntry::Pointer FloatZeissMetaEntry::New()
+{
+  Pointer sharedPtr(new(FloatZeissMetaEntry));
+  return sharedPtr;
+}
+
+// -----------------------------------------------------------------------------
+StringZeissMetaEntry::Pointer StringZeissMetaEntry::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+QString StringZeissMetaEntry::getNameOfClass() const
+{
+  return QString("StringZeissMetaEntry");
+}
+
+// -----------------------------------------------------------------------------
+QString StringZeissMetaEntry::ClassName()
+{
+  return QString("StringZeissMetaEntry");
+}
+
+// -----------------------------------------------------------------------------
+StringZeissMetaEntry::Pointer StringZeissMetaEntry::New()
+{
+  Pointer sharedPtr(new(StringZeissMetaEntry));
+  return sharedPtr;
+}

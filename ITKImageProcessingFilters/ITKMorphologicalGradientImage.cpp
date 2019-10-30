@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKMorphologicalGradientImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -179,7 +181,7 @@ AbstractFilter::Pointer ITKMorphologicalGradientImage::newFilterInstance(bool co
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKMorphologicalGradientImage::getHumanLabel() const
+QString ITKMorphologicalGradientImage::getHumanLabel() const
 {
   return "ITK::Morphological Gradient Image Filter";
 }
@@ -187,7 +189,7 @@ const QString ITKMorphologicalGradientImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKMorphologicalGradientImage::getUuid()
+QUuid ITKMorphologicalGradientImage::getUuid() const
 {
   return QUuid("{12c83608-c4c5-5c72-b22f-a7696e3f5448}");
 }
@@ -195,7 +197,62 @@ const QUuid ITKMorphologicalGradientImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKMorphologicalGradientImage::getSubGroupName() const
+QString ITKMorphologicalGradientImage::getSubGroupName() const
 {
   return "ITK BiasCorrection";
 }
+
+// -----------------------------------------------------------------------------
+ITKMorphologicalGradientImage::Pointer ITKMorphologicalGradientImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKMorphologicalGradientImage> ITKMorphologicalGradientImage::New()
+{
+  struct make_shared_enabler : public ITKMorphologicalGradientImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKMorphologicalGradientImage::getNameOfClass() const
+{
+  return QString("ITKMorphologicalGradientImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKMorphologicalGradientImage::ClassName()
+{
+  return QString("ITKMorphologicalGradientImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKMorphologicalGradientImage::setKernelRadius(const FloatVec3Type& value)
+{
+  m_KernelRadius = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec3Type ITKMorphologicalGradientImage::getKernelRadius() const
+{
+  return m_KernelRadius;
+}
+
+// -----------------------------------------------------------------------------
+void ITKMorphologicalGradientImage::setKernelType(int value)
+{
+  m_KernelType = value;
+}
+
+// -----------------------------------------------------------------------------
+int ITKMorphologicalGradientImage::getKernelType() const
+{
+  return m_KernelType;
+}
+
+

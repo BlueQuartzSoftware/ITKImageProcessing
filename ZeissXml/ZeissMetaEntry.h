@@ -30,9 +30,12 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #pragma once
 
+#include <memory>
+
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
-#include "SIMPLib/DataArrays/IDataArray.h"
+
+class IDataArray;
+using IDataArrayShPtrType = std::shared_ptr<IDataArray>;
 
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
 #include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
@@ -79,12 +82,33 @@ using IDataArrayShPtrType = std::shared_ptr<IDataArray>;
 class ITKImageProcessing_EXPORT AbstractZeissMetaData
 {
   public:
-    SIMPL_SHARED_POINTERS(AbstractZeissMetaData)
-    SIMPL_TYPE_MACRO(AbstractZeissMetaData)
+    using Self = AbstractZeissMetaData;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
+
+    /**
+     * @brief Returns the name of the class for AbstractZeissMetaData
+     */
+    virtual QString getNameOfClass() const;
+    /**
+     * @brief Returns the name of the class for AbstractZeissMetaData
+     */
+    static QString ClassName();
 
     virtual ~AbstractZeissMetaData() = default;
 
-    SIMPL_INSTANCE_PROPERTY(int32_t, ZeissIdTag)
+    /**
+     * @brief Setter property for ZeissIdTag
+     */
+    void setZeissIdTag(int32_t value);
+    /**
+     * @brief Getter property for ZeissIdTag
+     * @return Value of ZeissIdTag
+     */
+    int32_t getZeissIdTag() const;
 
     virtual bool setValue(const QString &value) = 0;
 #ifdef ZEISS_HDF_SUPPORT
@@ -98,7 +122,10 @@ class ITKImageProcessing_EXPORT AbstractZeissMetaData
     virtual IDataArrayShPtrType createDataArray(bool allocate = true) const = 0;
 
   protected:
-    AbstractZeissMetaData() {m_ZeissIdTag = 0;}
+    AbstractZeissMetaData();
+
+  private:
+    int32_t m_ZeissIdTag = 0;
 
   public:
     AbstractZeissMetaData(const AbstractZeissMetaData&) = delete; // Copy Constructor Not Implemented
@@ -113,9 +140,23 @@ class ITKImageProcessing_EXPORT AbstractZeissMetaData
 class ITKImageProcessing_EXPORT Int32ZeissMetaEntry : public AbstractZeissMetaData
 {
   public:
-    SIMPL_SHARED_POINTERS(Int32ZeissMetaEntry)
-    SIMPL_TYPE_MACRO_SUPER_OVERRIDE(Int32ZeissMetaEntry, AbstractZeissMetaData)
-    SIMPL_STATIC_NEW_MACRO(Int32ZeissMetaEntry)
+    using Self = Int32ZeissMetaEntry;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
+
+    /**
+     * @brief Returns the name of the class for Int32ZeissMetaEntry
+     */
+    QString getNameOfClass() const override;
+    /**
+     * @brief Returns the name of the class for Int32ZeissMetaEntry
+     */
+    static QString ClassName();
+
+    static Pointer New();
 
     Int32ZeissMetaEntry();
 
@@ -154,9 +195,23 @@ class ITKImageProcessing_EXPORT Int32ZeissMetaEntry : public AbstractZeissMetaDa
 class ITKImageProcessing_EXPORT Int64ZeissMetaEntry : public AbstractZeissMetaData
 {
   public:
-    SIMPL_SHARED_POINTERS(Int64ZeissMetaEntry)
-    SIMPL_TYPE_MACRO_SUPER_OVERRIDE(Int64ZeissMetaEntry, AbstractZeissMetaData)
-    SIMPL_STATIC_NEW_MACRO(Int64ZeissMetaEntry)
+    using Self = Int64ZeissMetaEntry;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
+
+    /**
+     * @brief Returns the name of the class for Int64ZeissMetaEntry
+     */
+    QString getNameOfClass() const override;
+    /**
+     * @brief Returns the name of the class for Int64ZeissMetaEntry
+     */
+    static QString ClassName();
+
+    static Pointer New();
 
     STATIC_NEW_METHODS(AbstractZeissMetaData, Int64ZeissMetaEntry, int64_t)
 
@@ -195,9 +250,23 @@ class ITKImageProcessing_EXPORT Int64ZeissMetaEntry : public AbstractZeissMetaDa
 class ITKImageProcessing_EXPORT FloatZeissMetaEntry : public AbstractZeissMetaData
 {
   public:
-    SIMPL_SHARED_POINTERS(FloatZeissMetaEntry)
-    SIMPL_TYPE_MACRO_SUPER_OVERRIDE(FloatZeissMetaEntry, AbstractZeissMetaData)
-    SIMPL_STATIC_NEW_MACRO(FloatZeissMetaEntry)
+    using Self = FloatZeissMetaEntry;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
+
+    /**
+     * @brief Returns the name of the class for FloatZeissMetaEntry
+     */
+    QString getNameOfClass() const override;
+    /**
+     * @brief Returns the name of the class for FloatZeissMetaEntry
+     */
+    static QString ClassName();
+
+    static Pointer New();
 
     STATIC_NEW_METHODS(AbstractZeissMetaData, FloatZeissMetaEntry, float)
 
@@ -235,9 +304,23 @@ class ITKImageProcessing_EXPORT FloatZeissMetaEntry : public AbstractZeissMetaDa
 class ITKImageProcessing_EXPORT StringZeissMetaEntry : public AbstractZeissMetaData
 {
   public:
-    SIMPL_SHARED_POINTERS(StringZeissMetaEntry)
-    SIMPL_TYPE_MACRO_SUPER_OVERRIDE(StringZeissMetaEntry, AbstractZeissMetaData)
-    SIMPL_STATIC_NEW_MACRO(StringZeissMetaEntry)
+    using Self = StringZeissMetaEntry;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
+
+    /**
+     * @brief Returns the name of the class for StringZeissMetaEntry
+     */
+    QString getNameOfClass() const override;
+    /**
+     * @brief Returns the name of the class for StringZeissMetaEntry
+     */
+    static QString ClassName();
+
+    static Pointer New();
 
     static AbstractZeissMetaData::Pointer New(int32_t idTag, const QString &value) {
       AbstractZeissMetaData::Pointer ptr (new StringZeissMetaEntry(idTag));
@@ -274,7 +357,6 @@ class ITKImageProcessing_EXPORT StringZeissMetaEntry : public AbstractZeissMetaD
     {
        setZeissIdTag(idTag);
     }
-
 
   private:
     QString m_Value;

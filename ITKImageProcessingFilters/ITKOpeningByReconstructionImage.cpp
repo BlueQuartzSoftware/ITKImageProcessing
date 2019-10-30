@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKOpeningByReconstructionImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -187,7 +189,7 @@ AbstractFilter::Pointer ITKOpeningByReconstructionImage::newFilterInstance(bool 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKOpeningByReconstructionImage::getHumanLabel() const
+QString ITKOpeningByReconstructionImage::getHumanLabel() const
 {
   return "ITK::Opening By Reconstruction Image Filter";
 }
@@ -195,7 +197,7 @@ const QString ITKOpeningByReconstructionImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKOpeningByReconstructionImage::getUuid()
+QUuid ITKOpeningByReconstructionImage::getUuid() const
 {
   return QUuid("{ca04004f-fb11-588d-9f77-d00b3ee9ad2a}");
 }
@@ -203,7 +205,86 @@ const QUuid ITKOpeningByReconstructionImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKOpeningByReconstructionImage::getSubGroupName() const
+QString ITKOpeningByReconstructionImage::getSubGroupName() const
 {
   return "ITK BiasCorrection";
 }
+
+// -----------------------------------------------------------------------------
+ITKOpeningByReconstructionImage::Pointer ITKOpeningByReconstructionImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKOpeningByReconstructionImage> ITKOpeningByReconstructionImage::New()
+{
+  struct make_shared_enabler : public ITKOpeningByReconstructionImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKOpeningByReconstructionImage::getNameOfClass() const
+{
+  return QString("ITKOpeningByReconstructionImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKOpeningByReconstructionImage::ClassName()
+{
+  return QString("ITKOpeningByReconstructionImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKOpeningByReconstructionImage::setFullyConnected(bool value)
+{
+  m_FullyConnected = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ITKOpeningByReconstructionImage::getFullyConnected() const
+{
+  return m_FullyConnected;
+}
+
+// -----------------------------------------------------------------------------
+void ITKOpeningByReconstructionImage::setPreserveIntensities(bool value)
+{
+  m_PreserveIntensities = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ITKOpeningByReconstructionImage::getPreserveIntensities() const
+{
+  return m_PreserveIntensities;
+}
+
+// -----------------------------------------------------------------------------
+void ITKOpeningByReconstructionImage::setKernelRadius(const FloatVec3Type& value)
+{
+  m_KernelRadius = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec3Type ITKOpeningByReconstructionImage::getKernelRadius() const
+{
+  return m_KernelRadius;
+}
+
+// -----------------------------------------------------------------------------
+void ITKOpeningByReconstructionImage::setKernelType(int value)
+{
+  m_KernelType = value;
+}
+
+// -----------------------------------------------------------------------------
+int ITKOpeningByReconstructionImage::getKernelType() const
+{
+  return m_KernelType;
+}
+
+

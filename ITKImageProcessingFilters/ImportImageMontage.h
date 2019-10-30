@@ -1,98 +1,71 @@
-/* ============================================================================
-* Copyright (c) 2009-2016 BlueQuartz Software, LLC
-*
-* Redistribution and use in source and binary forms, with or without modification,
-* are permitted provided that the following conditions are met:
-*
-* Redistributions of source code must retain the above copyright notice, this
-* list of conditions and the following disclaimer.
-*
-* Redistributions in binary form must reproduce the above copyright notice, this
-* list of conditions and the following disclaimer in the documentation and/or
-* other materials provided with the distribution.
-*
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
-* contributors may be used to endorse or promote products derived from this software
-* without specific prior written permission.
-*
-* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
-* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*
-* The code contained herein was partially funded by the followig contracts:
-*    United States Air Force Prime Contract FA8650-07-D-5800
-*    United States Air Force Prime Contract FA8650-10-D-5210
-*    United States Prime Contract Navy N00173-07-C-2068
-*
-* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+/*
+ * Your License or Copyright Information can go here
+ */
 
 #pragma once
 
 #include <memory>
 
+#include <QtCore/QFile>
+
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/DataArrays/StringDataArray.h"
 #include "SIMPLib/FilterParameters/FileListInfoFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/DataArrays/DataArray.hpp"
+
+#include "SIMPLib/ITK/itkImageReaderHelper.h"
+
+#include <itkImageFileReader.h>
 
 #include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
- * @brief The ITKImportImageStack class. See [Filter documentation](@ref itkimportimagestack) for details.
+ * @brief The ImportImageMontage class. See [Filter documentation](@ref importimagemontage) for details.
  */
-class ITKImageProcessing_EXPORT ITKImportImageStack : public AbstractFilter
+class ITKImageProcessing_EXPORT ImportImageMontage : public AbstractFilter
 {
   Q_OBJECT
 
 #ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ITKImportImageStack SUPERCLASS AbstractFilter)
-  PYB11_SHARED_POINTERS(ITKImportImageStack)
-  PYB11_FILTER_NEW_MACRO(ITKImportImageStack)
+  PYB11_CREATE_BINDINGS(ImportImageMontage SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(ImportImageMontage)
+  PYB11_FILTER_NEW_MACRO(ImportImageMontage)
   PYB11_FILTER_PARAMETER(DataArrayPath, DataContainerName)
   PYB11_FILTER_PARAMETER(QString, CellAttributeMatrixName)
+  PYB11_FILTER_PARAMETER(QString, MetaDataAttributeMatrixName)
   PYB11_FILTER_PARAMETER(FloatVec3Type, Origin)
   PYB11_FILTER_PARAMETER(FloatVec3Type, Spacing)
   PYB11_FILTER_PARAMETER(FileListInfo_t, InputFileListInfo)
-  PYB11_FILTER_PARAMETER(int, ImageStack)
-  PYB11_FILTER_PARAMETER(QString, ImageDataArrayName)
   PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
   PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
+  PYB11_PROPERTY(QString MetaDataAttributeMatrixName READ getMetaDataAttributeMatrixName WRITE setMetaDataAttributeMatrixName)
   PYB11_PROPERTY(FloatVec3Type Origin READ getOrigin WRITE setOrigin)
   PYB11_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
   PYB11_PROPERTY(FileListInfo_t InputFileListInfo READ getInputFileListInfo WRITE setInputFileListInfo)
-  PYB11_PROPERTY(int ImageStack READ getImageStack WRITE setImageStack)
-  PYB11_PROPERTY(QString ImageDataArrayName READ getImageDataArrayName WRITE setImageDataArrayName)
 #endif
 
 public:
-    using Self = ITKImportImageStack;
+    using Self = ImportImageMontage;
     using Pointer = std::shared_ptr<Self>;
     using ConstPointer = std::shared_ptr<const Self>;
     using WeakPointer = std::weak_ptr<Self>;
     using ConstWeakPointer = std::weak_ptr<Self>;
     static Pointer NullPointer();
 
-    static std::shared_ptr<ITKImportImageStack> New();
+    static std::shared_ptr<ImportImageMontage> New();
 
     /**
-    * @brief Returns the name of the class for ITKImportImageStack
+    * @brief Returns the name of the class for ImportImageMontage
     */
     QString getNameOfClass() const override;
     /**
-    * @brief Returns the name of the class for ITKImportImageStack
+    * @brief Returns the name of the class for ImportImageMontage
     */
     static QString ClassName();
 
 
-  ~ITKImportImageStack() override;
+  ~ImportImageMontage() override;
 
     /**
     * @brief Setter property for DataContainerName
@@ -117,6 +90,18 @@ public:
     QString getCellAttributeMatrixName() const;
 
   Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
+
+    /**
+    * @brief Setter property for MetaDataAttributeMatrixName
+    */
+    void setMetaDataAttributeMatrixName(const QString& value); 
+    /**
+    * @brief Getter property for MetaDataAttributeMatrixName
+    * @return Value of MetaDataAttributeMatrixName
+    */
+    QString getMetaDataAttributeMatrixName() const;
+
+  Q_PROPERTY(QString MetaDataAttributeMatrixName READ getMetaDataAttributeMatrixName WRITE setMetaDataAttributeMatrixName)
 
     /**
     * @brief Setter property for Origin
@@ -154,41 +139,10 @@ public:
 
   Q_PROPERTY(FileListInfo_t InputFileListInfo READ getInputFileListInfo WRITE setInputFileListInfo)
 
-    /**
-    * @brief Setter property for ImageStack
-    */
-    void setImageStack(int value); 
-    /**
-    * @brief Getter property for ImageStack
-    * @return Value of ImageStack
-    */
-    int getImageStack() const;
-
-  Q_PROPERTY(int ImageStack READ getImageStack WRITE setImageStack)
-
-    /**
-    * @brief Setter property for ImageDataArrayName
-    */
-    void setImageDataArrayName(const QString& value); 
-    /**
-    * @brief Getter property for ImageDataArrayName
-    * @return Value of ImageDataArrayName
-    */
-    QString getImageDataArrayName() const;
-
-  Q_PROPERTY(QString ImageDataArrayName READ getImageDataArrayName WRITE setImageDataArrayName)
-
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
   QString getCompiledLibraryName() const override;
-
-  /**
-   * @brief getBrandingString Returns the branding string for the filter, which is a tag
-   * used to denote the filter's association with specific plugins
-   * @return Branding string
-  */
-  QString getBrandingString() const override;
 
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
@@ -196,6 +150,13 @@ public:
    * @return
    */
   QString getFilterVersion() const override;
+
+  /**
+   * @brief getBrandingString Returns the branding string for the filter, which is a tag
+   * used to denote the filter's association with specific plugins
+   * @return Branding string
+   */
+  QString getBrandingString() const override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -239,8 +200,8 @@ public:
   void execute() override;
 
   /**
-  * @brief preflight Reimplemented from @see AbstractFilter class
-  */
+   * @brief preflight Reimplemented from @see AbstractFilter class
+   */
   void preflight() override;
 
 signals:
@@ -267,7 +228,15 @@ signals:
   void preflightExecuted();
 
 protected:
-  ITKImportImageStack();
+  ImportImageMontage();
+
+  /**
+   * @brief parseRegistrationFile Parses the ASCII file with the registration coordinates
+   * @param reader QFile to read
+   * @return Integer error value
+   */
+  int32_t parseRegistrationFile(QFile& reader);
+
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
    */
@@ -281,25 +250,31 @@ protected:
 private:
     DataArrayPath m_DataContainerName = {};
     QString m_CellAttributeMatrixName = {};
+    QString m_MetaDataAttributeMatrixName = {};
     FloatVec3Type m_Origin = {};
     FloatVec3Type m_Spacing = {};
     FileListInfo_t m_InputFileListInfo = {};
-    int m_ImageStack = {};
-    QString m_ImageDataArrayName = {};
-    std::weak_ptr<DataArray<uint8_t>>  m_ImageDataPtr;
-    uint8_t* m_ImageData = nullptr;
+    std::weak_ptr<DataArray<float>>  m_RegistrationCoordinatesPtr;
+    float* m_RegistrationCoordinates = nullptr;
+
+
+
+  StringDataArray::WeakPointer m_AttributeArrayNamesPtr;
+  QFile m_InStream;
+  int32_t m_NumImages;
+  QVector<QString> m_ArrayNames;
+  std::vector<float> m_Coords;
 
   /**
-   * @brief Get the ordered list of input files.
+   * @brief Include the declarations of the ITKImageReader helper functions that are common
+   * to a few different filters across different plugins.
    */
-  QVector<QString> getFileList();
-
-
+  ITK_IMAGE_READER_HELPER_ImageDataArrayName() ITK_IMAGE_READER_HELPER_DECL()
 
 public:
-  ITKImportImageStack(const ITKImportImageStack&) = delete; // Copy Constructor Not Implemented
-  ITKImportImageStack(ITKImportImageStack&&) = delete;      // Move Constructor Not Implemented
-  ITKImportImageStack& operator=(const ITKImportImageStack&) = delete; // Copy Assignment Not Implemented
-  ITKImportImageStack& operator=(ITKImportImageStack&&) = delete;      // Move Assignment Not Implemented
+  ImportImageMontage(const ImportImageMontage&) = delete; // Copy Constructor Not Implemented
+  ImportImageMontage(ImportImageMontage&&) = delete;                   // Move Constructor Not Implemented
+  ImportImageMontage& operator=(const ImportImageMontage&) = delete;   // Copy Assignment Not Implemented
+  ImportImageMontage& operator=(ImportImageMontage&&) = delete;        // Move Assignment Not Implemented
 };
 

@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKIsoContourDistanceImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -137,7 +139,7 @@ AbstractFilter::Pointer ITKIsoContourDistanceImage::newFilterInstance(bool copyF
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKIsoContourDistanceImage::getHumanLabel() const
+QString ITKIsoContourDistanceImage::getHumanLabel() const
 {
   return "ITK::Iso Contour Distance Image Filter";
 }
@@ -145,7 +147,7 @@ const QString ITKIsoContourDistanceImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKIsoContourDistanceImage::getUuid()
+QUuid ITKIsoContourDistanceImage::getUuid() const
 {
   return QUuid("{e9952e0e-97e4-53aa-8c6c-115fd18f0b89}");
 }
@@ -153,7 +155,62 @@ const QUuid ITKIsoContourDistanceImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKIsoContourDistanceImage::getSubGroupName() const
+QString ITKIsoContourDistanceImage::getSubGroupName() const
 {
   return "ITK DistanceMap";
 }
+
+// -----------------------------------------------------------------------------
+ITKIsoContourDistanceImage::Pointer ITKIsoContourDistanceImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKIsoContourDistanceImage> ITKIsoContourDistanceImage::New()
+{
+  struct make_shared_enabler : public ITKIsoContourDistanceImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKIsoContourDistanceImage::getNameOfClass() const
+{
+  return QString("ITKIsoContourDistanceImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKIsoContourDistanceImage::ClassName()
+{
+  return QString("ITKIsoContourDistanceImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKIsoContourDistanceImage::setLevelSetValue(double value)
+{
+  m_LevelSetValue = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKIsoContourDistanceImage::getLevelSetValue() const
+{
+  return m_LevelSetValue;
+}
+
+// -----------------------------------------------------------------------------
+void ITKIsoContourDistanceImage::setFarValue(double value)
+{
+  m_FarValue = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKIsoContourDistanceImage::getFarValue() const
+{
+  return m_FarValue;
+}
+
+

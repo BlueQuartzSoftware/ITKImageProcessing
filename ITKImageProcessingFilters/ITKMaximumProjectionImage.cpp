@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKMaximumProjectionImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -134,7 +136,7 @@ AbstractFilter::Pointer ITKMaximumProjectionImage::newFilterInstance(bool copyFi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKMaximumProjectionImage::getHumanLabel() const
+QString ITKMaximumProjectionImage::getHumanLabel() const
 {
   return "ITK::Maximum Projection Image Filter";
 }
@@ -142,7 +144,7 @@ const QString ITKMaximumProjectionImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKMaximumProjectionImage::getUuid()
+QUuid ITKMaximumProjectionImage::getUuid() const
 {
   return QUuid("{b2cb7ad7-6f62-51c4-943d-54d19c64e7be}");
 }
@@ -150,7 +152,50 @@ const QUuid ITKMaximumProjectionImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKMaximumProjectionImage::getSubGroupName() const
+QString ITKMaximumProjectionImage::getSubGroupName() const
 {
   return "ITK ImageStatistics";
 }
+
+// -----------------------------------------------------------------------------
+ITKMaximumProjectionImage::Pointer ITKMaximumProjectionImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKMaximumProjectionImage> ITKMaximumProjectionImage::New()
+{
+  struct make_shared_enabler : public ITKMaximumProjectionImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKMaximumProjectionImage::getNameOfClass() const
+{
+  return QString("ITKMaximumProjectionImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKMaximumProjectionImage::ClassName()
+{
+  return QString("ITKMaximumProjectionImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKMaximumProjectionImage::setProjectionDimension(double value)
+{
+  m_ProjectionDimension = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKMaximumProjectionImage::getProjectionDimension() const
+{
+  return m_ProjectionDimension;
+}
+
+

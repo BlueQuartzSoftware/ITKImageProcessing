@@ -11,9 +11,10 @@
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
+#include <memory>
+
 #include "ITKImageProcessingBase.h"
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
 
 // Auto includes
@@ -28,29 +29,89 @@
 class ITKImageProcessing_EXPORT ITKSigmoidImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+
+#ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(ITKSigmoidImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_SHARED_POINTERS(ITKSigmoidImage)
+  PYB11_FILTER_NEW_MACRO(ITKSigmoidImage)
+  PYB11_FILTER_PARAMETER(double, Alpha)
+  PYB11_FILTER_PARAMETER(double, Beta)
+  PYB11_FILTER_PARAMETER(double, OutputMaximum)
+  PYB11_FILTER_PARAMETER(double, OutputMinimum)
   PYB11_PROPERTY(double Alpha READ getAlpha WRITE setAlpha)
   PYB11_PROPERTY(double Beta READ getBeta WRITE setBeta)
   PYB11_PROPERTY(double OutputMaximum READ getOutputMaximum WRITE setOutputMaximum)
   PYB11_PROPERTY(double OutputMinimum READ getOutputMinimum WRITE setOutputMinimum)
+#endif
 
 public:
-  SIMPL_SHARED_POINTERS(ITKSigmoidImage)
-  SIMPL_FILTER_NEW_MACRO(ITKSigmoidImage)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKSigmoidImage, AbstractFilter)
+    using Self = ITKSigmoidImage;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
+
+    static std::shared_ptr<ITKSigmoidImage> New();
+
+    /**
+    * @brief Returns the name of the class for ITKSigmoidImage
+    */
+    QString getNameOfClass() const override;
+    /**
+    * @brief Returns the name of the class for ITKSigmoidImage
+    */
+    static QString ClassName();
+
 
   ~ITKSigmoidImage() override;
 
-  SIMPL_FILTER_PARAMETER(double, Alpha)
+    /**
+    * @brief Setter property for Alpha
+    */
+    void setAlpha(double value); 
+    /**
+    * @brief Getter property for Alpha
+    * @return Value of Alpha
+    */
+    double getAlpha() const;
+
   Q_PROPERTY(double Alpha READ getAlpha WRITE setAlpha)
 
-  SIMPL_FILTER_PARAMETER(double, Beta)
+    /**
+    * @brief Setter property for Beta
+    */
+    void setBeta(double value); 
+    /**
+    * @brief Getter property for Beta
+    * @return Value of Beta
+    */
+    double getBeta() const;
+
   Q_PROPERTY(double Beta READ getBeta WRITE setBeta)
 
-  SIMPL_FILTER_PARAMETER(double, OutputMaximum)
+    /**
+    * @brief Setter property for OutputMaximum
+    */
+    void setOutputMaximum(double value); 
+    /**
+    * @brief Getter property for OutputMaximum
+    * @return Value of OutputMaximum
+    */
+    double getOutputMaximum() const;
+
   Q_PROPERTY(double OutputMaximum READ getOutputMaximum WRITE setOutputMaximum)
 
-  SIMPL_FILTER_PARAMETER(double, OutputMinimum)
+    /**
+    * @brief Setter property for OutputMinimum
+    */
+    void setOutputMinimum(double value); 
+    /**
+    * @brief Getter property for OutputMinimum
+    * @return Value of OutputMinimum
+    */
+    double getOutputMinimum() const;
+
   Q_PROPERTY(double OutputMinimum READ getOutputMinimum WRITE setOutputMinimum)
 
 
@@ -62,18 +123,18 @@ public:
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -113,6 +174,13 @@ public:
   ITKSigmoidImage(ITKSigmoidImage&&) = delete;         // Move Constructor Not Implemented
   ITKSigmoidImage& operator=(const ITKSigmoidImage&) = delete; // Copy Assignment Not Implemented
   ITKSigmoidImage& operator=(ITKSigmoidImage&&) = delete;      // Move Assignment Not Implemented
+
+  private:
+    double m_Alpha = {};
+    double m_Beta = {};
+    double m_OutputMaximum = {};
+    double m_OutputMinimum = {};
+
 };
 
 #ifdef __clang__

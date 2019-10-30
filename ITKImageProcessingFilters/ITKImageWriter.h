@@ -33,11 +33,14 @@
 
 #pragma once
 
-#include "itkImage.h"
+#include <memory>
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
-#include "SIMPLib/Filtering/AbstractFilter.h"
+#include <itkImage.h>
+
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/IDataArray.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 
 #include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
@@ -49,16 +52,38 @@ class ITKImageProcessing_EXPORT ITKImageWriter : public AbstractFilter
 
   Q_OBJECT
 
+#ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(ITKImageWriter SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(ITKImageWriter)
+  PYB11_FILTER_NEW_MACRO(ITKImageWriter)
+  PYB11_FILTER_PARAMETER(QString, FileName)
+  PYB11_FILTER_PARAMETER(DataArrayPath, ImageArrayPath)
+  PYB11_FILTER_PARAMETER(int, Plane)
   PYB11_PROPERTY(QString FileName READ getFileName WRITE setFileName)
   PYB11_PROPERTY(DataArrayPath ImageArrayPath READ getImageArrayPath WRITE setImageArrayPath)
   PYB11_PROPERTY(int Plane READ getPlane WRITE setPlane)
   PYB11_METHOD(void registerImageIOFactories)
+#endif
 
 public:
-  SIMPL_SHARED_POINTERS(ITKImageWriter)
-  SIMPL_FILTER_NEW_MACRO(ITKImageWriter)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKImageWriter, AbstractFilter)
+    using Self = ITKImageWriter;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
+
+    static std::shared_ptr<ITKImageWriter> New();
+
+    /**
+    * @brief Returns the name of the class for ITKImageWriter
+    */
+    QString getNameOfClass() const override;
+    /**
+    * @brief Returns the name of the class for ITKImageWriter
+    */
+    static QString ClassName();
+
 
   ~ITKImageWriter() override;
 
@@ -66,33 +91,60 @@ public:
   static const int XZPlane = 1;
   static const int YZPlane = 2;
   
-  SIMPL_FILTER_PARAMETER(QString, FileName)
+    /**
+    * @brief Setter property for FileName
+    */
+    void setFileName(const QString& value); 
+    /**
+    * @brief Getter property for FileName
+    * @return Value of FileName
+    */
+    QString getFileName() const;
+
   Q_PROPERTY(QString FileName READ getFileName WRITE setFileName)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, ImageArrayPath)
+    /**
+    * @brief Setter property for ImageArrayPath
+    */
+    void setImageArrayPath(const DataArrayPath& value); 
+    /**
+    * @brief Getter property for ImageArrayPath
+    * @return Value of ImageArrayPath
+    */
+    DataArrayPath getImageArrayPath() const;
+
   Q_PROPERTY(DataArrayPath ImageArrayPath READ getImageArrayPath WRITE setImageArrayPath)
 
-  SIMPL_FILTER_PARAMETER(int, Plane)
+    /**
+    * @brief Setter property for Plane
+    */
+    void setPlane(int value); 
+    /**
+    * @brief Getter property for Plane
+    * @return Value of Plane
+    */
+    int getPlane() const;
+
   Q_PROPERTY(int Plane READ getPlane WRITE setPlane)
   
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
-  const QString getCompiledLibraryName() const override;
+  QString getCompiledLibraryName() const override;
 
   /**
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
   */
-  const QString getBrandingString() const override;
+  QString getBrandingString() const override;
 
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
    * @return
    */
-  const QString getFilterVersion() const override;
+  QString getFilterVersion() const override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -102,23 +154,23 @@ public:
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getGroupName() const override;
+  QString getGroupName() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -203,6 +255,10 @@ protected:
   void writeAsOneFile(typename itk::Image<TPixel, Dimensions>* image);
   
   private:
+    QString m_FileName = {};
+    DataArrayPath m_ImageArrayPath = {};
+    int m_Plane = {};
+
   /**
    * @brief copyTuple
    * @param index

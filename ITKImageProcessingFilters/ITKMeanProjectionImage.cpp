@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKMeanProjectionImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -134,7 +136,7 @@ AbstractFilter::Pointer ITKMeanProjectionImage::newFilterInstance(bool copyFilte
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKMeanProjectionImage::getHumanLabel() const
+QString ITKMeanProjectionImage::getHumanLabel() const
 {
   return "ITK::Mean Projection Image Filter";
 }
@@ -142,7 +144,7 @@ const QString ITKMeanProjectionImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKMeanProjectionImage::getUuid()
+QUuid ITKMeanProjectionImage::getUuid() const
 {
   return QUuid("{85c061bc-3ad7-5abc-8fc7-140678311706}");
 }
@@ -150,7 +152,50 @@ const QUuid ITKMeanProjectionImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKMeanProjectionImage::getSubGroupName() const
+QString ITKMeanProjectionImage::getSubGroupName() const
 {
   return "ITK ImageStatistics";
 }
+
+// -----------------------------------------------------------------------------
+ITKMeanProjectionImage::Pointer ITKMeanProjectionImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKMeanProjectionImage> ITKMeanProjectionImage::New()
+{
+  struct make_shared_enabler : public ITKMeanProjectionImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKMeanProjectionImage::getNameOfClass() const
+{
+  return QString("ITKMeanProjectionImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKMeanProjectionImage::ClassName()
+{
+  return QString("ITKMeanProjectionImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKMeanProjectionImage::setProjectionDimension(double value)
+{
+  m_ProjectionDimension = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKMeanProjectionImage::getProjectionDimension() const
+{
+  return m_ProjectionDimension;
+}
+
+

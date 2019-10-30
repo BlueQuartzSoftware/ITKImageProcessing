@@ -34,6 +34,8 @@
 
 #include <QtCore/QObject>
 
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/MetaXmlUtils.h"
 
 // -----------------------------------------------------------------------------

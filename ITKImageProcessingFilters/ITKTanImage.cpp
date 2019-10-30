@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKTanImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -124,7 +126,7 @@ AbstractFilter::Pointer ITKTanImage::newFilterInstance(bool copyFilterParameters
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKTanImage::getHumanLabel() const
+QString ITKTanImage::getHumanLabel() const
 {
   return "ITK::Tan Image Filter";
 }
@@ -132,7 +134,7 @@ const QString ITKTanImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKTanImage::getUuid()
+QUuid ITKTanImage::getUuid() const
 {
   return QUuid("{672810d9-5ec0-59c1-a209-8fb56c7a018a}");
 }
@@ -140,7 +142,38 @@ const QUuid ITKTanImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKTanImage::getSubGroupName() const
+QString ITKTanImage::getSubGroupName() const
 {
   return "ITK IntensityTransformation";
 }
+
+// -----------------------------------------------------------------------------
+ITKTanImage::Pointer ITKTanImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKTanImage> ITKTanImage::New()
+{
+  struct make_shared_enabler : public ITKTanImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKTanImage::getNameOfClass() const
+{
+  return QString("ITKTanImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKTanImage::ClassName()
+{
+  return QString("ITKTanImage");
+}
+
+

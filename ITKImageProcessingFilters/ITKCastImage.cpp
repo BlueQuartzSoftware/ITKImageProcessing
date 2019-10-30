@@ -2,6 +2,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKCastImage.h"
 
 #include "SIMPLib/Common/Constants.h"
@@ -153,7 +155,7 @@ AbstractFilter::Pointer ITKCastImage::newFilterInstance(bool copyFilterParameter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKCastImage::getHumanLabel() const
+QString ITKCastImage::getHumanLabel() const
 {
   return "ITK::Cast Image Filter";
 }
@@ -161,7 +163,7 @@ const QString ITKCastImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKCastImage::getUuid()
+QUuid ITKCastImage::getUuid() const
 {
   return QUuid("{3ad55a9b-98ec-549a-a6a8-c8967366260b}");
 }
@@ -169,7 +171,50 @@ const QUuid ITKCastImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKCastImage::getSubGroupName() const
+QString ITKCastImage::getSubGroupName() const
 {
   return "ITK IntensityTransformation";
 }
+
+// -----------------------------------------------------------------------------
+ITKCastImage::Pointer ITKCastImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKCastImage> ITKCastImage::New()
+{
+  struct make_shared_enabler : public ITKCastImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKCastImage::getNameOfClass() const
+{
+  return QString("ITKCastImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKCastImage::ClassName()
+{
+  return QString("ITKCastImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKCastImage::setCastingType(int value)
+{
+  m_CastingType = value;
+}
+
+// -----------------------------------------------------------------------------
+int ITKCastImage::getCastingType() const
+{
+  return m_CastingType;
+}
+
+

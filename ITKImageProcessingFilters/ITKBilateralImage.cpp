@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKBilateralImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -142,7 +144,7 @@ AbstractFilter::Pointer ITKBilateralImage::newFilterInstance(bool copyFilterPara
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKBilateralImage::getHumanLabel() const
+QString ITKBilateralImage::getHumanLabel() const
 {
   return "ITK::Bilateral Image Filter";
 }
@@ -150,7 +152,7 @@ const QString ITKBilateralImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKBilateralImage::getUuid()
+QUuid ITKBilateralImage::getUuid() const
 {
   return QUuid("{18ab754c-3219-59c8-928e-5fb4a09174e0}");
 }
@@ -158,7 +160,74 @@ const QUuid ITKBilateralImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKBilateralImage::getSubGroupName() const
+QString ITKBilateralImage::getSubGroupName() const
 {
   return "ITK Smoothing";
 }
+
+// -----------------------------------------------------------------------------
+ITKBilateralImage::Pointer ITKBilateralImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKBilateralImage> ITKBilateralImage::New()
+{
+  struct make_shared_enabler : public ITKBilateralImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKBilateralImage::getNameOfClass() const
+{
+  return QString("ITKBilateralImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKBilateralImage::ClassName()
+{
+  return QString("ITKBilateralImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKBilateralImage::setDomainSigma(double value)
+{
+  m_DomainSigma = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKBilateralImage::getDomainSigma() const
+{
+  return m_DomainSigma;
+}
+
+// -----------------------------------------------------------------------------
+void ITKBilateralImage::setRangeSigma(double value)
+{
+  m_RangeSigma = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKBilateralImage::getRangeSigma() const
+{
+  return m_RangeSigma;
+}
+
+// -----------------------------------------------------------------------------
+void ITKBilateralImage::setNumberOfRangeGaussianSamples(double value)
+{
+  m_NumberOfRangeGaussianSamples = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKBilateralImage::getNumberOfRangeGaussianSamples() const
+{
+  return m_NumberOfRangeGaussianSamples;
+}
+
+

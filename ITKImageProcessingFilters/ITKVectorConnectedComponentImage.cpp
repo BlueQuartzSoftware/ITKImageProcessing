@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKVectorConnectedComponentImage.h"
 
 #define DREAM3D_USE_int8_t 0
@@ -155,7 +157,7 @@ AbstractFilter::Pointer ITKVectorConnectedComponentImage::newFilterInstance(bool
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKVectorConnectedComponentImage::getHumanLabel() const
+QString ITKVectorConnectedComponentImage::getHumanLabel() const
 {
   return "ITK::Vector Connected Component Image Filter";
 }
@@ -163,7 +165,7 @@ const QString ITKVectorConnectedComponentImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKVectorConnectedComponentImage::getUuid()
+QUuid ITKVectorConnectedComponentImage::getUuid() const
 {
   return QUuid("{9d42ede4-fd4b-57fe-9595-50c16deaa3a2}");
 }
@@ -171,7 +173,62 @@ const QUuid ITKVectorConnectedComponentImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKVectorConnectedComponentImage::getSubGroupName() const
+QString ITKVectorConnectedComponentImage::getSubGroupName() const
 {
   return "ITK SegmentationPostProcessing";
 }
+
+// -----------------------------------------------------------------------------
+ITKVectorConnectedComponentImage::Pointer ITKVectorConnectedComponentImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKVectorConnectedComponentImage> ITKVectorConnectedComponentImage::New()
+{
+  struct make_shared_enabler : public ITKVectorConnectedComponentImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKVectorConnectedComponentImage::getNameOfClass() const
+{
+  return QString("ITKVectorConnectedComponentImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKVectorConnectedComponentImage::ClassName()
+{
+  return QString("ITKVectorConnectedComponentImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKVectorConnectedComponentImage::setDistanceThreshold(double value)
+{
+  m_DistanceThreshold = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKVectorConnectedComponentImage::getDistanceThreshold() const
+{
+  return m_DistanceThreshold;
+}
+
+// -----------------------------------------------------------------------------
+void ITKVectorConnectedComponentImage::setFullyConnected(bool value)
+{
+  m_FullyConnected = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ITKVectorConnectedComponentImage::getFullyConnected() const
+{
+  return m_FullyConnected;
+}
+
+

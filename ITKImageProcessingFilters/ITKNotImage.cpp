@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKNotImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -124,7 +126,7 @@ AbstractFilter::Pointer ITKNotImage::newFilterInstance(bool copyFilterParameters
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKNotImage::getHumanLabel() const
+QString ITKNotImage::getHumanLabel() const
 {
   return "ITK::Not Image Filter";
 }
@@ -132,7 +134,7 @@ const QString ITKNotImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKNotImage::getUuid()
+QUuid ITKNotImage::getUuid() const
 {
   return QUuid("{c8362fb9-d3ab-55c0-902b-274cc27d9bb8}");
 }
@@ -140,7 +142,38 @@ const QUuid ITKNotImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKNotImage::getSubGroupName() const
+QString ITKNotImage::getSubGroupName() const
 {
   return "ITK IntensityTransformation";
 }
+
+// -----------------------------------------------------------------------------
+ITKNotImage::Pointer ITKNotImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKNotImage> ITKNotImage::New()
+{
+  struct make_shared_enabler : public ITKNotImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKNotImage::getNameOfClass() const
+{
+  return QString("ITKNotImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKNotImage::ClassName()
+{
+  return QString("ITKNotImage");
+}
+
+

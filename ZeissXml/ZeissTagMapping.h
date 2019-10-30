@@ -30,11 +30,12 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #pragma once
 
+#include <memory>
+
 #include <map>
 
 #include "ITKImageProcessing/ZeissXml/ZeissMetaFactory.h"
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Geometry/IGeometry.h"
 #include "SIMPLib/SIMPLib.h"
 
@@ -58,7 +59,12 @@ using ZeissFactoryMap = QMap<int, ZeissMetaFactory::Pointer>;
 class ITKImageProcessing_EXPORT ZeissTagMapping
 {
   public:
-    SIMPL_SHARED_POINTERS(ZeissTagMapping)
+    using Self = ZeissTagMapping;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
 
     ~ZeissTagMapping();
 
@@ -102,7 +108,12 @@ class ITKImageProcessing_EXPORT ZeissTagMapping
 class ZeissUnitMapping
 {
 public:
-  SIMPL_SHARED_POINTERS(ZeissUnitMapping)
+  using Self = ZeissUnitMapping;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
 
   ~ZeissUnitMapping();
 

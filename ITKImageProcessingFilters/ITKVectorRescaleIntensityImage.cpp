@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKVectorRescaleIntensityImage.h"
 
 #include "SIMPLib/Common/Constants.h"
@@ -175,7 +177,7 @@ AbstractFilter::Pointer ITKVectorRescaleIntensityImage::newFilterInstance(bool c
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKVectorRescaleIntensityImage::getHumanLabel() const
+QString ITKVectorRescaleIntensityImage::getHumanLabel() const
 {
   return "ITK::Vector Rescale Intensity Image Filter";
 }
@@ -183,7 +185,7 @@ const QString ITKVectorRescaleIntensityImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKVectorRescaleIntensityImage::getUuid()
+QUuid ITKVectorRescaleIntensityImage::getUuid() const
 {
   return QUuid("{bc1051ba-6c67-5391-809b-48627ed47fa7}");
 }
@@ -191,7 +193,62 @@ const QUuid ITKVectorRescaleIntensityImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKVectorRescaleIntensityImage::getSubGroupName() const
+QString ITKVectorRescaleIntensityImage::getSubGroupName() const
 {
   return "ITK IntensityTransformation";
 }
+
+// -----------------------------------------------------------------------------
+ITKVectorRescaleIntensityImage::Pointer ITKVectorRescaleIntensityImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKVectorRescaleIntensityImage> ITKVectorRescaleIntensityImage::New()
+{
+  struct make_shared_enabler : public ITKVectorRescaleIntensityImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKVectorRescaleIntensityImage::getNameOfClass() const
+{
+  return QString("ITKVectorRescaleIntensityImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKVectorRescaleIntensityImage::ClassName()
+{
+  return QString("ITKVectorRescaleIntensityImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKVectorRescaleIntensityImage::setOutputMaximumMagnitude(double value)
+{
+  m_OutputMaximumMagnitude = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKVectorRescaleIntensityImage::getOutputMaximumMagnitude() const
+{
+  return m_OutputMaximumMagnitude;
+}
+
+// -----------------------------------------------------------------------------
+void ITKVectorRescaleIntensityImage::setOutputType(int value)
+{
+  m_OutputType = value;
+}
+
+// -----------------------------------------------------------------------------
+int ITKVectorRescaleIntensityImage::getOutputType() const
+{
+  return m_OutputType;
+}
+
+

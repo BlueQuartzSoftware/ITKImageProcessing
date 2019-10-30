@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKSqrtImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -124,7 +126,7 @@ AbstractFilter::Pointer ITKSqrtImage::newFilterInstance(bool copyFilterParameter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKSqrtImage::getHumanLabel() const
+QString ITKSqrtImage::getHumanLabel() const
 {
   return "ITK::Sqrt Image Filter";
 }
@@ -132,7 +134,7 @@ const QString ITKSqrtImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKSqrtImage::getUuid()
+QUuid ITKSqrtImage::getUuid() const
 {
   return QUuid("{8087dcad-68f2-598b-9670-d0f57647a445}");
 }
@@ -140,7 +142,38 @@ const QUuid ITKSqrtImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKSqrtImage::getSubGroupName() const
+QString ITKSqrtImage::getSubGroupName() const
 {
   return "ITK IntensityTransformation";
 }
+
+// -----------------------------------------------------------------------------
+ITKSqrtImage::Pointer ITKSqrtImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKSqrtImage> ITKSqrtImage::New()
+{
+  struct make_shared_enabler : public ITKSqrtImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKSqrtImage::getNameOfClass() const
+{
+  return QString("ITKSqrtImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKSqrtImage::ClassName()
+{
+  return QString("ITKSqrtImage");
+}
+
+

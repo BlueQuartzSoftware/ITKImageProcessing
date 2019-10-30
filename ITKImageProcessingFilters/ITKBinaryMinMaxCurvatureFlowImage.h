@@ -11,9 +11,10 @@
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
+#include <memory>
+
 #include "ITKImageProcessingBase.h"
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
 
 // Auto includes
@@ -36,22 +37,73 @@ class ITKImageProcessing_EXPORT ITKBinaryMinMaxCurvatureFlowImage : public ITKIm
   // PYB11_PROPERTY(double Threshold READ getThreshold WRITE setThreshold)
 
 public:
-  SIMPL_SHARED_POINTERS(ITKBinaryMinMaxCurvatureFlowImage)
-  SIMPL_FILTER_NEW_MACRO(ITKBinaryMinMaxCurvatureFlowImage)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKBinaryMinMaxCurvatureFlowImage, AbstractFilter)
+    using Self = ITKBinaryMinMaxCurvatureFlowImage;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
+
+    static std::shared_ptr<ITKBinaryMinMaxCurvatureFlowImage> New();
+
+    /**
+    * @brief Returns the name of the class for ITKBinaryMinMaxCurvatureFlowImage
+    */
+    QString getNameOfClass() const override;
+    /**
+    * @brief Returns the name of the class for ITKBinaryMinMaxCurvatureFlowImage
+    */
+    static QString ClassName();
+
 
   ~ITKBinaryMinMaxCurvatureFlowImage() override;
 
-  SIMPL_FILTER_PARAMETER(double, TimeStep)
+    /**
+    * @brief Setter property for TimeStep
+    */
+    void setTimeStep(double value); 
+    /**
+    * @brief Getter property for TimeStep
+    * @return Value of TimeStep
+    */
+    double getTimeStep() const;
+
   Q_PROPERTY(double TimeStep READ getTimeStep WRITE setTimeStep)
 
-  SIMPL_FILTER_PARAMETER(double, NumberOfIterations)
+    /**
+    * @brief Setter property for NumberOfIterations
+    */
+    void setNumberOfIterations(double value); 
+    /**
+    * @brief Getter property for NumberOfIterations
+    * @return Value of NumberOfIterations
+    */
+    double getNumberOfIterations() const;
+
   Q_PROPERTY(double NumberOfIterations READ getNumberOfIterations WRITE setNumberOfIterations)
 
-  SIMPL_FILTER_PARAMETER(int, StencilRadius)
+    /**
+    * @brief Setter property for StencilRadius
+    */
+    void setStencilRadius(int value); 
+    /**
+    * @brief Getter property for StencilRadius
+    * @return Value of StencilRadius
+    */
+    int getStencilRadius() const;
+
   Q_PROPERTY(int StencilRadius READ getStencilRadius WRITE setStencilRadius)
 
-  SIMPL_FILTER_PARAMETER(double, Threshold)
+    /**
+    * @brief Setter property for Threshold
+    */
+    void setThreshold(double value); 
+    /**
+    * @brief Getter property for Threshold
+    * @return Value of Threshold
+    */
+    double getThreshold() const;
+
   Q_PROPERTY(double Threshold READ getThreshold WRITE setThreshold)
 
 
@@ -63,18 +115,18 @@ public:
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -114,6 +166,13 @@ public:
   ITKBinaryMinMaxCurvatureFlowImage(ITKBinaryMinMaxCurvatureFlowImage&&) = delete;         // Move Constructor Not Implemented
   ITKBinaryMinMaxCurvatureFlowImage& operator=(const ITKBinaryMinMaxCurvatureFlowImage&) = delete; // Copy Assignment Not Implemented
   ITKBinaryMinMaxCurvatureFlowImage& operator=(ITKBinaryMinMaxCurvatureFlowImage&&) = delete;      // Move Assignment Not Implemented
+
+  private:
+    double m_TimeStep = {};
+    double m_NumberOfIterations = {};
+    int m_StencilRadius = {};
+    double m_Threshold = {};
+
 };
 
 #ifdef __clang__

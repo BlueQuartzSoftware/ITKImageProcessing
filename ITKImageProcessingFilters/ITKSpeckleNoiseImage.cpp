@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKSpeckleNoiseImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -141,7 +143,7 @@ AbstractFilter::Pointer ITKSpeckleNoiseImage::newFilterInstance(bool copyFilterP
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKSpeckleNoiseImage::getHumanLabel() const
+QString ITKSpeckleNoiseImage::getHumanLabel() const
 {
   return "ITK::Speckle Noise Image Filter";
 }
@@ -149,7 +151,7 @@ const QString ITKSpeckleNoiseImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKSpeckleNoiseImage::getUuid()
+QUuid ITKSpeckleNoiseImage::getUuid() const
 {
   return QUuid("{764085a4-6ecb-5fb7-891d-2fda208ba5d8}");
 }
@@ -157,7 +159,62 @@ const QUuid ITKSpeckleNoiseImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKSpeckleNoiseImage::getSubGroupName() const
+QString ITKSpeckleNoiseImage::getSubGroupName() const
 {
   return "ITK ImageNoise";
 }
+
+// -----------------------------------------------------------------------------
+ITKSpeckleNoiseImage::Pointer ITKSpeckleNoiseImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKSpeckleNoiseImage> ITKSpeckleNoiseImage::New()
+{
+  struct make_shared_enabler : public ITKSpeckleNoiseImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKSpeckleNoiseImage::getNameOfClass() const
+{
+  return QString("ITKSpeckleNoiseImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKSpeckleNoiseImage::ClassName()
+{
+  return QString("ITKSpeckleNoiseImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKSpeckleNoiseImage::setStandardDeviation(double value)
+{
+  m_StandardDeviation = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKSpeckleNoiseImage::getStandardDeviation() const
+{
+  return m_StandardDeviation;
+}
+
+// -----------------------------------------------------------------------------
+void ITKSpeckleNoiseImage::setSeed(double value)
+{
+  m_Seed = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKSpeckleNoiseImage::getSeed() const
+{
+  return m_Seed;
+}
+
+

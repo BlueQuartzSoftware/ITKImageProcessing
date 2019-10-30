@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKGradientAnisotropicDiffusionImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -147,7 +149,7 @@ AbstractFilter::Pointer ITKGradientAnisotropicDiffusionImage::newFilterInstance(
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKGradientAnisotropicDiffusionImage::getHumanLabel() const
+QString ITKGradientAnisotropicDiffusionImage::getHumanLabel() const
 {
   return "ITK::Gradient Anisotropic Diffusion Image Filter";
 }
@@ -155,7 +157,7 @@ const QString ITKGradientAnisotropicDiffusionImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKGradientAnisotropicDiffusionImage::getUuid()
+QUuid ITKGradientAnisotropicDiffusionImage::getUuid() const
 {
   return QUuid("{98d0b50b-9639-53a0-9e30-2fae6f7ab869}");
 }
@@ -163,7 +165,86 @@ const QUuid ITKGradientAnisotropicDiffusionImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKGradientAnisotropicDiffusionImage::getSubGroupName() const
+QString ITKGradientAnisotropicDiffusionImage::getSubGroupName() const
 {
   return "ITK AnisotropicSmoothing";
 }
+
+// -----------------------------------------------------------------------------
+ITKGradientAnisotropicDiffusionImage::Pointer ITKGradientAnisotropicDiffusionImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKGradientAnisotropicDiffusionImage> ITKGradientAnisotropicDiffusionImage::New()
+{
+  struct make_shared_enabler : public ITKGradientAnisotropicDiffusionImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKGradientAnisotropicDiffusionImage::getNameOfClass() const
+{
+  return QString("ITKGradientAnisotropicDiffusionImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKGradientAnisotropicDiffusionImage::ClassName()
+{
+  return QString("ITKGradientAnisotropicDiffusionImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKGradientAnisotropicDiffusionImage::setTimeStep(double value)
+{
+  m_TimeStep = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKGradientAnisotropicDiffusionImage::getTimeStep() const
+{
+  return m_TimeStep;
+}
+
+// -----------------------------------------------------------------------------
+void ITKGradientAnisotropicDiffusionImage::setConductanceParameter(double value)
+{
+  m_ConductanceParameter = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKGradientAnisotropicDiffusionImage::getConductanceParameter() const
+{
+  return m_ConductanceParameter;
+}
+
+// -----------------------------------------------------------------------------
+void ITKGradientAnisotropicDiffusionImage::setConductanceScalingUpdateInterval(double value)
+{
+  m_ConductanceScalingUpdateInterval = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKGradientAnisotropicDiffusionImage::getConductanceScalingUpdateInterval() const
+{
+  return m_ConductanceScalingUpdateInterval;
+}
+
+// -----------------------------------------------------------------------------
+void ITKGradientAnisotropicDiffusionImage::setNumberOfIterations(double value)
+{
+  m_NumberOfIterations = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKGradientAnisotropicDiffusionImage::getNumberOfIterations() const
+{
+  return m_NumberOfIterations;
+}
+
+
