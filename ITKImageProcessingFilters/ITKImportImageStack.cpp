@@ -346,9 +346,20 @@ void readImageStack(ITKImportImageStack* filter, const QVector<QString>& fileLis
     // get the current Slice data...
     DataArrayPointerType tempData = dca->getDataContainer(dcName)->getAttributeMatrix(attrMatName)->getAttributeArrayAs<DataArrayType>(arrayName);
     // Copy that into the output array...
-    outputData->copyFromArray(tupleIndex, tempData, 0, tuplesPerSlice);
+    if(!outputData->copyFromArray(tupleIndex, tempData, 0, tuplesPerSlice))
+    {
+      QString msg = QString("Error copying source image data into destination array.    Slice:%1    TupleIndex:%2    MaxTupleIndex:%3").arg(slice).arg(tupleIndex).arg(outputData->getSize());
+      filter->setErrorCondition(imageReader->getErrorCode(), msg);
+      return;
+    }
 
     slice++;
+
+    // Check to see if the filter got canceled.
+    if(filter->getCancel())
+    {
+      return;
+    }
   }
 }
 
