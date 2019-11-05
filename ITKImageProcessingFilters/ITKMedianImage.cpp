@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKMedianImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -133,7 +135,7 @@ AbstractFilter::Pointer ITKMedianImage::newFilterInstance(bool copyFilterParamet
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKMedianImage::getHumanLabel() const
+QString ITKMedianImage::getHumanLabel() const
 {
   return "ITK::Median Image Filter";
 }
@@ -141,7 +143,7 @@ const QString ITKMedianImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKMedianImage::getUuid()
+QUuid ITKMedianImage::getUuid() const
 {
   return QUuid("{cc27ee9a-9946-56ad-afd4-6e98b71f417d}");
 }
@@ -149,7 +151,50 @@ const QUuid ITKMedianImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKMedianImage::getSubGroupName() const
+QString ITKMedianImage::getSubGroupName() const
 {
   return "ITK Smoothing";
 }
+
+// -----------------------------------------------------------------------------
+ITKMedianImage::Pointer ITKMedianImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKMedianImage> ITKMedianImage::New()
+{
+  struct make_shared_enabler : public ITKMedianImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKMedianImage::getNameOfClass() const
+{
+  return QString("ITKMedianImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKMedianImage::ClassName()
+{
+  return QString("ITKMedianImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKMedianImage::setRadius(const FloatVec3Type& value)
+{
+  m_Radius = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec3Type ITKMedianImage::getRadius() const
+{
+  return m_Radius;
+}
+
+

@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKSobelEdgeDetectionImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -126,7 +128,7 @@ AbstractFilter::Pointer ITKSobelEdgeDetectionImage::newFilterInstance(bool copyF
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKSobelEdgeDetectionImage::getHumanLabel() const
+QString ITKSobelEdgeDetectionImage::getHumanLabel() const
 {
   return "ITK::Sobel Edge Detection Image Filter";
 }
@@ -134,7 +136,7 @@ const QString ITKSobelEdgeDetectionImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKSobelEdgeDetectionImage::getUuid()
+QUuid ITKSobelEdgeDetectionImage::getUuid() const
 {
   return QUuid("{f7d7493c-05e5-5ff0-8ac8-51bf8ece83fe}");
 }
@@ -142,7 +144,38 @@ const QUuid ITKSobelEdgeDetectionImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKSobelEdgeDetectionImage::getSubGroupName() const
+QString ITKSobelEdgeDetectionImage::getSubGroupName() const
 {
   return "ITK Smoothing";
 }
+
+// -----------------------------------------------------------------------------
+ITKSobelEdgeDetectionImage::Pointer ITKSobelEdgeDetectionImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKSobelEdgeDetectionImage> ITKSobelEdgeDetectionImage::New()
+{
+  struct make_shared_enabler : public ITKSobelEdgeDetectionImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKSobelEdgeDetectionImage::getNameOfClass() const
+{
+  return QString("ITKSobelEdgeDetectionImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKSobelEdgeDetectionImage::ClassName()
+{
+  return QString("ITKSobelEdgeDetectionImage");
+}
+
+

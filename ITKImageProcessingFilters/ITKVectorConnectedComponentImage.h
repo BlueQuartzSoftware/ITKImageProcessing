@@ -11,6 +11,8 @@
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
+#include <memory>
+
 #include <itkVectorConnectedComponentImageFilter.h>
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
@@ -27,21 +29,61 @@
 class ITKImageProcessing_EXPORT ITKVectorConnectedComponentImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+
+#ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(ITKVectorConnectedComponentImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_SHARED_POINTERS(ITKVectorConnectedComponentImage)
+  PYB11_FILTER_NEW_MACRO(ITKVectorConnectedComponentImage)
+  PYB11_FILTER_PARAMETER(double, DistanceThreshold)
+  PYB11_FILTER_PARAMETER(bool, FullyConnected)
   PYB11_PROPERTY(double DistanceThreshold READ getDistanceThreshold WRITE setDistanceThreshold)
   PYB11_PROPERTY(bool FullyConnected READ getFullyConnected WRITE setFullyConnected)
+#endif
 
 public:
-  SIMPL_SHARED_POINTERS(ITKVectorConnectedComponentImage)
-  SIMPL_FILTER_NEW_MACRO(ITKVectorConnectedComponentImage)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKVectorConnectedComponentImage, AbstractFilter)
+    using Self = ITKVectorConnectedComponentImage;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
+
+    static std::shared_ptr<ITKVectorConnectedComponentImage> New();
+
+    /**
+    * @brief Returns the name of the class for ITKVectorConnectedComponentImage
+    */
+    QString getNameOfClass() const override;
+    /**
+    * @brief Returns the name of the class for ITKVectorConnectedComponentImage
+    */
+    static QString ClassName();
+
 
   ~ITKVectorConnectedComponentImage() override;
 
-  SIMPL_FILTER_PARAMETER(double, DistanceThreshold)
+    /**
+    * @brief Setter property for DistanceThreshold
+    */
+    void setDistanceThreshold(double value); 
+    /**
+    * @brief Getter property for DistanceThreshold
+    * @return Value of DistanceThreshold
+    */
+    double getDistanceThreshold() const;
+
   Q_PROPERTY(double DistanceThreshold READ getDistanceThreshold WRITE setDistanceThreshold)
 
-  SIMPL_FILTER_PARAMETER(bool, FullyConnected)
+    /**
+    * @brief Setter property for FullyConnected
+    */
+    void setFullyConnected(bool value); 
+    /**
+    * @brief Getter property for FullyConnected
+    * @return Value of FullyConnected
+    */
+    bool getFullyConnected() const;
+
   Q_PROPERTY(bool FullyConnected READ getFullyConnected WRITE setFullyConnected)
 
 
@@ -53,18 +95,18 @@ public:
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -104,6 +146,11 @@ public:
   ITKVectorConnectedComponentImage(ITKVectorConnectedComponentImage&&) = delete;         // Move Constructor Not Implemented
   ITKVectorConnectedComponentImage& operator=(const ITKVectorConnectedComponentImage&) = delete; // Copy Assignment Not Implemented
   ITKVectorConnectedComponentImage& operator=(ITKVectorConnectedComponentImage&&) = delete;      // Move Assignment Not Implemented
+
+  private:
+    double m_DistanceThreshold = {};
+    bool m_FullyConnected = {};
+
 };
 
 #ifdef __clang__

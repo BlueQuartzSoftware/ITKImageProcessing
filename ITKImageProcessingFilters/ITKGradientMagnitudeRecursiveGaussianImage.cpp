@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKGradientMagnitudeRecursiveGaussianImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -137,7 +139,7 @@ AbstractFilter::Pointer ITKGradientMagnitudeRecursiveGaussianImage::newFilterIns
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKGradientMagnitudeRecursiveGaussianImage::getHumanLabel() const
+QString ITKGradientMagnitudeRecursiveGaussianImage::getHumanLabel() const
 {
   return "ITK::Gradient Magnitude Recursive Gaussian Image Filter";
 }
@@ -145,7 +147,7 @@ const QString ITKGradientMagnitudeRecursiveGaussianImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKGradientMagnitudeRecursiveGaussianImage::getUuid()
+QUuid ITKGradientMagnitudeRecursiveGaussianImage::getUuid() const
 {
   return QUuid("{fd688b32-d90e-5945-905b-2b7187b46265}");
 }
@@ -153,7 +155,62 @@ const QUuid ITKGradientMagnitudeRecursiveGaussianImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKGradientMagnitudeRecursiveGaussianImage::getSubGroupName() const
+QString ITKGradientMagnitudeRecursiveGaussianImage::getSubGroupName() const
 {
   return "ITK ImageGradient";
 }
+
+// -----------------------------------------------------------------------------
+ITKGradientMagnitudeRecursiveGaussianImage::Pointer ITKGradientMagnitudeRecursiveGaussianImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKGradientMagnitudeRecursiveGaussianImage> ITKGradientMagnitudeRecursiveGaussianImage::New()
+{
+  struct make_shared_enabler : public ITKGradientMagnitudeRecursiveGaussianImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKGradientMagnitudeRecursiveGaussianImage::getNameOfClass() const
+{
+  return QString("ITKGradientMagnitudeRecursiveGaussianImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKGradientMagnitudeRecursiveGaussianImage::ClassName()
+{
+  return QString("ITKGradientMagnitudeRecursiveGaussianImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKGradientMagnitudeRecursiveGaussianImage::setSigma(double value)
+{
+  m_Sigma = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKGradientMagnitudeRecursiveGaussianImage::getSigma() const
+{
+  return m_Sigma;
+}
+
+// -----------------------------------------------------------------------------
+void ITKGradientMagnitudeRecursiveGaussianImage::setNormalizeAcrossScale(bool value)
+{
+  m_NormalizeAcrossScale = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ITKGradientMagnitudeRecursiveGaussianImage::getNormalizeAcrossScale() const
+{
+  return m_NormalizeAcrossScale;
+}
+
+

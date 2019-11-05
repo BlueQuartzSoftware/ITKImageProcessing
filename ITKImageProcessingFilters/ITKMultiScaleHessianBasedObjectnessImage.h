@@ -11,9 +11,10 @@
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
+#include <memory>
+
 #include "ITKImageProcessingBase.h"
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
 
 // Auto includes
@@ -27,7 +28,20 @@
 class ITKImageProcessing_EXPORT ITKMultiScaleHessianBasedObjectnessImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+
+#ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(ITKMultiScaleHessianBasedObjectnessImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_SHARED_POINTERS(ITKMultiScaleHessianBasedObjectnessImage)
+  PYB11_FILTER_NEW_MACRO(ITKMultiScaleHessianBasedObjectnessImage)
+  PYB11_FILTER_PARAMETER(int, ObjectDimension)
+  PYB11_FILTER_PARAMETER(double, Alpha)
+  PYB11_FILTER_PARAMETER(double, Beta)
+  PYB11_FILTER_PARAMETER(double, Gamma)
+  PYB11_FILTER_PARAMETER(bool, ScaleObjectnessMeasure)
+  PYB11_FILTER_PARAMETER(bool, BrightObject)
+  PYB11_FILTER_PARAMETER(double, SigmaMinimum)
+  PYB11_FILTER_PARAMETER(double, SigmaMaximum)
+  PYB11_FILTER_PARAMETER(double, NumberOfSigmaSteps)
   PYB11_PROPERTY(int ObjectDimension READ getObjectDimension WRITE setObjectDimension)
   PYB11_PROPERTY(double Alpha READ getAlpha WRITE setAlpha)
   PYB11_PROPERTY(double Beta READ getBeta WRITE setBeta)
@@ -37,39 +51,136 @@ class ITKImageProcessing_EXPORT ITKMultiScaleHessianBasedObjectnessImage : publi
   PYB11_PROPERTY(double SigmaMinimum READ getSigmaMinimum WRITE setSigmaMinimum)
   PYB11_PROPERTY(double SigmaMaximum READ getSigmaMaximum WRITE setSigmaMaximum)
   PYB11_PROPERTY(double NumberOfSigmaSteps READ getNumberOfSigmaSteps WRITE setNumberOfSigmaSteps)
+#endif
 
 public:
-  SIMPL_SHARED_POINTERS(ITKMultiScaleHessianBasedObjectnessImage)
-  SIMPL_FILTER_NEW_MACRO(ITKMultiScaleHessianBasedObjectnessImage)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKMultiScaleHessianBasedObjectnessImage, AbstractFilter)
+    using Self = ITKMultiScaleHessianBasedObjectnessImage;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
+
+    static std::shared_ptr<ITKMultiScaleHessianBasedObjectnessImage> New();
+
+    /**
+    * @brief Returns the name of the class for ITKMultiScaleHessianBasedObjectnessImage
+    */
+    QString getNameOfClass() const override;
+    /**
+    * @brief Returns the name of the class for ITKMultiScaleHessianBasedObjectnessImage
+    */
+    static QString ClassName();
+
 
   ~ITKMultiScaleHessianBasedObjectnessImage() override;
 
-  SIMPL_FILTER_PARAMETER(int, ObjectDimension)
+    /**
+    * @brief Setter property for ObjectDimension
+    */
+    void setObjectDimension(int value); 
+    /**
+    * @brief Getter property for ObjectDimension
+    * @return Value of ObjectDimension
+    */
+    int getObjectDimension() const;
+
   Q_PROPERTY(int ObjectDimension READ getObjectDimension WRITE setObjectDimension)
 
-  SIMPL_FILTER_PARAMETER(double, Alpha)
+    /**
+    * @brief Setter property for Alpha
+    */
+    void setAlpha(double value); 
+    /**
+    * @brief Getter property for Alpha
+    * @return Value of Alpha
+    */
+    double getAlpha() const;
+
   Q_PROPERTY(double Alpha READ getAlpha WRITE setAlpha)
 
-  SIMPL_FILTER_PARAMETER(double, Beta)
+    /**
+    * @brief Setter property for Beta
+    */
+    void setBeta(double value); 
+    /**
+    * @brief Getter property for Beta
+    * @return Value of Beta
+    */
+    double getBeta() const;
+
   Q_PROPERTY(double Beta READ getBeta WRITE setBeta)
 
-  SIMPL_FILTER_PARAMETER(double, Gamma)
+    /**
+    * @brief Setter property for Gamma
+    */
+    void setGamma(double value); 
+    /**
+    * @brief Getter property for Gamma
+    * @return Value of Gamma
+    */
+    double getGamma() const;
+
   Q_PROPERTY(double Gamma READ getGamma WRITE setGamma)
 
-  SIMPL_FILTER_PARAMETER(bool, ScaleObjectnessMeasure)
+    /**
+    * @brief Setter property for ScaleObjectnessMeasure
+    */
+    void setScaleObjectnessMeasure(bool value); 
+    /**
+    * @brief Getter property for ScaleObjectnessMeasure
+    * @return Value of ScaleObjectnessMeasure
+    */
+    bool getScaleObjectnessMeasure() const;
+
   Q_PROPERTY(bool ScaleObjectnessMeasure READ getScaleObjectnessMeasure WRITE setScaleObjectnessMeasure)
 
-  SIMPL_FILTER_PARAMETER(bool, BrightObject)
+    /**
+    * @brief Setter property for BrightObject
+    */
+    void setBrightObject(bool value); 
+    /**
+    * @brief Getter property for BrightObject
+    * @return Value of BrightObject
+    */
+    bool getBrightObject() const;
+
   Q_PROPERTY(bool BrightObject READ getBrightObject WRITE setBrightObject)
 
-  SIMPL_FILTER_PARAMETER(double, SigmaMinimum)
+    /**
+    * @brief Setter property for SigmaMinimum
+    */
+    void setSigmaMinimum(double value); 
+    /**
+    * @brief Getter property for SigmaMinimum
+    * @return Value of SigmaMinimum
+    */
+    double getSigmaMinimum() const;
+
   Q_PROPERTY(double SigmaMinimum READ getSigmaMinimum WRITE setSigmaMinimum)
 
-  SIMPL_FILTER_PARAMETER(double, SigmaMaximum)
+    /**
+    * @brief Setter property for SigmaMaximum
+    */
+    void setSigmaMaximum(double value); 
+    /**
+    * @brief Getter property for SigmaMaximum
+    * @return Value of SigmaMaximum
+    */
+    double getSigmaMaximum() const;
+
   Q_PROPERTY(double SigmaMaximum READ getSigmaMaximum WRITE setSigmaMaximum)
 
-  SIMPL_FILTER_PARAMETER(double, NumberOfSigmaSteps)
+    /**
+    * @brief Setter property for NumberOfSigmaSteps
+    */
+    void setNumberOfSigmaSteps(double value); 
+    /**
+    * @brief Getter property for NumberOfSigmaSteps
+    * @return Value of NumberOfSigmaSteps
+    */
+    double getNumberOfSigmaSteps() const;
+
   Q_PROPERTY(double NumberOfSigmaSteps READ getNumberOfSigmaSteps WRITE setNumberOfSigmaSteps)
 
   /**
@@ -80,18 +191,18 @@ public:
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -131,6 +242,18 @@ public:
   ITKMultiScaleHessianBasedObjectnessImage(ITKMultiScaleHessianBasedObjectnessImage&&) = delete;      // Move Constructor Not Implemented
   ITKMultiScaleHessianBasedObjectnessImage& operator=(const ITKMultiScaleHessianBasedObjectnessImage&) = delete; // Copy Assignment Not Implemented
   ITKMultiScaleHessianBasedObjectnessImage& operator=(ITKMultiScaleHessianBasedObjectnessImage&&) = delete;      // Move Assignment Not Implemented
+
+  private:
+    int m_ObjectDimension = {};
+    double m_Alpha = {};
+    double m_Beta = {};
+    double m_Gamma = {};
+    bool m_ScaleObjectnessMeasure = {};
+    bool m_BrightObject = {};
+    double m_SigmaMinimum = {};
+    double m_SigmaMaximum = {};
+    double m_NumberOfSigmaSteps = {};
+
 };
 
 #ifdef __clang__

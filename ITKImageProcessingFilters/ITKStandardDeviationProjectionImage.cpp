@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKStandardDeviationProjectionImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -134,7 +136,7 @@ AbstractFilter::Pointer ITKStandardDeviationProjectionImage::newFilterInstance(b
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKStandardDeviationProjectionImage::getHumanLabel() const
+QString ITKStandardDeviationProjectionImage::getHumanLabel() const
 {
   return "ITK::Standard Deviation Projection Image Filter";
 }
@@ -142,7 +144,7 @@ const QString ITKStandardDeviationProjectionImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKStandardDeviationProjectionImage::getUuid()
+QUuid ITKStandardDeviationProjectionImage::getUuid() const
 {
   return QUuid("{89b327a7-c6a0-5965-b8aa-9d8bfcedcc76}");
 }
@@ -150,7 +152,50 @@ const QUuid ITKStandardDeviationProjectionImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKStandardDeviationProjectionImage::getSubGroupName() const
+QString ITKStandardDeviationProjectionImage::getSubGroupName() const
 {
   return "ITK ImageStatistics";
 }
+
+// -----------------------------------------------------------------------------
+ITKStandardDeviationProjectionImage::Pointer ITKStandardDeviationProjectionImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKStandardDeviationProjectionImage> ITKStandardDeviationProjectionImage::New()
+{
+  struct make_shared_enabler : public ITKStandardDeviationProjectionImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKStandardDeviationProjectionImage::getNameOfClass() const
+{
+  return QString("ITKStandardDeviationProjectionImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKStandardDeviationProjectionImage::ClassName()
+{
+  return QString("ITKStandardDeviationProjectionImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKStandardDeviationProjectionImage::setProjectionDimension(double value)
+{
+  m_ProjectionDimension = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKStandardDeviationProjectionImage::getProjectionDimension() const
+{
+  return m_ProjectionDimension;
+}
+
+

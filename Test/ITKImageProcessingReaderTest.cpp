@@ -41,6 +41,8 @@
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+
 #include "UnitTestSupport.hpp"
 
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKImageReader.h"
@@ -50,7 +52,6 @@
 
 #include <itkImageFileWriter.h>
 #include <itkImageIOBase.h>
-
 #include <itkMRCImageIO.h>
 #include <itkMetaImageIO.h>
 #include <itkNrrdImageIO.h>

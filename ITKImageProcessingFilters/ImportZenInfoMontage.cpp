@@ -2,6 +2,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ImportZenInfoMontage.h"
 
 #include <algorithm>
@@ -27,6 +29,7 @@
 #include "SIMPLib/FilterParameters/PreflightUpdatedValueFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Filtering/FilterManager.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
@@ -109,8 +112,6 @@ ImportZenInfoMontage::ImportZenInfoMontage()
 , m_DataContainerPath(ITKImageProcessing::Montage::k_DataContaineNameDefaultName)
 , m_CellAttributeMatrixName(ITKImageProcessing::Montage::k_TileAttributeMatrixDefaultName)
 , m_ImageDataArrayName(ITKImageProcessing::Montage::k_TileDataArrayDefaultName)
-, m_ConvertToGrayScale(false)
-, m_ChangeOrigin(false)
 , m_ChangeSpacing(true)
 , d_ptr(new ImportZenInfoMontagePrivate(this))
 {
@@ -126,10 +127,61 @@ ImportZenInfoMontage::ImportZenInfoMontage()
 // -----------------------------------------------------------------------------
 ImportZenInfoMontage::~ImportZenInfoMontage() = default;
 
-SIMPL_PIMPL_PROPERTY_DEF(ImportZenInfoMontage, QDomElement, Root)
-SIMPL_PIMPL_PROPERTY_DEF(ImportZenInfoMontage, QString, InputFile_Cache)
-SIMPL_PIMPL_PROPERTY_DEF(ImportZenInfoMontage, QDateTime, TimeStamp_Cache)
-SIMPL_PIMPL_PROPERTY_DEF(ImportZenInfoMontage, std::vector<ImportZenInfoMontage::BoundsType>, BoundsCache)
+// -----------------------------------------------------------------------------
+void ImportZenInfoMontage::setRoot(const QDomElement& value)
+{
+  Q_D(ImportZenInfoMontage);
+  d->m_Root = value;
+}
+
+// -----------------------------------------------------------------------------
+QDomElement ImportZenInfoMontage::getRoot() const
+{
+  Q_D(const ImportZenInfoMontage);
+  return d->m_Root;
+}
+
+// -----------------------------------------------------------------------------
+void ImportZenInfoMontage::setInputFile_Cache(const QString& value)
+{
+  Q_D(ImportZenInfoMontage);
+  d->m_InputFile_Cache = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ImportZenInfoMontage::getInputFile_Cache() const
+{
+  Q_D(const ImportZenInfoMontage);
+  return d->m_InputFile_Cache;
+}
+
+// -----------------------------------------------------------------------------
+void ImportZenInfoMontage::setTimeStamp_Cache(const QDateTime& value)
+{
+  Q_D(ImportZenInfoMontage);
+  d->m_TimeStamp_Cache = value;
+}
+
+// -----------------------------------------------------------------------------
+QDateTime ImportZenInfoMontage::getTimeStamp_Cache() const
+{
+  Q_D(const ImportZenInfoMontage);
+  return d->m_TimeStamp_Cache;
+}
+
+// -----------------------------------------------------------------------------
+void ImportZenInfoMontage::setBoundsCache(const std::vector<ImportZenInfoMontage::BoundsType>& value)
+{
+  Q_D(ImportZenInfoMontage);
+  d->m_BoundsCache = value;
+}
+
+// -----------------------------------------------------------------------------
+std::vector<ImportZenInfoMontage::BoundsType> ImportZenInfoMontage::getBoundsCache() const
+{
+  Q_D(const ImportZenInfoMontage);
+  return d->m_BoundsCache;
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -788,7 +840,7 @@ AbstractFilter::Pointer ImportZenInfoMontage::newFilterInstance(bool copyFilterP
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ImportZenInfoMontage::getCompiledLibraryName() const
+QString ImportZenInfoMontage::getCompiledLibraryName() const
 {
   return ITKImageProcessingConstants::ITKImageProcessingBaseName;
 }
@@ -796,7 +848,7 @@ const QString ImportZenInfoMontage::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ImportZenInfoMontage::getBrandingString() const
+QString ImportZenInfoMontage::getBrandingString() const
 {
   return ITKImageProcessingConstants::ITKImageProcessingPluginDisplayName;
 }
@@ -804,7 +856,7 @@ const QString ImportZenInfoMontage::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ImportZenInfoMontage::getFilterVersion() const
+QString ImportZenInfoMontage::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -815,7 +867,7 @@ const QString ImportZenInfoMontage::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ImportZenInfoMontage::getGroupName() const
+QString ImportZenInfoMontage::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -823,7 +875,7 @@ const QString ImportZenInfoMontage::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ImportZenInfoMontage::getSubGroupName() const
+QString ImportZenInfoMontage::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::ImportFilters;
 }
@@ -831,7 +883,7 @@ const QString ImportZenInfoMontage::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ImportZenInfoMontage::getHumanLabel() const
+QString ImportZenInfoMontage::getHumanLabel() const
 {
   return "ITK::Zeiss Zen Import";
 }
@@ -839,7 +891,203 @@ const QString ImportZenInfoMontage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ImportZenInfoMontage::getUuid()
+QUuid ImportZenInfoMontage::getUuid() const
 {
   return QUuid("{774ec947-eed6-5eb2-a01b-ee6470e61521}");
 }
+
+// -----------------------------------------------------------------------------
+ImportZenInfoMontage::Pointer ImportZenInfoMontage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ImportZenInfoMontage> ImportZenInfoMontage::New()
+{
+  struct make_shared_enabler : public ImportZenInfoMontage  
+  {
+
+  private:
+
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ImportZenInfoMontage::getNameOfClass() const
+{
+  return QString("ImportZenInfoMontage");
+}
+
+// -----------------------------------------------------------------------------
+QString ImportZenInfoMontage::ClassName()
+{
+  return QString("ImportZenInfoMontage");
+}
+
+// -----------------------------------------------------------------------------
+void ImportZenInfoMontage::setInputFile(const QString& value)
+{
+  m_InputFile = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ImportZenInfoMontage::getInputFile() const
+{
+  return m_InputFile;
+}
+
+// -----------------------------------------------------------------------------
+void ImportZenInfoMontage::setMontageStart(const IntVec2Type& value)
+{
+  m_MontageStart = value;
+}
+
+// -----------------------------------------------------------------------------
+IntVec2Type ImportZenInfoMontage::getMontageStart() const
+{
+  return m_MontageStart;
+}
+
+// -----------------------------------------------------------------------------
+void ImportZenInfoMontage::setMontageEnd(const IntVec2Type& value)
+{
+  m_MontageEnd = value;
+}
+
+// -----------------------------------------------------------------------------
+IntVec2Type ImportZenInfoMontage::getMontageEnd() const
+{
+  return m_MontageEnd;
+}
+
+// -----------------------------------------------------------------------------
+void ImportZenInfoMontage::setDataContainerPath(const DataArrayPath& value)
+{
+  m_DataContainerPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath ImportZenInfoMontage::getDataContainerPath() const
+{
+  return m_DataContainerPath;
+}
+
+// -----------------------------------------------------------------------------
+void ImportZenInfoMontage::setCellAttributeMatrixName(const QString& value)
+{
+  m_CellAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ImportZenInfoMontage::getCellAttributeMatrixName() const
+{
+  return m_CellAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void ImportZenInfoMontage::setImageDataArrayName(const QString& value)
+{
+  m_ImageDataArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ImportZenInfoMontage::getImageDataArrayName() const
+{
+  return m_ImageDataArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void ImportZenInfoMontage::setConvertToGrayScale(bool value)
+{
+  m_ConvertToGrayScale = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ImportZenInfoMontage::getConvertToGrayScale() const
+{
+  return m_ConvertToGrayScale;
+}
+
+// -----------------------------------------------------------------------------
+void ImportZenInfoMontage::setColorWeights(const FloatVec3Type& value)
+{
+  m_ColorWeights = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec3Type ImportZenInfoMontage::getColorWeights() const
+{
+  return m_ColorWeights;
+}
+
+// -----------------------------------------------------------------------------
+void ImportZenInfoMontage::setChangeOrigin(bool value)
+{
+  m_ChangeOrigin = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ImportZenInfoMontage::getChangeOrigin() const
+{
+  return m_ChangeOrigin;
+}
+
+// -----------------------------------------------------------------------------
+void ImportZenInfoMontage::setOrigin(const FloatVec3Type& value)
+{
+  m_Origin = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec3Type ImportZenInfoMontage::getOrigin() const
+{
+  return m_Origin;
+}
+
+// -----------------------------------------------------------------------------
+void ImportZenInfoMontage::setChangeSpacing(bool value)
+{
+  m_ChangeSpacing = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ImportZenInfoMontage::getChangeSpacing() const
+{
+  return m_ChangeSpacing;
+}
+
+// -----------------------------------------------------------------------------
+void ImportZenInfoMontage::setSpacing(const FloatVec3Type& value)
+{
+  m_Spacing = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec3Type ImportZenInfoMontage::getSpacing() const
+{
+  return m_Spacing;
+}
+
+// -----------------------------------------------------------------------------
+int32_t ImportZenInfoMontage::getRowCount() const
+{
+  return m_RowCount;
+}
+
+// -----------------------------------------------------------------------------
+int32_t ImportZenInfoMontage::getColumnCount() const
+{
+  return m_ColumnCount;
+}
+
+// -----------------------------------------------------------------------------
+QStringList ImportZenInfoMontage::getFilenameList() const
+{
+  return m_FilenameList;
+}
+
+

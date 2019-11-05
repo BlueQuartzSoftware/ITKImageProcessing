@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKBinaryThresholdImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -147,7 +149,7 @@ AbstractFilter::Pointer ITKBinaryThresholdImage::newFilterInstance(bool copyFilt
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKBinaryThresholdImage::getHumanLabel() const
+QString ITKBinaryThresholdImage::getHumanLabel() const
 {
   return "ITK::Binary Threshold Image Filter";
 }
@@ -155,7 +157,7 @@ const QString ITKBinaryThresholdImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKBinaryThresholdImage::getUuid()
+QUuid ITKBinaryThresholdImage::getUuid() const
 {
   return QUuid("{ba8a3f2e-3963-57c0-a8da-239e25de0526}");
 }
@@ -163,7 +165,86 @@ const QUuid ITKBinaryThresholdImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKBinaryThresholdImage::getSubGroupName() const
+QString ITKBinaryThresholdImage::getSubGroupName() const
 {
   return "ITK Thresholding";
 }
+
+// -----------------------------------------------------------------------------
+ITKBinaryThresholdImage::Pointer ITKBinaryThresholdImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKBinaryThresholdImage> ITKBinaryThresholdImage::New()
+{
+  struct make_shared_enabler : public ITKBinaryThresholdImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKBinaryThresholdImage::getNameOfClass() const
+{
+  return QString("ITKBinaryThresholdImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKBinaryThresholdImage::ClassName()
+{
+  return QString("ITKBinaryThresholdImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKBinaryThresholdImage::setLowerThreshold(double value)
+{
+  m_LowerThreshold = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKBinaryThresholdImage::getLowerThreshold() const
+{
+  return m_LowerThreshold;
+}
+
+// -----------------------------------------------------------------------------
+void ITKBinaryThresholdImage::setUpperThreshold(double value)
+{
+  m_UpperThreshold = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKBinaryThresholdImage::getUpperThreshold() const
+{
+  return m_UpperThreshold;
+}
+
+// -----------------------------------------------------------------------------
+void ITKBinaryThresholdImage::setInsideValue(int value)
+{
+  m_InsideValue = value;
+}
+
+// -----------------------------------------------------------------------------
+int ITKBinaryThresholdImage::getInsideValue() const
+{
+  return m_InsideValue;
+}
+
+// -----------------------------------------------------------------------------
+void ITKBinaryThresholdImage::setOutsideValue(int value)
+{
+  m_OutsideValue = value;
+}
+
+// -----------------------------------------------------------------------------
+int ITKBinaryThresholdImage::getOutsideValue() const
+{
+  return m_OutsideValue;
+}
+
+

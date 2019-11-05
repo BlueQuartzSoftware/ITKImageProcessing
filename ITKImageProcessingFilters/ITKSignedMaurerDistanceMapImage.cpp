@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKSignedMaurerDistanceMapImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -145,7 +147,7 @@ AbstractFilter::Pointer ITKSignedMaurerDistanceMapImage::newFilterInstance(bool 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKSignedMaurerDistanceMapImage::getHumanLabel() const
+QString ITKSignedMaurerDistanceMapImage::getHumanLabel() const
 {
   return "ITK::Signed Maurer Distance Map Image Filter";
 }
@@ -153,7 +155,7 @@ const QString ITKSignedMaurerDistanceMapImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKSignedMaurerDistanceMapImage::getUuid()
+QUuid ITKSignedMaurerDistanceMapImage::getUuid() const
 {
   return QUuid("{bb15d42a-3077-582a-be1a-76b2bae172e9}");
 }
@@ -161,7 +163,86 @@ const QUuid ITKSignedMaurerDistanceMapImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKSignedMaurerDistanceMapImage::getSubGroupName() const
+QString ITKSignedMaurerDistanceMapImage::getSubGroupName() const
 {
   return "ITK DistanceMap";
 }
+
+// -----------------------------------------------------------------------------
+ITKSignedMaurerDistanceMapImage::Pointer ITKSignedMaurerDistanceMapImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKSignedMaurerDistanceMapImage> ITKSignedMaurerDistanceMapImage::New()
+{
+  struct make_shared_enabler : public ITKSignedMaurerDistanceMapImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKSignedMaurerDistanceMapImage::getNameOfClass() const
+{
+  return QString("ITKSignedMaurerDistanceMapImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKSignedMaurerDistanceMapImage::ClassName()
+{
+  return QString("ITKSignedMaurerDistanceMapImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKSignedMaurerDistanceMapImage::setInsideIsPositive(bool value)
+{
+  m_InsideIsPositive = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ITKSignedMaurerDistanceMapImage::getInsideIsPositive() const
+{
+  return m_InsideIsPositive;
+}
+
+// -----------------------------------------------------------------------------
+void ITKSignedMaurerDistanceMapImage::setSquaredDistance(bool value)
+{
+  m_SquaredDistance = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ITKSignedMaurerDistanceMapImage::getSquaredDistance() const
+{
+  return m_SquaredDistance;
+}
+
+// -----------------------------------------------------------------------------
+void ITKSignedMaurerDistanceMapImage::setUseImageSpacing(bool value)
+{
+  m_UseImageSpacing = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ITKSignedMaurerDistanceMapImage::getUseImageSpacing() const
+{
+  return m_UseImageSpacing;
+}
+
+// -----------------------------------------------------------------------------
+void ITKSignedMaurerDistanceMapImage::setBackgroundValue(double value)
+{
+  m_BackgroundValue = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKSignedMaurerDistanceMapImage::getBackgroundValue() const
+{
+  return m_BackgroundValue;
+}
+
+

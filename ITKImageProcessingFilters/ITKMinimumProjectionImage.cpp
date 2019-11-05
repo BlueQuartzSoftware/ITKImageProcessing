@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKMinimumProjectionImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -134,7 +136,7 @@ AbstractFilter::Pointer ITKMinimumProjectionImage::newFilterInstance(bool copyFi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKMinimumProjectionImage::getHumanLabel() const
+QString ITKMinimumProjectionImage::getHumanLabel() const
 {
   return "ITK::Minimum Projection Image Filter";
 }
@@ -142,7 +144,7 @@ const QString ITKMinimumProjectionImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKMinimumProjectionImage::getUuid()
+QUuid ITKMinimumProjectionImage::getUuid() const
 {
   return QUuid("{6394a737-4a31-5593-9bb5-28492129ccf7}");
 }
@@ -150,7 +152,50 @@ const QUuid ITKMinimumProjectionImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKMinimumProjectionImage::getSubGroupName() const
+QString ITKMinimumProjectionImage::getSubGroupName() const
 {
   return "ITK ImageStatistics";
 }
+
+// -----------------------------------------------------------------------------
+ITKMinimumProjectionImage::Pointer ITKMinimumProjectionImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKMinimumProjectionImage> ITKMinimumProjectionImage::New()
+{
+  struct make_shared_enabler : public ITKMinimumProjectionImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKMinimumProjectionImage::getNameOfClass() const
+{
+  return QString("ITKMinimumProjectionImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKMinimumProjectionImage::ClassName()
+{
+  return QString("ITKMinimumProjectionImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKMinimumProjectionImage::setProjectionDimension(double value)
+{
+  m_ProjectionDimension = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKMinimumProjectionImage::getProjectionDimension() const
+{
+  return m_ProjectionDimension;
+}
+
+

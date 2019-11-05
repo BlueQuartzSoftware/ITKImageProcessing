@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKNormalizeImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -124,7 +126,7 @@ AbstractFilter::Pointer ITKNormalizeImage::newFilterInstance(bool copyFilterPara
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKNormalizeImage::getHumanLabel() const
+QString ITKNormalizeImage::getHumanLabel() const
 {
   return "ITK::Normalize Image Filter";
 }
@@ -132,7 +134,7 @@ const QString ITKNormalizeImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKNormalizeImage::getUuid()
+QUuid ITKNormalizeImage::getUuid() const
 {
   return QUuid("{5b905619-c46b-5690-b6fa-8e97cf4537b8}");
 }
@@ -140,7 +142,38 @@ const QUuid ITKNormalizeImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKNormalizeImage::getSubGroupName() const
+QString ITKNormalizeImage::getSubGroupName() const
 {
   return "ITK IntensityTransformation";
 }
+
+// -----------------------------------------------------------------------------
+ITKNormalizeImage::Pointer ITKNormalizeImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKNormalizeImage> ITKNormalizeImage::New()
+{
+  struct make_shared_enabler : public ITKNormalizeImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKNormalizeImage::getNameOfClass() const
+{
+  return QString("ITKNormalizeImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKNormalizeImage::ClassName()
+{
+  return QString("ITKNormalizeImage");
+}
+
+

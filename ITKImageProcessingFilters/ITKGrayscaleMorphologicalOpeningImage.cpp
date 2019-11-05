@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKGrayscaleMorphologicalOpeningImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -183,7 +185,7 @@ AbstractFilter::Pointer ITKGrayscaleMorphologicalOpeningImage::newFilterInstance
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKGrayscaleMorphologicalOpeningImage::getHumanLabel() const
+QString ITKGrayscaleMorphologicalOpeningImage::getHumanLabel() const
 {
   return "ITK::Grayscale Morphological Opening Image Filter";
 }
@@ -191,7 +193,7 @@ const QString ITKGrayscaleMorphologicalOpeningImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKGrayscaleMorphologicalOpeningImage::getUuid()
+QUuid ITKGrayscaleMorphologicalOpeningImage::getUuid() const
 {
   return QUuid("{c88ac42b-9477-5088-9ec0-862af1e0bb56}");
 }
@@ -199,7 +201,74 @@ const QUuid ITKGrayscaleMorphologicalOpeningImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKGrayscaleMorphologicalOpeningImage::getSubGroupName() const
+QString ITKGrayscaleMorphologicalOpeningImage::getSubGroupName() const
 {
   return "ITK BiasCorrection";
 }
+
+// -----------------------------------------------------------------------------
+ITKGrayscaleMorphologicalOpeningImage::Pointer ITKGrayscaleMorphologicalOpeningImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKGrayscaleMorphologicalOpeningImage> ITKGrayscaleMorphologicalOpeningImage::New()
+{
+  struct make_shared_enabler : public ITKGrayscaleMorphologicalOpeningImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKGrayscaleMorphologicalOpeningImage::getNameOfClass() const
+{
+  return QString("ITKGrayscaleMorphologicalOpeningImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKGrayscaleMorphologicalOpeningImage::ClassName()
+{
+  return QString("ITKGrayscaleMorphologicalOpeningImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKGrayscaleMorphologicalOpeningImage::setSafeBorder(bool value)
+{
+  m_SafeBorder = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ITKGrayscaleMorphologicalOpeningImage::getSafeBorder() const
+{
+  return m_SafeBorder;
+}
+
+// -----------------------------------------------------------------------------
+void ITKGrayscaleMorphologicalOpeningImage::setKernelRadius(const FloatVec3Type& value)
+{
+  m_KernelRadius = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec3Type ITKGrayscaleMorphologicalOpeningImage::getKernelRadius() const
+{
+  return m_KernelRadius;
+}
+
+// -----------------------------------------------------------------------------
+void ITKGrayscaleMorphologicalOpeningImage::setKernelType(int value)
+{
+  m_KernelType = value;
+}
+
+// -----------------------------------------------------------------------------
+int ITKGrayscaleMorphologicalOpeningImage::getKernelType() const
+{
+  return m_KernelType;
+}
+
+

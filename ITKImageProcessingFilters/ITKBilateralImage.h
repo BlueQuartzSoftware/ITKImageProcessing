@@ -11,9 +11,10 @@
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
+#include <memory>
+
 #include "ITKImageProcessingBase.h"
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
 
 // Auto includes
@@ -28,25 +29,75 @@
 class ITKImageProcessing_EXPORT ITKBilateralImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+
+#ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(ITKBilateralImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_SHARED_POINTERS(ITKBilateralImage)
+  PYB11_FILTER_NEW_MACRO(ITKBilateralImage)
+  PYB11_FILTER_PARAMETER(double, DomainSigma)
+  PYB11_FILTER_PARAMETER(double, RangeSigma)
+  PYB11_FILTER_PARAMETER(double, NumberOfRangeGaussianSamples)
   PYB11_PROPERTY(double DomainSigma READ getDomainSigma WRITE setDomainSigma)
   PYB11_PROPERTY(double RangeSigma READ getRangeSigma WRITE setRangeSigma)
   PYB11_PROPERTY(double NumberOfRangeGaussianSamples READ getNumberOfRangeGaussianSamples WRITE setNumberOfRangeGaussianSamples)
+#endif
 
 public:
-  SIMPL_SHARED_POINTERS(ITKBilateralImage)
-  SIMPL_FILTER_NEW_MACRO(ITKBilateralImage)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKBilateralImage, AbstractFilter)
+    using Self = ITKBilateralImage;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
+
+    static std::shared_ptr<ITKBilateralImage> New();
+
+    /**
+    * @brief Returns the name of the class for ITKBilateralImage
+    */
+    QString getNameOfClass() const override;
+    /**
+    * @brief Returns the name of the class for ITKBilateralImage
+    */
+    static QString ClassName();
+
 
   ~ITKBilateralImage() override;
 
-  SIMPL_FILTER_PARAMETER(double, DomainSigma)
+    /**
+    * @brief Setter property for DomainSigma
+    */
+    void setDomainSigma(double value); 
+    /**
+    * @brief Getter property for DomainSigma
+    * @return Value of DomainSigma
+    */
+    double getDomainSigma() const;
+
   Q_PROPERTY(double DomainSigma READ getDomainSigma WRITE setDomainSigma)
 
-  SIMPL_FILTER_PARAMETER(double, RangeSigma)
+    /**
+    * @brief Setter property for RangeSigma
+    */
+    void setRangeSigma(double value); 
+    /**
+    * @brief Getter property for RangeSigma
+    * @return Value of RangeSigma
+    */
+    double getRangeSigma() const;
+
   Q_PROPERTY(double RangeSigma READ getRangeSigma WRITE setRangeSigma)
 
-  SIMPL_FILTER_PARAMETER(double, NumberOfRangeGaussianSamples)
+    /**
+    * @brief Setter property for NumberOfRangeGaussianSamples
+    */
+    void setNumberOfRangeGaussianSamples(double value); 
+    /**
+    * @brief Getter property for NumberOfRangeGaussianSamples
+    * @return Value of NumberOfRangeGaussianSamples
+    */
+    double getNumberOfRangeGaussianSamples() const;
+
   Q_PROPERTY(double NumberOfRangeGaussianSamples READ getNumberOfRangeGaussianSamples WRITE setNumberOfRangeGaussianSamples)
 
 
@@ -58,18 +109,18 @@ public:
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -109,6 +160,12 @@ public:
   ITKBilateralImage(ITKBilateralImage&&) = delete;         // Move Constructor Not Implemented
   ITKBilateralImage& operator=(const ITKBilateralImage&) = delete; // Copy Assignment Not Implemented
   ITKBilateralImage& operator=(ITKBilateralImage&&) = delete;      // Move Assignment Not Implemented
+
+  private:
+    double m_DomainSigma = {};
+    double m_RangeSigma = {};
+    double m_NumberOfRangeGaussianSamples = {};
+
 };
 
 #ifdef __clang__

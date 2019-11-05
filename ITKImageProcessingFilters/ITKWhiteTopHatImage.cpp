@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKWhiteTopHatImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -183,7 +185,7 @@ AbstractFilter::Pointer ITKWhiteTopHatImage::newFilterInstance(bool copyFilterPa
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKWhiteTopHatImage::getHumanLabel() const
+QString ITKWhiteTopHatImage::getHumanLabel() const
 {
   return "ITK::White Top Hat Image Filter";
 }
@@ -191,7 +193,7 @@ const QString ITKWhiteTopHatImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKWhiteTopHatImage::getUuid()
+QUuid ITKWhiteTopHatImage::getUuid() const
 {
   return QUuid("{02e059f7-8055-52b4-9d48-915b67d1e39a}");
 }
@@ -199,7 +201,74 @@ const QUuid ITKWhiteTopHatImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKWhiteTopHatImage::getSubGroupName() const
+QString ITKWhiteTopHatImage::getSubGroupName() const
 {
   return "ITK BiasCorrection";
 }
+
+// -----------------------------------------------------------------------------
+ITKWhiteTopHatImage::Pointer ITKWhiteTopHatImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKWhiteTopHatImage> ITKWhiteTopHatImage::New()
+{
+  struct make_shared_enabler : public ITKWhiteTopHatImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKWhiteTopHatImage::getNameOfClass() const
+{
+  return QString("ITKWhiteTopHatImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKWhiteTopHatImage::ClassName()
+{
+  return QString("ITKWhiteTopHatImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKWhiteTopHatImage::setSafeBorder(bool value)
+{
+  m_SafeBorder = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ITKWhiteTopHatImage::getSafeBorder() const
+{
+  return m_SafeBorder;
+}
+
+// -----------------------------------------------------------------------------
+void ITKWhiteTopHatImage::setKernelRadius(const FloatVec3Type& value)
+{
+  m_KernelRadius = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec3Type ITKWhiteTopHatImage::getKernelRadius() const
+{
+  return m_KernelRadius;
+}
+
+// -----------------------------------------------------------------------------
+void ITKWhiteTopHatImage::setKernelType(int value)
+{
+  m_KernelType = value;
+}
+
+// -----------------------------------------------------------------------------
+int ITKWhiteTopHatImage::getKernelType() const
+{
+  return m_KernelType;
+}
+
+

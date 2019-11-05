@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKSquareImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -124,7 +126,7 @@ AbstractFilter::Pointer ITKSquareImage::newFilterInstance(bool copyFilterParamet
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKSquareImage::getHumanLabel() const
+QString ITKSquareImage::getHumanLabel() const
 {
   return "ITK::Square Image Filter";
 }
@@ -132,7 +134,7 @@ const QString ITKSquareImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKSquareImage::getUuid()
+QUuid ITKSquareImage::getUuid() const
 {
   return QUuid("{f092420e-14a0-5dc0-91f8-de0082103aef}");
 }
@@ -140,7 +142,38 @@ const QUuid ITKSquareImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKSquareImage::getSubGroupName() const
+QString ITKSquareImage::getSubGroupName() const
 {
   return "ITK IntensityTransformation";
 }
+
+// -----------------------------------------------------------------------------
+ITKSquareImage::Pointer ITKSquareImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKSquareImage> ITKSquareImage::New()
+{
+  struct make_shared_enabler : public ITKSquareImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKSquareImage::getNameOfClass() const
+{
+  return QString("ITKSquareImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKSquareImage::ClassName()
+{
+  return QString("ITKSquareImage");
+}
+
+

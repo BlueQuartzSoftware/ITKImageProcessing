@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKBinomialBlurImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -134,7 +136,7 @@ AbstractFilter::Pointer ITKBinomialBlurImage::newFilterInstance(bool copyFilterP
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKBinomialBlurImage::getHumanLabel() const
+QString ITKBinomialBlurImage::getHumanLabel() const
 {
   return "ITK::Binomial Blur Image Filter";
 }
@@ -142,7 +144,7 @@ const QString ITKBinomialBlurImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKBinomialBlurImage::getUuid()
+QUuid ITKBinomialBlurImage::getUuid() const
 {
   return QUuid("{4f51765f-ee36-52d0-96b6-f2aca3c24e7c}");
 }
@@ -150,7 +152,50 @@ const QUuid ITKBinomialBlurImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKBinomialBlurImage::getSubGroupName() const
+QString ITKBinomialBlurImage::getSubGroupName() const
 {
   return "ITK Smoothing";
 }
+
+// -----------------------------------------------------------------------------
+ITKBinomialBlurImage::Pointer ITKBinomialBlurImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKBinomialBlurImage> ITKBinomialBlurImage::New()
+{
+  struct make_shared_enabler : public ITKBinomialBlurImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKBinomialBlurImage::getNameOfClass() const
+{
+  return QString("ITKBinomialBlurImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKBinomialBlurImage::ClassName()
+{
+  return QString("ITKBinomialBlurImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKBinomialBlurImage::setRepetitions(double value)
+{
+  m_Repetitions = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKBinomialBlurImage::getRepetitions() const
+{
+  return m_Repetitions;
+}
+
+

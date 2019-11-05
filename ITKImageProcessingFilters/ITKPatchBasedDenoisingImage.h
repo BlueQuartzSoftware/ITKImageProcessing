@@ -9,9 +9,10 @@
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
+#include <memory>
+
 #include "ITKImageProcessingBase.h"
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
 
 // Auto includes
@@ -28,7 +29,25 @@
 class ITKImageProcessing_EXPORT ITKPatchBasedDenoisingImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+
+#ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(ITKPatchBasedDenoisingImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_SHARED_POINTERS(ITKPatchBasedDenoisingImage)
+  PYB11_FILTER_NEW_MACRO(ITKPatchBasedDenoisingImage)
+  PYB11_FILTER_PARAMETER(double, KernelBandwidthSigma)
+  PYB11_FILTER_PARAMETER(double, PatchRadius)
+  PYB11_FILTER_PARAMETER(double, NumberOfIterations)
+  PYB11_FILTER_PARAMETER(double, NumberOfSamplePatches)
+  PYB11_FILTER_PARAMETER(double, SampleVariance)
+  PYB11_FILTER_PARAMETER(double, NoiseSigma)
+  PYB11_FILTER_PARAMETER(double, NoiseModelFidelityWeight)
+  PYB11_FILTER_PARAMETER(bool, AlwaysTreatComponentsAsEuclidean)
+  PYB11_FILTER_PARAMETER(bool, KernelBandwidthEstimation)
+  PYB11_FILTER_PARAMETER(double, KernelBandwidthMultiplicationFactor)
+  PYB11_FILTER_PARAMETER(double, KernelBandwidthUpdateFrequency)
+  PYB11_FILTER_PARAMETER(double, KernelBandwidthFractionPixelsForEstimation)
+  PYB11_FILTER_PARAMETER(int, NoiseModel)
+  PYB11_FILTER_PARAMETER(int, NumberOfThreads)
   PYB11_PROPERTY(double KernelBandwidthSigma READ getKernelBandwidthSigma WRITE setKernelBandwidthSigma)
   PYB11_PROPERTY(double PatchRadius READ getPatchRadius WRITE setPatchRadius)
   PYB11_PROPERTY(double NumberOfIterations READ getNumberOfIterations WRITE setNumberOfIterations)
@@ -43,54 +62,196 @@ class ITKImageProcessing_EXPORT ITKPatchBasedDenoisingImage : public ITKImagePro
   PYB11_PROPERTY(double KernelBandwidthFractionPixelsForEstimation READ getKernelBandwidthFractionPixelsForEstimation WRITE setKernelBandwidthFractionPixelsForEstimation)
   PYB11_PROPERTY(int NoiseModel READ getNoiseModel WRITE setNoiseModel)
   PYB11_PROPERTY(int NumberOfThreads READ getNumberOfThreads WRITE setNumberOfThreads)
+#endif
 
 public:
-  SIMPL_SHARED_POINTERS(ITKPatchBasedDenoisingImage)
-  SIMPL_FILTER_NEW_MACRO(ITKPatchBasedDenoisingImage)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKPatchBasedDenoisingImage, AbstractFilter)
+    using Self = ITKPatchBasedDenoisingImage;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
+
+    static std::shared_ptr<ITKPatchBasedDenoisingImage> New();
+
+    /**
+    * @brief Returns the name of the class for ITKPatchBasedDenoisingImage
+    */
+    QString getNameOfClass() const override;
+    /**
+    * @brief Returns the name of the class for ITKPatchBasedDenoisingImage
+    */
+    static QString ClassName();
+
 
   ~ITKPatchBasedDenoisingImage() override;
 
-  SIMPL_FILTER_PARAMETER(double, KernelBandwidthSigma)
+    /**
+    * @brief Setter property for KernelBandwidthSigma
+    */
+    void setKernelBandwidthSigma(double value); 
+    /**
+    * @brief Getter property for KernelBandwidthSigma
+    * @return Value of KernelBandwidthSigma
+    */
+    double getKernelBandwidthSigma() const;
+
   Q_PROPERTY(double KernelBandwidthSigma READ getKernelBandwidthSigma WRITE setKernelBandwidthSigma)
 
-  SIMPL_FILTER_PARAMETER(double, PatchRadius)
+    /**
+    * @brief Setter property for PatchRadius
+    */
+    void setPatchRadius(double value); 
+    /**
+    * @brief Getter property for PatchRadius
+    * @return Value of PatchRadius
+    */
+    double getPatchRadius() const;
+
   Q_PROPERTY(double PatchRadius READ getPatchRadius WRITE setPatchRadius)
 
-  SIMPL_FILTER_PARAMETER(double, NumberOfIterations)
+    /**
+    * @brief Setter property for NumberOfIterations
+    */
+    void setNumberOfIterations(double value); 
+    /**
+    * @brief Getter property for NumberOfIterations
+    * @return Value of NumberOfIterations
+    */
+    double getNumberOfIterations() const;
+
   Q_PROPERTY(double NumberOfIterations READ getNumberOfIterations WRITE setNumberOfIterations)
 
-  SIMPL_FILTER_PARAMETER(double, NumberOfSamplePatches)
+    /**
+    * @brief Setter property for NumberOfSamplePatches
+    */
+    void setNumberOfSamplePatches(double value); 
+    /**
+    * @brief Getter property for NumberOfSamplePatches
+    * @return Value of NumberOfSamplePatches
+    */
+    double getNumberOfSamplePatches() const;
+
   Q_PROPERTY(double NumberOfSamplePatches READ getNumberOfSamplePatches WRITE setNumberOfSamplePatches)
 
-  SIMPL_FILTER_PARAMETER(double, SampleVariance)
+    /**
+    * @brief Setter property for SampleVariance
+    */
+    void setSampleVariance(double value); 
+    /**
+    * @brief Getter property for SampleVariance
+    * @return Value of SampleVariance
+    */
+    double getSampleVariance() const;
+
   Q_PROPERTY(double SampleVariance READ getSampleVariance WRITE setSampleVariance)
 
-  SIMPL_FILTER_PARAMETER(double, NoiseSigma)
+    /**
+    * @brief Setter property for NoiseSigma
+    */
+    void setNoiseSigma(double value); 
+    /**
+    * @brief Getter property for NoiseSigma
+    * @return Value of NoiseSigma
+    */
+    double getNoiseSigma() const;
+
   Q_PROPERTY(double NoiseSigma READ getNoiseSigma WRITE setNoiseSigma)
 
-  SIMPL_FILTER_PARAMETER(double, NoiseModelFidelityWeight)
+    /**
+    * @brief Setter property for NoiseModelFidelityWeight
+    */
+    void setNoiseModelFidelityWeight(double value); 
+    /**
+    * @brief Getter property for NoiseModelFidelityWeight
+    * @return Value of NoiseModelFidelityWeight
+    */
+    double getNoiseModelFidelityWeight() const;
+
   Q_PROPERTY(double NoiseModelFidelityWeight READ getNoiseModelFidelityWeight WRITE setNoiseModelFidelityWeight)
 
-  SIMPL_FILTER_PARAMETER(bool, AlwaysTreatComponentsAsEuclidean)
+    /**
+    * @brief Setter property for AlwaysTreatComponentsAsEuclidean
+    */
+    void setAlwaysTreatComponentsAsEuclidean(bool value); 
+    /**
+    * @brief Getter property for AlwaysTreatComponentsAsEuclidean
+    * @return Value of AlwaysTreatComponentsAsEuclidean
+    */
+    bool getAlwaysTreatComponentsAsEuclidean() const;
+
   Q_PROPERTY(bool AlwaysTreatComponentsAsEuclidean READ getAlwaysTreatComponentsAsEuclidean WRITE setAlwaysTreatComponentsAsEuclidean)
 
-  SIMPL_FILTER_PARAMETER(bool, KernelBandwidthEstimation)
+    /**
+    * @brief Setter property for KernelBandwidthEstimation
+    */
+    void setKernelBandwidthEstimation(bool value); 
+    /**
+    * @brief Getter property for KernelBandwidthEstimation
+    * @return Value of KernelBandwidthEstimation
+    */
+    bool getKernelBandwidthEstimation() const;
+
   Q_PROPERTY(bool KernelBandwidthEstimation READ getKernelBandwidthEstimation WRITE setKernelBandwidthEstimation)
 
-  SIMPL_FILTER_PARAMETER(double, KernelBandwidthMultiplicationFactor)
+    /**
+    * @brief Setter property for KernelBandwidthMultiplicationFactor
+    */
+    void setKernelBandwidthMultiplicationFactor(double value); 
+    /**
+    * @brief Getter property for KernelBandwidthMultiplicationFactor
+    * @return Value of KernelBandwidthMultiplicationFactor
+    */
+    double getKernelBandwidthMultiplicationFactor() const;
+
   Q_PROPERTY(double KernelBandwidthMultiplicationFactor READ getKernelBandwidthMultiplicationFactor WRITE setKernelBandwidthMultiplicationFactor)
 
-  SIMPL_FILTER_PARAMETER(double, KernelBandwidthUpdateFrequency)
+    /**
+    * @brief Setter property for KernelBandwidthUpdateFrequency
+    */
+    void setKernelBandwidthUpdateFrequency(double value); 
+    /**
+    * @brief Getter property for KernelBandwidthUpdateFrequency
+    * @return Value of KernelBandwidthUpdateFrequency
+    */
+    double getKernelBandwidthUpdateFrequency() const;
+
   Q_PROPERTY(double KernelBandwidthUpdateFrequency READ getKernelBandwidthUpdateFrequency WRITE setKernelBandwidthUpdateFrequency)
 
-  SIMPL_FILTER_PARAMETER(double, KernelBandwidthFractionPixelsForEstimation)
+    /**
+    * @brief Setter property for KernelBandwidthFractionPixelsForEstimation
+    */
+    void setKernelBandwidthFractionPixelsForEstimation(double value); 
+    /**
+    * @brief Getter property for KernelBandwidthFractionPixelsForEstimation
+    * @return Value of KernelBandwidthFractionPixelsForEstimation
+    */
+    double getKernelBandwidthFractionPixelsForEstimation() const;
+
   Q_PROPERTY(double KernelBandwidthFractionPixelsForEstimation READ getKernelBandwidthFractionPixelsForEstimation WRITE setKernelBandwidthFractionPixelsForEstimation)
 
-  SIMPL_FILTER_PARAMETER(int, NoiseModel)
+    /**
+    * @brief Setter property for NoiseModel
+    */
+    void setNoiseModel(int value); 
+    /**
+    * @brief Getter property for NoiseModel
+    * @return Value of NoiseModel
+    */
+    int getNoiseModel() const;
+
   Q_PROPERTY(int NoiseModel READ getNoiseModel WRITE setNoiseModel)
 
-  SIMPL_FILTER_PARAMETER(int, NumberOfThreads)
+    /**
+    * @brief Setter property for NumberOfThreads
+    */
+    void setNumberOfThreads(int value); 
+    /**
+    * @brief Getter property for NumberOfThreads
+    * @return Value of NumberOfThreads
+    */
+    int getNumberOfThreads() const;
+
   Q_PROPERTY(int NumberOfThreads READ getNumberOfThreads WRITE setNumberOfThreads)
 
   /**
@@ -101,18 +262,18 @@ public:
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -152,6 +313,23 @@ public:
   ITKPatchBasedDenoisingImage(ITKPatchBasedDenoisingImage&&) = delete;      // Move Constructor Not Implemented
   ITKPatchBasedDenoisingImage& operator=(const ITKPatchBasedDenoisingImage&) = delete; // Copy Assignment Not Implemented
   ITKPatchBasedDenoisingImage& operator=(ITKPatchBasedDenoisingImage&&) = delete;      // Move Assignment Not Implemented
+
+  private:
+    double m_KernelBandwidthSigma = {};
+    double m_PatchRadius = {};
+    double m_NumberOfIterations = {};
+    double m_NumberOfSamplePatches = {};
+    double m_SampleVariance = {};
+    double m_NoiseSigma = {};
+    double m_NoiseModelFidelityWeight = {};
+    bool m_AlwaysTreatComponentsAsEuclidean = {};
+    bool m_KernelBandwidthEstimation = {};
+    double m_KernelBandwidthMultiplicationFactor = {};
+    double m_KernelBandwidthUpdateFrequency = {};
+    double m_KernelBandwidthFractionPixelsForEstimation = {};
+    int m_NoiseModel = {};
+    int m_NumberOfThreads = {};
+
 };
 
 #ifdef __clang__

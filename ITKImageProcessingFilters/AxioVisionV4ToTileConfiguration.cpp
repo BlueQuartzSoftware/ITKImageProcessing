@@ -30,6 +30,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "AxioVisionV4ToTileConfiguration.h"
 
 #include <array>
@@ -40,6 +42,7 @@
 #include <QtXml/QDomDocument>
 
 #include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/Utilities/FileSystemPathHelper.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
@@ -407,7 +410,7 @@ AbstractFilter::Pointer AxioVisionV4ToTileConfiguration::newFilterInstance(bool 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AxioVisionV4ToTileConfiguration::getCompiledLibraryName() const
+QString AxioVisionV4ToTileConfiguration::getCompiledLibraryName() const
 {
   return ITKImageProcessingConstants::ITKImageProcessingBaseName;
 }
@@ -415,7 +418,7 @@ const QString AxioVisionV4ToTileConfiguration::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AxioVisionV4ToTileConfiguration::getBrandingString() const
+QString AxioVisionV4ToTileConfiguration::getBrandingString() const
 {
   return ITKImageProcessingConstants::ITKImageProcessingPluginDisplayName;
 }
@@ -423,7 +426,7 @@ const QString AxioVisionV4ToTileConfiguration::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AxioVisionV4ToTileConfiguration::getFilterVersion() const
+QString AxioVisionV4ToTileConfiguration::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -434,7 +437,7 @@ const QString AxioVisionV4ToTileConfiguration::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AxioVisionV4ToTileConfiguration::getGroupName() const
+QString AxioVisionV4ToTileConfiguration::getGroupName() const
 {
   return SIMPL::FilterGroups::ProcessingFilters;
 }
@@ -442,7 +445,7 @@ const QString AxioVisionV4ToTileConfiguration::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AxioVisionV4ToTileConfiguration::getSubGroupName() const
+QString AxioVisionV4ToTileConfiguration::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::ConversionFilters;
 }
@@ -450,7 +453,7 @@ const QString AxioVisionV4ToTileConfiguration::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AxioVisionV4ToTileConfiguration::getHumanLabel() const
+QString AxioVisionV4ToTileConfiguration::getHumanLabel() const
 { 
   return "ITK::Convert AxioVision To Tile Configuration file";
 }
@@ -459,8 +462,63 @@ const QString AxioVisionV4ToTileConfiguration::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid AxioVisionV4ToTileConfiguration::getUuid()
+QUuid AxioVisionV4ToTileConfiguration::getUuid() const
 {
   return QUuid("{30687f44-9c10-5617-bcb8-4109cbd6e55e}");
 }
+
+
+// -----------------------------------------------------------------------------
+AxioVisionV4ToTileConfiguration::Pointer AxioVisionV4ToTileConfiguration::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<AxioVisionV4ToTileConfiguration> AxioVisionV4ToTileConfiguration::New()
+{
+  struct make_shared_enabler : public AxioVisionV4ToTileConfiguration  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString AxioVisionV4ToTileConfiguration::getNameOfClass() const
+{
+  return QString("AxioVisionV4ToTileConfiguration");
+}
+
+// -----------------------------------------------------------------------------
+QString AxioVisionV4ToTileConfiguration::ClassName()
+{
+  return QString("AxioVisionV4ToTileConfiguration");
+}
+
+// -----------------------------------------------------------------------------
+void AxioVisionV4ToTileConfiguration::setInputFile(const QString& value)
+{
+  m_InputFile = value;
+}
+
+// -----------------------------------------------------------------------------
+QString AxioVisionV4ToTileConfiguration::getInputFile() const
+{
+  return m_InputFile;
+}
+
+// -----------------------------------------------------------------------------
+void AxioVisionV4ToTileConfiguration::setOutputFile(const QString& value)
+{
+  m_OutputFile = value;
+}
+
+// -----------------------------------------------------------------------------
+QString AxioVisionV4ToTileConfiguration::getOutputFile() const
+{
+  return m_OutputFile;
+}
+
 

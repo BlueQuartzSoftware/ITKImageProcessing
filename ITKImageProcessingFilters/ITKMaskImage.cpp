@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKMaskImage.h"
 
 #include "SIMPLib/Common/Constants.h"
@@ -239,7 +241,7 @@ AbstractFilter::Pointer ITKMaskImage::newFilterInstance(bool copyFilterParameter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKMaskImage::getHumanLabel() const
+QString ITKMaskImage::getHumanLabel() const
 {
   return "ITK::Mask Image Filter";
 }
@@ -247,7 +249,7 @@ const QString ITKMaskImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKMaskImage::getUuid()
+QUuid ITKMaskImage::getUuid() const
 {
   return QUuid("{97102d65-9c32-576a-9177-c59d958bad10}");
 }
@@ -255,7 +257,74 @@ const QUuid ITKMaskImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKMaskImage::getSubGroupName() const
+QString ITKMaskImage::getSubGroupName() const
 {
   return "ITK IntensityTransformation";
 }
+
+// -----------------------------------------------------------------------------
+ITKMaskImage::Pointer ITKMaskImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKMaskImage> ITKMaskImage::New()
+{
+  struct make_shared_enabler : public ITKMaskImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKMaskImage::getNameOfClass() const
+{
+  return QString("ITKMaskImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKMaskImage::ClassName()
+{
+  return QString("ITKMaskImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKMaskImage::setOutsideValue(double value)
+{
+  m_OutsideValue = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKMaskImage::getOutsideValue() const
+{
+  return m_OutsideValue;
+}
+
+// -----------------------------------------------------------------------------
+void ITKMaskImage::setMaskCellArrayPath(const DataArrayPath& value)
+{
+  m_MaskCellArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath ITKMaskImage::getMaskCellArrayPath() const
+{
+  return m_MaskCellArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void ITKMaskImage::setMaskContainerArray(const DataContainerArray::Pointer& value)
+{
+  m_MaskContainerArray = value;
+}
+
+// -----------------------------------------------------------------------------
+DataContainerArray::Pointer ITKMaskImage::getMaskContainerArray() const
+{
+  return m_MaskContainerArray;
+}
+
+

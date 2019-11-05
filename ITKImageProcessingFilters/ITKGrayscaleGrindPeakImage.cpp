@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKGrayscaleGrindPeakImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -133,7 +135,7 @@ AbstractFilter::Pointer ITKGrayscaleGrindPeakImage::newFilterInstance(bool copyF
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKGrayscaleGrindPeakImage::getHumanLabel() const
+QString ITKGrayscaleGrindPeakImage::getHumanLabel() const
 {
   return "ITK::Grayscale Grind Peak Image Filter";
 }
@@ -141,7 +143,7 @@ const QString ITKGrayscaleGrindPeakImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKGrayscaleGrindPeakImage::getUuid()
+QUuid ITKGrayscaleGrindPeakImage::getUuid() const
 {
   return QUuid("{d910551f-4eec-55c9-b0ce-69c2277e61bd}");
 }
@@ -149,7 +151,50 @@ const QUuid ITKGrayscaleGrindPeakImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKGrayscaleGrindPeakImage::getSubGroupName() const
+QString ITKGrayscaleGrindPeakImage::getSubGroupName() const
 {
   return "ITK BiasCorrection";
 }
+
+// -----------------------------------------------------------------------------
+ITKGrayscaleGrindPeakImage::Pointer ITKGrayscaleGrindPeakImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKGrayscaleGrindPeakImage> ITKGrayscaleGrindPeakImage::New()
+{
+  struct make_shared_enabler : public ITKGrayscaleGrindPeakImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKGrayscaleGrindPeakImage::getNameOfClass() const
+{
+  return QString("ITKGrayscaleGrindPeakImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKGrayscaleGrindPeakImage::ClassName()
+{
+  return QString("ITKGrayscaleGrindPeakImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKGrayscaleGrindPeakImage::setFullyConnected(bool value)
+{
+  m_FullyConnected = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ITKGrayscaleGrindPeakImage::getFullyConnected() const
+{
+  return m_FullyConnected;
+}
+
+

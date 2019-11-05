@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKGrayscaleErodeImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -179,7 +181,7 @@ AbstractFilter::Pointer ITKGrayscaleErodeImage::newFilterInstance(bool copyFilte
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKGrayscaleErodeImage::getHumanLabel() const
+QString ITKGrayscaleErodeImage::getHumanLabel() const
 {
   return "ITK::Grayscale Erode Image Filter";
 }
@@ -187,7 +189,7 @@ const QString ITKGrayscaleErodeImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKGrayscaleErodeImage::getUuid()
+QUuid ITKGrayscaleErodeImage::getUuid() const
 {
   return QUuid("{aef4e804-3f7a-5dc0-911c-b1f16a393a69}");
 }
@@ -195,7 +197,62 @@ const QUuid ITKGrayscaleErodeImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKGrayscaleErodeImage::getSubGroupName() const
+QString ITKGrayscaleErodeImage::getSubGroupName() const
 {
   return "ITK BiasCorrection";
 }
+
+// -----------------------------------------------------------------------------
+ITKGrayscaleErodeImage::Pointer ITKGrayscaleErodeImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKGrayscaleErodeImage> ITKGrayscaleErodeImage::New()
+{
+  struct make_shared_enabler : public ITKGrayscaleErodeImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKGrayscaleErodeImage::getNameOfClass() const
+{
+  return QString("ITKGrayscaleErodeImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKGrayscaleErodeImage::ClassName()
+{
+  return QString("ITKGrayscaleErodeImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKGrayscaleErodeImage::setKernelRadius(const FloatVec3Type& value)
+{
+  m_KernelRadius = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec3Type ITKGrayscaleErodeImage::getKernelRadius() const
+{
+  return m_KernelRadius;
+}
+
+// -----------------------------------------------------------------------------
+void ITKGrayscaleErodeImage::setKernelType(int value)
+{
+  m_KernelType = value;
+}
+
+// -----------------------------------------------------------------------------
+int ITKGrayscaleErodeImage::getKernelType() const
+{
+  return m_KernelType;
+}
+
+

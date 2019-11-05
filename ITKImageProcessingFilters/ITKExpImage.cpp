@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKExpImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -124,7 +126,7 @@ AbstractFilter::Pointer ITKExpImage::newFilterInstance(bool copyFilterParameters
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKExpImage::getHumanLabel() const
+QString ITKExpImage::getHumanLabel() const
 {
   return "ITK::Exp Image Filter";
 }
@@ -132,7 +134,7 @@ const QString ITKExpImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKExpImage::getUuid()
+QUuid ITKExpImage::getUuid() const
 {
   return QUuid("{a6fb3f3a-6c7a-5dfc-a4f1-75ff1d62c32f}");
 }
@@ -140,7 +142,38 @@ const QUuid ITKExpImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKExpImage::getSubGroupName() const
+QString ITKExpImage::getSubGroupName() const
 {
   return "ITK IntensityTransformation";
 }
+
+// -----------------------------------------------------------------------------
+ITKExpImage::Pointer ITKExpImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKExpImage> ITKExpImage::New()
+{
+  struct make_shared_enabler : public ITKExpImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKExpImage::getNameOfClass() const
+{
+  return QString("ITKExpImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKExpImage::ClassName()
+{
+  return QString("ITKExpImage");
+}
+
+

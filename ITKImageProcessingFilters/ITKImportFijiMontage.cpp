@@ -31,6 +31,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "ITKImportFijiMontage.h"
 
 #include <vector>
@@ -40,6 +42,7 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QStringList>
 
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/CoreFilters/ConvertColorToGrayScale.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
@@ -140,11 +143,46 @@ ITKImportFijiMontage::ITKImportFijiMontage()
 ITKImportFijiMontage::~ITKImportFijiMontage() = default;
 
 // -----------------------------------------------------------------------------
-//
+void ITKImportFijiMontage::setInputFile_Cache(const QString& value)
+{
+  Q_D(ITKImportFijiMontage);
+  d->m_InputFile_Cache = value;
+}
+
 // -----------------------------------------------------------------------------
-SIMPL_PIMPL_PROPERTY_DEF(ITKImportFijiMontage, QString, InputFile_Cache)
-SIMPL_PIMPL_PROPERTY_DEF(ITKImportFijiMontage, QDateTime, TimeStamp_Cache)
-SIMPL_PIMPL_PROPERTY_DEF(ITKImportFijiMontage, std::vector<ITKImportFijiMontage::BoundsType>, BoundsCache)
+QString ITKImportFijiMontage::getInputFile_Cache() const
+{
+  Q_D(const ITKImportFijiMontage);
+  return d->m_InputFile_Cache;
+}
+
+// -----------------------------------------------------------------------------
+void ITKImportFijiMontage::setTimeStamp_Cache(const QDateTime& value)
+{
+  Q_D(ITKImportFijiMontage);
+  d->m_TimeStamp_Cache = value;
+}
+
+// -----------------------------------------------------------------------------
+QDateTime ITKImportFijiMontage::getTimeStamp_Cache() const
+{
+  Q_D(const ITKImportFijiMontage);
+  return d->m_TimeStamp_Cache;
+}
+
+// -----------------------------------------------------------------------------
+void ITKImportFijiMontage::setBoundsCache(const std::vector<ITKImportFijiMontage::BoundsType>& value)
+{
+  Q_D(ITKImportFijiMontage);
+  d->m_BoundsCache = value;
+}
+
+// -----------------------------------------------------------------------------
+std::vector<ITKImportFijiMontage::BoundsType> ITKImportFijiMontage::getBoundsCache() const
+{
+  Q_D(const ITKImportFijiMontage);
+  return d->m_BoundsCache;
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -817,7 +855,7 @@ AbstractFilter::Pointer ITKImportFijiMontage::newFilterInstance(bool copyFilterP
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKImportFijiMontage::getCompiledLibraryName() const
+QString ITKImportFijiMontage::getCompiledLibraryName() const
 {
   return ITKImageProcessingConstants::ITKImageProcessingBaseName;
 }
@@ -825,7 +863,7 @@ const QString ITKImportFijiMontage::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKImportFijiMontage::getBrandingString() const
+QString ITKImportFijiMontage::getBrandingString() const
 {
   return "ITKImageProcessing";
 }
@@ -833,7 +871,7 @@ const QString ITKImportFijiMontage::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKImportFijiMontage::getFilterVersion() const
+QString ITKImportFijiMontage::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -843,7 +881,7 @@ const QString ITKImportFijiMontage::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKImportFijiMontage::getGroupName() const
+QString ITKImportFijiMontage::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -851,7 +889,7 @@ const QString ITKImportFijiMontage::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKImportFijiMontage::getUuid()
+QUuid ITKImportFijiMontage::getUuid() const
 {
   return QUuid("{5878723b-cc16-5486-ac5f-ff0107107e74}");
 }
@@ -859,7 +897,7 @@ const QUuid ITKImportFijiMontage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKImportFijiMontage::getSubGroupName() const
+QString ITKImportFijiMontage::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::InputFilters;
 }
@@ -867,7 +905,206 @@ const QString ITKImportFijiMontage::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKImportFijiMontage::getHumanLabel() const
+QString ITKImportFijiMontage::getHumanLabel() const
 {
   return "ITK::Import Fiji Montage";
 }
+
+// -----------------------------------------------------------------------------
+ITKImportFijiMontage::Pointer ITKImportFijiMontage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKImportFijiMontage> ITKImportFijiMontage::New()
+{
+  struct make_shared_enabler : public ITKImportFijiMontage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKImportFijiMontage::getNameOfClass() const
+{
+  return QString("ITKImportFijiMontage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKImportFijiMontage::ClassName()
+{
+  return QString("ITKImportFijiMontage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKImportFijiMontage::setInputFile(const QString& value)
+{
+  m_InputFile = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKImportFijiMontage::getInputFile() const
+{
+  return m_InputFile;
+}
+
+// -----------------------------------------------------------------------------
+void ITKImportFijiMontage::setMontageStart(const IntVec2Type& value)
+{
+  m_MontageStart = value;
+}
+
+// -----------------------------------------------------------------------------
+IntVec2Type ITKImportFijiMontage::getMontageStart() const
+{
+  return m_MontageStart;
+}
+
+// -----------------------------------------------------------------------------
+void ITKImportFijiMontage::setMontageEnd(const IntVec2Type& value)
+{
+  m_MontageEnd = value;
+}
+
+// -----------------------------------------------------------------------------
+IntVec2Type ITKImportFijiMontage::getMontageEnd() const
+{
+  return m_MontageEnd;
+}
+
+// -----------------------------------------------------------------------------
+void ITKImportFijiMontage::setDataContainerPath(const DataArrayPath& value)
+{
+  m_DataContainerPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath ITKImportFijiMontage::getDataContainerPath() const
+{
+  return m_DataContainerPath;
+}
+
+// -----------------------------------------------------------------------------
+void ITKImportFijiMontage::setCellAttributeMatrixName(const QString& value)
+{
+  m_CellAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKImportFijiMontage::getCellAttributeMatrixName() const
+{
+  return m_CellAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void ITKImportFijiMontage::setImageDataArrayName(const QString& value)
+{
+  m_ImageDataArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKImportFijiMontage::getImageDataArrayName() const
+{
+  return m_ImageDataArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void ITKImportFijiMontage::setConvertToGrayScale(bool value)
+{
+  m_ConvertToGrayScale = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ITKImportFijiMontage::getConvertToGrayScale() const
+{
+  return m_ConvertToGrayScale;
+}
+
+// -----------------------------------------------------------------------------
+void ITKImportFijiMontage::setColorWeights(const FloatVec3Type& value)
+{
+  m_ColorWeights = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec3Type ITKImportFijiMontage::getColorWeights() const
+{
+  return m_ColorWeights;
+}
+
+// -----------------------------------------------------------------------------
+void ITKImportFijiMontage::setChangeOrigin(bool value)
+{
+  m_ChangeOrigin = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ITKImportFijiMontage::getChangeOrigin() const
+{
+  return m_ChangeOrigin;
+}
+
+// -----------------------------------------------------------------------------
+void ITKImportFijiMontage::setOrigin(const FloatVec3Type& value)
+{
+  m_Origin = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec3Type ITKImportFijiMontage::getOrigin() const
+{
+  return m_Origin;
+}
+
+// -----------------------------------------------------------------------------
+void ITKImportFijiMontage::setChangeSpacing(bool value)
+{
+  m_ChangeSpacing = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ITKImportFijiMontage::getChangeSpacing() const
+{
+  return m_ChangeSpacing;
+}
+
+// -----------------------------------------------------------------------------
+void ITKImportFijiMontage::setSpacing(const FloatVec3Type& value)
+{
+  m_Spacing = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec3Type ITKImportFijiMontage::getSpacing() const
+{
+  return m_Spacing;
+}
+
+// -----------------------------------------------------------------------------
+int32_t ITKImportFijiMontage::getRowCount() const
+{
+  return m_RowCount;
+}
+
+// -----------------------------------------------------------------------------
+int32_t ITKImportFijiMontage::getColumnCount() const
+{
+  return m_ColumnCount;
+}
+
+// -----------------------------------------------------------------------------
+void ITKImportFijiMontage::setLengthUnit(int32_t value)
+{
+  m_LengthUnit = value;
+}
+
+// -----------------------------------------------------------------------------
+int32_t ITKImportFijiMontage::getLengthUnit() const
+{
+  return m_LengthUnit;
+}
+
+

@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKMorphologicalWatershedImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -141,7 +143,7 @@ AbstractFilter::Pointer ITKMorphologicalWatershedImage::newFilterInstance(bool c
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKMorphologicalWatershedImage::getHumanLabel() const
+QString ITKMorphologicalWatershedImage::getHumanLabel() const
 {
   return "ITK::Morphological Watershed Image Filter";
 }
@@ -149,7 +151,7 @@ const QString ITKMorphologicalWatershedImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKMorphologicalWatershedImage::getUuid()
+QUuid ITKMorphologicalWatershedImage::getUuid() const
 {
   return QUuid("{b2248340-a371-5899-90a2-86047950f0a2}");
 }
@@ -157,7 +159,74 @@ const QUuid ITKMorphologicalWatershedImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKMorphologicalWatershedImage::getSubGroupName() const
+QString ITKMorphologicalWatershedImage::getSubGroupName() const
 {
   return "ITK Watersheds";
 }
+
+// -----------------------------------------------------------------------------
+ITKMorphologicalWatershedImage::Pointer ITKMorphologicalWatershedImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKMorphologicalWatershedImage> ITKMorphologicalWatershedImage::New()
+{
+  struct make_shared_enabler : public ITKMorphologicalWatershedImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKMorphologicalWatershedImage::getNameOfClass() const
+{
+  return QString("ITKMorphologicalWatershedImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKMorphologicalWatershedImage::ClassName()
+{
+  return QString("ITKMorphologicalWatershedImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKMorphologicalWatershedImage::setLevel(double value)
+{
+  m_Level = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKMorphologicalWatershedImage::getLevel() const
+{
+  return m_Level;
+}
+
+// -----------------------------------------------------------------------------
+void ITKMorphologicalWatershedImage::setMarkWatershedLine(bool value)
+{
+  m_MarkWatershedLine = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ITKMorphologicalWatershedImage::getMarkWatershedLine() const
+{
+  return m_MarkWatershedLine;
+}
+
+// -----------------------------------------------------------------------------
+void ITKMorphologicalWatershedImage::setFullyConnected(bool value)
+{
+  m_FullyConnected = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ITKMorphologicalWatershedImage::getFullyConnected() const
+{
+  return m_FullyConnected;
+}
+
+

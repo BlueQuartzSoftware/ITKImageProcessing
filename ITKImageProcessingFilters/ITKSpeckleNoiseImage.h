@@ -11,9 +11,10 @@
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
+#include <memory>
+
 #include "ITKImageProcessingBase.h"
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
 
 // Auto includes
@@ -28,21 +29,61 @@
 class ITKImageProcessing_EXPORT ITKSpeckleNoiseImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+
+#ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(ITKSpeckleNoiseImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_SHARED_POINTERS(ITKSpeckleNoiseImage)
+  PYB11_FILTER_NEW_MACRO(ITKSpeckleNoiseImage)
+  PYB11_FILTER_PARAMETER(double, StandardDeviation)
+  PYB11_FILTER_PARAMETER(double, Seed)
   PYB11_PROPERTY(double StandardDeviation READ getStandardDeviation WRITE setStandardDeviation)
   PYB11_PROPERTY(double Seed READ getSeed WRITE setSeed)
+#endif
 
 public:
-  SIMPL_SHARED_POINTERS(ITKSpeckleNoiseImage)
-  SIMPL_FILTER_NEW_MACRO(ITKSpeckleNoiseImage)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKSpeckleNoiseImage, AbstractFilter)
+    using Self = ITKSpeckleNoiseImage;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
+
+    static std::shared_ptr<ITKSpeckleNoiseImage> New();
+
+    /**
+    * @brief Returns the name of the class for ITKSpeckleNoiseImage
+    */
+    QString getNameOfClass() const override;
+    /**
+    * @brief Returns the name of the class for ITKSpeckleNoiseImage
+    */
+    static QString ClassName();
+
 
   ~ITKSpeckleNoiseImage() override;
 
-  SIMPL_FILTER_PARAMETER(double, StandardDeviation)
+    /**
+    * @brief Setter property for StandardDeviation
+    */
+    void setStandardDeviation(double value); 
+    /**
+    * @brief Getter property for StandardDeviation
+    * @return Value of StandardDeviation
+    */
+    double getStandardDeviation() const;
+
   Q_PROPERTY(double StandardDeviation READ getStandardDeviation WRITE setStandardDeviation)
 
-  SIMPL_FILTER_PARAMETER(double, Seed)
+    /**
+    * @brief Setter property for Seed
+    */
+    void setSeed(double value); 
+    /**
+    * @brief Getter property for Seed
+    * @return Value of Seed
+    */
+    double getSeed() const;
+
   Q_PROPERTY(double Seed READ getSeed WRITE setSeed)
 
 
@@ -54,18 +95,18 @@ public:
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -105,6 +146,11 @@ public:
   ITKSpeckleNoiseImage(ITKSpeckleNoiseImage&&) = delete;         // Move Constructor Not Implemented
   ITKSpeckleNoiseImage& operator=(const ITKSpeckleNoiseImage&) = delete; // Copy Assignment Not Implemented
   ITKSpeckleNoiseImage& operator=(ITKSpeckleNoiseImage&&) = delete;      // Move Assignment Not Implemented
+
+  private:
+    double m_StandardDeviation = {};
+    double m_Seed = {};
+
 };
 
 #ifdef __clang__

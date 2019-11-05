@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -148,7 +150,7 @@ AbstractFilter::Pointer ITKDiscreteGaussianImage::newFilterInstance(bool copyFil
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKDiscreteGaussianImage::getHumanLabel() const
+QString ITKDiscreteGaussianImage::getHumanLabel() const
 {
   return "ITK::Discrete Gaussian Image Filter";
 }
@@ -156,7 +158,7 @@ const QString ITKDiscreteGaussianImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKDiscreteGaussianImage::getUuid()
+QUuid ITKDiscreteGaussianImage::getUuid() const
 {
   return QUuid("{53df5340-f632-598f-8a9b-802296b3a95c}");
 }
@@ -164,7 +166,86 @@ const QUuid ITKDiscreteGaussianImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKDiscreteGaussianImage::getSubGroupName() const
+QString ITKDiscreteGaussianImage::getSubGroupName() const
 {
   return "ITK Smoothing";
 }
+
+// -----------------------------------------------------------------------------
+ITKDiscreteGaussianImage::Pointer ITKDiscreteGaussianImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKDiscreteGaussianImage> ITKDiscreteGaussianImage::New()
+{
+  struct make_shared_enabler : public ITKDiscreteGaussianImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKDiscreteGaussianImage::getNameOfClass() const
+{
+  return QString("ITKDiscreteGaussianImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKDiscreteGaussianImage::ClassName()
+{
+  return QString("ITKDiscreteGaussianImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKDiscreteGaussianImage::setVariance(const FloatVec3Type& value)
+{
+  m_Variance = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec3Type ITKDiscreteGaussianImage::getVariance() const
+{
+  return m_Variance;
+}
+
+// -----------------------------------------------------------------------------
+void ITKDiscreteGaussianImage::setMaximumKernelWidth(int32_t value)
+{
+  m_MaximumKernelWidth = value;
+}
+
+// -----------------------------------------------------------------------------
+int32_t ITKDiscreteGaussianImage::getMaximumKernelWidth() const
+{
+  return m_MaximumKernelWidth;
+}
+
+// -----------------------------------------------------------------------------
+void ITKDiscreteGaussianImage::setMaximumError(const FloatVec3Type& value)
+{
+  m_MaximumError = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec3Type ITKDiscreteGaussianImage::getMaximumError() const
+{
+  return m_MaximumError;
+}
+
+// -----------------------------------------------------------------------------
+void ITKDiscreteGaussianImage::setUseImageSpacing(bool value)
+{
+  m_UseImageSpacing = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ITKDiscreteGaussianImage::getUseImageSpacing() const
+{
+  return m_UseImageSpacing;
+}
+
+

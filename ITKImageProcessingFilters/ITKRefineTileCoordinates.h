@@ -4,10 +4,12 @@
 
 #pragma once
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
-#include "SIMPLib/DataArrays/StringDataArray.h"
-#include "SIMPLib/Filtering/AbstractFilter.h"
+#include <memory>
+
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/DataArrays/StringDataArray.h"
+#include "SIMPLib/Common/SIMPLArray.hpp"
+#include "SIMPLib/Filtering/AbstractFilter.h"
 
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
 #include "ITKImageProcessing/ITKImageProcessingPlugin.h"
@@ -22,7 +24,18 @@
 class ITKImageProcessing_EXPORT ITKRefineTileCoordinates : public AbstractFilter
 {
   Q_OBJECT
+
+#ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(ITKRefineTileCoordinates SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(ITKRefineTileCoordinates)
+  PYB11_FILTER_NEW_MACRO(ITKRefineTileCoordinates)
+  PYB11_FILTER_PARAMETER(IntVec3Type, MontageSize)
+  PYB11_FILTER_PARAMETER(QStringList, DataContainers)
+  PYB11_FILTER_PARAMETER(QString, CommonAttributeMatrixName)
+  PYB11_FILTER_PARAMETER(QString, CommonDataArrayName)
+  PYB11_FILTER_PARAMETER(int, ImportMode)
+  PYB11_FILTER_PARAMETER(float, TileOverlap)
+  PYB11_FILTER_PARAMETER(bool, ApplyRefinedOrigin)
   PYB11_PROPERTY(IntVec3Type MontageSize READ getMontageSize WRITE setMontageSize)
   PYB11_PROPERTY(QStringList DataContainers READ getDataContainers WRITE setDataContainers)
   PYB11_PROPERTY(QString CommonAttributeMatrixName READ getCommonAttributeMatrixName WRITE setCommonAttributeMatrixName)
@@ -30,65 +43,144 @@ class ITKImageProcessing_EXPORT ITKRefineTileCoordinates : public AbstractFilter
   PYB11_PROPERTY(int ImportMode READ getImportMode WRITE setImportMode)
   PYB11_PROPERTY(float TileOverlap READ getTileOverlap WRITE setTileOverlap)
   PYB11_PROPERTY(bool ApplyRefinedOrigin READ getApplyRefinedOrigin WRITE setApplyRefinedOrigin)
+#endif
 
 public:
-  SIMPL_SHARED_POINTERS(ITKRefineTileCoordinates)
-  SIMPL_FILTER_NEW_MACRO(ITKRefineTileCoordinates)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKRefineTileCoordinates, AbstractFilter)
+    using Self = ITKRefineTileCoordinates;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
+
+    static std::shared_ptr<ITKRefineTileCoordinates> New();
+
+    /**
+    * @brief Returns the name of the class for ITKRefineTileCoordinates
+    */
+    QString getNameOfClass() const override;
+    /**
+    * @brief Returns the name of the class for ITKRefineTileCoordinates
+    */
+    static QString ClassName();
+
 
   ~ITKRefineTileCoordinates() override;
 
-  SIMPL_FILTER_PARAMETER(IntVec3Type, MontageSize)
+    /**
+    * @brief Setter property for MontageSize
+    */
+    void setMontageSize(const IntVec3Type& value); 
+    /**
+    * @brief Getter property for MontageSize
+    * @return Value of MontageSize
+    */
+    IntVec3Type getMontageSize() const;
+
   Q_PROPERTY(IntVec3Type MontageSize READ getMontageSize WRITE setMontageSize)
 
-  SIMPL_FILTER_PARAMETER(QStringList, DataContainers)
+    /**
+    * @brief Setter property for DataContainers
+    */
+    void setDataContainers(const QStringList& value); 
+    /**
+    * @brief Getter property for DataContainers
+    * @return Value of DataContainers
+    */
+    QStringList getDataContainers() const;
+
   Q_PROPERTY(QStringList DataContainers READ getDataContainers WRITE setDataContainers)
 
-  SIMPL_FILTER_PARAMETER(QString, CommonAttributeMatrixName)
+    /**
+    * @brief Setter property for CommonAttributeMatrixName
+    */
+    void setCommonAttributeMatrixName(const QString& value); 
+    /**
+    * @brief Getter property for CommonAttributeMatrixName
+    * @return Value of CommonAttributeMatrixName
+    */
+    QString getCommonAttributeMatrixName() const;
+
   Q_PROPERTY(QString CommonAttributeMatrixName READ getCommonAttributeMatrixName WRITE setCommonAttributeMatrixName)
 
-  SIMPL_FILTER_PARAMETER(QString, CommonDataArrayName)
+    /**
+    * @brief Setter property for CommonDataArrayName
+    */
+    void setCommonDataArrayName(const QString& value); 
+    /**
+    * @brief Getter property for CommonDataArrayName
+    * @return Value of CommonDataArrayName
+    */
+    QString getCommonDataArrayName() const;
+
   Q_PROPERTY(QString CommonDataArrayName READ getCommonDataArrayName WRITE setCommonDataArrayName)
 
-  SIMPL_FILTER_PARAMETER(int, ImportMode)
+    /**
+    * @brief Setter property for ImportMode
+    */
+    void setImportMode(int value); 
+    /**
+    * @brief Getter property for ImportMode
+    * @return Value of ImportMode
+    */
+    int getImportMode() const;
+
   Q_PROPERTY(int ImportMode READ getImportMode WRITE setImportMode)
 
-  SIMPL_FILTER_PARAMETER(float, TileOverlap)
+    /**
+    * @brief Setter property for TileOverlap
+    */
+    void setTileOverlap(float value); 
+    /**
+    * @brief Getter property for TileOverlap
+    * @return Value of TileOverlap
+    */
+    float getTileOverlap() const;
+
   Q_PROPERTY(float TileOverlap READ getTileOverlap WRITE setTileOverlap)
 
-  SIMPL_FILTER_PARAMETER(bool, ApplyRefinedOrigin)
+    /**
+    * @brief Setter property for ApplyRefinedOrigin
+    */
+    void setApplyRefinedOrigin(bool value); 
+    /**
+    * @brief Getter property for ApplyRefinedOrigin
+    * @return Value of ApplyRefinedOrigin
+    */
+    bool getApplyRefinedOrigin() const;
+
   Q_PROPERTY(bool ApplyRefinedOrigin READ getApplyRefinedOrigin WRITE setApplyRefinedOrigin)
 
   /**
    * @brief getCompiledLibraryName Returns the name of the Library that this filter is a part of
    * @return
    */
-  const QString getCompiledLibraryName() const override;
+  QString getCompiledLibraryName() const override;
 
   /**
    * @brief This returns a string that is displayed in the GUI. It should be readable
    * and understandable by humans.
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief This returns the group that the filter belonds to. You can select
    * a different group if you want. The string returned here will be displayed
    * in the GUI for the filter
    */
-  const QString getGroupName() const override;
+  QString getGroupName() const override;
 
   /**
    * @brief This returns a string that is displayed in the GUI and helps to sort the filters into
    * a subgroup. It should be readable and understandable by humans.
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief This method will instantiate all the end user settable options/parameters
@@ -181,9 +273,21 @@ protected:
   GeomType getGeomType();
 
 private:
+    IntVec3Type m_MontageSize = {};
+    QStringList m_DataContainers = {};
+    QString m_CommonAttributeMatrixName = {};
+    QString m_CommonDataArrayName = {};
+    int m_ImportMode = {};
+    float m_TileOverlap = {};
+    bool m_ApplyRefinedOrigin = {};
+    std::weak_ptr<DataArray<ITKImageProcessingConstants::DefaultPixelType>>  m_SelectedCellArrayPtr;
+    ITKImageProcessingConstants::DefaultPixelType* m_SelectedCellArray = nullptr;
+    std::weak_ptr<DataArray<float>>  m_StitchedCoordinatesPtr;
+    float* m_StitchedCoordinates = nullptr;
+
   std::vector<ITKImageProcessingConstants::DefaultPixelType*> m_PointerList;
-  DEFINE_DATAARRAY_VARIABLE(ITKImageProcessingConstants::DefaultPixelType, SelectedCellArray)
-  DEFINE_DATAARRAY_VARIABLE(float, StitchedCoordinates)
+
+
   StringDataArray::WeakPointer m_DataArrayNamesForStitchedCoordinatesPtr;
 
 public:

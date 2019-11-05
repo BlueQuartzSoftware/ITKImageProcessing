@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKLaplacianSharpeningImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -133,7 +135,7 @@ AbstractFilter::Pointer ITKLaplacianSharpeningImage::newFilterInstance(bool copy
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKLaplacianSharpeningImage::getHumanLabel() const
+QString ITKLaplacianSharpeningImage::getHumanLabel() const
 {
   return "ITK::Laplacian Sharpening Image Filter";
 }
@@ -141,7 +143,7 @@ const QString ITKLaplacianSharpeningImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKLaplacianSharpeningImage::getUuid()
+QUuid ITKLaplacianSharpeningImage::getUuid() const
 {
   return QUuid("{c4963181-c788-5efc-8560-d005a5e01eea}");
 }
@@ -149,7 +151,50 @@ const QUuid ITKLaplacianSharpeningImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKLaplacianSharpeningImage::getSubGroupName() const
+QString ITKLaplacianSharpeningImage::getSubGroupName() const
 {
   return "ITK Smoothing";
 }
+
+// -----------------------------------------------------------------------------
+ITKLaplacianSharpeningImage::Pointer ITKLaplacianSharpeningImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKLaplacianSharpeningImage> ITKLaplacianSharpeningImage::New()
+{
+  struct make_shared_enabler : public ITKLaplacianSharpeningImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKLaplacianSharpeningImage::getNameOfClass() const
+{
+  return QString("ITKLaplacianSharpeningImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKLaplacianSharpeningImage::ClassName()
+{
+  return QString("ITKLaplacianSharpeningImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKLaplacianSharpeningImage::setUseImageSpacing(bool value)
+{
+  m_UseImageSpacing = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ITKLaplacianSharpeningImage::getUseImageSpacing() const
+{
+  return m_UseImageSpacing;
+}
+
+

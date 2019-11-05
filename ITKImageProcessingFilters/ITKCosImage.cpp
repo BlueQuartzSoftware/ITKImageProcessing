@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKCosImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -124,7 +126,7 @@ AbstractFilter::Pointer ITKCosImage::newFilterInstance(bool copyFilterParameters
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKCosImage::getHumanLabel() const
+QString ITKCosImage::getHumanLabel() const
 {
   return "ITK::Cos Image Filter";
 }
@@ -132,7 +134,7 @@ const QString ITKCosImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKCosImage::getUuid()
+QUuid ITKCosImage::getUuid() const
 {
   return QUuid("{2c2d7bf6-1e78-52e6-80aa-58b504ce0912}");
 }
@@ -140,7 +142,38 @@ const QUuid ITKCosImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKCosImage::getSubGroupName() const
+QString ITKCosImage::getSubGroupName() const
 {
   return "ITK IntensityTransformation";
 }
+
+// -----------------------------------------------------------------------------
+ITKCosImage::Pointer ITKCosImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKCosImage> ITKCosImage::New()
+{
+  struct make_shared_enabler : public ITKCosImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKCosImage::getNameOfClass() const
+{
+  return QString("ITKCosImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKCosImage::ClassName()
+{
+  return QString("ITKCosImage");
+}
+
+

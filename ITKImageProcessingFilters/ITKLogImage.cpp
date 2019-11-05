@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKLogImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -124,7 +126,7 @@ AbstractFilter::Pointer ITKLogImage::newFilterInstance(bool copyFilterParameters
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKLogImage::getHumanLabel() const
+QString ITKLogImage::getHumanLabel() const
 {
   return "ITK::Log Image Filter";
 }
@@ -132,7 +134,7 @@ const QString ITKLogImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKLogImage::getUuid()
+QUuid ITKLogImage::getUuid() const
 {
   return QUuid("{69aba77c-9a35-5251-a18a-e3728ddd2963}");
 }
@@ -140,7 +142,38 @@ const QUuid ITKLogImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKLogImage::getSubGroupName() const
+QString ITKLogImage::getSubGroupName() const
 {
   return "ITK IntensityTransformation";
 }
+
+// -----------------------------------------------------------------------------
+ITKLogImage::Pointer ITKLogImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKLogImage> ITKLogImage::New()
+{
+  struct make_shared_enabler : public ITKLogImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKLogImage::getNameOfClass() const
+{
+  return QString("ITKLogImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKLogImage::ClassName()
+{
+  return QString("ITKLogImage");
+}
+
+

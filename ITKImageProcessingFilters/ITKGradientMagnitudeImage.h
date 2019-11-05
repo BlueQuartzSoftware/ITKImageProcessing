@@ -11,9 +11,10 @@
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
+#include <memory>
+
 #include "ITKImageProcessingBase.h"
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
 
 // Auto includes
@@ -28,17 +29,47 @@
 class ITKImageProcessing_EXPORT ITKGradientMagnitudeImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+
+#ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(ITKGradientMagnitudeImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_SHARED_POINTERS(ITKGradientMagnitudeImage)
+  PYB11_FILTER_NEW_MACRO(ITKGradientMagnitudeImage)
+  PYB11_FILTER_PARAMETER(bool, UseImageSpacing)
   PYB11_PROPERTY(bool UseImageSpacing READ getUseImageSpacing WRITE setUseImageSpacing)
+#endif
 
 public:
-  SIMPL_SHARED_POINTERS(ITKGradientMagnitudeImage)
-  SIMPL_FILTER_NEW_MACRO(ITKGradientMagnitudeImage)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKGradientMagnitudeImage, AbstractFilter)
+    using Self = ITKGradientMagnitudeImage;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
+
+    static std::shared_ptr<ITKGradientMagnitudeImage> New();
+
+    /**
+    * @brief Returns the name of the class for ITKGradientMagnitudeImage
+    */
+    QString getNameOfClass() const override;
+    /**
+    * @brief Returns the name of the class for ITKGradientMagnitudeImage
+    */
+    static QString ClassName();
+
 
   ~ITKGradientMagnitudeImage() override;
 
-  SIMPL_FILTER_PARAMETER(bool, UseImageSpacing)
+    /**
+    * @brief Setter property for UseImageSpacing
+    */
+    void setUseImageSpacing(bool value); 
+    /**
+    * @brief Getter property for UseImageSpacing
+    * @return Value of UseImageSpacing
+    */
+    bool getUseImageSpacing() const;
+
   Q_PROPERTY(bool UseImageSpacing READ getUseImageSpacing WRITE setUseImageSpacing)
 
 
@@ -50,18 +81,18 @@ public:
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -101,6 +132,10 @@ public:
   ITKGradientMagnitudeImage(ITKGradientMagnitudeImage&&) = delete;         // Move Constructor Not Implemented
   ITKGradientMagnitudeImage& operator=(const ITKGradientMagnitudeImage&) = delete; // Copy Assignment Not Implemented
   ITKGradientMagnitudeImage& operator=(ITKGradientMagnitudeImage&&) = delete;      // Move Assignment Not Implemented
+
+  private:
+    bool m_UseImageSpacing = {};
+
 };
 
 #ifdef __clang__

@@ -2,6 +2,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKPatchBasedDenoisingImage.h"
 
 #include "SIMPLib/Common/Constants.h"
@@ -220,7 +222,7 @@ AbstractFilter::Pointer ITKPatchBasedDenoisingImage::newFilterInstance(bool copy
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKPatchBasedDenoisingImage::getHumanLabel() const
+QString ITKPatchBasedDenoisingImage::getHumanLabel() const
 {
   return "ITK::Patch Based Denoising Image Filter";
 }
@@ -228,7 +230,7 @@ const QString ITKPatchBasedDenoisingImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKPatchBasedDenoisingImage::getUuid()
+QUuid ITKPatchBasedDenoisingImage::getUuid() const
 {
   return QUuid("{ed61aebd-3a47-5ee1-8c9e-4ce205111b76}");
 }
@@ -236,7 +238,206 @@ const QUuid ITKPatchBasedDenoisingImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKPatchBasedDenoisingImage::getSubGroupName() const
+QString ITKPatchBasedDenoisingImage::getSubGroupName() const
 {
   return "ITK Denoising";
 }
+
+// -----------------------------------------------------------------------------
+ITKPatchBasedDenoisingImage::Pointer ITKPatchBasedDenoisingImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKPatchBasedDenoisingImage> ITKPatchBasedDenoisingImage::New()
+{
+  struct make_shared_enabler : public ITKPatchBasedDenoisingImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKPatchBasedDenoisingImage::getNameOfClass() const
+{
+  return QString("ITKPatchBasedDenoisingImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKPatchBasedDenoisingImage::ClassName()
+{
+  return QString("ITKPatchBasedDenoisingImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKPatchBasedDenoisingImage::setKernelBandwidthSigma(double value)
+{
+  m_KernelBandwidthSigma = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKPatchBasedDenoisingImage::getKernelBandwidthSigma() const
+{
+  return m_KernelBandwidthSigma;
+}
+
+// -----------------------------------------------------------------------------
+void ITKPatchBasedDenoisingImage::setPatchRadius(double value)
+{
+  m_PatchRadius = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKPatchBasedDenoisingImage::getPatchRadius() const
+{
+  return m_PatchRadius;
+}
+
+// -----------------------------------------------------------------------------
+void ITKPatchBasedDenoisingImage::setNumberOfIterations(double value)
+{
+  m_NumberOfIterations = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKPatchBasedDenoisingImage::getNumberOfIterations() const
+{
+  return m_NumberOfIterations;
+}
+
+// -----------------------------------------------------------------------------
+void ITKPatchBasedDenoisingImage::setNumberOfSamplePatches(double value)
+{
+  m_NumberOfSamplePatches = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKPatchBasedDenoisingImage::getNumberOfSamplePatches() const
+{
+  return m_NumberOfSamplePatches;
+}
+
+// -----------------------------------------------------------------------------
+void ITKPatchBasedDenoisingImage::setSampleVariance(double value)
+{
+  m_SampleVariance = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKPatchBasedDenoisingImage::getSampleVariance() const
+{
+  return m_SampleVariance;
+}
+
+// -----------------------------------------------------------------------------
+void ITKPatchBasedDenoisingImage::setNoiseSigma(double value)
+{
+  m_NoiseSigma = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKPatchBasedDenoisingImage::getNoiseSigma() const
+{
+  return m_NoiseSigma;
+}
+
+// -----------------------------------------------------------------------------
+void ITKPatchBasedDenoisingImage::setNoiseModelFidelityWeight(double value)
+{
+  m_NoiseModelFidelityWeight = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKPatchBasedDenoisingImage::getNoiseModelFidelityWeight() const
+{
+  return m_NoiseModelFidelityWeight;
+}
+
+// -----------------------------------------------------------------------------
+void ITKPatchBasedDenoisingImage::setAlwaysTreatComponentsAsEuclidean(bool value)
+{
+  m_AlwaysTreatComponentsAsEuclidean = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ITKPatchBasedDenoisingImage::getAlwaysTreatComponentsAsEuclidean() const
+{
+  return m_AlwaysTreatComponentsAsEuclidean;
+}
+
+// -----------------------------------------------------------------------------
+void ITKPatchBasedDenoisingImage::setKernelBandwidthEstimation(bool value)
+{
+  m_KernelBandwidthEstimation = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ITKPatchBasedDenoisingImage::getKernelBandwidthEstimation() const
+{
+  return m_KernelBandwidthEstimation;
+}
+
+// -----------------------------------------------------------------------------
+void ITKPatchBasedDenoisingImage::setKernelBandwidthMultiplicationFactor(double value)
+{
+  m_KernelBandwidthMultiplicationFactor = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKPatchBasedDenoisingImage::getKernelBandwidthMultiplicationFactor() const
+{
+  return m_KernelBandwidthMultiplicationFactor;
+}
+
+// -----------------------------------------------------------------------------
+void ITKPatchBasedDenoisingImage::setKernelBandwidthUpdateFrequency(double value)
+{
+  m_KernelBandwidthUpdateFrequency = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKPatchBasedDenoisingImage::getKernelBandwidthUpdateFrequency() const
+{
+  return m_KernelBandwidthUpdateFrequency;
+}
+
+// -----------------------------------------------------------------------------
+void ITKPatchBasedDenoisingImage::setKernelBandwidthFractionPixelsForEstimation(double value)
+{
+  m_KernelBandwidthFractionPixelsForEstimation = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKPatchBasedDenoisingImage::getKernelBandwidthFractionPixelsForEstimation() const
+{
+  return m_KernelBandwidthFractionPixelsForEstimation;
+}
+
+// -----------------------------------------------------------------------------
+void ITKPatchBasedDenoisingImage::setNoiseModel(int value)
+{
+  m_NoiseModel = value;
+}
+
+// -----------------------------------------------------------------------------
+int ITKPatchBasedDenoisingImage::getNoiseModel() const
+{
+  return m_NoiseModel;
+}
+
+// -----------------------------------------------------------------------------
+void ITKPatchBasedDenoisingImage::setNumberOfThreads(int value)
+{
+  m_NumberOfThreads = value;
+}
+
+// -----------------------------------------------------------------------------
+int ITKPatchBasedDenoisingImage::getNumberOfThreads() const
+{
+  return m_NumberOfThreads;
+}
+
+

@@ -11,9 +11,10 @@
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
+#include <memory>
+
 #include "ITKImageProcessingBase.h"
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
 
 // Auto includes
@@ -29,29 +30,89 @@
 class ITKImageProcessing_EXPORT ITKSignedMaurerDistanceMapImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+
+#ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(ITKSignedMaurerDistanceMapImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_SHARED_POINTERS(ITKSignedMaurerDistanceMapImage)
+  PYB11_FILTER_NEW_MACRO(ITKSignedMaurerDistanceMapImage)
+  PYB11_FILTER_PARAMETER(bool, InsideIsPositive)
+  PYB11_FILTER_PARAMETER(bool, SquaredDistance)
+  PYB11_FILTER_PARAMETER(bool, UseImageSpacing)
+  PYB11_FILTER_PARAMETER(double, BackgroundValue)
   PYB11_PROPERTY(bool InsideIsPositive READ getInsideIsPositive WRITE setInsideIsPositive)
   PYB11_PROPERTY(bool SquaredDistance READ getSquaredDistance WRITE setSquaredDistance)
   PYB11_PROPERTY(bool UseImageSpacing READ getUseImageSpacing WRITE setUseImageSpacing)
   PYB11_PROPERTY(double BackgroundValue READ getBackgroundValue WRITE setBackgroundValue)
+#endif
 
 public:
-  SIMPL_SHARED_POINTERS(ITKSignedMaurerDistanceMapImage)
-  SIMPL_FILTER_NEW_MACRO(ITKSignedMaurerDistanceMapImage)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKSignedMaurerDistanceMapImage, AbstractFilter)
+    using Self = ITKSignedMaurerDistanceMapImage;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
+
+    static std::shared_ptr<ITKSignedMaurerDistanceMapImage> New();
+
+    /**
+    * @brief Returns the name of the class for ITKSignedMaurerDistanceMapImage
+    */
+    QString getNameOfClass() const override;
+    /**
+    * @brief Returns the name of the class for ITKSignedMaurerDistanceMapImage
+    */
+    static QString ClassName();
+
 
   ~ITKSignedMaurerDistanceMapImage() override;
 
-  SIMPL_FILTER_PARAMETER(bool, InsideIsPositive)
+    /**
+    * @brief Setter property for InsideIsPositive
+    */
+    void setInsideIsPositive(bool value); 
+    /**
+    * @brief Getter property for InsideIsPositive
+    * @return Value of InsideIsPositive
+    */
+    bool getInsideIsPositive() const;
+
   Q_PROPERTY(bool InsideIsPositive READ getInsideIsPositive WRITE setInsideIsPositive)
 
-  SIMPL_FILTER_PARAMETER(bool, SquaredDistance)
+    /**
+    * @brief Setter property for SquaredDistance
+    */
+    void setSquaredDistance(bool value); 
+    /**
+    * @brief Getter property for SquaredDistance
+    * @return Value of SquaredDistance
+    */
+    bool getSquaredDistance() const;
+
   Q_PROPERTY(bool SquaredDistance READ getSquaredDistance WRITE setSquaredDistance)
 
-  SIMPL_FILTER_PARAMETER(bool, UseImageSpacing)
+    /**
+    * @brief Setter property for UseImageSpacing
+    */
+    void setUseImageSpacing(bool value); 
+    /**
+    * @brief Getter property for UseImageSpacing
+    * @return Value of UseImageSpacing
+    */
+    bool getUseImageSpacing() const;
+
   Q_PROPERTY(bool UseImageSpacing READ getUseImageSpacing WRITE setUseImageSpacing)
 
-  SIMPL_FILTER_PARAMETER(double, BackgroundValue)
+    /**
+    * @brief Setter property for BackgroundValue
+    */
+    void setBackgroundValue(double value); 
+    /**
+    * @brief Getter property for BackgroundValue
+    * @return Value of BackgroundValue
+    */
+    double getBackgroundValue() const;
+
   Q_PROPERTY(double BackgroundValue READ getBackgroundValue WRITE setBackgroundValue)
 
 
@@ -63,18 +124,18 @@ public:
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -114,6 +175,13 @@ public:
   ITKSignedMaurerDistanceMapImage(ITKSignedMaurerDistanceMapImage&&) = delete;         // Move Constructor Not Implemented
   ITKSignedMaurerDistanceMapImage& operator=(const ITKSignedMaurerDistanceMapImage&) = delete; // Copy Assignment Not Implemented
   ITKSignedMaurerDistanceMapImage& operator=(ITKSignedMaurerDistanceMapImage&&) = delete;      // Move Assignment Not Implemented
+
+  private:
+    bool m_InsideIsPositive = {};
+    bool m_SquaredDistance = {};
+    bool m_UseImageSpacing = {};
+    double m_BackgroundValue = {};
+
 };
 
 #ifdef __clang__

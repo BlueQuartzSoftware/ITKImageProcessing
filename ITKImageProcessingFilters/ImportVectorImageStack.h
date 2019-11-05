@@ -35,13 +35,16 @@
 
 #pragma once
 
+#include <memory>
+
 #include <QtCore/QString>
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/DataArrays/IDataArray.h"
 #include "SIMPLib/DataArrays/StringDataArray.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/ITK/itkImageReaderHelper.h"
+#include "SIMPLib/Common/SIMPLArray.hpp"
 
 #include "ITKImageProcessing/FilterParameters/ImportVectorImageStackFilterParameter.h"
 #include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
@@ -56,7 +59,18 @@
 class ITKImageProcessing_EXPORT ImportVectorImageStack : public AbstractFilter
 {
   Q_OBJECT
+
+#ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(ImportVectorImageStack SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(ImportVectorImageStack)
+  PYB11_FILTER_NEW_MACRO(ImportVectorImageStack)
+  PYB11_FILTER_PARAMETER(DataArrayPath, DataContainerName)
+  PYB11_FILTER_PARAMETER(QString, CellAttributeMatrixName)
+  PYB11_FILTER_PARAMETER(FloatVec3Type, Origin)
+  PYB11_FILTER_PARAMETER(FloatVec3Type, Spacing)
+  PYB11_FILTER_PARAMETER(VectorFileListInfo_t, InputFileListInfo)
+  PYB11_FILTER_PARAMETER(QString, VectorDataArrayName)
+  PYB11_FILTER_PARAMETER(bool, ConvertToGrayscale)
   PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
   PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
   PYB11_PROPERTY(FloatVec3Type Origin READ getOrigin WRITE setOrigin)
@@ -64,52 +78,132 @@ class ITKImageProcessing_EXPORT ImportVectorImageStack : public AbstractFilter
   PYB11_PROPERTY(VectorFileListInfo_t InputFileListInfo READ getInputFileListInfo WRITE setInputFileListInfo)
   PYB11_PROPERTY(QString VectorDataArrayName READ getVectorDataArrayName WRITE setVectorDataArrayName)
   PYB11_PROPERTY(bool ConvertToGrayscale READ getConvertToGrayscale WRITE setConvertToGrayscale)
+#endif
+
 public:
-  SIMPL_SHARED_POINTERS(ImportVectorImageStack)
-  SIMPL_FILTER_NEW_MACRO(ImportVectorImageStack)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ImportVectorImageStack, AbstractFilter)
+    using Self = ImportVectorImageStack;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
+
+    static std::shared_ptr<ImportVectorImageStack> New();
+
+    /**
+    * @brief Returns the name of the class for ImportVectorImageStack
+    */
+    QString getNameOfClass() const override;
+    /**
+    * @brief Returns the name of the class for ImportVectorImageStack
+    */
+    static QString ClassName();
+
 
   ~ImportVectorImageStack() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, DataContainerName)
+    /**
+    * @brief Setter property for DataContainerName
+    */
+    void setDataContainerName(const DataArrayPath& value); 
+    /**
+    * @brief Getter property for DataContainerName
+    * @return Value of DataContainerName
+    */
+    DataArrayPath getDataContainerName() const;
+
   Q_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
 
-  SIMPL_FILTER_PARAMETER(QString, CellAttributeMatrixName)
+    /**
+    * @brief Setter property for CellAttributeMatrixName
+    */
+    void setCellAttributeMatrixName(const QString& value); 
+    /**
+    * @brief Getter property for CellAttributeMatrixName
+    * @return Value of CellAttributeMatrixName
+    */
+    QString getCellAttributeMatrixName() const;
+
   Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
-  SIMPL_FILTER_PARAMETER(FloatVec3Type, Origin)
+    /**
+    * @brief Setter property for Origin
+    */
+    void setOrigin(const FloatVec3Type& value); 
+    /**
+    * @brief Getter property for Origin
+    * @return Value of Origin
+    */
+    FloatVec3Type getOrigin() const;
+
   Q_PROPERTY(FloatVec3Type Origin READ getOrigin WRITE setOrigin)
 
-  SIMPL_FILTER_PARAMETER(FloatVec3Type, Spacing)
+    /**
+    * @brief Setter property for Spacing
+    */
+    void setSpacing(const FloatVec3Type& value); 
+    /**
+    * @brief Getter property for Spacing
+    * @return Value of Spacing
+    */
+    FloatVec3Type getSpacing() const;
+
   Q_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
 
-  SIMPL_FILTER_PARAMETER(VectorFileListInfo_t, InputFileListInfo)
+    /**
+    * @brief Setter property for InputFileListInfo
+    */
+    void setInputFileListInfo(const VectorFileListInfo_t& value); 
+    /**
+    * @brief Getter property for InputFileListInfo
+    * @return Value of InputFileListInfo
+    */
+    VectorFileListInfo_t getInputFileListInfo() const;
+
   Q_PROPERTY(VectorFileListInfo_t InputFileListInfo READ getInputFileListInfo WRITE setInputFileListInfo)
 
-  SIMPL_FILTER_PARAMETER(QString, VectorDataArrayName)
+    /**
+    * @brief Setter property for VectorDataArrayName
+    */
+    void setVectorDataArrayName(const QString& value); 
+    /**
+    * @brief Getter property for VectorDataArrayName
+    * @return Value of VectorDataArrayName
+    */
+    QString getVectorDataArrayName() const;
+
   Q_PROPERTY(QString VectorDataArrayName READ getVectorDataArrayName WRITE setVectorDataArrayName)
 
-  SIMPL_FILTER_PARAMETER(bool, ConvertToGrayscale)
+    /**
+    * @brief Setter property for ConvertToGrayscale
+    */
+    void setConvertToGrayscale(bool value); 
+    /**
+    * @brief Getter property for ConvertToGrayscale
+    * @return Value of ConvertToGrayscale
+    */
+    bool getConvertToGrayscale() const;
+
   Q_PROPERTY(bool ConvertToGrayscale READ getConvertToGrayscale WRITE setConvertToGrayscale)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
-  const QString getCompiledLibraryName() const override;
+  QString getCompiledLibraryName() const override;
 
   /**
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
    */
-  const QString getBrandingString() const override;
+  QString getBrandingString() const override;
 
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
    * @return
    */
-  const QString getFilterVersion() const override;
+  QString getFilterVersion() const override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -119,23 +213,23 @@ public:
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getGroupName() const override;
+  QString getGroupName() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -198,5 +292,15 @@ public:
   ImportVectorImageStack(ImportVectorImageStack&&) = delete;                 // Move Constructor Not Implemented
   ImportVectorImageStack& operator=(const ImportVectorImageStack&) = delete; // Copy Assignment Not Implemented
   ImportVectorImageStack& operator=(ImportVectorImageStack&&) = delete;      // Move Assignment Not Implemented
+
+  private:
+    DataArrayPath m_DataContainerName = {};
+    QString m_CellAttributeMatrixName = {};
+    FloatVec3Type m_Origin = {};
+    FloatVec3Type m_Spacing = {};
+    VectorFileListInfo_t m_InputFileListInfo = {};
+    QString m_VectorDataArrayName = {};
+    bool m_ConvertToGrayscale = {};
+
 };
 

@@ -11,9 +11,10 @@
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
+#include <memory>
+
 #include "ITKImageProcessingBase.h"
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
 
 // Auto includes
@@ -28,21 +29,61 @@
 class ITKImageProcessing_EXPORT ITKSaltAndPepperNoiseImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+
+#ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(ITKSaltAndPepperNoiseImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_SHARED_POINTERS(ITKSaltAndPepperNoiseImage)
+  PYB11_FILTER_NEW_MACRO(ITKSaltAndPepperNoiseImage)
+  PYB11_FILTER_PARAMETER(double, Probability)
+  PYB11_FILTER_PARAMETER(double, Seed)
   PYB11_PROPERTY(double Probability READ getProbability WRITE setProbability)
   PYB11_PROPERTY(double Seed READ getSeed WRITE setSeed)
+#endif
 
 public:
-  SIMPL_SHARED_POINTERS(ITKSaltAndPepperNoiseImage)
-  SIMPL_FILTER_NEW_MACRO(ITKSaltAndPepperNoiseImage)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKSaltAndPepperNoiseImage, AbstractFilter)
+    using Self = ITKSaltAndPepperNoiseImage;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
+
+    static std::shared_ptr<ITKSaltAndPepperNoiseImage> New();
+
+    /**
+    * @brief Returns the name of the class for ITKSaltAndPepperNoiseImage
+    */
+    QString getNameOfClass() const override;
+    /**
+    * @brief Returns the name of the class for ITKSaltAndPepperNoiseImage
+    */
+    static QString ClassName();
+
 
   ~ITKSaltAndPepperNoiseImage() override;
 
-  SIMPL_FILTER_PARAMETER(double, Probability)
+    /**
+    * @brief Setter property for Probability
+    */
+    void setProbability(double value); 
+    /**
+    * @brief Getter property for Probability
+    * @return Value of Probability
+    */
+    double getProbability() const;
+
   Q_PROPERTY(double Probability READ getProbability WRITE setProbability)
 
-  SIMPL_FILTER_PARAMETER(double, Seed)
+    /**
+    * @brief Setter property for Seed
+    */
+    void setSeed(double value); 
+    /**
+    * @brief Getter property for Seed
+    * @return Value of Seed
+    */
+    double getSeed() const;
+
   Q_PROPERTY(double Seed READ getSeed WRITE setSeed)
 
 
@@ -54,18 +95,18 @@ public:
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -105,6 +146,11 @@ public:
   ITKSaltAndPepperNoiseImage(ITKSaltAndPepperNoiseImage&&) = delete;         // Move Constructor Not Implemented
   ITKSaltAndPepperNoiseImage& operator=(const ITKSaltAndPepperNoiseImage&) = delete; // Copy Assignment Not Implemented
   ITKSaltAndPepperNoiseImage& operator=(ITKSaltAndPepperNoiseImage&&) = delete;      // Move Assignment Not Implemented
+
+  private:
+    double m_Probability = {};
+    double m_Seed = {};
+
 };
 
 #ifdef __clang__

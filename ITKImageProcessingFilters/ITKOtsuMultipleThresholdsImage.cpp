@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKOtsuMultipleThresholdsImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -152,7 +154,7 @@ AbstractFilter::Pointer ITKOtsuMultipleThresholdsImage::newFilterInstance(bool c
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKOtsuMultipleThresholdsImage::getHumanLabel() const
+QString ITKOtsuMultipleThresholdsImage::getHumanLabel() const
 {
   return "ITK::Otsu Multiple Thresholds Image Filter";
 }
@@ -160,7 +162,7 @@ const QString ITKOtsuMultipleThresholdsImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKOtsuMultipleThresholdsImage::getUuid()
+QUuid ITKOtsuMultipleThresholdsImage::getUuid() const
 {
   return QUuid("{6e66563a-edcf-5e11-bc1d-ceed36d8493f}");
 }
@@ -168,7 +170,98 @@ const QUuid ITKOtsuMultipleThresholdsImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKOtsuMultipleThresholdsImage::getSubGroupName() const
+QString ITKOtsuMultipleThresholdsImage::getSubGroupName() const
 {
   return "ITK Thresholding";
 }
+
+// -----------------------------------------------------------------------------
+ITKOtsuMultipleThresholdsImage::Pointer ITKOtsuMultipleThresholdsImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKOtsuMultipleThresholdsImage> ITKOtsuMultipleThresholdsImage::New()
+{
+  struct make_shared_enabler : public ITKOtsuMultipleThresholdsImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKOtsuMultipleThresholdsImage::getNameOfClass() const
+{
+  return QString("ITKOtsuMultipleThresholdsImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKOtsuMultipleThresholdsImage::ClassName()
+{
+  return QString("ITKOtsuMultipleThresholdsImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKOtsuMultipleThresholdsImage::setNumberOfThresholds(int value)
+{
+  m_NumberOfThresholds = value;
+}
+
+// -----------------------------------------------------------------------------
+int ITKOtsuMultipleThresholdsImage::getNumberOfThresholds() const
+{
+  return m_NumberOfThresholds;
+}
+
+// -----------------------------------------------------------------------------
+void ITKOtsuMultipleThresholdsImage::setLabelOffset(int value)
+{
+  m_LabelOffset = value;
+}
+
+// -----------------------------------------------------------------------------
+int ITKOtsuMultipleThresholdsImage::getLabelOffset() const
+{
+  return m_LabelOffset;
+}
+
+// -----------------------------------------------------------------------------
+void ITKOtsuMultipleThresholdsImage::setNumberOfHistogramBins(double value)
+{
+  m_NumberOfHistogramBins = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKOtsuMultipleThresholdsImage::getNumberOfHistogramBins() const
+{
+  return m_NumberOfHistogramBins;
+}
+
+// -----------------------------------------------------------------------------
+void ITKOtsuMultipleThresholdsImage::setValleyEmphasis(bool value)
+{
+  m_ValleyEmphasis = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ITKOtsuMultipleThresholdsImage::getValleyEmphasis() const
+{
+  return m_ValleyEmphasis;
+}
+
+// -----------------------------------------------------------------------------
+void ITKOtsuMultipleThresholdsImage::setThresholds(const FloatVec3Type& value)
+{
+  m_Thresholds = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec3Type ITKOtsuMultipleThresholdsImage::getThresholds() const
+{
+  return m_Thresholds;
+}
+
+

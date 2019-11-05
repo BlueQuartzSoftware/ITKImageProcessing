@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKZeroCrossingImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -139,7 +141,7 @@ AbstractFilter::Pointer ITKZeroCrossingImage::newFilterInstance(bool copyFilterP
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKZeroCrossingImage::getHumanLabel() const
+QString ITKZeroCrossingImage::getHumanLabel() const
 {
   return "ITK::Zero Crossing Image Filter";
 }
@@ -147,7 +149,7 @@ const QString ITKZeroCrossingImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKZeroCrossingImage::getUuid()
+QUuid ITKZeroCrossingImage::getUuid() const
 {
   return QUuid("{0259fa1a-4706-5df1-8418-95ffc7b932dd}");
 }
@@ -155,7 +157,62 @@ const QUuid ITKZeroCrossingImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKZeroCrossingImage::getSubGroupName() const
+QString ITKZeroCrossingImage::getSubGroupName() const
 {
   return "ITK Smoothing";
 }
+
+// -----------------------------------------------------------------------------
+ITKZeroCrossingImage::Pointer ITKZeroCrossingImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKZeroCrossingImage> ITKZeroCrossingImage::New()
+{
+  struct make_shared_enabler : public ITKZeroCrossingImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKZeroCrossingImage::getNameOfClass() const
+{
+  return QString("ITKZeroCrossingImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKZeroCrossingImage::ClassName()
+{
+  return QString("ITKZeroCrossingImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKZeroCrossingImage::setForegroundValue(int value)
+{
+  m_ForegroundValue = value;
+}
+
+// -----------------------------------------------------------------------------
+int ITKZeroCrossingImage::getForegroundValue() const
+{
+  return m_ForegroundValue;
+}
+
+// -----------------------------------------------------------------------------
+void ITKZeroCrossingImage::setBackgroundValue(int value)
+{
+  m_BackgroundValue = value;
+}
+
+// -----------------------------------------------------------------------------
+int ITKZeroCrossingImage::getBackgroundValue() const
+{
+  return m_BackgroundValue;
+}
+
+

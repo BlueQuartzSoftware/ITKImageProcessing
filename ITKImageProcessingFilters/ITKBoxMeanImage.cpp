@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKBoxMeanImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -133,7 +135,7 @@ AbstractFilter::Pointer ITKBoxMeanImage::newFilterInstance(bool copyFilterParame
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKBoxMeanImage::getHumanLabel() const
+QString ITKBoxMeanImage::getHumanLabel() const
 {
   return "ITK::Box Mean Image Filter";
 }
@@ -141,7 +143,7 @@ const QString ITKBoxMeanImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKBoxMeanImage::getUuid()
+QUuid ITKBoxMeanImage::getUuid() const
 {
   return QUuid("{6138f949-e363-5ca3-bc31-4f3daed65da5}");
 }
@@ -149,7 +151,50 @@ const QUuid ITKBoxMeanImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKBoxMeanImage::getSubGroupName() const
+QString ITKBoxMeanImage::getSubGroupName() const
 {
   return "ITK Smoothing";
 }
+
+// -----------------------------------------------------------------------------
+ITKBoxMeanImage::Pointer ITKBoxMeanImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKBoxMeanImage> ITKBoxMeanImage::New()
+{
+  struct make_shared_enabler : public ITKBoxMeanImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKBoxMeanImage::getNameOfClass() const
+{
+  return QString("ITKBoxMeanImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKBoxMeanImage::ClassName()
+{
+  return QString("ITKBoxMeanImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKBoxMeanImage::setRadius(const FloatVec3Type& value)
+{
+  m_Radius = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec3Type ITKBoxMeanImage::getRadius() const
+{
+  return m_Radius;
+}
+
+

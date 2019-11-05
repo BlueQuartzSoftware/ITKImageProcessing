@@ -11,9 +11,10 @@
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
+#include <memory>
+
 #include "ITKImageProcessingBase.h"
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
 
 // Auto includes
@@ -29,25 +30,75 @@
 class ITKImageProcessing_EXPORT ITKFFTNormalizedCorrelationImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+
+#ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(ITKFFTNormalizedCorrelationImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_SHARED_POINTERS(ITKFFTNormalizedCorrelationImage)
+  PYB11_FILTER_NEW_MACRO(ITKFFTNormalizedCorrelationImage)
+  PYB11_FILTER_PARAMETER(DataArrayPath, MovingCellArrayPath)
+  PYB11_FILTER_PARAMETER(double, RequiredNumberOfOverlappingPixels)
+  PYB11_FILTER_PARAMETER(double, RequiredFractionOfOverlappingPixels)
   PYB11_PROPERTY(DataArrayPath MovingCellArrayPath READ getMovingCellArrayPath WRITE setMovingCellArrayPath)
   PYB11_PROPERTY(double RequiredNumberOfOverlappingPixels READ getRequiredNumberOfOverlappingPixels WRITE setRequiredNumberOfOverlappingPixels)
   PYB11_PROPERTY(double RequiredFractionOfOverlappingPixels READ getRequiredFractionOfOverlappingPixels WRITE setRequiredFractionOfOverlappingPixels)
+#endif
 
 public:
-  SIMPL_SHARED_POINTERS(ITKFFTNormalizedCorrelationImage)
-  SIMPL_FILTER_NEW_MACRO(ITKFFTNormalizedCorrelationImage)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKFFTNormalizedCorrelationImage, AbstractFilter)
+    using Self = ITKFFTNormalizedCorrelationImage;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, MovingCellArrayPath)
+    static std::shared_ptr<ITKFFTNormalizedCorrelationImage> New();
+
+    /**
+    * @brief Returns the name of the class for ITKFFTNormalizedCorrelationImage
+    */
+    QString getNameOfClass() const override;
+    /**
+    * @brief Returns the name of the class for ITKFFTNormalizedCorrelationImage
+    */
+    static QString ClassName();
+
+
+    /**
+    * @brief Setter property for MovingCellArrayPath
+    */
+    void setMovingCellArrayPath(const DataArrayPath& value); 
+    /**
+    * @brief Getter property for MovingCellArrayPath
+    * @return Value of MovingCellArrayPath
+    */
+    DataArrayPath getMovingCellArrayPath() const;
+
   Q_PROPERTY(DataArrayPath MovingCellArrayPath READ getMovingCellArrayPath WRITE setMovingCellArrayPath)
 
   ~ITKFFTNormalizedCorrelationImage() override;
 
-  SIMPL_FILTER_PARAMETER(double, RequiredNumberOfOverlappingPixels)
+    /**
+    * @brief Setter property for RequiredNumberOfOverlappingPixels
+    */
+    void setRequiredNumberOfOverlappingPixels(double value); 
+    /**
+    * @brief Getter property for RequiredNumberOfOverlappingPixels
+    * @return Value of RequiredNumberOfOverlappingPixels
+    */
+    double getRequiredNumberOfOverlappingPixels() const;
+
   Q_PROPERTY(double RequiredNumberOfOverlappingPixels READ getRequiredNumberOfOverlappingPixels WRITE setRequiredNumberOfOverlappingPixels)
 
-  SIMPL_FILTER_PARAMETER(double, RequiredFractionOfOverlappingPixels)
+    /**
+    * @brief Setter property for RequiredFractionOfOverlappingPixels
+    */
+    void setRequiredFractionOfOverlappingPixels(double value); 
+    /**
+    * @brief Getter property for RequiredFractionOfOverlappingPixels
+    * @return Value of RequiredFractionOfOverlappingPixels
+    */
+    double getRequiredFractionOfOverlappingPixels() const;
+
   Q_PROPERTY(double RequiredFractionOfOverlappingPixels READ getRequiredFractionOfOverlappingPixels WRITE setRequiredFractionOfOverlappingPixels)
 
   /**
@@ -58,18 +109,18 @@ public:
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -109,6 +160,12 @@ public:
   ITKFFTNormalizedCorrelationImage(ITKFFTNormalizedCorrelationImage&&) = delete;      // Move Constructor Not Implemented
   ITKFFTNormalizedCorrelationImage& operator=(const ITKFFTNormalizedCorrelationImage&) = delete; // Copy Assignment Not Implemented
   ITKFFTNormalizedCorrelationImage& operator=(ITKFFTNormalizedCorrelationImage&&) = delete;      // Move Assignment Not Implemented
+
+  private:
+    DataArrayPath m_MovingCellArrayPath = {};
+    double m_RequiredNumberOfOverlappingPixels = {};
+    double m_RequiredFractionOfOverlappingPixels = {};
+
 };
 
 #ifdef __clang__

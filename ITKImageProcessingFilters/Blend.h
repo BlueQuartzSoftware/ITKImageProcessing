@@ -34,6 +34,7 @@
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/FilterParameters/IntVec2FilterParameter.h"
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Utilities/MontageSelection.h"
 
@@ -47,9 +48,23 @@ class ITKImageProcessing_EXPORT Blend : public AbstractFilter
   Q_OBJECT
 
 public:
-  SIMPL_SHARED_POINTERS(Blend)
-  SIMPL_FILTER_NEW_MACRO(Blend)
-  SIMPL_TYPE_MACRO_SUPER(Blend, AbstractFilter)
+  using Self = Blend;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static Pointer New();
+
+  /**
+   * @brief Returns the name of the class for DataContainerReader
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for DataContainerReader
+   */
+  static QString ClassName();
 
   Blend(const Blend&) = delete;            // Copy Constructor Not Implemented
   Blend& operator=(const Blend&) = delete; // Copy Assignment Not Implemented
@@ -57,58 +72,76 @@ public:
   Blend& operator=(Blend&&) = delete;      // Move Assignment Not Implemented
   ~Blend() override;
 
-  SIMPL_FILTER_PARAMETER(QString, MontageName)
+  QString getMontageName() const;
+  void setMontageName(const QString& value);
   Q_PROPERTY(QString MontageName READ getMontageName WRITE setMontageName)
 
-  SIMPL_FILTER_PARAMETER(uint, MaxIterations)
+  uint getMaxIterations() const;
+  void setMaxIterations(uint value);
   Q_PROPERTY(uint MaxIterations READ getMaxIterations WRITE setMaxIterations)
 
-  SIMPL_FILTER_PARAMETER(IntVec2Type, OverlapAmt)
+  IntVec2Type getOverlapAmt() const;
+  void setOverlapAmt(const IntVec2Type& value);
   Q_PROPERTY(IntVec2Type OverlapAmt READ getOverlapAmt WRITE setOverlapAmt)
 
-  SIMPL_FILTER_PARAMETER(double, LowTolerance)
+  double getLowTolerance() const;
+  void setLowTolerance(double value);
   Q_PROPERTY(double LowTolerance READ getLowTolerance WRITE setLowTolerance)
 
-  SIMPL_FILTER_PARAMETER(double, HighTolerance)
+  double getHighTolerance() const;
+  void setHighTolerance(double value);
   Q_PROPERTY(double HighTolerance READ getHighTolerance WRITE setHighTolerance)
 
-  SIMPL_FILTER_PARAMETER(int, Degree)
+  int getDegree() const;
+  void setDegree(int value);
   Q_PROPERTY(int Degree READ getDegree WRITE setDegree)
 
-  SIMPL_FILTER_PARAMETER(bool, UseAmoebaOptimizer)
+  bool getUseAmoebaOptimizer() const;
+  void setUseAmoebaOptimizer(bool value);
   Q_PROPERTY(bool UseAmoebaOptimizer READ getUseAmoebaOptimizer WRITE setUseAmoebaOptimizer)
 
-  SIMPL_FILTER_PARAMETER(bool, SpecifyInitialSimplex)
+  bool getSpecifyInitialSimplex() const;
+  void setSpecifyInitialSimplex(bool value);
   Q_PROPERTY(bool SpecifyInitialSimplex READ getSpecifyInitialSimplex WRITE setSpecifyInitialSimplex)
 
-  SIMPL_FILTER_PARAMETER(QString, PxStr)
+  QString getPxStr() const;
+  void setPxStr(const QString& value);
   Q_PROPERTY(QString PxStr READ getPxStr WRITE setPxStr)
 
-  SIMPL_FILTER_PARAMETER(QString, PyStr)
+  QString getPyStr() const;
+  void setPyStr(const QString& value);
   Q_PROPERTY(QString PyStr READ getPyStr WRITE setPyStr)
 
-  SIMPL_FILTER_PARAMETER(QString, AttributeMatrixName)
+  QString getAttributeMatrixName() const;
+  void setAttributeMatrixName(const QString& value);
   Q_PROPERTY(QString AttributeMatrixName READ getAttributeMatrixName WRITE setAttributeMatrixName)
 
-  SIMPL_FILTER_PARAMETER(QString, IPFColorsArrayName)
+  QString getIPFColorsArrayName() const;
+  void setIPFColorsArrayName(const QString& value);
   Q_PROPERTY(QString IPFColorsArrayName READ getIPFColorsArrayName WRITE setIPFColorsArrayName)
 
-  SIMPL_FILTER_PARAMETER(bool, CreateTransformContainer)
+  bool getCreateTransformContainer() const;
+  void setCreateTransformContainer(bool value);
   Q_PROPERTY(bool CreateTransformContainer READ getCreateTransformContainer WRITE setCreateTransformContainer)
 
-  SIMPL_FILTER_PARAMETER(QString, BlendDCName)
+  QString getBlendDCName() const;
+  void setBlendDCName(const QString& value);
   Q_PROPERTY(QString BlendDCName READ getBlendDCName WRITE setBlendDCName)
 
-  SIMPL_FILTER_PARAMETER(QString, TransformMatrixName)
+  QString getTransformMatrixName() const;
+  void setTransformMatrixName(const QString& value);
   Q_PROPERTY(QString TransformMatrixName READ getTransformMatrixName WRITE setTransformMatrixName)
 
-  SIMPL_FILTER_PARAMETER(QString, TransformArrayName)
+  QString getTransformArrayName() const;
+  void setTransformArrayName(const QString& value);
   Q_PROPERTY(QString TransformArrayName READ getTransformArrayName WRITE setTransformArrayName)
 
-  SIMPL_FILTER_PARAMETER(QString, ResidualArrayName)
+  QString getResidualArrayName() const;
+  void setResidualArrayName(const QString& value);
   Q_PROPERTY(QString ResidualArrayName READ getResidualArrayName WRITE setResidualArrayName)
 
-  SIMPL_FILTER_PARAMETER(QString, TransformPrefix)
+  QString getTransformPrefix() const;
+  void setTransformPrefix(const QString& value);
   Q_PROPERTY(QString TransformPrefix READ getTransformPrefix WRITE setTransformPrefix)
 
   bool GetConvergenceFromStopDescription(const QString&) const;
@@ -118,21 +151,21 @@ public:
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
-  const QString getCompiledLibraryName() const override;
+  QString getCompiledLibraryName() const override;
 
   /**
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
    */
-  const QString getBrandingString() const override;
+  QString getBrandingString() const override;
 
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
    * @return
    */
-  const QString getFilterVersion() const override;
+  QString getFilterVersion() const override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -142,23 +175,23 @@ public:
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getGroupName() const override;
+  QString getGroupName() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -236,6 +269,25 @@ protected:
   std::pair<double, double> getImageDims() const;
 
 private:
+  QString m_MontageName;
+  uint m_MaxIterations;
+  IntVec2Type m_OverlapAmt;
+  double m_LowTolerance = 0;
+  double m_HighTolerance = 0;
+  int m_Degree = 0;
+  bool m_UseAmoebaOptimizer = true;
+  bool m_SpecifyInitialSimplex = true;
+  QString m_PxStr;
+  QString m_PyStr;
+  QString m_AttributeMatrixName;
+  QString m_IPFColorsArrayName;
+  bool m_CreateTransformContainer;
+  QString m_BlendDCName;
+  QString m_TransformMatrixName;
+  QString m_TransformArrayName;
+  QString m_ResidualArrayName;
+  QString m_TransformPrefix;
+
   std::vector<double> m_PxVec;
   std::vector<double> m_PyVec;
 };

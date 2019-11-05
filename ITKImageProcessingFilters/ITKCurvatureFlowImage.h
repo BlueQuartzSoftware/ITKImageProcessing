@@ -11,9 +11,10 @@
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
+#include <memory>
+
 #include "ITKImageProcessingBase.h"
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
 
 // Auto includes
@@ -28,21 +29,61 @@
 class ITKImageProcessing_EXPORT ITKCurvatureFlowImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+
+#ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(ITKCurvatureFlowImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_SHARED_POINTERS(ITKCurvatureFlowImage)
+  PYB11_FILTER_NEW_MACRO(ITKCurvatureFlowImage)
+  PYB11_FILTER_PARAMETER(double, TimeStep)
+  PYB11_FILTER_PARAMETER(double, NumberOfIterations)
   PYB11_PROPERTY(double TimeStep READ getTimeStep WRITE setTimeStep)
   PYB11_PROPERTY(double NumberOfIterations READ getNumberOfIterations WRITE setNumberOfIterations)
+#endif
 
 public:
-  SIMPL_SHARED_POINTERS(ITKCurvatureFlowImage)
-  SIMPL_FILTER_NEW_MACRO(ITKCurvatureFlowImage)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKCurvatureFlowImage, AbstractFilter)
+    using Self = ITKCurvatureFlowImage;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
+
+    static std::shared_ptr<ITKCurvatureFlowImage> New();
+
+    /**
+    * @brief Returns the name of the class for ITKCurvatureFlowImage
+    */
+    QString getNameOfClass() const override;
+    /**
+    * @brief Returns the name of the class for ITKCurvatureFlowImage
+    */
+    static QString ClassName();
+
 
   ~ITKCurvatureFlowImage() override;
 
-  SIMPL_FILTER_PARAMETER(double, TimeStep)
+    /**
+    * @brief Setter property for TimeStep
+    */
+    void setTimeStep(double value); 
+    /**
+    * @brief Getter property for TimeStep
+    * @return Value of TimeStep
+    */
+    double getTimeStep() const;
+
   Q_PROPERTY(double TimeStep READ getTimeStep WRITE setTimeStep)
 
-  SIMPL_FILTER_PARAMETER(double, NumberOfIterations)
+    /**
+    * @brief Setter property for NumberOfIterations
+    */
+    void setNumberOfIterations(double value); 
+    /**
+    * @brief Getter property for NumberOfIterations
+    * @return Value of NumberOfIterations
+    */
+    double getNumberOfIterations() const;
+
   Q_PROPERTY(double NumberOfIterations READ getNumberOfIterations WRITE setNumberOfIterations)
 
 
@@ -54,18 +95,18 @@ public:
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -105,6 +146,11 @@ public:
   ITKCurvatureFlowImage(ITKCurvatureFlowImage&&) = delete;         // Move Constructor Not Implemented
   ITKCurvatureFlowImage& operator=(const ITKCurvatureFlowImage&) = delete; // Copy Assignment Not Implemented
   ITKCurvatureFlowImage& operator=(ITKCurvatureFlowImage&&) = delete;      // Move Assignment Not Implemented
+
+  private:
+    double m_TimeStep = {};
+    double m_NumberOfIterations = {};
+
 };
 
 #ifdef __clang__

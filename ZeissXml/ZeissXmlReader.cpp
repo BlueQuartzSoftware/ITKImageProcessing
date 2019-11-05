@@ -402,3 +402,52 @@ int ZeissXMLReader::getParseError()
   return _xmlParseError;
 }
 
+// -----------------------------------------------------------------------------
+ZeissXMLReader::Pointer ZeissXMLReader::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+QString ZeissXMLReader::getNameOfClass() const
+{
+  return QString("ZeissXMLReader");
+}
+
+// -----------------------------------------------------------------------------
+QString ZeissXMLReader::ClassName()
+{
+  return QString("ZeissXMLReader");
+}
+
+// -----------------------------------------------------------------------------
+void ZeissXMLReader::setTagsSection;
+(const ZeissTagsXmlSection::Pointer& value)
+{
+  m_TagsSection;
+  = value;
+}
+
+// -----------------------------------------------------------------------------
+ZeissTagsXmlSection::Pointer ZeissXMLReader::getTagsSection;
+() const
+{
+  return m_TagsSection;
+  ;
+}
+
+// -----------------------------------------------------------------------------
+void ZeissXMLReader::setImageTags;
+(const std::vector<ZeissTagsXmlSection::Pointer>& value)
+{
+  m_ImageTags;
+  = value;
+}
+
+// -----------------------------------------------------------------------------
+std::vector<ZeissTagsXmlSection::Pointer> ZeissXMLReader::getImageTags;
+() const
+{
+  return m_ImageTags;
+  ;
+}

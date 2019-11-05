@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKValuedRegionalMinimaImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -138,7 +140,7 @@ AbstractFilter::Pointer ITKValuedRegionalMinimaImage::newFilterInstance(bool cop
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKValuedRegionalMinimaImage::getHumanLabel() const
+QString ITKValuedRegionalMinimaImage::getHumanLabel() const
 {
   return "ITK::Valued Regional Minima Image Filter";
 }
@@ -146,7 +148,7 @@ const QString ITKValuedRegionalMinimaImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKValuedRegionalMinimaImage::getUuid()
+QUuid ITKValuedRegionalMinimaImage::getUuid() const
 {
   return QUuid("{739a0908-cb60-50f7-a484-b2157d023093}");
 }
@@ -154,7 +156,62 @@ const QUuid ITKValuedRegionalMinimaImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKValuedRegionalMinimaImage::getSubGroupName() const
+QString ITKValuedRegionalMinimaImage::getSubGroupName() const
 {
   return "ITK BiasCorrection";
 }
+
+// -----------------------------------------------------------------------------
+ITKValuedRegionalMinimaImage::Pointer ITKValuedRegionalMinimaImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKValuedRegionalMinimaImage> ITKValuedRegionalMinimaImage::New()
+{
+  struct make_shared_enabler : public ITKValuedRegionalMinimaImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKValuedRegionalMinimaImage::getNameOfClass() const
+{
+  return QString("ITKValuedRegionalMinimaImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKValuedRegionalMinimaImage::ClassName()
+{
+  return QString("ITKValuedRegionalMinimaImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKValuedRegionalMinimaImage::setFullyConnected(bool value)
+{
+  m_FullyConnected = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ITKValuedRegionalMinimaImage::getFullyConnected() const
+{
+  return m_FullyConnected;
+}
+
+// -----------------------------------------------------------------------------
+void ITKValuedRegionalMinimaImage::setFlat(bool value)
+{
+  m_Flat = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ITKValuedRegionalMinimaImage::getFlat() const
+{
+  return m_Flat;
+}
+
+

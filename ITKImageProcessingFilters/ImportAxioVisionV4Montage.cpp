@@ -28,6 +28,8 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+#include <memory>
+
 #include "ImportAxioVisionV4Montage.h"
 
 #include <array>
@@ -54,6 +56,7 @@
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Filtering/FilterManager.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKImageReader.h"
@@ -148,10 +151,61 @@ ImportAxioVisionV4Montage::ImportAxioVisionV4Montage()
 // -----------------------------------------------------------------------------
 ImportAxioVisionV4Montage::~ImportAxioVisionV4Montage() = default;
 
-SIMPL_PIMPL_PROPERTY_DEF(ImportAxioVisionV4Montage, QDomElement, Root)
-SIMPL_PIMPL_PROPERTY_DEF(ImportAxioVisionV4Montage, QString, InputFile_Cache)
-SIMPL_PIMPL_PROPERTY_DEF(ImportAxioVisionV4Montage, QDateTime, TimeStamp_Cache)
-SIMPL_PIMPL_PROPERTY_DEF(ImportAxioVisionV4Montage, std::vector<ImportAxioVisionV4Montage::BoundsType>, BoundsCache)
+// -----------------------------------------------------------------------------
+void ImportAxioVisionV4Montage::setRoot(const QDomElement& value)
+{
+  Q_D(ImportAxioVisionV4Montage);
+  d->m_Root = value;
+}
+
+// -----------------------------------------------------------------------------
+QDomElement ImportAxioVisionV4Montage::getRoot() const
+{
+  Q_D(const ImportAxioVisionV4Montage);
+  return d->m_Root;
+}
+
+// -----------------------------------------------------------------------------
+void ImportAxioVisionV4Montage::setInputFile_Cache(const QString& value)
+{
+  Q_D(ImportAxioVisionV4Montage);
+  d->m_InputFile_Cache = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ImportAxioVisionV4Montage::getInputFile_Cache() const
+{
+  Q_D(const ImportAxioVisionV4Montage);
+  return d->m_InputFile_Cache;
+}
+
+// -----------------------------------------------------------------------------
+void ImportAxioVisionV4Montage::setTimeStamp_Cache(const QDateTime& value)
+{
+  Q_D(ImportAxioVisionV4Montage);
+  d->m_TimeStamp_Cache = value;
+}
+
+// -----------------------------------------------------------------------------
+QDateTime ImportAxioVisionV4Montage::getTimeStamp_Cache() const
+{
+  Q_D(const ImportAxioVisionV4Montage);
+  return d->m_TimeStamp_Cache;
+}
+
+// -----------------------------------------------------------------------------
+void ImportAxioVisionV4Montage::setBoundsCache(const std::vector<ImportAxioVisionV4Montage::BoundsType>& value)
+{
+  Q_D(ImportAxioVisionV4Montage);
+  d->m_BoundsCache = value;
+}
+
+// -----------------------------------------------------------------------------
+std::vector<ImportAxioVisionV4Montage::BoundsType> ImportAxioVisionV4Montage::getBoundsCache() const
+{
+  Q_D(const ImportAxioVisionV4Montage);
+  return d->m_BoundsCache;
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -971,7 +1025,7 @@ AbstractFilter::Pointer ImportAxioVisionV4Montage::newFilterInstance(bool copyFi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ImportAxioVisionV4Montage::getCompiledLibraryName() const
+QString ImportAxioVisionV4Montage::getCompiledLibraryName() const
 {
   return ITKImageProcessingConstants::ITKImageProcessingBaseName;
 }
@@ -979,7 +1033,7 @@ const QString ImportAxioVisionV4Montage::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ImportAxioVisionV4Montage::getBrandingString() const
+QString ImportAxioVisionV4Montage::getBrandingString() const
 {
   return ITKImageProcessingConstants::ITKImageProcessingPluginDisplayName;
 }
@@ -987,7 +1041,7 @@ const QString ImportAxioVisionV4Montage::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ImportAxioVisionV4Montage::getFilterVersion() const
+QString ImportAxioVisionV4Montage::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -998,7 +1052,7 @@ const QString ImportAxioVisionV4Montage::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ImportAxioVisionV4Montage::getGroupName() const
+QString ImportAxioVisionV4Montage::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -1006,7 +1060,7 @@ const QString ImportAxioVisionV4Montage::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ImportAxioVisionV4Montage::getSubGroupName() const
+QString ImportAxioVisionV4Montage::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::ImportFilters;
 }
@@ -1014,7 +1068,7 @@ const QString ImportAxioVisionV4Montage::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ImportAxioVisionV4Montage::getHumanLabel() const
+QString ImportAxioVisionV4Montage::getHumanLabel() const
 {
   return "ITK::Zeiss AxioVision Import (V4)";
 }
@@ -1022,7 +1076,245 @@ const QString ImportAxioVisionV4Montage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ImportAxioVisionV4Montage::getUuid()
+QUuid ImportAxioVisionV4Montage::getUuid() const
 {
   return QUuid("{411b008c-006f-51b2-ba05-99e51a01af3c}");
 }
+
+// -----------------------------------------------------------------------------
+ImportAxioVisionV4Montage::Pointer ImportAxioVisionV4Montage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ImportAxioVisionV4Montage> ImportAxioVisionV4Montage::New()
+{
+  struct make_shared_enabler : public ImportAxioVisionV4Montage  
+  {
+
+  private:
+
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ImportAxioVisionV4Montage::getNameOfClass() const
+{
+  return QString("ImportAxioVisionV4Montage");
+}
+
+// -----------------------------------------------------------------------------
+QString ImportAxioVisionV4Montage::ClassName()
+{
+  return QString("ImportAxioVisionV4Montage");
+}
+
+// -----------------------------------------------------------------------------
+void ImportAxioVisionV4Montage::setInputFile(const QString& value)
+{
+  m_InputFile = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ImportAxioVisionV4Montage::getInputFile() const
+{
+  return m_InputFile;
+}
+
+// -----------------------------------------------------------------------------
+void ImportAxioVisionV4Montage::setMontageStart(const IntVec2Type& value)
+{
+  m_MontageStart = value;
+}
+
+// -----------------------------------------------------------------------------
+IntVec2Type ImportAxioVisionV4Montage::getMontageStart() const
+{
+  return m_MontageStart;
+}
+
+// -----------------------------------------------------------------------------
+void ImportAxioVisionV4Montage::setMontageEnd(const IntVec2Type& value)
+{
+  m_MontageEnd = value;
+}
+
+// -----------------------------------------------------------------------------
+IntVec2Type ImportAxioVisionV4Montage::getMontageEnd() const
+{
+  return m_MontageEnd;
+}
+
+// -----------------------------------------------------------------------------
+void ImportAxioVisionV4Montage::setDataContainerPath(const DataArrayPath& value)
+{
+  m_DataContainerPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath ImportAxioVisionV4Montage::getDataContainerPath() const
+{
+  return m_DataContainerPath;
+}
+
+// -----------------------------------------------------------------------------
+void ImportAxioVisionV4Montage::setCellAttributeMatrixName(const QString& value)
+{
+  m_CellAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ImportAxioVisionV4Montage::getCellAttributeMatrixName() const
+{
+  return m_CellAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void ImportAxioVisionV4Montage::setImageDataArrayName(const QString& value)
+{
+  m_ImageDataArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ImportAxioVisionV4Montage::getImageDataArrayName() const
+{
+  return m_ImageDataArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void ImportAxioVisionV4Montage::setMetaDataAttributeMatrixName(const QString& value)
+{
+  m_MetaDataAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ImportAxioVisionV4Montage::getMetaDataAttributeMatrixName() const
+{
+  return m_MetaDataAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void ImportAxioVisionV4Montage::setConvertToGrayScale(bool value)
+{
+  m_ConvertToGrayScale = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ImportAxioVisionV4Montage::getConvertToGrayScale() const
+{
+  return m_ConvertToGrayScale;
+}
+
+// -----------------------------------------------------------------------------
+void ImportAxioVisionV4Montage::setImportAllMetaData(bool value)
+{
+  m_ImportAllMetaData = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ImportAxioVisionV4Montage::getImportAllMetaData() const
+{
+  return m_ImportAllMetaData;
+}
+
+// -----------------------------------------------------------------------------
+void ImportAxioVisionV4Montage::setColorWeights(const FloatVec3Type& value)
+{
+  m_ColorWeights = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec3Type ImportAxioVisionV4Montage::getColorWeights() const
+{
+  return m_ColorWeights;
+}
+
+// -----------------------------------------------------------------------------
+void ImportAxioVisionV4Montage::setChangeOrigin(bool value)
+{
+  m_ChangeOrigin = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ImportAxioVisionV4Montage::getChangeOrigin() const
+{
+  return m_ChangeOrigin;
+}
+
+// -----------------------------------------------------------------------------
+void ImportAxioVisionV4Montage::setOrigin(const FloatVec3Type& value)
+{
+  m_Origin = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec3Type ImportAxioVisionV4Montage::getOrigin() const
+{
+  return m_Origin;
+}
+
+// -----------------------------------------------------------------------------
+void ImportAxioVisionV4Montage::setChangeSpacing(bool value)
+{
+  m_ChangeSpacing = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ImportAxioVisionV4Montage::getChangeSpacing() const
+{
+  return m_ChangeSpacing;
+}
+
+// -----------------------------------------------------------------------------
+void ImportAxioVisionV4Montage::setSpacing(const FloatVec3Type& value)
+{
+  m_Spacing = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec3Type ImportAxioVisionV4Montage::getSpacing() const
+{
+  return m_Spacing;
+}
+
+// -----------------------------------------------------------------------------
+int32_t ImportAxioVisionV4Montage::getRowCount() const
+{
+  return m_RowCount;
+}
+
+// -----------------------------------------------------------------------------
+int32_t ImportAxioVisionV4Montage::getColumnCount() const
+{
+  return m_ColumnCount;
+}
+
+// -----------------------------------------------------------------------------
+void ImportAxioVisionV4Montage::setFileWasRead(bool value)
+{
+  m_FileWasRead = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ImportAxioVisionV4Montage::getFileWasRead() const
+{
+  return m_FileWasRead;
+}
+
+// -----------------------------------------------------------------------------
+void ImportAxioVisionV4Montage::setGeneratedFileList(const QStringList& value)
+{
+  m_GeneratedFileList = value;
+}
+
+// -----------------------------------------------------------------------------
+QStringList ImportAxioVisionV4Montage::getGeneratedFileList() const
+{
+  return m_GeneratedFileList;
+}
+
+

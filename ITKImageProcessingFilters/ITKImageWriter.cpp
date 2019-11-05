@@ -31,6 +31,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "ITKImageWriter.h"
 
 #include <cstring>
@@ -68,6 +70,8 @@
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Utilities/FileSystemPathHelper.h"
 #include "SIMPLib/ITK/itkInPlaceDream3DDataToImageFilter.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+
 #define DREAM3D_USE_RGB_RGBA 1
 #define DREAM3D_USE_Vector 1
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
@@ -494,7 +498,7 @@ AbstractFilter::Pointer ITKImageWriter::newFilterInstance(bool copyFilterParamet
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKImageWriter::getCompiledLibraryName() const
+QString ITKImageWriter::getCompiledLibraryName() const
 {
   return ITKImageProcessingConstants::ITKImageProcessingBaseName;
 }
@@ -502,7 +506,7 @@ const QString ITKImageWriter::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKImageWriter::getBrandingString() const
+QString ITKImageWriter::getBrandingString() const
 {
   return "ITKImageProcessing";
 }
@@ -510,7 +514,7 @@ const QString ITKImageWriter::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKImageWriter::getFilterVersion() const
+QString ITKImageWriter::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -521,7 +525,7 @@ const QString ITKImageWriter::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKImageWriter::getGroupName() const
+QString ITKImageWriter::getGroupName() const
 {
   return "IO";
 }
@@ -529,7 +533,7 @@ const QString ITKImageWriter::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKImageWriter::getUuid()
+QUuid ITKImageWriter::getUuid() const
 {
   return QUuid("{11473711-f94d-5d96-b749-ec36a81ad338}");
 }
@@ -537,7 +541,7 @@ const QUuid ITKImageWriter::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKImageWriter::getSubGroupName() const
+QString ITKImageWriter::getSubGroupName() const
 {
   return "Output";
 }
@@ -545,7 +549,74 @@ const QString ITKImageWriter::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKImageWriter::getHumanLabel() const
+QString ITKImageWriter::getHumanLabel() const
 {
   return "ITK::Image Export";
 }
+
+// -----------------------------------------------------------------------------
+ITKImageWriter::Pointer ITKImageWriter::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKImageWriter> ITKImageWriter::New()
+{
+  struct make_shared_enabler : public ITKImageWriter  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKImageWriter::getNameOfClass() const
+{
+  return QString("ITKImageWriter");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKImageWriter::ClassName()
+{
+  return QString("ITKImageWriter");
+}
+
+// -----------------------------------------------------------------------------
+void ITKImageWriter::setFileName(const QString& value)
+{
+  m_FileName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKImageWriter::getFileName() const
+{
+  return m_FileName;
+}
+
+// -----------------------------------------------------------------------------
+void ITKImageWriter::setImageArrayPath(const DataArrayPath& value)
+{
+  m_ImageArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath ITKImageWriter::getImageArrayPath() const
+{
+  return m_ImageArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void ITKImageWriter::setPlane(int value)
+{
+  m_Plane = value;
+}
+
+// -----------------------------------------------------------------------------
+int ITKImageWriter::getPlane() const
+{
+  return m_Plane;
+}
+
+

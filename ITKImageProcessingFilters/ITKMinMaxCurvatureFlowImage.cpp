@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKMinMaxCurvatureFlowImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -142,7 +144,7 @@ AbstractFilter::Pointer ITKMinMaxCurvatureFlowImage::newFilterInstance(bool copy
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKMinMaxCurvatureFlowImage::getHumanLabel() const
+QString ITKMinMaxCurvatureFlowImage::getHumanLabel() const
 {
   return "ITK::Min Max Curvature Flow Image Filter";
 }
@@ -150,7 +152,7 @@ const QString ITKMinMaxCurvatureFlowImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKMinMaxCurvatureFlowImage::getUuid()
+QUuid ITKMinMaxCurvatureFlowImage::getUuid() const
 {
   return QUuid("{bd9bdf46-a229-544a-b158-151920261a63}");
 }
@@ -158,7 +160,74 @@ const QUuid ITKMinMaxCurvatureFlowImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKMinMaxCurvatureFlowImage::getSubGroupName() const
+QString ITKMinMaxCurvatureFlowImage::getSubGroupName() const
 {
   return "ITK CurvatureFlow";
 }
+
+// -----------------------------------------------------------------------------
+ITKMinMaxCurvatureFlowImage::Pointer ITKMinMaxCurvatureFlowImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKMinMaxCurvatureFlowImage> ITKMinMaxCurvatureFlowImage::New()
+{
+  struct make_shared_enabler : public ITKMinMaxCurvatureFlowImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKMinMaxCurvatureFlowImage::getNameOfClass() const
+{
+  return QString("ITKMinMaxCurvatureFlowImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKMinMaxCurvatureFlowImage::ClassName()
+{
+  return QString("ITKMinMaxCurvatureFlowImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKMinMaxCurvatureFlowImage::setTimeStep(double value)
+{
+  m_TimeStep = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKMinMaxCurvatureFlowImage::getTimeStep() const
+{
+  return m_TimeStep;
+}
+
+// -----------------------------------------------------------------------------
+void ITKMinMaxCurvatureFlowImage::setNumberOfIterations(double value)
+{
+  m_NumberOfIterations = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKMinMaxCurvatureFlowImage::getNumberOfIterations() const
+{
+  return m_NumberOfIterations;
+}
+
+// -----------------------------------------------------------------------------
+void ITKMinMaxCurvatureFlowImage::setStencilRadius(int value)
+{
+  m_StencilRadius = value;
+}
+
+// -----------------------------------------------------------------------------
+int ITKMinMaxCurvatureFlowImage::getStencilRadius() const
+{
+  return m_StencilRadius;
+}
+
+

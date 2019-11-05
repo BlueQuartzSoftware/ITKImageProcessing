@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKAdaptiveHistogramEqualizationImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -142,7 +144,7 @@ AbstractFilter::Pointer ITKAdaptiveHistogramEqualizationImage::newFilterInstance
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKAdaptiveHistogramEqualizationImage::getHumanLabel() const
+QString ITKAdaptiveHistogramEqualizationImage::getHumanLabel() const
 {
   return "ITK::Adaptive Histogram Equalization Image Filter";
 }
@@ -150,7 +152,7 @@ const QString ITKAdaptiveHistogramEqualizationImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKAdaptiveHistogramEqualizationImage::getUuid()
+QUuid ITKAdaptiveHistogramEqualizationImage::getUuid() const
 {
   return QUuid("{2d5a7599-5e01-5489-a107-23b704d2b5eb}");
 }
@@ -158,7 +160,74 @@ const QUuid ITKAdaptiveHistogramEqualizationImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKAdaptiveHistogramEqualizationImage::getSubGroupName() const
+QString ITKAdaptiveHistogramEqualizationImage::getSubGroupName() const
 {
   return "ITK ImageStatistics";
 }
+
+// -----------------------------------------------------------------------------
+ITKAdaptiveHistogramEqualizationImage::Pointer ITKAdaptiveHistogramEqualizationImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKAdaptiveHistogramEqualizationImage> ITKAdaptiveHistogramEqualizationImage::New()
+{
+  struct make_shared_enabler : public ITKAdaptiveHistogramEqualizationImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKAdaptiveHistogramEqualizationImage::getNameOfClass() const
+{
+  return QString("ITKAdaptiveHistogramEqualizationImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKAdaptiveHistogramEqualizationImage::ClassName()
+{
+  return QString("ITKAdaptiveHistogramEqualizationImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKAdaptiveHistogramEqualizationImage::setRadius(const FloatVec3Type& value)
+{
+  m_Radius = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec3Type ITKAdaptiveHistogramEqualizationImage::getRadius() const
+{
+  return m_Radius;
+}
+
+// -----------------------------------------------------------------------------
+void ITKAdaptiveHistogramEqualizationImage::setAlpha(float value)
+{
+  m_Alpha = value;
+}
+
+// -----------------------------------------------------------------------------
+float ITKAdaptiveHistogramEqualizationImage::getAlpha() const
+{
+  return m_Alpha;
+}
+
+// -----------------------------------------------------------------------------
+void ITKAdaptiveHistogramEqualizationImage::setBeta(float value)
+{
+  m_Beta = value;
+}
+
+// -----------------------------------------------------------------------------
+float ITKAdaptiveHistogramEqualizationImage::getBeta() const
+{
+  return m_Beta;
+}
+
+

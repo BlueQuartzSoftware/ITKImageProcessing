@@ -30,6 +30,8 @@
  *    United States Air Force Prime Contract FA8650-15-D-5231
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+#include <memory>
+
 #include "ITKImportRoboMetMontage.h"
 
 #include <QtCore/QDir>
@@ -47,6 +49,7 @@
 #include "SIMPLib/FilterParameters/PreflightUpdatedValueFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Utilities/StringOperations.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKImageReader.h"
@@ -115,9 +118,6 @@ ITKImportRoboMetMontage::ITKImportRoboMetMontage()
 , m_DataContainerPath(ITKImageProcessing::Montage::k_DataContaineNameDefaultName)
 , m_CellAttributeMatrixName(ITKImageProcessing::Montage::k_TileAttributeMatrixDefaultName)
 , m_ImageDataArrayName(ITKImageProcessing::Montage::k_TileDataArrayDefaultName)
-, m_ConvertToGrayScale(false)
-, m_ChangeOrigin(false)
-, m_ChangeSpacing(false)
 , m_LengthUnit(-1)
 , d_ptr(new ITKImportRoboMetMontagePrivate(this))
 {
@@ -137,9 +137,47 @@ ITKImportRoboMetMontage::~ITKImportRoboMetMontage() = default;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SIMPL_PIMPL_PROPERTY_DEF(ITKImportRoboMetMontage, QString, InputFile_Cache)
-SIMPL_PIMPL_PROPERTY_DEF(ITKImportRoboMetMontage, QDateTime, TimeStamp_Cache)
-SIMPL_PIMPL_PROPERTY_DEF(ITKImportRoboMetMontage, std::vector<ITKImportRoboMetMontage::BoundsType>, BoundsCache)
+// -----------------------------------------------------------------------------
+void ITKImportRoboMetMontage::setInputFile_Cache(const QString& value)
+{
+  Q_D(ITKImportRoboMetMontage);
+  d->m_InputFile_Cache = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKImportRoboMetMontage::getInputFile_Cache() const
+{
+  Q_D(const ITKImportRoboMetMontage);
+  return d->m_InputFile_Cache;
+}
+
+// -----------------------------------------------------------------------------
+void ITKImportRoboMetMontage::setTimeStamp_Cache(const QDateTime& value)
+{
+  Q_D(ITKImportRoboMetMontage);
+  d->m_TimeStamp_Cache = value;
+}
+
+// -----------------------------------------------------------------------------
+QDateTime ITKImportRoboMetMontage::getTimeStamp_Cache() const
+{
+  Q_D(const ITKImportRoboMetMontage);
+  return d->m_TimeStamp_Cache;
+}
+
+// -----------------------------------------------------------------------------
+void ITKImportRoboMetMontage::setBoundsCache(const std::vector<ITKImportRoboMetMontage::BoundsType>& value)
+{
+  Q_D(ITKImportRoboMetMontage);
+  d->m_BoundsCache = value;
+}
+
+// -----------------------------------------------------------------------------
+std::vector<ITKImportRoboMetMontage::BoundsType> ITKImportRoboMetMontage::getBoundsCache() const
+{
+  Q_D(const ITKImportRoboMetMontage);
+  return d->m_BoundsCache;
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -832,7 +870,7 @@ AbstractFilter::Pointer ITKImportRoboMetMontage::newFilterInstance(bool copyFilt
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKImportRoboMetMontage::getCompiledLibraryName() const
+QString ITKImportRoboMetMontage::getCompiledLibraryName() const
 {
   return ITKImageProcessingConstants::ITKImageProcessingBaseName;
 }
@@ -840,7 +878,7 @@ const QString ITKImportRoboMetMontage::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKImportRoboMetMontage::getBrandingString() const
+QString ITKImportRoboMetMontage::getBrandingString() const
 {
   return "ITKImageProcessing";
 }
@@ -848,7 +886,7 @@ const QString ITKImportRoboMetMontage::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKImportRoboMetMontage::getFilterVersion() const
+QString ITKImportRoboMetMontage::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -858,7 +896,7 @@ const QString ITKImportRoboMetMontage::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKImportRoboMetMontage::getGroupName() const
+QString ITKImportRoboMetMontage::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -866,7 +904,7 @@ const QString ITKImportRoboMetMontage::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKImportRoboMetMontage::getUuid()
+QUuid ITKImportRoboMetMontage::getUuid() const
 {
   return QUuid("{cdb130af-3616-57b1-be59-fe18113b2621}");
 }
@@ -874,7 +912,7 @@ const QUuid ITKImportRoboMetMontage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKImportRoboMetMontage::getSubGroupName() const
+QString ITKImportRoboMetMontage::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::InputFilters;
 }
@@ -882,7 +920,245 @@ const QString ITKImportRoboMetMontage::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKImportRoboMetMontage::getHumanLabel() const
+QString ITKImportRoboMetMontage::getHumanLabel() const
 {
   return "ITK::Import RoboMet Montage";
 }
+
+// -----------------------------------------------------------------------------
+ITKImportRoboMetMontage::Pointer ITKImportRoboMetMontage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKImportRoboMetMontage> ITKImportRoboMetMontage::New()
+{
+  struct make_shared_enabler : public ITKImportRoboMetMontage  
+  {
+
+  private:
+
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKImportRoboMetMontage::getNameOfClass() const
+{
+  return QString("ITKImportRoboMetMontage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKImportRoboMetMontage::ClassName()
+{
+  return QString("ITKImportRoboMetMontage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKImportRoboMetMontage::setInputFile(const QString& value)
+{
+  m_InputFile = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKImportRoboMetMontage::getInputFile() const
+{
+  return m_InputFile;
+}
+
+// -----------------------------------------------------------------------------
+void ITKImportRoboMetMontage::setMontageStart(const IntVec2Type& value)
+{
+  m_MontageStart = value;
+}
+
+// -----------------------------------------------------------------------------
+IntVec2Type ITKImportRoboMetMontage::getMontageStart() const
+{
+  return m_MontageStart;
+}
+
+// -----------------------------------------------------------------------------
+void ITKImportRoboMetMontage::setMontageEnd(const IntVec2Type& value)
+{
+  m_MontageEnd = value;
+}
+
+// -----------------------------------------------------------------------------
+IntVec2Type ITKImportRoboMetMontage::getMontageEnd() const
+{
+  return m_MontageEnd;
+}
+
+// -----------------------------------------------------------------------------
+void ITKImportRoboMetMontage::setDataContainerPath(const DataArrayPath& value)
+{
+  m_DataContainerPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath ITKImportRoboMetMontage::getDataContainerPath() const
+{
+  return m_DataContainerPath;
+}
+
+// -----------------------------------------------------------------------------
+void ITKImportRoboMetMontage::setCellAttributeMatrixName(const QString& value)
+{
+  m_CellAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKImportRoboMetMontage::getCellAttributeMatrixName() const
+{
+  return m_CellAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void ITKImportRoboMetMontage::setImageDataArrayName(const QString& value)
+{
+  m_ImageDataArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKImportRoboMetMontage::getImageDataArrayName() const
+{
+  return m_ImageDataArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void ITKImportRoboMetMontage::setConvertToGrayScale(bool value)
+{
+  m_ConvertToGrayScale = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ITKImportRoboMetMontage::getConvertToGrayScale() const
+{
+  return m_ConvertToGrayScale;
+}
+
+// -----------------------------------------------------------------------------
+void ITKImportRoboMetMontage::setColorWeights(const FloatVec3Type& value)
+{
+  m_ColorWeights = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec3Type ITKImportRoboMetMontage::getColorWeights() const
+{
+  return m_ColorWeights;
+}
+
+// -----------------------------------------------------------------------------
+void ITKImportRoboMetMontage::setChangeOrigin(bool value)
+{
+  m_ChangeOrigin = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ITKImportRoboMetMontage::getChangeOrigin() const
+{
+  return m_ChangeOrigin;
+}
+
+// -----------------------------------------------------------------------------
+void ITKImportRoboMetMontage::setOrigin(const FloatVec3Type& value)
+{
+  m_Origin = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec3Type ITKImportRoboMetMontage::getOrigin() const
+{
+  return m_Origin;
+}
+
+// -----------------------------------------------------------------------------
+void ITKImportRoboMetMontage::setChangeSpacing(bool value)
+{
+  m_ChangeSpacing = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ITKImportRoboMetMontage::getChangeSpacing() const
+{
+  return m_ChangeSpacing;
+}
+
+// -----------------------------------------------------------------------------
+void ITKImportRoboMetMontage::setSpacing(const FloatVec3Type& value)
+{
+  m_Spacing = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec3Type ITKImportRoboMetMontage::getSpacing() const
+{
+  return m_Spacing;
+}
+
+// -----------------------------------------------------------------------------
+void ITKImportRoboMetMontage::setSliceNumber(int value)
+{
+  m_SliceNumber = value;
+}
+
+// -----------------------------------------------------------------------------
+int ITKImportRoboMetMontage::getSliceNumber() const
+{
+  return m_SliceNumber;
+}
+
+// -----------------------------------------------------------------------------
+void ITKImportRoboMetMontage::setImageFilePrefix(const QString& value)
+{
+  m_ImageFilePrefix = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKImportRoboMetMontage::getImageFilePrefix() const
+{
+  return m_ImageFilePrefix;
+}
+
+// -----------------------------------------------------------------------------
+void ITKImportRoboMetMontage::setImageFileExtension(const QString& value)
+{
+  m_ImageFileExtension = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKImportRoboMetMontage::getImageFileExtension() const
+{
+  return m_ImageFileExtension;
+}
+
+// -----------------------------------------------------------------------------
+void ITKImportRoboMetMontage::setFileWasRead(bool value)
+{
+  m_FileWasRead = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ITKImportRoboMetMontage::getFileWasRead() const
+{
+  return m_FileWasRead;
+}
+
+// -----------------------------------------------------------------------------
+void ITKImportRoboMetMontage::setLengthUnit(int32_t value)
+{
+  m_LengthUnit = value;
+}
+
+// -----------------------------------------------------------------------------
+int32_t ITKImportRoboMetMontage::getLengthUnit() const
+{
+  return m_LengthUnit;
+}
+
+

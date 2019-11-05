@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKDanielssonDistanceMapImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -141,7 +143,7 @@ AbstractFilter::Pointer ITKDanielssonDistanceMapImage::newFilterInstance(bool co
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKDanielssonDistanceMapImage::getHumanLabel() const
+QString ITKDanielssonDistanceMapImage::getHumanLabel() const
 {
   return "ITK::Danielsson Distance Map Image Filter";
 }
@@ -149,7 +151,7 @@ const QString ITKDanielssonDistanceMapImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKDanielssonDistanceMapImage::getUuid()
+QUuid ITKDanielssonDistanceMapImage::getUuid() const
 {
   return QUuid("{53d5b289-a716-559b-89d9-5ebb34f714ca}");
 }
@@ -157,7 +159,74 @@ const QUuid ITKDanielssonDistanceMapImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKDanielssonDistanceMapImage::getSubGroupName() const
+QString ITKDanielssonDistanceMapImage::getSubGroupName() const
 {
   return "ITK DistanceMap";
 }
+
+// -----------------------------------------------------------------------------
+ITKDanielssonDistanceMapImage::Pointer ITKDanielssonDistanceMapImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKDanielssonDistanceMapImage> ITKDanielssonDistanceMapImage::New()
+{
+  struct make_shared_enabler : public ITKDanielssonDistanceMapImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKDanielssonDistanceMapImage::getNameOfClass() const
+{
+  return QString("ITKDanielssonDistanceMapImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKDanielssonDistanceMapImage::ClassName()
+{
+  return QString("ITKDanielssonDistanceMapImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKDanielssonDistanceMapImage::setInputIsBinary(bool value)
+{
+  m_InputIsBinary = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ITKDanielssonDistanceMapImage::getInputIsBinary() const
+{
+  return m_InputIsBinary;
+}
+
+// -----------------------------------------------------------------------------
+void ITKDanielssonDistanceMapImage::setSquaredDistance(bool value)
+{
+  m_SquaredDistance = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ITKDanielssonDistanceMapImage::getSquaredDistance() const
+{
+  return m_SquaredDistance;
+}
+
+// -----------------------------------------------------------------------------
+void ITKDanielssonDistanceMapImage::setUseImageSpacing(bool value)
+{
+  m_UseImageSpacing = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ITKDanielssonDistanceMapImage::getUseImageSpacing() const
+{
+  return m_UseImageSpacing;
+}
+
+

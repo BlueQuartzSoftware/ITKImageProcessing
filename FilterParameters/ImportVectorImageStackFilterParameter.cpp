@@ -103,3 +103,52 @@ void ImportVectorImageStackFilterParameter::writeJson(QJsonObject& json)
     json[getPropertyName()] = jsonObj;
   }
 }
+
+// -----------------------------------------------------------------------------
+ImportVectorImageStackFilterParameter::Pointer ImportVectorImageStackFilterParameter::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+ImportVectorImageStackFilterParameter::Pointer ImportVectorImageStackFilterParameter::New()
+{
+  Pointer sharedPtr(new(ImportVectorImageStackFilterParameter));
+  return sharedPtr;
+}
+
+// -----------------------------------------------------------------------------
+QString ImportVectorImageStackFilterParameter::getNameOfClass() const
+{
+  return QString("ImportVectorImageStackFilterParameter");
+}
+
+// -----------------------------------------------------------------------------
+QString ImportVectorImageStackFilterParameter::ClassName()
+{
+  return QString("ImportVectorImageStackFilterParameter");
+}
+
+// -----------------------------------------------------------------------------
+void ImportVectorImageStackFilterParameter::setSetterCallback(const ImportVectorImageStackFilterParameter::SetterCallbackType& value)
+{
+  m_SetterCallback = value;
+}
+
+// -----------------------------------------------------------------------------
+ImportVectorImageStackFilterParameter::SetterCallbackType ImportVectorImageStackFilterParameter::getSetterCallback() const
+{
+  return m_SetterCallback;
+}
+
+// -----------------------------------------------------------------------------
+void ImportVectorImageStackFilterParameter::setGetterCallback(const ImportVectorImageStackFilterParameter::GetterCallbackType& value)
+{
+  m_GetterCallback = value;
+}
+
+// -----------------------------------------------------------------------------
+ImportVectorImageStackFilterParameter::GetterCallbackType ImportVectorImageStackFilterParameter::getGetterCallback() const
+{
+  return m_GetterCallback;
+}

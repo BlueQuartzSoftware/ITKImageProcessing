@@ -33,6 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "ITKImportImageStack.h"
 
 #include <QtCore/QFileInfo>
@@ -260,10 +262,16 @@ void ITKImportImageStack::dataCheck()
   // Extract the Cell Attribute Matrix that was created and resize it for the number of Tuples that we have
   // and add it to the actual DataContainer that this filter created.
   AttributeMatrix::Pointer cellAttrMat = dc->getAttributeMatrix(getCellAttributeMatrixName());
+
+  IDataArray::Pointer imageDataPtr = cellAttrMat->removeAttributeArray(getImageDataArrayName());
+
   cellAttrMat->resizeAttributeArrays(dims.toContainer<std::vector<size_t>>());
   m->insertOrAssign(cellAttrMat);
-  // The data array that was embedded in the Cell Attribute Matrix just got resized so we should not have to do
-  // anything else at this point.
+
+  std::vector<size_t> compDims = imageDataPtr->getComponentDimensions();
+
+  IDataArray::Pointer resizedImageDataPtr = imageDataPtr->createNewArray(dims[0] * dims[1] * dims[2], compDims, imageDataPtr->getName(), !getInPreflight());
+  cellAttrMat->addOrReplaceAttributeArray(resizedImageDataPtr);
 }
 
 // -----------------------------------------------------------------------------
@@ -344,9 +352,20 @@ void readImageStack(ITKImportImageStack* filter, const QVector<QString>& fileLis
     // get the current Slice data...
     DataArrayPointerType tempData = dca->getDataContainer(dcName)->getAttributeMatrix(attrMatName)->getAttributeArrayAs<DataArrayType>(arrayName);
     // Copy that into the output array...
-    outputData->copyFromArray(tupleIndex, tempData, 0, tuplesPerSlice);
+    if(!outputData->copyFromArray(tupleIndex, tempData, 0, tuplesPerSlice))
+    {
+      QString msg = QString("Error copying source image data into destination array.    Slice:%1    TupleIndex:%2    MaxTupleIndex:%3").arg(slice).arg(tupleIndex).arg(outputData->getSize());
+      filter->setErrorCondition(imageReader->getErrorCode(), msg);
+      return;
+    }
 
     slice++;
+
+    // Check to see if the filter got canceled.
+    if(filter->getCancel())
+    {
+      return;
+    }
   }
 }
 
@@ -422,13 +441,13 @@ AbstractFilter::Pointer ITKImportImageStack::newFilterInstance(bool copyFilterPa
     filter->setFilterParameters(getFilterParameters());
     // We are going to hand copy all of the parameters because the other way of copying the parameters are going to
     // miss some of them because we are not enumerating all of them.
-    SIMPL_COPY_INSTANCEVAR(DataContainerName)
-    SIMPL_COPY_INSTANCEVAR(CellAttributeMatrixName)
-    SIMPL_COPY_INSTANCEVAR(Spacing)
-    SIMPL_COPY_INSTANCEVAR(Origin)
-    SIMPL_COPY_INSTANCEVAR(InputFileListInfo)
-    SIMPL_COPY_INSTANCEVAR(ImageStack)
-    SIMPL_COPY_INSTANCEVAR(ImageDataArrayName)
+    filter->setDataContainerName(getDataContainerName());
+    filter->setCellAttributeMatrixName(getCellAttributeMatrixName());
+    filter->setSpacing(getSpacing());
+    filter->setOrigin(getOrigin());
+    filter->setInputFileListInfo(getInputFileListInfo());
+    filter->setImageStack(getImageStack());
+    filter->setImageDataArrayName(getImageDataArrayName());
   }
   return filter;
 }
@@ -436,7 +455,7 @@ AbstractFilter::Pointer ITKImportImageStack::newFilterInstance(bool copyFilterPa
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKImportImageStack::getCompiledLibraryName() const
+QString ITKImportImageStack::getCompiledLibraryName() const
 {
   return ITKImageProcessingConstants::ITKImageProcessingBaseName;
 }
@@ -444,7 +463,7 @@ const QString ITKImportImageStack::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKImportImageStack::getBrandingString() const
+QString ITKImportImageStack::getBrandingString() const
 {
   return "ITKImageProcessing";
 }
@@ -452,7 +471,7 @@ const QString ITKImportImageStack::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKImportImageStack::getFilterVersion() const
+QString ITKImportImageStack::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -462,7 +481,7 @@ const QString ITKImportImageStack::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKImportImageStack::getGroupName() const
+QString ITKImportImageStack::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -470,7 +489,7 @@ const QString ITKImportImageStack::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKImportImageStack::getUuid()
+QUuid ITKImportImageStack::getUuid() const
 {
   return QUuid("{cf7d7497-9573-5102-bedd-38f86a6cdfd4}");
 }
@@ -478,7 +497,7 @@ const QUuid ITKImportImageStack::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKImportImageStack::getSubGroupName() const
+QString ITKImportImageStack::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::InputFilters;
 }
@@ -486,7 +505,122 @@ const QString ITKImportImageStack::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKImportImageStack::getHumanLabel() const
+QString ITKImportImageStack::getHumanLabel() const
 {
   return "ITK::Import Images (3D Stack)";
 }
+
+// -----------------------------------------------------------------------------
+ITKImportImageStack::Pointer ITKImportImageStack::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKImportImageStack> ITKImportImageStack::New()
+{
+  struct make_shared_enabler : public ITKImportImageStack  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKImportImageStack::getNameOfClass() const
+{
+  return QString("ITKImportImageStack");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKImportImageStack::ClassName()
+{
+  return QString("ITKImportImageStack");
+}
+
+// -----------------------------------------------------------------------------
+void ITKImportImageStack::setDataContainerName(const DataArrayPath& value)
+{
+  m_DataContainerName = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath ITKImportImageStack::getDataContainerName() const
+{
+  return m_DataContainerName;
+}
+
+// -----------------------------------------------------------------------------
+void ITKImportImageStack::setCellAttributeMatrixName(const QString& value)
+{
+  m_CellAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKImportImageStack::getCellAttributeMatrixName() const
+{
+  return m_CellAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void ITKImportImageStack::setOrigin(const FloatVec3Type& value)
+{
+  m_Origin = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec3Type ITKImportImageStack::getOrigin() const
+{
+  return m_Origin;
+}
+
+// -----------------------------------------------------------------------------
+void ITKImportImageStack::setSpacing(const FloatVec3Type& value)
+{
+  m_Spacing = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec3Type ITKImportImageStack::getSpacing() const
+{
+  return m_Spacing;
+}
+
+// -----------------------------------------------------------------------------
+void ITKImportImageStack::setInputFileListInfo(const FileListInfo_t& value)
+{
+  m_InputFileListInfo = value;
+}
+
+// -----------------------------------------------------------------------------
+FileListInfo_t ITKImportImageStack::getInputFileListInfo() const
+{
+  return m_InputFileListInfo;
+}
+
+// -----------------------------------------------------------------------------
+void ITKImportImageStack::setImageStack(int value)
+{
+  m_ImageStack = value;
+}
+
+// -----------------------------------------------------------------------------
+int ITKImportImageStack::getImageStack() const
+{
+  return m_ImageStack;
+}
+
+// -----------------------------------------------------------------------------
+void ITKImportImageStack::setImageDataArrayName(const QString& value)
+{
+  m_ImageDataArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKImportImageStack::getImageDataArrayName() const
+{
+  return m_ImageDataArrayName;
+}
+
+

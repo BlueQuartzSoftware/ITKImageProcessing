@@ -1,5 +1,7 @@
 #include "ITKImageProcessingBase.h"
 
+#include <memory>
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
@@ -25,7 +27,7 @@ void ITKImageProcessingBase::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKImageProcessingBase::getCompiledLibraryName() const
+QString ITKImageProcessingBase::getCompiledLibraryName() const
 {
   return ITKImageProcessingConstants::ITKImageProcessingBaseName;
 }
@@ -33,7 +35,7 @@ const QString ITKImageProcessingBase::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKImageProcessingBase::getBrandingString() const
+QString ITKImageProcessingBase::getBrandingString() const
 {
   return "ITKImageProcessing";
 }
@@ -41,7 +43,7 @@ const QString ITKImageProcessingBase::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKImageProcessingBase::getFilterVersion() const
+QString ITKImageProcessingBase::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -52,7 +54,7 @@ const QString ITKImageProcessingBase::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKImageProcessingBase::getGroupName() const
+QString ITKImageProcessingBase::getGroupName() const
 {
   return "ITK Image Processing";
 }
@@ -73,7 +75,7 @@ AbstractFilter::Pointer ITKImageProcessingBase::newFilterInstance(bool copyFilte
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKImageProcessingBase::getHumanLabel() const
+QString ITKImageProcessingBase::getHumanLabel() const
 {
   return "ITK::Image Processing Base";
 }
@@ -86,3 +88,70 @@ void ITKImageProcessingBase::readFilterParameters(AbstractFilterParametersReader
   reader->openFilterGroup(this, index);
   reader->closeFilterGroup();
 }
+
+// -----------------------------------------------------------------------------
+ITKImageProcessingBase::Pointer ITKImageProcessingBase::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKImageProcessingBase> ITKImageProcessingBase::New()
+{
+  struct make_shared_enabler : public ITKImageProcessingBase  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKImageProcessingBase::getNameOfClass() const
+{
+  return QString("ITKImageProcessingBase");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKImageProcessingBase::ClassName()
+{
+  return QString("ITKImageProcessingBase");
+}
+
+// -----------------------------------------------------------------------------
+void ITKImageProcessingBase::setSelectedCellArrayPath(const DataArrayPath& value)
+{
+  m_SelectedCellArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath ITKImageProcessingBase::getSelectedCellArrayPath() const
+{
+  return m_SelectedCellArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void ITKImageProcessingBase::setNewCellArrayName(const QString& value)
+{
+  m_NewCellArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKImageProcessingBase::getNewCellArrayName() const
+{
+  return m_NewCellArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void ITKImageProcessingBase::setSaveAsNewArray(bool value)
+{
+  m_SaveAsNewArray = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ITKImageProcessingBase::getSaveAsNewArray() const
+{
+  return m_SaveAsNewArray;
+}
+
+

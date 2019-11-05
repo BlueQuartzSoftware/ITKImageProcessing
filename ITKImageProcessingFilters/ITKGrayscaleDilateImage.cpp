@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKGrayscaleDilateImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -179,7 +181,7 @@ AbstractFilter::Pointer ITKGrayscaleDilateImage::newFilterInstance(bool copyFilt
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKGrayscaleDilateImage::getHumanLabel() const
+QString ITKGrayscaleDilateImage::getHumanLabel() const
 {
   return "ITK::Grayscale Dilate Image Filter";
 }
@@ -187,7 +189,7 @@ const QString ITKGrayscaleDilateImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKGrayscaleDilateImage::getUuid()
+QUuid ITKGrayscaleDilateImage::getUuid() const
 {
   return QUuid("{66cec151-2950-51f8-8a02-47d3516d8721}");
 }
@@ -195,7 +197,62 @@ const QUuid ITKGrayscaleDilateImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKGrayscaleDilateImage::getSubGroupName() const
+QString ITKGrayscaleDilateImage::getSubGroupName() const
 {
   return "ITK BiasCorrection";
 }
+
+// -----------------------------------------------------------------------------
+ITKGrayscaleDilateImage::Pointer ITKGrayscaleDilateImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKGrayscaleDilateImage> ITKGrayscaleDilateImage::New()
+{
+  struct make_shared_enabler : public ITKGrayscaleDilateImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKGrayscaleDilateImage::getNameOfClass() const
+{
+  return QString("ITKGrayscaleDilateImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKGrayscaleDilateImage::ClassName()
+{
+  return QString("ITKGrayscaleDilateImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKGrayscaleDilateImage::setKernelRadius(const FloatVec3Type& value)
+{
+  m_KernelRadius = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec3Type ITKGrayscaleDilateImage::getKernelRadius() const
+{
+  return m_KernelRadius;
+}
+
+// -----------------------------------------------------------------------------
+void ITKGrayscaleDilateImage::setKernelType(int value)
+{
+  m_KernelType = value;
+}
+
+// -----------------------------------------------------------------------------
+int ITKGrayscaleDilateImage::getKernelType() const
+{
+  return m_KernelType;
+}
+
+

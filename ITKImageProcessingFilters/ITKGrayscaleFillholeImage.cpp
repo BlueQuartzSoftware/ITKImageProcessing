@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKGrayscaleFillholeImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -133,7 +135,7 @@ AbstractFilter::Pointer ITKGrayscaleFillholeImage::newFilterInstance(bool copyFi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKGrayscaleFillholeImage::getHumanLabel() const
+QString ITKGrayscaleFillholeImage::getHumanLabel() const
 {
   return "ITK::Grayscale Fillhole Image Filter";
 }
@@ -141,7 +143,7 @@ const QString ITKGrayscaleFillholeImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKGrayscaleFillholeImage::getUuid()
+QUuid ITKGrayscaleFillholeImage::getUuid() const
 {
   return QUuid("{54c8dd45-88c4-5d4b-8a39-e3cc595e1cf8}");
 }
@@ -149,7 +151,50 @@ const QUuid ITKGrayscaleFillholeImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKGrayscaleFillholeImage::getSubGroupName() const
+QString ITKGrayscaleFillholeImage::getSubGroupName() const
 {
   return "ITK BiasCorrection";
 }
+
+// -----------------------------------------------------------------------------
+ITKGrayscaleFillholeImage::Pointer ITKGrayscaleFillholeImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKGrayscaleFillholeImage> ITKGrayscaleFillholeImage::New()
+{
+  struct make_shared_enabler : public ITKGrayscaleFillholeImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKGrayscaleFillholeImage::getNameOfClass() const
+{
+  return QString("ITKGrayscaleFillholeImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKGrayscaleFillholeImage::ClassName()
+{
+  return QString("ITKGrayscaleFillholeImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKGrayscaleFillholeImage::setFullyConnected(bool value)
+{
+  m_FullyConnected = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ITKGrayscaleFillholeImage::getFullyConnected() const
+{
+  return m_FullyConnected;
+}
+
+

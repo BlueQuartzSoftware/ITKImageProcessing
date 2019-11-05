@@ -11,9 +11,10 @@
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
+#include <memory>
+
 #include "ITKImageProcessingBase.h"
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
 
 // Auto includes
@@ -28,25 +29,75 @@
 class ITKImageProcessing_EXPORT ITKRescaleIntensityImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+
+#ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(ITKRescaleIntensityImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_SHARED_POINTERS(ITKRescaleIntensityImage)
+  PYB11_FILTER_NEW_MACRO(ITKRescaleIntensityImage)
+  PYB11_FILTER_PARAMETER(double, OutputMinimum)
+  PYB11_FILTER_PARAMETER(double, OutputMaximum)
+  PYB11_FILTER_PARAMETER(int, OutputType)
   PYB11_PROPERTY(double OutputMinimum READ getOutputMinimum WRITE setOutputMinimum)
   PYB11_PROPERTY(double OutputMaximum READ getOutputMaximum WRITE setOutputMaximum)
   PYB11_PROPERTY(int OutputType READ getOutputType WRITE setOutputType)
+#endif
 
 public:
-  SIMPL_SHARED_POINTERS(ITKRescaleIntensityImage)
-  SIMPL_FILTER_NEW_MACRO(ITKRescaleIntensityImage)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKRescaleIntensityImage, AbstractFilter)
+    using Self = ITKRescaleIntensityImage;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
+
+    static std::shared_ptr<ITKRescaleIntensityImage> New();
+
+    /**
+    * @brief Returns the name of the class for ITKRescaleIntensityImage
+    */
+    QString getNameOfClass() const override;
+    /**
+    * @brief Returns the name of the class for ITKRescaleIntensityImage
+    */
+    static QString ClassName();
+
 
   ~ITKRescaleIntensityImage() override;
 
-  SIMPL_FILTER_PARAMETER(double, OutputMinimum)
+    /**
+    * @brief Setter property for OutputMinimum
+    */
+    void setOutputMinimum(double value); 
+    /**
+    * @brief Getter property for OutputMinimum
+    * @return Value of OutputMinimum
+    */
+    double getOutputMinimum() const;
+
   Q_PROPERTY(double OutputMinimum READ getOutputMinimum WRITE setOutputMinimum)
 
-  SIMPL_FILTER_PARAMETER(double, OutputMaximum)
+    /**
+    * @brief Setter property for OutputMaximum
+    */
+    void setOutputMaximum(double value); 
+    /**
+    * @brief Getter property for OutputMaximum
+    * @return Value of OutputMaximum
+    */
+    double getOutputMaximum() const;
+
   Q_PROPERTY(double OutputMaximum READ getOutputMaximum WRITE setOutputMaximum)
 
-  SIMPL_FILTER_PARAMETER(int, OutputType)
+    /**
+    * @brief Setter property for OutputType
+    */
+    void setOutputType(int value); 
+    /**
+    * @brief Getter property for OutputType
+    * @return Value of OutputType
+    */
+    int getOutputType() const;
+
   Q_PROPERTY(int OutputType READ getOutputType WRITE setOutputType)
 
   /**
@@ -57,18 +108,18 @@ public:
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -113,6 +164,12 @@ public:
   ITKRescaleIntensityImage(ITKRescaleIntensityImage&&) = delete;         // Move Constructor Not Implemented
   ITKRescaleIntensityImage& operator=(const ITKRescaleIntensityImage&) = delete; // Copy Assignment Not Implemented
   ITKRescaleIntensityImage& operator=(ITKRescaleIntensityImage&&) = delete;      // Move Assignment Not Implemented
+
+  private:
+    double m_OutputMinimum = {};
+    double m_OutputMaximum = {};
+    int m_OutputType = {};
+
 };
 
 #ifdef __clang__

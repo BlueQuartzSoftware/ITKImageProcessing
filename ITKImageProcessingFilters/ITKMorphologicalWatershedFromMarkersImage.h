@@ -11,9 +11,10 @@
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
+#include <memory>
+
 #include "ITKImageProcessingBase.h"
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
 
 // Auto includes
@@ -32,25 +33,75 @@
 class ITKImageProcessing_EXPORT ITKMorphologicalWatershedFromMarkersImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+
+#ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(ITKMorphologicalWatershedFromMarkersImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_SHARED_POINTERS(ITKMorphologicalWatershedFromMarkersImage)
+  PYB11_FILTER_NEW_MACRO(ITKMorphologicalWatershedFromMarkersImage)
+  PYB11_FILTER_PARAMETER(bool, MarkWatershedLine)
+  PYB11_FILTER_PARAMETER(bool, FullyConnected)
+  PYB11_FILTER_PARAMETER(DataArrayPath, MarkerCellArrayPath)
   PYB11_PROPERTY(bool MarkWatershedLine READ getMarkWatershedLine WRITE setMarkWatershedLine)
   PYB11_PROPERTY(bool FullyConnected READ getFullyConnected WRITE setFullyConnected)
   PYB11_PROPERTY(DataArrayPath MarkerCellArrayPath READ getMarkerCellArrayPath WRITE setMarkerCellArrayPath)
+#endif
 
 public:
-  SIMPL_SHARED_POINTERS(ITKMorphologicalWatershedFromMarkersImage)
-  SIMPL_FILTER_NEW_MACRO(ITKMorphologicalWatershedFromMarkersImage)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKMorphologicalWatershedFromMarkersImage, AbstractFilter)
+    using Self = ITKMorphologicalWatershedFromMarkersImage;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
+
+    static std::shared_ptr<ITKMorphologicalWatershedFromMarkersImage> New();
+
+    /**
+    * @brief Returns the name of the class for ITKMorphologicalWatershedFromMarkersImage
+    */
+    QString getNameOfClass() const override;
+    /**
+    * @brief Returns the name of the class for ITKMorphologicalWatershedFromMarkersImage
+    */
+    static QString ClassName();
+
 
   ~ITKMorphologicalWatershedFromMarkersImage() override;
 
-  SIMPL_FILTER_PARAMETER(bool, MarkWatershedLine)
+    /**
+    * @brief Setter property for MarkWatershedLine
+    */
+    void setMarkWatershedLine(bool value); 
+    /**
+    * @brief Getter property for MarkWatershedLine
+    * @return Value of MarkWatershedLine
+    */
+    bool getMarkWatershedLine() const;
+
   Q_PROPERTY(bool MarkWatershedLine READ getMarkWatershedLine WRITE setMarkWatershedLine)
 
-  SIMPL_FILTER_PARAMETER(bool, FullyConnected)
+    /**
+    * @brief Setter property for FullyConnected
+    */
+    void setFullyConnected(bool value); 
+    /**
+    * @brief Getter property for FullyConnected
+    * @return Value of FullyConnected
+    */
+    bool getFullyConnected() const;
+
   Q_PROPERTY(bool FullyConnected READ getFullyConnected WRITE setFullyConnected)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, MarkerCellArrayPath)
+    /**
+    * @brief Setter property for MarkerCellArrayPath
+    */
+    void setMarkerCellArrayPath(const DataArrayPath& value); 
+    /**
+    * @brief Getter property for MarkerCellArrayPath
+    * @return Value of MarkerCellArrayPath
+    */
+    DataArrayPath getMarkerCellArrayPath() const;
+
   Q_PROPERTY(DataArrayPath MarkerCellArrayPath READ getMarkerCellArrayPath WRITE setMarkerCellArrayPath)
 
   /**
@@ -61,18 +112,18 @@ public:
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -85,7 +136,16 @@ public:
   void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
 
 protected:
-  SIMPL_INSTANCE_PROPERTY(DataContainerArray::Pointer, MarkerContainerArray)
+    /**
+    * @brief Setter property for MarkerContainerArray
+    */
+    void setMarkerContainerArray(const DataContainerArray::Pointer& value); 
+    /**
+    * @brief Getter property for MarkerContainerArray
+    * @return Value of MarkerContainerArray
+    */
+    DataContainerArray::Pointer getMarkerContainerArray() const;
+
 
   ITKMorphologicalWatershedFromMarkersImage();
 
@@ -119,6 +179,13 @@ public:
   ITKMorphologicalWatershedFromMarkersImage(ITKMorphologicalWatershedFromMarkersImage&&) = delete;      // Move Constructor Not Implemented
   ITKMorphologicalWatershedFromMarkersImage& operator=(const ITKMorphologicalWatershedFromMarkersImage&) = delete; // Copy Assignment Not Implemented
   ITKMorphologicalWatershedFromMarkersImage& operator=(ITKMorphologicalWatershedFromMarkersImage&&) = delete;      // Move Assignment Not Implemented
+
+  private:
+    bool m_MarkWatershedLine = {};
+    bool m_FullyConnected = {};
+    DataArrayPath m_MarkerCellArrayPath = {};
+    DataContainerArray::Pointer m_MarkerContainerArray = {};
+
 };
 
 #ifdef __clang__

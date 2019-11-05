@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKDoubleThresholdImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -159,7 +161,7 @@ AbstractFilter::Pointer ITKDoubleThresholdImage::newFilterInstance(bool copyFilt
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKDoubleThresholdImage::getHumanLabel() const
+QString ITKDoubleThresholdImage::getHumanLabel() const
 {
   return "ITK::Double Threshold Image Filter";
 }
@@ -167,7 +169,7 @@ const QString ITKDoubleThresholdImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKDoubleThresholdImage::getUuid()
+QUuid ITKDoubleThresholdImage::getUuid() const
 {
   return QUuid("{7fcfa231-519e-58da-bf8f-ad0f728bf0fe}");
 }
@@ -175,7 +177,122 @@ const QUuid ITKDoubleThresholdImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKDoubleThresholdImage::getSubGroupName() const
+QString ITKDoubleThresholdImage::getSubGroupName() const
 {
   return "ITK BiasCorrection";
 }
+
+// -----------------------------------------------------------------------------
+ITKDoubleThresholdImage::Pointer ITKDoubleThresholdImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKDoubleThresholdImage> ITKDoubleThresholdImage::New()
+{
+  struct make_shared_enabler : public ITKDoubleThresholdImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKDoubleThresholdImage::getNameOfClass() const
+{
+  return QString("ITKDoubleThresholdImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKDoubleThresholdImage::ClassName()
+{
+  return QString("ITKDoubleThresholdImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKDoubleThresholdImage::setThreshold1(double value)
+{
+  m_Threshold1 = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKDoubleThresholdImage::getThreshold1() const
+{
+  return m_Threshold1;
+}
+
+// -----------------------------------------------------------------------------
+void ITKDoubleThresholdImage::setThreshold2(double value)
+{
+  m_Threshold2 = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKDoubleThresholdImage::getThreshold2() const
+{
+  return m_Threshold2;
+}
+
+// -----------------------------------------------------------------------------
+void ITKDoubleThresholdImage::setThreshold3(double value)
+{
+  m_Threshold3 = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKDoubleThresholdImage::getThreshold3() const
+{
+  return m_Threshold3;
+}
+
+// -----------------------------------------------------------------------------
+void ITKDoubleThresholdImage::setThreshold4(double value)
+{
+  m_Threshold4 = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKDoubleThresholdImage::getThreshold4() const
+{
+  return m_Threshold4;
+}
+
+// -----------------------------------------------------------------------------
+void ITKDoubleThresholdImage::setInsideValue(int value)
+{
+  m_InsideValue = value;
+}
+
+// -----------------------------------------------------------------------------
+int ITKDoubleThresholdImage::getInsideValue() const
+{
+  return m_InsideValue;
+}
+
+// -----------------------------------------------------------------------------
+void ITKDoubleThresholdImage::setOutsideValue(int value)
+{
+  m_OutsideValue = value;
+}
+
+// -----------------------------------------------------------------------------
+int ITKDoubleThresholdImage::getOutsideValue() const
+{
+  return m_OutsideValue;
+}
+
+// -----------------------------------------------------------------------------
+void ITKDoubleThresholdImage::setFullyConnected(bool value)
+{
+  m_FullyConnected = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ITKDoubleThresholdImage::getFullyConnected() const
+{
+  return m_FullyConnected;
+}
+
+

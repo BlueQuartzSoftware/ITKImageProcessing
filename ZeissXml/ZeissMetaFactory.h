@@ -31,8 +31,9 @@
 #pragma once
 
 
+#include <memory>
+
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 #include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 #include "ITKImageProcessing/ZeissXml/ZeissMetaEntry.h"
@@ -44,7 +45,13 @@
 class ITKImageProcessing_EXPORT ZeissMetaFactory
 {
   public:
-    SIMPL_SHARED_POINTERS(ZeissMetaFactory);
+    using Self = ZeissMetaFactory;
+    ;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
 
     virtual ~ZeissMetaFactory() = default;
 
@@ -65,8 +72,20 @@ class ITKImageProcessing_EXPORT ZeissMetaFactory
 class ITKImageProcessing_EXPORT Int32ZeissMetaFactory : public ZeissMetaFactory
 {
   public:
-    SIMPL_SHARED_POINTERS(Int32ZeissMetaFactory);
-    SIMPL_NEW_SUPERCLASS(Int32ZeissMetaFactory, ZeissMetaFactory);
+    using Self = Int32ZeissMetaFactory;
+    ;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
+
+    using ZeissMetaFactoryType = ZeissMetaFactory::Pointer;
+    static ZeissMetaFactoryType NewZeissMetaFactory()
+    {
+      ZeissMetaFactoryType sharedPtr(new(Self));
+      return sharedPtr;
+    }
 
     AbstractZeissMetaData::Pointer createMetaEntry() override;
 
@@ -86,9 +105,20 @@ class ITKImageProcessing_EXPORT Int32ZeissMetaFactory : public ZeissMetaFactory
 class ITKImageProcessing_EXPORT Int64ZeissMetaFactory : public ZeissMetaFactory
 {
   public:
-    SIMPL_SHARED_POINTERS(Int64ZeissMetaFactory);
-    SIMPL_NEW_SUPERCLASS(Int64ZeissMetaFactory, ZeissMetaFactory);
+    using Self = Int64ZeissMetaFactory;
+    ;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
 
+    using ZeissMetaFactoryType = ZeissMetaFactory::Pointer;
+    static ZeissMetaFactoryType NewZeissMetaFactory()
+    {
+      ZeissMetaFactoryType sharedPtr(new(Self));
+      return sharedPtr;
+    }
     AbstractZeissMetaData::Pointer createMetaEntry() override;
 
   protected:
@@ -109,9 +139,20 @@ class ITKImageProcessing_EXPORT Int64ZeissMetaFactory : public ZeissMetaFactory
 class ITKImageProcessing_EXPORT FloatZeissMetaFactory : public ZeissMetaFactory
 {
   public:
-    SIMPL_SHARED_POINTERS(FloatZeissMetaFactory);
-    SIMPL_NEW_SUPERCLASS(FloatZeissMetaFactory, ZeissMetaFactory);
+    using Self = FloatZeissMetaFactory;
+    ;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
 
+    using ZeissMetaFactoryType = ZeissMetaFactory::Pointer;
+    static ZeissMetaFactoryType NewZeissMetaFactory()
+    {
+      ZeissMetaFactoryType sharedPtr(new(Self));
+      return sharedPtr;
+    }
     AbstractZeissMetaData::Pointer createMetaEntry() override;
 
   protected:
@@ -130,9 +171,20 @@ class ITKImageProcessing_EXPORT FloatZeissMetaFactory : public ZeissMetaFactory
 class ITKImageProcessing_EXPORT StringZeissMetaFactory : public ZeissMetaFactory
 {
   public:
-    SIMPL_SHARED_POINTERS(StringZeissMetaFactory);
-    SIMPL_NEW_SUPERCLASS(StringZeissMetaFactory, ZeissMetaFactory);
+    using Self = StringZeissMetaFactory;
+    ;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
 
+    using ZeissMetaFactoryType = ZeissMetaFactory::Pointer;
+    static ZeissMetaFactoryType NewZeissMetaFactory()
+    {
+      ZeissMetaFactoryType sharedPtr(new(Self));
+      return sharedPtr;
+    }
     AbstractZeissMetaData::Pointer createMetaEntry() override;
 
   protected:
@@ -143,4 +195,6 @@ class ITKImageProcessing_EXPORT StringZeissMetaFactory : public ZeissMetaFactory
     StringZeissMetaFactory(StringZeissMetaFactory&&) = delete;      // Move Constructor Not Implemented
     StringZeissMetaFactory& operator=(const StringZeissMetaFactory&) = delete; // Copy Assignment Not Implemented
     StringZeissMetaFactory& operator=(StringZeissMetaFactory&&) = delete;      // Move Assignment Not Implemented
+
+  private:
 };

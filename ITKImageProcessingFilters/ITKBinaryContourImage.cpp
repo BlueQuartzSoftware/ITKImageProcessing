@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKBinaryContourImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -141,7 +143,7 @@ AbstractFilter::Pointer ITKBinaryContourImage::newFilterInstance(bool copyFilter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKBinaryContourImage::getHumanLabel() const
+QString ITKBinaryContourImage::getHumanLabel() const
 {
   return "ITK::Binary Contour Image Filter";
 }
@@ -149,7 +151,7 @@ const QString ITKBinaryContourImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKBinaryContourImage::getUuid()
+QUuid ITKBinaryContourImage::getUuid() const
 {
   return QUuid("{3c451ac9-bfef-5e41-bae9-3957a0fc26a1}");
 }
@@ -157,7 +159,74 @@ const QUuid ITKBinaryContourImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKBinaryContourImage::getSubGroupName() const
+QString ITKBinaryContourImage::getSubGroupName() const
 {
   return "ITK ImageLabel";
 }
+
+// -----------------------------------------------------------------------------
+ITKBinaryContourImage::Pointer ITKBinaryContourImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKBinaryContourImage> ITKBinaryContourImage::New()
+{
+  struct make_shared_enabler : public ITKBinaryContourImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKBinaryContourImage::getNameOfClass() const
+{
+  return QString("ITKBinaryContourImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKBinaryContourImage::ClassName()
+{
+  return QString("ITKBinaryContourImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKBinaryContourImage::setFullyConnected(bool value)
+{
+  m_FullyConnected = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ITKBinaryContourImage::getFullyConnected() const
+{
+  return m_FullyConnected;
+}
+
+// -----------------------------------------------------------------------------
+void ITKBinaryContourImage::setBackgroundValue(double value)
+{
+  m_BackgroundValue = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKBinaryContourImage::getBackgroundValue() const
+{
+  return m_BackgroundValue;
+}
+
+// -----------------------------------------------------------------------------
+void ITKBinaryContourImage::setForegroundValue(double value)
+{
+  m_ForegroundValue = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKBinaryContourImage::getForegroundValue() const
+{
+  return m_ForegroundValue;
+}
+
+

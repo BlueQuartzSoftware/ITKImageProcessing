@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKAsinImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -124,7 +126,7 @@ AbstractFilter::Pointer ITKAsinImage::newFilterInstance(bool copyFilterParameter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKAsinImage::getHumanLabel() const
+QString ITKAsinImage::getHumanLabel() const
 {
   return "ITK::Asin Image Filter";
 }
@@ -132,7 +134,7 @@ const QString ITKAsinImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKAsinImage::getUuid()
+QUuid ITKAsinImage::getUuid() const
 {
   return QUuid("{79509ab1-24e1-50e4-9351-c5ce7cd87a72}");
 }
@@ -140,7 +142,38 @@ const QUuid ITKAsinImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKAsinImage::getSubGroupName() const
+QString ITKAsinImage::getSubGroupName() const
 {
   return "ITK IntensityTransformation";
 }
+
+// -----------------------------------------------------------------------------
+ITKAsinImage::Pointer ITKAsinImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKAsinImage> ITKAsinImage::New()
+{
+  struct make_shared_enabler : public ITKAsinImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKAsinImage::getNameOfClass() const
+{
+  return QString("ITKAsinImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKAsinImage::ClassName()
+{
+  return QString("ITKAsinImage");
+}
+
+

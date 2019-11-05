@@ -11,9 +11,10 @@
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
+#include <memory>
+
 #include "ITKImageProcessingBase.h"
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
 
 // Auto includes
@@ -28,29 +29,89 @@
 class ITKImageProcessing_EXPORT ITKIntensityWindowingImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+
+#ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(ITKIntensityWindowingImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_SHARED_POINTERS(ITKIntensityWindowingImage)
+  PYB11_FILTER_NEW_MACRO(ITKIntensityWindowingImage)
+  PYB11_FILTER_PARAMETER(double, WindowMinimum)
+  PYB11_FILTER_PARAMETER(double, WindowMaximum)
+  PYB11_FILTER_PARAMETER(double, OutputMinimum)
+  PYB11_FILTER_PARAMETER(double, OutputMaximum)
   PYB11_PROPERTY(double WindowMinimum READ getWindowMinimum WRITE setWindowMinimum)
   PYB11_PROPERTY(double WindowMaximum READ getWindowMaximum WRITE setWindowMaximum)
   PYB11_PROPERTY(double OutputMinimum READ getOutputMinimum WRITE setOutputMinimum)
   PYB11_PROPERTY(double OutputMaximum READ getOutputMaximum WRITE setOutputMaximum)
+#endif
 
 public:
-  SIMPL_SHARED_POINTERS(ITKIntensityWindowingImage)
-  SIMPL_FILTER_NEW_MACRO(ITKIntensityWindowingImage)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKIntensityWindowingImage, AbstractFilter)
+    using Self = ITKIntensityWindowingImage;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
+
+    static std::shared_ptr<ITKIntensityWindowingImage> New();
+
+    /**
+    * @brief Returns the name of the class for ITKIntensityWindowingImage
+    */
+    QString getNameOfClass() const override;
+    /**
+    * @brief Returns the name of the class for ITKIntensityWindowingImage
+    */
+    static QString ClassName();
+
 
   ~ITKIntensityWindowingImage() override;
 
-  SIMPL_FILTER_PARAMETER(double, WindowMinimum)
+    /**
+    * @brief Setter property for WindowMinimum
+    */
+    void setWindowMinimum(double value); 
+    /**
+    * @brief Getter property for WindowMinimum
+    * @return Value of WindowMinimum
+    */
+    double getWindowMinimum() const;
+
   Q_PROPERTY(double WindowMinimum READ getWindowMinimum WRITE setWindowMinimum)
 
-  SIMPL_FILTER_PARAMETER(double, WindowMaximum)
+    /**
+    * @brief Setter property for WindowMaximum
+    */
+    void setWindowMaximum(double value); 
+    /**
+    * @brief Getter property for WindowMaximum
+    * @return Value of WindowMaximum
+    */
+    double getWindowMaximum() const;
+
   Q_PROPERTY(double WindowMaximum READ getWindowMaximum WRITE setWindowMaximum)
 
-  SIMPL_FILTER_PARAMETER(double, OutputMinimum)
+    /**
+    * @brief Setter property for OutputMinimum
+    */
+    void setOutputMinimum(double value); 
+    /**
+    * @brief Getter property for OutputMinimum
+    * @return Value of OutputMinimum
+    */
+    double getOutputMinimum() const;
+
   Q_PROPERTY(double OutputMinimum READ getOutputMinimum WRITE setOutputMinimum)
 
-  SIMPL_FILTER_PARAMETER(double, OutputMaximum)
+    /**
+    * @brief Setter property for OutputMaximum
+    */
+    void setOutputMaximum(double value); 
+    /**
+    * @brief Getter property for OutputMaximum
+    * @return Value of OutputMaximum
+    */
+    double getOutputMaximum() const;
+
   Q_PROPERTY(double OutputMaximum READ getOutputMaximum WRITE setOutputMaximum)
 
 
@@ -62,18 +123,18 @@ public:
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -113,6 +174,13 @@ public:
   ITKIntensityWindowingImage(ITKIntensityWindowingImage&&) = delete;         // Move Constructor Not Implemented
   ITKIntensityWindowingImage& operator=(const ITKIntensityWindowingImage&) = delete; // Copy Assignment Not Implemented
   ITKIntensityWindowingImage& operator=(ITKIntensityWindowingImage&&) = delete;      // Move Assignment Not Implemented
+
+  private:
+    double m_WindowMinimum = {};
+    double m_WindowMaximum = {};
+    double m_OutputMinimum = {};
+    double m_OutputMaximum = {};
+
 };
 
 #ifdef __clang__

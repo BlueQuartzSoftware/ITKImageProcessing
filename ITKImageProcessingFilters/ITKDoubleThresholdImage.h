@@ -11,9 +11,10 @@
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
+#include <memory>
+
 #include "ITKImageProcessingBase.h"
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
 
 // Auto includes
@@ -30,7 +31,18 @@
 class ITKImageProcessing_EXPORT ITKDoubleThresholdImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+
+#ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(ITKDoubleThresholdImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_SHARED_POINTERS(ITKDoubleThresholdImage)
+  PYB11_FILTER_NEW_MACRO(ITKDoubleThresholdImage)
+  PYB11_FILTER_PARAMETER(double, Threshold1)
+  PYB11_FILTER_PARAMETER(double, Threshold2)
+  PYB11_FILTER_PARAMETER(double, Threshold3)
+  PYB11_FILTER_PARAMETER(double, Threshold4)
+  PYB11_FILTER_PARAMETER(int, InsideValue)
+  PYB11_FILTER_PARAMETER(int, OutsideValue)
+  PYB11_FILTER_PARAMETER(bool, FullyConnected)
   PYB11_PROPERTY(double Threshold1 READ getThreshold1 WRITE setThreshold1)
   PYB11_PROPERTY(double Threshold2 READ getThreshold2 WRITE setThreshold2)
   PYB11_PROPERTY(double Threshold3 READ getThreshold3 WRITE setThreshold3)
@@ -38,33 +50,112 @@ class ITKImageProcessing_EXPORT ITKDoubleThresholdImage : public ITKImageProcess
   PYB11_PROPERTY(int InsideValue READ getInsideValue WRITE setInsideValue)
   PYB11_PROPERTY(int OutsideValue READ getOutsideValue WRITE setOutsideValue)
   PYB11_PROPERTY(bool FullyConnected READ getFullyConnected WRITE setFullyConnected)
+#endif
 
 public:
-  SIMPL_SHARED_POINTERS(ITKDoubleThresholdImage)
-  SIMPL_FILTER_NEW_MACRO(ITKDoubleThresholdImage)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKDoubleThresholdImage, AbstractFilter)
+    using Self = ITKDoubleThresholdImage;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
+
+    static std::shared_ptr<ITKDoubleThresholdImage> New();
+
+    /**
+    * @brief Returns the name of the class for ITKDoubleThresholdImage
+    */
+    QString getNameOfClass() const override;
+    /**
+    * @brief Returns the name of the class for ITKDoubleThresholdImage
+    */
+    static QString ClassName();
+
 
   ~ITKDoubleThresholdImage() override;
 
-  SIMPL_FILTER_PARAMETER(double, Threshold1)
+    /**
+    * @brief Setter property for Threshold1
+    */
+    void setThreshold1(double value); 
+    /**
+    * @brief Getter property for Threshold1
+    * @return Value of Threshold1
+    */
+    double getThreshold1() const;
+
   Q_PROPERTY(double Threshold1 READ getThreshold1 WRITE setThreshold1)
 
-  SIMPL_FILTER_PARAMETER(double, Threshold2)
+    /**
+    * @brief Setter property for Threshold2
+    */
+    void setThreshold2(double value); 
+    /**
+    * @brief Getter property for Threshold2
+    * @return Value of Threshold2
+    */
+    double getThreshold2() const;
+
   Q_PROPERTY(double Threshold2 READ getThreshold2 WRITE setThreshold2)
 
-  SIMPL_FILTER_PARAMETER(double, Threshold3)
+    /**
+    * @brief Setter property for Threshold3
+    */
+    void setThreshold3(double value); 
+    /**
+    * @brief Getter property for Threshold3
+    * @return Value of Threshold3
+    */
+    double getThreshold3() const;
+
   Q_PROPERTY(double Threshold3 READ getThreshold3 WRITE setThreshold3)
 
-  SIMPL_FILTER_PARAMETER(double, Threshold4)
+    /**
+    * @brief Setter property for Threshold4
+    */
+    void setThreshold4(double value); 
+    /**
+    * @brief Getter property for Threshold4
+    * @return Value of Threshold4
+    */
+    double getThreshold4() const;
+
   Q_PROPERTY(double Threshold4 READ getThreshold4 WRITE setThreshold4)
 
-  SIMPL_FILTER_PARAMETER(int, InsideValue)
+    /**
+    * @brief Setter property for InsideValue
+    */
+    void setInsideValue(int value); 
+    /**
+    * @brief Getter property for InsideValue
+    * @return Value of InsideValue
+    */
+    int getInsideValue() const;
+
   Q_PROPERTY(int InsideValue READ getInsideValue WRITE setInsideValue)
 
-  SIMPL_FILTER_PARAMETER(int, OutsideValue)
+    /**
+    * @brief Setter property for OutsideValue
+    */
+    void setOutsideValue(int value); 
+    /**
+    * @brief Getter property for OutsideValue
+    * @return Value of OutsideValue
+    */
+    int getOutsideValue() const;
+
   Q_PROPERTY(int OutsideValue READ getOutsideValue WRITE setOutsideValue)
 
-  SIMPL_FILTER_PARAMETER(bool, FullyConnected)
+    /**
+    * @brief Setter property for FullyConnected
+    */
+    void setFullyConnected(bool value); 
+    /**
+    * @brief Getter property for FullyConnected
+    * @return Value of FullyConnected
+    */
+    bool getFullyConnected() const;
+
   Q_PROPERTY(bool FullyConnected READ getFullyConnected WRITE setFullyConnected)
 
 
@@ -76,18 +167,18 @@ public:
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -127,6 +218,16 @@ public:
   ITKDoubleThresholdImage(ITKDoubleThresholdImage&&) = delete;         // Move Constructor Not Implemented
   ITKDoubleThresholdImage& operator=(const ITKDoubleThresholdImage&) = delete; // Copy Assignment Not Implemented
   ITKDoubleThresholdImage& operator=(ITKDoubleThresholdImage&&) = delete;      // Move Assignment Not Implemented
+
+  private:
+    double m_Threshold1 = {};
+    double m_Threshold2 = {};
+    double m_Threshold3 = {};
+    double m_Threshold4 = {};
+    int m_InsideValue = {};
+    int m_OutsideValue = {};
+    bool m_FullyConnected = {};
+
 };
 
 #ifdef __clang__

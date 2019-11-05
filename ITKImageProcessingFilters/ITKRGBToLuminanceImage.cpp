@@ -2,6 +2,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKRGBToLuminanceImage.h"
 
 #include "SIMPLib/Common/Constants.h"
@@ -145,7 +147,7 @@ AbstractFilter::Pointer ITKRGBToLuminanceImage::newFilterInstance(bool copyFilte
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKRGBToLuminanceImage::getHumanLabel() const
+QString ITKRGBToLuminanceImage::getHumanLabel() const
 {
   return "ITK::RGB to Luminance Image Filter";
 }
@@ -153,7 +155,7 @@ const QString ITKRGBToLuminanceImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKRGBToLuminanceImage::getUuid()
+QUuid ITKRGBToLuminanceImage::getUuid() const
 {
   return QUuid("{bae507d6-4d0a-5ad2-8279-c674f1c90db8}");
 }
@@ -161,7 +163,38 @@ const QUuid ITKRGBToLuminanceImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKRGBToLuminanceImage::getSubGroupName() const
+QString ITKRGBToLuminanceImage::getSubGroupName() const
 {
   return "ITK IntensityTransformation";
 }
+
+// -----------------------------------------------------------------------------
+ITKRGBToLuminanceImage::Pointer ITKRGBToLuminanceImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKRGBToLuminanceImage> ITKRGBToLuminanceImage::New()
+{
+  struct make_shared_enabler : public ITKRGBToLuminanceImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKRGBToLuminanceImage::getNameOfClass() const
+{
+  return QString("ITKRGBToLuminanceImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKRGBToLuminanceImage::ClassName()
+{
+  return QString("ITKRGBToLuminanceImage");
+}
+
+

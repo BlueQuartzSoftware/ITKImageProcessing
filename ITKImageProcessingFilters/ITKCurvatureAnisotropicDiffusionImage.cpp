@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKCurvatureAnisotropicDiffusionImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -147,7 +149,7 @@ AbstractFilter::Pointer ITKCurvatureAnisotropicDiffusionImage::newFilterInstance
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKCurvatureAnisotropicDiffusionImage::getHumanLabel() const
+QString ITKCurvatureAnisotropicDiffusionImage::getHumanLabel() const
 {
   return "ITK::Curvature Anisotropic Diffusion Image Filter";
 }
@@ -155,7 +157,7 @@ const QString ITKCurvatureAnisotropicDiffusionImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKCurvatureAnisotropicDiffusionImage::getUuid()
+QUuid ITKCurvatureAnisotropicDiffusionImage::getUuid() const
 {
   return QUuid("{009fb2d0-6f65-5406-bb2a-4a883d0bc18c}");
 }
@@ -163,7 +165,86 @@ const QUuid ITKCurvatureAnisotropicDiffusionImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKCurvatureAnisotropicDiffusionImage::getSubGroupName() const
+QString ITKCurvatureAnisotropicDiffusionImage::getSubGroupName() const
 {
   return "ITK AnisotropicSmoothing";
 }
+
+// -----------------------------------------------------------------------------
+ITKCurvatureAnisotropicDiffusionImage::Pointer ITKCurvatureAnisotropicDiffusionImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKCurvatureAnisotropicDiffusionImage> ITKCurvatureAnisotropicDiffusionImage::New()
+{
+  struct make_shared_enabler : public ITKCurvatureAnisotropicDiffusionImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKCurvatureAnisotropicDiffusionImage::getNameOfClass() const
+{
+  return QString("ITKCurvatureAnisotropicDiffusionImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKCurvatureAnisotropicDiffusionImage::ClassName()
+{
+  return QString("ITKCurvatureAnisotropicDiffusionImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKCurvatureAnisotropicDiffusionImage::setTimeStep(double value)
+{
+  m_TimeStep = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKCurvatureAnisotropicDiffusionImage::getTimeStep() const
+{
+  return m_TimeStep;
+}
+
+// -----------------------------------------------------------------------------
+void ITKCurvatureAnisotropicDiffusionImage::setConductanceParameter(double value)
+{
+  m_ConductanceParameter = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKCurvatureAnisotropicDiffusionImage::getConductanceParameter() const
+{
+  return m_ConductanceParameter;
+}
+
+// -----------------------------------------------------------------------------
+void ITKCurvatureAnisotropicDiffusionImage::setConductanceScalingUpdateInterval(double value)
+{
+  m_ConductanceScalingUpdateInterval = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKCurvatureAnisotropicDiffusionImage::getConductanceScalingUpdateInterval() const
+{
+  return m_ConductanceScalingUpdateInterval;
+}
+
+// -----------------------------------------------------------------------------
+void ITKCurvatureAnisotropicDiffusionImage::setNumberOfIterations(double value)
+{
+  m_NumberOfIterations = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKCurvatureAnisotropicDiffusionImage::getNumberOfIterations() const
+{
+  return m_NumberOfIterations;
+}
+
+

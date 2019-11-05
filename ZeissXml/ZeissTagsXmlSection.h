@@ -30,10 +30,11 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #pragma once
 
+#include <memory>
+
 #include <QtCore/QMap>
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
 #include "ITKImageProcessing/ZeissXml/ZeissMetaEntry.h"
@@ -45,9 +46,23 @@
 class ITKImageProcessing_EXPORT ZeissTagsXmlSection
 {
   public:
-    SIMPL_SHARED_POINTERS(ZeissTagsXmlSection)
-    SIMPL_TYPE_MACRO(ZeissTagsXmlSection)
-    SIMPL_STATIC_NEW_MACRO(ZeissTagsXmlSection)
+    using Self = ZeissTagsXmlSection;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
+
+    /**
+     * @brief Returns the name of the class for ZeissTagsXmlSection
+     */
+    virtual QString getNameOfClass() const;
+    /**
+     * @brief Returns the name of the class for ZeissTagsXmlSection
+     */
+    static QString ClassName();
+
+    static Pointer New();
 
     using MetaDataType = QMap<int, AbstractZeissMetaData::Pointer>;
 
@@ -65,7 +80,6 @@ class ITKImageProcessing_EXPORT ZeissTagsXmlSection
     ZeissTagsXmlSection();
 
   private:
-
     MetaDataType m_MetaDataMap;
 
   public:

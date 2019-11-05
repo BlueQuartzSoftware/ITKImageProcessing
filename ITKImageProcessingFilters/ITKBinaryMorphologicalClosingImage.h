@@ -11,9 +11,10 @@
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
+#include <memory>
+
 #include "ITKImageProcessingBase.h"
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
 
 // Auto includes
@@ -31,29 +32,89 @@
 class ITKImageProcessing_EXPORT ITKBinaryMorphologicalClosingImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+
+#ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(ITKBinaryMorphologicalClosingImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_SHARED_POINTERS(ITKBinaryMorphologicalClosingImage)
+  PYB11_FILTER_NEW_MACRO(ITKBinaryMorphologicalClosingImage)
+  PYB11_FILTER_PARAMETER(double, ForegroundValue)
+  PYB11_FILTER_PARAMETER(bool, SafeBorder)
+  PYB11_FILTER_PARAMETER(FloatVec3Type, KernelRadius)
+  PYB11_FILTER_PARAMETER(int, KernelType)
   PYB11_PROPERTY(double ForegroundValue READ getForegroundValue WRITE setForegroundValue)
   PYB11_PROPERTY(bool SafeBorder READ getSafeBorder WRITE setSafeBorder)
   PYB11_PROPERTY(FloatVec3Type KernelRadius READ getKernelRadius WRITE setKernelRadius)
   PYB11_PROPERTY(int KernelType READ getKernelType WRITE setKernelType)
+#endif
 
 public:
-  SIMPL_SHARED_POINTERS(ITKBinaryMorphologicalClosingImage)
-  SIMPL_FILTER_NEW_MACRO(ITKBinaryMorphologicalClosingImage)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKBinaryMorphologicalClosingImage, AbstractFilter)
+    using Self = ITKBinaryMorphologicalClosingImage;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
+
+    static std::shared_ptr<ITKBinaryMorphologicalClosingImage> New();
+
+    /**
+    * @brief Returns the name of the class for ITKBinaryMorphologicalClosingImage
+    */
+    QString getNameOfClass() const override;
+    /**
+    * @brief Returns the name of the class for ITKBinaryMorphologicalClosingImage
+    */
+    static QString ClassName();
+
 
   ~ITKBinaryMorphologicalClosingImage() override;
 
-  SIMPL_FILTER_PARAMETER(double, ForegroundValue)
+    /**
+    * @brief Setter property for ForegroundValue
+    */
+    void setForegroundValue(double value); 
+    /**
+    * @brief Getter property for ForegroundValue
+    * @return Value of ForegroundValue
+    */
+    double getForegroundValue() const;
+
   Q_PROPERTY(double ForegroundValue READ getForegroundValue WRITE setForegroundValue)
 
-  SIMPL_FILTER_PARAMETER(bool, SafeBorder)
+    /**
+    * @brief Setter property for SafeBorder
+    */
+    void setSafeBorder(bool value); 
+    /**
+    * @brief Getter property for SafeBorder
+    * @return Value of SafeBorder
+    */
+    bool getSafeBorder() const;
+
   Q_PROPERTY(bool SafeBorder READ getSafeBorder WRITE setSafeBorder)
 
-  SIMPL_FILTER_PARAMETER(FloatVec3Type, KernelRadius)
+    /**
+    * @brief Setter property for KernelRadius
+    */
+    void setKernelRadius(const FloatVec3Type& value); 
+    /**
+    * @brief Getter property for KernelRadius
+    * @return Value of KernelRadius
+    */
+    FloatVec3Type getKernelRadius() const;
+
   Q_PROPERTY(FloatVec3Type KernelRadius READ getKernelRadius WRITE setKernelRadius)
 
-  SIMPL_FILTER_PARAMETER(int, KernelType)
+    /**
+    * @brief Setter property for KernelType
+    */
+    void setKernelType(int value); 
+    /**
+    * @brief Getter property for KernelType
+    * @return Value of KernelType
+    */
+    int getKernelType() const;
+
   Q_PROPERTY(int KernelType READ getKernelType WRITE setKernelType)
 
 
@@ -65,18 +126,18 @@ public:
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -116,6 +177,13 @@ public:
   ITKBinaryMorphologicalClosingImage(ITKBinaryMorphologicalClosingImage&&) = delete;         // Move Constructor Not Implemented
   ITKBinaryMorphologicalClosingImage& operator=(const ITKBinaryMorphologicalClosingImage&) = delete; // Copy Assignment Not Implemented
   ITKBinaryMorphologicalClosingImage& operator=(ITKBinaryMorphologicalClosingImage&&) = delete;      // Move Assignment Not Implemented
+
+  private:
+    double m_ForegroundValue = {};
+    bool m_SafeBorder = {};
+    FloatVec3Type m_KernelRadius = {};
+    int m_KernelType = {};
+
 };
 
 #ifdef __clang__

@@ -33,6 +33,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "ITKPCMTileRegistration.h"
 
 #include <algorithm>
@@ -608,7 +610,7 @@ AbstractFilter::Pointer ITKPCMTileRegistration::newFilterInstance(bool copyFilte
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKPCMTileRegistration::getCompiledLibraryName() const
+QString ITKPCMTileRegistration::getCompiledLibraryName() const
 {
   return ITKImageProcessingConstants::ITKImageProcessingBaseName;
 }
@@ -616,7 +618,7 @@ const QString ITKPCMTileRegistration::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKPCMTileRegistration::getBrandingString() const
+QString ITKPCMTileRegistration::getBrandingString() const
 {
   return "ITKImageProcessing";
 }
@@ -624,7 +626,7 @@ const QString ITKPCMTileRegistration::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKPCMTileRegistration::getFilterVersion() const
+QString ITKPCMTileRegistration::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -634,7 +636,7 @@ const QString ITKPCMTileRegistration::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKPCMTileRegistration::getGroupName() const
+QString ITKPCMTileRegistration::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -642,7 +644,7 @@ const QString ITKPCMTileRegistration::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKPCMTileRegistration::getUuid()
+QUuid ITKPCMTileRegistration::getUuid() const
 {
   return QUuid("{4388723b-cc16-3477-ac6f-fe0107107e74}");
 }
@@ -650,7 +652,7 @@ const QUuid ITKPCMTileRegistration::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKPCMTileRegistration::getSubGroupName() const
+QString ITKPCMTileRegistration::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::GenerationFilters;
 }
@@ -658,7 +660,98 @@ const QString ITKPCMTileRegistration::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKPCMTileRegistration::getHumanLabel() const
+QString ITKPCMTileRegistration::getHumanLabel() const
 {
   return "ITK::Adjust Tile Origins (PCM Method)";
 }
+
+// -----------------------------------------------------------------------------
+ITKPCMTileRegistration::Pointer ITKPCMTileRegistration::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKPCMTileRegistration> ITKPCMTileRegistration::New()
+{
+  struct make_shared_enabler : public ITKPCMTileRegistration  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKPCMTileRegistration::getNameOfClass() const
+{
+  return QString("ITKPCMTileRegistration");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKPCMTileRegistration::ClassName()
+{
+  return QString("ITKPCMTileRegistration");
+}
+
+// -----------------------------------------------------------------------------
+void ITKPCMTileRegistration::setMontageStart(const IntVec2Type& value)
+{
+  m_MontageStart = value;
+}
+
+// -----------------------------------------------------------------------------
+IntVec2Type ITKPCMTileRegistration::getMontageStart() const
+{
+  return m_MontageStart;
+}
+
+// -----------------------------------------------------------------------------
+void ITKPCMTileRegistration::setMontageEnd(const IntVec2Type& value)
+{
+  m_MontageEnd = value;
+}
+
+// -----------------------------------------------------------------------------
+IntVec2Type ITKPCMTileRegistration::getMontageEnd() const
+{
+  return m_MontageEnd;
+}
+
+// -----------------------------------------------------------------------------
+void ITKPCMTileRegistration::setDataContainerPrefix(const QString& value)
+{
+  m_DataContainerPrefix = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKPCMTileRegistration::getDataContainerPrefix() const
+{
+  return m_DataContainerPrefix;
+}
+
+// -----------------------------------------------------------------------------
+void ITKPCMTileRegistration::setCommonAttributeMatrixName(const QString& value)
+{
+  m_CommonAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKPCMTileRegistration::getCommonAttributeMatrixName() const
+{
+  return m_CommonAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void ITKPCMTileRegistration::setCommonDataArrayName(const QString& value)
+{
+  m_CommonDataArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKPCMTileRegistration::getCommonDataArrayName() const
+{
+  return m_CommonDataArrayName;
+}
+
+

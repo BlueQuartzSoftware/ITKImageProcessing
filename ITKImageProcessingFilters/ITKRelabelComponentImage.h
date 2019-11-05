@@ -11,9 +11,10 @@
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
 
+#include <memory>
+
 #include "ITKImageProcessingBase.h"
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
 
 // Auto includes
@@ -30,37 +31,117 @@
 class ITKImageProcessing_EXPORT ITKRelabelComponentImage : public ITKImageProcessingBase
 {
   Q_OBJECT
+
+#ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(ITKRelabelComponentImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_SHARED_POINTERS(ITKRelabelComponentImage)
+  PYB11_FILTER_NEW_MACRO(ITKRelabelComponentImage)
+  PYB11_FILTER_PARAMETER(double, MinimumObjectSize)
+  PYB11_FILTER_PARAMETER(bool, SortByObjectSize)
+  PYB11_FILTER_PARAMETER(double, NumberOfObjects)
+  PYB11_FILTER_PARAMETER(double, OriginalNumberOfObjects)
+  PYB11_FILTER_PARAMETER(FloatVec3Type, SizeOfObjectsInPhysicalUnits)
+  PYB11_FILTER_PARAMETER(FloatVec3Type, SizeOfObjectsInPixels)
   PYB11_PROPERTY(double MinimumObjectSize READ getMinimumObjectSize WRITE setMinimumObjectSize)
   PYB11_PROPERTY(bool SortByObjectSize READ getSortByObjectSize WRITE setSortByObjectSize)
   PYB11_PROPERTY(double NumberOfObjects READ getNumberOfObjects WRITE setNumberOfObjects)
   PYB11_PROPERTY(double OriginalNumberOfObjects READ getOriginalNumberOfObjects WRITE setOriginalNumberOfObjects)
   PYB11_PROPERTY(FloatVec3Type SizeOfObjectsInPhysicalUnits READ getSizeOfObjectsInPhysicalUnits WRITE setSizeOfObjectsInPhysicalUnits)
   PYB11_PROPERTY(FloatVec3Type SizeOfObjectsInPixels READ getSizeOfObjectsInPixels WRITE setSizeOfObjectsInPixels)
+#endif
 
 public:
-  SIMPL_SHARED_POINTERS(ITKRelabelComponentImage)
-  SIMPL_FILTER_NEW_MACRO(ITKRelabelComponentImage)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKRelabelComponentImage, AbstractFilter)
+    using Self = ITKRelabelComponentImage;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
+
+    static std::shared_ptr<ITKRelabelComponentImage> New();
+
+    /**
+    * @brief Returns the name of the class for ITKRelabelComponentImage
+    */
+    QString getNameOfClass() const override;
+    /**
+    * @brief Returns the name of the class for ITKRelabelComponentImage
+    */
+    static QString ClassName();
+
 
   ~ITKRelabelComponentImage() override;
 
-  SIMPL_FILTER_PARAMETER(double, MinimumObjectSize)
+    /**
+    * @brief Setter property for MinimumObjectSize
+    */
+    void setMinimumObjectSize(double value); 
+    /**
+    * @brief Getter property for MinimumObjectSize
+    * @return Value of MinimumObjectSize
+    */
+    double getMinimumObjectSize() const;
+
   Q_PROPERTY(double MinimumObjectSize READ getMinimumObjectSize WRITE setMinimumObjectSize)
 
-  SIMPL_FILTER_PARAMETER(bool, SortByObjectSize)
+    /**
+    * @brief Setter property for SortByObjectSize
+    */
+    void setSortByObjectSize(bool value); 
+    /**
+    * @brief Getter property for SortByObjectSize
+    * @return Value of SortByObjectSize
+    */
+    bool getSortByObjectSize() const;
+
   Q_PROPERTY(bool SortByObjectSize READ getSortByObjectSize WRITE setSortByObjectSize)
 
-  SIMPL_FILTER_PARAMETER(double, NumberOfObjects)
+    /**
+    * @brief Setter property for NumberOfObjects
+    */
+    void setNumberOfObjects(double value); 
+    /**
+    * @brief Getter property for NumberOfObjects
+    * @return Value of NumberOfObjects
+    */
+    double getNumberOfObjects() const;
+
   Q_PROPERTY(double NumberOfObjects READ getNumberOfObjects)
 
-  SIMPL_FILTER_PARAMETER(double, OriginalNumberOfObjects)
+    /**
+    * @brief Setter property for OriginalNumberOfObjects
+    */
+    void setOriginalNumberOfObjects(double value); 
+    /**
+    * @brief Getter property for OriginalNumberOfObjects
+    * @return Value of OriginalNumberOfObjects
+    */
+    double getOriginalNumberOfObjects() const;
+
   Q_PROPERTY(double OriginalNumberOfObjects READ getOriginalNumberOfObjects)
 
-  SIMPL_FILTER_PARAMETER(FloatVec3Type, SizeOfObjectsInPhysicalUnits)
+    /**
+    * @brief Setter property for SizeOfObjectsInPhysicalUnits
+    */
+    void setSizeOfObjectsInPhysicalUnits(const FloatVec3Type& value); 
+    /**
+    * @brief Getter property for SizeOfObjectsInPhysicalUnits
+    * @return Value of SizeOfObjectsInPhysicalUnits
+    */
+    FloatVec3Type getSizeOfObjectsInPhysicalUnits() const;
+
   Q_PROPERTY(FloatVec3Type SizeOfObjectsInPhysicalUnits READ getSizeOfObjectsInPhysicalUnits)
 
-  SIMPL_FILTER_PARAMETER(FloatVec3Type, SizeOfObjectsInPixels)
+    /**
+    * @brief Setter property for SizeOfObjectsInPixels
+    */
+    void setSizeOfObjectsInPixels(const FloatVec3Type& value); 
+    /**
+    * @brief Getter property for SizeOfObjectsInPixels
+    * @return Value of SizeOfObjectsInPixels
+    */
+    FloatVec3Type getSizeOfObjectsInPixels() const;
+
   Q_PROPERTY(FloatVec3Type SizeOfObjectsInPixels READ getSizeOfObjectsInPixels)
 
   /**
@@ -71,18 +152,18 @@ public:
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -122,6 +203,15 @@ public:
   ITKRelabelComponentImage(ITKRelabelComponentImage&&) = delete;         // Move Constructor Not Implemented
   ITKRelabelComponentImage& operator=(const ITKRelabelComponentImage&) = delete; // Copy Assignment Not Implemented
   ITKRelabelComponentImage& operator=(ITKRelabelComponentImage&&) = delete;      // Move Assignment Not Implemented
+
+  private:
+    double m_MinimumObjectSize = {};
+    bool m_SortByObjectSize = {};
+    double m_NumberOfObjects = {};
+    double m_OriginalNumberOfObjects = {};
+    FloatVec3Type m_SizeOfObjectsInPhysicalUnits = {};
+    FloatVec3Type m_SizeOfObjectsInPixels = {};
+
 };
 
 #ifdef __clang__

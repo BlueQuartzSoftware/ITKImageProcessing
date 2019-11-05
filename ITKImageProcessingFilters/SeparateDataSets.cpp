@@ -29,6 +29,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "SeparateDataSets.h"
 
 #include "SIMPLib/Common/Constants.h"
@@ -287,7 +289,7 @@ AbstractFilter::Pointer SeparateDataSets::newFilterInstance(bool copyFilterParam
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SeparateDataSets::getCompiledLibraryName() const
+QString SeparateDataSets::getCompiledLibraryName() const
 { 
   return ITKImageProcessingConstants::ZeissImportBaseName;
 }
@@ -295,7 +297,7 @@ const QString SeparateDataSets::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SeparateDataSets::getBrandingString() const
+QString SeparateDataSets::getBrandingString() const
 {
   return ITKImageProcessingConstants::ZeissImportPluginDisplayName;
 }
@@ -303,7 +305,7 @@ const QString SeparateDataSets::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SeparateDataSets::getFilterVersion() const
+QString SeparateDataSets::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -314,7 +316,7 @@ const QString SeparateDataSets::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SeparateDataSets::getGroupName() const
+QString SeparateDataSets::getGroupName() const
 { 
   return SIMPL::FilterGroups::Unsupported; 
 }
@@ -322,7 +324,7 @@ const QString SeparateDataSets::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SeparateDataSets::getSubGroupName() const
+QString SeparateDataSets::getSubGroupName() const
 { 
   return "ZeissImport"; 
 }
@@ -330,7 +332,7 @@ const QString SeparateDataSets::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SeparateDataSets::getHumanLabel() const
+QString SeparateDataSets::getHumanLabel() const
 { 
   return "Separate Datasets";
 }
@@ -339,8 +341,63 @@ const QString SeparateDataSets::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid SeparateDataSets::getUuid()
+QUuid SeparateDataSets::getUuid() const
 {
   return QUuid("{e9a9fd4b-ba9d-5c9a-bf38-5f040723602c}");
 }
+
+
+// -----------------------------------------------------------------------------
+SeparateDataSets::Pointer SeparateDataSets::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<SeparateDataSets> SeparateDataSets::New()
+{
+  struct make_shared_enabler : public SeparateDataSets  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString SeparateDataSets::getNameOfClass() const
+{
+  return QString("SeparateDataSets");
+}
+
+// -----------------------------------------------------------------------------
+QString SeparateDataSets::ClassName()
+{
+  return QString("SeparateDataSets");
+}
+
+// -----------------------------------------------------------------------------
+void SeparateDataSets::setDatasetAMPath(const DataArrayPath& value)
+{
+  m_DatasetAMPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath SeparateDataSets::getDatasetAMPath() const
+{
+  return m_DatasetAMPath;
+}
+
+// -----------------------------------------------------------------------------
+void SeparateDataSets::setMetadataAMPath(const DataArrayPath& value)
+{
+  m_MetadataAMPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath SeparateDataSets::getMetadataAMPath() const
+{
+  return m_MetadataAMPath;
+}
+
 

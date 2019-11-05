@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKConnectedComponentImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -138,7 +140,7 @@ AbstractFilter::Pointer ITKConnectedComponentImage::newFilterInstance(bool copyF
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKConnectedComponentImage::getHumanLabel() const
+QString ITKConnectedComponentImage::getHumanLabel() const
 {
   return "ITK::Connected Component Image Filter";
 }
@@ -146,7 +148,7 @@ const QString ITKConnectedComponentImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKConnectedComponentImage::getUuid()
+QUuid ITKConnectedComponentImage::getUuid() const
 {
   return QUuid("{bf554dd5-a927-5969-b651-1c47d386afce}");
 }
@@ -154,7 +156,62 @@ const QUuid ITKConnectedComponentImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKConnectedComponentImage::getSubGroupName() const
+QString ITKConnectedComponentImage::getSubGroupName() const
 {
   return "ITK SegmentationPostProcessing";
 }
+
+// -----------------------------------------------------------------------------
+ITKConnectedComponentImage::Pointer ITKConnectedComponentImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKConnectedComponentImage> ITKConnectedComponentImage::New()
+{
+  struct make_shared_enabler : public ITKConnectedComponentImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKConnectedComponentImage::getNameOfClass() const
+{
+  return QString("ITKConnectedComponentImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKConnectedComponentImage::ClassName()
+{
+  return QString("ITKConnectedComponentImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKConnectedComponentImage::setFullyConnected(bool value)
+{
+  m_FullyConnected = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ITKConnectedComponentImage::getFullyConnected() const
+{
+  return m_FullyConnected;
+}
+
+// -----------------------------------------------------------------------------
+void ITKConnectedComponentImage::setObjectCount(double value)
+{
+  m_ObjectCount = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKConnectedComponentImage::getObjectCount() const
+{
+  return m_ObjectCount;
+}
+
+

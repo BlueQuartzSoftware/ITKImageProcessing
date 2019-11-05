@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKSigmoidImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -145,7 +147,7 @@ AbstractFilter::Pointer ITKSigmoidImage::newFilterInstance(bool copyFilterParame
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKSigmoidImage::getHumanLabel() const
+QString ITKSigmoidImage::getHumanLabel() const
 {
   return "ITK::Sigmoid Image Filter";
 }
@@ -153,7 +155,7 @@ const QString ITKSigmoidImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKSigmoidImage::getUuid()
+QUuid ITKSigmoidImage::getUuid() const
 {
   return QUuid("{e6675be7-e98d-5e0f-a088-ba15cc301038}");
 }
@@ -161,7 +163,86 @@ const QUuid ITKSigmoidImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKSigmoidImage::getSubGroupName() const
+QString ITKSigmoidImage::getSubGroupName() const
 {
   return "ITK IntensityTransformation";
 }
+
+// -----------------------------------------------------------------------------
+ITKSigmoidImage::Pointer ITKSigmoidImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKSigmoidImage> ITKSigmoidImage::New()
+{
+  struct make_shared_enabler : public ITKSigmoidImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKSigmoidImage::getNameOfClass() const
+{
+  return QString("ITKSigmoidImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKSigmoidImage::ClassName()
+{
+  return QString("ITKSigmoidImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKSigmoidImage::setAlpha(double value)
+{
+  m_Alpha = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKSigmoidImage::getAlpha() const
+{
+  return m_Alpha;
+}
+
+// -----------------------------------------------------------------------------
+void ITKSigmoidImage::setBeta(double value)
+{
+  m_Beta = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKSigmoidImage::getBeta() const
+{
+  return m_Beta;
+}
+
+// -----------------------------------------------------------------------------
+void ITKSigmoidImage::setOutputMaximum(double value)
+{
+  m_OutputMaximum = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKSigmoidImage::getOutputMaximum() const
+{
+  return m_OutputMaximum;
+}
+
+// -----------------------------------------------------------------------------
+void ITKSigmoidImage::setOutputMinimum(double value)
+{
+  m_OutputMinimum = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKSigmoidImage::getOutputMinimum() const
+{
+  return m_OutputMinimum;
+}
+
+

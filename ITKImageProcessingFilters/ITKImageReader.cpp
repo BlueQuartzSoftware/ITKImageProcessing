@@ -31,6 +31,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "ITKImageReader.h"
 
 #include <QtCore/QFileInfo>
@@ -42,6 +44,7 @@
 #include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
@@ -98,10 +101,61 @@ ITKImageReader::~ITKImageReader() = default;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SIMPL_PIMPL_PROPERTY_DEF(ITKImageReader, QString, FileNameCache)
-SIMPL_PIMPL_PROPERTY_DEF(ITKImageReader, QDateTime, LastRead)
-SIMPL_PIMPL_PROPERTY_DEF(ITKImageReader, IDataArray::Pointer, ImageArrayCache)
-SIMPL_PIMPL_PROPERTY_DEF(ITKImageReader, ImageGeom::Pointer, DCGeometryCache)
+// -----------------------------------------------------------------------------
+void ITKImageReader::setFileNameCache(const QString& value)
+{
+  Q_D(ITKImageReader);
+  d->m_FileNameCache = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKImageReader::getFileNameCache() const
+{
+  Q_D(const ITKImageReader);
+  return d->m_FileNameCache;
+}
+
+// -----------------------------------------------------------------------------
+void ITKImageReader::setLastRead(const QDateTime& value)
+{
+  Q_D(ITKImageReader);
+  d->m_LastRead = value;
+}
+
+// -----------------------------------------------------------------------------
+QDateTime ITKImageReader::getLastRead() const
+{
+  Q_D(const ITKImageReader);
+  return d->m_LastRead;
+}
+
+// -----------------------------------------------------------------------------
+void ITKImageReader::setImageArrayCache(const IDataArray::Pointer& value)
+{
+  Q_D(ITKImageReader);
+  d->m_ImageArrayCache = value;
+}
+
+// -----------------------------------------------------------------------------
+IDataArray::Pointer ITKImageReader::getImageArrayCache() const
+{
+  Q_D(const ITKImageReader);
+  return d->m_ImageArrayCache;
+}
+
+// -----------------------------------------------------------------------------
+void ITKImageReader::setDCGeometryCache(const ImageGeom::Pointer& value)
+{
+  Q_D(ITKImageReader);
+  d->m_DCGeometryCache = value;
+}
+
+// -----------------------------------------------------------------------------
+ImageGeom::Pointer ITKImageReader::getDCGeometryCache() const
+{
+  Q_D(const ITKImageReader);
+  return d->m_DCGeometryCache;
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -222,7 +276,7 @@ AbstractFilter::Pointer ITKImageReader::newFilterInstance(bool copyFilterParamet
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKImageReader::getCompiledLibraryName() const
+QString ITKImageReader::getCompiledLibraryName() const
 {
   return ITKImageProcessingConstants::ITKImageProcessingBaseName;
 }
@@ -230,7 +284,7 @@ const QString ITKImageReader::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKImageReader::getBrandingString() const
+QString ITKImageReader::getBrandingString() const
 {
   return "ITKImageProcessing";
 }
@@ -238,7 +292,7 @@ const QString ITKImageReader::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKImageReader::getFilterVersion() const
+QString ITKImageReader::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -249,7 +303,7 @@ const QString ITKImageReader::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKImageReader::getGroupName() const
+QString ITKImageReader::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -257,7 +311,7 @@ const QString ITKImageReader::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKImageReader::getUuid()
+QUuid ITKImageReader::getUuid() const
 {
   return QUuid("{653b7b5c-03cb-5b32-8c3e-3637745e5ff6}");
 }
@@ -265,7 +319,7 @@ const QUuid ITKImageReader::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKImageReader::getSubGroupName() const
+QString ITKImageReader::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::InputFilters;
 }
@@ -273,7 +327,7 @@ const QString ITKImageReader::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKImageReader::getHumanLabel() const
+QString ITKImageReader::getHumanLabel() const
 {
   return "ITK::Image Reader";
 }
@@ -284,3 +338,85 @@ const QString ITKImageReader::getHumanLabel() const
 #include "SIMPLib/ITK/itkInPlaceImageToDream3DDataFilter.h"
 
 #include "SIMPLib/ITK/itkImageReaderHelper.cpp"
+
+// -----------------------------------------------------------------------------
+ITKImageReader::Pointer ITKImageReader::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKImageReader> ITKImageReader::New()
+{
+  struct make_shared_enabler : public ITKImageReader  
+  {
+
+  private:
+
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKImageReader::getNameOfClass() const
+{
+  return QString("ITKImageReader");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKImageReader::ClassName()
+{
+  return QString("ITKImageReader");
+}
+
+// -----------------------------------------------------------------------------
+void ITKImageReader::setFileName(const QString& value)
+{
+  m_FileName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKImageReader::getFileName() const
+{
+  return m_FileName;
+}
+
+// -----------------------------------------------------------------------------
+void ITKImageReader::setDataContainerName(const DataArrayPath& value)
+{
+  m_DataContainerName = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath ITKImageReader::getDataContainerName() const
+{
+  return m_DataContainerName;
+}
+
+// -----------------------------------------------------------------------------
+void ITKImageReader::setCellAttributeMatrixName(const QString& value)
+{
+  m_CellAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKImageReader::getCellAttributeMatrixName() const
+{
+  return m_CellAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void ITKImageReader::setImageDataArrayName(const QString& value)
+{
+  m_ImageDataArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKImageReader::getImageDataArrayName() const
+{
+  return m_ImageDataArrayName;
+}
+
+

@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKSmoothingRecursiveGaussianImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -140,7 +142,7 @@ AbstractFilter::Pointer ITKSmoothingRecursiveGaussianImage::newFilterInstance(bo
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKSmoothingRecursiveGaussianImage::getHumanLabel() const
+QString ITKSmoothingRecursiveGaussianImage::getHumanLabel() const
 {
   return "ITK::Smoothing Recursive Gaussian Image Filter";
 }
@@ -148,7 +150,7 @@ const QString ITKSmoothingRecursiveGaussianImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKSmoothingRecursiveGaussianImage::getUuid()
+QUuid ITKSmoothingRecursiveGaussianImage::getUuid() const
 {
   return QUuid("{0fd06492-06b1-5044-964c-e0555c556327}");
 }
@@ -156,7 +158,62 @@ const QUuid ITKSmoothingRecursiveGaussianImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKSmoothingRecursiveGaussianImage::getSubGroupName() const
+QString ITKSmoothingRecursiveGaussianImage::getSubGroupName() const
 {
   return "ITK Smoothing";
 }
+
+// -----------------------------------------------------------------------------
+ITKSmoothingRecursiveGaussianImage::Pointer ITKSmoothingRecursiveGaussianImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKSmoothingRecursiveGaussianImage> ITKSmoothingRecursiveGaussianImage::New()
+{
+  struct make_shared_enabler : public ITKSmoothingRecursiveGaussianImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKSmoothingRecursiveGaussianImage::getNameOfClass() const
+{
+  return QString("ITKSmoothingRecursiveGaussianImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKSmoothingRecursiveGaussianImage::ClassName()
+{
+  return QString("ITKSmoothingRecursiveGaussianImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKSmoothingRecursiveGaussianImage::setSigma(const FloatVec3Type& value)
+{
+  m_Sigma = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec3Type ITKSmoothingRecursiveGaussianImage::getSigma() const
+{
+  return m_Sigma;
+}
+
+// -----------------------------------------------------------------------------
+void ITKSmoothingRecursiveGaussianImage::setNormalizeAcrossScale(bool value)
+{
+  m_NormalizeAcrossScale = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ITKSmoothingRecursiveGaussianImage::getNormalizeAcrossScale() const
+{
+  return m_NormalizeAcrossScale;
+}
+
+

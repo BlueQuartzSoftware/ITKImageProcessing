@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKMorphologicalWatershedFromMarkersImage.h"
 
 #include "SIMPLib/Common/Constants.h"
@@ -217,7 +219,7 @@ AbstractFilter::Pointer ITKMorphologicalWatershedFromMarkersImage::newFilterInst
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKMorphologicalWatershedFromMarkersImage::getHumanLabel() const
+QString ITKMorphologicalWatershedFromMarkersImage::getHumanLabel() const
 {
   return "ITK::Morphological Watershed From Markers Image Filter";
 }
@@ -225,7 +227,7 @@ const QString ITKMorphologicalWatershedFromMarkersImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKMorphologicalWatershedFromMarkersImage::getUuid()
+QUuid ITKMorphologicalWatershedFromMarkersImage::getUuid() const
 {
   return QUuid("{81308863-094b-511d-9aa9-865e02e2b8d5}");
 }
@@ -233,7 +235,86 @@ const QUuid ITKMorphologicalWatershedFromMarkersImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKMorphologicalWatershedFromMarkersImage::getSubGroupName() const
+QString ITKMorphologicalWatershedFromMarkersImage::getSubGroupName() const
 {
   return "ITK Segmentation";
 }
+
+// -----------------------------------------------------------------------------
+ITKMorphologicalWatershedFromMarkersImage::Pointer ITKMorphologicalWatershedFromMarkersImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKMorphologicalWatershedFromMarkersImage> ITKMorphologicalWatershedFromMarkersImage::New()
+{
+  struct make_shared_enabler : public ITKMorphologicalWatershedFromMarkersImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKMorphologicalWatershedFromMarkersImage::getNameOfClass() const
+{
+  return QString("ITKMorphologicalWatershedFromMarkersImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKMorphologicalWatershedFromMarkersImage::ClassName()
+{
+  return QString("ITKMorphologicalWatershedFromMarkersImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKMorphologicalWatershedFromMarkersImage::setMarkWatershedLine(bool value)
+{
+  m_MarkWatershedLine = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ITKMorphologicalWatershedFromMarkersImage::getMarkWatershedLine() const
+{
+  return m_MarkWatershedLine;
+}
+
+// -----------------------------------------------------------------------------
+void ITKMorphologicalWatershedFromMarkersImage::setFullyConnected(bool value)
+{
+  m_FullyConnected = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ITKMorphologicalWatershedFromMarkersImage::getFullyConnected() const
+{
+  return m_FullyConnected;
+}
+
+// -----------------------------------------------------------------------------
+void ITKMorphologicalWatershedFromMarkersImage::setMarkerCellArrayPath(const DataArrayPath& value)
+{
+  m_MarkerCellArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath ITKMorphologicalWatershedFromMarkersImage::getMarkerCellArrayPath() const
+{
+  return m_MarkerCellArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void ITKMorphologicalWatershedFromMarkersImage::setMarkerContainerArray(const DataContainerArray::Pointer& value)
+{
+  m_MarkerContainerArray = value;
+}
+
+// -----------------------------------------------------------------------------
+DataContainerArray::Pointer ITKMorphologicalWatershedFromMarkersImage::getMarkerContainerArray() const
+{
+  return m_MarkerContainerArray;
+}
+
+

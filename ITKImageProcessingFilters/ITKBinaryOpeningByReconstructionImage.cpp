@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKBinaryOpeningByReconstructionImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -202,7 +204,7 @@ AbstractFilter::Pointer ITKBinaryOpeningByReconstructionImage::newFilterInstance
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKBinaryOpeningByReconstructionImage::getHumanLabel() const
+QString ITKBinaryOpeningByReconstructionImage::getHumanLabel() const
 {
   return "ITK::Binary Opening By Reconstruction Image Filter";
 }
@@ -210,7 +212,7 @@ const QString ITKBinaryOpeningByReconstructionImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKBinaryOpeningByReconstructionImage::getUuid()
+QUuid ITKBinaryOpeningByReconstructionImage::getUuid() const
 {
   return QUuid("{bd1c2353-0a39-52c0-902b-ee64721994c7}");
 }
@@ -218,7 +220,98 @@ const QUuid ITKBinaryOpeningByReconstructionImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKBinaryOpeningByReconstructionImage::getSubGroupName() const
+QString ITKBinaryOpeningByReconstructionImage::getSubGroupName() const
 {
   return "ITK BinaryMathematicalMorphology";
 }
+
+// -----------------------------------------------------------------------------
+ITKBinaryOpeningByReconstructionImage::Pointer ITKBinaryOpeningByReconstructionImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKBinaryOpeningByReconstructionImage> ITKBinaryOpeningByReconstructionImage::New()
+{
+  struct make_shared_enabler : public ITKBinaryOpeningByReconstructionImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKBinaryOpeningByReconstructionImage::getNameOfClass() const
+{
+  return QString("ITKBinaryOpeningByReconstructionImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKBinaryOpeningByReconstructionImage::ClassName()
+{
+  return QString("ITKBinaryOpeningByReconstructionImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKBinaryOpeningByReconstructionImage::setForegroundValue(double value)
+{
+  m_ForegroundValue = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKBinaryOpeningByReconstructionImage::getForegroundValue() const
+{
+  return m_ForegroundValue;
+}
+
+// -----------------------------------------------------------------------------
+void ITKBinaryOpeningByReconstructionImage::setBackgroundValue(double value)
+{
+  m_BackgroundValue = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKBinaryOpeningByReconstructionImage::getBackgroundValue() const
+{
+  return m_BackgroundValue;
+}
+
+// -----------------------------------------------------------------------------
+void ITKBinaryOpeningByReconstructionImage::setFullyConnected(bool value)
+{
+  m_FullyConnected = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ITKBinaryOpeningByReconstructionImage::getFullyConnected() const
+{
+  return m_FullyConnected;
+}
+
+// -----------------------------------------------------------------------------
+void ITKBinaryOpeningByReconstructionImage::setKernelRadius(const FloatVec3Type& value)
+{
+  m_KernelRadius = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec3Type ITKBinaryOpeningByReconstructionImage::getKernelRadius() const
+{
+  return m_KernelRadius;
+}
+
+// -----------------------------------------------------------------------------
+void ITKBinaryOpeningByReconstructionImage::setKernelType(int value)
+{
+  m_KernelType = value;
+}
+
+// -----------------------------------------------------------------------------
+int ITKBinaryOpeningByReconstructionImage::getKernelType() const
+{
+  return m_KernelType;
+}
+
+

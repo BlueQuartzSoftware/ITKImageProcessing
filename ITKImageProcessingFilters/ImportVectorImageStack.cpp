@@ -33,10 +33,11 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "ImportVectorImageStack.h"
 
 #include <cstring>
-
 #include <limits>
 
 #include <QtCore/QDir>
@@ -51,9 +52,9 @@
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Utilities/FilePathGenerator.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 
 #include "ITKImageProcessing/FilterParameters/ImportVectorImageStackFilterParameter.h"
-
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKImageReader.h"
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
@@ -189,7 +190,7 @@ void ImportVectorImageStack::dataCheck()
 
   // Make Sure all the input files exist. Throw an error for each one that is missing
   // for(int i = 0; i < fileList.size(); i++)
-  for(const auto fp : fileList)
+  for(const auto& fp : fileList)
   {
 
     QString filePath = QDir::toNativeSeparators(fp);
@@ -450,12 +451,12 @@ AbstractFilter::Pointer ImportVectorImageStack::newFilterInstance(bool copyFilte
     filter->setFilterParameters(getFilterParameters());
     // We are going to hand copy all of the parameters because the other way of copying the parameters are going to
     // miss some of them because we are not enumerating all of them.
-    SIMPL_COPY_INSTANCEVAR(DataContainerName)
-    SIMPL_COPY_INSTANCEVAR(CellAttributeMatrixName)
-    SIMPL_COPY_INSTANCEVAR(Spacing)
-    SIMPL_COPY_INSTANCEVAR(Origin)
-    SIMPL_COPY_INSTANCEVAR(InputFileListInfo)
-    SIMPL_COPY_INSTANCEVAR(VectorDataArrayName)
+    filter->setDataContainerName(getDataContainerName());
+    filter->setCellAttributeMatrixName(getCellAttributeMatrixName());
+    filter->setSpacing(getSpacing());
+    filter->setOrigin(getOrigin());
+    filter->setInputFileListInfo(getInputFileListInfo());
+    filter->setVectorDataArrayName(getVectorDataArrayName());
   }
   return filter;
 }
@@ -463,7 +464,7 @@ AbstractFilter::Pointer ImportVectorImageStack::newFilterInstance(bool copyFilte
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ImportVectorImageStack::getCompiledLibraryName() const
+QString ImportVectorImageStack::getCompiledLibraryName() const
 {
   return ITKImageProcessingConstants::ITKImageProcessingBaseName;
 }
@@ -471,7 +472,7 @@ const QString ImportVectorImageStack::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ImportVectorImageStack::getBrandingString() const
+QString ImportVectorImageStack::getBrandingString() const
 {
   return "ITKImageProcessing";
 }
@@ -479,7 +480,7 @@ const QString ImportVectorImageStack::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ImportVectorImageStack::getFilterVersion() const
+QString ImportVectorImageStack::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -490,7 +491,7 @@ const QString ImportVectorImageStack::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ImportVectorImageStack::getGroupName() const
+QString ImportVectorImageStack::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -498,7 +499,7 @@ const QString ImportVectorImageStack::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ImportVectorImageStack::getUuid()
+QUuid ImportVectorImageStack::getUuid() const
 {
   return QUuid("{c5474cd1-bea9-5a33-a0df-516e5735bab4}");
 }
@@ -506,7 +507,7 @@ const QUuid ImportVectorImageStack::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ImportVectorImageStack::getSubGroupName() const
+QString ImportVectorImageStack::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::InputFilters;
 }
@@ -514,7 +515,122 @@ const QString ImportVectorImageStack::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ImportVectorImageStack::getHumanLabel() const
+QString ImportVectorImageStack::getHumanLabel() const
 {
   return "Import Images (3D Vector Stack)";
 }
+
+// -----------------------------------------------------------------------------
+ImportVectorImageStack::Pointer ImportVectorImageStack::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ImportVectorImageStack> ImportVectorImageStack::New()
+{
+  struct make_shared_enabler : public ImportVectorImageStack  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ImportVectorImageStack::getNameOfClass() const
+{
+  return QString("ImportVectorImageStack");
+}
+
+// -----------------------------------------------------------------------------
+QString ImportVectorImageStack::ClassName()
+{
+  return QString("ImportVectorImageStack");
+}
+
+// -----------------------------------------------------------------------------
+void ImportVectorImageStack::setDataContainerName(const DataArrayPath& value)
+{
+  m_DataContainerName = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath ImportVectorImageStack::getDataContainerName() const
+{
+  return m_DataContainerName;
+}
+
+// -----------------------------------------------------------------------------
+void ImportVectorImageStack::setCellAttributeMatrixName(const QString& value)
+{
+  m_CellAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ImportVectorImageStack::getCellAttributeMatrixName() const
+{
+  return m_CellAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void ImportVectorImageStack::setOrigin(const FloatVec3Type& value)
+{
+  m_Origin = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec3Type ImportVectorImageStack::getOrigin() const
+{
+  return m_Origin;
+}
+
+// -----------------------------------------------------------------------------
+void ImportVectorImageStack::setSpacing(const FloatVec3Type& value)
+{
+  m_Spacing = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec3Type ImportVectorImageStack::getSpacing() const
+{
+  return m_Spacing;
+}
+
+// -----------------------------------------------------------------------------
+void ImportVectorImageStack::setInputFileListInfo(const VectorFileListInfo_t& value)
+{
+  m_InputFileListInfo = value;
+}
+
+// -----------------------------------------------------------------------------
+VectorFileListInfo_t ImportVectorImageStack::getInputFileListInfo() const
+{
+  return m_InputFileListInfo;
+}
+
+// -----------------------------------------------------------------------------
+void ImportVectorImageStack::setVectorDataArrayName(const QString& value)
+{
+  m_VectorDataArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ImportVectorImageStack::getVectorDataArrayName() const
+{
+  return m_VectorDataArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void ImportVectorImageStack::setConvertToGrayscale(bool value)
+{
+  m_ConvertToGrayscale = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ImportVectorImageStack::getConvertToGrayscale() const
+{
+  return m_ConvertToGrayscale;
+}
+
+

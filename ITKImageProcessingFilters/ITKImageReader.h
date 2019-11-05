@@ -33,14 +33,15 @@
 
 #pragma once
 
+#include <memory>
+
 #include <QtCore/QDateTime>
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
-
+#include "SIMPLib/DataContainers/DataContainer.h"
 #include "SIMPLib/ITK/itkImageReaderHelper.h"
-#include "SIMPLib/SIMPLib.h"
 
 #include <itkImageFileReader.h>
 
@@ -55,55 +56,152 @@ class ITKImageReaderPrivate;
 class ITKImageProcessing_EXPORT ITKImageReader : public AbstractFilter
 {
   Q_OBJECT
+
+#ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(ITKImageReader SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(ITKImageReader)
+  PYB11_FILTER_NEW_MACRO(ITKImageReader)
+  PYB11_FILTER_PARAMETER(QString, FileName)
+  PYB11_FILTER_PARAMETER(DataArrayPath, DataContainerName)
+  PYB11_FILTER_PARAMETER(QString, CellAttributeMatrixName)
+  PYB11_FILTER_PARAMETER(QString, ImageDataArrayName)
   PYB11_PROPERTY(QString FileName READ getFileName WRITE setFileName)
   PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
   PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
   PYB11_PROPERTY(QString ImageDataArrayName READ getImageDataArrayName WRITE setImageDataArrayName)
+#endif
+
   Q_DECLARE_PRIVATE(ITKImageReader)
 
 public:
-  SIMPL_SHARED_POINTERS(ITKImageReader)
-  SIMPL_FILTER_NEW_MACRO(ITKImageReader)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ITKImageReader, AbstractFilter)
+    using Self = ITKImageReader;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
+
+    static std::shared_ptr<ITKImageReader> New();
+
+    /**
+    * @brief Returns the name of the class for ITKImageReader
+    */
+    QString getNameOfClass() const override;
+    /**
+    * @brief Returns the name of the class for ITKImageReader
+    */
+    static QString ClassName();
+
 
   ~ITKImageReader() override;
 
-  SIMPL_FILTER_PARAMETER(QString, FileName)
+    /**
+    * @brief Setter property for FileName
+    */
+    void setFileName(const QString& value); 
+    /**
+    * @brief Getter property for FileName
+    * @return Value of FileName
+    */
+    QString getFileName() const;
+
   Q_PROPERTY(QString FileName READ getFileName WRITE setFileName)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, DataContainerName)
+    /**
+    * @brief Setter property for DataContainerName
+    */
+    void setDataContainerName(const DataArrayPath& value); 
+    /**
+    * @brief Getter property for DataContainerName
+    * @return Value of DataContainerName
+    */
+    DataArrayPath getDataContainerName() const;
+
   Q_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
 
-  SIMPL_FILTER_PARAMETER(QString, CellAttributeMatrixName)
+    /**
+    * @brief Setter property for CellAttributeMatrixName
+    */
+    void setCellAttributeMatrixName(const QString& value); 
+    /**
+    * @brief Getter property for CellAttributeMatrixName
+    * @return Value of CellAttributeMatrixName
+    */
+    QString getCellAttributeMatrixName() const;
+
   Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
-  SIMPL_FILTER_PARAMETER(QString, ImageDataArrayName)
+    /**
+    * @brief Setter property for ImageDataArrayName
+    */
+    void setImageDataArrayName(const QString& value); 
+    /**
+    * @brief Getter property for ImageDataArrayName
+    * @return Value of ImageDataArrayName
+    */
+    QString getImageDataArrayName() const;
+
   Q_PROPERTY(QString ImageDataArrayName READ getImageDataArrayName WRITE setImageDataArrayName)
 
-  SIMPL_PIMPL_PROPERTY_DECL(QString, FileNameCache)
-  SIMPL_PIMPL_PROPERTY_DECL(QDateTime, LastRead)
-  SIMPL_PIMPL_PROPERTY_DECL(IDataArray::Pointer, ImageArrayCache)
-  SIMPL_PIMPL_PROPERTY_DECL(ImageGeom::Pointer, DCGeometryCache)
+    /**
+    * @brief Setter property for FileNameCache
+    */
+  void setFileNameCache(const QString& value);
+  /**
+   * @brief Getter property for FileNameCache
+   * @return Value of FileNameCache
+   */
+  QString getFileNameCache() const;
+
+  /**
+   * @brief Setter property for LastRead
+   */
+  void setLastRead(const QDateTime& value);
+  /**
+   * @brief Getter property for LastRead
+   * @return Value of LastRead
+   */
+  QDateTime getLastRead() const;
+
+  /**
+   * @brief Setter property for ImageArrayCache
+   */
+  void setImageArrayCache(const IDataArray::Pointer& value);
+  /**
+   * @brief Getter property for ImageArrayCache
+   * @return Value of ImageArrayCache
+   */
+  IDataArray::Pointer getImageArrayCache() const;
+
+  /**
+   * @brief Setter property for DCGeometryCache
+   */
+  void setDCGeometryCache(const ImageGeom::Pointer& value);
+  /**
+   * @brief Getter property for DCGeometryCache
+   * @return Value of DCGeometryCache
+   */
+  ImageGeom::Pointer getDCGeometryCache() const;
+
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
-  const QString getCompiledLibraryName() const override;
+  QString getCompiledLibraryName() const override;
 
   /**
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
   */
-  const QString getBrandingString() const override;
+  QString getBrandingString() const override;
 
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
    * @return
    */
-  const QString getFilterVersion() const override;
+  QString getFilterVersion() const override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -113,23 +211,23 @@ public:
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getGroupName() const override;
+  QString getGroupName() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -193,6 +291,11 @@ protected:
   ITK_IMAGE_READER_HELPER_DECL()
 
 private:
+    QString m_FileName = {};
+    DataArrayPath m_DataContainerName = {};
+    QString m_CellAttributeMatrixName = {};
+    QString m_ImageDataArrayName = {};
+
   QScopedPointer<ITKImageReaderPrivate> const d_ptr;
 
 public:

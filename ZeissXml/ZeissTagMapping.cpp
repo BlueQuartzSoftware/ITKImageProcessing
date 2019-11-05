@@ -308,3 +308,15 @@ IGeometry::LengthUnit ZeissUnitMapping::convertToIGeometryLengthUnit(int idTag)
 
   return IGeometry::LengthUnit::Unknown;
 }
+
+// -----------------------------------------------------------------------------
+ZeissTagMapping::Pointer ZeissTagMapping::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+ZeissUnitMapping::Pointer ZeissUnitMapping::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}

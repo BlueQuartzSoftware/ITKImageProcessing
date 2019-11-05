@@ -28,6 +28,8 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+#include <memory>
+
 #include "IlluminationCorrection.h"
 
 #include <cstring>
@@ -800,7 +802,7 @@ AbstractFilter::Pointer IlluminationCorrection::newFilterInstance(bool copyFilte
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString IlluminationCorrection::getCompiledLibraryName() const
+QString IlluminationCorrection::getCompiledLibraryName() const
 {
   return ITKImageProcessingConstants::ITKImageProcessingBaseName;;
 }
@@ -808,7 +810,7 @@ const QString IlluminationCorrection::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString IlluminationCorrection::getBrandingString() const
+QString IlluminationCorrection::getBrandingString() const
 {
   return ITKImageProcessingConstants::ITKImageProcessingPluginDisplayName;
 }
@@ -816,7 +818,7 @@ const QString IlluminationCorrection::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString IlluminationCorrection::getFilterVersion() const
+QString IlluminationCorrection::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -827,7 +829,7 @@ const QString IlluminationCorrection::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString IlluminationCorrection::getGroupName() const
+QString IlluminationCorrection::getGroupName() const
 {
   return SIMPL::FilterGroups::ProcessingFilters;
 }
@@ -835,7 +837,7 @@ const QString IlluminationCorrection::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString IlluminationCorrection::getSubGroupName() const
+QString IlluminationCorrection::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::ImageFilters;
 }
@@ -843,7 +845,7 @@ const QString IlluminationCorrection::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString IlluminationCorrection::getHumanLabel() const
+QString IlluminationCorrection::getHumanLabel() const
 {
   return "ITK::Illumination Correction";
 }
@@ -851,7 +853,240 @@ const QString IlluminationCorrection::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid IlluminationCorrection::getUuid()
+QUuid IlluminationCorrection::getUuid() const
 {
   return QUuid("{a48f7a51-0ca9-584f-a0ca-4bfebdc41d7c}");
+}
+
+// -----------------------------------------------------------------------------
+IlluminationCorrection::Pointer IlluminationCorrection::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<IlluminationCorrection> IlluminationCorrection::New()
+{
+  struct make_shared_enabler : public IlluminationCorrection  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString IlluminationCorrection::getNameOfClass() const
+{
+  return QString("IlluminationCorrection");
+}
+
+// -----------------------------------------------------------------------------
+QString IlluminationCorrection::ClassName()
+{
+  return QString("IlluminationCorrection");
+}
+
+// -----------------------------------------------------------------------------
+void IlluminationCorrection::setDataContainerName(const QString& value)
+{
+  m_DataContainerName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString IlluminationCorrection::getDataContainerName() const
+{
+  return m_DataContainerName;
+}
+
+// -----------------------------------------------------------------------------
+void IlluminationCorrection::setDataContainers(const QStringList& value)
+{
+  m_DataContainers = value;
+}
+
+// -----------------------------------------------------------------------------
+QStringList IlluminationCorrection::getDataContainers() const
+{
+  return m_DataContainers;
+}
+
+// -----------------------------------------------------------------------------
+void IlluminationCorrection::setCellAttributeMatrixName(const QString& value)
+{
+  m_CellAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString IlluminationCorrection::getCellAttributeMatrixName() const
+{
+  return m_CellAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void IlluminationCorrection::setImageDataArrayName(const QString& value)
+{
+  m_ImageDataArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString IlluminationCorrection::getImageDataArrayName() const
+{
+  return m_ImageDataArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void IlluminationCorrection::setCorrectedImageDataArrayName(const QString& value)
+{
+  m_CorrectedImageDataArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString IlluminationCorrection::getCorrectedImageDataArrayName() const
+{
+  return m_CorrectedImageDataArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void IlluminationCorrection::setExportCorrectedImages(bool value)
+{
+  m_ExportCorrectedImages = value;
+}
+
+// -----------------------------------------------------------------------------
+bool IlluminationCorrection::getExportCorrectedImages() const
+{
+  return m_ExportCorrectedImages;
+}
+
+// -----------------------------------------------------------------------------
+void IlluminationCorrection::setOutputPath(const QString& value)
+{
+  m_OutputPath = value;
+}
+
+// -----------------------------------------------------------------------------
+QString IlluminationCorrection::getOutputPath() const
+{
+  return m_OutputPath;
+}
+
+// -----------------------------------------------------------------------------
+void IlluminationCorrection::setFileExtension(const QString& value)
+{
+  m_FileExtension = value;
+}
+
+// -----------------------------------------------------------------------------
+QString IlluminationCorrection::getFileExtension() const
+{
+  return m_FileExtension;
+}
+
+// -----------------------------------------------------------------------------
+void IlluminationCorrection::setBackgroundDataContainerPath(const DataArrayPath& value)
+{
+  m_BackgroundDataContainerPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath IlluminationCorrection::getBackgroundDataContainerPath() const
+{
+  return m_BackgroundDataContainerPath;
+}
+
+// -----------------------------------------------------------------------------
+void IlluminationCorrection::setBackgroundCellAttributeMatrixPath(const DataArrayPath& value)
+{
+  m_BackgroundCellAttributeMatrixPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath IlluminationCorrection::getBackgroundCellAttributeMatrixPath() const
+{
+  return m_BackgroundCellAttributeMatrixPath;
+}
+
+// -----------------------------------------------------------------------------
+void IlluminationCorrection::setBackgroundImageArrayPath(const DataArrayPath& value)
+{
+  m_BackgroundImageArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath IlluminationCorrection::getBackgroundImageArrayPath() const
+{
+  return m_BackgroundImageArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void IlluminationCorrection::setLowThreshold(uint32_t value)
+{
+  m_LowThreshold = value;
+}
+
+// -----------------------------------------------------------------------------
+uint32_t IlluminationCorrection::getLowThreshold() const
+{
+  return m_LowThreshold;
+}
+
+// -----------------------------------------------------------------------------
+void IlluminationCorrection::setHighThreshold(uint32_t value)
+{
+  m_HighThreshold = value;
+}
+
+// -----------------------------------------------------------------------------
+uint32_t IlluminationCorrection::getHighThreshold() const
+{
+  return m_HighThreshold;
+}
+
+// -----------------------------------------------------------------------------
+void IlluminationCorrection::setApplyCorrection(bool value)
+{
+  m_ApplyCorrection = value;
+}
+
+// -----------------------------------------------------------------------------
+bool IlluminationCorrection::getApplyCorrection() const
+{
+  return m_ApplyCorrection;
+}
+
+// -----------------------------------------------------------------------------
+void IlluminationCorrection::setApplyMedianFilter(bool value)
+{
+  m_ApplyMedianFilter = value;
+}
+
+// -----------------------------------------------------------------------------
+bool IlluminationCorrection::getApplyMedianFilter() const
+{
+  return m_ApplyMedianFilter;
+}
+
+// -----------------------------------------------------------------------------
+void IlluminationCorrection::setMedianRadius(const FloatVec3Type& value)
+{
+  m_MedianRadius = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec3Type IlluminationCorrection::getMedianRadius() const
+{
+  return m_MedianRadius;
+}
+
+// -----------------------------------------------------------------------------
+MontageSelection IlluminationCorrection::getMontageSelection() const
+{
+  return m_MontageSelection;
+}
+
+// -----------------------------------------------------------------------------
+void IlluminationCorrection::setMontageSelection(const MontageSelection& value)
+{
+  m_MontageSelection = value;
 }

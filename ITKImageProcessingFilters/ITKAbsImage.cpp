@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKAbsImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -124,7 +126,7 @@ AbstractFilter::Pointer ITKAbsImage::newFilterInstance(bool copyFilterParameters
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKAbsImage::getHumanLabel() const
+QString ITKAbsImage::getHumanLabel() const
 {
   return "ITK::Abs Image Filter";
 }
@@ -132,7 +134,7 @@ const QString ITKAbsImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKAbsImage::getUuid()
+QUuid ITKAbsImage::getUuid() const
 {
   return QUuid("{09f45c29-1cfb-566c-b3ae-d832b4f95905}");
 }
@@ -140,7 +142,38 @@ const QUuid ITKAbsImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKAbsImage::getSubGroupName() const
+QString ITKAbsImage::getSubGroupName() const
 {
   return "ITK IntensityTransformation";
 }
+
+// -----------------------------------------------------------------------------
+ITKAbsImage::Pointer ITKAbsImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKAbsImage> ITKAbsImage::New()
+{
+  struct make_shared_enabler : public ITKAbsImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKAbsImage::getNameOfClass() const
+{
+  return QString("ITKAbsImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKAbsImage::ClassName()
+{
+  return QString("ITKAbsImage");
+}
+
+

@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKNormalizeToConstantImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -133,7 +135,7 @@ AbstractFilter::Pointer ITKNormalizeToConstantImage::newFilterInstance(bool copy
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKNormalizeToConstantImage::getHumanLabel() const
+QString ITKNormalizeToConstantImage::getHumanLabel() const
 {
   return "ITK::Normalize To Constant Image Filter";
 }
@@ -141,7 +143,7 @@ const QString ITKNormalizeToConstantImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKNormalizeToConstantImage::getUuid()
+QUuid ITKNormalizeToConstantImage::getUuid() const
 {
   return QUuid("{001dd629-7032-56a9-99ec-ffaf2caf2ab0}");
 }
@@ -149,7 +151,50 @@ const QUuid ITKNormalizeToConstantImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKNormalizeToConstantImage::getSubGroupName() const
+QString ITKNormalizeToConstantImage::getSubGroupName() const
 {
   return "ITK IntensityTransformation";
 }
+
+// -----------------------------------------------------------------------------
+ITKNormalizeToConstantImage::Pointer ITKNormalizeToConstantImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKNormalizeToConstantImage> ITKNormalizeToConstantImage::New()
+{
+  struct make_shared_enabler : public ITKNormalizeToConstantImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKNormalizeToConstantImage::getNameOfClass() const
+{
+  return QString("ITKNormalizeToConstantImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKNormalizeToConstantImage::ClassName()
+{
+  return QString("ITKNormalizeToConstantImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKNormalizeToConstantImage::setConstant(double value)
+{
+  m_Constant = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKNormalizeToConstantImage::getConstant() const
+{
+  return m_Constant;
+}
+
+

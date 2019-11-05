@@ -99,3 +99,28 @@ AbstractZeissMetaData::Pointer ZeissTagsXmlSection::getEntry(int idTag)
   }
   return ptr;
 }
+
+// -----------------------------------------------------------------------------
+ZeissTagsXmlSection::Pointer ZeissTagsXmlSection::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+QString ZeissTagsXmlSection::getNameOfClass() const
+{
+  return QString("ZeissTagsXmlSection");
+}
+
+// -----------------------------------------------------------------------------
+QString ZeissTagsXmlSection::ClassName()
+{
+  return QString("ZeissTagsXmlSection");
+}
+
+// -----------------------------------------------------------------------------
+ZeissTagsXmlSection::Pointer ZeissTagsXmlSection::New()
+{
+  Pointer sharedPtr(new(ZeissTagsXmlSection));
+  return sharedPtr;
+}

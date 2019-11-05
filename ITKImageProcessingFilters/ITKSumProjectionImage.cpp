@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKSumProjectionImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -134,7 +136,7 @@ AbstractFilter::Pointer ITKSumProjectionImage::newFilterInstance(bool copyFilter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKSumProjectionImage::getHumanLabel() const
+QString ITKSumProjectionImage::getHumanLabel() const
 {
   return "ITK::Sum Projection Image Filter";
 }
@@ -142,7 +144,7 @@ const QString ITKSumProjectionImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKSumProjectionImage::getUuid()
+QUuid ITKSumProjectionImage::getUuid() const
 {
   return QUuid("{40714670-b3bd-554c-badb-787d8bab7568}");
 }
@@ -150,7 +152,50 @@ const QUuid ITKSumProjectionImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKSumProjectionImage::getSubGroupName() const
+QString ITKSumProjectionImage::getSubGroupName() const
 {
   return "ITK ImageStatistics";
 }
+
+// -----------------------------------------------------------------------------
+ITKSumProjectionImage::Pointer ITKSumProjectionImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKSumProjectionImage> ITKSumProjectionImage::New()
+{
+  struct make_shared_enabler : public ITKSumProjectionImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKSumProjectionImage::getNameOfClass() const
+{
+  return QString("ITKSumProjectionImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKSumProjectionImage::ClassName()
+{
+  return QString("ITKSumProjectionImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKSumProjectionImage::setProjectionDimension(double value)
+{
+  m_ProjectionDimension = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKSumProjectionImage::getProjectionDimension() const
+{
+  return m_ProjectionDimension;
+}
+
+

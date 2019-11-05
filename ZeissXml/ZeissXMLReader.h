@@ -32,12 +32,13 @@
 
 #error THIS FILE IS NO LONGER USED. WE are now using the QtXML framework instead of Expat
 //-- C++ Includes
+#include <memory>
+
 #include <string>
 #include <sstream>
 #include <vector>
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 #include "ZeissTagsXmlSection.h"
 #include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
@@ -53,9 +54,21 @@
 class ITKImageProcessing_EXPORT ZeissXMLReader : public ExpatEvtHandler
 {
 public:
+  using Self = ZeissXMLReader;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
 
-  SIMPL_SHARED_POINTERS(ZeissXMLReader)
-  SIMPL_TYPE_MACRO(ZeissXMLReader)
+  /**
+   * @brief Returns the name of the class for ZeissXMLReader
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for ZeissXMLReader
+   */
+  static QString ClassName();
 
   /**
   * @brief Creates a new Object which is wrapped in a shared_ptr
@@ -118,14 +131,39 @@ public:
    */
   void printStats(std::ostream &out);
 
-  SIMPL_INSTANCE_PROPERTY(ZeissTagsXmlSection::Pointer, TagsSection);
+  /**
+   * @brief Setter property for TagsSection;
+   */
+  void setTagsSection;
+  (const ZeissTagsXmlSection::Pointer& value);
+  /**
+   * @brief Getter property for TagsSection;
+   * @return Value of TagsSection;
+   */
+  ZeissTagsXmlSection::Pointer getTagsSection;
+  () const;
 
-  SIMPL_INSTANCE_PROPERTY(std::vector<ZeissTagsXmlSection::Pointer>, ImageTags);
+  /**
+   * @brief Setter property for ImageTags;
+   */
+  void setImageTags;
+  (const std::vector<ZeissTagsXmlSection::Pointer>& value);
+  /**
+   * @brief Getter property for ImageTags;
+   * @return Value of ImageTags;
+   */
+  std::vector<ZeissTagsXmlSection::Pointer> getImageTags;
+  () const;
 
 protected:
   ZeissXMLReader(const std::string &xmlFile);
 
 private:
+  ZeissTagsXmlSection::Pointer m_TagsSection;
+  = {};
+  std::vector<ZeissTagsXmlSection::Pointer> m_ImageTags;
+  = {};
+
   std::string       _xmlFilename;
   int32_t           _xmlParseError;
   ExpatParser*      _parser;

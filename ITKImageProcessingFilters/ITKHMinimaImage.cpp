@@ -4,6 +4,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKHMinimaImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
@@ -137,7 +139,7 @@ AbstractFilter::Pointer ITKHMinimaImage::newFilterInstance(bool copyFilterParame
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKHMinimaImage::getHumanLabel() const
+QString ITKHMinimaImage::getHumanLabel() const
 {
   return "ITK::H Minima Image Filter";
 }
@@ -145,7 +147,7 @@ const QString ITKHMinimaImage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ITKHMinimaImage::getUuid()
+QUuid ITKHMinimaImage::getUuid() const
 {
   return QUuid("{f1d7cf59-9b7c-53cb-b71a-76cf91c86e8f}");
 }
@@ -153,7 +155,62 @@ const QUuid ITKHMinimaImage::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ITKHMinimaImage::getSubGroupName() const
+QString ITKHMinimaImage::getSubGroupName() const
 {
   return "ITK BiasCorrection";
 }
+
+// -----------------------------------------------------------------------------
+ITKHMinimaImage::Pointer ITKHMinimaImage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ITKHMinimaImage> ITKHMinimaImage::New()
+{
+  struct make_shared_enabler : public ITKHMinimaImage  
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKHMinimaImage::getNameOfClass() const
+{
+  return QString("ITKHMinimaImage");
+}
+
+// -----------------------------------------------------------------------------
+QString ITKHMinimaImage::ClassName()
+{
+  return QString("ITKHMinimaImage");
+}
+
+// -----------------------------------------------------------------------------
+void ITKHMinimaImage::setHeight(double value)
+{
+  m_Height = value;
+}
+
+// -----------------------------------------------------------------------------
+double ITKHMinimaImage::getHeight() const
+{
+  return m_Height;
+}
+
+// -----------------------------------------------------------------------------
+void ITKHMinimaImage::setFullyConnected(bool value)
+{
+  m_FullyConnected = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ITKHMinimaImage::getFullyConnected() const
+{
+  return m_FullyConnected;
+}
+
+
