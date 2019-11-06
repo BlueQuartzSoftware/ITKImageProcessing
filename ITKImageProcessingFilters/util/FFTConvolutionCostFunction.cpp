@@ -974,7 +974,7 @@ void FFTConvolutionCostFunction::findFFTConvolutionAndMaxValue(const OverlapPair
   itk::SizeValueType bufferSize = fftConvolve->GetPixelContainer()->Size();
   MeasureType maxValue = *std::max_element(bufferPtr, bufferPtr + bufferSize);
   ScopedLockType lock(mutex);
-  residual += maxValue;
+  residual += maxValue * maxValue;
 
   std::cout << "Max Value: " << maxValue;
 }
