@@ -123,7 +123,7 @@ public:
    * @brief This method is called by Initialize as a parallel task algorithm operating on each image in the ImageGrid to calculate the overlap amounts.
    * @param image
    */
-  void InitializePercentageOverlaps(const ImageGrid::value_type& image);
+  void InitializeCellOverlaps(const ImageGrid::value_type& image);
 
   /**
    * @brief Override for itk::SingleValuedCostFunction::GetDerivative that throws an exception.
@@ -292,7 +292,7 @@ private:
   size_t m_Degree = 2;
   size_t m_OverlapXAmt;
   size_t m_OverlapYAmt;
-  std::vector<std::pair<size_t, size_t>> m_IJ;
+  //std::vector<std::pair<size_t, size_t>> m_IJ;
   OverlapPairs m_Overlaps;
   ImageGrid m_ImageGrid;
   double m_ImageDim_x;

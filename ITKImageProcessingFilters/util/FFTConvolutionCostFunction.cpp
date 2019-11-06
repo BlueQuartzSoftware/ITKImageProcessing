@@ -290,7 +290,7 @@ void FFTConvolutionCostFunction::Initialize(const GridMontageShPtr& montage, int
   m_Overlaps.clear();
   for(const auto& image : m_ImageGrid)
   {
-    taskAlg.execute(std::bind(&FFTConvolutionCostFunction::InitializePercentageOverlaps, this, image));
+    taskAlg.execute(std::bind(&FFTConvolutionCostFunction::InitializeCellOverlaps, this, image));
   }
   taskAlg.wait();
 }
@@ -407,7 +407,7 @@ void FFTConvolutionCostFunction::InitializeDataContainer(const GridMontageShPtr&
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FFTConvolutionCostFunction::InitializePercentageOverlaps(const ImageGrid::value_type& image)
+void FFTConvolutionCostFunction::InitializeCellOverlaps(const ImageGrid::value_type& image)
 {
   static MutexType mutex;
   const size_t width = image.second->GetBufferedRegion().GetSize()[0];
