@@ -126,6 +126,35 @@ public:
   void InitializeCellOverlaps(const ImageGrid::value_type& image);
 
   /**
+   * @brief Creates additional tiles along the right and bottom.
+   * These tiles are filled with the top of row 0 and the left of column 0.
+   * @param montage
+   * @param amName
+   * @param daName
+   */
+  void initializeCropOverlaps(const GridMontageShPtr& montage, const QString& amName, const QString& daName);
+
+  /**
+   * @brief Creates the right-most "missing data" column from the first column.
+   * Each call initializes one tile for the specified row.
+   * @param montage
+   * @param row
+   * @param amName
+   * @param daName
+   */
+  void initializeCropColImg(const GridMontageShPtr& montage, size_t row, const QString& amName, const QString& daName);
+
+  /**
+   * @brief Creates the bottom-most "missing data" row from the first row.
+   * Each call initializes one tile for the specified column.
+   * @param montage
+   * @param col
+   * @param amName
+   * @param daName
+   */
+  void initializeCropRowImg(const GridMontageShPtr& montage, size_t col, const QString& amName, const QString& daName);
+
+  /**
    * @brief Override for itk::SingleValuedCostFunction::GetDerivative that throws an exception.
    * @param unused
    * @param unused

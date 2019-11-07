@@ -286,6 +286,9 @@ void FFTConvolutionCostFunction::Initialize(const GridMontageShPtr& montage, int
   }
   taskAlg.wait();
 
+  // Populate crop overlaps
+  initializeCropOverlaps(montage, amName, daName);
+
   // Populate m_overlaps
   m_Overlaps.clear();
   for(const auto& image : m_ImageGrid)
@@ -418,6 +421,7 @@ void FFTConvolutionCostFunction::InitializeCellOverlaps(const ImageGrid::value_t
   PixelCoord kernelOrigin;
   InputImage::SizeType kernelSize;
 
+  //GridKey gridKey = image.first;
   auto rightImage{m_ImageGrid.find(std::make_pair(image.first.first, image.first.second + 1))};
   auto bottomImage{m_ImageGrid.find(std::make_pair(image.first.first + 1, image.first.second))};
   if(rightImage != m_ImageGrid.end())
@@ -462,6 +466,110 @@ void FFTConvolutionCostFunction::InitializeCellOverlaps(const ImageGrid::value_t
     ScopedLockType lock(mutex);
     m_Overlaps.push_back(overlap);
   }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FFTConvolutionCostFunction::initializeCropOverlaps(const GridMontageShPtr& montage, const QString& amName, const QString& daName)
+{
+  const size_t numCols = montage->getColumnCount();
+  const size_t numRows = montage->getRowCount();
+
+  for(size_t col = 0; col < numCols; col++)
+  {
+    initializeCropRowImg(montage, col, amName, daName);
+  }
+  for(size_t row = 0; row < numRows; row++)
+  {
+    initializeCropColImg(montage, row, amName, daName);
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FFTConvolutionCostFunction::initializeCropColImg(const GridMontageShPtr& montage, size_t row, const QString& amName, const QString& daName)
+{
+  GridTileIndex index = montage->getTileIndex(row, 0);
+  DataContainer::Pointer dc = montage->getDataContainer(index);
+  AttributeMatrix::Pointer am = dc->getAttributeMatrix(amName);
+  DataArray<Grayscale_T>::Pointer da = am->getAttributeArrayAs<DataArray<Grayscale_T>>(daName);
+  size_t comps = da->getNumberOfComponents();
+  ImageGeom::Pointer imageGeom = dc->getGeometryAs<ImageGeom>();
+  SizeVec3Type dims = imageGeom->getDimensions();
+  size_t xOrigin = 0;
+  size_t yOrigin = 0;
+
+  size_t height = std::min(dims.getY(), static_cast<size_t>(std::round(m_ImageDim_y)));
+  size_t minWidth = static_cast<size_t>(std::round(m_ImageDim_x));
+  size_t width = std::max(dims.getX() - minWidth, m_OverlapXAmt);
+
+  InputImage::SizeType imageSize;
+  imageSize[0] = width;
+  imageSize[1] = height;
+
+  PixelCoord imageOrigin;
+  imageOrigin[0] = 0;
+  imageOrigin[1] = 0;
+
+  InputImage::Pointer itkImage = InputImage::New();
+  itkImage->SetRegions(InputImage::RegionType(imageOrigin, imageSize));
+  itkImage->Allocate();
+
+  // A colored image could be used in a Fourier Transform as discussed in this paper:
+  // https://ieeexplore.ieee.org/document/723451
+  // NOTE Could this be parallelized?
+  ParallelData2DAlgorithm dataAlg;
+  dataAlg.setRange(0, 0, height, width);
+  dataAlg.execute(FFTImageInitializer(itkImage, width, xOrigin, yOrigin, da));
+
+  //GridKey imageKey = std::make_pair(row, montage->getColumnCount());
+  GridKey imageKey = std::make_pair(montage->getColumnCount(), row);
+  m_ImageGrid[imageKey] = itkImage;
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FFTConvolutionCostFunction::initializeCropRowImg(const GridMontageShPtr& montage, size_t col, const QString& amName, const QString& daName)
+{
+  GridTileIndex index = montage->getTileIndex(0, col);
+  DataContainer::Pointer dc = montage->getDataContainer(index);
+  AttributeMatrix::Pointer am = dc->getAttributeMatrix(amName);
+  DataArray<Grayscale_T>::Pointer da = am->getAttributeArrayAs<DataArray<Grayscale_T>>(daName);
+  size_t comps = da->getNumberOfComponents();
+  ImageGeom::Pointer imageGeom = dc->getGeometryAs<ImageGeom>();
+  SizeVec3Type dims = imageGeom->getDimensions();
+  size_t xOrigin = 0;
+  size_t yOrigin = 0;
+
+  size_t minHeight = static_cast<size_t>(std::round(m_ImageDim_y));
+  size_t height = std::max(dims.getY() - minHeight, m_OverlapYAmt);
+  
+  size_t width = std::min(dims.getX(), static_cast<size_t>(std::round(m_ImageDim_x)));
+
+  InputImage::SizeType imageSize;
+  imageSize[0] = width;
+  imageSize[1] = height;
+
+  PixelCoord imageOrigin;
+  imageOrigin[0] = 0;
+  imageOrigin[1] = 0;
+
+  InputImage::Pointer itkImage = InputImage::New();
+  itkImage->SetRegions(InputImage::RegionType(imageOrigin, imageSize));
+  itkImage->Allocate();
+
+  // A colored image could be used in a Fourier Transform as discussed in this paper:
+  // https://ieeexplore.ieee.org/document/723451
+  // NOTE Could this be parallelized?
+  ParallelData2DAlgorithm dataAlg;
+  dataAlg.setRange(0, 0, height, width);
+  dataAlg.execute(FFTImageInitializer(itkImage, width, xOrigin, yOrigin, da));
+
+  //GridKey imageKey = std::make_pair(montage->getRowCount(), col);
+  GridKey imageKey = std::make_pair(col, montage->getRowCount());
+  m_ImageGrid[imageKey] = itkImage;
 }
 
 // -----------------------------------------------------------------------------
