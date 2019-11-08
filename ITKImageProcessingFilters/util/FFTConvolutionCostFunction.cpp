@@ -75,9 +75,10 @@ public:
    * @param width
    * @param dataArray
    */
-  FFTImageInitializer(const InputImage::Pointer& image, size_t width, size_t xOffset, size_t yOffset, const DataArrayType::Pointer& dataArray)
+  FFTImageInitializer(const InputImage::Pointer& image, size_t width, size_t height, size_t xOffset, size_t yOffset, const DataArrayType::Pointer& dataArray)
   : m_Image(image)
   , m_Width(width)
+  , m_Height(height)
   , m_XOffset(xOffset)
   , m_YOffset(yOffset)
   , m_DataArray(dataArray)
@@ -118,6 +119,7 @@ public:
 private:
   InputImage::Pointer m_Image;
   size_t m_Width;
+  size_t m_Height;
   size_t m_XOffset = 0;
   size_t m_YOffset = 0;
   DataArrayType::Pointer m_DataArray;
@@ -287,7 +289,7 @@ void FFTConvolutionCostFunction::Initialize(const GridMontageShPtr& montage, int
   taskAlg.wait();
 
   // Populate crop overlaps
-  initializeCropOverlaps(montage, amName, daName);
+  //initializeCropOverlaps(montage, amName, daName);
 
   // Populate m_overlaps
   m_Overlaps.clear();
@@ -400,7 +402,8 @@ void FFTConvolutionCostFunction::InitializeDataContainer(const GridMontageShPtr&
   // NOTE Could this be parallelized?
   ParallelData2DAlgorithm dataAlg;
   dataAlg.setRange(0, 0, height, width);
-  dataAlg.execute(FFTImageInitializer(itkImage, dims.getX(), xOrigin, yOrigin, da));
+  //dataAlg.execute(FFTImageInitializer(itkImage, dims.getX(), dims.getY(), xOrigin, yOrigin, da));
+  dataAlg.execute(FFTImageInitializer(itkImage, width, height, xOrigin, yOrigin, da));
 
   GridKey imageKey = std::make_pair(row, column);
   ScopedLockType lock(mutex);
@@ -522,7 +525,8 @@ void FFTConvolutionCostFunction::initializeCropColImg(const GridMontageShPtr& mo
   // NOTE Could this be parallelized?
   ParallelData2DAlgorithm dataAlg;
   dataAlg.setRange(0, 0, height, width);
-  dataAlg.execute(FFTImageInitializer(itkImage, width, xOrigin, yOrigin, da));
+  //dataAlg.execute(FFTImageInitializer(itkImage, dims.getX(), dims.getY(), xOrigin, yOrigin, da));
+  dataAlg.execute(FFTImageInitializer(itkImage, width, height, xOrigin, yOrigin, da));
 
   //GridKey imageKey = std::make_pair(row, montage->getColumnCount());
   GridKey imageKey = std::make_pair(montage->getColumnCount(), row);
@@ -565,7 +569,8 @@ void FFTConvolutionCostFunction::initializeCropRowImg(const GridMontageShPtr& mo
   // NOTE Could this be parallelized?
   ParallelData2DAlgorithm dataAlg;
   dataAlg.setRange(0, 0, height, width);
-  dataAlg.execute(FFTImageInitializer(itkImage, width, xOrigin, yOrigin, da));
+  //dataAlg.execute(FFTImageInitializer(itkImage, dims.getX(), dims.getY(), xOrigin, yOrigin, da));
+  dataAlg.execute(FFTImageInitializer(itkImage, width, height, xOrigin, yOrigin, da));
 
   //GridKey imageKey = std::make_pair(montage->getRowCount(), col);
   GridKey imageKey = std::make_pair(col, montage->getRowCount());
@@ -646,8 +651,8 @@ FFTConvolutionCostFunction::MeasureType FFTConvolutionCostFunction::GetValue(con
   std::cout << "Parameters: " << parameters;
   std::cout << "Result " << residual;
 
-  // The value to minimize is the square of the sum of the maximum value of the fft convolution
-  MeasureType result = sqrt(residual);
+  // The value to maximize is the square of the sum of the maximum value of the fft convolution
+  MeasureType result = residual * residual;
   return result;
 }
 

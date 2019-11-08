@@ -268,6 +268,32 @@ protected:
 
   std::pair<double, double> getImageDims() const;
 
+  /**
+   * @brief Returns the required length for either X or Y parameters.
+   * Combined parameter length should be 2x this value.
+   * @return
+   */
+  size_t getSingleParamCount() const;
+
+  /**
+   * @brief Returns the default parameter scaling / step size.
+   * This is a combination of getDefaultScalingX() and getDefaultScalingY().
+   * @return
+   */
+  std::vector<double> getDefaultScaling() const;
+
+  /**
+   * @brief Gets the default Px  scaling / step size
+   * @return
+   */
+  std::vector<double> getDefaultScalingX() const;
+  
+  /**
+   * @brief Gets the default Py  scaling / step size
+   * @return
+   */
+  std::vector<double> getDefaultScalingY() const;
+
 private:
   QString m_MontageName;
   uint m_MaxIterations;

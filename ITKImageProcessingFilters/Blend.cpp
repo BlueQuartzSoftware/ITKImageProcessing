@@ -221,7 +221,7 @@ void Blend::dataCheck()
   }
   else
   {
-    size_t len = static_cast<size_t>(m_Degree * m_Degree + 2 * m_Degree + 1);
+    size_t len = getSingleParamCount();
     m_PxVec.resize(len);
     m_PyVec.resize(len);
     for(size_t i = 0; i < len; i++)
@@ -238,7 +238,7 @@ void Blend::dataCheck()
   // This step would not be necessary if using Dave's strict polynomial array
   // Otherwise, there is a direct correlation between the degree of the transform polynomial
   // and how many coefficients should reside in the initial guess
-  size_t len = static_cast<size_t>(m_Degree * m_Degree + 2 * m_Degree + 1);
+  size_t len = getSingleParamCount();
   if(len != m_PxVec.size())
   {
     QString str = QString("Number of coefficients in Px (%1) is not compatible with degree number (req: %2)").arg(m_PxVec.size()).arg(len);
@@ -380,26 +380,13 @@ void Blend::execute()
       initialParams[idx] = xyParameters[idx];
       scales[idx] = 0.001;
     }
-#if 0
-    constexpr double epsilon = itk::NumericTraits<double>::epsilon() + 1e-15;
-    for(size_t x = 0; x < m_Degree + 1; x++)
+#if 1
+    // Set scaling for parameter step sizes
+    std::vector<double> defaultScales = getDefaultScaling();
+    for(size_t i = 0; i < defaultScales.size(); i++)
     {
-      double xScale = x == 0 ? 1.0 : std::pow(0.1, x - 1);
-      for(size_t y = 0; y < m_Degree + 1; y++)
-      {
-        double yScale = y == 0 ? 1.0 : std::pow(0.1, y - 1);
-        size_t id = x * (m_Degree + 1) + y;
-        double minScale = std::min(xScale, yScale);
-        scales[id] = std::max(minScale, epsilon);
-      }
+      scales[i] = defaultScales[i];
     }
-    scales[0] = epsilon;
-    //scales[m_PxVec.size() - 1] = epsilon;
-    //scales[m_PxVec.size()] = epsilon;
-    scales[xyParameters.size() - 1] = epsilon;
-
-    //scales[m_Degree + 2] = 1;
-    //scales[m_PxVec.size() + 1] = 1;
 #endif
 
     itk::AmoebaOptimizer::Pointer optimizer = itk::AmoebaOptimizer::New();
@@ -407,7 +394,7 @@ void Blend::execute()
     optimizer->SetFunctionConvergenceTolerance(m_LowTolerance);
     optimizer->SetParametersConvergenceTolerance(m_HighTolerance);
     optimizer->SetInitialPosition(initialParams);
-    //optimizer->SetScales(scales);
+    optimizer->SetScales(scales);
     optimizer->SetOptimizeWithRestarts(true);
 
     GridMontageShPtr gridMontage = std::dynamic_pointer_cast<GridMontage>(getDataContainerArray()->getMontage(getMontageName()));
@@ -499,6 +486,87 @@ void Blend::execute()
   std::tie(imageDimX, imageDimY) = getImageDims();
   // Apply transform to dewarp data
   warpDataContainers(transformVector, imageDimX, imageDimY);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+size_t Blend::getSingleParamCount() const
+{
+  return static_cast<size_t>(m_Degree * m_Degree + 2 * m_Degree + 1);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+std::vector<double> Blend::getDefaultScaling() const
+{
+  std::vector<double> xScaling = getDefaultScalingX();
+  std::vector<double> yScaling = getDefaultScalingY();
+
+  std::vector<double> scales(xScaling.begin(), xScaling.end());
+  scales.insert(scales.end(), yScaling.begin(), yScaling.end());
+
+  return scales;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+std::vector<double> Blend::getDefaultScalingX() const
+{
+  const size_t count = getSingleParamCount();
+  std::vector<double> scales(count);
+
+  constexpr double epsilon = itk::NumericTraits<double>::epsilon() + 1e-15;
+  constexpr double scalePow = 0.1;
+  for(size_t x = 0; x < m_Degree + 1; x++)
+  {
+    double xScale = std::pow(scalePow, x);
+    for(size_t y = 0; y < m_Degree + 1; y++)
+    {
+      double yPrime = (y + 1) * (y + 1);
+      double yScale = std::pow(scalePow, yPrime);
+      size_t id = x * (m_Degree + 1) + y;
+      double scale = xScale * yScale;
+      scales[id] = std::max(scale, epsilon);
+    }
+  }
+
+  scales[0] = epsilon;
+  scales[count - 1] = epsilon;
+
+  return scales;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+std::vector<double> Blend::getDefaultScalingY() const
+{
+  const size_t count = getSingleParamCount();
+  std::vector<double> scales(count);
+
+  constexpr double epsilon = itk::NumericTraits<double>::epsilon() + 1e-15;
+  constexpr double scalePow = 0.1;
+  for(size_t x = 0; x < m_Degree + 1; x++)
+  {
+    double xPrime = (x + 1) * (x + 1);
+    double xScale = std::pow(scalePow, xPrime);
+    for(size_t y = 0; y < m_Degree + 1; y++)
+    {
+      double yScale = std::pow(scalePow, y);
+      size_t id = x * (m_Degree + 1) + y;
+      double scale = xScale * yScale;
+      scales[id] = std::max(scale, epsilon);
+    }
+  }
+
+  scales[0] = epsilon;
+  scales[1] = 1;
+  scales[count - 1] = epsilon;
+
+  return scales;
 }
 
 // -----------------------------------------------------------------------------
