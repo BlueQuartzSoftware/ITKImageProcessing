@@ -656,7 +656,7 @@ FFTConvolutionCostFunction::MeasureType FFTConvolutionCostFunction::GetValue(con
   std::cout << "Result " << residual;
 
   // The value to maximize is the square of the sum of the maximum value of the fft convolution
-  MeasureType result = std::sqrt(residual);
+  MeasureType result = residual * residual;
   return result;
 }
 
