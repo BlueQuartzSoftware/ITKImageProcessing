@@ -16,7 +16,7 @@
  * may be used to endorse or promote products derived from this software without
  * specific prior written permission.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS “AS IS”
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS AS IS
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
@@ -143,7 +143,8 @@ public:
    * @param offset
    * @param parameters
    */
-  FFTImageOverlapGenerator(const InputImage::Pointer& baseImg, const InputImage::Pointer& image, const PixelCoord& offset, size_t imageDim_x, size_t imageDim_y, size_t degree, const ParametersType& parameters)
+  FFTImageOverlapGenerator(const InputImage::Pointer& baseImg, const InputImage::Pointer& image, const PixelCoord& offset, size_t imageDim_x, size_t imageDim_y, size_t degree,
+                           const ParametersType& parameters)
   : m_BaseImg(baseImg)
   , m_Image(image)
   , m_Offset(offset)
@@ -191,7 +192,7 @@ public:
   {
     const double x_trans = (m_ImageDim_x - 1) / 2.0;
     const double y_trans = (m_ImageDim_y - 1) / 2.0;
-    std::array<double, 2> newPrime{ x + m_Offset[0] - x_trans, y + m_Offset[1] - y_trans };
+    std::array<double, 2> newPrime{x + m_Offset[0] - x_trans, y + m_Offset[1] - y_trans};
     const double newXPrime = newPrime[0];
     const double newYPrime = newPrime[1];
 
@@ -213,7 +214,7 @@ public:
 
     const int64_t oldXUnbound = static_cast<int64_t>(round(oldXPrime + x_trans));
     const int64_t oldYUnbound = static_cast<int64_t>(round(oldYPrime + y_trans));
-    PixelCoord oldPixel{ oldXUnbound, oldYUnbound };
+    PixelCoord oldPixel{oldXUnbound, oldYUnbound};
     return oldPixel;
   }
 
@@ -227,8 +228,10 @@ public:
     {
       for(size_t x = range.minCol(); x < range.maxCol(); x++)
       {
-        PixelCoord newIndex{ x, y };
-        PixelValue_T pixel{ 0 };
+        PixelCoord newIndex;
+        newIndex[0] = x;
+        newIndex[1] = y;
+        PixelValue_T pixel{0};
         const PixelCoord& oldIndex = calculateOldPixelIndex(x, y);
         if(baseImageContainsIndex(oldIndex))
         {
@@ -252,7 +255,8 @@ private:
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FFTConvolutionCostFunction::Initialize(const GridMontageShPtr& montage, int degree, const IntVec2Type& overlapAmt, const DataContainerArrayShPtr& dca, const QString& amName, const QString& daName)
+void FFTConvolutionCostFunction::Initialize(const GridMontageShPtr& montage, int degree, const IntVec2Type& overlapAmt, const DataContainerArrayShPtr& dca, const QString& amName,
+                                            const QString& daName)
 {
   m_Montage = montage;
   m_Degree = degree;
@@ -761,8 +765,8 @@ void FFTConvolutionCostFunction::checkTransformation(const ParametersType& param
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FFTConvolutionCostFunction::applyTransformationPixel(double tolerance, const ParametersType& parameters, const InputImage::Pointer& inputImage,
-                                                          const InputImage::RegionType& bufferedRegion, itk::ImageRegionIterator<InputImage> iter, const GridKey& gridKey, CropMap& cropMap) const
+void FFTConvolutionCostFunction::applyTransformationPixel(double tolerance, const ParametersType& parameters, const InputImage::Pointer& inputImage, const InputImage::RegionType& bufferedRegion,
+                                                          itk::ImageRegionIterator<InputImage> iter, const GridKey& gridKey, CropMap& cropMap) const
 {
   const double lastXIndex = bufferedRegion.GetSize()[0] - 1 + tolerance;
   const double lastYIndex = bufferedRegion.GetSize()[1] - 1 + tolerance;
@@ -780,8 +784,8 @@ void FFTConvolutionCostFunction::applyTransformationPixel(double tolerance, cons
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FFTConvolutionCostFunction::calculatePixelCoordinates(const ParametersType& parameters, const InputImage::Pointer& inputImage, const GridKey& gridKey,
-                                                           CropMap& cropMap, const PixelCoord& newPixel, double x_trans, double y_trans, double tolerance, double lastXIndex, double lastYIndex) const
+void FFTConvolutionCostFunction::calculatePixelCoordinates(const ParametersType& parameters, const InputImage::Pointer& inputImage, const GridKey& gridKey, CropMap& cropMap,
+                                                           const PixelCoord& newPixel, double x_trans, double y_trans, double tolerance, double lastXIndex, double lastYIndex) const
 {
   static MutexType mutex;
 
@@ -854,19 +858,19 @@ void FFTConvolutionCostFunction::adjustCropMap(const PixelCoord& pixel, const In
   RegionBounds region = cropMap[gridKey];
   if((distTop < distBot) && (distTop < distLeft) && (distTop < distRight))
   {
-    region.topBound = std::max(region.topBound, pixel[1]);
+    region.topBound = std::max(region.topBound, static_cast<int64_t>(pixel[1]));
   }
   else if((distRight < distLeft) && (distRight < distTop) && (distRight < distBot))
   {
-    region.rightBound = std::min(region.rightBound, pixel[0]);
+    region.rightBound = std::min(region.rightBound, static_cast<int64_t>(pixel[0]));
   }
   else if((distLeft < distRight) && (distLeft < distTop) && (distLeft < distBot))
   {
-    region.leftBound = std::max(region.leftBound, pixel[0]);
+    region.leftBound = std::max(region.leftBound, static_cast<int64_t>(pixel[0]));
   }
   else if(distBot < distTop)
   {
-    region.bottomBound = std::min(region.bottomBound, pixel[1]);
+    region.bottomBound = std::min(region.bottomBound, static_cast<int64_t>(pixel[1]));
   }
 
   cropMap[gridKey] = region;
@@ -904,8 +908,8 @@ void FFTConvolutionCostFunction::cropOverlap(OverlapPair& overlap, CropMap& crop
   const GridKey& gridKey1 = gridPair.first;
   const GridKey& gridKey2 = gridPair.second;
 
-  //cropDistortedGrid(gridKey1, distortedGrid, cropMap);
-  //cropDistortedGrid(gridKey2, distortedGrid, cropMap);
+  // cropDistortedGrid(gridKey1, distortedGrid, cropMap);
+  // cropDistortedGrid(gridKey2, distortedGrid, cropMap);
 
   if(gridKey1.first == gridKey2.first)
   {
@@ -1043,7 +1047,7 @@ FFTConvolutionCostFunction::ImagePair FFTConvolutionCostFunction::createOverlapI
   const InputImage::Pointer& firstBaseImg = m_ImageGrid.at(overlap.first.first);
 
   InputImage::Pointer firstOverlapImg = InputImage::New();
-  firstOverlapImg->SetRegions({ { 0,0 }, firstRegion.GetSize() });
+  firstOverlapImg->SetRegions({{0, 0}, firstRegion.GetSize()});
   firstOverlapImg->Allocate();
 
   auto index = firstRegion.GetIndex();
@@ -1056,7 +1060,7 @@ FFTConvolutionCostFunction::ImagePair FFTConvolutionCostFunction::createOverlapI
   const InputImage::Pointer& secondBaseImg = m_ImageGrid.at(overlap.first.second);
 
   InputImage::Pointer secondOverlapImg = InputImage::New();
-  secondOverlapImg->SetRegions({ { 0,0 }, secondRegion.GetSize() });
+  secondOverlapImg->SetRegions({{0, 0}, secondRegion.GetSize()});
   secondOverlapImg->Allocate();
 
   index = secondRegion.GetIndex();
@@ -1072,7 +1076,7 @@ FFTConvolutionCostFunction::ImagePair FFTConvolutionCostFunction::createOverlapI
 void FFTConvolutionCostFunction::findFFTConvolutionAndMaxValue(const OverlapPair& overlap, const ParametersType& parameters, MeasureType& residual) const
 {
   static MutexType mutex;
-  ImagePair& overlapImgs = createOverlapImages(overlap, parameters);
+  ImagePair overlapImgs = createOverlapImages(overlap, parameters);
 
   ConvolutionFilter::Pointer filter = ConvolutionFilter::New();
   filter->SetInput(overlapImgs.first);

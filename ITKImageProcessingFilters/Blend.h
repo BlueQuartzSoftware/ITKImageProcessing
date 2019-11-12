@@ -296,23 +296,23 @@ protected:
 
 private:
   QString m_MontageName;
-  uint m_MaxIterations;
-  IntVec2Type m_OverlapAmt;
-  double m_LowTolerance = 0;
-  double m_HighTolerance = 0;
-  int m_Degree = 0;
-  bool m_UseAmoebaOptimizer = true;
+  uint m_MaxIterations = 1000;
+  IntVec2Type m_OverlapAmt = {10, 10};
+  double m_LowTolerance = 1E-2;
+  double m_HighTolerance = 1E-2;
+  int m_Degree = 2;
+  bool m_UseAmoebaOptimizer = false;
   bool m_SpecifyInitialSimplex = true;
-  QString m_PxStr;
-  QString m_PyStr;
+  QString m_PxStr = "0.0;0.0;0.0;1.0;0.0;0.0;0.0";
+  QString m_PyStr = "0.0;1.0;0.0;0.0;0.0;0.0;0.0";
   QString m_AttributeMatrixName;
   QString m_IPFColorsArrayName;
   bool m_CreateTransformContainer;
-  QString m_BlendDCName;
-  QString m_TransformMatrixName;
-  QString m_TransformArrayName;
-  QString m_ResidualArrayName;
-  QString m_TransformPrefix;
+  QString m_BlendDCName = "Blend Data";
+  QString m_TransformMatrixName= "Transform Matrix";
+  QString m_TransformArrayName = "Transform";
+  QString m_ResidualArrayName = "Residual";
+  QString m_TransformPrefix = "Transformed_";
 
   std::vector<double> m_PxVec;
   std::vector<double> m_PyVec;
