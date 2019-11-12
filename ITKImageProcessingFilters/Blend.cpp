@@ -242,7 +242,7 @@ void Blend::dataCheck()
   }
 
   // Requirements to avoid crashing
-  if(getDataContainerArray()->getDataContainers().size() <= 0)
+  if(getDataContainerArray()->getDataContainers().empty())
   {
     setErrorCondition(-66710, "At least one DataContainer required");
     return;

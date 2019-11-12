@@ -293,16 +293,14 @@ void ITKStitchMontage::dataCheck()
       testPath.setAttributeMatrixName(getCommonAttributeMatrixName());
       testPath.setDataArrayName(getCommonDataArrayName());
 
-      int err = 0;
-
       DataContainer::Pointer dc = dca->getPrereqDataContainer(this, testPath);
       if(getErrorCode() < 0)
       {
         return;
       }
-
+      int err = -11020;
       AttributeMatrix::Pointer am = getDataContainerArray()->getPrereqAttributeMatrixFromPath(this, testPath, err);
-      if(getErrorCode() < 0 || err < 0)
+      if(getErrorCode() < 0)
       {
         return;
       }
