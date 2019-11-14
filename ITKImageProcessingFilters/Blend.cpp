@@ -479,7 +479,8 @@ void Blend::execute()
 // -----------------------------------------------------------------------------
 size_t Blend::getSingleParamCount() const
 {
-  return static_cast<size_t>(m_Degree * m_Degree + 2 * m_Degree + 1);
+  return FFTHelper::getReqPartialParameters(m_Degree);
+  //return static_cast<size_t>(m_Degree * m_Degree + 2 * m_Degree + 1);
 }
 
 // -----------------------------------------------------------------------------
@@ -506,14 +507,14 @@ std::vector<double> Blend::getDefaultScalingX() const
 
   constexpr double epsilon = itk::NumericTraits<double>::epsilon() + 1e-15;
   constexpr double scalePow = 0.1;
-  for(size_t x = 0; x < m_Degree + 1; x++)
+  for(size_t x = 0; x < m_Degree; x++)
   {
     double xScale = std::pow(scalePow, x);
-    for(size_t y = 0; y < m_Degree + 1; y++)
+    for(size_t y = 0; y < m_Degree; y++)
     {
       double yPrime = (y + 1) * (y + 1);
       double yScale = std::pow(scalePow, yPrime);
-      size_t id = x * (m_Degree + 1) + y;
+      size_t id = x * (m_Degree) + y;
       double scale = xScale * yScale;
       scales[id] = std::max(scale, epsilon);
     }
@@ -535,14 +536,14 @@ std::vector<double> Blend::getDefaultScalingY() const
 
   constexpr double epsilon = itk::NumericTraits<double>::epsilon() + 1e-15;
   constexpr double scalePow = 0.1;
-  for(size_t x = 0; x < m_Degree + 1; x++)
+  for(size_t x = 0; x < m_Degree; x++)
   {
     double xPrime = (x + 1) * (x + 1);
     double xScale = std::pow(scalePow, xPrime);
-    for(size_t y = 0; y < m_Degree + 1; y++)
+    for(size_t y = 0; y < m_Degree; y++)
     {
       double yScale = std::pow(scalePow, y);
-      size_t id = x * (m_Degree + 1) + y;
+      size_t id = x * (m_Degree) + y;
       double scale = xScale * yScale;
       scales[id] = std::max(scale, epsilon);
     }
@@ -669,8 +670,8 @@ void transformDataPixel(int degree, double x_trans, double y_trans, const SizeVe
     }
   }
 
-  const int64_t oldXUnbound = static_cast<int64_t>(round(oldPrime[0] + x_trans));
-  const int64_t oldYUnbound = static_cast<int64_t>(round(oldPrime[1] + y_trans));
+  const int64_t oldXUnbound = static_cast<int64_t>(std::floor(oldPrime[0] + x_trans));
+  const int64_t oldYUnbound = static_cast<int64_t>(std::floor(oldPrime[1] + y_trans));
 
   auto compDims = tempDACopy->getComponentDimensions();
   size_t numComponents = std::accumulate(compDims.begin(), compDims.end(), 0);

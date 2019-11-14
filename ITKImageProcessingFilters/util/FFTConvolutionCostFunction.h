@@ -52,6 +52,19 @@ using GridMontageShPtr = std::shared_ptr<GridMontage>;
 
 struct RegionBounds;
 
+namespace FFTHelper
+{
+constexpr uint32_t getReqPartialParameters(size_t degree)
+{
+  size_t deg1 = degree - 1;
+  return static_cast<uint32_t>(deg1 * deg1 + 2 * deg1 + 1);
+}
+constexpr uint32_t getReqParameters(size_t degree)
+{
+  return 2 * getReqPartialParameters(degree);
+}
+} // namespace FFTHelper
+
 /**
  * @class FFTConvolutionCostFunction FFTConvolutionCostFunction.h ITKImageProcessingFilters/util/FFTConvolutionCostFunction.h
  * @brief The FFTConvolutionCostFunction class is used as the cost function for the Blend filter.

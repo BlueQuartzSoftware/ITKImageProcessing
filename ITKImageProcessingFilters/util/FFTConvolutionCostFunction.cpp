@@ -164,7 +164,7 @@ public:
   {
     const InputImage::RegionType& baseRegion = m_BaseImg->GetRequestedRegion();
     const PixelCoord& baseIndex = baseRegion.GetIndex();
-    const auto& baseSize = baseRegion.GetSize();
+    const auto baseSize = baseRegion.GetSize();
 
     // Check edge cases for height / width
     for(size_t i = 0; i < 2; i++)
@@ -199,21 +199,22 @@ public:
     // old' = Ei(Ej(aij * x^i * y^j)
     double oldXPrime = 0.0;
     double oldYPrime = 0.0;
-    const size_t yInit = (m_Degree * m_Degree) + (2 * m_Degree + 1);
+    const size_t deg1 = m_Degree - 1;
+    const size_t yInit = (deg1 * deg1) + (2 * deg1 + 1);
     for(size_t i = 0; i <= m_Degree; i++)
     {
       for(size_t j = 0; j <= m_Degree; j++)
       {
         const double xyParam = std::pow(newXPrime, i) * std::pow(newYPrime, j);
-        const size_t xOffset = i * (m_Degree + 1) + j;
+        const size_t xOffset = i * (m_Degree) + j;
         const size_t yOffset = xOffset + yInit;
         oldXPrime += m_Parameters[xOffset] * xyParam;
         oldYPrime += m_Parameters[yOffset] * xyParam;
       }
     }
 
-    const int64_t oldXUnbound = static_cast<int64_t>(round(oldXPrime + x_trans));
-    const int64_t oldYUnbound = static_cast<int64_t>(round(oldYPrime + y_trans));
+    const int64_t oldXUnbound = static_cast<int64_t>(std::floor(oldXPrime + x_trans));
+    const int64_t oldYUnbound = static_cast<int64_t>(std::floor(oldYPrime + y_trans));
     PixelCoord oldPixel{oldXUnbound, oldYUnbound};
     return oldPixel;
   }
@@ -838,6 +839,8 @@ void FFTConvolutionCostFunction::calculatePixelCoordinates(const ParametersType&
 // -----------------------------------------------------------------------------
 void FFTConvolutionCostFunction::adjustCropMap(const PixelCoord& pixel, const InputImage::Pointer& inputImage, const GridKey& gridKey, CropMap& cropMap) const
 {
+  static MutexType mutex;
+
   auto inputSize = inputImage->GetBufferedRegion().GetSize();
   const int64_t width = inputSize[0];
   const int64_t height = inputSize[1];
@@ -848,29 +851,33 @@ void FFTConvolutionCostFunction::adjustCropMap(const PixelCoord& pixel, const In
   const int64_t maxX = minX + width;
   const int64_t maxY = minY + height;
 
-  const int64_t distTop = pixel[1] - minY;
-  const int64_t distBot = maxY - pixel[1];
-  const int64_t distLeft = pixel[0] - minX;
-  const int64_t distRight = maxX - pixel[0];
+  const int64_t x = static_cast<int64_t>(pixel[0]);
+  const int64_t y = static_cast<int64_t>(pixel[1]);
+
+  const int64_t distTop = y - minY;
+  const int64_t distBot = maxY - y;
+  const int64_t distLeft = x - minX;
+  const int64_t distRight = maxX - x;
 
   // Use a reference so we only override the target value instead of all four
   // Use min/max value in case the bounds might already be closer than the current pixel
+  ScopedLockType lock(mutex);
   RegionBounds region = cropMap[gridKey];
   if((distTop < distBot) && (distTop < distLeft) && (distTop < distRight))
   {
-    region.topBound = std::max(region.topBound, static_cast<int64_t>(pixel[1]));
+    region.topBound = std::max(region.topBound, y);
   }
   else if((distRight < distLeft) && (distRight < distTop) && (distRight < distBot))
   {
-    region.rightBound = std::min(region.rightBound, static_cast<int64_t>(pixel[0]));
+    region.rightBound = std::min(region.rightBound, x);
   }
   else if((distLeft < distRight) && (distLeft < distTop) && (distLeft < distBot))
   {
-    region.leftBound = std::max(region.leftBound, static_cast<int64_t>(pixel[0]));
+    region.leftBound = std::max(region.leftBound, x);
   }
   else if(distBot < distTop)
   {
-    region.bottomBound = std::min(region.bottomBound, static_cast<int64_t>(pixel[1]));
+    region.bottomBound = std::min(region.bottomBound, y);
   }
 
   cropMap[gridKey] = region;
