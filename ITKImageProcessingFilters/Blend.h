@@ -32,6 +32,8 @@
 
 #pragma once
 
+#include "itkSingleValuedCostFunction.h"
+
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/FilterParameters/IntVec2FilterParameter.h"
@@ -106,10 +108,6 @@ public:
   void setMaxIterations(uint value);
   Q_PROPERTY(uint MaxIterations READ getMaxIterations WRITE setMaxIterations)
 
-  IntVec2Type getOverlapAmt() const;
-  void setOverlapAmt(const IntVec2Type& value);
-  Q_PROPERTY(IntVec2Type OverlapAmt READ getOverlapAmt WRITE setOverlapAmt)
-
   double getLowTolerance() const;
   void setLowTolerance(double value);
   Q_PROPERTY(double LowTolerance READ getLowTolerance WRITE setLowTolerance)
@@ -118,9 +116,9 @@ public:
   void setHighTolerance(double value);
   Q_PROPERTY(double HighTolerance READ getHighTolerance WRITE setHighTolerance)
 
-  int getDegree() const;
-  void setDegree(int value);
-  Q_PROPERTY(int Degree READ getDegree WRITE setDegree)
+  int getDelta() const;
+  void setDelta(int value);
+  Q_PROPERTY(int Delta READ getDelta WRITE setDelta)
 
   bool getUseAmoebaOptimizer() const;
   void setUseAmoebaOptimizer(bool value);
@@ -278,6 +276,41 @@ protected:
   void initialize();
 
   /**
+   * @brief Parses a string of parameters separated by semicolons and returns a
+   * std::vector<double> of the corresponding values. Errors are generated if a
+   * problem occurs.
+   * @param paramStr
+   * @param paramName
+   * @return
+   */
+  std::vector<double> parseParameterStr(const QString& paramStr, const QString& paramName);
+
+  /**
+   * @brief Returns a vector of the default Px values
+   * @return
+   */
+  std::vector<double> getDefaultPx() const;
+
+  /**
+   * @brief Returns a vector of the default Py values
+   * @return
+   */
+  std::vector<double> getDefaultPy() const;
+
+  /**
+   * @brief Returns a vector the combined Px and Py values
+   * @return
+   */
+  std::vector<double> getPxyVec() const;
+
+  /**
+   * @brief Checks the montage requirements and emits the required error conditions.
+   * Returns true if all requirements pass. Returns false otherwise.
+   * @return
+   */
+  bool checkMontageRequirements();
+
+  /**
    * @brief Returns the name used for the internal grayscale array.
    * @return
    */
@@ -295,10 +328,16 @@ protected:
 
   /**
    * @brief Creates new DataContainers and warps the data by the FFT Convolution kernel generated.
-   * @param transformVector
+   * @param parameters
+   * @param imageDimX
+   * @param imageDimY
    */
-  void warpDataContainers(const std::vector<double>& transformVector, double imageDimX, double imageDimY);
+  void warpDataContainers(const itk::SingleValuedCostFunction::ParametersType& parameters, double imageDimX, double imageDimY);
 
+  /**
+   * @brief Returns the target image dimensions for the montage
+   * @return
+   */
   std::pair<double, double> getImageDims() const;
 
   /**
@@ -309,31 +348,20 @@ protected:
   size_t getSingleParamCount() const;
 
   /**
-   * @brief Returns the default parameter scaling / step size.
-   * This is a combination of getDefaultScalingX() and getDefaultScalingY().
+   * @brief Returns the default parameter step size.
+   * @param params
+   * @param imgDimX
+   * @param imgDimY
    * @return
    */
-  std::vector<double> getDefaultScaling() const;
-
-  /**
-   * @brief Gets the default Px  scaling / step size
-   * @return
-   */
-  std::vector<double> getDefaultScalingX() const;
-  
-  /**
-   * @brief Gets the default Py  scaling / step size
-   * @return
-   */
-  std::vector<double> getDefaultScalingY() const;
+  std::vector<double> getStepSizes(const std::vector<double>& params, size_t imgDimX, size_t imgDimY) const;
 
 private:
   QString m_MontageName;
   uint m_MaxIterations = 1000;
-  IntVec2Type m_OverlapAmt = {10, 10};
   double m_LowTolerance = 1E-2;
   double m_HighTolerance = 1E-2;
-  int m_Degree = 2;
+  int m_Delta = 5;
   bool m_UseAmoebaOptimizer = false;
   bool m_SpecifyInitialSimplex = true;
   QString m_PxStr = "0.0;0.0;0.0;1.0;0.0;0.0;0.0";

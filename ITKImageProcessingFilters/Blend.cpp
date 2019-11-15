@@ -78,6 +78,38 @@ using PixelValue_T = double;
 namespace
 {
 const QString InternalGrayscalePrefex = "_INTERNAL_Grayscale_";
+
+std::vector<double> convertParams2Vec(const FFTHelper::ParametersType& params)
+{
+  const size_t size = params.size();
+  std::vector<double> vec(size);
+  for(size_t i = 0; i < size; i++)
+  {
+    vec[i] = params[i];
+  }
+  return vec;
+}
+
+FFTHelper::ParametersType convertVec2Params(const std::vector<double>& vec)
+{
+  const size_t size = vec.size();
+  FFTHelper::ParametersType params(size);
+  for(size_t i = 0; i < size; i++)
+  {
+    params[i] = vec[i];
+  }
+  return params;
+}
+
+std::list<double> convertParams2List(const FFTHelper::ParametersType& params)
+{
+  std::list<double> list;
+  for(const auto& param : params)
+  {
+    list.push_back(param);
+  }
+  return list;
+}
 }
 
 uint Blend::GetIterationsFromStopDescription(const QString& stopDescription) const
@@ -127,13 +159,11 @@ void Blend::setupFilterParameters()
   FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_MONTAGE_STRUCTURE_SELECTION_FP("Montage Name", MontageName, FilterParameter::Category::Parameter, Blend));
-  parameters.push_back(SIMPL_NEW_INTEGER_FP("Degree", Degree, FilterParameter::Category::Parameter, Blend));
 
   QStringList linkedAmoebaProps{"MaxIterations", "OverlapAmt", "LowTolerance", "HighTolerance"};
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Amoeba Optimizer", UseAmoebaOptimizer, FilterParameter::Parameter, Blend, linkedAmoebaProps));
 
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Max Iterations", MaxIterations, FilterParameter::Category::Parameter, Blend));
-  parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Overlap Amount (Width, Height)", OverlapAmt, FilterParameter::Category::Parameter, Blend));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Function Convergence Tolerance", LowTolerance, FilterParameter::Category::Parameter, Blend));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Parameter Convergence Tolerance", HighTolerance, FilterParameter::Category::Parameter, Blend));
 
@@ -170,57 +200,20 @@ void Blend::dataCheck()
   clearErrorCode();
   clearWarningCode();
 
-  if(m_Degree < 0)
-  {
-    setErrorCondition(-66509, "The degree must be non-negative");
-  }
-
   if(m_SpecifyInitialSimplex)
   {
     // Need to make sure that the filter parameter for the initial guess
     // can be cast into actual numeric data
-    m_PxVec.clear();
-    for(const auto& coeff : m_PxStr.split(";"))
-    {
-      bool coerced = false;
-      m_PxVec.push_back(coeff.toDouble(&coerced));
-      if(!coerced)
-      {
-        QString str = QString("A Px coefficient (%1) could not be translated into a floating-point precision number").arg(coeff);
-        setErrorCondition(-66500, str);
-      }
-    }
-
-    // Need to make sure that the filter parameter for the initial guess
-    // can be cast into actual numeric data
-    m_PyVec.clear();
-    for(const auto& coeff : m_PyStr.split(";"))
-    {
-      bool coerced = false;
-      m_PyVec.push_back(coeff.toDouble(&coerced));
-      if(!coerced)
-      {
-        QString str = QString("A Py coefficient (%1) could not be translated into a floating-point precision number").arg(coeff);
-        setErrorCondition(-66500, str);
-      }
-    }
+    m_PxVec = parseParameterStr(m_PxStr, "Px");
+    m_PyVec = parseParameterStr(m_PyStr, "Py");
   }
   else
   {
-    size_t len = getSingleParamCount();
-    m_PxVec.resize(len);
-    m_PyVec.resize(len);
-    for(size_t i = 0; i < len; i++)
-    {
-      m_PxVec[i] = 0;
-      m_PyVec[i] = 0;
-    }
-
-    // Default value
-    m_PxVec[m_Degree + 1] = 1;
-    m_PyVec[1] = 1;
+    m_PxVec = getDefaultPx();
+    m_PyVec = getDefaultPy();
   }
 
+#if 0
   // This step would not be necessary if using Dave's strict polynomial array
   // Otherwise, there is a direct correlation between the degree of the transform polynomial
   // and how many coefficients should reside in the initial guess
@@ -235,59 +228,11 @@ void Blend::dataCheck()
     QString str = QString("Number of coefficients in Py (%1) is not compatible with degree number (req: %2)").arg(m_PyVec.size()).arg(len);
     setErrorCondition(-66400, str);
   }
+#endif
 
-  // Some overlap required
-  if(m_OverlapAmt[0] <= 0 || m_OverlapAmt[1] <= 0)
+  if(!checkMontageRequirements())
   {
-    setErrorCondition(-66600, "Overlap amount should be a greater than 0 in both dimensions");
-  }
-
-  // Requirements to avoid crashing
-  if(getDataContainerArray()->getDataContainers().empty())
-  {
-    setErrorCondition(-66710, "At least one DataContainer required");
     return;
-  }
-
-  AbstractMontageShPtr montage = getDataContainerArray()->getMontage(getMontageName());
-  if(nullptr == montage)
-  {
-    setErrorCondition(-66750, QString("Montage: %1 required").arg(getMontageName()));
-    return;
-  }
-
-  // All of the types in the chosen data container's image data arrays should be the same
-  for(const auto& dc : montage->getDataContainers())
-  {
-    if(nullptr == dc)
-    {
-      setErrorCondition(-66715, QString("Montage cannot contain null DataContainers"));
-      return;
-    }
-
-    AttributeMatrix::Pointer am = dc->getAttributeMatrix(m_AttributeMatrixName);
-    if(nullptr == am)
-    {
-      setErrorCondition(-66720, QString("AttributeMatrix: %1 required").arg(m_AttributeMatrixName));
-      return;
-    }
-
-    DataArray<Grayscale_T>::Pointer da = am->getAttributeArrayAs<DataArray<Grayscale_T>>(m_IPFColorsArrayName);
-    if(nullptr == da)
-    {
-      setErrorCondition(-66730, QString("DataArray: %1 required").arg(m_IPFColorsArrayName));
-      return;
-    }
-
-    QString typeName = da->getTypeAsString();
-    if(da->getComponentDimensions().size() > 1)
-    {
-      setErrorCondition(-66700, "Data array has unexpected dimensions");
-    }
-    else if(da->getTypeAsString() != typeName)
-    {
-      setErrorCondition(-66800, "Not all data attribute arrays are the same type");
-    }
   }
 
   // The data container holds a single output attribute matrix with 3 data arrays
@@ -304,10 +249,11 @@ void Blend::dataCheck()
     AttributeMatrixShPtr blendAM = blendDC->createNonPrereqAttributeMatrix(this, m_TransformMatrixName, {1}, AttributeMatrix::Type::Generic);
 
     // blendAM->createAndAddAttributeArray<UInt64ArrayType>(this, m_IterationsAAName, 0, {1});
-    blendAM->createNonPrereqArray<DoubleArrayType>(this, m_TransformArrayName, 0, {m_PxVec.size() + m_PyVec.size()});
+    blendAM->createNonPrereqArray<DoubleArrayType>(this, m_TransformArrayName, 0, {getSingleParamCount()});
     blendAM->createNonPrereqArray<DoubleArrayType>(this, m_ResidualArrayName, 0, {1});
   }
 
+  AbstractMontageShPtr montage = getDataContainerArray()->getMontage(getMontageName());
   QStringList dcNames = montage->getDataContainerNames();
   for(const QString& dcName : dcNames)
   {
@@ -348,46 +294,32 @@ void Blend::execute()
 
   // Generate internal grayscale values
   generateGrayscaleIPF();
-  const QString grayscaleArrayName = getGrayscaleArrayName();
-  std::vector<double> transformVector;
-  double imageDimX;
-  double imageDimY;
-
-  std::vector<double> xyParameters(m_PxVec.begin(), m_PxVec.end());
-  xyParameters.insert(xyParameters.end(), m_PyVec.begin(), m_PyVec.end());
+  std::vector<double> xyParameters = getPxyVec();
+  FFTHelper::ParametersType transformParams = ::convertVec2Params(xyParameters);
 
   if(m_UseAmoebaOptimizer)
   {
     // The optimizer needs an initial guess; this is supplied through a filter parameter
-    itk::AmoebaOptimizer::ParametersType initialParams(xyParameters.size());
-    itk::AmoebaOptimizer::ScalesType scales(xyParameters.size());
-    for(size_t idx = 0; idx < xyParameters.size(); ++idx)
-    {
-      initialParams[idx] = xyParameters[idx];
-      scales[idx] = 0.001;
-    }
-#if 1
-    // Set scaling for parameter step sizes
-    std::vector<double> defaultScales = getDefaultScaling();
-    for(size_t i = 0; i < defaultScales.size(); i++)
-    {
-      scales[i] = defaultScales[i];
-    }
-#endif
+    FFTHelper::ParametersType initialParams = ::convertVec2Params(xyParameters);
+
+    using CostFunctionType = FFTConvolutionCostFunction;
+    CostFunctionType implementation;
+    GridMontageShPtr gridMontage = std::dynamic_pointer_cast<GridMontage>(getDataContainerArray()->getMontage(getMontageName()));
+    implementation.Initialize(gridMontage, getDataContainerArray(), m_AttributeMatrixName, getGrayscaleArrayName());
+
+    // Calculate parameter step sizes
+    const double imgX = implementation.getImageDimX();
+    const double imgY = implementation.getImageDimY();
+    FFTHelper::ParametersType stepSizes = ::convertVec2Params(getStepSizes(xyParameters, imgX, imgY));
 
     itk::AmoebaOptimizer::Pointer optimizer = itk::AmoebaOptimizer::New();
     optimizer->SetMaximumNumberOfIterations(m_MaxIterations);
     optimizer->SetFunctionConvergenceTolerance(m_LowTolerance);
     optimizer->SetParametersConvergenceTolerance(m_HighTolerance);
     optimizer->SetInitialPosition(initialParams);
-    optimizer->SetScales(scales);
-    optimizer->SetOptimizeWithRestarts(true);
+    optimizer->SetInitialSimplexDelta(stepSizes);
+    //optimizer->SetOptimizeWithRestarts(true);
 
-    GridMontageShPtr gridMontage = std::dynamic_pointer_cast<GridMontage>(getDataContainerArray()->getMontage(getMontageName()));
-
-    using CostFunctionType = FFTConvolutionCostFunction;
-    CostFunctionType implementation;
-    implementation.Initialize(gridMontage, m_Degree, m_OverlapAmt, getDataContainerArray(), m_AttributeMatrixName, grayscaleArrayName);
     optimizer->SetCostFunction(&implementation);
     optimizer->MaximizeOn(); // Search for the greatest value
     optimizer->StartOptimization();
@@ -396,12 +328,7 @@ void Blend::execute()
     // to be obtained, but until then, we have to do some string parsing from the
     // optimizer's stop description
     QString stopReason = QString::fromStdString(optimizer->GetStopConditionDescription());
-    std::list<double> transform;
-    itk::AmoebaOptimizer::ParametersType finalParams = optimizer->GetCurrentPosition();
-    for(const auto& coeff : finalParams)
-    {
-      transform.push_back(coeff);
-    }
+    transformParams = optimizer->GetCurrentPosition();
 
     // cache value
     auto value = optimizer->GetValue();
@@ -417,7 +344,7 @@ void Blend::execute()
     notifyStatusMessage(initParamStr);
 
     QString finalParamStr = "Final Position: [ ";
-    for(auto param : finalParams)
+    for(auto param : transformParams)
     {
       finalParamStr += QString::number(param) + "; ";
     }
@@ -425,6 +352,7 @@ void Blend::execute()
     notifyStatusMessage(finalParamStr);
 
     notifyStatusMessage(QString::fromStdString(optimizer->GetStopConditionDescription()));
+    std::list<double> transform = ::convertParams2List(transformParams);
 
     qDebug() << "Initial Position: [ " << xyParameters << " ]";
     qDebug() << "Final Position: [ " << transform << " ]";
@@ -451,27 +379,80 @@ void Blend::execute()
       transformAM->getAttributeArrayAs<DoubleArrayType>(m_ResidualArrayName)->push_back(value);
       transformAM->getAttributeArrayAs<DoubleArrayType>(m_TransformArrayName)->setArray(transform);
     }
-
-    transformVector = {std::begin(transform), std::end(transform)};
   }
   else
   {
-    // std::tie(imageDimX, imageDimY) = getImageDims();
-    transformVector = {std::begin(xyParameters), std::end(xyParameters)};
-
     if(m_CreateTransformContainer)
     {
       AttributeMatrixShPtr transformAM = getDataContainerArray()->getDataContainer(m_BlendDCName)->getAttributeMatrix(m_TransformMatrixName);
-      transformAM->getAttributeArrayAs<DoubleArrayType>(m_TransformArrayName)->setArray({transformVector.begin(), transformVector.end()});
+      transformAM->getAttributeArrayAs<DoubleArrayType>(m_TransformArrayName)->setArray({transformParams.begin(), transformParams.end()});
     }
   }
 
   // Remove internal arrays
   deleteGrayscaleIPF();
 
+  double imageDimX;
+  double imageDimY;
   std::tie(imageDimX, imageDimY) = getImageDims();
   // Apply transform to dewarp data
-  warpDataContainers(transformVector, imageDimX, imageDimY);
+  warpDataContainers(transformParams, imageDimX, imageDimY);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool Blend::checkMontageRequirements()
+{
+  // Requirements to avoid crashing
+  if(getDataContainerArray()->getDataContainers().empty())
+  {
+    setErrorCondition(-66710, "At least one DataContainer required");
+    return false;
+  }
+
+  AbstractMontageShPtr montage = getDataContainerArray()->getMontage(getMontageName());
+  if(nullptr == montage)
+  {
+    setErrorCondition(-66750, QString("Montage: %1 required").arg(getMontageName()));
+    return false;
+  }
+
+  // All of the types in the chosen data container's image data arrays should be the same
+  for(const auto& dc : montage->getDataContainers())
+  {
+    if(nullptr == dc)
+    {
+      setErrorCondition(-66715, QString("Montage tiles must be empty"));
+      return false;
+    }
+
+    AttributeMatrix::Pointer am = dc->getAttributeMatrix(m_AttributeMatrixName);
+    if(nullptr == am)
+    {
+      setErrorCondition(-66720, QString("AttributeMatrix: %1 / %2 required").arg(dc->getName()).arg(m_AttributeMatrixName));
+      return false;
+    }
+
+    DataArray<Grayscale_T>::Pointer da = am->getAttributeArrayAs<DataArray<Grayscale_T>>(m_IPFColorsArrayName);
+    if(nullptr == da)
+    {
+      setErrorCondition(-66730, QString("DataArray: %1 / %2 / %3 required").arg(dc->getName()).arg(m_AttributeMatrixName).arg(m_IPFColorsArrayName));
+      return false;
+    }
+
+    QString typeName = da->getTypeAsString();
+    if(da->getComponentDimensions().size() > 1)
+    {
+      setErrorCondition(-66700, "Data array has unexpected dimensions");
+    }
+    else if(da->getTypeAsString() != typeName)
+    {
+      setErrorCondition(-66800, "Not all data attribute arrays are the same type");
+    }
+  }
+
+  return true;
 }
 
 // -----------------------------------------------------------------------------
@@ -479,81 +460,111 @@ void Blend::execute()
 // -----------------------------------------------------------------------------
 size_t Blend::getSingleParamCount() const
 {
-  return FFTHelper::getReqPartialParameters(m_Degree);
+  return FFTHelper::getReqPartialParameterSize();
   //return static_cast<size_t>(m_Degree * m_Degree + 2 * m_Degree + 1);
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-std::vector<double> Blend::getDefaultScaling() const
+double calcDelta(double maxDelta, double param, double mMax)
 {
-  std::vector<double> xScaling = getDefaultScalingX();
-  std::vector<double> yScaling = getDefaultScalingY();
-
-  std::vector<double> scales(xScaling.begin(), xScaling.end());
-  scales.insert(scales.end(), yScaling.begin(), yScaling.end());
-
-  return scales;
+  return maxDelta / mMax - param;
+  //double mDelta = mMax * param - maxDelta;
+  //return mDelta / mMax;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::vector<double> Blend::getDefaultScalingX() const
+std::vector<double> Blend::getStepSizes(const std::vector<double>& params, size_t imgDimX, size_t imgDimY) const
 {
-  const size_t count = getSingleParamCount();
-  std::vector<double> scales(count);
+  const size_t offset = FFTHelper::getReqPartialParameterSize();
+  std::vector<double> stepSizes(params.size());
+  
+  size_t xMax = (imgDimX / 2) * (imgDimX / 2);
+  size_t yMax = (imgDimY / 2) * (imgDimY / 2);
 
-  constexpr double epsilon = itk::NumericTraits<double>::epsilon() + 1e-15;
-  constexpr double scalePow = 0.1;
-  for(size_t x = 0; x < m_Degree; x++)
-  {
-    double xScale = std::pow(scalePow, x);
-    for(size_t y = 0; y < m_Degree; y++)
-    {
-      double yPrime = (y + 1) * (y + 1);
-      double yScale = std::pow(scalePow, yPrime);
-      size_t id = x * (m_Degree) + y;
-      double scale = xScale * yScale;
-      scales[id] = std::max(scale, epsilon);
-    }
-  }
+  // Px
+  stepSizes[0] = calcDelta(m_Delta, params[0], xMax);
+  stepSizes[1] = calcDelta(m_Delta, params[1], yMax);
+  stepSizes[2] = calcDelta(m_Delta, params[2], xMax * xMax);
+  stepSizes[3] = calcDelta(m_Delta, params[3], yMax * yMax);
+  stepSizes[4] = calcDelta(m_Delta, params[4], xMax * yMax);
+  stepSizes[5] = calcDelta(m_Delta, params[5], xMax * xMax * yMax);
+  stepSizes[6] = calcDelta(m_Delta, params[6], xMax * yMax * yMax);
 
-  scales[0] = epsilon;
-  scales[count - 1] = epsilon;
+  // Py
+  stepSizes[7] = calcDelta(m_Delta, params[7], xMax);
+  stepSizes[8] = calcDelta(m_Delta, params[8], yMax);
+  stepSizes[9] = calcDelta(m_Delta, params[9], xMax * xMax);
+  stepSizes[10] = calcDelta(m_Delta, params[10], yMax * yMax);
+  stepSizes[11] = calcDelta(m_Delta, params[11], xMax * yMax);
+  stepSizes[12] = calcDelta(m_Delta, params[12], xMax * xMax * yMax);
+  stepSizes[13] = calcDelta(m_Delta, params[13], xMax * yMax * yMax);
 
-  return scales;
+  return stepSizes;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::vector<double> Blend::getDefaultScalingY() const
+std::vector<double> Blend::parseParameterStr(const QString& paramStr, const QString& paramName)
 {
-  const size_t count = getSingleParamCount();
-  std::vector<double> scales(count);
-
-  constexpr double epsilon = itk::NumericTraits<double>::epsilon() + 1e-15;
-  constexpr double scalePow = 0.1;
-  for(size_t x = 0; x < m_Degree; x++)
+  std::vector<double> params;
+  for(const auto& coeff : paramStr.split(";"))
   {
-    double xPrime = (x + 1) * (x + 1);
-    double xScale = std::pow(scalePow, xPrime);
-    for(size_t y = 0; y < m_Degree; y++)
+    bool coerced = false;
+    params.push_back(coeff.toDouble(&coerced));
+    if(!coerced)
     {
-      double yScale = std::pow(scalePow, y);
-      size_t id = x * (m_Degree) + y;
-      double scale = xScale * yScale;
-      scales[id] = std::max(scale, epsilon);
+      QString str = QString("A %1 coefficient (%2) could not be translated into a floating-point precision number").arg(paramName).arg(coeff);
+      setErrorCondition(-66500, str);
     }
   }
 
-  scales[0] = epsilon;
-  scales[1] = 1;
-  scales[count - 1] = epsilon;
+  size_t len = getSingleParamCount();
+  if(len != params.size())
+  {
+    QString str = QString("Number of coefficients in %1 (%2) does not match the required amount (req: %3)").arg(paramName).arg(params.size()).arg(len);
+    setErrorCondition(-66400, str);
+  }
 
-  return scales;
+  return params;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+std::vector<double> Blend::getDefaultPx() const
+{
+  size_t len = getSingleParamCount();
+  std::vector<double> px(len, 0);
+  px[0] = 1;
+  return px;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+std::vector<double> Blend::getDefaultPy() const
+{
+  size_t len = getSingleParamCount();
+  std::vector<double> py(len, 0);
+  py[1] = 1;
+  return py;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+std::vector<double> Blend::getPxyVec() const
+{
+  size_t halfSize = getSingleParamCount();
+  std::vector<double> pxy(2 * halfSize);
+  for(size_t i = 0; i < halfSize; i++)
+  {
+    pxy[i] = m_PxVec[i];
+    pxy[i + halfSize] = m_PyVec[i];
+  }
+  return pxy;
 }
 
 // -----------------------------------------------------------------------------
@@ -616,77 +627,53 @@ void Blend::deleteGrayscaleIPF()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+FFTHelper::PixelTypei pixelTypeFromSizeVec(const SizeVec2Type& sizeVec)
+{
+  return FFTHelper::PixelTypei{ static_cast<int64_t>(sizeVec[0]), static_cast<int64_t>(sizeVec[1]) };
+}
+SizeVec2Type pixelTypeToSizeVec(const FFTHelper::PixelTypei& pixelType)
+{
+  return SizeVec2Type(static_cast<size_t>(pixelType[0]), static_cast<size_t>(pixelType[1]));
+}
+
 size_t flatten(const SizeVec2Type& xyPos, const SizeVec3Type& dimensions)
 {
   const size_t x = xyPos[0];
   const size_t y = xyPos[1];
 
   const size_t width = dimensions[0];
-  //  const size_t height = dimensions[1];
 
   return x + y * width;
 }
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-double pow(double base, size_t pow)
+size_t flatten(const FFTHelper::PixelTypei& xyPos, const SizeVec3Type& dimensions)
 {
-  double val = 1;
-  for(size_t i = 0; i < pow; i++)
-  {
-    val *= base;
-  }
-
-  return val;
+  return flatten(pixelTypeToSizeVec(xyPos), dimensions);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 template <typename T>
-void transformDataPixel(int degree, double x_trans, double y_trans, const SizeVec2Type& newPixel, const std::vector<double>& transformVector, const SizeVec3Type& dimensions,
+void transformDataPixel(double x_trans, double y_trans, const SizeVec2Type& newPixel, const FFTHelper::ParametersType& parameters, const SizeVec3Type& dimensions,
                         const typename DataArray<T>::Pointer& da, const typename DataArray<T>::Pointer& tempDACopy)
 {
-  // using PixelTyped = std::array<double, 2>;
-
-  const std::array<double, 2> newPrime = {newPixel[0] - x_trans, newPixel[1] - y_trans};
-  const double newXPrime = newPrime[0];
-  const double newYPrime = newPrime[1];
-
-  // old' = Ei(Ej(aij * x^i * y^j)
-  std::array<double, 2> oldPrime{0.0, 0.0};
-  const size_t yInit = (degree * degree) + (2 * degree + 1);
-  for(size_t i = 0; i <= degree; i++)
-  {
-    const double xVal = pow(newXPrime, i);
-    for(size_t j = 0; j <= degree; j++)
-    {
-      const double yVal = pow(newYPrime, j);
-      const size_t xOffset = i * (degree + 1) + j;
-      const size_t yOffset = xOffset + yInit;
-      oldPrime[0] += transformVector[xOffset] * xVal * yVal;
-      oldPrime[1] += transformVector[yOffset] * xVal * yVal;
-    }
-  }
-
-  const int64_t oldXUnbound = static_cast<int64_t>(std::floor(oldPrime[0] + x_trans));
-  const int64_t oldYUnbound = static_cast<int64_t>(std::floor(oldPrime[1] + y_trans));
+  FFTHelper::PixelTypei offset = FFTHelper::pixelType(x_trans, y_trans);
+  FFTHelper::PixelTypei oldPixelIndex = FFTHelper::getOldIndex(FFTHelper::pixelType(newPixel[0], newPixel[1]), offset, parameters);
 
   auto compDims = tempDACopy->getComponentDimensions();
   size_t numComponents = std::accumulate(compDims.begin(), compDims.end(), 0);
   size_t newIndex = flatten(newPixel, dimensions);
 
   // Cannot flatten invalid { X,Y } positions
-  if(oldXUnbound < 0 || oldYUnbound < 0 || oldXUnbound >= dimensions[0] || oldYUnbound >= dimensions[1])
+  if(oldPixelIndex[0] < 0 || oldPixelIndex[1] < 0 || oldPixelIndex[0] >= dimensions[0] || oldPixelIndex[1] >= dimensions[1])
   {
-    typename std::vector<T> blankTuple(numComponents, 0);
+    T initValue = tempDACopy->getInitValue();
+    typename std::vector<T> blankTuple(numComponents, initValue);
     da->setTuple(newIndex, blankTuple);
     return;
   }
 
-  SizeVec2Type oldPixel{static_cast<size_t>(oldXUnbound), static_cast<size_t>(oldYUnbound)};
-  size_t oldIndex = flatten(oldPixel, dimensions);
+  size_t oldIndex = flatten(oldPixelIndex, dimensions);
   if((oldIndex >= da->getNumberOfTuples()) || (newIndex >= da->getNumberOfTuples()))
   {
     return;
@@ -702,7 +689,7 @@ void transformDataPixel(int degree, double x_trans, double y_trans, const SizeVe
 //
 // -----------------------------------------------------------------------------
 template <typename T>
-void transformDataArray(int degree, const std::vector<double>& transformVector, const SizeVec3Type& dimensions, double x_trans, double y_trans, const typename DataArray<T>::Pointer& da)
+void transformDataArray(const FFTHelper::ParametersType& parameters, const SizeVec3Type& dimensions, double x_trans, double y_trans, const typename DataArray<T>::Pointer& da)
 {
   // Do not resize items that do not match the geometry.
   size_t flattenedDims = std::accumulate(dimensions.begin(), dimensions.end(), 1, std::multiplies<double>());
@@ -728,7 +715,7 @@ void transformDataArray(int degree, const std::vector<double>& transformVector, 
     {
       SizeVec2Type newPixel{x, y};
 
-      fn = std::bind(&transformDataPixel<T>, degree, x_trans, y_trans, newPixel, transformVector, dimensions, da, daCopy);
+      fn = std::bind(&transformDataPixel<T>, x_trans, y_trans, newPixel, parameters, dimensions, da, daCopy);
       taskAlg.execute(fn);
     }
   }
@@ -738,64 +725,64 @@ void transformDataArray(int degree, const std::vector<double>& transformVector, 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void transformIDataArray(int degree, const std::vector<double>& transformVector, const SizeVec3Type& dimensions, double x_trans, double y_trans, const IDataArray::Pointer& da)
+void transformIDataArray(const FFTHelper::ParametersType& parameters, const SizeVec3Type& dimensions, double x_trans, double y_trans, const IDataArray::Pointer& da)
 {
   if(std::dynamic_pointer_cast<Int8ArrayType>(da))
   {
     Int8ArrayType::Pointer array = std::dynamic_pointer_cast<Int8ArrayType>(da);
-    transformDataArray<int8_t>(degree, transformVector, dimensions, x_trans, y_trans, array);
+    transformDataArray<int8_t>(parameters, dimensions, x_trans, y_trans, array);
   }
   else if(std::dynamic_pointer_cast<UInt8ArrayType>(da))
   {
     UInt8ArrayType::Pointer array = std::dynamic_pointer_cast<UInt8ArrayType>(da);
-    transformDataArray<uint8_t>(degree, transformVector, dimensions, x_trans, y_trans, array);
+    transformDataArray<uint8_t>(parameters, dimensions, x_trans, y_trans, array);
   }
   else if(std::dynamic_pointer_cast<Int16ArrayType>(da))
   {
     Int16ArrayType::Pointer array = std::dynamic_pointer_cast<Int16ArrayType>(da);
-    transformDataArray<int16_t>(degree, transformVector, dimensions, x_trans, y_trans, array);
+    transformDataArray<int16_t>(parameters, dimensions, x_trans, y_trans, array);
   }
   else if(std::dynamic_pointer_cast<UInt16ArrayType>(da))
   {
     UInt16ArrayType::Pointer array = std::dynamic_pointer_cast<UInt16ArrayType>(da);
-    transformDataArray<uint16_t>(degree, transformVector, dimensions, x_trans, y_trans, array);
+    transformDataArray<uint16_t>(parameters, dimensions, x_trans, y_trans, array);
   }
   else if(std::dynamic_pointer_cast<Int32ArrayType>(da))
   {
     Int32ArrayType::Pointer array = std::dynamic_pointer_cast<Int32ArrayType>(da);
-    transformDataArray<int32_t>(degree, transformVector, dimensions, x_trans, y_trans, array);
+    transformDataArray<int32_t>(parameters, dimensions, x_trans, y_trans, array);
   }
   else if(std::dynamic_pointer_cast<UInt32ArrayType>(da))
   {
     UInt32ArrayType::Pointer array = std::dynamic_pointer_cast<UInt32ArrayType>(da);
-    transformDataArray<uint32_t>(degree, transformVector, dimensions, x_trans, y_trans, array);
+    transformDataArray<uint32_t>(parameters, dimensions, x_trans, y_trans, array);
   }
   else if(std::dynamic_pointer_cast<Int64ArrayType>(da))
   {
     Int64ArrayType::Pointer array = std::dynamic_pointer_cast<Int64ArrayType>(da);
-    transformDataArray<int64_t>(degree, transformVector, dimensions, x_trans, y_trans, array);
+    transformDataArray<int64_t>(parameters, dimensions, x_trans, y_trans, array);
   }
   else if(std::dynamic_pointer_cast<UInt64ArrayType>(da))
   {
     UInt64ArrayType::Pointer array = std::dynamic_pointer_cast<UInt64ArrayType>(da);
-    transformDataArray<uint64_t>(degree, transformVector, dimensions, x_trans, y_trans, array);
+    transformDataArray<uint64_t>(parameters, dimensions, x_trans, y_trans, array);
   }
   else if(std::dynamic_pointer_cast<FloatArrayType>(da))
   {
     FloatArrayType::Pointer array = std::dynamic_pointer_cast<FloatArrayType>(da);
-    transformDataArray<float>(degree, transformVector, dimensions, x_trans, y_trans, array);
+    transformDataArray<float>(parameters, dimensions, x_trans, y_trans, array);
   }
   else if(std::dynamic_pointer_cast<DoubleArrayType>(da))
   {
     DoubleArrayType::Pointer array = std::dynamic_pointer_cast<DoubleArrayType>(da);
-    transformDataArray<double>(degree, transformVector, dimensions, x_trans, y_trans, array);
+    transformDataArray<double>(parameters, dimensions, x_trans, y_trans, array);
   }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Blend::warpDataContainers(const std::vector<double>& transformVector, double imageDimX, double imageDimY)
+void Blend::warpDataContainers(const FFTHelper::ParametersType& parameters, double imageDimX, double imageDimY)
 {
   // Duplicate the DataContainers used and Warp them based on the transformVector generated.
   AbstractMontage::Pointer montage = getDataContainerArray()->getMontage(m_MontageName);
@@ -815,8 +802,10 @@ void Blend::warpDataContainers(const std::vector<double>& transformVector, doubl
     {
       for(const auto& da : *am)
       {
-        transformIDataArray(m_Degree, transformVector, dimensions, x_trans, y_trans, da);
+        transformIDataArray(parameters, dimensions, x_trans, y_trans, da);
       }
+      //DataArray<bool>::Pointer maskArray = createMaskArray(parameters, dimensions, x_trans, y_trans, m_MaskArrayName);
+      //am->addOrReplaceAttributeArray(maskArray);
     }
   }
 }
@@ -833,8 +822,8 @@ std::pair<double, double> Blend::getImageDims() const
     return {0, 0};
   }
 
-  size_t targetColumn = gridMontage->getColumnCount() > 1 ? 1 : 0;
-  size_t targetRow = gridMontage->getRowCount() > 1 ? 1 : 0;
+  size_t targetColumn = gridMontage->getColumnCount() > 2 ? 1 : 0;
+  size_t targetRow = gridMontage->getRowCount() > 2 ? 1 : 0;
 
   GridTileIndex tileX = gridMontage->getTileIndex(0, targetColumn);
   ImageGeom::Pointer imgGeomX = gridMontage->getDataContainer(tileX)->getGeometryAs<ImageGeom>();
@@ -998,6 +987,7 @@ void Blend::setMaxIterations(uint value)
   m_MaxIterations = value;
 }
 
+#if 0
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -1013,6 +1003,7 @@ void Blend::setOverlapAmt(const IntVec2Type& value)
 {
   m_OverlapAmt = value;
 }
+#endif
 
 // -----------------------------------------------------------------------------
 //
@@ -1049,17 +1040,17 @@ void Blend::setHighTolerance(double value)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int Blend::getDegree() const
+int Blend::getDelta() const
 {
-  return m_Degree;
+  return m_Delta;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Blend::setDegree(int value)
+void Blend::setDelta(int value)
 {
-  m_Degree = value;
+  m_Delta = value;
 }
 
 // -----------------------------------------------------------------------------

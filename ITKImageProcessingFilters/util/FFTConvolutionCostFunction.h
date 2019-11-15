@@ -54,15 +54,32 @@ struct RegionBounds;
 
 namespace FFTHelper
 {
-constexpr uint32_t getReqPartialParameters(size_t degree)
+using PixelTypei = std::array<int64_t, 2>;
+using ParametersType = itk::SingleValuedCostFunction::ParametersType;
+
+/**
+ * @brief Constructs a PixelTypei from x and y parameters
+ * @param x
+ * @param y
+ * @return
+ */
+PixelTypei pixelType(int64_t x, int64_t y);
+PixelTypei pixelType(size_t x, size_t y);
+PixelTypei pixelType(double x, double y);
+
+constexpr uint32_t getReqPartialParameterSize()
 {
-  size_t deg1 = degree - 1;
-  return static_cast<uint32_t>(deg1 * deg1 + 2 * deg1 + 1);
+  return 7;
+  //size_t deg1 = degree - 1;
+  //return static_cast<uint32_t>(deg1 * deg1 + 2 * deg1 + 1);
 }
-constexpr uint32_t getReqParameters(size_t degree)
+constexpr uint32_t getReqParameterSize()
 {
-  return 2 * getReqPartialParameters(degree);
+  return 2 * getReqPartialParameterSize();
 }
+PixelTypei getOldIndex(PixelTypei newCoords, PixelTypei offset, const ParametersType& parameters);
+int64_t px(PixelTypei newCoords, PixelTypei offset, const ParametersType& parameters);
+int64_t py(PixelTypei newCoords, PixelTypei offset, const ParametersType& parameters);
 } // namespace FFTHelper
 
 /**
@@ -113,16 +130,12 @@ public:
 
   /**
    * @brief Initializes the cost function based on a given set of values.
-   * @param chosenDataContainers
-   * @param rowChar
-   * @param colChar
-   * @param degree
-   * @param overlapAmt
+   * @param montage
    * @param dca
    * @param amName
    * @param daName
    */
-  void Initialize(const GridMontageShPtr& montage, int degree, const IntVec2Type& overlapAmt, const DataContainerArrayShPtr& dca, const QString& amName, const QString& daName);
+  void Initialize(const GridMontageShPtr& montage, const DataContainerArrayShPtr& dca, const QString& amName, const QString& daName);
 
   /**
    * @brief This method is called by Initialize as a parallel task algorithm operating on each DataContainer.
@@ -132,40 +145,13 @@ public:
    */
   void InitializeDataContainer(const GridMontageShPtr& montage, size_t row, size_t column, const QString& amName, const QString& daName);
 
+#if 0
   /**
    * @brief This method is called by Initialize as a parallel task algorithm operating on each image in the ImageGrid to calculate the overlap amounts.
    * @param image
    */
   void InitializeCellOverlaps(const ImageGrid::value_type& image);
-
-  /**
-   * @brief Creates additional tiles along the right and bottom.
-   * These tiles are filled with the top of row 0 and the left of column 0.
-   * @param montage
-   * @param amName
-   * @param daName
-   */
-  void initializeCropOverlaps(const GridMontageShPtr& montage, const QString& amName, const QString& daName);
-
-  /**
-   * @brief Creates the right-most "missing data" column from the first column.
-   * Each call initializes one tile for the specified row.
-   * @param montage
-   * @param row
-   * @param amName
-   * @param daName
-   */
-  void initializeCropColImg(const GridMontageShPtr& montage, size_t row, const QString& amName, const QString& daName);
-
-  /**
-   * @brief Creates the bottom-most "missing data" row from the first row.
-   * Each call initializes one tile for the specified column.
-   * @param montage
-   * @param col
-   * @param amName
-   * @param daName
-   */
-  void initializeCropRowImg(const GridMontageShPtr& montage, size_t col, const QString& amName, const QString& daName);
+#endif
 
   /**
    * @brief Override for itk::SingleValuedCostFunction::GetDerivative that throws an exception.
@@ -198,27 +184,27 @@ public:
 
   /**
    * @brief This method is called by applyTransformation as a parallel task to apply the transform to each pixel.
-   * @param tolerance
    * @param parameters
    * @param inputImage
-   * @param bufferedRegion
-   * @param iter
+   * @param index
+   * @param gridKey
+   * @param cropMap
    */
-  void applyTransformationPixel(double tolerance, const ParametersType& parameters, const InputImage::Pointer& inputImage,
-                                const InputImage::RegionType& bufferedRegion, itk::ImageRegionIterator<InputImage> iter, const GridKey& gridKey, CropMap& cropMap) const;
+  void applyTransformationPixel(const ParametersType& parameters, const InputImage::Pointer& inputImage,
+                                PixelCoord index, const GridKey& gridKey, CropMap& cropMap) const;
 
   /**
    * @brief This method is called by applyTransformationPixel as a parallel task calculating pixel coordinates.
    * @param parameters
+   * @param inputImage
+   * @param gridKey
+   * @param cropMap
    * @param pixel
-   * @param idx
    * @param x_trans
    * @param y_trans
-   * @param x_ref
-   * @param y_ref
    */
-  void calculatePixelCoordinates(const ParametersType& parameters, const InputImage::Pointer& inputImage, const GridKey& gridKey, CropMap& cropMap,
-                                 const PixelCoord& pixel, double x_trans, double y_trans, double tolerance, double lastXIndex, double lastYIndex) const;
+  void calculatePixelCoordinates(const ParametersType& parameters, const InputImage::Pointer& inputImage, const GridKey& gridKey, CropMap& cropMap, const PixelCoord& pixel, double x_trans,
+                                 double y_trans) const;
 
   /**
    * @brief Adjusts the given CropMap so that the RegionBounds for the given GridKey excludes the provided pixel coordinate.
@@ -237,6 +223,7 @@ public:
    */
   void updateCropMapBounds(const InputImage::Pointer& inputImage, CropMap& cropMap) const;
 
+#if 0
   /**
    * @brief Crops the provided ImageGrid based on the given OverlapPair and CropMap.
    * The CropMap is used to determine the bounds of the other Image specified by the
@@ -260,6 +247,17 @@ public:
    * @param cropMap
    */
   void cropOverlapVertical(OverlapPair& overlap, const CropMap& cropMap) const;
+#endif
+
+  /**
+   * @brief Creates OverlapPairs from the given CropMap.
+   * @param cropMap
+   * @return
+   */
+  OverlapPairs createOverlapPairs(const CropMap& cropMap) const;
+
+  RegionPair createRightRegionPairs(const RegionBounds& left, const RegionBounds& right) const;
+  RegionPair createBottomRegionPairs(const RegionBounds& top, const RegionBounds& bottom) const;
 
   /**
    * @brief Creates and returns a pair of images containing the overlap section based on the given parameters.
@@ -324,18 +322,14 @@ private:
    * @brief Checks if the given RegionBounds are valid.
    * @param index
    * @param bounds
+   * @param cropMap
    * @return
    */
-  bool isRegionValid(const GridKey& index, const RegionBounds& bounds) const;
+  bool isRegionValid(const GridKey& index, const RegionBounds& bounds, const CropMap& cropMap) const;
 
   // --------------------------------------------------------------------------
   // Variables
   GridMontageShPtr m_Montage = nullptr;
-  size_t m_Degree = 2;
-  size_t m_OverlapXAmt;
-  size_t m_OverlapYAmt;
-  //std::vector<std::pair<size_t, size_t>> m_IJ;
-  OverlapPairs m_Overlaps;
   ImageGrid m_ImageGrid;
   double m_ImageDim_x;
   double m_ImageDim_y;
