@@ -1,5 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2009-2016 BlueQuartz Software, LLC
+ * Copyright (c) 2019 BlueQuartz Software, LLC
+ * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -11,9 +12,9 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
- * contributors may be used to endorse or promote products derived from this software
- * without specific prior written permission.
+ * Neither the names of any of the BlueQuartz Software contributors
+ * may be used to endorse or promote products derived from this software without
+ * specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -26,10 +27,6 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * The code contained herein was partially funded by the followig contracts:
- *    United States Air Force Prime Contract FA8650-07-D-5800
- *    United States Air Force Prime Contract FA8650-10-D-5210
- *    United States Prime Contract Navy N00173-07-C-2068
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
@@ -39,28 +36,27 @@
 
 #include <QtCore/QJsonObject>
 
+#include "SIMPLib/Common/SIMPLArray.hpp"
 #include "SIMPLib/FilterParameters/FilterParameter.h"
 
-#include "VectorFileListInfo.h"
-
 /**
- * @brief SIMPL_NEW_FILELISTINFO_FP This macro is a short-form way of instantiating an instance of
+ * @brief SIMPL_NEW_EBSDWARPPOLYNOMIALFP This macro is a short-form way of instantiating an instance of
  * FileListInfoFilterParameter. There are 4 required parameters that are always passed to this macro
  * in the following order: HumanLabel, PropertyName, Category, FilterName (class name).
  *
  * Therefore, the macro should be written like this (this is a concrete example):
- * SIMPL_NEW_FILELISTINFO_FP("HumanLabel", PropertyName, Category, FilterName)
+ * SIMPL_NEW_EBSDWARPPOLYNOMIALFP("HumanLabel", PropertyName, Category, FilterName)
  *
  * Example 1 (instantiated within a filter called [GenericExample](@ref genericexample)):
- * SIMPL_NEW_FILELISTINFO_FP("Input File List", InputFileListInfo, FilterParameter::Parameter, GenericExample);
+ * SIMPL_NEW_EBSDWARPPOLYNOMIALFP("Input File List", InputFileListInfo, FilterParameter::Parameter, GenericExample);
  */
-#define SIMPL_NEW_VECTORFILELISTINFO_FP(...)                                                                                                                                                           \
-  SIMPL_EXPAND(_FP_GET_OVERRIDE(__VA_ARGS__, SIMPL_NEW_FP_9, SIMPL_NEW_FP_8, SIMPL_NEW_FP_7, SIMPL_NEW_FP_6, SIMPL_NEW_FP_5, SIMPL_NEW_FP_4)(ImportVectorImageStackFilterParameter, __VA_ARGS__))
+#define SIMPL_NEW_EBSDWARPPOLYNOMIAL_FP(...)                                                                                                                                                           \
+  SIMPL_EXPAND(_FP_GET_OVERRIDE(__VA_ARGS__, SIMPL_NEW_FP_9, SIMPL_NEW_FP_8, SIMPL_NEW_FP_7, SIMPL_NEW_FP_6, SIMPL_NEW_FP_5, SIMPL_NEW_FP_4)(EbsdWarpPolynomialFilterParameter, __VA_ARGS__))
 
-class ImportVectorImageStackFilterParameter : public FilterParameter
+class EbsdWarpPolynomialFilterParameter : public FilterParameter
 {
 public:
-  using Self = ImportVectorImageStackFilterParameter;
+  using Self = EbsdWarpPolynomialFilterParameter;
   using Pointer = std::shared_ptr<Self>;
   using ConstPointer = std::shared_ptr<const Self>;
   using WeakPointer = std::weak_ptr<Self>;
@@ -70,16 +66,16 @@ public:
   static Pointer New();
 
   /**
-   * @brief Returns the name of the class for ImportVectorImageStackFilterParameter
+   * @brief Returns the name of the class for EbsdWarpPolynomialFilterParameter
    */
   QString getNameOfClass() const override;
   /**
-   * @brief Returns the name of the class for ImportVectorImageStackFilterParameter
+   * @brief Returns the name of the class for EbsdWarpPolynomialFilterParameter
    */
   static QString ClassName();
 
-  using SetterCallbackType = std::function<void(VectorFileListInfo_t)>;
-  using GetterCallbackType = std::function<VectorFileListInfo_t(void)>;
+  using SetterCallbackType = std::function<void(FloatVec7Type)>;
+  using GetterCallbackType = std::function<FloatVec7Type(void)>;
 
   /**
    * @brief New This function instantiates an instance of the FileListInfoFilterParameter. Although this
@@ -97,10 +93,10 @@ public:
   * that this FilterParameter subclass represents.
    * @return
    */
-  static Pointer New(const QString& humanLabel, const QString& propertyName, const VectorFileListInfo_t& defaultValue, Category category, const SetterCallbackType& setterCallback,
+  static Pointer New(const QString& humanLabel, const QString& propertyName, const FloatVec7Type& defaultValue, Category category, const SetterCallbackType& setterCallback,
                      const GetterCallbackType& getterCallback, int groupIndex = -1);
 
-  ~ImportVectorImageStackFilterParameter() override;
+  ~EbsdWarpPolynomialFilterParameter() override;
 
   QString getWidgetType() const override;
 
@@ -124,12 +120,12 @@ public:
   /**
    * @brief Setter property for SetterCallback
    */
-  void setSetterCallback(const ImportVectorImageStackFilterParameter::SetterCallbackType& value);
+  void setSetterCallback(const EbsdWarpPolynomialFilterParameter::SetterCallbackType& value);
   /**
    * @brief Getter property for SetterCallback
    * @return Value of SetterCallback
    */
-  ImportVectorImageStackFilterParameter::SetterCallbackType getSetterCallback() const;
+  EbsdWarpPolynomialFilterParameter::SetterCallbackType getSetterCallback() const;
 
   /**
    * @param GetterCallback The method in the AbstractFilter subclass that <i>gets</i> the value of the property
@@ -139,23 +135,25 @@ public:
   /**
    * @brief Setter property for GetterCallback
    */
-  void setGetterCallback(const ImportVectorImageStackFilterParameter::GetterCallbackType& value);
+  void setGetterCallback(const EbsdWarpPolynomialFilterParameter::GetterCallbackType& value);
   /**
    * @brief Getter property for GetterCallback
    * @return Value of GetterCallback
    */
-  ImportVectorImageStackFilterParameter::GetterCallbackType getGetterCallback() const;
+  EbsdWarpPolynomialFilterParameter::GetterCallbackType getGetterCallback() const;
 
 protected:
-  ImportVectorImageStackFilterParameter();
+  EbsdWarpPolynomialFilterParameter();
 
 private:
-  ImportVectorImageStackFilterParameter::SetterCallbackType m_SetterCallback = {};
-  ImportVectorImageStackFilterParameter::GetterCallbackType m_GetterCallback = {};
+  EbsdWarpPolynomialFilterParameter::SetterCallbackType m_SetterCallback = {};
+  EbsdWarpPolynomialFilterParameter::GetterCallbackType m_GetterCallback = {};
 
 public:
-  ImportVectorImageStackFilterParameter(const ImportVectorImageStackFilterParameter&) = delete;            // Copy Constructor Not Implemented
-  ImportVectorImageStackFilterParameter(ImportVectorImageStackFilterParameter&&) = delete;                 // Move Constructor Not Implemented
-  ImportVectorImageStackFilterParameter& operator=(const ImportVectorImageStackFilterParameter&) = delete; // Copy Assignment Not Implemented
-  ImportVectorImageStackFilterParameter& operator=(ImportVectorImageStackFilterParameter&&) = delete;      // Move Assignment Not Implemented
+  EbsdWarpPolynomialFilterParameter(const EbsdWarpPolynomialFilterParameter&) = delete;            // Copy Constructor Not Implemented
+  EbsdWarpPolynomialFilterParameter(EbsdWarpPolynomialFilterParameter&&) = delete;                 // Move Constructor Not Implemented
+  EbsdWarpPolynomialFilterParameter& operator=(const EbsdWarpPolynomialFilterParameter&) = delete; // Copy Assignment Not Implemented
+  EbsdWarpPolynomialFilterParameter& operator=(EbsdWarpPolynomialFilterParameter&&) = delete;      // Move Assignment Not Implemented
 };
+
+Q_DECLARE_METATYPE(FloatVec7Type)

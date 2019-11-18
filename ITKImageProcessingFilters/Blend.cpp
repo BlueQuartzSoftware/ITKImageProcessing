@@ -70,6 +70,7 @@ using MutexType = tbb::queuing_mutex;
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/util/FFTConvolutionCostFunction.h"
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
+#include "ITKImageProcessing/FilterParameters/EbsdWarpPolynomialFilterParameter.h"
 
 using Grayscale_T = uint8_t;
 using PixelValue_T = double;
@@ -1250,4 +1251,24 @@ QString Blend::getTransformPrefix() const
 void Blend::setTransformPrefix(const QString& value)
 {
   m_TransformPrefix = value;
+}
+// -----------------------------------------------------------------------------
+FloatVec7Type Blend::getXFactors() const
+{
+  return m_XFactors;
+}
+// -----------------------------------------------------------------------------
+void Blend::setXFactors(const FloatVec7Type& value)
+{
+  m_XFactors = value;
+}
+// -----------------------------------------------------------------------------
+FloatVec7Type Blend::getYFactors() const
+{
+  return m_YFactors;
+}
+// -----------------------------------------------------------------------------
+void Blend::setYFactors(const FloatVec7Type& value)
+{
+  m_YFactors = value;
 }

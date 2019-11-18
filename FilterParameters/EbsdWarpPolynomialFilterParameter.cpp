@@ -33,38 +33,35 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "ImportVectorImageStackFilterParameter.h"
-
-#include <QtCore/QJsonObject>
-#include <QtCore/QJsonValue>
+#include "EbsdWarpPolynomialFilterParameter.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ImportVectorImageStackFilterParameter::ImportVectorImageStackFilterParameter() = default;
+EbsdWarpPolynomialFilterParameter::EbsdWarpPolynomialFilterParameter() = default;
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ImportVectorImageStackFilterParameter::~ImportVectorImageStackFilterParameter() = default;
+EbsdWarpPolynomialFilterParameter::~EbsdWarpPolynomialFilterParameter() = default;
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ImportVectorImageStackFilterParameter::Pointer ImportVectorImageStackFilterParameter::New(const QString& humanLabel, const QString& propertyName, const VectorFileListInfo_t& defaultValue,
-                                                                                          Category category, const SetterCallbackType& setterCallback, const GetterCallbackType& getterCallback,
-                                                                                          int groupIndex)
+EbsdWarpPolynomialFilterParameter::Pointer EbsdWarpPolynomialFilterParameter::New(const QString& humanLabel, const QString& propertyName, const FloatVec7Type& defaultValue, Category category,
+                                                                                  const SetterCallbackType& setterCallback, const GetterCallbackType& getterCallback, int groupIndex)
 {
-  ImportVectorImageStackFilterParameter::Pointer ptr = ImportVectorImageStackFilterParameter::New();
+
+  EbsdWarpPolynomialFilterParameter::Pointer ptr = EbsdWarpPolynomialFilterParameter::New();
   ptr->setHumanLabel(humanLabel);
   ptr->setPropertyName(propertyName);
   QVariant v;
   v.setValue(defaultValue);
   ptr->setDefaultValue(v);
   ptr->setCategory(category);
+  ptr->setGroupIndex(groupIndex);
   ptr->setSetterCallback(setterCallback);
   ptr->setGetterCallback(getterCallback);
-  ptr->setGroupIndex(groupIndex);
 
   return ptr;
 }
@@ -72,85 +69,125 @@ ImportVectorImageStackFilterParameter::Pointer ImportVectorImageStackFilterParam
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString ImportVectorImageStackFilterParameter::getWidgetType() const
+QString EbsdWarpPolynomialFilterParameter::getWidgetType() const
 {
-  return QString("ImportVectorImageStackWidget");
+  return QString("EbsdWarpPolynomialWidget");
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ImportVectorImageStackFilterParameter::readJson(const QJsonObject& json)
+void EbsdWarpPolynomialFilterParameter::readJson(const QJsonObject& obj)
 {
-  QJsonValue jsonValue = json[getPropertyName()];
+  QJsonValue jsonValue = obj[getPropertyName()];
   if(!jsonValue.isUndefined() && m_SetterCallback)
   {
-    QJsonObject jsonObj = jsonValue.toObject();
-    VectorFileListInfo_t fileListInfo;
-    fileListInfo.readJson(jsonObj);
-    m_SetterCallback(fileListInfo);
+    QJsonObject json = jsonValue.toObject();
+    FloatVec7Type floatVec7;
+    if(json["a0"].isDouble())
+    {
+      floatVec7[0] = static_cast<float>(json["a0"].toDouble());
+    }
+
+    if(json["a1"].isDouble())
+    {
+      floatVec7[1] = static_cast<float>(json["a1"].toDouble());
+    }
+
+    if(json["a2"].isDouble())
+    {
+      floatVec7[2] = static_cast<float>(json["a2"].toDouble());
+    }
+
+    if(json["a3"].isDouble())
+    {
+      floatVec7[3] = static_cast<float>(json["a3"].toDouble());
+    }
+
+    if(json["a4"].isDouble())
+    {
+      floatVec7[4] = static_cast<float>(json["a4"].toDouble());
+    }
+
+    if(json["a5"].isDouble())
+    {
+      floatVec7[5] = static_cast<float>(json["a5"].toDouble());
+    }
+
+    if(json["a6"].isDouble())
+    {
+      floatVec7[6] = static_cast<float>(json["a6"].toDouble());
+    }
+    m_SetterCallback(floatVec7);
   }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ImportVectorImageStackFilterParameter::writeJson(QJsonObject& json)
+void EbsdWarpPolynomialFilterParameter::writeJson(QJsonObject& obj)
 {
   if(m_GetterCallback)
   {
-    VectorFileListInfo_t fileListInfo = m_GetterCallback();
-    QJsonObject jsonObj;
-    fileListInfo.writeJson(jsonObj);
-    json[getPropertyName()] = jsonObj;
+    FloatVec7Type floatVec7 = m_GetterCallback();
+    QJsonObject json;
+    json["a0"] = static_cast<double>(floatVec7[0]);
+    json["a1"] = static_cast<double>(floatVec7[1]);
+    json["a2"] = static_cast<double>(floatVec7[2]);
+    json["a3"] = static_cast<double>(floatVec7[3]);
+    json["a4"] = static_cast<double>(floatVec7[4]);
+    json["a5"] = static_cast<double>(floatVec7[5]);
+    json["a6"] = static_cast<double>(floatVec7[6]);
+
+    obj[getPropertyName()] = json;
   }
 }
 
 // -----------------------------------------------------------------------------
-ImportVectorImageStackFilterParameter::Pointer ImportVectorImageStackFilterParameter::NullPointer()
+EbsdWarpPolynomialFilterParameter::Pointer EbsdWarpPolynomialFilterParameter::NullPointer()
 {
   return Pointer(static_cast<Self*>(nullptr));
 }
 
 // -----------------------------------------------------------------------------
-ImportVectorImageStackFilterParameter::Pointer ImportVectorImageStackFilterParameter::New()
+EbsdWarpPolynomialFilterParameter::Pointer EbsdWarpPolynomialFilterParameter::New()
 {
-  Pointer sharedPtr(new(ImportVectorImageStackFilterParameter));
+  Pointer sharedPtr(new(EbsdWarpPolynomialFilterParameter));
   return sharedPtr;
 }
 
 // -----------------------------------------------------------------------------
-QString ImportVectorImageStackFilterParameter::getNameOfClass() const
+QString EbsdWarpPolynomialFilterParameter::getNameOfClass() const
 {
-  return QString("ImportVectorImageStackFilterParameter");
+  return QString("EbsdWarpPolynomialFilterParameter");
 }
 
 // -----------------------------------------------------------------------------
-QString ImportVectorImageStackFilterParameter::ClassName()
+QString EbsdWarpPolynomialFilterParameter::ClassName()
 {
-  return QString("ImportVectorImageStackFilterParameter");
+  return QString("EbsdWarpPolynomialFilterParameter");
 }
 
 // -----------------------------------------------------------------------------
-void ImportVectorImageStackFilterParameter::setSetterCallback(const ImportVectorImageStackFilterParameter::SetterCallbackType& value)
+void EbsdWarpPolynomialFilterParameter::setSetterCallback(const EbsdWarpPolynomialFilterParameter::SetterCallbackType& value)
 {
   m_SetterCallback = value;
 }
 
 // -----------------------------------------------------------------------------
-ImportVectorImageStackFilterParameter::SetterCallbackType ImportVectorImageStackFilterParameter::getSetterCallback() const
+EbsdWarpPolynomialFilterParameter::SetterCallbackType EbsdWarpPolynomialFilterParameter::getSetterCallback() const
 {
   return m_SetterCallback;
 }
 
 // -----------------------------------------------------------------------------
-void ImportVectorImageStackFilterParameter::setGetterCallback(const ImportVectorImageStackFilterParameter::GetterCallbackType& value)
+void EbsdWarpPolynomialFilterParameter::setGetterCallback(const EbsdWarpPolynomialFilterParameter::GetterCallbackType& value)
 {
   m_GetterCallback = value;
 }
 
 // -----------------------------------------------------------------------------
-ImportVectorImageStackFilterParameter::GetterCallbackType ImportVectorImageStackFilterParameter::getGetterCallback() const
+EbsdWarpPolynomialFilterParameter::GetterCallbackType EbsdWarpPolynomialFilterParameter::getGetterCallback() const
 {
   return m_GetterCallback;
 }

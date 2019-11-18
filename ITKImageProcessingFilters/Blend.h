@@ -36,6 +36,7 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/FilterParameters/IntVec2FilterParameter.h"
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/SIMPLArray.hpp"
 #include "SIMPLib/Utilities/MontageSelection.h"
 
 #include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
@@ -46,6 +47,31 @@
 class ITKImageProcessing_EXPORT Blend : public AbstractFilter
 {
   Q_OBJECT
+
+#ifdef SIMPL_ENABLE_PYTHON
+  PYB11_CREATE_BINDINGS(Blend SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(Blend)
+  PYB11_FILTER_NEW_MACRO(Blend)
+
+  Q_PROPERTY(QString MontageName READ getMontageName WRITE setMontageName)
+  Q_PROPERTY(uint MaxIterations READ getMaxIterations WRITE setMaxIterations)
+  Q_PROPERTY(IntVec2Type OverlapAmt READ getOverlapAmt WRITE setOverlapAmt)
+  Q_PROPERTY(double LowTolerance READ getLowTolerance WRITE setLowTolerance)
+  Q_PROPERTY(double HighTolerance READ getHighTolerance WRITE setHighTolerance)
+  Q_PROPERTY(int Degree READ getDegree WRITE setDegree)
+  Q_PROPERTY(bool UseAmoebaOptimizer READ getUseAmoebaOptimizer WRITE setUseAmoebaOptimizer)
+  Q_PROPERTY(bool SpecifyInitialSimplex READ getSpecifyInitialSimplex WRITE setSpecifyInitialSimplex)
+  Q_PROPERTY(FloatVec7Type XFactors READ getXFactors WRITE setXFactors)
+  Q_PROPERTY(FloatVec7Type YFactors READ getYFactors WRITE setYFactors)
+  Q_PROPERTY(QString AttributeMatrixName READ getAttributeMatrixName WRITE setAttributeMatrixName)
+  Q_PROPERTY(QString IPFColorsArrayName READ getIPFColorsArrayName WRITE setIPFColorsArrayName)
+  Q_PROPERTY(bool CreateTransformContainer READ getCreateTransformContainer WRITE setCreateTransformContainer)
+  Q_PROPERTY(QString BlendDCName READ getBlendDCName WRITE setBlendDCName)
+  Q_PROPERTY(QString TransformMatrixName READ getTransformMatrixName WRITE setTransformMatrixName)
+  Q_PROPERTY(QString TransformArrayName READ getTransformArrayName WRITE setTransformArrayName)
+  Q_PROPERTY(QString ResidualArrayName READ getResidualArrayName WRITE setResidualArrayName)
+  Q_PROPERTY(QString TransformPrefix READ getTransformPrefix WRITE setTransformPrefix)
+#endif
 
 public:
   using Self = Blend;
@@ -111,6 +137,13 @@ public:
   QString getPyStr() const;
   void setPyStr(const QString& value);
   Q_PROPERTY(QString PyStr READ getPyStr WRITE setPyStr)
+  FloatVec7Type getXFactors() const;
+  void setXFactors(const FloatVec7Type& value);
+  Q_PROPERTY(FloatVec7Type XFactors READ getXFactors WRITE setXFactors)
+
+  FloatVec7Type getYFactors() const;
+  void setYFactors(const FloatVec7Type& value);
+  Q_PROPERTY(FloatVec7Type YFactors READ getYFactors WRITE setYFactors)
 
   QString getAttributeMatrixName() const;
   void setAttributeMatrixName(const QString& value);
@@ -316,4 +349,6 @@ private:
 
   std::vector<double> m_PxVec;
   std::vector<double> m_PyVec;
+  FloatVec7Type m_XFactors = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
+  FloatVec7Type m_YFactors = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
 };
