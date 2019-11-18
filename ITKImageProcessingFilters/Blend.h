@@ -128,13 +128,6 @@ public:
   void setSpecifyInitialSimplex(bool value);
   Q_PROPERTY(bool SpecifyInitialSimplex READ getSpecifyInitialSimplex WRITE setSpecifyInitialSimplex)
 
-  QString getPxStr() const;
-  void setPxStr(const QString& value);
-  Q_PROPERTY(QString PxStr READ getPxStr WRITE setPxStr)
-
-  QString getPyStr() const;
-  void setPyStr(const QString& value);
-  Q_PROPERTY(QString PyStr READ getPyStr WRITE setPyStr)
   FloatVec7Type getXFactors() const;
   void setXFactors(const FloatVec7Type& value);
   Q_PROPERTY(FloatVec7Type XFactors READ getXFactors WRITE setXFactors)
@@ -276,16 +269,6 @@ protected:
   void initialize();
 
   /**
-   * @brief Parses a string of parameters separated by semicolons and returns a
-   * std::vector<double> of the corresponding values. Errors are generated if a
-   * problem occurs.
-   * @param paramStr
-   * @param paramName
-   * @return
-   */
-  std::vector<double> parseParameterStr(const QString& paramStr, const QString& paramName);
-
-  /**
    * @brief Returns a vector of the default Px values
    * @return
    */
@@ -364,8 +347,6 @@ private:
   int m_Delta = 5;
   bool m_UseAmoebaOptimizer = false;
   bool m_SpecifyInitialSimplex = true;
-  QString m_PxStr = "0.0;0.0;0.0;1.0;0.0;0.0;0.0";
-  QString m_PyStr = "0.0;1.0;0.0;0.0;0.0;0.0;0.0";
   QString m_AttributeMatrixName;
   QString m_IPFColorsArrayName;
   bool m_CreateTransformContainer;
@@ -375,8 +356,6 @@ private:
   QString m_ResidualArrayName = "Residual";
   QString m_TransformPrefix = "Transformed_";
 
-  std::vector<double> m_PxVec;
-  std::vector<double> m_PyVec;
-  FloatVec7Type m_XFactors = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
-  FloatVec7Type m_YFactors = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
+  FloatVec7Type m_XFactors = {1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
+  FloatVec7Type m_YFactors = {0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
 };

@@ -167,10 +167,11 @@ void Blend::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Function Convergence Tolerance", LowTolerance, FilterParameter::Category::Parameter, Blend));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Parameter Convergence Tolerance", HighTolerance, FilterParameter::Category::Parameter, Blend));
 
-  QStringList linkedSpecifySimplexProps{"PxStr", "PyStr"};
+  QStringList linkedSpecifySimplexProps{"XFactors", "YFactors"};
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Specify Initial Simplex", SpecifyInitialSimplex, FilterParameter::Parameter, Blend, linkedSpecifySimplexProps));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Px", PxStr, FilterParameter::Category::Parameter, Blend));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Py", PyStr, FilterParameter::Category::Parameter, Blend));
+
+  parameters.push_back(SIMPL_NEW_EBSDWARPPOLYNOMIAL_FP("X Factors", XFactors, FilterParameter::Parameter, Blend));
+  parameters.push_back(SIMPL_NEW_EBSDWARPPOLYNOMIAL_FP("Y Factors", YFactors, FilterParameter::Parameter, Blend));
 
   parameters.push_back(SIMPL_NEW_STRING_FP("Attribute Matrix Name", AttributeMatrixName, FilterParameter::Category::Parameter, Blend));
   parameters.push_back(SIMPL_NEW_STRING_FP("IPF Colors Array Name", IPFColorsArrayName, FilterParameter::Category::Parameter, Blend));
@@ -199,36 +200,6 @@ void Blend::dataCheck()
 {
   clearErrorCode();
   clearWarningCode();
-
-  if(m_SpecifyInitialSimplex)
-  {
-    // Need to make sure that the filter parameter for the initial guess
-    // can be cast into actual numeric data
-    m_PxVec = parseParameterStr(m_PxStr, "Px");
-    m_PyVec = parseParameterStr(m_PyStr, "Py");
-  }
-  else
-  {
-    m_PxVec = getDefaultPx();
-    m_PyVec = getDefaultPy();
-  }
-
-#if 0
-  // This step would not be necessary if using Dave's strict polynomial array
-  // Otherwise, there is a direct correlation between the degree of the transform polynomial
-  // and how many coefficients should reside in the initial guess
-  size_t len = getSingleParamCount();
-  if(len != m_PxVec.size())
-  {
-    QString str = QString("Number of coefficients in Px (%1) is not compatible with degree number (req: %2)").arg(m_PxVec.size()).arg(len);
-    setErrorCondition(-66400, str);
-  }
-  if(len != m_PyVec.size())
-  {
-    QString str = QString("Number of coefficients in Py (%1) is not compatible with degree number (req: %2)").arg(m_PyVec.size()).arg(len);
-    setErrorCondition(-66400, str);
-  }
-#endif
 
   if(!checkMontageRequirements())
   {
@@ -515,29 +486,33 @@ std::vector<double> Blend::getStepSizes(const std::vector<double>& params, size_
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::vector<double> Blend::parseParameterStr(const QString& paramStr, const QString& paramName)
+std::vector<double> Blend::getPxyVec() const
 {
-  std::vector<double> params;
-  for(const auto& coeff : paramStr.split(";"))
+  size_t halfSize = getSingleParamCount();
+  std::vector<double> pxy(2 * halfSize, 0);
+
+  if(m_SpecifyInitialSimplex)
   {
-    bool coerced = false;
-    params.push_back(coeff.toDouble(&coerced));
-    if(!coerced)
+    for(size_t i = 0; i < halfSize; i++)
     {
-      QString str = QString("A %1 coefficient (%2) could not be translated into a floating-point precision number").arg(paramName).arg(coeff);
-      setErrorCondition(-66500, str);
+      pxy[i] = m_XFactors[i];
+      pxy[i + halfSize] = m_YFactors[i];
+    }
+  }
+  else
+  {
+    std::vector<double> px = getDefaultPx();
+    std::vector<double> py = getDefaultPy();
+    for(size_t i = 0; i < halfSize; i++)
+    {
+      pxy[i] = px[i];
+      pxy[i + halfSize] = py[i];
     }
   }
 
-  size_t len = getSingleParamCount();
-  if(len != params.size())
-  {
-    QString str = QString("Number of coefficients in %1 (%2) does not match the required amount (req: %3)").arg(paramName).arg(params.size()).arg(len);
-    setErrorCondition(-66400, str);
-  }
-
-  return params;
+  return pxy;
 }
+
 
 // -----------------------------------------------------------------------------
 //
@@ -559,21 +534,6 @@ std::vector<double> Blend::getDefaultPy() const
   std::vector<double> py(len, 0);
   py[1] = 1;
   return py;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-std::vector<double> Blend::getPxyVec() const
-{
-  size_t halfSize = getSingleParamCount();
-  std::vector<double> pxy(2 * halfSize);
-  for(size_t i = 0; i < halfSize; i++)
-  {
-    pxy[i] = m_PxVec[i];
-    pxy[i + halfSize] = m_PyVec[i];
-  }
-  return pxy;
 }
 
 // -----------------------------------------------------------------------------
@@ -1092,38 +1052,6 @@ bool Blend::getSpecifyInitialSimplex() const
 void Blend::setSpecifyInitialSimplex(bool value)
 {
   m_SpecifyInitialSimplex = value;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString Blend::getPxStr() const
-{
-  return m_PxStr;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void Blend::setPxStr(const QString& value)
-{
-  m_PxStr = value;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString Blend::getPyStr() const
-{
-  return m_PyStr;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void Blend::setPyStr(const QString& value)
-{
-  m_PyStr = value;
 }
 
 // -----------------------------------------------------------------------------
