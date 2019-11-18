@@ -312,13 +312,22 @@ void Blend::execute()
     const double imgY = implementation.getImageDimY();
     FFTHelper::ParametersType stepSizes = ::convertVec2Params(getStepSizes(xyParameters, imgX, imgY));
 
+    // Print out step sizes
+    QString stepSizeStr = "Step Sizes: [ ";
+    for(auto param : stepSizes)
+    {
+      stepSizeStr += QString::number(param) + "; ";
+    }
+    stepSizeStr += " ]";
+    notifyStatusMessage(stepSizeStr);
+
     itk::AmoebaOptimizer::Pointer optimizer = itk::AmoebaOptimizer::New();
     optimizer->SetMaximumNumberOfIterations(m_MaxIterations);
     optimizer->SetFunctionConvergenceTolerance(m_LowTolerance);
     optimizer->SetParametersConvergenceTolerance(m_HighTolerance);
     optimizer->SetInitialPosition(initialParams);
     optimizer->SetInitialSimplexDelta(stepSizes);
-    //optimizer->SetOptimizeWithRestarts(true);
+    optimizer->SetOptimizeWithRestarts(true);
 
     optimizer->SetCostFunction(&implementation);
     optimizer->MaximizeOn(); // Search for the greatest value
@@ -461,14 +470,14 @@ bool Blend::checkMontageRequirements()
 size_t Blend::getSingleParamCount() const
 {
   return FFTHelper::getReqPartialParameterSize();
-  //return static_cast<size_t>(m_Degree * m_Degree + 2 * m_Degree + 1);
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 double calcDelta(double maxDelta, double param, double mMax)
 {
   return maxDelta / mMax - param;
-  //double mDelta = mMax * param - maxDelta;
-  //return mDelta / mMax;
 }
 
 // -----------------------------------------------------------------------------
@@ -476,14 +485,14 @@ double calcDelta(double maxDelta, double param, double mMax)
 // -----------------------------------------------------------------------------
 std::vector<double> Blend::getStepSizes(const std::vector<double>& params, size_t imgDimX, size_t imgDimY) const
 {
-  const size_t offset = FFTHelper::getReqPartialParameterSize();
-  std::vector<double> stepSizes(params.size());
+  const size_t count = FFTHelper::getReqParameterSize();
+  std::vector<double> stepSizes(count);
   
-  size_t xMax = (imgDimX / 2) * (imgDimX / 2);
-  size_t yMax = (imgDimY / 2) * (imgDimY / 2);
+  const size_t xMax = (imgDimX / 2);// *(imgDimX / 2);
+  const size_t yMax = (imgDimY / 2);// *(imgDimY / 2);
 
   // Px
-  stepSizes[0] = calcDelta(m_Delta, params[0], xMax);
+  stepSizes[0] = 1 + calcDelta(m_Delta, params[0], xMax);
   stepSizes[1] = calcDelta(m_Delta, params[1], yMax);
   stepSizes[2] = calcDelta(m_Delta, params[2], xMax * xMax);
   stepSizes[3] = calcDelta(m_Delta, params[3], yMax * yMax);
@@ -493,7 +502,7 @@ std::vector<double> Blend::getStepSizes(const std::vector<double>& params, size_
 
   // Py
   stepSizes[7] = calcDelta(m_Delta, params[7], xMax);
-  stepSizes[8] = calcDelta(m_Delta, params[8], yMax);
+  stepSizes[8] = 1 + calcDelta(m_Delta, params[8], yMax);
   stepSizes[9] = calcDelta(m_Delta, params[9], xMax * xMax);
   stepSizes[10] = calcDelta(m_Delta, params[10], yMax * yMax);
   stepSizes[11] = calcDelta(m_Delta, params[11], xMax * yMax);

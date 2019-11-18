@@ -48,6 +48,16 @@
 using MutexType = tbb::queuing_mutex;
 using ScopedLockType = MutexType::scoped_lock;
 
+#define USE_CROP_CHECK 1
+
+struct RegionBounds
+{
+  int64_t leftBound = 0;
+  int64_t topBound = 0;
+  int64_t rightBound = std::numeric_limits<int64_t>::max();
+  int64_t bottomBound = std::numeric_limits<int64_t>::max();
+};
+
 // ----------------------------------------------------------------------------
 FFTHelper::PixelTypei FFTHelper::pixelType(int64_t x, int64_t y)
 {
@@ -83,7 +93,6 @@ int64_t FFTHelper::px(PixelTypei newCoords, PixelTypei offset, const ParametersT
   const double newXPrime = newCoords[0] - offset[0];
   const double newYPrime = newCoords[1] - offset[1];
 
-  // old' = Ei(Ej(aij * x^i * y^j)
   double oldXPrime = 0.0;
   oldXPrime += parameters[0] * newXPrime;
   oldXPrime += parameters[1] * newYPrime;
@@ -102,27 +111,18 @@ int64_t FFTHelper::py(PixelTypei newCoords, PixelTypei offset, const ParametersT
   const double newXPrime = newCoords[0] - offset[0];
   const double newYPrime = newCoords[1] - offset[1];
 
-  // old' = Ei(Ej(aij * x^i * y^j)
   double oldYPrime = 0.0;
   const size_t yOffset = getReqPartialParameterSize();
-  oldYPrime += parameters[yOffset + 0] * newXPrime;
-  oldYPrime += parameters[yOffset + 1] * newYPrime;
-  oldYPrime += parameters[yOffset + 2] * newXPrime * newXPrime;
-  oldYPrime += parameters[yOffset + 3] * newYPrime * newYPrime;
-  oldYPrime += parameters[yOffset + 4] * newXPrime * newYPrime;
-  oldYPrime += parameters[yOffset + 5] * newXPrime * newXPrime * newYPrime;
-  oldYPrime += parameters[yOffset + 6] * newXPrime * newYPrime * newYPrime;
+  oldYPrime += parameters[7] * newXPrime;
+  oldYPrime += parameters[8] * newYPrime;
+  oldYPrime += parameters[9] * newXPrime * newXPrime;
+  oldYPrime += parameters[10] * newYPrime * newYPrime;
+  oldYPrime += parameters[11] * newXPrime * newYPrime;
+  oldYPrime += parameters[12] * newXPrime * newXPrime * newYPrime;
+  oldYPrime += parameters[13] * newXPrime * newYPrime * newYPrime;
 
   return static_cast<int64_t>(std::floor(oldYPrime + offset[1]));
 }
-
-struct RegionBounds
-{
-  int64_t leftBound = 0;
-  int64_t topBound = 0;
-  int64_t rightBound = std::numeric_limits<int64_t>::max();
-  int64_t bottomBound = std::numeric_limits<int64_t>::max();
-};
 
 /**
  * @class FFTConvolutionCostFunction FFTConvolutionCostFunction.h ITKImageProcessingFilters/util/FFTConvolutionCostFunction.h
@@ -357,10 +357,10 @@ void FFTConvolutionCostFunction::calculateImageDim(const GridMontageShPtr& monta
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FFTConvolutionCostFunction::PixelTypei FFTConvolutionCostFunction::calculateNew2OldPixel(int64_t row, int64_t col, const ParametersType& parameters, double x_trans, double y_trans) const
+FFTConvolutionCostFunction::PixelTypei FFTConvolutionCostFunction::calculateNew2OldPixel(int64_t x, int64_t y, const ParametersType& parameters, double x_trans, double y_trans) const
 {
   FFTHelper::PixelTypei offset = FFTHelper::pixelType(x_trans, y_trans);
-  return FFTHelper::getOldIndex({ col, row }, offset, parameters);
+  return FFTHelper::getOldIndex({ x, y }, offset, parameters);
 }
 
 // -----------------------------------------------------------------------------
@@ -382,6 +382,8 @@ void FFTConvolutionCostFunction::InitializeDataContainer(const GridMontageShPtr&
   size_t height = dims.getY() / spacing.getY();
   size_t xOrigin = imageGeom->getOrigin().getX() / spacing.getX();
   size_t yOrigin = imageGeom->getOrigin().getY() / spacing.getY();
+  size_t offsetX = 0;
+  size_t offsetY = 0;
 
   /////////////////////////////////////////////////////////////////////////////
   // This divided the dimensions and origins by the spacing to treat the     //
@@ -389,15 +391,22 @@ void FFTConvolutionCostFunction::InitializeDataContainer(const GridMontageShPtr&
   /////////////////////////////////////////////////////////////////////////////
 
 #if 0
-  if(row == 0)
+  if(row == 0 && montage->getRowCount() > 2)
   {
+    offsetY = height;
+    const size_t yPrime = yOrigin + height;
     height = std::min(height, static_cast<size_t>(std::floor(m_ImageDim_y)));
-    yOrigin = dims.getY() - height;
+    yOrigin = yPrime - height;
+    offsetY -= height;
+    
   }
-  if(column == 0)
+  if(column == 0 && montage->getColumnCount() > 2)
   {
+    offsetX = width;
+    const size_t xPrime = xOrigin + width;
     width = std::min(width, static_cast<size_t>(std::floor(m_ImageDim_x)));
-    xOrigin = dims.getX() - width;
+    xOrigin = xPrime - width;
+    offsetX -= width;
   }
 #endif
 
@@ -417,7 +426,7 @@ void FFTConvolutionCostFunction::InitializeDataContainer(const GridMontageShPtr&
   // https://ieeexplore.ieee.org/document/723451
   // NOTE Could this be parallelized?
   ParallelData2DAlgorithm dataAlg;
-  dataAlg.setRange(0, 0, height, width);
+  dataAlg.setRange(offsetY, offsetX, height, width);
   dataAlg.execute(FFTImageInitializer(itkImage, width, height, da));
 
   GridKey imageKey = std::make_pair(column, row); // Flipped this to {x,y}
@@ -473,7 +482,7 @@ FFTConvolutionCostFunction::MeasureType FFTConvolutionCostFunction::GetValue(con
     checkTransformation(parameters, eachImage, std::ref(cropMap));
   }
 
-#if 0
+#if USE_CROP_CHECK
   if(!isCropMapValid(cropMap))
   {
     std::cout << "Invalid Parameters";
@@ -614,6 +623,7 @@ void FFTConvolutionCostFunction::calculatePixelCoordinates(const ParametersType&
   oldPixel[0] = oldPixeli[0];
   oldPixel[1] = oldPixeli[1];
 
+#if USE_CROP_CHECK
   bool isValidX = oldPixel[0] >= minX && oldPixel[0] < minX + width;
   bool isValidY = oldPixel[1] >= minY && oldPixel[1] < minY + height;
   bool isValid = isValidX && isValidY;
@@ -624,6 +634,7 @@ void FFTConvolutionCostFunction::calculatePixelCoordinates(const ParametersType&
     adjustCropMap(newPixel, inputImage, gridKey, cropMap);
     return;
   }
+#endif
 }
 
 // -----------------------------------------------------------------------------

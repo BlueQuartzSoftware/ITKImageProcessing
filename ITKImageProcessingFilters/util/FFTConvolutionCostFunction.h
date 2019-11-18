@@ -70,8 +70,6 @@ PixelTypei pixelType(double x, double y);
 constexpr uint32_t getReqPartialParameterSize()
 {
   return 7;
-  //size_t deg1 = degree - 1;
-  //return static_cast<uint32_t>(deg1 * deg1 + 2 * deg1 + 1);
 }
 constexpr uint32_t getReqParameterSize()
 {
@@ -301,15 +299,15 @@ private:
   void calculateImageDim(const GridMontageShPtr& montage);
 
   /**
-   * @brief Returns the pixel index for the given row, column, parameters, and translation amount.
-   * @param row
-   * @param col
+   * @brief Returns the pixel index for the given position, parameters, and translation amount.
+   * @param x
+   * @param y
    * @param parameters
    * @param x_trans
    * @param y_trans
    * @return
    */
-  PixelTypei calculateNew2OldPixel(int64_t row, int64_t col, const ParametersType& parameters, double x_trans, double y_trans) const;
+  PixelTypei calculateNew2OldPixel(int64_t x, int64_t y, const ParametersType& parameters, double x_trans, double y_trans) const;
 
   /**
    * @brief Checks if the regions of the given CropMap are valid.
