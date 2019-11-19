@@ -260,7 +260,7 @@ public:
     const double x_trans = (m_ImageDim_x - 1) / 2.0;
     const double y_trans = (m_ImageDim_y - 1) / 2.0;
     FFTHelper::PixelTypei index = FFTHelper::pixelType(x, y);
-    FFTHelper::PixelTypei offset = { x_trans - m_Offset[0], y_trans - m_Offset[1] };
+    FFTHelper::PixelTypei offset = {static_cast<int64_t>(x_trans - m_Offset[0]), static_cast<int64_t>(y_trans - m_Offset[1])};
     FFTHelper::PixelTypei oldPixel = FFTHelper::getOldIndex(index, offset, m_Parameters);
     return PixelCoord{ oldPixel[0], oldPixel[1] };
   }
@@ -275,7 +275,7 @@ public:
     {
       for(size_t x = range.minCol(); x < range.maxCol(); x++)
       {
-        PixelCoord newIndex{ x, y };
+        PixelCoord newIndex{static_cast<int64_t>(x), static_cast<int64_t>(y)};
         PixelValue_T pixel{0};
         const PixelCoord& oldIndex = calculateOldPixelIndex(x, y);
         if(baseImageContainsIndex(oldIndex))
