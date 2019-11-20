@@ -151,7 +151,7 @@ void transformDataPixel(double x_trans, double y_trans, const SizeVec2Type& newP
   // Cannot flatten invalid { X,Y } positions
   if(oldPixelIndex[0] < 0 || oldPixelIndex[1] < 0 || oldPixelIndex[0] >= dimensions[0] || oldPixelIndex[1] >= dimensions[1])
   {
-    clearTuple<T>(tempDACopy, numComponents, newIndex);
+    clearTuple<T>(da, numComponents, newIndex);
     return;
   }
 
