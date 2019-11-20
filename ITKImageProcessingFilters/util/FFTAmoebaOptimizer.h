@@ -94,6 +94,10 @@ namespace itk
     void
       StartOptimization() override;
 
+    /** Cancel optimization. */
+    void
+      Cancel();
+
     /** Plug in a Cost Function into the optimizer  */
     void
       SetCostFunction(SingleValuedCostFunction * costFunction) override;
@@ -170,6 +174,7 @@ namespace itk
     ParametersType                m_InitialSimplexDelta;
     bool                          m_OptimizeWithRestarts;
     fft_amoeba *                  m_VnlOptimizer;
+    bool                          m_Cancel = false;
 
     std::ostringstream m_StopConditionDescription;
   };

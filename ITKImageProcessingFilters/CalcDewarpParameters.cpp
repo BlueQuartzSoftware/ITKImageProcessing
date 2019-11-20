@@ -67,7 +67,6 @@ using MutexType = tbb::queuing_mutex;
 #include "SIMPLib/Utilities/ParallelTaskAlgorithm.h"
 
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
-#include "ITKImageProcessing/ITKImageProcessingFilters/util/FFTAmoebaOptimizer.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/util/FFTConvolutionCostFunction.h"
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
 #include "ITKImageProcessing/FilterParameters/EbsdWarpPolynomialFilterParameter.h"
@@ -272,25 +271,25 @@ void CalcDewarpParameters::execute()
   notifyStatusMessage(stepSizeStr);
 #endif
 
-  itk::FFTAmoebaOptimizer::Pointer optimizer = itk::FFTAmoebaOptimizer::New();
-  optimizer->SetMaximumNumberOfIterations(m_MaxIterations);
-  optimizer->SetFractionalTolerance(m_FractionalTolerance);
-  optimizer->SetInitialPosition(initialParams);
-  optimizer->SetInitialSimplexDelta(stepSizes);
-  //optimizer->SetOptimizeWithRestarts(true);
+  m_Optimizer = AmoebaOptimizer::New();
+  m_Optimizer->SetMaximumNumberOfIterations(m_MaxIterations);
+  m_Optimizer->SetFractionalTolerance(m_FractionalTolerance);
+  m_Optimizer->SetInitialPosition(initialParams);
+  m_Optimizer->SetInitialSimplexDelta(stepSizes);
+  m_Optimizer->SetOptimizeWithRestarts(true);
 
-  optimizer->SetCostFunction(&implementation);
-  optimizer->MaximizeOn(); // Search for the greatest value
-  optimizer->StartOptimization();
+  m_Optimizer->SetCostFunction(&implementation);
+  m_Optimizer->MaximizeOn(); // Search for the greatest value
+  m_Optimizer->StartOptimization();
 
   // Newer versions of the optimizer allow for easier methods of output information
   // to be obtained, but until then, we have to do some string parsing from the
   // optimizer's stop description
-  QString stopReason = QString::fromStdString(optimizer->GetStopConditionDescription());
-  transformParams = optimizer->GetCurrentPosition();
+  QString stopReason = QString::fromStdString(m_Optimizer->GetStopConditionDescription());
+  transformParams = m_Optimizer->GetCurrentPosition();
 
   // cache value
-  auto value = optimizer->GetValue();
+  auto value = m_Optimizer->GetValue();
   auto numIterations = GetIterationsFromStopDescription(stopReason);
 
 #if 0
@@ -312,7 +311,7 @@ void CalcDewarpParameters::execute()
   notifyStatusMessage(finalParamStr);
 #endif
 
-  notifyStatusMessage(QString::fromStdString(optimizer->GetStopConditionDescription()));
+  notifyStatusMessage(QString::fromStdString(m_Optimizer->GetStopConditionDescription()));
   std::list<double> transform = ::convertParams2List(transformParams);
 
   // ...otherwise, set the appropriate values for the filter's output data array
@@ -321,6 +320,19 @@ void CalcDewarpParameters::execute()
 
   // Remove internal arrays
   deleteGrayscaleIPF();
+  m_Optimizer = nullptr;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void CalcDewarpParameters::setCancel(bool value)
+{
+  AbstractFilter::setCancel(value);
+  if(value && nullptr != m_Optimizer)
+  {
+    m_Optimizer->Cancel();
+  }
 }
 
 // -----------------------------------------------------------------------------

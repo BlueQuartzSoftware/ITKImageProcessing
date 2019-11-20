@@ -24,6 +24,7 @@
 
 class vnl_cost_function;
 class vnl_least_squares_function;
+struct fft_amoebaFit;
 
 //: Nelder-Meade downhill simplex.
 //  fft_amoeba is an implementation of the Nelder-Meade downhill simplex
@@ -84,6 +85,8 @@ public:
   //: Number of evaluations used in last call to minimize
   int get_num_evaluations() const { return num_evaluations_; }
 
+  void cancel();
+
 public:
   //: Modify x so as to minimise f(x)
   static void minimize(vnl_cost_function& f, vnl_vector<double>& x);
@@ -108,6 +111,7 @@ protected:
   vnl_cost_function* fptr;
   double end_error_;
   int num_evaluations_;
+  fft_amoebaFit* m_Fit = nullptr;
 };
 
 // Private struct needs to be declared in the header file

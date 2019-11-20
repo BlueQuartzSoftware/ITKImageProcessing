@@ -143,6 +143,8 @@ namespace itk
     // start the actual work
     this->InvokeEvent(StartEvent());
 
+    m_Cancel = false;
+
     // configure the vnl optimizer
     CostFunctionAdaptorType * adaptor = GetNonConstCostFunctionAdaptor();
     // get rid of previous instance of the internal optimizer and create a
@@ -212,7 +214,7 @@ namespace itk
       auto         totalEvaluations = static_cast<unsigned int>(m_VnlOptimizer->get_num_evaluations());
       bool         converged = false;
       unsigned int i = 1;
-      while(!converged && (totalEvaluations < m_MaximumNumberOfIterations))
+      while(!converged && (totalEvaluations < m_MaximumNumberOfIterations) && !m_Cancel)
       {
         this->m_VnlOptimizer->set_max_iterations(static_cast<int>(this->m_MaximumNumberOfIterations - totalEvaluations));
         parameters = bestPosition;
@@ -256,7 +258,12 @@ namespace itk
 
     this->m_StopConditionDescription.str("");
     this->m_StopConditionDescription << this->GetNameOfClass() << ": ";
-    if(static_cast<unsigned int>(this->m_VnlOptimizer->get_num_evaluations()) < this->m_MaximumNumberOfIterations)
+    if(m_Cancel)
+    {
+      this->m_StopConditionDescription << "Operation cancelled after "
+        << this->m_VnlOptimizer->get_num_evaluations() << " iterations.";
+    }
+    else if(static_cast<unsigned int>(this->m_VnlOptimizer->get_num_evaluations()) < this->m_MaximumNumberOfIterations)
     {
       this->m_StopConditionDescription << "Fractional tolerance ("
         << this->m_FractionalTolerance
@@ -269,6 +276,15 @@ namespace itk
         << " Number of iterations is " << this->m_MaximumNumberOfIterations;
     }
     this->InvokeEvent(EndEvent());
+  }
+
+
+  void
+    FFTAmoebaOptimizer::Cancel()
+  {
+    m_Cancel = true;
+    // Simplest solution is to set the maximum iterations to 0 for the rest of the optimization
+    m_VnlOptimizer->cancel();
   }
 
 

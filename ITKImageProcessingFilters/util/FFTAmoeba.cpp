@@ -359,23 +359,36 @@ void fft_amoebaFit::amoeba(vnl_vector<double>& x,
   end_error_ = simplex[0].fv;
 }
 
+//: Set max iterations to 0 to stop optimizing
+void fft_amoeba::cancel()
+{
+  if(m_Fit)
+  {
+    m_Fit->maxiter = 0;
+  }
+}
+
 //: Modify x to minimise function supplied in constructor
 //  Start simplex defined by scaling elements of x
 void fft_amoeba::minimize(vnl_vector<double>& x)
 {
-  fft_amoebaFit af(*this);
-  af.amoeba(x);
-  num_evaluations_ = af.num_evaluations_;
-  end_error_ = af.end_error_;
+  m_Fit = new fft_amoebaFit(*this);
+  m_Fit->amoeba(x);
+  num_evaluations_ = m_Fit->num_evaluations_;
+  end_error_ = m_Fit->end_error_;
+  delete m_Fit;
+  m_Fit = nullptr;
 }
 
 //: Perform optimisation.  Start simplex defined by adding dx[i] to each x[i]
 void fft_amoeba::minimize(vnl_vector<double>& x, const vnl_vector<double>& dx)
 {
-  fft_amoebaFit af(*this);
-  af.amoeba(x, dx);
-  num_evaluations_ = af.num_evaluations_;
-  end_error_ = af.end_error_;
+  m_Fit = new fft_amoebaFit(*this);
+  m_Fit->amoeba(x, dx);
+  num_evaluations_ = m_Fit->num_evaluations_;
+  end_error_ = m_Fit->end_error_;
+  delete m_Fit;
+  m_Fit = nullptr;
 }
 
 

@@ -41,6 +41,8 @@
 #include "SIMPLib/Common/SIMPLArray.hpp"
 #include "SIMPLib/Utilities/MontageSelection.h"
 
+#include "ITKImageProcessing/ITKImageProcessingFilters/util/FFTAmoebaOptimizer.h"
+
 #include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
@@ -51,22 +53,24 @@ class ITKImageProcessing_EXPORT CalcDewarpParameters : public AbstractFilter
   Q_OBJECT
 
 #ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(CalcDewarpParameters SUPERCLASS AbstractFilter)
-  PYB11_SHARED_POINTERS(CalcDewarpParameters)
-  PYB11_FILTER_NEW_MACRO(CalcDewarpParameters)
+    PYB11_CREATE_BINDINGS(CalcDewarpParameters SUPERCLASS AbstractFilter)
+    PYB11_SHARED_POINTERS(CalcDewarpParameters)
+    PYB11_FILTER_NEW_MACRO(CalcDewarpParameters)
 
-  PYB11_PROPERTY(QString MontageName READ getMontageName WRITE setMontageName)
-  PYB11_PROPERTY(uint MaxIterations READ getMaxIterations WRITE setMaxIterations)
-  PYB11_PROPERTY(double FractionalTolerance READ getFractionalTolerance WRITE setFractionalTolerance)
-  PYB11_PROPERTY(bool SpecifyInitialSimplex READ getSpecifyInitialSimplex WRITE setSpecifyInitialSimplex)
-  PYB11_PROPERTY(FloatVec7Type XFactors READ getXFactors WRITE setXFactors)
-  PYB11_PROPERTY(FloatVec7Type YFactors READ getYFactors WRITE setYFactors)
-  PYB11_PROPERTY(QString AttributeMatrixName READ getAttributeMatrixName WRITE setAttributeMatrixName)
-  PYB11_PROPERTY(QString IPFColorsArrayName READ getIPFColorsArrayName WRITE setIPFColorsArrayName)
-  PYB11_PROPERTY(QString TransformDCName READ getTransformDCName WRITE setTransformDCName)
-  PYB11_PROPERTY(QString TransformMatrixName READ getTransformMatrixName WRITE setTransformMatrixName)
-  PYB11_PROPERTY(QString TransformArrayName READ getTransformArrayName WRITE setTransformArrayName)
+    PYB11_PROPERTY(QString MontageName READ getMontageName WRITE setMontageName)
+    PYB11_PROPERTY(uint MaxIterations READ getMaxIterations WRITE setMaxIterations)
+    PYB11_PROPERTY(double FractionalTolerance READ getFractionalTolerance WRITE setFractionalTolerance)
+    PYB11_PROPERTY(bool SpecifyInitialSimplex READ getSpecifyInitialSimplex WRITE setSpecifyInitialSimplex)
+    PYB11_PROPERTY(FloatVec7Type XFactors READ getXFactors WRITE setXFactors)
+    PYB11_PROPERTY(FloatVec7Type YFactors READ getYFactors WRITE setYFactors)
+    PYB11_PROPERTY(QString AttributeMatrixName READ getAttributeMatrixName WRITE setAttributeMatrixName)
+    PYB11_PROPERTY(QString IPFColorsArrayName READ getIPFColorsArrayName WRITE setIPFColorsArrayName)
+    PYB11_PROPERTY(QString TransformDCName READ getTransformDCName WRITE setTransformDCName)
+    PYB11_PROPERTY(QString TransformMatrixName READ getTransformMatrixName WRITE setTransformMatrixName)
+    PYB11_PROPERTY(QString TransformArrayName READ getTransformArrayName WRITE setTransformArrayName)
 #endif
+
+  using AmoebaOptimizer = itk::FFTAmoebaOptimizer;
 
 public:
   using Self = CalcDewarpParameters;
@@ -74,8 +78,8 @@ public:
   using ConstPointer = std::shared_ptr<const Self>;
   using WeakPointer = std::weak_ptr<Self>;
   using ConstWeakPointer = std::weak_ptr<Self>;
-  static Pointer NullPointer();
 
+  static Pointer NullPointer();
   static Pointer New();
 
   /**
@@ -201,6 +205,12 @@ public:
    */
   void preflight() override;
 
+public slots:
+  /**
+   * @brief Cancel the operation
+   */
+  void setCancel(bool value) override;
+
 signals:
   /**
    * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
@@ -299,6 +309,7 @@ protected:
   std::vector<double> getStepSizes(const std::vector<double>& params, size_t imgDimX, size_t imgDimY) const;
 
 private:
+  AmoebaOptimizer::Pointer m_Optimizer = nullptr;
   QString m_MontageName;
   uint m_MaxIterations = 1000;
   double m_FractionalTolerance = 1E-5;
