@@ -37,7 +37,6 @@
 using MutexType = tbb::queuing_mutex;
 #endif
 
-#include <itkAmoebaOptimizer.h>
 #include <itkFFTConvolutionImageFilter.h>
 #include <itkNumericTraits.h>
 
@@ -68,6 +67,7 @@ using MutexType = tbb::queuing_mutex;
 #include "SIMPLib/Utilities/ParallelTaskAlgorithm.h"
 
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/util/FFTAmoebaOptimizer.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/util/FFTConvolutionCostFunction.h"
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
 #include "ITKImageProcessing/FilterParameters/EbsdWarpPolynomialFilterParameter.h"
@@ -168,8 +168,7 @@ void CalcDewarpParameters::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Amoeba Optimizer", FilterParameter::Parameter));
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Max Iterations", MaxIterations, FilterParameter::Category::Parameter, CalcDewarpParameters));
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Delta", Delta, FilterParameter::Category::Parameter, CalcDewarpParameters));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Function Convergence Tolerance", FunctionTolerance, FilterParameter::Category::Parameter, CalcDewarpParameters));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Parameter Convergence Tolerance", ParameterTolerance, FilterParameter::Category::Parameter, CalcDewarpParameters));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Fractional Tolerance", FractionalTolerance, FilterParameter::Category::Parameter, CalcDewarpParameters));
 
   QStringList linkedSpecifySimplexProps{"XFactors", "YFactors"};
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Specify Initial Simplex", SpecifyInitialSimplex, FilterParameter::Parameter, CalcDewarpParameters, linkedSpecifySimplexProps));
@@ -273,13 +272,12 @@ void CalcDewarpParameters::execute()
   notifyStatusMessage(stepSizeStr);
 #endif
 
-  itk::AmoebaOptimizer::Pointer optimizer = itk::AmoebaOptimizer::New();
+  itk::FFTAmoebaOptimizer::Pointer optimizer = itk::FFTAmoebaOptimizer::New();
   optimizer->SetMaximumNumberOfIterations(m_MaxIterations);
-  optimizer->SetFunctionConvergenceTolerance(m_FunctionTolerance);
-  optimizer->SetParametersConvergenceTolerance(m_ParameterTolerance);
+  optimizer->SetFractionalTolerance(m_FractionalTolerance);
   optimizer->SetInitialPosition(initialParams);
   optimizer->SetInitialSimplexDelta(stepSizes);
-  optimizer->SetOptimizeWithRestarts(true);
+  //optimizer->SetOptimizeWithRestarts(true);
 
   optimizer->SetCostFunction(&implementation);
   optimizer->MaximizeOn(); // Search for the greatest value
@@ -691,33 +689,17 @@ void CalcDewarpParameters::setOverlapAmt(const IntVec2Type& value)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-double CalcDewarpParameters::getFunctionTolerance() const
+double CalcDewarpParameters::getFractionalTolerance() const
 {
-  return m_FunctionTolerance;
+  return m_FractionalTolerance;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CalcDewarpParameters::setFunctionTolerance(double value)
+void CalcDewarpParameters::setFractionalTolerance(double value)
 {
-  m_FunctionTolerance = value;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-double CalcDewarpParameters::getParameterTolerance() const
-{
-  return m_ParameterTolerance;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void CalcDewarpParameters::setParameterTolerance(double value)
-{
-  m_ParameterTolerance = value;
+  m_FractionalTolerance = value;
 }
 
 // -----------------------------------------------------------------------------

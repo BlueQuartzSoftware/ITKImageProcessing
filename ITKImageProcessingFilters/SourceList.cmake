@@ -192,6 +192,8 @@ endforeach()
 #-------------
 ADD_SIMPL_SUPPORT_CLASS(${${PLUGIN_NAME}_SOURCE_DIR} ${_filterGroupName} ITKImageBase)
 ADD_SIMPL_SUPPORT_CLASS(${${PLUGIN_NAME}_SOURCE_DIR} ${_filterGroupName} util/DetermineStitching)
+ADD_SIMPL_SUPPORT_CLASS(${${PLUGIN_NAME}_SOURCE_DIR} ${_filterGroupName} util/FFTAmoeba)
+ADD_SIMPL_SUPPORT_CLASS(${${PLUGIN_NAME}_SOURCE_DIR} ${_filterGroupName} util/FFTAmoebaOptimizer)
 ADD_SIMPL_SUPPORT_CLASS(${${PLUGIN_NAME}_SOURCE_DIR} ${_filterGroupName} util/FFTConvolutionCostFunction)
 ADD_SIMPL_SUPPORT_CLASS(${${PLUGIN_NAME}_SOURCE_DIR} ${_filterGroupName} util/MontageImportHelper)
 

@@ -55,18 +55,17 @@ class ITKImageProcessing_EXPORT CalcDewarpParameters : public AbstractFilter
   PYB11_SHARED_POINTERS(CalcDewarpParameters)
   PYB11_FILTER_NEW_MACRO(CalcDewarpParameters)
 
-  Q_PROPERTY(QString MontageName READ getMontageName WRITE setMontageName)
-  Q_PROPERTY(uint MaxIterations READ getMaxIterations WRITE setMaxIterations)
-  Q_PROPERTY(double FunctionTolerance READ getFunctionTolerance WRITE setFunctionTolerance)
-  Q_PROPERTY(double ParameterTolerance READ getParameterTolerance WRITE setParameterTolerance)
-  Q_PROPERTY(bool SpecifyInitialSimplex READ getSpecifyInitialSimplex WRITE setSpecifyInitialSimplex)
-  Q_PROPERTY(FloatVec7Type XFactors READ getXFactors WRITE setXFactors)
-  Q_PROPERTY(FloatVec7Type YFactors READ getYFactors WRITE setYFactors)
-  Q_PROPERTY(QString AttributeMatrixName READ getAttributeMatrixName WRITE setAttributeMatrixName)
-  Q_PROPERTY(QString IPFColorsArrayName READ getIPFColorsArrayName WRITE setIPFColorsArrayName)
-  Q_PROPERTY(QString TransformDCName READ getTransformDCName WRITE setTransformDCName)
-  Q_PROPERTY(QString TransformMatrixName READ getTransformMatrixName WRITE setTransformMatrixName)
-  Q_PROPERTY(QString TransformArrayName READ getTransformArrayName WRITE setTransformArrayName)
+  PYB11_PROPERTY(QString MontageName READ getMontageName WRITE setMontageName)
+  PYB11_PROPERTY(uint MaxIterations READ getMaxIterations WRITE setMaxIterations)
+  PYB11_PROPERTY(double FractionalTolerance READ getFractionalTolerance WRITE setFractionalTolerance)
+  PYB11_PROPERTY(bool SpecifyInitialSimplex READ getSpecifyInitialSimplex WRITE setSpecifyInitialSimplex)
+  PYB11_PROPERTY(FloatVec7Type XFactors READ getXFactors WRITE setXFactors)
+  PYB11_PROPERTY(FloatVec7Type YFactors READ getYFactors WRITE setYFactors)
+  PYB11_PROPERTY(QString AttributeMatrixName READ getAttributeMatrixName WRITE setAttributeMatrixName)
+  PYB11_PROPERTY(QString IPFColorsArrayName READ getIPFColorsArrayName WRITE setIPFColorsArrayName)
+  PYB11_PROPERTY(QString TransformDCName READ getTransformDCName WRITE setTransformDCName)
+  PYB11_PROPERTY(QString TransformMatrixName READ getTransformMatrixName WRITE setTransformMatrixName)
+  PYB11_PROPERTY(QString TransformArrayName READ getTransformArrayName WRITE setTransformArrayName)
 #endif
 
 public:
@@ -102,13 +101,9 @@ public:
   void setMaxIterations(uint value);
   Q_PROPERTY(uint MaxIterations READ getMaxIterations WRITE setMaxIterations)
 
-  double getFunctionTolerance() const;
-  void setFunctionTolerance(double value);
-  Q_PROPERTY(double FunctionTolerance READ getFunctionTolerance WRITE setFunctionTolerance)
-
-  double getParameterTolerance() const;
-  void setParameterTolerance(double value);
-  Q_PROPERTY(double ParameterTolerance READ getParameterTolerance WRITE setParameterTolerance)
+  double getFractionalTolerance() const;
+  void setFractionalTolerance(double value);
+  Q_PROPERTY(double FractionalTolerance READ getFractionalTolerance WRITE setFractionalTolerance)
 
   int getDelta() const;
   void setDelta(int value);
@@ -306,8 +301,7 @@ protected:
 private:
   QString m_MontageName;
   uint m_MaxIterations = 1000;
-  double m_FunctionTolerance = 1E-5;
-  double m_ParameterTolerance = 1;
+  double m_FractionalTolerance = 1E-5;
   int m_StepDelta = 5;
   bool m_SpecifyInitialSimplex = true;
   QString m_AttributeMatrixName;
