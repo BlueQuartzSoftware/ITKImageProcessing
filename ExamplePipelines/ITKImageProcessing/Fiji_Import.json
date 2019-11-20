@@ -23,7 +23,7 @@
         "Filter_Name": "ITKImportFijiMontage",
         "Filter_Uuid": "{5878723b-cc16-5486-ac5f-ff0107107e74}",
         "ImageDataArrayName": "Image",
-        "InputFile": "/Users/mjackson/DREAM3D-Dev/DREAM3D-Build/Debug/Bin/Data/Montage/SampleMosaic/TileConfiguration.txt",
+        "InputFile": "Data/Montage/SampleMosaic/TileConfiguration.txt",
         "Origin": {
             "x": 0,
             "y": 0,
@@ -57,7 +57,7 @@
         }
     },
     "2": {
-        "FileName": "/Users/mjackson/DREAM3D-Dev/DREAM3D-Build/Debug/Bin/Data/Output/Montage/FijiImport.png",
+        "FileName": "Data/Output/Montage/FijiImport.png",
         "FilterVersion": "2.0.915",
         "Filter_Enabled": true,
         "Filter_Human_Label": "ITK::Image Export",
@@ -76,7 +76,7 @@
         "Filter_Human_Label": "Write DREAM.3D Data File",
         "Filter_Name": "DataContainerWriter",
         "Filter_Uuid": "{3fcd4c43-9d75-5b86-aad4-4441bc914f37}",
-        "OutputFile": "/Users/mjackson/DREAM3D-Dev/DREAM3D-Build/Debug/Bin/Data/Output/Montage/FijiImport.dream3d",
+        "OutputFile": "Data/Output/Montage/FijiImport.dream3d",
         "WriteTimeSeries": 0,
         "WriteXdmfFile": 1
     },

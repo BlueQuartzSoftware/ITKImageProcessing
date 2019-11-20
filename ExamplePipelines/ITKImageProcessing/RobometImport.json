@@ -26,7 +26,7 @@
         "ImageDataArrayName": "Image",
         "ImageFileExtension": "bmp",
         "ImageFilePrefix": "0938410_",
-        "InputFile": "/Users/mjackson/DREAM3D-Dev/DREAM3D-Build/Debug/Bin/Data/Montage/0938410_ Mosaic Focus Details.csv",
+        "InputFile": "Data/Montage/0938410_ Mosaic Focus Details.csv",
         "Origin": {
             "x": 0,
             "y": 0,
@@ -66,7 +66,7 @@
         }
     },
     "2": {
-        "FileName": "/Users/mjackson/DREAM3D-Dev/DREAM3D-Build/Debug/Bin/Data/Output/Montage/Robomet_Montage.png",
+        "FileName": "Data/Output/Montage/Robomet_Montage.png",
         "FilterVersion": "2.0.915",
         "Filter_Enabled": true,
         "Filter_Human_Label": "ITK::Image Export",
@@ -85,7 +85,7 @@
         "Filter_Human_Label": "Write DREAM.3D Data File",
         "Filter_Name": "DataContainerWriter",
         "Filter_Uuid": "{3fcd4c43-9d75-5b86-aad4-4441bc914f37}",
-        "OutputFile": "/Users/mjackson/DREAM3D-Dev/DREAM3D-Build/Debug/Bin/Data/Output/Montage/AxioVisionImport.dream3d",
+        "OutputFile": "Data/Output/Montage/AxioVisionImport.dream3d",
         "WriteTimeSeries": 0,
         "WriteXdmfFile": 1
     },
