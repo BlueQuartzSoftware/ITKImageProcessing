@@ -133,10 +133,6 @@ ImportAxioVisionV4Montage::ImportAxioVisionV4Montage()
 , m_CellAttributeMatrixName(ITKImageProcessing::Montage::k_TileAttributeMatrixDefaultName)
 , m_ImageDataArrayName(ITKImageProcessing::Montage::k_TileDataArrayDefaultName)
 , m_MetaDataAttributeMatrixName(::k_MetaDataName)
-, m_ConvertToGrayScale(false)
-, m_ImportAllMetaData(false)
-, m_ChangeOrigin(false)
-, m_ChangeSpacing(false)
 , d_ptr(new ImportAxioVisionV4MontagePrivate(this))
 {
   m_ColorWeights = FloatVec3Type(0.2125f, 0.7154f, 0.0721f);
@@ -215,6 +211,12 @@ void ImportAxioVisionV4Montage::initialize()
   clearErrorCode();
   clearWarningCode();
   setCancel(false);
+
+  m_MontageStart[0] = m_ColumnMontageLimits[0];
+  m_MontageStart[1] = m_RowMontageLimits[0];
+
+  m_MontageEnd[0] = m_ColumnMontageLimits[1];
+  m_MontageEnd[1] = m_RowMontageLimits[1];
 }
 
 // -----------------------------------------------------------------------------
@@ -229,8 +231,8 @@ void ImportAxioVisionV4Montage::setupFilterParameters()
   param->setReadOnly(true);
   parameters.push_back(param);
 
-  parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage Start (Col, Row) [Inclusive, Zero Based]", MontageStart, FilterParameter::Parameter, ImportAxioVisionV4Montage));
-  parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage End (Col, Row) [Inclusive, Zero Based]", MontageEnd, FilterParameter::Parameter, ImportAxioVisionV4Montage));
+  parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage Column Start/End [Inclusive, Zero Based]", ColumnMontageLimits, FilterParameter::Parameter, ImportAxioVisionV4Montage));
+  parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage Row Start/End [Inclusive, Zero Based]", RowMontageLimits, FilterParameter::Parameter, ImportAxioVisionV4Montage));
 
   parameters.push_back(SIMPL_NEW_BOOL_FP("Import All MetaData", ImportAllMetaData, FilterParameter::Parameter, ImportAxioVisionV4Montage));
 
@@ -261,8 +263,7 @@ void ImportAxioVisionV4Montage::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void ImportAxioVisionV4Montage::dataCheck()
 {
-  clearErrorCode();
-  clearWarningCode();
+  initialize();
 
   QString ss;
   QFileInfo fi(getInputFile());
@@ -1090,11 +1091,10 @@ ImportAxioVisionV4Montage::Pointer ImportAxioVisionV4Montage::NullPointer()
 // -----------------------------------------------------------------------------
 std::shared_ptr<ImportAxioVisionV4Montage> ImportAxioVisionV4Montage::New()
 {
-  struct make_shared_enabler : public ImportAxioVisionV4Montage  
+  struct make_shared_enabler : public ImportAxioVisionV4Montage
   {
 
   private:
-
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
   val->setupFilterParameters();
@@ -1126,27 +1126,27 @@ QString ImportAxioVisionV4Montage::getInputFile() const
 }
 
 // -----------------------------------------------------------------------------
-void ImportAxioVisionV4Montage::setMontageStart(const IntVec2Type& value)
+void ImportAxioVisionV4Montage::setColumnMontageLimits(const IntVec2Type& value)
 {
-  m_MontageStart = value;
+  m_ColumnMontageLimits = value;
 }
 
 // -----------------------------------------------------------------------------
-IntVec2Type ImportAxioVisionV4Montage::getMontageStart() const
+IntVec2Type ImportAxioVisionV4Montage::getColumnMontageLimits() const
 {
-  return m_MontageStart;
+  return m_ColumnMontageLimits;
 }
 
 // -----------------------------------------------------------------------------
-void ImportAxioVisionV4Montage::setMontageEnd(const IntVec2Type& value)
+void ImportAxioVisionV4Montage::setRowMontageLimits(const IntVec2Type& value)
 {
-  m_MontageEnd = value;
+  m_RowMontageLimits = value;
 }
 
 // -----------------------------------------------------------------------------
-IntVec2Type ImportAxioVisionV4Montage::getMontageEnd() const
+IntVec2Type ImportAxioVisionV4Montage::getRowMontageLimits() const
 {
-  return m_MontageEnd;
+  return m_RowMontageLimits;
 }
 
 // -----------------------------------------------------------------------------
@@ -1316,5 +1316,3 @@ QStringList ImportAxioVisionV4Montage::getGeneratedFileList() const
 {
   return m_GeneratedFileList;
 }
-
-
