@@ -54,12 +54,10 @@ class ITKImageProcessing_EXPORT ApplyDewarpParameters : public AbstractFilter
   PYB11_CREATE_BINDINGS(ApplyDewarpParameters SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(ApplyDewarpParameters)
   PYB11_FILTER_NEW_MACRO(ApplyDewarpParameters)
-
   PYB11_PROPERTY(QString MontageName READ getMontageName WRITE setMontageName)
   PYB11_PROPERTY(bool UseDataArray READ getUseDataArray WRITE setUseDataArray)
-  PYB11_PROPERTY(FloatVec7Type XFactors READ getXFactors WRITE setXFactors)
-  PYB11_PROPERTY(FloatVec7Type YFactors READ getYFactors WRITE setYFactors)
   PYB11_PROPERTY(QString AttributeMatrixName READ getAttributeMatrixName WRITE setAttributeMatrixName)
+  PYB11_PROPERTY(QString MaskName READ getMaskName WRITE setMaskName)
   PYB11_PROPERTY(DataArrayPath TransformPath READ getTransformPath WRITE setTransformPath)
   PYB11_PROPERTY(QString TransformPrefix READ getTransformPrefix WRITE setTransformPrefix)
 #endif

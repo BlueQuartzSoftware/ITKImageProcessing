@@ -58,16 +58,7 @@ class ITKImageProcessing_EXPORT ImportZenInfoMontage : public AbstractFilter
   PYB11_CREATE_BINDINGS(ImportZenInfoMontage SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(ImportZenInfoMontage)
   PYB11_FILTER_NEW_MACRO(ImportZenInfoMontage)
-  PYB11_FILTER_PARAMETER(QString, InputFile)
-  PYB11_FILTER_PARAMETER(DataArrayPath, DataContainerPath)
-  PYB11_FILTER_PARAMETER(QString, CellAttributeMatrixName)
-  PYB11_FILTER_PARAMETER(QString, ImageDataArrayName)
-  PYB11_FILTER_PARAMETER(bool, ConvertToGrayScale)
-  PYB11_FILTER_PARAMETER(FloatVec3Type, ColorWeights)
-  PYB11_FILTER_PARAMETER(bool, ChangeOrigin)
-  PYB11_FILTER_PARAMETER(FloatVec3Type, Origin)
-  PYB11_FILTER_PARAMETER(bool, ChangeSpacing)
-  PYB11_FILTER_PARAMETER(FloatVec3Type, Spacing)
+
   PYB11_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
   PYB11_PROPERTY(DataArrayPath DataContainerPath READ getDataContainerPath WRITE setDataContainerPath)
   PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
@@ -80,8 +71,8 @@ class ITKImageProcessing_EXPORT ImportZenInfoMontage : public AbstractFilter
   PYB11_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
   PYB11_PROPERTY(int32_t RowCount READ getRowCount)
   PYB11_PROPERTY(int32_t ColumnCount READ getColumnCount)
-  PYB11_PROPERTY(IntVec2Type MontageStart READ getMontageStart WRITE setMontageStart)
-  PYB11_PROPERTY(IntVec2Type MontageEnd READ getMontageEnd WRITE setMontageEnd)
+  PYB11_PROPERTY(IntVec2Type ColumnMontageLimits READ getColumnMontageLimits WRITE setColumnMontageLimits)
+  PYB11_PROPERTY(IntVec2Type RowMontageLimits READ getRowMontageLimits WRITE setRowMontageLimits)
 #endif
   // clang-format on
 
@@ -136,28 +127,26 @@ public:
   Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
   /**
-   * @brief Setter property for MontageStart
+   * @brief Setter property for ColumnMontageLimits
    */
-  void setMontageStart(const IntVec2Type& value);
+  void setColumnMontageLimits(const IntVec2Type& value);
   /**
-   * @brief Getter property for MontageStart
-   * @return Value of MontageStart
+   * @brief Getter property for ColumnMontageLimits
+   * @return Value of ColumnMontageLimits
    */
-  IntVec2Type getMontageStart() const;
-
-  Q_PROPERTY(IntVec2Type MontageStart READ getMontageStart WRITE setMontageStart)
+  IntVec2Type getColumnMontageLimits() const;
+  Q_PROPERTY(IntVec2Type ColumnMontageLimits READ getColumnMontageLimits WRITE setColumnMontageLimits)
 
   /**
-   * @brief Setter property for MontageEnd
+   * @brief Setter property for RowMontageLimits
    */
-  void setMontageEnd(const IntVec2Type& value);
+  void setRowMontageLimits(const IntVec2Type& value);
   /**
-   * @brief Getter property for MontageEnd
-   * @return Value of MontageEnd
+   * @brief Getter property for RowMontageLimits
+   * @return Value of RowMontageLimits
    */
-  IntVec2Type getMontageEnd() const;
-
-  Q_PROPERTY(IntVec2Type MontageEnd READ getMontageEnd WRITE setMontageEnd)
+  IntVec2Type getRowMontageLimits() const;
+  Q_PROPERTY(IntVec2Type RowMontageLimits READ getRowMontageLimits WRITE setRowMontageLimits)
 
   /**
    * @brief Setter property for DataContainerPath
@@ -461,8 +450,10 @@ protected:
 
 private:
   QString m_InputFile = {};
-  IntVec2Type m_MontageStart = {};
-  IntVec2Type m_MontageEnd = {};
+  IntVec2Type m_ColumnMontageLimits = {0, 0};
+  IntVec2Type m_RowMontageLimits = {0, 0};
+  IntVec2Type m_MontageStart = {0, 0};
+  IntVec2Type m_MontageEnd = {0, 0};
   DataArrayPath m_DataContainerPath = {};
   QString m_CellAttributeMatrixName = {};
   QString m_ImageDataArrayName = {};

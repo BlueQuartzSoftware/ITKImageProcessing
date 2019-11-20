@@ -187,6 +187,11 @@ void ITKImportRoboMetMontage::initialize()
   clearErrorCode();
   clearWarningCode();
   setCancel(false);
+  m_MontageStart[0] = m_ColumnMontageLimits[0];
+  m_MontageStart[1] = m_RowMontageLimits[0];
+
+  m_MontageEnd[0] = m_ColumnMontageLimits[1];
+  m_MontageEnd[1] = m_RowMontageLimits[1];
 }
 
 // -----------------------------------------------------------------------------
@@ -201,8 +206,8 @@ void ITKImportRoboMetMontage::setupFilterParameters()
   param->setReadOnly(true);
   parameters.push_back(param);
 
-  parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage Start (Col, Row) [Inclusive, Zero Based]", MontageStart, FilterParameter::Parameter, ITKImportRoboMetMontage));
-  parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage End (Col, Row) [Inclusive, Zero Based]", MontageEnd, FilterParameter::Parameter, ITKImportRoboMetMontage));
+  parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage Column Start/End [Inclusive, Zero Based]", ColumnMontageLimits, FilterParameter::Parameter, ITKImportRoboMetMontage));
+  parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage Row Start/End [Inclusive, Zero Based]", RowMontageLimits, FilterParameter::Parameter, ITKImportRoboMetMontage));
 
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Slice Number", SliceNumber, FilterParameter::Parameter, ITKImportRoboMetMontage));
   parameters.push_back(SIMPL_NEW_STRING_FP("Image File Prefix", ImageFilePrefix, FilterParameter::Parameter, ITKImportRoboMetMontage));
@@ -234,8 +239,6 @@ void ITKImportRoboMetMontage::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void ITKImportRoboMetMontage::dataCheck()
 {
-  clearErrorCode();
-  clearWarningCode();
   initialize();
 
   QString ss;
@@ -934,11 +937,10 @@ ITKImportRoboMetMontage::Pointer ITKImportRoboMetMontage::NullPointer()
 // -----------------------------------------------------------------------------
 std::shared_ptr<ITKImportRoboMetMontage> ITKImportRoboMetMontage::New()
 {
-  struct make_shared_enabler : public ITKImportRoboMetMontage  
+  struct make_shared_enabler : public ITKImportRoboMetMontage
   {
 
   private:
-
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
   val->setupFilterParameters();
@@ -970,27 +972,27 @@ QString ITKImportRoboMetMontage::getInputFile() const
 }
 
 // -----------------------------------------------------------------------------
-void ITKImportRoboMetMontage::setMontageStart(const IntVec2Type& value)
+void ITKImportRoboMetMontage::setColumnMontageLimits(const IntVec2Type& value)
 {
-  m_MontageStart = value;
+  m_ColumnMontageLimits = value;
 }
 
 // -----------------------------------------------------------------------------
-IntVec2Type ITKImportRoboMetMontage::getMontageStart() const
+IntVec2Type ITKImportRoboMetMontage::getColumnMontageLimits() const
 {
-  return m_MontageStart;
+  return m_ColumnMontageLimits;
 }
 
 // -----------------------------------------------------------------------------
-void ITKImportRoboMetMontage::setMontageEnd(const IntVec2Type& value)
+void ITKImportRoboMetMontage::setRowMontageLimits(const IntVec2Type& value)
 {
-  m_MontageEnd = value;
+  m_RowMontageLimits = value;
 }
 
 // -----------------------------------------------------------------------------
-IntVec2Type ITKImportRoboMetMontage::getMontageEnd() const
+IntVec2Type ITKImportRoboMetMontage::getRowMontageLimits() const
 {
-  return m_MontageEnd;
+  return m_RowMontageLimits;
 }
 
 // -----------------------------------------------------------------------------
@@ -1160,5 +1162,3 @@ int32_t ITKImportRoboMetMontage::getLengthUnit() const
 {
   return m_LengthUnit;
 }
-
-

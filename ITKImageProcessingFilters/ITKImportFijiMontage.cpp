@@ -192,6 +192,12 @@ void ITKImportFijiMontage::initialize()
   clearErrorCode();
   clearWarningCode();
   setCancel(false);
+
+  m_MontageStart[0] = m_ColumnMontageLimits[0];
+  m_MontageStart[1] = m_RowMontageLimits[0];
+
+  m_MontageEnd[0] = m_ColumnMontageLimits[1];
+  m_MontageEnd[1] = m_RowMontageLimits[1];
 }
 
 // -----------------------------------------------------------------------------
@@ -206,8 +212,8 @@ void ITKImportFijiMontage::setupFilterParameters()
   param->setReadOnly(true);
   parameters.push_back(param);
 
-  parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage Start (Col, Row) [Inclusive, Zero Based]", MontageStart, FilterParameter::Parameter, ITKImportFijiMontage));
-  parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage End (Col, Row) [Inclusive, Zero Based]", MontageEnd, FilterParameter::Parameter, ITKImportFijiMontage));
+  parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage Column Start/End [Inclusive, Zero Based]", ColumnMontageLimits, FilterParameter::Parameter, ITKImportFijiMontage));
+  parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage Row Start/End [Inclusive, Zero Based]", RowMontageLimits, FilterParameter::Parameter, ITKImportFijiMontage));
 
   QStringList linkedProps("Origin");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Change Origin", ChangeOrigin, FilterParameter::Parameter, ITKImportFijiMontage, linkedProps));
@@ -236,8 +242,7 @@ void ITKImportFijiMontage::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void ITKImportFijiMontage::dataCheck()
 {
-  clearErrorCode();
-  clearWarningCode();
+  initialize();
 
   QString ss;
   QFileInfo fi(getInputFile());
@@ -919,7 +924,7 @@ ITKImportFijiMontage::Pointer ITKImportFijiMontage::NullPointer()
 // -----------------------------------------------------------------------------
 std::shared_ptr<ITKImportFijiMontage> ITKImportFijiMontage::New()
 {
-  struct make_shared_enabler : public ITKImportFijiMontage  
+  struct make_shared_enabler : public ITKImportFijiMontage
   {
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
@@ -952,27 +957,27 @@ QString ITKImportFijiMontage::getInputFile() const
 }
 
 // -----------------------------------------------------------------------------
-void ITKImportFijiMontage::setMontageStart(const IntVec2Type& value)
+void ITKImportFijiMontage::setColumnMontageLimits(const IntVec2Type& value)
 {
-  m_MontageStart = value;
+  m_ColumnMontageLimits = value;
 }
 
 // -----------------------------------------------------------------------------
-IntVec2Type ITKImportFijiMontage::getMontageStart() const
+IntVec2Type ITKImportFijiMontage::getColumnMontageLimits() const
 {
-  return m_MontageStart;
+  return m_ColumnMontageLimits;
 }
 
 // -----------------------------------------------------------------------------
-void ITKImportFijiMontage::setMontageEnd(const IntVec2Type& value)
+void ITKImportFijiMontage::setRowMontageLimits(const IntVec2Type& value)
 {
-  m_MontageEnd = value;
+  m_RowMontageLimits = value;
 }
 
 // -----------------------------------------------------------------------------
-IntVec2Type ITKImportFijiMontage::getMontageEnd() const
+IntVec2Type ITKImportFijiMontage::getRowMontageLimits() const
 {
-  return m_MontageEnd;
+  return m_RowMontageLimits;
 }
 
 // -----------------------------------------------------------------------------
@@ -1106,5 +1111,3 @@ int32_t ITKImportFijiMontage::getLengthUnit() const
 {
   return m_LengthUnit;
 }
-
-

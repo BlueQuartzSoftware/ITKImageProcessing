@@ -78,8 +78,9 @@ class ITKImageProcessing_EXPORT ITKImportFijiMontage : public AbstractFilter
   PYB11_PROPERTY(bool ChangeSpacing READ getChangeSpacing WRITE setChangeSpacing)
   PYB11_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
   PYB11_PROPERTY(int32_t LengthUnit READ getLengthUnit WRITE setLengthUnit)
-  PYB11_PROPERTY(IntVec2Type MontageStart READ getMontageStart WRITE setMontageStart)
-  PYB11_PROPERTY(IntVec2Type MontageEnd READ getMontageEnd WRITE setMontageEnd)
+  
+  PYB11_PROPERTY(IntVec2Type ColumnMontageLimits READ getColumnMontageLimits WRITE setColumnMontageLimits)
+  PYB11_PROPERTY(IntVec2Type RowMontageLimits READ getRowMontageLimits WRITE setRowMontageLimits)
 #endif
   // clang-format on
   Q_DECLARE_PRIVATE(ITKImportFijiMontage)
@@ -129,28 +130,26 @@ public:
   Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
   /**
-   * @brief Setter property for MontageStart
+   * @brief Setter property for ColumnMontageLimits
    */
-  void setMontageStart(const IntVec2Type& value);
+  void setColumnMontageLimits(const IntVec2Type& value);
   /**
-   * @brief Getter property for MontageStart
-   * @return Value of MontageStart
+   * @brief Getter property for ColumnMontageLimits
+   * @return Value of ColumnMontageLimits
    */
-  IntVec2Type getMontageStart() const;
-
-  Q_PROPERTY(IntVec2Type MontageStart READ getMontageStart WRITE setMontageStart)
+  IntVec2Type getColumnMontageLimits() const;
+  Q_PROPERTY(IntVec2Type ColumnMontageLimits READ getColumnMontageLimits WRITE setColumnMontageLimits)
 
   /**
-   * @brief Setter property for MontageEnd
+   * @brief Setter property for RowMontageLimits
    */
-  void setMontageEnd(const IntVec2Type& value);
+  void setRowMontageLimits(const IntVec2Type& value);
   /**
-   * @brief Getter property for MontageEnd
-   * @return Value of MontageEnd
+   * @brief Getter property for RowMontageLimits
+   * @return Value of RowMontageLimits
    */
-  IntVec2Type getMontageEnd() const;
-
-  Q_PROPERTY(IntVec2Type MontageEnd READ getMontageEnd WRITE setMontageEnd)
+  IntVec2Type getRowMontageLimits() const;
+  Q_PROPERTY(IntVec2Type RowMontageLimits READ getRowMontageLimits WRITE setRowMontageLimits)
 
   /**
    * @brief Setter property for DataContainerPath
@@ -455,19 +454,21 @@ protected:
   void findTileIndices(int32_t tolerance, std::vector<ITKImportFijiMontage::BoundsType>& bounds);
 
 private:
-    QString m_InputFile = {};
-    IntVec2Type m_MontageStart = {};
-    IntVec2Type m_MontageEnd = {};
-    DataArrayPath m_DataContainerPath = {};
-    QString m_CellAttributeMatrixName = {};
-    QString m_ImageDataArrayName = {};
-    bool m_ConvertToGrayScale = {};
-    FloatVec3Type m_ColorWeights = {};
-    bool m_ChangeOrigin = {};
-    FloatVec3Type m_Origin = {};
-    bool m_ChangeSpacing = {};
-    FloatVec3Type m_Spacing = {};
-    int32_t m_LengthUnit = {};
+  QString m_InputFile = {};
+  IntVec2Type m_ColumnMontageLimits = {0, 0};
+  IntVec2Type m_RowMontageLimits = {0, 0};
+  IntVec2Type m_MontageStart = {0, 0};
+  IntVec2Type m_MontageEnd = {0, 0};
+  DataArrayPath m_DataContainerPath = {};
+  QString m_CellAttributeMatrixName = {};
+  QString m_ImageDataArrayName = {};
+  bool m_ConvertToGrayScale = {};
+  FloatVec3Type m_ColorWeights = {};
+  bool m_ChangeOrigin = {};
+  FloatVec3Type m_Origin = {};
+  bool m_ChangeSpacing = {};
+  FloatVec3Type m_Spacing = {};
+  int32_t m_LengthUnit = {};
 
   QScopedPointer<ITKImportFijiMontagePrivate> const d_ptr;
   bool m_FileWasRead = false;

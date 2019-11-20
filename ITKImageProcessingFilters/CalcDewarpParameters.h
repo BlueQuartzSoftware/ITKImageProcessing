@@ -53,21 +53,23 @@ class ITKImageProcessing_EXPORT CalcDewarpParameters : public AbstractFilter
   Q_OBJECT
 
 #ifdef SIMPL_ENABLE_PYTHON
-    PYB11_CREATE_BINDINGS(CalcDewarpParameters SUPERCLASS AbstractFilter)
-    PYB11_SHARED_POINTERS(CalcDewarpParameters)
-    PYB11_FILTER_NEW_MACRO(CalcDewarpParameters)
+  PYB11_CREATE_BINDINGS(CalcDewarpParameters SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(CalcDewarpParameters)
+  PYB11_FILTER_NEW_MACRO(CalcDewarpParameters)
 
-    PYB11_PROPERTY(QString MontageName READ getMontageName WRITE setMontageName)
-    PYB11_PROPERTY(uint MaxIterations READ getMaxIterations WRITE setMaxIterations)
-    PYB11_PROPERTY(double FractionalTolerance READ getFractionalTolerance WRITE setFractionalTolerance)
-    PYB11_PROPERTY(bool SpecifyInitialSimplex READ getSpecifyInitialSimplex WRITE setSpecifyInitialSimplex)
-    PYB11_PROPERTY(FloatVec7Type XFactors READ getXFactors WRITE setXFactors)
-    PYB11_PROPERTY(FloatVec7Type YFactors READ getYFactors WRITE setYFactors)
-    PYB11_PROPERTY(QString AttributeMatrixName READ getAttributeMatrixName WRITE setAttributeMatrixName)
-    PYB11_PROPERTY(QString IPFColorsArrayName READ getIPFColorsArrayName WRITE setIPFColorsArrayName)
-    PYB11_PROPERTY(QString TransformDCName READ getTransformDCName WRITE setTransformDCName)
-    PYB11_PROPERTY(QString TransformMatrixName READ getTransformMatrixName WRITE setTransformMatrixName)
-    PYB11_PROPERTY(QString TransformArrayName READ getTransformArrayName WRITE setTransformArrayName)
+  PYB11_PROPERTY(QString MontageName READ getMontageName WRITE setMontageName)
+  PYB11_PROPERTY(uint MaxIterations READ getMaxIterations WRITE setMaxIterations)
+  PYB11_PROPERTY(double FractionalTolerance READ getFractionalTolerance WRITE setFractionalTolerance)
+  PYB11_PROPERTY(int Delta READ getDelta WRITE setDelta)
+  PYB11_PROPERTY(bool SpecifyInitialSimplex READ getSpecifyInitialSimplex WRITE setSpecifyInitialSimplex)
+  PYB11_PROPERTY(FloatVec7Type XFactors READ getXFactors WRITE setXFactors)
+  PYB11_PROPERTY(FloatVec7Type YFactors READ getYFactors WRITE setYFactors)
+  PYB11_PROPERTY(QString AttributeMatrixName READ getAttributeMatrixName WRITE setAttributeMatrixName)
+  PYB11_PROPERTY(QString IPFColorsArrayName READ getIPFColorsArrayName WRITE setIPFColorsArrayName)
+  PYB11_PROPERTY(QString TransformDCName READ getTransformDCName WRITE setTransformDCName)
+  PYB11_PROPERTY(QString TransformMatrixName READ getTransformMatrixName WRITE setTransformMatrixName)
+  PYB11_PROPERTY(QString TransformArrayName READ getTransformArrayName WRITE setTransformArrayName)
+
 #endif
 
   using AmoebaOptimizer = itk::FFTAmoebaOptimizer;

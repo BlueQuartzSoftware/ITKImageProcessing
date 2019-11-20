@@ -47,6 +47,7 @@
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/MultiDataContainerSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/PreflightUpdatedValueFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
 #include "SIMPLib/ITK/itkDream3DFilterInterruption.h"
@@ -58,6 +59,7 @@
 #include "SIMPLib/ITK/itkTransformToDream3DITransformContainer.h"
 #include "SIMPLib/ITK/itkTransformToDream3DTransformContainer.h"
 #include "SIMPLib/SIMPLibVersion.h"
+#include "SIMPLib/FilterParameters/IntFilterParameter.h"
 
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/util/MontageImportHelper.h"
@@ -170,17 +172,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKStitchMontage::ITKStitchMontage()
-: m_MontageStart(IntVec2Type(0, 0))
-, m_MontageEnd(IntVec2Type(0, 0))
-, m_DataContainerPrefix(ITKImageProcessing::Montage::k_DataContainerPrefixDefaultName)
-, m_CommonAttributeMatrixName(ITKImageProcessing::Montage::k_TileAttributeMatrixDefaultName)
-, m_CommonDataArrayName(ITKImageProcessing::Montage::k_TileDataArrayDefaultName)
-, m_MontageDataContainerName(ITKImageProcessing::Montage::k_MontageDataContainerDefaultName)
-, m_MontageAttributeMatrixName(ITKImageProcessing::Montage::k_MontageAttributeMatrixDefaultName)
-, m_MontageDataArrayName(ITKImageProcessing::Montage::k_MontageDataArrayDefaultName)
-{
-}
+ITKStitchMontage::ITKStitchMontage() = default;
 
 // -----------------------------------------------------------------------------
 //
@@ -196,6 +188,13 @@ void ITKStitchMontage::initialize()
   clearWarningCode();
   setCancel(false);
   m_ImageDataContainers.clear();
+  m_DataContainerList.clear();
+
+  m_MontageStart[0] = m_ColumnMontageLimits[0];
+  m_MontageStart[1] = m_RowMontageLimits[0];
+
+  m_MontageEnd[0] = m_ColumnMontageLimits[1];
+  m_MontageEnd[1] = m_RowMontageLimits[1];
 }
 
 // -----------------------------------------------------------------------------
@@ -205,8 +204,14 @@ void ITKStitchMontage::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
 
-  parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage Start (Col, Row) [Inclusive, Zero Based]", MontageStart, FilterParameter::Parameter, ITKStitchMontage));
-  parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage End (Col, Row) [Inclusive, Zero Based]", MontageEnd, FilterParameter::Parameter, ITKStitchMontage));
+  parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage Column Start/End [Inclusive, Zero Based]", ColumnMontageLimits, FilterParameter::Parameter, ITKStitchMontage));
+  parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage Row Start/End [Inclusive, Zero Based]", RowMontageLimits, FilterParameter::Parameter, ITKStitchMontage));
+
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Padding Digits for DataContainer Names", DataContainerPaddingDigits, FilterParameter::Category::Parameter, ITKStitchMontage));
+
+  PreflightUpdatedValueFilterParameter::Pointer param = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("DataContainer List", DataContainerInfo, FilterParameter::Parameter, ITKStitchMontage);
+  param->setReadOnly(true);
+  parameters.push_back(param);
 
   parameters.push_back(SIMPL_NEW_STRING_FP("Data Container Prefix", DataContainerPrefix, FilterParameter::RequiredArray, ITKStitchMontage));
   parameters.push_back(SIMPL_NEW_STRING_FP("Common Attribute Matrix", CommonAttributeMatrixName, FilterParameter::RequiredArray, ITKStitchMontage));
@@ -274,7 +279,7 @@ void ITKStitchMontage::dataCheck()
     return;
   }
 
-  m_ImageDataContainers.clear();
+  QTextStream dclistOut(&m_DataContainerList);
 
   DataContainerArray::Pointer dca = getDataContainerArray();
 
@@ -286,7 +291,7 @@ void ITKStitchMontage::dataCheck()
     for(int32_t col = m_MontageStart[0]; col <= m_MontageEnd[0]; col++)
     {
       // Create our DataContainer Name using a Prefix and a rXXcYY format.
-      QString dcName = MontageImportHelper::GenerateDataContainerName(getDataContainerPrefix(), m_MontageEnd, row, col);
+      QString dcName = MontageImportHelper::GenerateDataContainerName(getDataContainerPrefix(), m_DataContainerPaddingDigits, row, col);
 
       DataArrayPath testPath;
       testPath.setDataContainerName(dcName);
@@ -294,14 +299,18 @@ void ITKStitchMontage::dataCheck()
       testPath.setDataArrayName(getCommonDataArrayName());
 
       DataContainer::Pointer dc = dca->getPrereqDataContainer(this, testPath);
+
       if(getErrorCode() < 0)
       {
+        dclistOut << "[NOT FOUND]    R=" << row << " C=" << col << "  " << testPath.serialize();
         return;
       }
+
       int err = -11020;
       AttributeMatrix::Pointer am = getDataContainerArray()->getPrereqAttributeMatrixFromPath(this, testPath, err);
       if(getErrorCode() < 0)
       {
+        dclistOut << "[NOT FOUND]    R=" << row << " C=" << col << "  " << testPath.serialize();
         return;
       }
 
@@ -310,21 +319,24 @@ void ITKStitchMontage::dataCheck()
       {
         QString ss = QObject::tr("Image Data Array at path '%1' must have at least 2 tuple dimensions.").arg(testPath.serialize("/"));
         setErrorCondition(-11007, ss);
+        dclistOut << "[NOT FOUND]    R=" << row << " C=" << col << "  " << testPath.serialize();
         return;
       }
 
       tilePtr = dca->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, testPath);
       if(getErrorCode() < 0)
       {
+        dclistOut << "[NOT FOUND]    R=" << row << " C=" << col << "  " << testPath.serialize();
         return;
       }
 
       tileGeom = dca->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, dcName);
       if(getErrorCode() < 0)
       {
+        dclistOut << "[NOT FOUND]   R=" << row << " C=" << col << "  " << testPath.serialize();
         return;
       }
-
+      dclistOut << "[+]  R=" << row << " C=" << col << "  " << testPath.serialize("/") << "\n";
       m_ImageDataContainers.push_back(dc);
     }
   }
@@ -454,6 +466,12 @@ void ITKStitchMontage::execute()
 }
 
 // -----------------------------------------------------------------------------
+QString ITKStitchMontage::getDataContainerInfo()
+{
+  return m_DataContainerList;
+}
+
+// -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 template <typename PixelType, typename AccumulatePixelType>
@@ -521,7 +539,7 @@ void ITKStitchMontage::initializeResampler(typename Resampler::Pointer resampler
       ind[0] = x - m_MontageStart[0];
       using toITKType = itk::InPlaceDream3DDataToImageFilter<PixelType, Dimension>;
       typename toITKType::Pointer toITK = toITKType::New();
-      QString dcName = MontageImportHelper::GenerateDataContainerName(getDataContainerPrefix(), m_MontageEnd, y, x);
+      QString dcName = MontageImportHelper::GenerateDataContainerName(getDataContainerPrefix(), m_DataContainerPaddingDigits, y, x);
       DataContainer::Pointer imageDC = getDataContainerArray()->getDataContainer(dcName);
       // Check the resolution and fix if necessary
       ImageGeom::Pointer geom = imageDC->getGeometryAs<ImageGeom>();
@@ -719,7 +737,7 @@ ITKStitchMontage::Pointer ITKStitchMontage::NullPointer()
 // -----------------------------------------------------------------------------
 std::shared_ptr<ITKStitchMontage> ITKStitchMontage::New()
 {
-  struct make_shared_enabler : public ITKStitchMontage  
+  struct make_shared_enabler : public ITKStitchMontage
   {
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
@@ -740,27 +758,39 @@ QString ITKStitchMontage::ClassName()
 }
 
 // -----------------------------------------------------------------------------
-void ITKStitchMontage::setMontageStart(const IntVec2Type& value)
+void ITKStitchMontage::setDataContainerPaddingDigits(int32_t value)
 {
-  m_MontageStart = value;
+  m_DataContainerPaddingDigits = value;
 }
 
 // -----------------------------------------------------------------------------
-IntVec2Type ITKStitchMontage::getMontageStart() const
+int32_t ITKStitchMontage::getDataContainerPaddingDigits() const
 {
-  return m_MontageStart;
+  return m_DataContainerPaddingDigits;
 }
 
 // -----------------------------------------------------------------------------
-void ITKStitchMontage::setMontageEnd(const IntVec2Type& value)
+void ITKStitchMontage::setColumnMontageLimits(const IntVec2Type& value)
 {
-  m_MontageEnd = value;
+  m_ColumnMontageLimits = value;
 }
 
 // -----------------------------------------------------------------------------
-IntVec2Type ITKStitchMontage::getMontageEnd() const
+IntVec2Type ITKStitchMontage::getColumnMontageLimits() const
 {
-  return m_MontageEnd;
+  return m_ColumnMontageLimits;
+}
+
+// -----------------------------------------------------------------------------
+void ITKStitchMontage::setRowMontageLimits(const IntVec2Type& value)
+{
+  m_RowMontageLimits = value;
+}
+
+// -----------------------------------------------------------------------------
+IntVec2Type ITKStitchMontage::getRowMontageLimits() const
+{
+  return m_RowMontageLimits;
 }
 
 // -----------------------------------------------------------------------------
@@ -834,5 +864,3 @@ QString ITKStitchMontage::getMontageDataArrayName() const
 {
   return m_MontageDataArrayName;
 }
-
-

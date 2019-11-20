@@ -191,6 +191,11 @@ void ImportZenInfoMontage::initialize()
   clearErrorCode();
   clearWarningCode();
   setCancel(false);
+  m_MontageStart[0] = m_ColumnMontageLimits[0];
+  m_MontageStart[1] = m_RowMontageLimits[0];
+
+  m_MontageEnd[0] = m_ColumnMontageLimits[1];
+  m_MontageEnd[1] = m_RowMontageLimits[1];
 }
 
 // -----------------------------------------------------------------------------
@@ -205,8 +210,8 @@ void ImportZenInfoMontage::setupFilterParameters()
   param->setReadOnly(true);
   parameters.push_back(param);
 
-  parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage Start (Col, Row) [Inclusive, Zero Based]", MontageStart, FilterParameter::Parameter, ImportZenInfoMontage));
-  parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage End (Col, Row) [Inclusive, Zero Based]", MontageEnd, FilterParameter::Parameter, ImportZenInfoMontage));
+  parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage Column Start/End [Inclusive, Zero Based]", ColumnMontageLimits, FilterParameter::Parameter, ImportZenInfoMontage));
+  parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage Row Start/End [Inclusive, Zero Based]", RowMontageLimits, FilterParameter::Parameter, ImportZenInfoMontage));
 
   QStringList linkedProps("Origin");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Change Origin", ChangeOrigin, FilterParameter::Parameter, ImportZenInfoMontage, linkedProps));
@@ -235,8 +240,7 @@ void ImportZenInfoMontage::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void ImportZenInfoMontage::dataCheck()
 {
-  clearErrorCode();
-  clearWarningCode();
+  initialize();
 
   QString ss;
   QFileInfo fi(getInputFile());
@@ -905,11 +909,10 @@ ImportZenInfoMontage::Pointer ImportZenInfoMontage::NullPointer()
 // -----------------------------------------------------------------------------
 std::shared_ptr<ImportZenInfoMontage> ImportZenInfoMontage::New()
 {
-  struct make_shared_enabler : public ImportZenInfoMontage  
+  struct make_shared_enabler : public ImportZenInfoMontage
   {
 
   private:
-
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
   val->setupFilterParameters();
@@ -941,27 +944,27 @@ QString ImportZenInfoMontage::getInputFile() const
 }
 
 // -----------------------------------------------------------------------------
-void ImportZenInfoMontage::setMontageStart(const IntVec2Type& value)
+void ImportZenInfoMontage::setColumnMontageLimits(const IntVec2Type& value)
 {
-  m_MontageStart = value;
+  m_ColumnMontageLimits = value;
 }
 
 // -----------------------------------------------------------------------------
-IntVec2Type ImportZenInfoMontage::getMontageStart() const
+IntVec2Type ImportZenInfoMontage::getColumnMontageLimits() const
 {
-  return m_MontageStart;
+  return m_ColumnMontageLimits;
 }
 
 // -----------------------------------------------------------------------------
-void ImportZenInfoMontage::setMontageEnd(const IntVec2Type& value)
+void ImportZenInfoMontage::setRowMontageLimits(const IntVec2Type& value)
 {
-  m_MontageEnd = value;
+  m_RowMontageLimits = value;
 }
 
 // -----------------------------------------------------------------------------
-IntVec2Type ImportZenInfoMontage::getMontageEnd() const
+IntVec2Type ImportZenInfoMontage::getRowMontageLimits() const
 {
-  return m_MontageEnd;
+  return m_RowMontageLimits;
 }
 
 // -----------------------------------------------------------------------------
@@ -1089,5 +1092,3 @@ QStringList ImportZenInfoMontage::getFilenameList() const
 {
   return m_FilenameList;
 }
-
-
