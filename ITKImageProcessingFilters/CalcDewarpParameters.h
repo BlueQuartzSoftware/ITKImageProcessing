@@ -16,7 +16,7 @@
  * may be used to endorse or promote products derived from this software without
  * specific prior written permission.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS “AS IS”
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
@@ -44,39 +44,33 @@
 #include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
- * @brief The Blend class. See [Filter documentation](@ref blend) for details.
+ * @brief The CalcDewarpParameters class. See [Filter documentation](@ref CalcDewarpParameters) for details.
  */
-class ITKImageProcessing_EXPORT Blend : public AbstractFilter
+class ITKImageProcessing_EXPORT CalcDewarpParameters : public AbstractFilter
 {
   Q_OBJECT
 
 #ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(Blend SUPERCLASS AbstractFilter)
-  PYB11_SHARED_POINTERS(Blend)
-  PYB11_FILTER_NEW_MACRO(Blend)
+  PYB11_CREATE_BINDINGS(CalcDewarpParameters SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(CalcDewarpParameters)
+  PYB11_FILTER_NEW_MACRO(CalcDewarpParameters)
 
   Q_PROPERTY(QString MontageName READ getMontageName WRITE setMontageName)
   Q_PROPERTY(uint MaxIterations READ getMaxIterations WRITE setMaxIterations)
-  Q_PROPERTY(IntVec2Type OverlapAmt READ getOverlapAmt WRITE setOverlapAmt)
-  Q_PROPERTY(double LowTolerance READ getLowTolerance WRITE setLowTolerance)
-  Q_PROPERTY(double HighTolerance READ getHighTolerance WRITE setHighTolerance)
-  Q_PROPERTY(int Degree READ getDegree WRITE setDegree)
-  Q_PROPERTY(bool UseAmoebaOptimizer READ getUseAmoebaOptimizer WRITE setUseAmoebaOptimizer)
+  Q_PROPERTY(double FunctionTolerance READ getFunctionTolerance WRITE setFunctionTolerance)
+  Q_PROPERTY(double ParameterTolerance READ getParameterTolerance WRITE setParameterTolerance)
   Q_PROPERTY(bool SpecifyInitialSimplex READ getSpecifyInitialSimplex WRITE setSpecifyInitialSimplex)
   Q_PROPERTY(FloatVec7Type XFactors READ getXFactors WRITE setXFactors)
   Q_PROPERTY(FloatVec7Type YFactors READ getYFactors WRITE setYFactors)
   Q_PROPERTY(QString AttributeMatrixName READ getAttributeMatrixName WRITE setAttributeMatrixName)
   Q_PROPERTY(QString IPFColorsArrayName READ getIPFColorsArrayName WRITE setIPFColorsArrayName)
-  Q_PROPERTY(bool CreateTransformContainer READ getCreateTransformContainer WRITE setCreateTransformContainer)
-  Q_PROPERTY(QString BlendDCName READ getBlendDCName WRITE setBlendDCName)
+  Q_PROPERTY(QString TransformDCName READ getTransformDCName WRITE setTransformDCName)
   Q_PROPERTY(QString TransformMatrixName READ getTransformMatrixName WRITE setTransformMatrixName)
   Q_PROPERTY(QString TransformArrayName READ getTransformArrayName WRITE setTransformArrayName)
-  Q_PROPERTY(QString ResidualArrayName READ getResidualArrayName WRITE setResidualArrayName)
-  Q_PROPERTY(QString TransformPrefix READ getTransformPrefix WRITE setTransformPrefix)
 #endif
 
 public:
-  using Self = Blend;
+  using Self = CalcDewarpParameters;
   using Pointer = std::shared_ptr<Self>;
   using ConstPointer = std::shared_ptr<const Self>;
   using WeakPointer = std::weak_ptr<Self>;
@@ -94,11 +88,11 @@ public:
    */
   static QString ClassName();
 
-  Blend(const Blend&) = delete;            // Copy Constructor Not Implemented
-  Blend& operator=(const Blend&) = delete; // Copy Assignment Not Implemented
-  Blend(Blend&&) = delete;                 // Move Constructor Not Implemented
-  Blend& operator=(Blend&&) = delete;      // Move Assignment Not Implemented
-  ~Blend() override;
+  CalcDewarpParameters(const CalcDewarpParameters&) = delete;            // Copy Constructor Not Implemented
+  CalcDewarpParameters& operator=(const CalcDewarpParameters&) = delete; // Copy Assignment Not Implemented
+  CalcDewarpParameters(CalcDewarpParameters&&) = delete;                 // Move Constructor Not Implemented
+  CalcDewarpParameters& operator=(CalcDewarpParameters&&) = delete;      // Move Assignment Not Implemented
+  ~CalcDewarpParameters() override;
 
   QString getMontageName() const;
   void setMontageName(const QString& value);
@@ -108,21 +102,17 @@ public:
   void setMaxIterations(uint value);
   Q_PROPERTY(uint MaxIterations READ getMaxIterations WRITE setMaxIterations)
 
-  double getLowTolerance() const;
-  void setLowTolerance(double value);
-  Q_PROPERTY(double LowTolerance READ getLowTolerance WRITE setLowTolerance)
+  double getFunctionTolerance() const;
+  void setFunctionTolerance(double value);
+  Q_PROPERTY(double FunctionTolerance READ getFunctionTolerance WRITE setFunctionTolerance)
 
-  double getHighTolerance() const;
-  void setHighTolerance(double value);
-  Q_PROPERTY(double HighTolerance READ getHighTolerance WRITE setHighTolerance)
+  double getParameterTolerance() const;
+  void setParameterTolerance(double value);
+  Q_PROPERTY(double ParameterTolerance READ getParameterTolerance WRITE setParameterTolerance)
 
   int getDelta() const;
   void setDelta(int value);
   Q_PROPERTY(int Delta READ getDelta WRITE setDelta)
-
-  bool getUseAmoebaOptimizer() const;
-  void setUseAmoebaOptimizer(bool value);
-  Q_PROPERTY(bool UseAmoebaOptimizer READ getUseAmoebaOptimizer WRITE setUseAmoebaOptimizer)
 
   bool getSpecifyInitialSimplex() const;
   void setSpecifyInitialSimplex(bool value);
@@ -144,13 +134,9 @@ public:
   void setIPFColorsArrayName(const QString& value);
   Q_PROPERTY(QString IPFColorsArrayName READ getIPFColorsArrayName WRITE setIPFColorsArrayName)
 
-  bool getCreateTransformContainer() const;
-  void setCreateTransformContainer(bool value);
-  Q_PROPERTY(bool CreateTransformContainer READ getCreateTransformContainer WRITE setCreateTransformContainer)
-
-  QString getBlendDCName() const;
-  void setBlendDCName(const QString& value);
-  Q_PROPERTY(QString BlendDCName READ getBlendDCName WRITE setBlendDCName)
+  QString getTransformDCName() const;
+  void setTransformDCName(const QString& value);
+  Q_PROPERTY(QString TransformDCName READ getTransformDCName WRITE setTransformDCName)
 
   QString getTransformMatrixName() const;
   void setTransformMatrixName(const QString& value);
@@ -159,18 +145,6 @@ public:
   QString getTransformArrayName() const;
   void setTransformArrayName(const QString& value);
   Q_PROPERTY(QString TransformArrayName READ getTransformArrayName WRITE setTransformArrayName)
-
-  QString getResidualArrayName() const;
-  void setResidualArrayName(const QString& value);
-  Q_PROPERTY(QString ResidualArrayName READ getResidualArrayName WRITE setResidualArrayName)
-
-  QString getTransformPrefix() const;
-  void setTransformPrefix(const QString& value);
-  Q_PROPERTY(QString TransformPrefix READ getTransformPrefix WRITE setTransformPrefix)
-
-  bool GetConvergenceFromStopDescription(const QString&) const;
-
-  uint GetIterationsFromStopDescription(const QString&) const;
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -256,7 +230,7 @@ signals:
   void preflightExecuted();
 
 protected:
-  Blend();
+  CalcDewarpParameters();
 
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
@@ -309,19 +283,9 @@ protected:
    */
   void deleteGrayscaleIPF();
 
-  /**
-   * @brief Creates new DataContainers and warps the data by the FFT Convolution kernel generated.
-   * @param parameters
-   * @param imageDimX
-   * @param imageDimY
-   */
-  void warpDataContainers(const itk::SingleValuedCostFunction::ParametersType& parameters, double imageDimX, double imageDimY);
+  bool GetConvergenceFromStopDescription(const QString&) const;
 
-  /**
-   * @brief Returns the target image dimensions for the montage
-   * @return
-   */
-  std::pair<double, double> getImageDims() const;
+  uint GetIterationsFromStopDescription(const QString&) const;
 
   /**
    * @brief Returns the required length for either X or Y parameters.
@@ -342,18 +306,15 @@ protected:
 private:
   QString m_MontageName;
   uint m_MaxIterations = 1000;
-  double m_LowTolerance = 1E-2;
-  double m_HighTolerance = 1E-2;
-  int m_Delta = 5;
-  bool m_UseAmoebaOptimizer = false;
+  double m_FunctionTolerance = 1E-5;
+  double m_ParameterTolerance = 1;
+  int m_StepDelta = 5;
   bool m_SpecifyInitialSimplex = true;
   QString m_AttributeMatrixName;
-  QString m_IPFColorsArrayName;
-  bool m_CreateTransformContainer;
-  QString m_BlendDCName = "Blend Data";
-  QString m_TransformMatrixName= "Transform Matrix";
+  QString m_IPFColorsArrayName = "IPFColor";
+  QString m_TransformDCName = "Dewarp Data";
+  QString m_TransformMatrixName = "Transform Matrix";
   QString m_TransformArrayName = "Transform";
-  QString m_ResidualArrayName = "Residual";
   QString m_TransformPrefix = "Transformed_";
 
   FloatVec7Type m_XFactors = {1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};

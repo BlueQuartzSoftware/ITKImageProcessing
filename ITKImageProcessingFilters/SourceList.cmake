@@ -21,7 +21,8 @@ set(_PublicFilters
     ImportZenInfoMontage
 
 # These are from ITKImageProcessing Plugin
-    Blend
+    ApplyDewarpParameters
+    CalcDewarpParameters
     ITKImageReader
     ITKImageWriter
     ITKImportImageStack

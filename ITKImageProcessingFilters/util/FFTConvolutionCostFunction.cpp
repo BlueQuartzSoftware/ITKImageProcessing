@@ -48,7 +48,7 @@
 using MutexType = tbb::queuing_mutex;
 using ScopedLockType = MutexType::scoped_lock;
 
-#define USE_CROP_CHECK 1
+#define USE_CROP_CHECK 0
 
 struct RegionBounds
 {
