@@ -50,7 +50,13 @@ using PixelValue_T = double;
 class GridMontage;
 using GridMontageShPtr = std::shared_ptr<GridMontage>;
 
-struct RegionBounds;
+struct RegionBounds
+{
+  int64_t leftBound = 0;
+  int64_t topBound = 0;
+  int64_t rightBound = std::numeric_limits<int64_t>::max();
+  int64_t bottomBound = std::numeric_limits<int64_t>::max();
+};
 
 namespace FFTHelper
 {
@@ -73,7 +79,7 @@ constexpr uint32_t getReqPartialParameterSize()
 }
 constexpr uint32_t getReqParameterSize()
 {
-  return 2 * getReqPartialParameterSize();
+  return 14;
 }
 PixelTypei getOldIndex(PixelTypei newCoords, PixelTypei offset, const ParametersType& parameters);
 int64_t px(PixelTypei newCoords, PixelTypei offset, const ParametersType& parameters);
@@ -141,7 +147,14 @@ public:
    * @param amName
    * @param daName
    */
-  void InitializeDataContainer(const GridMontageShPtr& montage, size_t row, size_t column, const QString& amName, const QString& daName);
+  void initializeDataContainer(const GridMontageShPtr& montage, size_t row, size_t column, const QString& amName, const QString& daName);
+
+  /**
+   * @brief Precalculate the crop map for the given ImageGrid iterator
+   * @param inputImage
+   * @param cropMap
+   */
+  void precalcCropMap(const ImageGrid::value_type& inputImage, CropMap& cropMap);
 
 #if 0
   /**
@@ -188,8 +201,7 @@ public:
    * @param gridKey
    * @param cropMap
    */
-  void applyTransformationPixel(const ParametersType& parameters, const InputImage::Pointer& inputImage,
-                                PixelCoord index, const GridKey& gridKey, CropMap& cropMap) const;
+  void applyTransformationPixel(const ParametersType& parameters, const InputImage::Pointer& inputImage, PixelCoord index, const GridKey& gridKey, CropMap& cropMap) const;
 
   /**
    * @brief This method is called by applyTransformationPixel as a parallel task calculating pixel coordinates.
@@ -220,32 +232,6 @@ public:
    * @param cropMap
    */
   void updateCropMapBounds(const InputImage::Pointer& inputImage, CropMap& cropMap) const;
-
-#if 0
-  /**
-   * @brief Crops the provided ImageGrid based on the given OverlapPair and CropMap.
-   * The CropMap is used to determine the bounds of the other Image specified by the
-   * OverlapPair rather than its own matching Image.
-   * @param overlap
-   * @param distortedGrid
-   * @param cropMap
-   */
-  void cropOverlap(OverlapPair& overlap, CropMap& cropMap) const;
-
-  /**
-   * @brief Crops the OverlapPair using the provided ImageGrid and CropMap.
-   * @param overlap
-   * @param cropMap
-   */
-  void cropOverlapHorizontal(OverlapPair& overlap, const CropMap& cropMap) const;
-
-  /**
-   * @brief Crops the OverlapPair using the provided ImageGrid and CropMap.
-   * @param overlap
-   * @param cropMap
-   */
-  void cropOverlapVertical(OverlapPair& overlap, const CropMap& cropMap) const;
-#endif
 
   /**
    * @brief Creates OverlapPairs from the given CropMap.
@@ -331,4 +317,5 @@ private:
   ImageGrid m_ImageGrid;
   double m_ImageDim_x;
   double m_ImageDim_y;
+  OverlapPairs m_Overlaps;
 };
