@@ -64,7 +64,7 @@ using MutexType = tbb::queuing_mutex;
 #include "SIMPLib/Utilities/ParallelTaskAlgorithm.h"
 
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
-#include "ITKImageProcessing/ITKImageProcessingFilters/util/FFTConvolutionCostFunction.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/util/FFTDewarpHelper.h"
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
 #include "ITKImageProcessing/FilterParameters/EbsdWarpPolynomialFilterParameter.h"
 
@@ -75,7 +75,7 @@ namespace
 {
 const QString InternalGrayscalePrefex = "_INTERNAL_Grayscale_";
 
-std::vector<double> convertParams2Vec(const FFTHelper::ParametersType& params)
+std::vector<double> convertParams2Vec(const FFTDewarpHelper::ParametersType& params)
 {
   const size_t size = params.size();
   std::vector<double> vec(size);
@@ -86,10 +86,10 @@ std::vector<double> convertParams2Vec(const FFTHelper::ParametersType& params)
   return vec;
 }
 
-FFTHelper::ParametersType convertVec2Params(const std::vector<double>& vec)
+FFTDewarpHelper::ParametersType convertVec2Params(const std::vector<double>& vec)
 {
   const size_t size = vec.size();
-  FFTHelper::ParametersType params(size);
+  FFTDewarpHelper::ParametersType params(size);
   for(size_t i = 0; i < size; i++)
   {
     params[i] = vec[i];
@@ -97,7 +97,7 @@ FFTHelper::ParametersType convertVec2Params(const std::vector<double>& vec)
   return params;
 }
 
-std::list<double> convertParams2List(const FFTHelper::ParametersType& params)
+std::list<double> convertParams2List(const FFTDewarpHelper::ParametersType& params)
 {
   std::list<double> list;
   for(const auto& param : params)
@@ -107,11 +107,11 @@ std::list<double> convertParams2List(const FFTHelper::ParametersType& params)
   return list;
 }
 
-FFTHelper::PixelTypei pixelTypeFromSizeVec(const SizeVec2Type& sizeVec)
+FFTDewarpHelper::PixelIndex pixelIndexFromSizeVec(const SizeVec2Type& sizeVec)
 {
-  return FFTHelper::PixelTypei{static_cast<int64_t>(sizeVec[0]), static_cast<int64_t>(sizeVec[1])};
+  return FFTDewarpHelper::pixelIndex(sizeVec[0], sizeVec[1]);
 }
-SizeVec2Type pixelTypeToSizeVec(const FFTHelper::PixelTypei& pixelType)
+SizeVec2Type pixelIndexToSizeVec(const FFTDewarpHelper::PixelIndex& pixelType)
 {
   return SizeVec2Type(static_cast<size_t>(pixelType[0]), static_cast<size_t>(pixelType[1]));
 }
@@ -124,9 +124,9 @@ size_t flatten(const SizeVec2Type& xyPos, const SizeVec3Type& dimensions)
 
   return x + y * width;
 }
-size_t flatten(const FFTHelper::PixelTypei& xyPos, const SizeVec3Type& dimensions)
+size_t flatten(const FFTDewarpHelper::PixelIndex& xyPos, const SizeVec3Type& dimensions)
 {
-  return flatten(pixelTypeToSizeVec(xyPos), dimensions);
+  return flatten(pixelIndexToSizeVec(xyPos), dimensions);
 }
 
 template <typename T>
@@ -138,11 +138,11 @@ void clearTuple(const typename DataArray<T>::Pointer& da, size_t numComponents, 
 }
 
 template <typename T>
-void transformDataPixel(double x_trans, double y_trans, const SizeVec2Type& newPixel, const FFTHelper::ParametersType& parameters, const SizeVec3Type& dimensions,
+void transformDataPixel(double x_trans, double y_trans, const SizeVec2Type& newPixel, const FFTDewarpHelper::ParametersType& parameters, const SizeVec3Type& dimensions,
                         const typename DataArray<T>::Pointer& da, const typename DataArray<T>::Pointer& tempDACopy)
 {
-  FFTHelper::PixelTypei offset = FFTHelper::pixelType(x_trans, y_trans);
-  FFTHelper::PixelTypei oldPixelIndex = FFTHelper::getOldIndex(FFTHelper::pixelType(newPixel[0], newPixel[1]), offset, parameters);
+  FFTDewarpHelper::PixelIndex offset = FFTDewarpHelper::pixelIndex(x_trans, y_trans);
+  FFTDewarpHelper::PixelIndex oldPixelIndex = FFTDewarpHelper::getOldIndex(FFTDewarpHelper::pixelIndex(newPixel[0], newPixel[1]), offset, parameters);
 
   auto compDims = tempDACopy->getComponentDimensions();
   size_t numComponents = std::accumulate(compDims.begin(), compDims.end(), 0);
@@ -166,7 +166,7 @@ void transformDataPixel(double x_trans, double y_trans, const SizeVec2Type& newP
 }
 
 template <typename T>
-void transformDataArray(const FFTHelper::ParametersType& parameters, const SizeVec3Type& dimensions, double x_trans, double y_trans, const typename DataArray<T>::Pointer& da)
+void transformDataArray(const FFTDewarpHelper::ParametersType& parameters, const SizeVec3Type& dimensions, double x_trans, double y_trans, const typename DataArray<T>::Pointer& da)
 {
   // Do not resize items that do not match the geometry.
   size_t flattenedDims = std::accumulate(dimensions.begin(), dimensions.end(), 1, std::multiplies<double>());
@@ -199,7 +199,7 @@ void transformDataArray(const FFTHelper::ParametersType& parameters, const SizeV
   taskAlg.wait();
 }
 
-void transformIDataArray(const FFTHelper::ParametersType& parameters, const SizeVec3Type& dimensions, double x_trans, double y_trans, const IDataArray::Pointer& da)
+void transformIDataArray(const FFTDewarpHelper::ParametersType& parameters, const SizeVec3Type& dimensions, double x_trans, double y_trans, const IDataArray::Pointer& da)
 {
   if(std::dynamic_pointer_cast<Int8ArrayType>(da))
   {
@@ -435,7 +435,7 @@ bool ApplyDewarpParameters::checkMontageRequirements()
 // -----------------------------------------------------------------------------
 size_t ApplyDewarpParameters::getSingleParamCount() const
 {
-  return FFTHelper::getReqPartialParameterSize();
+  return FFTDewarpHelper::getReqPartialParameterSize();
 }
 
 // -----------------------------------------------------------------------------
@@ -473,7 +473,7 @@ std::vector<double> ApplyDewarpParameters::getPxyVec()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ApplyDewarpParameters::warpDataContainers(const FFTHelper::ParametersType& parameters, double imageDimX, double imageDimY)
+void ApplyDewarpParameters::warpDataContainers(const FFTDewarpHelper::ParametersType& parameters, double imageDimX, double imageDimY)
 {
   // Duplicate the DataContainers used and Warp them based on the transformVector generated.
   AbstractMontage::Pointer montage = getDataContainerArray()->getMontage(m_MontageName);

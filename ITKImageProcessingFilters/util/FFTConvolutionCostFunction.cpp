@@ -52,72 +52,7 @@ using ScopedLockType = int;
 #include "SIMPLib/Utilities/ParallelData2DAlgorithm.h"
 #include "SIMPLib/Utilities/ParallelTaskAlgorithm.h"
 
-
-// ----------------------------------------------------------------------------
-FFTHelper::PixelTypei FFTHelper::pixelType(int64_t x, int64_t y)
-{
-  return PixelTypei{x, y};
-}
-
-// ----------------------------------------------------------------------------
-FFTHelper::PixelTypei FFTHelper::pixelType(size_t x, size_t y)
-{
-  return PixelTypei{static_cast<int64_t>(x), static_cast<int64_t>(y)};
-}
-
-// ----------------------------------------------------------------------------
-FFTHelper::PixelTypei FFTHelper::pixelType(double x, double y)
-{
-  int64_t xi = static_cast<int64_t>(std::floor(x));
-  int64_t yi = static_cast<int64_t>(std::floor(y));
-  return PixelTypei{xi, yi};
-}
-
-// ----------------------------------------------------------------------------
-FFTHelper::PixelTypei FFTHelper::getOldIndex(PixelTypei newCoords, PixelTypei offset, const ParametersType& parameters)
-{
-  PixelTypei oldCoords;
-  oldCoords[0] = px(newCoords, offset, parameters);
-  oldCoords[1] = py(newCoords, offset, parameters);
-  return oldCoords;
-}
-
-// ----------------------------------------------------------------------------
-int64_t FFTHelper::px(PixelTypei newCoords, PixelTypei offset, const ParametersType& parameters)
-{
-  const double newXPrime = newCoords[0] - offset[0];
-  const double newYPrime = newCoords[1] - offset[1];
-
-  double oldXPrime = 0.0;
-  oldXPrime += parameters[0] * newXPrime;
-  oldXPrime += parameters[1] * newYPrime;
-  oldXPrime += parameters[2] * newXPrime * newXPrime;
-  oldXPrime += parameters[3] * newYPrime * newYPrime;
-  oldXPrime += parameters[4] * newXPrime * newYPrime;
-  oldXPrime += parameters[5] * newXPrime * newXPrime * newYPrime;
-  oldXPrime += parameters[6] * newXPrime * newYPrime * newYPrime;
-
-  return static_cast<int64_t>(std::floor(oldXPrime + offset[0]));
-}
-
-// ----------------------------------------------------------------------------
-int64_t FFTHelper::py(PixelTypei newCoords, PixelTypei offset, const ParametersType& parameters)
-{
-  const double newXPrime = newCoords[0] - offset[0];
-  const double newYPrime = newCoords[1] - offset[1];
-
-  double oldYPrime = 0.0;
-  const size_t yOffset = getReqPartialParameterSize();
-  oldYPrime += parameters[7] * newXPrime;
-  oldYPrime += parameters[8] * newYPrime;
-  oldYPrime += parameters[9] * newXPrime * newXPrime;
-  oldYPrime += parameters[10] * newYPrime * newYPrime;
-  oldYPrime += parameters[11] * newXPrime * newYPrime;
-  oldYPrime += parameters[12] * newXPrime * newXPrime * newYPrime;
-  oldYPrime += parameters[13] * newXPrime * newYPrime * newYPrime;
-
-  return static_cast<int64_t>(std::floor(oldYPrime + offset[1]));
-}
+#include "ITKImageProcessingFilters/util/FFTDewarpHelper.h"
 
 /**
  * @class FFTConvolutionCostFunction FFTConvolutionCostFunction.h ITKImageProcessingFilters/util/FFTConvolutionCostFunction.h
@@ -214,11 +149,11 @@ public:
   FFTImageOverlapGenerator(const InputImage::Pointer& baseImg, const InputImage::Pointer& image, const PixelCoord& offset, size_t imageDim_x, size_t imageDim_y, const ParametersType& parameters)
   : m_BaseImg(baseImg)
   , m_Image(image)
-  , m_Offset(offset)
-  , m_ImageDim_x(imageDim_x)
-  , m_ImageDim_y(imageDim_y)
   , m_Parameters(parameters)
   {
+    double x_trans = (imageDim_x - 1) / 2.0;
+    double y_trans = (imageDim_y - 1) / 2.0;
+    m_Offset = FFTDewarpHelper::pixelIndex(x_trans - offset[0], y_trans - offset[1]);
   }
 
   /**
@@ -256,11 +191,8 @@ public:
    */
   PixelCoord calculateOldPixelIndex(size_t x, size_t y) const
   {
-    const double x_trans = (m_ImageDim_x - 1) / 2.0;
-    const double y_trans = (m_ImageDim_y - 1) / 2.0;
-    FFTHelper::PixelTypei index = FFTHelper::pixelType(x, y);
-    FFTHelper::PixelTypei offset = FFTHelper::pixelType(x_trans - m_Offset[0], y_trans - m_Offset[1]);
-    FFTHelper::PixelTypei oldPixel = FFTHelper::getOldIndex(index, offset, m_Parameters);
+    FFTDewarpHelper::PixelIndex index = FFTDewarpHelper::pixelIndex(x, y);
+    FFTDewarpHelper::PixelIndex oldPixel = FFTDewarpHelper::getOldIndex(index, m_Offset, m_Parameters);
     return PixelCoord{oldPixel[0], oldPixel[1]};
   }
 
@@ -289,9 +221,7 @@ public:
 private:
   InputImage::Pointer m_BaseImg;
   InputImage::Pointer m_Image;
-  PixelCoord m_Offset;
-  size_t m_ImageDim_x;
-  size_t m_ImageDim_y;
+  FFTDewarpHelper::PixelIndex m_Offset;
   ParametersType m_Parameters;
 };
 
@@ -355,8 +285,8 @@ void FFTConvolutionCostFunction::calculateImageDim(const GridMontageShPtr& monta
 // -----------------------------------------------------------------------------
 FFTConvolutionCostFunction::PixelTypei FFTConvolutionCostFunction::calculateNew2OldPixel(int64_t x, int64_t y, const ParametersType& parameters, double x_trans, double y_trans) const
 {
-  FFTHelper::PixelTypei offset = FFTHelper::pixelType(x_trans, y_trans);
-  return FFTHelper::getOldIndex({x, y}, offset, parameters);
+  FFTDewarpHelper::PixelIndex offset = FFTDewarpHelper::pixelIndex(x_trans, y_trans);
+  return FFTDewarpHelper::getOldIndex({x, y}, offset, parameters);
 }
 
 // -----------------------------------------------------------------------------
@@ -477,7 +407,7 @@ void FFTConvolutionCostFunction::GetDerivative(const ParametersType&, Derivative
 // -----------------------------------------------------------------------------
 uint32_t FFTConvolutionCostFunction::GetNumberOfParameters() const
 {
-  return FFTHelper::getReqParameterSize();
+  return FFTDewarpHelper::getReqParameterSize();
 }
 
 // -----------------------------------------------------------------------------
@@ -491,9 +421,6 @@ FFTConvolutionCostFunction::MeasureType FFTConvolutionCostFunction::GetValue(con
   {
     findFFTConvolutionAndMaxValue(overlap, parameters, residual);
   }
-
-  std::cout << "Parameters: " << parameters;
-  std::cout << "Result " << residual;
 
   // The value to maximize is the square of the sum of the maximum value of the fft convolution
   MeasureType result = residual * residual;
@@ -631,8 +558,9 @@ void FFTConvolutionCostFunction::findFFTConvolutionAndMaxValue(const OverlapPair
   // Increment by the maximum value of the output of the fftConvolve
   // NOTE This methodology of getting the max element from the fftConvolve
   // output might require a deeper look
-  PixelValue_T* bufferPtr = fftConvolve->GetBufferPointer();
-  itk::SizeValueType bufferSize = fftConvolve->GetPixelContainer()->Size();
+  auto pixelContainer = fftConvolve->GetPixelContainer();
+  PixelValue_T* bufferPtr = pixelContainer->GetBufferPointer();
+  itk::SizeValueType bufferSize = pixelContainer->Size();
   MeasureType maxValue = *std::max_element(bufferPtr, bufferPtr + bufferSize);
   residual += maxValue;
 }

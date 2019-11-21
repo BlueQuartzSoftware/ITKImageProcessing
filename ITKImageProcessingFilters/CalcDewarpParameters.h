@@ -290,10 +290,6 @@ protected:
    */
   void deleteGrayscaleIPF();
 
-  bool GetConvergenceFromStopDescription(const QString&) const;
-
-  uint GetIterationsFromStopDescription(const QString&) const;
-
   /**
    * @brief Returns the required length for either X or Y parameters.
    * Combined parameter length should be 2x this value.

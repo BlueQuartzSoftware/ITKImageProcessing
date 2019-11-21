@@ -68,6 +68,7 @@ using MutexType = tbb::queuing_mutex;
 
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/util/FFTConvolutionCostFunction.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/util/FFTDewarpHelper.h"
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
 #include "ITKImageProcessing/FilterParameters/EbsdWarpPolynomialFilterParameter.h"
 
@@ -78,7 +79,8 @@ namespace
 {
 const QString InternalGrayscalePrefex = "_INTERNAL_Grayscale_";
 
-std::vector<double> convertParams2Vec(const FFTHelper::ParametersType& params)
+// -----------------------------------------------------------------------------
+std::vector<double> convertParams2Vec(const FFTDewarpHelper::ParametersType& params)
 {
   const size_t size = params.size();
   std::vector<double> vec(size);
@@ -89,10 +91,11 @@ std::vector<double> convertParams2Vec(const FFTHelper::ParametersType& params)
   return vec;
 }
 
-FFTHelper::ParametersType convertVec2Params(const std::vector<double>& vec)
+// -----------------------------------------------------------------------------
+FFTDewarpHelper::ParametersType convertVec2Params(const std::vector<double>& vec)
 {
   const size_t size = vec.size();
-  FFTHelper::ParametersType params(size);
+  FFTDewarpHelper::ParametersType params(size);
   for(size_t i = 0; i < size; i++)
   {
     params[i] = vec[i];
@@ -100,7 +103,8 @@ FFTHelper::ParametersType convertVec2Params(const std::vector<double>& vec)
   return params;
 }
 
-std::list<double> convertParams2List(const FFTHelper::ParametersType& params)
+// -----------------------------------------------------------------------------
+std::list<double> convertParams2List(const FFTDewarpHelper::ParametersType& params)
 {
   std::list<double> list;
   for(const auto& param : params)
@@ -110,27 +114,30 @@ std::list<double> convertParams2List(const FFTHelper::ParametersType& params)
   return list;
 }
 
+// -----------------------------------------------------------------------------
 double calcDelta(double maxDelta, double mMax)
 {
   return maxDelta / mMax;
 }
-} // namespace
 
-uint CalcDewarpParameters::GetIterationsFromStopDescription(const QString& stopDescription) const
+// -----------------------------------------------------------------------------
+bool checkConvergenceFromStopDescription(const QString& stopDescription)
 {
-  if(GetConvergenceFromStopDescription(stopDescription))
+  return stopDescription.contains("have been met");
+}
+
+// -----------------------------------------------------------------------------
+uint getIterationsFromStopDescription(const QString& stopDescription, uint maxIterations)
+{
+  if(checkConvergenceFromStopDescription(stopDescription))
   {
     const QString startStr = "have been met in ";
     const int startIdx = stopDescription.indexOf(startStr) + startStr.length();
     return stopDescription.midRef(startIdx, stopDescription.indexOf(" iterations") - startIdx).toUInt();
   }
-  return m_MaxIterations;
+  return maxIterations;
 }
-
-bool CalcDewarpParameters::GetConvergenceFromStopDescription(const QString& stopDescription) const
-{
-  return stopDescription.contains("have been met");
-}
+} // namespace
 
 // -----------------------------------------------------------------------------
 //
@@ -211,7 +218,7 @@ void CalcDewarpParameters::dataCheck()
     // Create a new data container to hold the output of this filter
     DataContainerShPtr CalcDewarpParametersDC = getDataContainerArray()->createNonPrereqDataContainer(this, DataArrayPath(m_TransformDCName, "", ""));
     AttributeMatrixShPtr CalcDewarpParametersAM = CalcDewarpParametersDC->createNonPrereqAttributeMatrix(this, m_TransformMatrixName, {1}, AttributeMatrix::Type::Generic);
-    CalcDewarpParametersAM->createNonPrereqArray<DoubleArrayType>(this, m_TransformArrayName, 0, {FFTHelper::getReqParameterSize()});
+    CalcDewarpParametersAM->createNonPrereqArray<DoubleArrayType>(this, m_TransformArrayName, 0, {FFTDewarpHelper::getReqParameterSize()});
   }
 }
 
@@ -245,10 +252,10 @@ void CalcDewarpParameters::execute()
   // Generate internal grayscale values
   generateGrayscaleIPF();
   std::vector<double> xyParameters = getPxyVec();
-  FFTHelper::ParametersType transformParams = ::convertVec2Params(xyParameters);
+  FFTDewarpHelper::ParametersType transformParams = ::convertVec2Params(xyParameters);
 
   // The optimizer needs an initial guess; this is supplied through a filter parameter
-  FFTHelper::ParametersType initialParams = ::convertVec2Params(xyParameters);
+  FFTDewarpHelper::ParametersType initialParams = ::convertVec2Params(xyParameters);
 
   using CostFunctionType = FFTConvolutionCostFunction;
   CostFunctionType implementation;
@@ -258,18 +265,7 @@ void CalcDewarpParameters::execute()
   // Calculate parameter step sizes
   const double imgX = implementation.getImageDimX();
   const double imgY = implementation.getImageDimY();
-  FFTHelper::ParametersType stepSizes = ::convertVec2Params(getStepSizes(xyParameters, imgX, imgY));
-
-#if 0
-  // Print out step sizes
-  QString stepSizeStr = "Step Sizes: [ ";
-  for(auto param : stepSizes)
-  {
-    stepSizeStr += QString::number(param) + "; ";
-  }
-  stepSizeStr += " ]";
-  notifyStatusMessage(stepSizeStr);
-#endif
+  FFTDewarpHelper::ParametersType stepSizes = ::convertVec2Params(getStepSizes(xyParameters, imgX, imgY));
 
   m_Optimizer = AmoebaOptimizer::New();
   m_Optimizer->SetMaximumNumberOfIterations(m_MaxIterations);
@@ -291,26 +287,7 @@ void CalcDewarpParameters::execute()
 
   // cache value
   auto value = m_Optimizer->GetValue();
-  auto numIterations = GetIterationsFromStopDescription(stopReason);
-
-#if 0
-  // Can get rid of these qDebug lines after debugging is done for filter
-  QString initParamStr = "Initial Position: [ ";
-  for(auto param : xyParameters)
-  {
-    initParamStr += QString::number(param) + "; ";
-  }
-  initParamStr += " ]";
-  notifyStatusMessage(initParamStr);
-
-  QString finalParamStr = "Final Position: [ ";
-  for(auto param : transformParams)
-  {
-    finalParamStr += QString::number(param) + "; ";
-  }
-  finalParamStr += " ]";
-  notifyStatusMessage(finalParamStr);
-#endif
+  auto numIterations = getIterationsFromStopDescription(stopReason, m_MaxIterations);
 
   notifyStatusMessage(QString::fromStdString(m_Optimizer->GetStopConditionDescription()));
   std::list<double> transform = ::convertParams2List(transformParams);
@@ -397,7 +374,7 @@ bool CalcDewarpParameters::checkMontageRequirements()
 // -----------------------------------------------------------------------------
 size_t CalcDewarpParameters::getSingleParamCount() const
 {
-  return FFTHelper::getReqPartialParameterSize();
+  return FFTDewarpHelper::getReqPartialParameterSize();
 }
 
 // -----------------------------------------------------------------------------
@@ -405,7 +382,7 @@ size_t CalcDewarpParameters::getSingleParamCount() const
 // -----------------------------------------------------------------------------
 std::vector<double> CalcDewarpParameters::getStepSizes(const std::vector<double>& params, size_t imgDimX, size_t imgDimY) const
 {
-  const size_t count = FFTHelper::getReqParameterSize();
+  const size_t count = FFTDewarpHelper::getReqParameterSize();
   std::vector<double> stepSizes(count);
 
   const size_t xMax = (imgDimX / 2);

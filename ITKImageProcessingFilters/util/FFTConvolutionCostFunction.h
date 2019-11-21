@@ -58,34 +58,6 @@ struct RegionBounds
   int64_t bottomBound = std::numeric_limits<int64_t>::max();
 };
 
-namespace FFTHelper
-{
-using PixelTypei = std::array<int64_t, 2>;
-using ParametersType = itk::SingleValuedCostFunction::ParametersType;
-
-/**
- * @brief Constructs a PixelTypei from x and y parameters
- * @param x
- * @param y
- * @return
- */
-PixelTypei pixelType(int64_t x, int64_t y);
-PixelTypei pixelType(size_t x, size_t y);
-PixelTypei pixelType(double x, double y);
-
-constexpr uint32_t getReqPartialParameterSize()
-{
-  return 7;
-}
-constexpr uint32_t getReqParameterSize()
-{
-  return 14;
-}
-PixelTypei getOldIndex(PixelTypei newCoords, PixelTypei offset, const ParametersType& parameters);
-int64_t px(PixelTypei newCoords, PixelTypei offset, const ParametersType& parameters);
-int64_t py(PixelTypei newCoords, PixelTypei offset, const ParametersType& parameters);
-} // namespace FFTHelper
-
 /**
  * @class FFTConvolutionCostFunction FFTConvolutionCostFunction.h ITKImageProcessingFilters/util/FFTConvolutionCostFunction.h
  * @brief The FFTConvolutionCostFunction class is used as the cost function for the Blend filter.
