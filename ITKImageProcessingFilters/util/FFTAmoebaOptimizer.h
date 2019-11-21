@@ -24,6 +24,8 @@
 
 #include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
+class AbstractFilter;
+
 namespace itk
 {
   /** \class FFTAmoebaOptimizer
@@ -143,6 +145,13 @@ namespace itk
     itkSetMacro(FractionalTolerance, double);
     itkGetConstMacro(FractionalTolerance, double);
 
+    /** The optimization algorithm will terminate when the simplex
+     * diameter and the difference in cost function values at the corners of
+     * the simplex falls below user specified thresholds. The cost function
+     * convergence threshold is set via SetFunctionConvergenceTolerance().*/
+    void SetSIMPLFilter(AbstractFilter*);
+    itkGetConstMacro(SIMPLFilter, AbstractFilter*);
+
     /** Report the reason for stopping. */
     const std::string
       GetStopConditionDescription() const override;
@@ -175,6 +184,7 @@ namespace itk
     bool                          m_OptimizeWithRestarts;
     fft_amoeba *                  m_VnlOptimizer;
     bool                          m_Cancel = false;
+    AbstractFilter*               m_SIMPLFilter = nullptr;
 
     std::ostringstream m_StopConditionDescription;
   };

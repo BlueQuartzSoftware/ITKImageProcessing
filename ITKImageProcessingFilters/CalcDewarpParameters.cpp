@@ -276,8 +276,9 @@ void CalcDewarpParameters::execute()
   m_Optimizer->SetFractionalTolerance(m_FractionalTolerance);
   m_Optimizer->SetInitialPosition(initialParams);
   m_Optimizer->SetInitialSimplexDelta(stepSizes);
-  m_Optimizer->SetOptimizeWithRestarts(true);
+  //m_Optimizer->SetOptimizeWithRestarts(true);
 
+  m_Optimizer->SetSIMPLFilter(this);
   m_Optimizer->SetCostFunction(&implementation);
   m_Optimizer->MaximizeOn(); // Search for the greatest value
   m_Optimizer->StartOptimization();
@@ -407,8 +408,8 @@ std::vector<double> CalcDewarpParameters::getStepSizes(const std::vector<double>
   const size_t count = FFTHelper::getReqParameterSize();
   std::vector<double> stepSizes(count);
 
-  const size_t xMax = (imgDimX / 2); // *(imgDimX / 2);
-  const size_t yMax = (imgDimY / 2); // *(imgDimY / 2);
+  const size_t xMax = (imgDimX / 2);
+  const size_t yMax = (imgDimY / 2);
 
   // Px
   stepSizes[0] = calcDelta(m_StepDelta, xMax);

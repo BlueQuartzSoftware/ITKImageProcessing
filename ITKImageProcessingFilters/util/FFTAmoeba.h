@@ -20,6 +20,8 @@
 #include <vnl/vnl_vector.h>
 #include <vnl/algo/vnl_algo_export.h>
 
+#include "SIMPLib/Filtering/AbstractFilter.h"
+
 #include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 class vnl_cost_function;
@@ -89,6 +91,7 @@ public:
   double get_fractional_range() const { return frac_range; }
 
   void cancel();
+  void set_filter(AbstractFilter* filter) { simpl_filter = filter; }
 
 public:
   //: Modify x so as to minimise f(x)
@@ -115,6 +118,7 @@ protected:
   double end_error_;
   int num_evaluations_;
   double frac_range;
+  AbstractFilter* simpl_filter = nullptr;
   fft_amoebaFit* m_Fit = nullptr;
 };
 

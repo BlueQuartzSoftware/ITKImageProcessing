@@ -18,6 +18,8 @@
 
 #include "FFTAmoebaOptimizer.h"
 
+#include "SIMPLib/Filtering/AbstractFilter.h"
+
 namespace itk
 {
 
@@ -204,6 +206,8 @@ namespace itk
       delta = automaticDelta;
     }
 
+    this->m_VnlOptimizer->set_filter(GetSIMPLFilter());
+
     this->m_VnlOptimizer->minimize(parameters, delta);
     bestPosition = parameters;
     double bestValue = adaptor->f(bestPosition);
@@ -284,6 +288,16 @@ namespace itk
   {
     m_Cancel = true;
     m_VnlOptimizer->cancel();
+  }
+
+  void
+    FFTAmoebaOptimizer::SetSIMPLFilter(AbstractFilter* filter)
+  {
+    if(this->m_SIMPLFilter != filter)
+    {
+      this->m_SIMPLFilter = filter;
+      this->Modified();
+    }
   }
 
 

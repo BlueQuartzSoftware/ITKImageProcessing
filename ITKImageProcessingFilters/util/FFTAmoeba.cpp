@@ -354,6 +354,11 @@ void fft_amoebaFit::amoeba(vnl_vector<double>& x,
       else if(verbose)
         std::cerr << simplex << '\n';
     }
+
+    if(simpl_filter)
+    {
+      simpl_filter->notifyStatusMessage(QString("Completed %1 iterations").arg(cnt));
+    }
   }
   num_evaluations_ = cnt;
   x = simplex[0].v;
