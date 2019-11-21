@@ -39,16 +39,19 @@
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
 #include "tbb/queuing_mutex.h"
+
+using MutexType = tbb::queuing_mutex;
+using ScopedLockType = MutexType::scoped_lock;
+#else
+// included so that this can be compiled even without tbb
+using MutexType = int;
+using ScopedLockType = int;
 #endif
 
 #include "SIMPLib/Montages/GridMontage.h"
 #include "SIMPLib/Utilities/ParallelData2DAlgorithm.h"
 #include "SIMPLib/Utilities/ParallelTaskAlgorithm.h"
 
-using MutexType = tbb::queuing_mutex;
-using ScopedLockType = MutexType::scoped_lock;
-
-#define USE_CROP_CHECK 0
 
 // ----------------------------------------------------------------------------
 FFTHelper::PixelTypei FFTHelper::pixelType(int64_t x, int64_t y)
@@ -482,28 +485,6 @@ uint32_t FFTConvolutionCostFunction::GetNumberOfParameters() const
 // -----------------------------------------------------------------------------
 FFTConvolutionCostFunction::MeasureType FFTConvolutionCostFunction::GetValue(const ParametersType& parameters) const
 {
-#if 0
-  CropMap cropMap;
-  
-  // Apply the Transform to each image in the image grid
-  for(const auto& eachImage : m_ImageGrid) // Parallelize this
-  {
-    checkTransformation(parameters, eachImage, std::ref(cropMap));
-  }
-#endif
-
-#if USE_CROP_CHECK
-  if(!isCropMapValid(cropMap))
-  {
-    std::cout << "Invalid Parameters";
-    // This is optimizing for the greatest return value, thus invalid inputs require a smallest return
-    return std::numeric_limits<MeasureType>::min();
-  }
-#endif
-
-  // Crop overlap portions
-  // OverlapPairs overlaps = createOverlapPairs(cropMap);
-
   MeasureType residual = 0.0;
   // Find the FFT Convolution and accumulate the maximum value from each overlap
   for(const auto& overlap : m_Overlaps) // Parallelize this
@@ -517,202 +498,6 @@ FFTConvolutionCostFunction::MeasureType FFTConvolutionCostFunction::GetValue(con
   // The value to maximize is the square of the sum of the maximum value of the fft convolution
   MeasureType result = residual * residual;
   return result;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-bool FFTConvolutionCostFunction::isCropMapValid(const CropMap& cropMap) const
-{
-  for(auto cropValue : cropMap)
-  {
-    const GridKey& index = cropValue.first;
-    const RegionBounds& bounds = cropValue.second;
-    if(!isRegionValid(index, bounds, cropMap))
-    {
-      return false;
-    }
-  }
-  return true;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-bool FFTConvolutionCostFunction::isRegionValid(const GridKey& index, const RegionBounds& bounds, const CropMap& cropMap) const
-{
-  const GridKey rightKey = std::make_pair(index.first + 1, index.second);
-  const GridKey botKey = std::make_pair(index.first, index.second + 1);
-
-  const auto rightBoundsIter = cropMap.find(rightKey);
-  const auto botBoundsIter = cropMap.find(botKey);
-
-  if(rightBoundsIter != cropMap.end())
-  {
-    const RegionBounds rightBounds = rightBoundsIter->second;
-    if(bounds.rightBound <= rightBounds.leftBound)
-    {
-      return false;
-    }
-  }
-  if(botBoundsIter != cropMap.end())
-  {
-    const RegionBounds botBounds = botBoundsIter->second;
-    if(bounds.bottomBound <= botBounds.topBound)
-    {
-      return false;
-    }
-  }
-
-  return true;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void FFTConvolutionCostFunction::checkTransformation(const ParametersType& parameters, const ImageGrid::value_type& inputImage, CropMap& cropMap) const
-{
-  // Add bounds to the CropMap
-  auto origin = inputImage.second->GetRequestedRegion().GetIndex();
-  auto size = inputImage.second->GetRequestedRegion().GetSize();
-  RegionBounds bounds;
-  bounds.leftBound = origin[0];
-  bounds.topBound = origin[1];
-  bounds.rightBound = bounds.leftBound + size[0];
-  bounds.bottomBound = bounds.topBound + size[1];
-  cropMap[inputImage.first] = bounds;
-
-  ParallelTaskAlgorithm taskAlg;
-  // Iterate through the pixels in eachImage and apply the transform
-  for(int64_t y = bounds.topBound; y < bounds.bottomBound; y++)
-  {
-    for(int64_t x = bounds.leftBound; x < bounds.rightBound; x++)
-    {
-      PixelCoord index = {x, y};
-      taskAlg.execute(std::bind(&FFTConvolutionCostFunction::applyTransformationPixel, this, parameters, inputImage.second, index, inputImage.first, std::ref(cropMap)));
-    }
-  }
-  taskAlg.wait();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void FFTConvolutionCostFunction::applyTransformationPixel(const ParametersType& parameters, const InputImage::Pointer& inputImage, PixelCoord index, const GridKey& gridKey, CropMap& cropMap) const
-{
-  const double x_trans = (m_ImageDim_x - 1) / 2.0;
-  const double y_trans = (m_ImageDim_y - 1) / 2.0;
-
-  calculatePixelCoordinates(parameters, inputImage, gridKey, cropMap, index, x_trans, y_trans);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void FFTConvolutionCostFunction::calculatePixelCoordinates(const ParametersType& parameters, const InputImage::Pointer& inputImage, const GridKey& gridKey, CropMap& cropMap,
-                                                           const PixelCoord& newPixel, double x_trans, double y_trans) const
-{
-  // static MutexType mutex;
-
-  auto inputSize = inputImage->GetBufferedRegion().GetSize();
-  const int64_t width = inputSize[0];
-  const int64_t height = inputSize[1];
-  auto inputIndex = inputImage->GetBufferedRegion().GetIndex();
-  const int64_t minX = inputIndex[0];
-  const int64_t minY = inputIndex[1];
-
-  PixelTypei oldPixeli = calculateNew2OldPixel(newPixel[0], newPixel[1], parameters, x_trans + minX, y_trans + minY);
-
-  PixelCoord oldPixel;
-  oldPixel[0] = oldPixeli[0];
-  oldPixel[1] = oldPixeli[1];
-
-#if USE_CROP_CHECK
-  bool isValidX = oldPixel[0] >= minX && oldPixel[0] < minX + width;
-  bool isValidY = oldPixel[1] >= minY && oldPixel[1] < minY + height;
-  bool isValid = isValidX && isValidY;
-
-  // Do not set invalid pixels
-  if(!isValid)
-  {
-    adjustCropMap(newPixel, inputImage, gridKey, cropMap);
-    return;
-  }
-#endif
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void FFTConvolutionCostFunction::adjustCropMap(const PixelCoord& pixel, const InputImage::Pointer& inputImage, const GridKey& gridKey, CropMap& cropMap) const
-{
-  static MutexType mutex;
-
-  auto inputSize = inputImage->GetBufferedRegion().GetSize();
-  const int64_t width = inputSize[0];
-  const int64_t height = inputSize[1];
-  auto inputIndex = inputImage->GetBufferedRegion().GetIndex();
-  const int64_t minX = inputIndex[0];
-  const int64_t minY = inputIndex[1];
-
-  const int64_t maxX = minX + width;
-  const int64_t maxY = minY + height;
-
-  const int64_t x = static_cast<int64_t>(pixel[0]);
-  const int64_t y = static_cast<int64_t>(pixel[1]);
-
-  const int64_t distTop = y - minY;
-  const int64_t distBot = maxY - y;
-  const int64_t distLeft = x - minX;
-  const int64_t distRight = maxX - x;
-
-  // Use a reference so we only override the target value instead of all four
-  // Use min/max value in case the bounds might already be closer than the current pixel
-  ScopedLockType lock(mutex);
-  RegionBounds region = cropMap[gridKey];
-  if((distTop < distBot) && (distTop < distLeft) && (distTop < distRight))
-  {
-    region.topBound = std::max(region.topBound, y);
-  }
-  else if((distRight < distLeft) && (distRight < distTop) && (distRight < distBot))
-  {
-    region.rightBound = std::min(region.rightBound, x);
-  }
-  else if((distLeft < distRight) && (distLeft < distTop) && (distLeft < distBot))
-  {
-    region.leftBound = std::max(region.leftBound, x);
-  }
-  else if(distBot < distTop)
-  {
-    region.bottomBound = std::min(region.bottomBound, y);
-  }
-
-  cropMap[gridKey] = region;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void FFTConvolutionCostFunction::updateCropMapBounds(const InputImage::Pointer& inputImage, CropMap& cropMap) const
-{
-  static MutexType mutex;
-
-  auto inputSize = inputImage->GetBufferedRegion().GetSize();
-  const int64_t width = inputSize[0];
-  const int64_t height = inputSize[1];
-  auto inputIndex = inputImage->GetBufferedRegion().GetIndex();
-  const int64_t initX = inputIndex[0];
-  const int64_t initY = inputIndex[1];
-
-  for(auto& mapIter : cropMap)
-  {
-    auto key = mapIter.first;
-    RegionBounds region = mapIter.second;
-    region.rightBound = std::min(region.rightBound, initX + width);
-    region.bottomBound = std::min(region.bottomBound, initY + height);
-    ScopedLockType lock(mutex);
-    cropMap[key] = region;
-  }
 }
 
 // -----------------------------------------------------------------------------
