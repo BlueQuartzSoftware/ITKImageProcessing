@@ -280,7 +280,8 @@ void fft_amoebaFit::amoeba(vnl_vector<double>& x,
 
   vnl_vector<double> vbar(n);
   while(cnt < maxiter) {
-    if(fractional_range(simplex) < F_tolerance)
+    frac_range = fractional_range(simplex);
+    if(frac_range < F_tolerance)
       break;
 
     // One step of the Nelder-Mead simplex algorithm
@@ -376,6 +377,7 @@ void fft_amoeba::minimize(vnl_vector<double>& x)
   m_Fit->amoeba(x);
   num_evaluations_ = m_Fit->num_evaluations_;
   end_error_ = m_Fit->end_error_;
+  frac_range = m_Fit->frac_range;
   delete m_Fit;
   m_Fit = nullptr;
 }

@@ -231,7 +231,7 @@ namespace itk
             maxAbs = fabs(bestPosition[j] - parameters[j]);
           }
         }
-        converged = fabs(bestValue - currentValue) / (fabs(bestValue) + fabs(currentValue)) < this->m_FractionalTolerance;
+        converged = this->m_VnlOptimizer->get_fractional_range() < this->m_FractionalTolerance;
 
         // this comparison is valid both for min and max because the
         // adaptor is set to always return the function value
@@ -283,7 +283,6 @@ namespace itk
     FFTAmoebaOptimizer::Cancel()
   {
     m_Cancel = true;
-    // Simplest solution is to set the maximum iterations to 0 for the rest of the optimization
     m_VnlOptimizer->cancel();
   }
 

@@ -85,6 +85,9 @@ public:
   //: Number of evaluations used in last call to minimize
   int get_num_evaluations() const { return num_evaluations_; }
 
+  //: Fractional range between minimum and maximum function values
+  double get_fractional_range() const { return frac_range; }
+
   void cancel();
 
 public:
@@ -111,6 +114,7 @@ protected:
   vnl_cost_function* fptr;
   double end_error_;
   int num_evaluations_;
+  double frac_range;
   fft_amoebaFit* m_Fit = nullptr;
 };
 
