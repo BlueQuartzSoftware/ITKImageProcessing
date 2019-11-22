@@ -32,7 +32,6 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include <array>
-#include <cmath>
 #include <map>
 
 #include <QtCore/QCoreApplication>
@@ -51,28 +50,22 @@
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
 
 #include "ITKImageProcessing/ITKImageProcessingFilters/util/FFTConvolutionCostFunction.h"
 #include "ITKImageProcessing/Test/UnitTestSupport.hpp"
 
-#ifndef M_PI
-#define M_PI (3.141592653)
-#endif
-
-namespace
-{
-  const QString MontageName = "Grid Montage";
-}
-
-class BlendTest
+class ApplyDewarpParametersTest
 {
 public:
-  BlendTest() = default;
-  ~BlendTest() = default;
-  BlendTest(const BlendTest&) = delete;            // Copy Constructor
-  BlendTest(BlendTest&&) = delete;                 // Move Constructor
-  BlendTest& operator=(const BlendTest&) = delete; // Copy Assignment
-  BlendTest& operator=(BlendTest&&) = delete;      // Move Assignment
+  ApplyDewarpParametersTest() = default;
+  ~ApplyDewarpParametersTest() = default;
+  ApplyDewarpParametersTest(const ApplyDewarpParametersTest&) = delete;            // Copy Constructor
+  ApplyDewarpParametersTest(ApplyDewarpParametersTest&&) = delete;                 // Move Constructor
+  ApplyDewarpParametersTest& operator=(const ApplyDewarpParametersTest&) = delete; // Copy Assignment
+  ApplyDewarpParametersTest& operator=(ApplyDewarpParametersTest&&) = delete;      // Move Assignment
+
+  const QString k_MontageName = "Grid Montage";
 
   // -----------------------------------------------------------------------------
   //
@@ -91,8 +84,8 @@ public:
   // -----------------------------------------------------------------------------
   void CreateGridMontage(const DataContainerArray::Pointer& dca)
   {
-    
-    GridMontage::Pointer gridMontage = GridMontage::New(::MontageName, 2, 2, 1);
+
+    GridMontage::Pointer gridMontage = GridMontage::New(k_MontageName, 2, 2, 1);
     GridTileIndex index = gridMontage->getTileIndex(0, 0);
     DataContainer::Pointer tileDC = dca->getDataContainer("R0C0");
     gridMontage->setDataContainer(index, tileDC);
@@ -142,7 +135,7 @@ public:
     ReadImage(readerFilter, image4Path, image4Name, dap);
 
     m_ImageReaderDca = readerFilter->getDataContainerArray();
-
+    DREAM3D_REQUIRE_VALID_POINTER(m_ImageReaderDca)
     CreateGridMontage(m_ImageReaderDca);
 
     return EXIT_SUCCESS;
@@ -151,16 +144,18 @@ public:
   // -----------------------------------------------------------------------------
   //
   // -----------------------------------------------------------------------------
-  int InitBlendFilter()
+  int InitCalcDewarpFilter()
   {
-    IFilterFactory::Pointer blendFactory = FilterManager::Instance()->getFactoryFromClassName("Blend");
-    DREAM3D_REQUIRE(blendFactory.get() != nullptr)
+    DREAM3D_REQUIRE_VALID_POINTER(m_ImageReaderDca)
 
-    m_BlendFilter = blendFactory->create();
-    DREAM3D_REQUIRE(m_BlendFilter.get() != nullptr)
+    IFilterFactory::Pointer m_ApplyDewarpFactory = FilterManager::Instance()->getFactoryFromClassName("ApplyDewarpParameters");
+    DREAM3D_REQUIRE(m_ApplyDewarpFactory.get() != nullptr)
 
-    QString montageName = ::MontageName;
-    DREAM3D_REQUIRE(m_ImageReaderDca->getMontage(::MontageName) != nullptr)
+    m_ApplyDewarpParameters = m_ApplyDewarpFactory->create();
+    DREAM3D_REQUIRE(m_ApplyDewarpParameters.get() != nullptr)
+
+    QString montageName = k_MontageName;
+    DREAM3D_REQUIRE(m_ImageReaderDca->getMontage(k_MontageName) != nullptr)
 
     // An affine transform will use degree 1 - Dave's algorithm assumes a degree 2
     // Correcting barrel/fish-eye/lens distortion requires degree 2 or higher
@@ -174,16 +169,16 @@ public:
     const double lowTolerance = 1E-2;
     const double highTolerance = 1E-2;
 
-    m_BlendFilter->setProperty("MaxIterations", QVariant(maxIterations));
-    m_BlendFilter->setProperty("Degree", QVariant(degree));
-    m_BlendFilter->setProperty("InitialSimplexGuess", QVariant(initialGuess));
-    m_BlendFilter->setProperty("OverlapPercentage", QVariant(overlapPercentage));
-    m_BlendFilter->setProperty("LowTolerance", QVariant(lowTolerance));
-    m_BlendFilter->setProperty("HighTolerance", QVariant(highTolerance));
-    m_BlendFilter->setProperty("DataAttributeArrayName", QVariant(dataArrayName));
-    m_BlendFilter->setProperty("AttributeMatrixName", QVariant(attrMatrName));
-    m_BlendFilter->setProperty("MontageName", montageName);
-    m_BlendFilter->setDataContainerArray(m_ImageReaderDca);
+    m_ApplyDewarpParameters->setProperty("MaxIterations", QVariant(maxIterations));
+    m_ApplyDewarpParameters->setProperty("Degree", QVariant(degree));
+    m_ApplyDewarpParameters->setProperty("InitialSimplexGuess", QVariant(initialGuess));
+    m_ApplyDewarpParameters->setProperty("OverlapPercentage", QVariant(overlapPercentage));
+    m_ApplyDewarpParameters->setProperty("LowTolerance", QVariant(lowTolerance));
+    m_ApplyDewarpParameters->setProperty("HighTolerance", QVariant(highTolerance));
+    m_ApplyDewarpParameters->setProperty("DataAttributeArrayName", QVariant(dataArrayName));
+    m_ApplyDewarpParameters->setProperty("AttributeMatrixName", QVariant(attrMatrName));
+    m_ApplyDewarpParameters->setProperty("MontageName", montageName);
+    m_ApplyDewarpParameters->setDataContainerArray(m_ImageReaderDca);
 
     return EXIT_SUCCESS;
   }
@@ -196,11 +191,11 @@ public:
     /*
     const QString rowChar = 'R';
     const QString colChar = 'C';
-    const int degree = m_BlendFilter->property("Degree").toInt();
-    const float overlapPercentage = m_BlendFilter->property("OverlapPercentage").toFloat();
-    const QStringList dcNames = m_ImageReaderDca->getMontage(::MontageName)->getDataContainerNames();
-    const QString attrMatName = m_BlendFilter->property("AttributeMatrixName").toString();
-    const QString dataArrayName = m_BlendFilter->property("DataAttributeArrayName").toString();
+    const int degree = m_ApplyDewarpParameters->property("Degree").toInt();
+    const float overlapPercentage = m_ApplyDewarpParameters->property("OverlapPercentage").toFloat();
+    const QStringList dcNames = m_ImageReaderDca->getMontage(k_MontageName)->getDataContainerNames();
+    const QString attrMatName = m_ApplyDewarpParameters->property("AttributeMatrixName").toString();
+    const QString dataArrayName = m_ApplyDewarpParameters->property("DataAttributeArrayName").toString();
 
     // The line below is used for testing the MultiParamCostFunction
     //    std::vector<double>{1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0}
@@ -226,7 +221,7 @@ public:
     DREAM3D_REQUIRE(gridKeys.contains(key10))
 
     // TODO: Test GetValue method
-    
+
     return EXIT_SUCCESS;
     */
 
@@ -236,8 +231,9 @@ public:
   // -----------------------------------------------------------------------------
   //
   // -----------------------------------------------------------------------------
-  int ExecuteBlendTest()
+  int ExecuteApplyDewarpParametersTest()
   {
+    DREAM3D_REQUIRE(m_ApplyDewarpParameters.get() != nullptr)
     const double errTolerance = 3.0;
 
     // THIS ISN'T THE ACTUAL KNOWN TRANSFORMATION MATRIX
@@ -252,10 +248,10 @@ public:
     // transform that rotates them 90 degrees clockwise
     const std::vector<double> expectedAnswer = {0.0, 0.0, 1.0, 0.0, 0.0, -1.0, 0.0, 0.0};
 
-    m_BlendFilter->execute();
+    m_ApplyDewarpParameters->execute();
 
-    DREAM3D_REQUIRE_EQUAL(m_BlendFilter->getErrorCode(), 0)
-    DataContainer::Pointer dc = m_BlendFilter->getDataContainerArray()->getDataContainer("Blend Data");
+    DREAM3D_REQUIRE_EQUAL(m_ApplyDewarpParameters->getErrorCode(), 0)
+    DataContainer::Pointer dc = m_ApplyDewarpParameters->getDataContainerArray()->getDataContainer("CalcDewarp Data");
     DREAM3D_REQUIRE(dc.get() != nullptr)
     AttributeMatrix::Pointer am = dc->getAttributeMatrix("Transform Matrix");
     DREAM3D_REQUIRE(am.get() != nullptr)
@@ -278,16 +274,15 @@ public:
   // -----------------------------------------------------------------------------
   void operator()()
   {
-    std::cout << "---------------- BlendTest ---------------------" << std::endl;
+    std::cout << "---------------- ApplyDewarpParametersTest ---------------------" << std::endl;
     int err = EXIT_SUCCESS;
-
     DREAM3D_REGISTER_TEST(ImportTestData())
-    DREAM3D_REGISTER_TEST(InitBlendFilter())
+    DREAM3D_REGISTER_TEST(InitCalcDewarpFilter())
     DREAM3D_REGISTER_TEST(TestFFTConvolutionCostFunction())
-    DREAM3D_REGISTER_TEST(ExecuteBlendTest())
+    DREAM3D_REGISTER_TEST(ExecuteApplyDewarpParametersTest())
   }
 
 private:
-  AbstractFilter::Pointer m_BlendFilter;
+  AbstractFilter::Pointer m_ApplyDewarpParameters;
   DataContainerArray::Pointer m_ImageReaderDca;
 };

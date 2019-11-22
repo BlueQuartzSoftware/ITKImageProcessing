@@ -592,10 +592,14 @@ void ImportZenInfoMontage::generateCache(QDomElement& exportDocument)
   findTileIndices(m_Tolerance, bounds);
 
   // std::vector<ImageGeom::Pointer> geometries;
-
+  d_ptr->m_MaxCol = 0;
+  d_ptr->m_MaxRow = 0;
   // Get the meta information from disk for each image
   for(auto& bound : bounds)
   {
+    d_ptr->m_MaxCol = std::max(bound.Col, d_ptr->m_MaxCol);
+    d_ptr->m_MaxRow = std::max(bound.Row, d_ptr->m_MaxRow);
+
     DataArrayPath dap(::k_DCName, ITKImageProcessing::Montage::k_AMName, ITKImageProcessing::Montage::k_AAName);
     AbstractFilter::Pointer imageImportFilter = MontageImportHelper::CreateImageImportFilter(this, bound.Filename, dap);
     imageImportFilter->preflight();

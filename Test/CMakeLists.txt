@@ -11,7 +11,8 @@ set(TEST_NAMES
   ImportZenInfoMontageTest
   AxioVisionV4ToTileConfigurationTest
   ImportAxioVisionV4MontageTest
-  BlendTest
+  CalcDewarpTest
+  ApplyDewarpParametersTest
   ITKImageProcessingReaderTest
   ITKImageProcessingWriterTest
   ITKImportImageStackTest

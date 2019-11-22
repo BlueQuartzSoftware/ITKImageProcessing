@@ -173,6 +173,12 @@ void ITKPCMTileRegistration::initialize()
   clearErrorCode();
   clearWarningCode();
   setCancel(false);
+
+  m_MontageStart[0] = m_ColumnMontageLimits[0];
+  m_MontageStart[1] = m_RowMontageLimits[0];
+
+  m_MontageEnd[0] = m_ColumnMontageLimits[1];
+  m_MontageEnd[1] = m_RowMontageLimits[1];
 }
 
 // -----------------------------------------------------------------------------
@@ -182,8 +188,8 @@ void ITKPCMTileRegistration::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
 
-  parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage Start (Col, Row) [Inclusive, Zero Based]", MontageStart, FilterParameter::Parameter, ITKPCMTileRegistration));
-  parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage End (Col, Row) [Inclusive, Zero Based]", MontageEnd, FilterParameter::Parameter, ITKPCMTileRegistration));
+  parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage Column Start/End [Inclusive, Zero Based]", ColumnMontageLimits, FilterParameter::Parameter, ITKPCMTileRegistration));
+  parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage Row Start/End [Inclusive, Zero Based]", RowMontageLimits, FilterParameter::Parameter, ITKPCMTileRegistration));
 
   parameters.push_back(SIMPL_NEW_STRING_FP("Data Container Prefix", DataContainerPrefix, FilterParameter::RequiredArray, ITKPCMTileRegistration));
 
@@ -198,8 +204,6 @@ void ITKPCMTileRegistration::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void ITKPCMTileRegistration::dataCheck()
 {
-  clearErrorCode();
-  clearWarningCode();
   initialize();
 
   if(m_MontageStart[0] > m_MontageEnd[0])
@@ -695,27 +699,27 @@ QString ITKPCMTileRegistration::ClassName()
 }
 
 // -----------------------------------------------------------------------------
-void ITKPCMTileRegistration::setMontageStart(const IntVec2Type& value)
+void ITKPCMTileRegistration::setColumnMontageLimits(const IntVec2Type& value)
 {
-  m_MontageStart = value;
+  m_ColumnMontageLimits = value;
 }
 
 // -----------------------------------------------------------------------------
-IntVec2Type ITKPCMTileRegistration::getMontageStart() const
+IntVec2Type ITKPCMTileRegistration::getColumnMontageLimits() const
 {
-  return m_MontageStart;
+  return m_ColumnMontageLimits;
 }
 
 // -----------------------------------------------------------------------------
-void ITKPCMTileRegistration::setMontageEnd(const IntVec2Type& value)
+void ITKPCMTileRegistration::setRowMontageLimits(const IntVec2Type& value)
 {
-  m_MontageEnd = value;
+  m_RowMontageLimits = value;
 }
 
 // -----------------------------------------------------------------------------
-IntVec2Type ITKPCMTileRegistration::getMontageEnd() const
+IntVec2Type ITKPCMTileRegistration::getRowMontageLimits() const
 {
-  return m_MontageEnd;
+  return m_RowMontageLimits;
 }
 
 // -----------------------------------------------------------------------------
