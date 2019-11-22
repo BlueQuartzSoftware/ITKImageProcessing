@@ -146,14 +146,51 @@ public:
    * @param imageDim_y
    * @param parameters
    */
-  FFTImageOverlapGenerator(const InputImage::Pointer& baseImg, const InputImage::Pointer& image, const PixelCoord& offset, size_t imageDim_x, size_t imageDim_y, const ParametersType& parameters)
+  FFTImageOverlapGenerator(const InputImage::Pointer& baseImg, const InputImage::Pointer& image, const PixelCoord& offset, size_t imageDim_x, size_t imageDim_y, const ParametersType& parameters,
+                           RegionBounds& regionBounds)
   : m_BaseImg(baseImg)
   , m_Image(image)
   , m_Parameters(parameters)
+  , m_Bounds(regionBounds)
   {
     double x_trans = (imageDim_x - 1) / 2.0;
     double y_trans = (imageDim_y - 1) / 2.0;
     m_Offset = FFTDewarpHelper::pixelIndex(x_trans - offset[0], y_trans - offset[1]);
+  }
+
+  /**
+   * @brief Updates the RegionBounds based on the provided invalid index.
+   * @param index
+   */
+  void updateRegionBounds(const PixelCoord& index) const
+  {
+    static MutexType mutex;
+
+    auto origin = m_Image->GetOrigin();
+    auto size = m_Image->GetRequestedRegion().GetSize();
+
+    const int64_t distTop = index[1] - origin[1];
+    const int64_t distBot = origin[1] + size[1] + index[1];
+    const int64_t distLeft = index[0] - origin[1];
+    const int64_t distRight = origin[0] + size[0] - index[0];
+
+    ScopedLockType scopedLock(mutex);
+    if(distTop < distBot && distTop < distLeft && distTop < distRight)
+    {
+      m_Bounds.topBound = std::max(m_Bounds.topBound, index[1]);
+    }
+    else if(distBot < distTop && distBot < distLeft && distBot < distRight)
+    {
+      m_Bounds.bottomBound = std::min(m_Bounds.bottomBound, index[1]);
+    }
+    else if(distLeft < distTop && distLeft < distBot && distLeft < distRight)
+    {
+      m_Bounds.leftBound = std::max(m_Bounds.leftBound, index[0]);
+    }
+    else if(distRight < distTop && distRight < distBot && distRight < distLeft)
+    {
+      m_Bounds.rightBound = std::min(m_Bounds.rightBound, index[0]);
+    }
   }
 
   /**
@@ -213,6 +250,10 @@ public:
         {
           pixel = m_BaseImg->GetPixel(oldIndex);
         }
+        else
+        {
+          updateRegionBounds(newIndex);
+        }
         m_Image->SetPixel(newIndex, pixel);
       }
     }
@@ -223,6 +264,7 @@ private:
   InputImage::Pointer m_Image;
   FFTDewarpHelper::PixelIndex m_Offset;
   ParametersType m_Parameters;
+  RegionBounds& m_Bounds;
 };
 
 // -----------------------------------------------------------------------------
@@ -444,8 +486,8 @@ FFTConvolutionCostFunction::OverlapPairs FFTConvolutionCostFunction::createOverl
     if(rightIter != cropMap.end())
     {
       GridPair gridPair = std::make_pair(key, rightKey);
-      RegionPair regions = createRightRegionPairs(bounds, rightIter->second);
-      OverlapPair overlapPair = std::make_pair(gridPair, regions);
+      InputImage::RegionType region = createRightRegionPairs(bounds, rightIter->second);
+      OverlapPair overlapPair = std::make_pair(gridPair, region);
       overlaps.push_back(overlapPair);
     }
 
@@ -454,8 +496,8 @@ FFTConvolutionCostFunction::OverlapPairs FFTConvolutionCostFunction::createOverl
     if(botIter != cropMap.end())
     {
       GridPair gridPair = std::make_pair(key, botKey);
-      RegionPair regions = createBottomRegionPairs(bounds, botIter->second);
-      OverlapPair overlapPair = std::make_pair(gridPair, regions);
+      InputImage::RegionType region = createBottomRegionPairs(bounds, botIter->second);
+      OverlapPair overlapPair = std::make_pair(gridPair, region);
       overlaps.push_back(overlapPair);
     }
   }
@@ -466,7 +508,7 @@ FFTConvolutionCostFunction::OverlapPairs FFTConvolutionCostFunction::createOverl
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FFTConvolutionCostFunction::RegionPair FFTConvolutionCostFunction::createRightRegionPairs(const RegionBounds& left, const RegionBounds& right) const
+FFTConvolutionCostFunction::InputImage::RegionType FFTConvolutionCostFunction::createRightRegionPairs(const RegionBounds& left, const RegionBounds& right) const
 {
   const int64_t topBound = std::max(left.topBound, right.topBound);
   const int64_t bottomBound = std::min(left.bottomBound, right.bottomBound);
@@ -483,13 +525,13 @@ FFTConvolutionCostFunction::RegionPair FFTConvolutionCostFunction::createRightRe
 
   // With the changes in overlap / origins, there are no longer any differences in the RegionPair
   InputImage::RegionType rightRegion = InputImage::RegionType(kernelOrigin, kernelSize);
-  return std::make_pair(rightRegion, rightRegion);
+  return rightRegion;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FFTConvolutionCostFunction::RegionPair FFTConvolutionCostFunction::createBottomRegionPairs(const RegionBounds& top, const RegionBounds& bottom) const
+FFTConvolutionCostFunction::InputImage::RegionType FFTConvolutionCostFunction::createBottomRegionPairs(const RegionBounds& top, const RegionBounds& bottom) const
 {
   const int64_t leftBound = std::max(top.leftBound, bottom.leftBound);
   const int64_t rightBound = std::min(top.rightBound, bottom.rightBound);
@@ -506,7 +548,7 @@ FFTConvolutionCostFunction::RegionPair FFTConvolutionCostFunction::createBottomR
 
   // With the changes in overlap / origins, there are no longer any differences in the RegionPair
   InputImage::RegionType botRegion = InputImage::RegionType(kernelOrigin, kernelSize);
-  return std::make_pair(botRegion, botRegion);
+  return botRegion;
 }
 
 // -----------------------------------------------------------------------------
@@ -515,31 +557,61 @@ FFTConvolutionCostFunction::RegionPair FFTConvolutionCostFunction::createBottomR
 FFTConvolutionCostFunction::ImagePair FFTConvolutionCostFunction::createOverlapImages(const OverlapPair& overlap, const ParametersType& parameters) const
 {
   // First image calculation
-  InputImage::RegionType firstRegion = overlap.second.first;
+  InputImage::RegionType region = overlap.second;
   const InputImage::Pointer& firstBaseImg = m_ImageGrid.at(overlap.first.first);
 
+  // Create RegionBounds
+  RegionBounds bounds;
+  bounds.topBound = region.GetIndex()[1];
+  bounds.bottomBound = region.GetIndex()[1] + region.GetSize()[1];
+  bounds.leftBound = region.GetIndex()[0];
+  bounds.rightBound = region.GetIndex()[0] + region.GetSize()[0];
+
   InputImage::Pointer firstOverlapImg = InputImage::New();
-  firstOverlapImg->SetRegions({firstRegion.GetIndex(), firstRegion.GetSize()});
+  firstOverlapImg->SetRegions({region.GetIndex(), region.GetSize()});
   firstOverlapImg->Allocate();
 
-  auto index = firstRegion.GetIndex();
+  auto index = region.GetIndex();
   ParallelData2DAlgorithm dataAlg;
-  dataAlg.setRange(index[1], index[0], firstRegion.GetSize()[1], firstRegion.GetSize()[0]);
-  dataAlg.execute(FFTImageOverlapGenerator(firstBaseImg, firstOverlapImg, index, m_ImageDim_x, m_ImageDim_y, parameters));
+  dataAlg.setRange(index[1], index[0], region.GetSize()[1], region.GetSize()[0]);
+  dataAlg.execute(FFTImageOverlapGenerator(firstBaseImg, firstOverlapImg, index, m_ImageDim_x, m_ImageDim_y, parameters, bounds));
 
   // Second image calculation
-  InputImage::RegionType secondRegion = overlap.second.second;
   const InputImage::Pointer& secondBaseImg = m_ImageGrid.at(overlap.first.second);
 
   InputImage::Pointer secondOverlapImg = InputImage::New();
-  secondOverlapImg->SetRegions({secondRegion.GetIndex(), secondRegion.GetSize()});
+  secondOverlapImg->SetRegions({region.GetIndex(), region.GetSize()});
   secondOverlapImg->Allocate();
 
-  index = secondRegion.GetIndex();
-  dataAlg.setRange(index[1], index[0], secondRegion.GetSize()[1], secondRegion.GetSize()[0]);
-  dataAlg.execute(FFTImageOverlapGenerator(secondBaseImg, secondOverlapImg, index, m_ImageDim_x, m_ImageDim_y, parameters));
+  index = region.GetIndex();
+  dataAlg.setRange(index[1], index[0], region.GetSize()[1], region.GetSize()[0]);
+  dataAlg.execute(FFTImageOverlapGenerator(secondBaseImg, secondOverlapImg, index, m_ImageDim_x, m_ImageDim_y, parameters, bounds));
 
-  return std::make_pair(firstOverlapImg, secondOverlapImg);
+  // Crop images
+  ImagePair imgPair = std::make_pair(firstOverlapImg, secondOverlapImg);
+  cropOverlapImages(imgPair, bounds);
+  return imgPair;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FFTConvolutionCostFunction::cropOverlapImages(ImagePair& imagePair, const RegionBounds& bounds) const
+{
+  size_t width = static_cast<size_t>(bounds.rightBound - bounds.leftBound);
+  size_t height = static_cast<size_t>(bounds.bottomBound - bounds.topBound);
+
+  InputImage::IndexType index{bounds.leftBound, bounds.topBound};
+  InputImage::SizeType size{width, height};
+  InputImage::RegionType region{index, size};
+
+  auto first = imagePair.first;
+  auto second = imagePair.second;
+  first->SetRequestedRegion(region);
+  second->SetRequestedRegion(region);
+  // Update imagePair
+  imagePair.first = first;
+  imagePair.second = second;
 }
 
 // -----------------------------------------------------------------------------

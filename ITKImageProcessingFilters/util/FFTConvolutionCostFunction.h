@@ -74,8 +74,7 @@ public:
   using KernelImages = std::pair<InputImage::Pointer, InputImage::Pointer>;
   using GridKey = std::pair<Cell_T, Cell_T>;
   using GridPair = std::pair<GridKey, GridKey>;
-  using RegionPair = std::pair<InputImage::RegionType, InputImage::RegionType>;
-  using OverlapPair = std::pair<GridPair, RegionPair>;
+  using OverlapPair = std::pair<GridPair, InputImage::RegionType>;
   using OverlapPairs = std::vector<OverlapPair>;
   using ImagePair = std::pair<InputImage::Pointer, InputImage::Pointer>;
   using ImageGrid = std::map<GridKey, InputImage::Pointer>;
@@ -180,7 +179,7 @@ private:
    * @param right
    * @return
    */
-  RegionPair createRightRegionPairs(const RegionBounds& left, const RegionBounds& right) const;
+  InputImage::RegionType createRightRegionPairs(const RegionBounds& left, const RegionBounds& right) const;
 
   /**
    * @brief Creates a RegionPair between two overlapping RegionBounds along the Y-axis
@@ -188,7 +187,7 @@ private:
    * @param bottom
    * @return
    */
-  RegionPair createBottomRegionPairs(const RegionBounds& top, const RegionBounds& bottom) const;
+  InputImage::RegionType createBottomRegionPairs(const RegionBounds& top, const RegionBounds& bottom) const;
 
   /**
    * @brief Creates and returns a pair of images containing the overlap section based on the given parameters.
@@ -197,6 +196,13 @@ private:
    * @return
    */
   ImagePair createOverlapImages(const OverlapPair& overlap, const ParametersType& parameters) const;
+
+  /**
+   * @brief crops the ImagePair regions to match the RegionBounds provided.
+   * @param imagePair
+   * @param bounds
+   */
+  void cropOverlapImages(ImagePair& imagePair, const RegionBounds& bounds) const;
 
   /**
    * @brief This method is called by GetValue to find the FFT Convolution and accumulate the maximum value from each overlap.
