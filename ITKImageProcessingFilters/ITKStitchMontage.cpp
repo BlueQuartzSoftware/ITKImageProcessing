@@ -555,7 +555,7 @@ void ITKStitchMontage::initializeResampler(typename Resampler::Pointer resampler
       resampler->SetInputTile(ind, image);
 
       typename MontageType::TransformPointer regTr = MontageType::TransformType::New();
-      ::ITransformContainer::Pointer transformContainer = geom->getTransformContainer();
+      ITransformContainer::Pointer transformContainer = geom->getTransformContainer();
       if(transformContainer.get() != nullptr)
       {
         using FilterType = itk::Dream3DITransformContainerToTransform<double, 3>;

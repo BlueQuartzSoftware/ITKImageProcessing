@@ -666,7 +666,7 @@ QString ITKPCMTileRegistration::getSubGroupName() const
 // -----------------------------------------------------------------------------
 QString ITKPCMTileRegistration::getHumanLabel() const
 {
-  return "ITK::Adjust Tile Origins (PCM Method)";
+  return "ITK::Compute Tile Transformations (PCM Method)";
 }
 
 // -----------------------------------------------------------------------------

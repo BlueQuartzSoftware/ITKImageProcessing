@@ -177,19 +177,19 @@ public:
     ScopedLockType scopedLock(mutex);
     if(distTop < distBot && distTop < distLeft && distTop < distRight)
     {
-      m_Bounds.topBound = std::max(m_Bounds.topBound, index[1]);
+      m_Bounds.topBound = std::max(m_Bounds.topBound, static_cast<int64_t>(index[1]));
     }
     else if(distBot < distTop && distBot < distLeft && distBot < distRight)
     {
-      m_Bounds.bottomBound = std::min(m_Bounds.bottomBound, index[1]);
+      m_Bounds.bottomBound = std::min(m_Bounds.bottomBound, static_cast<int64_t>(index[1]));
     }
     else if(distLeft < distTop && distLeft < distBot && distLeft < distRight)
     {
-      m_Bounds.leftBound = std::max(m_Bounds.leftBound, index[0]);
+      m_Bounds.leftBound = std::max(m_Bounds.leftBound, static_cast<int64_t>(index[0]));
     }
     else if(distRight < distTop && distRight < distBot && distRight < distLeft)
     {
-      m_Bounds.rightBound = std::min(m_Bounds.rightBound, index[0]);
+      m_Bounds.rightBound = std::min(m_Bounds.rightBound, static_cast<int64_t>(index[0]));
     }
   }
 
