@@ -60,6 +60,7 @@
 #include "ITKImageProcessing/Test/ITKImageProcessingTestFileLocations.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKImageReader.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/CalcDewarpParameters.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/ApplyDewarpParameters.h"
 
 class EdaxEbsdMontageTest
 {
@@ -78,9 +79,12 @@ public:
   const QString k_ScanData = QString("Scan Data");
   const QString k_PhaseData = QString("Phase Data");
   const QString k_ImageName = QString("IPFColors");
+  const QString k_MaskName = QString("Mask");
   const QString k_DewarpTransformContainerName = QString("Dewarp Data");
-  const QString k_TransformMatrix = QString("Trnasform Matrix");
+  const QString k_TransformMatrix = QString("Transform Matrix");
   const QString k_TransformArray = QString("Transform");
+  const DataArrayPath k_TransformPath;
+  const QString k_TransformPrefix = QString("");
 
   const QString k_OutputFile = QString("EbsdMontage.dream3d");
 
@@ -163,6 +167,26 @@ public:
   }
 
   // -----------------------------------------------------------------------------
+  void executeApplyDewarp(const DataContainerArray::Pointer& dca)
+  {
+    Observer obs;
+
+    ApplyDewarpParameters::Pointer apply = ApplyDewarpParameters::New();
+    apply->setDataContainerArray(dca);
+    apply->setMontageName(k_MontageName);
+    apply->setAttributeMatrixName(k_ScanData);
+    apply->setMaskName(k_MaskName);
+    apply->setTransformPath(k_TransformPath);
+    apply->setTransformPrefix(k_TransformPrefix);
+
+    QObject::connect(apply.get(), SIGNAL(messageGenerated(const AbstractMessage::Pointer&)), &obs, SLOT(processPipelineMessage(const AbstractMessage::Pointer&)));
+
+    apply->execute();
+    int32_t err = apply->getErrorCode();
+    DREAM3D_REQUIRED(err, >=, 0)
+  }
+
+  // -----------------------------------------------------------------------------
   void executeTest()
   {
     Observer obs;
@@ -199,6 +223,9 @@ public:
 
     // Calculate the Dewarping Parameters
     executeCalcDewarp(dca);
+
+    // Apply the dewarping to the images
+    executeApplyDewarp(dca);
 
     // Write out the .dream3d file for debugging in ParaView
     writer->execute();
