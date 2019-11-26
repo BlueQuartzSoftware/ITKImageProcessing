@@ -124,7 +124,7 @@ AbstractFilter::Pointer GetFilterByName(const QString& filterName)
 
     ITKImportImageStack::Pointer reader = std::static_pointer_cast<ITKImportImageStack>(abstractFilter);
 
-    FileListInfo_t fileListInfo;
+    StackFileListInfo fileListInfo;
     fileListInfo.InputPath = UnitTest::ITKImportImageStackTest::StackInputTestDir;
 
     reader->setInputFileListInfo(fileListInfo);
@@ -158,7 +158,7 @@ AbstractFilter::Pointer GetFilterByName(const QString& filterName)
     propertySet = reader->setProperty("DataContainerName", var);
     DREAM3D_REQUIRE_EQUAL(propertySet, true);
 
-    FileListInfo_t fileListInfo;
+    StackFileListInfo fileListInfo;
     fileListInfo.InputPath = "doesNotExist.ghost";
     fileListInfo.StartIndex = 75;
     fileListInfo.EndIndex = 77;
@@ -192,7 +192,7 @@ AbstractFilter::Pointer GetFilterByName(const QString& filterName)
     propertySet = reader->setProperty("DataContainerName", var);
     DREAM3D_REQUIRE_EQUAL(propertySet, true);
 
-    FileListInfo_t fileListInfo;
+    StackFileListInfo fileListInfo;
     fileListInfo.InputPath = UnitTest::ITKImportImageStackTest::StackInputTestDir;
     fileListInfo.StartIndex = 75;
     fileListInfo.EndIndex = 79;
@@ -235,7 +235,7 @@ AbstractFilter::Pointer GetFilterByName(const QString& filterName)
     propertySet = reader->setProperty("DataContainerName", var);
     DREAM3D_REQUIRE_EQUAL(propertySet, true);
 
-    FileListInfo_t fileListInfo;
+    StackFileListInfo fileListInfo;
     fileListInfo.InputPath = UnitTest::ITKImportImageStackTest::StackInputTestDir;
     fileListInfo.StartIndex = 11;
     fileListInfo.EndIndex = 13;

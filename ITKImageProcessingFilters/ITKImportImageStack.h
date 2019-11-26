@@ -38,6 +38,7 @@
 #include <memory>
 
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/FilterParameters/StackFileListInfo.h"
 #include "SIMPLib/FilterParameters/FileListInfoFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -60,14 +61,14 @@ class ITKImageProcessing_EXPORT ITKImportImageStack : public AbstractFilter
   PYB11_FILTER_PARAMETER(QString, CellAttributeMatrixName)
   PYB11_FILTER_PARAMETER(FloatVec3Type, Origin)
   PYB11_FILTER_PARAMETER(FloatVec3Type, Spacing)
-  PYB11_FILTER_PARAMETER(FileListInfo_t, InputFileListInfo)
+  PYB11_FILTER_PARAMETER(StackFileListInfo, InputFileListInfo)
   PYB11_FILTER_PARAMETER(int, ImageStack)
   PYB11_FILTER_PARAMETER(QString, ImageDataArrayName)
   PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
   PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
   PYB11_PROPERTY(FloatVec3Type Origin READ getOrigin WRITE setOrigin)
   PYB11_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
-  PYB11_PROPERTY(FileListInfo_t InputFileListInfo READ getInputFileListInfo WRITE setInputFileListInfo)
+  PYB11_PROPERTY(StackFileListInfo InputFileListInfo READ getInputFileListInfo WRITE setInputFileListInfo)
   PYB11_PROPERTY(int ImageStack READ getImageStack WRITE setImageStack)
   PYB11_PROPERTY(QString ImageDataArrayName READ getImageDataArrayName WRITE setImageDataArrayName)
 #endif
@@ -142,27 +143,27 @@ public:
 
   Q_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
 
-    /**
-    * @brief Setter property for InputFileListInfo
-    */
-    void setInputFileListInfo(const FileListInfo_t& value); 
-    /**
-    * @brief Getter property for InputFileListInfo
-    * @return Value of InputFileListInfo
-    */
-    FileListInfo_t getInputFileListInfo() const;
+  /**
+   * @brief Setter property for InputFileListInfo
+   */
+  void setInputFileListInfo(const StackFileListInfo& value);
+  /**
+   * @brief Getter property for InputFileListInfo
+   * @return Value of InputFileListInfo
+   */
+  StackFileListInfo getInputFileListInfo() const;
 
-  Q_PROPERTY(FileListInfo_t InputFileListInfo READ getInputFileListInfo WRITE setInputFileListInfo)
+  Q_PROPERTY(StackFileListInfo InputFileListInfo READ getInputFileListInfo WRITE setInputFileListInfo)
 
-    /**
-    * @brief Setter property for ImageStack
-    */
-    void setImageStack(int value); 
-    /**
-    * @brief Getter property for ImageStack
-    * @return Value of ImageStack
-    */
-    int getImageStack() const;
+  /**
+   * @brief Setter property for ImageStack
+   */
+  void setImageStack(int value);
+  /**
+   * @brief Getter property for ImageStack
+   * @return Value of ImageStack
+   */
+  int getImageStack() const;
 
   Q_PROPERTY(int ImageStack READ getImageStack WRITE setImageStack)
 
@@ -283,7 +284,7 @@ private:
     QString m_CellAttributeMatrixName = {};
     FloatVec3Type m_Origin = {};
     FloatVec3Type m_Spacing = {};
-    FileListInfo_t m_InputFileListInfo = {};
+    StackFileListInfo m_InputFileListInfo = {};
     int m_ImageStack = {};
     QString m_ImageDataArrayName = {};
     std::weak_ptr<DataArray<uint8_t>>  m_ImageDataPtr;

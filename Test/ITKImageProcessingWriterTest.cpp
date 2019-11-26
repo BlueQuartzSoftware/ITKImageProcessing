@@ -258,7 +258,7 @@ public:
       DREAM3D_REQUIRE_NE(filterFactory.get(), 0);
       filter = filterFactory->create();
 
-      FileListInfo_t listInfo;
+      StackFileListInfo listInfo;
       listInfo.PaddingDigits = 0;
       listInfo.Ordering = 0;
       listInfo.StartIndex = 0;
