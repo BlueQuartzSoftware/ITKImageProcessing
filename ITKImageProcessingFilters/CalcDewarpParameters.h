@@ -58,7 +58,7 @@ class ITKImageProcessing_EXPORT CalcDewarpParameters : public AbstractFilter
   PYB11_FILTER_NEW_MACRO(CalcDewarpParameters)
 
   PYB11_PROPERTY(QString MontageName READ getMontageName WRITE setMontageName)
-  PYB11_PROPERTY(uint MaxIterations READ getMaxIterations WRITE setMaxIterations)
+  PYB11_PROPERTY(uint32_t MaxIterations READ getMaxIterations WRITE setMaxIterations)
   PYB11_PROPERTY(double FractionalTolerance READ getFractionalTolerance WRITE setFractionalTolerance)
   PYB11_PROPERTY(int Delta READ getDelta WRITE setDelta)
   PYB11_PROPERTY(bool SpecifyInitialSimplex READ getSpecifyInitialSimplex WRITE setSpecifyInitialSimplex)
@@ -103,9 +103,9 @@ public:
   void setMontageName(const QString& value);
   Q_PROPERTY(QString MontageName READ getMontageName WRITE setMontageName)
 
-  uint getMaxIterations() const;
-  void setMaxIterations(uint value);
-  Q_PROPERTY(uint MaxIterations READ getMaxIterations WRITE setMaxIterations)
+  uint32_t getMaxIterations() const;
+  void setMaxIterations(uint32_t value);
+  Q_PROPERTY(uint32_t MaxIterations READ getMaxIterations WRITE setMaxIterations)
 
   double getFractionalTolerance() const;
   void setFractionalTolerance(double value);

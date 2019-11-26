@@ -258,13 +258,15 @@ void CalcDewarpParameters::execute()
   FFTDewarpHelper::ParametersType initialParams = ::convertVec2Params(xyParameters);
 
   using CostFunctionType = FFTConvolutionCostFunction;
-  CostFunctionType implementation;
+  using ConstFucntionPointerType = typename CostFunctionType::Pointer;
+  // This needs to be an ItkSmartPointer type because another object is going to increase the refcount
+  ConstFucntionPointerType costFunctionObject = CostFunctionType::New();
   GridMontageShPtr gridMontage = std::dynamic_pointer_cast<GridMontage>(getDataContainerArray()->getMontage(getMontageName()));
-  implementation.Initialize(gridMontage, getDataContainerArray(), m_AttributeMatrixName, getGrayscaleArrayName());
+  costFunctionObject->Initialize(gridMontage, getDataContainerArray(), m_AttributeMatrixName, getGrayscaleArrayName());
 
   // Calculate parameter step sizes
-  const double imgX = implementation.getImageDimX();
-  const double imgY = implementation.getImageDimY();
+  const double imgX = costFunctionObject->getImageDimX();
+  const double imgY = costFunctionObject->getImageDimY();
   FFTDewarpHelper::ParametersType stepSizes = ::convertVec2Params(getStepSizes(xyParameters, imgX, imgY));
 
   m_Optimizer = AmoebaOptimizer::New();
@@ -275,7 +277,7 @@ void CalcDewarpParameters::execute()
   //m_Optimizer->SetOptimizeWithRestarts(true);
 
   m_Optimizer->SetSIMPLFilter(this);
-  m_Optimizer->SetCostFunction(&implementation);
+  m_Optimizer->SetCostFunction(costFunctionObject); // Note: Increases the refcount for costFunctionObject
   m_Optimizer->MaximizeOn(); // Search for the greatest value
   m_Optimizer->StartOptimization();
 

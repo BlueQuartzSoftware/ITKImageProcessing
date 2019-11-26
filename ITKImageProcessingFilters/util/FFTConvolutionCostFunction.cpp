@@ -48,6 +48,8 @@ using MutexType = int;
 using ScopedLockType = int;
 #endif
 
+static double s_LastValue = 0.0;
+
 #include "SIMPLib/Montages/GridMontage.h"
 #include "SIMPLib/Utilities/ParallelData2DAlgorithm.h"
 #include "SIMPLib/Utilities/ParallelTaskAlgorithm.h"

@@ -34,6 +34,7 @@
 
 #include "itkAmoebaOptimizer.h"
 #include "itkFFTConvolutionImageFilter.h"
+#include "itkSmartPointer.h"
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
@@ -67,6 +68,13 @@ class ITKImageProcessing_EXPORT FFTConvolutionCostFunction : public itk::SingleV
 {
 public:
   static const uint8_t IMAGE_DIMENSIONS = 2;
+
+  /** Standard class type aliases. */
+  using Self = FFTConvolutionCostFunction;
+  using Superclass = itk::SingleValuedCostFunction;
+  using Pointer = itk::SmartPointer<Self>;
+  using ConstPointer = itk::SmartPointer<const Self>;
+
   using Cell_T = size_t;
   using PixelCoord = itk::Index<IMAGE_DIMENSIONS>;
   using InputImage = itk::Image<PixelValue_T, IMAGE_DIMENSIONS>;
@@ -117,7 +125,7 @@ public:
    * @param unused
    * @param unused
    */
-  void GetDerivative(const ParametersType&, DerivativeType&) const override;
+  void GetDerivative(const ParametersType& paramType, DerivativeType& dType) const override;
 
   /**
    * @brief Returns the target number of parameters.  This is calculated based on the degree value.

@@ -83,8 +83,8 @@ public:
   const QString k_DewarpTransformContainerName = QString("Dewarp Data");
   const QString k_TransformMatrix = QString("Transform Matrix");
   const QString k_TransformArray = QString("Transform");
-  const DataArrayPath k_TransformPath;
-  const QString k_TransformPrefix = QString("");
+  const DataArrayPath k_TransformPath = DataArrayPath(k_DewarpTransformContainerName, k_TransformMatrix, k_TransformArray);
+  const QString k_TransformPrefix = QString("Transformed_");
 
   const QString k_OutputFile = QString("EbsdMontage.dream3d");
 
