@@ -50,7 +50,7 @@ class ITKImageProcessing_EXPORT ZeissMetaFactory
     using Pointer = std::shared_ptr<Self>;
     using ConstPointer = std::shared_ptr<const Self>;
     using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<const Self>;
     static Pointer NullPointer();
 
     virtual ~ZeissMetaFactory() = default;
@@ -77,7 +77,7 @@ class ITKImageProcessing_EXPORT Int32ZeissMetaFactory : public ZeissMetaFactory
     using Pointer = std::shared_ptr<Self>;
     using ConstPointer = std::shared_ptr<const Self>;
     using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<const Self>;
     static Pointer NullPointer();
 
     using ZeissMetaFactoryType = ZeissMetaFactory::Pointer;
@@ -110,7 +110,7 @@ class ITKImageProcessing_EXPORT Int64ZeissMetaFactory : public ZeissMetaFactory
     using Pointer = std::shared_ptr<Self>;
     using ConstPointer = std::shared_ptr<const Self>;
     using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<const Self>;
     static Pointer NullPointer();
 
     using ZeissMetaFactoryType = ZeissMetaFactory::Pointer;
@@ -144,7 +144,7 @@ class ITKImageProcessing_EXPORT FloatZeissMetaFactory : public ZeissMetaFactory
     using Pointer = std::shared_ptr<Self>;
     using ConstPointer = std::shared_ptr<const Self>;
     using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<const Self>;
     static Pointer NullPointer();
 
     using ZeissMetaFactoryType = ZeissMetaFactory::Pointer;
@@ -176,7 +176,7 @@ class ITKImageProcessing_EXPORT StringZeissMetaFactory : public ZeissMetaFactory
     using Pointer = std::shared_ptr<Self>;
     using ConstPointer = std::shared_ptr<const Self>;
     using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<const Self>;
     static Pointer NullPointer();
 
     using ZeissMetaFactoryType = ZeissMetaFactory::Pointer;

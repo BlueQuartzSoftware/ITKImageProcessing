@@ -36,13 +36,13 @@ class ITKImageProcessing_EXPORT ImportImageMontage : public AbstractFilter
   PYB11_FILTER_PARAMETER(QString, MetaDataAttributeMatrixName)
   PYB11_FILTER_PARAMETER(FloatVec3Type, Origin)
   PYB11_FILTER_PARAMETER(FloatVec3Type, Spacing)
-  PYB11_FILTER_PARAMETER(FileListInfo_t, InputFileListInfo)
+  PYB11_FILTER_PARAMETER(StackFileListInfo, InputFileListInfo)
   PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
   PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
   PYB11_PROPERTY(QString MetaDataAttributeMatrixName READ getMetaDataAttributeMatrixName WRITE setMetaDataAttributeMatrixName)
   PYB11_PROPERTY(FloatVec3Type Origin READ getOrigin WRITE setOrigin)
   PYB11_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
-  PYB11_PROPERTY(FileListInfo_t InputFileListInfo READ getInputFileListInfo WRITE setInputFileListInfo)
+  PYB11_PROPERTY(StackFileListInfo InputFileListInfo READ getInputFileListInfo WRITE setInputFileListInfo)
 #endif
 
 public:
@@ -50,7 +50,7 @@ public:
     using Pointer = std::shared_ptr<Self>;
     using ConstPointer = std::shared_ptr<const Self>;
     using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<const Self>;
     static Pointer NullPointer();
 
     static std::shared_ptr<ImportImageMontage> New();
@@ -130,14 +130,14 @@ public:
     /**
     * @brief Setter property for InputFileListInfo
     */
-    void setInputFileListInfo(const FileListInfo_t& value); 
-    /**
-    * @brief Getter property for InputFileListInfo
-    * @return Value of InputFileListInfo
-    */
-    FileListInfo_t getInputFileListInfo() const;
+  void setInputFileListInfo(const StackFileListInfo& value);
+  /**
+   * @brief Getter property for InputFileListInfo
+   * @return Value of InputFileListInfo
+   */
+  StackFileListInfo getInputFileListInfo() const;
 
-  Q_PROPERTY(FileListInfo_t InputFileListInfo READ getInputFileListInfo WRITE setInputFileListInfo)
+  Q_PROPERTY(StackFileListInfo InputFileListInfo READ getInputFileListInfo WRITE setInputFileListInfo)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -253,7 +253,7 @@ private:
     QString m_MetaDataAttributeMatrixName = {};
     FloatVec3Type m_Origin = {};
     FloatVec3Type m_Spacing = {};
-    FileListInfo_t m_InputFileListInfo = {};
+    StackFileListInfo m_InputFileListInfo = {};
     std::weak_ptr<DataArray<float>>  m_RegistrationCoordinatesPtr;
     float* m_RegistrationCoordinates = nullptr;
 

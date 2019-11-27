@@ -588,13 +588,13 @@ FloatVec3Type ITKImportImageStack::getSpacing() const
 }
 
 // -----------------------------------------------------------------------------
-void ITKImportImageStack::setInputFileListInfo(const FileListInfo_t& value)
+void ITKImportImageStack::setInputFileListInfo(const StackFileListInfo& value)
 {
   m_InputFileListInfo = value;
 }
 
 // -----------------------------------------------------------------------------
-FileListInfo_t ITKImportImageStack::getInputFileListInfo() const
+StackFileListInfo ITKImportImageStack::getInputFileListInfo() const
 {
   return m_InputFileListInfo;
 }
