@@ -48,8 +48,6 @@ using MutexType = int;
 using ScopedLockType = int;
 #endif
 
-static double s_LastValue = 0.0;
-
 #include "SIMPLib/Montages/GridMontage.h"
 #include "SIMPLib/Utilities/ParallelData2DAlgorithm.h"
 #include "SIMPLib/Utilities/ParallelTaskAlgorithm.h"
@@ -173,23 +171,23 @@ public:
 
     const int64_t distTop = index[1] - origin[1];
     const int64_t distBot = origin[1] + size[1] + index[1];
-    const int64_t distLeft = index[0] - origin[1];
+    const int64_t distLeft = index[0] - origin[0];
     const int64_t distRight = origin[0] + size[0] - index[0];
 
     ScopedLockType scopedLock(mutex);
-    if(distTop < distBot && distTop < distLeft && distTop < distRight)
+    if(distTop <= distBot && distTop <= distLeft && distTop <= distRight)
     {
       m_Bounds.topBound = std::max(m_Bounds.topBound, static_cast<int64_t>(index[1]));
     }
-    else if(distBot < distTop && distBot < distLeft && distBot < distRight)
+    else if(distBot <= distTop && distBot <= distLeft && distBot <= distRight)
     {
       m_Bounds.bottomBound = std::min(m_Bounds.bottomBound, static_cast<int64_t>(index[1]));
     }
-    else if(distLeft < distTop && distLeft < distBot && distLeft < distRight)
+    else if(distLeft <= distTop && distLeft <= distBot && distLeft <= distRight)
     {
       m_Bounds.leftBound = std::max(m_Bounds.leftBound, static_cast<int64_t>(index[0]));
     }
-    else if(distRight < distTop && distRight < distBot && distRight < distLeft)
+    else if(distRight <= distTop && distRight <= distBot && distRight <= distLeft)
     {
       m_Bounds.rightBound = std::min(m_Bounds.rightBound, static_cast<int64_t>(index[0]));
     }
