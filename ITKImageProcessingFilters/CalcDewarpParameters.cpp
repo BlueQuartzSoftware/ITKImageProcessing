@@ -73,7 +73,6 @@ using MutexType = tbb::queuing_mutex;
 #include "ITKImageProcessing/FilterParameters/EbsdWarpPolynomialFilterParameter.h"
 
 using Grayscale_T = uint8_t;
-using PixelValue_T = double;
 
 namespace
 {

@@ -67,7 +67,7 @@ struct RegionBounds
 class ITKImageProcessing_EXPORT FFTConvolutionCostFunction : public itk::SingleValuedCostFunction
 {
 public:
-  static const uint8_t IMAGE_DIMENSIONS = 2;
+  static constexpr uint8_t IMAGE_DIMENSIONS = 2;
 
   /** Standard class type aliases. */
   using Self = FFTConvolutionCostFunction;

@@ -62,7 +62,7 @@ using ScopedLockType = int;
 class FFTImageInitializer
 {
 public:
-  static const uint8_t IMAGE_DIMENSIONS = 2;
+  static constexpr uint8_t IMAGE_DIMENSIONS = 2;
   using PixelCoord = itk::Index<IMAGE_DIMENSIONS>;
   using InputImage = itk::Image<PixelValue_T, IMAGE_DIMENSIONS>;
   using DataArrayType = DataArray<Grayscale_T>;
@@ -131,7 +131,7 @@ private:
  */
 class FFTImageOverlapGenerator
 {
-  static const uint8_t IMAGE_DIMENSIONS = 2;
+  static constexpr uint8_t IMAGE_DIMENSIONS = 2;
   using PixelCoord = itk::Index<IMAGE_DIMENSIONS>;
   using InputImage = itk::Image<PixelValue_T, IMAGE_DIMENSIONS>;
   using ParametersType = itk::SingleValuedCostFunction::ParametersType;
