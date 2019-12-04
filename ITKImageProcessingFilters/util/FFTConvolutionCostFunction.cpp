@@ -346,40 +346,38 @@ void FFTConvolutionCostFunction::initializeDataContainer(const GridMontageShPtr&
   ImageGeom::Pointer imageGeom = dc->getGeometryAs<ImageGeom>();
   FloatVec3Type spacing = imageGeom->getSpacing();
   SizeVec3Type dims = imageGeom->getDimensions();
-  size_t width = dims.getX() / spacing.getX();
-  size_t height = dims.getY() / spacing.getY();
+  const size_t geomWidth = dims.getX() / spacing.getX();
+  const size_t geomHeight = dims.getY() / spacing.getY();
   size_t xOrigin = imageGeom->getOrigin().getX() / spacing.getX();
   size_t yOrigin = imageGeom->getOrigin().getY() / spacing.getY();
   size_t offsetX = 0;
   size_t offsetY = 0;
+  size_t tileHeight = std::min(geomHeight, static_cast<size_t>(std::floor(m_ImageDim_y)));
+  size_t tileWidth = std::min(geomWidth, static_cast<size_t>(std::floor(m_ImageDim_x)));
 
   /////////////////////////////////////////////////////////////////////////////
   // This divided the dimensions and origins by the spacing to treat the     //
   // montage as if it has a spacing of size 1 in order to use itk::Index.    //
   /////////////////////////////////////////////////////////////////////////////
 
-#if 1
   if(row == 0 && montage->getRowCount() > 2)
   {
-    offsetY = height;
-    const size_t yPrime = yOrigin + height;
-    height = std::min(height, static_cast<size_t>(std::floor(m_ImageDim_y)));
-    yOrigin = yPrime - height;
-    offsetY -= height;
+    offsetY = geomHeight;
+    const size_t yPrime = yOrigin + geomHeight;
+    yOrigin = yPrime - tileHeight;
+    offsetY -= tileHeight;
   }
   if(column == 0 && montage->getColumnCount() > 2)
   {
-    offsetX = width;
-    const size_t xPrime = xOrigin + width;
-    width = std::min(width, static_cast<size_t>(std::floor(m_ImageDim_x)));
-    xOrigin = xPrime - width;
-    offsetX -= width;
+    offsetX = geomWidth;
+    const size_t xPrime = xOrigin + geomWidth;
+    xOrigin = xPrime - tileWidth;
+    offsetX -= tileWidth;
   }
-#endif
 
   InputImage::SizeType imageSize;
-  imageSize[0] = width;
-  imageSize[1] = height;
+  imageSize[0] = tileWidth;
+  imageSize[1] = tileHeight;
 
   PixelCoord imageOrigin;
   imageOrigin[0] = xOrigin;
@@ -393,8 +391,8 @@ void FFTConvolutionCostFunction::initializeDataContainer(const GridMontageShPtr&
   // https://ieeexplore.ieee.org/document/723451
   // NOTE Could this be parallelized?
   ParallelData2DAlgorithm dataAlg;
-  dataAlg.setRange(offsetY, offsetX, height, width);
-  dataAlg.execute(FFTImageInitializer(itkImage, width, height, da));
+  dataAlg.setRange(offsetY, offsetX, tileHeight, tileWidth);
+  dataAlg.execute(FFTImageInitializer(itkImage, geomWidth, geomHeight, da));
 
   GridKey imageKey = std::make_pair(column, row); // Flipped this to {x,y}
   ScopedLockType lock(mutex);
@@ -631,7 +629,7 @@ void FFTConvolutionCostFunction::findFFTConvolutionAndMaxValue(const OverlapPair
   // NOTE This methodology of getting the max element from the fftConvolve
   // output might require a deeper look
   auto pixelContainer = fftConvolve->GetPixelContainer();
-  PixelValue_T* bufferPtr = pixelContainer->GetBufferPointer();
+  OutputValue_T* bufferPtr = pixelContainer->GetBufferPointer();
   itk::SizeValueType bufferSize = pixelContainer->Size();
   MeasureType maxValue = *std::max_element(bufferPtr, bufferPtr + bufferSize);
   residual += maxValue;

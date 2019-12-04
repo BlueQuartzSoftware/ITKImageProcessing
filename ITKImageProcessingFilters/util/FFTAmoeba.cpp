@@ -119,8 +119,8 @@ double fractional_range(const std::vector<fft_amoeba_SimplexCorner>& simplex)
 {
   double min = 0;
   double max = 0;
-  for(unsigned i = 0; i < simplex.size() - 1; i++) {
-    const double val = simplex[i].fv;
+  for(const auto& corner : simplex) {
+    const double val = corner.fv;
     if(val < min)
       min = val;
     if(val > max)

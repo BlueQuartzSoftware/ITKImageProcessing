@@ -46,7 +46,8 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 
 using Grayscale_T = uint8_t;
-using PixelValue_T = double;
+using PixelValue_T = Grayscale_T;
+using OutputValue_T = double;
 
 class GridMontage;
 using GridMontageShPtr = std::shared_ptr<GridMontage>;
@@ -78,7 +79,7 @@ public:
   using Cell_T = size_t;
   using PixelCoord = itk::Index<IMAGE_DIMENSIONS>;
   using InputImage = itk::Image<PixelValue_T, IMAGE_DIMENSIONS>;
-  using OutputImage = itk::Image<PixelValue_T, IMAGE_DIMENSIONS>;
+  using OutputImage = itk::Image<OutputValue_T, IMAGE_DIMENSIONS>;
   using KernelImages = std::pair<InputImage::Pointer, InputImage::Pointer>;
   using GridKey = std::pair<Cell_T, Cell_T>;
   using GridPair = std::pair<GridKey, GridKey>;
