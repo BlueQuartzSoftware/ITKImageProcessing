@@ -173,7 +173,7 @@ void CalcDewarpParameters::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Amoeba Optimizer", FilterParameter::Parameter));
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Max Iterations", MaxIterations, FilterParameter::Category::Parameter, CalcDewarpParameters));
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Delta", Delta, FilterParameter::Category::Parameter, CalcDewarpParameters));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Fractional Tolerance", FractionalTolerance, FilterParameter::Category::Parameter, CalcDewarpParameters));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Fractional Convergence Tolerance", FractionalTolerance, FilterParameter::Category::Parameter, CalcDewarpParameters));
 
   QStringList linkedSpecifySimplexProps{"XFactors", "YFactors"};
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Specify Initial Simplex", SpecifyInitialSimplex, FilterParameter::Parameter, CalcDewarpParameters, linkedSpecifySimplexProps));

@@ -9,10 +9,11 @@ Processing (Processing)
 
 This **Filter** takes a set of dewarp parameters from the CalcDewarpParameters filter and uses them to dewarp tiles within a GridMontage.  The parameters are expected to be in the format
 
-X' = a_0 * X + a_1 * Y + a_2 * X^2 + a_3 * Y^2 + a_4 * XY + a_5 * X^2Y + a_6 * XY^2
-Y' = a_7 * X + a_8 * Y + a_9 * X^2 + a_10 * Y^2 + a_11 * XY + a_12 * X^2Y + a_13 * XY^2
+> x' = a<sub>0</sub> * x + a<sub>1</sub> * y + a<sub>2</sub> * x<sup>2</sup> + a<sub>3</sub> * y<sup>2</sup> + a<sub>4</sub> * xy + a<sub>5</sub> * x<sup>2</sup>y + a<sub>6</sub> * xy<sup>2</sup>
 
-where X and Y are offset based on the center of the average tile instead of the top-left corner.
+> y' = b<sub>0</sub> * x + b<sub>1</sub> * y + b<sub>2</sub> * x<sup>2</sup> + b<sub>3</sub> * y<sup>2</sup> + b<sub>4</sub> * xy + b<sub>5</sub> * x<sup>2</sup>y + b<sub>6</sub> * xy<sup>2</sup>
+
+where X and Y are offset by half of the target tile dimensions instead of starting at the tile's top-left corner.  The target tile dimensions are taken from the first or second row/column based on the number of rows and columns in the montage.  If there are more than two rows, the target height is taken from the second row.  Otherwise, the target height is taken from the first row.  If there are more than two columns, the target width is taken from the second column.  Otherwise, the target width is taken from the first column.
 
 ## Parameters ##
 
@@ -32,13 +33,13 @@ Not Applicable
 
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| **Data Container Prefix** | Transformed Data Container Prefix | N/A | N/A | Prefix to apply for dewarped DataContainers |
-| **Attribute Array** | Mask Array Name | Element | (1) | Name of the created Mask array for each dewarped DataContainer |
+| **Data Container Prefix** | Transformed_ | N/A | N/A | Prefix to apply for dewarped DataContainers and GridMontage |
+| **Attribute Array** | Mask | Element | (1) | Name of the created Mask array for each dewarped DataContainer |
 
 
 ## Example Pipelines ##
 
-List the names of the example pipelines where this filter is used.
+None
 
 ## License & Copyright ##
 
@@ -47,4 +48,4 @@ Please see the description file distributed with this plugin.
 ## DREAM3D Mailing Lists ##
 
 If you need more help with a filter, please consider asking your question on the DREAM3D Users mailing list:
-https://groups.google.com/forum/?hl=en#!forum/dream3d-users
+[DREAM.3D Users Google group!](https://groups.google.com/forum/?hl=en#!forum/dream3d-users)
