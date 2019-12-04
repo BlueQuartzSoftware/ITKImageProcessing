@@ -117,8 +117,8 @@ double sorted_simplex_fdiameter(const std::vector<fft_amoeba_SimplexCorner>& sim
 static
 double fractional_range(const std::vector<fft_amoeba_SimplexCorner>& simplex)
 {
-  double min = 0;
-  double max = 0;
+  double min = std::numeric_limits<double>::max();
+  double max = std::numeric_limits<double>::min();
   for(const auto& corner : simplex) {
     const double val = corner.fv;
     if(val < min)
