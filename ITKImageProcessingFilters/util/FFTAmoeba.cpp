@@ -126,9 +126,9 @@ double fractional_range(const std::vector<fft_amoeba_SimplexCorner>& simplex)
     if(val > max)
       max = val;
   }
-  double num = 2 * std::abs(max - min);
-  double denom = std::abs(max) + std::abs(min);
-  return num / denom;
+  double diff = 2 * std::abs(max - min);
+  double sum = std::abs(max) + std::abs(min);
+  return diff / sum;
 }
 
 static

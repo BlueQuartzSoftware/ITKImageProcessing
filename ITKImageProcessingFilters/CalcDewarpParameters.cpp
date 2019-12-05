@@ -383,29 +383,29 @@ size_t CalcDewarpParameters::getSingleParamCount() const
 // -----------------------------------------------------------------------------
 std::vector<double> CalcDewarpParameters::getStepSizes(const std::vector<double>& params, size_t imgDimX, size_t imgDimY) const
 {
-  const size_t count = FFTDewarpHelper::getReqParameterSize();
+  constexpr size_t count = FFTDewarpHelper::getReqParameterSize();
   std::vector<double> stepSizes(count);
 
-  const size_t xMax = (imgDimX / 2);
-  const size_t yMax = (imgDimY / 2);
+  const double xMax = (imgDimX / 2.0);
+  const double yMax = (imgDimY / 2.0);
 
   // Px
   stepSizes[0] = calcDelta(m_StepDelta, xMax);
   stepSizes[1] = calcDelta(m_StepDelta, yMax);
   stepSizes[2] = calcDelta(m_StepDelta, xMax * xMax);
-  stepSizes[3] = calcDelta(m_StepDelta, yMax * yMax);
+  stepSizes[3] = calcDelta(m_StepDelta, -yMax * yMax);
   stepSizes[4] = calcDelta(m_StepDelta, xMax * yMax);
-  stepSizes[5] = calcDelta(m_StepDelta, xMax * xMax * yMax);
-  stepSizes[6] = calcDelta(m_StepDelta, xMax * yMax * yMax);
+  stepSizes[5] = calcDelta(m_StepDelta, -xMax * xMax * yMax);
+  stepSizes[6] = calcDelta(m_StepDelta, -xMax * yMax * yMax);
 
   // Py
-  stepSizes[7] = calcDelta(m_StepDelta, xMax);
+  stepSizes[7] = calcDelta(m_StepDelta, -xMax);
   stepSizes[8] = calcDelta(m_StepDelta, yMax);
-  stepSizes[9] = calcDelta(m_StepDelta, xMax * xMax);
+  stepSizes[9] = calcDelta(m_StepDelta, -xMax * xMax);
   stepSizes[10] = calcDelta(m_StepDelta, yMax * yMax);
-  stepSizes[11] = calcDelta(m_StepDelta, xMax * yMax);
-  stepSizes[12] = calcDelta(m_StepDelta, xMax * xMax * yMax);
-  stepSizes[13] = calcDelta(m_StepDelta, xMax * yMax * yMax);
+  stepSizes[11] = calcDelta(m_StepDelta, -xMax * yMax);
+  stepSizes[12] = calcDelta(m_StepDelta, -xMax * xMax * yMax);
+  stepSizes[13] = calcDelta(m_StepDelta, -xMax * yMax * yMax);
 
   return stepSizes;
 }
