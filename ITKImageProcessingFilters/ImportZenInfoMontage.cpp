@@ -19,6 +19,7 @@
 #include "SIMPLib/DataArrays/StringDataArray.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
@@ -209,6 +210,10 @@ void ImportZenInfoMontage::setupFilterParameters()
   PreflightUpdatedValueFilterParameter::Pointer param = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Montage Information", MontageInformation, FilterParameter::Parameter, ImportZenInfoMontage);
   param->setReadOnly(true);
   parameters.push_back(param);
+
+  parameters.push_back(SIMPL_NEW_STRING_FP("Name of Created Montage", MontageName, FilterParameter::Parameter, ImportZenInfoMontage));
+  QVector<QString> choices = IGeometry::GetAllLengthUnitStrings();
+  parameters.push_back(SIMPL_NEW_CHOICE_FP("Length Unit", LengthUnit, FilterParameter::Parameter, ImportZenInfoMontage, choices, false));
 
   parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage Column Start/End [Inclusive, Zero Based]", ColumnMontageLimits, FilterParameter::Parameter, ImportZenInfoMontage));
   parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage Row Start/End [Inclusive, Zero Based]", RowMontageLimits, FilterParameter::Parameter, ImportZenInfoMontage));
@@ -571,6 +576,8 @@ void ImportZenInfoMontage::generateCache(QDomElement& exportDocument)
       bound.Spacing = m_Spacing;
     }
 
+    bound.LengthUnit = static_cast<IGeometry::LengthUnit>(getLengthUnit());
+
     bound.StartC = boundsElement.attribute(Zeiss::ZenXml::StartC).toInt(&ok);
     bound.StartS = boundsElement.attribute(Zeiss::ZenXml::StartS).toInt(&ok);
     bound.StartB = boundsElement.attribute(Zeiss::ZenXml::StartB).toInt(&ok);
@@ -681,7 +688,8 @@ void ImportZenInfoMontage::generateDataStructure()
 
   DataContainerArray::Pointer dca = getDataContainerArray();
 
-  // int imageCountPadding = MetaXmlUtils::CalculatePaddingDigits(bounds.size());
+  GridMontage::Pointer gridMontage = GridMontage::New(getMontageName(), m_RowCount, m_ColumnCount);
+
   int32_t rowCountPadding = MetaXmlUtils::CalculatePaddingDigits(m_RowCount);
   int32_t colCountPadding = MetaXmlUtils::CalculatePaddingDigits(m_ColumnCount);
   int charPaddingCount = std::max(rowCountPadding, colCountPadding);
@@ -717,8 +725,13 @@ void ImportZenInfoMontage::generateDataStructure()
     image->setOrigin(origin);
     FloatVec3Type spacing(bound.Spacing[0], bound.Spacing[1], 1.0);
     image->setSpacing(spacing);
+    image->setUnits(bound.LengthUnit);
 
     dc->setGeometry(image);
+
+    GridTileIndex gridIndex = gridMontage->getTileIndex(bound.Row, bound.Col);
+    // Set the montage's DataContainer for the current index
+    gridMontage->setDataContainer(gridIndex, dc);
 
     std::vector<size_t> tDims = {dims[0], dims[1], dims[2]};
     // Create the Cell Attribute Matrix into which the image data would be read
@@ -726,6 +739,7 @@ void ImportZenInfoMontage::generateDataStructure()
     dc->addOrReplaceAttributeMatrix(cellAttrMat);
     cellAttrMat->addOrReplaceAttributeArray(bound.ImageDataProxy);
   }
+  getDataContainerArray()->addOrReplaceMontage(gridMontage);
 }
 
 // -----------------------------------------------------------------------------
@@ -1095,4 +1109,28 @@ int32_t ImportZenInfoMontage::getColumnCount() const
 QStringList ImportZenInfoMontage::getFilenameList() const
 {
   return m_FilenameList;
+}
+
+// -----------------------------------------------------------------------------
+void ImportZenInfoMontage::setMontageName(const QString& value)
+{
+  m_MontageName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ImportZenInfoMontage::getMontageName() const
+{
+  return m_MontageName;
+}
+
+// -----------------------------------------------------------------------------
+void ImportZenInfoMontage::setLengthUnit(int32_t value)
+{
+  m_LengthUnit = value;
+}
+
+// -----------------------------------------------------------------------------
+int32_t ImportZenInfoMontage::getLengthUnit() const
+{
+  return m_LengthUnit;
 }

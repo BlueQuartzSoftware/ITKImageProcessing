@@ -286,6 +286,11 @@ void ITKStitchMontage::dataCheck()
   IDataArray::Pointer tilePtr = IDataArray::NullPointer();
   ImageGeom::Pointer tileGeom = ImageGeom::NullPointer();
   std::vector<size_t> tileTupleDims;
+
+  // Need to validate all the units are the same
+  IGeometry::LengthUnit tileLengthUnits = IGeometry::LengthUnit::Unknown;
+  bool tileLengthUnitsInited = false;
+
   for(int32_t row = m_MontageStart[1]; row <= m_MontageEnd[1]; row++)
   {
     for(int32_t col = m_MontageStart[0]; col <= m_MontageEnd[0]; col++)
@@ -299,6 +304,26 @@ void ITKStitchMontage::dataCheck()
       testPath.setDataArrayName(getCommonDataArrayName());
 
       DataContainer::Pointer dc = dca->getPrereqDataContainer(this, testPath);
+
+      if(!tileLengthUnitsInited)
+      {
+        tileLengthUnits = dc->getGeometry()->getUnits();
+        tileLengthUnitsInited = true;
+      }
+      else
+      {
+        IGeometry::LengthUnit currentLengthUnit = dc->getGeometry()->getUnits();
+        if(currentLengthUnit != tileLengthUnits)
+        {
+
+          QString ss = QObject::tr("The Length Units for ROW=%1 COL=%2 are inconsistent. %3 versus %4. At present this filter does not take length units into account.")
+                           .arg(row)
+                           .arg(col)
+                           .arg(IGeometry::LengthUnitToString(currentLengthUnit))
+                           .arg(IGeometry::LengthUnitToString(tileLengthUnits));
+          setWarningCondition(-11019, ss);
+        }
+      }
 
       if(getErrorCode() < 0)
       {
@@ -382,6 +407,7 @@ void ITKStitchMontage::dataCheck()
   montageGeom->setName("MontageGeometry");
   montageGeom->setDimensions(montageArrayXSize, montageArrayYSize, 1);
   montageGeom->setSpacing(tileGeom->getSpacing());
+  montageGeom->setUnits(tileGeom->getUnits());
 
   dc->setGeometry(montageGeom);
 

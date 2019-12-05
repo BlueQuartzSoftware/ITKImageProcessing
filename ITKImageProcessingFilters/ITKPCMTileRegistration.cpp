@@ -286,6 +286,16 @@ void ITKPCMTileRegistration::dataCheck()
       {
         return;
       }
+
+      typename ::TransformContainer::TransformParametersType dream3DParameters(12);
+      typename ::TransformContainer::TransformFixedParametersType dream3DFixedParameters(3);
+
+      TransformContainer::Pointer transformContainer = TransformContainer::New();
+      transformContainer->setParameters(dream3DParameters);
+      transformContainer->setFixedParameters(dream3DFixedParameters);
+      transformContainer->setTransformTypeAsString("AffineTransform_double_3_3");
+
+      image->setTransformContainer(transformContainer);
       m_DataContainers.push_back(dc);
     }
   }

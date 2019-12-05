@@ -40,6 +40,7 @@
 
 #include "SIMPLib/CoreFilters/ConvertColorToGrayScale.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
@@ -205,6 +206,10 @@ void ITKImportRoboMetMontage::setupFilterParameters()
   PreflightUpdatedValueFilterParameter::Pointer param = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Montage Information", MontageInformation, FilterParameter::Parameter, ITKImportRoboMetMontage);
   param->setReadOnly(true);
   parameters.push_back(param);
+
+  parameters.push_back(SIMPL_NEW_STRING_FP("Name of Created Montage", MontageName, FilterParameter::Parameter, ITKImportRoboMetMontage));
+  QVector<QString> choices = IGeometry::GetAllLengthUnitStrings();
+  parameters.push_back(SIMPL_NEW_CHOICE_FP("Length Unit", LengthUnit, FilterParameter::Parameter, ITKImportRoboMetMontage, choices, false));
 
   parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage Column Start/End [Inclusive, Zero Based]", ColumnMontageLimits, FilterParameter::Parameter, ITKImportRoboMetMontage));
   parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage Row Start/End [Inclusive, Zero Based]", RowMontageLimits, FilterParameter::Parameter, ITKImportRoboMetMontage));
@@ -531,6 +536,8 @@ void ITKImportRoboMetMontage::generateCache()
     bound.Col = col;
     bound.Row = row;
 
+    bound.LengthUnit = static_cast<IGeometry::LengthUnit>(getLengthUnit());
+
     d_ptr->m_MaxCol = std::max(bound.Col, d_ptr->m_MaxCol);
     d_ptr->m_MaxRow = std::max(bound.Row, d_ptr->m_MaxRow);
 
@@ -646,7 +653,8 @@ void ITKImportRoboMetMontage::generateDataStructure()
 
   DataContainerArray::Pointer dca = getDataContainerArray();
 
-  // int imageCountPadding = MetaXmlUtils::CalculatePaddingDigits(bounds.size());
+  GridMontage::Pointer gridMontage = GridMontage::New(getMontageName(), m_RowCount, m_ColumnCount);
+
   int32_t rowCountPadding = MetaXmlUtils::CalculatePaddingDigits(m_RowCount);
   int32_t colCountPadding = MetaXmlUtils::CalculatePaddingDigits(m_ColumnCount);
   int charPaddingCount = std::max(rowCountPadding, colCountPadding);
@@ -683,8 +691,13 @@ void ITKImportRoboMetMontage::generateDataStructure()
     image->setDimensions(bound.Dims);
     image->setOrigin(bound.Origin);
     image->setSpacing(bound.Spacing);
+    image->setUnits(bound.LengthUnit);
 
     dc->setGeometry(image);
+
+    GridTileIndex gridIndex = gridMontage->getTileIndex(bound.Row, bound.Col);
+    // Set the montage's DataContainer for the current index
+    gridMontage->setDataContainer(gridIndex, dc);
 
     using StdVecSizeType = std::vector<size_t>;
     // Create the Cell Attribute Matrix into which the image data would be read
@@ -692,6 +705,7 @@ void ITKImportRoboMetMontage::generateDataStructure()
     dc->addOrReplaceAttributeMatrix(cellAttrMat);
     cellAttrMat->addOrReplaceAttributeArray(bound.ImageDataProxy);
   }
+  getDataContainerArray()->addOrReplaceMontage(gridMontage);
 }
 
 // -----------------------------------------------------------------------------
@@ -1149,6 +1163,18 @@ void ITKImportRoboMetMontage::setFileWasRead(bool value)
 bool ITKImportRoboMetMontage::getFileWasRead() const
 {
   return m_FileWasRead;
+}
+
+// -----------------------------------------------------------------------------
+void ITKImportRoboMetMontage::setMontageName(const QString& value)
+{
+  m_MontageName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKImportRoboMetMontage::getMontageName() const
+{
+  return m_MontageName;
 }
 
 // -----------------------------------------------------------------------------

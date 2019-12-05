@@ -39,6 +39,7 @@
 #include "SIMPLib/Common/SIMPLArray.hpp"
 #include "SIMPLib/DataArrays/IDataArray.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/Geometry/IGeometry.h"
 
 #include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
@@ -58,6 +59,8 @@ class ITKImageProcessing_EXPORT ITKImportRoboMetMontage : public AbstractFilter
   PYB11_SHARED_POINTERS(ITKImportRoboMetMontage)
   PYB11_FILTER_NEW_MACRO(ITKImportRoboMetMontage)
 
+  PYB11_PROPERTY(QString MontageName READ getMontageName WRITE setMontageName)
+  PYB11_PROPERTY(int32_t LengthUnit READ getLengthUnit WRITE setLengthUnit)
   PYB11_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
   PYB11_PROPERTY(DataArrayPath DataContainerPath READ getDataContainerPath WRITE setDataContainerPath)
   PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
@@ -71,7 +74,6 @@ class ITKImageProcessing_EXPORT ITKImportRoboMetMontage : public AbstractFilter
   PYB11_PROPERTY(int SliceNumber READ getSliceNumber WRITE setSliceNumber)
   PYB11_PROPERTY(QString ImageFilePrefix READ getImageFilePrefix WRITE setImageFilePrefix)
   PYB11_PROPERTY(QString ImageFileExtension READ getImageFileExtension WRITE setImageFileExtension)
-  PYB11_PROPERTY(int32_t LengthUnit READ getLengthUnit WRITE setLengthUnit)
   PYB11_PROPERTY(IntVec2Type ColumnMontageLimits READ getColumnMontageLimits WRITE setColumnMontageLimits)
   PYB11_PROPERTY(IntVec2Type RowMontageLimits READ getRowMontageLimits WRITE setRowMontageLimits)
 #endif
@@ -87,7 +89,7 @@ public:
     int32_t Row;
     int32_t Col;
     IDataArray::Pointer ImageDataProxy;
-    //   AttributeMatrix::Pointer MetaData;
+    IGeometry::LengthUnit LengthUnit;
   };
 
   using Self = ITKImportRoboMetMontage;
@@ -110,6 +112,28 @@ public:
   static QString ClassName();
 
   ~ITKImportRoboMetMontage() override;
+
+  /**
+   * @brief Setter property for MontageName
+   */
+  void setMontageName(const QString& value);
+  /**
+   * @brief Getter property for MontageName
+   * @return Value of MontageName
+   */
+  QString getMontageName() const;
+  Q_PROPERTY(QString MontageName READ getMontageName WRITE setMontageName)
+
+  /**
+   * @brief Setter property for LengthUnit
+   */
+  void setLengthUnit(int32_t value);
+  /**
+   * @brief Getter property for LengthUnit
+   * @return Value of LengthUnit
+   */
+  int32_t getLengthUnit() const;
+  Q_PROPERTY(int32_t LengthUnit READ getLengthUnit WRITE setLengthUnit)
 
   /**
    * @brief Setter property for InputFile
@@ -305,18 +329,6 @@ public:
   Q_PROPERTY(bool FileWasRead READ getFileWasRead)
 
   /**
-   * @brief Setter property for LengthUnit
-   */
-  void setLengthUnit(int32_t value);
-  /**
-   * @brief Getter property for LengthUnit
-   * @return Value of LengthUnit
-   */
-  int32_t getLengthUnit() const;
-
-  Q_PROPERTY(int32_t LengthUnit READ getLengthUnit WRITE setLengthUnit)
-
-  /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
   QString getCompiledLibraryName() const override;
@@ -470,6 +482,8 @@ protected:
   QString getImageFilePath(const QString& filePath, int imageNumber, int row, int col);
 
 private:
+  QString m_MontageName = QString("Zen Montage");
+  int32_t m_LengthUnit = 6;
   QString m_InputFile = {};
   IntVec2Type m_ColumnMontageLimits = {0, 0};
   IntVec2Type m_RowMontageLimits = {0, 0};
@@ -488,7 +502,6 @@ private:
   QString m_ImageFilePrefix = {};
   QString m_ImageFileExtension = {};
   bool m_FileWasRead = {};
-  int32_t m_LengthUnit = {};
 
   QScopedPointer<ITKImportRoboMetMontagePrivate> const d_ptr;
 

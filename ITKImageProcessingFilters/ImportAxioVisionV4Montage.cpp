@@ -230,7 +230,7 @@ void ImportAxioVisionV4Montage::setupFilterParameters()
   PreflightUpdatedValueFilterParameter::Pointer param = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Montage Information", MontageInformation, FilterParameter::Parameter, ImportAxioVisionV4Montage);
   param->setReadOnly(true);
   parameters.push_back(param);
-
+  parameters.push_back(SIMPL_NEW_STRING_FP("Name of Created Montage", MontageName, FilterParameter::Parameter, ImportAxioVisionV4Montage));
   parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage Column Start/End [Inclusive, Zero Based]", ColumnMontageLimits, FilterParameter::Parameter, ImportAxioVisionV4Montage));
   parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage Row Start/End [Inclusive, Zero Based]", RowMontageLimits, FilterParameter::Parameter, ImportAxioVisionV4Montage));
 
@@ -640,6 +640,7 @@ void ImportAxioVisionV4Montage::generateCache(QDomElement& root)
     bound.Spacing = image->getSpacing();
     bound.Col = colIndex;
     bound.Row = rowIndex;
+    bound.LengthUnit = image->getUnits();
 
     if(getImportAllMetaData())
     {
@@ -753,6 +754,8 @@ void ImportAxioVisionV4Montage::generateDataStructure()
 
   DataContainerArray::Pointer dca = getDataContainerArray();
 
+  GridMontage::Pointer gridMontage = GridMontage::New(getMontageName(), m_RowCount, m_ColumnCount);
+
   // int imageCountPadding = MetaXmlUtils::CalculatePaddingDigits(bounds.size());
   int32_t rowCountPadding = MetaXmlUtils::CalculatePaddingDigits(m_RowCount);
   int32_t colCountPadding = MetaXmlUtils::CalculatePaddingDigits(m_ColumnCount);
@@ -786,8 +789,13 @@ void ImportAxioVisionV4Montage::generateDataStructure()
     image->setDimensions(bound.Dims);
     image->setOrigin(bound.Origin);
     image->setSpacing(bound.Spacing);
+    image->setUnits(bound.LengthUnit);
 
     dc->setGeometry(image);
+
+    GridTileIndex gridIndex = gridMontage->getTileIndex(bound.Row, bound.Col);
+    // Set the montage's DataContainer for the current index
+    gridMontage->setDataContainer(gridIndex, dc);
 
     using StdVecSizeType = std::vector<size_t>;
     // Create the Cell Attribute Matrix into which the image data would be read
@@ -799,6 +807,7 @@ void ImportAxioVisionV4Montage::generateDataStructure()
       dc->addOrReplaceAttributeMatrix(bound.MetaData);
     }
   }
+  getDataContainerArray()->addOrReplaceMontage(gridMontage);
 }
 
 // -----------------------------------------------------------------------------
@@ -1315,4 +1324,16 @@ void ImportAxioVisionV4Montage::setGeneratedFileList(const QStringList& value)
 QStringList ImportAxioVisionV4Montage::getGeneratedFileList() const
 {
   return m_GeneratedFileList;
+}
+
+// -----------------------------------------------------------------------------
+void ImportAxioVisionV4Montage::setMontageName(const QString& value)
+{
+  m_MontageName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ImportAxioVisionV4Montage::getMontageName() const
+{
+  return m_MontageName;
 }

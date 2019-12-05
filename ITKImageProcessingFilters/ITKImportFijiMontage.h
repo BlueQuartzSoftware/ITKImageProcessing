@@ -39,6 +39,7 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLArray.hpp"
 #include "SIMPLib/DataArrays/IDataArray.h"
+#include "SIMPLib/Geometry/IGeometry.h"
 
 #include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
@@ -56,17 +57,9 @@ class ITKImageProcessing_EXPORT ITKImportFijiMontage : public AbstractFilter
   PYB11_CREATE_BINDINGS(ITKImportFijiMontage SUPERCLASS ITKImportMontage)
   PYB11_SHARED_POINTERS(ITKImportFijiMontage)
   PYB11_FILTER_NEW_MACRO(ITKImportFijiMontage)
-  PYB11_FILTER_PARAMETER(QString, InputFile)
-  PYB11_FILTER_PARAMETER(DataArrayPath, DataContainerPath)
-  PYB11_FILTER_PARAMETER(QString, CellAttributeMatrixName)
-  PYB11_FILTER_PARAMETER(QString, ImageDataArrayName)
-  PYB11_FILTER_PARAMETER(bool, ConvertToGrayScale)
-  PYB11_FILTER_PARAMETER(FloatVec3Type, ColorWeights)
-  PYB11_FILTER_PARAMETER(bool, ChangeOrigin)
-  PYB11_FILTER_PARAMETER(FloatVec3Type, Origin)
-  PYB11_FILTER_PARAMETER(bool, ChangeSpacing)
-  PYB11_FILTER_PARAMETER(FloatVec3Type, Spacing)
 
+  PYB11_PROPERTY(QString MontageName READ getMontageName WRITE setMontageName)
+  PYB11_PROPERTY(int32_t LengthUnit READ getLengthUnit WRITE setLengthUnit)
   PYB11_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
   PYB11_PROPERTY(DataArrayPath DataContainerPath READ getDataContainerPath WRITE setDataContainerPath)
   PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
@@ -76,9 +69,7 @@ class ITKImageProcessing_EXPORT ITKImportFijiMontage : public AbstractFilter
   PYB11_PROPERTY(bool ChangeOrigin READ getChangeOrigin WRITE setChangeOrigin)
   PYB11_PROPERTY(FloatVec3Type Origin READ getOrigin WRITE setOrigin)
   PYB11_PROPERTY(bool ChangeSpacing READ getChangeSpacing WRITE setChangeSpacing)
-  PYB11_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
-  PYB11_PROPERTY(int32_t LengthUnit READ getLengthUnit WRITE setLengthUnit)
-  
+  PYB11_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing) 
   PYB11_PROPERTY(IntVec2Type ColumnMontageLimits READ getColumnMontageLimits WRITE setColumnMontageLimits)
   PYB11_PROPERTY(IntVec2Type RowMontageLimits READ getRowMontageLimits WRITE setRowMontageLimits)
 #endif
@@ -95,6 +86,7 @@ public:
     int32_t Row;
     int32_t Col;
     IDataArray::Pointer ImageDataProxy;
+    IGeometry::LengthUnit LengthUnit;
   };
 
   using Self = ITKImportFijiMontage;
@@ -116,6 +108,28 @@ public:
   static QString ClassName();
 
   ~ITKImportFijiMontage() override;
+
+  /**
+   * @brief Setter property for MontageName
+   */
+  void setMontageName(const QString& value);
+  /**
+   * @brief Getter property for MontageName
+   * @return Value of MontageName
+   */
+  QString getMontageName() const;
+  Q_PROPERTY(QString MontageName READ getMontageName WRITE setMontageName)
+
+  /**
+   * @brief Setter property for LengthUnit
+   */
+  void setLengthUnit(int32_t value);
+  /**
+   * @brief Getter property for LengthUnit
+   * @return Value of LengthUnit
+   */
+  int32_t getLengthUnit() const;
+  Q_PROPERTY(int32_t LengthUnit READ getLengthUnit WRITE setLengthUnit)
 
   /**
    * @brief Setter property for InputFile
@@ -274,18 +288,6 @@ public:
   int32_t getColumnCount() const;
 
   Q_PROPERTY(int32_t ColumnCount READ getColumnCount)
-
-  /**
-   * @brief Setter property for LengthUnit
-   */
-  void setLengthUnit(int32_t value);
-  /**
-   * @brief Getter property for LengthUnit
-   * @return Value of LengthUnit
-   */
-  int32_t getLengthUnit() const;
-
-  Q_PROPERTY(int32_t LengthUnit READ getLengthUnit WRITE setLengthUnit)
 
   QString getMontageInformation();
   Q_PROPERTY(QString MontageInformation READ getMontageInformation)
@@ -454,6 +456,8 @@ protected:
   void findTileIndices(int32_t tolerance, std::vector<ITKImportFijiMontage::BoundsType>& bounds);
 
 private:
+  QString m_MontageName = QString("Zen Montage");
+  int32_t m_LengthUnit = 6;
   QString m_InputFile = {};
   IntVec2Type m_ColumnMontageLimits = {0, 0};
   IntVec2Type m_RowMontageLimits = {0, 0};
@@ -468,7 +472,6 @@ private:
   FloatVec3Type m_Origin = {};
   bool m_ChangeSpacing = {};
   FloatVec3Type m_Spacing = {};
-  int32_t m_LengthUnit = {};
 
   QScopedPointer<ITKImportFijiMontagePrivate> const d_ptr;
   bool m_FileWasRead = false;

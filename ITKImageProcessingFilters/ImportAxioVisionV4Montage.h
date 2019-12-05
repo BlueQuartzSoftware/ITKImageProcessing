@@ -67,20 +67,8 @@ class ITKImageProcessing_EXPORT ImportAxioVisionV4Montage : public AbstractFilte
   PYB11_CREATE_BINDINGS(ImportAxioVisionV4Montage SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(ImportAxioVisionV4Montage)
   PYB11_FILTER_NEW_MACRO(ImportAxioVisionV4Montage)
-  PYB11_FILTER_PARAMETER(QString, InputFile)
-  PYB11_FILTER_PARAMETER(DataArrayPath, DataContainerPath)
-  PYB11_FILTER_PARAMETER(QString, CellAttributeMatrixName)
-  PYB11_FILTER_PARAMETER(QString, ImageDataArrayName)
-  PYB11_FILTER_PARAMETER(QString, MetaDataAttributeMatrixName)
-  PYB11_FILTER_PARAMETER(bool, ConvertToGrayScale)
-  PYB11_FILTER_PARAMETER(bool, ImportAllMetaData)
-  PYB11_FILTER_PARAMETER(FloatVec3Type, ColorWeights)
-  PYB11_FILTER_PARAMETER(bool, ChangeOrigin)
-  PYB11_FILTER_PARAMETER(FloatVec3Type, Origin)
-  PYB11_FILTER_PARAMETER(bool, ChangeSpacing)
-  PYB11_FILTER_PARAMETER(FloatVec3Type, Spacing)
 
-
+  PYB11_PROPERTY(QString MontageName READ getMontageName WRITE setMontageName)
   PYB11_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
   PYB11_PROPERTY(DataArrayPath DataContainerPath READ getDataContainerPath WRITE setDataContainerPath)
   PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
@@ -114,6 +102,7 @@ public:
     int32_t Col;
     IDataArray::Pointer ImageDataProxy;
     AttributeMatrix::Pointer MetaData;
+    IGeometry::LengthUnit LengthUnit;
   };
 
   using Self = ImportAxioVisionV4Montage;
@@ -135,6 +124,17 @@ public:
   static QString ClassName();
 
   ~ImportAxioVisionV4Montage() override;
+
+  /**
+   * @brief Setter property for MontageName
+   */
+  void setMontageName(const QString& value);
+  /**
+   * @brief Getter property for MontageName
+   * @return Value of MontageName
+   */
+  QString getMontageName() const;
+  Q_PROPERTY(QString MontageName READ getMontageName WRITE setMontageName)
 
   /**
    * @brief Setter property for InputFile
@@ -528,6 +528,7 @@ protected:
   void addRootMetaData(const AttributeMatrix::Pointer& metaAm, const ZeissTagsXmlSection::Pointer& rootTagsSection, int index);
 
 private:
+  QString m_MontageName = QString("AxioVision Montage");
   QString m_InputFile = {};
   IntVec2Type m_ColumnMontageLimits = {0, 0};
   IntVec2Type m_RowMontageLimits = {0, 0};
