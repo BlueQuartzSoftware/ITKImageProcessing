@@ -32,6 +32,8 @@
 
 #pragma once
 
+#include <array>
+
 #include <itkSingleValuedCostFunction.h>
 
 namespace FFTDewarpHelper
