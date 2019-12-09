@@ -346,8 +346,8 @@ void FFTConvolutionCostFunction::initializeDataContainer(const GridMontageShPtr&
   ImageGeom::Pointer imageGeom = dc->getGeometryAs<ImageGeom>();
   FloatVec3Type spacing = imageGeom->getSpacing();
   SizeVec3Type dims = imageGeom->getDimensions();
-  const size_t geomWidth = dims.getX() / spacing.getX();
-  const size_t geomHeight = dims.getY() / spacing.getY();
+  const size_t geomWidth = dims.getX();
+  const size_t geomHeight = dims.getY();
   size_t xOrigin = imageGeom->getOrigin().getX() / spacing.getX();
   size_t yOrigin = imageGeom->getOrigin().getY() / spacing.getY();
   size_t offsetX = 0;
@@ -395,7 +395,7 @@ void FFTConvolutionCostFunction::initializeDataContainer(const GridMontageShPtr&
   dataAlg.execute(FFTImageInitializer(itkImage, geomWidth, geomHeight, da));
 
   GridKey imageKey = std::make_pair(column, row); // Flipped this to {x,y}
-  ScopedLockType lock(mutex);
+  ScopedLockType scopedLock(mutex);
   m_ImageGrid[imageKey] = itkImage;
 }
 
@@ -455,12 +455,14 @@ uint32_t FFTConvolutionCostFunction::GetNumberOfParameters() const
 // -----------------------------------------------------------------------------
 FFTConvolutionCostFunction::MeasureType FFTConvolutionCostFunction::GetValue(const ParametersType& parameters) const
 {
+  ParallelTaskAlgorithm taskAlg;
   MeasureType residual = 0.0;
   // Find the FFT Convolution and accumulate the maximum value from each overlap
   for(const auto& overlap : m_Overlaps) // Parallelize this
   {
-    findFFTConvolutionAndMaxValue(overlap, parameters, residual);
+    taskAlg.execute(std::bind(&FFTConvolutionCostFunction::findFFTConvolutionAndMaxValue, this, overlap, parameters, std::ref(residual)));
   }
+  taskAlg.wait();
 
   // The value to maximize is the square of the sum of the maximum value of the fft convolution
   MeasureType result = residual * residual;
@@ -617,6 +619,8 @@ void FFTConvolutionCostFunction::cropOverlapImages(ImagePair& imagePair, const R
 // -----------------------------------------------------------------------------
 void FFTConvolutionCostFunction::findFFTConvolutionAndMaxValue(const OverlapPair& overlap, const ParametersType& parameters, MeasureType& residual) const
 {
+  static MutexType mutex;
+
   ImagePair overlapImgs = createOverlapImages(overlap, parameters);
 
   ConvolutionFilter::Pointer filter = ConvolutionFilter::New();
@@ -632,6 +636,8 @@ void FFTConvolutionCostFunction::findFFTConvolutionAndMaxValue(const OverlapPair
   OutputValue_T* bufferPtr = pixelContainer->GetBufferPointer();
   itk::SizeValueType bufferSize = pixelContainer->Size();
   MeasureType maxValue = *std::max_element(bufferPtr, bufferPtr + bufferSize);
+
+  ScopedLockType lock(mutex);
   residual += maxValue;
 }
 
