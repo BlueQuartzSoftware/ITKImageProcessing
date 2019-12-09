@@ -65,6 +65,7 @@ class ITKImageProcessing_EXPORT ITKPCMTileRegistration : public AbstractFilter
   PYB11_SHARED_POINTERS(ITKPCMTileRegistration)
   PYB11_FILTER_NEW_MACRO(ITKPCMTileRegistration)
 
+  PYB11_PROPERTY(int32_t DataContainerPaddingDigits READ getDataContainerPaddingDigits WRITE setDataContainerPaddingDigits)
   PYB11_PROPERTY(IntVec2Type ColumnMontageLimits READ getColumnMontageLimits WRITE setColumnMontageLimits)
   PYB11_PROPERTY(IntVec2Type RowMontageLimits READ getRowMontageLimits WRITE setRowMontageLimits)
   PYB11_PROPERTY(QString DataContainerPrefix READ getDataContainerPrefix WRITE setDataContainerPrefix)
@@ -92,6 +93,17 @@ public:
     static QString ClassName();
 
     ~ITKPCMTileRegistration() override;
+
+    /**
+     * @brief Setter property for DataContainerPaddingDigits
+     */
+    void setDataContainerPaddingDigits(int32_t value);
+    /**
+     * @brief Getter property for DataContainerPaddingDigits
+     * @return Value of DataContainerPaddingDigits
+     */
+    int32_t getDataContainerPaddingDigits() const;
+    Q_PROPERTY(int32_t DataContainerPaddingDigits READ getDataContainerPaddingDigits WRITE setDataContainerPaddingDigits)
 
     /**
      * @brief Setter property for ColumnMontageLimits
@@ -277,6 +289,7 @@ protected:
   typename TransformContainer::Pointer GetTransformContainerFromITKAffineTransform(const AffineType::Pointer& itkAffine);
 
 private:
+  int32_t m_DataContainerPaddingDigits = 1;
   IntVec2Type m_ColumnMontageLimits = {0, 0};
   IntVec2Type m_RowMontageLimits = {0, 0};
   IntVec2Type m_MontageStart = {0, 0};

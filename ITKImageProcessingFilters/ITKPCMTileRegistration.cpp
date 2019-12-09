@@ -44,6 +44,7 @@
 #include "SIMPLib/Common/TemplateHelpers.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatFilterParameter.h"
+#include "SIMPLib/FilterParameters/IntFilterParameter.h"
 #include "SIMPLib/FilterParameters/IntVec2FilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/MultiDataContainerSelectionFilterParameter.h"
@@ -191,6 +192,8 @@ void ITKPCMTileRegistration::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage Column Start/End [Inclusive, Zero Based]", ColumnMontageLimits, FilterParameter::Parameter, ITKPCMTileRegistration));
   parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage Row Start/End [Inclusive, Zero Based]", RowMontageLimits, FilterParameter::Parameter, ITKPCMTileRegistration));
 
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Padding Digits for DataContainer Names", DataContainerPaddingDigits, FilterParameter::Category::Parameter, ITKPCMTileRegistration));
+
   parameters.push_back(SIMPL_NEW_STRING_FP("Data Container Prefix", DataContainerPrefix, FilterParameter::RequiredArray, ITKPCMTileRegistration));
 
   parameters.push_back(SIMPL_NEW_STRING_FP("Common Attribute Matrix", CommonAttributeMatrixName, FilterParameter::RequiredArray, ITKPCMTileRegistration));
@@ -262,7 +265,7 @@ void ITKPCMTileRegistration::dataCheck()
     for(int32_t col = m_MontageStart[0]; col <= m_MontageEnd[0]; col++)
     {
       // Create our DataContainer Name using a Prefix and a rXXcYY format.
-      QString dcName = MontageImportHelper::GenerateDataContainerName(getDataContainerPrefix(), m_MontageEnd, row, col);
+      QString dcName = MontageImportHelper::GenerateDataContainerName(getDataContainerPrefix(), m_DataContainerPaddingDigits, row, col);
 
       DataArrayPath testPath;
       testPath.setDataContainerName(dcName);
@@ -401,7 +404,7 @@ typename MontageType::Pointer ITKPCMTileRegistration::createGrayscaleMontage(int
       ind[0] = static_cast<::itk::SizeValueType>(col - m_MontageStart[0]);
 
       // Get our DataContainer Name using a Prefix and a rXXcYY format.
-      QString dcName = MontageImportHelper::GenerateDataContainerName(getDataContainerPrefix(), m_MontageEnd, row, col);
+      QString dcName = MontageImportHelper::GenerateDataContainerName(getDataContainerPrefix(), m_DataContainerPaddingDigits, row, col);
       DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(dcName);
 
       using InPlaceDream3DToImageFileType = itk::InPlaceDream3DDataToImageFilter<ScalarPixelType, Dimension>;
@@ -444,7 +447,7 @@ typename MontageType::Pointer ITKPCMTileRegistration::createRGBMontage(int peakM
       ind[0] = static_cast<::itk::SizeValueType>(col - m_MontageStart[0]);
 
       // Get our DataContainer Name using a Prefix and a rXXcYY format.
-      QString dcName = MontageImportHelper::GenerateDataContainerName(getDataContainerPrefix(), m_MontageEnd, row, col);
+      QString dcName = MontageImportHelper::GenerateDataContainerName(getDataContainerPrefix(), m_DataContainerPaddingDigits, row, col);
       DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(dcName);
 
       using InPlaceDream3DToImageFileType = itk::InPlaceDream3DDataToImageFilter<PixelType, Dimension>;
@@ -545,7 +548,7 @@ void ITKPCMTileRegistration::storeMontageTransforms(typename MontageType::Pointe
       const TransformType* regTr = montage->GetOutputTransform(ind);
 
       // Get our DataContainer Name using a Prefix and a rXXcYY format.
-      QString dcName = MontageImportHelper::GenerateDataContainerName(getDataContainerPrefix(), m_MontageEnd, row, col);
+      QString dcName = MontageImportHelper::GenerateDataContainerName(getDataContainerPrefix(), m_DataContainerPaddingDigits, row, col);
       DataContainer::Pointer imageDC = getDataContainerArray()->getDataContainer(dcName);
 
       ImageGeom::Pointer image = imageDC->getGeometryAs<ImageGeom>();
@@ -768,4 +771,14 @@ QString ITKPCMTileRegistration::getCommonDataArrayName() const
   return m_CommonDataArrayName;
 }
 
+// -----------------------------------------------------------------------------
+void ITKPCMTileRegistration::setDataContainerPaddingDigits(int32_t value)
+{
+  m_DataContainerPaddingDigits = value;
+}
 
+// -----------------------------------------------------------------------------
+int32_t ITKPCMTileRegistration::getDataContainerPaddingDigits() const
+{
+  return m_DataContainerPaddingDigits;
+}
