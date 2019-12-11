@@ -31,6 +31,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <algorithm>
 #include <array>
 #include <map>
 #include <tuple>
@@ -39,6 +40,7 @@
 #include <QtCore/QFile>
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
@@ -85,15 +87,24 @@ public:
   const QString k_TransformArray = QString("Transform");
   const DataArrayPath k_TransformPath = DataArrayPath(k_DewarpTransformContainerName, k_TransformMatrix, k_TransformArray);
   const QString k_TransformPrefix = QString("Transformed_");
+  const QString k_TargetPrefix = "Dewarped.";
 
   const QString k_OutputFile = QString("EbsdMontage.dream3d");
 
   using ImageTupleType = std::tuple<QString, QString, FloatVec3Type>;
 
   const std::vector<ImageTupleType> k_InputRGBImages = {{UnitTest::ITKImageProcessingDataDir + "/ITKImageProcessing/Montage/2209p230908A", "a3.osc_r0c0", {0.0f, 0.0f, 0.0f}},
-                                                        {UnitTest::ITKImageProcessingDataDir + "/ITKImageProcessing/Montage/2209p230908A", "a3.osc_r0c1", {537.0f, 0.0f, 0.0f}},
-                                                        {UnitTest::ITKImageProcessingDataDir + "/ITKImageProcessing/Montage/2209p230908A", "a3.osc_r1c0", {0.0f, 523.0f, 0.0f}},
-                                                        {UnitTest::ITKImageProcessingDataDir + "/ITKImageProcessing/Montage/2209p230908A", "a3.osc_r1c1", {537.0f, 523.0f, 0.0f}}};
+                                                        {UnitTest::ITKImageProcessingDataDir + "/ITKImageProcessing/Montage/2209p230908A", "a3.osc_r0c1", {524.0f, 0.0f, 0.0f}},
+                                                        {UnitTest::ITKImageProcessingDataDir + "/ITKImageProcessing/Montage/2209p230908A", "a3.osc_r1c0", {0.0f, 503.0f, 0.0f}},
+                                                        {UnitTest::ITKImageProcessingDataDir + "/ITKImageProcessing/Montage/2209p230908A", "a3.osc_r1c1", {524.0f, 503.0f, 0.0f}}};
+
+  const std::vector<ImageTupleType> k_TargetRGBImages = {{UnitTest::ITKImageProcessingDataDir + "/ITKImageProcessing/Montage/2209p230908A", "Dewarped.a3.osc_r0c0", {0.0f, 0.0f, 0.0f}},
+                                                         {UnitTest::ITKImageProcessingDataDir + "/ITKImageProcessing/Montage/2209p230908A", "Dewarped.a3.osc_r0c1", {524.0f, 0.0f, 0.0f}},
+                                                         {UnitTest::ITKImageProcessingDataDir + "/ITKImageProcessing/Montage/2209p230908A", "Dewarped.a3.osc_r1c0", {0.0f, 503.0f, 0.0f}},
+                                                         {UnitTest::ITKImageProcessingDataDir + "/ITKImageProcessing/Montage/2209p230908A", "Dewarped.a3.osc_r1c1", {524.0f, 503.0f, 0.0f}}};
+
+  const FloatVec7Type k_XFactors = { 1.00764000415802 , 0.011232700198888779, 2.416989991615992e-05, -8.931179991122917e-07, 2.7852800485561602e-05, -3.578869822717934e-08, -3.303350126770965e-08 };
+  const FloatVec7Type k_YFactors = { -0.014375300146639347, 1.0108000040054321, -1.9961998987128027e-06, 3.401259891688824e-05, -7.315880066016689e-05, -3.929239866806711e-08, -4.738420145145028e-08 };
 
   // -----------------------------------------------------------------------------
   void importRGBImage(const DataContainerArray::Pointer& dca, const ImageTupleType& info)
@@ -150,10 +161,12 @@ public:
     CalcDewarpParameters::Pointer dewarp = CalcDewarpParameters::New();
     dewarp->setDataContainerArray(dca);
     dewarp->setMontageName(k_MontageName);
-    dewarp->setMaxIterations(1000);
-    dewarp->setDelta(5);
+    dewarp->setMaxIterations(5000);
+    dewarp->setDelta(12);
     dewarp->setFractionalTolerance(1E-5);
-    dewarp->setSpecifyInitialSimplex(false);
+    dewarp->setSpecifyInitialSimplex(true);
+    dewarp->setXFactors(k_XFactors);
+    dewarp->setYFactors(k_YFactors);
     dewarp->setAttributeMatrixName(k_ScanData);
     dewarp->setIPFColorsArrayName(k_ImageName);
     dewarp->setTransformDCName(k_DewarpTransformContainerName);
@@ -184,6 +197,68 @@ public:
     apply->execute();
     int32_t err = apply->getErrorCode();
     DREAM3D_REQUIRED(err, >=, 0)
+  }
+
+  // -----------------------------------------------------------------------------
+  size_t getMeanSquares(const UInt8ArrayType::Pointer& arr1, const UInt8ArrayType::Pointer& arr2)
+  {
+    size_t sumSqr = 0;
+
+    std::vector<size_t> comps = arr1->getComponentDimensions();
+    size_t flatComps = std::accumulate(comps.begin(), comps.end(), 1, std::multiplies<size_t>());
+
+    size_t tupleSize = arr1->getNumberOfTuples();
+    for(size_t tuple = 0; tuple < tupleSize; tuple++)
+    {
+      uint8_t* tuple1Ptr = arr1->getTuplePointer(tuple);
+      uint8_t* tuple2Ptr = arr2->getTuplePointer(tuple);
+
+      size_t tuple1 = 0;
+      size_t tuple2 = 0;
+      for(size_t comp = 0; comp < flatComps; comp++)
+      {
+        tuple1 += tuple1Ptr[comp];
+        tuple2 += tuple2Ptr[comp];
+      }
+      tuple1 /= flatComps;
+      tuple2 /= flatComps;
+
+      int64_t diff = tuple1 - tuple2;
+      sumSqr += diff * diff;
+    }
+
+    return sumSqr;
+  }
+
+  // -----------------------------------------------------------------------------
+  UInt8ArrayType::Pointer getColorArray(const DataContainerArray::Pointer& dca, const DataArrayPath& path)
+  {
+    AttributeMatrix::Pointer am = dca->getAttributeMatrix(path);
+    return am->getAttributeArrayAs<UInt8ArrayType>(path.getDataArrayName());
+  }
+
+  // -----------------------------------------------------------------------------
+  void checkDewarpResult(const DataContainerArray::Pointer& dca)
+  {
+    for(const auto& file : k_TargetRGBImages)
+    {
+      importRGBImage(dca, file);
+    }
+
+    DataArrayPath path("", k_ScanData, k_ImageName);
+    for(const auto& file : k_InputRGBImages)
+    {
+      const QString tileName = std::get<1>(file);
+      path.setDataContainerName(k_TargetPrefix + tileName);
+      UInt8ArrayType::Pointer targetArray = getColorArray(dca, path);
+
+      path.setDataContainerName(k_TransformPrefix + tileName);
+      UInt8ArrayType::Pointer transformArray = getColorArray(dca, path);
+
+      size_t comp = getMeanSquares(targetArray, transformArray);
+      //std::cout << qPrintable(tileName) << " comparison: " << comp << std::endl;
+      DREAM3D_REQUIRED(comp, <, 500000000);
+    }
   }
 
   // -----------------------------------------------------------------------------
@@ -226,6 +301,9 @@ public:
 
     // Apply the dewarping to the images
     executeApplyDewarp(dca);
+
+    // Check the resulting montage
+    checkDewarpResult(dca);
 
     // Write out the .dream3d file for debugging in ParaView
     writer->execute();
