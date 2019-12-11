@@ -304,6 +304,10 @@ void ITKStitchMontage::dataCheck()
       testPath.setDataArrayName(getCommonDataArrayName());
 
       DataContainer::Pointer dc = dca->getPrereqDataContainer(this, testPath);
+      if(getErrorCode() < 0)
+      {
+        continue;
+      }
 
       if(!tileLengthUnitsInited)
       {
