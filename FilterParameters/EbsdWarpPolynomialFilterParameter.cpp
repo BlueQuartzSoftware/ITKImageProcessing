@@ -77,9 +77,13 @@ QString EbsdWarpPolynomialFilterParameter::getWidgetType() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EbsdWarpPolynomialFilterParameter::readJson(const QJsonObject& obj)
+void EbsdWarpPolynomialFilterParameter::readJson(const QJsonObject& json)
 {
-  QJsonValue jsonValue = obj[getPropertyName()];
+  QJsonValue jsonValue = json[getPropertyName()];
+  if(jsonValue.isUndefined())
+  {
+    jsonValue = json[getLegacyPropertyName()];
+  }
   if(!jsonValue.isUndefined() && m_SetterCallback)
   {
     QJsonObject json = jsonValue.toObject();

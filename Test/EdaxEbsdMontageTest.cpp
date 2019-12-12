@@ -205,7 +205,7 @@ public:
     size_t sumSqr = 0;
 
     std::vector<size_t> comps = arr1->getComponentDimensions();
-    size_t flatComps = std::accumulate(comps.begin(), comps.end(), 1, std::multiplies<size_t>());
+    size_t flatComps = std::accumulate(comps.begin(), comps.end(), static_cast<size_t>(1), std::multiplies<size_t>());
 
     size_t tupleSize = arr1->getNumberOfTuples();
     for(size_t tuple = 0; tuple < tupleSize; tuple++)
@@ -257,7 +257,7 @@ public:
 
       size_t comp = getMeanSquares(targetArray, transformArray);
       //std::cout << qPrintable(tileName) << " comparison: " << comp << std::endl;
-      DREAM3D_REQUIRED(comp, <, 500000000);
+      DREAM3D_REQUIRED(comp, <, 500000000)
     }
   }
 
