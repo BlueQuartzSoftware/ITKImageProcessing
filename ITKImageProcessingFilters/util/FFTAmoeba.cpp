@@ -15,6 +15,8 @@
 #include <vnl/vnl_cost_function.h>
 #include <vnl/vnl_least_squares_function.h>
 
+#include "ITKImageProcessing/ITKImageProcessingFilters/CalcDewarpParameters.h"
+
 bool fft_amoeba::default_verbose = false;
 
 fft_amoeba::fft_amoeba(vnl_cost_function& f)
@@ -118,7 +120,9 @@ static
 double fractional_range(const std::vector<fft_amoeba_SimplexCorner>& simplex)
 {
   double min = std::numeric_limits<double>::max();
-  double max = std::numeric_limits<double>::min();
+  double max = std::numeric_limits<double>::lowest();
+  //for(unsigned i = 0; i < simplex.size() - 1; i++) {
+  //  const double val = simplex[i].fv;
   for(const auto& corner : simplex) {
     const double val = corner.fv;
     if(val < min)

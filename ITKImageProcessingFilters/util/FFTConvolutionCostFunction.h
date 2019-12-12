@@ -211,7 +211,7 @@ private:
    * @param imagePair
    * @param bounds
    */
-  void cropOverlapImages(ImagePair& imagePair, const RegionBounds& bounds) const;
+  ImagePair cropOverlapImages(ImagePair& imagePair, const RegionBounds& bounds) const;
 
   /**
    * @brief This method is called by GetValue to find the FFT Convolution and accumulate the maximum value from each overlap.
