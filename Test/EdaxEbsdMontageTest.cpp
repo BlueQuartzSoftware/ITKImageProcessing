@@ -161,8 +161,8 @@ public:
     CalcDewarpParameters::Pointer dewarp = CalcDewarpParameters::New();
     dewarp->setDataContainerArray(dca);
     dewarp->setMontageName(k_MontageName);
-    dewarp->setMaxIterations(5000);
-    dewarp->setDelta(12);
+    dewarp->setMaxIterations(1000);
+    dewarp->setDelta(5);
     dewarp->setFractionalTolerance(1E-5);
     dewarp->setSpecifyInitialSimplex(true);
     dewarp->setXFactors(k_XFactors);

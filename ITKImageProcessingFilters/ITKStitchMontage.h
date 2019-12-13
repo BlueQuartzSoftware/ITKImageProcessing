@@ -45,6 +45,7 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Geometry/TransformContainer.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/Utilities/MontageSelection.h"
 
 #include "itkAffineTransform.h"
 #include "itkCompositeTransform.h"
@@ -67,15 +68,14 @@ class ITKImageProcessing_EXPORT ITKStitchMontage : public AbstractFilter
   PYB11_SHARED_POINTERS(ITKStitchMontage)
   PYB11_FILTER_NEW_MACRO(ITKStitchMontage)
 
-  PYB11_PROPERTY(int32_t DataContainerPaddingDigits READ getDataContainerPaddingDigits WRITE setDataContainerPaddingDigits)
-  PYB11_PROPERTY(QString DataContainerPrefix READ getDataContainerPrefix WRITE setDataContainerPrefix)
+  PYB11_PROPERTY(MontageSelection MontageSelection READ getMontageSelection WRITE setMontageSelection)
+
   PYB11_PROPERTY(QString CommonAttributeMatrixName READ getCommonAttributeMatrixName WRITE setCommonAttributeMatrixName)
   PYB11_PROPERTY(QString CommonDataArrayName READ getCommonDataArrayName WRITE setCommonDataArrayName)
   PYB11_PROPERTY(QString MontageDataContainerName READ getMontageDataContainerName WRITE setMontageDataContainerName)
   PYB11_PROPERTY(QString MontageAttributeMatrixName READ getMontageAttributeMatrixName WRITE setMontageAttributeMatrixName)
   PYB11_PROPERTY(QString MontageDataArrayName READ getMontageDataArrayName WRITE setMontageDataArrayName)
-  PYB11_PROPERTY(IntVec2Type ColumnMontageLimits READ getColumnMontageLimits WRITE setColumnMontageLimits)
-  PYB11_PROPERTY(IntVec2Type RowMontageLimits READ getRowMontageLimits WRITE setRowMontageLimits)
+
 #endif
 
 public:
@@ -100,50 +100,18 @@ public:
   ~ITKStitchMontage() override;
 
   /**
-   * @brief Setter property for DataContainerPaddingDigits
+   * @brief Getter property for MontageSelection
+   * @return
    */
-  void setDataContainerPaddingDigits(int32_t value);
-  /**
-   * @brief Getter property for DataContainerPaddingDigits
-   * @return Value of DataContainerPaddingDigits
-   */
-  int32_t getDataContainerPaddingDigits() const;
-  Q_PROPERTY(int32_t DataContainerPaddingDigits READ getDataContainerPaddingDigits WRITE setDataContainerPaddingDigits)
+  MontageSelection getMontageSelection() const;
 
   /**
-   * @brief Setter property for ColumnMontageLimits
+   * @brief Setter property for MontageSelection
+   * @param value
    */
-  void setColumnMontageLimits(const IntVec2Type& value);
-  /**
-   * @brief Getter property for ColumnMontageLimits
-   * @return Value of ColumnMontageLimits
-   */
-  IntVec2Type getColumnMontageLimits() const;
-  Q_PROPERTY(IntVec2Type ColumnMontageLimits READ getColumnMontageLimits WRITE setColumnMontageLimits)
+  void setMontageSelection(const MontageSelection& value);
 
-  /**
-   * @brief Setter property for RowMontageLimits
-   */
-  void setRowMontageLimits(const IntVec2Type& value);
-  /**
-   * @brief Getter property for RowMontageLimits
-   * @return Value of RowMontageLimits
-   */
-  IntVec2Type getRowMontageLimits() const;
-  Q_PROPERTY(IntVec2Type RowMontageLimits READ getRowMontageLimits WRITE setRowMontageLimits)
-
-  /**
-   * @brief Setter property for DataContainerPrefix
-   */
-  void setDataContainerPrefix(const QString& value);
-  /**
-   * @brief Getter property for DataContainerPrefix
-   * @return Value of DataContainerPrefix
-   */
-  QString getDataContainerPrefix() const;
-
-  Q_PROPERTY(QString DataContainerPrefix READ getDataContainerPrefix WRITE setDataContainerPrefix)
-
+  Q_PROPERTY(MontageSelection MontageSelection READ getMontageSelection WRITE setMontageSelection)
   /**
    * @brief Setter property for CommonAttributeMatrixName
    */
@@ -319,21 +287,15 @@ protected:
   typename TransformContainer::Pointer GetTransformContainerFromITKAffineTransform(const AffineType::Pointer& itkAffine);
 
 private:
-  int32_t m_DataContainerPaddingDigits = 1;
+  MontageSelection m_MontageSelection = {};
 
-  QString m_DataContainerPrefix = {ITKImageProcessing::Montage::k_DataContainerPrefixDefaultName};
   QString m_CommonAttributeMatrixName = {ITKImageProcessing::Montage::k_TileAttributeMatrixDefaultName};
   QString m_CommonDataArrayName = {ITKImageProcessing::Montage::k_TileDataArrayDefaultName};
   QString m_MontageDataContainerName = {ITKImageProcessing::Montage::k_MontageDataContainerDefaultName};
   QString m_MontageAttributeMatrixName = {ITKImageProcessing::Montage::k_MontageAttributeMatrixDefaultName};
   QString m_MontageDataArrayName = {ITKImageProcessing::Montage::k_MontageDataArrayDefaultName};
 
-  IntVec2Type m_ColumnMontageLimits = {0, 0};
-  IntVec2Type m_RowMontageLimits = {0, 0};
-  IntVec2Type m_MontageStart = {0, 0};
-  IntVec2Type m_MontageEnd = {0, 0};
-
-  QString m_DataContainerList;
+  // QString m_DataContainerList;
 
   static constexpr unsigned Dimension = 2;
   IntVec2Type m_MontageSize;

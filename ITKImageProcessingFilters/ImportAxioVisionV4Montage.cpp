@@ -99,12 +99,13 @@ class ImportAxioVisionV4MontagePrivate
   bool m_ChangeOrigin = false;
   bool m_ChangeSpacing = false;
   bool m_ConvertToGrayScale = false;
+  bool m_ImportAllMetaData = false;
   FloatVec3Type m_Origin;
   FloatVec3Type m_Spacing;
   FloatVec3Type m_ColorWeights;
   QDateTime m_TimeStamp_Cache;
   QString m_MontageInformation;
-  bool m_ImportAllMetaData = false;
+
   QString m_MetaDataAttributeMatrixName;
   int32_t m_MaxRow = 0;
   int32_t m_MaxCol = 0;
@@ -227,12 +228,13 @@ void ImportAxioVisionV4Montage::setupFilterParameters()
   FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("AxioVision XML File (_meta.xml)", InputFile, FilterParameter::Parameter, ImportAxioVisionV4Montage, "*.xml"));
 
-  PreflightUpdatedValueFilterParameter::Pointer param = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Montage Information", MontageInformation, FilterParameter::Parameter, ImportAxioVisionV4Montage);
-  param->setReadOnly(true);
-  parameters.push_back(param);
   parameters.push_back(SIMPL_NEW_STRING_FP("Name of Created Montage", MontageName, FilterParameter::Parameter, ImportAxioVisionV4Montage));
   parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage Column Start/End [Inclusive, Zero Based]", ColumnMontageLimits, FilterParameter::Parameter, ImportAxioVisionV4Montage));
   parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage Row Start/End [Inclusive, Zero Based]", RowMontageLimits, FilterParameter::Parameter, ImportAxioVisionV4Montage));
+
+  PreflightUpdatedValueFilterParameter::Pointer param = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Montage Information", MontageInformation, FilterParameter::Parameter, ImportAxioVisionV4Montage);
+  param->setReadOnly(true);
+  parameters.push_back(param);
 
   parameters.push_back(SIMPL_NEW_BOOL_FP("Import All MetaData", ImportAllMetaData, FilterParameter::Parameter, ImportAxioVisionV4Montage));
 
@@ -507,7 +509,8 @@ QString ImportAxioVisionV4Montage::getMontageInformation()
   QTextStream ss(&montageInfo);
   int32_t importedCols = m_MontageEnd[0] - m_MontageStart[0] + 1;
   int32_t importedRows = m_MontageEnd[1] - m_MontageStart[1] + 1;
-  ss << "\nImported Columns: " << importedCols << "  Imported Rows: " << importedRows << "  Imported Image Count: " << (importedCols * importedRows);
+  ss << "\n"
+     << "Imported Columns: " << importedCols << "  Imported Rows: " << importedRows << "  Imported Image Count: " << (importedCols * importedRows);
   info = info.replace(ITKImageProcessing::Montage::k_MontageInfoReplaceKeyword, montageInfo);
   return info;
 }
@@ -706,8 +709,8 @@ void ImportAxioVisionV4Montage::generateCache(QDomElement& root)
 
   QString montageInfo;
   QTextStream ss(&montageInfo);
-  ss << "Max Column: " << m_ColumnCount - 1 << "  Max Row: " << m_RowCount - 1 << "  Image Count: " << imageCount;
-  ss << ITKImageProcessing::Montage::k_MontageInfoReplaceKeyword;
+  ss << "Tile Column(s): " << m_ColumnCount - 1 << "  Tile Row(s): " << m_RowCount - 1 << "  Image Count: " << imageCount;
+
   FloatVec3Type overrideOrigin = minCoord;
   FloatVec3Type overrideSpacing = minSpacing;
 
@@ -742,7 +745,7 @@ void ImportAxioVisionV4Montage::generateCache(QDomElement& root)
   }
   ss << "\nOrigin: " << overrideOrigin[0] << ", " << overrideOrigin[1] << ", " << overrideOrigin[2];
   ss << "\nSpacing: " << overrideSpacing[0] << ", " << overrideSpacing[1] << ", " << overrideSpacing[2];
-
+  ss << ITKImageProcessing::Montage::k_MontageInfoReplaceKeyword;
   d_ptr->m_MontageInformation = montageInfo;
   setBoundsCache(bounds);
 }
@@ -771,7 +774,7 @@ void ImportAxioVisionV4Montage::generateDataStructure()
     // Create our DataContainer Name using a Prefix and a rXXcYY format.
     QString dcName = getDataContainerPath().getDataContainerName();
     QTextStream dcNameStream(&dcName);
-    dcNameStream << "_r";
+    dcNameStream << "r";
     dcNameStream.setFieldWidth(charPaddingCount);
     dcNameStream.setFieldAlignment(QTextStream::AlignRight);
     dcNameStream.setPadChar('0');
@@ -889,7 +892,7 @@ void ImportAxioVisionV4Montage::readImages()
     // Create our DataContainer Name using a Prefix and a rXXcYY format.
     QString dcName = getDataContainerPath().getDataContainerName();
     QTextStream dcNameStream(&dcName);
-    dcNameStream << "_r";
+    dcNameStream << "r";
     dcNameStream.setFieldWidth(charPaddingCount);
     dcNameStream.setFieldAlignment(QTextStream::AlignRight);
     dcNameStream.setPadChar('0');

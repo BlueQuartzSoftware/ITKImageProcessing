@@ -205,16 +205,15 @@ void ITKImportFijiMontage::setupFilterParameters()
   FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Fiji Configuration File", InputFile, FilterParameter::Parameter, ITKImportFijiMontage, "*.txt"));
 
-  PreflightUpdatedValueFilterParameter::Pointer param = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Montage Information", MontageInformation, FilterParameter::Parameter, ITKImportFijiMontage);
-  param->setReadOnly(true);
-  parameters.push_back(param);
-
   parameters.push_back(SIMPL_NEW_STRING_FP("Name of Created Montage", MontageName, FilterParameter::Parameter, ITKImportFijiMontage));
+  parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage Column Start/End [Inclusive, Zero Based]", ColumnMontageLimits, FilterParameter::Parameter, ITKImportFijiMontage));
+  parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage Row Start/End [Inclusive, Zero Based]", RowMontageLimits, FilterParameter::Parameter, ITKImportFijiMontage));
   QVector<QString> choices = IGeometry::GetAllLengthUnitStrings();
   parameters.push_back(SIMPL_NEW_CHOICE_FP("Length Unit", LengthUnit, FilterParameter::Parameter, ITKImportFijiMontage, choices, false));
 
-  parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage Column Start/End [Inclusive, Zero Based]", ColumnMontageLimits, FilterParameter::Parameter, ITKImportFijiMontage));
-  parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage Row Start/End [Inclusive, Zero Based]", RowMontageLimits, FilterParameter::Parameter, ITKImportFijiMontage));
+  PreflightUpdatedValueFilterParameter::Pointer param = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Montage Information", MontageInformation, FilterParameter::Parameter, ITKImportFijiMontage);
+  param->setReadOnly(true);
+  parameters.push_back(param);
 
   QStringList linkedProps("Origin");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Change Origin", ChangeOrigin, FilterParameter::Parameter, ITKImportFijiMontage, linkedProps));
@@ -498,8 +497,7 @@ void ITKImportFijiMontage::generateCache()
 
   QString montageInfo;
   QTextStream ss(&montageInfo);
-  ss << "Max Column: " << m_ColumnCount - 1 << "  Max Row: " << m_RowCount - 1 << "  Image Count: " << m_ColumnCount * m_RowCount;
-  ss << ITKImageProcessing::Montage::k_MontageInfoReplaceKeyword;
+  ss << "Tile Column(s): " << m_ColumnCount - 1 << "  Tile Row(s): " << m_RowCount - 1 << "  Image Count: " << m_ColumnCount * m_RowCount;
 
   FloatVec3Type overrideOrigin = minCoord;
   FloatVec3Type overrideSpacing = minSpacing;
@@ -528,6 +526,7 @@ void ITKImportFijiMontage::generateCache()
   }
   ss << "\nOrigin: " << overrideOrigin[0] << ", " << overrideOrigin[1] << ", " << overrideOrigin[2];
   ss << "\nSpacing: " << overrideSpacing[0] << ", " << overrideSpacing[1] << ", " << overrideSpacing[2];
+  ss << ITKImageProcessing::Montage::k_MontageInfoReplaceKeyword;
   d_ptr->m_MontageInformation = montageInfo;
   setBoundsCache(bounds);
 }
@@ -555,7 +554,7 @@ void ITKImportFijiMontage::generateDataStructure()
     // Create our DataContainer Name using a Prefix and a rXXcYY format.
     QString dcName = getDataContainerPath().getDataContainerName();
     QTextStream dcNameStream(&dcName);
-    dcNameStream << "_r";
+    dcNameStream << "r";
     dcNameStream.setFieldWidth(charPaddingCount);
     dcNameStream.setFieldAlignment(QTextStream::AlignRight);
     dcNameStream.setPadChar('0');
@@ -622,7 +621,7 @@ void ITKImportFijiMontage::readImages()
     // Create our DataContainer Name using a Prefix and a rXXcYY format.
     QString dcName = getDataContainerPath().getDataContainerName();
     QTextStream dcNameStream(&dcName);
-    dcNameStream << "_r";
+    dcNameStream << "r";
     dcNameStream.setFieldWidth(charPaddingCount);
     dcNameStream.setFieldAlignment(QTextStream::AlignRight);
     dcNameStream.setPadChar('0');
@@ -730,7 +729,8 @@ QString ITKImportFijiMontage::getMontageInformation()
   QTextStream ss(&montageInfo);
   int32_t importedCols = m_MontageEnd[0] - m_MontageStart[0] + 1;
   int32_t importedRows = m_MontageEnd[1] - m_MontageStart[1] + 1;
-  ss << "\nImported Columns: " << importedCols << "  Imported Rows: " << importedRows << "  Imported Image Count: " << (importedCols * importedRows);
+  ss << "\n"
+     << "Imported Columns: " << importedCols << "  Imported Rows: " << importedRows << "  Imported Image Count: " << (importedCols * importedRows);
   info = info.replace(ITKImageProcessing::Montage::k_MontageInfoReplaceKeyword, montageInfo);
   return info;
 }

@@ -16,17 +16,18 @@
         "DataContainerPath": {
             "Attribute Matrix Name": "",
             "Data Array Name": "",
-            "Data Container Name": "Mosaic"
+            "Data Container Name": "Mosaic_"
         },
-        "FilterVersion": "2.0.915",
+        "FilterVersion": "2.0.958",
         "Filter_Enabled": true,
         "Filter_Human_Label": "ITK::Zeiss AxioVision Import (V4)",
         "Filter_Name": "ImportAxioVisionV4Montage",
         "Filter_Uuid": "{411b008c-006f-51b2-ba05-99e51a01af3c}",
         "ImageDataArrayName": "Image",
-        "ImportAllMetaData": 1,
+        "ImportAllMetaData": 0,
         "InputFile": "Data/Montage/SampleMosaic/_meta.xml",
         "MetaDataAttributeMatrixName": "AxioVision MetaData",
+        "MontageName": "AxioVision Montage",
         "Origin": {
             "x": 0,
             "y": 0,
@@ -43,15 +44,9 @@
         }
     },
     "1": {
-        "ColumnMontageLimits": {
-            "x": 0,
-            "y": 1
-        },
         "CommonAttributeMatrixName": "Tile Data",
         "CommonDataArrayName": "Image",
-        "DataContainerPaddingDigits": 1,
-        "DataContainerPrefix": "Mosaic_",
-        "FilterVersion": "2.0.915",
+        "FilterVersion": "2.0.958",
         "Filter_Enabled": true,
         "Filter_Human_Label": "ITK::Stitch Montage",
         "Filter_Name": "ITKStitchMontage",
@@ -59,14 +54,19 @@
         "MontageAttributeMatrixName": "Mosaic Data",
         "MontageDataArrayName": "Image",
         "MontageDataContainerName": "Mosaic",
-        "RowMontageLimits": {
-            "x": 0,
-            "y": 2
+        "MontageSelection": {
+            "ColEnd": 1,
+            "ColStart": 0,
+            "Padding": 1,
+            "PrefixStr": "Mosaic_",
+            "RowEnd": 2,
+            "RowStart": 0,
+            "SuffixStr": ""
         }
     },
     "2": {
         "FileName": "Data/Output/Montage/AxioVision_Montage.png",
-        "FilterVersion": "2.0.915",
+        "FilterVersion": "2.0.958",
         "Filter_Enabled": true,
         "Filter_Human_Label": "ITK::Image Export",
         "Filter_Name": "ITKImageWriter",
@@ -79,7 +79,7 @@
         "Plane": 0
     },
     "3": {
-        "FilterVersion": "2.0.223",
+        "FilterVersion": "2.0.243",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Write DREAM.3D Data File",
         "Filter_Name": "DataContainerWriter",

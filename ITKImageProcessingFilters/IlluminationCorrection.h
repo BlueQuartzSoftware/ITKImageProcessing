@@ -39,7 +39,7 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/Filtering/FilterFactory.hpp"
 #include "SIMPLib/Filtering/FilterManager.h"
-#include "SIMPLib/FilterParameters/MontageSelectionFilterParameter.h"
+#include "SIMPLib/Utilities/MontageSelection.h"
 #include "SIMPLib/Geometry/IGeometryGrid.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 
@@ -97,229 +97,227 @@ class ITKImageProcessing_EXPORT IlluminationCorrection : public AbstractFilter
 #endif
 
 public:
-    using Self = IlluminationCorrection;
-    using Pointer = std::shared_ptr<Self>;
-    using ConstPointer = std::shared_ptr<const Self>;
-    using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<const Self>;
-    static Pointer NullPointer();
+  using Self = IlluminationCorrection;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<const Self>;
+  static Pointer NullPointer();
 
-    static std::shared_ptr<IlluminationCorrection> New();
+  static std::shared_ptr<IlluminationCorrection> New();
 
-    /**
-    * @brief Returns the name of the class for IlluminationCorrection
-    */
-    QString getNameOfClass() const override;
-    /**
-    * @brief Returns the name of the class for IlluminationCorrection
-    */
-    static QString ClassName();
-
+  /**
+   * @brief Returns the name of the class for IlluminationCorrection
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for IlluminationCorrection
+   */
+  static QString ClassName();
 
   ~IlluminationCorrection() override;
 
-    /**
-    * @brief Setter property for DataContainerName
-    */
-    void setDataContainerName(const QString& value) ;
-    /**
-    * @brief Getter property for DataContainerName
-    * @return Value of DataContainerName
-    */
-    QString getDataContainerName() const ;
+  /**
+   * @brief Setter property for DataContainerName
+   */
+  void setDataContainerName(const QString& value);
+  /**
+   * @brief Getter property for DataContainerName
+   * @return Value of DataContainerName
+   */
+  QString getDataContainerName() const;
 
-
-    /**
-    * @brief Setter property for DataContainers
-    */
-    void setDataContainers(const QStringList& value); 
-    /**
-    * @brief Getter property for DataContainers
-    * @return Value of DataContainers
-    */
-    QStringList getDataContainers() const;
+  /**
+   * @brief Setter property for DataContainers
+   */
+  void setDataContainers(const QStringList& value);
+  /**
+   * @brief Getter property for DataContainers
+   * @return Value of DataContainers
+   */
+  QStringList getDataContainers() const;
 
   Q_PROPERTY(QStringList DataContainers READ getDataContainers WRITE setDataContainers)
 
-    /**
-     * @brief Getter property for MontageSelection
-     * @return
-     */
-    MontageSelection getMontageSelection() const;
+  /**
+   * @brief Getter property for MontageSelection
+   * @return
+   */
+  MontageSelection getMontageSelection() const;
 
-    /**
-     * @brief Setter property for MontageSelection
-     * @param value
-     */
-    void setMontageSelection(const MontageSelection& value);
+  /**
+   * @brief Setter property for MontageSelection
+   * @param value
+   */
+  void setMontageSelection(const MontageSelection& value);
 
   Q_PROPERTY(MontageSelection MontageSelection READ getMontageSelection WRITE setMontageSelection)
 
-    /**
-    * @brief Setter property for CellAttributeMatrixName
-    */
-    void setCellAttributeMatrixName(const QString& value); 
-    /**
-    * @brief Getter property for CellAttributeMatrixName
-    * @return Value of CellAttributeMatrixName
-    */
-    QString getCellAttributeMatrixName() const;
+  /**
+   * @brief Setter property for CellAttributeMatrixName
+   */
+  void setCellAttributeMatrixName(const QString& value);
+  /**
+   * @brief Getter property for CellAttributeMatrixName
+   * @return Value of CellAttributeMatrixName
+   */
+  QString getCellAttributeMatrixName() const;
 
   Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
-    /**
-    * @brief Setter property for ImageDataArrayName
-    */
-    void setImageDataArrayName(const QString& value);
-    /**
-    * @brief Getter property for ImageDataArrayName
-    * @return Value of ImageDataArrayName
-    */
-    QString getImageDataArrayName() const;
+  /**
+   * @brief Setter property for ImageDataArrayName
+   */
+  void setImageDataArrayName(const QString& value);
+  /**
+   * @brief Getter property for ImageDataArrayName
+   * @return Value of ImageDataArrayName
+   */
+  QString getImageDataArrayName() const;
 
   Q_PROPERTY(QString ImageDataArrayName READ getImageDataArrayName WRITE setImageDataArrayName)
 
-    /**
-    * @brief Setter property for CorrectedImageDataArrayName
-    */
-    void setCorrectedImageDataArrayName(const QString& value); 
-    /**
-    * @brief Getter property for CorrectedImageDataArrayName
-    * @return Value of CorrectedImageDataArrayName
-    */
-    QString getCorrectedImageDataArrayName() const;
+  /**
+   * @brief Setter property for CorrectedImageDataArrayName
+   */
+  void setCorrectedImageDataArrayName(const QString& value);
+  /**
+   * @brief Getter property for CorrectedImageDataArrayName
+   * @return Value of CorrectedImageDataArrayName
+   */
+  QString getCorrectedImageDataArrayName() const;
 
   Q_PROPERTY(QString CorrectedImageDataArrayName READ getCorrectedImageDataArrayName WRITE setCorrectedImageDataArrayName)
 
-    /**
-    * @brief Setter property for ExportCorrectedImages
-    */
-    void setExportCorrectedImages(bool value); 
-    /**
-    * @brief Getter property for ExportCorrectedImages
-    * @return Value of ExportCorrectedImages
-    */
-    bool getExportCorrectedImages() const;
+  /**
+   * @brief Setter property for ExportCorrectedImages
+   */
+  void setExportCorrectedImages(bool value);
+  /**
+   * @brief Getter property for ExportCorrectedImages
+   * @return Value of ExportCorrectedImages
+   */
+  bool getExportCorrectedImages() const;
 
   Q_PROPERTY(bool ExportCorrectedImages READ getExportCorrectedImages WRITE setExportCorrectedImages)
 
-    /**
-    * @brief Setter property for OutputPath
-    */
-    void setOutputPath(const QString& value); 
-    /**
-    * @brief Getter property for OutputPath
-    * @return Value of OutputPath
-    */
-    QString getOutputPath() const;
+  /**
+   * @brief Setter property for OutputPath
+   */
+  void setOutputPath(const QString& value);
+  /**
+   * @brief Getter property for OutputPath
+   * @return Value of OutputPath
+   */
+  QString getOutputPath() const;
 
   Q_PROPERTY(QString OutputPath READ getOutputPath WRITE setOutputPath)
 
-    /**
-    * @brief Setter property for FileExtension
-    */
-    void setFileExtension(const QString& value); 
-    /**
-    * @brief Getter property for FileExtension
-    * @return Value of FileExtension
-    */
-    QString getFileExtension() const;
+  /**
+   * @brief Setter property for FileExtension
+   */
+  void setFileExtension(const QString& value);
+  /**
+   * @brief Getter property for FileExtension
+   * @return Value of FileExtension
+   */
+  QString getFileExtension() const;
 
   Q_PROPERTY(QString FileExtension READ getFileExtension WRITE setFileExtension)
 
-    /**
-    * @brief Setter property for BackgroundDataContainerPath
-    */
-    void setBackgroundDataContainerPath(const DataArrayPath& value); 
-    /**
-    * @brief Getter property for BackgroundDataContainerPath
-    * @return Value of BackgroundDataContainerPath
-    */
-    DataArrayPath getBackgroundDataContainerPath() const;
+  /**
+   * @brief Setter property for BackgroundDataContainerPath
+   */
+  void setBackgroundDataContainerPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for BackgroundDataContainerPath
+   * @return Value of BackgroundDataContainerPath
+   */
+  DataArrayPath getBackgroundDataContainerPath() const;
 
   Q_PROPERTY(DataArrayPath BackgroundDataContainerPath READ getBackgroundDataContainerPath WRITE setBackgroundDataContainerPath)
 
-    /**
-    * @brief Setter property for BackgroundCellAttributeMatrixPath
-    */
-    void setBackgroundCellAttributeMatrixPath(const DataArrayPath& value); 
-    /**
-    * @brief Getter property for BackgroundCellAttributeMatrixPath
-    * @return Value of BackgroundCellAttributeMatrixPath
-    */
-    DataArrayPath getBackgroundCellAttributeMatrixPath() const;
+  /**
+   * @brief Setter property for BackgroundCellAttributeMatrixPath
+   */
+  void setBackgroundCellAttributeMatrixPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for BackgroundCellAttributeMatrixPath
+   * @return Value of BackgroundCellAttributeMatrixPath
+   */
+  DataArrayPath getBackgroundCellAttributeMatrixPath() const;
 
   Q_PROPERTY(DataArrayPath BackgroundCellAttributeMatrixPath READ getBackgroundCellAttributeMatrixPath WRITE setBackgroundCellAttributeMatrixPath)
 
-    /**
-    * @brief Setter property for BackgroundImageArrayPath
-    */
-    void setBackgroundImageArrayPath(const DataArrayPath& value); 
-    /**
-    * @brief Getter property for BackgroundImageArrayPath
-    * @return Value of BackgroundImageArrayPath
-    */
-    DataArrayPath getBackgroundImageArrayPath() const;
+  /**
+   * @brief Setter property for BackgroundImageArrayPath
+   */
+  void setBackgroundImageArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for BackgroundImageArrayPath
+   * @return Value of BackgroundImageArrayPath
+   */
+  DataArrayPath getBackgroundImageArrayPath() const;
 
   Q_PROPERTY(DataArrayPath BackgroundImageArrayPath READ getBackgroundImageArrayPath WRITE setBackgroundImageArrayPath)
 
-    /**
-    * @brief Setter property for LowThreshold
-    */
-    void setLowThreshold(uint32_t value); 
-    /**
-    * @brief Getter property for LowThreshold
-    * @return Value of LowThreshold
-    */
-    uint32_t getLowThreshold() const;
+  /**
+   * @brief Setter property for LowThreshold
+   */
+  void setLowThreshold(uint32_t value);
+  /**
+   * @brief Getter property for LowThreshold
+   * @return Value of LowThreshold
+   */
+  uint32_t getLowThreshold() const;
 
   Q_PROPERTY(uint32_t LowThreshold READ getLowThreshold WRITE setLowThreshold)
 
-    /**
-    * @brief Setter property for HighThreshold
-    */
-    void setHighThreshold(uint32_t value); 
-    /**
-    * @brief Getter property for HighThreshold
-    * @return Value of HighThreshold
-    */
-    uint32_t getHighThreshold() const;
+  /**
+   * @brief Setter property for HighThreshold
+   */
+  void setHighThreshold(uint32_t value);
+  /**
+   * @brief Getter property for HighThreshold
+   * @return Value of HighThreshold
+   */
+  uint32_t getHighThreshold() const;
 
   Q_PROPERTY(uint32_t HighThreshold READ getHighThreshold WRITE setHighThreshold)
 
-    /**
-    * @brief Setter property for ApplyCorrection
-    */
-    void setApplyCorrection(bool value); 
-    /**
-    * @brief Getter property for ApplyCorrection
-    * @return Value of ApplyCorrection
-    */
-    bool getApplyCorrection() const;
+  /**
+   * @brief Setter property for ApplyCorrection
+   */
+  void setApplyCorrection(bool value);
+  /**
+   * @brief Getter property for ApplyCorrection
+   * @return Value of ApplyCorrection
+   */
+  bool getApplyCorrection() const;
 
   Q_PROPERTY(int ApplyCorrection READ getApplyCorrection WRITE setApplyCorrection)
 
-    /**
-    * @brief Setter property for ApplyMedianFilter
-    */
-    void setApplyMedianFilter(bool value); 
-    /**
-    * @brief Getter property for ApplyMedianFilter
-    * @return Value of ApplyMedianFilter
-    */
-    bool getApplyMedianFilter() const;
+  /**
+   * @brief Setter property for ApplyMedianFilter
+   */
+  void setApplyMedianFilter(bool value);
+  /**
+   * @brief Getter property for ApplyMedianFilter
+   * @return Value of ApplyMedianFilter
+   */
+  bool getApplyMedianFilter() const;
 
   Q_PROPERTY(bool ApplyMedianFilter READ getApplyMedianFilter WRITE setApplyMedianFilter)
 
-    /**
-    * @brief Setter property for MedianRadius
-    */
-    void setMedianRadius(const FloatVec3Type& value); 
-    /**
-    * @brief Getter property for MedianRadius
-    * @return Value of MedianRadius
-    */
-    FloatVec3Type getMedianRadius() const;
+  /**
+   * @brief Setter property for MedianRadius
+   */
+  void setMedianRadius(const FloatVec3Type& value);
+  /**
+   * @brief Getter property for MedianRadius
+   * @return Value of MedianRadius
+   */
+  FloatVec3Type getMedianRadius() const;
 
   Q_PROPERTY(FloatVec3Type MedianRadius READ getMedianRadius WRITE setMedianRadius)
 
@@ -444,7 +442,7 @@ protected:
    * @return
    */
   ArrayType getArrayType();
-  
+
   /**
    * @brief Returns an enum value specifying which supported geometry type the incoming data falls into.
    * @return
@@ -471,7 +469,7 @@ protected:
    * @brief Checks the input arrays' type and geometry type and returns a deep copy of the geometry.
    * @return
    */
-  template<typename DataArrayType, typename GeometryType>
+  template <typename DataArrayType, typename GeometryType>
   std::shared_ptr<GeometryType> checkInputArrays()
   {
     DataContainerArray::Pointer dca = getDataContainerArray();
@@ -488,7 +486,8 @@ protected:
       {
         QString msg;
         QTextStream out(&msg);
-        out << "Attribute Array Path: " << imageArrayPath.serialize() << " is not of the appropriate type and components{1} (Grayscale) data. Please select a pattern of AttributeArray Paths that are gray scale images";
+        out << "Attribute Array Path: " << imageArrayPath.serialize()
+            << " is not of the appropriate type and components{1} (Grayscale) data. Please select a pattern of AttributeArray Paths that are gray scale images";
         setErrorCondition(-53000, msg);
       }
 
@@ -516,22 +515,22 @@ protected:
 
 private:
   MontageSelection m_MontageSelection = {};
-    QString m_DataContainerName = {};
-    QStringList m_DataContainers = {};
-    QString m_CellAttributeMatrixName = {};
-    QString m_ImageDataArrayName = {};
-    QString m_CorrectedImageDataArrayName = {};
-    bool m_ExportCorrectedImages = {};
-    QString m_OutputPath = {};
-    QString m_FileExtension = {};
-    DataArrayPath m_BackgroundDataContainerPath = {};
-    DataArrayPath m_BackgroundCellAttributeMatrixPath = {};
-    DataArrayPath m_BackgroundImageArrayPath = {};
-    uint32_t m_LowThreshold = {};
-    uint32_t m_HighThreshold = {};
-    bool m_ApplyCorrection = {};
-    bool m_ApplyMedianFilter = {};
-    FloatVec3Type m_MedianRadius = {};
+  QString m_DataContainerName = {};
+  QStringList m_DataContainers = {};
+  QString m_CellAttributeMatrixName = {};
+  QString m_ImageDataArrayName = {};
+  QString m_CorrectedImageDataArrayName = {};
+  bool m_ExportCorrectedImages = {};
+  QString m_OutputPath = {};
+  QString m_FileExtension = {};
+  DataArrayPath m_BackgroundDataContainerPath = {};
+  DataArrayPath m_BackgroundCellAttributeMatrixPath = {};
+  DataArrayPath m_BackgroundImageArrayPath = {};
+  uint32_t m_LowThreshold = {};
+  uint32_t m_HighThreshold = {};
+  bool m_ApplyCorrection = {};
+  bool m_ApplyMedianFilter = {};
+  FloatVec3Type m_MedianRadius = {};
 
   QMutex m_NotifyMessage;
 
@@ -541,4 +540,3 @@ public:
   IlluminationCorrection& operator=(const IlluminationCorrection&) = delete; // Copy Assignment Not Implemented
   IlluminationCorrection& operator=(IlluminationCorrection&&) = delete;      // Move Assignment Not Implemented
 };
-

@@ -52,7 +52,6 @@
 #include "SIMPLib/Utilities/StringOperations.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 
-#include "ITKImageProcessing/ITKImageProcessingConstants.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKImageReader.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/util/MontageImportHelper.h"
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
@@ -93,10 +92,11 @@ class ITKImportRoboMetMontagePrivate
   QDateTime m_TimeStamp_Cache;
   QString m_MontageInformation;
   int32_t m_SliceNumber = -1;
-  QString m_ImageFilePrefix;
-  QString m_ImageFileExtension;
   int32_t m_MaxRow = 0;
   int32_t m_MaxCol = 0;
+  QString m_ImageFilePrefix;
+  QString m_ImageFileExtension;
+
   std::vector<ITKImportRoboMetMontage::BoundsType> m_BoundsCache;
 };
 
@@ -115,19 +115,8 @@ ITKImportRoboMetMontagePrivate::ITKImportRoboMetMontagePrivate(ITKImportRoboMetM
 //
 // -----------------------------------------------------------------------------
 ITKImportRoboMetMontage::ITKImportRoboMetMontage()
-: m_InputFile("")
-, m_DataContainerPath(ITKImageProcessing::Montage::k_DataContaineNameDefaultName)
-, m_CellAttributeMatrixName(ITKImageProcessing::Montage::k_TileAttributeMatrixDefaultName)
-, m_ImageDataArrayName(ITKImageProcessing::Montage::k_TileDataArrayDefaultName)
-, m_LengthUnit(-1)
-, d_ptr(new ITKImportRoboMetMontagePrivate(this))
+: d_ptr(new ITKImportRoboMetMontagePrivate(this))
 {
-  m_NumImages = 0;
-  m_ColorWeights = FloatVec3Type(0.2125f, 0.7154f, 0.0721f);
-  m_Origin = FloatVec3Type(0.0f, 0.0f, 0.0f);
-  m_Spacing = FloatVec3Type(1.0f, 1.0f, 1.0f);
-  m_MontageStart = IntVec2Type(0, 0);
-  m_MontageEnd = IntVec2Type(0, 0);
 }
 
 // -----------------------------------------------------------------------------
@@ -203,16 +192,15 @@ void ITKImportRoboMetMontage::setupFilterParameters()
   FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Registration File (Mosaic Details)", InputFile, FilterParameter::Parameter, ITKImportRoboMetMontage, "", "*.txt"));
 
-  PreflightUpdatedValueFilterParameter::Pointer param = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Montage Information", MontageInformation, FilterParameter::Parameter, ITKImportRoboMetMontage);
-  param->setReadOnly(true);
-  parameters.push_back(param);
-
   parameters.push_back(SIMPL_NEW_STRING_FP("Name of Created Montage", MontageName, FilterParameter::Parameter, ITKImportRoboMetMontage));
+  parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage Column Start/End [Inclusive, Zero Based]", ColumnMontageLimits, FilterParameter::Parameter, ITKImportRoboMetMontage));
+  parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage Row Start/End [Inclusive, Zero Based]", RowMontageLimits, FilterParameter::Parameter, ITKImportRoboMetMontage));
   QVector<QString> choices = IGeometry::GetAllLengthUnitStrings();
   parameters.push_back(SIMPL_NEW_CHOICE_FP("Length Unit", LengthUnit, FilterParameter::Parameter, ITKImportRoboMetMontage, choices, false));
 
-  parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage Column Start/End [Inclusive, Zero Based]", ColumnMontageLimits, FilterParameter::Parameter, ITKImportRoboMetMontage));
-  parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage Row Start/End [Inclusive, Zero Based]", RowMontageLimits, FilterParameter::Parameter, ITKImportRoboMetMontage));
+  PreflightUpdatedValueFilterParameter::Pointer param = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Montage Information", MontageInformation, FilterParameter::Parameter, ITKImportRoboMetMontage);
+  param->setReadOnly(true);
+  parameters.push_back(param);
 
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Slice Number", SliceNumber, FilterParameter::Parameter, ITKImportRoboMetMontage));
   parameters.push_back(SIMPL_NEW_STRING_FP("Image File Prefix", ImageFilePrefix, FilterParameter::Parameter, ITKImportRoboMetMontage));
@@ -527,7 +515,7 @@ void ITKImportRoboMetMontage::generateCache()
 
     BoundsType bound;
     bound.Filename = imageFilePath;
-    bound.Origin = FloatVec3Type(xPos, yPos, 0.0f);
+    bound.Origin = FloatVec3Type(static_cast<float>(xPos), static_cast<float>(yPos), 0.0f);
     bound.Spacing = FloatVec3Type(1.0f, 1.0f, 1.0f);
     if(m_ChangeSpacing)
     {
@@ -546,7 +534,7 @@ void ITKImportRoboMetMontage::generateCache()
   // We use Zero based indexing so add 1 to get the counts
   m_ColumnCount++;
   m_RowCount++;
-  m_NumImages = bounds.size();
+  m_NumImages = static_cast<int32_t>(bounds.size());
 
   FloatVec3Type minCoord = {std::numeric_limits<float>::max(), std::numeric_limits<float>::max(), std::numeric_limits<float>::max()};
   FloatVec3Type minSpacing = {std::numeric_limits<float>::max(), std::numeric_limits<float>::max(), std::numeric_limits<float>::max()};
@@ -612,8 +600,7 @@ void ITKImportRoboMetMontage::generateCache()
 
   QString montageInfo;
   QTextStream ss(&montageInfo);
-  ss << "Max Column: " << m_ColumnCount - 1 << "  Max Row: " << m_RowCount - 1 << "  Image Count: " << m_NumImages;
-  ss << ITKImageProcessing::Montage::k_MontageInfoReplaceKeyword;
+  ss << "Tile Column(s): " << m_ColumnCount - 1 << "  Tile Row(s): " << m_RowCount - 1 << "  Image Count: " << m_NumImages;
 
   FloatVec3Type overrideOrigin = minCoord;
   FloatVec3Type overrideSpacing = minSpacing;
@@ -642,6 +629,7 @@ void ITKImportRoboMetMontage::generateCache()
   }
   ss << "\nOrigin: " << overrideOrigin[0] << ", " << overrideOrigin[1] << ", " << overrideOrigin[2];
   ss << "\nSpacing: " << overrideSpacing[0] << ", " << overrideSpacing[1] << ", " << overrideSpacing[2];
+  ss << ITKImageProcessing::Montage::k_MontageInfoReplaceKeyword;
   d_ptr->m_MontageInformation = montageInfo;
   setBoundsCache(bounds);
 }
@@ -653,7 +641,7 @@ void ITKImportRoboMetMontage::generateDataStructure()
 
   DataContainerArray::Pointer dca = getDataContainerArray();
 
-  GridMontage::Pointer gridMontage = GridMontage::New(getMontageName(), m_RowCount, m_ColumnCount);
+  GridMontage::Pointer gridMontage = GridMontage::New(getMontageName(), static_cast<size_t>(m_RowCount), static_cast<size_t>(m_ColumnCount));
 
   int32_t rowCountPadding = MetaXmlUtils::CalculatePaddingDigits(m_RowCount);
   int32_t colCountPadding = MetaXmlUtils::CalculatePaddingDigits(m_ColumnCount);
@@ -669,7 +657,7 @@ void ITKImportRoboMetMontage::generateDataStructure()
     // Create our DataContainer Name using a Prefix and a rXXcYY format.
     QString dcName = getDataContainerPath().getDataContainerName();
     QTextStream dcNameStream(&dcName);
-    dcNameStream << "_r";
+    dcNameStream << "r";
     dcNameStream.setFieldWidth(charPaddingCount);
     dcNameStream.setFieldAlignment(QTextStream::AlignRight);
     dcNameStream.setPadChar('0');
@@ -695,7 +683,7 @@ void ITKImportRoboMetMontage::generateDataStructure()
 
     dc->setGeometry(image);
 
-    GridTileIndex gridIndex = gridMontage->getTileIndex(bound.Row, bound.Col);
+    GridTileIndex gridIndex = gridMontage->getTileIndex(static_cast<size_t>(bound.Row), static_cast<size_t>(bound.Col));
     // Set the montage's DataContainer for the current index
     gridMontage->setDataContainer(gridIndex, dc);
 
@@ -736,7 +724,7 @@ void ITKImportRoboMetMontage::readImages()
     // Create our DataContainer Name using a Prefix and a rXXcYY format.
     QString dcName = getDataContainerPath().getDataContainerName();
     QTextStream dcNameStream(&dcName);
-    dcNameStream << "_r";
+    dcNameStream << "r";
     dcNameStream.setFieldWidth(charPaddingCount);
     dcNameStream.setFieldAlignment(QTextStream::AlignRight);
     dcNameStream.setPadChar('0');
@@ -866,7 +854,8 @@ QString ITKImportRoboMetMontage::getMontageInformation()
   QTextStream ss(&montageInfo);
   int32_t importedCols = m_MontageEnd[0] - m_MontageStart[0] + 1;
   int32_t importedRows = m_MontageEnd[1] - m_MontageStart[1] + 1;
-  ss << "\nImported Columns: " << importedCols << "  Imported Rows: " << importedRows << "  Imported Image Count: " << (importedCols * importedRows);
+  ss << "\n"
+     << "Imported Columns: " << importedCols << "  Imported Rows: " << importedRows << "  Imported Image Count: " << (importedCols * importedRows);
   info = info.replace(ITKImageProcessing::Montage::k_MontageInfoReplaceKeyword, montageInfo);
   return info;
 }

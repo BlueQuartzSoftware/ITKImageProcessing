@@ -42,6 +42,7 @@
 #include "SIMPLib/Geometry/IGeometry.h"
 
 #include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
+#include "ITKImageProcessing/ITKImageProcessingConstants.h"
 
 // our PIMPL private class
 class ITKImportRoboMetMontagePrivate;
@@ -489,15 +490,15 @@ private:
   IntVec2Type m_RowMontageLimits = {0, 0};
   IntVec2Type m_MontageStart = {0, 0};
   IntVec2Type m_MontageEnd = {0, 0};
-  DataArrayPath m_DataContainerPath = {};
-  QString m_CellAttributeMatrixName = {};
-  QString m_ImageDataArrayName = {};
+  DataArrayPath m_DataContainerPath = {ITKImageProcessing::Montage::k_DataContaineNameDefaultName, "", ""};
+  QString m_CellAttributeMatrixName = {ITKImageProcessing::Montage::k_TileAttributeMatrixDefaultName};
+  QString m_ImageDataArrayName = {ITKImageProcessing::Montage::k_TileDataArrayDefaultName};
   bool m_ConvertToGrayScale = {};
-  FloatVec3Type m_ColorWeights = {};
+  FloatVec3Type m_ColorWeights = {0.2125f, 0.7154f, 0.0721f};
   bool m_ChangeOrigin = {};
-  FloatVec3Type m_Origin = {};
+  FloatVec3Type m_Origin = {0.0f, 0.0f, 0.0f};
   bool m_ChangeSpacing = {};
-  FloatVec3Type m_Spacing = {};
+  FloatVec3Type m_Spacing = {1.0f, 1.0f, 1.0f};
   int m_SliceNumber = {};
   QString m_ImageFilePrefix = {};
   QString m_ImageFileExtension = {};
@@ -505,7 +506,7 @@ private:
 
   QScopedPointer<ITKImportRoboMetMontagePrivate> const d_ptr;
 
-  int32_t m_NumImages = -1;
+  int32_t m_NumImages = {0};
   int m_RowCount = -1;
   int m_ColumnCount = -1;
 

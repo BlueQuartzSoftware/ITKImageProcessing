@@ -16,9 +16,9 @@
         "DataContainerPath": {
             "Attribute Matrix Name": "",
             "Data Array Name": "",
-            "Data Container Name": "Mosaic"
+            "Data Container Name": "Mosaic_"
         },
-        "FilterVersion": "2.0.915",
+        "FilterVersion": "2.0.958",
         "Filter_Enabled": true,
         "Filter_Human_Label": "ITK::Import RoboMet Montage",
         "Filter_Name": "ITKImportRoboMetMontage",
@@ -27,6 +27,8 @@
         "ImageFileExtension": "bmp",
         "ImageFilePrefix": "0938410_",
         "InputFile": "Data/Montage/0938410_ Mosaic Focus Details.csv",
+        "LengthUnit": 6,
+        "MontageName": "Zen Montage",
         "Origin": {
             "x": 0,
             "y": 0,
@@ -44,15 +46,9 @@
         }
     },
     "1": {
-        "ColumnMontageLimits": {
-            "x": 0,
-            "y": 1
-        },
         "CommonAttributeMatrixName": "Tile Data",
         "CommonDataArrayName": "Image",
-        "DataContainerPaddingDigits": 1,
-        "DataContainerPrefix": "Mosaic_",
-        "FilterVersion": "2.0.915",
+        "FilterVersion": "2.0.958",
         "Filter_Enabled": true,
         "Filter_Human_Label": "ITK::Stitch Montage",
         "Filter_Name": "ITKStitchMontage",
@@ -60,14 +56,19 @@
         "MontageAttributeMatrixName": "Mosaic Data",
         "MontageDataArrayName": "Image",
         "MontageDataContainerName": "Mosaic",
-        "RowMontageLimits": {
-            "x": 0,
-            "y": 2
+        "MontageSelection": {
+            "ColEnd": 1,
+            "ColStart": 0,
+            "Padding": 1,
+            "PrefixStr": "Mosaic_",
+            "RowEnd": 2,
+            "RowStart": 0,
+            "SuffixStr": ""
         }
     },
     "2": {
         "FileName": "Data/Output/Montage/Robomet_Montage.png",
-        "FilterVersion": "2.0.915",
+        "FilterVersion": "2.0.958",
         "Filter_Enabled": true,
         "Filter_Human_Label": "ITK::Image Export",
         "Filter_Name": "ITKImageWriter",
@@ -80,12 +81,12 @@
         "Plane": 0
     },
     "3": {
-        "FilterVersion": "2.0.223",
+        "FilterVersion": "2.0.243",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Write DREAM.3D Data File",
         "Filter_Name": "DataContainerWriter",
         "Filter_Uuid": "{3fcd4c43-9d75-5b86-aad4-4441bc914f37}",
-        "OutputFile": "Data/Output/Montage/AxioVisionImport.dream3d",
+        "OutputFile": "Data/Output/Montage/Robomet_Montage.dream3d",
         "WriteTimeSeries": 0,
         "WriteXdmfFile": 1
     },
