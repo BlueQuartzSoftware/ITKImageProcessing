@@ -170,7 +170,7 @@ public:
     auto size = m_Image->GetRequestedRegion().GetSize();
 
     const int64_t distTop = index[1] - origin[1];
-    const int64_t distBot = origin[1] + size[1] + index[1];
+    const int64_t distBot = origin[1] + size[1] - index[1];
     const int64_t distLeft = index[0] - origin[0];
     const int64_t distRight = origin[0] + size[0] - index[0];
 
@@ -512,11 +512,11 @@ FFTConvolutionCostFunction::InputImage::RegionType FFTConvolutionCostFunction::c
 {
   const int64_t topBound = std::max(left.topBound, right.topBound);
   const int64_t bottomBound = std::min(left.bottomBound, right.bottomBound);
-  const int64_t width = std::abs(right.leftBound - left.rightBound);
-  const int64_t height = std::abs(bottomBound - topBound);
+  const int64_t width = (left.rightBound - right.leftBound);
+  const int64_t height = (bottomBound - topBound);
 
   PixelCoord kernelOrigin;
-  kernelOrigin[0] = left.rightBound;
+  kernelOrigin[0] = right.leftBound;
   kernelOrigin[1] = topBound;
 
   InputImage::SizeType kernelSize;
@@ -535,12 +535,12 @@ FFTConvolutionCostFunction::InputImage::RegionType FFTConvolutionCostFunction::c
 {
   const int64_t leftBound = std::max(top.leftBound, bottom.leftBound);
   const int64_t rightBound = std::min(top.rightBound, bottom.rightBound);
-  const int64_t width = std::abs(rightBound - leftBound);
-  const int64_t height = std::abs(bottom.topBound - top.bottomBound);
+  const int64_t width = (rightBound - leftBound);
+  const int64_t height = (top.bottomBound - bottom.topBound);
 
   PixelCoord kernelOrigin;
   kernelOrigin[0] = leftBound;
-  kernelOrigin[1] = top.bottomBound;
+  kernelOrigin[1] = bottom.topBound;
 
   InputImage::SizeType kernelSize;
   kernelSize[0] = width;
@@ -573,7 +573,7 @@ FFTConvolutionCostFunction::ImagePair FFTConvolutionCostFunction::createOverlapI
 
   auto index = region.GetIndex();
   ParallelData2DAlgorithm dataAlg;
-  dataAlg.setRange(index[1], index[0], region.GetSize()[1], region.GetSize()[0]);
+  dataAlg.setRange(index[1], index[0], index[1] + region.GetSize()[1], index[0] + region.GetSize()[0]);
   dataAlg.execute(FFTImageOverlapGenerator(firstBaseImg, firstOverlapImg, index, m_ImageDim_x, m_ImageDim_y, parameters, bounds));
 
   // Second image calculation
@@ -584,19 +584,18 @@ FFTConvolutionCostFunction::ImagePair FFTConvolutionCostFunction::createOverlapI
   secondOverlapImg->Allocate();
 
   index = region.GetIndex();
-  dataAlg.setRange(index[1], index[0], region.GetSize()[1], region.GetSize()[0]);
+  dataAlg.setRange(index[1], index[0], index[1] + region.GetSize()[1], index[0] + region.GetSize()[0]);
   dataAlg.execute(FFTImageOverlapGenerator(secondBaseImg, secondOverlapImg, index, m_ImageDim_x, m_ImageDim_y, parameters, bounds));
 
   // Crop images
   ImagePair imgPair = std::make_pair(firstOverlapImg, secondOverlapImg);
   return cropOverlapImages(imgPair, bounds);
-  //return imgPair;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FFTConvolutionCostFunction::ImagePair FFTConvolutionCostFunction::cropOverlapImages(ImagePair& imagePair, const RegionBounds& bounds) const
+FFTConvolutionCostFunction::ImagePair FFTConvolutionCostFunction::cropOverlapImages(const ImagePair& imagePair, const RegionBounds& bounds) const
 {
   size_t width = static_cast<size_t>(bounds.rightBound - bounds.leftBound);
   size_t height = static_cast<size_t>(bounds.bottomBound - bounds.topBound);
@@ -610,8 +609,7 @@ FFTConvolutionCostFunction::ImagePair FFTConvolutionCostFunction::cropOverlapIma
   first->SetRequestedRegion(region);
   second->SetRequestedRegion(region);
   // Update imagePair
-  imagePair = std::make_pair(first, second);
-  return imagePair;
+  return std::make_pair(first, second);
 }
 
 // -----------------------------------------------------------------------------
