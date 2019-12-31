@@ -94,16 +94,16 @@ public:
   }
 
   // -----------------------------------------------------------------------------
-  template <class PixelType, unsigned int Dimension>
+  template <class PixelType, uint32_t Dimension>
   DataContainerArray::Pointer CreateTestData(const DataArrayPath& path)
   {
     // Create test data (baseline)
     DataContainer::Pointer container = DataContainer::New(path.getDataContainerName());
     ImageGeom::Pointer imageGeometry = ImageGeom::CreateGeometry(SIMPL::Geometry::ImageGeometry);
-    QVector<float> origin(3, 0);
-    QVector<float> spacing(3, 1);
-    std::vector<size_t> dimensions(3, 1);
-    for(int32_t i = 0; i < Dimension; i++)
+    std::array<float, 3> origin = {0.0f, 0.0f, 0.0f};
+    std::array<float, 3> spacing = {1.0f, 1.0f, 1.0f};
+    std::vector<size_t> dimensions = {1, 1, 1};
+    for(uint32_t i = 0; i < Dimension; i++)
     {
       origin[i] = 1.23f + static_cast<float>(i);
       spacing[i] = 0.45f + static_cast<float>(i) * 0.2f;
@@ -128,10 +128,10 @@ public:
   ImageGeom::Pointer GetImageGeometry(DataContainer::Pointer& container)
   {
     IGeometry::Pointer geometry = container->getGeometry();
-    DREAM3D_REQUIRE_VALID_POINTER(geometry.get());
-    DREAM3D_REQUIRE_EQUAL(geometry->getGeometryTypeAsString(), "ImageGeometry");
+    DREAM3D_REQUIRE_VALID_POINTER(geometry.get())
+    DREAM3D_REQUIRE_EQUAL(geometry->getGeometryTypeAsString(), "ImageGeometry")
     ImageGeom::Pointer imageGeometry = std::dynamic_pointer_cast<ImageGeom>(geometry);
-    DREAM3D_REQUIRE_NE(imageGeometry.get(), 0);
+    DREAM3D_REQUIRE_VALID_POINTER(imageGeometry.get())
     return imageGeometry;
   }
 
@@ -153,7 +153,7 @@ public:
       // SCIFIO does not save the origin correctly. We disable this test until SCIFIO is fixed.
       // DREAM3D_COMPARE_FLOATS(&inputOrigin[i], &baselineOrigin[i], tol);
 
-      DREAM3D_REQUIRE_EQUAL(inputDimensions[i], baselineDimensions[i]);
+      DREAM3D_REQUIRE_EQUAL(inputDimensions[i], baselineDimensions[i])
       //      DREAM3D_REQUIRE_EQUAL(inputResolution[i], baselineResolution[i]);
       //      DREAM3D_REQUIRE_EQUAL(inputOrigin[i], baselineOrigin[i]);
     }
@@ -165,25 +165,25 @@ public:
                                   IDataArray::Pointer& dataArray)
   {
     attributeMatrix = container->getAttributeMatrix(matrixName);
-    DREAM3D_REQUIRE_NE(attributeMatrix.get(), 0);
+    DREAM3D_REQUIRE_VALID_POINTER(attributeMatrix.get())
     dataArray = attributeMatrix->getAttributeArray(arrayName);
-    DREAM3D_REQUIRE_NE(dataArray.get(), 0);
+    DREAM3D_REQUIRE_VALID_POINTER(dataArray.get())
   }
 
   // -----------------------------------------------------------------------------
   bool CompareAttributeMatrices(const AttributeMatrix::Pointer& baselineMatrix, const AttributeMatrix::Pointer& inputMatrix)
   {
     // Compare number of attributes
-    DREAM3D_REQUIRE_EQUAL(baselineMatrix->getNumberOfTuples(), inputMatrix->getNumberOfTuples());
-    DREAM3D_REQUIRE_EQUAL(baselineMatrix->getNumAttributeArrays(), inputMatrix->getNumAttributeArrays());
+    DREAM3D_REQUIRE_EQUAL(baselineMatrix->getNumberOfTuples(), inputMatrix->getNumberOfTuples())
+    DREAM3D_REQUIRE_EQUAL(baselineMatrix->getNumAttributeArrays(), inputMatrix->getNumAttributeArrays())
     std::vector<size_t> baselineTupleDimensions = baselineMatrix->getTupleDimensions();
     std::vector<size_t> inputTupleDimensions = inputMatrix->getTupleDimensions();
-    DREAM3D_REQUIRE_EQUAL(inputTupleDimensions.size(), inputTupleDimensions.size());
+    DREAM3D_REQUIRE_EQUAL(inputTupleDimensions.size(), inputTupleDimensions.size())
     for(size_t ii = 0; ii < inputTupleDimensions.size(); ii++)
     {
-      DREAM3D_REQUIRE_EQUAL(baselineTupleDimensions[ii], inputTupleDimensions[ii]);
+      DREAM3D_REQUIRE_EQUAL(baselineTupleDimensions[ii], inputTupleDimensions[ii])
     }
-    DREAM3D_REQUIRE_EQUAL(static_cast<uint32_t>(baselineMatrix->getType()), static_cast<uint32_t>(inputMatrix->getType()));
+    DREAM3D_REQUIRE_EQUAL(static_cast<uint32_t>(baselineMatrix->getType()), static_cast<uint32_t>(inputMatrix->getType()))
     return true;
   }
 
@@ -191,17 +191,28 @@ public:
   template <class PixelType>
   bool CompareDataArrays(const IDataArray::Pointer& baselineArray, const IDataArray::Pointer& inputArray)
   {
-    float tol = 1e-6;
-    DREAM3D_REQUIRE_EQUAL(baselineArray->getSize(), inputArray->getSize());
-    DREAM3D_REQUIRE_EQUAL(baselineArray->getNumberOfComponents(), inputArray->getNumberOfComponents());
-    DREAM3D_REQUIRE_EQUAL(baselineArray->getNumberOfTuples(), inputArray->getNumberOfTuples());
-    // DREAM3D_REQUIRE_EQUAL(baselineArray->getTypeAsString(), inputArray->getTypeAsString());->int8_t and char => should be considered as the same type.
-    // Compare number of components
+    // float tol = 1e-6f;
+    using ArrayType = DataArray<PixelType>;
+    using ArrayPtrType = typename ArrayType::Pointer;
+
+    ArrayPtrType baselineArrayCast = std::dynamic_pointer_cast<ArrayType>(baselineArray);
+    DREAM3D_REQUIRE_VALID_POINTER(baselineArrayCast.get())
+
+    ArrayPtrType inputArrayCast = std::dynamic_pointer_cast<ArrayType>(inputArray);
+    DREAM3D_REQUIRE_VALID_POINTER(inputArray.get())
+
+    DREAM3D_REQUIRE_EQUAL(baselineArray->getSize(), inputArray->getSize())
+    DREAM3D_REQUIRE_EQUAL(baselineArray->getNumberOfComponents(), inputArray->getNumberOfComponents())
+    DREAM3D_REQUIRE_EQUAL(baselineArray->getNumberOfTuples(), inputArray->getNumberOfTuples())
+    // DREAM3D_REQUIRE_EQUAL(baselineArray->getTypeAsString(), inputArray->getTypeAsString());->int8_t and char => should be considered as
+    // the same type. Compare number of components
     for(size_t ii = 0; ii < baselineArray->getSize(); ii++)
     {
-      float baselineValue = static_cast<PixelType*>(baselineArray->getVoidPointer(0))[ii];
-      float inputValue = static_cast<PixelType*>(inputArray->getVoidPointer(0))[ii];
-      DREAM3D_COMPARE_FLOATS(&baselineValue, &inputValue, tol);
+      void* baselineValue = baselineArray->getVoidPointer(ii);
+      void* inputValue = inputArray->getVoidPointer(ii);
+      // Now compare the raw bytes. If the values are exactly equal then the byte representations are the same.
+      int32_t comp = std::memcmp(baselineValue, inputValue, sizeof(PixelType));
+      DREAM3D_REQUIRE_EQUAL(comp, 0)
     }
     return true;
   }
@@ -213,7 +224,7 @@ public:
     // First compare geometries
     ImageGeom::Pointer inputImageGeometry = GetImageGeometry(inputContainer);
     ImageGeom::Pointer baselineImageGeometry = GetImageGeometry(baselineContainer);
-    DREAM3D_REQUIRE(CompareImageGeometries(inputImageGeometry, baselineImageGeometry));
+    DREAM3D_REQUIRE(CompareImageGeometries(inputImageGeometry, baselineImageGeometry))
     // Then compare values
     AttributeMatrix::Pointer inputAttributeMatrix;
     IDataArray::Pointer inputDataArray;
@@ -232,7 +243,7 @@ public:
   {
     // Get container for baseline
     QString baselineContainerName = baselinePath.getDataContainerName();
-    DREAM3D_REQUIRE(baselineContainerArray->getDataContainerNames().contains(baselineContainerName));
+    DREAM3D_REQUIRE(baselineContainerArray->getDataContainerNames().contains(baselineContainerName))
     DataContainer::Pointer baselineContainer = baselineContainerArray->getDataContainer(baselineContainerName);
 
     // Load container for input
@@ -245,7 +256,7 @@ public:
     if(Dimension == 2)
     {
       IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(QString("ITKImageReader"));
-      DREAM3D_REQUIRE_NE(filterFactory.get(), 0);
+      DREAM3D_REQUIRE_VALID_POINTER(filterFactory.get())
       filter = filterFactory->create();
 
       var.setValue(inputFilename);
@@ -255,7 +266,7 @@ public:
     else if(Dimension == 3)
     {
       IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(QString("ITKImportImageStack"));
-      DREAM3D_REQUIRE_NE(filterFactory.get(), 0);
+      DREAM3D_REQUIRE_VALID_POINTER(filterFactory.get())
       filter = filterFactory->create();
 
       StackFileListInfo listInfo;
@@ -274,7 +285,7 @@ public:
 
       var.setValue(listInfo);
       propWasSet = filter->setProperty("InputFileListInfo", var);
-      DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+      DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
       bool hasMissingFiles = false;
       bool orderAscending = false;
@@ -314,10 +325,10 @@ public:
     int err = filter->getErrorCode();
     DREAM3D_REQUIRE_EQUAL(err, 0)
 
-    DREAM3D_REQUIRE(inputContainerArray->getDataContainerNames().contains(inputContainerName));
+    DREAM3D_REQUIRE(inputContainerArray->getDataContainerNames().contains(inputContainerName))
     DataContainer::Pointer inputContainer = inputContainerArray->getDataContainer(inputContainerName);
     // Compare both data containers
-    DREAM3D_REQUIRE(CompareImageContainers<PixelType>(inputContainer, baselineContainer, baselinePath));
+    DREAM3D_REQUIRE(CompareImageContainers<PixelType>(inputContainer, baselineContainer, baselinePath))
     return true;
   }
 
@@ -330,7 +341,7 @@ public:
     FilterManager* fm = FilterManager::Instance();
     IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filtName);
 
-    DREAM3D_REQUIRE_NE(filterFactory.get(), 0);
+    DREAM3D_REQUIRE_VALID_POINTER(filterFactory.get())
     // If we get this far, the Factory is good so creating the filter should not fail unless something has
     // horribly gone wrong in which case the system is going to come down quickly after this.
     AbstractFilter::Pointer filter = filterFactory->create();
@@ -353,8 +364,8 @@ public:
 
     filter->execute();
 
-    DREAM3D_REQUIRED(filter->getErrorCode(), >=, 0);
-    DREAM3D_REQUIRED(filter->getWarningCode(), >=, 0);
+    DREAM3D_REQUIRED(filter->getErrorCode(), >=, 0)
+    DREAM3D_REQUIRED(filter->getWarningCode(), >=, 0)
     this->FilesToRemove << filename;
     return true;
   }
@@ -370,9 +381,9 @@ public:
     DataArrayPath path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = CreateTestData<PixelType, Dimension>(path);
     bool success = RunWriteImage<PixelType, Dimension>(filename, containerArray, path);
-    DREAM3D_REQUIRE(success);
+    DREAM3D_REQUIRE(success)
     success = CompareImages<PixelType, Dimension>(filename, containerArray, path, dataFileExtension);
-    DREAM3D_REQUIRE(success);
+    DREAM3D_REQUIRE(success)
 
     this->FilesToRemove << filename;
     if(!dataFileExtension.isEmpty())
@@ -405,8 +416,8 @@ public:
     }
 
     writer->execute();
-    DREAM3D_REQUIRED(writer->getErrorCode(), ==, -21003);
-    DREAM3D_REQUIRED(writer->getWarningCode(), >=, 0);
+    DREAM3D_REQUIRED(writer->getErrorCode(), ==, -21003)
+    DREAM3D_REQUIRED(writer->getWarningCode(), >=, 0)
     return EXIT_SUCCESS;
   }
 
@@ -472,7 +483,7 @@ public:
     DataArrayPath path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = CreateTestData<uint8_t, 3>(path);
     bool success = RunWriteImage<uint8_t, 2>(filename, containerArray, path);
-    DREAM3D_REQUIRE(success);
+    DREAM3D_REQUIRE(success)
     using NamesGeneratorType = itk::NumericSeriesFileNames;
     QString seriesfilename = UnitTest::ITKImageProcessingWriterTest::OutputBaseFile + "_%d.png";
     NamesGeneratorType::Pointer namesGenerator = NamesGeneratorType::New();
@@ -490,7 +501,7 @@ public:
       {
         std::cout << fileName << " Does not exist" << std::endl;
       }
-      DREAM3D_REQUIRE((check_file.exists() && check_file.isFile()));
+      DREAM3D_REQUIRE((check_file.exists() && check_file.isFile()))
       // Remove file
       this->FilesToRemove << QString(fileName.c_str());
     }
@@ -507,26 +518,26 @@ public:
     // Clean up before running the tests
     this->RemoveTestFiles();
 
-    DREAM3D_REGISTER_TEST(TestAvailability("ITKImageWriter"));
-    DREAM3D_REGISTER_TEST(TestNoInput());
+    DREAM3D_REGISTER_TEST(TestAvailability("ITKImageWriter"))
+    DREAM3D_REGISTER_TEST(TestNoInput())
 
     // TIFF
     QStringList listTIFFPixelTypes;
     listTIFFPixelTypes << "uint8_t"
                        << "int8_t"
                        << "float";
-    DREAM3D_REGISTER_TEST(TestWriteImage<2>("tif", listTIFFPixelTypes));
+    DREAM3D_REGISTER_TEST(TestWriteImage<2>("tif", listTIFFPixelTypes))
 
     // PNG
     QStringList listPNGPixelTypes;
     listPNGPixelTypes << "uint8_t"
                       << "uint16_t";
-    DREAM3D_REGISTER_TEST(TestWriteImage<2>("png", listPNGPixelTypes));
+    DREAM3D_REGISTER_TEST(TestWriteImage<2>("png", listPNGPixelTypes))
 
     // JPG
     QStringList listJPGPixelTypes;
     listJPGPixelTypes << "uint8_t";
-    DREAM3D_REGISTER_TEST(TestWriteImage<2>("jpg", listJPGPixelTypes));
+    DREAM3D_REGISTER_TEST(TestWriteImage<2>("jpg", listJPGPixelTypes))
 
     // MRC
     QStringList listMRCPixelTypes;
@@ -534,7 +545,7 @@ public:
                       << "int16_t"
                       << "uint16_t"
                       << "float";
-    DREAM3D_REGISTER_TEST(TestWriteImage<3>("mrc", listMRCPixelTypes));
+    DREAM3D_REGISTER_TEST(TestWriteImage<3>("mrc", listMRCPixelTypes))
 
     // Meta
     QStringList listMetaPixelTypes;
@@ -548,8 +559,8 @@ public:
                        << "int64_t"
                        << "float"
                        << "double";
-    DREAM3D_REGISTER_TEST(TestWriteImage<3>("mha", listMetaPixelTypes));
-    DREAM3D_REGISTER_TEST(TestWriteImage<3>("mhd", listMetaPixelTypes, "zraw"));
+    DREAM3D_REGISTER_TEST(TestWriteImage<3>("mha", listMetaPixelTypes))
+    DREAM3D_REGISTER_TEST(TestWriteImage<3>("mhd", listMetaPixelTypes, "zraw"))
 
     // NRRD
     QStringList listNRRDPixelTypes;
@@ -563,8 +574,8 @@ public:
                        << "int64_t"
                        << "float"
                        << "double";
-    DREAM3D_REGISTER_TEST(TestWriteImage<3>("nrrd", listNRRDPixelTypes));
-    DREAM3D_REGISTER_TEST(TestWriteImage<3>("nhdr", listNRRDPixelTypes, "raw.gz"));
+    DREAM3D_REGISTER_TEST(TestWriteImage<3>("nrrd", listNRRDPixelTypes))
+    DREAM3D_REGISTER_TEST(TestWriteImage<3>("nhdr", listNRRDPixelTypes, "raw.gz"))
     // NII
     QStringList listNIIPixelTypes;
     listNIIPixelTypes << "uint8_t"
@@ -577,7 +588,7 @@ public:
                       << "int64_t"
                       << "float"
                       << "double";
-    DREAM3D_REGISTER_TEST(TestWriteImage<3>("nii", listNIIPixelTypes));
+    DREAM3D_REGISTER_TEST(TestWriteImage<3>("nii", listNIIPixelTypes))
 #ifdef ITK_IMAGE_PROCESSING_HAVE_SCIFIO
     DREAM3D_REGISTER_TEST(TestWriteImage<3>("nii.gz", listNIIPixelTypes));
 #endif
@@ -589,7 +600,7 @@ public:
                        << "uint16_t"
                        << "int16_t"
                        << "float";
-    DREAM3D_REGISTER_TEST(TestWriteImage<3>("gipl", listGIPLPixelTypes));
+    DREAM3D_REGISTER_TEST(TestWriteImage<3>("gipl", listGIPLPixelTypes))
 
 #ifdef ITK_IMAGE_PROCESSING_HAVE_SCIFIO
     DREAM3D_REGISTER_TEST(TestWriteImage<3>("gipl.gz", listGIPLPixelTypes));
@@ -607,7 +618,7 @@ public:
                       << "int64_t"
                       << "float"
                       << "double";
-    DREAM3D_REGISTER_TEST(TestWriteImage<3>("hdr", listHDRPixelTypes, "img"));
+    DREAM3D_REGISTER_TEST(TestWriteImage<3>("hdr", listHDRPixelTypes, "img"))
 
     // BMP -> Load all images as RGB in ITK??
     //    QStringList listBMPPixelTypes;

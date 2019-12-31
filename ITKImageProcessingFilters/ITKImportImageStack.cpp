@@ -252,7 +252,7 @@ void ITKImportImageStack::dataCheck()
   DataContainer::Pointer dc = dca->getDataContainer(getDataContainerName());
   ImageGeom::Pointer imageGeom = dc->getGeometryAs<ImageGeom>();
   SizeVec3Type dims = imageGeom->getDimensions();
-  dims[2] = fileList.size();
+  dims[2] = static_cast<size_t>(fileList.size());
   imageGeom->setDimensions(dims);
   imageGeom->setOrigin(m_Origin);
   imageGeom->setSpacing(m_Spacing);
@@ -307,9 +307,10 @@ void readImageStack(ITKImportImageStack* filter, const QVector<QString>& fileLis
   using DataArrayPointerType = typename DataArrayType::Pointer;
   IDataArray::Pointer iDataArray = cellAttrMatr->getAttributeArray(arrayName);
   DataArrayPointerType outputData = std::dynamic_pointer_cast<DataArrayType>(iDataArray);
+
   if(nullptr == outputData.get())
   {
-    std::cout << "Could not dynamic_pointer_cast<> from IDataArray to " << iDataArray->getInfoString(SIMPL::InfoStringFormat::HtmlFormat).toStdString() << std::endl;
+    std::cout << "Could not dynamic_pointer_cast<> from IDataArray to \n" << iDataArray->getInfoString(SIMPL::InfoStringFormat::MarkDown).toStdString() << std::endl;
     return;
   }
 
@@ -326,7 +327,7 @@ void readImageStack(ITKImportImageStack* filter, const QVector<QString>& fileLis
   {
     // Do some progress message
     progress = static_cast<int32_t>(z - zStartIndex);
-    progress = (int32_t)(100.0f * (float)(progress) / total);
+    progress = static_cast<int32_t>(100.0f * static_cast<float>(progress) / total);
     QString msg = "Importing: " + filePath;
     filter->notifyStatusMessage(msg.toLatin1().data());
 
@@ -394,10 +395,10 @@ void ITKImportImageStack::execute()
   switch(component)
   {
   case itk::ImageIOBase::UCHAR:
-    readImageStack<unsigned char>(this, fileList);
+    readImageStack<uint8_t>(this, fileList);
     break;
   case itk::ImageIOBase::CHAR:
-    readImageStack<char>(this, fileList);
+    readImageStack<int8_t>(this, fileList);
     break;
   case itk::ImageIOBase::USHORT:
     readImageStack<uint16_t>(this, fileList);
