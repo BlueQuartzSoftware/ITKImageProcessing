@@ -351,11 +351,11 @@ typename MontageType::Pointer ITKPCMTileRegistration::createMontage(int peakMeth
   using SizeValueType = itk::Size<2>::SizeValueType;
   typename MontageType::Pointer montage = MontageType::New();
   montage->SetMontageSize({static_cast<SizeValueType>(colCount), static_cast<SizeValueType>(rowCount)});
-  montage->SetPaddingMethod(PCMType::PaddingMethod::MirrorWithExponentialDecay);
+  montage->SetPaddingMethod(PCMType::PaddingMethodEnum::MirrorWithExponentialDecay);
   //  montage->SetOriginAdjustment(originAdjustment);
   //  montage->SetForcedSpacing(sp);
 
-  using PeakInterpolationType = typename itk::MaxPhaseCorrelationOptimizer<PCMType>::PeakInterpolationMethod;
+  using PeakInterpolationType = typename itk::MaxPhaseCorrelationOptimizer<PCMType>::PeakInterpolationMethodEnum;
   using PeakFinderUnderlying = typename std::underlying_type<PeakInterpolationType>::type;
 
   auto peakMethod = static_cast<PeakFinderUnderlying>(peakMethodToUse);
