@@ -348,10 +348,10 @@ typename MontageType::Pointer ITKPCMTileRegistration::createMontage(int peakMeth
   }
 
 #if (ITK_VERSION_MAJOR == 5) && (ITK_VERSION_MINOR >= 1)
-  using PaddingMethodEnum = PCMType::PaddingMethodEnum;
+  using PaddingMethodEnum = typename PCMType::PaddingMethodEnum;
   using PeakInterpolationType = typename itk::MaxPhaseCorrelationOptimizer<PCMType>::PeakInterpolationMethodEnum;
 #else
-  using PaddingMethodEnum = PCMType::PaddingMethod;
+  using PaddingMethodEnum = typename PCMType::PaddingMethod;
   using PeakInterpolationType = typename itk::MaxPhaseCorrelationOptimizer<PCMType>::PeakInterpolationMethod;
 #endif
 
