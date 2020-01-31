@@ -364,15 +364,22 @@ typename MontageType::Pointer ITKPCMTileRegistration::createMontage(int peakMeth
     y1 = 0;
   }
 
+#if (ITK_VERSION_MAJOR == 5) && (ITK_VERSION_MINOR >= 1)
+  using PaddingMethodEnum = typename PCMType::PaddingMethodEnum;
+  using PeakInterpolationType = typename itk::MaxPhaseCorrelationOptimizer<PCMType>::PeakInterpolationMethodEnum;
+#else
+  using PaddingMethodEnum = typename PCMType::PaddingMethod;
+  using PeakInterpolationType = typename itk::MaxPhaseCorrelationOptimizer<PCMType>::PeakInterpolationMethod;
+#endif
+
   // Create tile montage
   using SizeValueType = itk::Size<2>::SizeValueType;
   typename MontageType::Pointer montage = MontageType::New();
   montage->SetMontageSize({static_cast<SizeValueType>(colCount), static_cast<SizeValueType>(rowCount)});
-  montage->SetPaddingMethod(PCMType::PaddingMethod::MirrorWithExponentialDecay);
+  montage->SetPaddingMethod(PaddingMethodEnum::MirrorWithExponentialDecay);
   //  montage->SetOriginAdjustment(originAdjustment);
   //  montage->SetForcedSpacing(sp);
 
-  using PeakInterpolationType = typename itk::MaxPhaseCorrelationOptimizer<PCMType>::PeakInterpolationMethod;
   using PeakFinderUnderlying = typename std::underlying_type<PeakInterpolationType>::type;
 
   auto peakMethod = static_cast<PeakFinderUnderlying>(peakMethodToUse);
