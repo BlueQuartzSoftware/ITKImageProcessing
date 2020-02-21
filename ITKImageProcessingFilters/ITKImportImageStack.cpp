@@ -183,7 +183,7 @@ void ITKImportImageStack::dataCheck()
     setErrorCondition(-64501, ss);
   }
 
-  DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName(), DataContainerID);
+  DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer(this, getDataContainerName(), DataContainerID);
   if(getErrorCode() < 0 || nullptr == m.get())
   {
     return;

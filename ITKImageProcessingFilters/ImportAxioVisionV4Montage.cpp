@@ -778,7 +778,7 @@ void ImportAxioVisionV4Montage::generateDataStructure()
     dcNameStream << bound.Col;
 
     // Create the DataContainer with a name based on the ROW & COLUMN indices
-    DataContainer::Pointer dc = dca->createNonPrereqDataContainer<AbstractFilter>(this, dcName);
+    DataContainer::Pointer dc = dca->createNonPrereqDataContainer(this, dcName);
 
     // Create the Image Geometry
     ImageGeom::Pointer image = ImageGeom::CreateGeometry(dcName);

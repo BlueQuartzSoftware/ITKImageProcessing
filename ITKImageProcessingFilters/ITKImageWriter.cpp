@@ -193,14 +193,14 @@ void ITKImageWriter::dataCheck()
     return;
   }
 
-  ImageGeom::Pointer imageGeometry = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getImageArrayPath().getDataContainerName());
+  ImageGeom::Pointer imageGeometry = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom>(this, getImageArrayPath().getDataContainerName());
   if(imageGeometry.get() == nullptr)
   {
     setErrorCondition(-21003, "No image geometry.");
     return;
   }
 
-  IDataArray::Pointer imageDataArrayPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, getImageArrayPath());
+  IDataArray::Pointer imageDataArrayPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray>(this, getImageArrayPath());
   if(getErrorCode() < 0)
   {
     QString ss = QObject::tr("The data array path '%1' was invalid for the property ImageArrayPath. Please check the input value.").arg(getImageArrayPath().serialize("/"));

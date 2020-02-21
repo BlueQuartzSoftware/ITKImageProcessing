@@ -466,7 +466,7 @@ protected:
     for(const auto& dcName : m_DataContainers)
     {
       DataArrayPath imageArrayPath(dcName, m_CellAttributeMatrixName, m_ImageDataArrayName);
-      typename DataArrayType::Pointer imageData = dca->getPrereqArrayFromPath<DataArrayType, AbstractFilter>(this, imageArrayPath, cDims);
+      typename DataArrayType::Pointer imageData = dca->getPrereqArrayFromPath<DataArrayType>(this, imageArrayPath, cDims);
       if(imageData.get() == nullptr)
       {
         QString msg;
