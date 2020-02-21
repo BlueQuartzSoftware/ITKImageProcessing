@@ -1,30 +1,26 @@
 /*
  * Your License or Copyright can go here
  */
+#include "ITKCastImage.h"
 
 #include <memory>
-
-#include "ITKCastImage.h"
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
-
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKCastImage::ITKCastImage()
-: m_CastingType(itk::ImageIOBase::IOComponentType::UCHAR - 1)
-{
-}
+ITKCastImage::ITKCastImage() = default;
 
 // -----------------------------------------------------------------------------
 //
@@ -54,6 +50,8 @@ void ITKCastImage::setupFilterParameters()
     choices.push_back("int");
     choices.push_back("unsigned long");
     choices.push_back("long");
+    choices.push_back("long long");
+    choices.push_back("unsigned long long");
     choices.push_back("float");
     choices.push_back("double");
     parameter->setChoices(choices);
@@ -114,7 +112,8 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
 // -----------------------------------------------------------------------------
 void ITKCastImage::dataCheckInternal()
 {
-  Dream3DArraySwitchOutputComponentMacro(this->dataCheck, m_CastingType, getSelectedCellArrayPath(), -4);
+  itk::CommonEnums::IOComponent castingType = static_cast<itk::CommonEnums::IOComponent>(m_CastingType + 1);
+  Dream3DArraySwitchOutputComponentMacro(this->dataCheck, castingType, getSelectedCellArrayPath(), -4);
 }
 
 // -----------------------------------------------------------------------------
@@ -136,7 +135,8 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
 // -----------------------------------------------------------------------------
 void ITKCastImage::filterInternal()
 {
-  Dream3DArraySwitchOutputComponentMacro(this->filter, m_CastingType, getSelectedCellArrayPath(), -4);
+  itk::CommonEnums::IOComponent castingType = static_cast<itk::CommonEnums::IOComponent>(m_CastingType + 1);
+  Dream3DArraySwitchOutputComponentMacro(this->filter, castingType, getSelectedCellArrayPath(), -4);
 }
 
 // -----------------------------------------------------------------------------

@@ -26,7 +26,7 @@
 //
 // -----------------------------------------------------------------------------
 ITKRescaleIntensityImage::ITKRescaleIntensityImage()
-: m_OutputType(itk::ImageIOBase::IOComponentType::UCHAR - 1)
+: m_OutputType(0)
 {
   m_OutputMinimum = StaticCastScalar<double, double, double>(0);
   m_OutputMaximum = StaticCastScalar<double, double, double>(255);
@@ -61,6 +61,8 @@ void ITKRescaleIntensityImage::setupFilterParameters()
     choices.push_back("int");
     choices.push_back("unsigned long");
     choices.push_back("long");
+    choices.push_back("long long");
+    choices.push_back("unsigned long long");
     choices.push_back("float");
     choices.push_back("double");
     parameter->setChoices(choices);

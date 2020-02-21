@@ -89,7 +89,7 @@ ITKVectorRescaleIntensityImageTest() = default;
     var.setValue(2.0);
     propWasSet = filter->setProperty("OutputMaximumMagnitude", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
-    var.setValue(itk::ImageIOBase::IOComponentType::FLOAT - 1);
+    var.setValue(10); // Test with Float Type
     propWasSet = filter->setProperty("OutputType", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     filter->setDataContainerArray(containerArray);

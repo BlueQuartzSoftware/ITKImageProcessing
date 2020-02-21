@@ -11,15 +11,13 @@
 
 #include <memory>
 
-#include "ITKImageProcessingBase.h"
+#include <itkCastImageFilter.h>
+#include <itkCommonEnums.h>
 
 #include "SIMPLib/SIMPLib.h"
 
-#include <SIMPLib/FilterParameters/BooleanFilterParameter.h>
-#include <itkCastImageFilter.h>
-
 #include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
-
+#include "ITKImageProcessing/ITKImageProcessingFilters/ITKImageProcessingBase.h"
 /**
  * @brief The ITKCastImage class. See [Filter documentation](@ref ITKCastImage) for details.
  */
@@ -130,8 +128,7 @@ public:
   ITKCastImage& operator=(ITKCastImage&&) = delete;      // Move Assignment Not Implemented
 
   private:
-    int m_CastingType = {};
-
+    int m_CastingType = {0};
 };
 
 #ifdef __clang__

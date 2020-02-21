@@ -6,6 +6,8 @@
 
 #include <itkImageIOBase.h>
 
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+
 class ITKCastImageTest : public ITKTestBase
 {
 
@@ -32,7 +34,7 @@ ITKCastImageTest() = default;
     var.setValue(false);
     propWasSet = filter->setProperty("SaveAsNewArray", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
-    var.setValue(itk::ImageIOBase::IOComponentType::DOUBLE - 1);
+    var.setValue(11); // Test with double type from ITK::CommonEnums::IOComponent
     propWasSet = filter->setProperty("CastingType", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     filter->setDataContainerArray(containerArray);
@@ -67,7 +69,7 @@ ITKCastImageTest() = default;
     var.setValue(false);
     propWasSet = filter->setProperty("SaveAsNewArray", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
-    var.setValue(itk::ImageIOBase::IOComponentType::UCHAR - 1);
+    var.setValue(0); // Test with unsigned char type
     propWasSet = filter->setProperty("CastingType", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     filter->setDataContainerArray(containerArray);

@@ -152,9 +152,8 @@ public:
   ITKVectorRescaleIntensityImage& operator=(ITKVectorRescaleIntensityImage&&) = delete;      // Move Assignment Not Implemented
 
   private:
-    double m_OutputMaximumMagnitude = {};
-    int m_OutputType = {};
-
+    double m_OutputMaximumMagnitude = StaticCastScalar<double, double, double>(255);
+    int m_OutputType = {0};
 };
 
 #ifdef __clang__

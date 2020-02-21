@@ -26,12 +26,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKVectorRescaleIntensityImage::ITKVectorRescaleIntensityImage()
-: m_OutputType(itk::ImageIOBase::IOComponentType::UCHAR - 1)
-{
-  m_OutputMaximumMagnitude = StaticCastScalar<double, double, double>(255);
-
-}
+ITKVectorRescaleIntensityImage::ITKVectorRescaleIntensityImage() = default;
 
 // -----------------------------------------------------------------------------
 //
@@ -61,6 +56,8 @@ void ITKVectorRescaleIntensityImage::setupFilterParameters()
     choices.push_back("int");
     choices.push_back("unsigned long");
     choices.push_back("long");
+    choices.push_back("long long");
+    choices.push_back("unsigned long long");
     choices.push_back("float");
     choices.push_back("double");
     parameter->setChoices(choices);
@@ -133,7 +130,8 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
 // -----------------------------------------------------------------------------
 void ITKVectorRescaleIntensityImage::dataCheckInternal()
 {
-  Dream3DArraySwitchOutputComponentMacro(this->dataCheck, m_OutputType, getSelectedCellArrayPath(), -4);
+  itk::CommonEnums::IOComponent castingType = static_cast<itk::CommonEnums::IOComponent>(m_OutputType + 1);
+  Dream3DArraySwitchOutputComponentMacro(this->dataCheck, castingType, getSelectedCellArrayPath(), -4);
 }
 
 // -----------------------------------------------------------------------------
@@ -158,7 +156,8 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
 // -----------------------------------------------------------------------------
 void ITKVectorRescaleIntensityImage::filterInternal()
 {
-  Dream3DArraySwitchOutputComponentMacro(this->filter, m_OutputType, getSelectedCellArrayPath(), -4);
+  itk::CommonEnums::IOComponent castingType = static_cast<itk::CommonEnums::IOComponent>(m_OutputType + 1);
+  Dream3DArraySwitchOutputComponentMacro(this->filter, castingType, getSelectedCellArrayPath(), -4);
 }
 
 // -----------------------------------------------------------------------------
