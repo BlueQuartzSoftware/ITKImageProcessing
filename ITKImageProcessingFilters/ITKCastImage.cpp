@@ -3,7 +3,11 @@
  */
 #include "ITKCastImage.h"
 
-#include <memory>
+#if(ITK_VERSION_MAJOR == 5) && (ITK_VERSION_MINOR >= 1)
+#include <itkCommonEnums.h>
+#else
+#include <itkImageIOBase.h>
+#endif
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -112,7 +116,11 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
 // -----------------------------------------------------------------------------
 void ITKCastImage::dataCheckInternal()
 {
+#if(ITK_VERSION_MAJOR == 5) && (ITK_VERSION_MINOR >= 1)
   itk::CommonEnums::IOComponent castingType = static_cast<itk::CommonEnums::IOComponent>(m_CastingType + 1);
+#else
+  itk::ImageIOBase::IOComponentType castingType = static_cast<itk::ImageIOBase::IOComponentType>(m_CastingType + 1);
+#endif
   Dream3DArraySwitchOutputComponentMacro(this->dataCheck, castingType, getSelectedCellArrayPath(), -4);
 }
 
@@ -135,7 +143,11 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
 // -----------------------------------------------------------------------------
 void ITKCastImage::filterInternal()
 {
+#if(ITK_VERSION_MAJOR == 5) && (ITK_VERSION_MINOR >= 1)
   itk::CommonEnums::IOComponent castingType = static_cast<itk::CommonEnums::IOComponent>(m_CastingType + 1);
+#else
+  itk::ImageIOBase::IOComponentType castingType = static_cast<itk::ImageIOBase::IOComponentType>(m_CastingType + 1);
+#endif
   Dream3DArraySwitchOutputComponentMacro(this->filter, castingType, getSelectedCellArrayPath(), -4);
 }
 
