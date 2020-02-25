@@ -131,7 +131,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
     cast->SetInput(toITK->GetOutput());
     cast->Update();
     // Convert back to dream3D array
-    DataContainer::Pointer container = getMarkerContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, dap.getDataContainerName());
+    DataContainer::Pointer container = getMarkerContainerArray()->createNonPrereqDataContainer(this, dap.getDataContainerName());
     if(!container.get())
     {
       setErrorCondition(-3, "No container.");

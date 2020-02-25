@@ -315,7 +315,7 @@ void ITKStitchMontage::dataCheck()
         return;
       }
 
-      tilePtr = dca->getPrereqIDataArrayFromPath<IDataArray>(this, testPath);
+      tilePtr = dca->getPrereqIDataArrayFromPath(this, testPath);
       if(getErrorCode() < 0)
       {
         return;

@@ -271,7 +271,7 @@ void ITKPCMTileRegistration::dataCheck()
         return;
       }
 
-      IDataArray::Pointer imagePtr = dca->getPrereqIDataArrayFromPath<IDataArray>(this, testPath);
+      IDataArray::Pointer imagePtr = dca->getPrereqIDataArrayFromPath(this, testPath);
       if(getErrorCode() < 0)
       {
         return;

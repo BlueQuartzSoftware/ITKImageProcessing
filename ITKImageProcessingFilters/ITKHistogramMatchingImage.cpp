@@ -87,7 +87,7 @@ size_t ITKHistogramMatchingImage::getImageDimension(const DataArrayPath& path)
 {
   std::vector<size_t> tDims(3, -1);
   QString errorMessage;
-  ImageGeom::Pointer imageGeometry = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, path.getDataContainerName());
+  ImageGeom::Pointer imageGeometry = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom>(this, path.getDataContainerName());
   if(imageGeometry.get() != nullptr)
   {
     tDims = imageGeometry->getDimensions().toContainer<std::vector<size_t>>();
@@ -112,7 +112,7 @@ size_t ITKHistogramMatchingImage::getImageDimension(const DataArrayPath& path)
 // -----------------------------------------------------------------------------
 int ITKHistogramMatchingImage::CheckArrayExists(const DataArrayPath& path)
 {
-  IDataArray::Pointer ptr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, path);
+  IDataArray::Pointer ptr = getDataContainerArray()->getPrereqIDataArrayFromPath(this, path);
   if(ptr.get() == nullptr)
   {
     QString errorMessage("Data Array %1 does not exist");
@@ -128,8 +128,8 @@ int ITKHistogramMatchingImage::CheckArrayExists(const DataArrayPath& path)
 void ITKHistogramMatchingImage::CompareImagePixelTypes(const DataArrayPath& path1, const DataArrayPath& path2)
 {
   // Verify that both images have same data type
-  IDataArray::Pointer ptr1 = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, path1);
-  IDataArray::Pointer ptr2 = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, path2);
+  IDataArray::Pointer ptr1 = getDataContainerArray()->getPrereqIDataArrayFromPath(this, path1);
+  IDataArray::Pointer ptr2 = getDataContainerArray()->getPrereqIDataArrayFromPath(this, path2);
   if(ptr1->getTypeAsString() != ptr2->getTypeAsString())
   {
     QString errorMessage("Both images must have the same pixel type.\nFound %1 and %2");

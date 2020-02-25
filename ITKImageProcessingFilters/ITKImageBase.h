@@ -349,7 +349,7 @@ protected:
   */
   bool checkImageType(const QVector<QString>& types, const DataArrayPath& path)
   {
-    IDataArray::Pointer ptr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray>(this, path);
+    IDataArray::Pointer ptr = getDataContainerArray()->getPrereqIDataArrayFromPath(this, path);
     if(nullptr != ptr)
     {
       if(types.indexOf(ptr->getTypeAsString()) != -1)
