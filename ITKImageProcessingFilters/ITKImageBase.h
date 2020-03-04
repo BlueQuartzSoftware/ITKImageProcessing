@@ -143,7 +143,7 @@ protected:
     ValueType* cellArray;
 
     std::vector<size_t> dims = ITKDream3DHelper::GetComponentsDimensions<PixelType>();
-    cellArrayPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<ValueType>, AbstractFilter>(
+    cellArrayPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<ValueType>>(
         this, array_path, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if(nullptr != cellArrayPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     {
@@ -154,7 +154,7 @@ protected:
       return;
     }
 
-    ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(array_path.getDataContainerName())->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
+    ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(array_path.getDataContainerName())->getPrereqGeometry<ImageGeom>(this);
     if(nullptr == image)
     {
       setErrorCondition(-1, "Array path does not contain image geometry.");
@@ -328,7 +328,7 @@ protected:
   */
   bool checkImageType(const QVector<QString>& types, const DataArrayPath& path)
   {
-    IDataArray::Pointer ptr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, path);
+    IDataArray::Pointer ptr = getDataContainerArray()->getPrereqIDataArrayFromPath(this, path);
     if(nullptr != ptr)
     {
       if(types.indexOf(ptr->getTypeAsString()) != -1)

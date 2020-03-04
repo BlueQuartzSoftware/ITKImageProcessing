@@ -315,13 +315,13 @@ void ITKStitchMontage::dataCheck()
         return;
       }
 
-      tilePtr = dca->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, testPath);
+      tilePtr = dca->getPrereqIDataArrayFromPath(this, testPath);
       if(getErrorCode() < 0)
       {
         return;
       }
 
-      tileGeom = dca->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, dcName);
+      tileGeom = dca->getPrereqGeometryFromDataContainer<ImageGeom>(this, dcName);
       if(getErrorCode() < 0)
       {
         return;

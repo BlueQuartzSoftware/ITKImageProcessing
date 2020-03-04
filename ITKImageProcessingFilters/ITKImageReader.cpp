@@ -215,7 +215,7 @@ void ITKImageReader::dataCheck()
     return;
   }
 
-  DataContainer::Pointer container = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName(), DataContainerID);
+  DataContainer::Pointer container = getDataContainerArray()->createNonPrereqDataContainer(this, getDataContainerName(), DataContainerID);
   if(container.get() == nullptr)
   {
     setErrorCondition(-3, "No container.");

@@ -271,13 +271,13 @@ void ITKPCMTileRegistration::dataCheck()
         return;
       }
 
-      IDataArray::Pointer imagePtr = dca->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, testPath);
+      IDataArray::Pointer imagePtr = dca->getPrereqIDataArrayFromPath(this, testPath);
       if(getErrorCode() < 0)
       {
         return;
       }
 
-      ImageGeom::Pointer image = dca->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, dcName);
+      ImageGeom::Pointer image = dca->getPrereqGeometryFromDataContainer<ImageGeom>(this, dcName);
       if(getErrorCode() < 0)
       {
         return;
