@@ -93,7 +93,7 @@ void ITKVectorConnectedComponentImage::readFilterParameters(AbstractFilterParame
 //
 // -----------------------------------------------------------------------------
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
-void ITKVectorConnectedComponentImage::dataCheck()
+void ITKVectorConnectedComponentImage::dataCheckImpl()
 {
   clearErrorCode();
   clearWarningCode();
@@ -105,15 +105,15 @@ void ITKVectorConnectedComponentImage::dataCheck()
                  << "double";
   checkImageType(supportedTypes, getSelectedCellArrayPath());
 
-  ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
+  ITKImageProcessingBase::dataCheckImpl<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ITKVectorConnectedComponentImage::dataCheckInternal()
+void ITKVectorConnectedComponentImage::dataCheck()
 {
-  Dream3DArraySwitchMacroOutputType(this->dataCheck, getSelectedCellArrayPath(), -4, uint32_t, 0);
+  Dream3DArraySwitchMacroOutputType(this->dataCheckImpl, getSelectedCellArrayPath(), -4, uint32_t, 0);
 }
 
 // -----------------------------------------------------------------------------

@@ -83,22 +83,22 @@ void ITKBinaryContourImage::readFilterParameters(AbstractFilterParametersReader*
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKBinaryContourImage::dataCheck()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKBinaryContourImage::dataCheckImpl()
 {
   clearErrorCode();
   clearWarningCode();
 
   // Check consistency of parameters
 
-  ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
+  ITKImageProcessingBase::dataCheckImpl<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ITKBinaryContourImage::dataCheckInternal()
+void ITKBinaryContourImage::dataCheck()
 {
-  Dream3DArraySwitchMacro(this->dataCheck, getSelectedCellArrayPath(), -4);
+  Dream3DArraySwitchMacro(this->dataCheckImpl, getSelectedCellArrayPath(), -4);
 }
 
 // -----------------------------------------------------------------------------

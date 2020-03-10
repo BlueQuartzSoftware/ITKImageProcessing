@@ -83,7 +83,7 @@ void ITKBinaryProjectionImage::readFilterParameters(AbstractFilterParametersRead
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKBinaryProjectionImage::dataCheck()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKBinaryProjectionImage::dataCheckImpl()
 {
   clearErrorCode();
   clearWarningCode();
@@ -91,15 +91,15 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   // Check consistency of parameters
   this->CheckIntegerEntry<unsigned int, double>(m_ProjectionDimension, "ProjectionDimension", true);
 
-  ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
+  ITKImageProcessingBase::dataCheckImpl<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ITKBinaryProjectionImage::dataCheckInternal()
+void ITKBinaryProjectionImage::dataCheck()
 {
-  Dream3DArraySwitchMacro(this->dataCheck, getSelectedCellArrayPath(), -4);
+  Dream3DArraySwitchMacro(this->dataCheckImpl, getSelectedCellArrayPath(), -4);
 }
 
 // -----------------------------------------------------------------------------

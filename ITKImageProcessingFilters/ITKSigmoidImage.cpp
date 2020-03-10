@@ -86,22 +86,22 @@ void ITKSigmoidImage::readFilterParameters(AbstractFilterParametersReader* reade
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKSigmoidImage::dataCheck()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKSigmoidImage::dataCheckImpl()
 {
   clearErrorCode();
   clearWarningCode();
 
   // Check consistency of parameters
 
-  ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
+  ITKImageProcessingBase::dataCheckImpl<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ITKSigmoidImage::dataCheckInternal()
+void ITKSigmoidImage::dataCheck()
 {
-  Dream3DArraySwitchMacro(this->dataCheck, getSelectedCellArrayPath(), -4);
+  Dream3DArraySwitchMacro(this->dataCheckImpl, getSelectedCellArrayPath(), -4);
 }
 
 // -----------------------------------------------------------------------------

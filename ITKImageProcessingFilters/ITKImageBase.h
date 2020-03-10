@@ -66,11 +66,6 @@ public:
   void execute() override;
 
   /**
-  * @brief preflight Reimplemented from @see AbstractFilter class
-  */
-  void preflight() override;
-
-  /**
    * @brief CastVec3ToITK Input type should be FloatVec3Type or IntVec3Type, Output
      type should be some kind of ITK "array" (itk::Size, itk::Index,...)
    */
@@ -130,7 +125,7 @@ protected:
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
    */
 
-  virtual void dataCheckInternal();
+  void dataCheck() override;
 
   /**
    * @brief imageCheck checks if data array contains an image.

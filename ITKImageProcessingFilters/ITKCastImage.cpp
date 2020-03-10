@@ -95,7 +95,7 @@ void ITKCastImage::readFilterParameters(AbstractFilterParametersReader* reader, 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKCastImage::dataCheck()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKCastImage::dataCheckImpl()
 {
   // Check consistency of parameters
   clearErrorCode();
@@ -108,20 +108,20 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
     setErrorCondition(-5, "Boundaries values of output component type inside boundaries of input component type. Use ITK::Rescale Intensity Image Filter instead.");
     return;
   }
-  ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
+  ITKImageProcessingBase::dataCheckImpl<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ITKCastImage::dataCheckInternal()
+void ITKCastImage::dataCheck()
 {
 #if(ITK_VERSION_MAJOR == 5) && (ITK_VERSION_MINOR >= 1)
   itk::CommonEnums::IOComponent castingType = static_cast<itk::CommonEnums::IOComponent>(m_CastingType + 1);
 #else
   itk::ImageIOBase::IOComponentType castingType = static_cast<itk::ImageIOBase::IOComponentType>(m_CastingType + 1);
 #endif
-  Dream3DArraySwitchOutputComponentMacro(this->dataCheck, castingType, getSelectedCellArrayPath(), -4);
+  Dream3DArraySwitchOutputComponentMacro(this->dataCheckImpl, castingType, getSelectedCellArrayPath(), -4);
 }
 
 // -----------------------------------------------------------------------------

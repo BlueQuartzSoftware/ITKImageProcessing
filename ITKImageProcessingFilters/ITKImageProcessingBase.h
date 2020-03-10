@@ -140,7 +140,7 @@ protected:
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
    */
   template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
-  void dataCheck()
+  void dataCheckImpl()
   {
     // typedef typename itk::NumericTraits<InputPixelType>::ValueType InputValueType;
     typedef typename itk::NumericTraits<OutputPixelType>::ValueType OutputValueType;

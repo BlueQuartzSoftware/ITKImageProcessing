@@ -66,7 +66,7 @@ void ITKRGBToLuminanceImage::readFilterParameters(AbstractFilterParametersReader
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKRGBToLuminanceImage::dataCheck()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKRGBToLuminanceImage::dataCheckImpl()
 {
   // Check consistency of parameters
   clearErrorCode();
@@ -78,15 +78,15 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
     return;
   }
   typedef typename itk::NumericTraits<InputPixelType>::ValueType ScalarPixelType;
-  ITKImageProcessingBase::dataCheck<InputPixelType, ScalarPixelType, Dimension>();
+  ITKImageProcessingBase::dataCheckImpl<InputPixelType, ScalarPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ITKRGBToLuminanceImage::dataCheckInternal()
+void ITKRGBToLuminanceImage::dataCheck()
 {
-  Dream3DArraySwitchMacro(this->dataCheck, getSelectedCellArrayPath(), -4);
+  Dream3DArraySwitchMacro(this->dataCheckImpl, getSelectedCellArrayPath(), -4);
 }
 
 // -----------------------------------------------------------------------------

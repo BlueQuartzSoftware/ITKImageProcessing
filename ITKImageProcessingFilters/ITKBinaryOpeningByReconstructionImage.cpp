@@ -109,7 +109,7 @@ void ITKBinaryOpeningByReconstructionImage::readFilterParameters(AbstractFilterP
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKBinaryOpeningByReconstructionImage::dataCheck()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKBinaryOpeningByReconstructionImage::dataCheckImpl()
 {
   clearErrorCode();
   clearWarningCode();
@@ -128,15 +128,15 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
                  << "int64_t";
   checkImageType(supportedTypes, getSelectedCellArrayPath());
 
-  ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
+  ITKImageProcessingBase::dataCheckImpl<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ITKBinaryOpeningByReconstructionImage::dataCheckInternal()
+void ITKBinaryOpeningByReconstructionImage::dataCheck()
 {
-  Dream3DArraySwitchMacro(this->dataCheck, getSelectedCellArrayPath(), -4);
+  Dream3DArraySwitchMacro(this->dataCheckImpl, getSelectedCellArrayPath(), -4);
 }
 
 // -----------------------------------------------------------------------------

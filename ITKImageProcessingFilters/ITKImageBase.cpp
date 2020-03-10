@@ -35,7 +35,7 @@ void ITKImageBase::initialize()
 void ITKImageBase::execute()
 {
   initialize();
-  this->dataCheckInternal();
+  dataCheck();
   if(getErrorCode() < 0)
   {
     return;
@@ -50,21 +50,7 @@ void ITKImageBase::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ITKImageBase::preflight()
-{
-  // These are the REQUIRED lines of CODE to make sure the filter behaves correctly
-  setInPreflight(true);              // Set the fact that we are preflighting.
-  emit preflightAboutToExecute();    // Emit this signal so that other widgets can do one file update
-  emit updateFilterParameters(this); // Emit this signal to have the widgets push their values down to the filter
-  this->dataCheckInternal();
-  emit preflightExecuted(); // We are done preflighting this filter
-  setInPreflight(false);    // Inform the system this filter is NOT in preflight mode anymore.
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void ITKImageBase::dataCheckInternal()
+void ITKImageBase::dataCheck()
 {
 }
 

@@ -80,22 +80,22 @@ void ITKLaplacianRecursiveGaussianImage::readFilterParameters(AbstractFilterPara
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKLaplacianRecursiveGaussianImage::dataCheck()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKLaplacianRecursiveGaussianImage::dataCheckImpl()
 {
   clearErrorCode();
   clearWarningCode();
 
   // Check consistency of parameters
 
-  ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
+  ITKImageProcessingBase::dataCheckImpl<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ITKLaplacianRecursiveGaussianImage::dataCheckInternal()
+void ITKLaplacianRecursiveGaussianImage::dataCheck()
 {
-  Dream3DArraySwitchMacroOutputType(this->dataCheck, getSelectedCellArrayPath(), -4,float, 0);
+  Dream3DArraySwitchMacroOutputType(this->dataCheckImpl, getSelectedCellArrayPath(), -4,float, 0);
 }
 
 // -----------------------------------------------------------------------------

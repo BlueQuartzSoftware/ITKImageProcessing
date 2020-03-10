@@ -79,7 +79,7 @@ void ITKMaskImage::readFilterParameters(AbstractFilterParametersReader* reader, 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKMaskImage::dataCheck()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKMaskImage::dataCheckImpl()
 {
   // Check consistency of parameters
 
@@ -90,15 +90,15 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
                  << "uint16_t"
                  << "uint32_t";
   checkImageType(supportedTypes, getMaskCellArrayPath());
-  ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
+  ITKImageProcessingBase::dataCheckImpl<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ITKMaskImage::dataCheckInternal()
+void ITKMaskImage::dataCheck()
 {
-  Dream3DArraySwitchMacro(this->dataCheck, getSelectedCellArrayPath(), -5);
+  Dream3DArraySwitchMacro(this->dataCheckImpl, getSelectedCellArrayPath(), -5);
 }
 
 // -----------------------------------------------------------------------------

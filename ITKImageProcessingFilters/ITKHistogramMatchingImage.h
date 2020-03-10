@@ -150,12 +150,12 @@ protected:
   /**
    * @brief dataCheckInternal overloads dataCheckInternal in ITKImageBase and calls templated dataCheck
    */
-  void dataCheckInternal() override;
+  void dataCheck() override;
 
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
    */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void dataCheck();
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void dataCheckImpl();
 
   /**
   * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter

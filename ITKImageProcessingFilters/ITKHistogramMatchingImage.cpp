@@ -182,7 +182,7 @@ void ITKHistogramMatchingImage::CompareImageTypes(const DataArrayPath& path1, co
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKHistogramMatchingImage::dataCheck()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKHistogramMatchingImage::dataCheckImpl()
 {
   clearErrorCode();
   clearWarningCode();
@@ -192,15 +192,15 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
 
   // Compare source and reference image type
   CompareImageTypes(getSelectedCellArrayPath(), getReferenceCellArrayPath());
-  ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
+  ITKImageProcessingBase::dataCheckImpl<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ITKHistogramMatchingImage::dataCheckInternal()
+void ITKHistogramMatchingImage::dataCheck()
 {
-  Dream3DArraySwitchMacro(this->dataCheck, getSelectedCellArrayPath(), -4);
+  Dream3DArraySwitchMacro(this->dataCheckImpl, getSelectedCellArrayPath(), -4);
 }
 
 // -----------------------------------------------------------------------------
