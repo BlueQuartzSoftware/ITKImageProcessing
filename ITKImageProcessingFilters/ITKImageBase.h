@@ -35,7 +35,6 @@ class ITKImageProcessing_EXPORT ITKImageBase : public AbstractFilter
 #ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(ITKImageBase SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(ITKImageBase)
-  PYB11_FILTER_NEW_MACRO(ITKImageBase)
 #endif
 
 public:
@@ -45,8 +44,6 @@ public:
     using WeakPointer = std::weak_ptr<Self>;
     using ConstWeakPointer = std::weak_ptr<const Self>;
     static Pointer NullPointer();
-
-    static std::shared_ptr<ITKImageBase> New();
 
     /**
     * @brief Returns the name of the class for ITKImageBase
@@ -120,12 +117,6 @@ public:
 
 protected:
   ITKImageBase();
-
-  /**
-   * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
-   */
-
-  void dataCheck() override;
 
   /**
    * @brief imageCheck checks if data array contains an image.
@@ -341,7 +332,7 @@ protected:
   /**
   * @brief Applies the filter
   */
-  virtual void filterInternal();
+  virtual void filterInternal() = 0;
 
   /**
    * @brief Initializes all the private instance variables.

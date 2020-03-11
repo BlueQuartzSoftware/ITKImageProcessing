@@ -62,19 +62,6 @@ QString ITKImageProcessingBase::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ITKImageProcessingBase::newFilterInstance(bool copyFilterParameters) const
-{
-  ITKImageProcessingBase::Pointer filter = ITKImageProcessingBase::New();
-  if(copyFilterParameters)
-  {
-    copyFilterParameterInstanceVariables(filter.get());
-  }
-  return filter;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 QString ITKImageProcessingBase::getHumanLabel() const
 {
   return "ITK::Image Processing Base";
@@ -93,17 +80,6 @@ void ITKImageProcessingBase::readFilterParameters(AbstractFilterParametersReader
 ITKImageProcessingBase::Pointer ITKImageProcessingBase::NullPointer()
 {
   return Pointer(static_cast<Self*>(nullptr));
-}
-
-// -----------------------------------------------------------------------------
-std::shared_ptr<ITKImageProcessingBase> ITKImageProcessingBase::New()
-{
-  struct make_shared_enabler : public ITKImageProcessingBase  
-  {
-  };
-  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
-  val->setupFilterParameters();
-  return val;
 }
 
 // -----------------------------------------------------------------------------

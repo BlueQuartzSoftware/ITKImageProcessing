@@ -48,34 +48,9 @@ void ITKImageBase::execute()
 }
 
 // -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void ITKImageBase::dataCheck()
-{
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void ITKImageBase::filterInternal()
-{
-}
-
-// -----------------------------------------------------------------------------
 ITKImageBase::Pointer ITKImageBase::NullPointer()
 {
   return Pointer(static_cast<Self*>(nullptr));
-}
-
-// -----------------------------------------------------------------------------
-std::shared_ptr<ITKImageBase> ITKImageBase::New()
-{
-  struct make_shared_enabler : public ITKImageBase  
-  {
-  };
-  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
-  val->setupFilterParameters();
-  return val;
 }
 
 // -----------------------------------------------------------------------------
