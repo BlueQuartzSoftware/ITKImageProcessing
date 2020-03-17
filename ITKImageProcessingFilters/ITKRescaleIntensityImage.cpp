@@ -151,7 +151,7 @@ template <typename OutputPixelType> void ITKRescaleIntensityImage::CheckEntryBou
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKRescaleIntensityImage::dataCheck()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKRescaleIntensityImage::dataCheckImpl()
 {
   clearErrorCode();
   clearWarningCode();
@@ -160,15 +160,15 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   CheckEntryBounds<OutputPixelType>(m_OutputMaximum, "OutputMaximum");
   CheckEntryBounds<OutputPixelType>(m_OutputMinimum, "OutputMinimum");
 
-  ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
+  ITKImageProcessingBase::dataCheckImpl<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ITKRescaleIntensityImage::dataCheckInternal()
+void ITKRescaleIntensityImage::dataCheck()
 {
-  Dream3DArraySwitchMacro(this->dataCheck, getSelectedCellArrayPath(), -4);
+  Dream3DArraySwitchMacro(this->dataCheckImpl, getSelectedCellArrayPath(), -4);
 }
 
 // -----------------------------------------------------------------------------

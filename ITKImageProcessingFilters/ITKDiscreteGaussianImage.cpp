@@ -85,7 +85,7 @@ void ITKDiscreteGaussianImage::readFilterParameters(AbstractFilterParametersRead
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKDiscreteGaussianImage::dataCheck()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKDiscreteGaussianImage::dataCheckImpl()
 {
   clearErrorCode();
   clearWarningCode();
@@ -95,15 +95,15 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   this->CheckIntegerEntry<uint32_t, int32_t>(m_MaximumKernelWidth, "MaximumKernelWidth", true);
   this->CheckVectorEntry<float, FloatVec3Type>(m_MaximumError, "MaximumError", false);
 
-  ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
+  ITKImageProcessingBase::dataCheckImpl<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ITKDiscreteGaussianImage::dataCheckInternal()
+void ITKDiscreteGaussianImage::dataCheck()
 {
-  Dream3DArraySwitchMacro(this->dataCheck, getSelectedCellArrayPath(), -4);
+  Dream3DArraySwitchMacro(this->dataCheckImpl, getSelectedCellArrayPath(), -4);
 }
 
 // -----------------------------------------------------------------------------

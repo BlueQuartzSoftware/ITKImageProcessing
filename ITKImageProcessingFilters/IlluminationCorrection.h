@@ -368,33 +368,7 @@ public:
    */
   void execute() override;
 
-  /**
-   * @brief preflight Reimplemented from @see AbstractFilter class
-   */
-  void preflight() override;
 
-signals:
-  /**
-   * @brief updateFilterParameters This is emitted when the filter requests all the latest Filter Parameters need to be
-   * pushed from a user facing control such as the FilterParameter Widget
-   * @param filter The filter to push the values into
-   */
-  void updateFilterParameters(AbstractFilter* filter);
-
-  /**
-   * @brief parametersChanged This signal can be emitted when any of the filter parameters are changed internally.
-   */
-  void parametersChanged();
-
-  /**
-   * @brief preflightAboutToExecute Emitted just before the dataCheck() is called. This can change if needed.
-   */
-  void preflightAboutToExecute();
-
-  /**
-   * @brief preflightExecuted Emitted just after the dataCheck() is called. Typically. This can change if needed.
-   */
-  void preflightExecuted();
 
 protected:
   enum class ArrayType
@@ -416,7 +390,7 @@ protected:
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
    */
-  void dataCheck();
+  void dataCheck() override;
 
   /**
    * @brief Initializes all the private instance variables.
@@ -466,7 +440,7 @@ protected:
     for(const auto& dcName : m_DataContainers)
     {
       DataArrayPath imageArrayPath(dcName, m_CellAttributeMatrixName, m_ImageDataArrayName);
-      typename DataArrayType::Pointer imageData = dca->getPrereqArrayFromPath<DataArrayType, AbstractFilter>(this, imageArrayPath, cDims);
+      typename DataArrayType::Pointer imageData = dca->getPrereqArrayFromPath<DataArrayType>(this, imageArrayPath, cDims);
       if(imageData.get() == nullptr)
       {
         QString msg;

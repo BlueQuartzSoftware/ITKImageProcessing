@@ -126,7 +126,7 @@ void ITKPatchBasedDenoisingImage::readFilterParameters(AbstractFilterParametersR
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKPatchBasedDenoisingImage::dataCheck()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKPatchBasedDenoisingImage::dataCheckImpl()
 {
   // Check consistency of parameters
   this->CheckIntegerEntry<uint32_t, double>(m_PatchRadius, "PatchRadius", true);
@@ -136,15 +136,15 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
 
   clearErrorCode();
   clearWarningCode();
-  ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
+  ITKImageProcessingBase::dataCheckImpl<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ITKPatchBasedDenoisingImage::dataCheckInternal()
+void ITKPatchBasedDenoisingImage::dataCheck()
 {
-  Dream3DArraySwitchMacroOutputType(this->dataCheck, getSelectedCellArrayPath(), -4, double, 0);
+  Dream3DArraySwitchMacroOutputType(this->dataCheckImpl, getSelectedCellArrayPath(), -4, double, 0);
 }
 
 // -----------------------------------------------------------------------------

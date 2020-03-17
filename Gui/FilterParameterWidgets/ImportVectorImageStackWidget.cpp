@@ -151,13 +151,13 @@ void ImportVectorImageStackWidget::setupGui()
 void ImportVectorImageStackWidget::connectSignalsSlots()
 {
   // Catch when the filter is about to execute the preflight
-  connect(getFilter(), SIGNAL(preflightAboutToExecute()), this, SLOT(beforePreflight()));
+  connect(getFilter(), &AbstractFilter::preflightAboutToExecute, this, &ImportVectorImageStackWidget::beforePreflight);
 
   // Catch when the filter is finished running the preflight
-  connect(getFilter(), SIGNAL(preflightExecuted()), this, SLOT(afterPreflight()));
+  connect(getFilter(), &AbstractFilter::preflightExecuted, this, &ImportVectorImageStackWidget::afterPreflight);
 
   // Catch when the filter wants its values updated
-  connect(getFilter(), SIGNAL(updateFilterParameters(AbstractFilter*)), this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
+  connect(getFilter(), &AbstractFilter::updateFilterParameters, this, &ImportVectorImageStackWidget::filterNeedsInputParameters);
 
   // Connections for the various ui widgets
   connect(m_Ui->inputDirBtn, &QPushButton::clicked, this, &ImportVectorImageStackWidget::inputDirBtn_clicked);

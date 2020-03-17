@@ -24,7 +24,6 @@ class ITKImageProcessing_EXPORT ITKImageProcessingBase : public ITKImageBase
 #ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(ITKImageProcessingBase SUPERCLASS ITKImageBase)
   PYB11_SHARED_POINTERS(ITKImageProcessingBase)
-  PYB11_FILTER_NEW_MACRO(ITKImageProcessingBase)
   PYB11_FILTER_PARAMETER(DataArrayPath, SelectedCellArrayPath)
   PYB11_FILTER_PARAMETER(QString, NewCellArrayName)
   PYB11_FILTER_PARAMETER(bool, SaveAsNewArray)
@@ -40,8 +39,6 @@ public:
   using WeakPointer = std::weak_ptr<Self>;
   using ConstWeakPointer = std::weak_ptr<const Self>;
   static Pointer NullPointer();
-
-  static std::shared_ptr<ITKImageProcessingBase> New();
 
   /**
    * @brief Returns the name of the class for ITKImageProcessingBase
@@ -113,25 +110,21 @@ public:
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
   QString getGroupName() const override;
-  /**
-   * @brief newFilterInstance Reimplemented from @see AbstractFilter class
-   */
-  virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  virtual QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
    */
-  virtual void setupFilterParameters() override;
+  void setupFilterParameters() override;
 
   /**
    * @brief readFilterParameters Reimplemented from @see AbstractFilter class
    */
-  virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
+  void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
 
 protected:
   ITKImageProcessingBase();
@@ -140,7 +133,7 @@ protected:
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
    */
   template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
-  void dataCheck()
+  void dataCheckImpl()
   {
     // typedef typename itk::NumericTraits<InputPixelType>::ValueType InputValueType;
     typedef typename itk::NumericTraits<OutputPixelType>::ValueType OutputValueType;
@@ -156,7 +149,7 @@ protected:
     {
       DataArrayPath tempPath;
       tempPath.update(getSelectedCellArrayPath().getDataContainerName(), getSelectedCellArrayPath().getAttributeMatrixName(), getNewCellArrayName());
-      m_NewCellArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<OutputValueType>, AbstractFilter, OutputValueType>(
+      m_NewCellArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<OutputValueType>>(
           this, tempPath, 0, outputDims);     /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
       if(nullptr != m_NewCellArrayPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
       {

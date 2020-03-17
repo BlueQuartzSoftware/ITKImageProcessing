@@ -128,13 +128,13 @@ void SeparateDataSets::execute()
     return;
   }
 
-  AttributeMatrix::Pointer origDataSetAM = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, getDatasetAMPath(), -9000);
+  AttributeMatrix::Pointer origDataSetAM = getDataContainerArray()->getPrereqAttributeMatrixFromPath(this, getDatasetAMPath(), -9000);
   if(getErrorCode() < 0)
   {
     return;
   }
 
-  AttributeMatrix::Pointer origMetaDataAM = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, getMetadataAMPath(), -9001);
+  AttributeMatrix::Pointer origMetaDataAM = getDataContainerArray()->getPrereqAttributeMatrixFromPath(this, getMetadataAMPath(), -9001);
   if(getErrorCode() < 0)
   {
     return;
@@ -142,31 +142,31 @@ void SeparateDataSets::execute()
 
   int err = 0;
   std::vector<size_t> cDims = {1};
-  StringDataArray::Pointer attrArrayNamesPtr = origMetaDataAM->getPrereqArray<StringDataArray, AbstractFilter>(this, "AttributeArrayNames", err, cDims);
+  StringDataArray::Pointer attrArrayNamesPtr = origMetaDataAM->getPrereqArray<StringDataArray>(this, "AttributeArrayNames", err, cDims);
   if(getErrorCode() < 0)
   {
     return;
   }
 
-  StringDataArray::Pointer stagePositionXPtr = origMetaDataAM->getPrereqArray<StringDataArray, AbstractFilter>(this, "StagePositionX", err, cDims);
+  StringDataArray::Pointer stagePositionXPtr = origMetaDataAM->getPrereqArray<StringDataArray>(this, "StagePositionX", err, cDims);
   if(getErrorCode() < 0)
   {
     return;
   }
 
-  StringDataArray::Pointer stagePositionYPtr = origMetaDataAM->getPrereqArray<StringDataArray, AbstractFilter>(this, "StagePositionY", err, cDims);
+  StringDataArray::Pointer stagePositionYPtr = origMetaDataAM->getPrereqArray<StringDataArray>(this, "StagePositionY", err, cDims);
   if(getErrorCode() < 0)
   {
     return;
   }
 
-  StringDataArray::Pointer scaleFactorForXPtr = origMetaDataAM->getPrereqArray<StringDataArray, AbstractFilter>(this, "ScaleFactorForX", err, cDims);
+  StringDataArray::Pointer scaleFactorForXPtr = origMetaDataAM->getPrereqArray<StringDataArray>(this, "ScaleFactorForX", err, cDims);
   if(getErrorCode() < 0)
   {
     return;
   }
 
-  StringDataArray::Pointer scaleFactorForYPtr = origMetaDataAM->getPrereqArray<StringDataArray, AbstractFilter>(this, "ScaleFactorForY", err, cDims);
+  StringDataArray::Pointer scaleFactorForYPtr = origMetaDataAM->getPrereqArray<StringDataArray>(this, "ScaleFactorForY", err, cDims);
   if(getErrorCode() < 0)
   {
     return;
@@ -212,7 +212,7 @@ void SeparateDataSets::execute()
 
     // Create the new data container for this data set
     DataContainerShPtr origDCPtr = getDataContainerArray()->getDataContainer(getDatasetAMPath());
-    DataContainerShPtr newDCPtr = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, dataSetName, DataContainerID);
+    DataContainerShPtr newDCPtr = getDataContainerArray()->createNonPrereqDataContainer(this, dataSetName, DataContainerID);
 
     ImageGeom::Pointer originalGeom = origDCPtr->getGeometryAs<ImageGeom>();
     ImageGeom::Pointer newGeom = ImageGeom::New();

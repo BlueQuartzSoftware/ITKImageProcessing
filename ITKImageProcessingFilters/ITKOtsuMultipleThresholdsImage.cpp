@@ -86,7 +86,7 @@ void ITKOtsuMultipleThresholdsImage::readFilterParameters(AbstractFilterParamete
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKOtsuMultipleThresholdsImage::dataCheck()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKOtsuMultipleThresholdsImage::dataCheckImpl()
 {
   clearErrorCode();
   clearWarningCode();
@@ -96,15 +96,15 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   this->CheckIntegerEntry<uint8_t, int>(m_LabelOffset, "LabelOffset", true);
   this->CheckIntegerEntry<uint32_t, double>(m_NumberOfHistogramBins, "NumberOfHistogramBins", true);
 
-  ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
+  ITKImageProcessingBase::dataCheckImpl<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ITKOtsuMultipleThresholdsImage::dataCheckInternal()
+void ITKOtsuMultipleThresholdsImage::dataCheck()
 {
-  Dream3DArraySwitchMacroOutputType(this->dataCheck, getSelectedCellArrayPath(), -4,uint8_t, 0);
+  Dream3DArraySwitchMacroOutputType(this->dataCheckImpl, getSelectedCellArrayPath(), -4,uint8_t, 0);
 }
 
 // -----------------------------------------------------------------------------

@@ -84,7 +84,7 @@ void ITKProxTVImage::readFilterParameters(AbstractFilterParametersReader* reader
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKProxTVImage::dataCheck()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKProxTVImage::dataCheckImpl()
 {
   clearErrorCode();
   clearWarningCode();
@@ -94,15 +94,15 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   this->CheckVectorEntry<double, FloatVec3Type>(m_Weights, "Weights", 0);
   this->CheckVectorEntry<double, FloatVec3Type>(m_Norms, "Norms", 0);
 
-  ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
+  ITKImageProcessingBase::dataCheckImpl<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ITKProxTVImage::dataCheckInternal()
+void ITKProxTVImage::dataCheck()
 {
-  Dream3DArraySwitchMacro(this->dataCheck, getSelectedCellArrayPath(), -4);
+  Dream3DArraySwitchMacro(this->dataCheckImpl, getSelectedCellArrayPath(), -4);
 }
 
 // -----------------------------------------------------------------------------

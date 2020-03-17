@@ -80,7 +80,7 @@ void ITKZeroCrossingImage::readFilterParameters(AbstractFilterParametersReader* 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKZeroCrossingImage::dataCheck()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKZeroCrossingImage::dataCheckImpl()
 {
   clearErrorCode();
   clearWarningCode();
@@ -89,15 +89,15 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   this->CheckIntegerEntry<uint8_t, int>(m_ForegroundValue, "ForegroundValue", true);
   this->CheckIntegerEntry<uint8_t, int>(m_BackgroundValue, "BackgroundValue", true);
 
-  ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
+  ITKImageProcessingBase::dataCheckImpl<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ITKZeroCrossingImage::dataCheckInternal()
+void ITKZeroCrossingImage::dataCheck()
 {
-  Dream3DArraySwitchMacroOutputType(this->dataCheck, getSelectedCellArrayPath(), -4, uint8_t, 0);
+  Dream3DArraySwitchMacroOutputType(this->dataCheckImpl, getSelectedCellArrayPath(), -4, uint8_t, 0);
 }
 
 // -----------------------------------------------------------------------------

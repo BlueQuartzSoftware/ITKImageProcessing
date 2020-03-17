@@ -109,7 +109,7 @@ void ITKBinaryDilateImage::readFilterParameters(AbstractFilterParametersReader* 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKBinaryDilateImage::dataCheck()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKBinaryDilateImage::dataCheckImpl()
 {
   clearErrorCode();
   clearWarningCode();
@@ -127,15 +127,15 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
                  << "uint64_t"
                  << "int64_t";
   checkImageType(supportedTypes, getSelectedCellArrayPath());
-  ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
+  ITKImageProcessingBase::dataCheckImpl<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ITKBinaryDilateImage::dataCheckInternal()
+void ITKBinaryDilateImage::dataCheck()
 {
-  Dream3DArraySwitchMacro(this->dataCheck, getSelectedCellArrayPath(), -4);
+  Dream3DArraySwitchMacro(this->dataCheckImpl, getSelectedCellArrayPath(), -4);
 }
 
 // -----------------------------------------------------------------------------

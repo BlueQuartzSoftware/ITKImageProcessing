@@ -139,7 +139,7 @@ template <typename OutputPixelType> void ITKVectorRescaleIntensityImage::CheckEn
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKVectorRescaleIntensityImage::dataCheck()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKVectorRescaleIntensityImage::dataCheckImpl()
 {
   // Check consistency of parameters
   CheckEntryBounds<OutputPixelType>(m_OutputMaximumMagnitude, "OutputMaximumMagnitude");
@@ -151,20 +151,20 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   clearWarningCode();
   // OutputPixelType is based on scalar types. Create corresponding vector pixel type.
   typedef itk::Vector<OutputPixelType, InputPixelType::Dimension> VectorOutputPixelType;
-  ITKImageProcessingBase::dataCheck<InputPixelType, VectorOutputPixelType, Dimension>();
+  ITKImageProcessingBase::dataCheckImpl<InputPixelType, VectorOutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ITKVectorRescaleIntensityImage::dataCheckInternal()
+void ITKVectorRescaleIntensityImage::dataCheck()
 {
 #if(ITK_VERSION_MAJOR == 5) && (ITK_VERSION_MINOR >= 1)
   itk::CommonEnums::IOComponent castingType = static_cast<itk::CommonEnums::IOComponent>(m_OutputType + 1);
 #else
   itk::ImageIOBase::IOComponentType castingType = static_cast<itk::ImageIOBase::IOComponentType>(m_OutputType + 1);
 #endif
-  Dream3DArraySwitchOutputComponentMacro(this->dataCheck, castingType, getSelectedCellArrayPath(), -4);
+  Dream3DArraySwitchOutputComponentMacro(this->dataCheckImpl, castingType, getSelectedCellArrayPath(), -4);
 }
 
 // -----------------------------------------------------------------------------
