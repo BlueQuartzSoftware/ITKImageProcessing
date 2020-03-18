@@ -1,9 +1,6 @@
 /*
  * Your License or Copyright can go here
  */
-
-#include <memory>
-
 #include "ITKCastImage.h"
 
 #include "SIMPLib/Common/Constants.h"
@@ -11,20 +8,17 @@
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
-
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKCastImage::ITKCastImage()
-: m_CastingType(itk::ImageIOBase::IOComponentType::UCHAR - 1)
-{
-}
+ITKCastImage::ITKCastImage() = default;
 
 // -----------------------------------------------------------------------------
 //
@@ -54,6 +48,8 @@ void ITKCastImage::setupFilterParameters()
     choices.push_back("int");
     choices.push_back("unsigned long");
     choices.push_back("long");
+    choices.push_back("long long");
+    choices.push_back("unsigned long long");
     choices.push_back("float");
     choices.push_back("double");
     parameter->setChoices(choices);
@@ -93,7 +89,7 @@ void ITKCastImage::readFilterParameters(AbstractFilterParametersReader* reader, 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKCastImage::dataCheck()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKCastImage::dataCheckImpl()
 {
   // Check consistency of parameters
   clearErrorCode();
@@ -106,15 +102,17 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
     setErrorCondition(-5, "Boundaries values of output component type inside boundaries of input component type. Use ITK::Rescale Intensity Image Filter instead.");
     return;
   }
-  ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
+  ITKImageProcessingBase::dataCheckImpl<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ITKCastImage::dataCheckInternal()
+void ITKCastImage::dataCheck()
 {
-  Dream3DArraySwitchOutputComponentMacro(this->dataCheck, m_CastingType, getSelectedCellArrayPath(), -4);
+  using CastingType = itk::ITK_IOCOMPONENT_CLASS::ITK_IOCOMPONENT_TYPE;
+  CastingType castingType = static_cast<CastingType>(m_CastingType + 1);
+  Dream3DArraySwitchOutputComponentMacro(this->dataCheckImpl, castingType, getSelectedCellArrayPath(), -4);
 }
 
 // -----------------------------------------------------------------------------
@@ -136,7 +134,9 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
 // -----------------------------------------------------------------------------
 void ITKCastImage::filterInternal()
 {
-  Dream3DArraySwitchOutputComponentMacro(this->filter, m_CastingType, getSelectedCellArrayPath(), -4);
+  using CastingType = itk::ITK_IOCOMPONENT_CLASS::ITK_IOCOMPONENT_TYPE;
+  CastingType castingType = static_cast<CastingType>(m_CastingType + 1);
+  Dream3DArraySwitchOutputComponentMacro(this->filter, castingType, getSelectedCellArrayPath(), -4);
 }
 
 // -----------------------------------------------------------------------------

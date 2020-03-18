@@ -86,7 +86,7 @@ void ITKThresholdMaximumConnectedComponentsImage::readFilterParameters(AbstractF
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKThresholdMaximumConnectedComponentsImage::dataCheck()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKThresholdMaximumConnectedComponentsImage::dataCheckImpl()
 {
   clearErrorCode();
   clearWarningCode();
@@ -96,15 +96,15 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   this->CheckIntegerEntry<uint8_t, int>(m_InsideValue, "InsideValue", true);
   this->CheckIntegerEntry<uint8_t, int>(m_OutsideValue, "OutsideValue", true);
 
-  ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
+  ITKImageProcessingBase::dataCheckImpl<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ITKThresholdMaximumConnectedComponentsImage::dataCheckInternal()
+void ITKThresholdMaximumConnectedComponentsImage::dataCheck()
 {
-  Dream3DArraySwitchMacroOutputType(this->dataCheck, getSelectedCellArrayPath(), -4, uint8_t, 0);
+  Dream3DArraySwitchMacroOutputType(this->dataCheckImpl, getSelectedCellArrayPath(), -4, uint8_t, 0);
 }
 
 // -----------------------------------------------------------------------------

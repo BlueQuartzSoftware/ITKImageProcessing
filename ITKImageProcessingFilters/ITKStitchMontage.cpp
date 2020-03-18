@@ -340,14 +340,14 @@ void ITKStitchMontage::dataCheck()
         return;
       }
 
-      tilePtr = dca->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, testPath);
+      tilePtr = dca->getPrereqIDataArrayFromPath(this, testPath);
       if(getErrorCode() < 0)
       {
         //   dclistOut << "[NOT FOUND]    R=" << row << " C=" << col << "  " << testPath.serialize();
         return;
       }
 
-      tileGeom = dca->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, dcName);
+      tileGeom = dca->getPrereqGeometryFromDataContainer<ImageGeom>(this, dcName);
       if(getErrorCode() < 0)
       {
         // dclistOut << "[NOT FOUND]   R=" << row << " C=" << col << "  " << testPath.serialize();
@@ -442,18 +442,6 @@ void ITKStitchMontage::dataCheck()
   setWarningCondition(-11014, ss);
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void ITKStitchMontage::preflight()
-{
-  setInPreflight(true);
-  emit preflightAboutToExecute();
-  emit updateFilterParameters(this);
-  dataCheck();
-  emit preflightExecuted();
-  setInPreflight(false);
-}
 
 // -----------------------------------------------------------------------------
 //

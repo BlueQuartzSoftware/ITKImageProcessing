@@ -185,7 +185,7 @@ void ITKImportImageStack::dataCheck()
     setErrorCondition(-64501, ss);
   }
 
-  DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName(), DataContainerID);
+  DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer(this, getDataContainerName(), DataContainerID);
   if(getErrorCode() < 0 || nullptr == m.get())
   {
     return;
@@ -276,18 +276,6 @@ void ITKImportImageStack::dataCheck()
   cellAttrMat->addOrReplaceAttributeArray(resizedImageDataPtr);
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void ITKImportImageStack::preflight()
-{
-  setInPreflight(true);
-  emit preflightAboutToExecute();
-  emit updateFilterParameters(this);
-  dataCheck();
-  emit preflightExecuted();
-  setInPreflight(false);
-}
 
 // -----------------------------------------------------------------------------
 //

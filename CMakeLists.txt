@@ -49,24 +49,24 @@ find_package(ITK REQUIRED)
 # --------------------------------------------------------------------
 # ITK Include
 set(ADDITIONAL_ITK_MODULES
-    ITKIOImageBase
     ITKImageNoise
-    ITKIOBMP
-    ITKIOJPEG
-    ITKIONRRD
-    ITKIOTIFF
-    ITKIOMeta
-    ITKIOPNG
-    ITKIOIPL
-    ITKIONIFTI
-    ITKIOGIPL
-    ITKIOVTK
-    ITKIOStimulate
     ITKIOBioRad
+    ITKIOBMP
     ITKIOGE
+    ITKIOGIPL
+    ITKIOImageBase
+    ITKIOIPL
+    ITKIOJPEG
+    ITKIOMeta
     ITKIOMRC
-    ITKTestKernel
+    ITKIONIFTI
+    ITKIONRRD
+    ITKIOPNG
+    ITKIOStimulate
+    ITKIOTIFF
+    ITKIOVTK
     ITKSmoothing
+    ITKTestKernel
     )
 get_property(ITK_VERSION_MAJOR GLOBAL PROPERTY ITK_VERSION_MAJOR)
 if(ITK_VERSION_MAJOR EQUAL 4)
@@ -76,6 +76,7 @@ elseif(ITK_VERSION_MAJOR EQUAL 5)
   #message(STATUS "Using ITK v5")
   # Put ITK 5 Specific Modyles in here
   set( ADDITIONAL_ITK_MODULES ${ADDITIONAL_ITK_MODULES}
+          ITKImageFeature
           ITKTransform
           Montage 
           TotalVariation

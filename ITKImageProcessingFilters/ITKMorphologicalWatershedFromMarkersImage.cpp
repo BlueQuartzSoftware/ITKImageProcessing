@@ -86,7 +86,7 @@ void ITKMorphologicalWatershedFromMarkersImage::readFilterParameters(AbstractFil
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKMorphologicalWatershedFromMarkersImage::dataCheck()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKMorphologicalWatershedFromMarkersImage::dataCheckImpl()
 {
   // Check consistency of parameters
   clearErrorCode();
@@ -95,15 +95,15 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   supportedTypes << "uint8_t"
                  << "uint16_t";
   checkImageType(supportedTypes, getMarkerCellArrayPath());
-  ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
+  ITKImageProcessingBase::dataCheckImpl<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ITKMorphologicalWatershedFromMarkersImage::dataCheckInternal()
+void ITKMorphologicalWatershedFromMarkersImage::dataCheck()
 {
-  Dream3DArraySwitchMacroOutputType(this->dataCheck, getSelectedCellArrayPath(), -4, uint16_t, 0);
+  Dream3DArraySwitchMacroOutputType(this->dataCheckImpl, getSelectedCellArrayPath(), -4, uint16_t, 0);
 }
 
 // -----------------------------------------------------------------------------
@@ -131,7 +131,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
     cast->SetInput(toITK->GetOutput());
     cast->Update();
     // Convert back to dream3D array
-    DataContainer::Pointer container = getMarkerContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, dap.getDataContainerName());
+    DataContainer::Pointer container = getMarkerContainerArray()->createNonPrereqDataContainer(this, dap.getDataContainerName());
     if(!container.get())
     {
       setErrorCondition(-3, "No container.");

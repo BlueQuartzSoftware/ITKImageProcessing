@@ -11,13 +11,11 @@
 
 #include <memory>
 
-#include "ITKImageProcessingBase.h"
+#include <itkCastImageFilter.h>
 
 #include "SIMPLib/SIMPLib.h"
 
-#include <SIMPLib/FilterParameters/BooleanFilterParameter.h>
-#include <itkCastImageFilter.h>
-
+#include "ITKImageProcessing/ITKImageProcessingFilters/ITKImageProcessingBase.h"
 #include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
@@ -106,12 +104,12 @@ protected:
   /**
    * @brief dataCheckInternal overloads dataCheckInternal in ITKImageBase and calls templated dataCheck
    */
-  void dataCheckInternal() override;
+  void dataCheck() override;
 
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
    */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void dataCheck();
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void dataCheckImpl();
 
   /**
   * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
@@ -130,8 +128,7 @@ public:
   ITKCastImage& operator=(ITKCastImage&&) = delete;      // Move Assignment Not Implemented
 
   private:
-    int m_CastingType = {};
-
+    int m_CastingType = {0};
 };
 
 #ifdef __clang__

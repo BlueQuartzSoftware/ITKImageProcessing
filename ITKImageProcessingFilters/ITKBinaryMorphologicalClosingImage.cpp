@@ -106,7 +106,7 @@ void ITKBinaryMorphologicalClosingImage::readFilterParameters(AbstractFilterPara
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKBinaryMorphologicalClosingImage::dataCheck()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKBinaryMorphologicalClosingImage::dataCheckImpl()
 {
   clearErrorCode();
   clearWarningCode();
@@ -125,15 +125,15 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
                  << "int64_t";
   checkImageType(supportedTypes, getSelectedCellArrayPath());
 
-  ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
+  ITKImageProcessingBase::dataCheckImpl<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ITKBinaryMorphologicalClosingImage::dataCheckInternal()
+void ITKBinaryMorphologicalClosingImage::dataCheck()
 {
-  Dream3DArraySwitchMacro(this->dataCheck, getSelectedCellArrayPath(), -4);
+  Dream3DArraySwitchMacro(this->dataCheckImpl, getSelectedCellArrayPath(), -4);
 }
 
 // -----------------------------------------------------------------------------

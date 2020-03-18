@@ -206,7 +206,7 @@ void ITKImportMontage::readImageFile(const QString& filePath, QPointF coords, in
     getDataContainerArray()->addOrReplaceDataContainer(dc);
   }
 
-  DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, dcName);
+  DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer(this, dcName);
   if(getErrorCode() < 0)
   {
     return;
@@ -326,18 +326,6 @@ void ITKImportMontage::adjustOriginAndSpacing()
   m_MontageInformation = montageInfo;
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void ITKImportMontage::preflight()
-{
-  setInPreflight(true);
-  emit preflightAboutToExecute();
-  emit updateFilterParameters(this);
-  dataCheck();
-  emit preflightExecuted();
-  setInPreflight(false);
-}
 
 // -----------------------------------------------------------------------------
 //

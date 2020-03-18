@@ -95,7 +95,7 @@ void ITKDoubleThresholdImage::readFilterParameters(AbstractFilterParametersReade
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKDoubleThresholdImage::dataCheck()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKDoubleThresholdImage::dataCheckImpl()
 {
   clearErrorCode();
   clearWarningCode();
@@ -104,15 +104,15 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   this->CheckIntegerEntry<uint8_t, int>(m_InsideValue, "InsideValue", true);
   this->CheckIntegerEntry<uint8_t, int>(m_OutsideValue, "OutsideValue", true);
 
-  ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
+  ITKImageProcessingBase::dataCheckImpl<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ITKDoubleThresholdImage::dataCheckInternal()
+void ITKDoubleThresholdImage::dataCheck()
 {
-  Dream3DArraySwitchMacroOutputType(this->dataCheck, getSelectedCellArrayPath(), -4,uint8_t, 0);
+  Dream3DArraySwitchMacroOutputType(this->dataCheckImpl, getSelectedCellArrayPath(), -4,uint8_t, 0);
 }
 
 // -----------------------------------------------------------------------------

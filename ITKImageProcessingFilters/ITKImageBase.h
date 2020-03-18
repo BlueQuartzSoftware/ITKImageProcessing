@@ -35,7 +35,6 @@ class ITKImageProcessing_EXPORT ITKImageBase : public AbstractFilter
 #ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(ITKImageBase SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(ITKImageBase)
-  PYB11_FILTER_NEW_MACRO(ITKImageBase)
 #endif
 
 public:
@@ -45,8 +44,6 @@ public:
     using WeakPointer = std::weak_ptr<Self>;
     using ConstWeakPointer = std::weak_ptr<const Self>;
     static Pointer NullPointer();
-
-    static std::shared_ptr<ITKImageBase> New();
 
     /**
     * @brief Returns the name of the class for ITKImageBase
@@ -64,11 +61,6 @@ public:
    * @brief execute Reimplemented from @see AbstractFilter class
    */
   void execute() override;
-
-  /**
-  * @brief preflight Reimplemented from @see AbstractFilter class
-  */
-  void preflight() override;
 
   /**
    * @brief CastVec3ToITK Input type should be FloatVec3Type or IntVec3Type, Output
@@ -121,37 +113,10 @@ public:
     return outputVec3;
   }
 
-signals:
-  /**
-   * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
-   * be pushed from a user-facing control (such as a widget)
-   * @param filter Filter instance pointer
-   */
-  void updateFilterParameters(AbstractFilter* filter);
 
-  /**
-   * @brief parametersChanged Emitted when any Filter parameter is changed internally
-   */
-  void parametersChanged();
-
-  /**
-   * @brief preflightAboutToExecute Emitted just before calling dataCheck()
-   */
-  void preflightAboutToExecute();
-
-  /**
-   * @brief preflightExecuted Emitted just after calling dataCheck()
-   */
-  void preflightExecuted();
 
 protected:
   ITKImageBase();
-
-  /**
-   * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
-   */
-
-  virtual void dataCheckInternal();
 
   /**
    * @brief imageCheck checks if data array contains an image.
@@ -164,7 +129,7 @@ protected:
     ValueType* cellArray;
 
     std::vector<size_t> dims = ITKDream3DHelper::GetComponentsDimensions<PixelType>();
-    cellArrayPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<ValueType>, AbstractFilter>(
+    cellArrayPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<ValueType>>(
         this, array_path, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if(nullptr != cellArrayPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     {
@@ -175,7 +140,7 @@ protected:
       return;
     }
 
-    ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(array_path.getDataContainerName())->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
+    ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(array_path.getDataContainerName())->getPrereqGeometry<ImageGeom>(this);
     if(nullptr == image)
     {
       setErrorCondition(-1, "Array path does not contain image geometry.");
@@ -349,7 +314,7 @@ protected:
   */
   bool checkImageType(const QVector<QString>& types, const DataArrayPath& path)
   {
-    IDataArray::Pointer ptr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, path);
+    IDataArray::Pointer ptr = getDataContainerArray()->getPrereqIDataArrayFromPath(this, path);
     if(nullptr != ptr)
     {
       if(types.indexOf(ptr->getTypeAsString()) != -1)
@@ -367,7 +332,7 @@ protected:
   /**
   * @brief Applies the filter
   */
-  virtual void filterInternal();
+  virtual void filterInternal() = 0;
 
   /**
    * @brief Initializes all the private instance variables.
