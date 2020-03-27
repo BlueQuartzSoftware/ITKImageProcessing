@@ -30,13 +30,13 @@ class ITKImageProcessing_EXPORT ITKMaximumProjectionImage : public ITKImageProce
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ITKMaximumProjectionImage SUPERCLASS ITKImageProcessingBase)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ITKMaximumProjectionImage SUPERCLASS ITKImageProcessingBase)
   PYB11_SHARED_POINTERS(ITKMaximumProjectionImage)
   PYB11_FILTER_NEW_MACRO(ITKMaximumProjectionImage)
-  PYB11_FILTER_PARAMETER(double, ProjectionDimension)
   PYB11_PROPERTY(double ProjectionDimension READ getProjectionDimension WRITE setProjectionDimension)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
     using Self = ITKMaximumProjectionImage;

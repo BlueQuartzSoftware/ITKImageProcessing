@@ -55,12 +55,11 @@ class ITKImageProcessing_EXPORT ImportZenInfoMontage : public AbstractFilter
 {
   Q_OBJECT
 
-// clang-format off
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ImportZenInfoMontage SUPERCLASS AbstractFilter)
+  // clang-format off
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ImportZenInfoMontage SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(ImportZenInfoMontage)
   PYB11_FILTER_NEW_MACRO(ImportZenInfoMontage)
-
   PYB11_PROPERTY(QString MontageName READ getMontageName WRITE setMontageName)
   PYB11_PROPERTY(int32_t LengthUnit READ getLengthUnit WRITE setLengthUnit)
   PYB11_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
@@ -77,7 +76,8 @@ class ITKImageProcessing_EXPORT ImportZenInfoMontage : public AbstractFilter
   PYB11_PROPERTY(int32_t ColumnCount READ getColumnCount)
   PYB11_PROPERTY(IntVec2Type ColumnMontageLimits READ getColumnMontageLimits WRITE setColumnMontageLimits)
   PYB11_PROPERTY(IntVec2Type RowMontageLimits READ getRowMontageLimits WRITE setRowMontageLimits)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
   // clang-format on
 
   Q_DECLARE_PRIVATE(ImportZenInfoMontage)

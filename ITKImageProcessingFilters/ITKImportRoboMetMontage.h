@@ -54,9 +54,9 @@ class ITKImageProcessing_EXPORT ITKImportRoboMetMontage : public AbstractFilter
 {
   Q_OBJECT
 
-// clang-format off
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ITKImportRoboMetMontage SUPERCLASS AbstractFilter)
+  // clang-format off
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ITKImportRoboMetMontage SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(ITKImportRoboMetMontage)
   PYB11_FILTER_NEW_MACRO(ITKImportRoboMetMontage)
 
@@ -77,9 +77,12 @@ class ITKImageProcessing_EXPORT ITKImportRoboMetMontage : public AbstractFilter
   PYB11_PROPERTY(QString ImageFileExtension READ getImageFileExtension WRITE setImageFileExtension)
   PYB11_PROPERTY(IntVec2Type ColumnMontageLimits READ getColumnMontageLimits WRITE setColumnMontageLimits)
   PYB11_PROPERTY(IntVec2Type RowMontageLimits READ getRowMontageLimits WRITE setRowMontageLimits)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
   // clang-format on
+
   Q_DECLARE_PRIVATE(ITKImportRoboMetMontage)
+  
 public:
   using BoundsType = struct
   {

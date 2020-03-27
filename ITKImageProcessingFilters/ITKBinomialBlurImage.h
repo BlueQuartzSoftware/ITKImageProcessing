@@ -30,13 +30,13 @@ class ITKImageProcessing_EXPORT ITKBinomialBlurImage : public ITKImageProcessing
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ITKBinomialBlurImage SUPERCLASS ITKImageProcessingBase)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ITKBinomialBlurImage SUPERCLASS ITKImageProcessingBase)
   PYB11_SHARED_POINTERS(ITKBinomialBlurImage)
   PYB11_FILTER_NEW_MACRO(ITKBinomialBlurImage)
-  PYB11_FILTER_PARAMETER(double, Repetitions)
   PYB11_PROPERTY(double Repetitions READ getRepetitions WRITE setRepetitions)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
     using Self = ITKBinomialBlurImage;

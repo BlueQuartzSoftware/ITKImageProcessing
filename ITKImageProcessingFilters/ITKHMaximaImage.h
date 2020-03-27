@@ -30,13 +30,13 @@ class ITKImageProcessing_EXPORT ITKHMaximaImage : public ITKImageProcessingBase
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ITKHMaximaImage SUPERCLASS ITKImageProcessingBase)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ITKHMaximaImage SUPERCLASS ITKImageProcessingBase)
   PYB11_SHARED_POINTERS(ITKHMaximaImage)
   PYB11_FILTER_NEW_MACRO(ITKHMaximaImage)
-  PYB11_FILTER_PARAMETER(double, Height)
   PYB11_PROPERTY(double Height READ getHeight WRITE setHeight)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
     using Self = ITKHMaximaImage;

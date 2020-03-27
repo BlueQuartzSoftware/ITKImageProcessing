@@ -52,9 +52,9 @@ class ITKImportFijiMontagePrivate;
 class ITKImageProcessing_EXPORT ITKImportFijiMontage : public AbstractFilter
 {
   Q_OBJECT
-// clang-format off
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ITKImportFijiMontage SUPERCLASS ITKImportMontage)
+  // clang-format off
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ITKImportFijiMontage SUPERCLASS ITKImportMontage)
   PYB11_SHARED_POINTERS(ITKImportFijiMontage)
   PYB11_FILTER_NEW_MACRO(ITKImportFijiMontage)
 
@@ -72,8 +72,10 @@ class ITKImageProcessing_EXPORT ITKImportFijiMontage : public AbstractFilter
   PYB11_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing) 
   PYB11_PROPERTY(IntVec2Type ColumnMontageLimits READ getColumnMontageLimits WRITE setColumnMontageLimits)
   PYB11_PROPERTY(IntVec2Type RowMontageLimits READ getRowMontageLimits WRITE setRowMontageLimits)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
   // clang-format on
+
   Q_DECLARE_PRIVATE(ITKImportFijiMontage)
 
 public:

@@ -32,10 +32,11 @@ class ITKImageProcessing_EXPORT ITKImageBase : public AbstractFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ITKImageBase SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ITKImageBase SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(ITKImageBase)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
     using Self = ITKImageBase;

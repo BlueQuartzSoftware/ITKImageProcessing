@@ -33,19 +33,16 @@ class ITKImageProcessing_EXPORT ITKBinaryClosingByReconstructionImage : public I
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ITKBinaryClosingByReconstructionImage SUPERCLASS ITKImageProcessingBase)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ITKBinaryClosingByReconstructionImage SUPERCLASS ITKImageProcessingBase)
   PYB11_SHARED_POINTERS(ITKBinaryClosingByReconstructionImage)
   PYB11_FILTER_NEW_MACRO(ITKBinaryClosingByReconstructionImage)
-  PYB11_FILTER_PARAMETER(double, ForegroundValue)
-  PYB11_FILTER_PARAMETER(bool, FullyConnected)
-  PYB11_FILTER_PARAMETER(FloatVec3Type, KernelRadius)
-  PYB11_FILTER_PARAMETER(int, KernelType)
   PYB11_PROPERTY(double ForegroundValue READ getForegroundValue WRITE setForegroundValue)
   PYB11_PROPERTY(bool FullyConnected READ getFullyConnected WRITE setFullyConnected)
   PYB11_PROPERTY(FloatVec3Type KernelRadius READ getKernelRadius WRITE setKernelRadius)
   PYB11_PROPERTY(int KernelType READ getKernelType WRITE setKernelType)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
     using Self = ITKBinaryClosingByReconstructionImage;

@@ -31,19 +31,16 @@ class ITKImageProcessing_EXPORT ITKRegionalMinimaImage : public ITKImageProcessi
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ITKRegionalMinimaImage SUPERCLASS ITKImageProcessingBase)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ITKRegionalMinimaImage SUPERCLASS ITKImageProcessingBase)
   PYB11_SHARED_POINTERS(ITKRegionalMinimaImage)
   PYB11_FILTER_NEW_MACRO(ITKRegionalMinimaImage)
-  PYB11_FILTER_PARAMETER(double, BackgroundValue)
-  PYB11_FILTER_PARAMETER(double, ForegroundValue)
-  PYB11_FILTER_PARAMETER(bool, FullyConnected)
-  PYB11_FILTER_PARAMETER(bool, FlatIsMinima)
   PYB11_PROPERTY(double BackgroundValue READ getBackgroundValue WRITE setBackgroundValue)
   PYB11_PROPERTY(double ForegroundValue READ getForegroundValue WRITE setForegroundValue)
   PYB11_PROPERTY(bool FullyConnected READ getFullyConnected WRITE setFullyConnected)
   PYB11_PROPERTY(bool FlatIsMinima READ getFlatIsMinima WRITE setFlatIsMinima)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
     using Self = ITKRegionalMinimaImage;

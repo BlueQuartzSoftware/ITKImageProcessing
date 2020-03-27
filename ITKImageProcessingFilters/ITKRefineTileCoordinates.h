@@ -25,17 +25,10 @@ class ITKImageProcessing_EXPORT ITKRefineTileCoordinates : public AbstractFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ITKRefineTileCoordinates SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ITKRefineTileCoordinates SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(ITKRefineTileCoordinates)
   PYB11_FILTER_NEW_MACRO(ITKRefineTileCoordinates)
-  PYB11_FILTER_PARAMETER(IntVec3Type, MontageSize)
-  PYB11_FILTER_PARAMETER(QStringList, DataContainers)
-  PYB11_FILTER_PARAMETER(QString, CommonAttributeMatrixName)
-  PYB11_FILTER_PARAMETER(QString, CommonDataArrayName)
-  PYB11_FILTER_PARAMETER(int, ImportMode)
-  PYB11_FILTER_PARAMETER(float, TileOverlap)
-  PYB11_FILTER_PARAMETER(bool, ApplyRefinedOrigin)
   PYB11_PROPERTY(IntVec3Type MontageSize READ getMontageSize WRITE setMontageSize)
   PYB11_PROPERTY(QStringList DataContainers READ getDataContainers WRITE setDataContainers)
   PYB11_PROPERTY(QString CommonAttributeMatrixName READ getCommonAttributeMatrixName WRITE setCommonAttributeMatrixName)
@@ -43,7 +36,8 @@ class ITKImageProcessing_EXPORT ITKRefineTileCoordinates : public AbstractFilter
   PYB11_PROPERTY(int ImportMode READ getImportMode WRITE setImportMode)
   PYB11_PROPERTY(float TileOverlap READ getTileOverlap WRITE setTileOverlap)
   PYB11_PROPERTY(bool ApplyRefinedOrigin READ getApplyRefinedOrigin WRITE setApplyRefinedOrigin)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
     using Self = ITKRefineTileCoordinates;

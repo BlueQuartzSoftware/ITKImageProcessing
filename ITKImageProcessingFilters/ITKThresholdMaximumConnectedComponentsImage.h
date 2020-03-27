@@ -31,19 +31,16 @@ class ITKImageProcessing_EXPORT ITKThresholdMaximumConnectedComponentsImage : pu
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ITKThresholdMaximumConnectedComponentsImage SUPERCLASS ITKImageProcessingBase)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ITKThresholdMaximumConnectedComponentsImage SUPERCLASS ITKImageProcessingBase)
   PYB11_SHARED_POINTERS(ITKThresholdMaximumConnectedComponentsImage)
   PYB11_FILTER_NEW_MACRO(ITKThresholdMaximumConnectedComponentsImage)
-  PYB11_FILTER_PARAMETER(double, MinimumObjectSizeInPixels)
-  PYB11_FILTER_PARAMETER(double, UpperBoundary)
-  PYB11_FILTER_PARAMETER(int, InsideValue)
-  PYB11_FILTER_PARAMETER(int, OutsideValue)
   PYB11_PROPERTY(double MinimumObjectSizeInPixels READ getMinimumObjectSizeInPixels WRITE setMinimumObjectSizeInPixels)
   PYB11_PROPERTY(double UpperBoundary READ getUpperBoundary WRITE setUpperBoundary)
   PYB11_PROPERTY(int InsideValue READ getInsideValue WRITE setInsideValue)
   PYB11_PROPERTY(int OutsideValue READ getOutsideValue WRITE setOutsideValue)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
     using Self = ITKThresholdMaximumConnectedComponentsImage;

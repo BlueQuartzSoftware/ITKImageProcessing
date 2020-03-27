@@ -29,11 +29,12 @@ class ITKImageProcessing_EXPORT ITKAcosImage : public ITKImageProcessingBase
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ITKAcosImage SUPERCLASS ITKImageProcessingBase)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ITKAcosImage SUPERCLASS ITKImageProcessingBase)
   PYB11_SHARED_POINTERS(ITKAcosImage)
   PYB11_FILTER_NEW_MACRO(ITKAcosImage)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
     using Self = ITKAcosImage;

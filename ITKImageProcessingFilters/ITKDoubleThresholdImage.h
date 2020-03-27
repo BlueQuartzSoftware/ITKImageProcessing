@@ -32,17 +32,10 @@ class ITKImageProcessing_EXPORT ITKDoubleThresholdImage : public ITKImageProcess
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ITKDoubleThresholdImage SUPERCLASS ITKImageProcessingBase)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ITKDoubleThresholdImage SUPERCLASS ITKImageProcessingBase)
   PYB11_SHARED_POINTERS(ITKDoubleThresholdImage)
   PYB11_FILTER_NEW_MACRO(ITKDoubleThresholdImage)
-  PYB11_FILTER_PARAMETER(double, Threshold1)
-  PYB11_FILTER_PARAMETER(double, Threshold2)
-  PYB11_FILTER_PARAMETER(double, Threshold3)
-  PYB11_FILTER_PARAMETER(double, Threshold4)
-  PYB11_FILTER_PARAMETER(int, InsideValue)
-  PYB11_FILTER_PARAMETER(int, OutsideValue)
-  PYB11_FILTER_PARAMETER(bool, FullyConnected)
   PYB11_PROPERTY(double Threshold1 READ getThreshold1 WRITE setThreshold1)
   PYB11_PROPERTY(double Threshold2 READ getThreshold2 WRITE setThreshold2)
   PYB11_PROPERTY(double Threshold3 READ getThreshold3 WRITE setThreshold3)
@@ -50,7 +43,8 @@ class ITKImageProcessing_EXPORT ITKDoubleThresholdImage : public ITKImageProcess
   PYB11_PROPERTY(int InsideValue READ getInsideValue WRITE setInsideValue)
   PYB11_PROPERTY(int OutsideValue READ getOutsideValue WRITE setOutsideValue)
   PYB11_PROPERTY(bool FullyConnected READ getFullyConnected WRITE setFullyConnected)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
     using Self = ITKDoubleThresholdImage;

@@ -25,13 +25,13 @@ class ITKImageProcessing_EXPORT ITKCastImage : public ITKImageProcessingBase
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ITKCastImage SUPERCLASS ITKImageProcessingBase)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ITKCastImage SUPERCLASS ITKImageProcessingBase)
   PYB11_SHARED_POINTERS(ITKCastImage)
   PYB11_FILTER_NEW_MACRO(ITKCastImage)
-  PYB11_FILTER_PARAMETER(int, CastingType)
   PYB11_PROPERTY(int CastingType READ getCastingType WRITE setCastingType)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
     using Self = ITKCastImage;

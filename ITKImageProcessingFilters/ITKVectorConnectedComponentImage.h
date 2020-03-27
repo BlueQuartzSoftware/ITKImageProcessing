@@ -30,15 +30,14 @@ class ITKImageProcessing_EXPORT ITKVectorConnectedComponentImage : public ITKIma
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ITKVectorConnectedComponentImage SUPERCLASS ITKImageProcessingBase)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ITKVectorConnectedComponentImage SUPERCLASS ITKImageProcessingBase)
   PYB11_SHARED_POINTERS(ITKVectorConnectedComponentImage)
   PYB11_FILTER_NEW_MACRO(ITKVectorConnectedComponentImage)
-  PYB11_FILTER_PARAMETER(double, DistanceThreshold)
-  PYB11_FILTER_PARAMETER(bool, FullyConnected)
   PYB11_PROPERTY(double DistanceThreshold READ getDistanceThreshold WRITE setDistanceThreshold)
   PYB11_PROPERTY(bool FullyConnected READ getFullyConnected WRITE setFullyConnected)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
     using Self = ITKVectorConnectedComponentImage;

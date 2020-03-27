@@ -53,15 +53,14 @@ class ITKImageProcessing_EXPORT ITKVectorRescaleIntensityImage : public ITKImage
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ITKVectorRescaleIntensityImage SUPERCLASS ITKImageProcessingBase)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ITKVectorRescaleIntensityImage SUPERCLASS ITKImageProcessingBase)
   PYB11_SHARED_POINTERS(ITKVectorRescaleIntensityImage)
   PYB11_FILTER_NEW_MACRO(ITKVectorRescaleIntensityImage)
-  PYB11_FILTER_PARAMETER(double, OutputMaximumMagnitude)
-  PYB11_FILTER_PARAMETER(int, OutputType)
   PYB11_PROPERTY(double OutputMaximumMagnitude READ getOutputMaximumMagnitude WRITE setOutputMaximumMagnitude)
   PYB11_PROPERTY(int OutputType READ getOutputType WRITE setOutputType)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
     using Self = ITKVectorRescaleIntensityImage;

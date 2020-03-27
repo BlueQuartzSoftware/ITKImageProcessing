@@ -30,15 +30,14 @@ class ITKImageProcessing_EXPORT ITKValuedRegionalMaximaImage : public ITKImagePr
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ITKValuedRegionalMaximaImage SUPERCLASS ITKImageProcessingBase)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ITKValuedRegionalMaximaImage SUPERCLASS ITKImageProcessingBase)
   PYB11_SHARED_POINTERS(ITKValuedRegionalMaximaImage)
   PYB11_FILTER_NEW_MACRO(ITKValuedRegionalMaximaImage)
-  PYB11_FILTER_PARAMETER(bool, FullyConnected)
-  PYB11_FILTER_PARAMETER(bool, Flat)
   PYB11_PROPERTY(bool FullyConnected READ getFullyConnected WRITE setFullyConnected)
   PYB11_PROPERTY(bool Flat READ getFlat WRITE setFlat)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
     using Self = ITKValuedRegionalMaximaImage;

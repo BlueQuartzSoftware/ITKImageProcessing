@@ -30,15 +30,14 @@ class ITKImageProcessing_EXPORT ITKMaskImage : public ITKImageProcessingBase
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ITKMaskImage SUPERCLASS ITKImageProcessingBase)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ITKMaskImage SUPERCLASS ITKImageProcessingBase)
   PYB11_SHARED_POINTERS(ITKMaskImage)
   PYB11_FILTER_NEW_MACRO(ITKMaskImage)
-  PYB11_FILTER_PARAMETER(double, OutsideValue)
-  PYB11_FILTER_PARAMETER(DataArrayPath, MaskCellArrayPath)
   PYB11_PROPERTY(double OutsideValue READ getOutsideValue WRITE setOutsideValue)
   PYB11_PROPERTY(DataArrayPath MaskCellArrayPath READ getMaskCellArrayPath WRITE setMaskCellArrayPath)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
     using Self = ITKMaskImage;

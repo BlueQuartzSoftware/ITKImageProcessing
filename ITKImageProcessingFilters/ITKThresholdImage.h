@@ -30,17 +30,15 @@ class ITKImageProcessing_EXPORT ITKThresholdImage : public ITKImageProcessingBas
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ITKThresholdImage SUPERCLASS ITKImageProcessingBase)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ITKThresholdImage SUPERCLASS ITKImageProcessingBase)
   PYB11_SHARED_POINTERS(ITKThresholdImage)
   PYB11_FILTER_NEW_MACRO(ITKThresholdImage)
-  PYB11_FILTER_PARAMETER(double, Lower)
-  PYB11_FILTER_PARAMETER(double, Upper)
-  PYB11_FILTER_PARAMETER(double, OutsideValue)
   PYB11_PROPERTY(double Lower READ getLower WRITE setLower)
   PYB11_PROPERTY(double Upper READ getUpper WRITE setUpper)
   PYB11_PROPERTY(double OutsideValue READ getOutsideValue WRITE setOutsideValue)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
     using Self = ITKThresholdImage;

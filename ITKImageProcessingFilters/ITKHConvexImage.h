@@ -31,15 +31,14 @@ class ITKImageProcessing_EXPORT ITKHConvexImage : public ITKImageProcessingBase
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ITKHConvexImage SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ITKHConvexImage SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(ITKHConvexImage)
   PYB11_FILTER_NEW_MACRO(ITKHConvexImage)
-  PYB11_FILTER_PARAMETER(double, Height)
-  PYB11_FILTER_PARAMETER(bool, FullyConnected)
   PYB11_PROPERTY(double Height READ getHeight WRITE setHeight)
   PYB11_PROPERTY(bool FullyConnected READ getFullyConnected WRITE setFullyConnected)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
     using Self = ITKHConvexImage;

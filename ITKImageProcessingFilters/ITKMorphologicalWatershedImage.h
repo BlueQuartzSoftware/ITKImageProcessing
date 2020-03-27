@@ -31,17 +31,15 @@ class ITKImageProcessing_EXPORT ITKMorphologicalWatershedImage : public ITKImage
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ITKMorphologicalWatershedImage SUPERCLASS ITKImageProcessingBase)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ITKMorphologicalWatershedImage SUPERCLASS ITKImageProcessingBase)
   PYB11_SHARED_POINTERS(ITKMorphologicalWatershedImage)
   PYB11_FILTER_NEW_MACRO(ITKMorphologicalWatershedImage)
-  PYB11_FILTER_PARAMETER(double, Level)
-  PYB11_FILTER_PARAMETER(bool, MarkWatershedLine)
-  PYB11_FILTER_PARAMETER(bool, FullyConnected)
   PYB11_PROPERTY(double Level READ getLevel WRITE setLevel)
   PYB11_PROPERTY(bool MarkWatershedLine READ getMarkWatershedLine WRITE setMarkWatershedLine)
   PYB11_PROPERTY(bool FullyConnected READ getFullyConnected WRITE setFullyConnected)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
     using Self = ITKMorphologicalWatershedImage;

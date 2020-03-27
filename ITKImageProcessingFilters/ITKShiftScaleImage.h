@@ -30,15 +30,14 @@ class ITKImageProcessing_EXPORT ITKShiftScaleImage : public ITKImageProcessingBa
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ITKShiftScaleImage SUPERCLASS ITKImageProcessingBase)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ITKShiftScaleImage SUPERCLASS ITKImageProcessingBase)
   PYB11_SHARED_POINTERS(ITKShiftScaleImage)
   PYB11_FILTER_NEW_MACRO(ITKShiftScaleImage)
-  PYB11_FILTER_PARAMETER(double, Shift)
-  PYB11_FILTER_PARAMETER(double, Scale)
   PYB11_PROPERTY(double Shift READ getShift WRITE setShift)
   PYB11_PROPERTY(double Scale READ getScale WRITE setScale)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
     using Self = ITKShiftScaleImage;

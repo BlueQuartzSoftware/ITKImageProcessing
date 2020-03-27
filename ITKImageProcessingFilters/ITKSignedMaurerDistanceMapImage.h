@@ -31,19 +31,16 @@ class ITKImageProcessing_EXPORT ITKSignedMaurerDistanceMapImage : public ITKImag
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ITKSignedMaurerDistanceMapImage SUPERCLASS ITKImageProcessingBase)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ITKSignedMaurerDistanceMapImage SUPERCLASS ITKImageProcessingBase)
   PYB11_SHARED_POINTERS(ITKSignedMaurerDistanceMapImage)
   PYB11_FILTER_NEW_MACRO(ITKSignedMaurerDistanceMapImage)
-  PYB11_FILTER_PARAMETER(bool, InsideIsPositive)
-  PYB11_FILTER_PARAMETER(bool, SquaredDistance)
-  PYB11_FILTER_PARAMETER(bool, UseImageSpacing)
-  PYB11_FILTER_PARAMETER(double, BackgroundValue)
   PYB11_PROPERTY(bool InsideIsPositive READ getInsideIsPositive WRITE setInsideIsPositive)
   PYB11_PROPERTY(bool SquaredDistance READ getSquaredDistance WRITE setSquaredDistance)
   PYB11_PROPERTY(bool UseImageSpacing READ getUseImageSpacing WRITE setUseImageSpacing)
   PYB11_PROPERTY(double BackgroundValue READ getBackgroundValue WRITE setBackgroundValue)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
     using Self = ITKSignedMaurerDistanceMapImage;

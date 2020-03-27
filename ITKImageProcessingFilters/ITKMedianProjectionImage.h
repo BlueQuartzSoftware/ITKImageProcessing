@@ -30,13 +30,13 @@ class ITKImageProcessing_EXPORT ITKMedianProjectionImage : public ITKImageProces
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ITKMedianProjectionImage SUPERCLASS ITKImageProcessingBase)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ITKMedianProjectionImage SUPERCLASS ITKImageProcessingBase)
   PYB11_SHARED_POINTERS(ITKMedianProjectionImage)
   PYB11_FILTER_NEW_MACRO(ITKMedianProjectionImage)
-  PYB11_FILTER_PARAMETER(double, ProjectionDimension)
   PYB11_PROPERTY(double ProjectionDimension READ getProjectionDimension WRITE setProjectionDimension)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
     using Self = ITKMedianProjectionImage;

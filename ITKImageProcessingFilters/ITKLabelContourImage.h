@@ -31,15 +31,14 @@ class ITKImageProcessing_EXPORT ITKLabelContourImage : public ITKImageProcessing
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ITKLabelContourImage SUPERCLASS ITKImageProcessingBase)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ITKLabelContourImage SUPERCLASS ITKImageProcessingBase)
   PYB11_SHARED_POINTERS(ITKLabelContourImage)
   PYB11_FILTER_NEW_MACRO(ITKLabelContourImage)
-  PYB11_FILTER_PARAMETER(bool, FullyConnected)
-  PYB11_FILTER_PARAMETER(double, BackgroundValue)
   PYB11_PROPERTY(bool FullyConnected READ getFullyConnected WRITE setFullyConnected)
   PYB11_PROPERTY(double BackgroundValue READ getBackgroundValue WRITE setBackgroundValue)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
     using Self = ITKLabelContourImage;

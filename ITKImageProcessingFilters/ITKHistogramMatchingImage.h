@@ -29,19 +29,16 @@ class ITKImageProcessing_EXPORT ITKHistogramMatchingImage : public ITKImageProce
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ITKHistogramMatchingImage SUPERCLASS ITKImageProcessingBase)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ITKHistogramMatchingImage SUPERCLASS ITKImageProcessingBase)
   PYB11_SHARED_POINTERS(ITKHistogramMatchingImage)
   PYB11_FILTER_NEW_MACRO(ITKHistogramMatchingImage)
-  PYB11_FILTER_PARAMETER(DataArrayPath, ReferenceCellArrayPath)
-  PYB11_FILTER_PARAMETER(double, NumberOfHistogramLevels)
-  PYB11_FILTER_PARAMETER(double, NumberOfMatchPoints)
-  PYB11_FILTER_PARAMETER(bool, ThresholdAtMeanIntensity)
   PYB11_PROPERTY(DataArrayPath ReferenceCellArrayPath READ getReferenceCellArrayPath WRITE setReferenceCellArrayPath)
   PYB11_PROPERTY(double NumberOfHistogramLevels READ getNumberOfHistogramLevels WRITE setNumberOfHistogramLevels)
   PYB11_PROPERTY(double NumberOfMatchPoints READ getNumberOfMatchPoints WRITE setNumberOfMatchPoints)
   PYB11_PROPERTY(bool ThresholdAtMeanIntensity READ getThresholdAtMeanIntensity WRITE setThresholdAtMeanIntensity)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
     using Self = ITKHistogramMatchingImage;

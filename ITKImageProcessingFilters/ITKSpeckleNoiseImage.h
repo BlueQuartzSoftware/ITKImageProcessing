@@ -30,15 +30,14 @@ class ITKImageProcessing_EXPORT ITKSpeckleNoiseImage : public ITKImageProcessing
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ITKSpeckleNoiseImage SUPERCLASS ITKImageProcessingBase)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ITKSpeckleNoiseImage SUPERCLASS ITKImageProcessingBase)
   PYB11_SHARED_POINTERS(ITKSpeckleNoiseImage)
   PYB11_FILTER_NEW_MACRO(ITKSpeckleNoiseImage)
-  PYB11_FILTER_PARAMETER(double, StandardDeviation)
-  PYB11_FILTER_PARAMETER(double, Seed)
   PYB11_PROPERTY(double StandardDeviation READ getStandardDeviation WRITE setStandardDeviation)
   PYB11_PROPERTY(double Seed READ getSeed WRITE setSeed)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
     using Self = ITKSpeckleNoiseImage;

@@ -30,17 +30,15 @@ class ITKImageProcessing_EXPORT ITKBilateralImage : public ITKImageProcessingBas
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ITKBilateralImage SUPERCLASS ITKImageProcessingBase)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ITKBilateralImage SUPERCLASS ITKImageProcessingBase)
   PYB11_SHARED_POINTERS(ITKBilateralImage)
   PYB11_FILTER_NEW_MACRO(ITKBilateralImage)
-  PYB11_FILTER_PARAMETER(double, DomainSigma)
-  PYB11_FILTER_PARAMETER(double, RangeSigma)
-  PYB11_FILTER_PARAMETER(double, NumberOfRangeGaussianSamples)
   PYB11_PROPERTY(double DomainSigma READ getDomainSigma WRITE setDomainSigma)
   PYB11_PROPERTY(double RangeSigma READ getRangeSigma WRITE setRangeSigma)
   PYB11_PROPERTY(double NumberOfRangeGaussianSamples READ getNumberOfRangeGaussianSamples WRITE setNumberOfRangeGaussianSamples)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
     using Self = ITKBilateralImage;

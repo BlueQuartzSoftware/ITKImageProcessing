@@ -30,13 +30,13 @@ class ITKImageProcessing_EXPORT ITKLaplacianSharpeningImage : public ITKImagePro
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ITKLaplacianSharpeningImage SUPERCLASS ITKImageProcessingBase)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ITKLaplacianSharpeningImage SUPERCLASS ITKImageProcessingBase)
   PYB11_SHARED_POINTERS(ITKLaplacianSharpeningImage)
   PYB11_FILTER_NEW_MACRO(ITKLaplacianSharpeningImage)
-  PYB11_FILTER_PARAMETER(bool, UseImageSpacing)
   PYB11_PROPERTY(bool UseImageSpacing READ getUseImageSpacing WRITE setUseImageSpacing)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
     using Self = ITKLaplacianSharpeningImage;

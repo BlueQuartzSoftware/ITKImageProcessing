@@ -30,7 +30,7 @@
 class ITKImageProcessing_EXPORT ITKBinaryMinMaxCurvatureFlowImage : public ITKImageProcessingBase
 {
   Q_OBJECT
-  // PYB11_CREATE_BINDINGS(ITKBinaryMinMaxCurvatureFlowImage SUPERCLASS ITKImageProcessingBase)
+  // PYB11_BEGIN_BINDINGS(ITKBinaryMinMaxCurvatureFlowImage SUPERCLASS ITKImageProcessingBase)
   // PYB11_PROPERTY(double TimeStep READ getTimeStep WRITE setTimeStep)
   // PYB11_PROPERTY(double NumberOfIterations READ getNumberOfIterations WRITE setNumberOfIterations)
   // PYB11_PROPERTY(int StencilRadius READ getStencilRadius WRITE setStencilRadius)

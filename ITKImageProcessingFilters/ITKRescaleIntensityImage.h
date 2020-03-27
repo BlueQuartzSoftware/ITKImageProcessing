@@ -30,17 +30,15 @@ class ITKImageProcessing_EXPORT ITKRescaleIntensityImage : public ITKImageProces
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ITKRescaleIntensityImage SUPERCLASS ITKImageProcessingBase)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ITKRescaleIntensityImage SUPERCLASS ITKImageProcessingBase)
   PYB11_SHARED_POINTERS(ITKRescaleIntensityImage)
   PYB11_FILTER_NEW_MACRO(ITKRescaleIntensityImage)
-  PYB11_FILTER_PARAMETER(double, OutputMinimum)
-  PYB11_FILTER_PARAMETER(double, OutputMaximum)
-  PYB11_FILTER_PARAMETER(int, OutputType)
   PYB11_PROPERTY(double OutputMinimum READ getOutputMinimum WRITE setOutputMinimum)
   PYB11_PROPERTY(double OutputMaximum READ getOutputMaximum WRITE setOutputMaximum)
   PYB11_PROPERTY(int OutputType READ getOutputType WRITE setOutputType)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
     using Self = ITKRescaleIntensityImage;

@@ -29,19 +29,10 @@ class ITKImageProcessing_EXPORT ITKMultiScaleHessianBasedObjectnessImage : publi
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ITKMultiScaleHessianBasedObjectnessImage SUPERCLASS ITKImageProcessingBase)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ITKMultiScaleHessianBasedObjectnessImage SUPERCLASS ITKImageProcessingBase)
   PYB11_SHARED_POINTERS(ITKMultiScaleHessianBasedObjectnessImage)
   PYB11_FILTER_NEW_MACRO(ITKMultiScaleHessianBasedObjectnessImage)
-  PYB11_FILTER_PARAMETER(int, ObjectDimension)
-  PYB11_FILTER_PARAMETER(double, Alpha)
-  PYB11_FILTER_PARAMETER(double, Beta)
-  PYB11_FILTER_PARAMETER(double, Gamma)
-  PYB11_FILTER_PARAMETER(bool, ScaleObjectnessMeasure)
-  PYB11_FILTER_PARAMETER(bool, BrightObject)
-  PYB11_FILTER_PARAMETER(double, SigmaMinimum)
-  PYB11_FILTER_PARAMETER(double, SigmaMaximum)
-  PYB11_FILTER_PARAMETER(double, NumberOfSigmaSteps)
   PYB11_PROPERTY(int ObjectDimension READ getObjectDimension WRITE setObjectDimension)
   PYB11_PROPERTY(double Alpha READ getAlpha WRITE setAlpha)
   PYB11_PROPERTY(double Beta READ getBeta WRITE setBeta)
@@ -51,7 +42,8 @@ class ITKImageProcessing_EXPORT ITKMultiScaleHessianBasedObjectnessImage : publi
   PYB11_PROPERTY(double SigmaMinimum READ getSigmaMinimum WRITE setSigmaMinimum)
   PYB11_PROPERTY(double SigmaMaximum READ getSigmaMaximum WRITE setSigmaMaximum)
   PYB11_PROPERTY(double NumberOfSigmaSteps READ getNumberOfSigmaSteps WRITE setNumberOfSigmaSteps)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
     using Self = ITKMultiScaleHessianBasedObjectnessImage;

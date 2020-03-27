@@ -31,19 +31,16 @@ class ITKImageProcessing_EXPORT ITKGradientAnisotropicDiffusionImage : public IT
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ITKGradientAnisotropicDiffusionImage SUPERCLASS ITKImageProcessingBase)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ITKGradientAnisotropicDiffusionImage SUPERCLASS ITKImageProcessingBase)
   PYB11_SHARED_POINTERS(ITKGradientAnisotropicDiffusionImage)
   PYB11_FILTER_NEW_MACRO(ITKGradientAnisotropicDiffusionImage)
-  PYB11_FILTER_PARAMETER(double, TimeStep)
-  PYB11_FILTER_PARAMETER(double, ConductanceParameter)
-  PYB11_FILTER_PARAMETER(double, ConductanceScalingUpdateInterval)
-  PYB11_FILTER_PARAMETER(double, NumberOfIterations)
   PYB11_PROPERTY(double TimeStep READ getTimeStep WRITE setTimeStep)
   PYB11_PROPERTY(double ConductanceParameter READ getConductanceParameter WRITE setConductanceParameter)
   PYB11_PROPERTY(double ConductanceScalingUpdateInterval READ getConductanceScalingUpdateInterval WRITE setConductanceScalingUpdateInterval)
   PYB11_PROPERTY(double NumberOfIterations READ getNumberOfIterations WRITE setNumberOfIterations)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
     using Self = ITKGradientAnisotropicDiffusionImage;

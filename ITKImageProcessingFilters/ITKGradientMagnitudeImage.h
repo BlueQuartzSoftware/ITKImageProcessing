@@ -30,13 +30,13 @@ class ITKImageProcessing_EXPORT ITKGradientMagnitudeImage : public ITKImageProce
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ITKGradientMagnitudeImage SUPERCLASS ITKImageProcessingBase)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ITKGradientMagnitudeImage SUPERCLASS ITKImageProcessingBase)
   PYB11_SHARED_POINTERS(ITKGradientMagnitudeImage)
   PYB11_FILTER_NEW_MACRO(ITKGradientMagnitudeImage)
-  PYB11_FILTER_PARAMETER(bool, UseImageSpacing)
   PYB11_PROPERTY(bool UseImageSpacing READ getUseImageSpacing WRITE setUseImageSpacing)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
     using Self = ITKGradientMagnitudeImage;

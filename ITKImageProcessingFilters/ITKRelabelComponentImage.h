@@ -32,23 +32,18 @@ class ITKImageProcessing_EXPORT ITKRelabelComponentImage : public ITKImageProces
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ITKRelabelComponentImage SUPERCLASS ITKImageProcessingBase)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ITKRelabelComponentImage SUPERCLASS ITKImageProcessingBase)
   PYB11_SHARED_POINTERS(ITKRelabelComponentImage)
   PYB11_FILTER_NEW_MACRO(ITKRelabelComponentImage)
-  PYB11_FILTER_PARAMETER(double, MinimumObjectSize)
-  PYB11_FILTER_PARAMETER(bool, SortByObjectSize)
-  PYB11_FILTER_PARAMETER(double, NumberOfObjects)
-  PYB11_FILTER_PARAMETER(double, OriginalNumberOfObjects)
-  PYB11_FILTER_PARAMETER(FloatVec3Type, SizeOfObjectsInPhysicalUnits)
-  PYB11_FILTER_PARAMETER(FloatVec3Type, SizeOfObjectsInPixels)
   PYB11_PROPERTY(double MinimumObjectSize READ getMinimumObjectSize WRITE setMinimumObjectSize)
   PYB11_PROPERTY(bool SortByObjectSize READ getSortByObjectSize WRITE setSortByObjectSize)
   PYB11_PROPERTY(double NumberOfObjects READ getNumberOfObjects WRITE setNumberOfObjects)
   PYB11_PROPERTY(double OriginalNumberOfObjects READ getOriginalNumberOfObjects WRITE setOriginalNumberOfObjects)
   PYB11_PROPERTY(FloatVec3Type SizeOfObjectsInPhysicalUnits READ getSizeOfObjectsInPhysicalUnits WRITE setSizeOfObjectsInPhysicalUnits)
   PYB11_PROPERTY(FloatVec3Type SizeOfObjectsInPixels READ getSizeOfObjectsInPixels WRITE setSizeOfObjectsInPixels)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
     using Self = ITKRelabelComponentImage;

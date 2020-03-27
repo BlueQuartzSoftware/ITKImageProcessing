@@ -57,26 +57,11 @@ class ITKImageProcessing_EXPORT IlluminationCorrection : public AbstractFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(IlluminationCorrection SUPERCLASS AbstractFilter)
-  PYB11_PROPERTY(MontageSelection MontageSelection READ getMontageSelection WRITE setMontageSelection)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(IlluminationCorrection SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(IlluminationCorrection)
   PYB11_FILTER_NEW_MACRO(IlluminationCorrection)
-  PYB11_FILTER_PARAMETER(QStringList, DataContainers)
-  PYB11_FILTER_PARAMETER(QString, CellAttributeMatrixName)
-  PYB11_FILTER_PARAMETER(QString, ImageDataArrayName)
-  PYB11_FILTER_PARAMETER(QString, CorrectedImageDataArrayName)
-  PYB11_FILTER_PARAMETER(bool, ExportCorrectedImages)
-  PYB11_FILTER_PARAMETER(QString, OutputPath)
-  PYB11_FILTER_PARAMETER(QString, FileExtension)
-  PYB11_FILTER_PARAMETER(DataArrayPath, BackgroundDataContainerPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, BackgroundCellAttributeMatrixPath)
-  PYB11_FILTER_PARAMETER(DataArrayPath, BackgroundImageArrayPath)
-  PYB11_FILTER_PARAMETER(uint32_t, LowThreshold)
-  PYB11_FILTER_PARAMETER(uint32_t, HighThreshold)
-  PYB11_FILTER_PARAMETER(bool, ApplyCorrection)
-  PYB11_FILTER_PARAMETER(bool, ApplyMedianFilter)
-  PYB11_FILTER_PARAMETER(FloatVec3Type, MedianRadius)
+  PYB11_PROPERTY(MontageSelection MontageSelection READ getMontageSelection WRITE setMontageSelection)
   PYB11_PROPERTY(QStringList DataContainers READ getDataContainers WRITE setDataContainers)
   PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
   PYB11_PROPERTY(QString ImageDataArrayName READ getImageDataArrayName WRITE setImageDataArrayName)
@@ -84,17 +69,16 @@ class ITKImageProcessing_EXPORT IlluminationCorrection : public AbstractFilter
   PYB11_PROPERTY(bool ExportCorrectedImages READ getExportCorrectedImages WRITE setExportCorrectedImages)
   PYB11_PROPERTY(QString OutputPath READ getOutputPath WRITE setOutputPath)
   PYB11_PROPERTY(QString FileExtension READ getFileExtension WRITE setFileExtension)
-
   PYB11_PROPERTY(DataArrayPath BackgroundDataContainerPath READ getBackgroundDataContainerPath WRITE setBackgroundDataContainerPath)
   PYB11_PROPERTY(DataArrayPath BackgroundCellAttributeMatrixPath READ getBackgroundCellAttributeMatrixPath WRITE setBackgroundCellAttributeMatrixPath)
   PYB11_PROPERTY(DataArrayPath BackgroundImageArrayPath READ getBackgroundImageArrayPath WRITE setBackgroundImageArrayPath)
-
   PYB11_PROPERTY(uint32_t LowThreshold READ getLowThreshold WRITE setLowThreshold)
   PYB11_PROPERTY(uint32_t HighThreshold READ getHighThreshold WRITE setHighThreshold)
   PYB11_PROPERTY(bool ApplyCorrection READ getApplyCorrection WRITE setApplyCorrection)
   PYB11_PROPERTY(bool ApplyMedianFilter READ getApplyMedianFilter WRITE setApplyMedianFilter)
   PYB11_PROPERTY(FloatVec3Type MedianRadius READ getMedianRadius WRITE setMedianRadius)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
   using Self = IlluminationCorrection;

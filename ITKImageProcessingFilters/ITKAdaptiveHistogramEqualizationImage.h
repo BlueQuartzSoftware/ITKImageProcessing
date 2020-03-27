@@ -32,17 +32,15 @@ class ITKImageProcessing_EXPORT ITKAdaptiveHistogramEqualizationImage : public I
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ITKAdaptiveHistogramEqualizationImage SUPERCLASS ITKImageProcessingBase)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ITKAdaptiveHistogramEqualizationImage SUPERCLASS ITKImageProcessingBase)
   PYB11_SHARED_POINTERS(ITKAdaptiveHistogramEqualizationImage)
   PYB11_FILTER_NEW_MACRO(ITKAdaptiveHistogramEqualizationImage)
-  PYB11_FILTER_PARAMETER(FloatVec3Type, Radius)
-  PYB11_FILTER_PARAMETER(float, Alpha)
-  PYB11_FILTER_PARAMETER(float, Beta)
   PYB11_PROPERTY(FloatVec3Type Radius READ getRadius WRITE setRadius)
   PYB11_PROPERTY(float Alpha READ getAlpha WRITE setAlpha)
   PYB11_PROPERTY(float Beta READ getBeta WRITE setBeta)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
     using Self = ITKAdaptiveHistogramEqualizationImage;

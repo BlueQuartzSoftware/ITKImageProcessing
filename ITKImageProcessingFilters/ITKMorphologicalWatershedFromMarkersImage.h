@@ -34,17 +34,15 @@ class ITKImageProcessing_EXPORT ITKMorphologicalWatershedFromMarkersImage : publ
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ITKMorphologicalWatershedFromMarkersImage SUPERCLASS ITKImageProcessingBase)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ITKMorphologicalWatershedFromMarkersImage SUPERCLASS ITKImageProcessingBase)
   PYB11_SHARED_POINTERS(ITKMorphologicalWatershedFromMarkersImage)
   PYB11_FILTER_NEW_MACRO(ITKMorphologicalWatershedFromMarkersImage)
-  PYB11_FILTER_PARAMETER(bool, MarkWatershedLine)
-  PYB11_FILTER_PARAMETER(bool, FullyConnected)
-  PYB11_FILTER_PARAMETER(DataArrayPath, MarkerCellArrayPath)
   PYB11_PROPERTY(bool MarkWatershedLine READ getMarkWatershedLine WRITE setMarkWatershedLine)
   PYB11_PROPERTY(bool FullyConnected READ getFullyConnected WRITE setFullyConnected)
   PYB11_PROPERTY(DataArrayPath MarkerCellArrayPath READ getMarkerCellArrayPath WRITE setMarkerCellArrayPath)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
     using Self = ITKMorphologicalWatershedFromMarkersImage;

@@ -30,15 +30,14 @@ class ITKImageProcessing_EXPORT ITKIsoContourDistanceImage : public ITKImageProc
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ITKIsoContourDistanceImage SUPERCLASS ITKImageProcessingBase)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ITKIsoContourDistanceImage SUPERCLASS ITKImageProcessingBase)
   PYB11_SHARED_POINTERS(ITKIsoContourDistanceImage)
   PYB11_FILTER_NEW_MACRO(ITKIsoContourDistanceImage)
-  PYB11_FILTER_PARAMETER(double, LevelSetValue)
-  PYB11_FILTER_PARAMETER(double, FarValue)
   PYB11_PROPERTY(double LevelSetValue READ getLevelSetValue WRITE setLevelSetValue)
   PYB11_PROPERTY(double FarValue READ getFarValue WRITE setFarValue)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
     using Self = ITKIsoContourDistanceImage;

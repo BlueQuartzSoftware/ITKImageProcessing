@@ -31,17 +31,15 @@ class ITKImageProcessing_EXPORT ITKFFTNormalizedCorrelationImage : public ITKIma
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ITKFFTNormalizedCorrelationImage SUPERCLASS ITKImageProcessingBase)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ITKFFTNormalizedCorrelationImage SUPERCLASS ITKImageProcessingBase)
   PYB11_SHARED_POINTERS(ITKFFTNormalizedCorrelationImage)
   PYB11_FILTER_NEW_MACRO(ITKFFTNormalizedCorrelationImage)
-  PYB11_FILTER_PARAMETER(DataArrayPath, MovingCellArrayPath)
-  PYB11_FILTER_PARAMETER(double, RequiredNumberOfOverlappingPixels)
-  PYB11_FILTER_PARAMETER(double, RequiredFractionOfOverlappingPixels)
   PYB11_PROPERTY(DataArrayPath MovingCellArrayPath READ getMovingCellArrayPath WRITE setMovingCellArrayPath)
   PYB11_PROPERTY(double RequiredNumberOfOverlappingPixels READ getRequiredNumberOfOverlappingPixels WRITE setRequiredNumberOfOverlappingPixels)
   PYB11_PROPERTY(double RequiredFractionOfOverlappingPixels READ getRequiredFractionOfOverlappingPixels WRITE setRequiredFractionOfOverlappingPixels)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
     using Self = ITKFFTNormalizedCorrelationImage;

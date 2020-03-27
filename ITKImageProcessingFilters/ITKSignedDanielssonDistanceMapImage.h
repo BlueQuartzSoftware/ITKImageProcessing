@@ -30,17 +30,15 @@ class ITKImageProcessing_EXPORT ITKSignedDanielssonDistanceMapImage : public ITK
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ITKSignedDanielssonDistanceMapImage SUPERCLASS ITKImageProcessingBase)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ITKSignedDanielssonDistanceMapImage SUPERCLASS ITKImageProcessingBase)
   PYB11_SHARED_POINTERS(ITKSignedDanielssonDistanceMapImage)
   PYB11_FILTER_NEW_MACRO(ITKSignedDanielssonDistanceMapImage)
-  PYB11_FILTER_PARAMETER(bool, InsideIsPositive)
-  PYB11_FILTER_PARAMETER(bool, SquaredDistance)
-  PYB11_FILTER_PARAMETER(bool, UseImageSpacing)
   PYB11_PROPERTY(bool InsideIsPositive READ getInsideIsPositive WRITE setInsideIsPositive)
   PYB11_PROPERTY(bool SquaredDistance READ getSquaredDistance WRITE setSquaredDistance)
   PYB11_PROPERTY(bool UseImageSpacing READ getUseImageSpacing WRITE setUseImageSpacing)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
     using Self = ITKSignedDanielssonDistanceMapImage;
