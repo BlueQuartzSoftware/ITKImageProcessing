@@ -30,24 +30,10 @@ class ITKImageProcessing_EXPORT ITKPatchBasedDenoisingImage : public ITKImagePro
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ITKPatchBasedDenoisingImage SUPERCLASS ITKImageProcessingBase)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ITKPatchBasedDenoisingImage SUPERCLASS ITKImageProcessingBase)
   PYB11_SHARED_POINTERS(ITKPatchBasedDenoisingImage)
   PYB11_FILTER_NEW_MACRO(ITKPatchBasedDenoisingImage)
-  PYB11_FILTER_PARAMETER(double, KernelBandwidthSigma)
-  PYB11_FILTER_PARAMETER(double, PatchRadius)
-  PYB11_FILTER_PARAMETER(double, NumberOfIterations)
-  PYB11_FILTER_PARAMETER(double, NumberOfSamplePatches)
-  PYB11_FILTER_PARAMETER(double, SampleVariance)
-  PYB11_FILTER_PARAMETER(double, NoiseSigma)
-  PYB11_FILTER_PARAMETER(double, NoiseModelFidelityWeight)
-  PYB11_FILTER_PARAMETER(bool, AlwaysTreatComponentsAsEuclidean)
-  PYB11_FILTER_PARAMETER(bool, KernelBandwidthEstimation)
-  PYB11_FILTER_PARAMETER(double, KernelBandwidthMultiplicationFactor)
-  PYB11_FILTER_PARAMETER(double, KernelBandwidthUpdateFrequency)
-  PYB11_FILTER_PARAMETER(double, KernelBandwidthFractionPixelsForEstimation)
-  PYB11_FILTER_PARAMETER(int, NoiseModel)
-  PYB11_FILTER_PARAMETER(int, NumberOfThreads)
   PYB11_PROPERTY(double KernelBandwidthSigma READ getKernelBandwidthSigma WRITE setKernelBandwidthSigma)
   PYB11_PROPERTY(double PatchRadius READ getPatchRadius WRITE setPatchRadius)
   PYB11_PROPERTY(double NumberOfIterations READ getNumberOfIterations WRITE setNumberOfIterations)
@@ -62,7 +48,8 @@ class ITKImageProcessing_EXPORT ITKPatchBasedDenoisingImage : public ITKImagePro
   PYB11_PROPERTY(double KernelBandwidthFractionPixelsForEstimation READ getKernelBandwidthFractionPixelsForEstimation WRITE setKernelBandwidthFractionPixelsForEstimation)
   PYB11_PROPERTY(int NoiseModel READ getNoiseModel WRITE setNoiseModel)
   PYB11_PROPERTY(int NumberOfThreads READ getNumberOfThreads WRITE setNumberOfThreads)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
     using Self = ITKPatchBasedDenoisingImage;

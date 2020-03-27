@@ -31,15 +31,14 @@ class ITKImageProcessing_EXPORT ITKSmoothingRecursiveGaussianImage : public ITKI
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ITKSmoothingRecursiveGaussianImage SUPERCLASS ITKImageProcessingBase)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ITKSmoothingRecursiveGaussianImage SUPERCLASS ITKImageProcessingBase)
   PYB11_SHARED_POINTERS(ITKSmoothingRecursiveGaussianImage)
   PYB11_FILTER_NEW_MACRO(ITKSmoothingRecursiveGaussianImage)
-  PYB11_FILTER_PARAMETER(FloatVec3Type, Sigma)
-  PYB11_FILTER_PARAMETER(bool, NormalizeAcrossScale)
   PYB11_PROPERTY(FloatVec3Type Sigma READ getSigma WRITE setSigma)
   PYB11_PROPERTY(bool NormalizeAcrossScale READ getNormalizeAcrossScale WRITE setNormalizeAcrossScale)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
     using Self = ITKSmoothingRecursiveGaussianImage;

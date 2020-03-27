@@ -30,13 +30,13 @@ class ITKImageProcessing_EXPORT ITKNormalizeToConstantImage : public ITKImagePro
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ITKNormalizeToConstantImage SUPERCLASS ITKImageProcessingBase)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ITKNormalizeToConstantImage SUPERCLASS ITKImageProcessingBase)
   PYB11_SHARED_POINTERS(ITKNormalizeToConstantImage)
   PYB11_FILTER_NEW_MACRO(ITKNormalizeToConstantImage)
-  PYB11_FILTER_PARAMETER(double, Constant)
   PYB11_PROPERTY(double Constant READ getConstant WRITE setConstant)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
     using Self = ITKNormalizeToConstantImage;

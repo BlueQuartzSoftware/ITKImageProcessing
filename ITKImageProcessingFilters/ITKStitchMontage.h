@@ -61,11 +61,10 @@ class ITKImageProcessing_EXPORT ITKStitchMontage : public AbstractFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ITKStitchMontage SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ITKStitchMontage SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(ITKStitchMontage)
   PYB11_FILTER_NEW_MACRO(ITKStitchMontage)
-
   PYB11_PROPERTY(IntVec2Type MontageStart READ getMontageStart WRITE setMontageStart)
   PYB11_PROPERTY(IntVec2Type MontageEnd READ getMontageEnd WRITE setMontageEnd)
   PYB11_PROPERTY(QString DataContainerPrefix READ getDataContainerPrefix WRITE setDataContainerPrefix)
@@ -74,7 +73,8 @@ class ITKImageProcessing_EXPORT ITKStitchMontage : public AbstractFilter
   PYB11_PROPERTY(QString MontageDataContainerName READ getMontageDataContainerName WRITE setMontageDataContainerName)
   PYB11_PROPERTY(QString MontageAttributeMatrixName READ getMontageAttributeMatrixName WRITE setMontageAttributeMatrixName)
   PYB11_PROPERTY(QString MontageDataArrayName READ getMontageDataArrayName WRITE setMontageDataArrayName)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
     using Self = ITKStitchMontage;

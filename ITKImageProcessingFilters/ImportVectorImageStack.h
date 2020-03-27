@@ -60,17 +60,10 @@ class ITKImageProcessing_EXPORT ImportVectorImageStack : public AbstractFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ImportVectorImageStack SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ImportVectorImageStack SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(ImportVectorImageStack)
   PYB11_FILTER_NEW_MACRO(ImportVectorImageStack)
-  PYB11_FILTER_PARAMETER(DataArrayPath, DataContainerName)
-  PYB11_FILTER_PARAMETER(QString, CellAttributeMatrixName)
-  PYB11_FILTER_PARAMETER(FloatVec3Type, Origin)
-  PYB11_FILTER_PARAMETER(FloatVec3Type, Spacing)
-  PYB11_FILTER_PARAMETER(VectorFileListInfo_t, InputFileListInfo)
-  PYB11_FILTER_PARAMETER(QString, VectorDataArrayName)
-  PYB11_FILTER_PARAMETER(bool, ConvertToGrayscale)
   PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
   PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
   PYB11_PROPERTY(FloatVec3Type Origin READ getOrigin WRITE setOrigin)
@@ -78,7 +71,8 @@ class ITKImageProcessing_EXPORT ImportVectorImageStack : public AbstractFilter
   PYB11_PROPERTY(VectorFileListInfo_t InputFileListInfo READ getInputFileListInfo WRITE setInputFileListInfo)
   PYB11_PROPERTY(QString VectorDataArrayName READ getVectorDataArrayName WRITE setVectorDataArrayName)
   PYB11_PROPERTY(bool ConvertToGrayscale READ getConvertToGrayscale WRITE setConvertToGrayscale)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
     using Self = ImportVectorImageStack;

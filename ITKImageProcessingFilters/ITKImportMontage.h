@@ -62,18 +62,9 @@ struct ITKMontageCache
 class ITKImageProcessing_EXPORT ITKImportMontage : public AbstractFilter
 {
   Q_OBJECT
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ITKImportMontage SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ITKImportMontage SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(ITKImportMontage)
-  PYB11_FILTER_PARAMETER(QString, DataContainerPrefix)
-  PYB11_FILTER_PARAMETER(QString, CellAttributeMatrixName)
-  PYB11_FILTER_PARAMETER(QString, AttributeArrayName)
-  PYB11_FILTER_PARAMETER(bool, ChangeOrigin)
-  PYB11_FILTER_PARAMETER(FloatVec3Type, Origin)
-  PYB11_FILTER_PARAMETER(bool, UsePixelCoordinates)
-  PYB11_FILTER_PARAMETER(bool, ChangeSpacing)
-  PYB11_FILTER_PARAMETER(FloatVec3Type, Spacing)
-  PYB11_FILTER_PARAMETER(int32_t, LengthUnit)
   PYB11_PROPERTY(QString DataContainerPrefix READ getDataContainerPrefix WRITE setDataContainerPrefix)
   PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
   PYB11_PROPERTY(QString AttributeArrayName READ getAttributeArrayName WRITE setAttributeArrayName)
@@ -84,7 +75,9 @@ class ITKImageProcessing_EXPORT ITKImportMontage : public AbstractFilter
   PYB11_PROPERTY(QString MontageInformation READ getMontageInformation)
   PYB11_PROPERTY(int RowCount READ getRowCount)
   PYB11_PROPERTY(int ColumnCount READ getColumnCount)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
+
   Q_DECLARE_PRIVATE(ITKImportMontage)
 
 public:

@@ -33,21 +33,17 @@ class ITKImageProcessing_EXPORT ITKOtsuMultipleThresholdsImage : public ITKImage
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ITKOtsuMultipleThresholdsImage SUPERCLASS ITKImageProcessingBase)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ITKOtsuMultipleThresholdsImage SUPERCLASS ITKImageProcessingBase)
   PYB11_SHARED_POINTERS(ITKOtsuMultipleThresholdsImage)
   PYB11_FILTER_NEW_MACRO(ITKOtsuMultipleThresholdsImage)
-  PYB11_FILTER_PARAMETER(int, NumberOfThresholds)
-  PYB11_FILTER_PARAMETER(int, LabelOffset)
-  PYB11_FILTER_PARAMETER(double, NumberOfHistogramBins)
-  PYB11_FILTER_PARAMETER(bool, ValleyEmphasis)
-  PYB11_FILTER_PARAMETER(FloatVec3Type, Thresholds)
   PYB11_PROPERTY(int NumberOfThresholds READ getNumberOfThresholds WRITE setNumberOfThresholds)
   PYB11_PROPERTY(int LabelOffset READ getLabelOffset WRITE setLabelOffset)
   PYB11_PROPERTY(double NumberOfHistogramBins READ getNumberOfHistogramBins WRITE setNumberOfHistogramBins)
   PYB11_PROPERTY(bool ValleyEmphasis READ getValleyEmphasis WRITE setValleyEmphasis)
   PYB11_PROPERTY(FloatVec3Type Thresholds READ getThresholds WRITE setThresholds)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
     using Self = ITKOtsuMultipleThresholdsImage;

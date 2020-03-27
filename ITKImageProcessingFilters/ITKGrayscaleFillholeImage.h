@@ -30,13 +30,13 @@ class ITKImageProcessing_EXPORT ITKGrayscaleFillholeImage : public ITKImageProce
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ITKGrayscaleFillholeImage SUPERCLASS ITKImageProcessingBase)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ITKGrayscaleFillholeImage SUPERCLASS ITKImageProcessingBase)
   PYB11_SHARED_POINTERS(ITKGrayscaleFillholeImage)
   PYB11_FILTER_NEW_MACRO(ITKGrayscaleFillholeImage)
-  PYB11_FILTER_PARAMETER(bool, FullyConnected)
   PYB11_PROPERTY(bool FullyConnected READ getFullyConnected WRITE setFullyConnected)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
     using Self = ITKGrayscaleFillholeImage;

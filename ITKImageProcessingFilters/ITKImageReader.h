@@ -57,19 +57,16 @@ class ITKImageProcessing_EXPORT ITKImageReader : public AbstractFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ITKImageReader SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ITKImageReader SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(ITKImageReader)
   PYB11_FILTER_NEW_MACRO(ITKImageReader)
-  PYB11_FILTER_PARAMETER(QString, FileName)
-  PYB11_FILTER_PARAMETER(DataArrayPath, DataContainerName)
-  PYB11_FILTER_PARAMETER(QString, CellAttributeMatrixName)
-  PYB11_FILTER_PARAMETER(QString, ImageDataArrayName)
   PYB11_PROPERTY(QString FileName READ getFileName WRITE setFileName)
   PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
   PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
   PYB11_PROPERTY(QString ImageDataArrayName READ getImageDataArrayName WRITE setImageDataArrayName)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
   Q_DECLARE_PRIVATE(ITKImageReader)
 

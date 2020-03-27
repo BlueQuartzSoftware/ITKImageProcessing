@@ -30,19 +30,16 @@ class ITKImageProcessing_EXPORT ITKSigmoidImage : public ITKImageProcessingBase
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ITKSigmoidImage SUPERCLASS ITKImageProcessingBase)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ITKSigmoidImage SUPERCLASS ITKImageProcessingBase)
   PYB11_SHARED_POINTERS(ITKSigmoidImage)
   PYB11_FILTER_NEW_MACRO(ITKSigmoidImage)
-  PYB11_FILTER_PARAMETER(double, Alpha)
-  PYB11_FILTER_PARAMETER(double, Beta)
-  PYB11_FILTER_PARAMETER(double, OutputMaximum)
-  PYB11_FILTER_PARAMETER(double, OutputMinimum)
   PYB11_PROPERTY(double Alpha READ getAlpha WRITE setAlpha)
   PYB11_PROPERTY(double Beta READ getBeta WRITE setBeta)
   PYB11_PROPERTY(double OutputMaximum READ getOutputMaximum WRITE setOutputMaximum)
   PYB11_PROPERTY(double OutputMinimum READ getOutputMinimum WRITE setOutputMinimum)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
     using Self = ITKSigmoidImage;

@@ -30,15 +30,14 @@ class ITKImageProcessing_EXPORT ITKSaltAndPepperNoiseImage : public ITKImageProc
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ITKSaltAndPepperNoiseImage SUPERCLASS ITKImageProcessingBase)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ITKSaltAndPepperNoiseImage SUPERCLASS ITKImageProcessingBase)
   PYB11_SHARED_POINTERS(ITKSaltAndPepperNoiseImage)
   PYB11_FILTER_NEW_MACRO(ITKSaltAndPepperNoiseImage)
-  PYB11_FILTER_PARAMETER(double, Probability)
-  PYB11_FILTER_PARAMETER(double, Seed)
   PYB11_PROPERTY(double Probability READ getProbability WRITE setProbability)
   PYB11_PROPERTY(double Seed READ getSeed WRITE setSeed)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
     using Self = ITKSaltAndPepperNoiseImage;

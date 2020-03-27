@@ -62,23 +62,11 @@ class ITKImageProcessing_EXPORT ImportAxioVisionV4Montage : public AbstractFilte
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
+  // Start Python bindings declarations
   // clang-format off
-  PYB11_CREATE_BINDINGS(ImportAxioVisionV4Montage SUPERCLASS AbstractFilter)
+  PYB11_BEGIN_BINDINGS(ImportAxioVisionV4Montage SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(ImportAxioVisionV4Montage)
   PYB11_FILTER_NEW_MACRO(ImportAxioVisionV4Montage)
-  PYB11_FILTER_PARAMETER(QString, InputFile)
-  PYB11_FILTER_PARAMETER(DataArrayPath, DataContainerPath)
-  PYB11_FILTER_PARAMETER(QString, CellAttributeMatrixName)
-  PYB11_FILTER_PARAMETER(QString, ImageDataArrayName)
-  PYB11_FILTER_PARAMETER(QString, MetaDataAttributeMatrixName)
-  PYB11_FILTER_PARAMETER(bool, ConvertToGrayScale)
-  PYB11_FILTER_PARAMETER(bool, ImportAllMetaData)
-  PYB11_FILTER_PARAMETER(FloatVec3Type, ColorWeights)
-  PYB11_FILTER_PARAMETER(bool, ChangeOrigin)
-  PYB11_FILTER_PARAMETER(FloatVec3Type, Origin)
-  PYB11_FILTER_PARAMETER(bool, ChangeSpacing)
-  PYB11_FILTER_PARAMETER(FloatVec3Type, Spacing)
   PYB11_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
   PYB11_PROPERTY(DataArrayPath DataContainerPath READ getDataContainerPath WRITE setDataContainerPath)
   PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
@@ -91,13 +79,13 @@ class ITKImageProcessing_EXPORT ImportAxioVisionV4Montage : public AbstractFilte
   PYB11_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
   PYB11_PROPERTY(int32_t RowCount READ getRowCount)
   PYB11_PROPERTY(int32_t ColumnCount READ getColumnCount)
-
   PYB11_PROPERTY(bool ImportAllMetaData READ getImportAllMetaData WRITE setImportAllMetaData)
   PYB11_PROPERTY(QString MetaDataAttributeMatrixName getMetaDataAttributeMatrixName WRITE setMetaDataAttributeMatrixName)
   PYB11_PROPERTY(IntVec2Type MontageStart READ getMontageStart WRITE setMontageStart)
   PYB11_PROPERTY(IntVec2Type MontageEnd READ getMontageEnd WRITE setMontageEnd)
+  PYB11_END_BINDINGS()
   // clang-format on
-#endif
+  // End Python bindings declarations
 
   Q_DECLARE_PRIVATE(ImportAxioVisionV4Montage)
 

@@ -32,19 +32,16 @@ class ITKImageProcessing_EXPORT ITKOpeningByReconstructionImage : public ITKImag
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ITKOpeningByReconstructionImage SUPERCLASS ITKImageProcessingBase)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ITKOpeningByReconstructionImage SUPERCLASS ITKImageProcessingBase)
   PYB11_SHARED_POINTERS(ITKOpeningByReconstructionImage)
   PYB11_FILTER_NEW_MACRO(ITKOpeningByReconstructionImage)
-  PYB11_FILTER_PARAMETER(bool, FullyConnected)
-  PYB11_FILTER_PARAMETER(bool, PreserveIntensities)
-  PYB11_FILTER_PARAMETER(FloatVec3Type, KernelRadius)
-  PYB11_FILTER_PARAMETER(int, KernelType)
   PYB11_PROPERTY(bool FullyConnected READ getFullyConnected WRITE setFullyConnected)
   PYB11_PROPERTY(bool PreserveIntensities READ getPreserveIntensities WRITE setPreserveIntensities)
   PYB11_PROPERTY(FloatVec3Type KernelRadius READ getKernelRadius WRITE setKernelRadius)
   PYB11_PROPERTY(int KernelType READ getKernelType WRITE setKernelType)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
     using Self = ITKOpeningByReconstructionImage;

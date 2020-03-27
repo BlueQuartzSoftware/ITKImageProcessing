@@ -60,18 +60,16 @@ class ITKImageProcessing_EXPORT ITKImageWriter : public AbstractFilter
 
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ITKImageWriter SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ITKImageWriter SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(ITKImageWriter)
   PYB11_FILTER_NEW_MACRO(ITKImageWriter)
-  PYB11_FILTER_PARAMETER(QString, FileName)
-  PYB11_FILTER_PARAMETER(DataArrayPath, ImageArrayPath)
-  PYB11_FILTER_PARAMETER(int, Plane)
   PYB11_PROPERTY(QString FileName READ getFileName WRITE setFileName)
   PYB11_PROPERTY(DataArrayPath ImageArrayPath READ getImageArrayPath WRITE setImageArrayPath)
   PYB11_PROPERTY(int Plane READ getPlane WRITE setPlane)
   PYB11_METHOD(void registerImageIOFactories)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
     using Self = ITKImageWriter;

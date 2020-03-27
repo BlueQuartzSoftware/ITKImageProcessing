@@ -30,15 +30,14 @@ class ITKImageProcessing_EXPORT ITKCurvatureFlowImage : public ITKImageProcessin
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ITKCurvatureFlowImage SUPERCLASS ITKImageProcessingBase)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ITKCurvatureFlowImage SUPERCLASS ITKImageProcessingBase)
   PYB11_SHARED_POINTERS(ITKCurvatureFlowImage)
   PYB11_FILTER_NEW_MACRO(ITKCurvatureFlowImage)
-  PYB11_FILTER_PARAMETER(double, TimeStep)
-  PYB11_FILTER_PARAMETER(double, NumberOfIterations)
   PYB11_PROPERTY(double TimeStep READ getTimeStep WRITE setTimeStep)
   PYB11_PROPERTY(double NumberOfIterations READ getNumberOfIterations WRITE setNumberOfIterations)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
     using Self = ITKCurvatureFlowImage;

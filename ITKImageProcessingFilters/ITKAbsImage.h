@@ -29,11 +29,12 @@ class ITKImageProcessing_EXPORT ITKAbsImage : public ITKImageProcessingBase
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ITKAbsImage SUPERCLASS ITKImageProcessingBase)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ITKAbsImage SUPERCLASS ITKImageProcessingBase)
   PYB11_SHARED_POINTERS(ITKAbsImage)
   PYB11_FILTER_NEW_MACRO(ITKAbsImage)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
     using Self = ITKAbsImage;

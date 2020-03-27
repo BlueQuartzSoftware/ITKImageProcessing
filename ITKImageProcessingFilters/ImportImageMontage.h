@@ -27,23 +27,18 @@ class ITKImageProcessing_EXPORT ImportImageMontage : public AbstractFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ImportImageMontage SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ImportImageMontage SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(ImportImageMontage)
   PYB11_FILTER_NEW_MACRO(ImportImageMontage)
-  PYB11_FILTER_PARAMETER(DataArrayPath, DataContainerName)
-  PYB11_FILTER_PARAMETER(QString, CellAttributeMatrixName)
-  PYB11_FILTER_PARAMETER(QString, MetaDataAttributeMatrixName)
-  PYB11_FILTER_PARAMETER(FloatVec3Type, Origin)
-  PYB11_FILTER_PARAMETER(FloatVec3Type, Spacing)
-  PYB11_FILTER_PARAMETER(StackFileListInfo, InputFileListInfo)
   PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
   PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
   PYB11_PROPERTY(QString MetaDataAttributeMatrixName READ getMetaDataAttributeMatrixName WRITE setMetaDataAttributeMatrixName)
   PYB11_PROPERTY(FloatVec3Type Origin READ getOrigin WRITE setOrigin)
   PYB11_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
   PYB11_PROPERTY(StackFileListInfo InputFileListInfo READ getInputFileListInfo WRITE setInputFileListInfo)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
     using Self = ImportImageMontage;

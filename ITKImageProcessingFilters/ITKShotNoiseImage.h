@@ -30,15 +30,14 @@ class ITKImageProcessing_EXPORT ITKShotNoiseImage : public ITKImageProcessingBas
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ITKShotNoiseImage SUPERCLASS ITKImageProcessingBase)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ITKShotNoiseImage SUPERCLASS ITKImageProcessingBase)
   PYB11_SHARED_POINTERS(ITKShotNoiseImage)
   PYB11_FILTER_NEW_MACRO(ITKShotNoiseImage)
-  PYB11_FILTER_PARAMETER(double, Scale)
-  PYB11_FILTER_PARAMETER(double, Seed)
   PYB11_PROPERTY(double Scale READ getScale WRITE setScale)
   PYB11_PROPERTY(double Seed READ getSeed WRITE setSeed)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
     using Self = ITKShotNoiseImage;

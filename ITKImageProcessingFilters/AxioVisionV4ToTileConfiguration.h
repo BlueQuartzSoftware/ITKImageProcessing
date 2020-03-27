@@ -51,15 +51,14 @@ class ITKImageProcessing_EXPORT AxioVisionV4ToTileConfiguration : public Abstrac
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(AxioVisionV4ToTileConfiguration SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(AxioVisionV4ToTileConfiguration SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(AxioVisionV4ToTileConfiguration)
   PYB11_FILTER_NEW_MACRO(AxioVisionV4ToTileConfiguration)
-  PYB11_FILTER_PARAMETER(QString, InputFile)
-  PYB11_FILTER_PARAMETER(QString, OutputFile)
   PYB11_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
   PYB11_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
     using Self = AxioVisionV4ToTileConfiguration;

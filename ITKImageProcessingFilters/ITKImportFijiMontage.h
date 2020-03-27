@@ -51,22 +51,11 @@ class ITKImportFijiMontagePrivate;
 class ITKImageProcessing_EXPORT ITKImportFijiMontage : public AbstractFilter
 {
   Q_OBJECT
-// clang-format off
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ITKImportFijiMontage SUPERCLASS ITKImportMontage)
+  // clang-format off
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ITKImportFijiMontage SUPERCLASS ITKImportMontage)
   PYB11_SHARED_POINTERS(ITKImportFijiMontage)
   PYB11_FILTER_NEW_MACRO(ITKImportFijiMontage)
-  PYB11_FILTER_PARAMETER(QString, InputFile)
-  PYB11_FILTER_PARAMETER(DataArrayPath, DataContainerPath)
-  PYB11_FILTER_PARAMETER(QString, CellAttributeMatrixName)
-  PYB11_FILTER_PARAMETER(QString, ImageDataArrayName)
-  PYB11_FILTER_PARAMETER(bool, ConvertToGrayScale)
-  PYB11_FILTER_PARAMETER(FloatVec3Type, ColorWeights)
-  PYB11_FILTER_PARAMETER(bool, ChangeOrigin)
-  PYB11_FILTER_PARAMETER(FloatVec3Type, Origin)
-  PYB11_FILTER_PARAMETER(bool, ChangeSpacing)
-  PYB11_FILTER_PARAMETER(FloatVec3Type, Spacing)
-
   PYB11_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
   PYB11_PROPERTY(DataArrayPath DataContainerPath READ getDataContainerPath WRITE setDataContainerPath)
   PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
@@ -80,7 +69,8 @@ class ITKImageProcessing_EXPORT ITKImportFijiMontage : public AbstractFilter
   PYB11_PROPERTY(int32_t LengthUnit READ getLengthUnit WRITE setLengthUnit)
   PYB11_PROPERTY(IntVec2Type MontageStart READ getMontageStart WRITE setMontageStart)
   PYB11_PROPERTY(IntVec2Type MontageEnd READ getMontageEnd WRITE setMontageEnd)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
   // clang-format on
   Q_DECLARE_PRIVATE(ITKImportFijiMontage)
 

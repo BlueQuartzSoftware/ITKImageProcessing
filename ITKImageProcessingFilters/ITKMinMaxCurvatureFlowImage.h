@@ -31,17 +31,15 @@ class ITKImageProcessing_EXPORT ITKMinMaxCurvatureFlowImage : public ITKImagePro
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ITKMinMaxCurvatureFlowImage SUPERCLASS ITKImageProcessingBase)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ITKMinMaxCurvatureFlowImage SUPERCLASS ITKImageProcessingBase)
   PYB11_SHARED_POINTERS(ITKMinMaxCurvatureFlowImage)
   PYB11_FILTER_NEW_MACRO(ITKMinMaxCurvatureFlowImage)
-  PYB11_FILTER_PARAMETER(double, TimeStep)
-  PYB11_FILTER_PARAMETER(double, NumberOfIterations)
-  PYB11_FILTER_PARAMETER(int, StencilRadius)
   PYB11_PROPERTY(double TimeStep READ getTimeStep WRITE setTimeStep)
   PYB11_PROPERTY(double NumberOfIterations READ getNumberOfIterations WRITE setNumberOfIterations)
   PYB11_PROPERTY(int StencilRadius READ getStencilRadius WRITE setStencilRadius)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
     using Self = ITKMinMaxCurvatureFlowImage;

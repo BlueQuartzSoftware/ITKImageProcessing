@@ -31,19 +31,16 @@ class ITKImageProcessing_EXPORT ITKBinaryThresholdImage : public ITKImageProcess
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ITKBinaryThresholdImage SUPERCLASS ITKImageProcessingBase)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ITKBinaryThresholdImage SUPERCLASS ITKImageProcessingBase)
   PYB11_SHARED_POINTERS(ITKBinaryThresholdImage)
   PYB11_FILTER_NEW_MACRO(ITKBinaryThresholdImage)
-  PYB11_FILTER_PARAMETER(double, LowerThreshold)
-  PYB11_FILTER_PARAMETER(double, UpperThreshold)
-  PYB11_FILTER_PARAMETER(int, InsideValue)
-  PYB11_FILTER_PARAMETER(int, OutsideValue)
   PYB11_PROPERTY(double LowerThreshold READ getLowerThreshold WRITE setLowerThreshold)
   PYB11_PROPERTY(double UpperThreshold READ getUpperThreshold WRITE setUpperThreshold)
   PYB11_PROPERTY(int InsideValue READ getInsideValue WRITE setInsideValue)
   PYB11_PROPERTY(int OutsideValue READ getOutsideValue WRITE setOutsideValue)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
     using Self = ITKBinaryThresholdImage;

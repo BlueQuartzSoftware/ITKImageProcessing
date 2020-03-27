@@ -30,13 +30,13 @@ class ITKImageProcessing_EXPORT ITKMedianImage : public ITKImageProcessingBase
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ITKMedianImage SUPERCLASS ITKImageProcessingBase)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ITKMedianImage SUPERCLASS ITKImageProcessingBase)
   PYB11_SHARED_POINTERS(ITKMedianImage)
   PYB11_FILTER_NEW_MACRO(ITKMedianImage)
-  PYB11_FILTER_PARAMETER(FloatVec3Type, Radius)
   PYB11_PROPERTY(FloatVec3Type Radius READ getRadius WRITE setRadius)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
     using Self = ITKMedianImage;

@@ -52,24 +52,11 @@ class ITKImageProcessing_EXPORT ITKImportRoboMetMontage : public AbstractFilter
 {
   Q_OBJECT
 
-// clang-format off
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ITKImportRoboMetMontage SUPERCLASS AbstractFilter)
+  // clang-format off
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ITKImportRoboMetMontage SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(ITKImportRoboMetMontage)
   PYB11_FILTER_NEW_MACRO(ITKImportRoboMetMontage)
-  PYB11_FILTER_PARAMETER(QString, InputFile)
-  PYB11_FILTER_PARAMETER(DataArrayPath, DataContainerPath)
-  PYB11_FILTER_PARAMETER(QString, CellAttributeMatrixName)
-  PYB11_FILTER_PARAMETER(QString, ImageDataArrayName)
-  PYB11_FILTER_PARAMETER(bool, ConvertToGrayScale)
-  PYB11_FILTER_PARAMETER(FloatVec3Type, ColorWeights)
-  PYB11_FILTER_PARAMETER(bool, ChangeOrigin)
-  PYB11_FILTER_PARAMETER(FloatVec3Type, Origin)
-  PYB11_FILTER_PARAMETER(bool, ChangeSpacing)
-  PYB11_FILTER_PARAMETER(FloatVec3Type, Spacing)
-  PYB11_FILTER_PARAMETER(int, SliceNumber)
-  PYB11_FILTER_PARAMETER(QString, ImageFilePrefix)
-  PYB11_FILTER_PARAMETER(QString, ImageFileExtension)
   PYB11_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
   PYB11_PROPERTY(DataArrayPath DataContainerPath READ getDataContainerPath WRITE setDataContainerPath)
   PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
@@ -80,14 +67,14 @@ class ITKImageProcessing_EXPORT ITKImportRoboMetMontage : public AbstractFilter
   PYB11_PROPERTY(FloatVec3Type Origin READ getOrigin WRITE setOrigin)
   PYB11_PROPERTY(bool ChangeSpacing READ getChangeSpacing WRITE setChangeSpacing)
   PYB11_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
-
   PYB11_PROPERTY(int SliceNumber READ getSliceNumber WRITE setSliceNumber)
   PYB11_PROPERTY(QString ImageFilePrefix READ getImageFilePrefix WRITE setImageFilePrefix)
   PYB11_PROPERTY(QString ImageFileExtension READ getImageFileExtension WRITE setImageFileExtension)
   PYB11_PROPERTY(int32_t LengthUnit READ getLengthUnit WRITE setLengthUnit)
   PYB11_PROPERTY(IntVec2Type MontageStart READ getMontageStart WRITE setMontageStart)
   PYB11_PROPERTY(IntVec2Type MontageEnd READ getMontageEnd WRITE setMontageEnd)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
   // clang-format on
   Q_DECLARE_PRIVATE(ITKImportRoboMetMontage)
 public:

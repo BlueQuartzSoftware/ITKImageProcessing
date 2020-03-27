@@ -32,19 +32,16 @@ class ITKImageProcessing_EXPORT ITKDiscreteGaussianImage : public ITKImageProces
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ITKDiscreteGaussianImage SUPERCLASS ITKImageProcessingBase)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ITKDiscreteGaussianImage SUPERCLASS ITKImageProcessingBase)
   PYB11_SHARED_POINTERS(ITKDiscreteGaussianImage)
   PYB11_FILTER_NEW_MACRO(ITKDiscreteGaussianImage)
-  PYB11_FILTER_PARAMETER(FloatVec3Type, Variance)
-  PYB11_FILTER_PARAMETER(int32_t, MaximumKernelWidth)
-  PYB11_FILTER_PARAMETER(FloatVec3Type, MaximumError)
-  PYB11_FILTER_PARAMETER(bool, UseImageSpacing)
   PYB11_PROPERTY(FloatVec3Type Variance READ getVariance WRITE setVariance)
   PYB11_PROPERTY(int32_t MaximumKernelWidth READ getMaximumKernelWidth WRITE setMaximumKernelWidth)
   PYB11_PROPERTY(FloatVec3Type MaximumError READ getMaximumError WRITE setMaximumError)
   PYB11_PROPERTY(bool UseImageSpacing READ getUseImageSpacing WRITE setUseImageSpacing)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
     using Self = ITKDiscreteGaussianImage;

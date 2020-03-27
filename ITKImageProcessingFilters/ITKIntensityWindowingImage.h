@@ -30,19 +30,16 @@ class ITKImageProcessing_EXPORT ITKIntensityWindowingImage : public ITKImageProc
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ITKIntensityWindowingImage SUPERCLASS ITKImageProcessingBase)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ITKIntensityWindowingImage SUPERCLASS ITKImageProcessingBase)
   PYB11_SHARED_POINTERS(ITKIntensityWindowingImage)
   PYB11_FILTER_NEW_MACRO(ITKIntensityWindowingImage)
-  PYB11_FILTER_PARAMETER(double, WindowMinimum)
-  PYB11_FILTER_PARAMETER(double, WindowMaximum)
-  PYB11_FILTER_PARAMETER(double, OutputMinimum)
-  PYB11_FILTER_PARAMETER(double, OutputMaximum)
   PYB11_PROPERTY(double WindowMinimum READ getWindowMinimum WRITE setWindowMinimum)
   PYB11_PROPERTY(double WindowMaximum READ getWindowMaximum WRITE setWindowMaximum)
   PYB11_PROPERTY(double OutputMinimum READ getOutputMinimum WRITE setOutputMinimum)
   PYB11_PROPERTY(double OutputMaximum READ getOutputMaximum WRITE setOutputMaximum)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
     using Self = ITKIntensityWindowingImage;

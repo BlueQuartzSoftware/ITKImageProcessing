@@ -30,13 +30,13 @@ class ITKImageProcessing_EXPORT ITKInvertIntensityImage : public ITKImageProcess
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ITKInvertIntensityImage SUPERCLASS ITKImageProcessingBase)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ITKInvertIntensityImage SUPERCLASS ITKImageProcessingBase)
   PYB11_SHARED_POINTERS(ITKInvertIntensityImage)
   PYB11_FILTER_NEW_MACRO(ITKInvertIntensityImage)
-  PYB11_FILTER_PARAMETER(double, Maximum)
   PYB11_PROPERTY(double Maximum READ getMaximum WRITE setMaximum)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
     using Self = ITKInvertIntensityImage;

@@ -60,21 +60,17 @@ class ITKImageProcessing_EXPORT ITKPCMTileRegistration : public AbstractFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ITKPCMTileRegistration SUPERCLASS AbstractFilter)
+  // Start Python bindings declarations
+  PYB11_BEGIN_BINDINGS(ITKPCMTileRegistration SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(ITKPCMTileRegistration)
   PYB11_FILTER_NEW_MACRO(ITKPCMTileRegistration)
-  PYB11_FILTER_PARAMETER(IntVec3Type, MontageStart)
-  PYB11_FILTER_PARAMETER(IntVec3Type, MontageEnd)
-  PYB11_FILTER_PARAMETER(QString, DataContainerPrefix)
-  PYB11_FILTER_PARAMETER(QString, CommonAttributeMatrixName)
-  PYB11_FILTER_PARAMETER(QString, CommonDataArrayName)
   PYB11_PROPERTY(IntVec3Type MontageStart READ getMontageStart WRITE setMontageStart)
   PYB11_PROPERTY(IntVec3Type MontageEnd READ getMontageEnd WRITE setMontageEnd)
   PYB11_PROPERTY(QString DataContainerPrefix READ getDataContainerPrefix WRITE setDataContainerPrefix)
   PYB11_PROPERTY(QString CommonAttributeMatrixName READ getCommonAttributeMatrixName WRITE setCommonAttributeMatrixName)
   PYB11_PROPERTY(QString CommonDataArrayName READ getCommonDataArrayName WRITE setCommonDataArrayName)
-#endif
+  PYB11_END_BINDINGS()
+  // End Python bindings declarations
 
 public:
     using Self = ITKPCMTileRegistration;
