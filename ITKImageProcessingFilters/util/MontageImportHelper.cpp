@@ -141,6 +141,25 @@ std::map<int32_t, std::vector<size_t>> MontageImportHelper::Burn(int32_t toleran
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+QString MontageImportHelper::GenerateDataContainerName(const QString& dataContainerPrefix, int32_t paddingDigits, int32_t row, int32_t col)
+{
+  QString dcName = dataContainerPrefix;
+  QTextStream dcNameStream(&dcName);
+  dcNameStream << "r";
+  dcNameStream.setFieldWidth(paddingDigits);
+  dcNameStream.setFieldAlignment(QTextStream::AlignRight);
+  dcNameStream.setPadChar('0');
+  dcNameStream << row;
+  dcNameStream.setFieldWidth(0);
+  dcNameStream << "c";
+  dcNameStream.setFieldWidth(paddingDigits);
+  dcNameStream << col;
+  return dcName;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 QString MontageImportHelper::GenerateDataContainerName(const QString& dataContainerPrefix, const IntVec2Type& montageMaxValues, int32_t row, int32_t col)
 {
   int32_t rowCountPadding = MetaXmlUtils::CalculatePaddingDigits(montageMaxValues[1]);

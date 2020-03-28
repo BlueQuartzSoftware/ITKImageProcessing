@@ -29,14 +29,59 @@ The configuration above would result in a data structure as shown in the followi
 
 ## Parameters ##
 
-| Name             |  Type  |
-|------------------|--------|
-| Input Fiji Tile Configuration File | String |
-| Origin | float x 3 |
-| Convert to GrayScale | bool |
-| Data Container Prefix | String |
-| Cell Attribute Matrix Name | String |
-| Data Array Name | String |
+| Name             | Type | Comment |
+|------------------|------|---------|
+| Input Fiji Tile Configuration File | String | |
+| Name of Created Montage | String | Used for the montage infrastructure |
+| Montage Column Start/End | Int x 2 | The starting and ending column (inclusive) that will be imported |
+| Montage Row Start/End | Int x 2 | The starting and ending column (inclusive) that will be imported |
+| Length Unit | Int | Selected from predefined list. See table below |
+| Change Origin | Bool = OFF | Set the origin of the mosaic to a user defined value |
+| Origin | Float 3 Vect | The new origin of the mosaic |
+| Convert to GrayScale | Bool | The filter will show an error if the images are already in grayscale format |
+| Color Weighting | Float 3 Vect | The luminosity values for the conversion || Data Container Prefix | String  | A prefix that can be used for each data container.  |
+| Cell Attribute Matrix Name | String  | The name of the Cell Attribute Matrix. |
+| Image Data Array Name | String  | The name of the import image data |
+
+### Color To Gray Scale Notes ###
+
+The luminosity method is a more sophisticated version of the average method. It also averages the values, but it forms a weighted average to account for human perception. We re more sensitive to green than other colors, so green is weighted most heavily. The default formula for luminosity is BT709 Gray scale:
+
+    Red: 0.2125 Green: 0.7154 Blue: 0.0721. 
+
+The user can set the weightings to what ever values they would like.
+
+### Lenght Unit ###
+
+    Yoctometer = 0
+    Zeptometer = 1
+    Attometer = 2
+    Femtometer = 3
+    Picometer = 4
+    Nanometer = 5
+    Micrometer = 6
+    Millimeter = 7
+    Centimeter = 8
+    Decimeter = 9
+    Meter = 10
+    Decameter = 11
+    Hectometer = 12
+    Kilometer = 13
+    Megameter = 14
+    Gigameter = 15
+    Terameter = 16
+    Petameter = 17
+    Exameter = 18
+    Zettameter = 19
+    Yottameter = 20
+    Angstrom = 21
+    Mil = 22
+    Inch = 23
+    Foot = 24
+    Mile = 25
+    Fathom = 26
+    Unspecified = 100U
+    Unknown = 101U
 
 ## Required DataContainers ##
 

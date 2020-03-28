@@ -64,8 +64,9 @@ class ITKImageProcessing_EXPORT ITKPCMTileRegistration : public AbstractFilter
   PYB11_BEGIN_BINDINGS(ITKPCMTileRegistration SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(ITKPCMTileRegistration)
   PYB11_FILTER_NEW_MACRO(ITKPCMTileRegistration)
-  PYB11_PROPERTY(IntVec3Type MontageStart READ getMontageStart WRITE setMontageStart)
-  PYB11_PROPERTY(IntVec3Type MontageEnd READ getMontageEnd WRITE setMontageEnd)
+  PYB11_PROPERTY(int32_t DataContainerPaddingDigits READ getDataContainerPaddingDigits WRITE setDataContainerPaddingDigits)
+  PYB11_PROPERTY(IntVec2Type ColumnMontageLimits READ getColumnMontageLimits WRITE setColumnMontageLimits)
+  PYB11_PROPERTY(IntVec2Type RowMontageLimits READ getRowMontageLimits WRITE setRowMontageLimits)
   PYB11_PROPERTY(QString DataContainerPrefix READ getDataContainerPrefix WRITE setDataContainerPrefix)
   PYB11_PROPERTY(QString CommonAttributeMatrixName READ getCommonAttributeMatrixName WRITE setCommonAttributeMatrixName)
   PYB11_PROPERTY(QString CommonDataArrayName READ getCommonDataArrayName WRITE setCommonDataArrayName)
@@ -91,44 +92,52 @@ public:
     */
     static QString ClassName();
 
-
-  ~ITKPCMTileRegistration() override;
-
-    /**
-    * @brief Setter property for MontageStart
-    */
-    void setMontageStart(const IntVec2Type& value); 
-    /**
-    * @brief Getter property for MontageStart
-    * @return Value of MontageStart
-    */
-    IntVec2Type getMontageStart() const;
-
-  Q_PROPERTY(IntVec2Type MontageStart READ getMontageStart WRITE setMontageStart)
+    ~ITKPCMTileRegistration() override;
 
     /**
-    * @brief Setter property for MontageEnd
-    */
-    void setMontageEnd(const IntVec2Type& value); 
+     * @brief Setter property for DataContainerPaddingDigits
+     */
+    void setDataContainerPaddingDigits(int32_t value);
     /**
-    * @brief Getter property for MontageEnd
-    * @return Value of MontageEnd
-    */
-    IntVec2Type getMontageEnd() const;
+     * @brief Getter property for DataContainerPaddingDigits
+     * @return Value of DataContainerPaddingDigits
+     */
+    int32_t getDataContainerPaddingDigits() const;
+    Q_PROPERTY(int32_t DataContainerPaddingDigits READ getDataContainerPaddingDigits WRITE setDataContainerPaddingDigits)
 
-  Q_PROPERTY(IntVec2Type MontageEnd READ getMontageEnd WRITE setMontageEnd)
+    /**
+     * @brief Setter property for ColumnMontageLimits
+     */
+    void setColumnMontageLimits(const IntVec2Type& value);
+    /**
+     * @brief Getter property for ColumnMontageLimits
+     * @return Value of ColumnMontageLimits
+     */
+    IntVec2Type getColumnMontageLimits() const;
+    Q_PROPERTY(IntVec2Type ColumnMontageLimits READ getColumnMontageLimits WRITE setColumnMontageLimits)
 
     /**
-    * @brief Setter property for DataContainerPrefix
-    */
-    void setDataContainerPrefix(const QString& value); 
+     * @brief Setter property for RowMontageLimits
+     */
+    void setRowMontageLimits(const IntVec2Type& value);
     /**
-    * @brief Getter property for DataContainerPrefix
-    * @return Value of DataContainerPrefix
-    */
+     * @brief Getter property for RowMontageLimits
+     * @return Value of RowMontageLimits
+     */
+    IntVec2Type getRowMontageLimits() const;
+    Q_PROPERTY(IntVec2Type RowMontageLimits READ getRowMontageLimits WRITE setRowMontageLimits)
+
+    /**
+     * @brief Setter property for DataContainerPrefix
+     */
+    void setDataContainerPrefix(const QString& value);
+    /**
+     * @brief Getter property for DataContainerPrefix
+     * @return Value of DataContainerPrefix
+     */
     QString getDataContainerPrefix() const;
 
-  Q_PROPERTY(QString DataContainerPrefix READ getDataContainerPrefix WRITE setDataContainerPrefix)
+    Q_PROPERTY(QString DataContainerPrefix READ getDataContainerPrefix WRITE setDataContainerPrefix)
 
     /**
     * @brief Setter property for CommonAttributeMatrixName
@@ -252,11 +261,14 @@ protected:
   typename TransformContainer::Pointer GetTransformContainerFromITKAffineTransform(const AffineType::Pointer& itkAffine);
 
 private:
-    IntVec2Type m_MontageStart = {};
-    IntVec2Type m_MontageEnd = {};
-    QString m_DataContainerPrefix = {};
-    QString m_CommonAttributeMatrixName = {};
-    QString m_CommonDataArrayName = {};
+  int32_t m_DataContainerPaddingDigits = 1;
+  IntVec2Type m_ColumnMontageLimits = {0, 0};
+  IntVec2Type m_RowMontageLimits = {0, 0};
+  IntVec2Type m_MontageStart = {0, 0};
+  IntVec2Type m_MontageEnd = {0, 0};
+  QString m_DataContainerPrefix = {};
+  QString m_CommonAttributeMatrixName = {};
+  QString m_CommonDataArrayName = {};
 
   static constexpr unsigned Dimension = 2;
   std::vector<DataContainer::Pointer> m_DataContainers;

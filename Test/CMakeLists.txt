@@ -7,17 +7,15 @@ set(${PLUGIN_NAME}Test_BINARY_DIR ${${PLUGIN_NAME}_BINARY_DIR}/Test)
 # be directly included in the main test source file. We list them here so that
 # they will show up in IDEs
 set(TEST_NAMES
-
   # These are from ZeissImport
-  ImportZenInfoMontageTest
-  AxioVisionV4ToTileConfigurationTest
-  ImportAxioVisionV4MontageTest
-
-  ITKImageProcessingReaderTest
-  ITKImageProcessingWriterTest
-  ITKImportImageStackTest
-  ImportVectorImageStackTest
-  ITKMedianImageTest
+#  ImportZenInfoMontageTest
+#  AxioVisionV4ToTileConfigurationTest
+#  ImportAxioVisionV4MontageTest
+#  ITKImageProcessingReaderTest
+#  ITKImageProcessingWriterTest
+#  ITKImportImageStackTest
+#  ImportVectorImageStackTest
+#  ITKMedianImageTest
 )
 
 if(ITK_VERSION_MAJOR EQUAL 4)
@@ -26,10 +24,12 @@ elseif(ITK_VERSION_MAJOR EQUAL 5)
   # Put ITK 5 Specific Modyles in here
   set( TEST_NAMES
       ${TEST_NAMES}
-      ITKImportFijiMontageTest
-      ITKImportRoboMetMontageTest
-      ITKProxTVImageTest
+#      ITKImportFijiMontageTest
+#      ITKImportRoboMetMontageTest
+#      ITKProxTVImageTest
+      EdaxEbsdMontageTest
 
+      # These are not viable any more....
       # ITKPCMTileRegistrationTest
       # ITKStitchMontageTest
   )

@@ -70,6 +70,16 @@ public:
   /**
    * @brief GenerateDataContainerName
    * @param dataContainerPrefix
+   * @param paddingDigits The number of digits to padd the index number
+   * @param row
+   * @param col
+   * @return
+   */
+  static QString GenerateDataContainerName(const QString& dataContainerPrefix, int32_t paddingDigits, int32_t row, int32_t col);
+
+  /**
+   * @brief GenerateDataContainerName
+   * @param dataContainerPrefix
    * @param montageMaxValues
    * @param row
    * @param col

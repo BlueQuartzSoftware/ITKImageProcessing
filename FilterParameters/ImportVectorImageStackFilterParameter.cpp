@@ -52,7 +52,8 @@ ImportVectorImageStackFilterParameter::~ImportVectorImageStackFilterParameter() 
 //
 // -----------------------------------------------------------------------------
 ImportVectorImageStackFilterParameter::Pointer ImportVectorImageStackFilterParameter::New(const QString& humanLabel, const QString& propertyName, const VectorFileListInfo_t& defaultValue,
-                                                                                          Category category, SetterCallbackType setterCallback, GetterCallbackType getterCallback)
+                                                                                          Category category, const SetterCallbackType& setterCallback, const GetterCallbackType& getterCallback,
+                                                                                          int groupIndex)
 {
   ImportVectorImageStackFilterParameter::Pointer ptr = ImportVectorImageStackFilterParameter::New();
   ptr->setHumanLabel(humanLabel);
@@ -63,6 +64,7 @@ ImportVectorImageStackFilterParameter::Pointer ImportVectorImageStackFilterParam
   ptr->setCategory(category);
   ptr->setSetterCallback(setterCallback);
   ptr->setGetterCallback(getterCallback);
+  ptr->setGroupIndex(groupIndex);
 
   return ptr;
 }
@@ -81,6 +83,10 @@ QString ImportVectorImageStackFilterParameter::getWidgetType() const
 void ImportVectorImageStackFilterParameter::readJson(const QJsonObject& json)
 {
   QJsonValue jsonValue = json[getPropertyName()];
+  if(jsonValue.isUndefined())
+  {
+    jsonValue = json[getLegacyPropertyName()];
+  }
   if(!jsonValue.isUndefined() && m_SetterCallback)
   {
     QJsonObject jsonObj = jsonValue.toObject();

@@ -39,8 +39,10 @@
 #include "SIMPLib/Common/SIMPLArray.hpp"
 #include "SIMPLib/DataArrays/IDataArray.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/Geometry/IGeometry.h"
 
 #include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
+#include "ITKImageProcessing/ITKImageProcessingConstants.h"
 
 // our PIMPL private class
 class ITKImportRoboMetMontagePrivate;
@@ -57,6 +59,9 @@ class ITKImageProcessing_EXPORT ITKImportRoboMetMontage : public AbstractFilter
   PYB11_BEGIN_BINDINGS(ITKImportRoboMetMontage SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(ITKImportRoboMetMontage)
   PYB11_FILTER_NEW_MACRO(ITKImportRoboMetMontage)
+
+  PYB11_PROPERTY(QString MontageName READ getMontageName WRITE setMontageName)
+  PYB11_PROPERTY(int32_t LengthUnit READ getLengthUnit WRITE setLengthUnit)
   PYB11_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
   PYB11_PROPERTY(DataArrayPath DataContainerPath READ getDataContainerPath WRITE setDataContainerPath)
   PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
@@ -70,13 +75,14 @@ class ITKImageProcessing_EXPORT ITKImportRoboMetMontage : public AbstractFilter
   PYB11_PROPERTY(int SliceNumber READ getSliceNumber WRITE setSliceNumber)
   PYB11_PROPERTY(QString ImageFilePrefix READ getImageFilePrefix WRITE setImageFilePrefix)
   PYB11_PROPERTY(QString ImageFileExtension READ getImageFileExtension WRITE setImageFileExtension)
-  PYB11_PROPERTY(int32_t LengthUnit READ getLengthUnit WRITE setLengthUnit)
-  PYB11_PROPERTY(IntVec2Type MontageStart READ getMontageStart WRITE setMontageStart)
-  PYB11_PROPERTY(IntVec2Type MontageEnd READ getMontageEnd WRITE setMontageEnd)
+  PYB11_PROPERTY(IntVec2Type ColumnMontageLimits READ getColumnMontageLimits WRITE setColumnMontageLimits)
+  PYB11_PROPERTY(IntVec2Type RowMontageLimits READ getRowMontageLimits WRITE setRowMontageLimits)
   PYB11_END_BINDINGS()
   // End Python bindings declarations
   // clang-format on
+
   Q_DECLARE_PRIVATE(ITKImportRoboMetMontage)
+  
 public:
   using BoundsType = struct
   {
@@ -87,236 +93,244 @@ public:
     int32_t Row;
     int32_t Col;
     IDataArray::Pointer ImageDataProxy;
-    //   AttributeMatrix::Pointer MetaData;
+    IGeometry::LengthUnit LengthUnit;
   };
 
-    using Self = ITKImportRoboMetMontage;
-    using Pointer = std::shared_ptr<Self>;
-    using ConstPointer = std::shared_ptr<const Self>;
-    using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<const Self>;
-    static Pointer NullPointer();
+  using Self = ITKImportRoboMetMontage;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<const Self>;
+  static Pointer NullPointer();
 
-    static std::shared_ptr<ITKImportRoboMetMontage> New();
 
-    /**
-    * @brief Returns the name of the class for ITKImportRoboMetMontage
-    */
-    QString getNameOfClass() const override;
-    /**
-    * @brief Returns the name of the class for ITKImportRoboMetMontage
-    */
-    static QString ClassName();
+  static std::shared_ptr<ITKImportRoboMetMontage> New();
 
+  /**
+   * @brief Returns the name of the class for ITKImportRoboMetMontage
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for ITKImportRoboMetMontage
+   */
+  static QString ClassName();
 
   ~ITKImportRoboMetMontage() override;
 
-    /**
-    * @brief Setter property for InputFile
-    */
-    void setInputFile(const QString& value); 
-    /**
-    * @brief Getter property for InputFile
-    * @return Value of InputFile
-    */
-    QString getInputFile() const;
+  /**
+   * @brief Setter property for MontageName
+   */
+  void setMontageName(const QString& value);
+  /**
+   * @brief Getter property for MontageName
+   * @return Value of MontageName
+   */
+  QString getMontageName() const;
+  Q_PROPERTY(QString MontageName READ getMontageName WRITE setMontageName)
+
+  /**
+   * @brief Setter property for LengthUnit
+   */
+  void setLengthUnit(int32_t value);
+  /**
+   * @brief Getter property for LengthUnit
+   * @return Value of LengthUnit
+   */
+  int32_t getLengthUnit() const;
+  Q_PROPERTY(int32_t LengthUnit READ getLengthUnit WRITE setLengthUnit)
+
+  /**
+   * @brief Setter property for InputFile
+   */
+  void setInputFile(const QString& value);
+  /**
+   * @brief Getter property for InputFile
+   * @return Value of InputFile
+   */
+  QString getInputFile() const;
 
   Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
-    /**
-    * @brief Setter property for MontageStart
-    */
-    void setMontageStart(const IntVec2Type& value); 
-    /**
-    * @brief Getter property for MontageStart
-    * @return Value of MontageStart
-    */
-    IntVec2Type getMontageStart() const;
+  /**
+   * @brief Setter property for ColumnMontageLimits
+   */
+  void setColumnMontageLimits(const IntVec2Type& value);
+  /**
+   * @brief Getter property for ColumnMontageLimits
+   * @return Value of ColumnMontageLimits
+   */
+  IntVec2Type getColumnMontageLimits() const;
+  Q_PROPERTY(IntVec2Type ColumnMontageLimits READ getColumnMontageLimits WRITE setColumnMontageLimits)
 
-  Q_PROPERTY(IntVec2Type MontageStart READ getMontageStart WRITE setMontageStart)
+  /**
+   * @brief Setter property for RowMontageLimits
+   */
+  void setRowMontageLimits(const IntVec2Type& value);
+  /**
+   * @brief Getter property for RowMontageLimits
+   * @return Value of RowMontageLimits
+   */
+  IntVec2Type getRowMontageLimits() const;
+  Q_PROPERTY(IntVec2Type RowMontageLimits READ getRowMontageLimits WRITE setRowMontageLimits)
 
-    /**
-    * @brief Setter property for MontageEnd
-    */
-    void setMontageEnd(const IntVec2Type& value); 
-    /**
-    * @brief Getter property for MontageEnd
-    * @return Value of MontageEnd
-    */
-    IntVec2Type getMontageEnd() const;
-
-  Q_PROPERTY(IntVec2Type MontageEnd READ getMontageEnd WRITE setMontageEnd)
-
-    /**
-    * @brief Setter property for DataContainerPath
-    */
-    void setDataContainerPath(const DataArrayPath& value); 
-    /**
-    * @brief Getter property for DataContainerPath
-    * @return Value of DataContainerPath
-    */
-    DataArrayPath getDataContainerPath() const;
+  /**
+   * @brief Setter property for DataContainerPath
+   */
+  void setDataContainerPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for DataContainerPath
+   * @return Value of DataContainerPath
+   */
+  DataArrayPath getDataContainerPath() const;
 
   Q_PROPERTY(DataArrayPath DataContainerPath READ getDataContainerPath WRITE setDataContainerPath)
 
-    /**
-    * @brief Setter property for CellAttributeMatrixName
-    */
-    void setCellAttributeMatrixName(const QString& value); 
-    /**
-    * @brief Getter property for CellAttributeMatrixName
-    * @return Value of CellAttributeMatrixName
-    */
-    QString getCellAttributeMatrixName() const;
+  /**
+   * @brief Setter property for CellAttributeMatrixName
+   */
+  void setCellAttributeMatrixName(const QString& value);
+  /**
+   * @brief Getter property for CellAttributeMatrixName
+   * @return Value of CellAttributeMatrixName
+   */
+  QString getCellAttributeMatrixName() const;
 
   Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
-    /**
-    * @brief Setter property for ImageDataArrayName
-    */
-    void setImageDataArrayName(const QString& value); 
-    /**
-    * @brief Getter property for ImageDataArrayName
-    * @return Value of ImageDataArrayName
-    */
-    QString getImageDataArrayName() const;
+  /**
+   * @brief Setter property for ImageDataArrayName
+   */
+  void setImageDataArrayName(const QString& value);
+  /**
+   * @brief Getter property for ImageDataArrayName
+   * @return Value of ImageDataArrayName
+   */
+  QString getImageDataArrayName() const;
 
   Q_PROPERTY(QString ImageDataArrayName READ getImageDataArrayName WRITE setImageDataArrayName)
 
-    /**
-    * @brief Setter property for ConvertToGrayScale
-    */
-    void setConvertToGrayScale(bool value); 
-    /**
-    * @brief Getter property for ConvertToGrayScale
-    * @return Value of ConvertToGrayScale
-    */
-    bool getConvertToGrayScale() const;
+  /**
+   * @brief Setter property for ConvertToGrayScale
+   */
+  void setConvertToGrayScale(bool value);
+  /**
+   * @brief Getter property for ConvertToGrayScale
+   * @return Value of ConvertToGrayScale
+   */
+  bool getConvertToGrayScale() const;
 
   Q_PROPERTY(bool ConvertToGrayScale READ getConvertToGrayScale WRITE setConvertToGrayScale)
 
-    /**
-    * @brief Setter property for ColorWeights
-    */
-    void setColorWeights(const FloatVec3Type& value); 
-    /**
-    * @brief Getter property for ColorWeights
-    * @return Value of ColorWeights
-    */
-    FloatVec3Type getColorWeights() const;
+  /**
+   * @brief Setter property for ColorWeights
+   */
+  void setColorWeights(const FloatVec3Type& value);
+  /**
+   * @brief Getter property for ColorWeights
+   * @return Value of ColorWeights
+   */
+  FloatVec3Type getColorWeights() const;
 
   Q_PROPERTY(FloatVec3Type ColorWeights READ getColorWeights WRITE setColorWeights)
 
-    /**
-    * @brief Setter property for ChangeOrigin
-    */
-    void setChangeOrigin(bool value); 
-    /**
-    * @brief Getter property for ChangeOrigin
-    * @return Value of ChangeOrigin
-    */
-    bool getChangeOrigin() const;
+  /**
+   * @brief Setter property for ChangeOrigin
+   */
+  void setChangeOrigin(bool value);
+  /**
+   * @brief Getter property for ChangeOrigin
+   * @return Value of ChangeOrigin
+   */
+  bool getChangeOrigin() const;
 
   Q_PROPERTY(bool ChangeOrigin READ getChangeOrigin WRITE setChangeOrigin)
 
-    /**
-    * @brief Setter property for Origin
-    */
-    void setOrigin(const FloatVec3Type& value); 
-    /**
-    * @brief Getter property for Origin
-    * @return Value of Origin
-    */
-    FloatVec3Type getOrigin() const;
+  /**
+   * @brief Setter property for Origin
+   */
+  void setOrigin(const FloatVec3Type& value);
+  /**
+   * @brief Getter property for Origin
+   * @return Value of Origin
+   */
+  FloatVec3Type getOrigin() const;
 
   Q_PROPERTY(FloatVec3Type Origin READ getOrigin WRITE setOrigin)
 
-    /**
-    * @brief Setter property for ChangeSpacing
-    */
-    void setChangeSpacing(bool value); 
-    /**
-    * @brief Getter property for ChangeSpacing
-    * @return Value of ChangeSpacing
-    */
-    bool getChangeSpacing() const;
+  /**
+   * @brief Setter property for ChangeSpacing
+   */
+  void setChangeSpacing(bool value);
+  /**
+   * @brief Getter property for ChangeSpacing
+   * @return Value of ChangeSpacing
+   */
+  bool getChangeSpacing() const;
 
   Q_PROPERTY(bool ChangeSpacing READ getChangeSpacing WRITE setChangeSpacing)
 
-    /**
-    * @brief Setter property for Spacing
-    */
-    void setSpacing(const FloatVec3Type& value); 
-    /**
-    * @brief Getter property for Spacing
-    * @return Value of Spacing
-    */
-    FloatVec3Type getSpacing() const;
+  /**
+   * @brief Setter property for Spacing
+   */
+  void setSpacing(const FloatVec3Type& value);
+  /**
+   * @brief Getter property for Spacing
+   * @return Value of Spacing
+   */
+  FloatVec3Type getSpacing() const;
 
   Q_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
 
-    /**
-    * @brief Setter property for SliceNumber
-    */
-    void setSliceNumber(int value); 
-    /**
-    * @brief Getter property for SliceNumber
-    * @return Value of SliceNumber
-    */
-    int getSliceNumber() const;
+  /**
+   * @brief Setter property for SliceNumber
+   */
+  void setSliceNumber(int value);
+  /**
+   * @brief Getter property for SliceNumber
+   * @return Value of SliceNumber
+   */
+  int getSliceNumber() const;
 
   Q_PROPERTY(int SliceNumber READ getSliceNumber WRITE setSliceNumber)
 
-    /**
-    * @brief Setter property for ImageFilePrefix
-    */
-    void setImageFilePrefix(const QString& value); 
-    /**
-    * @brief Getter property for ImageFilePrefix
-    * @return Value of ImageFilePrefix
-    */
-    QString getImageFilePrefix() const;
+  /**
+   * @brief Setter property for ImageFilePrefix
+   */
+  void setImageFilePrefix(const QString& value);
+  /**
+   * @brief Getter property for ImageFilePrefix
+   * @return Value of ImageFilePrefix
+   */
+  QString getImageFilePrefix() const;
 
   Q_PROPERTY(QString ImageFilePrefix READ getImageFilePrefix WRITE setImageFilePrefix)
 
-    /**
-    * @brief Setter property for ImageFileExtension
-    */
-    void setImageFileExtension(const QString& value); 
-    /**
-    * @brief Getter property for ImageFileExtension
-    * @return Value of ImageFileExtension
-    */
-    QString getImageFileExtension() const;
+  /**
+   * @brief Setter property for ImageFileExtension
+   */
+  void setImageFileExtension(const QString& value);
+  /**
+   * @brief Getter property for ImageFileExtension
+   * @return Value of ImageFileExtension
+   */
+  QString getImageFileExtension() const;
 
   Q_PROPERTY(QString ImageFileExtension READ getImageFileExtension WRITE setImageFileExtension)
 
   QString getMontageInformation();
   Q_PROPERTY(QString MontageInformation READ getMontageInformation)
 
-    /**
-    * @brief Setter property for FileWasRead
-    */
-    void setFileWasRead(bool value); 
-    /**
-    * @brief Getter property for FileWasRead
-    * @return Value of FileWasRead
-    */
-    bool getFileWasRead() const;
+  /**
+   * @brief Setter property for FileWasRead
+   */
+  void setFileWasRead(bool value);
+  /**
+   * @brief Getter property for FileWasRead
+   * @return Value of FileWasRead
+   */
+  bool getFileWasRead() const;
 
   Q_PROPERTY(bool FileWasRead READ getFileWasRead)
-
-    /**
-    * @brief Setter property for LengthUnit
-    */
-    void setLengthUnit(int32_t value); 
-    /**
-    * @brief Getter property for LengthUnit
-    * @return Value of LengthUnit
-    */
-    int32_t getLengthUnit() const;
-
-  Q_PROPERTY(int32_t LengthUnit READ getLengthUnit WRITE setLengthUnit)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -405,7 +419,6 @@ public:
 
 
 
-
 protected:
   ITKImportRoboMetMontage();
 
@@ -447,27 +460,30 @@ protected:
   QString getImageFilePath(const QString& filePath, int imageNumber, int row, int col);
 
 private:
-    QString m_InputFile = {};
-    IntVec2Type m_MontageStart = {};
-    IntVec2Type m_MontageEnd = {};
-    DataArrayPath m_DataContainerPath = {};
-    QString m_CellAttributeMatrixName = {};
-    QString m_ImageDataArrayName = {};
-    bool m_ConvertToGrayScale = {};
-    FloatVec3Type m_ColorWeights = {};
-    bool m_ChangeOrigin = {};
-    FloatVec3Type m_Origin = {};
-    bool m_ChangeSpacing = {};
-    FloatVec3Type m_Spacing = {};
-    int m_SliceNumber = {};
-    QString m_ImageFilePrefix = {};
-    QString m_ImageFileExtension = {};
-    bool m_FileWasRead = {};
-    int32_t m_LengthUnit = {};
+  QString m_MontageName = QString("Zen Montage");
+  int32_t m_LengthUnit = 6;
+  QString m_InputFile = {};
+  IntVec2Type m_ColumnMontageLimits = {0, 0};
+  IntVec2Type m_RowMontageLimits = {0, 0};
+  IntVec2Type m_MontageStart = {0, 0};
+  IntVec2Type m_MontageEnd = {0, 0};
+  DataArrayPath m_DataContainerPath = {ITKImageProcessing::Montage::k_DataContaineNameDefaultName, "", ""};
+  QString m_CellAttributeMatrixName = {ITKImageProcessing::Montage::k_TileAttributeMatrixDefaultName};
+  QString m_ImageDataArrayName = {ITKImageProcessing::Montage::k_TileDataArrayDefaultName};
+  bool m_ConvertToGrayScale = {};
+  FloatVec3Type m_ColorWeights = {0.2125f, 0.7154f, 0.0721f};
+  bool m_ChangeOrigin = {};
+  FloatVec3Type m_Origin = {0.0f, 0.0f, 0.0f};
+  bool m_ChangeSpacing = {};
+  FloatVec3Type m_Spacing = {1.0f, 1.0f, 1.0f};
+  int m_SliceNumber = {};
+  QString m_ImageFilePrefix = {};
+  QString m_ImageFileExtension = {};
+  bool m_FileWasRead = {};
 
   QScopedPointer<ITKImportRoboMetMontagePrivate> const d_ptr;
 
-  int32_t m_NumImages = -1;
+  int32_t m_NumImages = {0};
   int m_RowCount = -1;
   int m_ColumnCount = -1;
 

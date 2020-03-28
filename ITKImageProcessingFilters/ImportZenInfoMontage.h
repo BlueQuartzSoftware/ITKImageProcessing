@@ -41,8 +41,10 @@
 #include "SIMPLib/Common/SIMPLArray.hpp"
 #include "SIMPLib/DataArrays/IDataArray.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/Geometry/IGeometry.h"
 
 #include "ITKImageProcessing/ITKImageProcessingPlugin.h"
+
 // our PIMPL private class
 class ImportZenInfoMontagePrivate;
 
@@ -58,6 +60,8 @@ class ITKImageProcessing_EXPORT ImportZenInfoMontage : public AbstractFilter
   PYB11_BEGIN_BINDINGS(ImportZenInfoMontage SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(ImportZenInfoMontage)
   PYB11_FILTER_NEW_MACRO(ImportZenInfoMontage)
+  PYB11_PROPERTY(QString MontageName READ getMontageName WRITE setMontageName)
+  PYB11_PROPERTY(int32_t LengthUnit READ getLengthUnit WRITE setLengthUnit)
   PYB11_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
   PYB11_PROPERTY(DataArrayPath DataContainerPath READ getDataContainerPath WRITE setDataContainerPath)
   PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
@@ -70,8 +74,8 @@ class ITKImageProcessing_EXPORT ImportZenInfoMontage : public AbstractFilter
   PYB11_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
   PYB11_PROPERTY(int32_t RowCount READ getRowCount)
   PYB11_PROPERTY(int32_t ColumnCount READ getColumnCount)
-  PYB11_PROPERTY(IntVec2Type MontageStart READ getMontageStart WRITE setMontageStart)
-  PYB11_PROPERTY(IntVec2Type MontageEnd READ getMontageEnd WRITE setMontageEnd)
+  PYB11_PROPERTY(IntVec2Type ColumnMontageLimits READ getColumnMontageLimits WRITE setColumnMontageLimits)
+  PYB11_PROPERTY(IntVec2Type RowMontageLimits READ getRowMontageLimits WRITE setRowMontageLimits)
   PYB11_END_BINDINGS()
   // End Python bindings declarations
   // clang-format on
@@ -92,6 +96,7 @@ public:
     int32_t Row;
     int32_t Col;
     IDataArray::Pointer ImageDataProxy;
+    IGeometry::LengthUnit LengthUnit;
   };
 
   using Self = ImportZenInfoMontage;
@@ -115,6 +120,28 @@ public:
   ~ImportZenInfoMontage() override;
 
   /**
+   * @brief Setter property for MontageName
+   */
+  void setMontageName(const QString& value);
+  /**
+   * @brief Getter property for MontageName
+   * @return Value of MontageName
+   */
+  QString getMontageName() const;
+  Q_PROPERTY(QString MontageName READ getMontageName WRITE setMontageName)
+
+  /**
+   * @brief Setter property for LengthUnit
+   */
+  void setLengthUnit(int32_t value);
+  /**
+   * @brief Getter property for LengthUnit
+   * @return Value of LengthUnit
+   */
+  int32_t getLengthUnit() const;
+  Q_PROPERTY(int32_t LengthUnit READ getLengthUnit WRITE setLengthUnit)
+
+  /**
    * @brief Setter property for InputFile
    */
   void setInputFile(const QString& value);
@@ -127,28 +154,26 @@ public:
   Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
   /**
-   * @brief Setter property for MontageStart
+   * @brief Setter property for ColumnMontageLimits
    */
-  void setMontageStart(const IntVec2Type& value);
+  void setColumnMontageLimits(const IntVec2Type& value);
   /**
-   * @brief Getter property for MontageStart
-   * @return Value of MontageStart
+   * @brief Getter property for ColumnMontageLimits
+   * @return Value of ColumnMontageLimits
    */
-  IntVec2Type getMontageStart() const;
-
-  Q_PROPERTY(IntVec2Type MontageStart READ getMontageStart WRITE setMontageStart)
+  IntVec2Type getColumnMontageLimits() const;
+  Q_PROPERTY(IntVec2Type ColumnMontageLimits READ getColumnMontageLimits WRITE setColumnMontageLimits)
 
   /**
-   * @brief Setter property for MontageEnd
+   * @brief Setter property for RowMontageLimits
    */
-  void setMontageEnd(const IntVec2Type& value);
+  void setRowMontageLimits(const IntVec2Type& value);
   /**
-   * @brief Getter property for MontageEnd
-   * @return Value of MontageEnd
+   * @brief Getter property for RowMontageLimits
+   * @return Value of RowMontageLimits
    */
-  IntVec2Type getMontageEnd() const;
-
-  Q_PROPERTY(IntVec2Type MontageEnd READ getMontageEnd WRITE setMontageEnd)
+  IntVec2Type getRowMontageLimits() const;
+  Q_PROPERTY(IntVec2Type RowMontageLimits READ getRowMontageLimits WRITE setRowMontageLimits)
 
   /**
    * @brief Setter property for DataContainerPath
@@ -425,9 +450,13 @@ protected:
   void findTileIndices(int32_t tolerance, std::vector<BoundsType>& bounds);
 
 private:
+  QString m_MontageName = QString("Zen Montage");
+  int32_t m_LengthUnit = 6;
   QString m_InputFile = {};
-  IntVec2Type m_MontageStart = {};
-  IntVec2Type m_MontageEnd = {};
+  IntVec2Type m_ColumnMontageLimits = {0, 0};
+  IntVec2Type m_RowMontageLimits = {0, 0};
+  IntVec2Type m_MontageStart = {0, 0};
+  IntVec2Type m_MontageEnd = {0, 0};
   DataArrayPath m_DataContainerPath = {};
   QString m_CellAttributeMatrixName = {};
   QString m_ImageDataArrayName = {};
@@ -446,9 +475,6 @@ private:
   int32_t m_Tolerance = 100;
 
 public:
-  /* Rule of 5: All special member functions should be defined if any are defined.
-   * https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md#c21-if-you-define-or-delete-any-default-operation-define-or-delete-them-all
-   */
   ImportZenInfoMontage(const ImportZenInfoMontage&) = delete;            // Copy Constructor Not Implemented
   ImportZenInfoMontage& operator=(const ImportZenInfoMontage&) = delete; // Copy Assignment Not Implemented
   ImportZenInfoMontage(ImportZenInfoMontage&&) = delete;                 // Move Constructor Not Implemented

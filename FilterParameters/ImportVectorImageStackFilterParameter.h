@@ -37,66 +37,11 @@
 
 #include <memory>
 
-#include "SIMPLib/FilterParameters/FilterParameter.h"
-
 #include <QtCore/QJsonObject>
 
-typedef struct
-{
-  qint32 PaddingDigits = 3;
-  quint32 Ordering = 0; /* Ordering=0 = Ascending, Ordering=1 = Descending */
-  qint32 StartIndex = 0;
-  qint32 EndIndex = 1;
-  qint32 IncrementIndex = 1;
-  qint32 StartComponent = 0;
-  qint32 EndComponent = 1;
-  QString Separator = QString("-");
-  QString InputPath;
-  QString FilePrefix;
-  QString FileSuffix;
-  QString FileExtension;
+#include "SIMPLib/FilterParameters/FilterParameter.h"
 
-  void writeJson(QJsonObject& json)
-  {
-    json["PaddingDigits"] = static_cast<double>(PaddingDigits);
-    json["Ordering"] = static_cast<double>(Ordering);
-    json["StartIndex"] = static_cast<double>(StartIndex);
-    json["EndIndex"] = static_cast<double>(EndIndex);
-    json["IncrementIndex"] = static_cast<double>(IncrementIndex);
-    json["InputPath"] = InputPath;
-    json["FilePrefix"] = FilePrefix;
-    json["FileSuffix"] = FileSuffix;
-    json["FileExtension"] = FileExtension;
-    json["StartComponent"] = StartComponent;
-    json["EndComponent"] = EndComponent;
-    json["Separator"] = Separator;
-  }
-
-  bool readJson(QJsonObject& json)
-  {
-    if(json["PaddingDigits"].isDouble() && json["Ordering"].isDouble() && json["StartIndex"].isDouble() && json["EndIndex"].isDouble() && json["IncrementIndex"].isDouble() &&
-       json["InputPath"].isString() && json["FilePrefix"].isString() && json["FileSuffix"].isString() && json["FileExtension"].isString())
-    {
-      PaddingDigits = static_cast<qint32>(json["PaddingDigits"].toDouble());
-      Ordering = static_cast<quint32>(json["Ordering"].toDouble());
-      StartIndex = static_cast<qint32>(json["StartIndex"].toDouble());
-      EndIndex = static_cast<qint32>(json["EndIndex"].toDouble());
-      IncrementIndex = static_cast<qint32>(json["IncrementIndex"].toDouble());
-      InputPath = json["InputPath"].toString();
-      FilePrefix = json["FilePrefix"].toString();
-      FileSuffix = json["FileSuffix"].toString();
-      FileExtension = json["FileExtension"].toString();
-      StartComponent = static_cast<qint32>(json["StartComponent"].toDouble());
-      EndComponent = static_cast<qint32>(json["EndComponent"].toDouble());
-      Separator = json["Separator"].toString();
-
-      return true;
-    }
-    return false;
-  }
-} VectorFileListInfo_t;
-
-Q_DECLARE_METATYPE(VectorFileListInfo_t)
+#include "VectorFileListInfo.h"
 
 /**
  * @brief SIMPL_NEW_FILELISTINFO_FP This macro is a short-form way of instantiating an instance of
@@ -133,8 +78,8 @@ public:
    */
   static QString ClassName();
 
-  typedef std::function<void(VectorFileListInfo_t)> SetterCallbackType;
-  typedef std::function<VectorFileListInfo_t(void)> GetterCallbackType;
+  using SetterCallbackType = std::function<void(VectorFileListInfo_t)>;
+  using GetterCallbackType = std::function<VectorFileListInfo_t(void)>;
 
   /**
    * @brief New This function instantiates an instance of the FileListInfoFilterParameter. Although this
@@ -152,8 +97,8 @@ public:
   * that this FilterParameter subclass represents.
    * @return
    */
-  static Pointer New(const QString& humanLabel, const QString& propertyName, const VectorFileListInfo_t& defaultValue, Category category, SetterCallbackType setterCallback,
-                     GetterCallbackType getterCallback);
+  static Pointer New(const QString& humanLabel, const QString& propertyName, const VectorFileListInfo_t& defaultValue, Category category, const SetterCallbackType& setterCallback,
+                     const GetterCallbackType& getterCallback, int groupIndex = -1);
 
   ~ImportVectorImageStackFilterParameter() override;
 
@@ -208,7 +153,9 @@ private:
   ImportVectorImageStackFilterParameter::SetterCallbackType m_SetterCallback = {};
   ImportVectorImageStackFilterParameter::GetterCallbackType m_GetterCallback = {};
 
-  ImportVectorImageStackFilterParameter(const ImportVectorImageStackFilterParameter&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ImportVectorImageStackFilterParameter&) = delete;                        // Move assignment Not Implemented
+public:
+  ImportVectorImageStackFilterParameter(const ImportVectorImageStackFilterParameter&) = delete;            // Copy Constructor Not Implemented
+  ImportVectorImageStackFilterParameter(ImportVectorImageStackFilterParameter&&) = delete;                 // Move Constructor Not Implemented
+  ImportVectorImageStackFilterParameter& operator=(const ImportVectorImageStackFilterParameter&) = delete; // Copy Assignment Not Implemented
+  ImportVectorImageStackFilterParameter& operator=(ImportVectorImageStackFilterParameter&&) = delete;      // Move Assignment Not Implemented
 };
-

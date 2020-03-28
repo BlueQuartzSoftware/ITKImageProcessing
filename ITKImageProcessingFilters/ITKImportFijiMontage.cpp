@@ -46,6 +46,7 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/CoreFilters/ConvertColorToGrayScale.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
@@ -124,10 +125,6 @@ ITKImportFijiMontage::ITKImportFijiMontage()
 , m_DataContainerPath(ITKImageProcessing::Montage::k_DataContaineNameDefaultName)
 , m_CellAttributeMatrixName(ITKImageProcessing::Montage::k_TileAttributeMatrixDefaultName)
 , m_ImageDataArrayName(ITKImageProcessing::Montage::k_TileDataArrayDefaultName)
-, m_ConvertToGrayScale(false)
-, m_ChangeOrigin(false)
-, m_ChangeSpacing(false)
-, m_LengthUnit(-1)
 , d_ptr(new ITKImportFijiMontagePrivate(this))
 {
   m_ColorWeights = FloatVec3Type(0.2125f, 0.7154f, 0.0721f);
@@ -192,6 +189,12 @@ void ITKImportFijiMontage::initialize()
   clearErrorCode();
   clearWarningCode();
   setCancel(false);
+
+  m_MontageStart[0] = m_ColumnMontageLimits[0];
+  m_MontageStart[1] = m_RowMontageLimits[0];
+
+  m_MontageEnd[0] = m_ColumnMontageLimits[1];
+  m_MontageEnd[1] = m_RowMontageLimits[1];
 }
 
 // -----------------------------------------------------------------------------
@@ -202,12 +205,15 @@ void ITKImportFijiMontage::setupFilterParameters()
   FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Fiji Configuration File", InputFile, FilterParameter::Parameter, ITKImportFijiMontage, "*.txt"));
 
+  parameters.push_back(SIMPL_NEW_STRING_FP("Name of Created Montage", MontageName, FilterParameter::Parameter, ITKImportFijiMontage));
+  parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage Column Start/End [Inclusive, Zero Based]", ColumnMontageLimits, FilterParameter::Parameter, ITKImportFijiMontage));
+  parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage Row Start/End [Inclusive, Zero Based]", RowMontageLimits, FilterParameter::Parameter, ITKImportFijiMontage));
+  QVector<QString> choices = IGeometry::GetAllLengthUnitStrings();
+  parameters.push_back(SIMPL_NEW_CHOICE_FP("Length Unit", LengthUnit, FilterParameter::Parameter, ITKImportFijiMontage, choices, false));
+
   PreflightUpdatedValueFilterParameter::Pointer param = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Montage Information", MontageInformation, FilterParameter::Parameter, ITKImportFijiMontage);
   param->setReadOnly(true);
   parameters.push_back(param);
-
-  parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage Start (Col, Row) [Inclusive, Zero Based]", MontageStart, FilterParameter::Parameter, ITKImportFijiMontage));
-  parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage End (Col, Row) [Inclusive, Zero Based]", MontageEnd, FilterParameter::Parameter, ITKImportFijiMontage));
 
   QStringList linkedProps("Origin");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Change Origin", ChangeOrigin, FilterParameter::Parameter, ITKImportFijiMontage, linkedProps));
@@ -236,8 +242,7 @@ void ITKImportFijiMontage::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void ITKImportFijiMontage::dataCheck()
 {
-  clearErrorCode();
-  clearWarningCode();
+  initialize();
 
   QString ss;
   QFileInfo fi(getInputFile());
@@ -418,6 +423,7 @@ void ITKImportFijiMontage::generateCache()
     QFileInfo fi(getInputFile());
     QString absolutePath = fi.absolutePath() + QDir::separator() + bound.Filename;
     bound.Filename = absolutePath;
+    bound.LengthUnit = static_cast<IGeometry::LengthUnit>(getLengthUnit());
 
     DataArrayPath dap(::k_DCName, ITKImageProcessing::Montage::k_AMName, ITKImageProcessing::Montage::k_AAName);
     AbstractFilter::Pointer imageImportFilter = MontageImportHelper::CreateImageImportFilter(this, bound.Filename, dap);
@@ -479,8 +485,7 @@ void ITKImportFijiMontage::generateCache()
 
   QString montageInfo;
   QTextStream ss(&montageInfo);
-  ss << "Max Column: " << m_ColumnCount - 1 << "  Max Row: " << m_RowCount - 1 << "  Image Count: " << m_ColumnCount * m_RowCount;
-  ss << ITKImageProcessing::Montage::k_MontageInfoReplaceKeyword;
+  ss << "Tile Column(s): " << m_ColumnCount - 1 << "  Tile Row(s): " << m_RowCount - 1 << "  Image Count: " << m_ColumnCount * m_RowCount;
 
   FloatVec3Type overrideOrigin = minCoord;
   FloatVec3Type overrideSpacing = minSpacing;
@@ -509,6 +514,7 @@ void ITKImportFijiMontage::generateCache()
   }
   ss << "\nOrigin: " << overrideOrigin[0] << ", " << overrideOrigin[1] << ", " << overrideOrigin[2];
   ss << "\nSpacing: " << overrideSpacing[0] << ", " << overrideSpacing[1] << ", " << overrideSpacing[2];
+  ss << ITKImageProcessing::Montage::k_MontageInfoReplaceKeyword;
   d_ptr->m_MontageInformation = montageInfo;
   setBoundsCache(bounds);
 }
@@ -520,7 +526,8 @@ void ITKImportFijiMontage::generateDataStructure()
 
   DataContainerArray::Pointer dca = getDataContainerArray();
 
-  // int imageCountPadding = MetaXmlUtils::CalculatePaddingDigits(bounds.size());
+  GridMontage::Pointer gridMontage = GridMontage::New(getMontageName(), m_RowCount, m_ColumnCount);
+
   int32_t rowCountPadding = MetaXmlUtils::CalculatePaddingDigits(m_RowCount);
   int32_t colCountPadding = MetaXmlUtils::CalculatePaddingDigits(m_ColumnCount);
   int charPaddingCount = std::max(rowCountPadding, colCountPadding);
@@ -535,7 +542,7 @@ void ITKImportFijiMontage::generateDataStructure()
     // Create our DataContainer Name using a Prefix and a rXXcYY format.
     QString dcName = getDataContainerPath().getDataContainerName();
     QTextStream dcNameStream(&dcName);
-    dcNameStream << "_r";
+    dcNameStream << "r";
     dcNameStream.setFieldWidth(charPaddingCount);
     dcNameStream.setFieldAlignment(QTextStream::AlignRight);
     dcNameStream.setPadChar('0');
@@ -557,8 +564,13 @@ void ITKImportFijiMontage::generateDataStructure()
     image->setDimensions(bound.Dims);
     image->setOrigin(bound.Origin);
     image->setSpacing(bound.Spacing);
+    image->setUnits(bound.LengthUnit);
 
     dc->setGeometry(image);
+
+    GridTileIndex gridIndex = gridMontage->getTileIndex(bound.Row, bound.Col);
+    // Set the montage's DataContainer for the current index
+    gridMontage->setDataContainer(gridIndex, dc);
 
     using StdVecSizeType = std::vector<size_t>;
     // Create the Cell Attribute Matrix into which the image data would be read
@@ -566,6 +578,7 @@ void ITKImportFijiMontage::generateDataStructure()
     dc->addOrReplaceAttributeMatrix(cellAttrMat);
     cellAttrMat->addOrReplaceAttributeArray(bound.ImageDataProxy);
   }
+  getDataContainerArray()->addOrReplaceMontage(gridMontage);
 }
 
 // -----------------------------------------------------------------------------
@@ -596,7 +609,7 @@ void ITKImportFijiMontage::readImages()
     // Create our DataContainer Name using a Prefix and a rXXcYY format.
     QString dcName = getDataContainerPath().getDataContainerName();
     QTextStream dcNameStream(&dcName);
-    dcNameStream << "_r";
+    dcNameStream << "r";
     dcNameStream.setFieldWidth(charPaddingCount);
     dcNameStream.setFieldAlignment(QTextStream::AlignRight);
     dcNameStream.setPadChar('0');
@@ -704,7 +717,8 @@ QString ITKImportFijiMontage::getMontageInformation()
   QTextStream ss(&montageInfo);
   int32_t importedCols = m_MontageEnd[0] - m_MontageStart[0] + 1;
   int32_t importedRows = m_MontageEnd[1] - m_MontageStart[1] + 1;
-  ss << "\nImported Columns: " << importedCols << "  Imported Rows: " << importedRows << "  Imported Image Count: " << (importedCols * importedRows);
+  ss << "\n"
+     << "Imported Columns: " << importedCols << "  Imported Rows: " << importedRows << "  Imported Image Count: " << (importedCols * importedRows);
   info = info.replace(ITKImageProcessing::Montage::k_MontageInfoReplaceKeyword, montageInfo);
   return info;
 }
@@ -907,7 +921,7 @@ ITKImportFijiMontage::Pointer ITKImportFijiMontage::NullPointer()
 // -----------------------------------------------------------------------------
 std::shared_ptr<ITKImportFijiMontage> ITKImportFijiMontage::New()
 {
-  struct make_shared_enabler : public ITKImportFijiMontage  
+  struct make_shared_enabler : public ITKImportFijiMontage
   {
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
@@ -940,27 +954,27 @@ QString ITKImportFijiMontage::getInputFile() const
 }
 
 // -----------------------------------------------------------------------------
-void ITKImportFijiMontage::setMontageStart(const IntVec2Type& value)
+void ITKImportFijiMontage::setColumnMontageLimits(const IntVec2Type& value)
 {
-  m_MontageStart = value;
+  m_ColumnMontageLimits = value;
 }
 
 // -----------------------------------------------------------------------------
-IntVec2Type ITKImportFijiMontage::getMontageStart() const
+IntVec2Type ITKImportFijiMontage::getColumnMontageLimits() const
 {
-  return m_MontageStart;
+  return m_ColumnMontageLimits;
 }
 
 // -----------------------------------------------------------------------------
-void ITKImportFijiMontage::setMontageEnd(const IntVec2Type& value)
+void ITKImportFijiMontage::setRowMontageLimits(const IntVec2Type& value)
 {
-  m_MontageEnd = value;
+  m_RowMontageLimits = value;
 }
 
 // -----------------------------------------------------------------------------
-IntVec2Type ITKImportFijiMontage::getMontageEnd() const
+IntVec2Type ITKImportFijiMontage::getRowMontageLimits() const
 {
-  return m_MontageEnd;
+  return m_RowMontageLimits;
 }
 
 // -----------------------------------------------------------------------------
@@ -1084,6 +1098,19 @@ int32_t ITKImportFijiMontage::getColumnCount() const
 }
 
 // -----------------------------------------------------------------------------
+void ITKImportFijiMontage::setMontageName(const QString& value)
+{
+  m_MontageName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ITKImportFijiMontage::getMontageName() const
+{
+  return m_MontageName;
+}
+
+//
+// -----------------------------------------------------------------------------
 void ITKImportFijiMontage::setLengthUnit(int32_t value)
 {
   m_LengthUnit = value;
@@ -1094,5 +1121,3 @@ int32_t ITKImportFijiMontage::getLengthUnit() const
 {
   return m_LengthUnit;
 }
-
-

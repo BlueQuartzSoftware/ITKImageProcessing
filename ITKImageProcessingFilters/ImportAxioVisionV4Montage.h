@@ -67,6 +67,7 @@ class ITKImageProcessing_EXPORT ImportAxioVisionV4Montage : public AbstractFilte
   PYB11_BEGIN_BINDINGS(ImportAxioVisionV4Montage SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(ImportAxioVisionV4Montage)
   PYB11_FILTER_NEW_MACRO(ImportAxioVisionV4Montage)
+  PYB11_PROPERTY(QString MontageName READ getMontageName WRITE setMontageName)
   PYB11_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
   PYB11_PROPERTY(DataArrayPath DataContainerPath READ getDataContainerPath WRITE setDataContainerPath)
   PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
@@ -81,8 +82,8 @@ class ITKImageProcessing_EXPORT ImportAxioVisionV4Montage : public AbstractFilte
   PYB11_PROPERTY(int32_t ColumnCount READ getColumnCount)
   PYB11_PROPERTY(bool ImportAllMetaData READ getImportAllMetaData WRITE setImportAllMetaData)
   PYB11_PROPERTY(QString MetaDataAttributeMatrixName getMetaDataAttributeMatrixName WRITE setMetaDataAttributeMatrixName)
-  PYB11_PROPERTY(IntVec2Type MontageStart READ getMontageStart WRITE setMontageStart)
-  PYB11_PROPERTY(IntVec2Type MontageEnd READ getMontageEnd WRITE setMontageEnd)
+  PYB11_PROPERTY(IntVec2Type ColumnMontageLimits READ getColumnMontageLimits WRITE setColumnMontageLimits)
+  PYB11_PROPERTY(IntVec2Type RowMontageLimits READ getRowMontageLimits WRITE setRowMontageLimits)
   PYB11_END_BINDINGS()
   // clang-format on
   // End Python bindings declarations
@@ -100,6 +101,7 @@ public:
     int32_t Col;
     IDataArray::Pointer ImageDataProxy;
     AttributeMatrix::Pointer MetaData;
+    IGeometry::LengthUnit LengthUnit;
   };
 
   using Self = ImportAxioVisionV4Montage;
@@ -123,6 +125,17 @@ public:
   ~ImportAxioVisionV4Montage() override;
 
   /**
+   * @brief Setter property for MontageName
+   */
+  void setMontageName(const QString& value);
+  /**
+   * @brief Getter property for MontageName
+   * @return Value of MontageName
+   */
+  QString getMontageName() const;
+  Q_PROPERTY(QString MontageName READ getMontageName WRITE setMontageName)
+
+  /**
    * @brief Setter property for InputFile
    */
   void setInputFile(const QString& value);
@@ -135,28 +148,26 @@ public:
   Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
   /**
-   * @brief Setter property for MontageStart
+   * @brief Setter property for ColumnMontageLimits
    */
-  void setMontageStart(const IntVec2Type& value);
+  void setColumnMontageLimits(const IntVec2Type& value);
   /**
-   * @brief Getter property for MontageStart
-   * @return Value of MontageStart
+   * @brief Getter property for ColumnMontageLimits
+   * @return Value of ColumnMontageLimits
    */
-  IntVec2Type getMontageStart() const;
-
-  Q_PROPERTY(IntVec2Type MontageStart READ getMontageStart WRITE setMontageStart)
+  IntVec2Type getColumnMontageLimits() const;
+  Q_PROPERTY(IntVec2Type ColumnMontageLimits READ getColumnMontageLimits WRITE setColumnMontageLimits)
 
   /**
-   * @brief Setter property for MontageEnd
+   * @brief Setter property for RowMontageLimits
    */
-  void setMontageEnd(const IntVec2Type& value);
+  void setRowMontageLimits(const IntVec2Type& value);
   /**
-   * @brief Getter property for MontageEnd
-   * @return Value of MontageEnd
+   * @brief Getter property for RowMontageLimits
+   * @return Value of RowMontageLimits
    */
-  IntVec2Type getMontageEnd() const;
-
-  Q_PROPERTY(IntVec2Type MontageEnd READ getMontageEnd WRITE setMontageEnd)
+  IntVec2Type getRowMontageLimits() const;
+  Q_PROPERTY(IntVec2Type RowMontageLimits READ getRowMontageLimits WRITE setRowMontageLimits)
 
   /**
    * @brief Setter property for DataContainerPath
@@ -490,19 +501,22 @@ protected:
   void addRootMetaData(const AttributeMatrix::Pointer& metaAm, const ZeissTagsXmlSection::Pointer& rootTagsSection, int index);
 
 private:
+  QString m_MontageName = QString("AxioVision Montage");
   QString m_InputFile = {};
-  IntVec2Type m_MontageStart = {};
-  IntVec2Type m_MontageEnd = {};
+  IntVec2Type m_ColumnMontageLimits = {0, 0};
+  IntVec2Type m_RowMontageLimits = {0, 0};
+  IntVec2Type m_MontageStart = {0, 0};
+  IntVec2Type m_MontageEnd = {0, 0};
   DataArrayPath m_DataContainerPath = {};
   QString m_CellAttributeMatrixName = {};
   QString m_ImageDataArrayName = {};
   QString m_MetaDataAttributeMatrixName = {};
-  bool m_ConvertToGrayScale = {};
-  bool m_ImportAllMetaData = {};
+  bool m_ConvertToGrayScale = false;
+  bool m_ImportAllMetaData = false;
   FloatVec3Type m_ColorWeights = {};
-  bool m_ChangeOrigin = {};
+  bool m_ChangeOrigin = false;
   FloatVec3Type m_Origin = {};
-  bool m_ChangeSpacing = {};
+  bool m_ChangeSpacing = false;
   FloatVec3Type m_Spacing = {};
   bool m_FileWasRead = {};
   QStringList m_GeneratedFileList = {};

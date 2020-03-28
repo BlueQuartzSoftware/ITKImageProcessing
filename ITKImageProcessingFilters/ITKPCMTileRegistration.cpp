@@ -44,6 +44,7 @@
 #include "SIMPLib/Common/TemplateHelpers.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatFilterParameter.h"
+#include "SIMPLib/FilterParameters/IntFilterParameter.h"
 #include "SIMPLib/FilterParameters/IntVec2FilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/MultiDataContainerSelectionFilterParameter.h"
@@ -173,6 +174,12 @@ void ITKPCMTileRegistration::initialize()
   clearErrorCode();
   clearWarningCode();
   setCancel(false);
+
+  m_MontageStart[0] = m_ColumnMontageLimits[0];
+  m_MontageStart[1] = m_RowMontageLimits[0];
+
+  m_MontageEnd[0] = m_ColumnMontageLimits[1];
+  m_MontageEnd[1] = m_RowMontageLimits[1];
 }
 
 // -----------------------------------------------------------------------------
@@ -182,8 +189,10 @@ void ITKPCMTileRegistration::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
 
-  parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage Start (Col, Row) [Inclusive, Zero Based]", MontageStart, FilterParameter::Parameter, ITKPCMTileRegistration));
-  parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage End (Col, Row) [Inclusive, Zero Based]", MontageEnd, FilterParameter::Parameter, ITKPCMTileRegistration));
+  parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage Column Start/End [Inclusive, Zero Based]", ColumnMontageLimits, FilterParameter::Parameter, ITKPCMTileRegistration));
+  parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage Row Start/End [Inclusive, Zero Based]", RowMontageLimits, FilterParameter::Parameter, ITKPCMTileRegistration));
+
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Padding Digits for DataContainer Names", DataContainerPaddingDigits, FilterParameter::Category::Parameter, ITKPCMTileRegistration));
 
   parameters.push_back(SIMPL_NEW_STRING_FP("Data Container Prefix", DataContainerPrefix, FilterParameter::RequiredArray, ITKPCMTileRegistration));
 
@@ -198,8 +207,6 @@ void ITKPCMTileRegistration::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void ITKPCMTileRegistration::dataCheck()
 {
-  clearErrorCode();
-  clearWarningCode();
   initialize();
 
   if(m_MontageStart[0] > m_MontageEnd[0])
@@ -258,7 +265,7 @@ void ITKPCMTileRegistration::dataCheck()
     for(int32_t col = m_MontageStart[0]; col <= m_MontageEnd[0]; col++)
     {
       // Create our DataContainer Name using a Prefix and a rXXcYY format.
-      QString dcName = MontageImportHelper::GenerateDataContainerName(getDataContainerPrefix(), m_MontageEnd, row, col);
+      QString dcName = MontageImportHelper::GenerateDataContainerName(getDataContainerPrefix(), m_DataContainerPaddingDigits, row, col);
 
       DataArrayPath testPath;
       testPath.setDataContainerName(dcName);
@@ -282,6 +289,16 @@ void ITKPCMTileRegistration::dataCheck()
       {
         return;
       }
+
+      typename ::TransformContainer::TransformParametersType dream3DParameters(12);
+      typename ::TransformContainer::TransformFixedParametersType dream3DFixedParameters(3);
+
+      TransformContainer::Pointer transformContainer = TransformContainer::New();
+      transformContainer->setParameters(dream3DParameters);
+      transformContainer->setFixedParameters(dream3DFixedParameters);
+      transformContainer->setTransformTypeAsString("AffineTransform_double_3_3");
+
+      image->setTransformContainer(transformContainer);
       m_DataContainers.push_back(dc);
     }
   }
@@ -382,7 +399,7 @@ typename MontageType::Pointer ITKPCMTileRegistration::createGrayscaleMontage(int
       ind[0] = static_cast<::itk::SizeValueType>(col - m_MontageStart[0]);
 
       // Get our DataContainer Name using a Prefix and a rXXcYY format.
-      QString dcName = MontageImportHelper::GenerateDataContainerName(getDataContainerPrefix(), m_MontageEnd, row, col);
+      QString dcName = MontageImportHelper::GenerateDataContainerName(getDataContainerPrefix(), m_DataContainerPaddingDigits, row, col);
       DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(dcName);
 
       using InPlaceDream3DToImageFileType = itk::InPlaceDream3DDataToImageFilter<ScalarPixelType, Dimension>;
@@ -425,7 +442,7 @@ typename MontageType::Pointer ITKPCMTileRegistration::createRGBMontage(int peakM
       ind[0] = static_cast<::itk::SizeValueType>(col - m_MontageStart[0]);
 
       // Get our DataContainer Name using a Prefix and a rXXcYY format.
-      QString dcName = MontageImportHelper::GenerateDataContainerName(getDataContainerPrefix(), m_MontageEnd, row, col);
+      QString dcName = MontageImportHelper::GenerateDataContainerName(getDataContainerPrefix(), m_DataContainerPaddingDigits, row, col);
       DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(dcName);
 
       using InPlaceDream3DToImageFileType = itk::InPlaceDream3DDataToImageFilter<PixelType, Dimension>;
@@ -526,7 +543,7 @@ void ITKPCMTileRegistration::storeMontageTransforms(typename MontageType::Pointe
       const TransformType* regTr = montage->GetOutputTransform(ind);
 
       // Get our DataContainer Name using a Prefix and a rXXcYY format.
-      QString dcName = MontageImportHelper::GenerateDataContainerName(getDataContainerPrefix(), m_MontageEnd, row, col);
+      QString dcName = MontageImportHelper::GenerateDataContainerName(getDataContainerPrefix(), m_DataContainerPaddingDigits, row, col);
       DataContainer::Pointer imageDC = getDataContainerArray()->getDataContainer(dcName);
 
       ImageGeom::Pointer image = imageDC->getGeometryAs<ImageGeom>();
@@ -657,7 +674,7 @@ QString ITKPCMTileRegistration::getSubGroupName() const
 // -----------------------------------------------------------------------------
 QString ITKPCMTileRegistration::getHumanLabel() const
 {
-  return "ITK::Adjust Tile Origins (PCM Method)";
+  return "ITK::Compute Tile Transformations (PCM Method)";
 }
 
 // -----------------------------------------------------------------------------
@@ -690,27 +707,27 @@ QString ITKPCMTileRegistration::ClassName()
 }
 
 // -----------------------------------------------------------------------------
-void ITKPCMTileRegistration::setMontageStart(const IntVec2Type& value)
+void ITKPCMTileRegistration::setColumnMontageLimits(const IntVec2Type& value)
 {
-  m_MontageStart = value;
+  m_ColumnMontageLimits = value;
 }
 
 // -----------------------------------------------------------------------------
-IntVec2Type ITKPCMTileRegistration::getMontageStart() const
+IntVec2Type ITKPCMTileRegistration::getColumnMontageLimits() const
 {
-  return m_MontageStart;
+  return m_ColumnMontageLimits;
 }
 
 // -----------------------------------------------------------------------------
-void ITKPCMTileRegistration::setMontageEnd(const IntVec2Type& value)
+void ITKPCMTileRegistration::setRowMontageLimits(const IntVec2Type& value)
 {
-  m_MontageEnd = value;
+  m_RowMontageLimits = value;
 }
 
 // -----------------------------------------------------------------------------
-IntVec2Type ITKPCMTileRegistration::getMontageEnd() const
+IntVec2Type ITKPCMTileRegistration::getRowMontageLimits() const
 {
-  return m_MontageEnd;
+  return m_RowMontageLimits;
 }
 
 // -----------------------------------------------------------------------------
@@ -749,4 +766,14 @@ QString ITKPCMTileRegistration::getCommonDataArrayName() const
   return m_CommonDataArrayName;
 }
 
+// -----------------------------------------------------------------------------
+void ITKPCMTileRegistration::setDataContainerPaddingDigits(int32_t value)
+{
+  m_DataContainerPaddingDigits = value;
+}
 
+// -----------------------------------------------------------------------------
+int32_t ITKPCMTileRegistration::getDataContainerPaddingDigits() const
+{
+  return m_DataContainerPaddingDigits;
+}

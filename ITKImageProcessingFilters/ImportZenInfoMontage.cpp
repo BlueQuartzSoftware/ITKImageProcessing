@@ -19,6 +19,7 @@
 #include "SIMPLib/DataArrays/StringDataArray.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
@@ -191,6 +192,11 @@ void ImportZenInfoMontage::initialize()
   clearErrorCode();
   clearWarningCode();
   setCancel(false);
+  m_MontageStart[0] = m_ColumnMontageLimits[0];
+  m_MontageStart[1] = m_RowMontageLimits[0];
+
+  m_MontageEnd[0] = m_ColumnMontageLimits[1];
+  m_MontageEnd[1] = m_RowMontageLimits[1];
 }
 
 // -----------------------------------------------------------------------------
@@ -201,12 +207,15 @@ void ImportZenInfoMontage::setupFilterParameters()
   FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Zen Export File (*_info.xml)", InputFile, FilterParameter::Parameter, ImportZenInfoMontage, "*.xml"));
 
+  parameters.push_back(SIMPL_NEW_STRING_FP("Name of Created Montage", MontageName, FilterParameter::Parameter, ImportZenInfoMontage));
+  parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage Column Start/End [Inclusive, Zero Based]", ColumnMontageLimits, FilterParameter::Parameter, ImportZenInfoMontage));
+  parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage Row Start/End [Inclusive, Zero Based]", RowMontageLimits, FilterParameter::Parameter, ImportZenInfoMontage));
+  QVector<QString> choices = IGeometry::GetAllLengthUnitStrings();
+  parameters.push_back(SIMPL_NEW_CHOICE_FP("Length Unit", LengthUnit, FilterParameter::Parameter, ImportZenInfoMontage, choices, false));
+
   PreflightUpdatedValueFilterParameter::Pointer param = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Montage Information", MontageInformation, FilterParameter::Parameter, ImportZenInfoMontage);
   param->setReadOnly(true);
   parameters.push_back(param);
-
-  parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage Start (Col, Row) [Inclusive, Zero Based]", MontageStart, FilterParameter::Parameter, ImportZenInfoMontage));
-  parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage End (Col, Row) [Inclusive, Zero Based]", MontageEnd, FilterParameter::Parameter, ImportZenInfoMontage));
 
   QStringList linkedProps("Origin");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Change Origin", ChangeOrigin, FilterParameter::Parameter, ImportZenInfoMontage, linkedProps));
@@ -235,8 +244,7 @@ void ImportZenInfoMontage::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void ImportZenInfoMontage::dataCheck()
 {
-  clearErrorCode();
-  clearWarningCode();
+  initialize();
 
   QString ss;
   QFileInfo fi(getInputFile());
@@ -431,7 +439,8 @@ QString ImportZenInfoMontage::getMontageInformation()
   QTextStream ss(&montageInfo);
   int32_t importedCols = m_MontageEnd[0] - m_MontageStart[0] + 1;
   int32_t importedRows = m_MontageEnd[1] - m_MontageStart[1] + 1;
-  ss << "\nImported Columns: " << importedCols << "  Imported Rows: " << importedRows << "  Imported Image Count: " << (importedCols * importedRows);
+  ss << "\n"
+     << "Imported Columns: " << importedCols << "  Imported Rows: " << importedRows << "  Imported Image Count: " << (importedCols * importedRows);
   info = info.replace(ITKImageProcessing::Montage::k_MontageInfoReplaceKeyword, montageInfo);
   return info;
 }
@@ -554,6 +563,8 @@ void ImportZenInfoMontage::generateCache(QDomElement& exportDocument)
       bound.Spacing = m_Spacing;
     }
 
+    bound.LengthUnit = static_cast<IGeometry::LengthUnit>(getLengthUnit());
+
     bound.StartC = boundsElement.attribute(Zeiss::ZenXml::StartC).toInt(&ok);
     bound.StartS = boundsElement.attribute(Zeiss::ZenXml::StartS).toInt(&ok);
     bound.StartB = boundsElement.attribute(Zeiss::ZenXml::StartB).toInt(&ok);
@@ -575,10 +586,14 @@ void ImportZenInfoMontage::generateCache(QDomElement& exportDocument)
   findTileIndices(m_Tolerance, bounds);
 
   // std::vector<ImageGeom::Pointer> geometries;
-
+  d_ptr->m_MaxCol = 0;
+  d_ptr->m_MaxRow = 0;
   // Get the meta information from disk for each image
   for(auto& bound : bounds)
   {
+    d_ptr->m_MaxCol = std::max(bound.Col, d_ptr->m_MaxCol);
+    d_ptr->m_MaxRow = std::max(bound.Row, d_ptr->m_MaxRow);
+
     DataArrayPath dap(::k_DCName, ITKImageProcessing::Montage::k_AMName, ITKImageProcessing::Montage::k_AAName);
     AbstractFilter::Pointer imageImportFilter = MontageImportHelper::CreateImageImportFilter(this, bound.Filename, dap);
     imageImportFilter->preflight();
@@ -623,8 +638,7 @@ void ImportZenInfoMontage::generateCache(QDomElement& exportDocument)
 
   QString montageInfo;
   QTextStream ss(&montageInfo);
-  ss << "Max Column: " << m_ColumnCount - 1 << "  Max Row: " << m_RowCount - 1 << "  Image Count: " << bounds.size();
-  ss << ITKImageProcessing::Montage::k_MontageInfoReplaceKeyword;
+  ss << "Tile Column(s): " << m_ColumnCount - 1 << "  Tile Row(s): " << m_RowCount - 1 << "  Image Count: " << bounds.size();
 
   FloatVec3Type overrideOrigin = minCoord;
   FloatVec3Type overrideSpacing = minSpacing;
@@ -649,6 +663,7 @@ void ImportZenInfoMontage::generateCache(QDomElement& exportDocument)
   }
   ss << "\nOrigin: " << overrideOrigin[0] << ", " << overrideOrigin[1] << ", " << overrideOrigin[2];
   ss << "\nSpacing: " << overrideSpacing[0] << ", " << overrideSpacing[1] << ", " << overrideSpacing[2];
+  ss << ITKImageProcessing::Montage::k_MontageInfoReplaceKeyword;
   d_ptr->m_MontageInformation = montageInfo;
   setBoundsCache(bounds);
 }
@@ -660,7 +675,8 @@ void ImportZenInfoMontage::generateDataStructure()
 
   DataContainerArray::Pointer dca = getDataContainerArray();
 
-  // int imageCountPadding = MetaXmlUtils::CalculatePaddingDigits(bounds.size());
+  GridMontage::Pointer gridMontage = GridMontage::New(getMontageName(), m_RowCount, m_ColumnCount);
+
   int32_t rowCountPadding = MetaXmlUtils::CalculatePaddingDigits(m_RowCount);
   int32_t colCountPadding = MetaXmlUtils::CalculatePaddingDigits(m_ColumnCount);
   int charPaddingCount = std::max(rowCountPadding, colCountPadding);
@@ -675,7 +691,7 @@ void ImportZenInfoMontage::generateDataStructure()
     // Create our DataContainer Name using a Prefix and a rXXcYY format.
     QString dcName = getDataContainerPath().getDataContainerName();
     QTextStream dcNameStream(&dcName);
-    dcNameStream << "_r";
+    dcNameStream << "r";
     dcNameStream.setFieldWidth(charPaddingCount);
     dcNameStream.setFieldAlignment(QTextStream::AlignRight);
     dcNameStream.setPadChar('0');
@@ -696,8 +712,13 @@ void ImportZenInfoMontage::generateDataStructure()
     image->setOrigin(origin);
     FloatVec3Type spacing(bound.Spacing[0], bound.Spacing[1], 1.0);
     image->setSpacing(spacing);
+    image->setUnits(bound.LengthUnit);
 
     dc->setGeometry(image);
+
+    GridTileIndex gridIndex = gridMontage->getTileIndex(bound.Row, bound.Col);
+    // Set the montage's DataContainer for the current index
+    gridMontage->setDataContainer(gridIndex, dc);
 
     std::vector<size_t> tDims = {dims[0], dims[1], dims[2]};
     // Create the Cell Attribute Matrix into which the image data would be read
@@ -705,6 +726,7 @@ void ImportZenInfoMontage::generateDataStructure()
     dc->addOrReplaceAttributeMatrix(cellAttrMat);
     cellAttrMat->addOrReplaceAttributeArray(bound.ImageDataProxy);
   }
+  getDataContainerArray()->addOrReplaceMontage(gridMontage);
 }
 
 // -----------------------------------------------------------------------------
@@ -735,7 +757,7 @@ void ImportZenInfoMontage::readImages()
     // Create our DataContainer Name using a Prefix and a rXXcYY format.
     QString dcName = getDataContainerPath().getDataContainerName();
     QTextStream dcNameStream(&dcName);
-    dcNameStream << "_r";
+    dcNameStream << "r";
     dcNameStream.setFieldWidth(charPaddingCount);
     dcNameStream.setFieldAlignment(QTextStream::AlignRight);
     dcNameStream.setPadChar('0');
@@ -892,11 +914,10 @@ ImportZenInfoMontage::Pointer ImportZenInfoMontage::NullPointer()
 // -----------------------------------------------------------------------------
 std::shared_ptr<ImportZenInfoMontage> ImportZenInfoMontage::New()
 {
-  struct make_shared_enabler : public ImportZenInfoMontage  
+  struct make_shared_enabler : public ImportZenInfoMontage
   {
 
   private:
-
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
   val->setupFilterParameters();
@@ -928,27 +949,27 @@ QString ImportZenInfoMontage::getInputFile() const
 }
 
 // -----------------------------------------------------------------------------
-void ImportZenInfoMontage::setMontageStart(const IntVec2Type& value)
+void ImportZenInfoMontage::setColumnMontageLimits(const IntVec2Type& value)
 {
-  m_MontageStart = value;
+  m_ColumnMontageLimits = value;
 }
 
 // -----------------------------------------------------------------------------
-IntVec2Type ImportZenInfoMontage::getMontageStart() const
+IntVec2Type ImportZenInfoMontage::getColumnMontageLimits() const
 {
-  return m_MontageStart;
+  return m_ColumnMontageLimits;
 }
 
 // -----------------------------------------------------------------------------
-void ImportZenInfoMontage::setMontageEnd(const IntVec2Type& value)
+void ImportZenInfoMontage::setRowMontageLimits(const IntVec2Type& value)
 {
-  m_MontageEnd = value;
+  m_RowMontageLimits = value;
 }
 
 // -----------------------------------------------------------------------------
-IntVec2Type ImportZenInfoMontage::getMontageEnd() const
+IntVec2Type ImportZenInfoMontage::getRowMontageLimits() const
 {
-  return m_MontageEnd;
+  return m_RowMontageLimits;
 }
 
 // -----------------------------------------------------------------------------
@@ -1077,4 +1098,26 @@ QStringList ImportZenInfoMontage::getFilenameList() const
   return m_FilenameList;
 }
 
+// -----------------------------------------------------------------------------
+void ImportZenInfoMontage::setMontageName(const QString& value)
+{
+  m_MontageName = value;
+}
 
+// -----------------------------------------------------------------------------
+QString ImportZenInfoMontage::getMontageName() const
+{
+  return m_MontageName;
+}
+
+// -----------------------------------------------------------------------------
+void ImportZenInfoMontage::setLengthUnit(int32_t value)
+{
+  m_LengthUnit = value;
+}
+
+// -----------------------------------------------------------------------------
+int32_t ImportZenInfoMontage::getLengthUnit() const
+{
+  return m_LengthUnit;
+}
