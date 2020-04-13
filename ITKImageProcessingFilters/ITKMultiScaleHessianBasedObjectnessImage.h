@@ -76,7 +76,6 @@ public:
     * @return Value of ObjectDimension
     */
     int getObjectDimension() const;
-
   Q_PROPERTY(int ObjectDimension READ getObjectDimension WRITE setObjectDimension)
 
     /**
@@ -88,7 +87,6 @@ public:
     * @return Value of Alpha
     */
     double getAlpha() const;
-
   Q_PROPERTY(double Alpha READ getAlpha WRITE setAlpha)
 
     /**
@@ -100,7 +98,6 @@ public:
     * @return Value of Beta
     */
     double getBeta() const;
-
   Q_PROPERTY(double Beta READ getBeta WRITE setBeta)
 
     /**
@@ -112,7 +109,6 @@ public:
     * @return Value of Gamma
     */
     double getGamma() const;
-
   Q_PROPERTY(double Gamma READ getGamma WRITE setGamma)
 
     /**
@@ -124,7 +120,6 @@ public:
     * @return Value of ScaleObjectnessMeasure
     */
     bool getScaleObjectnessMeasure() const;
-
   Q_PROPERTY(bool ScaleObjectnessMeasure READ getScaleObjectnessMeasure WRITE setScaleObjectnessMeasure)
 
     /**
@@ -136,7 +131,6 @@ public:
     * @return Value of BrightObject
     */
     bool getBrightObject() const;
-
   Q_PROPERTY(bool BrightObject READ getBrightObject WRITE setBrightObject)
 
     /**
@@ -148,7 +142,6 @@ public:
     * @return Value of SigmaMinimum
     */
     double getSigmaMinimum() const;
-
   Q_PROPERTY(double SigmaMinimum READ getSigmaMinimum WRITE setSigmaMinimum)
 
     /**
@@ -160,7 +153,6 @@ public:
     * @return Value of SigmaMaximum
     */
     double getSigmaMaximum() const;
-
   Q_PROPERTY(double SigmaMaximum READ getSigmaMaximum WRITE setSigmaMaximum)
 
     /**
@@ -172,7 +164,6 @@ public:
     * @return Value of NumberOfSigmaSteps
     */
     double getNumberOfSigmaSteps() const;
-
   Q_PROPERTY(double NumberOfSigmaSteps READ getNumberOfSigmaSteps WRITE setNumberOfSigmaSteps)
 
   /**

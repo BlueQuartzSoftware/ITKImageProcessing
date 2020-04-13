@@ -105,7 +105,6 @@ public:
     * @return Value of DataContainerName
     */
     DataArrayPath getDataContainerName() const;
-
   Q_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
 
     /**
@@ -117,7 +116,6 @@ public:
     * @return Value of CellAttributeMatrixName
     */
     QString getCellAttributeMatrixName() const;
-
   Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
     /**
@@ -129,7 +127,6 @@ public:
     * @return Value of Origin
     */
     FloatVec3Type getOrigin() const;
-
   Q_PROPERTY(FloatVec3Type Origin READ getOrigin WRITE setOrigin)
 
     /**
@@ -141,7 +138,6 @@ public:
     * @return Value of Spacing
     */
     FloatVec3Type getSpacing() const;
-
   Q_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
 
     /**
@@ -153,7 +149,6 @@ public:
     * @return Value of InputFileListInfo
     */
     VectorFileListInfo_t getInputFileListInfo() const;
-
   Q_PROPERTY(VectorFileListInfo_t InputFileListInfo READ getInputFileListInfo WRITE setInputFileListInfo)
 
     /**
@@ -165,7 +160,6 @@ public:
     * @return Value of VectorDataArrayName
     */
     QString getVectorDataArrayName() const;
-
   Q_PROPERTY(QString VectorDataArrayName READ getVectorDataArrayName WRITE setVectorDataArrayName)
 
     /**
@@ -177,7 +171,6 @@ public:
     * @return Value of ConvertToGrayscale
     */
     bool getConvertToGrayscale() const;
-
   Q_PROPERTY(bool ConvertToGrayscale READ getConvertToGrayscale WRITE setConvertToGrayscale)
 
   /**

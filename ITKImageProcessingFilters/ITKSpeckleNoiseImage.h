@@ -70,7 +70,6 @@ public:
     * @return Value of StandardDeviation
     */
     double getStandardDeviation() const;
-
   Q_PROPERTY(double StandardDeviation READ getStandardDeviation WRITE setStandardDeviation)
 
     /**
@@ -82,7 +81,6 @@ public:
     * @return Value of Seed
     */
     double getSeed() const;
-
   Q_PROPERTY(double Seed READ getSeed WRITE setSeed)
 
 

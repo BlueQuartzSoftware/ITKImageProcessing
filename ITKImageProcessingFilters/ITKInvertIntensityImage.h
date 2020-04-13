@@ -69,7 +69,6 @@ public:
     * @return Value of Maximum
     */
     double getMaximum() const;
-
   Q_PROPERTY(double Maximum READ getMaximum WRITE setMaximum)
 
 

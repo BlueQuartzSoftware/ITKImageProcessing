@@ -71,7 +71,6 @@ public:
     * @return Value of InsideIsPositive
     */
     bool getInsideIsPositive() const;
-
   Q_PROPERTY(bool InsideIsPositive READ getInsideIsPositive WRITE setInsideIsPositive)
 
     /**
@@ -83,7 +82,6 @@ public:
     * @return Value of SquaredDistance
     */
     bool getSquaredDistance() const;
-
   Q_PROPERTY(bool SquaredDistance READ getSquaredDistance WRITE setSquaredDistance)
 
     /**
@@ -95,7 +93,6 @@ public:
     * @return Value of UseImageSpacing
     */
     bool getUseImageSpacing() const;
-
   Q_PROPERTY(bool UseImageSpacing READ getUseImageSpacing WRITE setUseImageSpacing)
 
 

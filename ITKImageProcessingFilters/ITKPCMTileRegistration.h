@@ -148,7 +148,6 @@ public:
     * @return Value of CommonAttributeMatrixName
     */
     QString getCommonAttributeMatrixName() const;
-
   Q_PROPERTY(QString CommonAttributeMatrixName READ getCommonAttributeMatrixName WRITE setCommonAttributeMatrixName)
 
     /**
@@ -160,7 +159,6 @@ public:
     * @return Value of CommonDataArrayName
     */
     QString getCommonDataArrayName() const;
-
   Q_PROPERTY(QString CommonDataArrayName READ getCommonDataArrayName WRITE setCommonDataArrayName)
 
   /**

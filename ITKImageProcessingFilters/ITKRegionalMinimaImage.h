@@ -73,7 +73,6 @@ public:
     * @return Value of BackgroundValue
     */
     double getBackgroundValue() const;
-
   Q_PROPERTY(double BackgroundValue READ getBackgroundValue WRITE setBackgroundValue)
 
     /**
@@ -85,7 +84,6 @@ public:
     * @return Value of ForegroundValue
     */
     double getForegroundValue() const;
-
   Q_PROPERTY(double ForegroundValue READ getForegroundValue WRITE setForegroundValue)
 
     /**
@@ -97,7 +95,6 @@ public:
     * @return Value of FullyConnected
     */
     bool getFullyConnected() const;
-
   Q_PROPERTY(bool FullyConnected READ getFullyConnected WRITE setFullyConnected)
 
     /**
@@ -109,7 +106,6 @@ public:
     * @return Value of FlatIsMinima
     */
     bool getFlatIsMinima() const;
-
   Q_PROPERTY(bool FlatIsMinima READ getFlatIsMinima WRITE setFlatIsMinima)
 
 

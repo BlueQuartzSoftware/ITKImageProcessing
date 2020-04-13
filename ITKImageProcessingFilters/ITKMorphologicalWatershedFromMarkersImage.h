@@ -75,7 +75,6 @@ public:
     * @return Value of MarkWatershedLine
     */
     bool getMarkWatershedLine() const;
-
   Q_PROPERTY(bool MarkWatershedLine READ getMarkWatershedLine WRITE setMarkWatershedLine)
 
     /**
@@ -87,7 +86,6 @@ public:
     * @return Value of FullyConnected
     */
     bool getFullyConnected() const;
-
   Q_PROPERTY(bool FullyConnected READ getFullyConnected WRITE setFullyConnected)
 
     /**
@@ -99,7 +97,6 @@ public:
     * @return Value of MarkerCellArrayPath
     */
     DataArrayPath getMarkerCellArrayPath() const;
-
   Q_PROPERTY(DataArrayPath MarkerCellArrayPath READ getMarkerCellArrayPath WRITE setMarkerCellArrayPath)
 
   /**

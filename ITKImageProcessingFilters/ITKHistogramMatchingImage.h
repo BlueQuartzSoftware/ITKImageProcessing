@@ -71,7 +71,6 @@ public:
     * @return Value of ReferenceCellArrayPath
     */
     DataArrayPath getReferenceCellArrayPath() const;
-
   Q_PROPERTY(DataArrayPath ReferenceCellArrayPath READ getReferenceCellArrayPath WRITE setReferenceCellArrayPath)
 
     /**
@@ -83,7 +82,6 @@ public:
     * @return Value of NumberOfHistogramLevels
     */
     double getNumberOfHistogramLevels() const;
-
   Q_PROPERTY(double NumberOfHistogramLevels READ getNumberOfHistogramLevels WRITE setNumberOfHistogramLevels)
 
     /**
@@ -95,7 +93,6 @@ public:
     * @return Value of NumberOfMatchPoints
     */
     double getNumberOfMatchPoints() const;
-
   Q_PROPERTY(double NumberOfMatchPoints READ getNumberOfMatchPoints WRITE setNumberOfMatchPoints)
 
     /**
@@ -107,7 +104,6 @@ public:
     * @return Value of ThresholdAtMeanIntensity
     */
     bool getThresholdAtMeanIntensity() const;
-
   Q_PROPERTY(bool ThresholdAtMeanIntensity READ getThresholdAtMeanIntensity WRITE setThresholdAtMeanIntensity)
 
   /**

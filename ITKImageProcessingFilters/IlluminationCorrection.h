@@ -120,7 +120,6 @@ public:
    * @return Value of DataContainers
    */
   QStringList getDataContainers() const;
-
   Q_PROPERTY(QStringList DataContainers READ getDataContainers WRITE setDataContainers)
 
   /**
@@ -134,7 +133,6 @@ public:
    * @param value
    */
   void setMontageSelection(const MontageSelection& value);
-
   Q_PROPERTY(MontageSelection MontageSelection READ getMontageSelection WRITE setMontageSelection)
 
   /**
@@ -146,7 +144,6 @@ public:
    * @return Value of CellAttributeMatrixName
    */
   QString getCellAttributeMatrixName() const;
-
   Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
   /**
@@ -158,7 +155,6 @@ public:
    * @return Value of ImageDataArrayName
    */
   QString getImageDataArrayName() const;
-
   Q_PROPERTY(QString ImageDataArrayName READ getImageDataArrayName WRITE setImageDataArrayName)
 
   /**
@@ -170,7 +166,6 @@ public:
    * @return Value of CorrectedImageDataArrayName
    */
   QString getCorrectedImageDataArrayName() const;
-
   Q_PROPERTY(QString CorrectedImageDataArrayName READ getCorrectedImageDataArrayName WRITE setCorrectedImageDataArrayName)
 
   /**
@@ -182,7 +177,6 @@ public:
    * @return Value of ExportCorrectedImages
    */
   bool getExportCorrectedImages() const;
-
   Q_PROPERTY(bool ExportCorrectedImages READ getExportCorrectedImages WRITE setExportCorrectedImages)
 
   /**
@@ -194,7 +188,6 @@ public:
    * @return Value of OutputPath
    */
   QString getOutputPath() const;
-
   Q_PROPERTY(QString OutputPath READ getOutputPath WRITE setOutputPath)
 
   /**
@@ -206,7 +199,6 @@ public:
    * @return Value of FileExtension
    */
   QString getFileExtension() const;
-
   Q_PROPERTY(QString FileExtension READ getFileExtension WRITE setFileExtension)
 
   /**
@@ -218,7 +210,6 @@ public:
    * @return Value of BackgroundDataContainerPath
    */
   DataArrayPath getBackgroundDataContainerPath() const;
-
   Q_PROPERTY(DataArrayPath BackgroundDataContainerPath READ getBackgroundDataContainerPath WRITE setBackgroundDataContainerPath)
 
   /**
@@ -230,7 +221,6 @@ public:
    * @return Value of BackgroundCellAttributeMatrixPath
    */
   DataArrayPath getBackgroundCellAttributeMatrixPath() const;
-
   Q_PROPERTY(DataArrayPath BackgroundCellAttributeMatrixPath READ getBackgroundCellAttributeMatrixPath WRITE setBackgroundCellAttributeMatrixPath)
 
   /**
@@ -242,7 +232,6 @@ public:
    * @return Value of BackgroundImageArrayPath
    */
   DataArrayPath getBackgroundImageArrayPath() const;
-
   Q_PROPERTY(DataArrayPath BackgroundImageArrayPath READ getBackgroundImageArrayPath WRITE setBackgroundImageArrayPath)
 
   /**
@@ -254,7 +243,6 @@ public:
    * @return Value of LowThreshold
    */
   uint32_t getLowThreshold() const;
-
   Q_PROPERTY(uint32_t LowThreshold READ getLowThreshold WRITE setLowThreshold)
 
   /**
@@ -266,7 +254,6 @@ public:
    * @return Value of HighThreshold
    */
   uint32_t getHighThreshold() const;
-
   Q_PROPERTY(uint32_t HighThreshold READ getHighThreshold WRITE setHighThreshold)
 
   /**
@@ -278,7 +265,6 @@ public:
    * @return Value of ApplyCorrection
    */
   bool getApplyCorrection() const;
-
   Q_PROPERTY(int ApplyCorrection READ getApplyCorrection WRITE setApplyCorrection)
 
   /**
@@ -290,7 +276,6 @@ public:
    * @return Value of ApplyMedianFilter
    */
   bool getApplyMedianFilter() const;
-
   Q_PROPERTY(bool ApplyMedianFilter READ getApplyMedianFilter WRITE setApplyMedianFilter)
 
   /**
@@ -302,7 +287,6 @@ public:
    * @return Value of MedianRadius
    */
   FloatVec3Type getMedianRadius() const;
-
   Q_PROPERTY(FloatVec3Type MedianRadius READ getMedianRadius WRITE setMedianRadius)
 
   /**

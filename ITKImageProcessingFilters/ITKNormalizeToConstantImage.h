@@ -69,7 +69,6 @@ public:
     * @return Value of Constant
     */
     double getConstant() const;
-
   Q_PROPERTY(double Constant READ getConstant WRITE setConstant)
 
 

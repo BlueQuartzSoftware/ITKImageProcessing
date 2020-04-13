@@ -77,7 +77,6 @@ public:
     * @return Value of Threshold1
     */
     double getThreshold1() const;
-
   Q_PROPERTY(double Threshold1 READ getThreshold1 WRITE setThreshold1)
 
     /**
@@ -89,7 +88,6 @@ public:
     * @return Value of Threshold2
     */
     double getThreshold2() const;
-
   Q_PROPERTY(double Threshold2 READ getThreshold2 WRITE setThreshold2)
 
     /**
@@ -101,7 +99,6 @@ public:
     * @return Value of Threshold3
     */
     double getThreshold3() const;
-
   Q_PROPERTY(double Threshold3 READ getThreshold3 WRITE setThreshold3)
 
     /**
@@ -113,7 +110,6 @@ public:
     * @return Value of Threshold4
     */
     double getThreshold4() const;
-
   Q_PROPERTY(double Threshold4 READ getThreshold4 WRITE setThreshold4)
 
     /**
@@ -125,7 +121,6 @@ public:
     * @return Value of InsideValue
     */
     int getInsideValue() const;
-
   Q_PROPERTY(int InsideValue READ getInsideValue WRITE setInsideValue)
 
     /**
@@ -137,7 +132,6 @@ public:
     * @return Value of OutsideValue
     */
     int getOutsideValue() const;
-
   Q_PROPERTY(int OutsideValue READ getOutsideValue WRITE setOutsideValue)
 
     /**
@@ -149,7 +143,6 @@ public:
     * @return Value of FullyConnected
     */
     bool getFullyConnected() const;
-
   Q_PROPERTY(bool FullyConnected READ getFullyConnected WRITE setFullyConnected)
 
 

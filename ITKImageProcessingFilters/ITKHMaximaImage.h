@@ -69,7 +69,6 @@ public:
     * @return Value of Height
     */
     double getHeight() const;
-
   Q_PROPERTY(double Height READ getHeight WRITE setHeight)
 
 

@@ -82,7 +82,6 @@ public:
     * @return Value of KernelBandwidthSigma
     */
     double getKernelBandwidthSigma() const;
-
   Q_PROPERTY(double KernelBandwidthSigma READ getKernelBandwidthSigma WRITE setKernelBandwidthSigma)
 
     /**
@@ -94,7 +93,6 @@ public:
     * @return Value of PatchRadius
     */
     double getPatchRadius() const;
-
   Q_PROPERTY(double PatchRadius READ getPatchRadius WRITE setPatchRadius)
 
     /**
@@ -106,7 +104,6 @@ public:
     * @return Value of NumberOfIterations
     */
     double getNumberOfIterations() const;
-
   Q_PROPERTY(double NumberOfIterations READ getNumberOfIterations WRITE setNumberOfIterations)
 
     /**
@@ -118,7 +115,6 @@ public:
     * @return Value of NumberOfSamplePatches
     */
     double getNumberOfSamplePatches() const;
-
   Q_PROPERTY(double NumberOfSamplePatches READ getNumberOfSamplePatches WRITE setNumberOfSamplePatches)
 
     /**
@@ -130,7 +126,6 @@ public:
     * @return Value of SampleVariance
     */
     double getSampleVariance() const;
-
   Q_PROPERTY(double SampleVariance READ getSampleVariance WRITE setSampleVariance)
 
     /**
@@ -142,7 +137,6 @@ public:
     * @return Value of NoiseSigma
     */
     double getNoiseSigma() const;
-
   Q_PROPERTY(double NoiseSigma READ getNoiseSigma WRITE setNoiseSigma)
 
     /**
@@ -154,7 +148,6 @@ public:
     * @return Value of NoiseModelFidelityWeight
     */
     double getNoiseModelFidelityWeight() const;
-
   Q_PROPERTY(double NoiseModelFidelityWeight READ getNoiseModelFidelityWeight WRITE setNoiseModelFidelityWeight)
 
     /**
@@ -166,7 +159,6 @@ public:
     * @return Value of AlwaysTreatComponentsAsEuclidean
     */
     bool getAlwaysTreatComponentsAsEuclidean() const;
-
   Q_PROPERTY(bool AlwaysTreatComponentsAsEuclidean READ getAlwaysTreatComponentsAsEuclidean WRITE setAlwaysTreatComponentsAsEuclidean)
 
     /**
@@ -178,7 +170,6 @@ public:
     * @return Value of KernelBandwidthEstimation
     */
     bool getKernelBandwidthEstimation() const;
-
   Q_PROPERTY(bool KernelBandwidthEstimation READ getKernelBandwidthEstimation WRITE setKernelBandwidthEstimation)
 
     /**
@@ -190,7 +181,6 @@ public:
     * @return Value of KernelBandwidthMultiplicationFactor
     */
     double getKernelBandwidthMultiplicationFactor() const;
-
   Q_PROPERTY(double KernelBandwidthMultiplicationFactor READ getKernelBandwidthMultiplicationFactor WRITE setKernelBandwidthMultiplicationFactor)
 
     /**
@@ -202,7 +192,6 @@ public:
     * @return Value of KernelBandwidthUpdateFrequency
     */
     double getKernelBandwidthUpdateFrequency() const;
-
   Q_PROPERTY(double KernelBandwidthUpdateFrequency READ getKernelBandwidthUpdateFrequency WRITE setKernelBandwidthUpdateFrequency)
 
     /**
@@ -214,7 +203,6 @@ public:
     * @return Value of KernelBandwidthFractionPixelsForEstimation
     */
     double getKernelBandwidthFractionPixelsForEstimation() const;
-
   Q_PROPERTY(double KernelBandwidthFractionPixelsForEstimation READ getKernelBandwidthFractionPixelsForEstimation WRITE setKernelBandwidthFractionPixelsForEstimation)
 
     /**
@@ -226,7 +214,6 @@ public:
     * @return Value of NoiseModel
     */
     int getNoiseModel() const;
-
   Q_PROPERTY(int NoiseModel READ getNoiseModel WRITE setNoiseModel)
 
     /**
@@ -238,7 +225,6 @@ public:
     * @return Value of NumberOfThreads
     */
     int getNumberOfThreads() const;
-
   Q_PROPERTY(int NumberOfThreads READ getNumberOfThreads WRITE setNumberOfThreads)
 
   /**

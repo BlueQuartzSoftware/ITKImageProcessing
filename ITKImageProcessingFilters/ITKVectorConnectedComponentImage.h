@@ -70,7 +70,6 @@ public:
     * @return Value of DistanceThreshold
     */
     double getDistanceThreshold() const;
-
   Q_PROPERTY(double DistanceThreshold READ getDistanceThreshold WRITE setDistanceThreshold)
 
     /**
@@ -82,7 +81,6 @@ public:
     * @return Value of FullyConnected
     */
     bool getFullyConnected() const;
-
   Q_PROPERTY(bool FullyConnected READ getFullyConnected WRITE setFullyConnected)
 
 

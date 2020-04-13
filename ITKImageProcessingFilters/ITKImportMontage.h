@@ -108,7 +108,6 @@ public:
    * @return Value of DataContainerPrefix
    */
   QString getDataContainerPrefix() const;
-
   Q_PROPERTY(QString DataContainerPrefix READ getDataContainerPrefix WRITE setDataContainerPrefix)
 
   /**
@@ -120,7 +119,6 @@ public:
    * @return Value of CellAttributeMatrixName
    */
   QString getCellAttributeMatrixName() const;
-
   Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
   /**
@@ -132,7 +130,6 @@ public:
    * @return Value of AttributeArrayName
    */
   QString getAttributeArrayName() const;
-
   Q_PROPERTY(QString AttributeArrayName READ getAttributeArrayName WRITE setAttributeArrayName)
 
   /**
@@ -144,7 +141,6 @@ public:
    * @return Value of ChangeOrigin
    */
   bool getChangeOrigin() const;
-
   Q_PROPERTY(bool ChangeOrigin READ getChangeOrigin WRITE setChangeOrigin)
 
   /**
@@ -156,7 +152,6 @@ public:
    * @return Value of Origin
    */
   FloatVec3Type getOrigin() const;
-
   Q_PROPERTY(FloatVec3Type Origin READ getOrigin WRITE setOrigin)
 
   /**
@@ -168,7 +163,6 @@ public:
    * @return Value of UsePixelCoordinates
    */
   bool getUsePixelCoordinates() const;
-
   Q_PROPERTY(bool UsePixelCoordinates READ getUsePixelCoordinates WRITE setUsePixelCoordinates)
 
   /**
@@ -180,7 +174,6 @@ public:
    * @return Value of ChangeSpacing
    */
   bool getChangeSpacing() const;
-
   Q_PROPERTY(bool ChangeSpacing READ getChangeSpacing WRITE setChangeSpacing)
 
   /**
@@ -192,7 +185,6 @@ public:
    * @return Value of Spacing
    */
   FloatVec3Type getSpacing() const;
-
   Q_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
 
   /**
@@ -200,7 +192,6 @@ public:
    * @return Value of RowCount
    */
   int getRowCount() const;
-
   Q_PROPERTY(int RowCount READ getRowCount)
 
   /**
@@ -208,7 +199,6 @@ public:
    * @return Value of ColumnCount
    */
   int getColumnCount() const;
-
   Q_PROPERTY(int ColumnCount READ getColumnCount)
 
   /**
@@ -220,7 +210,6 @@ public:
    * @return Value of LengthUnit
    */
   int32_t getLengthUnit() const;
-
   Q_PROPERTY(int32_t LengthUnit READ getLengthUnit WRITE setLengthUnit)
 
   /**
@@ -228,7 +217,6 @@ public:
    * @return Value of MontageInformation
    */
   QString getMontageInformation() const;
-
   Q_PROPERTY(QString MontageInformation READ getMontageInformation)
 
   using MontageCacheVector = std::vector<ITKMontageCache>;

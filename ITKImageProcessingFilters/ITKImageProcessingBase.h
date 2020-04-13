@@ -58,7 +58,6 @@ public:
    * @return Value of SelectedCellArrayPath
    */
   DataArrayPath getSelectedCellArrayPath() const;
-
   Q_PROPERTY(DataArrayPath SelectedCellArrayPath READ getSelectedCellArrayPath WRITE setSelectedCellArrayPath)
 
   /**
@@ -70,7 +69,6 @@ public:
    * @return Value of NewCellArrayName
    */
   QString getNewCellArrayName() const;
-
   Q_PROPERTY(QString NewCellArrayName READ getNewCellArrayName WRITE setNewCellArrayName)
 
   /**
@@ -82,7 +80,6 @@ public:
    * @return Value of SaveAsNewArray
    */
   bool getSaveAsNewArray() const;
-
   Q_PROPERTY(bool SaveAsNewArray READ getSaveAsNewArray WRITE setSaveAsNewArray)
 
   /**

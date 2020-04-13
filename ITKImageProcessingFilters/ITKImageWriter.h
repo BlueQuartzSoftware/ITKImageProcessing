@@ -106,7 +106,6 @@ public:
     * @return Value of FileName
     */
     QString getFileName() const;
-
   Q_PROPERTY(QString FileName READ getFileName WRITE setFileName)
 
     /**
@@ -118,7 +117,6 @@ public:
     * @return Value of ImageArrayPath
     */
     DataArrayPath getImageArrayPath() const;
-
   Q_PROPERTY(DataArrayPath ImageArrayPath READ getImageArrayPath WRITE setImageArrayPath)
 
     /**
@@ -130,7 +128,6 @@ public:
     * @return Value of Plane
     */
     int getPlane() const;
-
   Q_PROPERTY(int Plane READ getPlane WRITE setPlane)
   
   /**

@@ -70,7 +70,6 @@ public:
     * @return Value of InsideValue
     */
     double getInsideValue() const;
-
   Q_PROPERTY(double InsideValue READ getInsideValue WRITE setInsideValue)
 
     /**
@@ -82,7 +81,6 @@ public:
     * @return Value of OutsideValue
     */
     double getOutsideValue() const;
-
   Q_PROPERTY(double OutsideValue READ getOutsideValue WRITE setOutsideValue)
 
 

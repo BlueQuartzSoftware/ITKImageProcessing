@@ -61,7 +61,6 @@ public:
     * @return Value of MaximumNumberOfIterations
     */
     double getMaximumNumberOfIterations() const;
-
   Q_PROPERTY(double MaximumNumberOfIterations READ getMaximumNumberOfIterations WRITE setMaximumNumberOfIterations)
 
     /**
@@ -73,7 +72,6 @@ public:
     * @return Value of Weights
     */
     FloatVec3Type getWeights() const;
-
   Q_PROPERTY(FloatVec3Type Weights READ getWeights WRITE setWeights)
 
     /**
@@ -85,7 +83,6 @@ public:
     * @return Value of Norms
     */
     FloatVec3Type getNorms() const;
-
   Q_PROPERTY(FloatVec3Type Norms READ getNorms WRITE setNorms)
 
 

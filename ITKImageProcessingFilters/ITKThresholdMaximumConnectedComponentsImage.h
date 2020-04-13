@@ -73,7 +73,6 @@ public:
     * @return Value of MinimumObjectSizeInPixels
     */
     double getMinimumObjectSizeInPixels() const;
-
   Q_PROPERTY(double MinimumObjectSizeInPixels READ getMinimumObjectSizeInPixels WRITE setMinimumObjectSizeInPixels)
 
     /**
@@ -85,7 +84,6 @@ public:
     * @return Value of UpperBoundary
     */
     double getUpperBoundary() const;
-
   Q_PROPERTY(double UpperBoundary READ getUpperBoundary WRITE setUpperBoundary)
 
     /**
@@ -97,7 +95,6 @@ public:
     * @return Value of InsideValue
     */
     int getInsideValue() const;
-
   Q_PROPERTY(int InsideValue READ getInsideValue WRITE setInsideValue)
 
     /**
@@ -109,7 +106,6 @@ public:
     * @return Value of OutsideValue
     */
     int getOutsideValue() const;
-
   Q_PROPERTY(int OutsideValue READ getOutsideValue WRITE setOutsideValue)
 
 

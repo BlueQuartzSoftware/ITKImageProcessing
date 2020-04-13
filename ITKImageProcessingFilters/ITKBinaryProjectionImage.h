@@ -71,7 +71,6 @@ public:
     * @return Value of ProjectionDimension
     */
     double getProjectionDimension() const;
-
   Q_PROPERTY(double ProjectionDimension READ getProjectionDimension WRITE setProjectionDimension)
 
     /**
@@ -83,7 +82,6 @@ public:
     * @return Value of ForegroundValue
     */
     double getForegroundValue() const;
-
   Q_PROPERTY(double ForegroundValue READ getForegroundValue WRITE setForegroundValue)
 
     /**
@@ -95,7 +93,6 @@ public:
     * @return Value of BackgroundValue
     */
     double getBackgroundValue() const;
-
   Q_PROPERTY(double BackgroundValue READ getBackgroundValue WRITE setBackgroundValue)
 
 

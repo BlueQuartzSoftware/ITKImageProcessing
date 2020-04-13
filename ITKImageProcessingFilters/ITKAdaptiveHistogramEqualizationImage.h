@@ -73,7 +73,6 @@ public:
     * @return Value of Radius
     */
     FloatVec3Type getRadius() const;
-
   Q_PROPERTY(FloatVec3Type Radius READ getRadius WRITE setRadius)
 
     /**
@@ -85,7 +84,6 @@ public:
     * @return Value of Alpha
     */
     float getAlpha() const;
-
   Q_PROPERTY(float Alpha READ getAlpha WRITE setAlpha)
 
     /**
@@ -97,7 +95,6 @@ public:
     * @return Value of Beta
     */
     float getBeta() const;
-
   Q_PROPERTY(float Beta READ getBeta WRITE setBeta)
 
   /**

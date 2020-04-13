@@ -69,7 +69,6 @@ public:
     * @return Value of Radius
     */
     FloatVec3Type getRadius() const;
-
   Q_PROPERTY(FloatVec3Type Radius READ getRadius WRITE setRadius)
 
   /**

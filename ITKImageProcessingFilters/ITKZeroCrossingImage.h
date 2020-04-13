@@ -70,7 +70,6 @@ public:
     * @return Value of ForegroundValue
     */
     int getForegroundValue() const;
-
   Q_PROPERTY(int ForegroundValue READ getForegroundValue WRITE setForegroundValue)
 
     /**
@@ -82,7 +81,6 @@ public:
     * @return Value of BackgroundValue
     */
     int getBackgroundValue() const;
-
   Q_PROPERTY(int BackgroundValue READ getBackgroundValue WRITE setBackgroundValue)
 
 

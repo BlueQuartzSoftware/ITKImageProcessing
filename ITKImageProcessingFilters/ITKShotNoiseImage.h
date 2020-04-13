@@ -70,7 +70,6 @@ public:
     * @return Value of Scale
     */
     double getScale() const;
-
   Q_PROPERTY(double Scale READ getScale WRITE setScale)
 
     /**
@@ -82,7 +81,6 @@ public:
     * @return Value of Seed
     */
     double getSeed() const;
-
   Q_PROPERTY(double Seed READ getSeed WRITE setSeed)
 
 

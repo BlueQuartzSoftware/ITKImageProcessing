@@ -71,7 +71,6 @@ public:
     * @return Value of Lower
     */
     double getLower() const;
-
   Q_PROPERTY(double Lower READ getLower WRITE setLower)
 
     /**
@@ -83,7 +82,6 @@ public:
     * @return Value of Upper
     */
     double getUpper() const;
-
   Q_PROPERTY(double Upper READ getUpper WRITE setUpper)
 
     /**
@@ -95,7 +93,6 @@ public:
     * @return Value of OutsideValue
     */
     double getOutsideValue() const;
-
   Q_PROPERTY(double OutsideValue READ getOutsideValue WRITE setOutsideValue)
 
 

@@ -74,7 +74,6 @@ public:
     * @return Value of BackgroundValue
     */
     double getBackgroundValue() const;
-
   Q_PROPERTY(double BackgroundValue READ getBackgroundValue WRITE setBackgroundValue)
 
     /**
@@ -86,7 +85,6 @@ public:
     * @return Value of ForegroundValue
     */
     double getForegroundValue() const;
-
   Q_PROPERTY(double ForegroundValue READ getForegroundValue WRITE setForegroundValue)
 
     /**
@@ -98,7 +96,6 @@ public:
     * @return Value of KernelRadius
     */
     FloatVec3Type getKernelRadius() const;
-
   Q_PROPERTY(FloatVec3Type KernelRadius READ getKernelRadius WRITE setKernelRadius)
 
     /**
@@ -110,7 +107,6 @@ public:
     * @return Value of KernelType
     */
     int getKernelType() const;
-
   Q_PROPERTY(int KernelType READ getKernelType WRITE setKernelType)
 
 

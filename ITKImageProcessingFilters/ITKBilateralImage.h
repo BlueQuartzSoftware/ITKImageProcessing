@@ -71,7 +71,6 @@ public:
     * @return Value of DomainSigma
     */
     double getDomainSigma() const;
-
   Q_PROPERTY(double DomainSigma READ getDomainSigma WRITE setDomainSigma)
 
     /**
@@ -83,7 +82,6 @@ public:
     * @return Value of RangeSigma
     */
     double getRangeSigma() const;
-
   Q_PROPERTY(double RangeSigma READ getRangeSigma WRITE setRangeSigma)
 
     /**
@@ -95,7 +93,6 @@ public:
     * @return Value of NumberOfRangeGaussianSamples
     */
     double getNumberOfRangeGaussianSamples() const;
-
   Q_PROPERTY(double NumberOfRangeGaussianSamples READ getNumberOfRangeGaussianSamples WRITE setNumberOfRangeGaussianSamples)
 
 

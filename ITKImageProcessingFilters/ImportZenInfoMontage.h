@@ -150,7 +150,6 @@ public:
    * @return Value of InputFile
    */
   QString getInputFile() const;
-
   Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
   /**
@@ -184,7 +183,6 @@ public:
    * @return Value of DataContainerPath
    */
   DataArrayPath getDataContainerPath() const;
-
   Q_PROPERTY(DataArrayPath DataContainerPath READ getDataContainerPath WRITE setDataContainerPath)
 
   /**
@@ -196,7 +194,6 @@ public:
    * @return Value of CellAttributeMatrixName
    */
   QString getCellAttributeMatrixName() const;
-
   Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
   /**
@@ -208,7 +205,6 @@ public:
    * @return Value of ImageDataArrayName
    */
   QString getImageDataArrayName() const;
-
   Q_PROPERTY(QString ImageDataArrayName READ getImageDataArrayName WRITE setImageDataArrayName)
 
   /**
@@ -220,7 +216,6 @@ public:
    * @return Value of ConvertToGrayScale
    */
   bool getConvertToGrayScale() const;
-
   Q_PROPERTY(bool ConvertToGrayScale READ getConvertToGrayScale WRITE setConvertToGrayScale)
 
   /**
@@ -232,7 +227,6 @@ public:
    * @return Value of ColorWeights
    */
   FloatVec3Type getColorWeights() const;
-
   Q_PROPERTY(FloatVec3Type ColorWeights READ getColorWeights WRITE setColorWeights)
 
   /**
@@ -244,7 +238,6 @@ public:
    * @return Value of ChangeOrigin
    */
   bool getChangeOrigin() const;
-
   Q_PROPERTY(bool ChangeOrigin READ getChangeOrigin WRITE setChangeOrigin)
 
   /**
@@ -256,7 +249,6 @@ public:
    * @return Value of Origin
    */
   FloatVec3Type getOrigin() const;
-
   Q_PROPERTY(FloatVec3Type Origin READ getOrigin WRITE setOrigin)
 
   /**
@@ -268,7 +260,6 @@ public:
    * @return Value of ChangeSpacing
    */
   bool getChangeSpacing() const;
-
   Q_PROPERTY(bool ChangeSpacing READ getChangeSpacing WRITE setChangeSpacing)
 
   /**
@@ -280,7 +271,6 @@ public:
    * @return Value of Spacing
    */
   FloatVec3Type getSpacing() const;
-
   Q_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
 
   /**
@@ -288,7 +278,6 @@ public:
    * @return Value of RowCount
    */
   int32_t getRowCount() const;
-
   Q_PROPERTY(int32_t RowCount READ getRowCount)
 
   /**
@@ -296,7 +285,6 @@ public:
    * @return Value of ColumnCount
    */
   int32_t getColumnCount() const;
-
   Q_PROPERTY(int32_t ColumnCount READ getColumnCount)
 
   QString getMontageInformation();
@@ -307,7 +295,6 @@ public:
    * @return Value of FilenameList
    */
   QStringList getFilenameList() const;
-
   Q_PROPERTY(QStringList FilenameList READ getFilenameList)
 
   /**

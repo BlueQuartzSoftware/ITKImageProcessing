@@ -69,7 +69,6 @@ public:
     * @return Value of UseImageSpacing
     */
     bool getUseImageSpacing() const;
-
   Q_PROPERTY(bool UseImageSpacing READ getUseImageSpacing WRITE setUseImageSpacing)
 
 

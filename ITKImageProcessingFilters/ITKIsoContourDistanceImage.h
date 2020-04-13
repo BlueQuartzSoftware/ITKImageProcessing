@@ -70,7 +70,6 @@ public:
     * @return Value of LevelSetValue
     */
     double getLevelSetValue() const;
-
   Q_PROPERTY(double LevelSetValue READ getLevelSetValue WRITE setLevelSetValue)
 
     /**
@@ -82,7 +81,6 @@ public:
     * @return Value of FarValue
     */
     double getFarValue() const;
-
   Q_PROPERTY(double FarValue READ getFarValue WRITE setFarValue)
 
 

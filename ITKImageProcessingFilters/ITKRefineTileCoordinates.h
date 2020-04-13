@@ -70,7 +70,6 @@ public:
     * @return Value of MontageSize
     */
     IntVec3Type getMontageSize() const;
-
   Q_PROPERTY(IntVec3Type MontageSize READ getMontageSize WRITE setMontageSize)
 
     /**
@@ -82,7 +81,6 @@ public:
     * @return Value of DataContainers
     */
     QStringList getDataContainers() const;
-
   Q_PROPERTY(QStringList DataContainers READ getDataContainers WRITE setDataContainers)
 
     /**
@@ -94,7 +92,6 @@ public:
     * @return Value of CommonAttributeMatrixName
     */
     QString getCommonAttributeMatrixName() const;
-
   Q_PROPERTY(QString CommonAttributeMatrixName READ getCommonAttributeMatrixName WRITE setCommonAttributeMatrixName)
 
     /**
@@ -106,7 +103,6 @@ public:
     * @return Value of CommonDataArrayName
     */
     QString getCommonDataArrayName() const;
-
   Q_PROPERTY(QString CommonDataArrayName READ getCommonDataArrayName WRITE setCommonDataArrayName)
 
     /**
@@ -118,7 +114,6 @@ public:
     * @return Value of ImportMode
     */
     int getImportMode() const;
-
   Q_PROPERTY(int ImportMode READ getImportMode WRITE setImportMode)
 
     /**
@@ -130,7 +125,6 @@ public:
     * @return Value of TileOverlap
     */
     float getTileOverlap() const;
-
   Q_PROPERTY(float TileOverlap READ getTileOverlap WRITE setTileOverlap)
 
     /**
@@ -142,7 +136,6 @@ public:
     * @return Value of ApplyRefinedOrigin
     */
     bool getApplyRefinedOrigin() const;
-
   Q_PROPERTY(bool ApplyRefinedOrigin READ getApplyRefinedOrigin WRITE setApplyRefinedOrigin)
 
   /**

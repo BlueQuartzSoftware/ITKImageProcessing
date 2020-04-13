@@ -74,7 +74,6 @@ public:
     * @return Value of Variance
     */
     FloatVec3Type getVariance() const;
-
   Q_PROPERTY(FloatVec3Type Variance READ getVariance WRITE setVariance)
 
     /**
@@ -86,7 +85,6 @@ public:
     * @return Value of MaximumKernelWidth
     */
     int32_t getMaximumKernelWidth() const;
-
   Q_PROPERTY(int32_t MaximumKernelWidth READ getMaximumKernelWidth WRITE setMaximumKernelWidth)
 
     /**
@@ -98,7 +96,6 @@ public:
     * @return Value of MaximumError
     */
     FloatVec3Type getMaximumError() const;
-
   Q_PROPERTY(FloatVec3Type MaximumError READ getMaximumError WRITE setMaximumError)
 
     /**
@@ -110,7 +107,6 @@ public:
     * @return Value of UseImageSpacing
     */
     bool getUseImageSpacing() const;
-
   Q_PROPERTY(bool UseImageSpacing READ getUseImageSpacing WRITE setUseImageSpacing)
 
 

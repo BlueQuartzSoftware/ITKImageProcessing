@@ -70,7 +70,6 @@ public:
     * @return Value of MovingCellArrayPath
     */
     DataArrayPath getMovingCellArrayPath() const;
-
   Q_PROPERTY(DataArrayPath MovingCellArrayPath READ getMovingCellArrayPath WRITE setMovingCellArrayPath)
 
   ~ITKFFTNormalizedCorrelationImage() override;
@@ -84,7 +83,6 @@ public:
     * @return Value of RequiredNumberOfOverlappingPixels
     */
     double getRequiredNumberOfOverlappingPixels() const;
-
   Q_PROPERTY(double RequiredNumberOfOverlappingPixels READ getRequiredNumberOfOverlappingPixels WRITE setRequiredNumberOfOverlappingPixels)
 
     /**
@@ -96,7 +94,6 @@ public:
     * @return Value of RequiredFractionOfOverlappingPixels
     */
     double getRequiredFractionOfOverlappingPixels() const;
-
   Q_PROPERTY(double RequiredFractionOfOverlappingPixels READ getRequiredFractionOfOverlappingPixels WRITE setRequiredFractionOfOverlappingPixels)
 
   /**

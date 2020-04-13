@@ -76,7 +76,6 @@ public:
     * @return Value of NumberOfThresholds
     */
     int getNumberOfThresholds() const;
-
   Q_PROPERTY(int NumberOfThresholds READ getNumberOfThresholds WRITE setNumberOfThresholds)
 
     /**
@@ -88,7 +87,6 @@ public:
     * @return Value of LabelOffset
     */
     int getLabelOffset() const;
-
   Q_PROPERTY(int LabelOffset READ getLabelOffset WRITE setLabelOffset)
 
     /**
@@ -100,7 +98,6 @@ public:
     * @return Value of NumberOfHistogramBins
     */
     double getNumberOfHistogramBins() const;
-
   Q_PROPERTY(double NumberOfHistogramBins READ getNumberOfHistogramBins WRITE setNumberOfHistogramBins)
 
     /**
@@ -112,7 +109,6 @@ public:
     * @return Value of ValleyEmphasis
     */
     bool getValleyEmphasis() const;
-
   Q_PROPERTY(bool ValleyEmphasis READ getValleyEmphasis WRITE setValleyEmphasis)
 
     /**
@@ -124,7 +120,6 @@ public:
     * @return Value of Thresholds
     */
     FloatVec3Type getThresholds() const;
-
   Q_PROPERTY(FloatVec3Type Thresholds READ getThresholds)
 
   /**

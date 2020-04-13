@@ -69,7 +69,6 @@ public:
     * @return Value of Repetitions
     */
     double getRepetitions() const;
-
   Q_PROPERTY(double Repetitions READ getRepetitions WRITE setRepetitions)
 
 

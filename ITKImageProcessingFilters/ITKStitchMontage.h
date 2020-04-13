@@ -108,7 +108,6 @@ public:
    * @param value
    */
   void setMontageSelection(const MontageSelection& value);
-
   Q_PROPERTY(MontageSelection MontageSelection READ getMontageSelection WRITE setMontageSelection)
   /**
    * @brief Setter property for CommonAttributeMatrixName
@@ -119,7 +118,6 @@ public:
    * @return Value of CommonAttributeMatrixName
    */
   QString getCommonAttributeMatrixName() const;
-
   Q_PROPERTY(QString CommonAttributeMatrixName READ getCommonAttributeMatrixName WRITE setCommonAttributeMatrixName)
 
   /**
@@ -131,7 +129,6 @@ public:
    * @return Value of CommonDataArrayName
    */
   QString getCommonDataArrayName() const;
-
   Q_PROPERTY(QString CommonDataArrayName READ getCommonDataArrayName WRITE setCommonDataArrayName)
 
   /**
@@ -143,7 +140,6 @@ public:
    * @return Value of MontageDataContainerName
    */
   QString getMontageDataContainerName() const;
-
   Q_PROPERTY(QString MontageDataContainerName READ getMontageDataContainerName WRITE setMontageDataContainerName)
 
   /**
@@ -155,7 +151,6 @@ public:
    * @return Value of MontageAttributeMatrixName
    */
   QString getMontageAttributeMatrixName() const;
-
   Q_PROPERTY(QString MontageAttributeMatrixName READ getMontageAttributeMatrixName WRITE setMontageAttributeMatrixName)
 
   /**

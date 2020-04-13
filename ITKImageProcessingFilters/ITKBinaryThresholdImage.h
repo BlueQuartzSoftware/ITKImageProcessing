@@ -73,7 +73,6 @@ public:
     * @return Value of LowerThreshold
     */
     double getLowerThreshold() const;
-
   Q_PROPERTY(double LowerThreshold READ getLowerThreshold WRITE setLowerThreshold)
 
     /**
@@ -85,7 +84,6 @@ public:
     * @return Value of UpperThreshold
     */
     double getUpperThreshold() const;
-
   Q_PROPERTY(double UpperThreshold READ getUpperThreshold WRITE setUpperThreshold)
 
     /**
@@ -97,7 +95,6 @@ public:
     * @return Value of InsideValue
     */
     int getInsideValue() const;
-
   Q_PROPERTY(int InsideValue READ getInsideValue WRITE setInsideValue)
 
     /**
@@ -109,7 +106,6 @@ public:
     * @return Value of OutsideValue
     */
     int getOutsideValue() const;
-
   Q_PROPERTY(int OutsideValue READ getOutsideValue WRITE setOutsideValue)
 
 

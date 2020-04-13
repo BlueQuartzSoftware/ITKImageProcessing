@@ -101,7 +101,6 @@ public:
     * @return Value of FileName
     */
     QString getFileName() const;
-
   Q_PROPERTY(QString FileName READ getFileName WRITE setFileName)
 
     /**
@@ -113,7 +112,6 @@ public:
     * @return Value of DataContainerName
     */
     DataArrayPath getDataContainerName() const;
-
   Q_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
 
     /**
@@ -125,7 +123,6 @@ public:
     * @return Value of CellAttributeMatrixName
     */
     QString getCellAttributeMatrixName() const;
-
   Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
     /**
@@ -137,7 +134,6 @@ public:
     * @return Value of ImageDataArrayName
     */
     QString getImageDataArrayName() const;
-
   Q_PROPERTY(QString ImageDataArrayName READ getImageDataArrayName WRITE setImageDataArrayName)
 
     /**

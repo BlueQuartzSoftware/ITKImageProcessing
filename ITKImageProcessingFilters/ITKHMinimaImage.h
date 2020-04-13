@@ -71,7 +71,6 @@ public:
     * @return Value of Height
     */
     double getHeight() const;
-
   Q_PROPERTY(double Height READ getHeight WRITE setHeight)
 
     /**
@@ -83,7 +82,6 @@ public:
     * @return Value of FullyConnected
     */
     bool getFullyConnected() const;
-
   Q_PROPERTY(bool FullyConnected READ getFullyConnected WRITE setFullyConnected)
 
 

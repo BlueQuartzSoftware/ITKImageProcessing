@@ -70,7 +70,6 @@ public:
     * @return Value of Shift
     */
     double getShift() const;
-
   Q_PROPERTY(double Shift READ getShift WRITE setShift)
 
     /**
@@ -82,7 +81,6 @@ public:
     * @return Value of Scale
     */
     double getScale() const;
-
   Q_PROPERTY(double Scale READ getScale WRITE setScale)
 
 

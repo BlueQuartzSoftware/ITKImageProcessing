@@ -70,7 +70,6 @@ public:
     * @return Value of Probability
     */
     double getProbability() const;
-
   Q_PROPERTY(double Probability READ getProbability WRITE setProbability)
 
     /**
@@ -82,7 +81,6 @@ public:
     * @return Value of Seed
     */
     double getSeed() const;
-
   Q_PROPERTY(double Seed READ getSeed WRITE setSeed)
 
 

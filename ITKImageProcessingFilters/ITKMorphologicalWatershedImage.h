@@ -72,7 +72,6 @@ public:
     * @return Value of Level
     */
     double getLevel() const;
-
   Q_PROPERTY(double Level READ getLevel WRITE setLevel)
 
     /**
@@ -84,7 +83,6 @@ public:
     * @return Value of MarkWatershedLine
     */
     bool getMarkWatershedLine() const;
-
   Q_PROPERTY(bool MarkWatershedLine READ getMarkWatershedLine WRITE setMarkWatershedLine)
 
     /**
@@ -96,7 +94,6 @@ public:
     * @return Value of FullyConnected
     */
     bool getFullyConnected() const;
-
   Q_PROPERTY(bool FullyConnected READ getFullyConnected WRITE setFullyConnected)
 
 

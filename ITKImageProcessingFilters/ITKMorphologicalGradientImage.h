@@ -71,7 +71,6 @@ public:
     * @return Value of KernelRadius
     */
     FloatVec3Type getKernelRadius() const;
-
   Q_PROPERTY(FloatVec3Type KernelRadius READ getKernelRadius WRITE setKernelRadius)
 
     /**
@@ -83,7 +82,6 @@ public:
     * @return Value of KernelType
     */
     int getKernelType() const;
-
   Q_PROPERTY(int KernelType READ getKernelType WRITE setKernelType)
 
 

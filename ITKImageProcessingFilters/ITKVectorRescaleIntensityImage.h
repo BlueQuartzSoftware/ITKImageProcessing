@@ -93,7 +93,6 @@ public:
     * @return Value of OutputMaximumMagnitude
     */
     double getOutputMaximumMagnitude() const;
-
   Q_PROPERTY(double OutputMaximumMagnitude READ getOutputMaximumMagnitude WRITE setOutputMaximumMagnitude)
 
     /**
@@ -105,7 +104,6 @@ public:
     * @return Value of OutputType
     */
     int getOutputType() const;
-
   Q_PROPERTY(int OutputType READ getOutputType WRITE setOutputType)
 
   /**

@@ -69,7 +69,6 @@ public:
     * @return Value of ProjectionDimension
     */
     double getProjectionDimension() const;
-
   Q_PROPERTY(double ProjectionDimension READ getProjectionDimension WRITE setProjectionDimension)
 
 

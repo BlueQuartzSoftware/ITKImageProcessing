@@ -76,7 +76,6 @@ public:
     * @return Value of MinimumObjectSize
     */
     double getMinimumObjectSize() const;
-
   Q_PROPERTY(double MinimumObjectSize READ getMinimumObjectSize WRITE setMinimumObjectSize)
 
     /**
@@ -88,7 +87,6 @@ public:
     * @return Value of SortByObjectSize
     */
     bool getSortByObjectSize() const;
-
   Q_PROPERTY(bool SortByObjectSize READ getSortByObjectSize WRITE setSortByObjectSize)
 
     /**
@@ -100,7 +98,6 @@ public:
     * @return Value of NumberOfObjects
     */
     double getNumberOfObjects() const;
-
   Q_PROPERTY(double NumberOfObjects READ getNumberOfObjects)
 
     /**
@@ -112,7 +109,6 @@ public:
     * @return Value of OriginalNumberOfObjects
     */
     double getOriginalNumberOfObjects() const;
-
   Q_PROPERTY(double OriginalNumberOfObjects READ getOriginalNumberOfObjects)
 
     /**
@@ -124,7 +120,6 @@ public:
     * @return Value of SizeOfObjectsInPhysicalUnits
     */
     FloatVec3Type getSizeOfObjectsInPhysicalUnits() const;
-
   Q_PROPERTY(FloatVec3Type SizeOfObjectsInPhysicalUnits READ getSizeOfObjectsInPhysicalUnits)
 
     /**
@@ -136,7 +131,6 @@ public:
     * @return Value of SizeOfObjectsInPixels
     */
     FloatVec3Type getSizeOfObjectsInPixels() const;
-
   Q_PROPERTY(FloatVec3Type SizeOfObjectsInPixels READ getSizeOfObjectsInPixels)
 
   /**

@@ -72,7 +72,6 @@ public:
     * @return Value of WindowMinimum
     */
     double getWindowMinimum() const;
-
   Q_PROPERTY(double WindowMinimum READ getWindowMinimum WRITE setWindowMinimum)
 
     /**
@@ -84,7 +83,6 @@ public:
     * @return Value of WindowMaximum
     */
     double getWindowMaximum() const;
-
   Q_PROPERTY(double WindowMaximum READ getWindowMaximum WRITE setWindowMaximum)
 
     /**
@@ -96,7 +94,6 @@ public:
     * @return Value of OutputMinimum
     */
     double getOutputMinimum() const;
-
   Q_PROPERTY(double OutputMinimum READ getOutputMinimum WRITE setOutputMinimum)
 
     /**
@@ -108,7 +105,6 @@ public:
     * @return Value of OutputMaximum
     */
     double getOutputMaximum() const;
-
   Q_PROPERTY(double OutputMaximum READ getOutputMaximum WRITE setOutputMaximum)
 
 

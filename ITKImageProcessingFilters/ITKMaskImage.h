@@ -70,7 +70,6 @@ public:
     * @return Value of OutsideValue
     */
     double getOutsideValue() const;
-
   Q_PROPERTY(double OutsideValue READ getOutsideValue WRITE setOutsideValue)
 
     /**
@@ -82,7 +81,6 @@ public:
     * @return Value of MaskCellArrayPath
     */
     DataArrayPath getMaskCellArrayPath() const;
-
   Q_PROPERTY(DataArrayPath MaskCellArrayPath READ getMaskCellArrayPath WRITE setMaskCellArrayPath)
 
   /**

@@ -71,7 +71,6 @@ public:
     * @return Value of Sigma
     */
     double getSigma() const;
-
   Q_PROPERTY(double Sigma READ getSigma WRITE setSigma)
 
     /**
@@ -83,7 +82,6 @@ public:
     * @return Value of NormalizeAcrossScale
     */
     bool getNormalizeAcrossScale() const;
-
   Q_PROPERTY(bool NormalizeAcrossScale READ getNormalizeAcrossScale WRITE setNormalizeAcrossScale)
 
 

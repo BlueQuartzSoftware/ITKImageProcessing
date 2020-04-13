@@ -70,7 +70,6 @@ public:
     * @return Value of FullyConnected
     */
     bool getFullyConnected() const;
-
   Q_PROPERTY(bool FullyConnected READ getFullyConnected WRITE setFullyConnected)
 
     /**
@@ -82,7 +81,6 @@ public:
     * @return Value of Flat
     */
     bool getFlat() const;
-
   Q_PROPERTY(bool Flat READ getFlat)
 
 

@@ -67,7 +67,6 @@ public:
     * @return Value of TimeStep
     */
     double getTimeStep() const;
-
   Q_PROPERTY(double TimeStep READ getTimeStep WRITE setTimeStep)
 
     /**
@@ -79,7 +78,6 @@ public:
     * @return Value of NumberOfIterations
     */
     double getNumberOfIterations() const;
-
   Q_PROPERTY(double NumberOfIterations READ getNumberOfIterations WRITE setNumberOfIterations)
 
     /**
@@ -91,7 +89,6 @@ public:
     * @return Value of StencilRadius
     */
     int getStencilRadius() const;
-
   Q_PROPERTY(int StencilRadius READ getStencilRadius WRITE setStencilRadius)
 
     /**
@@ -103,7 +100,6 @@ public:
     * @return Value of Threshold
     */
     double getThreshold() const;
-
   Q_PROPERTY(double Threshold READ getThreshold WRITE setThreshold)
 
 

@@ -72,7 +72,6 @@ public:
     * @return Value of Alpha
     */
     double getAlpha() const;
-
   Q_PROPERTY(double Alpha READ getAlpha WRITE setAlpha)
 
     /**
@@ -84,7 +83,6 @@ public:
     * @return Value of Beta
     */
     double getBeta() const;
-
   Q_PROPERTY(double Beta READ getBeta WRITE setBeta)
 
     /**
@@ -96,7 +94,6 @@ public:
     * @return Value of OutputMaximum
     */
     double getOutputMaximum() const;
-
   Q_PROPERTY(double OutputMaximum READ getOutputMaximum WRITE setOutputMaximum)
 
     /**
@@ -108,7 +105,6 @@ public:
     * @return Value of OutputMinimum
     */
     double getOutputMinimum() const;
-
   Q_PROPERTY(double OutputMinimum READ getOutputMinimum WRITE setOutputMinimum)
 
 

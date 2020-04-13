@@ -62,7 +62,6 @@ public:
     * @return Value of CastingType
     */
     int getCastingType() const;
-
   Q_PROPERTY(int CastingType READ getCastingType WRITE setCastingType)
 
   ~ITKCastImage() override;

@@ -73,7 +73,6 @@ public:
     * @return Value of TimeStep
     */
     double getTimeStep() const;
-
   Q_PROPERTY(double TimeStep READ getTimeStep WRITE setTimeStep)
 
     /**
@@ -85,7 +84,6 @@ public:
     * @return Value of ConductanceParameter
     */
     double getConductanceParameter() const;
-
   Q_PROPERTY(double ConductanceParameter READ getConductanceParameter WRITE setConductanceParameter)
 
     /**
@@ -97,7 +95,6 @@ public:
     * @return Value of ConductanceScalingUpdateInterval
     */
     double getConductanceScalingUpdateInterval() const;
-
   Q_PROPERTY(double ConductanceScalingUpdateInterval READ getConductanceScalingUpdateInterval WRITE setConductanceScalingUpdateInterval)
 
     /**
@@ -109,7 +106,6 @@ public:
     * @return Value of NumberOfIterations
     */
     double getNumberOfIterations() const;
-
   Q_PROPERTY(double NumberOfIterations READ getNumberOfIterations WRITE setNumberOfIterations)
 
 

@@ -91,7 +91,6 @@ public:
     * @return Value of InputFile
     */
     QString getInputFile() const;
-
   Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
     /**
@@ -103,7 +102,6 @@ public:
     * @return Value of OutputFile
     */
     QString getOutputFile() const;
-
   Q_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
 
   /**

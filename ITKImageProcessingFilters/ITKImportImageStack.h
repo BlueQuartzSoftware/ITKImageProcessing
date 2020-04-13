@@ -98,7 +98,6 @@ public:
     * @return Value of DataContainerName
     */
     DataArrayPath getDataContainerName() const;
-
   Q_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
 
     /**
@@ -110,7 +109,6 @@ public:
     * @return Value of CellAttributeMatrixName
     */
     QString getCellAttributeMatrixName() const;
-
   Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
     /**
@@ -122,7 +120,6 @@ public:
     * @return Value of Origin
     */
     FloatVec3Type getOrigin() const;
-
   Q_PROPERTY(FloatVec3Type Origin READ getOrigin WRITE setOrigin)
 
     /**
@@ -134,7 +131,6 @@ public:
     * @return Value of Spacing
     */
     FloatVec3Type getSpacing() const;
-
   Q_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
 
   /**
@@ -146,7 +142,6 @@ public:
    * @return Value of InputFileListInfo
    */
   StackFileListInfo getInputFileListInfo() const;
-
   Q_PROPERTY(StackFileListInfo InputFileListInfo READ getInputFileListInfo WRITE setInputFileListInfo)
 
   /**
@@ -158,7 +153,6 @@ public:
    * @return Value of ImageStack
    */
   int getImageStack() const;
-
   Q_PROPERTY(int ImageStack READ getImageStack WRITE setImageStack)
 
     /**
@@ -170,7 +164,6 @@ public:
     * @return Value of ImageDataArrayName
     */
     QString getImageDataArrayName() const;
-
   Q_PROPERTY(QString ImageDataArrayName READ getImageDataArrayName WRITE setImageDataArrayName)
 
   /**

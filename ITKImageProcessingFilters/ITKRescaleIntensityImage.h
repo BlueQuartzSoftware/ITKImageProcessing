@@ -71,7 +71,6 @@ public:
     * @return Value of OutputMinimum
     */
     double getOutputMinimum() const;
-
   Q_PROPERTY(double OutputMinimum READ getOutputMinimum WRITE setOutputMinimum)
 
     /**
@@ -83,7 +82,6 @@ public:
     * @return Value of OutputMaximum
     */
     double getOutputMaximum() const;
-
   Q_PROPERTY(double OutputMaximum READ getOutputMaximum WRITE setOutputMaximum)
 
     /**
@@ -95,7 +93,6 @@ public:
     * @return Value of OutputType
     */
     int getOutputType() const;
-
   Q_PROPERTY(int OutputType READ getOutputType WRITE setOutputType)
 
   /**

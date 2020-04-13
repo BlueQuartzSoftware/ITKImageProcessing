@@ -71,7 +71,6 @@ public:
     * @return Value of FullyConnected
     */
     bool getFullyConnected() const;
-
   Q_PROPERTY(bool FullyConnected READ getFullyConnected WRITE setFullyConnected)
 
     /**
@@ -83,7 +82,6 @@ public:
     * @return Value of BackgroundValue
     */
     double getBackgroundValue() const;
-
   Q_PROPERTY(double BackgroundValue READ getBackgroundValue WRITE setBackgroundValue)
 
 
