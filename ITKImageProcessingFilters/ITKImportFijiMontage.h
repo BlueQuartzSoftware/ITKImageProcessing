@@ -54,7 +54,7 @@ class ITKImageProcessing_EXPORT ITKImportFijiMontage : public AbstractFilter
   Q_OBJECT
   // clang-format off
   // Start Python bindings declarations
-  PYB11_BEGIN_BINDINGS(ITKImportFijiMontage SUPERCLASS ITKImportMontage)
+  PYB11_BEGIN_BINDINGS(ITKImportFijiMontage SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(ITKImportFijiMontage)
   PYB11_FILTER_NEW_MACRO(ITKImportFijiMontage)
 

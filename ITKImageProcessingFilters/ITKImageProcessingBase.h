@@ -22,7 +22,7 @@ class ITKImageProcessing_EXPORT ITKImageProcessingBase : public ITKImageBase
 {
   Q_OBJECT
   // Start Python bindings declarations
-  PYB11_BEGIN_BINDINGS(ITKImageProcessingBase SUPERCLASS ITKImageBase)
+  PYB11_BEGIN_BINDINGS(ITKImageProcessingBase SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(ITKImageProcessingBase)
   PYB11_PROPERTY(DataArrayPath SelectedCellArrayPath READ getSelectedCellArrayPath WRITE setSelectedCellArrayPath)
   PYB11_PROPERTY(QString NewCellArrayName READ getNewCellArrayName WRITE setNewCellArrayName)

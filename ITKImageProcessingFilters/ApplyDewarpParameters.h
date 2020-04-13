@@ -50,8 +50,8 @@ class ITKImageProcessing_EXPORT ApplyDewarpParameters : public AbstractFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(ApplyDewarpParameters SUPERCLASS AbstractFilter)
+  // clang-format off
+  PYB11_BEGIN_BINDINGS(ApplyDewarpParameters SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(ApplyDewarpParameters)
   PYB11_FILTER_NEW_MACRO(ApplyDewarpParameters)
   PYB11_PROPERTY(QString MontageName READ getMontageName WRITE setMontageName)
@@ -60,7 +60,8 @@ class ITKImageProcessing_EXPORT ApplyDewarpParameters : public AbstractFilter
   PYB11_PROPERTY(QString MaskName READ getMaskName WRITE setMaskName)
   PYB11_PROPERTY(DataArrayPath TransformPath READ getTransformPath WRITE setTransformPath)
   PYB11_PROPERTY(QString TransformPrefix READ getTransformPrefix WRITE setTransformPrefix)
-#endif
+  PYB11_END_BINDINGS()
+  // clang-format on
 
 public:
   using Self = ApplyDewarpParameters;
