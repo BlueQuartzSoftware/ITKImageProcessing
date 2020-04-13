@@ -35,6 +35,7 @@ class ITKImageProcessing_EXPORT ITKOtsuMultipleThresholdsImage : public ITKImage
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ITKOtsuMultipleThresholdsImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ITKOtsuMultipleThresholdsImage)
   PYB11_FILTER_NEW_MACRO(ITKOtsuMultipleThresholdsImage)
   PYB11_PROPERTY(int NumberOfThresholds READ getNumberOfThresholds WRITE setNumberOfThresholds)

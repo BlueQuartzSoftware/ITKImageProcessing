@@ -52,6 +52,7 @@ class ITKImageProcessing_EXPORT ApplyDewarpParameters : public AbstractFilter
 
   // clang-format off
   PYB11_BEGIN_BINDINGS(ApplyDewarpParameters SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ApplyDewarpParameters)
   PYB11_FILTER_NEW_MACRO(ApplyDewarpParameters)
   PYB11_PROPERTY(QString MontageName READ getMontageName WRITE setMontageName)

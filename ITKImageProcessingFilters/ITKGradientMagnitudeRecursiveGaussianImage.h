@@ -33,6 +33,7 @@ class ITKImageProcessing_EXPORT ITKGradientMagnitudeRecursiveGaussianImage : pub
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ITKGradientMagnitudeRecursiveGaussianImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ITKGradientMagnitudeRecursiveGaussianImage)
   PYB11_FILTER_NEW_MACRO(ITKGradientMagnitudeRecursiveGaussianImage)
   PYB11_PROPERTY(double Sigma READ getSigma WRITE setSigma)

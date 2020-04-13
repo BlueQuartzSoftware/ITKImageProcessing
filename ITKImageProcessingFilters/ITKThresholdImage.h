@@ -32,6 +32,7 @@ class ITKImageProcessing_EXPORT ITKThresholdImage : public ITKImageProcessingBas
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ITKThresholdImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ITKThresholdImage)
   PYB11_FILTER_NEW_MACRO(ITKThresholdImage)
   PYB11_PROPERTY(double Lower READ getLower WRITE setLower)

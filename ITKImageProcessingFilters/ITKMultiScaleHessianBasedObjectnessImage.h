@@ -31,6 +31,7 @@ class ITKImageProcessing_EXPORT ITKMultiScaleHessianBasedObjectnessImage : publi
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ITKMultiScaleHessianBasedObjectnessImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ITKMultiScaleHessianBasedObjectnessImage)
   PYB11_FILTER_NEW_MACRO(ITKMultiScaleHessianBasedObjectnessImage)
   PYB11_PROPERTY(int ObjectDimension READ getObjectDimension WRITE setObjectDimension)

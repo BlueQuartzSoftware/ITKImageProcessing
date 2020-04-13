@@ -32,6 +32,7 @@ class ITKImageProcessing_EXPORT ITKDanielssonDistanceMapImage : public ITKImageP
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ITKDanielssonDistanceMapImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ITKDanielssonDistanceMapImage)
   PYB11_FILTER_NEW_MACRO(ITKDanielssonDistanceMapImage)
   PYB11_PROPERTY(bool InputIsBinary READ getInputIsBinary WRITE setInputIsBinary)

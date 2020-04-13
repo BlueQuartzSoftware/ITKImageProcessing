@@ -32,6 +32,7 @@ class ITKImageProcessing_EXPORT ITKSpeckleNoiseImage : public ITKImageProcessing
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ITKSpeckleNoiseImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ITKSpeckleNoiseImage)
   PYB11_FILTER_NEW_MACRO(ITKSpeckleNoiseImage)
   PYB11_PROPERTY(double StandardDeviation READ getStandardDeviation WRITE setStandardDeviation)

@@ -32,6 +32,7 @@ class ITKImageProcessing_EXPORT ITKZeroCrossingImage : public ITKImageProcessing
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ITKZeroCrossingImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ITKZeroCrossingImage)
   PYB11_FILTER_NEW_MACRO(ITKZeroCrossingImage)
   PYB11_PROPERTY(int ForegroundValue READ getForegroundValue WRITE setForegroundValue)

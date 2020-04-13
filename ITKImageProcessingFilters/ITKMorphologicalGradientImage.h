@@ -33,6 +33,7 @@ class ITKImageProcessing_EXPORT ITKMorphologicalGradientImage : public ITKImageP
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ITKMorphologicalGradientImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ITKMorphologicalGradientImage)
   PYB11_FILTER_NEW_MACRO(ITKMorphologicalGradientImage)
   PYB11_PROPERTY(FloatVec3Type KernelRadius READ getKernelRadius WRITE setKernelRadius)

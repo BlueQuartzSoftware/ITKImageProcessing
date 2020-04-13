@@ -33,6 +33,7 @@ class ITKImageProcessing_EXPORT ITKFFTNormalizedCorrelationImage : public ITKIma
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ITKFFTNormalizedCorrelationImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ITKFFTNormalizedCorrelationImage)
   PYB11_FILTER_NEW_MACRO(ITKFFTNormalizedCorrelationImage)
   PYB11_PROPERTY(DataArrayPath MovingCellArrayPath READ getMovingCellArrayPath WRITE setMovingCellArrayPath)

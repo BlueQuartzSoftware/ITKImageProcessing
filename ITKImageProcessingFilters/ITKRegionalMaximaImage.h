@@ -35,6 +35,7 @@ class ITKImageProcessing_EXPORT ITKRegionalMaximaImage : public ITKImageProcessi
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ITKRegionalMaximaImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ITKRegionalMaximaImage)
   PYB11_FILTER_NEW_MACRO(ITKRegionalMaximaImage)
   PYB11_PROPERTY(double BackgroundValue READ getBackgroundValue WRITE setBackgroundValue)

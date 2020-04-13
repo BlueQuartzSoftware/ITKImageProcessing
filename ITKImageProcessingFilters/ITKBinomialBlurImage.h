@@ -32,6 +32,7 @@ class ITKImageProcessing_EXPORT ITKBinomialBlurImage : public ITKImageProcessing
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ITKBinomialBlurImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ITKBinomialBlurImage)
   PYB11_FILTER_NEW_MACRO(ITKBinomialBlurImage)
   PYB11_PROPERTY(double Repetitions READ getRepetitions WRITE setRepetitions)

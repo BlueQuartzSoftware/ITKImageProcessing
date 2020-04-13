@@ -65,6 +65,7 @@ class ITKImageProcessing_EXPORT ImportAxioVisionV4Montage : public AbstractFilte
   // Start Python bindings declarations
   // clang-format off
   PYB11_BEGIN_BINDINGS(ImportAxioVisionV4Montage SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ImportAxioVisionV4Montage)
   PYB11_FILTER_NEW_MACRO(ImportAxioVisionV4Montage)
   PYB11_PROPERTY(QString MontageName READ getMontageName WRITE setMontageName)

@@ -32,6 +32,7 @@ class ITKImageProcessing_EXPORT ITKSaltAndPepperNoiseImage : public ITKImageProc
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ITKSaltAndPepperNoiseImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ITKSaltAndPepperNoiseImage)
   PYB11_FILTER_NEW_MACRO(ITKSaltAndPepperNoiseImage)
   PYB11_PROPERTY(double Probability READ getProbability WRITE setProbability)

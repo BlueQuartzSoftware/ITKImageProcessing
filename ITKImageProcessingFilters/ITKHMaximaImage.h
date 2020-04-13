@@ -32,6 +32,7 @@ class ITKImageProcessing_EXPORT ITKHMaximaImage : public ITKImageProcessingBase
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ITKHMaximaImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ITKHMaximaImage)
   PYB11_FILTER_NEW_MACRO(ITKHMaximaImage)
   PYB11_PROPERTY(double Height READ getHeight WRITE setHeight)

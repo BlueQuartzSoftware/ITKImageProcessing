@@ -32,6 +32,7 @@ class ITKImageProcessing_EXPORT ITKVectorConnectedComponentImage : public ITKIma
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ITKVectorConnectedComponentImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ITKVectorConnectedComponentImage)
   PYB11_FILTER_NEW_MACRO(ITKVectorConnectedComponentImage)
   PYB11_PROPERTY(double DistanceThreshold READ getDistanceThreshold WRITE setDistanceThreshold)

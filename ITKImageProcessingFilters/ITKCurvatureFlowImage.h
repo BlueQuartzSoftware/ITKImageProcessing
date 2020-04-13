@@ -32,6 +32,7 @@ class ITKImageProcessing_EXPORT ITKCurvatureFlowImage : public ITKImageProcessin
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ITKCurvatureFlowImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ITKCurvatureFlowImage)
   PYB11_FILTER_NEW_MACRO(ITKCurvatureFlowImage)
   PYB11_PROPERTY(double TimeStep READ getTimeStep WRITE setTimeStep)

@@ -32,6 +32,7 @@ class ITKImageProcessing_EXPORT ITKNormalizeToConstantImage : public ITKImagePro
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ITKNormalizeToConstantImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ITKNormalizeToConstantImage)
   PYB11_FILTER_NEW_MACRO(ITKNormalizeToConstantImage)
   PYB11_PROPERTY(double Constant READ getConstant WRITE setConstant)

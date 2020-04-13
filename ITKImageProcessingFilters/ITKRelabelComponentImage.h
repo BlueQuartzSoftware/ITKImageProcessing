@@ -34,6 +34,7 @@ class ITKImageProcessing_EXPORT ITKRelabelComponentImage : public ITKImageProces
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ITKRelabelComponentImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ITKRelabelComponentImage)
   PYB11_FILTER_NEW_MACRO(ITKRelabelComponentImage)
   PYB11_PROPERTY(double MinimumObjectSize READ getMinimumObjectSize WRITE setMinimumObjectSize)

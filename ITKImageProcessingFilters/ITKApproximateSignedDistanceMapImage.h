@@ -32,6 +32,7 @@ class ITKImageProcessing_EXPORT ITKApproximateSignedDistanceMapImage : public IT
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ITKApproximateSignedDistanceMapImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ITKApproximateSignedDistanceMapImage)
   PYB11_FILTER_NEW_MACRO(ITKApproximateSignedDistanceMapImage)
   PYB11_PROPERTY(double InsideValue READ getInsideValue WRITE setInsideValue)

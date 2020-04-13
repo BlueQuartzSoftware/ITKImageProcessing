@@ -34,6 +34,7 @@ class ITKImageProcessing_EXPORT ITKGrayscaleMorphologicalClosingImage : public I
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ITKGrayscaleMorphologicalClosingImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ITKGrayscaleMorphologicalClosingImage)
   PYB11_FILTER_NEW_MACRO(ITKGrayscaleMorphologicalClosingImage)
   PYB11_PROPERTY(bool SafeBorder READ getSafeBorder WRITE setSafeBorder)

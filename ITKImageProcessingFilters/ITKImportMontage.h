@@ -64,6 +64,7 @@ class ITKImageProcessing_EXPORT ITKImportMontage : public AbstractFilter
   Q_OBJECT
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ITKImportMontage SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ITKImportMontage)
   PYB11_PROPERTY(QString DataContainerPrefix READ getDataContainerPrefix WRITE setDataContainerPrefix)
   PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)

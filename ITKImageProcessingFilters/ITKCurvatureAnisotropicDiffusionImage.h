@@ -33,6 +33,7 @@ class ITKImageProcessing_EXPORT ITKCurvatureAnisotropicDiffusionImage : public I
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ITKCurvatureAnisotropicDiffusionImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ITKCurvatureAnisotropicDiffusionImage)
   PYB11_FILTER_NEW_MACRO(ITKCurvatureAnisotropicDiffusionImage)
   PYB11_PROPERTY(double TimeStep READ getTimeStep WRITE setTimeStep)

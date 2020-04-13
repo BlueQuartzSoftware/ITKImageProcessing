@@ -32,6 +32,7 @@ class ITKImageProcessing_EXPORT ITKRescaleIntensityImage : public ITKImageProces
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ITKRescaleIntensityImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ITKRescaleIntensityImage)
   PYB11_FILTER_NEW_MACRO(ITKRescaleIntensityImage)
   PYB11_PROPERTY(double OutputMinimum READ getOutputMinimum WRITE setOutputMinimum)

@@ -54,6 +54,7 @@ class ITKImageProcessing_EXPORT CalcDewarpParameters : public AbstractFilter
 
   // clang-format off
   PYB11_BEGIN_BINDINGS(CalcDewarpParameters SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(CalcDewarpParameters)
   PYB11_FILTER_NEW_MACRO(CalcDewarpParameters)
 

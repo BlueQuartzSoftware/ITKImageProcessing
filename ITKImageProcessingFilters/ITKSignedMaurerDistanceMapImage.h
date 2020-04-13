@@ -33,6 +33,7 @@ class ITKImageProcessing_EXPORT ITKSignedMaurerDistanceMapImage : public ITKImag
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ITKSignedMaurerDistanceMapImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ITKSignedMaurerDistanceMapImage)
   PYB11_FILTER_NEW_MACRO(ITKSignedMaurerDistanceMapImage)
   PYB11_PROPERTY(bool InsideIsPositive READ getInsideIsPositive WRITE setInsideIsPositive)

@@ -36,6 +36,7 @@ class ITKImageProcessing_EXPORT ITKMorphologicalWatershedFromMarkersImage : publ
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ITKMorphologicalWatershedFromMarkersImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ITKMorphologicalWatershedFromMarkersImage)
   PYB11_FILTER_NEW_MACRO(ITKMorphologicalWatershedFromMarkersImage)
   PYB11_PROPERTY(bool MarkWatershedLine READ getMarkWatershedLine WRITE setMarkWatershedLine)

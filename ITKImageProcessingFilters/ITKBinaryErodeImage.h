@@ -35,6 +35,7 @@ class ITKImageProcessing_EXPORT ITKBinaryErodeImage : public ITKImageProcessingB
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ITKBinaryErodeImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ITKBinaryErodeImage)
   PYB11_FILTER_NEW_MACRO(ITKBinaryErodeImage)
   PYB11_PROPERTY(double BackgroundValue READ getBackgroundValue WRITE setBackgroundValue)

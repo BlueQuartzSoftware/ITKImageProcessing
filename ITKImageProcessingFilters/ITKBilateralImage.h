@@ -32,6 +32,7 @@ class ITKImageProcessing_EXPORT ITKBilateralImage : public ITKImageProcessingBas
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ITKBilateralImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ITKBilateralImage)
   PYB11_FILTER_NEW_MACRO(ITKBilateralImage)
   PYB11_PROPERTY(double DomainSigma READ getDomainSigma WRITE setDomainSigma)

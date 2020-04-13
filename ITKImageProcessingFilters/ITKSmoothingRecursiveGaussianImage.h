@@ -33,6 +33,7 @@ class ITKImageProcessing_EXPORT ITKSmoothingRecursiveGaussianImage : public ITKI
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ITKSmoothingRecursiveGaussianImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ITKSmoothingRecursiveGaussianImage)
   PYB11_FILTER_NEW_MACRO(ITKSmoothingRecursiveGaussianImage)
   PYB11_PROPERTY(FloatVec3Type Sigma READ getSigma WRITE setSigma)

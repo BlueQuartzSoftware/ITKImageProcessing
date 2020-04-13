@@ -33,6 +33,7 @@ class ITKImageProcessing_EXPORT ITKRegionalMinimaImage : public ITKImageProcessi
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ITKRegionalMinimaImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ITKRegionalMinimaImage)
   PYB11_FILTER_NEW_MACRO(ITKRegionalMinimaImage)
   PYB11_PROPERTY(double BackgroundValue READ getBackgroundValue WRITE setBackgroundValue)

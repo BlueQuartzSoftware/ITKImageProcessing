@@ -34,6 +34,7 @@ class ITKImageProcessing_EXPORT ITKImageBase : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ITKImageBase SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ITKImageBase)
   PYB11_END_BINDINGS()
   // End Python bindings declarations

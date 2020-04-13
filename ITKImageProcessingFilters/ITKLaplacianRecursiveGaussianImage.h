@@ -33,6 +33,7 @@ class ITKImageProcessing_EXPORT ITKLaplacianRecursiveGaussianImage : public ITKI
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ITKLaplacianRecursiveGaussianImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ITKLaplacianRecursiveGaussianImage)
   PYB11_FILTER_NEW_MACRO(ITKLaplacianRecursiveGaussianImage)
   PYB11_PROPERTY(double Sigma READ getSigma WRITE setSigma)

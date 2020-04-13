@@ -34,6 +34,7 @@ class ITKImageProcessing_EXPORT ITKDiscreteGaussianImage : public ITKImageProces
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ITKDiscreteGaussianImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ITKDiscreteGaussianImage)
   PYB11_FILTER_NEW_MACRO(ITKDiscreteGaussianImage)
   PYB11_PROPERTY(FloatVec3Type Variance READ getVariance WRITE setVariance)

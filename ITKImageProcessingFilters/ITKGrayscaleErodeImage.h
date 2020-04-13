@@ -33,6 +33,7 @@ class ITKImageProcessing_EXPORT ITKGrayscaleErodeImage : public ITKImageProcessi
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ITKGrayscaleErodeImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ITKGrayscaleErodeImage)
   PYB11_FILTER_NEW_MACRO(ITKGrayscaleErodeImage)
   PYB11_PROPERTY(FloatVec3Type KernelRadius READ getKernelRadius WRITE setKernelRadius)

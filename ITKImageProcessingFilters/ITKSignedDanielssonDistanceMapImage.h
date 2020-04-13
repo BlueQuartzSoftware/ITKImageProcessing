@@ -32,6 +32,7 @@ class ITKImageProcessing_EXPORT ITKSignedDanielssonDistanceMapImage : public ITK
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ITKSignedDanielssonDistanceMapImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ITKSignedDanielssonDistanceMapImage)
   PYB11_FILTER_NEW_MACRO(ITKSignedDanielssonDistanceMapImage)
   PYB11_PROPERTY(bool InsideIsPositive READ getInsideIsPositive WRITE setInsideIsPositive)

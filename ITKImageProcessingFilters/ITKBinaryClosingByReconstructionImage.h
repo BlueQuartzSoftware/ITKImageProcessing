@@ -35,6 +35,7 @@ class ITKImageProcessing_EXPORT ITKBinaryClosingByReconstructionImage : public I
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ITKBinaryClosingByReconstructionImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ITKBinaryClosingByReconstructionImage)
   PYB11_FILTER_NEW_MACRO(ITKBinaryClosingByReconstructionImage)
   PYB11_PROPERTY(double ForegroundValue READ getForegroundValue WRITE setForegroundValue)

@@ -27,6 +27,7 @@ class ITKImageProcessing_EXPORT ITKCastImage : public ITKImageProcessingBase
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ITKCastImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ITKCastImage)
   PYB11_FILTER_NEW_MACRO(ITKCastImage)
   PYB11_PROPERTY(int CastingType READ getCastingType WRITE setCastingType)

@@ -65,6 +65,7 @@ class ITKImageProcessing_EXPORT ITKStitchMontage : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ITKStitchMontage SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ITKStitchMontage)
   PYB11_FILTER_NEW_MACRO(ITKStitchMontage)
   PYB11_PROPERTY(MontageSelection MontageSelection READ getMontageSelection WRITE setMontageSelection)

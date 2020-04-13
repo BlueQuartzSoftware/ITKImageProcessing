@@ -34,6 +34,7 @@ class ITKImageProcessing_EXPORT ITKDoubleThresholdImage : public ITKImageProcess
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ITKDoubleThresholdImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ITKDoubleThresholdImage)
   PYB11_FILTER_NEW_MACRO(ITKDoubleThresholdImage)
   PYB11_PROPERTY(double Threshold1 READ getThreshold1 WRITE setThreshold1)

@@ -32,6 +32,7 @@ class ITKImageProcessing_EXPORT ITKShiftScaleImage : public ITKImageProcessingBa
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ITKShiftScaleImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ITKShiftScaleImage)
   PYB11_FILTER_NEW_MACRO(ITKShiftScaleImage)
   PYB11_PROPERTY(double Shift READ getShift WRITE setShift)

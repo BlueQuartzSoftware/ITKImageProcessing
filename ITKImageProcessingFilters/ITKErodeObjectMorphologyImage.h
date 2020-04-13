@@ -34,6 +34,7 @@ class ITKImageProcessing_EXPORT ITKErodeObjectMorphologyImage : public ITKImageP
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ITKErodeObjectMorphologyImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ITKErodeObjectMorphologyImage)
   PYB11_FILTER_NEW_MACRO(ITKErodeObjectMorphologyImage)
   PYB11_PROPERTY(double ObjectValue READ getObjectValue WRITE setObjectValue)
