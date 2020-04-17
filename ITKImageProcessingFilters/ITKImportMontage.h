@@ -90,6 +90,8 @@ public:
   using ConstWeakPointer = std::weak_ptr<const Self>;
   static Pointer NullPointer();
 
+  static Pointer New();
+
   /**
    * @brief Returns the name of the class for ITKImportMontage
    */
