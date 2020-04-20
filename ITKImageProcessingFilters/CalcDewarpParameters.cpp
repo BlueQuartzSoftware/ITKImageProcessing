@@ -273,8 +273,8 @@ void CalcDewarpParameters::execute()
   transformParams = m_Optimizer->GetCurrentPosition();
 
   // cache value
-  auto value = m_Optimizer->GetValue();
-  auto numIterations = getIterationsFromStopDescription(stopReason, m_MaxIterations);
+  m_Optimizer->GetValue();
+  getIterationsFromStopDescription(stopReason, m_MaxIterations);
 
   notifyStatusMessage(QString::fromStdString(m_Optimizer->GetStopConditionDescription()));
   std::list<double> transform = ::convertParams2List(transformParams);
@@ -481,6 +481,9 @@ void CalcDewarpParameters::generateGrayscaleIPF()
 
     conversionFilter->execute();
     int err = conversionFilter->getErrorCode();
+    if(err < 0)
+    {
+    }
   }
 }
 
