@@ -59,6 +59,7 @@ class ITKImageProcessing_EXPORT ITKImageReader : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ITKImageReader SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ITKImageReader)
   PYB11_FILTER_NEW_MACRO(ITKImageReader)
   PYB11_PROPERTY(QString FileName READ getFileName WRITE setFileName)

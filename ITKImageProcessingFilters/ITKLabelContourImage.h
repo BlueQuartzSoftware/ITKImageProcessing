@@ -33,6 +33,7 @@ class ITKImageProcessing_EXPORT ITKLabelContourImage : public ITKImageProcessing
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ITKLabelContourImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ITKLabelContourImage)
   PYB11_FILTER_NEW_MACRO(ITKLabelContourImage)
   PYB11_PROPERTY(bool FullyConnected READ getFullyConnected WRITE setFullyConnected)

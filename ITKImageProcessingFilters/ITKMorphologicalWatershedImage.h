@@ -33,6 +33,7 @@ class ITKImageProcessing_EXPORT ITKMorphologicalWatershedImage : public ITKImage
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ITKMorphologicalWatershedImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ITKMorphologicalWatershedImage)
   PYB11_FILTER_NEW_MACRO(ITKMorphologicalWatershedImage)
   PYB11_PROPERTY(double Level READ getLevel WRITE setLevel)

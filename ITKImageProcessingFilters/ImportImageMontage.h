@@ -29,6 +29,7 @@ class ITKImageProcessing_EXPORT ImportImageMontage : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ImportImageMontage SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ImportImageMontage)
   PYB11_FILTER_NEW_MACRO(ImportImageMontage)
   PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)

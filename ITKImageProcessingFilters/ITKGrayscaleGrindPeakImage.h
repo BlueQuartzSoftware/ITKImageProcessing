@@ -32,6 +32,7 @@ class ITKImageProcessing_EXPORT ITKGrayscaleGrindPeakImage : public ITKImageProc
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ITKGrayscaleGrindPeakImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ITKGrayscaleGrindPeakImage)
   PYB11_FILTER_NEW_MACRO(ITKGrayscaleGrindPeakImage)
   PYB11_PROPERTY(bool FullyConnected READ getFullyConnected WRITE setFullyConnected)

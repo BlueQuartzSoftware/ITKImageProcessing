@@ -59,6 +59,7 @@ class ITKImageProcessing_EXPORT IlluminationCorrection : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(IlluminationCorrection SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(IlluminationCorrection)
   PYB11_FILTER_NEW_MACRO(IlluminationCorrection)
   PYB11_PROPERTY(MontageSelection MontageSelection READ getMontageSelection WRITE setMontageSelection)

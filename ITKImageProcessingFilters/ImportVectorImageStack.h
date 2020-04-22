@@ -62,6 +62,7 @@ class ITKImageProcessing_EXPORT ImportVectorImageStack : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ImportVectorImageStack SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ImportVectorImageStack)
   PYB11_FILTER_NEW_MACRO(ImportVectorImageStack)
   PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)

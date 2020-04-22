@@ -33,6 +33,7 @@ class ITKImageProcessing_EXPORT ITKConnectedComponentImage : public ITKImageProc
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ITKConnectedComponentImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ITKConnectedComponentImage)
   PYB11_FILTER_NEW_MACRO(ITKConnectedComponentImage)
   PYB11_PROPERTY(bool FullyConnected READ getFullyConnected WRITE setFullyConnected)

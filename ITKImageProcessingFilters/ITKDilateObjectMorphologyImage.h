@@ -34,6 +34,7 @@ class ITKImageProcessing_EXPORT ITKDilateObjectMorphologyImage : public ITKImage
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ITKDilateObjectMorphologyImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ITKDilateObjectMorphologyImage)
   PYB11_FILTER_NEW_MACRO(ITKDilateObjectMorphologyImage)
   PYB11_PROPERTY(double ObjectValue READ getObjectValue WRITE setObjectValue)

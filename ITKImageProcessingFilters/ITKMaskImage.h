@@ -32,6 +32,7 @@ class ITKImageProcessing_EXPORT ITKMaskImage : public ITKImageProcessingBase
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ITKMaskImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ITKMaskImage)
   PYB11_FILTER_NEW_MACRO(ITKMaskImage)
   PYB11_PROPERTY(double OutsideValue READ getOutsideValue WRITE setOutsideValue)

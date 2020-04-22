@@ -35,6 +35,7 @@ class ITKImageProcessing_EXPORT ITKBinaryMorphologicalClosingImage : public ITKI
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ITKBinaryMorphologicalClosingImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ITKBinaryMorphologicalClosingImage)
   PYB11_FILTER_NEW_MACRO(ITKBinaryMorphologicalClosingImage)
   PYB11_PROPERTY(double ForegroundValue READ getForegroundValue WRITE setForegroundValue)

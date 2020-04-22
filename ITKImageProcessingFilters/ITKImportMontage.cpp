@@ -403,6 +403,17 @@ QString ITKImportMontage::getHumanLabel() const
 }
 
 // -----------------------------------------------------------------------------
+ITKImportMontage::Pointer ITKImportMontage::New()
+{
+  struct make_shared_enabler : public ITKImportMontage
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
 ITKImportMontage::Pointer ITKImportMontage::NullPointer()
 {
   return Pointer(static_cast<Self*>(nullptr));

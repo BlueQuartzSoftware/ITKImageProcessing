@@ -33,6 +33,7 @@ class ITKImageProcessing_EXPORT ITKGradientAnisotropicDiffusionImage : public IT
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ITKGradientAnisotropicDiffusionImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ITKGradientAnisotropicDiffusionImage)
   PYB11_FILTER_NEW_MACRO(ITKGradientAnisotropicDiffusionImage)
   PYB11_PROPERTY(double TimeStep READ getTimeStep WRITE setTimeStep)

@@ -64,7 +64,9 @@ class ITKImageProcessing_EXPORT ITKImportMontage : public AbstractFilter
   Q_OBJECT
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ITKImportMontage SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ITKImportMontage)
+  PYB11_FILTER_NEW_MACRO(ITKImportMontage)
   PYB11_PROPERTY(QString DataContainerPrefix READ getDataContainerPrefix WRITE setDataContainerPrefix)
   PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
   PYB11_PROPERTY(QString AttributeArrayName READ getAttributeArrayName WRITE setAttributeArrayName)
@@ -87,6 +89,8 @@ public:
   using WeakPointer = std::weak_ptr<Self>;
   using ConstWeakPointer = std::weak_ptr<const Self>;
   static Pointer NullPointer();
+
+  static Pointer New();
 
   /**
    * @brief Returns the name of the class for ITKImportMontage

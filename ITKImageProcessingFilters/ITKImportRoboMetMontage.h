@@ -57,6 +57,7 @@ class ITKImageProcessing_EXPORT ITKImportRoboMetMontage : public AbstractFilter
   // clang-format off
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ITKImportRoboMetMontage SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ITKImportRoboMetMontage)
   PYB11_FILTER_NEW_MACRO(ITKImportRoboMetMontage)
 

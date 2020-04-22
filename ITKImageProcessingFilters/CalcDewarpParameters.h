@@ -52,8 +52,9 @@ class ITKImageProcessing_EXPORT CalcDewarpParameters : public AbstractFilter
 {
   Q_OBJECT
 
-#ifdef SIMPL_ENABLE_PYTHON
-  PYB11_CREATE_BINDINGS(CalcDewarpParameters SUPERCLASS AbstractFilter)
+  // clang-format off
+  PYB11_BEGIN_BINDINGS(CalcDewarpParameters SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(CalcDewarpParameters)
   PYB11_FILTER_NEW_MACRO(CalcDewarpParameters)
 
@@ -69,8 +70,8 @@ class ITKImageProcessing_EXPORT CalcDewarpParameters : public AbstractFilter
   PYB11_PROPERTY(QString TransformDCName READ getTransformDCName WRITE setTransformDCName)
   PYB11_PROPERTY(QString TransformMatrixName READ getTransformMatrixName WRITE setTransformMatrixName)
   PYB11_PROPERTY(QString TransformArrayName READ getTransformArrayName WRITE setTransformArrayName)
-
-#endif
+  PYB11_END_BINDINGS()
+  // clang-format on
 
   using AmoebaOptimizer = itk::FFTAmoebaOptimizer;
 

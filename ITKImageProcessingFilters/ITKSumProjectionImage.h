@@ -32,6 +32,7 @@ class ITKImageProcessing_EXPORT ITKSumProjectionImage : public ITKImageProcessin
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ITKSumProjectionImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ITKSumProjectionImage)
   PYB11_FILTER_NEW_MACRO(ITKSumProjectionImage)
   PYB11_PROPERTY(double ProjectionDimension READ getProjectionDimension WRITE setProjectionDimension)

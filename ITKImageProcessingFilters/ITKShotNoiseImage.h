@@ -32,6 +32,7 @@ class ITKImageProcessing_EXPORT ITKShotNoiseImage : public ITKImageProcessingBas
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ITKShotNoiseImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ITKShotNoiseImage)
   PYB11_FILTER_NEW_MACRO(ITKShotNoiseImage)
   PYB11_PROPERTY(double Scale READ getScale WRITE setScale)

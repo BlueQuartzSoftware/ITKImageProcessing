@@ -32,6 +32,7 @@ class ITKImageProcessing_EXPORT ITKGradientMagnitudeImage : public ITKImageProce
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ITKGradientMagnitudeImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ITKGradientMagnitudeImage)
   PYB11_FILTER_NEW_MACRO(ITKGradientMagnitudeImage)
   PYB11_PROPERTY(bool UseImageSpacing READ getUseImageSpacing WRITE setUseImageSpacing)

@@ -33,6 +33,7 @@ class ITKImageProcessing_EXPORT ITKBinaryContourImage : public ITKImageProcessin
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ITKBinaryContourImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ITKBinaryContourImage)
   PYB11_FILTER_NEW_MACRO(ITKBinaryContourImage)
   PYB11_PROPERTY(bool FullyConnected READ getFullyConnected WRITE setFullyConnected)

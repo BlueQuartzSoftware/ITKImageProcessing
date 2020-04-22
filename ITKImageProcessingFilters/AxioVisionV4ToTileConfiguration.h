@@ -53,6 +53,7 @@ class ITKImageProcessing_EXPORT AxioVisionV4ToTileConfiguration : public Abstrac
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(AxioVisionV4ToTileConfiguration SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(AxioVisionV4ToTileConfiguration)
   PYB11_FILTER_NEW_MACRO(AxioVisionV4ToTileConfiguration)
   PYB11_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)

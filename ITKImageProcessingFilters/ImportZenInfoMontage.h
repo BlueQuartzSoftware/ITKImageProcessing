@@ -58,6 +58,7 @@ class ITKImageProcessing_EXPORT ImportZenInfoMontage : public AbstractFilter
   // clang-format off
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ImportZenInfoMontage SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ImportZenInfoMontage)
   PYB11_FILTER_NEW_MACRO(ImportZenInfoMontage)
   PYB11_PROPERTY(QString MontageName READ getMontageName WRITE setMontageName)

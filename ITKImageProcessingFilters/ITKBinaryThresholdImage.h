@@ -33,6 +33,7 @@ class ITKImageProcessing_EXPORT ITKBinaryThresholdImage : public ITKImageProcess
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ITKBinaryThresholdImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ITKBinaryThresholdImage)
   PYB11_FILTER_NEW_MACRO(ITKBinaryThresholdImage)
   PYB11_PROPERTY(double LowerThreshold READ getLowerThreshold WRITE setLowerThreshold)

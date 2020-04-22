@@ -32,6 +32,7 @@ class ITKImageProcessing_EXPORT ITKValuedRegionalMinimaImage : public ITKImagePr
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ITKValuedRegionalMinimaImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ITKValuedRegionalMinimaImage)
   PYB11_FILTER_NEW_MACRO(ITKValuedRegionalMinimaImage)
   PYB11_PROPERTY(bool FullyConnected READ getFullyConnected WRITE setFullyConnected)

@@ -62,6 +62,7 @@ class ITKImageProcessing_EXPORT ITKPCMTileRegistration : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ITKPCMTileRegistration SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ITKPCMTileRegistration)
   PYB11_FILTER_NEW_MACRO(ITKPCMTileRegistration)
   PYB11_PROPERTY(int32_t DataContainerPaddingDigits READ getDataContainerPaddingDigits WRITE setDataContainerPaddingDigits)

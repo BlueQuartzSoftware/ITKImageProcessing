@@ -32,6 +32,7 @@ class ITKImageProcessing_EXPORT ITKMeanProjectionImage : public ITKImageProcessi
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ITKMeanProjectionImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ITKMeanProjectionImage)
   PYB11_FILTER_NEW_MACRO(ITKMeanProjectionImage)
   PYB11_PROPERTY(double ProjectionDimension READ getProjectionDimension WRITE setProjectionDimension)

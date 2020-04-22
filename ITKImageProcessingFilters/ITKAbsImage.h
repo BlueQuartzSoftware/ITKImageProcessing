@@ -31,6 +31,7 @@ class ITKImageProcessing_EXPORT ITKAbsImage : public ITKImageProcessingBase
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ITKAbsImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ITKAbsImage)
   PYB11_FILTER_NEW_MACRO(ITKAbsImage)
   PYB11_END_BINDINGS()

@@ -31,6 +31,7 @@ class ITKImageProcessing_EXPORT ITKHistogramMatchingImage : public ITKImageProce
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ITKHistogramMatchingImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ITKHistogramMatchingImage)
   PYB11_FILTER_NEW_MACRO(ITKHistogramMatchingImage)
   PYB11_PROPERTY(DataArrayPath ReferenceCellArrayPath READ getReferenceCellArrayPath WRITE setReferenceCellArrayPath)

@@ -277,11 +277,18 @@ void CalcDewarpParameters::execute()
   getIterationsFromStopDescription(stopReason, m_MaxIterations);
 
   notifyStatusMessage(QString::fromStdString(m_Optimizer->GetStopConditionDescription()));
-  std::list<double> transform = ::convertParams2List(transformParams);
 
   // ...otherwise, set the appropriate values for the filter's output data array
   AttributeMatrixShPtr transformAM = getDataContainerArray()->getDataContainer(m_TransformDCName)->getAttributeMatrix(m_TransformMatrixName);
-  transformAM->getAttributeArrayAs<DoubleArrayType>(m_TransformArrayName)->setArray(transform);
+  auto transformArray = transformAM->getAttributeArrayAs<DoubleArrayType>(m_TransformArrayName);
+
+  if(transformParams.size() != transformArray->size())
+  {
+    setErrorCondition(-87000, QObject::tr("Mismatching sizes in transform array"));
+    return;
+  }
+
+  std::copy(transformParams.begin(), transformParams.end(), transformArray->begin());
 
   // Remove internal arrays
   deleteGrayscaleIPF();

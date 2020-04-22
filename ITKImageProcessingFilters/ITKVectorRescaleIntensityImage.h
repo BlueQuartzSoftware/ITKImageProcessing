@@ -55,6 +55,7 @@ class ITKImageProcessing_EXPORT ITKVectorRescaleIntensityImage : public ITKImage
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ITKVectorRescaleIntensityImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ITKVectorRescaleIntensityImage)
   PYB11_FILTER_NEW_MACRO(ITKVectorRescaleIntensityImage)
   PYB11_PROPERTY(double OutputMaximumMagnitude READ getOutputMaximumMagnitude WRITE setOutputMaximumMagnitude)

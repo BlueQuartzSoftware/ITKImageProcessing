@@ -33,6 +33,7 @@ class ITKImageProcessing_EXPORT ITKThresholdMaximumConnectedComponentsImage : pu
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ITKThresholdMaximumConnectedComponentsImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ITKThresholdMaximumConnectedComponentsImage)
   PYB11_FILTER_NEW_MACRO(ITKThresholdMaximumConnectedComponentsImage)
   PYB11_PROPERTY(double MinimumObjectSizeInPixels READ getMinimumObjectSizeInPixels WRITE setMinimumObjectSizeInPixels)

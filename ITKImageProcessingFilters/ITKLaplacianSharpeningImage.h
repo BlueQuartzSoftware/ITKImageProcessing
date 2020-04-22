@@ -32,6 +32,7 @@ class ITKImageProcessing_EXPORT ITKLaplacianSharpeningImage : public ITKImagePro
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ITKLaplacianSharpeningImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ITKLaplacianSharpeningImage)
   PYB11_FILTER_NEW_MACRO(ITKLaplacianSharpeningImage)
   PYB11_PROPERTY(bool UseImageSpacing READ getUseImageSpacing WRITE setUseImageSpacing)

@@ -34,6 +34,7 @@ class ITKImageProcessing_EXPORT ITKBlackTopHatImage : public ITKImageProcessingB
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ITKBlackTopHatImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ITKBlackTopHatImage)
   PYB11_FILTER_NEW_MACRO(ITKBlackTopHatImage)
   PYB11_PROPERTY(bool SafeBorder READ getSafeBorder WRITE setSafeBorder)

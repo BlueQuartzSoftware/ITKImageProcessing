@@ -32,6 +32,7 @@ class ITKImageProcessing_EXPORT ITKPatchBasedDenoisingImage : public ITKImagePro
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ITKPatchBasedDenoisingImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ITKPatchBasedDenoisingImage)
   PYB11_FILTER_NEW_MACRO(ITKPatchBasedDenoisingImage)
   PYB11_PROPERTY(double KernelBandwidthSigma READ getKernelBandwidthSigma WRITE setKernelBandwidthSigma)

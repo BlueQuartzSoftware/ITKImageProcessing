@@ -27,6 +27,7 @@ class ITKImageProcessing_EXPORT ITKRefineTileCoordinates : public AbstractFilter
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ITKRefineTileCoordinates SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ITKRefineTileCoordinates)
   PYB11_FILTER_NEW_MACRO(ITKRefineTileCoordinates)
   PYB11_PROPERTY(IntVec3Type MontageSize READ getMontageSize WRITE setMontageSize)

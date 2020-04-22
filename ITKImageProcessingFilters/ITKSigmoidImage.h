@@ -32,6 +32,7 @@ class ITKImageProcessing_EXPORT ITKSigmoidImage : public ITKImageProcessingBase
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ITKSigmoidImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ITKSigmoidImage)
   PYB11_FILTER_NEW_MACRO(ITKSigmoidImage)
   PYB11_PROPERTY(double Alpha READ getAlpha WRITE setAlpha)

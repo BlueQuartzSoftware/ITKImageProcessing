@@ -32,6 +32,7 @@ class ITKImageProcessing_EXPORT ITKIntensityWindowingImage : public ITKImageProc
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ITKIntensityWindowingImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ITKIntensityWindowingImage)
   PYB11_FILTER_NEW_MACRO(ITKIntensityWindowingImage)
   PYB11_PROPERTY(double WindowMinimum READ getWindowMinimum WRITE setWindowMinimum)

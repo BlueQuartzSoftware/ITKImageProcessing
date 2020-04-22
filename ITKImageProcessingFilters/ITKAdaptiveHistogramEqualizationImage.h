@@ -34,6 +34,7 @@ class ITKImageProcessing_EXPORT ITKAdaptiveHistogramEqualizationImage : public I
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ITKAdaptiveHistogramEqualizationImage SUPERCLASS ITKImageProcessingBase)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ITKAdaptiveHistogramEqualizationImage)
   PYB11_FILTER_NEW_MACRO(ITKAdaptiveHistogramEqualizationImage)
   PYB11_PROPERTY(FloatVec3Type Radius READ getRadius WRITE setRadius)

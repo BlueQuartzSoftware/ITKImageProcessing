@@ -33,6 +33,7 @@ class ITKImageProcessing_EXPORT ITKHConvexImage : public ITKImageProcessingBase
 
   // Start Python bindings declarations
   PYB11_BEGIN_BINDINGS(ITKHConvexImage SUPERCLASS AbstractFilter)
+  PYB11_FILTER()
   PYB11_SHARED_POINTERS(ITKHConvexImage)
   PYB11_FILTER_NEW_MACRO(ITKHConvexImage)
   PYB11_PROPERTY(double Height READ getHeight WRITE setHeight)
