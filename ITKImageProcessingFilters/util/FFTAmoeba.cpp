@@ -98,23 +98,23 @@ void sort_simplex(std::vector<fft_amoeba_SimplexCorner>& simplex)
   std::qsort(&simplex[0], simplex.size(), sizeof simplex[0], compare_aux);
 }
 
-static
-double maxabsdiff(const vnl_vector<double>& a, const vnl_vector<double>& b)
-{
-  double v = 0;
-  for(unsigned i = 0; i < a.size(); ++i) {
-    double ad = vnl_math::abs(a[i] - b[i]);
-    if(ad > v)
-      v = ad;
-  }
-  return v;
-}
+// static
+// double maxabsdiff(const vnl_vector<double>& a, const vnl_vector<double>& b)
+//{
+//  double v = 0;
+//  for(unsigned i = 0; i < a.size(); ++i) {
+//    double ad = vnl_math::abs(a[i] - b[i]);
+//    if(ad > v)
+//      v = ad;
+//  }
+//  return v;
+//}
 
-static
-double sorted_simplex_fdiameter(const std::vector<fft_amoeba_SimplexCorner>& simplex)
-{
-  return simplex[simplex.size() - 1].fv - simplex[0].fv;
-}
+// static
+// double sorted_simplex_fdiameter(const std::vector<fft_amoeba_SimplexCorner>& simplex)
+//{
+//  return simplex[simplex.size() - 1].fv - simplex[0].fv;
+//}
 
 static
 double fractional_range(const std::vector<fft_amoeba_SimplexCorner>& simplex)
@@ -135,18 +135,17 @@ double fractional_range(const std::vector<fft_amoeba_SimplexCorner>& simplex)
   return diff / sum;
 }
 
-static
-double simplex_diameter(const std::vector<fft_amoeba_SimplexCorner>& simplex)
-{
-  double max = 0;
-  for(unsigned i = 0; i < simplex.size() - 1; i++) {
-    double thismax = maxabsdiff(simplex[i].v, simplex[i + 1].v);
-    if(thismax > max)
-      max = thismax;
-  }
-  return max;
-}
-
+// static
+// double simplex_diameter(const std::vector<fft_amoeba_SimplexCorner>& simplex)
+//{
+//  double max = 0;
+//  for(unsigned i = 0; i < simplex.size() - 1; i++) {
+//    double thismax = maxabsdiff(simplex[i].v, simplex[i + 1].v);
+//    if(thismax > max)
+//      max = thismax;
+//  }
+//  return max;
+//}
 
 std::ostream& operator<<(std::ostream& s, const fft_amoeba_SimplexCorner& simplex)
 {

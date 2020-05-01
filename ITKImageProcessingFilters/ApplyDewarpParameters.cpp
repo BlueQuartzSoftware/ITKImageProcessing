@@ -75,16 +75,16 @@ namespace
 {
 const QString InternalGrayscalePrefex = "_INTERNAL_Grayscale_";
 
-std::vector<double> convertParams2Vec(const FFTDewarpHelper::ParametersType& params)
-{
-  const size_t size = params.size();
-  std::vector<double> vec(size);
-  for(size_t i = 0; i < size; i++)
-  {
-    vec[i] = params[i];
-  }
-  return vec;
-}
+// std::vector<double> convertParams2Vec(const FFTDewarpHelper::ParametersType& params)
+//{
+//  const size_t size = params.size();
+//  std::vector<double> vec(size);
+//  for(size_t i = 0; i < size; i++)
+//  {
+//    vec[i] = params[i];
+//  }
+//  return vec;
+//}
 
 FFTDewarpHelper::ParametersType convertVec2Params(const std::vector<double>& vec)
 {
@@ -97,20 +97,20 @@ FFTDewarpHelper::ParametersType convertVec2Params(const std::vector<double>& vec
   return params;
 }
 
-std::list<double> convertParams2List(const FFTDewarpHelper::ParametersType& params)
-{
-  std::list<double> list;
-  for(const auto& param : params)
-  {
-    list.push_back(param);
-  }
-  return list;
-}
+// std::list<double> convertParams2List(const FFTDewarpHelper::ParametersType& params)
+//{
+//  std::list<double> list;
+//  for(const auto& param : params)
+//  {
+//    list.push_back(param);
+//  }
+//  return list;
+//}
 
-FFTDewarpHelper::PixelIndex pixelIndexFromSizeVec(const SizeVec2Type& sizeVec)
-{
-  return FFTDewarpHelper::pixelIndex(sizeVec[0], sizeVec[1]);
-}
+// FFTDewarpHelper::PixelIndex pixelIndexFromSizeVec(const SizeVec2Type& sizeVec)
+//{
+//  return FFTDewarpHelper::pixelIndex(sizeVec[0], sizeVec[1]);
+//}
 SizeVec2Type pixelIndexToSizeVec(const FFTDewarpHelper::PixelIndex& pixelType)
 {
   return SizeVec2Type(static_cast<size_t>(pixelType[0]), static_cast<size_t>(pixelType[1]));

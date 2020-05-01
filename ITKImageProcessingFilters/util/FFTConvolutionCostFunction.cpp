@@ -73,10 +73,9 @@ public:
    * @param width
    * @param dataArray
    */
-  FFTImageInitializer(const InputImage::Pointer& image, size_t width, size_t height, const DataArrayType::Pointer& dataArray)
+  FFTImageInitializer(const InputImage::Pointer& image, size_t width, const DataArrayType::Pointer& dataArray)
   : m_Image(image)
   , m_Width(width)
-  , m_Height(height)
   , m_DataArray(dataArray)
   , m_Comps(dataArray->getNumberOfComponents())
   {
@@ -118,7 +117,7 @@ public:
 private:
   InputImage::Pointer m_Image;
   size_t m_Width;
-  size_t m_Height;
+  // size_t m_Height;
   PixelCoord m_ImageIndex;
   DataArrayType::Pointer m_DataArray;
   size_t m_Comps;
@@ -272,6 +271,7 @@ private:
 // -----------------------------------------------------------------------------
 void FFTConvolutionCostFunction::Initialize(const GridMontageShPtr& montage, const DataContainerArrayShPtr& dca, const QString& amName, const QString& daName)
 {
+  std::ignore = dca;
   m_Montage = montage;
 
   m_ImageGrid.clear();
@@ -342,7 +342,7 @@ void FFTConvolutionCostFunction::initializeDataContainer(const GridMontageShPtr&
   DataContainer::Pointer dc = montage->getDataContainer(index);
   AttributeMatrix::Pointer am = dc->getAttributeMatrix(amName);
   DataArray<Grayscale_T>::Pointer da = am->getAttributeArrayAs<DataArray<Grayscale_T>>(daName);
-  size_t comps = da->getNumberOfComponents();
+  // size_t comps = da->getNumberOfComponents();
   ImageGeom::Pointer imageGeom = dc->getGeometryAs<ImageGeom>();
   FloatVec3Type spacing = imageGeom->getSpacing();
   SizeVec3Type dims = imageGeom->getDimensions();
@@ -392,7 +392,7 @@ void FFTConvolutionCostFunction::initializeDataContainer(const GridMontageShPtr&
   // NOTE Could this be parallelized?
   ParallelData2DAlgorithm dataAlg;
   dataAlg.setRange(offsetY, offsetX, tileHeight, tileWidth);
-  dataAlg.execute(FFTImageInitializer(itkImage, geomWidth, geomHeight, da));
+  dataAlg.execute(FFTImageInitializer(itkImage, geomWidth, da));
 
   GridKey imageKey = std::make_pair(column, row); // Flipped this to {x,y}
   ScopedLockType scopedLock(mutex);

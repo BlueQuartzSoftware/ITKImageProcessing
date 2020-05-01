@@ -79,16 +79,16 @@ namespace
 const QString InternalGrayscalePrefex = "_INTERNAL_Grayscale_";
 
 // -----------------------------------------------------------------------------
-std::vector<double> convertParams2Vec(const FFTDewarpHelper::ParametersType& params)
-{
-  const size_t size = params.size();
-  std::vector<double> vec(size);
-  for(size_t i = 0; i < size; i++)
-  {
-    vec[i] = params[i];
-  }
-  return vec;
-}
+// std::vector<double> convertParams2Vec(const FFTDewarpHelper::ParametersType& params)
+//{
+//  const size_t size = params.size();
+//  std::vector<double> vec(size);
+//  for(size_t i = 0; i < size; i++)
+//  {
+//    vec[i] = params[i];
+//  }
+//  return vec;
+//}
 
 // -----------------------------------------------------------------------------
 FFTDewarpHelper::ParametersType convertVec2Params(const std::vector<double>& vec)
@@ -103,15 +103,15 @@ FFTDewarpHelper::ParametersType convertVec2Params(const std::vector<double>& vec
 }
 
 // -----------------------------------------------------------------------------
-std::list<double> convertParams2List(const FFTDewarpHelper::ParametersType& params)
-{
-  std::list<double> list;
-  for(const auto& param : params)
-  {
-    list.push_back(param);
-  }
-  return list;
-}
+// std::list<double> convertParams2List(const FFTDewarpHelper::ParametersType& params)
+//{
+//  std::list<double> list;
+//  for(const auto& param : params)
+//  {
+//    list.push_back(param);
+//  }
+//  return list;
+//}
 
 // -----------------------------------------------------------------------------
 double calcDelta(double maxDelta, double mMax)

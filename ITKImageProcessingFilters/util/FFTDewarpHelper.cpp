@@ -86,7 +86,7 @@ int64_t FFTDewarpHelper::py(PixelIndex newIndex, PixelIndex offset, const Parame
   const double newYPrime = newIndex[1] - offset[1];
 
   double oldYPrime = 0.0;
-  const size_t yOffset = getReqPartialParameterSize();
+  // const size_t yOffset = getReqPartialParameterSize();
   oldYPrime += parameters[7] * newXPrime;
   oldYPrime += parameters[8] * newYPrime;
   oldYPrime += parameters[9] * newXPrime * newXPrime;
