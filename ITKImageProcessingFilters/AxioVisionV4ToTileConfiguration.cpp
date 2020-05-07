@@ -30,7 +30,6 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include <memory>
 
 #include "AxioVisionV4ToTileConfiguration.h"
 

@@ -31,7 +31,6 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "ITKRescaleIntensityImage.h"
 
-#include <memory>
 
 #if(ITK_VERSION_MAJOR == 5) && (ITK_VERSION_MINOR >= 1)
 #include <itkCommonEnums.h>

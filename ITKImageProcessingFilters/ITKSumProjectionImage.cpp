@@ -4,7 +4,6 @@
  * Your License or Copyright can go here
  */
 
-#include <memory>
 
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKSumProjectionImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"

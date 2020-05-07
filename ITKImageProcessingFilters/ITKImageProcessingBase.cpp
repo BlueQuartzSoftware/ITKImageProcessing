@@ -1,6 +1,5 @@
 #include "ITKImageProcessingBase.h"
 
-#include <memory>
 
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 

@@ -2,7 +2,6 @@
  * Your License or Copyright Information can go here
  */
 
-#include <memory>
 
 #include "ImportImageMontage.h"
 

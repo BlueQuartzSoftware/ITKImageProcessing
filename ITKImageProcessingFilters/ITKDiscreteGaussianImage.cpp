@@ -4,7 +4,6 @@
  * Your License or Copyright can go here
  */
 
-#include <memory>
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
