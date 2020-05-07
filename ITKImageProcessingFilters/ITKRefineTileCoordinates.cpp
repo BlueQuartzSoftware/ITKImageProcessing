@@ -293,14 +293,14 @@ void executeRefinement(ITKRefineTileCoordinates* filter)
   using MultiCompType = FloatArrayType;
   // using CompDimsType = MultiCompType::comp_dims_type;
   using MultiCompTypeIterator = MultiCompType::tuple_iterator;
-  MultiCompTypeIterator begin = coords.begin<MultiCompTypeIterator>();
+  MultiCompTypeIterator begin = coords.tupleBegin();
   std::cout << "# Define the number of dimensions we are working on\n";
   std::cout << "# Generated in the ITKRefineTileCoordinates filter as part of a debugging aid\n";
   std::cout << "\n";
   std::cout << "dim = 2\n";
   std::cout << "# Define the image coordinates\n";
 
-  for(MultiCompTypeIterator coordIter = begin; coordIter != coords.end<MultiCompTypeIterator>(); coordIter++)
+  for(MultiCompTypeIterator coordIter = begin; coordIter != coords.tupleEnd(); coordIter++)
   {
     std::cout << "ImageFileName.XXX; ; (" << coordIter.comp_value(0) << ", " << coordIter.comp_value(1) << ")" << std::endl;
   }
