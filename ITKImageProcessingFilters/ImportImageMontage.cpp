@@ -386,7 +386,6 @@ QString ImportImageMontage::getHumanLabel() const
 
 #include "SIMPLib/ITK/itkGetComponentsDimensions.h"
 #include "SIMPLib/ITK/itkInPlaceImageToDream3DDataFilter.h"
-
 #include "SIMPLib/ITK/itkImageReaderHelper.cpp"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/DataContainers/DataContainer.h"

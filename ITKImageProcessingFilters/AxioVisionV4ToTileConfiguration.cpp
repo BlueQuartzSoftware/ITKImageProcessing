@@ -29,8 +29,6 @@
  *
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-
 #include "AxioVisionV4ToTileConfiguration.h"
 
 #include <array>

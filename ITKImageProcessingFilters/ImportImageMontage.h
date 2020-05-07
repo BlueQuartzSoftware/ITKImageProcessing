@@ -13,7 +13,6 @@
 #include "SIMPLib/FilterParameters/FileListInfoFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-
 #include "SIMPLib/ITK/itkImageReaderHelper.h"
 
 #include <itkImageFileReader.h>

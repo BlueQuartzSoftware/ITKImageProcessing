@@ -43,7 +43,6 @@ using MutexType = tbb::queuing_mutex;
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Common/SIMPLRange.h"
-
 #include "SIMPLib/CoreFilters/ConvertColorToGrayScale.h"
 #include "SIMPLib/DataContainers/DataArrayPath.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"

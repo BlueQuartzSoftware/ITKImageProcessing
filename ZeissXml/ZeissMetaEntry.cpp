@@ -40,7 +40,6 @@
 #include <QtCore/QDebug>
 
 #include "SIMPLib/DataArrays/DataArray.hpp"
-
 #include "SIMPLib/DataArrays/StringDataArray.h"
 
 #include "ITKImageProcessing/ZeissXml/ZeissTagMapping.h"

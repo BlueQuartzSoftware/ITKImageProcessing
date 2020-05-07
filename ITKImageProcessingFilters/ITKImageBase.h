@@ -8,7 +8,6 @@
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-
 #include "SIMPLib/ITK/itkDream3DFilterInterruption.h"
 
 #include "SIMPLib/ITK/itkInPlaceDream3DDataToImageFilter.h"

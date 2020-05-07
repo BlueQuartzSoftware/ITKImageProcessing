@@ -30,8 +30,6 @@
  *    United States Air Force Prime Contract FA8650-10-D-5210
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-
 #include "ITKImageWriter.h"
 
 #include <cstring>

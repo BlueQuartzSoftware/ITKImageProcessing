@@ -30,8 +30,6 @@
 *    United States Air Force Prime Contract FA8650-10-D-5210
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-
 #include "ITKImageReader.h"
 
 #include <QtCore/QFileInfo>
@@ -322,7 +320,6 @@ QString ITKImageReader::getHumanLabel() const
 
 #include "SIMPLib/ITK/itkGetComponentsDimensions.h"
 #include "SIMPLib/ITK/itkInPlaceImageToDream3DDataFilter.h"
-
 #include "SIMPLib/ITK/itkImageReaderHelper.cpp"
 
 // -----------------------------------------------------------------------------
