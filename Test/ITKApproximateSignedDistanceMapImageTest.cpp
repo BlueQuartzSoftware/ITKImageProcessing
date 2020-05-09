@@ -8,16 +8,15 @@
 // Auto includes
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 
-
 class ITKApproximateSignedDistanceMapImageTest : public ITKTestBase
 {
 
 public:
-ITKApproximateSignedDistanceMapImageTest() = default;
-~ITKApproximateSignedDistanceMapImageTest() override = default;
+  ITKApproximateSignedDistanceMapImageTest() = default;
+  ~ITKApproximateSignedDistanceMapImageTest() override = default;
 
   int TestITKApproximateSignedDistanceMapImagedefaultTest()
-{
+  {
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/2th_cthead1.png");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -44,18 +43,18 @@ ITKApproximateSignedDistanceMapImageTest() = default;
     DataArrayPath baseline_path("BContainer", "BAttributeMatrixName", "BAttributeArrayName");
     this->ReadImage(baseline_filename, containerArray, baseline_path);
 
-//    DataContainerWriter::Pointer dcWriter = DataContainerWriter::New();
-//    dcWriter->setOutputFile("/tmp/ITKApproximateSignedDistanceMapImageTest.dream3d");
-//    dcWriter->setDataContainerArray(containerArray);
-//    dcWriter->execute();
+    //    DataContainerWriter::Pointer dcWriter = DataContainerWriter::New();
+    //    dcWriter->setOutputFile("/tmp/ITKApproximateSignedDistanceMapImageTest.dream3d");
+    //    dcWriter->setDataContainerArray(containerArray);
+    //    dcWriter->execute();
 
     int res = this->CompareImages(containerArray, input_path, baseline_path, 0.01);
     DREAM3D_REQUIRE_EQUAL(res, 0);
     return 0;
-}
+  }
 
-int TestITKApproximateSignedDistanceMapImagemodified_parmsTest()
-{
+  int TestITKApproximateSignedDistanceMapImagemodified_parmsTest()
+  {
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/2th_cthead1.png");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -74,18 +73,18 @@ int TestITKApproximateSignedDistanceMapImagemodified_parmsTest()
     propWasSet = filter->setProperty("SaveAsNewArray", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     {
-        double d3d_var;
-        d3d_var = 100;
-        var.setValue(d3d_var);
-        propWasSet = filter->setProperty("InsideValue", var);
-        DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+      double d3d_var;
+      d3d_var = 100;
+      var.setValue(d3d_var);
+      propWasSet = filter->setProperty("InsideValue", var);
+      DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     }
     {
-        double d3d_var;
-        d3d_var = 0;
-        var.setValue(d3d_var);
-        propWasSet = filter->setProperty("OutsideValue", var);
-        DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+      double d3d_var;
+      d3d_var = 0;
+      var.setValue(d3d_var);
+      propWasSet = filter->setProperty("OutsideValue", var);
+      DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     }
     filter->setDataContainerArray(containerArray);
     filter->execute();
@@ -98,9 +97,7 @@ int TestITKApproximateSignedDistanceMapImagemodified_parmsTest()
     int res = this->CompareImages(containerArray, input_path, baseline_path, 0.01);
     DREAM3D_REQUIRE_EQUAL(res, 0);
     return 0;
-}
-
-
+  }
 
   // -----------------------------------------------------------------------------
   //
@@ -111,8 +108,8 @@ int TestITKApproximateSignedDistanceMapImagemodified_parmsTest()
 
     DREAM3D_REGISTER_TEST(this->TestFilterAvailability("ITKApproximateSignedDistanceMapImage"));
 
-    DREAM3D_REGISTER_TEST( TestITKApproximateSignedDistanceMapImagedefaultTest());
-    DREAM3D_REGISTER_TEST( TestITKApproximateSignedDistanceMapImagemodified_parmsTest());
+    DREAM3D_REGISTER_TEST(TestITKApproximateSignedDistanceMapImagedefaultTest());
+    DREAM3D_REGISTER_TEST(TestITKApproximateSignedDistanceMapImagemodified_parmsTest());
 
     if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
     {

@@ -44,13 +44,13 @@
 #include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
-* @class ZeissXMLReader ZeissXMLReader.h Importer/ZeissXMLReader.h
-* @brief  This class reads the xml file that is produced by the Zeiss software
-* during an image export.
-* @author Mike Jackson
-* @date Oct 2007
-* @version $Revision: 1.1 $
-*/
+ * @class ZeissXMLReader ZeissXMLReader.h Importer/ZeissXMLReader.h
+ * @brief  This class reads the xml file that is produced by the Zeiss software
+ * during an image export.
+ * @author Mike Jackson
+ * @date Oct 2007
+ * @version $Revision: 1.1 $
+ */
 class ITKImageProcessing_EXPORT ZeissXMLReader : public ExpatEvtHandler
 {
 public:
@@ -71,12 +71,12 @@ public:
   static QString ClassName();
 
   /**
-  * @brief Creates a new Object which is wrapped in a shared_ptr
-  * @param filename The filename of the xml file to read
-  * @slice The slice number that the xml file corresponds to
-  * @return Shared Pointer
-  */
-  static Pointer New(const std::string &filename)
+   * @brief Creates a new Object which is wrapped in a shared_ptr
+   * @param filename The filename of the xml file to read
+   * @slice The slice number that the xml file corresponds to
+   * @return Shared Pointer
+   */
+  static Pointer New(const std::string& filename)
   {
     Pointer ptr(new ZeissXMLReader(filename));
     return ptr;
@@ -88,7 +88,7 @@ public:
    * @brief Sets the input file to parse
    * @param inputFile The path to an xml file
    */
-  void setXMLInputFile(const std::string &inputFile)
+  void setXMLInputFile(const std::string& inputFile)
   {
     this->_xmlFilename = inputFile;
   }
@@ -102,10 +102,10 @@ public:
   }
 
   /**
-  * @brief Reads the Data Model from an XML File/
-  * @return Error: Negative is error Condition
-  */
-  int32_t parse() ;
+   * @brief Reads the Data Model from an XML File/
+   * @return Error: Negative is error Condition
+   */
+  int32_t parse();
 
   // -----------------------------------------------------------------------------
   //  ExpatEvtHandler Implementation
@@ -129,7 +129,7 @@ public:
    * from the xml file
    * @param out A std::ostream Object reference
    */
-  void printStats(std::ostream &out);
+  void printStats(std::ostream& out);
 
   /**
    * @brief Setter property for TagsSection;
@@ -156,7 +156,7 @@ public:
   () const;
 
 protected:
-  ZeissXMLReader(const std::string &xmlFile);
+  ZeissXMLReader(const std::string& xmlFile);
 
 private:
   ZeissTagsXmlSection::Pointer m_TagsSection;
@@ -164,21 +164,21 @@ private:
   std::vector<ZeissTagsXmlSection::Pointer> m_ImageTags;
   = {};
 
-  std::string       _xmlFilename;
-  int32_t           _xmlParseError;
-  ExpatParser*      _parser;
-  std::string       _errorMessage;
-  std::string       _charData;
-  bool              _parseData;
+  std::string _xmlFilename;
+  int32_t _xmlParseError;
+  ExpatParser* _parser;
+  std::string _errorMessage;
+  std::string _charData;
+  bool _parseData;
 
-  int               _xmlSection;
-  std::string       _vTagContent;
-  int               _tileSection;
+  int _xmlSection;
+  std::string _vTagContent;
+  int _tileSection;
 
-  ZeissTagsXmlSection::Pointer  m_CurrentTagSection;
+  ZeissTagsXmlSection::Pointer m_CurrentTagSection;
 
-  ZeissXMLReader(const ZeissXMLReader&);    //Not Implemented
-  void operator=(const ZeissXMLReader&);  //Not Implemented
+  ZeissXMLReader(const ZeissXMLReader&); // Not Implemented
+  void operator=(const ZeissXMLReader&); // Not Implemented
 
   /**
    * @brief Runs the actual parsing of the XML File
@@ -186,9 +186,9 @@ private:
    */
   int32_t _parseXMLFile();
 
-// -----------------------------------------------------------------------------
-//  Tags that deliniate sections of the XML file:
-// -----------------------------------------------------------------------------
+  // -----------------------------------------------------------------------------
+  //  Tags that deliniate sections of the XML file:
+  // -----------------------------------------------------------------------------
   // <ROOT>
   void onRoot_StartTag(const XML_Char* name, const XML_Char** attrs);
   void onRoot_EndTag(const XML_Char* name);
@@ -214,17 +214,13 @@ private:
    * @param value The variable to store the value into
    */
   template <typename T>
-  void extractValue(const std::string &data, T &value)
+  void extractValue(const std::string& data, T& value)
   {
 
-    std::istringstream istream (data);
-    while(istream.good() )
+    std::istringstream istream(data);
+    while(istream.good())
     {
       istream >> value;
     }
   }
-
-
 };
-
-

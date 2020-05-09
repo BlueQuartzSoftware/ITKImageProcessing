@@ -4,7 +4,6 @@
  * Your License or Copyright can go here
  */
 
-
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKLabelContourImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 #include "SIMPLib/Common/Constants.h"
@@ -17,7 +16,6 @@
 
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -25,7 +23,6 @@ ITKLabelContourImage::ITKLabelContourImage()
 {
   m_FullyConnected = StaticCastScalar<bool, bool, bool>(false);
   m_BackgroundValue = StaticCastScalar<double, double, double>(0);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -42,7 +39,6 @@ void ITKLabelContourImage::setupFilterParameters()
 
   parameters.push_back(SIMPL_NEW_BOOL_FP("FullyConnected", FullyConnected, FilterParameter::Parameter, ITKLabelContourImage));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("BackgroundValue", BackgroundValue, FilterParameter::Parameter, ITKLabelContourImage));
-
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -77,7 +73,8 @@ void ITKLabelContourImage::readFilterParameters(AbstractFilterParametersReader* 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKLabelContourImage::dataCheckImpl()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKLabelContourImage::dataCheckImpl()
 {
   clearErrorCode();
   clearWarningCode();
@@ -99,7 +96,8 @@ void ITKLabelContourImage::dataCheck()
 //
 // -----------------------------------------------------------------------------
 
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKLabelContourImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKLabelContourImage::filter()
 {
   typedef itk::Image<InputPixelType, Dimension> InputImageType;
   typedef itk::Image<OutputPixelType, Dimension> OutputImageType;
@@ -109,7 +107,6 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   filter->SetFullyConnected(static_cast<bool>(m_FullyConnected));
   filter->SetBackgroundValue(static_cast<double>(m_BackgroundValue));
   this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -166,7 +163,7 @@ ITKLabelContourImage::Pointer ITKLabelContourImage::NullPointer()
 // -----------------------------------------------------------------------------
 std::shared_ptr<ITKLabelContourImage> ITKLabelContourImage::New()
 {
-  struct make_shared_enabler : public ITKLabelContourImage  
+  struct make_shared_enabler : public ITKLabelContourImage
   {
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
@@ -209,5 +206,3 @@ double ITKLabelContourImage::getBackgroundValue() const
 {
   return m_BackgroundValue;
 }
-
-

@@ -4,7 +4,6 @@
  * Your License or Copyright can go here
  */
 
-
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKThresholdMaximumConnectedComponentsImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 #include "SIMPLib/Common/Constants.h"
@@ -17,7 +16,6 @@
 
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -27,7 +25,6 @@ ITKThresholdMaximumConnectedComponentsImage::ITKThresholdMaximumConnectedCompone
   m_UpperBoundary = StaticCastScalar<double, double, double>(std::numeric_limits<double>::max());
   m_InsideValue = StaticCastScalar<int, int, int>(1u);
   m_OutsideValue = StaticCastScalar<int, int, int>(0u);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -46,7 +43,6 @@ void ITKThresholdMaximumConnectedComponentsImage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("UpperBoundary", UpperBoundary, FilterParameter::Parameter, ITKThresholdMaximumConnectedComponentsImage));
   parameters.push_back(SIMPL_NEW_INTEGER_FP("InsideValue", InsideValue, FilterParameter::Parameter, ITKThresholdMaximumConnectedComponentsImage));
   parameters.push_back(SIMPL_NEW_INTEGER_FP("OutsideValue", OutsideValue, FilterParameter::Parameter, ITKThresholdMaximumConnectedComponentsImage));
-
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -83,7 +79,8 @@ void ITKThresholdMaximumConnectedComponentsImage::readFilterParameters(AbstractF
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKThresholdMaximumConnectedComponentsImage::dataCheckImpl()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKThresholdMaximumConnectedComponentsImage::dataCheckImpl()
 {
   clearErrorCode();
   clearWarningCode();
@@ -108,7 +105,8 @@ void ITKThresholdMaximumConnectedComponentsImage::dataCheck()
 //
 // -----------------------------------------------------------------------------
 
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKThresholdMaximumConnectedComponentsImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKThresholdMaximumConnectedComponentsImage::filter()
 {
   typedef itk::Image<InputPixelType, Dimension> InputImageType;
   typedef itk::Image<OutputPixelType, Dimension> OutputImageType;
@@ -120,7 +118,6 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   filter->SetInsideValue(static_cast<uint8_t>(m_InsideValue));
   filter->SetOutsideValue(static_cast<uint8_t>(m_OutsideValue));
   this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -177,7 +174,7 @@ ITKThresholdMaximumConnectedComponentsImage::Pointer ITKThresholdMaximumConnecte
 // -----------------------------------------------------------------------------
 std::shared_ptr<ITKThresholdMaximumConnectedComponentsImage> ITKThresholdMaximumConnectedComponentsImage::New()
 {
-  struct make_shared_enabler : public ITKThresholdMaximumConnectedComponentsImage  
+  struct make_shared_enabler : public ITKThresholdMaximumConnectedComponentsImage
   {
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
@@ -244,5 +241,3 @@ int ITKThresholdMaximumConnectedComponentsImage::getOutsideValue() const
 {
   return m_OutsideValue;
 }
-
-

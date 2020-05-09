@@ -42,60 +42,58 @@ class ITKImageProcessing_EXPORT ITKSignedDanielssonDistanceMapImage : public ITK
   // End Python bindings declarations
 
 public:
-    using Self = ITKSignedDanielssonDistanceMapImage;
-    using Pointer = std::shared_ptr<Self>;
-    using ConstPointer = std::shared_ptr<const Self>;
-    using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<const Self>;
-    static Pointer NullPointer();
+  using Self = ITKSignedDanielssonDistanceMapImage;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<const Self>;
+  static Pointer NullPointer();
 
-    static std::shared_ptr<ITKSignedDanielssonDistanceMapImage> New();
+  static std::shared_ptr<ITKSignedDanielssonDistanceMapImage> New();
 
-    /**
-    * @brief Returns the name of the class for ITKSignedDanielssonDistanceMapImage
-    */
-    QString getNameOfClass() const override;
-    /**
-    * @brief Returns the name of the class for ITKSignedDanielssonDistanceMapImage
-    */
-    static QString ClassName();
-
+  /**
+   * @brief Returns the name of the class for ITKSignedDanielssonDistanceMapImage
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for ITKSignedDanielssonDistanceMapImage
+   */
+  static QString ClassName();
 
   ~ITKSignedDanielssonDistanceMapImage() override;
 
-    /**
-    * @brief Setter property for InsideIsPositive
-    */
-    void setInsideIsPositive(bool value); 
-    /**
-    * @brief Getter property for InsideIsPositive
-    * @return Value of InsideIsPositive
-    */
-    bool getInsideIsPositive() const;
+  /**
+   * @brief Setter property for InsideIsPositive
+   */
+  void setInsideIsPositive(bool value);
+  /**
+   * @brief Getter property for InsideIsPositive
+   * @return Value of InsideIsPositive
+   */
+  bool getInsideIsPositive() const;
   Q_PROPERTY(bool InsideIsPositive READ getInsideIsPositive WRITE setInsideIsPositive)
 
-    /**
-    * @brief Setter property for SquaredDistance
-    */
-    void setSquaredDistance(bool value); 
-    /**
-    * @brief Getter property for SquaredDistance
-    * @return Value of SquaredDistance
-    */
-    bool getSquaredDistance() const;
+  /**
+   * @brief Setter property for SquaredDistance
+   */
+  void setSquaredDistance(bool value);
+  /**
+   * @brief Getter property for SquaredDistance
+   * @return Value of SquaredDistance
+   */
+  bool getSquaredDistance() const;
   Q_PROPERTY(bool SquaredDistance READ getSquaredDistance WRITE setSquaredDistance)
 
-    /**
-    * @brief Setter property for UseImageSpacing
-    */
-    void setUseImageSpacing(bool value); 
-    /**
-    * @brief Getter property for UseImageSpacing
-    * @return Value of UseImageSpacing
-    */
-    bool getUseImageSpacing() const;
+  /**
+   * @brief Setter property for UseImageSpacing
+   */
+  void setUseImageSpacing(bool value);
+  /**
+   * @brief Getter property for UseImageSpacing
+   * @return Value of UseImageSpacing
+   */
+  bool getUseImageSpacing() const;
   Q_PROPERTY(bool UseImageSpacing READ getUseImageSpacing WRITE setUseImageSpacing)
-
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -139,32 +137,32 @@ protected:
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
    */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void dataCheckImpl();
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void dataCheckImpl();
 
   /**
-  * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
-  */
+   * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
+   */
   void filterInternal() override;
 
   /**
-  * @brief Applies the filter
-  */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
+   * @brief Applies the filter
+   */
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void filter();
 
 public:
-  ITKSignedDanielssonDistanceMapImage(const ITKSignedDanielssonDistanceMapImage&) = delete;    // Copy Constructor Not Implemented
-  ITKSignedDanielssonDistanceMapImage(ITKSignedDanielssonDistanceMapImage&&) = delete;         // Move Constructor Not Implemented
+  ITKSignedDanielssonDistanceMapImage(const ITKSignedDanielssonDistanceMapImage&) = delete;            // Copy Constructor Not Implemented
+  ITKSignedDanielssonDistanceMapImage(ITKSignedDanielssonDistanceMapImage&&) = delete;                 // Move Constructor Not Implemented
   ITKSignedDanielssonDistanceMapImage& operator=(const ITKSignedDanielssonDistanceMapImage&) = delete; // Copy Assignment Not Implemented
   ITKSignedDanielssonDistanceMapImage& operator=(ITKSignedDanielssonDistanceMapImage&&) = delete;      // Move Assignment Not Implemented
 
-  private:
-    bool m_InsideIsPositive = {};
-    bool m_SquaredDistance = {};
-    bool m_UseImageSpacing = {};
-
+private:
+  bool m_InsideIsPositive = {};
+  bool m_SquaredDistance = {};
+  bool m_UseImageSpacing = {};
 };
 
 #ifdef __clang__
 #pragma clang diagnostic pop
 #endif
-

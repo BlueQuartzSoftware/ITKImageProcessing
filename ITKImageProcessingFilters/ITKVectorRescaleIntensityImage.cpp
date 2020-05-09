@@ -51,7 +51,6 @@
 #define DREAM3D_USE_Vector 1
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -125,7 +124,8 @@ void ITKVectorRescaleIntensityImage::readFilterParameters(AbstractFilterParamete
   reader->closeFilterGroup();
 }
 
-template <typename OutputPixelType> void ITKVectorRescaleIntensityImage::CheckEntryBounds(double value, QString name)
+template <typename OutputPixelType>
+void ITKVectorRescaleIntensityImage::CheckEntryBounds(double value, QString name)
 {
   double lowest = static_cast<double>(std::numeric_limits<OutputPixelType>::lowest());
   double max = static_cast<double>(std::numeric_limits<OutputPixelType>::max());
@@ -139,7 +139,8 @@ template <typename OutputPixelType> void ITKVectorRescaleIntensityImage::CheckEn
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKVectorRescaleIntensityImage::dataCheckImpl()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKVectorRescaleIntensityImage::dataCheckImpl()
 {
   // Check consistency of parameters
   CheckEntryBounds<OutputPixelType>(m_OutputMaximumMagnitude, "OutputMaximumMagnitude");
@@ -171,7 +172,8 @@ void ITKVectorRescaleIntensityImage::dataCheck()
 //
 // -----------------------------------------------------------------------------
 
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKVectorRescaleIntensityImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKVectorRescaleIntensityImage::filter()
 {
   typedef itk::Image<InputPixelType, Dimension> InputImageType;
   // OutputPixelType is based on scalar types. Create corresponding vector pixel type.
@@ -243,7 +245,7 @@ ITKVectorRescaleIntensityImage::Pointer ITKVectorRescaleIntensityImage::NullPoin
 // -----------------------------------------------------------------------------
 std::shared_ptr<ITKVectorRescaleIntensityImage> ITKVectorRescaleIntensityImage::New()
 {
-  struct make_shared_enabler : public ITKVectorRescaleIntensityImage  
+  struct make_shared_enabler : public ITKVectorRescaleIntensityImage
   {
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
@@ -286,5 +288,3 @@ int ITKVectorRescaleIntensityImage::getOutputType() const
 {
   return m_OutputType;
 }
-
-

@@ -1,6 +1,5 @@
 #include "ITKImageProcessingBase.h"
 
-
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
@@ -128,5 +127,3 @@ bool ITKImageProcessingBase::getSaveAsNewArray() const
 {
   return m_SaveAsNewArray;
 }
-
-

@@ -31,7 +31,6 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "DetermineStitching.h"
 
-
 #include "itkImage.h"
 
 #include "SIMPLib/ITK/itkBridge.h"
@@ -49,17 +48,17 @@ DetermineStitching::~DetermineStitching() = default;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-//Finds the max value in a vector ... possibly redunant since it is one line ...
-template<typename T>
+// Finds the max value in a vector ... possibly redunant since it is one line ...
+template <typename T>
 T FindMaxValue(QVector<T> inputVector)
 {
   typename QVector<T>::iterator it = std::max_element(inputVector.begin(), inputVector.end());
   return *it;
 }
 
-//This helper function takes the tile list and creates a new vector that orders the tiles as though they are in comb order. So a tile set collected
-//in a comb fashion (along the rows first) will have the values in the new vector match the original index. This is a helper so that we can always stitch the
-//tiles the same way regardless of how they were collected.
+// This helper function takes the tile list and creates a new vector that orders the tiles as though they are in comb order. So a tile set collected
+// in a comb fashion (along the rows first) will have the values in the new vector match the original index. This is a helper so that we can always stitch the
+// tiles the same way regardless of how they were collected.
 
 // -----------------------------------------------------------------------------
 //
@@ -70,26 +69,24 @@ std::vector<size_t> DetermineStitching::ReturnIndexForCombOrder(QVector<qint32> 
   std::vector<size_t> newIndices(xTileList.size(), 0);
   size_t count;
 
-  for (size_t iter = 0; iter < xTileList.size(); iter++)
+  for(size_t iter = 0; iter < xTileList.size(); iter++)
   {
     count = 0;
-    for (size_t j = 0; j < numYtiles; j++)
+    for(size_t j = 0; j < numYtiles; j++)
     {
-      for (size_t i = 0; i < numXtiles; i++)
+      for(size_t i = 0; i < numXtiles; i++)
       {
-        if (xTileList[iter] == i && yTileList[iter] == j)
+        if(xTileList[iter] == i && yTileList[iter] == j)
         {
           newIndices[iter] = count;
         }
-        count ++;
+        count++;
       }
     }
   }
 
   return newIndices;
-
 }
-
 
 // This function takes the input mode (which is set in the ui) and based on it's value determines how exactly the
 // order of images should be layed out
@@ -107,11 +104,11 @@ std::vector<size_t> DetermineStitching::ReturnProperIndex(int InputMode, int xDi
   // The goal is to get this information in Top Down Comb order
   int counter = 0;
   int linestart = 0;
-  switch (InputMode)
+  switch(InputMode)
   {
   case 0:
     // If it's already in top down comb order then we don't have a problem. Return a vector filled with values from 0 - numtiles
-    for (int i = 0; i < numTiles; i++)
+    for(int i = 0; i < numTiles; i++)
     {
       newIndices[i] = i;
     }
@@ -119,14 +116,13 @@ std::vector<size_t> DetermineStitching::ReturnProperIndex(int InputMode, int xDi
   case 1:
     // Column comb order
     counter = 0;
-    for (int x = 0; x < xDims; x++)
+    for(int x = 0; x < xDims; x++)
     {
-      for (int y = 0; y < yDims; y++)
+      for(int y = 0; y < yDims; y++)
       {
-        newIndices[x + y*xDims] = counter;
+        newIndices[x + y * xDims] = counter;
         counter++;
       }
-
     }
     break;
   case 2:
@@ -135,13 +131,13 @@ std::vector<size_t> DetermineStitching::ReturnProperIndex(int InputMode, int xDi
     // A B C
     // F E D
     // G H I
-    for (int y = 0; y < yDims; y++)
+    for(int y = 0; y < yDims; y++)
     {
-      for (int x = 0; x < xDims; x++)
+      for(int x = 0; x < xDims; x++)
       {
-        if (y % 2 == 0) // If it's an even row, apply Comb order
+        if(y % 2 == 0) // If it's an even row, apply Comb order
         {
-          newIndices[(x + (y*xDims))] = x + (y*xDims);
+          newIndices[(x + (y * xDims))] = x + (y * xDims);
         }
         else // If it's an odd row apply reverse comb order
         {
@@ -159,9 +155,8 @@ std::vector<size_t> DetermineStitching::ReturnProperIndex(int InputMode, int xDi
 
           Indices[0+(1*2)] = (((1+1) * 2) - 0) - 1		==		Indices[2] = 3
           */
-          newIndices[x + y*xDims] = (((1 + y) * xDims) - x) - 1;
+          newIndices[x + y * xDims] = (((1 + y) * xDims) - x) - 1;
         }
-
       }
     }
 
@@ -170,20 +165,18 @@ std::vector<size_t> DetermineStitching::ReturnProperIndex(int InputMode, int xDi
   case 3:
     // Column Snake order
     counter = 0;
-    for (int x = 0; x < xDims; x++)
+    for(int x = 0; x < xDims; x++)
     {
-      for (int y = 0; y < yDims; y++)
+      for(int y = 0; y < yDims; y++)
       {
-        if (y % 2 == 0)
+        if(y % 2 == 0)
         {
-          newIndices[counter] = x + y*xDims;
-
+          newIndices[counter] = x + y * xDims;
         }
         else
         {
           linestart = (yDims * (xDims - 1)) + y;
-          newIndices[linestart - (x*yDims)] = x + y*xDims;
-
+          newIndices[linestart - (x * yDims)] = x + y * xDims;
         }
 
         counter++;
@@ -193,13 +186,11 @@ std::vector<size_t> DetermineStitching::ReturnProperIndex(int InputMode, int xDi
     break;
   default:
     // If it's not an option fill in a comb order and hope for the best
-    for (int i = 0; i < numTiles; i++)
+    for(int i = 0; i < numTiles; i++)
     {
       newIndices[i] = i;
     }
     break;
-
-
   }
 
   return newIndices;

@@ -8,16 +8,15 @@
 // Auto includes
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 
-
 class ITKShotNoiseImageTest : public ITKTestBase
 {
 
 public:
-ITKShotNoiseImageTest() = default;
-~ITKShotNoiseImageTest() override = default;
+  ITKShotNoiseImageTest() = default;
+  ~ITKShotNoiseImageTest() override = default;
 
   int TestITKShotNoiseImage2dTest()
-{
+  {
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/cthead1.png");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -36,11 +35,11 @@ ITKShotNoiseImageTest() = default;
     propWasSet = filter->setProperty("SaveAsNewArray", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     {
-        double d3d_var;
-        d3d_var = 123;
-        var.setValue(d3d_var);
-        propWasSet = filter->setProperty("Seed", var);
-        DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+      double d3d_var;
+      d3d_var = 123;
+      var.setValue(d3d_var);
+      propWasSet = filter->setProperty("Seed", var);
+      DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     }
     filter->setDataContainerArray(containerArray);
     filter->execute();
@@ -53,10 +52,10 @@ ITKShotNoiseImageTest() = default;
     int res = this->CompareImages(containerArray, input_path, baseline_path, 500.0);
     DREAM3D_REQUIRE_EQUAL(res, 0);
     return 0;
-}
+  }
 
-int TestITKShotNoiseImage3dTest()
-{
+  int TestITKShotNoiseImage3dTest()
+  {
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/RA-Short.nrrd");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -75,11 +74,11 @@ int TestITKShotNoiseImage3dTest()
     propWasSet = filter->setProperty("SaveAsNewArray", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     {
-        double d3d_var;
-        d3d_var = 123;
-        var.setValue(d3d_var);
-        propWasSet = filter->setProperty("Seed", var);
-        DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+      double d3d_var;
+      d3d_var = 123;
+      var.setValue(d3d_var);
+      propWasSet = filter->setProperty("Seed", var);
+      DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     }
     filter->setDataContainerArray(containerArray);
     filter->execute();
@@ -92,10 +91,10 @@ int TestITKShotNoiseImage3dTest()
     int res = this->CompareImages(containerArray, input_path, baseline_path, 500.0);
     DREAM3D_REQUIRE_EQUAL(res, 0);
     return 0;
-}
+  }
 
-int TestITKShotNoiseImagergbTest()
-{
+  int TestITKShotNoiseImagergbTest()
+  {
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/VM1111Shrink-RGB.png");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -114,11 +113,11 @@ int TestITKShotNoiseImagergbTest()
     propWasSet = filter->setProperty("SaveAsNewArray", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     {
-        double d3d_var;
-        d3d_var = 123;
-        var.setValue(d3d_var);
-        propWasSet = filter->setProperty("Seed", var);
-        DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+      double d3d_var;
+      d3d_var = 123;
+      var.setValue(d3d_var);
+      propWasSet = filter->setProperty("Seed", var);
+      DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     }
     filter->setDataContainerArray(containerArray);
     filter->execute();
@@ -131,9 +130,7 @@ int TestITKShotNoiseImagergbTest()
     int res = this->CompareImages(containerArray, input_path, baseline_path, 500.0);
     DREAM3D_REQUIRE_EQUAL(res, 0);
     return 0;
-}
-
-
+  }
 
   // -----------------------------------------------------------------------------
   //
@@ -144,9 +141,9 @@ int TestITKShotNoiseImagergbTest()
 
     DREAM3D_REGISTER_TEST(this->TestFilterAvailability("ITKShotNoiseImage"));
 
-    DREAM3D_REGISTER_TEST( TestITKShotNoiseImage2dTest());
-    DREAM3D_REGISTER_TEST( TestITKShotNoiseImage3dTest());
-    DREAM3D_REGISTER_TEST( TestITKShotNoiseImagergbTest());
+    DREAM3D_REGISTER_TEST(TestITKShotNoiseImage2dTest());
+    DREAM3D_REGISTER_TEST(TestITKShotNoiseImage3dTest());
+    DREAM3D_REGISTER_TEST(TestITKShotNoiseImagergbTest());
 
     if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
     {
@@ -156,5 +153,5 @@ int TestITKShotNoiseImagergbTest()
 
 private:
   ITKShotNoiseImageTest(const ITKShotNoiseImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKShotNoiseImageTest&);  // Operator '=' Not Implemented
+  void operator=(const ITKShotNoiseImageTest&);        // Operator '=' Not Implemented
 };

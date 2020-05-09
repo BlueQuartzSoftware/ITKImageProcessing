@@ -47,80 +47,79 @@ class ITKImageProcessing_EXPORT ITKOtsuMultipleThresholdsImage : public ITKImage
   // End Python bindings declarations
 
 public:
-    using Self = ITKOtsuMultipleThresholdsImage;
-    using Pointer = std::shared_ptr<Self>;
-    using ConstPointer = std::shared_ptr<const Self>;
-    using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<const Self>;
-    static Pointer NullPointer();
+  using Self = ITKOtsuMultipleThresholdsImage;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<const Self>;
+  static Pointer NullPointer();
 
-    static std::shared_ptr<ITKOtsuMultipleThresholdsImage> New();
+  static std::shared_ptr<ITKOtsuMultipleThresholdsImage> New();
 
-    /**
-    * @brief Returns the name of the class for ITKOtsuMultipleThresholdsImage
-    */
-    QString getNameOfClass() const override;
-    /**
-    * @brief Returns the name of the class for ITKOtsuMultipleThresholdsImage
-    */
-    static QString ClassName();
-
+  /**
+   * @brief Returns the name of the class for ITKOtsuMultipleThresholdsImage
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for ITKOtsuMultipleThresholdsImage
+   */
+  static QString ClassName();
 
   ~ITKOtsuMultipleThresholdsImage() override;
 
-    /**
-    * @brief Setter property for NumberOfThresholds
-    */
-    void setNumberOfThresholds(int value); 
-    /**
-    * @brief Getter property for NumberOfThresholds
-    * @return Value of NumberOfThresholds
-    */
-    int getNumberOfThresholds() const;
+  /**
+   * @brief Setter property for NumberOfThresholds
+   */
+  void setNumberOfThresholds(int value);
+  /**
+   * @brief Getter property for NumberOfThresholds
+   * @return Value of NumberOfThresholds
+   */
+  int getNumberOfThresholds() const;
   Q_PROPERTY(int NumberOfThresholds READ getNumberOfThresholds WRITE setNumberOfThresholds)
 
-    /**
-    * @brief Setter property for LabelOffset
-    */
-    void setLabelOffset(int value); 
-    /**
-    * @brief Getter property for LabelOffset
-    * @return Value of LabelOffset
-    */
-    int getLabelOffset() const;
+  /**
+   * @brief Setter property for LabelOffset
+   */
+  void setLabelOffset(int value);
+  /**
+   * @brief Getter property for LabelOffset
+   * @return Value of LabelOffset
+   */
+  int getLabelOffset() const;
   Q_PROPERTY(int LabelOffset READ getLabelOffset WRITE setLabelOffset)
 
-    /**
-    * @brief Setter property for NumberOfHistogramBins
-    */
-    void setNumberOfHistogramBins(double value); 
-    /**
-    * @brief Getter property for NumberOfHistogramBins
-    * @return Value of NumberOfHistogramBins
-    */
-    double getNumberOfHistogramBins() const;
+  /**
+   * @brief Setter property for NumberOfHistogramBins
+   */
+  void setNumberOfHistogramBins(double value);
+  /**
+   * @brief Getter property for NumberOfHistogramBins
+   * @return Value of NumberOfHistogramBins
+   */
+  double getNumberOfHistogramBins() const;
   Q_PROPERTY(double NumberOfHistogramBins READ getNumberOfHistogramBins WRITE setNumberOfHistogramBins)
 
-    /**
-    * @brief Setter property for ValleyEmphasis
-    */
-    void setValleyEmphasis(bool value); 
-    /**
-    * @brief Getter property for ValleyEmphasis
-    * @return Value of ValleyEmphasis
-    */
-    bool getValleyEmphasis() const;
+  /**
+   * @brief Setter property for ValleyEmphasis
+   */
+  void setValleyEmphasis(bool value);
+  /**
+   * @brief Getter property for ValleyEmphasis
+   * @return Value of ValleyEmphasis
+   */
+  bool getValleyEmphasis() const;
   Q_PROPERTY(bool ValleyEmphasis READ getValleyEmphasis WRITE setValleyEmphasis)
 
-    /**
-    * @brief Setter property for Thresholds
-    */
-    void setThresholds(const FloatVec3Type& value); 
-    /**
-    * @brief Getter property for Thresholds
-    * @return Value of Thresholds
-    */
-    FloatVec3Type getThresholds() const;
+  /**
+   * @brief Setter property for Thresholds
+   */
+  void setThresholds(const FloatVec3Type& value);
+  /**
+   * @brief Getter property for Thresholds
+   * @return Value of Thresholds
+   */
+  FloatVec3Type getThresholds() const;
   Q_PROPERTY(FloatVec3Type Thresholds READ getThresholds)
 
   /**
@@ -165,34 +164,34 @@ protected:
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
    */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void dataCheckImpl();
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void dataCheckImpl();
 
   /**
-  * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
-  */
+   * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
+   */
   void filterInternal() override;
 
   /**
-  * @brief Applies the filter
-  */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
+   * @brief Applies the filter
+   */
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void filter();
 
 public:
-  ITKOtsuMultipleThresholdsImage(const ITKOtsuMultipleThresholdsImage&) = delete;    // Copy Constructor Not Implemented
-  ITKOtsuMultipleThresholdsImage(ITKOtsuMultipleThresholdsImage&&) = delete;         // Move Constructor Not Implemented
+  ITKOtsuMultipleThresholdsImage(const ITKOtsuMultipleThresholdsImage&) = delete;            // Copy Constructor Not Implemented
+  ITKOtsuMultipleThresholdsImage(ITKOtsuMultipleThresholdsImage&&) = delete;                 // Move Constructor Not Implemented
   ITKOtsuMultipleThresholdsImage& operator=(const ITKOtsuMultipleThresholdsImage&) = delete; // Copy Assignment Not Implemented
   ITKOtsuMultipleThresholdsImage& operator=(ITKOtsuMultipleThresholdsImage&&) = delete;      // Move Assignment Not Implemented
 
-  private:
-    int m_NumberOfThresholds = {};
-    int m_LabelOffset = {};
-    double m_NumberOfHistogramBins = {};
-    bool m_ValleyEmphasis = {};
-    FloatVec3Type m_Thresholds = {};
-
+private:
+  int m_NumberOfThresholds = {};
+  int m_LabelOffset = {};
+  double m_NumberOfHistogramBins = {};
+  bool m_ValleyEmphasis = {};
+  FloatVec3Type m_Thresholds = {};
 };
 
 #ifdef __clang__
 #pragma clang diagnostic pop
 #endif
-

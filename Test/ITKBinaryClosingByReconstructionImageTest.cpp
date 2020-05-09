@@ -16,8 +16,8 @@ class ITKBinaryClosingByReconstructionImageTest : public ITKTestBase
 {
 
 public:
-ITKBinaryClosingByReconstructionImageTest() = default;
-~ITKBinaryClosingByReconstructionImageTest() override = default;
+  ITKBinaryClosingByReconstructionImageTest() = default;
+  ~ITKBinaryClosingByReconstructionImageTest() override = default;
 
   int TestITKBinaryClosingByReconstructionImageBinaryClosingByReconstructionTest()
   {

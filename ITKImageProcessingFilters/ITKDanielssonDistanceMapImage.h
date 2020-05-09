@@ -42,60 +42,58 @@ class ITKImageProcessing_EXPORT ITKDanielssonDistanceMapImage : public ITKImageP
   // End Python bindings declarations
 
 public:
-    using Self = ITKDanielssonDistanceMapImage;
-    using Pointer = std::shared_ptr<Self>;
-    using ConstPointer = std::shared_ptr<const Self>;
-    using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<const Self>;
-    static Pointer NullPointer();
+  using Self = ITKDanielssonDistanceMapImage;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<const Self>;
+  static Pointer NullPointer();
 
-    static std::shared_ptr<ITKDanielssonDistanceMapImage> New();
+  static std::shared_ptr<ITKDanielssonDistanceMapImage> New();
 
-    /**
-    * @brief Returns the name of the class for ITKDanielssonDistanceMapImage
-    */
-    QString getNameOfClass() const override;
-    /**
-    * @brief Returns the name of the class for ITKDanielssonDistanceMapImage
-    */
-    static QString ClassName();
-
+  /**
+   * @brief Returns the name of the class for ITKDanielssonDistanceMapImage
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for ITKDanielssonDistanceMapImage
+   */
+  static QString ClassName();
 
   ~ITKDanielssonDistanceMapImage() override;
 
-    /**
-    * @brief Setter property for InputIsBinary
-    */
-    void setInputIsBinary(bool value); 
-    /**
-    * @brief Getter property for InputIsBinary
-    * @return Value of InputIsBinary
-    */
-    bool getInputIsBinary() const;
+  /**
+   * @brief Setter property for InputIsBinary
+   */
+  void setInputIsBinary(bool value);
+  /**
+   * @brief Getter property for InputIsBinary
+   * @return Value of InputIsBinary
+   */
+  bool getInputIsBinary() const;
   Q_PROPERTY(bool InputIsBinary READ getInputIsBinary WRITE setInputIsBinary)
 
-    /**
-    * @brief Setter property for SquaredDistance
-    */
-    void setSquaredDistance(bool value); 
-    /**
-    * @brief Getter property for SquaredDistance
-    * @return Value of SquaredDistance
-    */
-    bool getSquaredDistance() const;
+  /**
+   * @brief Setter property for SquaredDistance
+   */
+  void setSquaredDistance(bool value);
+  /**
+   * @brief Getter property for SquaredDistance
+   * @return Value of SquaredDistance
+   */
+  bool getSquaredDistance() const;
   Q_PROPERTY(bool SquaredDistance READ getSquaredDistance WRITE setSquaredDistance)
 
-    /**
-    * @brief Setter property for UseImageSpacing
-    */
-    void setUseImageSpacing(bool value); 
-    /**
-    * @brief Getter property for UseImageSpacing
-    * @return Value of UseImageSpacing
-    */
-    bool getUseImageSpacing() const;
+  /**
+   * @brief Setter property for UseImageSpacing
+   */
+  void setUseImageSpacing(bool value);
+  /**
+   * @brief Getter property for UseImageSpacing
+   * @return Value of UseImageSpacing
+   */
+  bool getUseImageSpacing() const;
   Q_PROPERTY(bool UseImageSpacing READ getUseImageSpacing WRITE setUseImageSpacing)
-
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -139,32 +137,32 @@ protected:
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
    */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void dataCheckImpl();
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void dataCheckImpl();
 
   /**
-  * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
-  */
+   * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
+   */
   void filterInternal() override;
 
   /**
-  * @brief Applies the filter
-  */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
+   * @brief Applies the filter
+   */
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void filter();
 
 public:
-  ITKDanielssonDistanceMapImage(const ITKDanielssonDistanceMapImage&) = delete;    // Copy Constructor Not Implemented
-  ITKDanielssonDistanceMapImage(ITKDanielssonDistanceMapImage&&) = delete;         // Move Constructor Not Implemented
+  ITKDanielssonDistanceMapImage(const ITKDanielssonDistanceMapImage&) = delete;            // Copy Constructor Not Implemented
+  ITKDanielssonDistanceMapImage(ITKDanielssonDistanceMapImage&&) = delete;                 // Move Constructor Not Implemented
   ITKDanielssonDistanceMapImage& operator=(const ITKDanielssonDistanceMapImage&) = delete; // Copy Assignment Not Implemented
   ITKDanielssonDistanceMapImage& operator=(ITKDanielssonDistanceMapImage&&) = delete;      // Move Assignment Not Implemented
 
-  private:
-    bool m_InputIsBinary = {};
-    bool m_SquaredDistance = {};
-    bool m_UseImageSpacing = {};
-
+private:
+  bool m_InputIsBinary = {};
+  bool m_SquaredDistance = {};
+  bool m_UseImageSpacing = {};
 };
 
 #ifdef __clang__
 #pragma clang diagnostic pop
 #endif
-

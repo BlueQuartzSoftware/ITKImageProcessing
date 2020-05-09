@@ -8,16 +8,15 @@
 // Auto includes
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 
-
 class ITKHMaximaImageTest : public ITKTestBase
 {
 
 public:
-ITKHMaximaImageTest() = default;
-~ITKHMaximaImageTest() override = default;
+  ITKHMaximaImageTest() = default;
+  ~ITKHMaximaImageTest() override = default;
 
   int TestITKHMaximaImageHMaximaTest()
-{
+  {
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/RA-Short.nrrd");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -36,11 +35,11 @@ ITKHMaximaImageTest() = default;
     propWasSet = filter->setProperty("SaveAsNewArray", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     {
-        double d3d_var;
-        d3d_var = 2000;
-        var.setValue(d3d_var);
-        propWasSet = filter->setProperty("Height", var);
-        DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+      double d3d_var;
+      d3d_var = 2000;
+      var.setValue(d3d_var);
+      propWasSet = filter->setProperty("Height", var);
+      DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     }
     filter->setDataContainerArray(containerArray);
     filter->execute();
@@ -51,9 +50,7 @@ ITKHMaximaImageTest() = default;
     GetMD5FromDataContainer(containerArray, input_path, md5Output);
     DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("b30d403fb1c5948abfb17fa9c346cecd"));
     return 0;
-}
-
-
+  }
 
   // -----------------------------------------------------------------------------
   //
@@ -64,7 +61,7 @@ ITKHMaximaImageTest() = default;
 
     DREAM3D_REGISTER_TEST(this->TestFilterAvailability("ITKHMaximaImage"));
 
-    DREAM3D_REGISTER_TEST( TestITKHMaximaImageHMaximaTest());
+    DREAM3D_REGISTER_TEST(TestITKHMaximaImageHMaximaTest());
 
     if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
     {

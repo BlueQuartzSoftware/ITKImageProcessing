@@ -45,71 +45,69 @@ class ITKImageProcessing_EXPORT ITKDiscreteGaussianImage : public ITKImageProces
   // End Python bindings declarations
 
 public:
-    using Self = ITKDiscreteGaussianImage;
-    using Pointer = std::shared_ptr<Self>;
-    using ConstPointer = std::shared_ptr<const Self>;
-    using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<const Self>;
-    static Pointer NullPointer();
+  using Self = ITKDiscreteGaussianImage;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<const Self>;
+  static Pointer NullPointer();
 
-    static std::shared_ptr<ITKDiscreteGaussianImage> New();
+  static std::shared_ptr<ITKDiscreteGaussianImage> New();
 
-    /**
-    * @brief Returns the name of the class for ITKDiscreteGaussianImage
-    */
-    QString getNameOfClass() const override;
-    /**
-    * @brief Returns the name of the class for ITKDiscreteGaussianImage
-    */
-    static QString ClassName();
-
+  /**
+   * @brief Returns the name of the class for ITKDiscreteGaussianImage
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for ITKDiscreteGaussianImage
+   */
+  static QString ClassName();
 
   ~ITKDiscreteGaussianImage() override;
 
-    /**
-    * @brief Setter property for Variance
-    */
-    void setVariance(const FloatVec3Type& value); 
-    /**
-    * @brief Getter property for Variance
-    * @return Value of Variance
-    */
-    FloatVec3Type getVariance() const;
+  /**
+   * @brief Setter property for Variance
+   */
+  void setVariance(const FloatVec3Type& value);
+  /**
+   * @brief Getter property for Variance
+   * @return Value of Variance
+   */
+  FloatVec3Type getVariance() const;
   Q_PROPERTY(FloatVec3Type Variance READ getVariance WRITE setVariance)
 
-    /**
-    * @brief Setter property for MaximumKernelWidth
-    */
-    void setMaximumKernelWidth(int32_t value); 
-    /**
-    * @brief Getter property for MaximumKernelWidth
-    * @return Value of MaximumKernelWidth
-    */
-    int32_t getMaximumKernelWidth() const;
+  /**
+   * @brief Setter property for MaximumKernelWidth
+   */
+  void setMaximumKernelWidth(int32_t value);
+  /**
+   * @brief Getter property for MaximumKernelWidth
+   * @return Value of MaximumKernelWidth
+   */
+  int32_t getMaximumKernelWidth() const;
   Q_PROPERTY(int32_t MaximumKernelWidth READ getMaximumKernelWidth WRITE setMaximumKernelWidth)
 
-    /**
-    * @brief Setter property for MaximumError
-    */
-    void setMaximumError(const FloatVec3Type& value); 
-    /**
-    * @brief Getter property for MaximumError
-    * @return Value of MaximumError
-    */
-    FloatVec3Type getMaximumError() const;
+  /**
+   * @brief Setter property for MaximumError
+   */
+  void setMaximumError(const FloatVec3Type& value);
+  /**
+   * @brief Getter property for MaximumError
+   * @return Value of MaximumError
+   */
+  FloatVec3Type getMaximumError() const;
   Q_PROPERTY(FloatVec3Type MaximumError READ getMaximumError WRITE setMaximumError)
 
-    /**
-    * @brief Setter property for UseImageSpacing
-    */
-    void setUseImageSpacing(bool value); 
-    /**
-    * @brief Getter property for UseImageSpacing
-    * @return Value of UseImageSpacing
-    */
-    bool getUseImageSpacing() const;
+  /**
+   * @brief Setter property for UseImageSpacing
+   */
+  void setUseImageSpacing(bool value);
+  /**
+   * @brief Getter property for UseImageSpacing
+   * @return Value of UseImageSpacing
+   */
+  bool getUseImageSpacing() const;
   Q_PROPERTY(bool UseImageSpacing READ getUseImageSpacing WRITE setUseImageSpacing)
-
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -153,33 +151,33 @@ protected:
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
    */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void dataCheckImpl();
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void dataCheckImpl();
 
   /**
-  * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
-  */
+   * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
+   */
   void filterInternal() override;
 
   /**
-  * @brief Applies the filter
-  */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
+   * @brief Applies the filter
+   */
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void filter();
 
 public:
-  ITKDiscreteGaussianImage(const ITKDiscreteGaussianImage&) = delete;    // Copy Constructor Not Implemented
-  ITKDiscreteGaussianImage(ITKDiscreteGaussianImage&&) = delete;         // Move Constructor Not Implemented
+  ITKDiscreteGaussianImage(const ITKDiscreteGaussianImage&) = delete;            // Copy Constructor Not Implemented
+  ITKDiscreteGaussianImage(ITKDiscreteGaussianImage&&) = delete;                 // Move Constructor Not Implemented
   ITKDiscreteGaussianImage& operator=(const ITKDiscreteGaussianImage&) = delete; // Copy Assignment Not Implemented
   ITKDiscreteGaussianImage& operator=(ITKDiscreteGaussianImage&&) = delete;      // Move Assignment Not Implemented
 
-  private:
-    FloatVec3Type m_Variance = {};
-    int32_t m_MaximumKernelWidth = {};
-    FloatVec3Type m_MaximumError = {};
-    bool m_UseImageSpacing = {};
-
+private:
+  FloatVec3Type m_Variance = {};
+  int32_t m_MaximumKernelWidth = {};
+  FloatVec3Type m_MaximumError = {};
+  bool m_UseImageSpacing = {};
 };
 
 #ifdef __clang__
 #pragma clang diagnostic pop
 #endif
-

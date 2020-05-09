@@ -4,7 +4,6 @@
  * Your License or Copyright can go here
  */
 
-
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKBinaryProjectionImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 #include "SIMPLib/Common/Constants.h"
@@ -17,7 +16,6 @@
 
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -26,7 +24,6 @@ ITKBinaryProjectionImage::ITKBinaryProjectionImage()
   m_ProjectionDimension = StaticCastScalar<double, double, double>(0u);
   m_ForegroundValue = StaticCastScalar<double, double, double>(1.0);
   m_BackgroundValue = StaticCastScalar<double, double, double>(0.0);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -44,7 +41,6 @@ void ITKBinaryProjectionImage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("ProjectionDimension", ProjectionDimension, FilterParameter::Parameter, ITKBinaryProjectionImage));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("ForegroundValue", ForegroundValue, FilterParameter::Parameter, ITKBinaryProjectionImage));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("BackgroundValue", BackgroundValue, FilterParameter::Parameter, ITKBinaryProjectionImage));
-
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -80,7 +76,8 @@ void ITKBinaryProjectionImage::readFilterParameters(AbstractFilterParametersRead
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKBinaryProjectionImage::dataCheckImpl()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKBinaryProjectionImage::dataCheckImpl()
 {
   clearErrorCode();
   clearWarningCode();
@@ -103,7 +100,8 @@ void ITKBinaryProjectionImage::dataCheck()
 //
 // -----------------------------------------------------------------------------
 
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKBinaryProjectionImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKBinaryProjectionImage::filter()
 {
   typedef itk::Image<InputPixelType, Dimension> InputImageType;
   typedef itk::Image<OutputPixelType, Dimension> OutputImageType;
@@ -114,7 +112,6 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   filter->SetForegroundValue(static_cast<double>(m_ForegroundValue));
   filter->SetBackgroundValue(static_cast<double>(m_BackgroundValue));
   this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -171,7 +168,7 @@ ITKBinaryProjectionImage::Pointer ITKBinaryProjectionImage::NullPointer()
 // -----------------------------------------------------------------------------
 std::shared_ptr<ITKBinaryProjectionImage> ITKBinaryProjectionImage::New()
 {
-  struct make_shared_enabler : public ITKBinaryProjectionImage  
+  struct make_shared_enabler : public ITKBinaryProjectionImage
   {
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
@@ -226,5 +223,3 @@ double ITKBinaryProjectionImage::getBackgroundValue() const
 {
   return m_BackgroundValue;
 }
-
-

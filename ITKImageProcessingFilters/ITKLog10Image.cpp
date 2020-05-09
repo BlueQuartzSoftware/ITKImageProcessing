@@ -4,7 +4,6 @@
  * Your License or Copyright can go here
  */
 
-
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKLog10Image.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 #include "SIMPLib/Common/Constants.h"
@@ -16,7 +15,6 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
-
 
 // -----------------------------------------------------------------------------
 //
@@ -66,7 +64,8 @@ void ITKLog10Image::readFilterParameters(AbstractFilterParametersReader* reader,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKLog10Image::dataCheckImpl()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKLog10Image::dataCheckImpl()
 {
   clearErrorCode();
   clearWarningCode();
@@ -88,7 +87,8 @@ void ITKLog10Image::dataCheck()
 //
 // -----------------------------------------------------------------------------
 
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKLog10Image::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKLog10Image::filter()
 {
   typedef itk::Image<InputPixelType, Dimension> InputImageType;
   typedef itk::Image<OutputPixelType, Dimension> OutputImageType;
@@ -96,7 +96,6 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   typedef itk::Log10ImageFilter<InputImageType, OutputImageType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
   this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -153,7 +152,7 @@ ITKLog10Image::Pointer ITKLog10Image::NullPointer()
 // -----------------------------------------------------------------------------
 std::shared_ptr<ITKLog10Image> ITKLog10Image::New()
 {
-  struct make_shared_enabler : public ITKLog10Image  
+  struct make_shared_enabler : public ITKLog10Image
   {
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
@@ -172,5 +171,3 @@ QString ITKLog10Image::ClassName()
 {
   return QString("ITKLog10Image");
 }
-
-

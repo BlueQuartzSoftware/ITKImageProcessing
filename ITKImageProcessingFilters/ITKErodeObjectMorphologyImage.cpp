@@ -4,7 +4,6 @@
  * Your License or Copyright can go here
  */
 
-
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKErodeObjectMorphologyImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 #include "SIMPLib/Common/Constants.h"
@@ -20,7 +19,6 @@
 
 #include <itkFlatStructuringElement.h>
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -30,7 +28,6 @@ ITKErodeObjectMorphologyImage::ITKErodeObjectMorphologyImage()
   m_BackgroundValue = StaticCastScalar<double, double, double>(0);
   m_KernelRadius = CastStdToVec3<std::vector<unsigned int>, FloatVec3Type, float>(std::vector<unsigned int>(3, 1));
   m_KernelType = StaticCastScalar<int, int, int>(itk::simple::sitkBall);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -67,7 +64,6 @@ void ITKErodeObjectMorphologyImage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("BackgroundValue", BackgroundValue, FilterParameter::Parameter, ITKErodeObjectMorphologyImage));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("KernelRadius", KernelRadius, FilterParameter::Parameter, ITKErodeObjectMorphologyImage));
 
-
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Save as New Array", SaveAsNewArray, FilterParameter::Parameter, ITKErodeObjectMorphologyImage, linkedProps));
@@ -103,7 +99,8 @@ void ITKErodeObjectMorphologyImage::readFilterParameters(AbstractFilterParameter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKErodeObjectMorphologyImage::dataCheckImpl()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKErodeObjectMorphologyImage::dataCheckImpl()
 {
   clearErrorCode();
   clearWarningCode();
@@ -126,7 +123,8 @@ void ITKErodeObjectMorphologyImage::dataCheck()
 //
 // -----------------------------------------------------------------------------
 
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKErodeObjectMorphologyImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKErodeObjectMorphologyImage::filter()
 {
   typedef itk::Image<InputPixelType, Dimension> InputImageType;
   typedef itk::Image<OutputPixelType, Dimension> OutputImageType;
@@ -155,11 +153,10 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   // define filter
   typedef itk::ErodeObjectMorphologyImageFilter<InputImageType, OutputImageType, StructuringElementType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
-  filter->SetObjectValue(static_cast<typename FilterType::PixelType>(this->getObjectValue()) );
+  filter->SetObjectValue(static_cast<typename FilterType::PixelType>(this->getObjectValue()));
   filter->SetBackgroundValue(static_cast<double>(m_BackgroundValue));
   filter->SetKernel(structuringElement);
   this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -216,7 +213,7 @@ ITKErodeObjectMorphologyImage::Pointer ITKErodeObjectMorphologyImage::NullPointe
 // -----------------------------------------------------------------------------
 std::shared_ptr<ITKErodeObjectMorphologyImage> ITKErodeObjectMorphologyImage::New()
 {
-  struct make_shared_enabler : public ITKErodeObjectMorphologyImage  
+  struct make_shared_enabler : public ITKErodeObjectMorphologyImage
   {
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
@@ -283,5 +280,3 @@ int ITKErodeObjectMorphologyImage::getKernelType() const
 {
   return m_KernelType;
 }
-
-

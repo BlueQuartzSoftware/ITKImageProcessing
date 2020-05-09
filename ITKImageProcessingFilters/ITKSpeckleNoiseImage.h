@@ -41,49 +41,47 @@ class ITKImageProcessing_EXPORT ITKSpeckleNoiseImage : public ITKImageProcessing
   // End Python bindings declarations
 
 public:
-    using Self = ITKSpeckleNoiseImage;
-    using Pointer = std::shared_ptr<Self>;
-    using ConstPointer = std::shared_ptr<const Self>;
-    using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<const Self>;
-    static Pointer NullPointer();
+  using Self = ITKSpeckleNoiseImage;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<const Self>;
+  static Pointer NullPointer();
 
-    static std::shared_ptr<ITKSpeckleNoiseImage> New();
+  static std::shared_ptr<ITKSpeckleNoiseImage> New();
 
-    /**
-    * @brief Returns the name of the class for ITKSpeckleNoiseImage
-    */
-    QString getNameOfClass() const override;
-    /**
-    * @brief Returns the name of the class for ITKSpeckleNoiseImage
-    */
-    static QString ClassName();
-
+  /**
+   * @brief Returns the name of the class for ITKSpeckleNoiseImage
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for ITKSpeckleNoiseImage
+   */
+  static QString ClassName();
 
   ~ITKSpeckleNoiseImage() override;
 
-    /**
-    * @brief Setter property for StandardDeviation
-    */
-    void setStandardDeviation(double value); 
-    /**
-    * @brief Getter property for StandardDeviation
-    * @return Value of StandardDeviation
-    */
-    double getStandardDeviation() const;
+  /**
+   * @brief Setter property for StandardDeviation
+   */
+  void setStandardDeviation(double value);
+  /**
+   * @brief Getter property for StandardDeviation
+   * @return Value of StandardDeviation
+   */
+  double getStandardDeviation() const;
   Q_PROPERTY(double StandardDeviation READ getStandardDeviation WRITE setStandardDeviation)
 
-    /**
-    * @brief Setter property for Seed
-    */
-    void setSeed(double value); 
-    /**
-    * @brief Getter property for Seed
-    * @return Value of Seed
-    */
-    double getSeed() const;
+  /**
+   * @brief Setter property for Seed
+   */
+  void setSeed(double value);
+  /**
+   * @brief Getter property for Seed
+   * @return Value of Seed
+   */
+  double getSeed() const;
   Q_PROPERTY(double Seed READ getSeed WRITE setSeed)
-
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -127,31 +125,31 @@ protected:
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
    */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void dataCheckImpl();
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void dataCheckImpl();
 
   /**
-  * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
-  */
+   * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
+   */
   void filterInternal() override;
 
   /**
-  * @brief Applies the filter
-  */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
+   * @brief Applies the filter
+   */
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void filter();
 
 public:
-  ITKSpeckleNoiseImage(const ITKSpeckleNoiseImage&) = delete;    // Copy Constructor Not Implemented
-  ITKSpeckleNoiseImage(ITKSpeckleNoiseImage&&) = delete;         // Move Constructor Not Implemented
+  ITKSpeckleNoiseImage(const ITKSpeckleNoiseImage&) = delete;            // Copy Constructor Not Implemented
+  ITKSpeckleNoiseImage(ITKSpeckleNoiseImage&&) = delete;                 // Move Constructor Not Implemented
   ITKSpeckleNoiseImage& operator=(const ITKSpeckleNoiseImage&) = delete; // Copy Assignment Not Implemented
   ITKSpeckleNoiseImage& operator=(ITKSpeckleNoiseImage&&) = delete;      // Move Assignment Not Implemented
 
-  private:
-    double m_StandardDeviation = {};
-    double m_Seed = {};
-
+private:
+  double m_StandardDeviation = {};
+  double m_Seed = {};
 };
 
 #ifdef __clang__
 #pragma clang diagnostic pop
 #endif
-

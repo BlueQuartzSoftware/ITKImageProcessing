@@ -8,16 +8,15 @@
 // Auto includes
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 
-
 class ITKSumProjectionImageTest : public ITKTestBase
 {
 
 public:
-ITKSumProjectionImageTest() = default;
-~ITKSumProjectionImageTest() override = default;
+  ITKSumProjectionImageTest() = default;
+  ~ITKSumProjectionImageTest() override = default;
 
   int TestITKSumProjectionImagez_projectionTest()
-{
+  {
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/RA-Float.nrrd");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -36,11 +35,11 @@ ITKSumProjectionImageTest() = default;
     propWasSet = filter->setProperty("SaveAsNewArray", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     {
-        double d3d_var;
-        d3d_var = 2;
-        var.setValue(d3d_var);
-        propWasSet = filter->setProperty("ProjectionDimension", var);
-        DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+      double d3d_var;
+      d3d_var = 2;
+      var.setValue(d3d_var);
+      propWasSet = filter->setProperty("ProjectionDimension", var);
+      DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     }
     filter->setDataContainerArray(containerArray);
     filter->execute();
@@ -53,9 +52,7 @@ ITKSumProjectionImageTest() = default;
     int res = this->CompareImages(containerArray, input_path, baseline_path, 0.0001);
     DREAM3D_REQUIRE_EQUAL(res, 0);
     return 0;
-}
-
-
+  }
 
   // -----------------------------------------------------------------------------
   //
@@ -66,7 +63,7 @@ ITKSumProjectionImageTest() = default;
 
     DREAM3D_REGISTER_TEST(this->TestFilterAvailability("ITKSumProjectionImage"));
 
-    DREAM3D_REGISTER_TEST( TestITKSumProjectionImagez_projectionTest());
+    DREAM3D_REGISTER_TEST(TestITKSumProjectionImagez_projectionTest());
 
     if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
     {

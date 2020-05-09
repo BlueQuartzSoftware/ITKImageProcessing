@@ -14,8 +14,8 @@ class ITKMorphologicalGradientImageTest : public ITKTestBase
 {
 
 public:
-ITKMorphologicalGradientImageTest() = default;
-~ITKMorphologicalGradientImageTest() override = default;
+  ITKMorphologicalGradientImageTest() = default;
+  ~ITKMorphologicalGradientImageTest() override = default;
 
   int TestITKMorphologicalGradientImageMorphologicalGradientTest()
   {

@@ -4,7 +4,6 @@
  * Your License or Copyright can go here
  */
 
-
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKBinomialBlurImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 #include "SIMPLib/Common/Constants.h"
@@ -17,14 +16,12 @@
 
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 ITKBinomialBlurImage::ITKBinomialBlurImage()
 {
   m_Repetitions = StaticCastScalar<double, double, double>(1u);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -40,7 +37,6 @@ void ITKBinomialBlurImage::setupFilterParameters()
   FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Repetitions", Repetitions, FilterParameter::Parameter, ITKBinomialBlurImage));
-
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -74,7 +70,8 @@ void ITKBinomialBlurImage::readFilterParameters(AbstractFilterParametersReader* 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKBinomialBlurImage::dataCheckImpl()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKBinomialBlurImage::dataCheckImpl()
 {
   clearErrorCode();
   clearWarningCode();
@@ -97,7 +94,8 @@ void ITKBinomialBlurImage::dataCheck()
 //
 // -----------------------------------------------------------------------------
 
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKBinomialBlurImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKBinomialBlurImage::filter()
 {
   typedef itk::Image<InputPixelType, Dimension> InputImageType;
   typedef itk::Image<OutputPixelType, Dimension> OutputImageType;
@@ -106,7 +104,6 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   typename FilterType::Pointer filter = FilterType::New();
   filter->SetRepetitions(static_cast<unsigned int>(m_Repetitions));
   this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -163,7 +160,7 @@ ITKBinomialBlurImage::Pointer ITKBinomialBlurImage::NullPointer()
 // -----------------------------------------------------------------------------
 std::shared_ptr<ITKBinomialBlurImage> ITKBinomialBlurImage::New()
 {
-  struct make_shared_enabler : public ITKBinomialBlurImage  
+  struct make_shared_enabler : public ITKBinomialBlurImage
   {
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
@@ -194,5 +191,3 @@ double ITKBinomialBlurImage::getRepetitions() const
 {
   return m_Repetitions;
 }
-
-

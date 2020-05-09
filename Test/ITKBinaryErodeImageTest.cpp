@@ -16,8 +16,8 @@ class ITKBinaryErodeImageTest : public ITKTestBase
 {
 
 public:
-ITKBinaryErodeImageTest() = default;
-~ITKBinaryErodeImageTest() override = default;
+  ITKBinaryErodeImageTest() = default;
+  ~ITKBinaryErodeImageTest() override = default;
 
   int TestITKBinaryErodeImageBinaryErodeTest()
   {

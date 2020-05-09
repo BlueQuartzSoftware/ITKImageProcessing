@@ -4,7 +4,6 @@
  * Your License or Copyright can go here
  */
 
-
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKThresholdImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 #include "SIMPLib/Common/Constants.h"
@@ -17,7 +16,6 @@
 
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -26,7 +24,6 @@ ITKThresholdImage::ITKThresholdImage()
   m_Lower = StaticCastScalar<double, double, double>(0.0);
   m_Upper = StaticCastScalar<double, double, double>(1.0);
   m_OutsideValue = StaticCastScalar<double, double, double>(0.0);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -44,7 +41,6 @@ void ITKThresholdImage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Lower", Lower, FilterParameter::Parameter, ITKThresholdImage));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Upper", Upper, FilterParameter::Parameter, ITKThresholdImage));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("OutsideValue", OutsideValue, FilterParameter::Parameter, ITKThresholdImage));
-
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -80,7 +76,8 @@ void ITKThresholdImage::readFilterParameters(AbstractFilterParametersReader* rea
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKThresholdImage::dataCheckImpl()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKThresholdImage::dataCheckImpl()
 {
   clearErrorCode();
   clearWarningCode();
@@ -102,10 +99,11 @@ void ITKThresholdImage::dataCheck()
 //
 // -----------------------------------------------------------------------------
 
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKThresholdImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKThresholdImage::filter()
 {
   typedef itk::Image<InputPixelType, Dimension> InputImageType;
-  //typedef itk::Image<OutputPixelType, Dimension> OutputImageType;
+  // typedef itk::Image<OutputPixelType, Dimension> OutputImageType;
   // define filter
   typedef itk::ThresholdImageFilter<InputImageType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
@@ -113,7 +111,6 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   filter->SetUpper(static_cast<double>(m_Upper));
   filter->SetOutsideValue(static_cast<double>(m_OutsideValue));
   this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -170,7 +167,7 @@ ITKThresholdImage::Pointer ITKThresholdImage::NullPointer()
 // -----------------------------------------------------------------------------
 std::shared_ptr<ITKThresholdImage> ITKThresholdImage::New()
 {
-  struct make_shared_enabler : public ITKThresholdImage  
+  struct make_shared_enabler : public ITKThresholdImage
   {
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
@@ -225,5 +222,3 @@ double ITKThresholdImage::getOutsideValue() const
 {
   return m_OutsideValue;
 }
-
-

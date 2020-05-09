@@ -30,13 +30,11 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "ZeissMetaFactory.h"
 
-
 AbstractZeissMetaData::Pointer Int32ZeissMetaFactory::createMetaEntry()
 {
   AbstractZeissMetaData::Pointer ptr = Int32ZeissMetaEntry::New();
   return ptr;
 }
-
 
 AbstractZeissMetaData::Pointer Int64ZeissMetaFactory::createMetaEntry()
 {
@@ -44,13 +42,11 @@ AbstractZeissMetaData::Pointer Int64ZeissMetaFactory::createMetaEntry()
   return ptr;
 }
 
-
 AbstractZeissMetaData::Pointer FloatZeissMetaFactory::createMetaEntry()
 {
   AbstractZeissMetaData::Pointer ptr = FloatZeissMetaEntry::New();
   return ptr;
 }
-
 
 AbstractZeissMetaData::Pointer StringZeissMetaFactory::createMetaEntry()
 {

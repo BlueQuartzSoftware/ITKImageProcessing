@@ -45,128 +45,126 @@ class ITKImageProcessing_EXPORT SeparateDataSets : public AbstractFilter
 {
   Q_OBJECT
 
-  public:
-    using Self = SeparateDataSets;
-    using Pointer = std::shared_ptr<Self>;
-    using ConstPointer = std::shared_ptr<const Self>;
-    using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<const Self>;
-    static Pointer NullPointer();
+public:
+  using Self = SeparateDataSets;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<const Self>;
+  static Pointer NullPointer();
 
-    static std::shared_ptr<SeparateDataSets> New();
+  static std::shared_ptr<SeparateDataSets> New();
 
-    /**
-    * @brief Returns the name of the class for SeparateDataSets
-    */
-    QString getNameOfClass() const override;
-    /**
-    * @brief Returns the name of the class for SeparateDataSets
-    */
-    static QString ClassName();
+  /**
+   * @brief Returns the name of the class for SeparateDataSets
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for SeparateDataSets
+   */
+  static QString ClassName();
 
+  ~SeparateDataSets() override;
 
-    ~SeparateDataSets() override;
+  /**
+   * @brief Setter property for DatasetAMPath
+   */
+  void setDatasetAMPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for DatasetAMPath
+   * @return Value of DatasetAMPath
+   */
+  DataArrayPath getDatasetAMPath() const;
 
-    /**
-    * @brief Setter property for DatasetAMPath
-    */
-    void setDatasetAMPath(const DataArrayPath& value); 
-    /**
-    * @brief Getter property for DatasetAMPath
-    * @return Value of DatasetAMPath
-    */
-    DataArrayPath getDatasetAMPath() const;
+  Q_PROPERTY(DataArrayPath DatasetAMPath READ getDatasetAMPath WRITE setDatasetAMPath)
 
-    Q_PROPERTY(DataArrayPath DatasetAMPath READ getDatasetAMPath WRITE setDatasetAMPath)
+  /**
+   * @brief Setter property for MetadataAMPath
+   */
+  void setMetadataAMPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for MetadataAMPath
+   * @return Value of MetadataAMPath
+   */
+  DataArrayPath getMetadataAMPath() const;
 
-    /**
-    * @brief Setter property for MetadataAMPath
-    */
-    void setMetadataAMPath(const DataArrayPath& value); 
-    /**
-    * @brief Getter property for MetadataAMPath
-    * @return Value of MetadataAMPath
-    */
-    DataArrayPath getMetadataAMPath() const;
+  Q_PROPERTY(DataArrayPath MetadataAMPath READ getMetadataAMPath WRITE setMetadataAMPath)
 
-    Q_PROPERTY(DataArrayPath MetadataAMPath READ getMetadataAMPath WRITE setMetadataAMPath)
+  /**
+   * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
+   */
+  QString getCompiledLibraryName() const override;
 
-    /**
-     * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
-     */
-    QString getCompiledLibraryName() const override;
+  /**
+   * @brief getBrandingString Returns the branding string for the filter, which is a tag
+   * used to denote the filter's association with specific plugins
+   * @return Branding string
+   */
+  QString getBrandingString() const override;
 
-    /**
-     * @brief getBrandingString Returns the branding string for the filter, which is a tag
-     * used to denote the filter's association with specific plugins
-     * @return Branding string
-    */
-    QString getBrandingString() const override;
+  /**
+   * @brief getFilterVersion Returns a version string for this filter. Default
+   * value is an empty string.
+   * @return
+   */
+  QString getFilterVersion() const override;
 
-    /**
-     * @brief getFilterVersion Returns a version string for this filter. Default
-     * value is an empty string.
-     * @return
-     */
-    QString getFilterVersion() const override;
+  /**
+   * @brief newFilterInstance Reimplemented from @see AbstractFilter class
+   */
+  AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) const override;
 
-    /**
-     * @brief newFilterInstance Reimplemented from @see AbstractFilter class
-     */
-    AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) const override;
+  /**
+   * @brief getGroupName Reimplemented from @see AbstractFilter class
+   */
+  QString getGroupName() const override;
 
-    /**
-     * @brief getGroupName Reimplemented from @see AbstractFilter class
-     */
-    QString getGroupName() const override;
+  /**
+   * @brief getSubGroupName Reimplemented from @see AbstractFilter class
+   */
+  QString getSubGroupName() const override;
 
-    /**
-     * @brief getSubGroupName Reimplemented from @see AbstractFilter class
-     */
-    QString getSubGroupName() const override;
+  /**
+   * @brief getUuid Return the unique identifier for this filter.
+   * @return A QUuid object.
+   */
+  QUuid getUuid() const override;
 
-    /**
-     * @brief getUuid Return the unique identifier for this filter.
-     * @return A QUuid object.
-     */
-    QUuid getUuid() const override;
+  /**
+   * @brief getHumanLabel Reimplemented from @see AbstractFilter class
+   */
+  QString getHumanLabel() const override;
 
-    /**
-     * @brief getHumanLabel Reimplemented from @see AbstractFilter class
-     */
-    QString getHumanLabel() const override;
+  /**
+   * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  void setupFilterParameters() override;
 
-    /**
-     * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    void setupFilterParameters() override;
+  /**
+   * @brief execute Reimplemented from @see AbstractFilter class
+   */
+  void execute() override;
 
-    /**
-     * @brief execute Reimplemented from @see AbstractFilter class
-     */
-    void execute() override;
+protected:
+  SeparateDataSets();
 
-  protected:
-    SeparateDataSets();
+  /**
+   * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+   */
+  void dataCheck();
 
-    /**
-    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
-    */
-    void dataCheck();
+  /**
+   * @brief Initializes all the private instance variables.
+   */
+  void initialize();
 
-    /**
-    * @brief Initializes all the private instance variables.
-    */
-    void initialize();
+public:
+  SeparateDataSets(const SeparateDataSets&) = delete;            // Copy Constructor Not Implemented
+  SeparateDataSets(SeparateDataSets&&) = delete;                 // Move Constructor Not Implemented
+  SeparateDataSets& operator=(const SeparateDataSets&) = delete; // Copy Assignment Not Implemented
+  SeparateDataSets& operator=(SeparateDataSets&&) = delete;      // Move Assignment Not Implemented
 
-  public:
-    SeparateDataSets(const SeparateDataSets&) = delete;            // Copy Constructor Not Implemented
-    SeparateDataSets(SeparateDataSets&&) = delete;                 // Move Constructor Not Implemented
-    SeparateDataSets& operator=(const SeparateDataSets&) = delete; // Copy Assignment Not Implemented
-    SeparateDataSets& operator=(SeparateDataSets&&) = delete;      // Move Assignment Not Implemented
-
-  private:
-    DataArrayPath m_DatasetAMPath = {};
-    DataArrayPath m_MetadataAMPath = {};
-
+private:
+  DataArrayPath m_DatasetAMPath = {};
+  DataArrayPath m_MetadataAMPath = {};
 };

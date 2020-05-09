@@ -4,7 +4,6 @@
  * Your License or Copyright can go here
  */
 
-
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKDanielssonDistanceMapImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 #include "SIMPLib/Common/Constants.h"
@@ -17,7 +16,6 @@
 
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -26,7 +24,6 @@ ITKDanielssonDistanceMapImage::ITKDanielssonDistanceMapImage()
   m_InputIsBinary = StaticCastScalar<bool, bool, bool>(false);
   m_SquaredDistance = StaticCastScalar<bool, bool, bool>(false);
   m_UseImageSpacing = StaticCastScalar<bool, bool, bool>(false);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -44,7 +41,6 @@ void ITKDanielssonDistanceMapImage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_BOOL_FP("InputIsBinary", InputIsBinary, FilterParameter::Parameter, ITKDanielssonDistanceMapImage));
   parameters.push_back(SIMPL_NEW_BOOL_FP("SquaredDistance", SquaredDistance, FilterParameter::Parameter, ITKDanielssonDistanceMapImage));
   parameters.push_back(SIMPL_NEW_BOOL_FP("UseImageSpacing", UseImageSpacing, FilterParameter::Parameter, ITKDanielssonDistanceMapImage));
-
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -80,7 +76,8 @@ void ITKDanielssonDistanceMapImage::readFilterParameters(AbstractFilterParameter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKDanielssonDistanceMapImage::dataCheckImpl()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKDanielssonDistanceMapImage::dataCheckImpl()
 {
   clearErrorCode();
   clearWarningCode();
@@ -95,14 +92,15 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
 // -----------------------------------------------------------------------------
 void ITKDanielssonDistanceMapImage::dataCheck()
 {
-  Dream3DArraySwitchMacroOutputType(this->dataCheckImpl, getSelectedCellArrayPath(), -4,float, 0);
+  Dream3DArraySwitchMacroOutputType(this->dataCheckImpl, getSelectedCellArrayPath(), -4, float, 0);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKDanielssonDistanceMapImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKDanielssonDistanceMapImage::filter()
 {
   typedef itk::Image<InputPixelType, Dimension> InputImageType;
   typedef itk::Image<OutputPixelType, Dimension> OutputImageType;
@@ -113,7 +111,6 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   filter->SetSquaredDistance(static_cast<bool>(m_SquaredDistance));
   filter->SetUseImageSpacing(static_cast<bool>(m_UseImageSpacing));
   this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -121,7 +118,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
 // -----------------------------------------------------------------------------
 void ITKDanielssonDistanceMapImage::filterInternal()
 {
-  Dream3DArraySwitchMacroOutputType(this->filter, getSelectedCellArrayPath(), -4,float, 0);
+  Dream3DArraySwitchMacroOutputType(this->filter, getSelectedCellArrayPath(), -4, float, 0);
 }
 
 // -----------------------------------------------------------------------------
@@ -170,7 +167,7 @@ ITKDanielssonDistanceMapImage::Pointer ITKDanielssonDistanceMapImage::NullPointe
 // -----------------------------------------------------------------------------
 std::shared_ptr<ITKDanielssonDistanceMapImage> ITKDanielssonDistanceMapImage::New()
 {
-  struct make_shared_enabler : public ITKDanielssonDistanceMapImage  
+  struct make_shared_enabler : public ITKDanielssonDistanceMapImage
   {
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
@@ -225,5 +222,3 @@ bool ITKDanielssonDistanceMapImage::getUseImageSpacing() const
 {
   return m_UseImageSpacing;
 }
-
-

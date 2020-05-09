@@ -40,38 +40,36 @@ class ITKImageProcessing_EXPORT ITKLaplacianSharpeningImage : public ITKImagePro
   // End Python bindings declarations
 
 public:
-    using Self = ITKLaplacianSharpeningImage;
-    using Pointer = std::shared_ptr<Self>;
-    using ConstPointer = std::shared_ptr<const Self>;
-    using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<const Self>;
-    static Pointer NullPointer();
+  using Self = ITKLaplacianSharpeningImage;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<const Self>;
+  static Pointer NullPointer();
 
-    static std::shared_ptr<ITKLaplacianSharpeningImage> New();
+  static std::shared_ptr<ITKLaplacianSharpeningImage> New();
 
-    /**
-    * @brief Returns the name of the class for ITKLaplacianSharpeningImage
-    */
-    QString getNameOfClass() const override;
-    /**
-    * @brief Returns the name of the class for ITKLaplacianSharpeningImage
-    */
-    static QString ClassName();
-
+  /**
+   * @brief Returns the name of the class for ITKLaplacianSharpeningImage
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for ITKLaplacianSharpeningImage
+   */
+  static QString ClassName();
 
   ~ITKLaplacianSharpeningImage() override;
 
-    /**
-    * @brief Setter property for UseImageSpacing
-    */
-    void setUseImageSpacing(bool value); 
-    /**
-    * @brief Getter property for UseImageSpacing
-    * @return Value of UseImageSpacing
-    */
-    bool getUseImageSpacing() const;
+  /**
+   * @brief Setter property for UseImageSpacing
+   */
+  void setUseImageSpacing(bool value);
+  /**
+   * @brief Getter property for UseImageSpacing
+   * @return Value of UseImageSpacing
+   */
+  bool getUseImageSpacing() const;
   Q_PROPERTY(bool UseImageSpacing READ getUseImageSpacing WRITE setUseImageSpacing)
-
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -115,30 +113,30 @@ protected:
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
    */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void dataCheckImpl();
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void dataCheckImpl();
 
   /**
-  * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
-  */
+   * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
+   */
   void filterInternal() override;
 
   /**
-  * @brief Applies the filter
-  */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
+   * @brief Applies the filter
+   */
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void filter();
 
 public:
-  ITKLaplacianSharpeningImage(const ITKLaplacianSharpeningImage&) = delete;    // Copy Constructor Not Implemented
-  ITKLaplacianSharpeningImage(ITKLaplacianSharpeningImage&&) = delete;         // Move Constructor Not Implemented
+  ITKLaplacianSharpeningImage(const ITKLaplacianSharpeningImage&) = delete;            // Copy Constructor Not Implemented
+  ITKLaplacianSharpeningImage(ITKLaplacianSharpeningImage&&) = delete;                 // Move Constructor Not Implemented
   ITKLaplacianSharpeningImage& operator=(const ITKLaplacianSharpeningImage&) = delete; // Copy Assignment Not Implemented
   ITKLaplacianSharpeningImage& operator=(ITKLaplacianSharpeningImage&&) = delete;      // Move Assignment Not Implemented
 
-  private:
-    bool m_UseImageSpacing = {};
-
+private:
+  bool m_UseImageSpacing = {};
 };
 
 #ifdef __clang__
 #pragma clang diagnostic pop
 #endif
-

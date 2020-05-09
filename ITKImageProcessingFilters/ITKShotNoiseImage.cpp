@@ -4,7 +4,6 @@
  * Your License or Copyright can go here
  */
 
-
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKShotNoiseImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 #include "SIMPLib/Common/Constants.h"
@@ -17,15 +16,13 @@
 
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 ITKShotNoiseImage::ITKShotNoiseImage()
 {
   m_Scale = StaticCastScalar<double, double, double>(1.0);
-  m_Seed = StaticCastScalar<double, double, double>((uint32_t) itk::simple::sitkWallClock);
-
+  m_Seed = StaticCastScalar<double, double, double>((uint32_t)itk::simple::sitkWallClock);
 }
 
 // -----------------------------------------------------------------------------
@@ -42,7 +39,6 @@ void ITKShotNoiseImage::setupFilterParameters()
 
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Scale", Scale, FilterParameter::Parameter, ITKShotNoiseImage));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Seed", Seed, FilterParameter::Parameter, ITKShotNoiseImage));
-
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -77,7 +73,8 @@ void ITKShotNoiseImage::readFilterParameters(AbstractFilterParametersReader* rea
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKShotNoiseImage::dataCheckImpl()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKShotNoiseImage::dataCheckImpl()
 {
   clearErrorCode();
   clearWarningCode();
@@ -100,7 +97,8 @@ void ITKShotNoiseImage::dataCheck()
 //
 // -----------------------------------------------------------------------------
 
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKShotNoiseImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKShotNoiseImage::filter()
 {
   typedef itk::Image<InputPixelType, Dimension> InputImageType;
   typedef itk::Image<OutputPixelType, Dimension> OutputImageType;
@@ -113,7 +111,6 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
     filter->SetSeed(m_Seed);
   }
   this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -170,7 +167,7 @@ ITKShotNoiseImage::Pointer ITKShotNoiseImage::NullPointer()
 // -----------------------------------------------------------------------------
 std::shared_ptr<ITKShotNoiseImage> ITKShotNoiseImage::New()
 {
-  struct make_shared_enabler : public ITKShotNoiseImage  
+  struct make_shared_enabler : public ITKShotNoiseImage
   {
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
@@ -213,5 +210,3 @@ double ITKShotNoiseImage::getSeed() const
 {
   return m_Seed;
 }
-
-

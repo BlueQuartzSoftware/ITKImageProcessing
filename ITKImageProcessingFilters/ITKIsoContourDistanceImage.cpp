@@ -4,7 +4,6 @@
  * Your License or Copyright can go here
  */
 
-
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKIsoContourDistanceImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 #include "SIMPLib/Common/Constants.h"
@@ -17,7 +16,6 @@
 
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -25,7 +23,6 @@ ITKIsoContourDistanceImage::ITKIsoContourDistanceImage()
 {
   m_LevelSetValue = StaticCastScalar<double, double, double>(0.0);
   m_FarValue = StaticCastScalar<double, double, double>(10);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -42,7 +39,6 @@ void ITKIsoContourDistanceImage::setupFilterParameters()
 
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("LevelSetValue", LevelSetValue, FilterParameter::Parameter, ITKIsoContourDistanceImage));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("FarValue", FarValue, FilterParameter::Parameter, ITKIsoContourDistanceImage));
-
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -77,7 +73,8 @@ void ITKIsoContourDistanceImage::readFilterParameters(AbstractFilterParametersRe
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKIsoContourDistanceImage::dataCheckImpl()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKIsoContourDistanceImage::dataCheckImpl()
 {
   clearErrorCode();
   clearWarningCode();
@@ -92,14 +89,15 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
 // -----------------------------------------------------------------------------
 void ITKIsoContourDistanceImage::dataCheck()
 {
-  Dream3DArraySwitchMacroOutputType(this->dataCheckImpl, getSelectedCellArrayPath(), -4,float, 0);
+  Dream3DArraySwitchMacroOutputType(this->dataCheckImpl, getSelectedCellArrayPath(), -4, float, 0);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKIsoContourDistanceImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKIsoContourDistanceImage::filter()
 {
   typedef itk::Image<InputPixelType, Dimension> InputImageType;
   typedef itk::Image<OutputPixelType, Dimension> OutputImageType;
@@ -109,7 +107,6 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   filter->SetLevelSetValue(static_cast<double>(m_LevelSetValue));
   filter->SetFarValue(static_cast<double>(m_FarValue));
   this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -117,7 +114,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
 // -----------------------------------------------------------------------------
 void ITKIsoContourDistanceImage::filterInternal()
 {
-  Dream3DArraySwitchMacroOutputType(this->filter, getSelectedCellArrayPath(), -4,float, 0);
+  Dream3DArraySwitchMacroOutputType(this->filter, getSelectedCellArrayPath(), -4, float, 0);
 }
 
 // -----------------------------------------------------------------------------
@@ -166,7 +163,7 @@ ITKIsoContourDistanceImage::Pointer ITKIsoContourDistanceImage::NullPointer()
 // -----------------------------------------------------------------------------
 std::shared_ptr<ITKIsoContourDistanceImage> ITKIsoContourDistanceImage::New()
 {
-  struct make_shared_enabler : public ITKIsoContourDistanceImage  
+  struct make_shared_enabler : public ITKIsoContourDistanceImage
   {
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
@@ -209,5 +206,3 @@ double ITKIsoContourDistanceImage::getFarValue() const
 {
   return m_FarValue;
 }
-
-

@@ -4,7 +4,6 @@
  * Your License or Copyright can go here
  */
 
-
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKBlackTopHatImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 #include "SIMPLib/Common/Constants.h"
@@ -20,7 +19,6 @@
 
 #include <itkFlatStructuringElement.h>
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -29,7 +27,6 @@ ITKBlackTopHatImage::ITKBlackTopHatImage()
   m_SafeBorder = StaticCastScalar<bool, bool, bool>(true);
   m_KernelRadius = CastStdToVec3<std::vector<unsigned int>, FloatVec3Type, float>(std::vector<unsigned int>(3, 1));
   m_KernelType = StaticCastScalar<int, int, int>(itk::simple::sitkBall);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -65,7 +62,6 @@ void ITKBlackTopHatImage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_BOOL_FP("SafeBorder", SafeBorder, FilterParameter::Parameter, ITKBlackTopHatImage));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("KernelRadius", KernelRadius, FilterParameter::Parameter, ITKBlackTopHatImage));
 
-
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Save as New Array", SaveAsNewArray, FilterParameter::Parameter, ITKBlackTopHatImage, linkedProps));
@@ -100,7 +96,8 @@ void ITKBlackTopHatImage::readFilterParameters(AbstractFilterParametersReader* r
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKBlackTopHatImage::dataCheckImpl()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKBlackTopHatImage::dataCheckImpl()
 {
   clearErrorCode();
   clearWarningCode();
@@ -123,7 +120,8 @@ void ITKBlackTopHatImage::dataCheck()
 //
 // -----------------------------------------------------------------------------
 
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKBlackTopHatImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKBlackTopHatImage::filter()
 {
   typedef itk::Image<InputPixelType, Dimension> InputImageType;
   typedef itk::Image<OutputPixelType, Dimension> OutputImageType;
@@ -155,7 +153,6 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   filter->SetSafeBorder(static_cast<bool>(m_SafeBorder));
   filter->SetKernel(structuringElement);
   this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -212,7 +209,7 @@ ITKBlackTopHatImage::Pointer ITKBlackTopHatImage::NullPointer()
 // -----------------------------------------------------------------------------
 std::shared_ptr<ITKBlackTopHatImage> ITKBlackTopHatImage::New()
 {
-  struct make_shared_enabler : public ITKBlackTopHatImage  
+  struct make_shared_enabler : public ITKBlackTopHatImage
   {
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
@@ -267,5 +264,3 @@ int ITKBlackTopHatImage::getKernelType() const
 {
   return m_KernelType;
 }
-
-

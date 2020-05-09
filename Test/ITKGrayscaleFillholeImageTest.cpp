@@ -8,16 +8,15 @@
 // Auto includes
 #include <SIMPLib/FilterParameters/BooleanFilterParameter.h>
 
-
 class ITKGrayscaleFillholeImageTest : public ITKTestBase
 {
 
 public:
-ITKGrayscaleFillholeImageTest() = default;
-~ITKGrayscaleFillholeImageTest() override = default;
+  ITKGrayscaleFillholeImageTest() = default;
+  ~ITKGrayscaleFillholeImageTest() override = default;
 
   int TestITKGrayscaleFillholeImageGrayscaleFillhole1Test()
-{
+  {
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/RA-Short.nrrd");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -44,10 +43,10 @@ ITKGrayscaleFillholeImageTest() = default;
     GetMD5FromDataContainer(containerArray, input_path, md5Output);
     DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("e2c49e979bd4c64f0efff67b196b1950"));
     return 0;
-}
+  }
 
-int TestITKGrayscaleFillholeImageGrayscaleFillhole2Test()
-{
+  int TestITKGrayscaleFillholeImageGrayscaleFillhole2Test()
+  {
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/RA-Slice-Short.png");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -74,9 +73,7 @@ int TestITKGrayscaleFillholeImageGrayscaleFillhole2Test()
     GetMD5FromDataContainer(containerArray, input_path, md5Output);
     DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("e3cd61348a7824d191e83632bf92baae"));
     return 0;
-}
-
-
+  }
 
   // -----------------------------------------------------------------------------
   //
@@ -87,8 +84,8 @@ int TestITKGrayscaleFillholeImageGrayscaleFillhole2Test()
 
     DREAM3D_REGISTER_TEST(this->TestFilterAvailability("ITKGrayscaleFillholeImage"));
 
-    DREAM3D_REGISTER_TEST( TestITKGrayscaleFillholeImageGrayscaleFillhole1Test());
-    DREAM3D_REGISTER_TEST( TestITKGrayscaleFillholeImageGrayscaleFillhole2Test());
+    DREAM3D_REGISTER_TEST(TestITKGrayscaleFillholeImageGrayscaleFillhole1Test());
+    DREAM3D_REGISTER_TEST(TestITKGrayscaleFillholeImageGrayscaleFillhole2Test());
 
     if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
     {

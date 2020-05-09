@@ -35,13 +35,13 @@
 // ----------------------------------------------------------------------------
 FFTDewarpHelper::PixelIndex FFTDewarpHelper::pixelIndex(int64_t x, int64_t y)
 {
-  return PixelIndex{ x, y };
+  return PixelIndex{x, y};
 }
 
 // ----------------------------------------------------------------------------
 FFTDewarpHelper::PixelIndex FFTDewarpHelper::pixelIndex(size_t x, size_t y)
 {
-  return PixelIndex{ static_cast<int64_t>(x), static_cast<int64_t>(y) };
+  return PixelIndex{static_cast<int64_t>(x), static_cast<int64_t>(y)};
 }
 
 // ----------------------------------------------------------------------------
@@ -49,7 +49,7 @@ FFTDewarpHelper::PixelIndex FFTDewarpHelper::pixelIndex(double x, double y)
 {
   int64_t xi = static_cast<int64_t>(std::floor(x));
   int64_t yi = static_cast<int64_t>(std::floor(y));
-  return PixelIndex{ xi, yi };
+  return PixelIndex{xi, yi};
 }
 
 // ----------------------------------------------------------------------------

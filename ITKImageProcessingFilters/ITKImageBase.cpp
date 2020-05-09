@@ -2,7 +2,6 @@
  * Your License or Copyright can go here
  */
 
-
 #include "ITKImageBase.h"
 
 // -----------------------------------------------------------------------------
@@ -63,5 +62,3 @@ QString ITKImageBase::ClassName()
 {
   return QString("ITKImageBase");
 }
-
-

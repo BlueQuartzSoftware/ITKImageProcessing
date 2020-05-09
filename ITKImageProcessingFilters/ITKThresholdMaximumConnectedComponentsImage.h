@@ -44,71 +44,69 @@ class ITKImageProcessing_EXPORT ITKThresholdMaximumConnectedComponentsImage : pu
   // End Python bindings declarations
 
 public:
-    using Self = ITKThresholdMaximumConnectedComponentsImage;
-    using Pointer = std::shared_ptr<Self>;
-    using ConstPointer = std::shared_ptr<const Self>;
-    using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<const Self>;
-    static Pointer NullPointer();
+  using Self = ITKThresholdMaximumConnectedComponentsImage;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<const Self>;
+  static Pointer NullPointer();
 
-    static std::shared_ptr<ITKThresholdMaximumConnectedComponentsImage> New();
+  static std::shared_ptr<ITKThresholdMaximumConnectedComponentsImage> New();
 
-    /**
-    * @brief Returns the name of the class for ITKThresholdMaximumConnectedComponentsImage
-    */
-    QString getNameOfClass() const override;
-    /**
-    * @brief Returns the name of the class for ITKThresholdMaximumConnectedComponentsImage
-    */
-    static QString ClassName();
-
+  /**
+   * @brief Returns the name of the class for ITKThresholdMaximumConnectedComponentsImage
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for ITKThresholdMaximumConnectedComponentsImage
+   */
+  static QString ClassName();
 
   ~ITKThresholdMaximumConnectedComponentsImage() override;
 
-    /**
-    * @brief Setter property for MinimumObjectSizeInPixels
-    */
-    void setMinimumObjectSizeInPixels(double value); 
-    /**
-    * @brief Getter property for MinimumObjectSizeInPixels
-    * @return Value of MinimumObjectSizeInPixels
-    */
-    double getMinimumObjectSizeInPixels() const;
+  /**
+   * @brief Setter property for MinimumObjectSizeInPixels
+   */
+  void setMinimumObjectSizeInPixels(double value);
+  /**
+   * @brief Getter property for MinimumObjectSizeInPixels
+   * @return Value of MinimumObjectSizeInPixels
+   */
+  double getMinimumObjectSizeInPixels() const;
   Q_PROPERTY(double MinimumObjectSizeInPixels READ getMinimumObjectSizeInPixels WRITE setMinimumObjectSizeInPixels)
 
-    /**
-    * @brief Setter property for UpperBoundary
-    */
-    void setUpperBoundary(double value); 
-    /**
-    * @brief Getter property for UpperBoundary
-    * @return Value of UpperBoundary
-    */
-    double getUpperBoundary() const;
+  /**
+   * @brief Setter property for UpperBoundary
+   */
+  void setUpperBoundary(double value);
+  /**
+   * @brief Getter property for UpperBoundary
+   * @return Value of UpperBoundary
+   */
+  double getUpperBoundary() const;
   Q_PROPERTY(double UpperBoundary READ getUpperBoundary WRITE setUpperBoundary)
 
-    /**
-    * @brief Setter property for InsideValue
-    */
-    void setInsideValue(int value); 
-    /**
-    * @brief Getter property for InsideValue
-    * @return Value of InsideValue
-    */
-    int getInsideValue() const;
+  /**
+   * @brief Setter property for InsideValue
+   */
+  void setInsideValue(int value);
+  /**
+   * @brief Getter property for InsideValue
+   * @return Value of InsideValue
+   */
+  int getInsideValue() const;
   Q_PROPERTY(int InsideValue READ getInsideValue WRITE setInsideValue)
 
-    /**
-    * @brief Setter property for OutsideValue
-    */
-    void setOutsideValue(int value); 
-    /**
-    * @brief Getter property for OutsideValue
-    * @return Value of OutsideValue
-    */
-    int getOutsideValue() const;
+  /**
+   * @brief Setter property for OutsideValue
+   */
+  void setOutsideValue(int value);
+  /**
+   * @brief Getter property for OutsideValue
+   * @return Value of OutsideValue
+   */
+  int getOutsideValue() const;
   Q_PROPERTY(int OutsideValue READ getOutsideValue WRITE setOutsideValue)
-
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -152,33 +150,33 @@ protected:
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
    */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void dataCheckImpl();
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void dataCheckImpl();
 
   /**
-  * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
-  */
+   * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
+   */
   void filterInternal() override;
 
   /**
-  * @brief Applies the filter
-  */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
+   * @brief Applies the filter
+   */
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void filter();
 
 public:
-  ITKThresholdMaximumConnectedComponentsImage(const ITKThresholdMaximumConnectedComponentsImage&) = delete;    // Copy Constructor Not Implemented
-  ITKThresholdMaximumConnectedComponentsImage(ITKThresholdMaximumConnectedComponentsImage&&) = delete;         // Move Constructor Not Implemented
+  ITKThresholdMaximumConnectedComponentsImage(const ITKThresholdMaximumConnectedComponentsImage&) = delete;            // Copy Constructor Not Implemented
+  ITKThresholdMaximumConnectedComponentsImage(ITKThresholdMaximumConnectedComponentsImage&&) = delete;                 // Move Constructor Not Implemented
   ITKThresholdMaximumConnectedComponentsImage& operator=(const ITKThresholdMaximumConnectedComponentsImage&) = delete; // Copy Assignment Not Implemented
   ITKThresholdMaximumConnectedComponentsImage& operator=(ITKThresholdMaximumConnectedComponentsImage&&) = delete;      // Move Assignment Not Implemented
 
-  private:
-    double m_MinimumObjectSizeInPixels = {};
-    double m_UpperBoundary = {};
-    int m_InsideValue = {};
-    int m_OutsideValue = {};
-
+private:
+  double m_MinimumObjectSizeInPixels = {};
+  double m_UpperBoundary = {};
+  int m_InsideValue = {};
+  int m_OutsideValue = {};
 };
 
 #ifdef __clang__
 #pragma clang diagnostic pop
 #endif
-

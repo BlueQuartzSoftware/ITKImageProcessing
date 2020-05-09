@@ -41,65 +41,63 @@
 
 #include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
-
 using ZeissIdNameMap = QMap<int, QString>;
 using ZeissNameIdMap = QMap<QString, int>;
 using ZeissFactoryMap = QMap<int, ZeissMetaFactory::Pointer>;
 
 /**
-* @class ZeissTagMapping ZeissTagMapping.h R3D/Common/ZeissTagMapping.h
-* @brief This class is used to map values from the Zeiss XML file to and from
-* human readable values. It also creates factories for each of the tags found in the
-* Zeiss XML file. For each value there is a const QString and an integer value
-* that uniquely identifies the tag.
-* @author Michael A. Jackson for BlueQuartz Software
-* @date Jul 29, 2009
-* @version 1.0
-*/
+ * @class ZeissTagMapping ZeissTagMapping.h R3D/Common/ZeissTagMapping.h
+ * @brief This class is used to map values from the Zeiss XML file to and from
+ * human readable values. It also creates factories for each of the tags found in the
+ * Zeiss XML file. For each value there is a const QString and an integer value
+ * that uniquely identifies the tag.
+ * @author Michael A. Jackson for BlueQuartz Software
+ * @date Jul 29, 2009
+ * @version 1.0
+ */
 class ITKImageProcessing_EXPORT ZeissTagMapping
 {
-  public:
-    using Self = ZeissTagMapping;
-    using Pointer = std::shared_ptr<Self>;
-    using ConstPointer = std::shared_ptr<const Self>;
-    using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<const Self>;
-    static Pointer NullPointer();
+public:
+  using Self = ZeissTagMapping;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<const Self>;
+  static Pointer NullPointer();
 
-    ~ZeissTagMapping();
+  ~ZeissTagMapping();
 
-    static ZeissTagMapping::Pointer instance();
+  static ZeissTagMapping::Pointer instance();
 
+  QString nameForId(int idtag);
 
-    QString nameForId(int idtag);
+  int idForName(const QString& name);
 
-    int idForName(const QString &name);
+  ZeissMetaFactory::Pointer factoryForId(int idTag);
 
-    ZeissMetaFactory::Pointer factoryForId(int idTag);
+  AbstractZeissMetaData::Pointer metaDataForId(int idTag, const QString& value);
 
-    AbstractZeissMetaData::Pointer metaDataForId(int idTag, const QString &value);
+  AbstractZeissMetaData::Pointer metaDataForTagName(const QString& name);
 
-    AbstractZeissMetaData::Pointer metaDataForTagName(const QString &name);
+protected:
+  ZeissTagMapping();
 
-  protected:
-    ZeissTagMapping();
+  void initIdNameMap();
 
-    void initIdNameMap();
+  void initNameIdMap();
 
-    void initNameIdMap();
+  void initFactoryMap();
 
-    void initFactoryMap();
+private:
+  ZeissIdNameMap _idNameMap;
+  ZeissNameIdMap _nameIdMap;
+  ZeissFactoryMap _idFactoryMap;
 
-  private:
-    ZeissIdNameMap _idNameMap;
-    ZeissNameIdMap _nameIdMap;
-    ZeissFactoryMap _idFactoryMap;
-
-  public:
-    ZeissTagMapping(const ZeissTagMapping&) = delete; // Copy Constructor Not Implemented
-    ZeissTagMapping(ZeissTagMapping&&) = delete;      // Move Constructor Not Implemented
-    ZeissTagMapping& operator=(const ZeissTagMapping&) = delete; // Copy Assignment Not Implemented
-    ZeissTagMapping& operator=(ZeissTagMapping&&) = delete;      // Move Assignment Not Implemented
+public:
+  ZeissTagMapping(const ZeissTagMapping&) = delete;            // Copy Constructor Not Implemented
+  ZeissTagMapping(ZeissTagMapping&&) = delete;                 // Move Constructor Not Implemented
+  ZeissTagMapping& operator=(const ZeissTagMapping&) = delete; // Copy Assignment Not Implemented
+  ZeissTagMapping& operator=(ZeissTagMapping&&) = delete;      // Move Assignment Not Implemented
 };
 
 /**
@@ -136,6 +134,3 @@ public:
 };
 
 #include "ZeissTagMappingConstants.h"
-
-
-

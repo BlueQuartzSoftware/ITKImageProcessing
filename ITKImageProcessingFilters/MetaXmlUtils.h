@@ -41,30 +41,26 @@ class AbstractFilter;
 class ZeissTagsXmlSection;
 using ZeissTagsXmlSectionPtr = std::shared_ptr<ZeissTagsXmlSection>;
 
-
 class MetaXmlUtils
 {
-  public:
-    MetaXmlUtils();
-    ~MetaXmlUtils();
+public:
+  MetaXmlUtils();
+  ~MetaXmlUtils();
 
-    MetaXmlUtils(const MetaXmlUtils&) = delete; // Copy Constructor Not Implemented
-    MetaXmlUtils(MetaXmlUtils&&) = delete;      // Move Constructor Not Implemented
-    MetaXmlUtils& operator=(const MetaXmlUtils&) = delete; // Copy Assignment Not Implemented
-    MetaXmlUtils& operator=(MetaXmlUtils&&) = delete;      // Move Assignment Not Implemented
+  MetaXmlUtils(const MetaXmlUtils&) = delete;            // Copy Constructor Not Implemented
+  MetaXmlUtils(MetaXmlUtils&&) = delete;                 // Move Constructor Not Implemented
+  MetaXmlUtils& operator=(const MetaXmlUtils&) = delete; // Copy Assignment Not Implemented
+  MetaXmlUtils& operator=(MetaXmlUtils&&) = delete;      // Move Assignment Not Implemented
 
+  static ITKImageProcessing_EXPORT ZeissTagsXmlSectionPtr ParseTagsSection(AbstractFilter* filter, QDomElement& tags);
+  static ITKImageProcessing_EXPORT ZeissTagsXmlSectionPtr ParseScalingSection(AbstractFilter* filter, QDomElement& tags);
 
-    static ITKImageProcessing_EXPORT ZeissTagsXmlSectionPtr ParseTagsSection(AbstractFilter* filter, QDomElement& tags);
-    static ITKImageProcessing_EXPORT ZeissTagsXmlSectionPtr ParseScalingSection(AbstractFilter* filter, QDomElement& tags);
+  static ITKImageProcessing_EXPORT int32_t GetInt32Entry(AbstractFilter* filter, ZeissTagsXmlSection* tagsSection, int idValue);
 
-    static ITKImageProcessing_EXPORT int32_t GetInt32Entry(AbstractFilter* filter, ZeissTagsXmlSection *tagsSection, int idValue);
+  static ITKImageProcessing_EXPORT float GetFloatEntry(AbstractFilter* filter, ZeissTagsXmlSection* tagsSection, int idValue);
 
-    static ITKImageProcessing_EXPORT float GetFloatEntry(AbstractFilter* filter, ZeissTagsXmlSection* tagsSection, int idValue);
+  static ITKImageProcessing_EXPORT int32_t CalculatePaddingDigits(int32_t count);
 
-    static ITKImageProcessing_EXPORT int32_t CalculatePaddingDigits(int32_t count);
-
-  protected:
-
-  private:
-
+protected:
+private:
 };

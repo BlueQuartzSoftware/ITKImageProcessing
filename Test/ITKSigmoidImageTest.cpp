@@ -8,16 +8,15 @@
 // Auto includes
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 
-
 class ITKSigmoidImageTest : public ITKTestBase
 {
 
 public:
-ITKSigmoidImageTest() = default;
-~ITKSigmoidImageTest() override = default;
+  ITKSigmoidImageTest() = default;
+  ~ITKSigmoidImageTest() override = default;
 
   int TestITKSigmoidImagedefaultsTest()
-{
+  {
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/Ramp-Zero-One-Float.nrrd");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -44,9 +43,7 @@ ITKSigmoidImageTest() = default;
     GetMD5FromDataContainer(containerArray, input_path, md5Output);
     DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("c9222b9c9150e0d7a07e9de184c10167"));
     return 0;
-}
-
-
+  }
 
   // -----------------------------------------------------------------------------
   //
@@ -57,7 +54,7 @@ ITKSigmoidImageTest() = default;
 
     DREAM3D_REGISTER_TEST(this->TestFilterAvailability("ITKSigmoidImage"));
 
-    DREAM3D_REGISTER_TEST( TestITKSigmoidImagedefaultsTest());
+    DREAM3D_REGISTER_TEST(TestITKSigmoidImagedefaultsTest());
 
     if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
     {

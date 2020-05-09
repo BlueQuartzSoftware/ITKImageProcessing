@@ -4,7 +4,6 @@
  * Your License or Copyright can go here
  */
 
-
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKGrayscaleGrindPeakImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 #include "SIMPLib/Common/Constants.h"
@@ -17,14 +16,12 @@
 
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 ITKGrayscaleGrindPeakImage::ITKGrayscaleGrindPeakImage()
 {
   m_FullyConnected = StaticCastScalar<bool, bool, bool>(false);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -40,7 +37,6 @@ void ITKGrayscaleGrindPeakImage::setupFilterParameters()
   FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_BOOL_FP("FullyConnected", FullyConnected, FilterParameter::Parameter, ITKGrayscaleGrindPeakImage));
-
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -74,7 +70,8 @@ void ITKGrayscaleGrindPeakImage::readFilterParameters(AbstractFilterParametersRe
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKGrayscaleGrindPeakImage::dataCheckImpl()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKGrayscaleGrindPeakImage::dataCheckImpl()
 {
   clearErrorCode();
   clearWarningCode();
@@ -96,7 +93,8 @@ void ITKGrayscaleGrindPeakImage::dataCheck()
 //
 // -----------------------------------------------------------------------------
 
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKGrayscaleGrindPeakImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKGrayscaleGrindPeakImage::filter()
 {
   typedef itk::Image<InputPixelType, Dimension> InputImageType;
   typedef itk::Image<OutputPixelType, Dimension> OutputImageType;
@@ -105,7 +103,6 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   typename FilterType::Pointer filter = FilterType::New();
   filter->SetFullyConnected(static_cast<bool>(m_FullyConnected));
   this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -162,7 +159,7 @@ ITKGrayscaleGrindPeakImage::Pointer ITKGrayscaleGrindPeakImage::NullPointer()
 // -----------------------------------------------------------------------------
 std::shared_ptr<ITKGrayscaleGrindPeakImage> ITKGrayscaleGrindPeakImage::New()
 {
-  struct make_shared_enabler : public ITKGrayscaleGrindPeakImage  
+  struct make_shared_enabler : public ITKGrayscaleGrindPeakImage
   {
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
@@ -193,5 +190,3 @@ bool ITKGrayscaleGrindPeakImage::getFullyConnected() const
 {
   return m_FullyConnected;
 }
-
-

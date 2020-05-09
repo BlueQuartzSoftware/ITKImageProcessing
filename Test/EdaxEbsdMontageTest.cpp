@@ -103,8 +103,8 @@ public:
                                                          {UnitTest::ITKImageProcessingDataDir + "/ITKImageProcessing/Montage/2209p230908A", "Dewarped.a3.osc_r1c0", {0.0f, 503.0f, 0.0f}},
                                                          {UnitTest::ITKImageProcessingDataDir + "/ITKImageProcessing/Montage/2209p230908A", "Dewarped.a3.osc_r1c1", {524.0f, 503.0f, 0.0f}}};
 
-  const FloatVec7Type k_XFactors = { 1.00764000415802 , 0.011232700198888779, 2.416989991615992e-05, -8.931179991122917e-07, 2.7852800485561602e-05, -3.578869822717934e-08, -3.303350126770965e-08 };
-  const FloatVec7Type k_YFactors = { -0.014375300146639347, 1.0108000040054321, -1.9961998987128027e-06, 3.401259891688824e-05, -7.315880066016689e-05, -3.929239866806711e-08, -4.738420145145028e-08 };
+  const FloatVec7Type k_XFactors = {1.00764000415802, 0.011232700198888779, 2.416989991615992e-05, -8.931179991122917e-07, 2.7852800485561602e-05, -3.578869822717934e-08, -3.303350126770965e-08};
+  const FloatVec7Type k_YFactors = {-0.014375300146639347, 1.0108000040054321, -1.9961998987128027e-06, 3.401259891688824e-05, -7.315880066016689e-05, -3.929239866806711e-08, -4.738420145145028e-08};
 
   // -----------------------------------------------------------------------------
   void importRGBImage(const DataContainerArray::Pointer& dca, const ImageTupleType& info)
@@ -256,7 +256,7 @@ public:
       UInt8ArrayType::Pointer transformArray = getColorArray(dca, path);
 
       size_t comp = getMeanSquares(targetArray, transformArray);
-      //std::cout << qPrintable(tileName) << " comparison: " << comp << std::endl;
+      // std::cout << qPrintable(tileName) << " comparison: " << comp << std::endl;
       DREAM3D_REQUIRED(comp, <, 500000000)
     }
   }

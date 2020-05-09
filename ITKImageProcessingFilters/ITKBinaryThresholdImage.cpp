@@ -4,7 +4,6 @@
  * Your License or Copyright can go here
  */
 
-
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKBinaryThresholdImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 #include "SIMPLib/Common/Constants.h"
@@ -17,7 +16,6 @@
 
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -27,7 +25,6 @@ ITKBinaryThresholdImage::ITKBinaryThresholdImage()
   m_UpperThreshold = StaticCastScalar<double, double, double>(255.0);
   m_InsideValue = StaticCastScalar<int, int, int>(1u);
   m_OutsideValue = StaticCastScalar<int, int, int>(0u);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -46,7 +43,6 @@ void ITKBinaryThresholdImage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("UpperThreshold", UpperThreshold, FilterParameter::Parameter, ITKBinaryThresholdImage));
   parameters.push_back(SIMPL_NEW_INTEGER_FP("InsideValue", InsideValue, FilterParameter::Parameter, ITKBinaryThresholdImage));
   parameters.push_back(SIMPL_NEW_INTEGER_FP("OutsideValue", OutsideValue, FilterParameter::Parameter, ITKBinaryThresholdImage));
-
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -83,7 +79,8 @@ void ITKBinaryThresholdImage::readFilterParameters(AbstractFilterParametersReade
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKBinaryThresholdImage::dataCheckImpl()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKBinaryThresholdImage::dataCheckImpl()
 {
   clearErrorCode();
   clearWarningCode();
@@ -100,14 +97,15 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
 // -----------------------------------------------------------------------------
 void ITKBinaryThresholdImage::dataCheck()
 {
-  Dream3DArraySwitchMacroOutputType(this->dataCheckImpl, getSelectedCellArrayPath(), -4,uint8_t, 0);
+  Dream3DArraySwitchMacroOutputType(this->dataCheckImpl, getSelectedCellArrayPath(), -4, uint8_t, 0);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKBinaryThresholdImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKBinaryThresholdImage::filter()
 {
   typedef itk::Image<InputPixelType, Dimension> InputImageType;
   typedef itk::Image<OutputPixelType, Dimension> OutputImageType;
@@ -119,7 +117,6 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   filter->SetInsideValue(static_cast<uint8_t>(m_InsideValue));
   filter->SetOutsideValue(static_cast<uint8_t>(m_OutsideValue));
   this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -127,7 +124,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
 // -----------------------------------------------------------------------------
 void ITKBinaryThresholdImage::filterInternal()
 {
-  Dream3DArraySwitchMacroOutputType(this->filter, getSelectedCellArrayPath(), -4,uint8_t, 0);
+  Dream3DArraySwitchMacroOutputType(this->filter, getSelectedCellArrayPath(), -4, uint8_t, 0);
 }
 
 // -----------------------------------------------------------------------------
@@ -176,7 +173,7 @@ ITKBinaryThresholdImage::Pointer ITKBinaryThresholdImage::NullPointer()
 // -----------------------------------------------------------------------------
 std::shared_ptr<ITKBinaryThresholdImage> ITKBinaryThresholdImage::New()
 {
-  struct make_shared_enabler : public ITKBinaryThresholdImage  
+  struct make_shared_enabler : public ITKBinaryThresholdImage
   {
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
@@ -243,5 +240,3 @@ int ITKBinaryThresholdImage::getOutsideValue() const
 {
   return m_OutsideValue;
 }
-
-

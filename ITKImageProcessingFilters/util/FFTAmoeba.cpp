@@ -20,7 +20,8 @@
 bool fft_amoeba::default_verbose = false;
 
 fft_amoeba::fft_amoeba(vnl_cost_function& f)
-  : fptr(&f), num_evaluations_(0)
+: fptr(&f)
+, num_evaluations_(0)
 {
   verbose = default_verbose;
   maxiter = f.get_number_of_unknowns() * 200;
@@ -30,23 +31,21 @@ fft_amoeba::fft_amoeba(vnl_cost_function& f)
   zero_term_delta = 0.00025;
 }
 
-
 struct fft_amoebaFit : public fft_amoeba
 {
   int cnt;
 
-  fft_amoebaFit(fft_amoeba& a) : fft_amoeba(a) {
+  fft_amoebaFit(fft_amoeba& a)
+  : fft_amoeba(a)
+  {
     cnt = 0;
   }
 
   //: Initialise the simplex given one corner, x (scale each element to get other corners)
-  void set_up_simplex_relative(std::vector<fft_amoeba_SimplexCorner>& simplex,
-    const vnl_vector<double>& x);
+  void set_up_simplex_relative(std::vector<fft_amoeba_SimplexCorner>& simplex, const vnl_vector<double>& x);
 
   //: Initialise the simplex given one corner, x and displacements of others
-  void set_up_simplex_absolute(std::vector<fft_amoeba_SimplexCorner>& simplex,
-    const vnl_vector<double>& x,
-    const vnl_vector<double>& dx);
+  void set_up_simplex_absolute(std::vector<fft_amoeba_SimplexCorner>& simplex, const vnl_vector<double>& x, const vnl_vector<double>& dx);
 
   //: Perform optimisation.  Start simplex defined by scaling elements of x
   void amoeba(vnl_vector<double>& x);
@@ -57,21 +56,18 @@ struct fft_amoebaFit : public fft_amoeba
   //: Perform optimisation, given simplex to start
   void amoeba(vnl_vector<double>& x, std::vector<fft_amoeba_SimplexCorner>& simplex);
 
-  double f(const vnl_vector<double>& x) {
+  double f(const vnl_vector<double>& x)
+  {
     return fptr->f(x);
   }
 
-  void set_corner(fft_amoeba_SimplexCorner * s,
-    const vnl_vector<double>& v)
+  void set_corner(fft_amoeba_SimplexCorner* s, const vnl_vector<double>& v)
   {
     s->v = v;
     s->fv = f(v);
     cnt++;
   }
-  void set_corner_a_plus_bl(fft_amoeba_SimplexCorner * s,
-    const vnl_vector<double>& vbar,
-    const vnl_vector<double>& v,
-    double lambda)
+  void set_corner_a_plus_bl(fft_amoeba_SimplexCorner* s, const vnl_vector<double>& vbar, const vnl_vector<double>& v, double lambda)
   {
     s->v = (1 - lambda) * vbar + lambda * v;
     s->fv = f(s->v);
@@ -79,21 +75,17 @@ struct fft_amoebaFit : public fft_amoeba
   }
 };
 
-int fft_amoeba_SimplexCorner::compare(fft_amoeba_SimplexCorner const& s1,
-  fft_amoeba_SimplexCorner const& s2)
+int fft_amoeba_SimplexCorner::compare(fft_amoeba_SimplexCorner const& s1, fft_amoeba_SimplexCorner const& s2)
 {
   return vnl_math::sgn(s1.fv - s2.fv);
 }
 
-static
-int compare_aux(const void * s1, const void * s2)
+static int compare_aux(const void* s1, const void* s2)
 {
-  return fft_amoeba_SimplexCorner::compare(*(const fft_amoeba_SimplexCorner*)s1,
-    *(const fft_amoeba_SimplexCorner*)s2);
+  return fft_amoeba_SimplexCorner::compare(*(const fft_amoeba_SimplexCorner*)s1, *(const fft_amoeba_SimplexCorner*)s2);
 }
 
-static
-void sort_simplex(std::vector<fft_amoeba_SimplexCorner>& simplex)
+static void sort_simplex(std::vector<fft_amoeba_SimplexCorner>& simplex)
 {
   std::qsort(&simplex[0], simplex.size(), sizeof simplex[0], compare_aux);
 }
@@ -116,14 +108,14 @@ void sort_simplex(std::vector<fft_amoeba_SimplexCorner>& simplex)
 //  return simplex[simplex.size() - 1].fv - simplex[0].fv;
 //}
 
-static
-double fractional_range(const std::vector<fft_amoeba_SimplexCorner>& simplex)
+static double fractional_range(const std::vector<fft_amoeba_SimplexCorner>& simplex)
 {
   double min = std::numeric_limits<double>::max();
   double max = std::numeric_limits<double>::lowest();
-  //for(unsigned i = 0; i < simplex.size() - 1; i++) {
+  // for(unsigned i = 0; i < simplex.size() - 1; i++) {
   //  const double val = simplex[i].fv;
-  for(const auto& corner : simplex) {
+  for(const auto& corner : simplex)
+  {
     const double val = corner.fv;
     if(val < min)
       min = val;
@@ -155,11 +147,10 @@ std::ostream& operator<<(std::ostream& s, const fft_amoeba_SimplexCorner& simple
 
 std::ostream& operator<<(std::ostream& s, const std::vector<fft_amoeba_SimplexCorner>& simplex)
 {
-  for(const auto & i : simplex)
+  for(const auto& i : simplex)
     s << i.fv << ' ';
   return s;
 }
-
 
 bool operator==(const fft_amoeba_SimplexCorner& a, const fft_amoeba_SimplexCorner& b)
 {
@@ -167,8 +158,7 @@ bool operator==(const fft_amoeba_SimplexCorner& a, const fft_amoeba_SimplexCorne
 }
 
 //: Initialise the simplex given one corner, x
-void fft_amoebaFit::set_up_simplex_relative(std::vector<fft_amoeba_SimplexCorner>& simplex,
-  const vnl_vector<double>& x)
+void fft_amoebaFit::set_up_simplex_relative(std::vector<fft_amoeba_SimplexCorner>& simplex, const vnl_vector<double>& x)
 {
   int n = x.size();
 
@@ -176,16 +166,17 @@ void fft_amoebaFit::set_up_simplex_relative(std::vector<fft_amoeba_SimplexCorner
   simplex[0].fv = f(x);
 
   // Following improvement suggested by L.Pfeffer at Stanford
-  const double usual_delta = relative_diameter;             // 5 percent deltas for non-zero terms
-  //const double zero_term_delta = 0.00025;      // Even smaller delta for zero elements of x
-//  vnl_vector<double> y(n);
-  for(int j = 0; j < n; ++j) {
-    fft_amoeba_SimplexCorner *s = &simplex[j + 1];
+  const double usual_delta = relative_diameter; // 5 percent deltas for non-zero terms
+  // const double zero_term_delta = 0.00025;      // Even smaller delta for zero elements of x
+  //  vnl_vector<double> y(n);
+  for(int j = 0; j < n; ++j)
+  {
+    fft_amoeba_SimplexCorner* s = &simplex[j + 1];
     s->v = x;
 
     // perturb s->v(j)
     if(vnl_math::abs(s->v[j]) > zero_term_delta)
-      s->v[j] = (1 + usual_delta)*s->v[j];
+      s->v[j] = (1 + usual_delta) * s->v[j];
     else
       s->v[j] = zero_term_delta;
 
@@ -194,17 +185,16 @@ void fft_amoebaFit::set_up_simplex_relative(std::vector<fft_amoeba_SimplexCorner
 }
 
 //: Initialise the simplex given one corner, x and displacements of others
-void fft_amoebaFit::set_up_simplex_absolute(std::vector<fft_amoeba_SimplexCorner>& simplex,
-  const vnl_vector<double>& x,
-  const vnl_vector<double>& dx)
+void fft_amoebaFit::set_up_simplex_absolute(std::vector<fft_amoeba_SimplexCorner>& simplex, const vnl_vector<double>& x, const vnl_vector<double>& dx)
 {
   int n = x.size();
 
   simplex[0].v = x;
   simplex[0].fv = f(x);
 
-  for(int j = 0; j < n; ++j) {
-    fft_amoeba_SimplexCorner *s = &simplex[j + 1];
+  for(int j = 0; j < n; ++j)
+  {
+    fft_amoeba_SimplexCorner* s = &simplex[j + 1];
     s->v = x;
 
     // perturb s->v(j)
@@ -261,16 +251,17 @@ void fft_amoebaFit::amoeba(vnl_vector<double>& x, const vnl_vector<double>& dx)
 }
 
 //: Perform optimisation, given simplex to start
-void fft_amoebaFit::amoeba(vnl_vector<double>& x,
-  std::vector<fft_amoeba_SimplexCorner>& simplex)
+void fft_amoebaFit::amoeba(vnl_vector<double>& x, std::vector<fft_amoeba_SimplexCorner>& simplex)
 {
   int n = x.size();
   sort_simplex(simplex);
 
-  if(verbose > 1) {
+  if(verbose > 1)
+  {
     std::cerr << "initial\n" << simplex;
   }
-  else if(verbose) {
+  else if(verbose)
+  {
     std::cerr << "initial: " << simplex << '\n';
   }
 
@@ -279,16 +270,18 @@ void fft_amoebaFit::amoeba(vnl_vector<double>& x,
   fft_amoeba_SimplexCorner expand(n);
   fft_amoeba_SimplexCorner contract(n);
   fft_amoeba_SimplexCorner shrink(n);
-  fft_amoeba_SimplexCorner *next;
+  fft_amoeba_SimplexCorner* next;
 
   vnl_vector<double> vbar(n);
-  while(cnt < maxiter) {
+  while(cnt < maxiter)
+  {
     frac_range = fractional_range(simplex);
     if(frac_range < F_tolerance)
       break;
 
     // One step of the Nelder-Mead simplex algorithm
-    for(int k = 0; k < n; ++k) {
+    for(int k = 0; k < n; ++k)
+    {
       vbar[k] = 0;
       for(int i = 0; i < n; ++i)
         vbar[k] += simplex[i].v[k];
@@ -298,35 +291,41 @@ void fft_amoebaFit::amoeba(vnl_vector<double>& x,
     set_corner_a_plus_bl(&reflect, vbar, simplex[n].v, -1);
 
     next = &reflect;
-    const char *how = "reflect ";
-    if(reflect.fv < simplex[n - 1].fv) {
+    const char* how = "reflect ";
+    if(reflect.fv < simplex[n - 1].fv)
+    {
       // Reflection not totally crap...
-      if(reflect.fv < simplex[0].fv) {
+      if(reflect.fv < simplex[0].fv)
+      {
         // Reflection actually the best, try expanding
         set_corner_a_plus_bl(&expand, vbar, reflect.v, 2);
 
-        if(expand.fv < simplex[0].fv) {
+        if(expand.fv < simplex[0].fv)
+        {
           next = &expand;
           how = "expand  ";
         }
       }
     }
-    else {
+    else
+    {
       // Reflection *is* totally crap...
       {
-        fft_amoeba_SimplexCorner *tmp = &simplex[n];
+        fft_amoeba_SimplexCorner* tmp = &simplex[n];
         if(reflect.fv < tmp->fv)
           // replace simplex[n] by reflection as at least it's better than that
           tmp = &reflect;
         set_corner_a_plus_bl(&contract, vbar, tmp->v, 0.5);
       }
 
-      if(contract.fv < simplex[0].fv) {
+      if(contract.fv < simplex[0].fv)
+      {
         // The contraction point was really good, hold it there
         next = &contract;
         how = "contract";
       }
-      else {
+      else
+      {
         // The contraction point was only average, shrink the entire simplex.
         for(int j = 1; j < n; ++j)
 
@@ -342,7 +341,8 @@ void fft_amoebaFit::amoeba(vnl_vector<double>& x,
     sort_simplex(simplex);
 
     // Print debugging info
-    if(verbose) {
+    if(verbose)
+    {
       char buf[16383];
       std::sprintf(buf, "iter %5d: %s ", cnt, how);
       std::cerr << buf;
@@ -401,7 +401,6 @@ void fft_amoeba::minimize(vnl_vector<double>& x, const vnl_vector<double>& dx)
   m_Fit = nullptr;
 }
 
-
 //: Static method
 void fft_amoeba::minimize(vnl_cost_function& f, vnl_vector<double>& x)
 {
@@ -420,8 +419,7 @@ void fft_amoeba::minimize(vnl_cost_function& f, vnl_vector<double>& x, double de
 }
 
 //: Static method
-void fft_amoeba::minimize(vnl_cost_function& f, vnl_vector<double>& x,
-  const vnl_vector<double>& dx)
+void fft_amoeba::minimize(vnl_cost_function& f, vnl_vector<double>& x, const vnl_vector<double>& dx)
 {
   fft_amoeba a(f);
   a.verbose = fft_amoeba::default_verbose;
@@ -429,19 +427,23 @@ void fft_amoeba::minimize(vnl_cost_function& f, vnl_vector<double>& x,
   amoeba.amoeba(x, dx);
 }
 
-
 class fft_amoeba_LSCF : public vnl_cost_function
 {
   vnl_least_squares_function* ls_;
   vnl_vector<double> fx;
+
 public:
   fft_amoeba_LSCF(vnl_least_squares_function& ls)
-    : vnl_cost_function(ls.get_number_of_unknowns()),
-    ls_(&ls), fx(ls.get_number_of_residuals()) {}
+  : vnl_cost_function(ls.get_number_of_unknowns())
+  , ls_(&ls)
+  , fx(ls.get_number_of_residuals())
+  {
+  }
 
   ~fft_amoeba_LSCF() override = default;
 
-  double f(vnl_vector<double> const& x) override {
+  double f(vnl_vector<double> const& x) override
+  {
     ls_->f(x, fx);
     return fx.squared_magnitude();
   }
@@ -454,7 +456,10 @@ void fft_amoeba::minimize(vnl_least_squares_function& f, vnl_vector<double>& x)
 }
 
 /////////////////////////////////////////////////////////////////////////////
-fft_amoeba_SimplexCorner::fft_amoeba_SimplexCorner(int n) : v(n) {}
+fft_amoeba_SimplexCorner::fft_amoeba_SimplexCorner(int n)
+: v(n)
+{
+}
 
 fft_amoeba_SimplexCorner& fft_amoeba_SimplexCorner::operator=(const fft_amoeba_SimplexCorner& that) = default;
 

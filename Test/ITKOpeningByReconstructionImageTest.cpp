@@ -15,8 +15,8 @@ class ITKOpeningByReconstructionImageTest : public ITKTestBase
 {
 
 public:
-ITKOpeningByReconstructionImageTest() = default;
-~ITKOpeningByReconstructionImageTest() override = default;
+  ITKOpeningByReconstructionImageTest() = default;
+  ~ITKOpeningByReconstructionImageTest() override = default;
 
   int TestITKOpeningByReconstructionImageOpeningByReconstructionTest()
   {

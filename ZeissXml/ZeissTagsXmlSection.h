@@ -45,47 +45,45 @@
  */
 class ITKImageProcessing_EXPORT ZeissTagsXmlSection
 {
-  public:
-    using Self = ZeissTagsXmlSection;
-    using Pointer = std::shared_ptr<Self>;
-    using ConstPointer = std::shared_ptr<const Self>;
-    using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<const Self>;
-    static Pointer NullPointer();
+public:
+  using Self = ZeissTagsXmlSection;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<const Self>;
+  static Pointer NullPointer();
 
-    /**
-     * @brief Returns the name of the class for ZeissTagsXmlSection
-     */
-    virtual QString getNameOfClass() const;
-    /**
-     * @brief Returns the name of the class for ZeissTagsXmlSection
-     */
-    static QString ClassName();
+  /**
+   * @brief Returns the name of the class for ZeissTagsXmlSection
+   */
+  virtual QString getNameOfClass() const;
+  /**
+   * @brief Returns the name of the class for ZeissTagsXmlSection
+   */
+  static QString ClassName();
 
-    static Pointer New();
+  static Pointer New();
 
-    using MetaDataType = QMap<int, AbstractZeissMetaData::Pointer>;
+  using MetaDataType = QMap<int, AbstractZeissMetaData::Pointer>;
 
-    virtual ~ZeissTagsXmlSection();
+  virtual ~ZeissTagsXmlSection();
 
-    MetaDataType& getMetaDataMap();
+  MetaDataType& getMetaDataMap();
 
-    void addMetaDataEntry(AbstractZeissMetaData::Pointer& entry);
-    void removeMetaDataEntry(int idTag);
-    AbstractZeissMetaData::Pointer getEntry(int idTag);
-    int count();
+  void addMetaDataEntry(AbstractZeissMetaData::Pointer& entry);
+  void removeMetaDataEntry(int idTag);
+  AbstractZeissMetaData::Pointer getEntry(int idTag);
+  int count();
 
+protected:
+  ZeissTagsXmlSection();
 
-  protected:
-    ZeissTagsXmlSection();
+private:
+  MetaDataType m_MetaDataMap;
 
-  private:
-    MetaDataType m_MetaDataMap;
-
-  public:
-    ZeissTagsXmlSection(const ZeissTagsXmlSection&) = delete; // Copy Constructor Not Implemented
-    ZeissTagsXmlSection(ZeissTagsXmlSection&&) = delete;      // Move Constructor Not Implemented
-    ZeissTagsXmlSection& operator=(const ZeissTagsXmlSection&) = delete; // Copy Assignment Not Implemented
-    ZeissTagsXmlSection& operator=(ZeissTagsXmlSection&&) = delete;      // Move Assignment Not Implemented
+public:
+  ZeissTagsXmlSection(const ZeissTagsXmlSection&) = delete;            // Copy Constructor Not Implemented
+  ZeissTagsXmlSection(ZeissTagsXmlSection&&) = delete;                 // Move Constructor Not Implemented
+  ZeissTagsXmlSection& operator=(const ZeissTagsXmlSection&) = delete; // Copy Assignment Not Implemented
+  ZeissTagsXmlSection& operator=(ZeissTagsXmlSection&&) = delete;      // Move Assignment Not Implemented
 };
-

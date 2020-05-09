@@ -9,16 +9,15 @@
 #include <SIMPLib/FilterParameters/BooleanFilterParameter.h>
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 
-
 class ITKLaplacianRecursiveGaussianImageTest : public ITKTestBase
 {
 
 public:
-ITKLaplacianRecursiveGaussianImageTest() = default;
-~ITKLaplacianRecursiveGaussianImageTest() override = default;
+  ITKLaplacianRecursiveGaussianImageTest() = default;
+  ~ITKLaplacianRecursiveGaussianImageTest() override = default;
 
   int TestITKLaplacianRecursiveGaussianImagedefaultTest()
-{
+  {
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/RA-Float.nrrd");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -47,9 +46,7 @@ ITKLaplacianRecursiveGaussianImageTest() = default;
     int res = this->CompareImages(containerArray, input_path, baseline_path, 0.0001);
     DREAM3D_REQUIRE_EQUAL(res, 0);
     return 0;
-}
-
-
+  }
 
   // -----------------------------------------------------------------------------
   //
@@ -60,7 +57,7 @@ ITKLaplacianRecursiveGaussianImageTest() = default;
 
     DREAM3D_REGISTER_TEST(this->TestFilterAvailability("ITKLaplacianRecursiveGaussianImage"));
 
-    DREAM3D_REGISTER_TEST( TestITKLaplacianRecursiveGaussianImagedefaultTest());
+    DREAM3D_REGISTER_TEST(TestITKLaplacianRecursiveGaussianImagedefaultTest());
 
     if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
     {

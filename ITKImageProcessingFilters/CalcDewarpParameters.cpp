@@ -258,11 +258,11 @@ void CalcDewarpParameters::execute()
   m_Optimizer->SetFractionalTolerance(m_FractionalTolerance);
   m_Optimizer->SetInitialPosition(initialParams);
   m_Optimizer->SetInitialSimplexDelta(stepSizes);
-  //m_Optimizer->SetOptimizeWithRestarts(true);
+  // m_Optimizer->SetOptimizeWithRestarts(true);
 
   m_Optimizer->SetSIMPLFilter(this);
   m_Optimizer->SetCostFunction(costFunctionObject); // Note: Increases the refcount for costFunctionObject
-  m_Optimizer->MaximizeOn(); // Search for the greatest value
+  m_Optimizer->MaximizeOn();                        // Search for the greatest value
   m_Optimizer->StartOptimization();
 
   // Newer versions of the optimizer allow for easier methods of output information

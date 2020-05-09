@@ -4,7 +4,6 @@
  * Your License or Copyright can go here
  */
 
-
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKHMaximaImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 #include "SIMPLib/Common/Constants.h"
@@ -17,14 +16,12 @@
 
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 ITKHMaximaImage::ITKHMaximaImage()
 {
   m_Height = StaticCastScalar<double, double, double>(2.0);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -40,7 +37,6 @@ void ITKHMaximaImage::setupFilterParameters()
   FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Height", Height, FilterParameter::Parameter, ITKHMaximaImage));
-
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -74,7 +70,8 @@ void ITKHMaximaImage::readFilterParameters(AbstractFilterParametersReader* reade
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKHMaximaImage::dataCheckImpl()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKHMaximaImage::dataCheckImpl()
 {
   clearErrorCode();
   clearWarningCode();
@@ -96,7 +93,8 @@ void ITKHMaximaImage::dataCheck()
 //
 // -----------------------------------------------------------------------------
 
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKHMaximaImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKHMaximaImage::filter()
 {
   typedef itk::Image<InputPixelType, Dimension> InputImageType;
   typedef itk::Image<OutputPixelType, Dimension> OutputImageType;
@@ -105,7 +103,6 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   typename FilterType::Pointer filter = FilterType::New();
   filter->SetHeight(static_cast<double>(m_Height));
   this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -162,7 +159,7 @@ ITKHMaximaImage::Pointer ITKHMaximaImage::NullPointer()
 // -----------------------------------------------------------------------------
 std::shared_ptr<ITKHMaximaImage> ITKHMaximaImage::New()
 {
-  struct make_shared_enabler : public ITKHMaximaImage  
+  struct make_shared_enabler : public ITKHMaximaImage
   {
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
@@ -193,5 +190,3 @@ double ITKHMaximaImage::getHeight() const
 {
   return m_Height;
 }
-
-

@@ -4,7 +4,6 @@
  * Your License or Copyright can go here
  */
 
-
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKSigmoidImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 #include "SIMPLib/Common/Constants.h"
@@ -17,7 +16,6 @@
 
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -27,7 +25,6 @@ ITKSigmoidImage::ITKSigmoidImage()
   m_Beta = StaticCastScalar<double, double, double>(0);
   m_OutputMaximum = StaticCastScalar<double, double, double>(255);
   m_OutputMinimum = StaticCastScalar<double, double, double>(0);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -46,7 +43,6 @@ void ITKSigmoidImage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Beta", Beta, FilterParameter::Parameter, ITKSigmoidImage));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("OutputMaximum", OutputMaximum, FilterParameter::Parameter, ITKSigmoidImage));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("OutputMinimum", OutputMinimum, FilterParameter::Parameter, ITKSigmoidImage));
-
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -83,7 +79,8 @@ void ITKSigmoidImage::readFilterParameters(AbstractFilterParametersReader* reade
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKSigmoidImage::dataCheckImpl()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKSigmoidImage::dataCheckImpl()
 {
   clearErrorCode();
   clearWarningCode();
@@ -105,7 +102,8 @@ void ITKSigmoidImage::dataCheck()
 //
 // -----------------------------------------------------------------------------
 
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKSigmoidImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKSigmoidImage::filter()
 {
   typedef itk::Image<InputPixelType, Dimension> InputImageType;
   typedef itk::Image<OutputPixelType, Dimension> OutputImageType;
@@ -117,7 +115,6 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   filter->SetOutputMaximum(static_cast<double>(m_OutputMaximum));
   filter->SetOutputMinimum(static_cast<double>(m_OutputMinimum));
   this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -174,7 +171,7 @@ ITKSigmoidImage::Pointer ITKSigmoidImage::NullPointer()
 // -----------------------------------------------------------------------------
 std::shared_ptr<ITKSigmoidImage> ITKSigmoidImage::New()
 {
-  struct make_shared_enabler : public ITKSigmoidImage  
+  struct make_shared_enabler : public ITKSigmoidImage
   {
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
@@ -241,5 +238,3 @@ double ITKSigmoidImage::getOutputMinimum() const
 {
   return m_OutputMinimum;
 }
-
-

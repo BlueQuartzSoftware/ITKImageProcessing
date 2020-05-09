@@ -40,36 +40,35 @@ class ITKImageProcessing_EXPORT ITKBoxMeanImage : public ITKImageProcessingBase
   // End Python bindings declarations
 
 public:
-    using Self = ITKBoxMeanImage;
-    using Pointer = std::shared_ptr<Self>;
-    using ConstPointer = std::shared_ptr<const Self>;
-    using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<const Self>;
-    static Pointer NullPointer();
+  using Self = ITKBoxMeanImage;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<const Self>;
+  static Pointer NullPointer();
 
-    static std::shared_ptr<ITKBoxMeanImage> New();
+  static std::shared_ptr<ITKBoxMeanImage> New();
 
-    /**
-    * @brief Returns the name of the class for ITKBoxMeanImage
-    */
-    QString getNameOfClass() const override;
-    /**
-    * @brief Returns the name of the class for ITKBoxMeanImage
-    */
-    static QString ClassName();
-
+  /**
+   * @brief Returns the name of the class for ITKBoxMeanImage
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for ITKBoxMeanImage
+   */
+  static QString ClassName();
 
   ~ITKBoxMeanImage() override;
 
-    /**
-    * @brief Setter property for Radius
-    */
-    void setRadius(const FloatVec3Type& value); 
-    /**
-    * @brief Getter property for Radius
-    * @return Value of Radius
-    */
-    FloatVec3Type getRadius() const;
+  /**
+   * @brief Setter property for Radius
+   */
+  void setRadius(const FloatVec3Type& value);
+  /**
+   * @brief Getter property for Radius
+   * @return Value of Radius
+   */
+  FloatVec3Type getRadius() const;
   Q_PROPERTY(FloatVec3Type Radius READ getRadius WRITE setRadius)
 
   /**
@@ -114,30 +113,30 @@ protected:
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
    */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void dataCheckImpl();
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void dataCheckImpl();
 
   /**
-  * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
-  */
+   * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
+   */
   void filterInternal() override;
 
   /**
-  * @brief Applies the filter
-  */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
+   * @brief Applies the filter
+   */
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void filter();
 
 public:
-  ITKBoxMeanImage(const ITKBoxMeanImage&) = delete;    // Copy Constructor Not Implemented
-  ITKBoxMeanImage(ITKBoxMeanImage&&) = delete;         // Move Constructor Not Implemented
+  ITKBoxMeanImage(const ITKBoxMeanImage&) = delete;            // Copy Constructor Not Implemented
+  ITKBoxMeanImage(ITKBoxMeanImage&&) = delete;                 // Move Constructor Not Implemented
   ITKBoxMeanImage& operator=(const ITKBoxMeanImage&) = delete; // Copy Assignment Not Implemented
   ITKBoxMeanImage& operator=(ITKBoxMeanImage&&) = delete;      // Move Assignment Not Implemented
 
-  private:
-    FloatVec3Type m_Radius = {};
-
+private:
+  FloatVec3Type m_Radius = {};
 };
 
 #ifdef __clang__
 #pragma clang diagnostic pop
 #endif
-

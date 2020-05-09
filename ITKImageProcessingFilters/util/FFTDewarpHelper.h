@@ -38,42 +38,42 @@
 
 namespace FFTDewarpHelper
 {
-  using PixelIndex = std::array<int64_t, 2>;
-  using ParametersType = itk::SingleValuedCostFunction::ParametersType;
+using PixelIndex = std::array<int64_t, 2>;
+using ParametersType = itk::SingleValuedCostFunction::ParametersType;
 
-  /**
-   * @brief Constructs a PixelTypei from x and y parameters
-   * @param x
-   * @param y
-   * @return
-   */
-  PixelIndex pixelIndex(int64_t x, int64_t y);
-  PixelIndex pixelIndex(size_t x, size_t y);
-  PixelIndex pixelIndex(double x, double y);
+/**
+ * @brief Constructs a PixelTypei from x and y parameters
+ * @param x
+ * @param y
+ * @return
+ */
+PixelIndex pixelIndex(int64_t x, int64_t y);
+PixelIndex pixelIndex(size_t x, size_t y);
+PixelIndex pixelIndex(double x, double y);
 
-  /**
-   * @brief Returns the number of parameters for either X or Y
-   * @return
-   */
-  constexpr uint32_t getReqPartialParameterSize()
-  {
-    return 7;
-  }
+/**
+ * @brief Returns the number of parameters for either X or Y
+ * @return
+ */
+constexpr uint32_t getReqPartialParameterSize()
+{
+  return 7;
+}
 
-  /**
-   * @brief Returns the total number of parameters for both X and Y.
-   * @return
-   */
-  constexpr uint32_t getReqParameterSize()
-  {
-    return 14;
-  }
-  
-  /**
-   * @brief Returns the old pixel index from which to extract the value for the given parameters.
-   * @param 
-   */
-  PixelIndex getOldIndex(PixelIndex newIndex, PixelIndex offset, const ParametersType& parameters);
-  int64_t px(PixelIndex newIndex, PixelIndex offset, const ParametersType& parameters);
-  int64_t py(PixelIndex newIndex, PixelIndex offset, const ParametersType& parameters);
-} // namespace FFTHelper
+/**
+ * @brief Returns the total number of parameters for both X and Y.
+ * @return
+ */
+constexpr uint32_t getReqParameterSize()
+{
+  return 14;
+}
+
+/**
+ * @brief Returns the old pixel index from which to extract the value for the given parameters.
+ * @param
+ */
+PixelIndex getOldIndex(PixelIndex newIndex, PixelIndex offset, const ParametersType& parameters);
+int64_t px(PixelIndex newIndex, PixelIndex offset, const ParametersType& parameters);
+int64_t py(PixelIndex newIndex, PixelIndex offset, const ParametersType& parameters);
+} // namespace FFTDewarpHelper

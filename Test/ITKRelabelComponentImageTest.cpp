@@ -10,16 +10,15 @@
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 #include <SIMPLib/FilterParameters/FloatVec3FilterParameter.h>
 
-
 class ITKRelabelComponentImageTest : public ITKTestBase
 {
 
 public:
-ITKRelabelComponentImageTest() = default;
-~ITKRelabelComponentImageTest() override = default;
+  ITKRelabelComponentImageTest() = default;
+  ~ITKRelabelComponentImageTest() override = default;
 
   int TestITKRelabelComponentImagedefaultTest()
-{
+  {
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/2th_cthead1.png");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -50,10 +49,10 @@ ITKRelabelComponentImageTest() = default;
     var = filter->property("OriginalNumberOfObjects");
     DREAM3D_REQUIRE_EQUAL(var.toUInt(), 2u);
     return 0;
-}
+  }
 
-int TestITKRelabelComponentImageno_sortingTest()
-{
+  int TestITKRelabelComponentImageno_sortingTest()
+  {
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/2th_cthead1.png");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -72,11 +71,11 @@ int TestITKRelabelComponentImageno_sortingTest()
     propWasSet = filter->setProperty("SaveAsNewArray", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     {
-        bool d3d_var;
-        d3d_var = false;
-        var.setValue(d3d_var);
-        propWasSet = filter->setProperty("SortByObjectSize", var);
-        DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+      bool d3d_var;
+      d3d_var = false;
+      var.setValue(d3d_var);
+      propWasSet = filter->setProperty("SortByObjectSize", var);
+      DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     }
     filter->setDataContainerArray(containerArray);
     filter->execute();
@@ -95,9 +94,7 @@ int TestITKRelabelComponentImageno_sortingTest()
     var = filter->property("OriginalNumberOfObjects");
     DREAM3D_REQUIRE_EQUAL(var.toUInt(), 2u);
     return 0;
-}
-
-
+  }
 
   // -----------------------------------------------------------------------------
   //
@@ -108,8 +105,8 @@ int TestITKRelabelComponentImageno_sortingTest()
 
     DREAM3D_REGISTER_TEST(this->TestFilterAvailability("ITKRelabelComponentImage"));
 
-    DREAM3D_REGISTER_TEST( TestITKRelabelComponentImagedefaultTest());
-    DREAM3D_REGISTER_TEST( TestITKRelabelComponentImageno_sortingTest());
+    DREAM3D_REGISTER_TEST(TestITKRelabelComponentImagedefaultTest());
+    DREAM3D_REGISTER_TEST(TestITKRelabelComponentImageno_sortingTest());
 
     if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
     {

@@ -44,60 +44,58 @@ class ITKImageProcessing_EXPORT ITKGrayscaleMorphologicalClosingImage : public I
   // End Python bindings declarations
 
 public:
-    using Self = ITKGrayscaleMorphologicalClosingImage;
-    using Pointer = std::shared_ptr<Self>;
-    using ConstPointer = std::shared_ptr<const Self>;
-    using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<const Self>;
-    static Pointer NullPointer();
+  using Self = ITKGrayscaleMorphologicalClosingImage;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<const Self>;
+  static Pointer NullPointer();
 
-    static std::shared_ptr<ITKGrayscaleMorphologicalClosingImage> New();
+  static std::shared_ptr<ITKGrayscaleMorphologicalClosingImage> New();
 
-    /**
-    * @brief Returns the name of the class for ITKGrayscaleMorphologicalClosingImage
-    */
-    QString getNameOfClass() const override;
-    /**
-    * @brief Returns the name of the class for ITKGrayscaleMorphologicalClosingImage
-    */
-    static QString ClassName();
-
+  /**
+   * @brief Returns the name of the class for ITKGrayscaleMorphologicalClosingImage
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for ITKGrayscaleMorphologicalClosingImage
+   */
+  static QString ClassName();
 
   ~ITKGrayscaleMorphologicalClosingImage() override;
 
-    /**
-    * @brief Setter property for SafeBorder
-    */
-    void setSafeBorder(bool value); 
-    /**
-    * @brief Getter property for SafeBorder
-    * @return Value of SafeBorder
-    */
-    bool getSafeBorder() const;
+  /**
+   * @brief Setter property for SafeBorder
+   */
+  void setSafeBorder(bool value);
+  /**
+   * @brief Getter property for SafeBorder
+   * @return Value of SafeBorder
+   */
+  bool getSafeBorder() const;
   Q_PROPERTY(bool SafeBorder READ getSafeBorder WRITE setSafeBorder)
 
-    /**
-    * @brief Setter property for KernelRadius
-    */
-    void setKernelRadius(const FloatVec3Type& value); 
-    /**
-    * @brief Getter property for KernelRadius
-    * @return Value of KernelRadius
-    */
-    FloatVec3Type getKernelRadius() const;
+  /**
+   * @brief Setter property for KernelRadius
+   */
+  void setKernelRadius(const FloatVec3Type& value);
+  /**
+   * @brief Getter property for KernelRadius
+   * @return Value of KernelRadius
+   */
+  FloatVec3Type getKernelRadius() const;
   Q_PROPERTY(FloatVec3Type KernelRadius READ getKernelRadius WRITE setKernelRadius)
 
-    /**
-    * @brief Setter property for KernelType
-    */
-    void setKernelType(int value); 
-    /**
-    * @brief Getter property for KernelType
-    * @return Value of KernelType
-    */
-    int getKernelType() const;
+  /**
+   * @brief Setter property for KernelType
+   */
+  void setKernelType(int value);
+  /**
+   * @brief Getter property for KernelType
+   * @return Value of KernelType
+   */
+  int getKernelType() const;
   Q_PROPERTY(int KernelType READ getKernelType WRITE setKernelType)
-
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -141,32 +139,32 @@ protected:
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
    */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void dataCheckImpl();
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void dataCheckImpl();
 
   /**
-  * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
-  */
+   * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
+   */
   void filterInternal() override;
 
   /**
-  * @brief Applies the filter
-  */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
+   * @brief Applies the filter
+   */
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void filter();
 
 public:
-  ITKGrayscaleMorphologicalClosingImage(const ITKGrayscaleMorphologicalClosingImage&) = delete;    // Copy Constructor Not Implemented
-  ITKGrayscaleMorphologicalClosingImage(ITKGrayscaleMorphologicalClosingImage&&) = delete;         // Move Constructor Not Implemented
+  ITKGrayscaleMorphologicalClosingImage(const ITKGrayscaleMorphologicalClosingImage&) = delete;            // Copy Constructor Not Implemented
+  ITKGrayscaleMorphologicalClosingImage(ITKGrayscaleMorphologicalClosingImage&&) = delete;                 // Move Constructor Not Implemented
   ITKGrayscaleMorphologicalClosingImage& operator=(const ITKGrayscaleMorphologicalClosingImage&) = delete; // Copy Assignment Not Implemented
   ITKGrayscaleMorphologicalClosingImage& operator=(ITKGrayscaleMorphologicalClosingImage&&) = delete;      // Move Assignment Not Implemented
 
-  private:
-    bool m_SafeBorder = {};
-    FloatVec3Type m_KernelRadius = {};
-    int m_KernelType = {};
-
+private:
+  bool m_SafeBorder = {};
+  FloatVec3Type m_KernelRadius = {};
+  int m_KernelType = {};
 };
 
 #ifdef __clang__
 #pragma clang diagnostic pop
 #endif
-

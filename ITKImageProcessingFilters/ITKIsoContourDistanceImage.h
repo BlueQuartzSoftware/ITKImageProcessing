@@ -41,49 +41,47 @@ class ITKImageProcessing_EXPORT ITKIsoContourDistanceImage : public ITKImageProc
   // End Python bindings declarations
 
 public:
-    using Self = ITKIsoContourDistanceImage;
-    using Pointer = std::shared_ptr<Self>;
-    using ConstPointer = std::shared_ptr<const Self>;
-    using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<const Self>;
-    static Pointer NullPointer();
+  using Self = ITKIsoContourDistanceImage;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<const Self>;
+  static Pointer NullPointer();
 
-    static std::shared_ptr<ITKIsoContourDistanceImage> New();
+  static std::shared_ptr<ITKIsoContourDistanceImage> New();
 
-    /**
-    * @brief Returns the name of the class for ITKIsoContourDistanceImage
-    */
-    QString getNameOfClass() const override;
-    /**
-    * @brief Returns the name of the class for ITKIsoContourDistanceImage
-    */
-    static QString ClassName();
-
+  /**
+   * @brief Returns the name of the class for ITKIsoContourDistanceImage
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for ITKIsoContourDistanceImage
+   */
+  static QString ClassName();
 
   ~ITKIsoContourDistanceImage() override;
 
-    /**
-    * @brief Setter property for LevelSetValue
-    */
-    void setLevelSetValue(double value); 
-    /**
-    * @brief Getter property for LevelSetValue
-    * @return Value of LevelSetValue
-    */
-    double getLevelSetValue() const;
+  /**
+   * @brief Setter property for LevelSetValue
+   */
+  void setLevelSetValue(double value);
+  /**
+   * @brief Getter property for LevelSetValue
+   * @return Value of LevelSetValue
+   */
+  double getLevelSetValue() const;
   Q_PROPERTY(double LevelSetValue READ getLevelSetValue WRITE setLevelSetValue)
 
-    /**
-    * @brief Setter property for FarValue
-    */
-    void setFarValue(double value); 
-    /**
-    * @brief Getter property for FarValue
-    * @return Value of FarValue
-    */
-    double getFarValue() const;
+  /**
+   * @brief Setter property for FarValue
+   */
+  void setFarValue(double value);
+  /**
+   * @brief Getter property for FarValue
+   * @return Value of FarValue
+   */
+  double getFarValue() const;
   Q_PROPERTY(double FarValue READ getFarValue WRITE setFarValue)
-
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -127,31 +125,31 @@ protected:
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
    */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void dataCheckImpl();
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void dataCheckImpl();
 
   /**
-  * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
-  */
+   * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
+   */
   void filterInternal() override;
 
   /**
-  * @brief Applies the filter
-  */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
+   * @brief Applies the filter
+   */
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void filter();
 
 public:
-  ITKIsoContourDistanceImage(const ITKIsoContourDistanceImage&) = delete;    // Copy Constructor Not Implemented
-  ITKIsoContourDistanceImage(ITKIsoContourDistanceImage&&) = delete;         // Move Constructor Not Implemented
+  ITKIsoContourDistanceImage(const ITKIsoContourDistanceImage&) = delete;            // Copy Constructor Not Implemented
+  ITKIsoContourDistanceImage(ITKIsoContourDistanceImage&&) = delete;                 // Move Constructor Not Implemented
   ITKIsoContourDistanceImage& operator=(const ITKIsoContourDistanceImage&) = delete; // Copy Assignment Not Implemented
   ITKIsoContourDistanceImage& operator=(ITKIsoContourDistanceImage&&) = delete;      // Move Assignment Not Implemented
 
-  private:
-    double m_LevelSetValue = {};
-    double m_FarValue = {};
-
+private:
+  double m_LevelSetValue = {};
+  double m_FarValue = {};
 };
 
 #ifdef __clang__
 #pragma clang diagnostic pop
 #endif
-

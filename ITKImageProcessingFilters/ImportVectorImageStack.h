@@ -76,102 +76,101 @@ class ITKImageProcessing_EXPORT ImportVectorImageStack : public AbstractFilter
   // End Python bindings declarations
 
 public:
-    using Self = ImportVectorImageStack;
-    using Pointer = std::shared_ptr<Self>;
-    using ConstPointer = std::shared_ptr<const Self>;
-    using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<const Self>;
-    static Pointer NullPointer();
+  using Self = ImportVectorImageStack;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<const Self>;
+  static Pointer NullPointer();
 
-    static std::shared_ptr<ImportVectorImageStack> New();
+  static std::shared_ptr<ImportVectorImageStack> New();
 
-    /**
-    * @brief Returns the name of the class for ImportVectorImageStack
-    */
-    QString getNameOfClass() const override;
-    /**
-    * @brief Returns the name of the class for ImportVectorImageStack
-    */
-    static QString ClassName();
-
+  /**
+   * @brief Returns the name of the class for ImportVectorImageStack
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for ImportVectorImageStack
+   */
+  static QString ClassName();
 
   ~ImportVectorImageStack() override;
 
-    /**
-    * @brief Setter property for DataContainerName
-    */
-    void setDataContainerName(const DataArrayPath& value); 
-    /**
-    * @brief Getter property for DataContainerName
-    * @return Value of DataContainerName
-    */
-    DataArrayPath getDataContainerName() const;
+  /**
+   * @brief Setter property for DataContainerName
+   */
+  void setDataContainerName(const DataArrayPath& value);
+  /**
+   * @brief Getter property for DataContainerName
+   * @return Value of DataContainerName
+   */
+  DataArrayPath getDataContainerName() const;
   Q_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
 
-    /**
-    * @brief Setter property for CellAttributeMatrixName
-    */
-    void setCellAttributeMatrixName(const QString& value); 
-    /**
-    * @brief Getter property for CellAttributeMatrixName
-    * @return Value of CellAttributeMatrixName
-    */
-    QString getCellAttributeMatrixName() const;
+  /**
+   * @brief Setter property for CellAttributeMatrixName
+   */
+  void setCellAttributeMatrixName(const QString& value);
+  /**
+   * @brief Getter property for CellAttributeMatrixName
+   * @return Value of CellAttributeMatrixName
+   */
+  QString getCellAttributeMatrixName() const;
   Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
-    /**
-    * @brief Setter property for Origin
-    */
-    void setOrigin(const FloatVec3Type& value); 
-    /**
-    * @brief Getter property for Origin
-    * @return Value of Origin
-    */
-    FloatVec3Type getOrigin() const;
+  /**
+   * @brief Setter property for Origin
+   */
+  void setOrigin(const FloatVec3Type& value);
+  /**
+   * @brief Getter property for Origin
+   * @return Value of Origin
+   */
+  FloatVec3Type getOrigin() const;
   Q_PROPERTY(FloatVec3Type Origin READ getOrigin WRITE setOrigin)
 
-    /**
-    * @brief Setter property for Spacing
-    */
-    void setSpacing(const FloatVec3Type& value); 
-    /**
-    * @brief Getter property for Spacing
-    * @return Value of Spacing
-    */
-    FloatVec3Type getSpacing() const;
+  /**
+   * @brief Setter property for Spacing
+   */
+  void setSpacing(const FloatVec3Type& value);
+  /**
+   * @brief Getter property for Spacing
+   * @return Value of Spacing
+   */
+  FloatVec3Type getSpacing() const;
   Q_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
 
-    /**
-    * @brief Setter property for InputFileListInfo
-    */
-    void setInputFileListInfo(const VectorFileListInfo_t& value); 
-    /**
-    * @brief Getter property for InputFileListInfo
-    * @return Value of InputFileListInfo
-    */
-    VectorFileListInfo_t getInputFileListInfo() const;
+  /**
+   * @brief Setter property for InputFileListInfo
+   */
+  void setInputFileListInfo(const VectorFileListInfo_t& value);
+  /**
+   * @brief Getter property for InputFileListInfo
+   * @return Value of InputFileListInfo
+   */
+  VectorFileListInfo_t getInputFileListInfo() const;
   Q_PROPERTY(VectorFileListInfo_t InputFileListInfo READ getInputFileListInfo WRITE setInputFileListInfo)
 
-    /**
-    * @brief Setter property for VectorDataArrayName
-    */
-    void setVectorDataArrayName(const QString& value); 
-    /**
-    * @brief Getter property for VectorDataArrayName
-    * @return Value of VectorDataArrayName
-    */
-    QString getVectorDataArrayName() const;
+  /**
+   * @brief Setter property for VectorDataArrayName
+   */
+  void setVectorDataArrayName(const QString& value);
+  /**
+   * @brief Getter property for VectorDataArrayName
+   * @return Value of VectorDataArrayName
+   */
+  QString getVectorDataArrayName() const;
   Q_PROPERTY(QString VectorDataArrayName READ getVectorDataArrayName WRITE setVectorDataArrayName)
 
-    /**
-    * @brief Setter property for ConvertToGrayscale
-    */
-    void setConvertToGrayscale(bool value); 
-    /**
-    * @brief Getter property for ConvertToGrayscale
-    * @return Value of ConvertToGrayscale
-    */
-    bool getConvertToGrayscale() const;
+  /**
+   * @brief Setter property for ConvertToGrayscale
+   */
+  void setConvertToGrayscale(bool value);
+  /**
+   * @brief Getter property for ConvertToGrayscale
+   * @return Value of ConvertToGrayscale
+   */
+  bool getConvertToGrayscale() const;
   Q_PROPERTY(bool ConvertToGrayscale READ getConvertToGrayscale WRITE setConvertToGrayscale)
 
   /**
@@ -229,8 +228,6 @@ public:
    */
   void execute() override;
 
-
-
 protected:
   ImportVectorImageStack();
 
@@ -255,14 +252,12 @@ public:
   ImportVectorImageStack& operator=(const ImportVectorImageStack&) = delete; // Copy Assignment Not Implemented
   ImportVectorImageStack& operator=(ImportVectorImageStack&&) = delete;      // Move Assignment Not Implemented
 
-  private:
-    DataArrayPath m_DataContainerName = {};
-    QString m_CellAttributeMatrixName = {};
-    FloatVec3Type m_Origin = {};
-    FloatVec3Type m_Spacing = {};
-    VectorFileListInfo_t m_InputFileListInfo = {};
-    QString m_VectorDataArrayName = {};
-    bool m_ConvertToGrayscale = {};
-
+private:
+  DataArrayPath m_DataContainerName = {};
+  QString m_CellAttributeMatrixName = {};
+  FloatVec3Type m_Origin = {};
+  FloatVec3Type m_Spacing = {};
+  VectorFileListInfo_t m_InputFileListInfo = {};
+  QString m_VectorDataArrayName = {};
+  bool m_ConvertToGrayscale = {};
 };
-

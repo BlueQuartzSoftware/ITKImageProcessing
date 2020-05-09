@@ -43,60 +43,58 @@ class ITKImageProcessing_EXPORT ITKBinaryContourImage : public ITKImageProcessin
   // End Python bindings declarations
 
 public:
-    using Self = ITKBinaryContourImage;
-    using Pointer = std::shared_ptr<Self>;
-    using ConstPointer = std::shared_ptr<const Self>;
-    using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<const Self>;
-    static Pointer NullPointer();
+  using Self = ITKBinaryContourImage;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<const Self>;
+  static Pointer NullPointer();
 
-    static std::shared_ptr<ITKBinaryContourImage> New();
+  static std::shared_ptr<ITKBinaryContourImage> New();
 
-    /**
-    * @brief Returns the name of the class for ITKBinaryContourImage
-    */
-    QString getNameOfClass() const override;
-    /**
-    * @brief Returns the name of the class for ITKBinaryContourImage
-    */
-    static QString ClassName();
-
+  /**
+   * @brief Returns the name of the class for ITKBinaryContourImage
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for ITKBinaryContourImage
+   */
+  static QString ClassName();
 
   ~ITKBinaryContourImage() override;
 
-    /**
-    * @brief Setter property for FullyConnected
-    */
-    void setFullyConnected(bool value); 
-    /**
-    * @brief Getter property for FullyConnected
-    * @return Value of FullyConnected
-    */
-    bool getFullyConnected() const;
+  /**
+   * @brief Setter property for FullyConnected
+   */
+  void setFullyConnected(bool value);
+  /**
+   * @brief Getter property for FullyConnected
+   * @return Value of FullyConnected
+   */
+  bool getFullyConnected() const;
   Q_PROPERTY(bool FullyConnected READ getFullyConnected WRITE setFullyConnected)
 
-    /**
-    * @brief Setter property for BackgroundValue
-    */
-    void setBackgroundValue(double value); 
-    /**
-    * @brief Getter property for BackgroundValue
-    * @return Value of BackgroundValue
-    */
-    double getBackgroundValue() const;
+  /**
+   * @brief Setter property for BackgroundValue
+   */
+  void setBackgroundValue(double value);
+  /**
+   * @brief Getter property for BackgroundValue
+   * @return Value of BackgroundValue
+   */
+  double getBackgroundValue() const;
   Q_PROPERTY(double BackgroundValue READ getBackgroundValue WRITE setBackgroundValue)
 
-    /**
-    * @brief Setter property for ForegroundValue
-    */
-    void setForegroundValue(double value); 
-    /**
-    * @brief Getter property for ForegroundValue
-    * @return Value of ForegroundValue
-    */
-    double getForegroundValue() const;
+  /**
+   * @brief Setter property for ForegroundValue
+   */
+  void setForegroundValue(double value);
+  /**
+   * @brief Getter property for ForegroundValue
+   * @return Value of ForegroundValue
+   */
+  double getForegroundValue() const;
   Q_PROPERTY(double ForegroundValue READ getForegroundValue WRITE setForegroundValue)
-
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -140,32 +138,32 @@ protected:
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
    */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void dataCheckImpl();
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void dataCheckImpl();
 
   /**
-  * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
-  */
+   * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
+   */
   void filterInternal() override;
 
   /**
-  * @brief Applies the filter
-  */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
+   * @brief Applies the filter
+   */
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void filter();
 
 public:
-  ITKBinaryContourImage(const ITKBinaryContourImage&) = delete;    // Copy Constructor Not Implemented
-  ITKBinaryContourImage(ITKBinaryContourImage&&) = delete;         // Move Constructor Not Implemented
+  ITKBinaryContourImage(const ITKBinaryContourImage&) = delete;            // Copy Constructor Not Implemented
+  ITKBinaryContourImage(ITKBinaryContourImage&&) = delete;                 // Move Constructor Not Implemented
   ITKBinaryContourImage& operator=(const ITKBinaryContourImage&) = delete; // Copy Assignment Not Implemented
   ITKBinaryContourImage& operator=(ITKBinaryContourImage&&) = delete;      // Move Assignment Not Implemented
 
-  private:
-    bool m_FullyConnected = {};
-    double m_BackgroundValue = {};
-    double m_ForegroundValue = {};
-
+private:
+  bool m_FullyConnected = {};
+  double m_BackgroundValue = {};
+  double m_ForegroundValue = {};
 };
 
 #ifdef __clang__
 #pragma clang diagnostic pop
 #endif
-

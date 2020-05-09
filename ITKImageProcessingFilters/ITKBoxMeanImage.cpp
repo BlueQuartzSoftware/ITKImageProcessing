@@ -4,7 +4,6 @@
  * Your License or Copyright can go here
  */
 
-
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKBoxMeanImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 #include "SIMPLib/Common/Constants.h"
@@ -16,7 +15,6 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
-
 
 // -----------------------------------------------------------------------------
 //
@@ -39,7 +37,6 @@ void ITKBoxMeanImage::setupFilterParameters()
   FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Radius", Radius, FilterParameter::Parameter, ITKBoxMeanImage));
-
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -73,7 +70,8 @@ void ITKBoxMeanImage::readFilterParameters(AbstractFilterParametersReader* reade
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKBoxMeanImage::dataCheckImpl()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKBoxMeanImage::dataCheckImpl()
 {
   clearErrorCode();
   clearWarningCode();
@@ -96,7 +94,8 @@ void ITKBoxMeanImage::dataCheck()
 //
 // -----------------------------------------------------------------------------
 
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKBoxMeanImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKBoxMeanImage::filter()
 {
   typedef itk::Image<InputPixelType, Dimension> InputImageType;
   typedef itk::Image<OutputPixelType, Dimension> OutputImageType;
@@ -105,7 +104,6 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   typename FilterType::Pointer filter = FilterType::New();
   filter->SetRadius(CastVec3ToITK<FloatVec3Type, typename FilterType::RadiusType, typename FilterType::RadiusType::SizeValueType>(m_Radius, FilterType::RadiusType::Dimension));
   this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -162,7 +160,7 @@ ITKBoxMeanImage::Pointer ITKBoxMeanImage::NullPointer()
 // -----------------------------------------------------------------------------
 std::shared_ptr<ITKBoxMeanImage> ITKBoxMeanImage::New()
 {
-  struct make_shared_enabler : public ITKBoxMeanImage  
+  struct make_shared_enabler : public ITKBoxMeanImage
   {
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
@@ -193,5 +191,3 @@ FloatVec3Type ITKBoxMeanImage::getRadius() const
 {
   return m_Radius;
 }
-
-

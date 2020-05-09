@@ -24,20 +24,20 @@
 class ImportZenInfoMontageTest
 {
 
-  public:
-    ImportZenInfoMontageTest() = default;
-    ~ImportZenInfoMontageTest() = default;
-    ImportZenInfoMontageTest(const ImportZenInfoMontageTest&) = delete;            // Copy Constructor
-    ImportZenInfoMontageTest(ImportZenInfoMontageTest&&) = delete;                 // Move Constructor
-    ImportZenInfoMontageTest& operator=(const ImportZenInfoMontageTest&) = delete; // Copy Assignment
-    ImportZenInfoMontageTest& operator=(ImportZenInfoMontageTest&&) = delete;      // Move Assignment
+public:
+  ImportZenInfoMontageTest() = default;
+  ~ImportZenInfoMontageTest() = default;
+  ImportZenInfoMontageTest(const ImportZenInfoMontageTest&) = delete;            // Copy Constructor
+  ImportZenInfoMontageTest(ImportZenInfoMontageTest&&) = delete;                 // Move Constructor
+  ImportZenInfoMontageTest& operator=(const ImportZenInfoMontageTest&) = delete; // Copy Assignment
+  ImportZenInfoMontageTest& operator=(ImportZenInfoMontageTest&&) = delete;      // Move Assignment
 
   // -----------------------------------------------------------------------------
   //
   // -----------------------------------------------------------------------------
   void RemoveTestFiles()
   {
-  #if REMOVE_TEST_FILES
+#if REMOVE_TEST_FILES
     QFile::remove(UnitTest::ImportZenInfoMontageTest::OutputDREAM3DFile);
 #endif
   }
@@ -138,12 +138,11 @@ class ImportZenInfoMontageTest
 
     int err = EXIT_SUCCESS;
 
+    DREAM3D_REGISTER_TEST(TestImportZenInfoMontageTest())
 
-    DREAM3D_REGISTER_TEST( TestImportZenInfoMontageTest() )
-
-    DREAM3D_REGISTER_TEST( RemoveTestFiles() )
+    DREAM3D_REGISTER_TEST(RemoveTestFiles())
   }
 
-  private:
-    QString m_ClassName = QString("ImportZenInfoMontageTest");
+private:
+  QString m_ClassName = QString("ImportZenInfoMontageTest");
 };

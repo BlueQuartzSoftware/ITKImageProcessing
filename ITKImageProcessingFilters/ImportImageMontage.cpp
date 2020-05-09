@@ -2,7 +2,6 @@
  * Your License or Copyright Information can go here
  */
 
-
 #include "ImportImageMontage.h"
 
 #include <QtCore/QFileInfo>
@@ -233,7 +232,6 @@ void ImportImageMontage::dataCheck()
   }
 #endif
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -500,7 +498,7 @@ ImportImageMontage::Pointer ImportImageMontage::NullPointer()
 // -----------------------------------------------------------------------------
 std::shared_ptr<ImportImageMontage> ImportImageMontage::New()
 {
-  struct make_shared_enabler : public ImportImageMontage  
+  struct make_shared_enabler : public ImportImageMontage
   {
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
@@ -591,5 +589,3 @@ FileListInfo_t ImportImageMontage::getInputFileListInfo() const
 {
   return m_InputFileListInfo;
 }
-
-

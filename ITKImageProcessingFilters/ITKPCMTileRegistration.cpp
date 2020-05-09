@@ -301,7 +301,6 @@ void ITKPCMTileRegistration::dataCheck()
   }
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -349,7 +348,7 @@ typename MontageType::Pointer ITKPCMTileRegistration::createMontage(int peakMeth
     y1 = 0;
   }
 
-#if (ITK_VERSION_MAJOR == 5) && (ITK_VERSION_MINOR >= 1)
+#if(ITK_VERSION_MAJOR == 5) && (ITK_VERSION_MINOR >= 1)
   using PaddingMethodEnum = typename PCMType::PaddingMethodEnum;
   using PeakInterpolationType = typename itk::MaxPhaseCorrelationOptimizer<PCMType>::PeakInterpolationMethodEnum;
 #else
@@ -683,7 +682,7 @@ ITKPCMTileRegistration::Pointer ITKPCMTileRegistration::NullPointer()
 // -----------------------------------------------------------------------------
 std::shared_ptr<ITKPCMTileRegistration> ITKPCMTileRegistration::New()
 {
-  struct make_shared_enabler : public ITKPCMTileRegistration  
+  struct make_shared_enabler : public ITKPCMTileRegistration
   {
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();

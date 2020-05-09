@@ -8,16 +8,15 @@
 // Auto includes
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 
-
 class ITKInvertIntensityImageTest : public ITKTestBase
 {
 
 public:
-ITKInvertIntensityImageTest() = default;
-~ITKInvertIntensityImageTest() override = default;
+  ITKInvertIntensityImageTest() = default;
+  ~ITKInvertIntensityImageTest() override = default;
 
   int TestITKInvertIntensityImage3dTest()
-{
+  {
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/RA-Short.nrrd");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -44,9 +43,7 @@ ITKInvertIntensityImageTest() = default;
     GetMD5FromDataContainer(containerArray, input_path, md5Output);
     DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("76765a57f26a7979f33efc8ed9801a55"));
     return 0;
-}
-
-
+  }
 
   // -----------------------------------------------------------------------------
   //
@@ -57,7 +54,7 @@ ITKInvertIntensityImageTest() = default;
 
     DREAM3D_REGISTER_TEST(this->TestFilterAvailability("ITKInvertIntensityImage"));
 
-    DREAM3D_REGISTER_TEST( TestITKInvertIntensityImage3dTest());
+    DREAM3D_REGISTER_TEST(TestITKInvertIntensityImage3dTest());
 
     if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
     {

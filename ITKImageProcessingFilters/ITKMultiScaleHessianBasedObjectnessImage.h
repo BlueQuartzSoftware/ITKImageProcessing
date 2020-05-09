@@ -47,124 +47,123 @@ class ITKImageProcessing_EXPORT ITKMultiScaleHessianBasedObjectnessImage : publi
   // End Python bindings declarations
 
 public:
-    using Self = ITKMultiScaleHessianBasedObjectnessImage;
-    using Pointer = std::shared_ptr<Self>;
-    using ConstPointer = std::shared_ptr<const Self>;
-    using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<const Self>;
-    static Pointer NullPointer();
+  using Self = ITKMultiScaleHessianBasedObjectnessImage;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<const Self>;
+  static Pointer NullPointer();
 
-    static std::shared_ptr<ITKMultiScaleHessianBasedObjectnessImage> New();
+  static std::shared_ptr<ITKMultiScaleHessianBasedObjectnessImage> New();
 
-    /**
-    * @brief Returns the name of the class for ITKMultiScaleHessianBasedObjectnessImage
-    */
-    QString getNameOfClass() const override;
-    /**
-    * @brief Returns the name of the class for ITKMultiScaleHessianBasedObjectnessImage
-    */
-    static QString ClassName();
-
+  /**
+   * @brief Returns the name of the class for ITKMultiScaleHessianBasedObjectnessImage
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for ITKMultiScaleHessianBasedObjectnessImage
+   */
+  static QString ClassName();
 
   ~ITKMultiScaleHessianBasedObjectnessImage() override;
 
-    /**
-    * @brief Setter property for ObjectDimension
-    */
-    void setObjectDimension(int value); 
-    /**
-    * @brief Getter property for ObjectDimension
-    * @return Value of ObjectDimension
-    */
-    int getObjectDimension() const;
+  /**
+   * @brief Setter property for ObjectDimension
+   */
+  void setObjectDimension(int value);
+  /**
+   * @brief Getter property for ObjectDimension
+   * @return Value of ObjectDimension
+   */
+  int getObjectDimension() const;
   Q_PROPERTY(int ObjectDimension READ getObjectDimension WRITE setObjectDimension)
 
-    /**
-    * @brief Setter property for Alpha
-    */
-    void setAlpha(double value); 
-    /**
-    * @brief Getter property for Alpha
-    * @return Value of Alpha
-    */
-    double getAlpha() const;
+  /**
+   * @brief Setter property for Alpha
+   */
+  void setAlpha(double value);
+  /**
+   * @brief Getter property for Alpha
+   * @return Value of Alpha
+   */
+  double getAlpha() const;
   Q_PROPERTY(double Alpha READ getAlpha WRITE setAlpha)
 
-    /**
-    * @brief Setter property for Beta
-    */
-    void setBeta(double value); 
-    /**
-    * @brief Getter property for Beta
-    * @return Value of Beta
-    */
-    double getBeta() const;
+  /**
+   * @brief Setter property for Beta
+   */
+  void setBeta(double value);
+  /**
+   * @brief Getter property for Beta
+   * @return Value of Beta
+   */
+  double getBeta() const;
   Q_PROPERTY(double Beta READ getBeta WRITE setBeta)
 
-    /**
-    * @brief Setter property for Gamma
-    */
-    void setGamma(double value); 
-    /**
-    * @brief Getter property for Gamma
-    * @return Value of Gamma
-    */
-    double getGamma() const;
+  /**
+   * @brief Setter property for Gamma
+   */
+  void setGamma(double value);
+  /**
+   * @brief Getter property for Gamma
+   * @return Value of Gamma
+   */
+  double getGamma() const;
   Q_PROPERTY(double Gamma READ getGamma WRITE setGamma)
 
-    /**
-    * @brief Setter property for ScaleObjectnessMeasure
-    */
-    void setScaleObjectnessMeasure(bool value); 
-    /**
-    * @brief Getter property for ScaleObjectnessMeasure
-    * @return Value of ScaleObjectnessMeasure
-    */
-    bool getScaleObjectnessMeasure() const;
+  /**
+   * @brief Setter property for ScaleObjectnessMeasure
+   */
+  void setScaleObjectnessMeasure(bool value);
+  /**
+   * @brief Getter property for ScaleObjectnessMeasure
+   * @return Value of ScaleObjectnessMeasure
+   */
+  bool getScaleObjectnessMeasure() const;
   Q_PROPERTY(bool ScaleObjectnessMeasure READ getScaleObjectnessMeasure WRITE setScaleObjectnessMeasure)
 
-    /**
-    * @brief Setter property for BrightObject
-    */
-    void setBrightObject(bool value); 
-    /**
-    * @brief Getter property for BrightObject
-    * @return Value of BrightObject
-    */
-    bool getBrightObject() const;
+  /**
+   * @brief Setter property for BrightObject
+   */
+  void setBrightObject(bool value);
+  /**
+   * @brief Getter property for BrightObject
+   * @return Value of BrightObject
+   */
+  bool getBrightObject() const;
   Q_PROPERTY(bool BrightObject READ getBrightObject WRITE setBrightObject)
 
-    /**
-    * @brief Setter property for SigmaMinimum
-    */
-    void setSigmaMinimum(double value); 
-    /**
-    * @brief Getter property for SigmaMinimum
-    * @return Value of SigmaMinimum
-    */
-    double getSigmaMinimum() const;
+  /**
+   * @brief Setter property for SigmaMinimum
+   */
+  void setSigmaMinimum(double value);
+  /**
+   * @brief Getter property for SigmaMinimum
+   * @return Value of SigmaMinimum
+   */
+  double getSigmaMinimum() const;
   Q_PROPERTY(double SigmaMinimum READ getSigmaMinimum WRITE setSigmaMinimum)
 
-    /**
-    * @brief Setter property for SigmaMaximum
-    */
-    void setSigmaMaximum(double value); 
-    /**
-    * @brief Getter property for SigmaMaximum
-    * @return Value of SigmaMaximum
-    */
-    double getSigmaMaximum() const;
+  /**
+   * @brief Setter property for SigmaMaximum
+   */
+  void setSigmaMaximum(double value);
+  /**
+   * @brief Getter property for SigmaMaximum
+   * @return Value of SigmaMaximum
+   */
+  double getSigmaMaximum() const;
   Q_PROPERTY(double SigmaMaximum READ getSigmaMaximum WRITE setSigmaMaximum)
 
-    /**
-    * @brief Setter property for NumberOfSigmaSteps
-    */
-    void setNumberOfSigmaSteps(double value); 
-    /**
-    * @brief Getter property for NumberOfSigmaSteps
-    * @return Value of NumberOfSigmaSteps
-    */
-    double getNumberOfSigmaSteps() const;
+  /**
+   * @brief Setter property for NumberOfSigmaSteps
+   */
+  void setNumberOfSigmaSteps(double value);
+  /**
+   * @brief Getter property for NumberOfSigmaSteps
+   * @return Value of NumberOfSigmaSteps
+   */
+  double getNumberOfSigmaSteps() const;
   Q_PROPERTY(double NumberOfSigmaSteps READ getNumberOfSigmaSteps WRITE setNumberOfSigmaSteps)
 
   /**
@@ -209,38 +208,38 @@ protected:
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
    */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void dataCheckImpl();
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void dataCheckImpl();
 
   /**
-  * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
-  */
+   * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
+   */
   void filterInternal() override;
 
   /**
-  * @brief Applies the filter
-  */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
+   * @brief Applies the filter
+   */
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void filter();
 
 public:
-  ITKMultiScaleHessianBasedObjectnessImage(const ITKMultiScaleHessianBasedObjectnessImage&) = delete; // Copy Constructor Not Implemented
-  ITKMultiScaleHessianBasedObjectnessImage(ITKMultiScaleHessianBasedObjectnessImage&&) = delete;      // Move Constructor Not Implemented
+  ITKMultiScaleHessianBasedObjectnessImage(const ITKMultiScaleHessianBasedObjectnessImage&) = delete;            // Copy Constructor Not Implemented
+  ITKMultiScaleHessianBasedObjectnessImage(ITKMultiScaleHessianBasedObjectnessImage&&) = delete;                 // Move Constructor Not Implemented
   ITKMultiScaleHessianBasedObjectnessImage& operator=(const ITKMultiScaleHessianBasedObjectnessImage&) = delete; // Copy Assignment Not Implemented
   ITKMultiScaleHessianBasedObjectnessImage& operator=(ITKMultiScaleHessianBasedObjectnessImage&&) = delete;      // Move Assignment Not Implemented
 
-  private:
-    int m_ObjectDimension = {};
-    double m_Alpha = {};
-    double m_Beta = {};
-    double m_Gamma = {};
-    bool m_ScaleObjectnessMeasure = {};
-    bool m_BrightObject = {};
-    double m_SigmaMinimum = {};
-    double m_SigmaMaximum = {};
-    double m_NumberOfSigmaSteps = {};
-
+private:
+  int m_ObjectDimension = {};
+  double m_Alpha = {};
+  double m_Beta = {};
+  double m_Gamma = {};
+  bool m_ScaleObjectnessMeasure = {};
+  bool m_BrightObject = {};
+  double m_SigmaMinimum = {};
+  double m_SigmaMaximum = {};
+  double m_NumberOfSigmaSteps = {};
 };
 
 #ifdef __clang__
 #pragma clang diagnostic pop
 #endif
-

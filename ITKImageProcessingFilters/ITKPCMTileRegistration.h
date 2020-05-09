@@ -75,91 +75,91 @@ class ITKImageProcessing_EXPORT ITKPCMTileRegistration : public AbstractFilter
   // End Python bindings declarations
 
 public:
-    using Self = ITKPCMTileRegistration;
-    using Pointer = std::shared_ptr<Self>;
-    using ConstPointer = std::shared_ptr<const Self>;
-    using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<const Self>;
-    static Pointer NullPointer();
+  using Self = ITKPCMTileRegistration;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<const Self>;
+  static Pointer NullPointer();
 
-    static std::shared_ptr<ITKPCMTileRegistration> New();
+  static std::shared_ptr<ITKPCMTileRegistration> New();
 
-    /**
-    * @brief Returns the name of the class for ITKPCMTileRegistration
-    */
-    QString getNameOfClass() const override;
-    /**
-    * @brief Returns the name of the class for ITKPCMTileRegistration
-    */
-    static QString ClassName();
+  /**
+   * @brief Returns the name of the class for ITKPCMTileRegistration
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for ITKPCMTileRegistration
+   */
+  static QString ClassName();
 
-    ~ITKPCMTileRegistration() override;
+  ~ITKPCMTileRegistration() override;
 
-    /**
-     * @brief Setter property for DataContainerPaddingDigits
-     */
-    void setDataContainerPaddingDigits(int32_t value);
-    /**
-     * @brief Getter property for DataContainerPaddingDigits
-     * @return Value of DataContainerPaddingDigits
-     */
-    int32_t getDataContainerPaddingDigits() const;
-    Q_PROPERTY(int32_t DataContainerPaddingDigits READ getDataContainerPaddingDigits WRITE setDataContainerPaddingDigits)
+  /**
+   * @brief Setter property for DataContainerPaddingDigits
+   */
+  void setDataContainerPaddingDigits(int32_t value);
+  /**
+   * @brief Getter property for DataContainerPaddingDigits
+   * @return Value of DataContainerPaddingDigits
+   */
+  int32_t getDataContainerPaddingDigits() const;
+  Q_PROPERTY(int32_t DataContainerPaddingDigits READ getDataContainerPaddingDigits WRITE setDataContainerPaddingDigits)
 
-    /**
-     * @brief Setter property for ColumnMontageLimits
-     */
-    void setColumnMontageLimits(const IntVec2Type& value);
-    /**
-     * @brief Getter property for ColumnMontageLimits
-     * @return Value of ColumnMontageLimits
-     */
-    IntVec2Type getColumnMontageLimits() const;
-    Q_PROPERTY(IntVec2Type ColumnMontageLimits READ getColumnMontageLimits WRITE setColumnMontageLimits)
+  /**
+   * @brief Setter property for ColumnMontageLimits
+   */
+  void setColumnMontageLimits(const IntVec2Type& value);
+  /**
+   * @brief Getter property for ColumnMontageLimits
+   * @return Value of ColumnMontageLimits
+   */
+  IntVec2Type getColumnMontageLimits() const;
+  Q_PROPERTY(IntVec2Type ColumnMontageLimits READ getColumnMontageLimits WRITE setColumnMontageLimits)
 
-    /**
-     * @brief Setter property for RowMontageLimits
-     */
-    void setRowMontageLimits(const IntVec2Type& value);
-    /**
-     * @brief Getter property for RowMontageLimits
-     * @return Value of RowMontageLimits
-     */
-    IntVec2Type getRowMontageLimits() const;
-    Q_PROPERTY(IntVec2Type RowMontageLimits READ getRowMontageLimits WRITE setRowMontageLimits)
+  /**
+   * @brief Setter property for RowMontageLimits
+   */
+  void setRowMontageLimits(const IntVec2Type& value);
+  /**
+   * @brief Getter property for RowMontageLimits
+   * @return Value of RowMontageLimits
+   */
+  IntVec2Type getRowMontageLimits() const;
+  Q_PROPERTY(IntVec2Type RowMontageLimits READ getRowMontageLimits WRITE setRowMontageLimits)
 
-    /**
-     * @brief Setter property for DataContainerPrefix
-     */
-    void setDataContainerPrefix(const QString& value);
-    /**
-     * @brief Getter property for DataContainerPrefix
-     * @return Value of DataContainerPrefix
-     */
-    QString getDataContainerPrefix() const;
+  /**
+   * @brief Setter property for DataContainerPrefix
+   */
+  void setDataContainerPrefix(const QString& value);
+  /**
+   * @brief Getter property for DataContainerPrefix
+   * @return Value of DataContainerPrefix
+   */
+  QString getDataContainerPrefix() const;
 
-    Q_PROPERTY(QString DataContainerPrefix READ getDataContainerPrefix WRITE setDataContainerPrefix)
+  Q_PROPERTY(QString DataContainerPrefix READ getDataContainerPrefix WRITE setDataContainerPrefix)
 
-    /**
-    * @brief Setter property for CommonAttributeMatrixName
-    */
-    void setCommonAttributeMatrixName(const QString& value); 
-    /**
-    * @brief Getter property for CommonAttributeMatrixName
-    * @return Value of CommonAttributeMatrixName
-    */
-    QString getCommonAttributeMatrixName() const;
+  /**
+   * @brief Setter property for CommonAttributeMatrixName
+   */
+  void setCommonAttributeMatrixName(const QString& value);
+  /**
+   * @brief Getter property for CommonAttributeMatrixName
+   * @return Value of CommonAttributeMatrixName
+   */
+  QString getCommonAttributeMatrixName() const;
   Q_PROPERTY(QString CommonAttributeMatrixName READ getCommonAttributeMatrixName WRITE setCommonAttributeMatrixName)
 
-    /**
-    * @brief Setter property for CommonDataArrayName
-    */
-    void setCommonDataArrayName(const QString& value); 
-    /**
-    * @brief Getter property for CommonDataArrayName
-    * @return Value of CommonDataArrayName
-    */
-    QString getCommonDataArrayName() const;
+  /**
+   * @brief Setter property for CommonDataArrayName
+   */
+  void setCommonDataArrayName(const QString& value);
+  /**
+   * @brief Getter property for CommonDataArrayName
+   * @return Value of CommonDataArrayName
+   */
+  QString getCommonDataArrayName() const;
   Q_PROPERTY(QString CommonDataArrayName READ getCommonDataArrayName WRITE setCommonDataArrayName)
 
   /**

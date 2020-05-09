@@ -30,7 +30,6 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #pragma once
 
-
 #include <memory>
 
 #include "SIMPLib/SIMPLib.h"
@@ -38,32 +37,32 @@
 #include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 #include "ITKImageProcessing/ZeissXml/ZeissMetaEntry.h"
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 class ITKImageProcessing_EXPORT ZeissMetaFactory
 {
-  public:
-    using Self = ZeissMetaFactory;
-    ;
-    using Pointer = std::shared_ptr<Self>;
-    using ConstPointer = std::shared_ptr<const Self>;
-    using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<const Self>;
-    static Pointer NullPointer();
+public:
+  using Self = ZeissMetaFactory;
+  ;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<const Self>;
+  static Pointer NullPointer();
 
-    virtual ~ZeissMetaFactory() = default;
+  virtual ~ZeissMetaFactory() = default;
 
-    virtual AbstractZeissMetaData::Pointer createMetaEntry() = 0;
-  protected:
-    ZeissMetaFactory() = default;
+  virtual AbstractZeissMetaData::Pointer createMetaEntry() = 0;
 
-  public:
-    ZeissMetaFactory(const ZeissMetaFactory&) = delete; // Copy Constructor Not Implemented
-    ZeissMetaFactory(ZeissMetaFactory&&) = delete;      // Move Constructor Not Implemented
-    ZeissMetaFactory& operator=(const ZeissMetaFactory&) = delete; // Copy Assignment Not Implemented
-    ZeissMetaFactory& operator=(ZeissMetaFactory&&) = delete;      // Move Assignment Not Implemented
+protected:
+  ZeissMetaFactory() = default;
+
+public:
+  ZeissMetaFactory(const ZeissMetaFactory&) = delete;            // Copy Constructor Not Implemented
+  ZeissMetaFactory(ZeissMetaFactory&&) = delete;                 // Move Constructor Not Implemented
+  ZeissMetaFactory& operator=(const ZeissMetaFactory&) = delete; // Copy Assignment Not Implemented
+  ZeissMetaFactory& operator=(ZeissMetaFactory&&) = delete;      // Move Assignment Not Implemented
 };
 
 // -----------------------------------------------------------------------------
@@ -71,32 +70,32 @@ class ITKImageProcessing_EXPORT ZeissMetaFactory
 // -----------------------------------------------------------------------------
 class ITKImageProcessing_EXPORT Int32ZeissMetaFactory : public ZeissMetaFactory
 {
-  public:
-    using Self = Int32ZeissMetaFactory;
-    ;
-    using Pointer = std::shared_ptr<Self>;
-    using ConstPointer = std::shared_ptr<const Self>;
-    using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<const Self>;
-    static Pointer NullPointer();
+public:
+  using Self = Int32ZeissMetaFactory;
+  ;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<const Self>;
+  static Pointer NullPointer();
 
-    using ZeissMetaFactoryType = ZeissMetaFactory::Pointer;
-    static ZeissMetaFactoryType NewZeissMetaFactory()
-    {
-      ZeissMetaFactoryType sharedPtr(new(Self));
-      return sharedPtr;
-    }
+  using ZeissMetaFactoryType = ZeissMetaFactory::Pointer;
+  static ZeissMetaFactoryType NewZeissMetaFactory()
+  {
+    ZeissMetaFactoryType sharedPtr(new(Self));
+    return sharedPtr;
+  }
 
-    AbstractZeissMetaData::Pointer createMetaEntry() override;
+  AbstractZeissMetaData::Pointer createMetaEntry() override;
 
-  protected:
-    Int32ZeissMetaFactory() = default;
+protected:
+  Int32ZeissMetaFactory() = default;
 
-  public:
-    Int32ZeissMetaFactory(const Int32ZeissMetaFactory&) = delete; // Copy Constructor Not Implemented
-    Int32ZeissMetaFactory(Int32ZeissMetaFactory&&) = delete;      // Move Constructor Not Implemented
-    Int32ZeissMetaFactory& operator=(const Int32ZeissMetaFactory&) = delete; // Copy Assignment Not Implemented
-    Int32ZeissMetaFactory& operator=(Int32ZeissMetaFactory&&) = delete;      // Move Assignment Not Implemented
+public:
+  Int32ZeissMetaFactory(const Int32ZeissMetaFactory&) = delete;            // Copy Constructor Not Implemented
+  Int32ZeissMetaFactory(Int32ZeissMetaFactory&&) = delete;                 // Move Constructor Not Implemented
+  Int32ZeissMetaFactory& operator=(const Int32ZeissMetaFactory&) = delete; // Copy Assignment Not Implemented
+  Int32ZeissMetaFactory& operator=(Int32ZeissMetaFactory&&) = delete;      // Move Assignment Not Implemented
 };
 
 // -----------------------------------------------------------------------------
@@ -104,65 +103,63 @@ class ITKImageProcessing_EXPORT Int32ZeissMetaFactory : public ZeissMetaFactory
 // -----------------------------------------------------------------------------
 class ITKImageProcessing_EXPORT Int64ZeissMetaFactory : public ZeissMetaFactory
 {
-  public:
-    using Self = Int64ZeissMetaFactory;
-    ;
-    using Pointer = std::shared_ptr<Self>;
-    using ConstPointer = std::shared_ptr<const Self>;
-    using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<const Self>;
-    static Pointer NullPointer();
+public:
+  using Self = Int64ZeissMetaFactory;
+  ;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<const Self>;
+  static Pointer NullPointer();
 
-    using ZeissMetaFactoryType = ZeissMetaFactory::Pointer;
-    static ZeissMetaFactoryType NewZeissMetaFactory()
-    {
-      ZeissMetaFactoryType sharedPtr(new(Self));
-      return sharedPtr;
-    }
-    AbstractZeissMetaData::Pointer createMetaEntry() override;
+  using ZeissMetaFactoryType = ZeissMetaFactory::Pointer;
+  static ZeissMetaFactoryType NewZeissMetaFactory()
+  {
+    ZeissMetaFactoryType sharedPtr(new(Self));
+    return sharedPtr;
+  }
+  AbstractZeissMetaData::Pointer createMetaEntry() override;
 
-  protected:
-    Int64ZeissMetaFactory() = default;
+protected:
+  Int64ZeissMetaFactory() = default;
 
-  public:
-    Int64ZeissMetaFactory(const Int64ZeissMetaFactory&) = delete; // Copy Constructor Not Implemented
-    Int64ZeissMetaFactory(Int64ZeissMetaFactory&&) = delete;      // Move Constructor Not Implemented
-    Int64ZeissMetaFactory& operator=(const Int64ZeissMetaFactory&) = delete; // Copy Assignment Not Implemented
-    Int64ZeissMetaFactory& operator=(Int64ZeissMetaFactory&&) = delete;      // Move Assignment Not Implemented
+public:
+  Int64ZeissMetaFactory(const Int64ZeissMetaFactory&) = delete;            // Copy Constructor Not Implemented
+  Int64ZeissMetaFactory(Int64ZeissMetaFactory&&) = delete;                 // Move Constructor Not Implemented
+  Int64ZeissMetaFactory& operator=(const Int64ZeissMetaFactory&) = delete; // Copy Assignment Not Implemented
+  Int64ZeissMetaFactory& operator=(Int64ZeissMetaFactory&&) = delete;      // Move Assignment Not Implemented
 };
-
-
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 class ITKImageProcessing_EXPORT FloatZeissMetaFactory : public ZeissMetaFactory
 {
-  public:
-    using Self = FloatZeissMetaFactory;
-    ;
-    using Pointer = std::shared_ptr<Self>;
-    using ConstPointer = std::shared_ptr<const Self>;
-    using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<const Self>;
-    static Pointer NullPointer();
+public:
+  using Self = FloatZeissMetaFactory;
+  ;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<const Self>;
+  static Pointer NullPointer();
 
-    using ZeissMetaFactoryType = ZeissMetaFactory::Pointer;
-    static ZeissMetaFactoryType NewZeissMetaFactory()
-    {
-      ZeissMetaFactoryType sharedPtr(new(Self));
-      return sharedPtr;
-    }
-    AbstractZeissMetaData::Pointer createMetaEntry() override;
+  using ZeissMetaFactoryType = ZeissMetaFactory::Pointer;
+  static ZeissMetaFactoryType NewZeissMetaFactory()
+  {
+    ZeissMetaFactoryType sharedPtr(new(Self));
+    return sharedPtr;
+  }
+  AbstractZeissMetaData::Pointer createMetaEntry() override;
 
-  protected:
-    FloatZeissMetaFactory() = default;
+protected:
+  FloatZeissMetaFactory() = default;
 
-  public:
-    FloatZeissMetaFactory(const FloatZeissMetaFactory&) = delete; // Copy Constructor Not Implemented
-    FloatZeissMetaFactory(FloatZeissMetaFactory&&) = delete;      // Move Constructor Not Implemented
-    FloatZeissMetaFactory& operator=(const FloatZeissMetaFactory&) = delete; // Copy Assignment Not Implemented
-    FloatZeissMetaFactory& operator=(FloatZeissMetaFactory&&) = delete;      // Move Assignment Not Implemented
+public:
+  FloatZeissMetaFactory(const FloatZeissMetaFactory&) = delete;            // Copy Constructor Not Implemented
+  FloatZeissMetaFactory(FloatZeissMetaFactory&&) = delete;                 // Move Constructor Not Implemented
+  FloatZeissMetaFactory& operator=(const FloatZeissMetaFactory&) = delete; // Copy Assignment Not Implemented
+  FloatZeissMetaFactory& operator=(FloatZeissMetaFactory&&) = delete;      // Move Assignment Not Implemented
 };
 
 // -----------------------------------------------------------------------------
@@ -170,31 +167,31 @@ class ITKImageProcessing_EXPORT FloatZeissMetaFactory : public ZeissMetaFactory
 // -----------------------------------------------------------------------------
 class ITKImageProcessing_EXPORT StringZeissMetaFactory : public ZeissMetaFactory
 {
-  public:
-    using Self = StringZeissMetaFactory;
-    ;
-    using Pointer = std::shared_ptr<Self>;
-    using ConstPointer = std::shared_ptr<const Self>;
-    using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<const Self>;
-    static Pointer NullPointer();
+public:
+  using Self = StringZeissMetaFactory;
+  ;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<const Self>;
+  static Pointer NullPointer();
 
-    using ZeissMetaFactoryType = ZeissMetaFactory::Pointer;
-    static ZeissMetaFactoryType NewZeissMetaFactory()
-    {
-      ZeissMetaFactoryType sharedPtr(new(Self));
-      return sharedPtr;
-    }
-    AbstractZeissMetaData::Pointer createMetaEntry() override;
+  using ZeissMetaFactoryType = ZeissMetaFactory::Pointer;
+  static ZeissMetaFactoryType NewZeissMetaFactory()
+  {
+    ZeissMetaFactoryType sharedPtr(new(Self));
+    return sharedPtr;
+  }
+  AbstractZeissMetaData::Pointer createMetaEntry() override;
 
-  protected:
-    StringZeissMetaFactory() = default;
+protected:
+  StringZeissMetaFactory() = default;
 
-  public:
-    StringZeissMetaFactory(const StringZeissMetaFactory&) = delete; // Copy Constructor Not Implemented
-    StringZeissMetaFactory(StringZeissMetaFactory&&) = delete;      // Move Constructor Not Implemented
-    StringZeissMetaFactory& operator=(const StringZeissMetaFactory&) = delete; // Copy Assignment Not Implemented
-    StringZeissMetaFactory& operator=(StringZeissMetaFactory&&) = delete;      // Move Assignment Not Implemented
+public:
+  StringZeissMetaFactory(const StringZeissMetaFactory&) = delete;            // Copy Constructor Not Implemented
+  StringZeissMetaFactory(StringZeissMetaFactory&&) = delete;                 // Move Constructor Not Implemented
+  StringZeissMetaFactory& operator=(const StringZeissMetaFactory&) = delete; // Copy Assignment Not Implemented
+  StringZeissMetaFactory& operator=(StringZeissMetaFactory&&) = delete;      // Move Assignment Not Implemented
 
-  private:
+private:
 };

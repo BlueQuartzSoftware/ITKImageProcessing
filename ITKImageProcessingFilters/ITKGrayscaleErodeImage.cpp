@@ -4,7 +4,6 @@
  * Your License or Copyright can go here
  */
 
-
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKGrayscaleErodeImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 #include "SIMPLib/Common/Constants.h"
@@ -20,7 +19,6 @@
 
 #include <itkFlatStructuringElement.h>
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -28,7 +26,6 @@ ITKGrayscaleErodeImage::ITKGrayscaleErodeImage()
 {
   m_KernelRadius = CastStdToVec3<std::vector<unsigned int>, FloatVec3Type, float>(std::vector<unsigned int>(3, 1));
   m_KernelType = StaticCastScalar<int, int, int>(itk::simple::sitkBall);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -63,7 +60,6 @@ void ITKGrayscaleErodeImage::setupFilterParameters()
   // Other parameters
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("KernelRadius", KernelRadius, FilterParameter::Parameter, ITKGrayscaleErodeImage));
 
-
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Save as New Array", SaveAsNewArray, FilterParameter::Parameter, ITKGrayscaleErodeImage, linkedProps));
@@ -97,7 +93,8 @@ void ITKGrayscaleErodeImage::readFilterParameters(AbstractFilterParametersReader
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKGrayscaleErodeImage::dataCheckImpl()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKGrayscaleErodeImage::dataCheckImpl()
 {
   clearErrorCode();
   clearWarningCode();
@@ -120,7 +117,8 @@ void ITKGrayscaleErodeImage::dataCheck()
 //
 // -----------------------------------------------------------------------------
 
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKGrayscaleErodeImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKGrayscaleErodeImage::filter()
 {
   typedef itk::Image<InputPixelType, Dimension> InputImageType;
   typedef itk::Image<OutputPixelType, Dimension> OutputImageType;
@@ -151,7 +149,6 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   typename FilterType::Pointer filter = FilterType::New();
   filter->SetKernel(structuringElement);
   this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -208,7 +205,7 @@ ITKGrayscaleErodeImage::Pointer ITKGrayscaleErodeImage::NullPointer()
 // -----------------------------------------------------------------------------
 std::shared_ptr<ITKGrayscaleErodeImage> ITKGrayscaleErodeImage::New()
 {
-  struct make_shared_enabler : public ITKGrayscaleErodeImage  
+  struct make_shared_enabler : public ITKGrayscaleErodeImage
   {
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
@@ -251,5 +248,3 @@ int ITKGrayscaleErodeImage::getKernelType() const
 {
   return m_KernelType;
 }
-
-

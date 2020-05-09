@@ -15,8 +15,8 @@ class ITKBinaryMorphologicalOpeningImageTest : public ITKTestBase
 {
 
 public:
-ITKBinaryMorphologicalOpeningImageTest() = default;
-~ITKBinaryMorphologicalOpeningImageTest() override = default;
+  ITKBinaryMorphologicalOpeningImageTest() = default;
+  ~ITKBinaryMorphologicalOpeningImageTest() override = default;
 
   int TestITKBinaryMorphologicalOpeningImageBinaryMorphologicalOpeningTest()
   {

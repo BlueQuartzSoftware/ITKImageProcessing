@@ -4,7 +4,6 @@
  * Your License or Copyright can go here
  */
 
-
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKHMinimaImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 #include "SIMPLib/Common/Constants.h"
@@ -17,7 +16,6 @@
 
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -25,7 +23,6 @@ ITKHMinimaImage::ITKHMinimaImage()
 {
   m_Height = StaticCastScalar<double, double, double>(2.0);
   m_FullyConnected = StaticCastScalar<bool, bool, bool>(false);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -42,7 +39,6 @@ void ITKHMinimaImage::setupFilterParameters()
 
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Height", Height, FilterParameter::Parameter, ITKHMinimaImage));
   parameters.push_back(SIMPL_NEW_BOOL_FP("FullyConnected", FullyConnected, FilterParameter::Parameter, ITKHMinimaImage));
-
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -77,7 +73,8 @@ void ITKHMinimaImage::readFilterParameters(AbstractFilterParametersReader* reade
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKHMinimaImage::dataCheckImpl()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKHMinimaImage::dataCheckImpl()
 {
   clearErrorCode();
   clearWarningCode();
@@ -99,7 +96,8 @@ void ITKHMinimaImage::dataCheck()
 //
 // -----------------------------------------------------------------------------
 
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKHMinimaImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKHMinimaImage::filter()
 {
   typedef itk::Image<InputPixelType, Dimension> InputImageType;
   typedef itk::Image<OutputPixelType, Dimension> OutputImageType;
@@ -109,7 +107,6 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   filter->SetHeight(static_cast<double>(m_Height));
   filter->SetFullyConnected(static_cast<bool>(m_FullyConnected));
   this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -166,7 +163,7 @@ ITKHMinimaImage::Pointer ITKHMinimaImage::NullPointer()
 // -----------------------------------------------------------------------------
 std::shared_ptr<ITKHMinimaImage> ITKHMinimaImage::New()
 {
-  struct make_shared_enabler : public ITKHMinimaImage  
+  struct make_shared_enabler : public ITKHMinimaImage
   {
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
@@ -209,5 +206,3 @@ bool ITKHMinimaImage::getFullyConnected() const
 {
   return m_FullyConnected;
 }
-
-

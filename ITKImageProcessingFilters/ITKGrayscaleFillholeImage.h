@@ -40,38 +40,36 @@ class ITKImageProcessing_EXPORT ITKGrayscaleFillholeImage : public ITKImageProce
   // End Python bindings declarations
 
 public:
-    using Self = ITKGrayscaleFillholeImage;
-    using Pointer = std::shared_ptr<Self>;
-    using ConstPointer = std::shared_ptr<const Self>;
-    using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<const Self>;
-    static Pointer NullPointer();
+  using Self = ITKGrayscaleFillholeImage;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<const Self>;
+  static Pointer NullPointer();
 
-    static std::shared_ptr<ITKGrayscaleFillholeImage> New();
+  static std::shared_ptr<ITKGrayscaleFillholeImage> New();
 
-    /**
-    * @brief Returns the name of the class for ITKGrayscaleFillholeImage
-    */
-    QString getNameOfClass() const override;
-    /**
-    * @brief Returns the name of the class for ITKGrayscaleFillholeImage
-    */
-    static QString ClassName();
-
+  /**
+   * @brief Returns the name of the class for ITKGrayscaleFillholeImage
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for ITKGrayscaleFillholeImage
+   */
+  static QString ClassName();
 
   ~ITKGrayscaleFillholeImage() override;
 
-    /**
-    * @brief Setter property for FullyConnected
-    */
-    void setFullyConnected(bool value); 
-    /**
-    * @brief Getter property for FullyConnected
-    * @return Value of FullyConnected
-    */
-    bool getFullyConnected() const;
+  /**
+   * @brief Setter property for FullyConnected
+   */
+  void setFullyConnected(bool value);
+  /**
+   * @brief Getter property for FullyConnected
+   * @return Value of FullyConnected
+   */
+  bool getFullyConnected() const;
   Q_PROPERTY(bool FullyConnected READ getFullyConnected WRITE setFullyConnected)
-
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -115,30 +113,30 @@ protected:
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
    */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void dataCheckImpl();
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void dataCheckImpl();
 
   /**
-  * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
-  */
+   * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
+   */
   void filterInternal() override;
 
   /**
-  * @brief Applies the filter
-  */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
+   * @brief Applies the filter
+   */
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void filter();
 
 public:
-  ITKGrayscaleFillholeImage(const ITKGrayscaleFillholeImage&) = delete;    // Copy Constructor Not Implemented
-  ITKGrayscaleFillholeImage(ITKGrayscaleFillholeImage&&) = delete;         // Move Constructor Not Implemented
+  ITKGrayscaleFillholeImage(const ITKGrayscaleFillholeImage&) = delete;            // Copy Constructor Not Implemented
+  ITKGrayscaleFillholeImage(ITKGrayscaleFillholeImage&&) = delete;                 // Move Constructor Not Implemented
   ITKGrayscaleFillholeImage& operator=(const ITKGrayscaleFillholeImage&) = delete; // Copy Assignment Not Implemented
   ITKGrayscaleFillholeImage& operator=(ITKGrayscaleFillholeImage&&) = delete;      // Move Assignment Not Implemented
 
-  private:
-    bool m_FullyConnected = {};
-
+private:
+  bool m_FullyConnected = {};
 };
 
 #ifdef __clang__
 #pragma clang diagnostic pop
 #endif
-

@@ -41,49 +41,47 @@ class ITKImageProcessing_EXPORT ITKVectorConnectedComponentImage : public ITKIma
   // End Python bindings declarations
 
 public:
-    using Self = ITKVectorConnectedComponentImage;
-    using Pointer = std::shared_ptr<Self>;
-    using ConstPointer = std::shared_ptr<const Self>;
-    using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<const Self>;
-    static Pointer NullPointer();
+  using Self = ITKVectorConnectedComponentImage;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<const Self>;
+  static Pointer NullPointer();
 
-    static std::shared_ptr<ITKVectorConnectedComponentImage> New();
+  static std::shared_ptr<ITKVectorConnectedComponentImage> New();
 
-    /**
-    * @brief Returns the name of the class for ITKVectorConnectedComponentImage
-    */
-    QString getNameOfClass() const override;
-    /**
-    * @brief Returns the name of the class for ITKVectorConnectedComponentImage
-    */
-    static QString ClassName();
-
+  /**
+   * @brief Returns the name of the class for ITKVectorConnectedComponentImage
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for ITKVectorConnectedComponentImage
+   */
+  static QString ClassName();
 
   ~ITKVectorConnectedComponentImage() override;
 
-    /**
-    * @brief Setter property for DistanceThreshold
-    */
-    void setDistanceThreshold(double value); 
-    /**
-    * @brief Getter property for DistanceThreshold
-    * @return Value of DistanceThreshold
-    */
-    double getDistanceThreshold() const;
+  /**
+   * @brief Setter property for DistanceThreshold
+   */
+  void setDistanceThreshold(double value);
+  /**
+   * @brief Getter property for DistanceThreshold
+   * @return Value of DistanceThreshold
+   */
+  double getDistanceThreshold() const;
   Q_PROPERTY(double DistanceThreshold READ getDistanceThreshold WRITE setDistanceThreshold)
 
-    /**
-    * @brief Setter property for FullyConnected
-    */
-    void setFullyConnected(bool value); 
-    /**
-    * @brief Getter property for FullyConnected
-    * @return Value of FullyConnected
-    */
-    bool getFullyConnected() const;
+  /**
+   * @brief Setter property for FullyConnected
+   */
+  void setFullyConnected(bool value);
+  /**
+   * @brief Getter property for FullyConnected
+   * @return Value of FullyConnected
+   */
+  bool getFullyConnected() const;
   Q_PROPERTY(bool FullyConnected READ getFullyConnected WRITE setFullyConnected)
-
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -127,31 +125,31 @@ protected:
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
    */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void dataCheckImpl();
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void dataCheckImpl();
 
   /**
-  * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
-  */
+   * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
+   */
   void filterInternal() override;
 
   /**
-  * @brief Applies the filter
-  */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
+   * @brief Applies the filter
+   */
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void filter();
 
 public:
-  ITKVectorConnectedComponentImage(const ITKVectorConnectedComponentImage&) = delete;    // Copy Constructor Not Implemented
-  ITKVectorConnectedComponentImage(ITKVectorConnectedComponentImage&&) = delete;         // Move Constructor Not Implemented
+  ITKVectorConnectedComponentImage(const ITKVectorConnectedComponentImage&) = delete;            // Copy Constructor Not Implemented
+  ITKVectorConnectedComponentImage(ITKVectorConnectedComponentImage&&) = delete;                 // Move Constructor Not Implemented
   ITKVectorConnectedComponentImage& operator=(const ITKVectorConnectedComponentImage&) = delete; // Copy Assignment Not Implemented
   ITKVectorConnectedComponentImage& operator=(ITKVectorConnectedComponentImage&&) = delete;      // Move Assignment Not Implemented
 
-  private:
-    double m_DistanceThreshold = {};
-    bool m_FullyConnected = {};
-
+private:
+  double m_DistanceThreshold = {};
+  bool m_FullyConnected = {};
 };
 
 #ifdef __clang__
 #pragma clang diagnostic pop
 #endif
-

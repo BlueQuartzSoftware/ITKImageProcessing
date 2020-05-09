@@ -23,22 +23,22 @@
 class AxioVisionV4ToTileConfigurationTest
 {
 
-  public:
-    AxioVisionV4ToTileConfigurationTest() = default;
-    ~AxioVisionV4ToTileConfigurationTest() = default;
-    AxioVisionV4ToTileConfigurationTest(const AxioVisionV4ToTileConfigurationTest&) = delete;            // Copy Constructor
-    AxioVisionV4ToTileConfigurationTest(AxioVisionV4ToTileConfigurationTest&&) = delete;                 // Move Constructor
-    AxioVisionV4ToTileConfigurationTest& operator=(const AxioVisionV4ToTileConfigurationTest&) = delete; // Copy Assignment
-    AxioVisionV4ToTileConfigurationTest& operator=(AxioVisionV4ToTileConfigurationTest&&) = delete;      // Move Assignment
+public:
+  AxioVisionV4ToTileConfigurationTest() = default;
+  ~AxioVisionV4ToTileConfigurationTest() = default;
+  AxioVisionV4ToTileConfigurationTest(const AxioVisionV4ToTileConfigurationTest&) = delete;            // Copy Constructor
+  AxioVisionV4ToTileConfigurationTest(AxioVisionV4ToTileConfigurationTest&&) = delete;                 // Move Constructor
+  AxioVisionV4ToTileConfigurationTest& operator=(const AxioVisionV4ToTileConfigurationTest&) = delete; // Copy Assignment
+  AxioVisionV4ToTileConfigurationTest& operator=(AxioVisionV4ToTileConfigurationTest&&) = delete;      // Move Assignment
 
   // -----------------------------------------------------------------------------
   //
   // -----------------------------------------------------------------------------
   void RemoveTestFiles()
   {
-  #if REMOVE_TEST_FILES
+#if REMOVE_TEST_FILES
     QFile::remove(UnitTest::AxioVisionV4ToTileConfigurationTest::OutputFile);
-  #endif
+#endif
   }
 
   // -----------------------------------------------------------------------------
@@ -65,7 +65,6 @@ class AxioVisionV4ToTileConfigurationTest
     QString writtenConfigContent = writtenConfigFile.readAll();
     writtenConfigFile.close();
 
-
     QFile exemplarConfigFile(UnitTest::AxioVisionV4ToTileConfigurationTest::ExemplarOutputFile);
     exemplarConfigFile.open(QFile::ReadOnly);
     QString exemplarConfigContent = exemplarConfigFile.readAll();
@@ -83,13 +82,10 @@ class AxioVisionV4ToTileConfigurationTest
     std::cout << "---------------- AxioVisionV4ToTileConfigurationTest ---------------------" << std::endl;
     int err = EXIT_SUCCESS;
 
-    DREAM3D_REGISTER_TEST( TestMetaXmlToFijiConfigTest() )
+    DREAM3D_REGISTER_TEST(TestMetaXmlToFijiConfigTest())
 
- //  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
+    //  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
   }
 
-  private:
-
-
+private:
 };
-

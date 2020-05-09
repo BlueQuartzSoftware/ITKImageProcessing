@@ -4,7 +4,6 @@
  * Your License or Copyright can go here
  */
 
-
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKDilateObjectMorphologyImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 #include "SIMPLib/Common/Constants.h"
@@ -20,7 +19,6 @@
 
 #include <itkFlatStructuringElement.h>
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -29,7 +27,6 @@ ITKDilateObjectMorphologyImage::ITKDilateObjectMorphologyImage()
   m_ObjectValue = StaticCastScalar<double, double, double>(1);
   m_KernelRadius = CastStdToVec3<std::vector<unsigned int>, FloatVec3Type, float>(std::vector<unsigned int>(3, 1));
   m_KernelType = StaticCastScalar<int, int, int>(itk::simple::sitkBall);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -65,7 +62,6 @@ void ITKDilateObjectMorphologyImage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("ObjectValue", ObjectValue, FilterParameter::Parameter, ITKDilateObjectMorphologyImage));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("KernelRadius", KernelRadius, FilterParameter::Parameter, ITKDilateObjectMorphologyImage));
 
-
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Save as New Array", SaveAsNewArray, FilterParameter::Parameter, ITKDilateObjectMorphologyImage, linkedProps));
@@ -100,7 +96,8 @@ void ITKDilateObjectMorphologyImage::readFilterParameters(AbstractFilterParamete
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKDilateObjectMorphologyImage::dataCheckImpl()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKDilateObjectMorphologyImage::dataCheckImpl()
 {
   clearErrorCode();
   clearWarningCode();
@@ -123,7 +120,8 @@ void ITKDilateObjectMorphologyImage::dataCheck()
 //
 // -----------------------------------------------------------------------------
 
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKDilateObjectMorphologyImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKDilateObjectMorphologyImage::filter()
 {
   typedef itk::Image<InputPixelType, Dimension> InputImageType;
   typedef itk::Image<OutputPixelType, Dimension> OutputImageType;
@@ -152,10 +150,9 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   // define filter
   typedef itk::DilateObjectMorphologyImageFilter<InputImageType, OutputImageType, StructuringElementType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
-  filter->SetObjectValue(static_cast<typename FilterType::PixelType>(this->getObjectValue()) );
+  filter->SetObjectValue(static_cast<typename FilterType::PixelType>(this->getObjectValue()));
   filter->SetKernel(structuringElement);
   this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -212,7 +209,7 @@ ITKDilateObjectMorphologyImage::Pointer ITKDilateObjectMorphologyImage::NullPoin
 // -----------------------------------------------------------------------------
 std::shared_ptr<ITKDilateObjectMorphologyImage> ITKDilateObjectMorphologyImage::New()
 {
-  struct make_shared_enabler : public ITKDilateObjectMorphologyImage  
+  struct make_shared_enabler : public ITKDilateObjectMorphologyImage
   {
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
@@ -267,5 +264,3 @@ int ITKDilateObjectMorphologyImage::getKernelType() const
 {
   return m_KernelType;
 }
-
-

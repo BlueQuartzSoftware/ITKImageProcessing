@@ -4,7 +4,6 @@
  * Your License or Copyright can go here
  */
 
-
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKStandardDeviationProjectionImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 #include "SIMPLib/Common/Constants.h"
@@ -17,14 +16,12 @@
 
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 ITKStandardDeviationProjectionImage::ITKStandardDeviationProjectionImage()
 {
   m_ProjectionDimension = StaticCastScalar<double, double, double>(0u);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -40,7 +37,6 @@ void ITKStandardDeviationProjectionImage::setupFilterParameters()
   FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("ProjectionDimension", ProjectionDimension, FilterParameter::Parameter, ITKStandardDeviationProjectionImage));
-
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -74,7 +70,8 @@ void ITKStandardDeviationProjectionImage::readFilterParameters(AbstractFilterPar
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKStandardDeviationProjectionImage::dataCheckImpl()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKStandardDeviationProjectionImage::dataCheckImpl()
 {
   clearErrorCode();
   clearWarningCode();
@@ -97,7 +94,8 @@ void ITKStandardDeviationProjectionImage::dataCheck()
 //
 // -----------------------------------------------------------------------------
 
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKStandardDeviationProjectionImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKStandardDeviationProjectionImage::filter()
 {
   typedef itk::Image<InputPixelType, Dimension> InputImageType;
   typedef itk::Image<OutputPixelType, Dimension> OutputImageType;
@@ -106,7 +104,6 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   typename FilterType::Pointer filter = FilterType::New();
   filter->SetProjectionDimension(static_cast<unsigned int>(m_ProjectionDimension));
   this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -163,7 +160,7 @@ ITKStandardDeviationProjectionImage::Pointer ITKStandardDeviationProjectionImage
 // -----------------------------------------------------------------------------
 std::shared_ptr<ITKStandardDeviationProjectionImage> ITKStandardDeviationProjectionImage::New()
 {
-  struct make_shared_enabler : public ITKStandardDeviationProjectionImage  
+  struct make_shared_enabler : public ITKStandardDeviationProjectionImage
   {
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
@@ -194,5 +191,3 @@ double ITKStandardDeviationProjectionImage::getProjectionDimension() const
 {
   return m_ProjectionDimension;
 }
-
-

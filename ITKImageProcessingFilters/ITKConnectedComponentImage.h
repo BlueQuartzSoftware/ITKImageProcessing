@@ -42,49 +42,47 @@ class ITKImageProcessing_EXPORT ITKConnectedComponentImage : public ITKImageProc
   // End Python bindings declarations
 
 public:
-    using Self = ITKConnectedComponentImage;
-    using Pointer = std::shared_ptr<Self>;
-    using ConstPointer = std::shared_ptr<const Self>;
-    using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<const Self>;
-    static Pointer NullPointer();
+  using Self = ITKConnectedComponentImage;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<const Self>;
+  static Pointer NullPointer();
 
-    static std::shared_ptr<ITKConnectedComponentImage> New();
+  static std::shared_ptr<ITKConnectedComponentImage> New();
 
-    /**
-    * @brief Returns the name of the class for ITKConnectedComponentImage
-    */
-    QString getNameOfClass() const override;
-    /**
-    * @brief Returns the name of the class for ITKConnectedComponentImage
-    */
-    static QString ClassName();
-
+  /**
+   * @brief Returns the name of the class for ITKConnectedComponentImage
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for ITKConnectedComponentImage
+   */
+  static QString ClassName();
 
   ~ITKConnectedComponentImage() override;
 
-    /**
-    * @brief Setter property for FullyConnected
-    */
-    void setFullyConnected(bool value); 
-    /**
-    * @brief Getter property for FullyConnected
-    * @return Value of FullyConnected
-    */
-    bool getFullyConnected() const;
+  /**
+   * @brief Setter property for FullyConnected
+   */
+  void setFullyConnected(bool value);
+  /**
+   * @brief Getter property for FullyConnected
+   * @return Value of FullyConnected
+   */
+  bool getFullyConnected() const;
   Q_PROPERTY(bool FullyConnected READ getFullyConnected WRITE setFullyConnected)
 
-    /**
-    * @brief Setter property for ObjectCount
-    */
-    void setObjectCount(double value); 
-    /**
-    * @brief Getter property for ObjectCount
-    * @return Value of ObjectCount
-    */
-    double getObjectCount() const;
+  /**
+   * @brief Setter property for ObjectCount
+   */
+  void setObjectCount(double value);
+  /**
+   * @brief Getter property for ObjectCount
+   * @return Value of ObjectCount
+   */
+  double getObjectCount() const;
   Q_PROPERTY(double ObjectCount READ getObjectCount)
-
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -128,31 +126,31 @@ protected:
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
    */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void dataCheckImpl();
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void dataCheckImpl();
 
   /**
-  * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
-  */
+   * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
+   */
   void filterInternal() override;
 
   /**
-  * @brief Applies the filter
-  */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
+   * @brief Applies the filter
+   */
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void filter();
 
 public:
-  ITKConnectedComponentImage(const ITKConnectedComponentImage&) = delete;    // Copy Constructor Not Implemented
-  ITKConnectedComponentImage(ITKConnectedComponentImage&&) = delete;         // Move Constructor Not Implemented
+  ITKConnectedComponentImage(const ITKConnectedComponentImage&) = delete;            // Copy Constructor Not Implemented
+  ITKConnectedComponentImage(ITKConnectedComponentImage&&) = delete;                 // Move Constructor Not Implemented
   ITKConnectedComponentImage& operator=(const ITKConnectedComponentImage&) = delete; // Copy Assignment Not Implemented
   ITKConnectedComponentImage& operator=(ITKConnectedComponentImage&&) = delete;      // Move Assignment Not Implemented
 
-  private:
-    bool m_FullyConnected = {};
-    double m_ObjectCount = {};
-
+private:
+  bool m_FullyConnected = {};
+  double m_ObjectCount = {};
 };
 
 #ifdef __clang__
 #pragma clang diagnostic pop
 #endif
-

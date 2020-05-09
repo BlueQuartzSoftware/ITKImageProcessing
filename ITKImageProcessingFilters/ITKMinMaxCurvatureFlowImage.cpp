@@ -4,7 +4,6 @@
  * Your License or Copyright can go here
  */
 
-
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKMinMaxCurvatureFlowImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 #include "SIMPLib/Common/Constants.h"
@@ -17,7 +16,6 @@
 
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -26,7 +24,6 @@ ITKMinMaxCurvatureFlowImage::ITKMinMaxCurvatureFlowImage()
   m_TimeStep = StaticCastScalar<double, double, double>(0.05);
   m_NumberOfIterations = StaticCastScalar<double, double, double>(5u);
   m_StencilRadius = StaticCastScalar<int, int, int>(2);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -44,7 +41,6 @@ void ITKMinMaxCurvatureFlowImage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("TimeStep", TimeStep, FilterParameter::Parameter, ITKMinMaxCurvatureFlowImage));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("NumberOfIterations", NumberOfIterations, FilterParameter::Parameter, ITKMinMaxCurvatureFlowImage));
   parameters.push_back(SIMPL_NEW_INTEGER_FP("StencilRadius", StencilRadius, FilterParameter::Parameter, ITKMinMaxCurvatureFlowImage));
-
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -80,7 +76,8 @@ void ITKMinMaxCurvatureFlowImage::readFilterParameters(AbstractFilterParametersR
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKMinMaxCurvatureFlowImage::dataCheckImpl()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKMinMaxCurvatureFlowImage::dataCheckImpl()
 {
   clearErrorCode();
   clearWarningCode();
@@ -103,7 +100,8 @@ void ITKMinMaxCurvatureFlowImage::dataCheck()
 //
 // -----------------------------------------------------------------------------
 
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKMinMaxCurvatureFlowImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKMinMaxCurvatureFlowImage::filter()
 {
   typedef typename itk::NumericTraits<InputPixelType>::RealType FloatPixelType;
   typedef itk::Image<FloatPixelType, Dimension> FloatImageType;
@@ -114,7 +112,6 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   filter->SetNumberOfIterations(static_cast<uint32_t>(m_NumberOfIterations));
   filter->SetStencilRadius(static_cast<int>(m_StencilRadius));
   this->ITKImageProcessingBase::filterCastToFloat<InputPixelType, InputPixelType, Dimension, FilterType, FloatImageType>(filter);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -171,7 +168,7 @@ ITKMinMaxCurvatureFlowImage::Pointer ITKMinMaxCurvatureFlowImage::NullPointer()
 // -----------------------------------------------------------------------------
 std::shared_ptr<ITKMinMaxCurvatureFlowImage> ITKMinMaxCurvatureFlowImage::New()
 {
-  struct make_shared_enabler : public ITKMinMaxCurvatureFlowImage  
+  struct make_shared_enabler : public ITKMinMaxCurvatureFlowImage
   {
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
@@ -226,5 +223,3 @@ int ITKMinMaxCurvatureFlowImage::getStencilRadius() const
 {
   return m_StencilRadius;
 }
-
-

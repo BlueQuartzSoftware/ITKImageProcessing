@@ -4,7 +4,6 @@
  * Your License or Copyright can go here
  */
 
-
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKGradientMagnitudeRecursiveGaussianImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 #include "SIMPLib/Common/Constants.h"
@@ -17,7 +16,6 @@
 
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -25,7 +23,6 @@ ITKGradientMagnitudeRecursiveGaussianImage::ITKGradientMagnitudeRecursiveGaussia
 {
   m_Sigma = StaticCastScalar<double, double, double>(1.0);
   m_NormalizeAcrossScale = StaticCastScalar<bool, bool, bool>(false);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -42,7 +39,6 @@ void ITKGradientMagnitudeRecursiveGaussianImage::setupFilterParameters()
 
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Sigma", Sigma, FilterParameter::Parameter, ITKGradientMagnitudeRecursiveGaussianImage));
   parameters.push_back(SIMPL_NEW_BOOL_FP("NormalizeAcrossScale", NormalizeAcrossScale, FilterParameter::Parameter, ITKGradientMagnitudeRecursiveGaussianImage));
-
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -77,7 +73,8 @@ void ITKGradientMagnitudeRecursiveGaussianImage::readFilterParameters(AbstractFi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKGradientMagnitudeRecursiveGaussianImage::dataCheckImpl()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKGradientMagnitudeRecursiveGaussianImage::dataCheckImpl()
 {
   clearErrorCode();
   clearWarningCode();
@@ -92,14 +89,15 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
 // -----------------------------------------------------------------------------
 void ITKGradientMagnitudeRecursiveGaussianImage::dataCheck()
 {
-  Dream3DArraySwitchMacroOutputType(this->dataCheckImpl, getSelectedCellArrayPath(), -4,float, 0);
+  Dream3DArraySwitchMacroOutputType(this->dataCheckImpl, getSelectedCellArrayPath(), -4, float, 0);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKGradientMagnitudeRecursiveGaussianImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKGradientMagnitudeRecursiveGaussianImage::filter()
 {
   typedef itk::Image<InputPixelType, Dimension> InputImageType;
   typedef itk::Image<OutputPixelType, Dimension> OutputImageType;
@@ -109,7 +107,6 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   filter->SetSigma(static_cast<double>(m_Sigma));
   filter->SetNormalizeAcrossScale(static_cast<bool>(m_NormalizeAcrossScale));
   this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -117,7 +114,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
 // -----------------------------------------------------------------------------
 void ITKGradientMagnitudeRecursiveGaussianImage::filterInternal()
 {
-  Dream3DArraySwitchMacroOutputType(this->filter, getSelectedCellArrayPath(), -4,float, 0);
+  Dream3DArraySwitchMacroOutputType(this->filter, getSelectedCellArrayPath(), -4, float, 0);
 }
 
 // -----------------------------------------------------------------------------
@@ -166,7 +163,7 @@ ITKGradientMagnitudeRecursiveGaussianImage::Pointer ITKGradientMagnitudeRecursiv
 // -----------------------------------------------------------------------------
 std::shared_ptr<ITKGradientMagnitudeRecursiveGaussianImage> ITKGradientMagnitudeRecursiveGaussianImage::New()
 {
-  struct make_shared_enabler : public ITKGradientMagnitudeRecursiveGaussianImage  
+  struct make_shared_enabler : public ITKGradientMagnitudeRecursiveGaussianImage
   {
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
@@ -209,5 +206,3 @@ bool ITKGradientMagnitudeRecursiveGaussianImage::getNormalizeAcrossScale() const
 {
   return m_NormalizeAcrossScale;
 }
-
-

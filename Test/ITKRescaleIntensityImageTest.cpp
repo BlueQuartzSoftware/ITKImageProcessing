@@ -8,16 +8,15 @@
 // Auto includes
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 
-
 class ITKRescaleIntensityImageTest : public ITKTestBase
 {
 
 public:
-ITKRescaleIntensityImageTest() = default;
-~ITKRescaleIntensityImageTest() override = default;
+  ITKRescaleIntensityImageTest() = default;
+  ~ITKRescaleIntensityImageTest() override = default;
 
   int TestITKRescaleIntensityImage3dTest()
-{
+  {
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/RA-Float.nrrd");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -46,9 +45,7 @@ ITKRescaleIntensityImageTest() = default;
     int res = this->CompareImages(containerArray, input_path, baseline_path, 1e-8);
     DREAM3D_REQUIRE_EQUAL(res, 0);
     return 0;
-}
-
-
+  }
 
   // -----------------------------------------------------------------------------
   //
@@ -59,7 +56,7 @@ ITKRescaleIntensityImageTest() = default;
 
     DREAM3D_REGISTER_TEST(this->TestFilterAvailability("ITKRescaleIntensityImage"));
 
-    DREAM3D_REGISTER_TEST( TestITKRescaleIntensityImage3dTest());
+    DREAM3D_REGISTER_TEST(TestITKRescaleIntensityImage3dTest());
 
     if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
     {

@@ -47,82 +47,80 @@ class ITKImageProcessing_EXPORT ITKBinaryDilateImage : public ITKImageProcessing
   // End Python bindings declarations
 
 public:
-    using Self = ITKBinaryDilateImage;
-    using Pointer = std::shared_ptr<Self>;
-    using ConstPointer = std::shared_ptr<const Self>;
-    using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<const Self>;
-    static Pointer NullPointer();
+  using Self = ITKBinaryDilateImage;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<const Self>;
+  static Pointer NullPointer();
 
-    static std::shared_ptr<ITKBinaryDilateImage> New();
+  static std::shared_ptr<ITKBinaryDilateImage> New();
 
-    /**
-    * @brief Returns the name of the class for ITKBinaryDilateImage
-    */
-    QString getNameOfClass() const override;
-    /**
-    * @brief Returns the name of the class for ITKBinaryDilateImage
-    */
-    static QString ClassName();
-
+  /**
+   * @brief Returns the name of the class for ITKBinaryDilateImage
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for ITKBinaryDilateImage
+   */
+  static QString ClassName();
 
   ~ITKBinaryDilateImage() override;
 
-    /**
-    * @brief Setter property for BackgroundValue
-    */
-    void setBackgroundValue(double value); 
-    /**
-    * @brief Getter property for BackgroundValue
-    * @return Value of BackgroundValue
-    */
-    double getBackgroundValue() const;
+  /**
+   * @brief Setter property for BackgroundValue
+   */
+  void setBackgroundValue(double value);
+  /**
+   * @brief Getter property for BackgroundValue
+   * @return Value of BackgroundValue
+   */
+  double getBackgroundValue() const;
   Q_PROPERTY(double BackgroundValue READ getBackgroundValue WRITE setBackgroundValue)
 
-    /**
-    * @brief Setter property for ForegroundValue
-    */
-    void setForegroundValue(double value); 
-    /**
-    * @brief Getter property for ForegroundValue
-    * @return Value of ForegroundValue
-    */
-    double getForegroundValue() const;
+  /**
+   * @brief Setter property for ForegroundValue
+   */
+  void setForegroundValue(double value);
+  /**
+   * @brief Getter property for ForegroundValue
+   * @return Value of ForegroundValue
+   */
+  double getForegroundValue() const;
   Q_PROPERTY(double ForegroundValue READ getForegroundValue WRITE setForegroundValue)
 
-    /**
-    * @brief Setter property for BoundaryToForeground
-    */
-    void setBoundaryToForeground(bool value); 
-    /**
-    * @brief Getter property for BoundaryToForeground
-    * @return Value of BoundaryToForeground
-    */
-    bool getBoundaryToForeground() const;
+  /**
+   * @brief Setter property for BoundaryToForeground
+   */
+  void setBoundaryToForeground(bool value);
+  /**
+   * @brief Getter property for BoundaryToForeground
+   * @return Value of BoundaryToForeground
+   */
+  bool getBoundaryToForeground() const;
   Q_PROPERTY(bool BoundaryToForeground READ getBoundaryToForeground WRITE setBoundaryToForeground)
 
-    /**
-    * @brief Setter property for KernelRadius
-    */
-    void setKernelRadius(const FloatVec3Type& value); 
-    /**
-    * @brief Getter property for KernelRadius
-    * @return Value of KernelRadius
-    */
-    FloatVec3Type getKernelRadius() const;
+  /**
+   * @brief Setter property for KernelRadius
+   */
+  void setKernelRadius(const FloatVec3Type& value);
+  /**
+   * @brief Getter property for KernelRadius
+   * @return Value of KernelRadius
+   */
+  FloatVec3Type getKernelRadius() const;
   Q_PROPERTY(FloatVec3Type KernelRadius READ getKernelRadius WRITE setKernelRadius)
 
-    /**
-    * @brief Setter property for KernelType
-    */
-    void setKernelType(int value); 
-    /**
-    * @brief Getter property for KernelType
-    * @return Value of KernelType
-    */
-    int getKernelType() const;
+  /**
+   * @brief Setter property for KernelType
+   */
+  void setKernelType(int value);
+  /**
+   * @brief Getter property for KernelType
+   * @return Value of KernelType
+   */
+  int getKernelType() const;
   Q_PROPERTY(int KernelType READ getKernelType WRITE setKernelType)
-
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -166,34 +164,34 @@ protected:
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
    */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void dataCheckImpl();
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void dataCheckImpl();
 
   /**
-  * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
-  */
+   * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
+   */
   void filterInternal() override;
 
   /**
-  * @brief Applies the filter
-  */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
+   * @brief Applies the filter
+   */
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void filter();
 
 public:
-  ITKBinaryDilateImage(const ITKBinaryDilateImage&) = delete;    // Copy Constructor Not Implemented
-  ITKBinaryDilateImage(ITKBinaryDilateImage&&) = delete;         // Move Constructor Not Implemented
+  ITKBinaryDilateImage(const ITKBinaryDilateImage&) = delete;            // Copy Constructor Not Implemented
+  ITKBinaryDilateImage(ITKBinaryDilateImage&&) = delete;                 // Move Constructor Not Implemented
   ITKBinaryDilateImage& operator=(const ITKBinaryDilateImage&) = delete; // Copy Assignment Not Implemented
   ITKBinaryDilateImage& operator=(ITKBinaryDilateImage&&) = delete;      // Move Assignment Not Implemented
 
-  private:
-    double m_BackgroundValue = {};
-    double m_ForegroundValue = {};
-    bool m_BoundaryToForeground = {};
-    FloatVec3Type m_KernelRadius = {};
-    int m_KernelType = {};
-
+private:
+  double m_BackgroundValue = {};
+  double m_ForegroundValue = {};
+  bool m_BoundaryToForeground = {};
+  FloatVec3Type m_KernelRadius = {};
+  int m_KernelType = {};
 };
 
 #ifdef __clang__
 #pragma clang diagnostic pop
 #endif
-

@@ -4,7 +4,6 @@
  * Your License or Copyright can go here
  */
 
-
 #include "ITKMorphologicalWatershedFromMarkersImage.h"
 
 #include "SIMPLib/Common/Constants.h"
@@ -16,7 +15,6 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
-
 
 /* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
 enum createdPathID : RenameDataPath::DataID_t
@@ -84,7 +82,8 @@ void ITKMorphologicalWatershedFromMarkersImage::readFilterParameters(AbstractFil
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKMorphologicalWatershedFromMarkersImage::dataCheckImpl()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKMorphologicalWatershedFromMarkersImage::dataCheckImpl()
 {
   // Check consistency of parameters
   clearErrorCode();
@@ -107,7 +106,8 @@ void ITKMorphologicalWatershedFromMarkersImage::dataCheck()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKMorphologicalWatershedFromMarkersImage::convertDataContainerType()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKMorphologicalWatershedFromMarkersImage::convertDataContainerType()
 {
   typedef itk::Image<InputPixelType, Dimension> InputImageType;
   typedef itk::Image<OutputPixelType, Dimension> OutputImageType;
@@ -156,7 +156,8 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKMorphologicalWatershedFromMarkersImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKMorphologicalWatershedFromMarkersImage::filter()
 {
   typedef itk::Image<InputPixelType, Dimension> InputImageType;
   typedef itk::Image<OutputPixelType, Dimension> OutputImageType;
@@ -247,7 +248,7 @@ ITKMorphologicalWatershedFromMarkersImage::Pointer ITKMorphologicalWatershedFrom
 // -----------------------------------------------------------------------------
 std::shared_ptr<ITKMorphologicalWatershedFromMarkersImage> ITKMorphologicalWatershedFromMarkersImage::New()
 {
-  struct make_shared_enabler : public ITKMorphologicalWatershedFromMarkersImage  
+  struct make_shared_enabler : public ITKMorphologicalWatershedFromMarkersImage
   {
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
@@ -314,5 +315,3 @@ DataContainerArray::Pointer ITKMorphologicalWatershedFromMarkersImage::getMarker
 {
   return m_MarkerContainerArray;
 }
-
-

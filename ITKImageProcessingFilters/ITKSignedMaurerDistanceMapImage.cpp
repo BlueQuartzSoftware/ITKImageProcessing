@@ -4,7 +4,6 @@
  * Your License or Copyright can go here
  */
 
-
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKSignedMaurerDistanceMapImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 #include "SIMPLib/Common/Constants.h"
@@ -17,7 +16,6 @@
 
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -27,7 +25,6 @@ ITKSignedMaurerDistanceMapImage::ITKSignedMaurerDistanceMapImage()
   m_SquaredDistance = StaticCastScalar<bool, bool, bool>(true);
   m_UseImageSpacing = StaticCastScalar<bool, bool, bool>(false);
   m_BackgroundValue = StaticCastScalar<double, double, double>(0.0);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -46,7 +43,6 @@ void ITKSignedMaurerDistanceMapImage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_BOOL_FP("SquaredDistance", SquaredDistance, FilterParameter::Parameter, ITKSignedMaurerDistanceMapImage));
   parameters.push_back(SIMPL_NEW_BOOL_FP("UseImageSpacing", UseImageSpacing, FilterParameter::Parameter, ITKSignedMaurerDistanceMapImage));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("BackgroundValue", BackgroundValue, FilterParameter::Parameter, ITKSignedMaurerDistanceMapImage));
-
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -83,7 +79,8 @@ void ITKSignedMaurerDistanceMapImage::readFilterParameters(AbstractFilterParamet
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKSignedMaurerDistanceMapImage::dataCheckImpl()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKSignedMaurerDistanceMapImage::dataCheckImpl()
 {
   clearErrorCode();
   clearWarningCode();
@@ -105,7 +102,8 @@ void ITKSignedMaurerDistanceMapImage::dataCheck()
 //
 // -----------------------------------------------------------------------------
 
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKSignedMaurerDistanceMapImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKSignedMaurerDistanceMapImage::filter()
 {
   typedef itk::Image<InputPixelType, Dimension> InputImageType;
   typedef itk::Image<OutputPixelType, Dimension> OutputImageType;
@@ -117,7 +115,6 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   filter->SetUseImageSpacing(static_cast<bool>(m_UseImageSpacing));
   filter->SetBackgroundValue(static_cast<double>(m_BackgroundValue));
   this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -174,7 +171,7 @@ ITKSignedMaurerDistanceMapImage::Pointer ITKSignedMaurerDistanceMapImage::NullPo
 // -----------------------------------------------------------------------------
 std::shared_ptr<ITKSignedMaurerDistanceMapImage> ITKSignedMaurerDistanceMapImage::New()
 {
-  struct make_shared_enabler : public ITKSignedMaurerDistanceMapImage  
+  struct make_shared_enabler : public ITKSignedMaurerDistanceMapImage
   {
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
@@ -241,5 +238,3 @@ double ITKSignedMaurerDistanceMapImage::getBackgroundValue() const
 {
   return m_BackgroundValue;
 }
-
-

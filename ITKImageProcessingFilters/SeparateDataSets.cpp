@@ -76,14 +76,12 @@ void SeparateDataSets::setupFilterParameters()
   FilterParameterVectorType parameters;
 
   {
-    AttributeMatrixSelectionFilterParameter::RequirementType req =
-        AttributeMatrixSelectionFilterParameter::CreateRequirement(AttributeMatrix::Type::Cell, IGeometry::Type::Image);
+    AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(AttributeMatrix::Type::Cell, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Dataset Attribute Matrix", DatasetAMPath, FilterParameter::RequiredArray, SeparateDataSets, req));
   }
 
   {
-    AttributeMatrixSelectionFilterParameter::RequirementType req =
-        AttributeMatrixSelectionFilterParameter::CreateRequirement(AttributeMatrix::Type::Generic, IGeometry::Type::Image);
+    AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(AttributeMatrix::Type::Generic, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Metadata Attribute Matrix", MetadataAMPath, FilterParameter::RequiredArray, SeparateDataSets, req));
   }
 
@@ -105,12 +103,12 @@ void SeparateDataSets::dataCheck()
 void SeparateDataSets::preflight()
 {
   // These are the REQUIRED lines of CODE to make sure the filter behaves correctly
-  setInPreflight(true); // Set the fact that we are preflighting.
-  emit preflightAboutToExecute(); // Emit this signal so that other widgets can do one file update
+  setInPreflight(true);              // Set the fact that we are preflighting.
+  emit preflightAboutToExecute();    // Emit this signal so that other widgets can do one file update
   emit updateFilterParameters(this); // Emit this signal to have the widgets push their values down to the filter
-  dataCheck(); // Run our DataCheck to make sure everthing is setup correctly
-  emit preflightExecuted(); // We are done preflighting this filter
-  setInPreflight(false); // Inform the system this filter is NOT in preflight mode anymore.
+  dataCheck();                       // Run our DataCheck to make sure everthing is setup correctly
+  emit preflightExecuted();          // We are done preflighting this filter
+  setInPreflight(false);             // Inform the system this filter is NOT in preflight mode anymore.
 }
 
 // -----------------------------------------------------------------------------
@@ -169,7 +167,7 @@ void SeparateDataSets::execute()
     return;
   }
 
-  for (int i = 0; i < attrArrayNamesPtr->getNumberOfTuples(); i++)
+  for(int i = 0; i < attrArrayNamesPtr->getNumberOfTuples(); i++)
   {
     QString dataSetName = attrArrayNamesPtr->getValue(i);
     IDataArray::Pointer origDataSetPtr = origDataSetAM->getAttributeArray(dataSetName);
@@ -228,7 +226,7 @@ void SeparateDataSets::execute()
 
     // Move the data set to the new attribute matrix
     IDataArray::Pointer newDataSetPtr = origDataSetAM->removeAttributeArray(origDataSetPtr->getName());
-    if (nullptr != newDataSetPtr.get())
+    if(nullptr != newDataSetPtr.get())
     {
       newDataSetAM->insertOrAssign(newDataSetPtr);
     }
@@ -238,7 +236,7 @@ void SeparateDataSets::execute()
 
     // Loop through the meta data arrays in the new meta data attribute matrix.  Make the tuple that refers to the current data set as the only tuple.
     QStringList newMetaDataArrayNames = newMetaDataAM->getAttributeArrayNames();
-    for (int j = 0; j < newMetaDataArrayNames.size(); j++)
+    for(int j = 0; j < newMetaDataArrayNames.size(); j++)
     {
       QString metaDataArrayName = newMetaDataArrayNames[j];
       IDataArray::Pointer newMetaDataPtr = newMetaDataAM->getAttributeArray(metaDataArrayName);
@@ -254,7 +252,7 @@ void SeparateDataSets::execute()
 
   getDataContainerArray()->removeDataContainer(getDatasetAMPath().getDataContainerName());
 
-//  if (getCancel() == true) { return; }
+  //  if (getCancel() == true) { return; }
 
   //  if (getWarningCode() < 0)
   //  {
@@ -287,7 +285,7 @@ AbstractFilter::Pointer SeparateDataSets::newFilterInstance(bool copyFilterParam
 //
 // -----------------------------------------------------------------------------
 QString SeparateDataSets::getCompiledLibraryName() const
-{ 
+{
   return ITKImageProcessingConstants::ZeissImportBaseName;
 }
 
@@ -306,7 +304,7 @@ QString SeparateDataSets::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  ITKImageProcessing::Version::Major() << "." << ITKImageProcessing::Version::Minor() << "." << ITKImageProcessing::Version::Patch();
+  vStream << ITKImageProcessing::Version::Major() << "." << ITKImageProcessing::Version::Minor() << "." << ITKImageProcessing::Version::Patch();
   return version;
 }
 
@@ -314,26 +312,25 @@ QString SeparateDataSets::getFilterVersion() const
 //
 // -----------------------------------------------------------------------------
 QString SeparateDataSets::getGroupName() const
-{ 
-  return SIMPL::FilterGroups::Unsupported; 
+{
+  return SIMPL::FilterGroups::Unsupported;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 QString SeparateDataSets::getSubGroupName() const
-{ 
-  return "ZeissImport"; 
+{
+  return "ZeissImport";
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 QString SeparateDataSets::getHumanLabel() const
-{ 
+{
   return "Separate Datasets";
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -342,7 +339,6 @@ QUuid SeparateDataSets::getUuid() const
 {
   return QUuid("{e9a9fd4b-ba9d-5c9a-bf38-5f040723602c}");
 }
-
 
 // -----------------------------------------------------------------------------
 SeparateDataSets::Pointer SeparateDataSets::NullPointer()
@@ -353,7 +349,7 @@ SeparateDataSets::Pointer SeparateDataSets::NullPointer()
 // -----------------------------------------------------------------------------
 std::shared_ptr<SeparateDataSets> SeparateDataSets::New()
 {
-  struct make_shared_enabler : public SeparateDataSets  
+  struct make_shared_enabler : public SeparateDataSets
   {
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
@@ -396,5 +392,3 @@ DataArrayPath SeparateDataSets::getMetadataAMPath() const
 {
   return m_MetadataAMPath;
 }
-
-

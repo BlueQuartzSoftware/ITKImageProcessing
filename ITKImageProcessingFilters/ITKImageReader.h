@@ -1,35 +1,35 @@
 /* ============================================================================
-* Copyright (c) 2009-2016 BlueQuartz Software, LLC
-*
-* Redistribution and use in source and binary forms, with or without modification,
-* are permitted provided that the following conditions are met:
-*
-* Redistributions of source code must retain the above copyright notice, this
-* list of conditions and the following disclaimer.
-*
-* Redistributions in binary form must reproduce the above copyright notice, this
-* list of conditions and the following disclaimer in the documentation and/or
-* other materials provided with the distribution.
-*
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
-* contributors may be used to endorse or promote products derived from this software
-* without specific prior written permission.
-*
-* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
-* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*
-* The code contained herein was partially funded by the followig contracts:
-*    United States Air Force Prime Contract FA8650-10-D-5210
-*
-* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+ * Copyright (c) 2009-2016 BlueQuartz Software, LLC
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this
+ * list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+ *
+ * Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+ * contributors may be used to endorse or promote products derived from this software
+ * without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+ * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * The code contained herein was partially funded by the followig contracts:
+ *    United States Air Force Prime Contract FA8650-10-D-5210
+ *
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #pragma once
 
@@ -72,74 +72,73 @@ class ITKImageProcessing_EXPORT ITKImageReader : public AbstractFilter
   Q_DECLARE_PRIVATE(ITKImageReader)
 
 public:
-    using Self = ITKImageReader;
-    using Pointer = std::shared_ptr<Self>;
-    using ConstPointer = std::shared_ptr<const Self>;
-    using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<const Self>;
-    static Pointer NullPointer();
+  using Self = ITKImageReader;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<const Self>;
+  static Pointer NullPointer();
 
-    static std::shared_ptr<ITKImageReader> New();
+  static std::shared_ptr<ITKImageReader> New();
 
-    /**
-    * @brief Returns the name of the class for ITKImageReader
-    */
-    QString getNameOfClass() const override;
-    /**
-    * @brief Returns the name of the class for ITKImageReader
-    */
-    static QString ClassName();
-
+  /**
+   * @brief Returns the name of the class for ITKImageReader
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for ITKImageReader
+   */
+  static QString ClassName();
 
   ~ITKImageReader() override;
 
-    /**
-    * @brief Setter property for FileName
-    */
-    void setFileName(const QString& value); 
-    /**
-    * @brief Getter property for FileName
-    * @return Value of FileName
-    */
-    QString getFileName() const;
+  /**
+   * @brief Setter property for FileName
+   */
+  void setFileName(const QString& value);
+  /**
+   * @brief Getter property for FileName
+   * @return Value of FileName
+   */
+  QString getFileName() const;
   Q_PROPERTY(QString FileName READ getFileName WRITE setFileName)
 
-    /**
-    * @brief Setter property for DataContainerName
-    */
-    void setDataContainerName(const DataArrayPath& value); 
-    /**
-    * @brief Getter property for DataContainerName
-    * @return Value of DataContainerName
-    */
-    DataArrayPath getDataContainerName() const;
+  /**
+   * @brief Setter property for DataContainerName
+   */
+  void setDataContainerName(const DataArrayPath& value);
+  /**
+   * @brief Getter property for DataContainerName
+   * @return Value of DataContainerName
+   */
+  DataArrayPath getDataContainerName() const;
   Q_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
 
-    /**
-    * @brief Setter property for CellAttributeMatrixName
-    */
-    void setCellAttributeMatrixName(const QString& value); 
-    /**
-    * @brief Getter property for CellAttributeMatrixName
-    * @return Value of CellAttributeMatrixName
-    */
-    QString getCellAttributeMatrixName() const;
+  /**
+   * @brief Setter property for CellAttributeMatrixName
+   */
+  void setCellAttributeMatrixName(const QString& value);
+  /**
+   * @brief Getter property for CellAttributeMatrixName
+   * @return Value of CellAttributeMatrixName
+   */
+  QString getCellAttributeMatrixName() const;
   Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
-    /**
-    * @brief Setter property for ImageDataArrayName
-    */
-    void setImageDataArrayName(const QString& value); 
-    /**
-    * @brief Getter property for ImageDataArrayName
-    * @return Value of ImageDataArrayName
-    */
-    QString getImageDataArrayName() const;
+  /**
+   * @brief Setter property for ImageDataArrayName
+   */
+  void setImageDataArrayName(const QString& value);
+  /**
+   * @brief Getter property for ImageDataArrayName
+   * @return Value of ImageDataArrayName
+   */
+  QString getImageDataArrayName() const;
   Q_PROPERTY(QString ImageDataArrayName READ getImageDataArrayName WRITE setImageDataArrayName)
 
-    /**
-    * @brief Setter property for FileNameCache
-    */
+  /**
+   * @brief Setter property for FileNameCache
+   */
   void setFileNameCache(const QString& value);
   /**
    * @brief Getter property for FileNameCache
@@ -177,7 +176,6 @@ public:
    */
   ImageGeom::Pointer getDCGeometryCache() const;
 
-
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
@@ -187,7 +185,7 @@ public:
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
-  */
+   */
   QString getBrandingString() const override;
 
   /**
@@ -238,8 +236,6 @@ public:
    */
   void execute() override;
 
-
-
 protected:
   ITKImageReader();
   /**
@@ -259,17 +255,16 @@ protected:
   ITK_IMAGE_READER_HELPER_DECL()
 
 private:
-    QString m_FileName = {};
-    DataArrayPath m_DataContainerName = {};
-    QString m_CellAttributeMatrixName = {};
-    QString m_ImageDataArrayName = {};
+  QString m_FileName = {};
+  DataArrayPath m_DataContainerName = {};
+  QString m_CellAttributeMatrixName = {};
+  QString m_ImageDataArrayName = {};
 
   QScopedPointer<ITKImageReaderPrivate> const d_ptr;
 
 public:
-  ITKImageReader(const ITKImageReader&) = delete; // Copy Constructor Not Implemented
-  ITKImageReader(ITKImageReader&&) = delete;      // Move Constructor Not Implemented
+  ITKImageReader(const ITKImageReader&) = delete;            // Copy Constructor Not Implemented
+  ITKImageReader(ITKImageReader&&) = delete;                 // Move Constructor Not Implemented
   ITKImageReader& operator=(const ITKImageReader&) = delete; // Copy Assignment Not Implemented
   ITKImageReader& operator=(ITKImageReader&&) = delete;      // Move Assignment Not Implemented
 };
-

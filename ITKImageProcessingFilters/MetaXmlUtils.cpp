@@ -43,7 +43,6 @@ MetaXmlUtils::MetaXmlUtils() = default;
 
 MetaXmlUtils::~MetaXmlUtils() = default;
 
-
 // -----------------------------------------------------------------------------
 ZeissTagsXmlSectionPtr MetaXmlUtils::ParseTagsSection(AbstractFilter* filter, QDomElement& tags)
 {
@@ -133,7 +132,6 @@ ZeissTagsXmlSectionPtr MetaXmlUtils::ParseScalingSection(AbstractFilter* filter,
   }
   return rootTagsSection;
 }
-
 
 // -----------------------------------------------------------------------------
 //

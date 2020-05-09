@@ -4,7 +4,6 @@
  * Your License or Copyright can go here
  */
 
-
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKRegionalMaximaImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 #include "SIMPLib/Common/Constants.h"
@@ -17,7 +16,6 @@
 
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -27,7 +25,6 @@ ITKRegionalMaximaImage::ITKRegionalMaximaImage()
   m_ForegroundValue = StaticCastScalar<double, double, double>(1.0);
   m_FullyConnected = StaticCastScalar<bool, bool, bool>(false);
   m_FlatIsMaxima = StaticCastScalar<bool, bool, bool>(true);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -46,7 +43,6 @@ void ITKRegionalMaximaImage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("ForegroundValue", ForegroundValue, FilterParameter::Parameter, ITKRegionalMaximaImage));
   parameters.push_back(SIMPL_NEW_BOOL_FP("FullyConnected", FullyConnected, FilterParameter::Parameter, ITKRegionalMaximaImage));
   parameters.push_back(SIMPL_NEW_BOOL_FP("FlatIsMaxima", FlatIsMaxima, FilterParameter::Parameter, ITKRegionalMaximaImage));
-
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -83,7 +79,8 @@ void ITKRegionalMaximaImage::readFilterParameters(AbstractFilterParametersReader
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKRegionalMaximaImage::dataCheckImpl()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKRegionalMaximaImage::dataCheckImpl()
 {
   clearErrorCode();
   clearWarningCode();
@@ -98,14 +95,15 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
 // -----------------------------------------------------------------------------
 void ITKRegionalMaximaImage::dataCheck()
 {
-  Dream3DArraySwitchMacroOutputType(this->dataCheckImpl, getSelectedCellArrayPath(), -4,uint32_t, 0);
+  Dream3DArraySwitchMacroOutputType(this->dataCheckImpl, getSelectedCellArrayPath(), -4, uint32_t, 0);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKRegionalMaximaImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKRegionalMaximaImage::filter()
 {
   typedef itk::Image<InputPixelType, Dimension> InputImageType;
   typedef itk::Image<OutputPixelType, Dimension> OutputImageType;
@@ -117,7 +115,6 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   filter->SetFullyConnected(static_cast<bool>(m_FullyConnected));
   filter->SetFlatIsMaxima(static_cast<bool>(m_FlatIsMaxima));
   this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -125,7 +122,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
 // -----------------------------------------------------------------------------
 void ITKRegionalMaximaImage::filterInternal()
 {
-  Dream3DArraySwitchMacroOutputType(this->filter, getSelectedCellArrayPath(), -4,uint32_t, 0);
+  Dream3DArraySwitchMacroOutputType(this->filter, getSelectedCellArrayPath(), -4, uint32_t, 0);
 }
 
 // -----------------------------------------------------------------------------
@@ -174,7 +171,7 @@ ITKRegionalMaximaImage::Pointer ITKRegionalMaximaImage::NullPointer()
 // -----------------------------------------------------------------------------
 std::shared_ptr<ITKRegionalMaximaImage> ITKRegionalMaximaImage::New()
 {
-  struct make_shared_enabler : public ITKRegionalMaximaImage  
+  struct make_shared_enabler : public ITKRegionalMaximaImage
   {
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
@@ -241,5 +238,3 @@ bool ITKRegionalMaximaImage::getFlatIsMaxima() const
 {
   return m_FlatIsMaxima;
 }
-
-

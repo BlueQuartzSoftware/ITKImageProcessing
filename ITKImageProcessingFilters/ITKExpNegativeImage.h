@@ -30,24 +30,23 @@ class ITKImageProcessing_EXPORT ITKExpNegativeImage : public ITKImageProcessingB
   Q_OBJECT
 
 public:
-    using Self = ITKExpNegativeImage;
-    using Pointer = std::shared_ptr<Self>;
-    using ConstPointer = std::shared_ptr<const Self>;
-    using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<const Self>;
-    static Pointer NullPointer();
+  using Self = ITKExpNegativeImage;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<const Self>;
+  static Pointer NullPointer();
 
-    static std::shared_ptr<ITKExpNegativeImage> New();
+  static std::shared_ptr<ITKExpNegativeImage> New();
 
-    /**
-    * @brief Returns the name of the class for ITKExpNegativeImage
-    */
-    QString getNameOfClass() const override;
-    /**
-    * @brief Returns the name of the class for ITKExpNegativeImage
-    */
-    static QString ClassName();
-
+  /**
+   * @brief Returns the name of the class for ITKExpNegativeImage
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for ITKExpNegativeImage
+   */
+  static QString ClassName();
 
   ~ITKExpNegativeImage() override;
 
@@ -93,29 +92,29 @@ protected:
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
    */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void dataCheckImpl();
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void dataCheckImpl();
 
   /**
-  * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
-  */
+   * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
+   */
   void filterInternal() override;
 
   /**
-  * @brief Applies the filter
-  */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
+   * @brief Applies the filter
+   */
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void filter();
 
 public:
-  ITKExpNegativeImage(const ITKExpNegativeImage&) = delete;    // Copy Constructor Not Implemented
-  ITKExpNegativeImage(ITKExpNegativeImage&&) = delete;         // Move Constructor Not Implemented
+  ITKExpNegativeImage(const ITKExpNegativeImage&) = delete;            // Copy Constructor Not Implemented
+  ITKExpNegativeImage(ITKExpNegativeImage&&) = delete;                 // Move Constructor Not Implemented
   ITKExpNegativeImage& operator=(const ITKExpNegativeImage&) = delete; // Copy Assignment Not Implemented
   ITKExpNegativeImage& operator=(ITKExpNegativeImage&&) = delete;      // Move Assignment Not Implemented
 
-  private:
-
+private:
 };
 
 #ifdef __clang__
 #pragma clang diagnostic pop
 #endif
-

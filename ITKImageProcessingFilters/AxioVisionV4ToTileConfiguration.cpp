@@ -141,7 +141,10 @@ void AxioVisionV4ToTileConfiguration::execute()
     return;
   }
 
-  if (getCancel()) { return; }
+  if(getCancel())
+  {
+    return;
+  }
 
   // Parse the XML file to get all the meta-data information and create all the
   // data structure that is needed.
@@ -214,7 +217,7 @@ void AxioVisionV4ToTileConfiguration::parseImages(QDomElement& root, ZeissTagsXm
   int imageCountPadding = MetaXmlUtils::CalculatePaddingDigits(imageCount);
   //  int32_t rowCountPadding = MetaXmlUtils::CalculatePaddingDigits(rowCount);
   //  int32_t colCountPadding = MetaXmlUtils::CalculatePaddingDigits(colCount);
-  //int charPaddingCount = std::max(rowCountPadding, colCountPadding);
+  // int charPaddingCount = std::max(rowCountPadding, colCountPadding);
 
   DataContainerArray::Pointer dca = getDataContainerArray();
   QTextStream outTextStream;
@@ -224,15 +227,20 @@ void AxioVisionV4ToTileConfiguration::parseImages(QDomElement& root, ZeissTagsXm
     // Create our Output file Stream
     outFile.open(QIODevice::WriteOnly | QIODevice::Text);
     outTextStream.setDevice(&outFile);
-    outTextStream << "# File Written by DREAM.3D based on values from the _meta.xml" << "\n";
-    outTextStream << "# Files are ordered Columns moving fastest, then rows." << "\n";
-    outTextStream << "# Coordinate values are in pixel coords." << "\n";
-    outTextStream << "# Define the number of dimensions we are working on." << "\n";
-    outTextStream << "dim = 2" << "\n";
+    outTextStream << "# File Written by DREAM.3D based on values from the _meta.xml"
+                  << "\n";
+    outTextStream << "# Files are ordered Columns moving fastest, then rows."
+                  << "\n";
+    outTextStream << "# Coordinate values are in pixel coords."
+                  << "\n";
+    outTextStream << "# Define the number of dimensions we are working on."
+                  << "\n";
+    outTextStream << "dim = 2"
+                  << "\n";
     outTextStream << "\n";
-    outTextStream << "# Define the image coordinates" << "\n";
+    outTextStream << "# Define the image coordinates"
+                  << "\n";
   }
-
 
   std::vector<std::array<int32_t, 3>> allDims;
   std::vector<std::array<float, 3>> allResolution;
@@ -240,8 +248,8 @@ void AxioVisionV4ToTileConfiguration::parseImages(QDomElement& root, ZeissTagsXm
   std::vector<std::array<int32_t, 2>> allRCIndices;
   std::vector<QString> allNames;
 
-  std::array<float, 3> minOrigin = {{ std::numeric_limits<float>::max(), std::numeric_limits<float>::max(), 0.0f}};
-  std::array<int32_t, 2> maxRC = {{ 0,0}};
+  std::array<float, 3> minOrigin = {{std::numeric_limits<float>::max(), std::numeric_limits<float>::max(), 0.0f}};
+  std::array<int32_t, 2> maxRC = {{0, 0}};
 
   // Loop over every image in the _meta.xml file
   for(int p = 0; p < imageCount; p++)
@@ -297,12 +305,17 @@ void AxioVisionV4ToTileConfiguration::parseImages(QDomElement& root, ZeissTagsXm
       return;
     }
 
-    std::array<int32_t, 2> rcIndex = {{ rowIndex, colIndex}};
+    std::array<int32_t, 2> rcIndex = {{rowIndex, colIndex}};
     allRCIndices.push_back(rcIndex);
 
-    if(rcIndex[0] > maxRC[0]) { maxRC[0] = rcIndex[0];}
-    if(rcIndex[1] > maxRC[1]) { maxRC[1] = rcIndex[1];}
-
+    if(rcIndex[0] > maxRC[0])
+    {
+      maxRC[0] = rcIndex[0];
+    }
+    if(rcIndex[1] > maxRC[1])
+    {
+      maxRC[1] = rcIndex[1];
+    }
 
     //#######################################################################
     // Get Pixel Dimensions of the image.
@@ -331,9 +344,18 @@ void AxioVisionV4ToTileConfiguration::parseImages(QDomElement& root, ZeissTagsXm
 
     allOrigins.push_back(origin);
 
-    if(origin[0] < minOrigin[0]) { minOrigin[0] = origin[0];}
-    if(origin[1] < minOrigin[1]) { minOrigin[1] = origin[1];}
-    if(origin[2] < minOrigin[2]) { minOrigin[2] = origin[2];}
+    if(origin[0] < minOrigin[0])
+    {
+      minOrigin[0] = origin[0];
+    }
+    if(origin[1] < minOrigin[1])
+    {
+      minOrigin[1] = origin[1];
+    }
+    if(origin[2] < minOrigin[2])
+    {
+      minOrigin[2] = origin[2];
+    }
 
     //#######################################################################
     // Get the Spacing of the geometry
@@ -356,7 +378,7 @@ void AxioVisionV4ToTileConfiguration::parseImages(QDomElement& root, ZeissTagsXm
   {
     for(int32_t col = 0; col <= maxRC[1]; col++)
     {
-      for (size_t p = 0; p < imageCount; p++)
+      for(size_t p = 0; p < imageCount; p++)
       {
         std::array<int32_t, 2>& rcIndex = allRCIndices.at(p);
         if(rcIndex[0] == row && rcIndex[1] == col)
@@ -364,12 +386,13 @@ void AxioVisionV4ToTileConfiguration::parseImages(QDomElement& root, ZeissTagsXm
           std::array<float, 3> origin = allOrigins[p];
           std::array<float, 3> resolution = allResolution[p];
 
-          origin[0] = (origin[0] - minOrigin[0])/resolution[0];
-          origin[1] = (origin[1] - minOrigin[1])/resolution[1];
-          origin[2] = (origin[2] - minOrigin[2])/resolution[2];
+          origin[0] = (origin[0] - minOrigin[0]) / resolution[0];
+          origin[1] = (origin[1] - minOrigin[1]) / resolution[1];
+          origin[2] = (origin[2] - minOrigin[2]) / resolution[2];
           if(!getInPreflight())
           {
-            outTextStream << allNames[p] << "; ; (" << origin[0] << ", " << origin[1] << ")" << "\n";
+            outTextStream << allNames[p] << "; ; (" << origin[0] << ", " << origin[1] << ")"
+                          << "\n";
           }
         }
       }
@@ -413,7 +436,7 @@ QString AxioVisionV4ToTileConfiguration::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
-  vStream <<  ITKImageProcessing::Version::Major() << "." << ITKImageProcessing::Version::Minor() << "." << ITKImageProcessing::Version::Patch();
+  vStream << ITKImageProcessing::Version::Major() << "." << ITKImageProcessing::Version::Minor() << "." << ITKImageProcessing::Version::Patch();
   return version;
 }
 
@@ -437,10 +460,9 @@ QString AxioVisionV4ToTileConfiguration::getSubGroupName() const
 //
 // -----------------------------------------------------------------------------
 QString AxioVisionV4ToTileConfiguration::getHumanLabel() const
-{ 
+{
   return "ITK::Convert AxioVision To Tile Configuration file";
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -449,7 +471,6 @@ QUuid AxioVisionV4ToTileConfiguration::getUuid() const
 {
   return QUuid("{30687f44-9c10-5617-bcb8-4109cbd6e55e}");
 }
-
 
 // -----------------------------------------------------------------------------
 AxioVisionV4ToTileConfiguration::Pointer AxioVisionV4ToTileConfiguration::NullPointer()
@@ -460,7 +481,7 @@ AxioVisionV4ToTileConfiguration::Pointer AxioVisionV4ToTileConfiguration::NullPo
 // -----------------------------------------------------------------------------
 std::shared_ptr<AxioVisionV4ToTileConfiguration> AxioVisionV4ToTileConfiguration::New()
 {
-  struct make_shared_enabler : public AxioVisionV4ToTileConfiguration  
+  struct make_shared_enabler : public AxioVisionV4ToTileConfiguration
   {
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
@@ -503,5 +524,3 @@ QString AxioVisionV4ToTileConfiguration::getOutputFile() const
 {
   return m_OutputFile;
 }
-
-

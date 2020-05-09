@@ -4,7 +4,6 @@
  * Your License or Copyright can go here
  */
 
-
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKAdaptiveHistogramEqualizationImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 #include "SIMPLib/Common/Constants.h"
@@ -17,7 +16,6 @@
 
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -26,7 +24,6 @@ ITKAdaptiveHistogramEqualizationImage::ITKAdaptiveHistogramEqualizationImage()
   m_Radius = CastStdToVec3<std::vector<unsigned int>, FloatVec3Type, float>(std::vector<unsigned int>(3, 5));
   m_Alpha = StaticCastScalar<float, float, float>(0.3f);
   m_Beta = StaticCastScalar<float, float, float>(0.3f);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -44,7 +41,6 @@ void ITKAdaptiveHistogramEqualizationImage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Radius", Radius, FilterParameter::Parameter, ITKAdaptiveHistogramEqualizationImage));
   parameters.push_back(SIMPL_NEW_FLOAT_FP("Alpha", Alpha, FilterParameter::Parameter, ITKAdaptiveHistogramEqualizationImage));
   parameters.push_back(SIMPL_NEW_FLOAT_FP("Beta", Beta, FilterParameter::Parameter, ITKAdaptiveHistogramEqualizationImage));
-
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -80,7 +76,8 @@ void ITKAdaptiveHistogramEqualizationImage::readFilterParameters(AbstractFilterP
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKAdaptiveHistogramEqualizationImage::dataCheckImpl()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKAdaptiveHistogramEqualizationImage::dataCheckImpl()
 {
   clearErrorCode();
   clearWarningCode();
@@ -103,7 +100,8 @@ void ITKAdaptiveHistogramEqualizationImage::dataCheck()
 //
 // -----------------------------------------------------------------------------
 
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKAdaptiveHistogramEqualizationImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKAdaptiveHistogramEqualizationImage::filter()
 {
   typedef itk::Image<InputPixelType, Dimension> InputImageType;
   // typedef itk::Image<OutputPixelType, Dimension> OutputImageType;
@@ -114,7 +112,6 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   filter->SetAlpha(static_cast<float>(m_Alpha));
   filter->SetBeta(static_cast<float>(m_Beta));
   this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -171,7 +168,7 @@ ITKAdaptiveHistogramEqualizationImage::Pointer ITKAdaptiveHistogramEqualizationI
 // -----------------------------------------------------------------------------
 std::shared_ptr<ITKAdaptiveHistogramEqualizationImage> ITKAdaptiveHistogramEqualizationImage::New()
 {
-  struct make_shared_enabler : public ITKAdaptiveHistogramEqualizationImage  
+  struct make_shared_enabler : public ITKAdaptiveHistogramEqualizationImage
   {
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
@@ -226,5 +223,3 @@ float ITKAdaptiveHistogramEqualizationImage::getBeta() const
 {
   return m_Beta;
 }
-
-

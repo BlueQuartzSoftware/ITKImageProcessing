@@ -4,7 +4,6 @@
  * Your License or Copyright can go here
  */
 
-
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKSqrtImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 #include "SIMPLib/Common/Constants.h"
@@ -16,7 +15,6 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
-
 
 // -----------------------------------------------------------------------------
 //
@@ -66,7 +64,8 @@ void ITKSqrtImage::readFilterParameters(AbstractFilterParametersReader* reader, 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKSqrtImage::dataCheckImpl()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKSqrtImage::dataCheckImpl()
 {
   clearErrorCode();
   clearWarningCode();
@@ -88,7 +87,8 @@ void ITKSqrtImage::dataCheck()
 //
 // -----------------------------------------------------------------------------
 
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKSqrtImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKSqrtImage::filter()
 {
   typedef itk::Image<InputPixelType, Dimension> InputImageType;
   typedef itk::Image<OutputPixelType, Dimension> OutputImageType;
@@ -96,7 +96,6 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   typedef itk::SqrtImageFilter<InputImageType, OutputImageType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
   this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -153,7 +152,7 @@ ITKSqrtImage::Pointer ITKSqrtImage::NullPointer()
 // -----------------------------------------------------------------------------
 std::shared_ptr<ITKSqrtImage> ITKSqrtImage::New()
 {
-  struct make_shared_enabler : public ITKSqrtImage  
+  struct make_shared_enabler : public ITKSqrtImage
   {
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
@@ -172,5 +171,3 @@ QString ITKSqrtImage::ClassName()
 {
   return QString("ITKSqrtImage");
 }
-
-

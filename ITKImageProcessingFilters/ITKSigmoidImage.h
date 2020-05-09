@@ -43,71 +43,69 @@ class ITKImageProcessing_EXPORT ITKSigmoidImage : public ITKImageProcessingBase
   // End Python bindings declarations
 
 public:
-    using Self = ITKSigmoidImage;
-    using Pointer = std::shared_ptr<Self>;
-    using ConstPointer = std::shared_ptr<const Self>;
-    using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<const Self>;
-    static Pointer NullPointer();
+  using Self = ITKSigmoidImage;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<const Self>;
+  static Pointer NullPointer();
 
-    static std::shared_ptr<ITKSigmoidImage> New();
+  static std::shared_ptr<ITKSigmoidImage> New();
 
-    /**
-    * @brief Returns the name of the class for ITKSigmoidImage
-    */
-    QString getNameOfClass() const override;
-    /**
-    * @brief Returns the name of the class for ITKSigmoidImage
-    */
-    static QString ClassName();
-
+  /**
+   * @brief Returns the name of the class for ITKSigmoidImage
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for ITKSigmoidImage
+   */
+  static QString ClassName();
 
   ~ITKSigmoidImage() override;
 
-    /**
-    * @brief Setter property for Alpha
-    */
-    void setAlpha(double value); 
-    /**
-    * @brief Getter property for Alpha
-    * @return Value of Alpha
-    */
-    double getAlpha() const;
+  /**
+   * @brief Setter property for Alpha
+   */
+  void setAlpha(double value);
+  /**
+   * @brief Getter property for Alpha
+   * @return Value of Alpha
+   */
+  double getAlpha() const;
   Q_PROPERTY(double Alpha READ getAlpha WRITE setAlpha)
 
-    /**
-    * @brief Setter property for Beta
-    */
-    void setBeta(double value); 
-    /**
-    * @brief Getter property for Beta
-    * @return Value of Beta
-    */
-    double getBeta() const;
+  /**
+   * @brief Setter property for Beta
+   */
+  void setBeta(double value);
+  /**
+   * @brief Getter property for Beta
+   * @return Value of Beta
+   */
+  double getBeta() const;
   Q_PROPERTY(double Beta READ getBeta WRITE setBeta)
 
-    /**
-    * @brief Setter property for OutputMaximum
-    */
-    void setOutputMaximum(double value); 
-    /**
-    * @brief Getter property for OutputMaximum
-    * @return Value of OutputMaximum
-    */
-    double getOutputMaximum() const;
+  /**
+   * @brief Setter property for OutputMaximum
+   */
+  void setOutputMaximum(double value);
+  /**
+   * @brief Getter property for OutputMaximum
+   * @return Value of OutputMaximum
+   */
+  double getOutputMaximum() const;
   Q_PROPERTY(double OutputMaximum READ getOutputMaximum WRITE setOutputMaximum)
 
-    /**
-    * @brief Setter property for OutputMinimum
-    */
-    void setOutputMinimum(double value); 
-    /**
-    * @brief Getter property for OutputMinimum
-    * @return Value of OutputMinimum
-    */
-    double getOutputMinimum() const;
+  /**
+   * @brief Setter property for OutputMinimum
+   */
+  void setOutputMinimum(double value);
+  /**
+   * @brief Getter property for OutputMinimum
+   * @return Value of OutputMinimum
+   */
+  double getOutputMinimum() const;
   Q_PROPERTY(double OutputMinimum READ getOutputMinimum WRITE setOutputMinimum)
-
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -151,33 +149,33 @@ protected:
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
    */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void dataCheckImpl();
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void dataCheckImpl();
 
   /**
-  * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
-  */
+   * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
+   */
   void filterInternal() override;
 
   /**
-  * @brief Applies the filter
-  */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
+   * @brief Applies the filter
+   */
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void filter();
 
 public:
-  ITKSigmoidImage(const ITKSigmoidImage&) = delete;    // Copy Constructor Not Implemented
-  ITKSigmoidImage(ITKSigmoidImage&&) = delete;         // Move Constructor Not Implemented
+  ITKSigmoidImage(const ITKSigmoidImage&) = delete;            // Copy Constructor Not Implemented
+  ITKSigmoidImage(ITKSigmoidImage&&) = delete;                 // Move Constructor Not Implemented
   ITKSigmoidImage& operator=(const ITKSigmoidImage&) = delete; // Copy Assignment Not Implemented
   ITKSigmoidImage& operator=(ITKSigmoidImage&&) = delete;      // Move Assignment Not Implemented
 
-  private:
-    double m_Alpha = {};
-    double m_Beta = {};
-    double m_OutputMaximum = {};
-    double m_OutputMinimum = {};
-
+private:
+  double m_Alpha = {};
+  double m_Beta = {};
+  double m_OutputMaximum = {};
+  double m_OutputMinimum = {};
 };
 
 #ifdef __clang__
 #pragma clang diagnostic pop
 #endif
-

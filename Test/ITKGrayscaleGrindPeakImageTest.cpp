@@ -8,16 +8,15 @@
 // Auto includes
 #include <SIMPLib/FilterParameters/BooleanFilterParameter.h>
 
-
 class ITKGrayscaleGrindPeakImageTest : public ITKTestBase
 {
 
 public:
-ITKGrayscaleGrindPeakImageTest() = default;
-~ITKGrayscaleGrindPeakImageTest() override = default;
+  ITKGrayscaleGrindPeakImageTest() = default;
+  ~ITKGrayscaleGrindPeakImageTest() override = default;
 
   int TestITKGrayscaleGrindPeakImageGrayscaleGrindPeak1Test()
-{
+  {
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/RA-Short.nrrd");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -44,10 +43,10 @@ ITKGrayscaleGrindPeakImageTest() = default;
     GetMD5FromDataContainer(containerArray, input_path, md5Output);
     DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("084cdd1d64664ebfab26c2e0ed382e14"));
     return 0;
-}
+  }
 
-int TestITKGrayscaleGrindPeakImageGrayscaleGrindPeak2Test()
-{
+  int TestITKGrayscaleGrindPeakImageGrayscaleGrindPeak2Test()
+  {
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/RA-Slice-Short.png");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -74,9 +73,7 @@ int TestITKGrayscaleGrindPeakImageGrayscaleGrindPeak2Test()
     GetMD5FromDataContainer(containerArray, input_path, md5Output);
     DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("b18d75cccb9361c65b40bb5c0d3c6e0d"));
     return 0;
-}
-
-
+  }
 
   // -----------------------------------------------------------------------------
   //
@@ -87,8 +84,8 @@ int TestITKGrayscaleGrindPeakImageGrayscaleGrindPeak2Test()
 
     DREAM3D_REGISTER_TEST(this->TestFilterAvailability("ITKGrayscaleGrindPeakImage"));
 
-    DREAM3D_REGISTER_TEST( TestITKGrayscaleGrindPeakImageGrayscaleGrindPeak1Test());
-    DREAM3D_REGISTER_TEST( TestITKGrayscaleGrindPeakImageGrayscaleGrindPeak2Test());
+    DREAM3D_REGISTER_TEST(TestITKGrayscaleGrindPeakImageGrayscaleGrindPeak1Test());
+    DREAM3D_REGISTER_TEST(TestITKGrayscaleGrindPeakImageGrayscaleGrindPeak2Test());
 
     if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
     {

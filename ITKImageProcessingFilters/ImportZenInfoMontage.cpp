@@ -2,7 +2,6 @@
  * Your License or Copyright can go here
  */
 
-
 #include "ImportZenInfoMontage.h"
 
 #include <algorithm>
@@ -400,7 +399,6 @@ void ImportZenInfoMontage::dataCheck()
 
   generateDataStructure();
 }
-
 
 // -----------------------------------------------------------------------------
 //

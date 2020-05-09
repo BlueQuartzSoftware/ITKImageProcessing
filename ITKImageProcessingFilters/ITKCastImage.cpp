@@ -14,7 +14,6 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -89,7 +88,8 @@ void ITKCastImage::readFilterParameters(AbstractFilterParametersReader* reader, 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKCastImage::dataCheckImpl()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKCastImage::dataCheckImpl()
 {
   // Check consistency of parameters
   clearErrorCode();
@@ -119,7 +119,8 @@ void ITKCastImage::dataCheck()
 //
 // -----------------------------------------------------------------------------
 
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKCastImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKCastImage::filter()
 {
   typedef itk::Image<InputPixelType, Dimension> InputImageType;
   typedef itk::Image<OutputPixelType, Dimension> OutputImageType;
@@ -185,7 +186,7 @@ ITKCastImage::Pointer ITKCastImage::NullPointer()
 // -----------------------------------------------------------------------------
 std::shared_ptr<ITKCastImage> ITKCastImage::New()
 {
-  struct make_shared_enabler : public ITKCastImage  
+  struct make_shared_enabler : public ITKCastImage
   {
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
@@ -216,5 +217,3 @@ int ITKCastImage::getCastingType() const
 {
   return m_CastingType;
 }
-
-

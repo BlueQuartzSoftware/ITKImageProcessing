@@ -42,49 +42,47 @@ class ITKImageProcessing_EXPORT ITKSmoothingRecursiveGaussianImage : public ITKI
   // End Python bindings declarations
 
 public:
-    using Self = ITKSmoothingRecursiveGaussianImage;
-    using Pointer = std::shared_ptr<Self>;
-    using ConstPointer = std::shared_ptr<const Self>;
-    using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<const Self>;
-    static Pointer NullPointer();
+  using Self = ITKSmoothingRecursiveGaussianImage;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<const Self>;
+  static Pointer NullPointer();
 
-    static std::shared_ptr<ITKSmoothingRecursiveGaussianImage> New();
+  static std::shared_ptr<ITKSmoothingRecursiveGaussianImage> New();
 
-    /**
-    * @brief Returns the name of the class for ITKSmoothingRecursiveGaussianImage
-    */
-    QString getNameOfClass() const override;
-    /**
-    * @brief Returns the name of the class for ITKSmoothingRecursiveGaussianImage
-    */
-    static QString ClassName();
-
+  /**
+   * @brief Returns the name of the class for ITKSmoothingRecursiveGaussianImage
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for ITKSmoothingRecursiveGaussianImage
+   */
+  static QString ClassName();
 
   ~ITKSmoothingRecursiveGaussianImage() override;
 
-    /**
-    * @brief Setter property for Sigma
-    */
-    void setSigma(const FloatVec3Type& value); 
-    /**
-    * @brief Getter property for Sigma
-    * @return Value of Sigma
-    */
-    FloatVec3Type getSigma() const;
+  /**
+   * @brief Setter property for Sigma
+   */
+  void setSigma(const FloatVec3Type& value);
+  /**
+   * @brief Getter property for Sigma
+   * @return Value of Sigma
+   */
+  FloatVec3Type getSigma() const;
   Q_PROPERTY(FloatVec3Type Sigma READ getSigma WRITE setSigma)
 
-    /**
-    * @brief Setter property for NormalizeAcrossScale
-    */
-    void setNormalizeAcrossScale(bool value); 
-    /**
-    * @brief Getter property for NormalizeAcrossScale
-    * @return Value of NormalizeAcrossScale
-    */
-    bool getNormalizeAcrossScale() const;
+  /**
+   * @brief Setter property for NormalizeAcrossScale
+   */
+  void setNormalizeAcrossScale(bool value);
+  /**
+   * @brief Getter property for NormalizeAcrossScale
+   * @return Value of NormalizeAcrossScale
+   */
+  bool getNormalizeAcrossScale() const;
   Q_PROPERTY(bool NormalizeAcrossScale READ getNormalizeAcrossScale WRITE setNormalizeAcrossScale)
-
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -128,31 +126,31 @@ protected:
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
    */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void dataCheckImpl();
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void dataCheckImpl();
 
   /**
-  * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
-  */
+   * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
+   */
   void filterInternal() override;
 
   /**
-  * @brief Applies the filter
-  */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
+   * @brief Applies the filter
+   */
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void filter();
 
 public:
-  ITKSmoothingRecursiveGaussianImage(const ITKSmoothingRecursiveGaussianImage&) = delete;    // Copy Constructor Not Implemented
-  ITKSmoothingRecursiveGaussianImage(ITKSmoothingRecursiveGaussianImage&&) = delete;         // Move Constructor Not Implemented
+  ITKSmoothingRecursiveGaussianImage(const ITKSmoothingRecursiveGaussianImage&) = delete;            // Copy Constructor Not Implemented
+  ITKSmoothingRecursiveGaussianImage(ITKSmoothingRecursiveGaussianImage&&) = delete;                 // Move Constructor Not Implemented
   ITKSmoothingRecursiveGaussianImage& operator=(const ITKSmoothingRecursiveGaussianImage&) = delete; // Copy Assignment Not Implemented
   ITKSmoothingRecursiveGaussianImage& operator=(ITKSmoothingRecursiveGaussianImage&&) = delete;      // Move Assignment Not Implemented
 
-  private:
-    FloatVec3Type m_Sigma = {};
-    bool m_NormalizeAcrossScale = {};
-
+private:
+  FloatVec3Type m_Sigma = {};
+  bool m_NormalizeAcrossScale = {};
 };
 
 #ifdef __clang__
 #pragma clang diagnostic pop
 #endif
-

@@ -2,7 +2,6 @@
  * Your License or Copyright can go here
  */
 
-
 #include "ITKRGBToLuminanceImage.h"
 
 #include "SIMPLib/Common/Constants.h"
@@ -17,7 +16,6 @@
 #define DREAM3D_USE_RGB_RGBA 1
 #define DREAM3D_USE_Scalar 0
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
-
 
 // -----------------------------------------------------------------------------
 //
@@ -65,7 +63,8 @@ void ITKRGBToLuminanceImage::readFilterParameters(AbstractFilterParametersReader
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKRGBToLuminanceImage::dataCheckImpl()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKRGBToLuminanceImage::dataCheckImpl()
 {
   // Check consistency of parameters
   clearErrorCode();
@@ -92,7 +91,8 @@ void ITKRGBToLuminanceImage::dataCheck()
 //
 // -----------------------------------------------------------------------------
 
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKRGBToLuminanceImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKRGBToLuminanceImage::filter()
 {
   typedef typename itk::NumericTraits<InputPixelType>::ValueType ScalarPixelType;
   typedef itk::Image<ScalarPixelType, Dimension> OutputImageType;
@@ -176,7 +176,7 @@ ITKRGBToLuminanceImage::Pointer ITKRGBToLuminanceImage::NullPointer()
 // -----------------------------------------------------------------------------
 std::shared_ptr<ITKRGBToLuminanceImage> ITKRGBToLuminanceImage::New()
 {
-  struct make_shared_enabler : public ITKRGBToLuminanceImage  
+  struct make_shared_enabler : public ITKRGBToLuminanceImage
   {
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
@@ -195,5 +195,3 @@ QString ITKRGBToLuminanceImage::ClassName()
 {
   return QString("ITKRGBToLuminanceImage");
 }
-
-

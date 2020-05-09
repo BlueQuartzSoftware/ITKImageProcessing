@@ -15,8 +15,8 @@ class ITKClosingByReconstructionImageTest : public ITKTestBase
 {
 
 public:
-ITKClosingByReconstructionImageTest() = default;
-~ITKClosingByReconstructionImageTest() override = default;
+  ITKClosingByReconstructionImageTest() = default;
+  ~ITKClosingByReconstructionImageTest() override = default;
 
   int TestITKClosingByReconstructionImageClosingByReconstructionTest()
   {

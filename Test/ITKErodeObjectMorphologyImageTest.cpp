@@ -15,8 +15,8 @@ class ITKErodeObjectMorphologyImageTest : public ITKTestBase
 {
 
 public:
-ITKErodeObjectMorphologyImageTest() = default;
-~ITKErodeObjectMorphologyImageTest() override = default;
+  ITKErodeObjectMorphologyImageTest() = default;
+  ~ITKErodeObjectMorphologyImageTest() override = default;
 
   int TestITKErodeObjectMorphologyImagefloatTest()
   {

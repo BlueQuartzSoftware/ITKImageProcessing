@@ -4,7 +4,6 @@
  * Your License or Copyright can go here
  */
 
-
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKRegionalMinimaImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 #include "SIMPLib/Common/Constants.h"
@@ -17,7 +16,6 @@
 
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -27,7 +25,6 @@ ITKRegionalMinimaImage::ITKRegionalMinimaImage()
   m_ForegroundValue = StaticCastScalar<double, double, double>(1.0);
   m_FullyConnected = StaticCastScalar<bool, bool, bool>(false);
   m_FlatIsMinima = StaticCastScalar<bool, bool, bool>(true);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -46,7 +43,6 @@ void ITKRegionalMinimaImage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("ForegroundValue", ForegroundValue, FilterParameter::Parameter, ITKRegionalMinimaImage));
   parameters.push_back(SIMPL_NEW_BOOL_FP("FullyConnected", FullyConnected, FilterParameter::Parameter, ITKRegionalMinimaImage));
   parameters.push_back(SIMPL_NEW_BOOL_FP("FlatIsMinima", FlatIsMinima, FilterParameter::Parameter, ITKRegionalMinimaImage));
-
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -83,7 +79,8 @@ void ITKRegionalMinimaImage::readFilterParameters(AbstractFilterParametersReader
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKRegionalMinimaImage::dataCheckImpl()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKRegionalMinimaImage::dataCheckImpl()
 {
   clearErrorCode();
   clearWarningCode();
@@ -105,7 +102,8 @@ void ITKRegionalMinimaImage::dataCheck()
 //
 // -----------------------------------------------------------------------------
 
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKRegionalMinimaImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKRegionalMinimaImage::filter()
 {
   typedef itk::Image<InputPixelType, Dimension> InputImageType;
   typedef itk::Image<OutputPixelType, Dimension> OutputImageType;
@@ -117,7 +115,6 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   filter->SetFullyConnected(static_cast<bool>(m_FullyConnected));
   filter->SetFlatIsMinima(static_cast<bool>(m_FlatIsMinima));
   this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -174,7 +171,7 @@ ITKRegionalMinimaImage::Pointer ITKRegionalMinimaImage::NullPointer()
 // -----------------------------------------------------------------------------
 std::shared_ptr<ITKRegionalMinimaImage> ITKRegionalMinimaImage::New()
 {
-  struct make_shared_enabler : public ITKRegionalMinimaImage  
+  struct make_shared_enabler : public ITKRegionalMinimaImage
   {
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
@@ -241,5 +238,3 @@ bool ITKRegionalMinimaImage::getFlatIsMinima() const
 {
   return m_FlatIsMinima;
 }
-
-

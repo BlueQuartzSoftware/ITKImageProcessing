@@ -4,7 +4,6 @@
  * Your License or Copyright can go here
  */
 
-
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKIntensityWindowingImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 #include "SIMPLib/Common/Constants.h"
@@ -17,7 +16,6 @@
 
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -27,7 +25,6 @@ ITKIntensityWindowingImage::ITKIntensityWindowingImage()
   m_WindowMaximum = StaticCastScalar<double, double, double>(255.0);
   m_OutputMinimum = StaticCastScalar<double, double, double>(0.0);
   m_OutputMaximum = StaticCastScalar<double, double, double>(255.0);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -46,7 +43,6 @@ void ITKIntensityWindowingImage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("WindowMaximum", WindowMaximum, FilterParameter::Parameter, ITKIntensityWindowingImage));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("OutputMinimum", OutputMinimum, FilterParameter::Parameter, ITKIntensityWindowingImage));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("OutputMaximum", OutputMaximum, FilterParameter::Parameter, ITKIntensityWindowingImage));
-
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -83,7 +79,8 @@ void ITKIntensityWindowingImage::readFilterParameters(AbstractFilterParametersRe
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKIntensityWindowingImage::dataCheckImpl()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKIntensityWindowingImage::dataCheckImpl()
 {
   clearErrorCode();
   clearWarningCode();
@@ -105,7 +102,8 @@ void ITKIntensityWindowingImage::dataCheck()
 //
 // -----------------------------------------------------------------------------
 
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKIntensityWindowingImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKIntensityWindowingImage::filter()
 {
   typedef itk::Image<InputPixelType, Dimension> InputImageType;
   typedef itk::Image<OutputPixelType, Dimension> OutputImageType;
@@ -117,7 +115,6 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   filter->SetOutputMinimum(static_cast<double>(m_OutputMinimum));
   filter->SetOutputMaximum(static_cast<double>(m_OutputMaximum));
   this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -174,7 +171,7 @@ ITKIntensityWindowingImage::Pointer ITKIntensityWindowingImage::NullPointer()
 // -----------------------------------------------------------------------------
 std::shared_ptr<ITKIntensityWindowingImage> ITKIntensityWindowingImage::New()
 {
-  struct make_shared_enabler : public ITKIntensityWindowingImage  
+  struct make_shared_enabler : public ITKIntensityWindowingImage
   {
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
@@ -241,5 +238,3 @@ double ITKIntensityWindowingImage::getOutputMaximum() const
 {
   return m_OutputMaximum;
 }
-
-

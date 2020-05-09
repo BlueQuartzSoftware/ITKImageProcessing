@@ -20,8 +20,8 @@
 #include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 // There is a known overflow for the templates but the code seems to work correctly so disable the warning
-#if (_MSC_VER >= 1)
-#pragma warning(disable:4756)
+#if(_MSC_VER >= 1)
+#pragma warning(disable : 4756)
 #endif
 
 /**
@@ -38,22 +38,21 @@ class ITKImageProcessing_EXPORT ITKImageBase : public AbstractFilter
   // End Python bindings declarations
 
 public:
-    using Self = ITKImageBase;
-    using Pointer = std::shared_ptr<Self>;
-    using ConstPointer = std::shared_ptr<const Self>;
-    using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<const Self>;
-    static Pointer NullPointer();
+  using Self = ITKImageBase;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<const Self>;
+  static Pointer NullPointer();
 
-    /**
-    * @brief Returns the name of the class for ITKImageBase
-    */
-    QString getNameOfClass() const override;
-    /**
-    * @brief Returns the name of the class for ITKImageBase
-    */
-    static QString ClassName();
-
+  /**
+   * @brief Returns the name of the class for ITKImageBase
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for ITKImageBase
+   */
+  static QString ClassName();
 
   ~ITKImageBase() override;
 
@@ -66,7 +65,8 @@ public:
    * @brief CastVec3ToITK Input type should be FloatVec3Type or IntVec3Type, Output
      type should be some kind of ITK "array" (itk::Size, itk::Index,...)
    */
-  template <typename InputType, typename OutputType, typename ComponentType> OutputType CastVec3ToITK(const InputType& inputVec3, unsigned int dimension) const
+  template <typename InputType, typename OutputType, typename ComponentType>
+  OutputType CastVec3ToITK(const InputType& inputVec3, unsigned int dimension) const
   {
     OutputType output;
     if(dimension > 0)
@@ -86,7 +86,8 @@ public:
   /**
    * @brief StaticCast Performs a static cast on a value. 'unused' type is to match 'CastStdToVec3' template format to simplify template declaration in conversion script.
    */
-  template <typename InputType, typename OutputType, typename unused> OutputType StaticCastScalar(const InputType& val) const
+  template <typename InputType, typename OutputType, typename unused>
+  OutputType StaticCastScalar(const InputType& val) const
   {
     return static_cast<OutputType>(val);
   }
@@ -95,7 +96,8 @@ public:
    * @brief CastStdToVec3 Input type should be std::vector<float> or std::vector<int>
      and Output type should be FloatVec3Type or IntVec3Type
    */
-  template <typename InputType, typename OutputType, typename ComponentType> OutputType CastStdToVec3(const InputType& inputVector) const
+  template <typename InputType, typename OutputType, typename ComponentType>
+  OutputType CastStdToVec3(const InputType& inputVector) const
   {
     OutputType outputVec3;
     if(inputVector.size() > 0)
@@ -113,15 +115,14 @@ public:
     return outputVec3;
   }
 
-
-
 protected:
   ITKImageBase();
 
   /**
    * @brief imageCheck checks if data array contains an image.
    */
-  template <typename PixelType, unsigned int Dimension> void imageCheck(const DataArrayPath& array_path)
+  template <typename PixelType, unsigned int Dimension>
+  void imageCheck(const DataArrayPath& array_path)
   {
     using ValueType = typename itk::NumericTraits<PixelType>::ValueType;
     // Check data array
@@ -129,9 +130,8 @@ protected:
     ValueType* cellArray;
 
     std::vector<size_t> dims = ITKDream3DHelper::GetComponentsDimensions<PixelType>();
-    cellArrayPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<ValueType>>(
-        this, array_path, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if(nullptr != cellArrayPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+    cellArrayPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<ValueType>>(this, array_path, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if(nullptr != cellArrayPtr.lock())                                                                            /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     {
       cellArray = cellArrayPtr.lock()->getPointer(0);
     } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -148,8 +148,8 @@ protected:
   }
 
   /**
-  * @brief Applies the filter
-  */
+   * @brief Applies the filter
+   */
   template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension, typename FilterType>
   void filter(FilterType* filter, const std::string& outputArrayName, bool saveAsNewArray, const DataArrayPath& selectedArray)
   {
@@ -194,7 +194,7 @@ protected:
       toDream3DFilter->SetDataContainer(dc);
       toDream3DFilter->Update();
     } catch(itk::ExceptionObject& err)
-    { 
+    {
       if(!getCancel())
       {
         QString errorMessage = "ITK exception was thrown while filtering input image: %1";
@@ -205,8 +205,8 @@ protected:
   }
 
   /**
-  * @brief Applies the filter, casting the input to float
-  */
+   * @brief Applies the filter, casting the input to float
+   */
 
   template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension, typename FilterType, typename FloatImageType>
   void filterCastToFloat(FilterType* filter, const std::string& outputArrayName, bool saveAsNewArray, const DataArrayPath& selectedArray)
@@ -275,7 +275,8 @@ protected:
     The 3rd parameter, 'bool' is given to match the definition of CheckVectorEntry. This allows
     to use a dictionary in Python to choose between the 2 functions.
   */
-  template <typename VarType, typename SubsType> void CheckIntegerEntry(SubsType value, const QString& name, bool /* b */)
+  template <typename VarType, typename SubsType>
+  void CheckIntegerEntry(SubsType value, const QString& name, bool /* b */)
   {
     using ValueType = typename itk::NumericTraits<VarType>::ValueType;
     SubsType lowest = static_cast<SubsType>(std::numeric_limits<ValueType>::lowest());
@@ -292,7 +293,8 @@ protected:
     For the other type, we have to use one of this primitive type, and verify that the
     value corresponds to what is expected.
   */
-  template <typename VarType, typename SubsType> void CheckVectorEntry(SubsType value, const QString& name, bool integer)
+  template <typename VarType, typename SubsType>
+  void CheckVectorEntry(SubsType value, const QString& name, bool integer)
   {
     using ValueType = typename itk::NumericTraits<VarType>::ValueType;
     auto lowest = static_cast<float>(std::numeric_limits<ValueType>::lowest());
@@ -310,8 +312,8 @@ protected:
   }
 
   /**
-  * @brief Check if image type corresponds to requirements
-  */
+   * @brief Check if image type corresponds to requirements
+   */
   bool checkImageType(const QVector<QString>& types, const DataArrayPath& path)
   {
     IDataArray::Pointer ptr = getDataContainerArray()->getPrereqIDataArrayFromPath(this, path);
@@ -330,8 +332,8 @@ protected:
   }
 
   /**
-  * @brief Applies the filter
-  */
+   * @brief Applies the filter
+   */
   virtual void filterInternal() = 0;
 
   /**
@@ -345,7 +347,5 @@ public:
   ITKImageBase& operator=(const ITKImageBase&) = delete; // Copy Assignment Not Implemented
   ITKImageBase& operator=(ITKImageBase&&) = delete;      // Move Assignment Not Implemented
 
-  private:
-
+private:
 };
-

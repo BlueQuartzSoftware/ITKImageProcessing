@@ -144,8 +144,8 @@ protected:
     {
       DataArrayPath tempPath;
       tempPath.update(getSelectedCellArrayPath().getDataContainerName(), getSelectedCellArrayPath().getAttributeMatrixName(), getNewCellArrayName());
-      m_NewCellArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<OutputValueType>>(
-          this, tempPath, 0, outputDims);     /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+      m_NewCellArrayPtr =
+          getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<OutputValueType>>(this, tempPath, 0, outputDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
       if(nullptr != m_NewCellArrayPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
       {
         m_NewCellArray = m_NewCellArrayPtr.lock()->getVoidPointer(0);

@@ -648,7 +648,6 @@ void IlluminationCorrection::dataCheck()
   }
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -789,7 +788,8 @@ AbstractFilter::Pointer IlluminationCorrection::newFilterInstance(bool copyFilte
 // -----------------------------------------------------------------------------
 QString IlluminationCorrection::getCompiledLibraryName() const
 {
-  return ITKImageProcessingConstants::ITKImageProcessingBaseName;;
+  return ITKImageProcessingConstants::ITKImageProcessingBaseName;
+  ;
 }
 
 // -----------------------------------------------------------------------------
@@ -852,7 +852,7 @@ IlluminationCorrection::Pointer IlluminationCorrection::NullPointer()
 // -----------------------------------------------------------------------------
 std::shared_ptr<IlluminationCorrection> IlluminationCorrection::New()
 {
-  struct make_shared_enabler : public IlluminationCorrection  
+  struct make_shared_enabler : public IlluminationCorrection
   {
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();

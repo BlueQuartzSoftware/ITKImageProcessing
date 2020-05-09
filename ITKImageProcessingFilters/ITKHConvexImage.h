@@ -42,47 +42,46 @@ class ITKImageProcessing_EXPORT ITKHConvexImage : public ITKImageProcessingBase
   // End Python bindings declarations
 
 public:
-    using Self = ITKHConvexImage;
-    using Pointer = std::shared_ptr<Self>;
-    using ConstPointer = std::shared_ptr<const Self>;
-    using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<const Self>;
-    static Pointer NullPointer();
+  using Self = ITKHConvexImage;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<const Self>;
+  static Pointer NullPointer();
 
-    static std::shared_ptr<ITKHConvexImage> New();
+  static std::shared_ptr<ITKHConvexImage> New();
 
-    /**
-    * @brief Returns the name of the class for ITKHConvexImage
-    */
-    QString getNameOfClass() const override;
-    /**
-    * @brief Returns the name of the class for ITKHConvexImage
-    */
-    static QString ClassName();
-
+  /**
+   * @brief Returns the name of the class for ITKHConvexImage
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for ITKHConvexImage
+   */
+  static QString ClassName();
 
   ~ITKHConvexImage() override;
 
-    /**
-    * @brief Setter property for Height
-    */
-    void setHeight(double value); 
-    /**
-    * @brief Getter property for Height
-    * @return Value of Height
-    */
-    double getHeight() const;
+  /**
+   * @brief Setter property for Height
+   */
+  void setHeight(double value);
+  /**
+   * @brief Getter property for Height
+   * @return Value of Height
+   */
+  double getHeight() const;
   Q_PROPERTY(double Height READ getHeight WRITE setHeight)
 
-    /**
-    * @brief Setter property for FullyConnected
-    */
-    void setFullyConnected(bool value); 
-    /**
-    * @brief Getter property for FullyConnected
-    * @return Value of FullyConnected
-    */
-    bool getFullyConnected() const;
+  /**
+   * @brief Setter property for FullyConnected
+   */
+  void setFullyConnected(bool value);
+  /**
+   * @brief Getter property for FullyConnected
+   * @return Value of FullyConnected
+   */
+  bool getFullyConnected() const;
   Q_PROPERTY(bool FullyConnected READ getFullyConnected WRITE setFullyConnected)
 
   /**
@@ -127,7 +126,8 @@ protected:
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
    */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void dataCheckImpl();
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void dataCheckImpl();
 
   /**
    * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
@@ -137,7 +137,8 @@ protected:
   /**
    * @brief Applies the filter
    */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void filter();
 
 public:
   ITKHConvexImage(const ITKHConvexImage&) = delete;            // Copy Constructor Not Implemented
@@ -145,13 +146,11 @@ public:
   ITKHConvexImage& operator=(const ITKHConvexImage&) = delete; // Copy Assignment Not Implemented
   ITKHConvexImage& operator=(ITKHConvexImage&&) = delete;      // Move Assignment Not Implemented
 
-  private:
-    double m_Height = {};
-    bool m_FullyConnected = {};
-
+private:
+  double m_Height = {};
+  bool m_FullyConnected = {};
 };
 
 #ifdef __clang__
 #pragma clang diagnostic pop
 #endif
-

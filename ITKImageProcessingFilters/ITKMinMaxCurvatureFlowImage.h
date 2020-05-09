@@ -43,60 +43,58 @@ class ITKImageProcessing_EXPORT ITKMinMaxCurvatureFlowImage : public ITKImagePro
   // End Python bindings declarations
 
 public:
-    using Self = ITKMinMaxCurvatureFlowImage;
-    using Pointer = std::shared_ptr<Self>;
-    using ConstPointer = std::shared_ptr<const Self>;
-    using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<const Self>;
-    static Pointer NullPointer();
+  using Self = ITKMinMaxCurvatureFlowImage;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<const Self>;
+  static Pointer NullPointer();
 
-    static std::shared_ptr<ITKMinMaxCurvatureFlowImage> New();
+  static std::shared_ptr<ITKMinMaxCurvatureFlowImage> New();
 
-    /**
-    * @brief Returns the name of the class for ITKMinMaxCurvatureFlowImage
-    */
-    QString getNameOfClass() const override;
-    /**
-    * @brief Returns the name of the class for ITKMinMaxCurvatureFlowImage
-    */
-    static QString ClassName();
-
+  /**
+   * @brief Returns the name of the class for ITKMinMaxCurvatureFlowImage
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for ITKMinMaxCurvatureFlowImage
+   */
+  static QString ClassName();
 
   ~ITKMinMaxCurvatureFlowImage() override;
 
-    /**
-    * @brief Setter property for TimeStep
-    */
-    void setTimeStep(double value); 
-    /**
-    * @brief Getter property for TimeStep
-    * @return Value of TimeStep
-    */
-    double getTimeStep() const;
+  /**
+   * @brief Setter property for TimeStep
+   */
+  void setTimeStep(double value);
+  /**
+   * @brief Getter property for TimeStep
+   * @return Value of TimeStep
+   */
+  double getTimeStep() const;
   Q_PROPERTY(double TimeStep READ getTimeStep WRITE setTimeStep)
 
-    /**
-    * @brief Setter property for NumberOfIterations
-    */
-    void setNumberOfIterations(double value); 
-    /**
-    * @brief Getter property for NumberOfIterations
-    * @return Value of NumberOfIterations
-    */
-    double getNumberOfIterations() const;
+  /**
+   * @brief Setter property for NumberOfIterations
+   */
+  void setNumberOfIterations(double value);
+  /**
+   * @brief Getter property for NumberOfIterations
+   * @return Value of NumberOfIterations
+   */
+  double getNumberOfIterations() const;
   Q_PROPERTY(double NumberOfIterations READ getNumberOfIterations WRITE setNumberOfIterations)
 
-    /**
-    * @brief Setter property for StencilRadius
-    */
-    void setStencilRadius(int value); 
-    /**
-    * @brief Getter property for StencilRadius
-    * @return Value of StencilRadius
-    */
-    int getStencilRadius() const;
+  /**
+   * @brief Setter property for StencilRadius
+   */
+  void setStencilRadius(int value);
+  /**
+   * @brief Getter property for StencilRadius
+   * @return Value of StencilRadius
+   */
+  int getStencilRadius() const;
   Q_PROPERTY(int StencilRadius READ getStencilRadius WRITE setStencilRadius)
-
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -140,32 +138,32 @@ protected:
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
    */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void dataCheckImpl();
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void dataCheckImpl();
 
   /**
-  * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
-  */
+   * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
+   */
   void filterInternal() override;
 
   /**
-  * @brief Applies the filter
-  */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
+   * @brief Applies the filter
+   */
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void filter();
 
 public:
-  ITKMinMaxCurvatureFlowImage(const ITKMinMaxCurvatureFlowImage&) = delete;    // Copy Constructor Not Implemented
-  ITKMinMaxCurvatureFlowImage(ITKMinMaxCurvatureFlowImage&&) = delete;         // Move Constructor Not Implemented
+  ITKMinMaxCurvatureFlowImage(const ITKMinMaxCurvatureFlowImage&) = delete;            // Copy Constructor Not Implemented
+  ITKMinMaxCurvatureFlowImage(ITKMinMaxCurvatureFlowImage&&) = delete;                 // Move Constructor Not Implemented
   ITKMinMaxCurvatureFlowImage& operator=(const ITKMinMaxCurvatureFlowImage&) = delete; // Copy Assignment Not Implemented
   ITKMinMaxCurvatureFlowImage& operator=(ITKMinMaxCurvatureFlowImage&&) = delete;      // Move Assignment Not Implemented
 
-  private:
-    double m_TimeStep = {};
-    double m_NumberOfIterations = {};
-    int m_StencilRadius = {};
-
+private:
+  double m_TimeStep = {};
+  double m_NumberOfIterations = {};
+  int m_StencilRadius = {};
 };
 
 #ifdef __clang__
 #pragma clang diagnostic pop
 #endif
-

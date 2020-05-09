@@ -163,7 +163,6 @@ public:
 
     ZeissTagMapping::Pointer tagMapping = ZeissTagMapping::instance();
 
-
     ZeissTagsXmlSection::MetaDataType tagMetaData = rootTagsSection->getMetaDataMap();
     stream << "####### Tags #######\n";
     for(const auto& entry : tagMetaData)

@@ -4,7 +4,6 @@
  * Your License or Copyright can go here
  */
 
-
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKBinaryMorphologicalOpeningImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 #include "SIMPLib/Common/Constants.h"
@@ -20,7 +19,6 @@
 
 #include <itkFlatStructuringElement.h>
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -30,7 +28,6 @@ ITKBinaryMorphologicalOpeningImage::ITKBinaryMorphologicalOpeningImage()
   m_ForegroundValue = StaticCastScalar<double, double, double>(1.0);
   m_KernelRadius = CastStdToVec3<std::vector<unsigned int>, FloatVec3Type, float>(std::vector<unsigned int>(3, 1));
   m_KernelType = StaticCastScalar<int, int, int>(itk::simple::sitkBall);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -67,7 +64,6 @@ void ITKBinaryMorphologicalOpeningImage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("ForegroundValue", ForegroundValue, FilterParameter::Parameter, ITKBinaryMorphologicalOpeningImage));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("KernelRadius", KernelRadius, FilterParameter::Parameter, ITKBinaryMorphologicalOpeningImage));
 
-
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Save as New Array", SaveAsNewArray, FilterParameter::Parameter, ITKBinaryMorphologicalOpeningImage, linkedProps));
@@ -103,7 +99,8 @@ void ITKBinaryMorphologicalOpeningImage::readFilterParameters(AbstractFilterPara
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKBinaryMorphologicalOpeningImage::dataCheckImpl()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKBinaryMorphologicalOpeningImage::dataCheckImpl()
 {
   clearErrorCode();
   clearWarningCode();
@@ -137,7 +134,8 @@ void ITKBinaryMorphologicalOpeningImage::dataCheck()
 //
 // -----------------------------------------------------------------------------
 
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKBinaryMorphologicalOpeningImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKBinaryMorphologicalOpeningImage::filter()
 {
   typedef itk::Image<InputPixelType, Dimension> InputImageType;
   typedef itk::Image<OutputPixelType, Dimension> OutputImageType;
@@ -170,7 +168,6 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   filter->SetForegroundValue(static_cast<double>(m_ForegroundValue));
   filter->SetKernel(structuringElement);
   this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -227,7 +224,7 @@ ITKBinaryMorphologicalOpeningImage::Pointer ITKBinaryMorphologicalOpeningImage::
 // -----------------------------------------------------------------------------
 std::shared_ptr<ITKBinaryMorphologicalOpeningImage> ITKBinaryMorphologicalOpeningImage::New()
 {
-  struct make_shared_enabler : public ITKBinaryMorphologicalOpeningImage  
+  struct make_shared_enabler : public ITKBinaryMorphologicalOpeningImage
   {
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
@@ -294,5 +291,3 @@ int ITKBinaryMorphologicalOpeningImage::getKernelType() const
 {
   return m_KernelType;
 }
-
-

@@ -72,17 +72,17 @@ ITKImageProcessingPlugin::ITKImageProcessingPlugin()
 , m_CompatibilityVersion(ITKImageProcessing::Version::Package())
 , m_Vendor("BlueQuartz Software")
 , // Initialize ITKImageProcessing's Vendor Name Here
-    m_URL("http://www.github.com/bluequartzsoftware/ITKImageProcessing")
+m_URL("http://www.github.com/bluequartzsoftware/ITKImageProcessing")
 , // Initialize Company URL Here
-    m_Location("")
+m_Location("")
 , // Initialize ITKImageProcessing library Location Here
-    m_Description("")
+m_Description("")
 , // Initialize ITKImageProcessing's Description Here
-    m_Copyright("")
+m_Copyright("")
 , // Initialize ITKImageProcessing's Copyright Here
-    m_Filters(QList<QString>())
+m_Filters(QList<QString>())
 , // Initialize ITKImageProcessing's List of Dependencies Here
-    m_DidLoad(false)
+m_DidLoad(false)
 {
 #ifdef ITK_IMAGE_PROCESSING_HAVE_SCIFIO
   ITKImageProcessingPlugin::setSCIFIOEnvironmentVariables();

@@ -79,5 +79,5 @@ public:
 
 private:
   ITKProxTVImageTest(const ITKProxTVImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKProxTVImageTest&);  // Operator '=' Not Implemented
+  void operator=(const ITKProxTVImageTest&);     // Operator '=' Not Implemented
 };

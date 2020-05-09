@@ -42,49 +42,47 @@ class ITKImageProcessing_EXPORT ITKGrayscaleDilateImage : public ITKImageProcess
   // End Python bindings declarations
 
 public:
-    using Self = ITKGrayscaleDilateImage;
-    using Pointer = std::shared_ptr<Self>;
-    using ConstPointer = std::shared_ptr<const Self>;
-    using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<const Self>;
-    static Pointer NullPointer();
+  using Self = ITKGrayscaleDilateImage;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<const Self>;
+  static Pointer NullPointer();
 
-    static std::shared_ptr<ITKGrayscaleDilateImage> New();
+  static std::shared_ptr<ITKGrayscaleDilateImage> New();
 
-    /**
-    * @brief Returns the name of the class for ITKGrayscaleDilateImage
-    */
-    QString getNameOfClass() const override;
-    /**
-    * @brief Returns the name of the class for ITKGrayscaleDilateImage
-    */
-    static QString ClassName();
-
+  /**
+   * @brief Returns the name of the class for ITKGrayscaleDilateImage
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for ITKGrayscaleDilateImage
+   */
+  static QString ClassName();
 
   ~ITKGrayscaleDilateImage() override;
 
-    /**
-    * @brief Setter property for KernelRadius
-    */
-    void setKernelRadius(const FloatVec3Type& value); 
-    /**
-    * @brief Getter property for KernelRadius
-    * @return Value of KernelRadius
-    */
-    FloatVec3Type getKernelRadius() const;
+  /**
+   * @brief Setter property for KernelRadius
+   */
+  void setKernelRadius(const FloatVec3Type& value);
+  /**
+   * @brief Getter property for KernelRadius
+   * @return Value of KernelRadius
+   */
+  FloatVec3Type getKernelRadius() const;
   Q_PROPERTY(FloatVec3Type KernelRadius READ getKernelRadius WRITE setKernelRadius)
 
-    /**
-    * @brief Setter property for KernelType
-    */
-    void setKernelType(int value); 
-    /**
-    * @brief Getter property for KernelType
-    * @return Value of KernelType
-    */
-    int getKernelType() const;
+  /**
+   * @brief Setter property for KernelType
+   */
+  void setKernelType(int value);
+  /**
+   * @brief Getter property for KernelType
+   * @return Value of KernelType
+   */
+  int getKernelType() const;
   Q_PROPERTY(int KernelType READ getKernelType WRITE setKernelType)
-
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -128,31 +126,31 @@ protected:
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
    */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void dataCheckImpl();
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void dataCheckImpl();
 
   /**
-  * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
-  */
+   * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
+   */
   void filterInternal() override;
 
   /**
-  * @brief Applies the filter
-  */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
+   * @brief Applies the filter
+   */
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void filter();
 
 public:
-  ITKGrayscaleDilateImage(const ITKGrayscaleDilateImage&) = delete;    // Copy Constructor Not Implemented
-  ITKGrayscaleDilateImage(ITKGrayscaleDilateImage&&) = delete;         // Move Constructor Not Implemented
+  ITKGrayscaleDilateImage(const ITKGrayscaleDilateImage&) = delete;            // Copy Constructor Not Implemented
+  ITKGrayscaleDilateImage(ITKGrayscaleDilateImage&&) = delete;                 // Move Constructor Not Implemented
   ITKGrayscaleDilateImage& operator=(const ITKGrayscaleDilateImage&) = delete; // Copy Assignment Not Implemented
   ITKGrayscaleDilateImage& operator=(ITKGrayscaleDilateImage&&) = delete;      // Move Assignment Not Implemented
 
-  private:
-    FloatVec3Type m_KernelRadius = {};
-    int m_KernelType = {};
-
+private:
+  FloatVec3Type m_KernelRadius = {};
+  int m_KernelType = {};
 };
 
 #ifdef __clang__
 #pragma clang diagnostic pop
 #endif
-

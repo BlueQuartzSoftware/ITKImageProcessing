@@ -7,16 +7,15 @@
 #include "ITKTestBase.h"
 // Auto includes
 
-
 class ITKTanImageTest : public ITKTestBase
 {
 
 public:
-ITKTanImageTest() = default;
-~ITKTanImageTest() override = default;
+  ITKTanImageTest() = default;
+  ~ITKTanImageTest() override = default;
 
   int TestITKTanImagedefaultsTest()
-{
+  {
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/Ramp-Zero-One-Float.nrrd");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -45,9 +44,7 @@ ITKTanImageTest() = default;
     int res = this->CompareImages(containerArray, input_path, baseline_path, 0.01);
     DREAM3D_REQUIRE_EQUAL(res, 0);
     return 0;
-}
-
-
+  }
 
   // -----------------------------------------------------------------------------
   //
@@ -58,7 +55,7 @@ ITKTanImageTest() = default;
 
     DREAM3D_REGISTER_TEST(this->TestFilterAvailability("ITKTanImage"));
 
-    DREAM3D_REGISTER_TEST( TestITKTanImagedefaultsTest());
+    DREAM3D_REGISTER_TEST(TestITKTanImagedefaultsTest());
 
     if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
     {

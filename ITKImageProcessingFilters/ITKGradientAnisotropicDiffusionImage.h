@@ -44,71 +44,69 @@ class ITKImageProcessing_EXPORT ITKGradientAnisotropicDiffusionImage : public IT
   // End Python bindings declarations
 
 public:
-    using Self = ITKGradientAnisotropicDiffusionImage;
-    using Pointer = std::shared_ptr<Self>;
-    using ConstPointer = std::shared_ptr<const Self>;
-    using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<const Self>;
-    static Pointer NullPointer();
+  using Self = ITKGradientAnisotropicDiffusionImage;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<const Self>;
+  static Pointer NullPointer();
 
-    static std::shared_ptr<ITKGradientAnisotropicDiffusionImage> New();
+  static std::shared_ptr<ITKGradientAnisotropicDiffusionImage> New();
 
-    /**
-    * @brief Returns the name of the class for ITKGradientAnisotropicDiffusionImage
-    */
-    QString getNameOfClass() const override;
-    /**
-    * @brief Returns the name of the class for ITKGradientAnisotropicDiffusionImage
-    */
-    static QString ClassName();
-
+  /**
+   * @brief Returns the name of the class for ITKGradientAnisotropicDiffusionImage
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for ITKGradientAnisotropicDiffusionImage
+   */
+  static QString ClassName();
 
   ~ITKGradientAnisotropicDiffusionImage() override;
 
-    /**
-    * @brief Setter property for TimeStep
-    */
-    void setTimeStep(double value); 
-    /**
-    * @brief Getter property for TimeStep
-    * @return Value of TimeStep
-    */
-    double getTimeStep() const;
+  /**
+   * @brief Setter property for TimeStep
+   */
+  void setTimeStep(double value);
+  /**
+   * @brief Getter property for TimeStep
+   * @return Value of TimeStep
+   */
+  double getTimeStep() const;
   Q_PROPERTY(double TimeStep READ getTimeStep WRITE setTimeStep)
 
-    /**
-    * @brief Setter property for ConductanceParameter
-    */
-    void setConductanceParameter(double value); 
-    /**
-    * @brief Getter property for ConductanceParameter
-    * @return Value of ConductanceParameter
-    */
-    double getConductanceParameter() const;
+  /**
+   * @brief Setter property for ConductanceParameter
+   */
+  void setConductanceParameter(double value);
+  /**
+   * @brief Getter property for ConductanceParameter
+   * @return Value of ConductanceParameter
+   */
+  double getConductanceParameter() const;
   Q_PROPERTY(double ConductanceParameter READ getConductanceParameter WRITE setConductanceParameter)
 
-    /**
-    * @brief Setter property for ConductanceScalingUpdateInterval
-    */
-    void setConductanceScalingUpdateInterval(double value); 
-    /**
-    * @brief Getter property for ConductanceScalingUpdateInterval
-    * @return Value of ConductanceScalingUpdateInterval
-    */
-    double getConductanceScalingUpdateInterval() const;
+  /**
+   * @brief Setter property for ConductanceScalingUpdateInterval
+   */
+  void setConductanceScalingUpdateInterval(double value);
+  /**
+   * @brief Getter property for ConductanceScalingUpdateInterval
+   * @return Value of ConductanceScalingUpdateInterval
+   */
+  double getConductanceScalingUpdateInterval() const;
   Q_PROPERTY(double ConductanceScalingUpdateInterval READ getConductanceScalingUpdateInterval WRITE setConductanceScalingUpdateInterval)
 
-    /**
-    * @brief Setter property for NumberOfIterations
-    */
-    void setNumberOfIterations(double value); 
-    /**
-    * @brief Getter property for NumberOfIterations
-    * @return Value of NumberOfIterations
-    */
-    double getNumberOfIterations() const;
+  /**
+   * @brief Setter property for NumberOfIterations
+   */
+  void setNumberOfIterations(double value);
+  /**
+   * @brief Getter property for NumberOfIterations
+   * @return Value of NumberOfIterations
+   */
+  double getNumberOfIterations() const;
   Q_PROPERTY(double NumberOfIterations READ getNumberOfIterations WRITE setNumberOfIterations)
-
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -152,33 +150,33 @@ protected:
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
    */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void dataCheckImpl();
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void dataCheckImpl();
 
   /**
-  * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
-  */
+   * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
+   */
   void filterInternal() override;
 
   /**
-  * @brief Applies the filter
-  */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
+   * @brief Applies the filter
+   */
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void filter();
 
 public:
-  ITKGradientAnisotropicDiffusionImage(const ITKGradientAnisotropicDiffusionImage&) = delete;    // Copy Constructor Not Implemented
-  ITKGradientAnisotropicDiffusionImage(ITKGradientAnisotropicDiffusionImage&&) = delete;         // Move Constructor Not Implemented
+  ITKGradientAnisotropicDiffusionImage(const ITKGradientAnisotropicDiffusionImage&) = delete;            // Copy Constructor Not Implemented
+  ITKGradientAnisotropicDiffusionImage(ITKGradientAnisotropicDiffusionImage&&) = delete;                 // Move Constructor Not Implemented
   ITKGradientAnisotropicDiffusionImage& operator=(const ITKGradientAnisotropicDiffusionImage&) = delete; // Copy Assignment Not Implemented
   ITKGradientAnisotropicDiffusionImage& operator=(ITKGradientAnisotropicDiffusionImage&&) = delete;      // Move Assignment Not Implemented
 
-  private:
-    double m_TimeStep = {};
-    double m_ConductanceParameter = {};
-    double m_ConductanceScalingUpdateInterval = {};
-    double m_NumberOfIterations = {};
-
+private:
+  double m_TimeStep = {};
+  double m_ConductanceParameter = {};
+  double m_ConductanceScalingUpdateInterval = {};
+  double m_NumberOfIterations = {};
 };
 
 #ifdef __clang__
 #pragma clang diagnostic pop
 #endif
-

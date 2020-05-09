@@ -38,7 +38,6 @@
 
 #include "SIMPLib/Filtering/AbstractFilter.h"
 
-
 #include "ITKImageProcessing/ITKImageProcessingPlugin.h"
 
 class ZeissTagsXmlSection;
@@ -62,47 +61,46 @@ class ITKImageProcessing_EXPORT AxioVisionV4ToTileConfiguration : public Abstrac
   // End Python bindings declarations
 
 public:
-    using Self = AxioVisionV4ToTileConfiguration;
-    using Pointer = std::shared_ptr<Self>;
-    using ConstPointer = std::shared_ptr<const Self>;
-    using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<const Self>;
-    static Pointer NullPointer();
+  using Self = AxioVisionV4ToTileConfiguration;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<const Self>;
+  static Pointer NullPointer();
 
-    static std::shared_ptr<AxioVisionV4ToTileConfiguration> New();
+  static std::shared_ptr<AxioVisionV4ToTileConfiguration> New();
 
-    /**
-    * @brief Returns the name of the class for AxioVisionV4ToTileConfiguration
-    */
-    QString getNameOfClass() const override;
-    /**
-    * @brief Returns the name of the class for AxioVisionV4ToTileConfiguration
-    */
-    static QString ClassName();
-
+  /**
+   * @brief Returns the name of the class for AxioVisionV4ToTileConfiguration
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for AxioVisionV4ToTileConfiguration
+   */
+  static QString ClassName();
 
   ~AxioVisionV4ToTileConfiguration() override;
 
-    /**
-    * @brief Setter property for InputFile
-    */
-    void setInputFile(const QString& value); 
-    /**
-    * @brief Getter property for InputFile
-    * @return Value of InputFile
-    */
-    QString getInputFile() const;
+  /**
+   * @brief Setter property for InputFile
+   */
+  void setInputFile(const QString& value);
+  /**
+   * @brief Getter property for InputFile
+   * @return Value of InputFile
+   */
+  QString getInputFile() const;
   Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
-    /**
-    * @brief Setter property for OutputFile
-    */
-    void setOutputFile(const QString& value); 
-    /**
-    * @brief Getter property for OutputFile
-    * @return Value of OutputFile
-    */
-    QString getOutputFile() const;
+  /**
+   * @brief Setter property for OutputFile
+   */
+  void setOutputFile(const QString& value);
+  /**
+   * @brief Getter property for OutputFile
+   * @return Value of OutputFile
+   */
+  QString getOutputFile() const;
   Q_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
 
   /**
@@ -160,8 +158,6 @@ public:
    */
   void execute() override;
 
-
-
 protected:
   AxioVisionV4ToTileConfiguration();
 
@@ -191,8 +187,8 @@ protected:
   void initializeImageGeom(const QDomElement& root, ZeissTagsXmlSection* photoTagsSection, QTextStream& out);
 
 private:
-    QString m_InputFile = {};
-    QString m_OutputFile = {};
+  QString m_InputFile = {};
+  QString m_OutputFile = {};
 
 public:
   /* Rule of 5: All special member functions should be defined if any are defined.
@@ -202,6 +198,4 @@ public:
   AxioVisionV4ToTileConfiguration& operator=(const AxioVisionV4ToTileConfiguration&) = delete; // Copy Assignment Not Implemented
   AxioVisionV4ToTileConfiguration(AxioVisionV4ToTileConfiguration&&) = delete;                 // Move Constructor Not Implemented
   AxioVisionV4ToTileConfiguration& operator=(AxioVisionV4ToTileConfiguration&&) = delete;      // Move Assignment Not Implemented
-
 };
-

@@ -1,35 +1,35 @@
 /* ============================================================================
-* Copyright (c) 2009-2016 BlueQuartz Software, LLC
-*
-* Redistribution and use in source and binary forms, with or without modification,
-* are permitted provided that the following conditions are met:
-*
-* Redistributions of source code must retain the above copyright notice, this
-* list of conditions and the following disclaimer.
-*
-* Redistributions in binary form must reproduce the above copyright notice, this
-* list of conditions and the following disclaimer in the documentation and/or
-* other materials provided with the distribution.
-*
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
-* contributors may be used to endorse or promote products derived from this software
-* without specific prior written permission.
-*
-* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
-* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*
-* The code contained herein was partially funded by the followig contracts:
-*    United States Air Force Prime Contract FA8650-10-D-5210
-*
-* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+ * Copyright (c) 2009-2016 BlueQuartz Software, LLC
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this
+ * list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+ *
+ * Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+ * contributors may be used to endorse or promote products derived from this software
+ * without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+ * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * The code contained herein was partially funded by the followig contracts:
+ *    United States Air Force Prime Contract FA8650-10-D-5210
+ *
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #pragma once
 
@@ -55,46 +55,46 @@ public:
   virtual ~ITKImageProcessingPlugin();
 
   /**
-  * @brief get list of supported read extensions as QString
-  */
+   * @brief get list of supported read extensions as QString
+   */
   static QString getListSupportedReadExtensions();
 
   /**
-  * @brief get list of supported write extensions as QString
-  */
+   * @brief get list of supported write extensions as QString
+   */
   static QString getListSupportedWriteExtensions();
 
   /**
-  * @brief get list of supported 2D file extensions as QStringList
-  */
+   * @brief get list of supported 2D file extensions as QStringList
+   */
   static QStringList getList2DSupportedFileExtensions();
 
   /**
-  * @brief set environment variables required to find java executable and java packages packaged in DREAM3D
-  */
+   * @brief set environment variables required to find java executable and java packages packaged in DREAM3D
+   */
   static void setSCIFIOEnvironmentVariables();
-  
+
   /**
-  * @brief Returns the name of the plugin that appears on the file system. 
-  * 
-  * Note that if the build is a debug build there will be a _Plugin postfix
-  * to the filename.
-  */
+   * @brief Returns the name of the plugin that appears on the file system.
+   *
+   * Note that if the build is a debug build there will be a _Plugin postfix
+   * to the filename.
+   */
   virtual QString getPluginFileName();
-  
+
   /**
-  * @brief getPluginDisplayName The name that should be used for human facing
-  * labels and display strings
-  * @return 
-  */
+   * @brief getPluginDisplayName The name that should be used for human facing
+   * labels and display strings
+   * @return
+   */
   virtual QString getPluginDisplayName();
-  
+
   /**
-  * @brief getPluginBaseName The Name of the plugin.
-  * 
-  * This typically will NOT have the Plugin suffix.
-  * @return 
-  */
+   * @brief getPluginBaseName The Name of the plugin.
+   *
+   * This typically will NOT have the Plugin suffix.
+   * @return
+   */
   virtual QString getPluginBaseName();
 
   /**
@@ -103,13 +103,13 @@ public:
   virtual QString getVersion();
 
   /**
-  * @brief getCompatibilityVersion Returns the compatibility version
-  */
+   * @brief getCompatibilityVersion Returns the compatibility version
+   */
   virtual QString getCompatibilityVersion();
 
   /**
-  * @brief getVendor Returns the name of the vendor
-  */
+   * @brief getVendor Returns the name of the vendor
+   */
   virtual QString getVendor();
 
   /**
@@ -177,9 +177,9 @@ public:
   virtual void registerFilterWidgets(FilterWidgetManager* fwm);
 
   /**
-  * @brief registerFilters Registers the filters that this plugin implements with the Filter Manager that is passed in
-  * @param fm FilterManager instance pointer
-  */
+   * @brief registerFilters Registers the filters that this plugin implements with the Filter Manager that is passed in
+   * @param fm FilterManager instance pointer
+   */
   virtual void registerFilters(FilterManager* fm);
 
   /**
@@ -209,4 +209,3 @@ private:
   ITKImageProcessingPlugin(const ITKImageProcessingPlugin&) = delete; // Copy Constructor Not Implemented
   void operator=(const ITKImageProcessingPlugin&) = delete;           // Move assignment Not Implemented
 };
-

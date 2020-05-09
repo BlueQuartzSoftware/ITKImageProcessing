@@ -4,7 +4,6 @@
  * Your License or Copyright can go here
  */
 
-
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKCurvatureAnisotropicDiffusionImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 #include "SIMPLib/Common/Constants.h"
@@ -17,7 +16,6 @@
 
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -27,7 +25,6 @@ ITKCurvatureAnisotropicDiffusionImage::ITKCurvatureAnisotropicDiffusionImage()
   m_ConductanceParameter = StaticCastScalar<double, double, double>(3.0);
   m_ConductanceScalingUpdateInterval = StaticCastScalar<double, double, double>(1u);
   m_NumberOfIterations = StaticCastScalar<double, double, double>(5u);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -46,7 +43,6 @@ void ITKCurvatureAnisotropicDiffusionImage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("ConductanceParameter", ConductanceParameter, FilterParameter::Parameter, ITKCurvatureAnisotropicDiffusionImage));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("ConductanceScalingUpdateInterval", ConductanceScalingUpdateInterval, FilterParameter::Parameter, ITKCurvatureAnisotropicDiffusionImage));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("NumberOfIterations", NumberOfIterations, FilterParameter::Parameter, ITKCurvatureAnisotropicDiffusionImage));
-
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -83,7 +79,8 @@ void ITKCurvatureAnisotropicDiffusionImage::readFilterParameters(AbstractFilterP
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKCurvatureAnisotropicDiffusionImage::dataCheckImpl()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKCurvatureAnisotropicDiffusionImage::dataCheckImpl()
 {
   clearErrorCode();
   clearWarningCode();
@@ -107,7 +104,8 @@ void ITKCurvatureAnisotropicDiffusionImage::dataCheck()
 //
 // -----------------------------------------------------------------------------
 
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKCurvatureAnisotropicDiffusionImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKCurvatureAnisotropicDiffusionImage::filter()
 {
   typedef typename itk::NumericTraits<InputPixelType>::RealType FloatPixelType;
   typedef itk::Image<FloatPixelType, Dimension> FloatImageType;
@@ -119,7 +117,6 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   filter->SetConductanceScalingUpdateInterval(static_cast<unsigned int>(m_ConductanceScalingUpdateInterval));
   filter->SetNumberOfIterations(static_cast<uint32_t>(m_NumberOfIterations));
   this->ITKImageProcessingBase::filterCastToFloat<InputPixelType, InputPixelType, Dimension, FilterType, FloatImageType>(filter);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -176,7 +173,7 @@ ITKCurvatureAnisotropicDiffusionImage::Pointer ITKCurvatureAnisotropicDiffusionI
 // -----------------------------------------------------------------------------
 std::shared_ptr<ITKCurvatureAnisotropicDiffusionImage> ITKCurvatureAnisotropicDiffusionImage::New()
 {
-  struct make_shared_enabler : public ITKCurvatureAnisotropicDiffusionImage  
+  struct make_shared_enabler : public ITKCurvatureAnisotropicDiffusionImage
   {
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
@@ -243,5 +240,3 @@ double ITKCurvatureAnisotropicDiffusionImage::getNumberOfIterations() const
 {
   return m_NumberOfIterations;
 }
-
-

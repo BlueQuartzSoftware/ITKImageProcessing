@@ -14,8 +14,8 @@ class ITKGrayscaleErodeImageTest : public ITKTestBase
 {
 
 public:
-ITKGrayscaleErodeImageTest() = default;
-~ITKGrayscaleErodeImageTest() override = default;
+  ITKGrayscaleErodeImageTest() = default;
+  ~ITKGrayscaleErodeImageTest() override = default;
 
   int TestITKGrayscaleErodeImageGrayscaleErodeTest()
   {

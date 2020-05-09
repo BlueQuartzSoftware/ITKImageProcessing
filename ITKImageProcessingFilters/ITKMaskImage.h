@@ -41,47 +41,46 @@ class ITKImageProcessing_EXPORT ITKMaskImage : public ITKImageProcessingBase
   // End Python bindings declarations
 
 public:
-    using Self = ITKMaskImage;
-    using Pointer = std::shared_ptr<Self>;
-    using ConstPointer = std::shared_ptr<const Self>;
-    using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<const Self>;
-    static Pointer NullPointer();
+  using Self = ITKMaskImage;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<const Self>;
+  static Pointer NullPointer();
 
-    static std::shared_ptr<ITKMaskImage> New();
+  static std::shared_ptr<ITKMaskImage> New();
 
-    /**
-    * @brief Returns the name of the class for ITKMaskImage
-    */
-    QString getNameOfClass() const override;
-    /**
-    * @brief Returns the name of the class for ITKMaskImage
-    */
-    static QString ClassName();
-
+  /**
+   * @brief Returns the name of the class for ITKMaskImage
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for ITKMaskImage
+   */
+  static QString ClassName();
 
   ~ITKMaskImage() override;
 
-    /**
-    * @brief Setter property for OutsideValue
-    */
-    void setOutsideValue(double value); 
-    /**
-    * @brief Getter property for OutsideValue
-    * @return Value of OutsideValue
-    */
-    double getOutsideValue() const;
+  /**
+   * @brief Setter property for OutsideValue
+   */
+  void setOutsideValue(double value);
+  /**
+   * @brief Getter property for OutsideValue
+   * @return Value of OutsideValue
+   */
+  double getOutsideValue() const;
   Q_PROPERTY(double OutsideValue READ getOutsideValue WRITE setOutsideValue)
 
-    /**
-    * @brief Setter property for MaskCellArrayPath
-    */
-    void setMaskCellArrayPath(const DataArrayPath& value); 
-    /**
-    * @brief Getter property for MaskCellArrayPath
-    * @return Value of MaskCellArrayPath
-    */
-    DataArrayPath getMaskCellArrayPath() const;
+  /**
+   * @brief Setter property for MaskCellArrayPath
+   */
+  void setMaskCellArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for MaskCellArrayPath
+   * @return Value of MaskCellArrayPath
+   */
+  DataArrayPath getMaskCellArrayPath() const;
   Q_PROPERTY(DataArrayPath MaskCellArrayPath READ getMaskCellArrayPath WRITE setMaskCellArrayPath)
 
   /**
@@ -116,16 +115,15 @@ public:
   void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
 
 protected:
-    /**
-    * @brief Setter property for MaskContainerArray
-    */
-    void setMaskContainerArray(const DataContainerArray::Pointer& value); 
-    /**
-    * @brief Getter property for MaskContainerArray
-    * @return Value of MaskContainerArray
-    */
-    DataContainerArray::Pointer getMaskContainerArray() const;
-
+  /**
+   * @brief Setter property for MaskContainerArray
+   */
+  void setMaskContainerArray(const DataContainerArray::Pointer& value);
+  /**
+   * @brief Getter property for MaskContainerArray
+   * @return Value of MaskContainerArray
+   */
+  DataContainerArray::Pointer getMaskContainerArray() const;
 
   ITKMaskImage();
 
@@ -137,25 +135,29 @@ protected:
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
    */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void dataCheckImpl();
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void dataCheckImpl();
 
   /**
-  * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
-  */
+   * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
+   */
   void filterInternal() override;
 
   /**
-  * @brief Applies the filter
-  */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
+   * @brief Applies the filter
+   */
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void filter();
 
   /**
-  * @brief Converts data container MarkerCellArrayPath to uint16
-  */
+   * @brief Converts data container MarkerCellArrayPath to uint16
+   */
 
-  template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> typename std::enable_if<std::is_scalar<InputPixelType>::value>::type convertDataContainerType();
+  template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+  typename std::enable_if<std::is_scalar<InputPixelType>::value>::type convertDataContainerType();
 
-  template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> typename std::enable_if<!std::is_scalar<InputPixelType>::value>::type convertDataContainerType();
+  template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+  typename std::enable_if<!std::is_scalar<InputPixelType>::value>::type convertDataContainerType();
 
 public:
   ITKMaskImage(const ITKMaskImage&) = delete;            // Copy Constructor Not Implemented
@@ -163,14 +165,12 @@ public:
   ITKMaskImage& operator=(const ITKMaskImage&) = delete; // Copy Assignment Not Implemented
   ITKMaskImage& operator=(ITKMaskImage&&) = delete;      // Move Assignment Not Implemented
 
-  private:
-    double m_OutsideValue = {};
-    DataArrayPath m_MaskCellArrayPath = {};
-    DataContainerArray::Pointer m_MaskContainerArray = {};
-
+private:
+  double m_OutsideValue = {};
+  DataArrayPath m_MaskCellArrayPath = {};
+  DataContainerArray::Pointer m_MaskContainerArray = {};
 };
 
 #ifdef __clang__
 #pragma clang diagnostic pop
 #endif
-

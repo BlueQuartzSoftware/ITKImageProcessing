@@ -9,16 +9,15 @@
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 #include <SIMPLib/FilterParameters/IntFilterParameter.h>
 
-
 class ITKThresholdMaximumConnectedComponentsImageTest : public ITKTestBase
 {
 
 public:
-ITKThresholdMaximumConnectedComponentsImageTest() = default;
-~ITKThresholdMaximumConnectedComponentsImageTest() override = default;
+  ITKThresholdMaximumConnectedComponentsImageTest() = default;
+  ~ITKThresholdMaximumConnectedComponentsImageTest() override = default;
 
   int TestITKThresholdMaximumConnectedComponentsImagedefaultTest()
-{
+  {
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/cthead1.png");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -45,10 +44,10 @@ ITKThresholdMaximumConnectedComponentsImageTest() = default;
     GetMD5FromDataContainer(containerArray, input_path, md5Output);
     DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("c84b75c78c33844251a1095d9cbcffb9"));
     return 0;
-}
+  }
 
-int TestITKThresholdMaximumConnectedComponentsImageparametersTest()
-{
+  int TestITKThresholdMaximumConnectedComponentsImageparametersTest()
+  {
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/cthead1.png");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -67,18 +66,18 @@ int TestITKThresholdMaximumConnectedComponentsImageparametersTest()
     propWasSet = filter->setProperty("SaveAsNewArray", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     {
-        double d3d_var;
-        d3d_var = 40;
-        var.setValue(d3d_var);
-        propWasSet = filter->setProperty("MinimumObjectSizeInPixels", var);
-        DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+      double d3d_var;
+      d3d_var = 40;
+      var.setValue(d3d_var);
+      propWasSet = filter->setProperty("MinimumObjectSizeInPixels", var);
+      DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     }
     {
-        double d3d_var;
-        d3d_var = 150;
-        var.setValue(d3d_var);
-        propWasSet = filter->setProperty("UpperBoundary", var);
-        DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+      double d3d_var;
+      d3d_var = 150;
+      var.setValue(d3d_var);
+      propWasSet = filter->setProperty("UpperBoundary", var);
+      DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     }
     filter->setDataContainerArray(containerArray);
     filter->execute();
@@ -89,10 +88,10 @@ int TestITKThresholdMaximumConnectedComponentsImageparametersTest()
     GetMD5FromDataContainer(containerArray, input_path, md5Output);
     DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("27c6cf8494fcc4e414f1c420e7a9ca6f"));
     return 0;
-}
+  }
 
-int TestITKThresholdMaximumConnectedComponentsImagefloatTest()
-{
+  int TestITKThresholdMaximumConnectedComponentsImagefloatTest()
+  {
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/RA-Float.nrrd");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -119,9 +118,7 @@ int TestITKThresholdMaximumConnectedComponentsImagefloatTest()
     GetMD5FromDataContainer(containerArray, input_path, md5Output);
     DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("e475b27bd0dd66ede330c4eab93c17e9"));
     return 0;
-}
-
-
+  }
 
   // -----------------------------------------------------------------------------
   //
@@ -132,9 +129,9 @@ int TestITKThresholdMaximumConnectedComponentsImagefloatTest()
 
     DREAM3D_REGISTER_TEST(this->TestFilterAvailability("ITKThresholdMaximumConnectedComponentsImage"));
 
-    DREAM3D_REGISTER_TEST( TestITKThresholdMaximumConnectedComponentsImagedefaultTest());
-    DREAM3D_REGISTER_TEST( TestITKThresholdMaximumConnectedComponentsImageparametersTest());
-    DREAM3D_REGISTER_TEST( TestITKThresholdMaximumConnectedComponentsImagefloatTest());
+    DREAM3D_REGISTER_TEST(TestITKThresholdMaximumConnectedComponentsImagedefaultTest());
+    DREAM3D_REGISTER_TEST(TestITKThresholdMaximumConnectedComponentsImageparametersTest());
+    DREAM3D_REGISTER_TEST(TestITKThresholdMaximumConnectedComponentsImagefloatTest());
 
     if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
     {

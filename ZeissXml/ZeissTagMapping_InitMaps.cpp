@@ -30,8 +30,8 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 /** THIS FILE WAS AUTO-GENERATED FROM THE ZVI_TAGS.TXT FILE WHICH WAS MANUALLY GENERATED FROM
-* THE ZVI DOCUMENTATION FILE THAT IS DOWNLOADED FROM CARL ZEISS UNDER LICENSE.
-*/
+ * THE ZVI DOCUMENTATION FILE THAT IS DOWNLOADED FROM CARL ZEISS UNDER LICENSE.
+ */
 
 // -----------------------------------------------------------------------------
 //
@@ -1687,4 +1687,3 @@ void ZeissTagMapping::initFactoryMap()
   _idFactoryMap[Zeiss::MetaXML::Origin_2Id] = FloatZeissMetaFactory::NewZeissMetaFactory();
   _idFactoryMap[Zeiss::MetaXML::Angle_2Id] = FloatZeissMetaFactory::NewZeissMetaFactory();
 }
-

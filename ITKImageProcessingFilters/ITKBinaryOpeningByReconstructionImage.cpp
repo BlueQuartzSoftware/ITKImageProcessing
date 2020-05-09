@@ -4,7 +4,6 @@
  * Your License or Copyright can go here
  */
 
-
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKBinaryOpeningByReconstructionImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 #include "SIMPLib/Common/Constants.h"
@@ -20,7 +19,6 @@
 
 #include <itkFlatStructuringElement.h>
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -31,7 +29,6 @@ ITKBinaryOpeningByReconstructionImage::ITKBinaryOpeningByReconstructionImage()
   m_FullyConnected = StaticCastScalar<bool, bool, bool>(false);
   m_KernelRadius = CastStdToVec3<std::vector<unsigned int>, FloatVec3Type, float>(std::vector<unsigned int>(3, 1));
   m_KernelType = StaticCastScalar<int, int, int>(itk::simple::sitkBall);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -69,7 +66,6 @@ void ITKBinaryOpeningByReconstructionImage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_BOOL_FP("FullyConnected", FullyConnected, FilterParameter::Parameter, ITKBinaryOpeningByReconstructionImage));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("KernelRadius", KernelRadius, FilterParameter::Parameter, ITKBinaryOpeningByReconstructionImage));
 
-
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Save as New Array", SaveAsNewArray, FilterParameter::Parameter, ITKBinaryOpeningByReconstructionImage, linkedProps));
@@ -106,7 +102,8 @@ void ITKBinaryOpeningByReconstructionImage::readFilterParameters(AbstractFilterP
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKBinaryOpeningByReconstructionImage::dataCheckImpl()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKBinaryOpeningByReconstructionImage::dataCheckImpl()
 {
   clearErrorCode();
   clearWarningCode();
@@ -140,10 +137,11 @@ void ITKBinaryOpeningByReconstructionImage::dataCheck()
 //
 // -----------------------------------------------------------------------------
 
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKBinaryOpeningByReconstructionImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKBinaryOpeningByReconstructionImage::filter()
 {
   typedef itk::Image<InputPixelType, Dimension> InputImageType;
-  //typedef itk::Image<OutputPixelType, Dimension> OutputImageType;
+  // typedef itk::Image<OutputPixelType, Dimension> OutputImageType;
   typedef itk::FlatStructuringElement<Dimension> StructuringElementType;
   typedef typename StructuringElementType::RadiusType RadiusType;
   RadiusType elementRadius = CastVec3ToITK<FloatVec3Type, RadiusType, typename RadiusType::SizeValueType>(m_KernelRadius, RadiusType::Dimension);
@@ -174,7 +172,6 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   filter->SetFullyConnected(static_cast<bool>(m_FullyConnected));
   filter->SetKernel(structuringElement);
   this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -231,7 +228,7 @@ ITKBinaryOpeningByReconstructionImage::Pointer ITKBinaryOpeningByReconstructionI
 // -----------------------------------------------------------------------------
 std::shared_ptr<ITKBinaryOpeningByReconstructionImage> ITKBinaryOpeningByReconstructionImage::New()
 {
-  struct make_shared_enabler : public ITKBinaryOpeningByReconstructionImage  
+  struct make_shared_enabler : public ITKBinaryOpeningByReconstructionImage
   {
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
@@ -310,5 +307,3 @@ int ITKBinaryOpeningByReconstructionImage::getKernelType() const
 {
   return m_KernelType;
 }
-
-

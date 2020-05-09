@@ -42,49 +42,47 @@ class ITKImageProcessing_EXPORT ITKGradientMagnitudeRecursiveGaussianImage : pub
   // End Python bindings declarations
 
 public:
-    using Self = ITKGradientMagnitudeRecursiveGaussianImage;
-    using Pointer = std::shared_ptr<Self>;
-    using ConstPointer = std::shared_ptr<const Self>;
-    using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<const Self>;
-    static Pointer NullPointer();
+  using Self = ITKGradientMagnitudeRecursiveGaussianImage;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<const Self>;
+  static Pointer NullPointer();
 
-    static std::shared_ptr<ITKGradientMagnitudeRecursiveGaussianImage> New();
+  static std::shared_ptr<ITKGradientMagnitudeRecursiveGaussianImage> New();
 
-    /**
-    * @brief Returns the name of the class for ITKGradientMagnitudeRecursiveGaussianImage
-    */
-    QString getNameOfClass() const override;
-    /**
-    * @brief Returns the name of the class for ITKGradientMagnitudeRecursiveGaussianImage
-    */
-    static QString ClassName();
-
+  /**
+   * @brief Returns the name of the class for ITKGradientMagnitudeRecursiveGaussianImage
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for ITKGradientMagnitudeRecursiveGaussianImage
+   */
+  static QString ClassName();
 
   ~ITKGradientMagnitudeRecursiveGaussianImage() override;
 
-    /**
-    * @brief Setter property for Sigma
-    */
-    void setSigma(double value); 
-    /**
-    * @brief Getter property for Sigma
-    * @return Value of Sigma
-    */
-    double getSigma() const;
+  /**
+   * @brief Setter property for Sigma
+   */
+  void setSigma(double value);
+  /**
+   * @brief Getter property for Sigma
+   * @return Value of Sigma
+   */
+  double getSigma() const;
   Q_PROPERTY(double Sigma READ getSigma WRITE setSigma)
 
-    /**
-    * @brief Setter property for NormalizeAcrossScale
-    */
-    void setNormalizeAcrossScale(bool value); 
-    /**
-    * @brief Getter property for NormalizeAcrossScale
-    * @return Value of NormalizeAcrossScale
-    */
-    bool getNormalizeAcrossScale() const;
+  /**
+   * @brief Setter property for NormalizeAcrossScale
+   */
+  void setNormalizeAcrossScale(bool value);
+  /**
+   * @brief Getter property for NormalizeAcrossScale
+   * @return Value of NormalizeAcrossScale
+   */
+  bool getNormalizeAcrossScale() const;
   Q_PROPERTY(bool NormalizeAcrossScale READ getNormalizeAcrossScale WRITE setNormalizeAcrossScale)
-
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -128,31 +126,31 @@ protected:
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
    */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void dataCheckImpl();
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void dataCheckImpl();
 
   /**
-  * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
-  */
+   * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
+   */
   void filterInternal() override;
 
   /**
-  * @brief Applies the filter
-  */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
+   * @brief Applies the filter
+   */
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void filter();
 
 public:
-  ITKGradientMagnitudeRecursiveGaussianImage(const ITKGradientMagnitudeRecursiveGaussianImage&) = delete;    // Copy Constructor Not Implemented
-  ITKGradientMagnitudeRecursiveGaussianImage(ITKGradientMagnitudeRecursiveGaussianImage&&) = delete;         // Move Constructor Not Implemented
+  ITKGradientMagnitudeRecursiveGaussianImage(const ITKGradientMagnitudeRecursiveGaussianImage&) = delete;            // Copy Constructor Not Implemented
+  ITKGradientMagnitudeRecursiveGaussianImage(ITKGradientMagnitudeRecursiveGaussianImage&&) = delete;                 // Move Constructor Not Implemented
   ITKGradientMagnitudeRecursiveGaussianImage& operator=(const ITKGradientMagnitudeRecursiveGaussianImage&) = delete; // Copy Assignment Not Implemented
   ITKGradientMagnitudeRecursiveGaussianImage& operator=(ITKGradientMagnitudeRecursiveGaussianImage&&) = delete;      // Move Assignment Not Implemented
 
-  private:
-    double m_Sigma = {};
-    bool m_NormalizeAcrossScale = {};
-
+private:
+  double m_Sigma = {};
+  bool m_NormalizeAcrossScale = {};
 };
 
 #ifdef __clang__
 #pragma clang diagnostic pop
 #endif
-

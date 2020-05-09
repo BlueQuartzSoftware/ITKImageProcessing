@@ -15,8 +15,8 @@ class ITKWhiteTopHatImageTest : public ITKTestBase
 {
 
 public:
-ITKWhiteTopHatImageTest() = default;
-~ITKWhiteTopHatImageTest() override = default;
+  ITKWhiteTopHatImageTest() = default;
+  ~ITKWhiteTopHatImageTest() override = default;
 
   int TestITKWhiteTopHatImageWhiteTopHatErodeTest()
   {

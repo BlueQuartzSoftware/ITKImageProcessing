@@ -4,7 +4,6 @@
  * Your License or Copyright can go here
  */
 
-
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKBilateralImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 #include "SIMPLib/Common/Constants.h"
@@ -17,7 +16,6 @@
 
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -26,7 +24,6 @@ ITKBilateralImage::ITKBilateralImage()
   m_DomainSigma = StaticCastScalar<double, double, double>(4.0);
   m_RangeSigma = StaticCastScalar<double, double, double>(50.0);
   m_NumberOfRangeGaussianSamples = StaticCastScalar<double, double, double>(100u);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -44,7 +41,6 @@ void ITKBilateralImage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("DomainSigma", DomainSigma, FilterParameter::Parameter, ITKBilateralImage));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("RangeSigma", RangeSigma, FilterParameter::Parameter, ITKBilateralImage));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("NumberOfRangeGaussianSamples", NumberOfRangeGaussianSamples, FilterParameter::Parameter, ITKBilateralImage));
-
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -80,7 +76,8 @@ void ITKBilateralImage::readFilterParameters(AbstractFilterParametersReader* rea
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKBilateralImage::dataCheckImpl()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKBilateralImage::dataCheckImpl()
 {
   clearErrorCode();
   clearWarningCode();
@@ -103,7 +100,8 @@ void ITKBilateralImage::dataCheck()
 //
 // -----------------------------------------------------------------------------
 
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKBilateralImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKBilateralImage::filter()
 {
   typedef itk::Image<InputPixelType, Dimension> InputImageType;
   typedef itk::Image<OutputPixelType, Dimension> OutputImageType;
@@ -114,7 +112,6 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   filter->SetRangeSigma(static_cast<double>(m_RangeSigma));
   filter->SetNumberOfRangeGaussianSamples(static_cast<unsigned int>(m_NumberOfRangeGaussianSamples));
   this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -171,7 +168,7 @@ ITKBilateralImage::Pointer ITKBilateralImage::NullPointer()
 // -----------------------------------------------------------------------------
 std::shared_ptr<ITKBilateralImage> ITKBilateralImage::New()
 {
-  struct make_shared_enabler : public ITKBilateralImage  
+  struct make_shared_enabler : public ITKBilateralImage
   {
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
@@ -226,5 +223,3 @@ double ITKBilateralImage::getNumberOfRangeGaussianSamples() const
 {
   return m_NumberOfRangeGaussianSamples;
 }
-
-

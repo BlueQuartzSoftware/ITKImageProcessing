@@ -41,49 +41,47 @@ class ITKImageProcessing_EXPORT ITKValuedRegionalMinimaImage : public ITKImagePr
   // End Python bindings declarations
 
 public:
-    using Self = ITKValuedRegionalMinimaImage;
-    using Pointer = std::shared_ptr<Self>;
-    using ConstPointer = std::shared_ptr<const Self>;
-    using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<const Self>;
-    static Pointer NullPointer();
+  using Self = ITKValuedRegionalMinimaImage;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<const Self>;
+  static Pointer NullPointer();
 
-    static std::shared_ptr<ITKValuedRegionalMinimaImage> New();
+  static std::shared_ptr<ITKValuedRegionalMinimaImage> New();
 
-    /**
-    * @brief Returns the name of the class for ITKValuedRegionalMinimaImage
-    */
-    QString getNameOfClass() const override;
-    /**
-    * @brief Returns the name of the class for ITKValuedRegionalMinimaImage
-    */
-    static QString ClassName();
-
+  /**
+   * @brief Returns the name of the class for ITKValuedRegionalMinimaImage
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for ITKValuedRegionalMinimaImage
+   */
+  static QString ClassName();
 
   ~ITKValuedRegionalMinimaImage() override;
 
-    /**
-    * @brief Setter property for FullyConnected
-    */
-    void setFullyConnected(bool value); 
-    /**
-    * @brief Getter property for FullyConnected
-    * @return Value of FullyConnected
-    */
-    bool getFullyConnected() const;
+  /**
+   * @brief Setter property for FullyConnected
+   */
+  void setFullyConnected(bool value);
+  /**
+   * @brief Getter property for FullyConnected
+   * @return Value of FullyConnected
+   */
+  bool getFullyConnected() const;
   Q_PROPERTY(bool FullyConnected READ getFullyConnected WRITE setFullyConnected)
 
-    /**
-    * @brief Setter property for Flat
-    */
-    void setFlat(bool value); 
-    /**
-    * @brief Getter property for Flat
-    * @return Value of Flat
-    */
-    bool getFlat() const;
+  /**
+   * @brief Setter property for Flat
+   */
+  void setFlat(bool value);
+  /**
+   * @brief Getter property for Flat
+   * @return Value of Flat
+   */
+  bool getFlat() const;
   Q_PROPERTY(bool Flat READ getFlat)
-
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -127,31 +125,31 @@ protected:
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
    */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void dataCheckImpl();
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void dataCheckImpl();
 
   /**
-  * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
-  */
+   * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
+   */
   void filterInternal() override;
 
   /**
-  * @brief Applies the filter
-  */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
+   * @brief Applies the filter
+   */
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void filter();
 
 public:
-  ITKValuedRegionalMinimaImage(const ITKValuedRegionalMinimaImage&) = delete;    // Copy Constructor Not Implemented
-  ITKValuedRegionalMinimaImage(ITKValuedRegionalMinimaImage&&) = delete;         // Move Constructor Not Implemented
+  ITKValuedRegionalMinimaImage(const ITKValuedRegionalMinimaImage&) = delete;            // Copy Constructor Not Implemented
+  ITKValuedRegionalMinimaImage(ITKValuedRegionalMinimaImage&&) = delete;                 // Move Constructor Not Implemented
   ITKValuedRegionalMinimaImage& operator=(const ITKValuedRegionalMinimaImage&) = delete; // Copy Assignment Not Implemented
   ITKValuedRegionalMinimaImage& operator=(ITKValuedRegionalMinimaImage&&) = delete;      // Move Assignment Not Implemented
 
-  private:
-    bool m_FullyConnected = {};
-    bool m_Flat = {};
-
+private:
+  bool m_FullyConnected = {};
+  bool m_Flat = {};
 };
 
 #ifdef __clang__
 #pragma clang diagnostic pop
 #endif
-

@@ -15,8 +15,8 @@ class ITKDilateObjectMorphologyImageTest : public ITKTestBase
 {
 
 public:
-ITKDilateObjectMorphologyImageTest() = default;
-~ITKDilateObjectMorphologyImageTest() override = default;
+  ITKDilateObjectMorphologyImageTest() = default;
+  ~ITKDilateObjectMorphologyImageTest() override = default;
 
   int TestITKDilateObjectMorphologyImagefloatTest()
   {

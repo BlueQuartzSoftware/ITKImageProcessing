@@ -4,7 +4,6 @@
  * Your License or Copyright can go here
  */
 
-
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKSobelEdgeDetectionImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 #include "SIMPLib/Common/Constants.h"
@@ -16,7 +15,6 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
-
 
 // -----------------------------------------------------------------------------
 //
@@ -68,7 +66,8 @@ void ITKSobelEdgeDetectionImage::readFilterParameters(AbstractFilterParametersRe
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKSobelEdgeDetectionImage::dataCheck()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKSobelEdgeDetectionImage::dataCheck()
 {
   clearErrorCode();
   clearWarningCode();
@@ -90,7 +89,8 @@ void ITKSobelEdgeDetectionImage::dataCheckInternal()
 //
 // -----------------------------------------------------------------------------
 
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKSobelEdgeDetectionImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKSobelEdgeDetectionImage::filter()
 {
   typedef itk::Image<InputPixelType, Dimension> InputImageType;
   typedef itk::Image<OutputPixelType, Dimension> OutputImageType;
@@ -98,7 +98,6 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   typedef itk::SobelEdgeDetectionImageFilter<InputImageType, OutputImageType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
   this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -155,7 +154,7 @@ ITKSobelEdgeDetectionImage::Pointer ITKSobelEdgeDetectionImage::NullPointer()
 // -----------------------------------------------------------------------------
 std::shared_ptr<ITKSobelEdgeDetectionImage> ITKSobelEdgeDetectionImage::New()
 {
-  struct make_shared_enabler : public ITKSobelEdgeDetectionImage  
+  struct make_shared_enabler : public ITKSobelEdgeDetectionImage
   {
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
@@ -174,5 +173,3 @@ QString ITKSobelEdgeDetectionImage::ClassName()
 {
   return QString("ITKSobelEdgeDetectionImage");
 }
-
-

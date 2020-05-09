@@ -42,69 +42,68 @@ class ITKImageProcessing_EXPORT ITKHistogramMatchingImage : public ITKImageProce
   // End Python bindings declarations
 
 public:
-    using Self = ITKHistogramMatchingImage;
-    using Pointer = std::shared_ptr<Self>;
-    using ConstPointer = std::shared_ptr<const Self>;
-    using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<const Self>;
-    static Pointer NullPointer();
+  using Self = ITKHistogramMatchingImage;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<const Self>;
+  static Pointer NullPointer();
 
-    static std::shared_ptr<ITKHistogramMatchingImage> New();
+  static std::shared_ptr<ITKHistogramMatchingImage> New();
 
-    /**
-    * @brief Returns the name of the class for ITKHistogramMatchingImage
-    */
-    QString getNameOfClass() const override;
-    /**
-    * @brief Returns the name of the class for ITKHistogramMatchingImage
-    */
-    static QString ClassName();
-
+  /**
+   * @brief Returns the name of the class for ITKHistogramMatchingImage
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for ITKHistogramMatchingImage
+   */
+  static QString ClassName();
 
   ~ITKHistogramMatchingImage() override;
 
-    /**
-    * @brief Setter property for ReferenceCellArrayPath
-    */
-    void setReferenceCellArrayPath(const DataArrayPath& value); 
-    /**
-    * @brief Getter property for ReferenceCellArrayPath
-    * @return Value of ReferenceCellArrayPath
-    */
-    DataArrayPath getReferenceCellArrayPath() const;
+  /**
+   * @brief Setter property for ReferenceCellArrayPath
+   */
+  void setReferenceCellArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for ReferenceCellArrayPath
+   * @return Value of ReferenceCellArrayPath
+   */
+  DataArrayPath getReferenceCellArrayPath() const;
   Q_PROPERTY(DataArrayPath ReferenceCellArrayPath READ getReferenceCellArrayPath WRITE setReferenceCellArrayPath)
 
-    /**
-    * @brief Setter property for NumberOfHistogramLevels
-    */
-    void setNumberOfHistogramLevels(double value); 
-    /**
-    * @brief Getter property for NumberOfHistogramLevels
-    * @return Value of NumberOfHistogramLevels
-    */
-    double getNumberOfHistogramLevels() const;
+  /**
+   * @brief Setter property for NumberOfHistogramLevels
+   */
+  void setNumberOfHistogramLevels(double value);
+  /**
+   * @brief Getter property for NumberOfHistogramLevels
+   * @return Value of NumberOfHistogramLevels
+   */
+  double getNumberOfHistogramLevels() const;
   Q_PROPERTY(double NumberOfHistogramLevels READ getNumberOfHistogramLevels WRITE setNumberOfHistogramLevels)
 
-    /**
-    * @brief Setter property for NumberOfMatchPoints
-    */
-    void setNumberOfMatchPoints(double value); 
-    /**
-    * @brief Getter property for NumberOfMatchPoints
-    * @return Value of NumberOfMatchPoints
-    */
-    double getNumberOfMatchPoints() const;
+  /**
+   * @brief Setter property for NumberOfMatchPoints
+   */
+  void setNumberOfMatchPoints(double value);
+  /**
+   * @brief Getter property for NumberOfMatchPoints
+   * @return Value of NumberOfMatchPoints
+   */
+  double getNumberOfMatchPoints() const;
   Q_PROPERTY(double NumberOfMatchPoints READ getNumberOfMatchPoints WRITE setNumberOfMatchPoints)
 
-    /**
-    * @brief Setter property for ThresholdAtMeanIntensity
-    */
-    void setThresholdAtMeanIntensity(bool value); 
-    /**
-    * @brief Getter property for ThresholdAtMeanIntensity
-    * @return Value of ThresholdAtMeanIntensity
-    */
-    bool getThresholdAtMeanIntensity() const;
+  /**
+   * @brief Setter property for ThresholdAtMeanIntensity
+   */
+  void setThresholdAtMeanIntensity(bool value);
+  /**
+   * @brief Getter property for ThresholdAtMeanIntensity
+   * @return Value of ThresholdAtMeanIntensity
+   */
+  bool getThresholdAtMeanIntensity() const;
   Q_PROPERTY(bool ThresholdAtMeanIntensity READ getThresholdAtMeanIntensity WRITE setThresholdAtMeanIntensity)
 
   /**
@@ -149,17 +148,19 @@ protected:
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
    */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void dataCheckImpl();
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void dataCheckImpl();
 
   /**
-  * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
-  */
+   * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
+   */
   void filterInternal() override;
 
   /**
-  * @brief Applies the filter
-  */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
+   * @brief Applies the filter
+   */
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void filter();
 
   /**
    * @brief getImageDimension Returns the dimension of an image.
@@ -183,20 +184,18 @@ protected:
   void CompareImagePixelTypes(const DataArrayPath& path1, const DataArrayPath& path2);
 
 public:
-  ITKHistogramMatchingImage(const ITKHistogramMatchingImage&) = delete; // Copy Constructor Not Implemented
-  ITKHistogramMatchingImage(ITKHistogramMatchingImage&&) = delete;      // Move Constructor Not Implemented
+  ITKHistogramMatchingImage(const ITKHistogramMatchingImage&) = delete;            // Copy Constructor Not Implemented
+  ITKHistogramMatchingImage(ITKHistogramMatchingImage&&) = delete;                 // Move Constructor Not Implemented
   ITKHistogramMatchingImage& operator=(const ITKHistogramMatchingImage&) = delete; // Copy Assignment Not Implemented
   ITKHistogramMatchingImage& operator=(ITKHistogramMatchingImage&&) = delete;      // Move Assignment Not Implemented
 
-  private:
-    DataArrayPath m_ReferenceCellArrayPath = {};
-    double m_NumberOfHistogramLevels = {};
-    double m_NumberOfMatchPoints = {};
-    bool m_ThresholdAtMeanIntensity = {};
-
+private:
+  DataArrayPath m_ReferenceCellArrayPath = {};
+  double m_NumberOfHistogramLevels = {};
+  double m_NumberOfMatchPoints = {};
+  bool m_ThresholdAtMeanIntensity = {};
 };
 
 #ifdef __clang__
 #pragma clang diagnostic pop
 #endif
-

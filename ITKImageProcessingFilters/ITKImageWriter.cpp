@@ -73,7 +73,6 @@
 #define DREAM3D_USE_Vector 1
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
 
-
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
 #include "ITKImageProcessingPlugin.h"
@@ -81,8 +80,6 @@
 #ifdef _WIN32
 extern Q_CORE_EXPORT int qt_ntfs_permission_lookup;
 #endif
-
-
 
 // -----------------------------------------------------------------------------
 //
@@ -103,21 +100,21 @@ ITKImageWriter::~ITKImageWriter() = default;
 // -----------------------------------------------------------------------------
 void ITKImageWriter::registerImageIOFactories() const
 {
-	  itk::JPEGImageIOFactory::RegisterOneFactory();
-	  itk::NrrdImageIOFactory::RegisterOneFactory();
-	  itk::PNGImageIOFactory::RegisterOneFactory();
-	  itk::TIFFImageIOFactory::RegisterOneFactory();
-	  itk::JPEGImageIOFactory::RegisterOneFactory();
-	  itk::BMPImageIOFactory::RegisterOneFactory();
-	  itk::MetaImageIOFactory::RegisterOneFactory();
-	  itk::NiftiImageIOFactory::RegisterOneFactory();
-	  itk::GiplImageIOFactory::RegisterOneFactory();
-	  itk::VTKImageIOFactory::RegisterOneFactory();
-	  itk::StimulateImageIOFactory::RegisterOneFactory();
-	  itk::BioRadImageIOFactory::RegisterOneFactory();
-	  itk::GE4ImageIOFactory::RegisterOneFactory();
-	  itk::GE5ImageIOFactory::RegisterOneFactory();
-	  itk::MRCImageIOFactory::RegisterOneFactory();
+  itk::JPEGImageIOFactory::RegisterOneFactory();
+  itk::NrrdImageIOFactory::RegisterOneFactory();
+  itk::PNGImageIOFactory::RegisterOneFactory();
+  itk::TIFFImageIOFactory::RegisterOneFactory();
+  itk::JPEGImageIOFactory::RegisterOneFactory();
+  itk::BMPImageIOFactory::RegisterOneFactory();
+  itk::MetaImageIOFactory::RegisterOneFactory();
+  itk::NiftiImageIOFactory::RegisterOneFactory();
+  itk::GiplImageIOFactory::RegisterOneFactory();
+  itk::VTKImageIOFactory::RegisterOneFactory();
+  itk::StimulateImageIOFactory::RegisterOneFactory();
+  itk::BioRadImageIOFactory::RegisterOneFactory();
+  itk::GE4ImageIOFactory::RegisterOneFactory();
+  itk::GE5ImageIOFactory::RegisterOneFactory();
+  itk::MRCImageIOFactory::RegisterOneFactory();
 }
 
 // -----------------------------------------------------------------------------
@@ -205,7 +202,6 @@ void ITKImageWriter::dataCheck()
   }
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -220,7 +216,8 @@ bool ITKImageWriter::is2DFormat()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename TPixel, unsigned int Dimensions> void ITKImageWriter::writeAs2DStack(typename itk::Image<TPixel, Dimensions>* image, unsigned long z_size)
+template <typename TPixel, unsigned int Dimensions>
+void ITKImageWriter::writeAs2DStack(typename itk::Image<TPixel, Dimensions>* image, unsigned long z_size)
 {
   typedef itk::NumericSeriesFileNames NamesGeneratorType;
   NamesGeneratorType::Pointer namesGenerator = NamesGeneratorType::New();
@@ -245,7 +242,8 @@ template <typename TPixel, unsigned int Dimensions> void ITKImageWriter::writeAs
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename TPixel, unsigned int Dimensions> void ITKImageWriter::writeAsOneFile(typename itk::Image<TPixel, Dimensions>* image)
+template <typename TPixel, unsigned int Dimensions>
+void ITKImageWriter::writeAsOneFile(typename itk::Image<TPixel, Dimensions>* image)
 {
   typedef itk::Image<TPixel, Dimensions> ImageType;
   typedef itk::ImageFileWriter<ImageType> FileWriterType;
@@ -263,7 +261,8 @@ template <typename TPixel, unsigned int Dimensions> void ITKImageWriter::writeAs
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename TPixel, typename UnusedTPixel, unsigned int Dimensions> void ITKImageWriter::writeImage()
+template <typename TPixel, typename UnusedTPixel, unsigned int Dimensions>
+void ITKImageWriter::writeImage()
 {
   using ImageType = itk::Image<TPixel, Dimensions>;
   using ToITKType = itk::InPlaceDream3DDataToImageFilter<TPixel, Dimensions>;
@@ -306,7 +305,7 @@ template <typename TPixel, typename UnusedTPixel, unsigned int Dimensions> void 
   size_t dB = dimB;                                                                                                                                                                                    \
   size_t numElements = dA * dB;                                                                                                                                                                        \
   AttributeMatrix::Pointer am = AttributeMatrix::New(tDims, attributeMatrix->getName(), AttributeMatrix::Type::Cell);                                                                                  \
-  dc->addOrReplaceAttributeMatrix(am);                                                                                                                                                                          \
+  dc->addOrReplaceAttributeMatrix(am);                                                                                                                                                                 \
   imageGeom->setDimensions(tDims.data());                                                                                                                                                              \
   IDataArray::Pointer sliceData = currentData->createNewArray(numElements, cDims, currentData->getName(), true);                                                                                       \
   am->insertOrAssign(sliceData);
@@ -426,7 +425,6 @@ void ITKImageWriter::execute()
       saveImageData(dca, slice, dims[0]);
     }
   }
-
 }
 
 // -----------------------------------------------------------------------------
@@ -547,7 +545,7 @@ ITKImageWriter::Pointer ITKImageWriter::NullPointer()
 // -----------------------------------------------------------------------------
 std::shared_ptr<ITKImageWriter> ITKImageWriter::New()
 {
-  struct make_shared_enabler : public ITKImageWriter  
+  struct make_shared_enabler : public ITKImageWriter
   {
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
@@ -602,5 +600,3 @@ int ITKImageWriter::getPlane() const
 {
   return m_Plane;
 }
-
-

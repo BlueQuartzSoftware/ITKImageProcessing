@@ -30,24 +30,23 @@ class ITKImageProcessing_EXPORT ITKLog10Image : public ITKImageProcessingBase
   Q_OBJECT
 
 public:
-    using Self = ITKLog10Image;
-    using Pointer = std::shared_ptr<Self>;
-    using ConstPointer = std::shared_ptr<const Self>;
-    using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<const Self>;
-    static Pointer NullPointer();
+  using Self = ITKLog10Image;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<const Self>;
+  static Pointer NullPointer();
 
-    static std::shared_ptr<ITKLog10Image> New();
+  static std::shared_ptr<ITKLog10Image> New();
 
-    /**
-    * @brief Returns the name of the class for ITKLog10Image
-    */
-    QString getNameOfClass() const override;
-    /**
-    * @brief Returns the name of the class for ITKLog10Image
-    */
-    static QString ClassName();
-
+  /**
+   * @brief Returns the name of the class for ITKLog10Image
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for ITKLog10Image
+   */
+  static QString ClassName();
 
   ~ITKLog10Image() override;
 
@@ -93,29 +92,29 @@ protected:
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
    */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void dataCheckImpl();
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void dataCheckImpl();
 
   /**
-  * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
-  */
+   * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
+   */
   void filterInternal() override;
 
   /**
-  * @brief Applies the filter
-  */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
+   * @brief Applies the filter
+   */
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void filter();
 
 public:
-  ITKLog10Image(const ITKLog10Image&) = delete;    // Copy Constructor Not Implemented
-  ITKLog10Image(ITKLog10Image&&) = delete;         // Move Constructor Not Implemented
+  ITKLog10Image(const ITKLog10Image&) = delete;            // Copy Constructor Not Implemented
+  ITKLog10Image(ITKLog10Image&&) = delete;                 // Move Constructor Not Implemented
   ITKLog10Image& operator=(const ITKLog10Image&) = delete; // Copy Assignment Not Implemented
   ITKLog10Image& operator=(ITKLog10Image&&) = delete;      // Move Assignment Not Implemented
 
-  private:
-
+private:
 };
 
 #ifdef __clang__
 #pragma clang diagnostic pop
 #endif
-

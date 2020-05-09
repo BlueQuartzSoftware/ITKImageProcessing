@@ -15,8 +15,8 @@ class ITKGrayscaleMorphologicalOpeningImageTest : public ITKTestBase
 {
 
 public:
-ITKGrayscaleMorphologicalOpeningImageTest() = default;
-~ITKGrayscaleMorphologicalOpeningImageTest() override = default;
+  ITKGrayscaleMorphologicalOpeningImageTest() = default;
+  ~ITKGrayscaleMorphologicalOpeningImageTest() override = default;
 
   int TestITKGrayscaleMorphologicalOpeningImageGrayscaleMorphologicalOpeningTest()
   {

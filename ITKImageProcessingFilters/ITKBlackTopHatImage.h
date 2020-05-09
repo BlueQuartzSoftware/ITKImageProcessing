@@ -44,60 +44,58 @@ class ITKImageProcessing_EXPORT ITKBlackTopHatImage : public ITKImageProcessingB
   // End Python bindings declarations
 
 public:
-    using Self = ITKBlackTopHatImage;
-    using Pointer = std::shared_ptr<Self>;
-    using ConstPointer = std::shared_ptr<const Self>;
-    using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<const Self>;
-    static Pointer NullPointer();
+  using Self = ITKBlackTopHatImage;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<const Self>;
+  static Pointer NullPointer();
 
-    static std::shared_ptr<ITKBlackTopHatImage> New();
+  static std::shared_ptr<ITKBlackTopHatImage> New();
 
-    /**
-    * @brief Returns the name of the class for ITKBlackTopHatImage
-    */
-    QString getNameOfClass() const override;
-    /**
-    * @brief Returns the name of the class for ITKBlackTopHatImage
-    */
-    static QString ClassName();
-
+  /**
+   * @brief Returns the name of the class for ITKBlackTopHatImage
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for ITKBlackTopHatImage
+   */
+  static QString ClassName();
 
   ~ITKBlackTopHatImage() override;
 
-    /**
-    * @brief Setter property for SafeBorder
-    */
-    void setSafeBorder(bool value); 
-    /**
-    * @brief Getter property for SafeBorder
-    * @return Value of SafeBorder
-    */
-    bool getSafeBorder() const;
+  /**
+   * @brief Setter property for SafeBorder
+   */
+  void setSafeBorder(bool value);
+  /**
+   * @brief Getter property for SafeBorder
+   * @return Value of SafeBorder
+   */
+  bool getSafeBorder() const;
   Q_PROPERTY(bool SafeBorder READ getSafeBorder WRITE setSafeBorder)
 
-    /**
-    * @brief Setter property for KernelRadius
-    */
-    void setKernelRadius(const FloatVec3Type& value); 
-    /**
-    * @brief Getter property for KernelRadius
-    * @return Value of KernelRadius
-    */
-    FloatVec3Type getKernelRadius() const;
+  /**
+   * @brief Setter property for KernelRadius
+   */
+  void setKernelRadius(const FloatVec3Type& value);
+  /**
+   * @brief Getter property for KernelRadius
+   * @return Value of KernelRadius
+   */
+  FloatVec3Type getKernelRadius() const;
   Q_PROPERTY(FloatVec3Type KernelRadius READ getKernelRadius WRITE setKernelRadius)
 
-    /**
-    * @brief Setter property for KernelType
-    */
-    void setKernelType(int value); 
-    /**
-    * @brief Getter property for KernelType
-    * @return Value of KernelType
-    */
-    int getKernelType() const;
+  /**
+   * @brief Setter property for KernelType
+   */
+  void setKernelType(int value);
+  /**
+   * @brief Getter property for KernelType
+   * @return Value of KernelType
+   */
+  int getKernelType() const;
   Q_PROPERTY(int KernelType READ getKernelType WRITE setKernelType)
-
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -141,32 +139,32 @@ protected:
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
    */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void dataCheckImpl();
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void dataCheckImpl();
 
   /**
-  * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
-  */
+   * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
+   */
   void filterInternal() override;
 
   /**
-  * @brief Applies the filter
-  */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
+   * @brief Applies the filter
+   */
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void filter();
 
 public:
-  ITKBlackTopHatImage(const ITKBlackTopHatImage&) = delete;    // Copy Constructor Not Implemented
-  ITKBlackTopHatImage(ITKBlackTopHatImage&&) = delete;         // Move Constructor Not Implemented
+  ITKBlackTopHatImage(const ITKBlackTopHatImage&) = delete;            // Copy Constructor Not Implemented
+  ITKBlackTopHatImage(ITKBlackTopHatImage&&) = delete;                 // Move Constructor Not Implemented
   ITKBlackTopHatImage& operator=(const ITKBlackTopHatImage&) = delete; // Copy Assignment Not Implemented
   ITKBlackTopHatImage& operator=(ITKBlackTopHatImage&&) = delete;      // Move Assignment Not Implemented
 
-  private:
-    bool m_SafeBorder = {};
-    FloatVec3Type m_KernelRadius = {};
-    int m_KernelType = {};
-
+private:
+  bool m_SafeBorder = {};
+  FloatVec3Type m_KernelRadius = {};
+  int m_KernelType = {};
 };
 
 #ifdef __clang__
 #pragma clang diagnostic pop
 #endif
-

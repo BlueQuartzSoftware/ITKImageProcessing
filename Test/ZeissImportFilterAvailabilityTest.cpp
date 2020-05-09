@@ -49,14 +49,13 @@
 #include "ZeissImportTestFileLocations.h"
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void RemoveTestFiles()
 {
 #if REMOVE_TEST_FILES
-  //QFile::remove( /* Use a constant from the TestFileLocations.h */);
+  // QFile::remove( /* Use a constant from the TestFileLocations.h */);
 #endif
 }
 
@@ -69,7 +68,7 @@ void TestFilterAvailability()
   QString filtName = ITKImageProcessingConstants::ImageProcessingFilters::k_ReadImageFilterClassName;
   FilterManager* fm = FilterManager::Instance();
   IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filtName);
-  if (nullptr == filterFactory.get() )
+  if(nullptr == filterFactory.get())
   {
     std::stringstream ss;
     ss << "The ZeissImport Plugin Requires the use of the " << filtName.toStdString() << " filter which is found in the ImageProcessing Plugin";
@@ -79,7 +78,7 @@ void TestFilterAvailability()
   filtName = ITKImageProcessingConstants::ImageProcessingFilters::k_RgbToGrayFilterClassName;
   fm = FilterManager::Instance();
   filterFactory = fm->getFactoryFromClassName(filtName);
-  if (nullptr == filterFactory.get() )
+  if(nullptr == filterFactory.get())
   {
     std::stringstream ss;
     ss << "The ZeissImport Plugin Requires the use of the " << filtName.toStdString() << " filter which is found in the ImageProcessing Plugin";
@@ -88,8 +87,6 @@ void TestFilterAvailability()
 
   return;
 }
-
-
 
 // -----------------------------------------------------------------------------
 //
@@ -104,7 +101,6 @@ void loadFilterPlugins()
   QMetaObjectUtilities::RegisterMetaTypes();
 }
 
-
 // -----------------------------------------------------------------------------
 //  Use test framework
 // -----------------------------------------------------------------------------
@@ -117,12 +113,9 @@ int main(int argc, char** argv)
   QCoreApplication::setApplicationName("ZeissImportFilterAvailabilityTest");
 
   int err = EXIT_SUCCESS;
-  DREAM3D_REGISTER_TEST( loadFilterPlugins() );
-  DREAM3D_REGISTER_TEST( TestFilterAvailability() );
+  DREAM3D_REGISTER_TEST(loadFilterPlugins());
+  DREAM3D_REGISTER_TEST(TestFilterAvailability());
 
   PRINT_TEST_SUMMARY();
   return err;
 }
-
-
-

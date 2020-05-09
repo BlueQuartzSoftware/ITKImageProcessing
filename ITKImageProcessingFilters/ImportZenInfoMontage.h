@@ -393,8 +393,6 @@ public:
    */
   std::vector<BoundsType> getBoundsCache() const;
 
-
-
 protected:
   ImportZenInfoMontage();
 

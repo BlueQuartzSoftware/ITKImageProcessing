@@ -40,38 +40,36 @@ class ITKImageProcessing_EXPORT ITKInvertIntensityImage : public ITKImageProcess
   // End Python bindings declarations
 
 public:
-    using Self = ITKInvertIntensityImage;
-    using Pointer = std::shared_ptr<Self>;
-    using ConstPointer = std::shared_ptr<const Self>;
-    using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<const Self>;
-    static Pointer NullPointer();
+  using Self = ITKInvertIntensityImage;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<const Self>;
+  static Pointer NullPointer();
 
-    static std::shared_ptr<ITKInvertIntensityImage> New();
+  static std::shared_ptr<ITKInvertIntensityImage> New();
 
-    /**
-    * @brief Returns the name of the class for ITKInvertIntensityImage
-    */
-    QString getNameOfClass() const override;
-    /**
-    * @brief Returns the name of the class for ITKInvertIntensityImage
-    */
-    static QString ClassName();
-
+  /**
+   * @brief Returns the name of the class for ITKInvertIntensityImage
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for ITKInvertIntensityImage
+   */
+  static QString ClassName();
 
   ~ITKInvertIntensityImage() override;
 
-    /**
-    * @brief Setter property for Maximum
-    */
-    void setMaximum(double value); 
-    /**
-    * @brief Getter property for Maximum
-    * @return Value of Maximum
-    */
-    double getMaximum() const;
+  /**
+   * @brief Setter property for Maximum
+   */
+  void setMaximum(double value);
+  /**
+   * @brief Getter property for Maximum
+   * @return Value of Maximum
+   */
+  double getMaximum() const;
   Q_PROPERTY(double Maximum READ getMaximum WRITE setMaximum)
-
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -115,30 +113,30 @@ protected:
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
    */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void dataCheckImpl();
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void dataCheckImpl();
 
   /**
-  * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
-  */
+   * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
+   */
   void filterInternal() override;
 
   /**
-  * @brief Applies the filter
-  */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
+   * @brief Applies the filter
+   */
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void filter();
 
 public:
-  ITKInvertIntensityImage(const ITKInvertIntensityImage&) = delete;    // Copy Constructor Not Implemented
-  ITKInvertIntensityImage(ITKInvertIntensityImage&&) = delete;         // Move Constructor Not Implemented
+  ITKInvertIntensityImage(const ITKInvertIntensityImage&) = delete;            // Copy Constructor Not Implemented
+  ITKInvertIntensityImage(ITKInvertIntensityImage&&) = delete;                 // Move Constructor Not Implemented
   ITKInvertIntensityImage& operator=(const ITKInvertIntensityImage&) = delete; // Copy Assignment Not Implemented
   ITKInvertIntensityImage& operator=(ITKInvertIntensityImage&&) = delete;      // Move Assignment Not Implemented
 
-  private:
-    double m_Maximum = {};
-
+private:
+  double m_Maximum = {};
 };
 
 #ifdef __clang__
 #pragma clang diagnostic pop
 #endif
-

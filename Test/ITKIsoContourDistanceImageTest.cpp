@@ -8,16 +8,15 @@
 // Auto includes
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 
-
 class ITKIsoContourDistanceImageTest : public ITKTestBase
 {
 
 public:
-ITKIsoContourDistanceImageTest() = default;
-~ITKIsoContourDistanceImageTest() override = default;
+  ITKIsoContourDistanceImageTest() = default;
+  ~ITKIsoContourDistanceImageTest() override = default;
 
   int TestITKIsoContourDistanceImagedefaultTest()
-{
+  {
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/2th_cthead1.png");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -36,11 +35,11 @@ ITKIsoContourDistanceImageTest() = default;
     propWasSet = filter->setProperty("SaveAsNewArray", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     {
-        double d3d_var;
-        d3d_var = 50.0;
-        var.setValue(d3d_var);
-        propWasSet = filter->setProperty("LevelSetValue", var);
-        DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+      double d3d_var;
+      d3d_var = 50.0;
+      var.setValue(d3d_var);
+      propWasSet = filter->setProperty("LevelSetValue", var);
+      DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     }
     filter->setDataContainerArray(containerArray);
     filter->execute();
@@ -53,9 +52,7 @@ ITKIsoContourDistanceImageTest() = default;
     int res = this->CompareImages(containerArray, input_path, baseline_path, 0.0001);
     DREAM3D_REQUIRE_EQUAL(res, 0);
     return 0;
-}
-
-
+  }
 
   // -----------------------------------------------------------------------------
   //
@@ -66,7 +63,7 @@ ITKIsoContourDistanceImageTest() = default;
 
     DREAM3D_REGISTER_TEST(this->TestFilterAvailability("ITKIsoContourDistanceImage"));
 
-    DREAM3D_REGISTER_TEST( TestITKIsoContourDistanceImagedefaultTest());
+    DREAM3D_REGISTER_TEST(TestITKIsoContourDistanceImagedefaultTest());
 
     if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
     {

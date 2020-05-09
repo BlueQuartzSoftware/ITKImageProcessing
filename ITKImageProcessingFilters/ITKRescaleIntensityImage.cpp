@@ -31,7 +31,6 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "ITKRescaleIntensityImage.h"
 
-
 #if(ITK_VERSION_MAJOR == 5) && (ITK_VERSION_MINOR >= 1)
 #include <itkCommonEnums.h>
 #else
@@ -48,7 +47,6 @@
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
-
 
 // -----------------------------------------------------------------------------
 //
@@ -97,10 +95,8 @@ void ITKRescaleIntensityImage::setupFilterParameters()
     parameters.push_back(parameter);
   }
 
-
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("OutputMinimum", OutputMinimum, FilterParameter::Parameter, ITKRescaleIntensityImage));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("OutputMaximum", OutputMaximum, FilterParameter::Parameter, ITKRescaleIntensityImage));
-
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -135,7 +131,8 @@ void ITKRescaleIntensityImage::readFilterParameters(AbstractFilterParametersRead
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename OutputPixelType> void ITKRescaleIntensityImage::CheckEntryBounds(double value, QString name)
+template <typename OutputPixelType>
+void ITKRescaleIntensityImage::CheckEntryBounds(double value, QString name)
 {
   double lowest = static_cast<double>(std::numeric_limits<OutputPixelType>::lowest());
   double max = static_cast<double>(std::numeric_limits<OutputPixelType>::max());
@@ -146,11 +143,11 @@ template <typename OutputPixelType> void ITKRescaleIntensityImage::CheckEntryBou
   }
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKRescaleIntensityImage::dataCheckImpl()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKRescaleIntensityImage::dataCheckImpl()
 {
   clearErrorCode();
   clearWarningCode();
@@ -174,7 +171,8 @@ void ITKRescaleIntensityImage::dataCheck()
 //
 // -----------------------------------------------------------------------------
 
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKRescaleIntensityImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKRescaleIntensityImage::filter()
 {
   typedef itk::Image<InputPixelType, Dimension> InputImageType;
   typedef itk::Image<OutputPixelType, Dimension> OutputImageType;
@@ -184,7 +182,6 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   filter->SetOutputMinimum(static_cast<double>(m_OutputMinimum));
   filter->SetOutputMaximum(static_cast<double>(m_OutputMaximum));
   this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -241,7 +238,7 @@ ITKRescaleIntensityImage::Pointer ITKRescaleIntensityImage::NullPointer()
 // -----------------------------------------------------------------------------
 std::shared_ptr<ITKRescaleIntensityImage> ITKRescaleIntensityImage::New()
 {
-  struct make_shared_enabler : public ITKRescaleIntensityImage  
+  struct make_shared_enabler : public ITKRescaleIntensityImage
   {
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
@@ -296,5 +293,3 @@ int ITKRescaleIntensityImage::getOutputType() const
 {
   return m_OutputType;
 }
-
-

@@ -351,8 +351,6 @@ public:
    */
   void execute() override;
 
-
-
 protected:
   enum class ArrayType
   {

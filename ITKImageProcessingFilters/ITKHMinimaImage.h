@@ -42,49 +42,47 @@ class ITKImageProcessing_EXPORT ITKHMinimaImage : public ITKImageProcessingBase
   // End Python bindings declarations
 
 public:
-    using Self = ITKHMinimaImage;
-    using Pointer = std::shared_ptr<Self>;
-    using ConstPointer = std::shared_ptr<const Self>;
-    using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<const Self>;
-    static Pointer NullPointer();
+  using Self = ITKHMinimaImage;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<const Self>;
+  static Pointer NullPointer();
 
-    static std::shared_ptr<ITKHMinimaImage> New();
+  static std::shared_ptr<ITKHMinimaImage> New();
 
-    /**
-    * @brief Returns the name of the class for ITKHMinimaImage
-    */
-    QString getNameOfClass() const override;
-    /**
-    * @brief Returns the name of the class for ITKHMinimaImage
-    */
-    static QString ClassName();
-
+  /**
+   * @brief Returns the name of the class for ITKHMinimaImage
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for ITKHMinimaImage
+   */
+  static QString ClassName();
 
   ~ITKHMinimaImage() override;
 
-    /**
-    * @brief Setter property for Height
-    */
-    void setHeight(double value); 
-    /**
-    * @brief Getter property for Height
-    * @return Value of Height
-    */
-    double getHeight() const;
+  /**
+   * @brief Setter property for Height
+   */
+  void setHeight(double value);
+  /**
+   * @brief Getter property for Height
+   * @return Value of Height
+   */
+  double getHeight() const;
   Q_PROPERTY(double Height READ getHeight WRITE setHeight)
 
-    /**
-    * @brief Setter property for FullyConnected
-    */
-    void setFullyConnected(bool value); 
-    /**
-    * @brief Getter property for FullyConnected
-    * @return Value of FullyConnected
-    */
-    bool getFullyConnected() const;
+  /**
+   * @brief Setter property for FullyConnected
+   */
+  void setFullyConnected(bool value);
+  /**
+   * @brief Getter property for FullyConnected
+   * @return Value of FullyConnected
+   */
+  bool getFullyConnected() const;
   Q_PROPERTY(bool FullyConnected READ getFullyConnected WRITE setFullyConnected)
-
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -128,31 +126,31 @@ protected:
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
    */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void dataCheckImpl();
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void dataCheckImpl();
 
   /**
-  * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
-  */
+   * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
+   */
   void filterInternal() override;
 
   /**
-  * @brief Applies the filter
-  */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
+   * @brief Applies the filter
+   */
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void filter();
 
 public:
-  ITKHMinimaImage(const ITKHMinimaImage&) = delete;    // Copy Constructor Not Implemented
-  ITKHMinimaImage(ITKHMinimaImage&&) = delete;         // Move Constructor Not Implemented
+  ITKHMinimaImage(const ITKHMinimaImage&) = delete;            // Copy Constructor Not Implemented
+  ITKHMinimaImage(ITKHMinimaImage&&) = delete;                 // Move Constructor Not Implemented
   ITKHMinimaImage& operator=(const ITKHMinimaImage&) = delete; // Copy Assignment Not Implemented
   ITKHMinimaImage& operator=(ITKHMinimaImage&&) = delete;      // Move Assignment Not Implemented
 
-  private:
-    double m_Height = {};
-    bool m_FullyConnected = {};
-
+private:
+  double m_Height = {};
+  bool m_FullyConnected = {};
 };
 
 #ifdef __clang__
 #pragma clang diagnostic pop
 #endif
-

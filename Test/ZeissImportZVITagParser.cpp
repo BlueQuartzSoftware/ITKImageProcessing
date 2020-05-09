@@ -3,10 +3,8 @@
 #include <QtCore/QTextStream>
 #include <QtCore/QFile>
 
-
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
 #include "ITKImageProcessing/Test/TestFileLocations.h"
-
 
 // -----------------------------------------------------------------------------
 //
@@ -30,16 +28,46 @@ QString cleanupValue(const QString val)
   value = value.replace(".", "_");
   value = value.replace("[", "_");
   value = value.replace("]", "_");
-  if(value.startsWith("0")) { value = value.replace("0", "Zero"); }
-  if(value.startsWith("1")) { value = value.replace("1", "One"); }
-  if(value.startsWith("2")) { value = value.replace("2", "Two"); }
-  if(value.startsWith("3")) { value = value.replace("3", "Three"); }
-  if(value.startsWith("4")) { value = value.replace("4", "Four"); }
-  if(value.startsWith("5")) { value = value.replace("5", "Five"); }
-  if(value.startsWith("6")) { value = value.replace("6", "Six"); }
-  if(value.startsWith("7")) { value = value.replace("7", "Seven"); }
-  if(value.startsWith("8")) { value = value.replace("8", "Eight"); }
-  if(value.startsWith("9")) { value = value.replace("9", "Nine"); }
+  if(value.startsWith("0"))
+  {
+    value = value.replace("0", "Zero");
+  }
+  if(value.startsWith("1"))
+  {
+    value = value.replace("1", "One");
+  }
+  if(value.startsWith("2"))
+  {
+    value = value.replace("2", "Two");
+  }
+  if(value.startsWith("3"))
+  {
+    value = value.replace("3", "Three");
+  }
+  if(value.startsWith("4"))
+  {
+    value = value.replace("4", "Four");
+  }
+  if(value.startsWith("5"))
+  {
+    value = value.replace("5", "Five");
+  }
+  if(value.startsWith("6"))
+  {
+    value = value.replace("6", "Six");
+  }
+  if(value.startsWith("7"))
+  {
+    value = value.replace("7", "Seven");
+  }
+  if(value.startsWith("8"))
+  {
+    value = value.replace("8", "Eight");
+  }
+  if(value.startsWith("9"))
+  {
+    value = value.replace("9", "Nine");
+  }
   return value;
 }
 
@@ -63,7 +91,7 @@ QStringList GenerateZeissMetaXMLConstants()
   QStringList list = contents.split(QRegExp("\\n"));
   QStringListIterator sourceLines(list);
 
-  while (sourceLines.hasNext())
+  while(sourceLines.hasNext())
   {
     QString line = sourceLines.next();
 
@@ -96,15 +124,17 @@ void makeHeaderFile(const QString filename)
 
   hOut.open(QFile::WriteOnly);
 
-  QTextStream stream( &hOut );
+  QTextStream stream(&hOut);
 
   QStringList outLines = GenerateZeissMetaXMLConstants();
 
   stream << "/** THIS FILE WAS AUTO-GENERATED FROM THE ZVI_TAGS.TXT FILE WHICH WAS MANUALLY GENERATED FROM\n";
   stream << "* THE ZVI DOCUMENTATION FILE THAT IS DOWNLOADED FROM CARL ZEISS UNDER LICENSE.\n";
   stream << "*/\n\n";
-  stream << "#ifndef _ZEISSTAGMAPPINGConstants_H_" << "\n";
-  stream << "#define _ZEISSTAGMAPPINGConstants_H_" << "\n";
+  stream << "#ifndef _ZEISSTAGMAPPINGConstants_H_"
+         << "\n";
+  stream << "#define _ZEISSTAGMAPPINGConstants_H_"
+         << "\n";
   stream << "\n";
   stream << "#include <QtCore/QString>\n\n";
   stream << "namespace Zeiss {\n  namespace MetaXML { \n";
@@ -115,7 +145,6 @@ void makeHeaderFile(const QString filename)
   stream << "#endif\n";
 
   hOut.close();
-
 }
 
 // -----------------------------------------------------------------------------
@@ -137,7 +166,7 @@ QStringList GenerateZeissInitIdNameMap()
   QStringList list = contents.split(QRegExp("\\n"));
   QStringListIterator sourceLines(list);
 
-  while (sourceLines.hasNext())
+  while(sourceLines.hasNext())
   {
     QString line = sourceLines.next();
 
@@ -174,7 +203,7 @@ QStringList GenerateZeissInitNameIdMap()
   QStringList list = contents.split(QRegExp("\\n"));
   QStringListIterator sourceLines(list);
 
-  while (sourceLines.hasNext())
+  while(sourceLines.hasNext())
   {
     QString line = sourceLines.next();
 
@@ -211,7 +240,7 @@ QStringList GenerateZeissInitFactoryMap()
   QStringList list = contents.split(QRegExp("\\n"));
   QStringListIterator sourceLines(list);
 
-  while (sourceLines.hasNext())
+  while(sourceLines.hasNext())
   {
     QString line = sourceLines.next();
 
@@ -229,8 +258,6 @@ QStringList GenerateZeissInitFactoryMap()
   return outLines + strLines;
 }
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -242,7 +269,7 @@ void makeCPPFile(const QString filename)
 
   hOut.open(QFile::WriteOnly);
 
-  QTextStream stream( &hOut );
+  QTextStream stream(&hOut);
 
   QStringList outLines = GenerateZeissInitIdNameMap();
 

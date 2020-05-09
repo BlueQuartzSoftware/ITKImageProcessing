@@ -83,7 +83,7 @@ class ITKImageProcessing_EXPORT ITKImportRoboMetMontage : public AbstractFilter
   // clang-format on
 
   Q_DECLARE_PRIVATE(ITKImportRoboMetMontage)
-  
+
 public:
   using BoundsType = struct
   {
@@ -103,7 +103,6 @@ public:
   using WeakPointer = std::weak_ptr<Self>;
   using ConstWeakPointer = std::weak_ptr<const Self>;
   static Pointer NullPointer();
-
 
   static std::shared_ptr<ITKImportRoboMetMontage> New();
 
@@ -374,9 +373,9 @@ public:
    */
   void execute() override;
 
-    /**
-    * @brief Setter property for InputFile_Cache
-    */
+  /**
+   * @brief Setter property for InputFile_Cache
+   */
   void setInputFile_Cache(const QString& value);
   /**
    * @brief Getter property for InputFile_Cache
@@ -403,8 +402,6 @@ public:
    * @return Value of BoundsCache
    */
   std::vector<BoundsType> getBoundsCache() const;
-
-
 
 protected:
   ITKImportRoboMetMontage();

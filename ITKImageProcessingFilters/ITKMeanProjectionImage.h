@@ -40,38 +40,36 @@ class ITKImageProcessing_EXPORT ITKMeanProjectionImage : public ITKImageProcessi
   // End Python bindings declarations
 
 public:
-    using Self = ITKMeanProjectionImage;
-    using Pointer = std::shared_ptr<Self>;
-    using ConstPointer = std::shared_ptr<const Self>;
-    using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<const Self>;
-    static Pointer NullPointer();
+  using Self = ITKMeanProjectionImage;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<const Self>;
+  static Pointer NullPointer();
 
-    static std::shared_ptr<ITKMeanProjectionImage> New();
+  static std::shared_ptr<ITKMeanProjectionImage> New();
 
-    /**
-    * @brief Returns the name of the class for ITKMeanProjectionImage
-    */
-    QString getNameOfClass() const override;
-    /**
-    * @brief Returns the name of the class for ITKMeanProjectionImage
-    */
-    static QString ClassName();
-
+  /**
+   * @brief Returns the name of the class for ITKMeanProjectionImage
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for ITKMeanProjectionImage
+   */
+  static QString ClassName();
 
   ~ITKMeanProjectionImage() override;
 
-    /**
-    * @brief Setter property for ProjectionDimension
-    */
-    void setProjectionDimension(double value); 
-    /**
-    * @brief Getter property for ProjectionDimension
-    * @return Value of ProjectionDimension
-    */
-    double getProjectionDimension() const;
+  /**
+   * @brief Setter property for ProjectionDimension
+   */
+  void setProjectionDimension(double value);
+  /**
+   * @brief Getter property for ProjectionDimension
+   * @return Value of ProjectionDimension
+   */
+  double getProjectionDimension() const;
   Q_PROPERTY(double ProjectionDimension READ getProjectionDimension WRITE setProjectionDimension)
-
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -115,30 +113,30 @@ protected:
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
    */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void dataCheckImpl();
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void dataCheckImpl();
 
   /**
-  * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
-  */
+   * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
+   */
   void filterInternal() override;
 
   /**
-  * @brief Applies the filter
-  */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
+   * @brief Applies the filter
+   */
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void filter();
 
 public:
-  ITKMeanProjectionImage(const ITKMeanProjectionImage&) = delete;    // Copy Constructor Not Implemented
-  ITKMeanProjectionImage(ITKMeanProjectionImage&&) = delete;         // Move Constructor Not Implemented
+  ITKMeanProjectionImage(const ITKMeanProjectionImage&) = delete;            // Copy Constructor Not Implemented
+  ITKMeanProjectionImage(ITKMeanProjectionImage&&) = delete;                 // Move Constructor Not Implemented
   ITKMeanProjectionImage& operator=(const ITKMeanProjectionImage&) = delete; // Copy Assignment Not Implemented
   ITKMeanProjectionImage& operator=(ITKMeanProjectionImage&&) = delete;      // Move Assignment Not Implemented
 
-  private:
-    double m_ProjectionDimension = {};
-
+private:
+  double m_ProjectionDimension = {};
 };
 
 #ifdef __clang__
 #pragma clang diagnostic pop
 #endif
-

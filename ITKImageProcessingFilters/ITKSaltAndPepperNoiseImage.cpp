@@ -4,7 +4,6 @@
  * Your License or Copyright can go here
  */
 
-
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKSaltAndPepperNoiseImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 #include "SIMPLib/Common/Constants.h"
@@ -15,7 +14,6 @@
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 
-
 #define DREAM3D_USE_RGB_RGBA 1
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
 
@@ -25,8 +23,7 @@
 ITKSaltAndPepperNoiseImage::ITKSaltAndPepperNoiseImage()
 {
   m_Probability = StaticCastScalar<double, double, double>(0.01);
-  m_Seed = StaticCastScalar<double, double, double>((uint32_t) itk::simple::sitkWallClock);
-
+  m_Seed = StaticCastScalar<double, double, double>((uint32_t)itk::simple::sitkWallClock);
 }
 
 // -----------------------------------------------------------------------------
@@ -43,7 +40,6 @@ void ITKSaltAndPepperNoiseImage::setupFilterParameters()
 
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Probability", Probability, FilterParameter::Parameter, ITKSaltAndPepperNoiseImage));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Seed", Seed, FilterParameter::Parameter, ITKSaltAndPepperNoiseImage));
-
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -78,7 +74,8 @@ void ITKSaltAndPepperNoiseImage::readFilterParameters(AbstractFilterParametersRe
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKSaltAndPepperNoiseImage::dataCheckImpl()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKSaltAndPepperNoiseImage::dataCheckImpl()
 {
   clearErrorCode();
   clearWarningCode();
@@ -101,7 +98,8 @@ void ITKSaltAndPepperNoiseImage::dataCheck()
 //
 // -----------------------------------------------------------------------------
 
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKSaltAndPepperNoiseImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKSaltAndPepperNoiseImage::filter()
 {
   typedef itk::Image<InputPixelType, Dimension> InputImageType;
   typedef itk::Image<OutputPixelType, Dimension> OutputImageType;
@@ -114,7 +112,6 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
     filter->SetSeed(m_Seed);
   }
   this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -171,7 +168,7 @@ ITKSaltAndPepperNoiseImage::Pointer ITKSaltAndPepperNoiseImage::NullPointer()
 // -----------------------------------------------------------------------------
 std::shared_ptr<ITKSaltAndPepperNoiseImage> ITKSaltAndPepperNoiseImage::New()
 {
-  struct make_shared_enabler : public ITKSaltAndPepperNoiseImage  
+  struct make_shared_enabler : public ITKSaltAndPepperNoiseImage
   {
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
@@ -214,5 +211,3 @@ double ITKSaltAndPepperNoiseImage::getSeed() const
 {
   return m_Seed;
 }
-
-

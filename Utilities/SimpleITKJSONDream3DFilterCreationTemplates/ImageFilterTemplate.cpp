@@ -4,7 +4,6 @@
  * Your License or Copyright can go here
  */
 
-
 #include "ITKImageProcessing/ITKImageProcessingFilters/${FilterName}.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 #include "SIMPLib/Common/Constants.h"
@@ -17,25 +16,35 @@
 
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-${FilterName}::${FilterName}()
+$
 {
-${InitializationParameters}
-  setupFilterParameters();
+  FilterName
+}
+::${FilterName}()
+{
+  ${InitializationParameters} setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-${FilterName}::~${FilterName}() = default;
+$
+{
+  FilterName
+}
+::~${FilterName}() = default;
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ${FilterName}::setupFilterParameters()
+void $
+{
+  FilterName
+}
+::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
 
@@ -59,63 +68,104 @@ void ${FilterName}::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ${FilterName}::readFilterParameters(AbstractFilterParametersReader* reader, int index)
+void $
+{
+  FilterName
+}
+::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
   setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
   setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
   setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
-${ReadFilterParameters}
-  reader->closeFilterGroup();
+  ${ReadFilterParameters} reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ${FilterName}::dataCheck()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void $
+{
+  FilterName
+}
+::dataCheck()
 {
   clearErrorCode();
   clearWarningCode();
 
   // Check consistency of parameters
-${CheckIntegerEntry}
-  ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
+  ${CheckIntegerEntry} ITKImageProcessingBase::dataCheck<InputPixelType, OutputPixelType, Dimension>();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ${FilterName}::dataCheckInternal()
+void $
 {
-${DataCheckInternal}
+  FilterName
+}
+::dataCheckInternal()
+{
+  $
+  {
+    DataCheckInternal
+  }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ${FilterName}::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void $
+{
+  FilterName
+}
+::filter()
 {
   typedef itk::Image<InputPixelType, Dimension> InputImageType;
   typedef itk::Image<OutputPixelType, Dimension> OutputImageType;
   // define filter
-${Filter}
+  $
+  {
+    Filter
+  }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ${FilterName}::filterInternal()
+void $
 {
-${FilterInternal}
+  FilterName
+}
+::filterInternal()
+{
+  $
+  {
+    FilterInternal
+  }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ${FilterName}::newFilterInstance(bool copyFilterParameters) const
+AbstractFilter::Pointer $
 {
-  ${FilterName}::Pointer filter = ${FilterName}::New();
+  FilterName
+}
+::newFilterInstance(bool copyFilterParameters) const
+{
+  $
+  {
+    FilterName
+  }
+  ::Pointer filter = $
+  {
+    FilterName
+  }
+  ::New();
   if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
@@ -126,7 +176,11 @@ AbstractFilter::Pointer ${FilterName}::newFilterInstance(bool copyFilterParamete
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ${FilterName}::getHumanLabel() const
+const QString $
+{
+  FilterName
+}
+::getHumanLabel() const
 {
   return "ITK::${FilterNameExpanded}";
 }
@@ -134,15 +188,26 @@ const QString ${FilterName}::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ${FilterName}::getUuid()
+const QUuid $
 {
-${UUID}
+  FilterName
+}
+::getUuid()
+{
+  $
+  {
+    UUID
+  }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ${FilterName}::getSubGroupName() const
+const QString $
+{
+  FilterName
+}
+::getSubGroupName() const
 {
   return "ITK ${ITKModule}";
 }
@@ -156,9 +221,7 @@ ImageFilterTemplate::Pointer ImageFilterTemplate::NullPointer()
 // -----------------------------------------------------------------------------
 std::shared_ptr<${FilterName}> ImageFilterTemplate::New()
 {
-  struct make_shared_enabler : public ${FilterName}  
-  {
-  };
+  struct make_shared_enabler : public ${FilterName} {};
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
   val->setupFilterParameters();
   return val;
@@ -175,5 +238,3 @@ QString ImageFilterTemplate::ClassName()
 {
   return QString("${FilterName}");
 }
-
-

@@ -47,15 +47,15 @@ ZeissTagsXmlSection::~ZeissTagsXmlSection() = default;
 void ZeissTagsXmlSection::addMetaDataEntry(AbstractZeissMetaData::Pointer& entry)
 {
   int idTag = entry->getZeissIdTag();
-  QMap<int, AbstractZeissMetaData::Pointer>::iterator e =  m_MetaDataMap.find(idTag);
-  if (e !=  m_MetaDataMap.end())
+  QMap<int, AbstractZeissMetaData::Pointer>::iterator e = m_MetaDataMap.find(idTag);
+  if(e != m_MetaDataMap.end())
   {
     m_MetaDataMap.erase(e);
   }
   m_MetaDataMap[entry->getZeissIdTag()] = entry;
 
-//  std::pair<int, AbstractZeissMetaData::Pointer> p(entry->getZeissIdTag(), entry);
-//  m_MetaDataMap.insert(p);
+  //  std::pair<int, AbstractZeissMetaData::Pointer> p(entry->getZeissIdTag(), entry);
+  //  m_MetaDataMap.insert(p);
 }
 
 // -----------------------------------------------------------------------------
@@ -63,8 +63,8 @@ void ZeissTagsXmlSection::addMetaDataEntry(AbstractZeissMetaData::Pointer& entry
 // -----------------------------------------------------------------------------
 void ZeissTagsXmlSection::removeMetaDataEntry(int idTag)
 {
-  MetaDataType::iterator entry =  m_MetaDataMap.find(idTag);
-  if (entry !=  m_MetaDataMap.end())
+  MetaDataType::iterator entry = m_MetaDataMap.find(idTag);
+  if(entry != m_MetaDataMap.end())
   {
     m_MetaDataMap.erase(entry);
   }
@@ -92,8 +92,8 @@ ZeissTagsXmlSection::MetaDataType& ZeissTagsXmlSection::getMetaDataMap()
 AbstractZeissMetaData::Pointer ZeissTagsXmlSection::getEntry(int idTag)
 {
   AbstractZeissMetaData::Pointer ptr = AbstractZeissMetaData::NullPointer();
-  MetaDataType::iterator entry =  m_MetaDataMap.find(idTag);
-  if (entry != m_MetaDataMap.end())
+  MetaDataType::iterator entry = m_MetaDataMap.find(idTag);
+  if(entry != m_MetaDataMap.end())
   {
     return entry.value();
   }

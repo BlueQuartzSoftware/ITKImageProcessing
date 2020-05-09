@@ -41,49 +41,47 @@ class ITKImageProcessing_EXPORT ITKCurvatureFlowImage : public ITKImageProcessin
   // End Python bindings declarations
 
 public:
-    using Self = ITKCurvatureFlowImage;
-    using Pointer = std::shared_ptr<Self>;
-    using ConstPointer = std::shared_ptr<const Self>;
-    using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<const Self>;
-    static Pointer NullPointer();
+  using Self = ITKCurvatureFlowImage;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<const Self>;
+  static Pointer NullPointer();
 
-    static std::shared_ptr<ITKCurvatureFlowImage> New();
+  static std::shared_ptr<ITKCurvatureFlowImage> New();
 
-    /**
-    * @brief Returns the name of the class for ITKCurvatureFlowImage
-    */
-    QString getNameOfClass() const override;
-    /**
-    * @brief Returns the name of the class for ITKCurvatureFlowImage
-    */
-    static QString ClassName();
-
+  /**
+   * @brief Returns the name of the class for ITKCurvatureFlowImage
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for ITKCurvatureFlowImage
+   */
+  static QString ClassName();
 
   ~ITKCurvatureFlowImage() override;
 
-    /**
-    * @brief Setter property for TimeStep
-    */
-    void setTimeStep(double value); 
-    /**
-    * @brief Getter property for TimeStep
-    * @return Value of TimeStep
-    */
-    double getTimeStep() const;
+  /**
+   * @brief Setter property for TimeStep
+   */
+  void setTimeStep(double value);
+  /**
+   * @brief Getter property for TimeStep
+   * @return Value of TimeStep
+   */
+  double getTimeStep() const;
   Q_PROPERTY(double TimeStep READ getTimeStep WRITE setTimeStep)
 
-    /**
-    * @brief Setter property for NumberOfIterations
-    */
-    void setNumberOfIterations(double value); 
-    /**
-    * @brief Getter property for NumberOfIterations
-    * @return Value of NumberOfIterations
-    */
-    double getNumberOfIterations() const;
+  /**
+   * @brief Setter property for NumberOfIterations
+   */
+  void setNumberOfIterations(double value);
+  /**
+   * @brief Getter property for NumberOfIterations
+   * @return Value of NumberOfIterations
+   */
+  double getNumberOfIterations() const;
   Q_PROPERTY(double NumberOfIterations READ getNumberOfIterations WRITE setNumberOfIterations)
-
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -127,31 +125,31 @@ protected:
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
    */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void dataCheckImpl();
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void dataCheckImpl();
 
   /**
-  * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
-  */
+   * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
+   */
   void filterInternal() override;
 
   /**
-  * @brief Applies the filter
-  */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
+   * @brief Applies the filter
+   */
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void filter();
 
 public:
-  ITKCurvatureFlowImage(const ITKCurvatureFlowImage&) = delete;    // Copy Constructor Not Implemented
-  ITKCurvatureFlowImage(ITKCurvatureFlowImage&&) = delete;         // Move Constructor Not Implemented
+  ITKCurvatureFlowImage(const ITKCurvatureFlowImage&) = delete;            // Copy Constructor Not Implemented
+  ITKCurvatureFlowImage(ITKCurvatureFlowImage&&) = delete;                 // Move Constructor Not Implemented
   ITKCurvatureFlowImage& operator=(const ITKCurvatureFlowImage&) = delete; // Copy Assignment Not Implemented
   ITKCurvatureFlowImage& operator=(ITKCurvatureFlowImage&&) = delete;      // Move Assignment Not Implemented
 
-  private:
-    double m_TimeStep = {};
-    double m_NumberOfIterations = {};
-
+private:
+  double m_TimeStep = {};
+  double m_NumberOfIterations = {};
 };
 
 #ifdef __clang__
 #pragma clang diagnostic pop
 #endif
-

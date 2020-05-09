@@ -9,16 +9,15 @@
 #include <SIMPLib/FilterParameters/BooleanFilterParameter.h>
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 
-
 class ITKLabelContourImageTest : public ITKTestBase
 {
 
 public:
-ITKLabelContourImageTest() = default;
-~ITKLabelContourImageTest() override = default;
+  ITKLabelContourImageTest() = default;
+  ~ITKLabelContourImageTest() override = default;
 
   int TestITKLabelContourImagedefaultTest()
-{
+  {
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/2th_cthead1.png");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -45,9 +44,7 @@ ITKLabelContourImageTest() = default;
     GetMD5FromDataContainer(containerArray, input_path, md5Output);
     DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("d742c05a8d8aa9b41f58b8d2aad6b5d0"));
     return 0;
-}
-
-
+  }
 
   // -----------------------------------------------------------------------------
   //
@@ -58,7 +55,7 @@ ITKLabelContourImageTest() = default;
 
     DREAM3D_REGISTER_TEST(this->TestFilterAvailability("ITKLabelContourImage"));
 
-    DREAM3D_REGISTER_TEST( TestITKLabelContourImagedefaultTest());
+    DREAM3D_REGISTER_TEST(TestITKLabelContourImagedefaultTest());
 
     if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
     {

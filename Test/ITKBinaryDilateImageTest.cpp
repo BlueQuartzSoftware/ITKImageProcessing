@@ -16,8 +16,8 @@ class ITKBinaryDilateImageTest : public ITKTestBase
 {
 
 public:
-ITKBinaryDilateImageTest() = default;
-~ITKBinaryDilateImageTest() override = default;
+  ITKBinaryDilateImageTest() = default;
+  ~ITKBinaryDilateImageTest() override = default;
 
   int TestITKBinaryDilateImageBinaryDilateTest()
   {

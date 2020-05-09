@@ -4,7 +4,6 @@
  * Your License or Copyright can go here
  */
 
-
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKVectorConnectedComponentImage.h"
 
 #define DREAM3D_USE_int8_t 0
@@ -31,7 +30,6 @@
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -39,7 +37,6 @@ ITKVectorConnectedComponentImage::ITKVectorConnectedComponentImage()
 {
   m_DistanceThreshold = StaticCastScalar<double, double, double>(1.0);
   m_FullyConnected = StaticCastScalar<bool, bool, bool>(false);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -56,7 +53,6 @@ void ITKVectorConnectedComponentImage::setupFilterParameters()
 
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("DistanceThreshold", DistanceThreshold, FilterParameter::Parameter, ITKVectorConnectedComponentImage));
   parameters.push_back(SIMPL_NEW_BOOL_FP("FullyConnected", FullyConnected, FilterParameter::Parameter, ITKVectorConnectedComponentImage));
-
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -119,17 +115,17 @@ void ITKVectorConnectedComponentImage::dataCheck()
 //
 // -----------------------------------------------------------------------------
 
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKVectorConnectedComponentImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKVectorConnectedComponentImage::filter()
 {
   typedef itk::Image<InputPixelType, Dimension> InputImageType;
   typedef itk::Image<OutputPixelType, Dimension> OutputImageType;
   // define filter
-  typedef itk::VectorConnectedComponentImageFilter<InputImageType, OutputImageType, itk::Image<uint8_t, InputImageType::ImageDimension> > FilterType;
+  typedef itk::VectorConnectedComponentImageFilter<InputImageType, OutputImageType, itk::Image<uint8_t, InputImageType::ImageDimension>> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
-  filter->SetDistanceThreshold( static_cast<typename FilterType::InputValueType>( this->m_DistanceThreshold ) );
+  filter->SetDistanceThreshold(static_cast<typename FilterType::InputValueType>(this->m_DistanceThreshold));
   filter->SetFullyConnected(static_cast<bool>(m_FullyConnected));
   this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -186,7 +182,7 @@ ITKVectorConnectedComponentImage::Pointer ITKVectorConnectedComponentImage::Null
 // -----------------------------------------------------------------------------
 std::shared_ptr<ITKVectorConnectedComponentImage> ITKVectorConnectedComponentImage::New()
 {
-  struct make_shared_enabler : public ITKVectorConnectedComponentImage  
+  struct make_shared_enabler : public ITKVectorConnectedComponentImage
   {
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
@@ -229,5 +225,3 @@ bool ITKVectorConnectedComponentImage::getFullyConnected() const
 {
   return m_FullyConnected;
 }
-
-

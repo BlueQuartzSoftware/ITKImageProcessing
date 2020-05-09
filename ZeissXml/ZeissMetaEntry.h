@@ -81,57 +81,57 @@ using IDataArrayShPtrType = std::shared_ptr<IDataArray>;
 // -----------------------------------------------------------------------------
 class ITKImageProcessing_EXPORT AbstractZeissMetaData
 {
-  public:
-    using Self = AbstractZeissMetaData;
-    using Pointer = std::shared_ptr<Self>;
-    using ConstPointer = std::shared_ptr<const Self>;
-    using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<const Self>;
-    static Pointer NullPointer();
+public:
+  using Self = AbstractZeissMetaData;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<const Self>;
+  static Pointer NullPointer();
 
-    /**
-     * @brief Returns the name of the class for AbstractZeissMetaData
-     */
-    virtual QString getNameOfClass() const;
-    /**
-     * @brief Returns the name of the class for AbstractZeissMetaData
-     */
-    static QString ClassName();
+  /**
+   * @brief Returns the name of the class for AbstractZeissMetaData
+   */
+  virtual QString getNameOfClass() const;
+  /**
+   * @brief Returns the name of the class for AbstractZeissMetaData
+   */
+  static QString ClassName();
 
-    virtual ~AbstractZeissMetaData() = default;
+  virtual ~AbstractZeissMetaData() = default;
 
-    /**
-     * @brief Setter property for ZeissIdTag
-     */
-    void setZeissIdTag(int32_t value);
-    /**
-     * @brief Getter property for ZeissIdTag
-     * @return Value of ZeissIdTag
-     */
-    int32_t getZeissIdTag() const;
+  /**
+   * @brief Setter property for ZeissIdTag
+   */
+  void setZeissIdTag(int32_t value);
+  /**
+   * @brief Getter property for ZeissIdTag
+   * @return Value of ZeissIdTag
+   */
+  int32_t getZeissIdTag() const;
 
-    virtual bool setValue(const QString &value) = 0;
+  virtual bool setValue(const QString& value) = 0;
 #ifdef ZEISS_HDF_SUPPORT
-    virtual int writeHDF5Attribute(hid_t fileId, const QString &datasetPath) = 0;
-    virtual int readHDF5Attribute(hid_t fileId, const QString &datasetPath) = 0;
+  virtual int writeHDF5Attribute(hid_t fileId, const QString& datasetPath) = 0;
+  virtual int readHDF5Attribute(hid_t fileId, const QString& datasetPath) = 0;
 #endif
-    virtual void printValue(std::ostream& out) const = 0;
+  virtual void printValue(std::ostream& out) const = 0;
 
-    virtual QString toString() const = 0;
+  virtual QString toString() const = 0;
 
-    virtual IDataArrayShPtrType createDataArray(bool allocate = true) const = 0;
+  virtual IDataArrayShPtrType createDataArray(bool allocate = true) const = 0;
 
-  protected:
-    AbstractZeissMetaData();
+protected:
+  AbstractZeissMetaData();
 
-  private:
-    int32_t m_ZeissIdTag = 0;
+private:
+  int32_t m_ZeissIdTag = 0;
 
-  public:
-    AbstractZeissMetaData(const AbstractZeissMetaData&) = delete; // Copy Constructor Not Implemented
-    AbstractZeissMetaData(AbstractZeissMetaData&&) = delete;      // Move Constructor Not Implemented
-    AbstractZeissMetaData& operator=(const AbstractZeissMetaData&) = delete; // Copy Assignment Not Implemented
-    AbstractZeissMetaData& operator=(AbstractZeissMetaData&&) = delete;      // Move Assignment Not Implemented
+public:
+  AbstractZeissMetaData(const AbstractZeissMetaData&) = delete;            // Copy Constructor Not Implemented
+  AbstractZeissMetaData(AbstractZeissMetaData&&) = delete;                 // Move Constructor Not Implemented
+  AbstractZeissMetaData& operator=(const AbstractZeissMetaData&) = delete; // Copy Assignment Not Implemented
+  AbstractZeissMetaData& operator=(AbstractZeissMetaData&&) = delete;      // Move Assignment Not Implemented
 };
 
 // -----------------------------------------------------------------------------
@@ -139,54 +139,54 @@ class ITKImageProcessing_EXPORT AbstractZeissMetaData
 // -----------------------------------------------------------------------------
 class ITKImageProcessing_EXPORT Int32ZeissMetaEntry : public AbstractZeissMetaData
 {
-  public:
-    using Self = Int32ZeissMetaEntry;
-    using Pointer = std::shared_ptr<Self>;
-    using ConstPointer = std::shared_ptr<const Self>;
-    using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<const Self>;
-    static Pointer NullPointer();
+public:
+  using Self = Int32ZeissMetaEntry;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<const Self>;
+  static Pointer NullPointer();
 
-    /**
-     * @brief Returns the name of the class for Int32ZeissMetaEntry
-     */
-    QString getNameOfClass() const override;
-    /**
-     * @brief Returns the name of the class for Int32ZeissMetaEntry
-     */
-    static QString ClassName();
+  /**
+   * @brief Returns the name of the class for Int32ZeissMetaEntry
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for Int32ZeissMetaEntry
+   */
+  static QString ClassName();
 
-    static Pointer New();
+  static Pointer New();
 
-    Int32ZeissMetaEntry();
+  Int32ZeissMetaEntry();
 
-    explicit Int32ZeissMetaEntry(int32_t idTag);
+  explicit Int32ZeissMetaEntry(int32_t idTag);
 
-    STATIC_NEW_METHODS(AbstractZeissMetaData, Int32ZeissMetaEntry, int32_t)
+  STATIC_NEW_METHODS(AbstractZeissMetaData, Int32ZeissMetaEntry, int32_t)
 
-    ~Int32ZeissMetaEntry() override;
+  ~Int32ZeissMetaEntry() override;
 
-    VALUE_DECLARATION(int32_t)
+  VALUE_DECLARATION(int32_t)
 
 #ifdef ZEISS_HDF_SUPPORT
-    HDF5_READ_WRITE_DECLARATIONS()
+  HDF5_READ_WRITE_DECLARATIONS()
 #endif
 
-    void printValue(std::ostream& out) const override;
+  void printValue(std::ostream& out) const override;
 
-    QString toString() const override;
+  QString toString() const override;
 
-    IDataArrayShPtrType createDataArray(bool allocate = true) const override;
+  IDataArrayShPtrType createDataArray(bool allocate = true) const override;
 
-  protected:
-  private:
-    int m_Value = 0;
+protected:
+private:
+  int m_Value = 0;
 
-  public:
-    Int32ZeissMetaEntry(const Int32ZeissMetaEntry&) = delete; // Copy Constructor Not Implemented
-    Int32ZeissMetaEntry(Int32ZeissMetaEntry&&) = delete;      // Move Constructor Not Implemented
-    Int32ZeissMetaEntry& operator=(const Int32ZeissMetaEntry&) = delete; // Copy Assignment Not Implemented
-    Int32ZeissMetaEntry& operator=(Int32ZeissMetaEntry&&) = delete;      // Move Assignment Not Implemented
+public:
+  Int32ZeissMetaEntry(const Int32ZeissMetaEntry&) = delete;            // Copy Constructor Not Implemented
+  Int32ZeissMetaEntry(Int32ZeissMetaEntry&&) = delete;                 // Move Constructor Not Implemented
+  Int32ZeissMetaEntry& operator=(const Int32ZeissMetaEntry&) = delete; // Copy Assignment Not Implemented
+  Int32ZeissMetaEntry& operator=(Int32ZeissMetaEntry&&) = delete;      // Move Assignment Not Implemented
 };
 
 // -----------------------------------------------------------------------------
@@ -194,54 +194,52 @@ class ITKImageProcessing_EXPORT Int32ZeissMetaEntry : public AbstractZeissMetaDa
 // -----------------------------------------------------------------------------
 class ITKImageProcessing_EXPORT Int64ZeissMetaEntry : public AbstractZeissMetaData
 {
-  public:
-    using Self = Int64ZeissMetaEntry;
-    using Pointer = std::shared_ptr<Self>;
-    using ConstPointer = std::shared_ptr<const Self>;
-    using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<const Self>;
-    static Pointer NullPointer();
+public:
+  using Self = Int64ZeissMetaEntry;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<const Self>;
+  static Pointer NullPointer();
 
-    /**
-     * @brief Returns the name of the class for Int64ZeissMetaEntry
-     */
-    QString getNameOfClass() const override;
-    /**
-     * @brief Returns the name of the class for Int64ZeissMetaEntry
-     */
-    static QString ClassName();
+  /**
+   * @brief Returns the name of the class for Int64ZeissMetaEntry
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for Int64ZeissMetaEntry
+   */
+  static QString ClassName();
 
-    static Pointer New();
+  static Pointer New();
 
-    STATIC_NEW_METHODS(AbstractZeissMetaData, Int64ZeissMetaEntry, int64_t)
+  STATIC_NEW_METHODS(AbstractZeissMetaData, Int64ZeissMetaEntry, int64_t)
 
-    Int64ZeissMetaEntry();
-    explicit Int64ZeissMetaEntry(int32_t idTag);
+  Int64ZeissMetaEntry();
+  explicit Int64ZeissMetaEntry(int32_t idTag);
 
-    ~Int64ZeissMetaEntry() override;
+  ~Int64ZeissMetaEntry() override;
 
-    VALUE_DECLARATION(int64_t)
+  VALUE_DECLARATION(int64_t)
 
 #ifdef ZEISS_HDF_SUPPORT
-    HDF5_READ_WRITE_DECLARATIONS()
+  HDF5_READ_WRITE_DECLARATIONS()
 #endif
-    void printValue(std::ostream& out) const override;
+  void printValue(std::ostream& out) const override;
 
-    QString toString() const override;
+  QString toString() const override;
 
-    IDataArrayShPtrType createDataArray(bool allocate = true) const override;
+  IDataArrayShPtrType createDataArray(bool allocate = true) const override;
 
-  protected:
+protected:
+private:
+  int64_t m_Value = 0;
 
-
-  private:
-    int64_t m_Value = 0;
-
-  public:
-    Int64ZeissMetaEntry(const Int64ZeissMetaEntry&) = delete; // Copy Constructor Not Implemented
-    Int64ZeissMetaEntry(Int64ZeissMetaEntry&&) = delete;      // Move Constructor Not Implemented
-    Int64ZeissMetaEntry& operator=(const Int64ZeissMetaEntry&) = delete; // Copy Assignment Not Implemented
-    Int64ZeissMetaEntry& operator=(Int64ZeissMetaEntry&&) = delete;      // Move Assignment Not Implemented
+public:
+  Int64ZeissMetaEntry(const Int64ZeissMetaEntry&) = delete;            // Copy Constructor Not Implemented
+  Int64ZeissMetaEntry(Int64ZeissMetaEntry&&) = delete;                 // Move Constructor Not Implemented
+  Int64ZeissMetaEntry& operator=(const Int64ZeissMetaEntry&) = delete; // Copy Assignment Not Implemented
+  Int64ZeissMetaEntry& operator=(Int64ZeissMetaEntry&&) = delete;      // Move Assignment Not Implemented
 };
 
 // -----------------------------------------------------------------------------
@@ -249,53 +247,53 @@ class ITKImageProcessing_EXPORT Int64ZeissMetaEntry : public AbstractZeissMetaDa
 // -----------------------------------------------------------------------------
 class ITKImageProcessing_EXPORT FloatZeissMetaEntry : public AbstractZeissMetaData
 {
-  public:
-    using Self = FloatZeissMetaEntry;
-    using Pointer = std::shared_ptr<Self>;
-    using ConstPointer = std::shared_ptr<const Self>;
-    using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<const Self>;
-    static Pointer NullPointer();
+public:
+  using Self = FloatZeissMetaEntry;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<const Self>;
+  static Pointer NullPointer();
 
-    /**
-     * @brief Returns the name of the class for FloatZeissMetaEntry
-     */
-    QString getNameOfClass() const override;
-    /**
-     * @brief Returns the name of the class for FloatZeissMetaEntry
-     */
-    static QString ClassName();
+  /**
+   * @brief Returns the name of the class for FloatZeissMetaEntry
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for FloatZeissMetaEntry
+   */
+  static QString ClassName();
 
-    static Pointer New();
+  static Pointer New();
 
-    STATIC_NEW_METHODS(AbstractZeissMetaData, FloatZeissMetaEntry, float)
+  STATIC_NEW_METHODS(AbstractZeissMetaData, FloatZeissMetaEntry, float)
 
-    FloatZeissMetaEntry();
-    explicit FloatZeissMetaEntry(int32_t idTag);
+  FloatZeissMetaEntry();
+  explicit FloatZeissMetaEntry(int32_t idTag);
 
-    ~FloatZeissMetaEntry() override;
+  ~FloatZeissMetaEntry() override;
 
-    VALUE_DECLARATION(float)
+  VALUE_DECLARATION(float)
 
 #ifdef ZEISS_HDF_SUPPORT
-    HDF5_READ_WRITE_DECLARATIONS()
+  HDF5_READ_WRITE_DECLARATIONS()
 #endif
 
-    void printValue(std::ostream& out) const override;
+  void printValue(std::ostream& out) const override;
 
-    QString toString() const override;
+  QString toString() const override;
 
-    IDataArrayShPtrType createDataArray(bool allocate = true) const override;
+  IDataArrayShPtrType createDataArray(bool allocate = true) const override;
 
-  protected:
-  private:
-    float m_Value = 0.0f;
+protected:
+private:
+  float m_Value = 0.0f;
 
-  public:
-    FloatZeissMetaEntry(const FloatZeissMetaEntry&) = delete; // Copy Constructor Not Implemented
-    FloatZeissMetaEntry(FloatZeissMetaEntry&&) = delete;      // Move Constructor Not Implemented
-    FloatZeissMetaEntry& operator=(const FloatZeissMetaEntry&) = delete; // Copy Assignment Not Implemented
-    FloatZeissMetaEntry& operator=(FloatZeissMetaEntry&&) = delete;      // Move Assignment Not Implemented
+public:
+  FloatZeissMetaEntry(const FloatZeissMetaEntry&) = delete;            // Copy Constructor Not Implemented
+  FloatZeissMetaEntry(FloatZeissMetaEntry&&) = delete;                 // Move Constructor Not Implemented
+  FloatZeissMetaEntry& operator=(const FloatZeissMetaEntry&) = delete; // Copy Assignment Not Implemented
+  FloatZeissMetaEntry& operator=(FloatZeissMetaEntry&&) = delete;      // Move Assignment Not Implemented
 };
 
 // -----------------------------------------------------------------------------
@@ -303,92 +301,88 @@ class ITKImageProcessing_EXPORT FloatZeissMetaEntry : public AbstractZeissMetaDa
 // -----------------------------------------------------------------------------
 class ITKImageProcessing_EXPORT StringZeissMetaEntry : public AbstractZeissMetaData
 {
-  public:
-    using Self = StringZeissMetaEntry;
-    using Pointer = std::shared_ptr<Self>;
-    using ConstPointer = std::shared_ptr<const Self>;
-    using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<const Self>;
-    static Pointer NullPointer();
+public:
+  using Self = StringZeissMetaEntry;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<const Self>;
+  static Pointer NullPointer();
 
-    /**
-     * @brief Returns the name of the class for StringZeissMetaEntry
-     */
-    QString getNameOfClass() const override;
-    /**
-     * @brief Returns the name of the class for StringZeissMetaEntry
-     */
-    static QString ClassName();
+  /**
+   * @brief Returns the name of the class for StringZeissMetaEntry
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for StringZeissMetaEntry
+   */
+  static QString ClassName();
 
-    static Pointer New();
+  static Pointer New();
 
-    static AbstractZeissMetaData::Pointer New(int32_t idTag, const QString &value) {
-      AbstractZeissMetaData::Pointer ptr (new StringZeissMetaEntry(idTag));
-      bool ok = ptr->setValue(value);
-      if(!ok)
-      {
-        ptr = AbstractZeissMetaData::NullPointer();
-      }
-      return ptr;
+  static AbstractZeissMetaData::Pointer New(int32_t idTag, const QString& value)
+  {
+    AbstractZeissMetaData::Pointer ptr(new StringZeissMetaEntry(idTag));
+    bool ok = ptr->setValue(value);
+    if(!ok)
+    {
+      ptr = AbstractZeissMetaData::NullPointer();
     }
+    return ptr;
+  }
 
-    ~StringZeissMetaEntry() override;
+  ~StringZeissMetaEntry() override;
 
-    bool setValue(const QString& value) override;
-    QString getValue();
+  bool setValue(const QString& value) override;
+  QString getValue();
 
 #ifdef ZEISS_HDF_SUPPORT
-    HDF5_READ_WRITE_DECLARATIONS()
+  HDF5_READ_WRITE_DECLARATIONS()
 #endif
 
-    void printValue(std::ostream& out) const override;
+  void printValue(std::ostream& out) const override;
 
-    QString toString() const override;
+  QString toString() const override;
 
-    IDataArrayShPtrType createDataArray(bool allocate = true) const override;
+  IDataArrayShPtrType createDataArray(bool allocate = true) const override;
 
-  protected:
-    StringZeissMetaEntry()
-    {
-      m_Value = "";
-    }
+protected:
+  StringZeissMetaEntry()
+  {
+    m_Value = "";
+  }
 
-    explicit StringZeissMetaEntry(int32_t idTag)
-    {
-       setZeissIdTag(idTag);
-    }
+  explicit StringZeissMetaEntry(int32_t idTag)
+  {
+    setZeissIdTag(idTag);
+  }
 
-  private:
-    QString m_Value;
+private:
+  QString m_Value;
 
-  public:
-    StringZeissMetaEntry(const StringZeissMetaEntry&) = delete; // Copy Constructor Not Implemented
-    StringZeissMetaEntry(StringZeissMetaEntry&&) = delete;      // Move Constructor Not Implemented
-    StringZeissMetaEntry& operator=(const StringZeissMetaEntry&) = delete; // Copy Assignment Not Implemented
-    StringZeissMetaEntry& operator=(StringZeissMetaEntry&&) = delete;      // Move Assignment Not Implemented
+public:
+  StringZeissMetaEntry(const StringZeissMetaEntry&) = delete;            // Copy Constructor Not Implemented
+  StringZeissMetaEntry(StringZeissMetaEntry&&) = delete;                 // Move Constructor Not Implemented
+  StringZeissMetaEntry& operator=(const StringZeissMetaEntry&) = delete; // Copy Assignment Not Implemented
+  StringZeissMetaEntry& operator=(StringZeissMetaEntry&&) = delete;      // Move Assignment Not Implemented
 };
-
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-namespace ZeissMetaEntry {
+namespace ZeissMetaEntry
+{
 
+template <typename DestMetaData>
+typename DestMetaData::Pointer convert(AbstractZeissMetaData::Pointer src)
+{
 
-  template<typename DestMetaData>
-  typename DestMetaData::Pointer convert(AbstractZeissMetaData::Pointer src)
-  {
+  StringZeissMetaEntry::Pointer srcPtr = std::dynamic_pointer_cast<StringZeissMetaEntry>(src);
+  Q_ASSERT_X(srcPtr.get() != nullptr, "Could not Cast to StringZeissMetaEntry", "");
 
-    StringZeissMetaEntry::Pointer srcPtr = std::dynamic_pointer_cast<StringZeissMetaEntry>(src);
-    Q_ASSERT_X(srcPtr.get() != nullptr, "Could not Cast to StringZeissMetaEntry", "");
-
-
-    typename DestMetaData::Pointer destPtr = DestMetaData::New();
-    destPtr->setValue(srcPtr->getValue());
-    return destPtr;
-
-  }
-
+  typename DestMetaData::Pointer destPtr = DestMetaData::New();
+  destPtr->setValue(srcPtr->getValue());
+  return destPtr;
 }
 
-
+} // namespace ZeissMetaEntry

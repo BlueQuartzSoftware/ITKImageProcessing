@@ -4,7 +4,6 @@
  * Your License or Copyright can go here
  */
 
-
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKClosingByReconstructionImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 #include "SIMPLib/Common/Constants.h"
@@ -20,7 +19,6 @@
 
 #include <itkFlatStructuringElement.h>
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -30,7 +28,6 @@ ITKClosingByReconstructionImage::ITKClosingByReconstructionImage()
   m_PreserveIntensities = StaticCastScalar<bool, bool, bool>(false);
   m_KernelRadius = CastStdToVec3<std::vector<unsigned int>, FloatVec3Type, float>(std::vector<unsigned int>(3, 1));
   m_KernelType = StaticCastScalar<int, int, int>(itk::simple::sitkBall);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -67,7 +64,6 @@ void ITKClosingByReconstructionImage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_BOOL_FP("PreserveIntensities", PreserveIntensities, FilterParameter::Parameter, ITKClosingByReconstructionImage));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("KernelRadius", KernelRadius, FilterParameter::Parameter, ITKClosingByReconstructionImage));
 
-
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Save as New Array", SaveAsNewArray, FilterParameter::Parameter, ITKClosingByReconstructionImage, linkedProps));
@@ -103,7 +99,8 @@ void ITKClosingByReconstructionImage::readFilterParameters(AbstractFilterParamet
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKClosingByReconstructionImage::dataCheckImpl()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKClosingByReconstructionImage::dataCheckImpl()
 {
   clearErrorCode();
   clearWarningCode();
@@ -126,7 +123,8 @@ void ITKClosingByReconstructionImage::dataCheck()
 //
 // -----------------------------------------------------------------------------
 
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKClosingByReconstructionImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKClosingByReconstructionImage::filter()
 {
   typedef itk::Image<InputPixelType, Dimension> InputImageType;
   typedef itk::Image<OutputPixelType, Dimension> OutputImageType;
@@ -159,7 +157,6 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   filter->SetPreserveIntensities(static_cast<bool>(m_PreserveIntensities));
   filter->SetKernel(structuringElement);
   this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -216,7 +213,7 @@ ITKClosingByReconstructionImage::Pointer ITKClosingByReconstructionImage::NullPo
 // -----------------------------------------------------------------------------
 std::shared_ptr<ITKClosingByReconstructionImage> ITKClosingByReconstructionImage::New()
 {
-  struct make_shared_enabler : public ITKClosingByReconstructionImage  
+  struct make_shared_enabler : public ITKClosingByReconstructionImage
   {
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
@@ -283,5 +280,3 @@ int ITKClosingByReconstructionImage::getKernelType() const
 {
   return m_KernelType;
 }
-
-

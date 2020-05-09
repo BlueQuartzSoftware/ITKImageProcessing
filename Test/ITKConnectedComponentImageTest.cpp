@@ -9,16 +9,15 @@
 #include <SIMPLib/FilterParameters/BooleanFilterParameter.h>
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 
-
 class ITKConnectedComponentImageTest : public ITKTestBase
 {
 
 public:
-ITKConnectedComponentImageTest() = default;
-~ITKConnectedComponentImageTest() override = default;
+  ITKConnectedComponentImageTest() = default;
+  ~ITKConnectedComponentImageTest() override = default;
 
   int TestITKConnectedComponentImagedefaultTest()
-{
+  {
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/WhiteDots.png");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -47,10 +46,10 @@ ITKConnectedComponentImageTest() = default;
     var = filter->property("ObjectCount");
     DREAM3D_REQUIRE_EQUAL(var.toUInt(), 23u);
     return 0;
-}
+  }
 
-int TestITKConnectedComponentImagefullyconnectedTest()
-{
+  int TestITKConnectedComponentImagefullyconnectedTest()
+  {
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/WhiteDots.png");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -69,11 +68,11 @@ int TestITKConnectedComponentImagefullyconnectedTest()
     propWasSet = filter->setProperty("SaveAsNewArray", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     {
-        bool d3d_var;
-        d3d_var = true;
-        var.setValue(d3d_var);
-        propWasSet = filter->setProperty("FullyConnected", var);
-        DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+      bool d3d_var;
+      d3d_var = true;
+      var.setValue(d3d_var);
+      propWasSet = filter->setProperty("FullyConnected", var);
+      DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     }
     filter->setDataContainerArray(containerArray);
     filter->execute();
@@ -84,9 +83,7 @@ int TestITKConnectedComponentImagefullyconnectedTest()
     GetMD5FromDataContainer(containerArray, input_path, md5Output);
     DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("e40b7cdfc1b34ae2e6b13660d626cc29"));
     return 0;
-}
-
-
+  }
 
   // -----------------------------------------------------------------------------
   //
@@ -97,8 +94,8 @@ int TestITKConnectedComponentImagefullyconnectedTest()
 
     DREAM3D_REGISTER_TEST(this->TestFilterAvailability("ITKConnectedComponentImage"));
 
-    DREAM3D_REGISTER_TEST( TestITKConnectedComponentImagedefaultTest());
-    DREAM3D_REGISTER_TEST( TestITKConnectedComponentImagefullyconnectedTest());
+    DREAM3D_REGISTER_TEST(TestITKConnectedComponentImagedefaultTest());
+    DREAM3D_REGISTER_TEST(TestITKConnectedComponentImagefullyconnectedTest());
 
     if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
     {

@@ -8,16 +8,15 @@
 // Auto includes
 #include <SIMPLib/FilterParameters/BooleanFilterParameter.h>
 
-
 class ITKValuedRegionalMinimaImageTest : public ITKTestBase
 {
 
 public:
-ITKValuedRegionalMinimaImageTest() = default;
-~ITKValuedRegionalMinimaImageTest() override = default;
+  ITKValuedRegionalMinimaImageTest() = default;
+  ~ITKValuedRegionalMinimaImageTest() override = default;
 
   int TestITKValuedRegionalMinimaImagedefaultsTest()
-{
+  {
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/cthead1.png");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -44,9 +43,7 @@ ITKValuedRegionalMinimaImageTest() = default;
     GetMD5FromDataContainer(containerArray, input_path, md5Output);
     DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("8297d018757b1477e31293ab8a8f0db1"));
     return 0;
-}
-
-
+  }
 
   // -----------------------------------------------------------------------------
   //
@@ -57,7 +54,7 @@ ITKValuedRegionalMinimaImageTest() = default;
 
     DREAM3D_REGISTER_TEST(this->TestFilterAvailability("ITKValuedRegionalMinimaImage"));
 
-    DREAM3D_REGISTER_TEST( TestITKValuedRegionalMinimaImagedefaultsTest());
+    DREAM3D_REGISTER_TEST(TestITKValuedRegionalMinimaImagedefaultsTest());
 
     if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
     {

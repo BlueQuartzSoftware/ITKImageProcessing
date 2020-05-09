@@ -12,8 +12,8 @@ class ITKMedianImageTest : public ITKTestBase
 {
 
 public:
-ITKMedianImageTest() = default;
-~ITKMedianImageTest() override = default;
+  ITKMedianImageTest() = default;
+  ~ITKMedianImageTest() override = default;
 
   int TestITKMedianImagedefaultsTest()
   {

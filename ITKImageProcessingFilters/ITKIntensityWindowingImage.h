@@ -43,71 +43,69 @@ class ITKImageProcessing_EXPORT ITKIntensityWindowingImage : public ITKImageProc
   // End Python bindings declarations
 
 public:
-    using Self = ITKIntensityWindowingImage;
-    using Pointer = std::shared_ptr<Self>;
-    using ConstPointer = std::shared_ptr<const Self>;
-    using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<const Self>;
-    static Pointer NullPointer();
+  using Self = ITKIntensityWindowingImage;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<const Self>;
+  static Pointer NullPointer();
 
-    static std::shared_ptr<ITKIntensityWindowingImage> New();
+  static std::shared_ptr<ITKIntensityWindowingImage> New();
 
-    /**
-    * @brief Returns the name of the class for ITKIntensityWindowingImage
-    */
-    QString getNameOfClass() const override;
-    /**
-    * @brief Returns the name of the class for ITKIntensityWindowingImage
-    */
-    static QString ClassName();
-
+  /**
+   * @brief Returns the name of the class for ITKIntensityWindowingImage
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for ITKIntensityWindowingImage
+   */
+  static QString ClassName();
 
   ~ITKIntensityWindowingImage() override;
 
-    /**
-    * @brief Setter property for WindowMinimum
-    */
-    void setWindowMinimum(double value); 
-    /**
-    * @brief Getter property for WindowMinimum
-    * @return Value of WindowMinimum
-    */
-    double getWindowMinimum() const;
+  /**
+   * @brief Setter property for WindowMinimum
+   */
+  void setWindowMinimum(double value);
+  /**
+   * @brief Getter property for WindowMinimum
+   * @return Value of WindowMinimum
+   */
+  double getWindowMinimum() const;
   Q_PROPERTY(double WindowMinimum READ getWindowMinimum WRITE setWindowMinimum)
 
-    /**
-    * @brief Setter property for WindowMaximum
-    */
-    void setWindowMaximum(double value); 
-    /**
-    * @brief Getter property for WindowMaximum
-    * @return Value of WindowMaximum
-    */
-    double getWindowMaximum() const;
+  /**
+   * @brief Setter property for WindowMaximum
+   */
+  void setWindowMaximum(double value);
+  /**
+   * @brief Getter property for WindowMaximum
+   * @return Value of WindowMaximum
+   */
+  double getWindowMaximum() const;
   Q_PROPERTY(double WindowMaximum READ getWindowMaximum WRITE setWindowMaximum)
 
-    /**
-    * @brief Setter property for OutputMinimum
-    */
-    void setOutputMinimum(double value); 
-    /**
-    * @brief Getter property for OutputMinimum
-    * @return Value of OutputMinimum
-    */
-    double getOutputMinimum() const;
+  /**
+   * @brief Setter property for OutputMinimum
+   */
+  void setOutputMinimum(double value);
+  /**
+   * @brief Getter property for OutputMinimum
+   * @return Value of OutputMinimum
+   */
+  double getOutputMinimum() const;
   Q_PROPERTY(double OutputMinimum READ getOutputMinimum WRITE setOutputMinimum)
 
-    /**
-    * @brief Setter property for OutputMaximum
-    */
-    void setOutputMaximum(double value); 
-    /**
-    * @brief Getter property for OutputMaximum
-    * @return Value of OutputMaximum
-    */
-    double getOutputMaximum() const;
+  /**
+   * @brief Setter property for OutputMaximum
+   */
+  void setOutputMaximum(double value);
+  /**
+   * @brief Getter property for OutputMaximum
+   * @return Value of OutputMaximum
+   */
+  double getOutputMaximum() const;
   Q_PROPERTY(double OutputMaximum READ getOutputMaximum WRITE setOutputMaximum)
-
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -151,33 +149,33 @@ protected:
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
    */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void dataCheckImpl();
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void dataCheckImpl();
 
   /**
-  * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
-  */
+   * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
+   */
   void filterInternal() override;
 
   /**
-  * @brief Applies the filter
-  */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
+   * @brief Applies the filter
+   */
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void filter();
 
 public:
-  ITKIntensityWindowingImage(const ITKIntensityWindowingImage&) = delete;    // Copy Constructor Not Implemented
-  ITKIntensityWindowingImage(ITKIntensityWindowingImage&&) = delete;         // Move Constructor Not Implemented
+  ITKIntensityWindowingImage(const ITKIntensityWindowingImage&) = delete;            // Copy Constructor Not Implemented
+  ITKIntensityWindowingImage(ITKIntensityWindowingImage&&) = delete;                 // Move Constructor Not Implemented
   ITKIntensityWindowingImage& operator=(const ITKIntensityWindowingImage&) = delete; // Copy Assignment Not Implemented
   ITKIntensityWindowingImage& operator=(ITKIntensityWindowingImage&&) = delete;      // Move Assignment Not Implemented
 
-  private:
-    double m_WindowMinimum = {};
-    double m_WindowMaximum = {};
-    double m_OutputMinimum = {};
-    double m_OutputMaximum = {};
-
+private:
+  double m_WindowMinimum = {};
+  double m_WindowMaximum = {};
+  double m_OutputMinimum = {};
+  double m_OutputMaximum = {};
 };
 
 #ifdef __clang__
 #pragma clang diagnostic pop
 #endif
-

@@ -4,7 +4,6 @@
  * Your License or Copyright can go here
  */
 
-
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKBinaryDilateImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 #include "SIMPLib/Common/Constants.h"
@@ -20,7 +19,6 @@
 
 #include <itkFlatStructuringElement.h>
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -31,7 +29,6 @@ ITKBinaryDilateImage::ITKBinaryDilateImage()
   m_BoundaryToForeground = StaticCastScalar<bool, bool, bool>(false);
   m_KernelRadius = CastStdToVec3<std::vector<unsigned int>, FloatVec3Type, float>(std::vector<unsigned int>(3, 1));
   m_KernelType = StaticCastScalar<int, int, int>(itk::simple::sitkBall);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -69,7 +66,6 @@ void ITKBinaryDilateImage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_BOOL_FP("BoundaryToForeground", BoundaryToForeground, FilterParameter::Parameter, ITKBinaryDilateImage));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("KernelRadius", KernelRadius, FilterParameter::Parameter, ITKBinaryDilateImage));
 
-
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Save as New Array", SaveAsNewArray, FilterParameter::Parameter, ITKBinaryDilateImage, linkedProps));
@@ -106,7 +102,8 @@ void ITKBinaryDilateImage::readFilterParameters(AbstractFilterParametersReader* 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKBinaryDilateImage::dataCheckImpl()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKBinaryDilateImage::dataCheckImpl()
 {
   clearErrorCode();
   clearWarningCode();
@@ -139,7 +136,8 @@ void ITKBinaryDilateImage::dataCheck()
 //
 // -----------------------------------------------------------------------------
 
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKBinaryDilateImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKBinaryDilateImage::filter()
 {
   typedef itk::Image<InputPixelType, Dimension> InputImageType;
   typedef itk::Image<OutputPixelType, Dimension> OutputImageType;
@@ -173,7 +171,6 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   filter->SetBoundaryToForeground(static_cast<bool>(m_BoundaryToForeground));
   filter->SetKernel(structuringElement);
   this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -230,7 +227,7 @@ ITKBinaryDilateImage::Pointer ITKBinaryDilateImage::NullPointer()
 // -----------------------------------------------------------------------------
 std::shared_ptr<ITKBinaryDilateImage> ITKBinaryDilateImage::New()
 {
-  struct make_shared_enabler : public ITKBinaryDilateImage  
+  struct make_shared_enabler : public ITKBinaryDilateImage
   {
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
@@ -309,5 +306,3 @@ int ITKBinaryDilateImage::getKernelType() const
 {
   return m_KernelType;
 }
-
-

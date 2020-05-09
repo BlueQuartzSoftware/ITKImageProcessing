@@ -4,7 +4,6 @@
  * Your License or Copyright can go here
  */
 
-
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKCurvatureFlowImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 #include "SIMPLib/Common/Constants.h"
@@ -17,7 +16,6 @@
 
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -25,7 +23,6 @@ ITKCurvatureFlowImage::ITKCurvatureFlowImage()
 {
   m_TimeStep = StaticCastScalar<double, double, double>(0.05);
   m_NumberOfIterations = StaticCastScalar<double, double, double>(5u);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -42,7 +39,6 @@ void ITKCurvatureFlowImage::setupFilterParameters()
 
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("TimeStep", TimeStep, FilterParameter::Parameter, ITKCurvatureFlowImage));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("NumberOfIterations", NumberOfIterations, FilterParameter::Parameter, ITKCurvatureFlowImage));
-
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -77,7 +73,8 @@ void ITKCurvatureFlowImage::readFilterParameters(AbstractFilterParametersReader*
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKCurvatureFlowImage::dataCheckImpl()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKCurvatureFlowImage::dataCheckImpl()
 {
   clearErrorCode();
   clearWarningCode();
@@ -93,14 +90,15 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
 // -----------------------------------------------------------------------------
 void ITKCurvatureFlowImage::dataCheck()
 {
-  Dream3DArraySwitchMacroOutputType(this->dataCheckImpl, getSelectedCellArrayPath(), -4,typename itk::NumericTraits<typename InputImageType::PixelType>::RealType, 1);
+  Dream3DArraySwitchMacroOutputType(this->dataCheckImpl, getSelectedCellArrayPath(), -4, typename itk::NumericTraits<typename InputImageType::PixelType>::RealType, 1);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKCurvatureFlowImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKCurvatureFlowImage::filter()
 {
   typedef typename itk::NumericTraits<InputPixelType>::RealType FloatPixelType;
   typedef itk::Image<FloatPixelType, Dimension> FloatImageType;
@@ -110,7 +108,6 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   filter->SetTimeStep(static_cast<double>(m_TimeStep));
   filter->SetNumberOfIterations(static_cast<uint32_t>(m_NumberOfIterations));
   this->ITKImageProcessingBase::filterCastToFloat<InputPixelType, InputPixelType, Dimension, FilterType, FloatImageType>(filter);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -118,7 +115,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
 // -----------------------------------------------------------------------------
 void ITKCurvatureFlowImage::filterInternal()
 {
-  Dream3DArraySwitchMacroOutputType(this->filter, getSelectedCellArrayPath(), -4,typename itk::NumericTraits<typename InputImageType::PixelType>::RealType, 1);
+  Dream3DArraySwitchMacroOutputType(this->filter, getSelectedCellArrayPath(), -4, typename itk::NumericTraits<typename InputImageType::PixelType>::RealType, 1);
 }
 
 // -----------------------------------------------------------------------------
@@ -167,7 +164,7 @@ ITKCurvatureFlowImage::Pointer ITKCurvatureFlowImage::NullPointer()
 // -----------------------------------------------------------------------------
 std::shared_ptr<ITKCurvatureFlowImage> ITKCurvatureFlowImage::New()
 {
-  struct make_shared_enabler : public ITKCurvatureFlowImage  
+  struct make_shared_enabler : public ITKCurvatureFlowImage
   {
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
@@ -210,5 +207,3 @@ double ITKCurvatureFlowImage::getNumberOfIterations() const
 {
   return m_NumberOfIterations;
 }
-
-

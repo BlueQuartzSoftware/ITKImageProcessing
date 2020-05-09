@@ -54,19 +54,34 @@ public:
   double F_tolerance;
 
   //: Define maximum number of iterations to use
-  void set_max_iterations(int n) { maxiter = n; }
+  void set_max_iterations(int n)
+  {
+    maxiter = n;
+  }
 
   //: Define tolerance on elements of x
-  void set_x_tolerance(double tol) { X_tolerance = tol; }
+  void set_x_tolerance(double tol)
+  {
+    X_tolerance = tol;
+  }
 
   //: Define tolerance on function evaluation
-  void set_f_tolerance(double tol) { F_tolerance = tol; }
+  void set_f_tolerance(double tol)
+  {
+    F_tolerance = tol;
+  }
 
   //: Define scaling used to select starting vertices relative to initial x0.
   //  I.e. the i'th vertex has x[i] = x0[i]*(1+relative_diameter)
-  void set_relative_diameter(double r) { relative_diameter = r; }
+  void set_relative_diameter(double r)
+  {
+    relative_diameter = r;
+  }
 
-  void set_zero_term_delta(double d) { zero_term_delta = d; }
+  void set_zero_term_delta(double d)
+  {
+    zero_term_delta = d;
+  }
   //: Scaling used to select starting vertices relative to initial x0.
   //  I.e. the i'th vertex has x[i] = x0[i]*(1+relative_diameter)
   double relative_diameter;
@@ -82,16 +97,28 @@ public:
   //  Start simplex defined by adding dx[i] to each x[i]
   void minimize(vnl_vector<double>& x, const vnl_vector<double>& dx);
 
-  double get_end_error() const { return end_error_; }
+  double get_end_error() const
+  {
+    return end_error_;
+  }
 
   //: Number of evaluations used in last call to minimize
-  int get_num_evaluations() const { return num_evaluations_; }
+  int get_num_evaluations() const
+  {
+    return num_evaluations_;
+  }
 
   //: Fractional range between minimum and maximum function values
-  double get_fractional_range() const { return frac_range; }
+  double get_fractional_range() const
+  {
+    return frac_range;
+  }
 
   void cancel();
-  void set_filter(AbstractFilter* filter) { simpl_filter = filter; }
+  void set_filter(AbstractFilter* filter)
+  {
+    simpl_filter = filter;
+  }
 
 public:
   //: Modify x so as to minimise f(x)
@@ -99,14 +126,12 @@ public:
 
   //: Modify x so as to minimise f(x)
   //  Start simplex defined by adding dx[i] to each x[i]
-  static void minimize(vnl_cost_function& f, vnl_vector<double>& x,
-    const vnl_vector<double>& dx);
+  static void minimize(vnl_cost_function& f, vnl_vector<double>& x, const vnl_vector<double>& dx);
 
   //: Modify x so as to minimise f(x)
   //  delta defines relative size of initial simplex
   //  ie the i'th vertex has xi[i] = x[i]*(1+delta)
-  static void minimize(vnl_cost_function& f, vnl_vector<double>& x,
-    double delta);
+  static void minimize(vnl_cost_function& f, vnl_vector<double>& x, double delta);
 
   //: Modify x so as to minimise f(x)
   static void minimize(vnl_least_squares_function& f, vnl_vector<double>& x);
@@ -130,9 +155,8 @@ struct fft_amoeba_SimplexCorner
   double fv;
 
   fft_amoeba_SimplexCorner(int = 0);
-  fft_amoeba_SimplexCorner& operator= (const fft_amoeba_SimplexCorner& that);
-  static int compare(fft_amoeba_SimplexCorner const& s1,
-    fft_amoeba_SimplexCorner const& s2);
+  fft_amoeba_SimplexCorner& operator=(const fft_amoeba_SimplexCorner& that);
+  static int compare(fft_amoeba_SimplexCorner const& s1, fft_amoeba_SimplexCorner const& s2);
 };
 
 #endif // fft_amoeba_h_

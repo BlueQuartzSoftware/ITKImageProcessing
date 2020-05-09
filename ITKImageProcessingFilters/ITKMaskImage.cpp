@@ -4,7 +4,6 @@
  * Your License or Copyright can go here
  */
 
-
 #include "ITKMaskImage.h"
 
 #include "SIMPLib/Common/Constants.h"
@@ -19,14 +18,12 @@
 #define DREAM3D_USE_RGB_RGBA 1
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 ITKMaskImage::ITKMaskImage()
 {
   m_OutsideValue = StaticCastScalar<double, double, double>(0);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -77,7 +74,8 @@ void ITKMaskImage::readFilterParameters(AbstractFilterParametersReader* reader, 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKMaskImage::dataCheckImpl()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKMaskImage::dataCheckImpl()
 {
   // Check consistency of parameters
 
@@ -103,7 +101,8 @@ void ITKMaskImage::dataCheck()
 //
 // -----------------------------------------------------------------------------
 
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> typename std::enable_if<!std::is_scalar<InputPixelType>::value>::type ITKMaskImage::convertDataContainerType()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+typename std::enable_if<!std::is_scalar<InputPixelType>::value>::type ITKMaskImage::convertDataContainerType()
 {
   // This should never happened as masks should be scalar images, not RGBA or vector images.
   // We need this function because vector and RGBA images are supported as input images
@@ -118,7 +117,8 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   setErrorCondition(-20, errorMessage);
 }
 
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> typename std::enable_if<std::is_scalar<InputPixelType>::value>::type ITKMaskImage::convertDataContainerType()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+typename std::enable_if<std::is_scalar<InputPixelType>::value>::type ITKMaskImage::convertDataContainerType()
 {
   typedef itk::Image<InputPixelType, Dimension> InputImageType;
   typedef itk::Image<OutputPixelType, Dimension> OutputImageType;
@@ -167,7 +167,8 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
 //
 // -----------------------------------------------------------------------------
 
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKMaskImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKMaskImage::filter()
 {
   typedef itk::Image<InputPixelType, Dimension> InputImageType;
   typedef itk::Image<uint32_t, Dimension> MaskImageType;
@@ -269,7 +270,7 @@ ITKMaskImage::Pointer ITKMaskImage::NullPointer()
 // -----------------------------------------------------------------------------
 std::shared_ptr<ITKMaskImage> ITKMaskImage::New()
 {
-  struct make_shared_enabler : public ITKMaskImage  
+  struct make_shared_enabler : public ITKMaskImage
   {
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
@@ -324,5 +325,3 @@ DataContainerArray::Pointer ITKMaskImage::getMaskContainerArray() const
 {
   return m_MaskContainerArray;
 }
-
-

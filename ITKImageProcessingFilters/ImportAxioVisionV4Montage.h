@@ -424,8 +424,6 @@ public:
    */
   std::vector<BoundsType> getBoundsCache() const;
 
-
-
 protected:
   ImportAxioVisionV4Montage();
 

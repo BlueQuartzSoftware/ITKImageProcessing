@@ -4,7 +4,6 @@
  * Your License or Copyright can go here
  */
 
-
 #include "ITKMultiScaleHessianBasedObjectnessImage.h"
 
 #include "SIMPLib/Common/Constants.h"
@@ -23,7 +22,6 @@
 
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -39,7 +37,6 @@ ITKMultiScaleHessianBasedObjectnessImage::ITKMultiScaleHessianBasedObjectnessIma
   m_SigmaMinimum = StaticCastScalar<double, double, double>(0.2);
   m_SigmaMaximum = StaticCastScalar<double, double, double>(2.0);
   m_NumberOfSigmaSteps = StaticCastScalar<double, double, double>(10);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -104,7 +101,8 @@ void ITKMultiScaleHessianBasedObjectnessImage::readFilterParameters(AbstractFilt
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKMultiScaleHessianBasedObjectnessImage::dataCheckImpl()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKMultiScaleHessianBasedObjectnessImage::dataCheckImpl()
 {
   // Check consistency of parameters
   this->CheckIntegerEntry<uint32_t, double>(m_NumberOfSigmaSteps, "NumberOfSigmaSteps", true);
@@ -126,7 +124,8 @@ void ITKMultiScaleHessianBasedObjectnessImage::dataCheck()
 //
 // -----------------------------------------------------------------------------
 
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKMultiScaleHessianBasedObjectnessImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKMultiScaleHessianBasedObjectnessImage::filter()
 {
   typedef itk::Image<InputPixelType, Dimension> InputImageType;
   typedef itk::Image<OutputPixelType, Dimension> OutputImageType;
@@ -209,7 +208,7 @@ ITKMultiScaleHessianBasedObjectnessImage::Pointer ITKMultiScaleHessianBasedObjec
 // -----------------------------------------------------------------------------
 std::shared_ptr<ITKMultiScaleHessianBasedObjectnessImage> ITKMultiScaleHessianBasedObjectnessImage::New()
 {
-  struct make_shared_enabler : public ITKMultiScaleHessianBasedObjectnessImage  
+  struct make_shared_enabler : public ITKMultiScaleHessianBasedObjectnessImage
   {
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
@@ -336,5 +335,3 @@ double ITKMultiScaleHessianBasedObjectnessImage::getNumberOfSigmaSteps() const
 {
   return m_NumberOfSigmaSteps;
 }
-
-

@@ -4,7 +4,6 @@
  * Your License or Copyright can go here
  */
 
-
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKZeroCrossingImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 #include "SIMPLib/Common/Constants.h"
@@ -17,7 +16,6 @@
 
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -25,7 +23,6 @@ ITKZeroCrossingImage::ITKZeroCrossingImage()
 {
   m_ForegroundValue = StaticCastScalar<int, int, int>(1u);
   m_BackgroundValue = StaticCastScalar<int, int, int>(0u);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -42,7 +39,6 @@ void ITKZeroCrossingImage::setupFilterParameters()
 
   parameters.push_back(SIMPL_NEW_INTEGER_FP("ForegroundValue", ForegroundValue, FilterParameter::Parameter, ITKZeroCrossingImage));
   parameters.push_back(SIMPL_NEW_INTEGER_FP("BackgroundValue", BackgroundValue, FilterParameter::Parameter, ITKZeroCrossingImage));
-
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -77,7 +73,8 @@ void ITKZeroCrossingImage::readFilterParameters(AbstractFilterParametersReader* 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKZeroCrossingImage::dataCheckImpl()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKZeroCrossingImage::dataCheckImpl()
 {
   clearErrorCode();
   clearWarningCode();
@@ -101,7 +98,8 @@ void ITKZeroCrossingImage::dataCheck()
 //
 // -----------------------------------------------------------------------------
 
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKZeroCrossingImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKZeroCrossingImage::filter()
 {
   typedef itk::Image<InputPixelType, Dimension> InputImageType;
   typedef itk::Image<OutputPixelType, Dimension> OutputImageType;
@@ -111,7 +109,6 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   filter->SetForegroundValue(static_cast<uint8_t>(m_ForegroundValue));
   filter->SetBackgroundValue(static_cast<uint8_t>(m_BackgroundValue));
   this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -168,7 +165,7 @@ ITKZeroCrossingImage::Pointer ITKZeroCrossingImage::NullPointer()
 // -----------------------------------------------------------------------------
 std::shared_ptr<ITKZeroCrossingImage> ITKZeroCrossingImage::New()
 {
-  struct make_shared_enabler : public ITKZeroCrossingImage  
+  struct make_shared_enabler : public ITKZeroCrossingImage
   {
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
@@ -211,5 +208,3 @@ int ITKZeroCrossingImage::getBackgroundValue() const
 {
   return m_BackgroundValue;
 }
-
-

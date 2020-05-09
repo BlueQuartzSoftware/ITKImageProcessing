@@ -9,16 +9,15 @@
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 #include <SIMPLib/FilterParameters/IntFilterParameter.h>
 
-
 class ITKMinMaxCurvatureFlowImageTest : public ITKTestBase
 {
 
 public:
-ITKMinMaxCurvatureFlowImageTest() = default;
-~ITKMinMaxCurvatureFlowImageTest() override = default;
+  ITKMinMaxCurvatureFlowImageTest() = default;
+  ~ITKMinMaxCurvatureFlowImageTest() override = default;
 
   int TestITKMinMaxCurvatureFlowImagedefaultsTest()
-{
+  {
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/RA-Float.nrrd");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -47,10 +46,10 @@ ITKMinMaxCurvatureFlowImageTest() = default;
     int res = this->CompareImages(containerArray, input_path, baseline_path, 0.01);
     DREAM3D_REQUIRE_EQUAL(res, 0);
     return 0;
-}
+  }
 
-int TestITKMinMaxCurvatureFlowImagelongerTest()
-{
+  int TestITKMinMaxCurvatureFlowImagelongerTest()
+  {
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/RA-Float.nrrd");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -69,18 +68,18 @@ int TestITKMinMaxCurvatureFlowImagelongerTest()
     propWasSet = filter->setProperty("SaveAsNewArray", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     {
-        double d3d_var;
-        d3d_var = 0.1;
-        var.setValue(d3d_var);
-        propWasSet = filter->setProperty("TimeStep", var);
-        DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+      double d3d_var;
+      d3d_var = 0.1;
+      var.setValue(d3d_var);
+      propWasSet = filter->setProperty("TimeStep", var);
+      DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     }
     {
-        double d3d_var;
-        d3d_var = 10;
-        var.setValue(d3d_var);
-        propWasSet = filter->setProperty("NumberOfIterations", var);
-        DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+      double d3d_var;
+      d3d_var = 10;
+      var.setValue(d3d_var);
+      propWasSet = filter->setProperty("NumberOfIterations", var);
+      DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     }
     filter->setDataContainerArray(containerArray);
     filter->execute();
@@ -93,9 +92,7 @@ int TestITKMinMaxCurvatureFlowImagelongerTest()
     int res = this->CompareImages(containerArray, input_path, baseline_path, 0.01);
     DREAM3D_REQUIRE_EQUAL(res, 0);
     return 0;
-}
-
-
+  }
 
   // -----------------------------------------------------------------------------
   //
@@ -106,8 +103,8 @@ int TestITKMinMaxCurvatureFlowImagelongerTest()
 
     DREAM3D_REGISTER_TEST(this->TestFilterAvailability("ITKMinMaxCurvatureFlowImage"));
 
-    DREAM3D_REGISTER_TEST( TestITKMinMaxCurvatureFlowImagedefaultsTest());
-    DREAM3D_REGISTER_TEST( TestITKMinMaxCurvatureFlowImagelongerTest());
+    DREAM3D_REGISTER_TEST(TestITKMinMaxCurvatureFlowImagedefaultsTest());
+    DREAM3D_REGISTER_TEST(TestITKMinMaxCurvatureFlowImagelongerTest());
 
     if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
     {

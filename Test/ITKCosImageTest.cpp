@@ -7,16 +7,15 @@
 #include "ITKTestBase.h"
 // Auto includes
 
-
 class ITKCosImageTest : public ITKTestBase
 {
 
 public:
-ITKCosImageTest() = default;
-~ITKCosImageTest() override = default;
+  ITKCosImageTest() = default;
+  ~ITKCosImageTest() override = default;
 
   int TestITKCosImagefloatTest()
-{
+  {
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/RA-Slice-Float.nrrd");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -45,10 +44,10 @@ ITKCosImageTest() = default;
     int res = this->CompareImages(containerArray, input_path, baseline_path, 0.01);
     DREAM3D_REQUIRE_EQUAL(res, 0);
     return 0;
-}
+  }
 
-int TestITKCosImageshortTest()
-{
+  int TestITKCosImageshortTest()
+  {
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/RA-Slice-Short.nrrd");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -77,9 +76,7 @@ int TestITKCosImageshortTest()
     int res = this->CompareImages(containerArray, input_path, baseline_path, 0.01);
     DREAM3D_REQUIRE_EQUAL(res, 0);
     return 0;
-}
-
-
+  }
 
   // -----------------------------------------------------------------------------
   //
@@ -90,8 +87,8 @@ int TestITKCosImageshortTest()
 
     DREAM3D_REGISTER_TEST(this->TestFilterAvailability("ITKCosImage"));
 
-    DREAM3D_REGISTER_TEST( TestITKCosImagefloatTest());
-    DREAM3D_REGISTER_TEST( TestITKCosImageshortTest());
+    DREAM3D_REGISTER_TEST(TestITKCosImagefloatTest());
+    DREAM3D_REGISTER_TEST(TestITKCosImageshortTest());
 
     if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
     {

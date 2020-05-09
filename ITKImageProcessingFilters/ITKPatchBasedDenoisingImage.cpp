@@ -2,7 +2,6 @@
  * Your License or Copyright can go here
  */
 
-
 #include "ITKPatchBasedDenoisingImage.h"
 
 #include "SIMPLib/Common/Constants.h"
@@ -17,7 +16,6 @@
 #include <itkGaussianRandomSpatialNeighborSubsampler.h>
 
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
-
 
 // -----------------------------------------------------------------------------
 //
@@ -124,7 +122,8 @@ void ITKPatchBasedDenoisingImage::readFilterParameters(AbstractFilterParametersR
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKPatchBasedDenoisingImage::dataCheckImpl()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKPatchBasedDenoisingImage::dataCheckImpl()
 {
   // Check consistency of parameters
   this->CheckIntegerEntry<uint32_t, double>(m_PatchRadius, "PatchRadius", true);
@@ -149,7 +148,8 @@ void ITKPatchBasedDenoisingImage::dataCheck()
 //
 // -----------------------------------------------------------------------------
 
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKPatchBasedDenoisingImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKPatchBasedDenoisingImage::filter()
 {
   typedef itk::Image<OutputPixelType, Dimension> RealImageType;
   // define filter
@@ -250,7 +250,7 @@ ITKPatchBasedDenoisingImage::Pointer ITKPatchBasedDenoisingImage::NullPointer()
 // -----------------------------------------------------------------------------
 std::shared_ptr<ITKPatchBasedDenoisingImage> ITKPatchBasedDenoisingImage::New()
 {
-  struct make_shared_enabler : public ITKPatchBasedDenoisingImage  
+  struct make_shared_enabler : public ITKPatchBasedDenoisingImage
   {
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
@@ -437,5 +437,3 @@ int ITKPatchBasedDenoisingImage::getNumberOfThreads() const
 {
   return m_NumberOfThreads;
 }
-
-

@@ -30,14 +30,15 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 /** THIS FILE WAS AUTO-GENERATED FROM THE ZVI_TAGS.TXT FILE WHICH WAS MANUALLY GENERATED FROM
-* THE ZVI DOCUMENTATION FILE THAT IS DOWNLOADED FROM CARL ZEISS UNDER LICENSE.
-*/
+ * THE ZVI DOCUMENTATION FILE THAT IS DOWNLOADED FROM CARL ZEISS UNDER LICENSE.
+ */
 
 #pragma once
 
 #include <QtCore/QString>
 
-namespace Zeiss {
+namespace Zeiss
+{
 namespace MetaXML
 {
 
@@ -1178,4 +1179,4 @@ const QString Origin_2("Origin_2");
 const QString Angle_2("Angle_2");
 
 } // namespace MetaXML
-}
+} // namespace Zeiss

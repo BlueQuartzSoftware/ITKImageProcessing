@@ -1,37 +1,37 @@
 /* ============================================================================
-* Copyright (c) 2009-2016 BlueQuartz Software, LLC
-*
-* Redistribution and use in source and binary forms, with or without modification,
-* are permitted provided that the following conditions are met:
-*
-* Redistributions of source code must retain the above copyright notice, this
-* list of conditions and the following disclaimer.
-*
-* Redistributions in binary form must reproduce the above copyright notice, this
-* list of conditions and the following disclaimer in the documentation and/or
-* other materials provided with the distribution.
-*
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
-* contributors may be used to endorse or promote products derived from this software
-* without specific prior written permission.
-*
-* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
-* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*
-* The code contained herein was partially funded by the followig contracts:
-*    United States Air Force Prime Contract FA8650-07-D-5800
-*    United States Air Force Prime Contract FA8650-10-D-5210
-*    United States Prime Contract Navy N00173-07-C-2068
-*
-* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+ * Copyright (c) 2009-2016 BlueQuartz Software, LLC
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this
+ * list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+ *
+ * Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+ * contributors may be used to endorse or promote products derived from this software
+ * without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+ * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * The code contained herein was partially funded by the followig contracts:
+ *    United States Air Force Prime Contract FA8650-07-D-5800
+ *    United States Air Force Prime Contract FA8650-10-D-5210
+ *    United States Prime Contract Navy N00173-07-C-2068
+ *
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #pragma once
 
@@ -69,69 +69,68 @@ class ITKImageProcessing_EXPORT ITKImportImageStack : public AbstractFilter
   // End Python bindings declarations
 
 public:
-    using Self = ITKImportImageStack;
-    using Pointer = std::shared_ptr<Self>;
-    using ConstPointer = std::shared_ptr<const Self>;
-    using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<const Self>;
-    static Pointer NullPointer();
+  using Self = ITKImportImageStack;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<const Self>;
+  static Pointer NullPointer();
 
-    static std::shared_ptr<ITKImportImageStack> New();
+  static std::shared_ptr<ITKImportImageStack> New();
 
-    /**
-    * @brief Returns the name of the class for ITKImportImageStack
-    */
-    QString getNameOfClass() const override;
-    /**
-    * @brief Returns the name of the class for ITKImportImageStack
-    */
-    static QString ClassName();
-
+  /**
+   * @brief Returns the name of the class for ITKImportImageStack
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for ITKImportImageStack
+   */
+  static QString ClassName();
 
   ~ITKImportImageStack() override;
 
-    /**
-    * @brief Setter property for DataContainerName
-    */
-    void setDataContainerName(const DataArrayPath& value); 
-    /**
-    * @brief Getter property for DataContainerName
-    * @return Value of DataContainerName
-    */
-    DataArrayPath getDataContainerName() const;
+  /**
+   * @brief Setter property for DataContainerName
+   */
+  void setDataContainerName(const DataArrayPath& value);
+  /**
+   * @brief Getter property for DataContainerName
+   * @return Value of DataContainerName
+   */
+  DataArrayPath getDataContainerName() const;
   Q_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
 
-    /**
-    * @brief Setter property for CellAttributeMatrixName
-    */
-    void setCellAttributeMatrixName(const QString& value); 
-    /**
-    * @brief Getter property for CellAttributeMatrixName
-    * @return Value of CellAttributeMatrixName
-    */
-    QString getCellAttributeMatrixName() const;
+  /**
+   * @brief Setter property for CellAttributeMatrixName
+   */
+  void setCellAttributeMatrixName(const QString& value);
+  /**
+   * @brief Getter property for CellAttributeMatrixName
+   * @return Value of CellAttributeMatrixName
+   */
+  QString getCellAttributeMatrixName() const;
   Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
-    /**
-    * @brief Setter property for Origin
-    */
-    void setOrigin(const FloatVec3Type& value); 
-    /**
-    * @brief Getter property for Origin
-    * @return Value of Origin
-    */
-    FloatVec3Type getOrigin() const;
+  /**
+   * @brief Setter property for Origin
+   */
+  void setOrigin(const FloatVec3Type& value);
+  /**
+   * @brief Getter property for Origin
+   * @return Value of Origin
+   */
+  FloatVec3Type getOrigin() const;
   Q_PROPERTY(FloatVec3Type Origin READ getOrigin WRITE setOrigin)
 
-    /**
-    * @brief Setter property for Spacing
-    */
-    void setSpacing(const FloatVec3Type& value); 
-    /**
-    * @brief Getter property for Spacing
-    * @return Value of Spacing
-    */
-    FloatVec3Type getSpacing() const;
+  /**
+   * @brief Setter property for Spacing
+   */
+  void setSpacing(const FloatVec3Type& value);
+  /**
+   * @brief Getter property for Spacing
+   * @return Value of Spacing
+   */
+  FloatVec3Type getSpacing() const;
   Q_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
 
   /**
@@ -156,15 +155,15 @@ public:
   int getImageStack() const;
   Q_PROPERTY(int ImageStack READ getImageStack WRITE setImageStack)
 
-    /**
-    * @brief Setter property for ImageDataArrayName
-    */
-    void setImageDataArrayName(const QString& value); 
-    /**
-    * @brief Getter property for ImageDataArrayName
-    * @return Value of ImageDataArrayName
-    */
-    QString getImageDataArrayName() const;
+  /**
+   * @brief Setter property for ImageDataArrayName
+   */
+  void setImageDataArrayName(const QString& value);
+  /**
+   * @brief Getter property for ImageDataArrayName
+   * @return Value of ImageDataArrayName
+   */
+  QString getImageDataArrayName() const;
   Q_PROPERTY(QString ImageDataArrayName READ getImageDataArrayName WRITE setImageDataArrayName)
 
   /**
@@ -176,7 +175,7 @@ public:
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
-  */
+   */
   QString getBrandingString() const override;
 
   /**
@@ -227,8 +226,6 @@ public:
    */
   void execute() override;
 
-
-
 protected:
   ITKImportImageStack();
   /**
@@ -242,27 +239,24 @@ protected:
   void initialize();
 
 private:
-    DataArrayPath m_DataContainerName = {};
-    QString m_CellAttributeMatrixName = {};
-    FloatVec3Type m_Origin = {};
-    FloatVec3Type m_Spacing = {};
-    StackFileListInfo m_InputFileListInfo = {};
-    int m_ImageStack = {};
-    QString m_ImageDataArrayName = {};
-    std::weak_ptr<DataArray<uint8_t>>  m_ImageDataPtr;
-    uint8_t* m_ImageData = nullptr;
+  DataArrayPath m_DataContainerName = {};
+  QString m_CellAttributeMatrixName = {};
+  FloatVec3Type m_Origin = {};
+  FloatVec3Type m_Spacing = {};
+  StackFileListInfo m_InputFileListInfo = {};
+  int m_ImageStack = {};
+  QString m_ImageDataArrayName = {};
+  std::weak_ptr<DataArray<uint8_t>> m_ImageDataPtr;
+  uint8_t* m_ImageData = nullptr;
 
   /**
    * @brief Get the ordered list of input files.
    */
   QVector<QString> getFileList();
 
-
-
 public:
-  ITKImportImageStack(const ITKImportImageStack&) = delete; // Copy Constructor Not Implemented
-  ITKImportImageStack(ITKImportImageStack&&) = delete;      // Move Constructor Not Implemented
+  ITKImportImageStack(const ITKImportImageStack&) = delete;            // Copy Constructor Not Implemented
+  ITKImportImageStack(ITKImportImageStack&&) = delete;                 // Move Constructor Not Implemented
   ITKImportImageStack& operator=(const ITKImportImageStack&) = delete; // Copy Assignment Not Implemented
   ITKImportImageStack& operator=(ITKImportImageStack&&) = delete;      // Move Assignment Not Implemented
 };
-

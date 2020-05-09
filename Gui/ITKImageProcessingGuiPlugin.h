@@ -10,13 +10,12 @@ class ITKImageProcessingGuiPlugin : public ITKImageProcessingPlugin
 
 public:
   ITKImageProcessingGuiPlugin();
-   ~ITKImageProcessingGuiPlugin() override;
-  
+  ~ITKImageProcessingGuiPlugin() override;
+
   /**
    * @brief Register all the filters with the FilterWidgetFactory
    */
   void registerFilterWidgets(FilterWidgetManager* fwm) override;
-  
 
 public:
   ITKImageProcessingGuiPlugin(const ITKImageProcessingGuiPlugin&) = delete;            // Copy Constructor Not Implemented

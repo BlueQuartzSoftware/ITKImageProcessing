@@ -2,7 +2,6 @@
  * Your License or Copyright can go here
  */
 
-
 #include "ITKHistogramMatchingImage.h"
 
 #include "SIMPLib/Common/Constants.h"
@@ -15,7 +14,6 @@
 
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -24,7 +22,6 @@ ITKHistogramMatchingImage::ITKHistogramMatchingImage()
   m_NumberOfHistogramLevels = StaticCastScalar<double, double, double>(256u);
   m_NumberOfMatchPoints = StaticCastScalar<double, double, double>(1u);
   m_ThresholdAtMeanIntensity = StaticCastScalar<bool, bool, bool>(true);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -180,7 +177,8 @@ void ITKHistogramMatchingImage::CompareImageTypes(const DataArrayPath& path1, co
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKHistogramMatchingImage::dataCheckImpl()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKHistogramMatchingImage::dataCheckImpl()
 {
   clearErrorCode();
   clearWarningCode();
@@ -205,7 +203,8 @@ void ITKHistogramMatchingImage::dataCheck()
 //
 // -----------------------------------------------------------------------------
 
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKHistogramMatchingImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKHistogramMatchingImage::filter()
 {
   typedef itk::Image<InputPixelType, Dimension> InputImageType;
   typedef itk::Image<OutputPixelType, Dimension> OutputImageType;
@@ -285,7 +284,7 @@ ITKHistogramMatchingImage::Pointer ITKHistogramMatchingImage::NullPointer()
 // -----------------------------------------------------------------------------
 std::shared_ptr<ITKHistogramMatchingImage> ITKHistogramMatchingImage::New()
 {
-  struct make_shared_enabler : public ITKHistogramMatchingImage  
+  struct make_shared_enabler : public ITKHistogramMatchingImage
   {
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
@@ -352,5 +351,3 @@ bool ITKHistogramMatchingImage::getThresholdAtMeanIntensity() const
 {
   return m_ThresholdAtMeanIntensity;
 }
-
-

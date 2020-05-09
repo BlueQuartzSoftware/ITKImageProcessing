@@ -4,7 +4,6 @@
  * Your License or Copyright can go here
  */
 
-
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -16,7 +15,6 @@
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 
-
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKDiscreteGaussianImage.h"
 
 // -----------------------------------------------------------------------------
@@ -24,11 +22,10 @@
 // -----------------------------------------------------------------------------
 ITKDiscreteGaussianImage::ITKDiscreteGaussianImage()
 {
-  m_Variance = CastStdToVec3<std::vector<double>, FloatVec3Type, float>(std::vector<double>(3,1.0));
+  m_Variance = CastStdToVec3<std::vector<double>, FloatVec3Type, float>(std::vector<double>(3, 1.0));
   m_MaximumKernelWidth = StaticCastScalar<double, double, double>(32u);
   m_MaximumError = CastStdToVec3<std::vector<double>, FloatVec3Type, float>(std::vector<double>(3, 0.01));
   m_UseImageSpacing = StaticCastScalar<bool, bool, bool>(true);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -47,7 +44,6 @@ void ITKDiscreteGaussianImage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_INTEGER_FP("MaximumKernelWidth", MaximumKernelWidth, FilterParameter::Parameter, ITKDiscreteGaussianImage));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("MaximumError", MaximumError, FilterParameter::Parameter, ITKDiscreteGaussianImage));
   parameters.push_back(SIMPL_NEW_BOOL_FP("UseImageSpacing", UseImageSpacing, FilterParameter::Parameter, ITKDiscreteGaussianImage));
-
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -84,7 +80,8 @@ void ITKDiscreteGaussianImage::readFilterParameters(AbstractFilterParametersRead
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKDiscreteGaussianImage::dataCheckImpl()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKDiscreteGaussianImage::dataCheckImpl()
 {
   clearErrorCode();
   clearWarningCode();
@@ -122,7 +119,6 @@ void ITKDiscreteGaussianImage::filter()
   filter->SetMaximumError(CastVec3ToITK<FloatVec3Type, typename FilterType::ArrayType, typename FilterType::ArrayType::ValueType>(m_MaximumError, FilterType::ArrayType::Dimension));
   filter->SetUseImageSpacing(static_cast<bool>(m_UseImageSpacing));
   this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -179,7 +175,7 @@ ITKDiscreteGaussianImage::Pointer ITKDiscreteGaussianImage::NullPointer()
 // -----------------------------------------------------------------------------
 std::shared_ptr<ITKDiscreteGaussianImage> ITKDiscreteGaussianImage::New()
 {
-  struct make_shared_enabler : public ITKDiscreteGaussianImage  
+  struct make_shared_enabler : public ITKDiscreteGaussianImage
   {
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
@@ -246,5 +242,3 @@ bool ITKDiscreteGaussianImage::getUseImageSpacing() const
 {
   return m_UseImageSpacing;
 }
-
-

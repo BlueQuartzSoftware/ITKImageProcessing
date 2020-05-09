@@ -4,7 +4,6 @@
  * Your License or Copyright can go here
  */
 
-
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKApproximateSignedDistanceMapImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 #include "SIMPLib/Common/Constants.h"
@@ -17,7 +16,6 @@
 
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -25,7 +23,6 @@ ITKApproximateSignedDistanceMapImage::ITKApproximateSignedDistanceMapImage()
 {
   m_InsideValue = StaticCastScalar<double, double, double>(1u);
   m_OutsideValue = StaticCastScalar<double, double, double>(0u);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -42,7 +39,6 @@ void ITKApproximateSignedDistanceMapImage::setupFilterParameters()
 
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("InsideValue", InsideValue, FilterParameter::Parameter, ITKApproximateSignedDistanceMapImage));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("OutsideValue", OutsideValue, FilterParameter::Parameter, ITKApproximateSignedDistanceMapImage));
-
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -77,7 +73,8 @@ void ITKApproximateSignedDistanceMapImage::readFilterParameters(AbstractFilterPa
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKApproximateSignedDistanceMapImage::dataCheckImpl()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKApproximateSignedDistanceMapImage::dataCheckImpl()
 {
   clearErrorCode();
   clearWarningCode();
@@ -92,14 +89,15 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
 // -----------------------------------------------------------------------------
 void ITKApproximateSignedDistanceMapImage::dataCheck()
 {
-  Dream3DArraySwitchMacroOutputType(this->dataCheckImpl, getSelectedCellArrayPath(), -4,float, 0);
+  Dream3DArraySwitchMacroOutputType(this->dataCheckImpl, getSelectedCellArrayPath(), -4, float, 0);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKApproximateSignedDistanceMapImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKApproximateSignedDistanceMapImage::filter()
 {
   typedef itk::Image<InputPixelType, Dimension> InputImageType;
   typedef itk::Image<OutputPixelType, Dimension> OutputImageType;
@@ -109,7 +107,6 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   filter->SetInsideValue(static_cast<double>(m_InsideValue));
   filter->SetOutsideValue(static_cast<double>(m_OutsideValue));
   this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -117,7 +114,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
 // -----------------------------------------------------------------------------
 void ITKApproximateSignedDistanceMapImage::filterInternal()
 {
-  Dream3DArraySwitchMacroOutputType(this->filter, getSelectedCellArrayPath(), -4,float, 0);
+  Dream3DArraySwitchMacroOutputType(this->filter, getSelectedCellArrayPath(), -4, float, 0);
 }
 
 // -----------------------------------------------------------------------------
@@ -166,7 +163,7 @@ ITKApproximateSignedDistanceMapImage::Pointer ITKApproximateSignedDistanceMapIma
 // -----------------------------------------------------------------------------
 std::shared_ptr<ITKApproximateSignedDistanceMapImage> ITKApproximateSignedDistanceMapImage::New()
 {
-  struct make_shared_enabler : public ITKApproximateSignedDistanceMapImage  
+  struct make_shared_enabler : public ITKApproximateSignedDistanceMapImage
   {
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
@@ -209,5 +206,3 @@ double ITKApproximateSignedDistanceMapImage::getOutsideValue() const
 {
   return m_OutsideValue;
 }
-
-

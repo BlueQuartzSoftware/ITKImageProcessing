@@ -10,16 +10,15 @@
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 #include <SIMPLib/FilterParameters/IntFilterParameter.h>
 
-
 class ITKDoubleThresholdImageTest : public ITKTestBase
 {
 
 public:
-ITKDoubleThresholdImageTest() = default;
-~ITKDoubleThresholdImageTest() override = default;
+  ITKDoubleThresholdImageTest() = default;
+  ~ITKDoubleThresholdImageTest() override = default;
 
   int TestITKDoubleThresholdImageDoubleThreshold1Test()
-{
+  {
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/RA-Short.nrrd");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -46,10 +45,10 @@ ITKDoubleThresholdImageTest() = default;
     GetMD5FromDataContainer(containerArray, input_path, md5Output);
     DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("dbd0ea7d6f16bb93e9c688cb0f1bfd85"));
     return 0;
-}
+  }
 
-int TestITKDoubleThresholdImageDoubleThreshold2Test()
-{
+  int TestITKDoubleThresholdImageDoubleThreshold2Test()
+  {
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/RA-Slice-Short.png");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -68,32 +67,32 @@ int TestITKDoubleThresholdImageDoubleThreshold2Test()
     propWasSet = filter->setProperty("SaveAsNewArray", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     {
-        double d3d_var;
-        d3d_var = 0;
-        var.setValue(d3d_var);
-        propWasSet = filter->setProperty("Threshold1", var);
-        DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+      double d3d_var;
+      d3d_var = 0;
+      var.setValue(d3d_var);
+      propWasSet = filter->setProperty("Threshold1", var);
+      DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     }
     {
-        double d3d_var;
-        d3d_var = 0;
-        var.setValue(d3d_var);
-        propWasSet = filter->setProperty("Threshold2", var);
-        DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+      double d3d_var;
+      d3d_var = 0;
+      var.setValue(d3d_var);
+      propWasSet = filter->setProperty("Threshold2", var);
+      DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     }
     {
-        double d3d_var;
-        d3d_var = 3000;
-        var.setValue(d3d_var);
-        propWasSet = filter->setProperty("Threshold3", var);
-        DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+      double d3d_var;
+      d3d_var = 3000;
+      var.setValue(d3d_var);
+      propWasSet = filter->setProperty("Threshold3", var);
+      DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     }
     {
-        double d3d_var;
-        d3d_var = 2700;
-        var.setValue(d3d_var);
-        propWasSet = filter->setProperty("Threshold4", var);
-        DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+      double d3d_var;
+      d3d_var = 2700;
+      var.setValue(d3d_var);
+      propWasSet = filter->setProperty("Threshold4", var);
+      DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     }
     filter->setDataContainerArray(containerArray);
     filter->execute();
@@ -104,9 +103,7 @@ int TestITKDoubleThresholdImageDoubleThreshold2Test()
     GetMD5FromDataContainer(containerArray, input_path, md5Output);
     DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("2c8fc2345ccfa980ef42aef5910efaa3"));
     return 0;
-}
-
-
+  }
 
   // -----------------------------------------------------------------------------
   //
@@ -117,8 +114,8 @@ int TestITKDoubleThresholdImageDoubleThreshold2Test()
 
     DREAM3D_REGISTER_TEST(this->TestFilterAvailability("ITKDoubleThresholdImage"));
 
-    DREAM3D_REGISTER_TEST( TestITKDoubleThresholdImageDoubleThreshold1Test());
-    DREAM3D_REGISTER_TEST( TestITKDoubleThresholdImageDoubleThreshold2Test());
+    DREAM3D_REGISTER_TEST(TestITKDoubleThresholdImageDoubleThreshold1Test());
+    DREAM3D_REGISTER_TEST(TestITKDoubleThresholdImageDoubleThreshold2Test());
 
     if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
     {

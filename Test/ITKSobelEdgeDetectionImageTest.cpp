@@ -7,16 +7,15 @@
 #include "ITKTestBase.h"
 // Auto includes
 
-
 class ITKSobelEdgeDetectionImageTest : public ITKTestBase
 {
 
 public:
-ITKSobelEdgeDetectionImageTest() = default;
-~ITKSobelEdgeDetectionImageTest() override = default;
+  ITKSobelEdgeDetectionImageTest() = default;
+  ~ITKSobelEdgeDetectionImageTest() override = default;
 
   int TestITKSobelEdgeDetectionImagedefaultsTest()
-{
+  {
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/RA-Float.nrrd");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -45,9 +44,7 @@ ITKSobelEdgeDetectionImageTest() = default;
     int res = this->CompareImages(containerArray, input_path, baseline_path, 0.01);
     DREAM3D_REQUIRE_EQUAL(res, 0);
     return 0;
-}
-
-
+  }
 
   // -----------------------------------------------------------------------------
   //
@@ -58,7 +55,7 @@ ITKSobelEdgeDetectionImageTest() = default;
 
     DREAM3D_REGISTER_TEST(this->TestFilterAvailability("ITKSobelEdgeDetectionImage"));
 
-    DREAM3D_REGISTER_TEST( TestITKSobelEdgeDetectionImagedefaultsTest());
+    DREAM3D_REGISTER_TEST(TestITKSobelEdgeDetectionImagedefaultsTest());
 
     if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
     {

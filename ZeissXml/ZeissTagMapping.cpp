@@ -33,7 +33,6 @@
 #include "ITKImageProcessing/ZeissXml/ZeissMetaEntry.h"
 #include "ITKImageProcessing/ZeissXml/ZeissMetaFactory.h"
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -56,13 +55,12 @@ ZeissTagMapping::Pointer ZeissTagMapping::instance()
 {
   static ZeissTagMapping::Pointer singleton;
 
-  if (singleton.get() == nullptr)
+  if(singleton.get() == nullptr)
   {
-    singleton.reset (new ZeissTagMapping() );
+    singleton.reset(new ZeissTagMapping());
   }
   return singleton;
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -70,7 +68,7 @@ ZeissTagMapping::Pointer ZeissTagMapping::instance()
 QString ZeissTagMapping::nameForId(int idTag)
 {
   QMap<int, QString>::iterator i = _idNameMap.find(idTag);
-  if (i != _idNameMap.end())
+  if(i != _idNameMap.end())
   {
     return i.value();
   }
@@ -83,7 +81,7 @@ QString ZeissTagMapping::nameForId(int idTag)
 int ZeissTagMapping::idForName(const QString& name)
 {
   ZeissNameIdMap::iterator i = _nameIdMap.find(name);
-  if (i != _nameIdMap.end())
+  if(i != _nameIdMap.end())
   {
     return i.value();
   }
@@ -96,7 +94,7 @@ int ZeissTagMapping::idForName(const QString& name)
 ZeissMetaFactory::Pointer ZeissTagMapping::factoryForId(int idTag)
 {
   ZeissFactoryMap::iterator i = _idFactoryMap.find(idTag);
-  if (i != _idFactoryMap.end())
+  if(i != _idFactoryMap.end())
   {
     return i.value();
   }
@@ -110,13 +108,13 @@ ZeissMetaFactory::Pointer ZeissTagMapping::factoryForId(int idTag)
 AbstractZeissMetaData::Pointer ZeissTagMapping::metaDataForTagName(const QString& name)
 {
   int idTag = idForName(name);
-  if (idTag < 0)
+  if(idTag < 0)
   {
     return AbstractZeissMetaData::NullPointer();
   }
 
   ZeissMetaFactory::Pointer f = _idFactoryMap[idTag];
-  if (nullptr != f.get() )
+  if(nullptr != f.get())
   {
     AbstractZeissMetaData::Pointer ptr = f->createMetaEntry();
     ptr->setZeissIdTag(idTag);
@@ -131,7 +129,7 @@ AbstractZeissMetaData::Pointer ZeissTagMapping::metaDataForTagName(const QString
 AbstractZeissMetaData::Pointer ZeissTagMapping::metaDataForId(int idTag, const QString& value)
 {
   ZeissMetaFactory::Pointer f = _idFactoryMap[idTag];
-  if (nullptr != f.get() )
+  if(nullptr != f.get())
   {
     AbstractZeissMetaData::Pointer ptr = f->createMetaEntry();
     ptr->setZeissIdTag(idTag);

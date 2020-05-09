@@ -2,7 +2,6 @@
  * Your License or Copyright Information can go here
  */
 
-
 #include "ITKRefineTileCoordinates.h"
 
 #include <QtCore/QString>
@@ -237,7 +236,6 @@ void ITKRefineTileCoordinates::dataCheck()
   }
 }
 
-
 // -----------------------------------------------------------------------------
 template <typename T>
 void executeRefinement(ITKRefineTileCoordinates* filter)
@@ -442,7 +440,7 @@ ITKRefineTileCoordinates::Pointer ITKRefineTileCoordinates::NullPointer()
 // -----------------------------------------------------------------------------
 std::shared_ptr<ITKRefineTileCoordinates> ITKRefineTileCoordinates::New()
 {
-  struct make_shared_enabler : public ITKRefineTileCoordinates  
+  struct make_shared_enabler : public ITKRefineTileCoordinates
   {
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
@@ -545,5 +543,3 @@ bool ITKRefineTileCoordinates::getApplyRefinedOrigin() const
 {
   return m_ApplyRefinedOrigin;
 }
-
-

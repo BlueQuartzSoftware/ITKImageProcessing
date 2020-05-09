@@ -4,7 +4,6 @@
  * Your License or Copyright can go here
  */
 
-
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKGrayscaleMorphologicalOpeningImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 #include "SIMPLib/Common/Constants.h"
@@ -20,7 +19,6 @@
 
 #include <itkFlatStructuringElement.h>
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -29,7 +27,6 @@ ITKGrayscaleMorphologicalOpeningImage::ITKGrayscaleMorphologicalOpeningImage()
   m_SafeBorder = StaticCastScalar<bool, bool, bool>(true);
   m_KernelRadius = CastStdToVec3<std::vector<unsigned int>, FloatVec3Type, float>(std::vector<unsigned int>(3, 1));
   m_KernelType = StaticCastScalar<int, int, int>(itk::simple::sitkBall);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -65,7 +62,6 @@ void ITKGrayscaleMorphologicalOpeningImage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_BOOL_FP("SafeBorder", SafeBorder, FilterParameter::Parameter, ITKGrayscaleMorphologicalOpeningImage));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("KernelRadius", KernelRadius, FilterParameter::Parameter, ITKGrayscaleMorphologicalOpeningImage));
 
-
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Save as New Array", SaveAsNewArray, FilterParameter::Parameter, ITKGrayscaleMorphologicalOpeningImage, linkedProps));
@@ -100,7 +96,8 @@ void ITKGrayscaleMorphologicalOpeningImage::readFilterParameters(AbstractFilterP
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKGrayscaleMorphologicalOpeningImage::dataCheckImpl()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKGrayscaleMorphologicalOpeningImage::dataCheckImpl()
 {
   clearErrorCode();
   clearWarningCode();
@@ -123,7 +120,8 @@ void ITKGrayscaleMorphologicalOpeningImage::dataCheck()
 //
 // -----------------------------------------------------------------------------
 
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKGrayscaleMorphologicalOpeningImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKGrayscaleMorphologicalOpeningImage::filter()
 {
   typedef itk::Image<InputPixelType, Dimension> InputImageType;
   typedef itk::Image<OutputPixelType, Dimension> OutputImageType;
@@ -155,7 +153,6 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   filter->SetSafeBorder(static_cast<bool>(m_SafeBorder));
   filter->SetKernel(structuringElement);
   this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -212,7 +209,7 @@ ITKGrayscaleMorphologicalOpeningImage::Pointer ITKGrayscaleMorphologicalOpeningI
 // -----------------------------------------------------------------------------
 std::shared_ptr<ITKGrayscaleMorphologicalOpeningImage> ITKGrayscaleMorphologicalOpeningImage::New()
 {
-  struct make_shared_enabler : public ITKGrayscaleMorphologicalOpeningImage  
+  struct make_shared_enabler : public ITKGrayscaleMorphologicalOpeningImage
   {
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
@@ -267,5 +264,3 @@ int ITKGrayscaleMorphologicalOpeningImage::getKernelType() const
 {
   return m_KernelType;
 }
-
-

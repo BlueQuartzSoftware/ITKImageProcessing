@@ -41,49 +41,47 @@ class ITKImageProcessing_EXPORT ITKApproximateSignedDistanceMapImage : public IT
   // End Python bindings declarations
 
 public:
-    using Self = ITKApproximateSignedDistanceMapImage;
-    using Pointer = std::shared_ptr<Self>;
-    using ConstPointer = std::shared_ptr<const Self>;
-    using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<const Self>;
-    static Pointer NullPointer();
+  using Self = ITKApproximateSignedDistanceMapImage;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<const Self>;
+  static Pointer NullPointer();
 
-    static std::shared_ptr<ITKApproximateSignedDistanceMapImage> New();
+  static std::shared_ptr<ITKApproximateSignedDistanceMapImage> New();
 
-    /**
-    * @brief Returns the name of the class for ITKApproximateSignedDistanceMapImage
-    */
-    QString getNameOfClass() const override;
-    /**
-    * @brief Returns the name of the class for ITKApproximateSignedDistanceMapImage
-    */
-    static QString ClassName();
-
+  /**
+   * @brief Returns the name of the class for ITKApproximateSignedDistanceMapImage
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for ITKApproximateSignedDistanceMapImage
+   */
+  static QString ClassName();
 
   ~ITKApproximateSignedDistanceMapImage() override;
 
-    /**
-    * @brief Setter property for InsideValue
-    */
-    void setInsideValue(double value); 
-    /**
-    * @brief Getter property for InsideValue
-    * @return Value of InsideValue
-    */
-    double getInsideValue() const;
+  /**
+   * @brief Setter property for InsideValue
+   */
+  void setInsideValue(double value);
+  /**
+   * @brief Getter property for InsideValue
+   * @return Value of InsideValue
+   */
+  double getInsideValue() const;
   Q_PROPERTY(double InsideValue READ getInsideValue WRITE setInsideValue)
 
-    /**
-    * @brief Setter property for OutsideValue
-    */
-    void setOutsideValue(double value); 
-    /**
-    * @brief Getter property for OutsideValue
-    * @return Value of OutsideValue
-    */
-    double getOutsideValue() const;
+  /**
+   * @brief Setter property for OutsideValue
+   */
+  void setOutsideValue(double value);
+  /**
+   * @brief Getter property for OutsideValue
+   * @return Value of OutsideValue
+   */
+  double getOutsideValue() const;
   Q_PROPERTY(double OutsideValue READ getOutsideValue WRITE setOutsideValue)
-
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -127,31 +125,31 @@ protected:
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
    */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void dataCheckImpl();
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void dataCheckImpl();
 
   /**
-  * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
-  */
+   * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
+   */
   void filterInternal() override;
 
   /**
-  * @brief Applies the filter
-  */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
+   * @brief Applies the filter
+   */
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void filter();
 
 public:
-  ITKApproximateSignedDistanceMapImage(const ITKApproximateSignedDistanceMapImage&) = delete;    // Copy Constructor Not Implemented
-  ITKApproximateSignedDistanceMapImage(ITKApproximateSignedDistanceMapImage&&) = delete;         // Move Constructor Not Implemented
+  ITKApproximateSignedDistanceMapImage(const ITKApproximateSignedDistanceMapImage&) = delete;            // Copy Constructor Not Implemented
+  ITKApproximateSignedDistanceMapImage(ITKApproximateSignedDistanceMapImage&&) = delete;                 // Move Constructor Not Implemented
   ITKApproximateSignedDistanceMapImage& operator=(const ITKApproximateSignedDistanceMapImage&) = delete; // Copy Assignment Not Implemented
   ITKApproximateSignedDistanceMapImage& operator=(ITKApproximateSignedDistanceMapImage&&) = delete;      // Move Assignment Not Implemented
 
-  private:
-    double m_InsideValue = {};
-    double m_OutsideValue = {};
-
+private:
+  double m_InsideValue = {};
+  double m_OutsideValue = {};
 };
 
 #ifdef __clang__
 #pragma clang diagnostic pop
 #endif
-

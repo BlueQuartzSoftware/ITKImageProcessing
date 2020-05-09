@@ -64,47 +64,46 @@ class ITKImageProcessing_EXPORT ITKVectorRescaleIntensityImage : public ITKImage
   // End Python bindings declarations
 
 public:
-    using Self = ITKVectorRescaleIntensityImage;
-    using Pointer = std::shared_ptr<Self>;
-    using ConstPointer = std::shared_ptr<const Self>;
-    using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<const Self>;
-    static Pointer NullPointer();
+  using Self = ITKVectorRescaleIntensityImage;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<const Self>;
+  static Pointer NullPointer();
 
-    static std::shared_ptr<ITKVectorRescaleIntensityImage> New();
+  static std::shared_ptr<ITKVectorRescaleIntensityImage> New();
 
-    /**
-    * @brief Returns the name of the class for ITKVectorRescaleIntensityImage
-    */
-    QString getNameOfClass() const override;
-    /**
-    * @brief Returns the name of the class for ITKVectorRescaleIntensityImage
-    */
-    static QString ClassName();
-
+  /**
+   * @brief Returns the name of the class for ITKVectorRescaleIntensityImage
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for ITKVectorRescaleIntensityImage
+   */
+  static QString ClassName();
 
   ~ITKVectorRescaleIntensityImage() override;
 
-    /**
-    * @brief Setter property for OutputMaximumMagnitude
-    */
-    void setOutputMaximumMagnitude(double value); 
-    /**
-    * @brief Getter property for OutputMaximumMagnitude
-    * @return Value of OutputMaximumMagnitude
-    */
-    double getOutputMaximumMagnitude() const;
+  /**
+   * @brief Setter property for OutputMaximumMagnitude
+   */
+  void setOutputMaximumMagnitude(double value);
+  /**
+   * @brief Getter property for OutputMaximumMagnitude
+   * @return Value of OutputMaximumMagnitude
+   */
+  double getOutputMaximumMagnitude() const;
   Q_PROPERTY(double OutputMaximumMagnitude READ getOutputMaximumMagnitude WRITE setOutputMaximumMagnitude)
 
-    /**
-    * @brief Setter property for OutputType
-    */
-    void setOutputType(int value); 
-    /**
-    * @brief Getter property for OutputType
-    * @return Value of OutputType
-    */
-    int getOutputType() const;
+  /**
+   * @brief Setter property for OutputType
+   */
+  void setOutputType(int value);
+  /**
+   * @brief Getter property for OutputType
+   * @return Value of OutputType
+   */
+  int getOutputType() const;
   Q_PROPERTY(int OutputType READ getOutputType WRITE setOutputType)
 
   /**
@@ -149,35 +148,37 @@ protected:
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
    */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void dataCheckImpl();
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void dataCheckImpl();
 
   /**
-  * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
-  */
+   * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
+   */
   void filterInternal() override;
 
   /**
-  * @brief Applies the filter
-  */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
+   * @brief Applies the filter
+   */
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void filter();
 
   /**
-  * @brief Checks 'value' can be casted to OutputPixelType.
-  */
-  template <typename OutputPixelType> void CheckEntryBounds(double value, QString name);
+   * @brief Checks 'value' can be casted to OutputPixelType.
+   */
+  template <typename OutputPixelType>
+  void CheckEntryBounds(double value, QString name);
 
 public:
-  ITKVectorRescaleIntensityImage(const ITKVectorRescaleIntensityImage&) = delete; // Copy Constructor Not Implemented
-  ITKVectorRescaleIntensityImage(ITKVectorRescaleIntensityImage&&) = delete;      // Move Constructor Not Implemented
+  ITKVectorRescaleIntensityImage(const ITKVectorRescaleIntensityImage&) = delete;            // Copy Constructor Not Implemented
+  ITKVectorRescaleIntensityImage(ITKVectorRescaleIntensityImage&&) = delete;                 // Move Constructor Not Implemented
   ITKVectorRescaleIntensityImage& operator=(const ITKVectorRescaleIntensityImage&) = delete; // Copy Assignment Not Implemented
   ITKVectorRescaleIntensityImage& operator=(ITKVectorRescaleIntensityImage&&) = delete;      // Move Assignment Not Implemented
 
-  private:
-    double m_OutputMaximumMagnitude = StaticCastScalar<double, double, double>(255);
-    int m_OutputType = {0};
+private:
+  double m_OutputMaximumMagnitude = StaticCastScalar<double, double, double>(255);
+  int m_OutputType = {0};
 };
 
 #ifdef __clang__
 #pragma clang diagnostic pop
 #endif
-

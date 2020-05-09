@@ -41,85 +41,84 @@ class ITKImageProcessing_EXPORT ImportImageMontage : public AbstractFilter
   // End Python bindings declarations
 
 public:
-    using Self = ImportImageMontage;
-    using Pointer = std::shared_ptr<Self>;
-    using ConstPointer = std::shared_ptr<const Self>;
-    using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<const Self>;
-    static Pointer NullPointer();
+  using Self = ImportImageMontage;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<const Self>;
+  static Pointer NullPointer();
 
-    static std::shared_ptr<ImportImageMontage> New();
+  static std::shared_ptr<ImportImageMontage> New();
 
-    /**
-    * @brief Returns the name of the class for ImportImageMontage
-    */
-    QString getNameOfClass() const override;
-    /**
-    * @brief Returns the name of the class for ImportImageMontage
-    */
-    static QString ClassName();
-
+  /**
+   * @brief Returns the name of the class for ImportImageMontage
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for ImportImageMontage
+   */
+  static QString ClassName();
 
   ~ImportImageMontage() override;
 
-    /**
-    * @brief Setter property for DataContainerName
-    */
-    void setDataContainerName(const DataArrayPath& value); 
-    /**
-    * @brief Getter property for DataContainerName
-    * @return Value of DataContainerName
-    */
-    DataArrayPath getDataContainerName() const;
+  /**
+   * @brief Setter property for DataContainerName
+   */
+  void setDataContainerName(const DataArrayPath& value);
+  /**
+   * @brief Getter property for DataContainerName
+   * @return Value of DataContainerName
+   */
+  DataArrayPath getDataContainerName() const;
   Q_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
 
-    /**
-    * @brief Setter property for CellAttributeMatrixName
-    */
-    void setCellAttributeMatrixName(const QString& value); 
-    /**
-    * @brief Getter property for CellAttributeMatrixName
-    * @return Value of CellAttributeMatrixName
-    */
-    QString getCellAttributeMatrixName() const;
+  /**
+   * @brief Setter property for CellAttributeMatrixName
+   */
+  void setCellAttributeMatrixName(const QString& value);
+  /**
+   * @brief Getter property for CellAttributeMatrixName
+   * @return Value of CellAttributeMatrixName
+   */
+  QString getCellAttributeMatrixName() const;
   Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
-    /**
-    * @brief Setter property for MetaDataAttributeMatrixName
-    */
-    void setMetaDataAttributeMatrixName(const QString& value); 
-    /**
-    * @brief Getter property for MetaDataAttributeMatrixName
-    * @return Value of MetaDataAttributeMatrixName
-    */
-    QString getMetaDataAttributeMatrixName() const;
+  /**
+   * @brief Setter property for MetaDataAttributeMatrixName
+   */
+  void setMetaDataAttributeMatrixName(const QString& value);
+  /**
+   * @brief Getter property for MetaDataAttributeMatrixName
+   * @return Value of MetaDataAttributeMatrixName
+   */
+  QString getMetaDataAttributeMatrixName() const;
   Q_PROPERTY(QString MetaDataAttributeMatrixName READ getMetaDataAttributeMatrixName WRITE setMetaDataAttributeMatrixName)
 
-    /**
-    * @brief Setter property for Origin
-    */
-    void setOrigin(const FloatVec3Type& value); 
-    /**
-    * @brief Getter property for Origin
-    * @return Value of Origin
-    */
-    FloatVec3Type getOrigin() const;
+  /**
+   * @brief Setter property for Origin
+   */
+  void setOrigin(const FloatVec3Type& value);
+  /**
+   * @brief Getter property for Origin
+   * @return Value of Origin
+   */
+  FloatVec3Type getOrigin() const;
   Q_PROPERTY(FloatVec3Type Origin READ getOrigin WRITE setOrigin)
 
-    /**
-    * @brief Setter property for Spacing
-    */
-    void setSpacing(const FloatVec3Type& value); 
-    /**
-    * @brief Getter property for Spacing
-    * @return Value of Spacing
-    */
-    FloatVec3Type getSpacing() const;
+  /**
+   * @brief Setter property for Spacing
+   */
+  void setSpacing(const FloatVec3Type& value);
+  /**
+   * @brief Getter property for Spacing
+   * @return Value of Spacing
+   */
+  FloatVec3Type getSpacing() const;
   Q_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
 
-    /**
-    * @brief Setter property for InputFileListInfo
-    */
+  /**
+   * @brief Setter property for InputFileListInfo
+   */
   void setInputFileListInfo(const StackFileListInfo& value);
   /**
    * @brief Getter property for InputFileListInfo
@@ -209,16 +208,14 @@ protected:
   void initialize();
 
 private:
-    DataArrayPath m_DataContainerName = {};
-    QString m_CellAttributeMatrixName = {};
-    QString m_MetaDataAttributeMatrixName = {};
-    FloatVec3Type m_Origin = {};
-    FloatVec3Type m_Spacing = {};
-    StackFileListInfo m_InputFileListInfo = {};
-    std::weak_ptr<DataArray<float>>  m_RegistrationCoordinatesPtr;
-    float* m_RegistrationCoordinates = nullptr;
-
-
+  DataArrayPath m_DataContainerName = {};
+  QString m_CellAttributeMatrixName = {};
+  QString m_MetaDataAttributeMatrixName = {};
+  FloatVec3Type m_Origin = {};
+  FloatVec3Type m_Spacing = {};
+  StackFileListInfo m_InputFileListInfo = {};
+  std::weak_ptr<DataArray<float>> m_RegistrationCoordinatesPtr;
+  float* m_RegistrationCoordinates = nullptr;
 
   StringDataArray::WeakPointer m_AttributeArrayNamesPtr;
   QFile m_InStream;
@@ -232,10 +229,8 @@ private:
    */
   ITK_IMAGE_READER_HELPER_ImageDataArrayName() ITK_IMAGE_READER_HELPER_DECL()
 
-public:
-  ImportImageMontage(const ImportImageMontage&) = delete; // Copy Constructor Not Implemented
+      public : ImportImageMontage(const ImportImageMontage&) = delete; // Copy Constructor Not Implemented
   ImportImageMontage(ImportImageMontage&&) = delete;                   // Move Constructor Not Implemented
   ImportImageMontage& operator=(const ImportImageMontage&) = delete;   // Copy Assignment Not Implemented
   ImportImageMontage& operator=(ImportImageMontage&&) = delete;        // Move Assignment Not Implemented
 };
-

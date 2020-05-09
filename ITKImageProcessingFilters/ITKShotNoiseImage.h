@@ -41,49 +41,47 @@ class ITKImageProcessing_EXPORT ITKShotNoiseImage : public ITKImageProcessingBas
   // End Python bindings declarations
 
 public:
-    using Self = ITKShotNoiseImage;
-    using Pointer = std::shared_ptr<Self>;
-    using ConstPointer = std::shared_ptr<const Self>;
-    using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<const Self>;
-    static Pointer NullPointer();
+  using Self = ITKShotNoiseImage;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<const Self>;
+  static Pointer NullPointer();
 
-    static std::shared_ptr<ITKShotNoiseImage> New();
+  static std::shared_ptr<ITKShotNoiseImage> New();
 
-    /**
-    * @brief Returns the name of the class for ITKShotNoiseImage
-    */
-    QString getNameOfClass() const override;
-    /**
-    * @brief Returns the name of the class for ITKShotNoiseImage
-    */
-    static QString ClassName();
-
+  /**
+   * @brief Returns the name of the class for ITKShotNoiseImage
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for ITKShotNoiseImage
+   */
+  static QString ClassName();
 
   ~ITKShotNoiseImage() override;
 
-    /**
-    * @brief Setter property for Scale
-    */
-    void setScale(double value); 
-    /**
-    * @brief Getter property for Scale
-    * @return Value of Scale
-    */
-    double getScale() const;
+  /**
+   * @brief Setter property for Scale
+   */
+  void setScale(double value);
+  /**
+   * @brief Getter property for Scale
+   * @return Value of Scale
+   */
+  double getScale() const;
   Q_PROPERTY(double Scale READ getScale WRITE setScale)
 
-    /**
-    * @brief Setter property for Seed
-    */
-    void setSeed(double value); 
-    /**
-    * @brief Getter property for Seed
-    * @return Value of Seed
-    */
-    double getSeed() const;
+  /**
+   * @brief Setter property for Seed
+   */
+  void setSeed(double value);
+  /**
+   * @brief Getter property for Seed
+   * @return Value of Seed
+   */
+  double getSeed() const;
   Q_PROPERTY(double Seed READ getSeed WRITE setSeed)
-
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -127,31 +125,31 @@ protected:
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
    */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void dataCheckImpl();
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void dataCheckImpl();
 
   /**
-  * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
-  */
+   * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
+   */
   void filterInternal() override;
 
   /**
-  * @brief Applies the filter
-  */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
+   * @brief Applies the filter
+   */
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void filter();
 
 public:
-  ITKShotNoiseImage(const ITKShotNoiseImage&) = delete;    // Copy Constructor Not Implemented
-  ITKShotNoiseImage(ITKShotNoiseImage&&) = delete;         // Move Constructor Not Implemented
+  ITKShotNoiseImage(const ITKShotNoiseImage&) = delete;            // Copy Constructor Not Implemented
+  ITKShotNoiseImage(ITKShotNoiseImage&&) = delete;                 // Move Constructor Not Implemented
   ITKShotNoiseImage& operator=(const ITKShotNoiseImage&) = delete; // Copy Assignment Not Implemented
   ITKShotNoiseImage& operator=(ITKShotNoiseImage&&) = delete;      // Move Assignment Not Implemented
 
-  private:
-    double m_Scale = {};
-    double m_Seed = {};
-
+private:
+  double m_Scale = {};
+  double m_Seed = {};
 };
 
 #ifdef __clang__
 #pragma clang diagnostic pop
 #endif
-

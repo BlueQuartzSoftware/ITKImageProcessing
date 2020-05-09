@@ -4,7 +4,6 @@
  * Your License or Copyright can go here
  */
 
-
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKConnectedComponentImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 #include "SIMPLib/Common/Constants.h"
@@ -17,14 +16,12 @@
 
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 ITKConnectedComponentImage::ITKConnectedComponentImage()
 {
   m_FullyConnected = StaticCastScalar<bool, bool, bool>(false);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -40,7 +37,6 @@ void ITKConnectedComponentImage::setupFilterParameters()
   FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_BOOL_FP("FullyConnected", FullyConnected, FilterParameter::Parameter, ITKConnectedComponentImage));
-
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -74,7 +70,8 @@ void ITKConnectedComponentImage::readFilterParameters(AbstractFilterParametersRe
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKConnectedComponentImage::dataCheckImpl()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKConnectedComponentImage::dataCheckImpl()
 {
   clearErrorCode();
   clearWarningCode();
@@ -89,14 +86,15 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
 // -----------------------------------------------------------------------------
 void ITKConnectedComponentImage::dataCheck()
 {
-  Dream3DArraySwitchMacroOutputType(this->dataCheckImpl, getSelectedCellArrayPath(), -4,uint32_t, 0);
+  Dream3DArraySwitchMacroOutputType(this->dataCheckImpl, getSelectedCellArrayPath(), -4, uint32_t, 0);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKConnectedComponentImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKConnectedComponentImage::filter()
 {
   typedef itk::Image<InputPixelType, Dimension> InputImageType;
   typedef itk::Image<OutputPixelType, Dimension> OutputImageType;
@@ -105,12 +103,11 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   typename FilterType::Pointer filter = FilterType::New();
   filter->SetFullyConnected(static_cast<bool>(m_FullyConnected));
   this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
-{
-  QString outputVal = "ObjectCount :%1";
-  m_ObjectCount = filter->GetObjectCount();
-  setWarningCondition(0, outputVal.arg(m_ObjectCount));
-}
-
+  {
+    QString outputVal = "ObjectCount :%1";
+    m_ObjectCount = filter->GetObjectCount();
+    setWarningCondition(0, outputVal.arg(m_ObjectCount));
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -118,7 +115,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
 // -----------------------------------------------------------------------------
 void ITKConnectedComponentImage::filterInternal()
 {
-  Dream3DArraySwitchMacroOutputType(this->filter, getSelectedCellArrayPath(), -4,uint32_t, 0);
+  Dream3DArraySwitchMacroOutputType(this->filter, getSelectedCellArrayPath(), -4, uint32_t, 0);
 }
 
 // -----------------------------------------------------------------------------
@@ -167,7 +164,7 @@ ITKConnectedComponentImage::Pointer ITKConnectedComponentImage::NullPointer()
 // -----------------------------------------------------------------------------
 std::shared_ptr<ITKConnectedComponentImage> ITKConnectedComponentImage::New()
 {
-  struct make_shared_enabler : public ITKConnectedComponentImage  
+  struct make_shared_enabler : public ITKConnectedComponentImage
   {
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
@@ -210,5 +207,3 @@ double ITKConnectedComponentImage::getObjectCount() const
 {
   return m_ObjectCount;
 }
-
-

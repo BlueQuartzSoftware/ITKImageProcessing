@@ -4,7 +4,6 @@
  * Your License or Copyright can go here
  */
 
-
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKOtsuMultipleThresholdsImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 #include "SIMPLib/Common/Constants.h"
@@ -17,7 +16,6 @@
 
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -27,7 +25,6 @@ ITKOtsuMultipleThresholdsImage::ITKOtsuMultipleThresholdsImage()
   m_LabelOffset = StaticCastScalar<int, int, int>(0u);
   m_NumberOfHistogramBins = StaticCastScalar<double, double, double>(128u);
   m_ValleyEmphasis = StaticCastScalar<bool, bool, bool>(false);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -46,7 +43,6 @@ void ITKOtsuMultipleThresholdsImage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_INTEGER_FP("LabelOffset", LabelOffset, FilterParameter::Parameter, ITKOtsuMultipleThresholdsImage));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("NumberOfHistogramBins", NumberOfHistogramBins, FilterParameter::Parameter, ITKOtsuMultipleThresholdsImage));
   parameters.push_back(SIMPL_NEW_BOOL_FP("ValleyEmphasis", ValleyEmphasis, FilterParameter::Parameter, ITKOtsuMultipleThresholdsImage));
-
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -83,7 +79,8 @@ void ITKOtsuMultipleThresholdsImage::readFilterParameters(AbstractFilterParamete
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKOtsuMultipleThresholdsImage::dataCheckImpl()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKOtsuMultipleThresholdsImage::dataCheckImpl()
 {
   clearErrorCode();
   clearWarningCode();
@@ -101,14 +98,15 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
 // -----------------------------------------------------------------------------
 void ITKOtsuMultipleThresholdsImage::dataCheck()
 {
-  Dream3DArraySwitchMacroOutputType(this->dataCheckImpl, getSelectedCellArrayPath(), -4,uint8_t, 0);
+  Dream3DArraySwitchMacroOutputType(this->dataCheckImpl, getSelectedCellArrayPath(), -4, uint8_t, 0);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKOtsuMultipleThresholdsImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKOtsuMultipleThresholdsImage::filter()
 {
   typedef itk::Image<InputPixelType, Dimension> InputImageType;
   typedef itk::Image<OutputPixelType, Dimension> OutputImageType;
@@ -120,11 +118,10 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   filter->SetNumberOfHistogramBins(static_cast<uint32_t>(m_NumberOfHistogramBins));
   filter->SetValleyEmphasis(static_cast<bool>(m_ValleyEmphasis));
   this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
-//{
-//  QString outputVal = "Thresholds :%1";
-//  m_Thresholds = filter->GetThresholds();
-//}
-
+  //{
+  //  QString outputVal = "Thresholds :%1";
+  //  m_Thresholds = filter->GetThresholds();
+  //}
 }
 
 // -----------------------------------------------------------------------------
@@ -132,7 +129,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
 // -----------------------------------------------------------------------------
 void ITKOtsuMultipleThresholdsImage::filterInternal()
 {
-  Dream3DArraySwitchMacroOutputType(this->filter, getSelectedCellArrayPath(), -4,uint8_t, 0);
+  Dream3DArraySwitchMacroOutputType(this->filter, getSelectedCellArrayPath(), -4, uint8_t, 0);
 }
 
 // -----------------------------------------------------------------------------
@@ -181,7 +178,7 @@ ITKOtsuMultipleThresholdsImage::Pointer ITKOtsuMultipleThresholdsImage::NullPoin
 // -----------------------------------------------------------------------------
 std::shared_ptr<ITKOtsuMultipleThresholdsImage> ITKOtsuMultipleThresholdsImage::New()
 {
-  struct make_shared_enabler : public ITKOtsuMultipleThresholdsImage  
+  struct make_shared_enabler : public ITKOtsuMultipleThresholdsImage
   {
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
@@ -260,5 +257,3 @@ FloatVec3Type ITKOtsuMultipleThresholdsImage::getThresholds() const
 {
   return m_Thresholds;
 }
-
-

@@ -4,7 +4,6 @@
  * Your License or Copyright can go here
  */
 
-
 #include "ITKFFTNormalizedCorrelationImage.h"
 
 #include "SIMPLib/Common/Constants.h"
@@ -19,7 +18,6 @@
 
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -27,7 +25,6 @@ ITKFFTNormalizedCorrelationImage::ITKFFTNormalizedCorrelationImage()
 {
   m_RequiredNumberOfOverlappingPixels = StaticCastScalar<double, double, double>(0);
   m_RequiredFractionOfOverlappingPixels = StaticCastScalar<double, double, double>(0.0);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -79,7 +76,8 @@ void ITKFFTNormalizedCorrelationImage::readFilterParameters(AbstractFilterParame
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKFFTNormalizedCorrelationImage::dataCheckImpl()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKFFTNormalizedCorrelationImage::dataCheckImpl()
 {
   clearErrorCode();
   clearWarningCode();
@@ -102,7 +100,8 @@ void ITKFFTNormalizedCorrelationImage::dataCheck()
 //
 // -----------------------------------------------------------------------------
 
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKFFTNormalizedCorrelationImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKFFTNormalizedCorrelationImage::filter()
 {
   typedef itk::Image<InputPixelType, Dimension> InputImageType;
   typedef itk::Image<OutputPixelType, Dimension> IntermediateImageType;
@@ -170,7 +169,6 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
     setErrorCondition(-55558, errorMessage.arg(err.GetDescription()));
     return;
   }
-
 }
 
 // -----------------------------------------------------------------------------
@@ -227,7 +225,7 @@ ITKFFTNormalizedCorrelationImage::Pointer ITKFFTNormalizedCorrelationImage::Null
 // -----------------------------------------------------------------------------
 std::shared_ptr<ITKFFTNormalizedCorrelationImage> ITKFFTNormalizedCorrelationImage::New()
 {
-  struct make_shared_enabler : public ITKFFTNormalizedCorrelationImage  
+  struct make_shared_enabler : public ITKFFTNormalizedCorrelationImage
   {
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
@@ -282,5 +280,3 @@ double ITKFFTNormalizedCorrelationImage::getRequiredFractionOfOverlappingPixels(
 {
   return m_RequiredFractionOfOverlappingPixels;
 }
-
-

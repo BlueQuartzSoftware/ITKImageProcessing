@@ -42,60 +42,58 @@ class ITKImageProcessing_EXPORT ITKBilateralImage : public ITKImageProcessingBas
   // End Python bindings declarations
 
 public:
-    using Self = ITKBilateralImage;
-    using Pointer = std::shared_ptr<Self>;
-    using ConstPointer = std::shared_ptr<const Self>;
-    using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<const Self>;
-    static Pointer NullPointer();
+  using Self = ITKBilateralImage;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<const Self>;
+  static Pointer NullPointer();
 
-    static std::shared_ptr<ITKBilateralImage> New();
+  static std::shared_ptr<ITKBilateralImage> New();
 
-    /**
-    * @brief Returns the name of the class for ITKBilateralImage
-    */
-    QString getNameOfClass() const override;
-    /**
-    * @brief Returns the name of the class for ITKBilateralImage
-    */
-    static QString ClassName();
-
+  /**
+   * @brief Returns the name of the class for ITKBilateralImage
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for ITKBilateralImage
+   */
+  static QString ClassName();
 
   ~ITKBilateralImage() override;
 
-    /**
-    * @brief Setter property for DomainSigma
-    */
-    void setDomainSigma(double value); 
-    /**
-    * @brief Getter property for DomainSigma
-    * @return Value of DomainSigma
-    */
-    double getDomainSigma() const;
+  /**
+   * @brief Setter property for DomainSigma
+   */
+  void setDomainSigma(double value);
+  /**
+   * @brief Getter property for DomainSigma
+   * @return Value of DomainSigma
+   */
+  double getDomainSigma() const;
   Q_PROPERTY(double DomainSigma READ getDomainSigma WRITE setDomainSigma)
 
-    /**
-    * @brief Setter property for RangeSigma
-    */
-    void setRangeSigma(double value); 
-    /**
-    * @brief Getter property for RangeSigma
-    * @return Value of RangeSigma
-    */
-    double getRangeSigma() const;
+  /**
+   * @brief Setter property for RangeSigma
+   */
+  void setRangeSigma(double value);
+  /**
+   * @brief Getter property for RangeSigma
+   * @return Value of RangeSigma
+   */
+  double getRangeSigma() const;
   Q_PROPERTY(double RangeSigma READ getRangeSigma WRITE setRangeSigma)
 
-    /**
-    * @brief Setter property for NumberOfRangeGaussianSamples
-    */
-    void setNumberOfRangeGaussianSamples(double value); 
-    /**
-    * @brief Getter property for NumberOfRangeGaussianSamples
-    * @return Value of NumberOfRangeGaussianSamples
-    */
-    double getNumberOfRangeGaussianSamples() const;
+  /**
+   * @brief Setter property for NumberOfRangeGaussianSamples
+   */
+  void setNumberOfRangeGaussianSamples(double value);
+  /**
+   * @brief Getter property for NumberOfRangeGaussianSamples
+   * @return Value of NumberOfRangeGaussianSamples
+   */
+  double getNumberOfRangeGaussianSamples() const;
   Q_PROPERTY(double NumberOfRangeGaussianSamples READ getNumberOfRangeGaussianSamples WRITE setNumberOfRangeGaussianSamples)
-
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -139,32 +137,32 @@ protected:
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
    */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void dataCheckImpl();
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void dataCheckImpl();
 
   /**
-  * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
-  */
+   * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
+   */
   void filterInternal() override;
 
   /**
-  * @brief Applies the filter
-  */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
+   * @brief Applies the filter
+   */
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void filter();
 
 public:
-  ITKBilateralImage(const ITKBilateralImage&) = delete;    // Copy Constructor Not Implemented
-  ITKBilateralImage(ITKBilateralImage&&) = delete;         // Move Constructor Not Implemented
+  ITKBilateralImage(const ITKBilateralImage&) = delete;            // Copy Constructor Not Implemented
+  ITKBilateralImage(ITKBilateralImage&&) = delete;                 // Move Constructor Not Implemented
   ITKBilateralImage& operator=(const ITKBilateralImage&) = delete; // Copy Assignment Not Implemented
   ITKBilateralImage& operator=(ITKBilateralImage&&) = delete;      // Move Assignment Not Implemented
 
-  private:
-    double m_DomainSigma = {};
-    double m_RangeSigma = {};
-    double m_NumberOfRangeGaussianSamples = {};
-
+private:
+  double m_DomainSigma = {};
+  double m_RangeSigma = {};
+  double m_NumberOfRangeGaussianSamples = {};
 };
 
 #ifdef __clang__
 #pragma clang diagnostic pop
 #endif
-

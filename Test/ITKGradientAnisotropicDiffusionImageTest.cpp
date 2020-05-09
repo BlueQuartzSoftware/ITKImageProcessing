@@ -8,16 +8,15 @@
 // Auto includes
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 
-
 class ITKGradientAnisotropicDiffusionImageTest : public ITKTestBase
 {
 
 public:
-ITKGradientAnisotropicDiffusionImageTest() = default;
-~ITKGradientAnisotropicDiffusionImageTest() override = default;
+  ITKGradientAnisotropicDiffusionImageTest() = default;
+  ~ITKGradientAnisotropicDiffusionImageTest() override = default;
 
   int TestITKGradientAnisotropicDiffusionImagedefaultsTest()
-{
+  {
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/RA-Float.nrrd");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -36,11 +35,11 @@ ITKGradientAnisotropicDiffusionImageTest() = default;
     propWasSet = filter->setProperty("SaveAsNewArray", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     {
-        double d3d_var;
-        d3d_var = 0.01;
-        var.setValue(d3d_var);
-        propWasSet = filter->setProperty("TimeStep", var);
-        DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+      double d3d_var;
+      d3d_var = 0.01;
+      var.setValue(d3d_var);
+      propWasSet = filter->setProperty("TimeStep", var);
+      DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     }
     filter->setDataContainerArray(containerArray);
     filter->execute();
@@ -53,10 +52,10 @@ ITKGradientAnisotropicDiffusionImageTest() = default;
     int res = this->CompareImages(containerArray, input_path, baseline_path, 0);
     DREAM3D_REQUIRE_EQUAL(res, 0);
     return 0;
-}
+  }
 
-int TestITKGradientAnisotropicDiffusionImagelongerTest()
-{
+  int TestITKGradientAnisotropicDiffusionImagelongerTest()
+  {
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/RA-Float.nrrd");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -75,18 +74,18 @@ int TestITKGradientAnisotropicDiffusionImagelongerTest()
     propWasSet = filter->setProperty("SaveAsNewArray", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     {
-        double d3d_var;
-        d3d_var = 0.01;
-        var.setValue(d3d_var);
-        propWasSet = filter->setProperty("TimeStep", var);
-        DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+      double d3d_var;
+      d3d_var = 0.01;
+      var.setValue(d3d_var);
+      propWasSet = filter->setProperty("TimeStep", var);
+      DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     }
     {
-        double d3d_var;
-        d3d_var = 10;
-        var.setValue(d3d_var);
-        propWasSet = filter->setProperty("NumberOfIterations", var);
-        DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+      double d3d_var;
+      d3d_var = 10;
+      var.setValue(d3d_var);
+      propWasSet = filter->setProperty("NumberOfIterations", var);
+      DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     }
     filter->setDataContainerArray(containerArray);
     filter->execute();
@@ -99,9 +98,7 @@ int TestITKGradientAnisotropicDiffusionImagelongerTest()
     int res = this->CompareImages(containerArray, input_path, baseline_path, 0);
     DREAM3D_REQUIRE_EQUAL(res, 0);
     return 0;
-}
-
-
+  }
 
   // -----------------------------------------------------------------------------
   //
@@ -112,8 +109,8 @@ int TestITKGradientAnisotropicDiffusionImagelongerTest()
 
     DREAM3D_REGISTER_TEST(this->TestFilterAvailability("ITKGradientAnisotropicDiffusionImage"));
 
-    DREAM3D_REGISTER_TEST( TestITKGradientAnisotropicDiffusionImagedefaultsTest());
-    DREAM3D_REGISTER_TEST( TestITKGradientAnisotropicDiffusionImagelongerTest());
+    DREAM3D_REGISTER_TEST(TestITKGradientAnisotropicDiffusionImagedefaultsTest());
+    DREAM3D_REGISTER_TEST(TestITKGradientAnisotropicDiffusionImagelongerTest());
 
     if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
     {

@@ -4,7 +4,6 @@
  * Your License or Copyright can go here
  */
 
-
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKRelabelComponentImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 #include "SIMPLib/Common/Constants.h"
@@ -17,7 +16,6 @@
 
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -25,7 +23,6 @@ ITKRelabelComponentImage::ITKRelabelComponentImage()
 {
   m_MinimumObjectSize = StaticCastScalar<double, double, double>(0u);
   m_SortByObjectSize = StaticCastScalar<bool, bool, bool>(true);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -42,7 +39,6 @@ void ITKRelabelComponentImage::setupFilterParameters()
 
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("MinimumObjectSize", MinimumObjectSize, FilterParameter::Parameter, ITKRelabelComponentImage));
   parameters.push_back(SIMPL_NEW_BOOL_FP("SortByObjectSize", SortByObjectSize, FilterParameter::Parameter, ITKRelabelComponentImage));
-
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -77,7 +73,8 @@ void ITKRelabelComponentImage::readFilterParameters(AbstractFilterParametersRead
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKRelabelComponentImage::dataCheckImpl()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKRelabelComponentImage::dataCheckImpl()
 {
   clearErrorCode();
   clearWarningCode();
@@ -100,7 +97,8 @@ void ITKRelabelComponentImage::dataCheck()
 //
 // -----------------------------------------------------------------------------
 
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKRelabelComponentImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKRelabelComponentImage::filter()
 {
   typedef itk::Image<InputPixelType, Dimension> InputImageType;
   typedef itk::Image<OutputPixelType, Dimension> OutputImageType;
@@ -110,25 +108,24 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   filter->SetMinimumObjectSize(static_cast<uint64_t>(m_MinimumObjectSize));
   filter->SetSortByObjectSize(static_cast<bool>(m_SortByObjectSize));
   this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
-{
-  QString outputVal = "NumberOfObjects :%1";
-  m_NumberOfObjects = filter->GetNumberOfObjects();
-  setWarningCondition(0, outputVal.arg(m_NumberOfObjects));
-}
-{
-  QString outputVal = "OriginalNumberOfObjects :%1";
-  m_OriginalNumberOfObjects = filter->GetOriginalNumberOfObjects();
-  setWarningCondition(0, outputVal.arg(m_OriginalNumberOfObjects));
-}
-//{
-//  QString outputVal = "SizeOfObjectsInPhysicalUnits :%1";
-//  m_SizeOfObjectsInPhysicalUnits = filter->GetSizeOfObjectsInPhysicalUnits();
-//}
-//{
-//  QString outputVal = "SizeOfObjectsInPixels :%1";
-//  m_SizeOfObjectsInPixels = filter->GetSizeOfObjectsInPixels();
-//}
-
+  {
+    QString outputVal = "NumberOfObjects :%1";
+    m_NumberOfObjects = filter->GetNumberOfObjects();
+    setWarningCondition(0, outputVal.arg(m_NumberOfObjects));
+  }
+  {
+    QString outputVal = "OriginalNumberOfObjects :%1";
+    m_OriginalNumberOfObjects = filter->GetOriginalNumberOfObjects();
+    setWarningCondition(0, outputVal.arg(m_OriginalNumberOfObjects));
+  }
+  //{
+  //  QString outputVal = "SizeOfObjectsInPhysicalUnits :%1";
+  //  m_SizeOfObjectsInPhysicalUnits = filter->GetSizeOfObjectsInPhysicalUnits();
+  //}
+  //{
+  //  QString outputVal = "SizeOfObjectsInPixels :%1";
+  //  m_SizeOfObjectsInPixels = filter->GetSizeOfObjectsInPixels();
+  //}
 }
 
 // -----------------------------------------------------------------------------
@@ -185,7 +182,7 @@ ITKRelabelComponentImage::Pointer ITKRelabelComponentImage::NullPointer()
 // -----------------------------------------------------------------------------
 std::shared_ptr<ITKRelabelComponentImage> ITKRelabelComponentImage::New()
 {
-  struct make_shared_enabler : public ITKRelabelComponentImage  
+  struct make_shared_enabler : public ITKRelabelComponentImage
   {
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
@@ -276,5 +273,3 @@ FloatVec3Type ITKRelabelComponentImage::getSizeOfObjectsInPixels() const
 {
   return m_SizeOfObjectsInPixels;
 }
-
-

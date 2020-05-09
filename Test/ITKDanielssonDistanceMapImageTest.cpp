@@ -8,16 +8,15 @@
 // Auto includes
 #include <SIMPLib/FilterParameters/BooleanFilterParameter.h>
 
-
 class ITKDanielssonDistanceMapImageTest : public ITKTestBase
 {
 
 public:
-ITKDanielssonDistanceMapImageTest() = default;
-~ITKDanielssonDistanceMapImageTest() override = default;
+  ITKDanielssonDistanceMapImageTest() = default;
+  ~ITKDanielssonDistanceMapImageTest() override = default;
 
   int TestITKDanielssonDistanceMapImagedefaultTest()
-{
+  {
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/2th_cthead1.png");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -46,9 +45,7 @@ ITKDanielssonDistanceMapImageTest() = default;
     int res = this->CompareImages(containerArray, input_path, baseline_path, 0.01);
     DREAM3D_REQUIRE_EQUAL(res, 0);
     return 0;
-}
-
-
+  }
 
   // -----------------------------------------------------------------------------
   //
@@ -59,7 +56,7 @@ ITKDanielssonDistanceMapImageTest() = default;
 
     DREAM3D_REGISTER_TEST(this->TestFilterAvailability("ITKDanielssonDistanceMapImage"));
 
-    DREAM3D_REGISTER_TEST( TestITKDanielssonDistanceMapImagedefaultTest());
+    DREAM3D_REGISTER_TEST(TestITKDanielssonDistanceMapImagedefaultTest());
 
     if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
     {

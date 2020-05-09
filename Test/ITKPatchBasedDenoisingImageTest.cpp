@@ -13,8 +13,8 @@ class ITKPatchBasedDenoisingImageTest : public ITKTestBase
 {
 
 public:
-ITKPatchBasedDenoisingImageTest() = default;
-~ITKPatchBasedDenoisingImageTest() override = default;
+  ITKPatchBasedDenoisingImageTest() = default;
+  ~ITKPatchBasedDenoisingImageTest() override = default;
 
   int TestITKPatchBasedDenoisingImagedefaultTest()
   {

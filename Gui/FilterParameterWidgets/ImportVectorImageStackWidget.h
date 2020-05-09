@@ -166,4 +166,3 @@ private:
   ImportVectorImageStackWidget(const ImportVectorImageStackWidget&) = delete; // Copy Constructor Not Implemented
   void operator=(const ImportVectorImageStackWidget&) = delete;               // Move assignment Not Implemented
 };
-

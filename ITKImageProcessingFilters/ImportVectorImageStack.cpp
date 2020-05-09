@@ -109,7 +109,8 @@ void ImportVectorImageStack::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
 
   parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Cell Attribute Matrix Name", CellAttributeMatrixName, DataContainerName, FilterParameter::CreatedArray, ImportVectorImageStack));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Vector Data Array Name", VectorDataArrayName, DataContainerName, CellAttributeMatrixName, FilterParameter::CreatedArray, ImportVectorImageStack));
+  parameters.push_back(
+      SIMPL_NEW_DA_WITH_LINKED_AM_FP("Vector Data Array Name", VectorDataArrayName, DataContainerName, CellAttributeMatrixName, FilterParameter::CreatedArray, ImportVectorImageStack));
 
   setFilterParameters(parameters);
 }
@@ -248,7 +249,7 @@ void ImportVectorImageStack::dataCheck()
       imageReader->setFileName(filePath);
       imageReader->preflight();
 
-      if (imageReader->getErrorCode() < 0)
+      if(imageReader->getErrorCode() < 0)
       {
         setErrorCondition(imageReader->getErrorCode(), "Image Reader failed preflight.  Please contact the DREAM.3D developers for more information.");
       }
@@ -287,11 +288,11 @@ void ImportVectorImageStack::dataCheck()
   }
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename T> void importVectorData(ImportVectorImageStack* filter)
+template <typename T>
+void importVectorData(ImportVectorImageStack* filter)
 {
 
   using DataArrayType = DataArray<T>;
@@ -363,11 +364,10 @@ template <typename T> void importVectorData(ImportVectorImageStack* filter)
       imageReader->setImageDataArrayName(::TempDAName);
       imageReader->setFileName(filePath);
       imageReader->execute();
-      if (imageReader->getErrorCode() < 0)
+      if(imageReader->getErrorCode() < 0)
       {
         filter->setErrorCondition(imageReader->getErrorCode(), "Image Reader failed execution.  Please contact the DREAM.3D developers for more information.");
       }
-
 
       // Get the DataContainer from the ITKReadImage filter
       DataContainer::Pointer imageReaderDC = imageReader->getDataContainerArray()->getDataContainer(::TempDCName);
@@ -516,7 +516,7 @@ ImportVectorImageStack::Pointer ImportVectorImageStack::NullPointer()
 // -----------------------------------------------------------------------------
 std::shared_ptr<ImportVectorImageStack> ImportVectorImageStack::New()
 {
-  struct make_shared_enabler : public ImportVectorImageStack  
+  struct make_shared_enabler : public ImportVectorImageStack
   {
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
@@ -619,5 +619,3 @@ bool ImportVectorImageStack::getConvertToGrayscale() const
 {
   return m_ConvertToGrayscale;
 }
-
-

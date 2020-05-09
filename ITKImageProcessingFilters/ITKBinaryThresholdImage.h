@@ -44,71 +44,69 @@ class ITKImageProcessing_EXPORT ITKBinaryThresholdImage : public ITKImageProcess
   // End Python bindings declarations
 
 public:
-    using Self = ITKBinaryThresholdImage;
-    using Pointer = std::shared_ptr<Self>;
-    using ConstPointer = std::shared_ptr<const Self>;
-    using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<const Self>;
-    static Pointer NullPointer();
+  using Self = ITKBinaryThresholdImage;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<const Self>;
+  static Pointer NullPointer();
 
-    static std::shared_ptr<ITKBinaryThresholdImage> New();
+  static std::shared_ptr<ITKBinaryThresholdImage> New();
 
-    /**
-    * @brief Returns the name of the class for ITKBinaryThresholdImage
-    */
-    QString getNameOfClass() const override;
-    /**
-    * @brief Returns the name of the class for ITKBinaryThresholdImage
-    */
-    static QString ClassName();
-
+  /**
+   * @brief Returns the name of the class for ITKBinaryThresholdImage
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for ITKBinaryThresholdImage
+   */
+  static QString ClassName();
 
   ~ITKBinaryThresholdImage() override;
 
-    /**
-    * @brief Setter property for LowerThreshold
-    */
-    void setLowerThreshold(double value); 
-    /**
-    * @brief Getter property for LowerThreshold
-    * @return Value of LowerThreshold
-    */
-    double getLowerThreshold() const;
+  /**
+   * @brief Setter property for LowerThreshold
+   */
+  void setLowerThreshold(double value);
+  /**
+   * @brief Getter property for LowerThreshold
+   * @return Value of LowerThreshold
+   */
+  double getLowerThreshold() const;
   Q_PROPERTY(double LowerThreshold READ getLowerThreshold WRITE setLowerThreshold)
 
-    /**
-    * @brief Setter property for UpperThreshold
-    */
-    void setUpperThreshold(double value); 
-    /**
-    * @brief Getter property for UpperThreshold
-    * @return Value of UpperThreshold
-    */
-    double getUpperThreshold() const;
+  /**
+   * @brief Setter property for UpperThreshold
+   */
+  void setUpperThreshold(double value);
+  /**
+   * @brief Getter property for UpperThreshold
+   * @return Value of UpperThreshold
+   */
+  double getUpperThreshold() const;
   Q_PROPERTY(double UpperThreshold READ getUpperThreshold WRITE setUpperThreshold)
 
-    /**
-    * @brief Setter property for InsideValue
-    */
-    void setInsideValue(int value); 
-    /**
-    * @brief Getter property for InsideValue
-    * @return Value of InsideValue
-    */
-    int getInsideValue() const;
+  /**
+   * @brief Setter property for InsideValue
+   */
+  void setInsideValue(int value);
+  /**
+   * @brief Getter property for InsideValue
+   * @return Value of InsideValue
+   */
+  int getInsideValue() const;
   Q_PROPERTY(int InsideValue READ getInsideValue WRITE setInsideValue)
 
-    /**
-    * @brief Setter property for OutsideValue
-    */
-    void setOutsideValue(int value); 
-    /**
-    * @brief Getter property for OutsideValue
-    * @return Value of OutsideValue
-    */
-    int getOutsideValue() const;
+  /**
+   * @brief Setter property for OutsideValue
+   */
+  void setOutsideValue(int value);
+  /**
+   * @brief Getter property for OutsideValue
+   * @return Value of OutsideValue
+   */
+  int getOutsideValue() const;
   Q_PROPERTY(int OutsideValue READ getOutsideValue WRITE setOutsideValue)
-
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -152,33 +150,33 @@ protected:
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
    */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void dataCheckImpl();
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void dataCheckImpl();
 
   /**
-  * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
-  */
+   * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
+   */
   void filterInternal() override;
 
   /**
-  * @brief Applies the filter
-  */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
+   * @brief Applies the filter
+   */
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void filter();
 
 public:
-  ITKBinaryThresholdImage(const ITKBinaryThresholdImage&) = delete;    // Copy Constructor Not Implemented
-  ITKBinaryThresholdImage(ITKBinaryThresholdImage&&) = delete;         // Move Constructor Not Implemented
+  ITKBinaryThresholdImage(const ITKBinaryThresholdImage&) = delete;            // Copy Constructor Not Implemented
+  ITKBinaryThresholdImage(ITKBinaryThresholdImage&&) = delete;                 // Move Constructor Not Implemented
   ITKBinaryThresholdImage& operator=(const ITKBinaryThresholdImage&) = delete; // Copy Assignment Not Implemented
   ITKBinaryThresholdImage& operator=(ITKBinaryThresholdImage&&) = delete;      // Move Assignment Not Implemented
 
-  private:
-    double m_LowerThreshold = {};
-    double m_UpperThreshold = {};
-    int m_InsideValue = {};
-    int m_OutsideValue = {};
-
+private:
+  double m_LowerThreshold = {};
+  double m_UpperThreshold = {};
+  int m_InsideValue = {};
+  int m_OutsideValue = {};
 };
 
 #ifdef __clang__
 #pragma clang diagnostic pop
 #endif
-

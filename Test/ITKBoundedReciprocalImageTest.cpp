@@ -7,16 +7,15 @@
 #include "ITKTestBase.h"
 // Auto includes
 
-
 class ITKBoundedReciprocalImageTest : public ITKTestBase
 {
 
 public:
-ITKBoundedReciprocalImageTest() = default;
-~ITKBoundedReciprocalImageTest() override = default;
+  ITKBoundedReciprocalImageTest() = default;
+  ~ITKBoundedReciprocalImageTest() override = default;
 
   int TestITKBoundedReciprocalImagedefaultsTest()
-{
+  {
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/Ramp-Zero-One-Float.nrrd");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -45,10 +44,10 @@ ITKBoundedReciprocalImageTest() = default;
     int res = this->CompareImages(containerArray, input_path, baseline_path, 0.01);
     DREAM3D_REQUIRE_EQUAL(res, 0);
     return 0;
-}
+  }
 
-int TestITKBoundedReciprocalImagevectorTest()
-{
+  int TestITKBoundedReciprocalImagevectorTest()
+  {
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/VM1111Shrink-RGB.png");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -77,9 +76,7 @@ int TestITKBoundedReciprocalImagevectorTest()
     int res = this->CompareImages(containerArray, input_path, baseline_path, 0.0001);
     DREAM3D_REQUIRE_EQUAL(res, 0);
     return 0;
-}
-
-
+  }
 
   // -----------------------------------------------------------------------------
   //
@@ -90,8 +87,8 @@ int TestITKBoundedReciprocalImagevectorTest()
 
     DREAM3D_REGISTER_TEST(this->TestFilterAvailability("ITKBoundedReciprocalImage"));
 
-    DREAM3D_REGISTER_TEST( TestITKBoundedReciprocalImagedefaultsTest());
-    DREAM3D_REGISTER_TEST( TestITKBoundedReciprocalImagevectorTest());
+    DREAM3D_REGISTER_TEST(TestITKBoundedReciprocalImagedefaultsTest());
+    DREAM3D_REGISTER_TEST(TestITKBoundedReciprocalImagevectorTest());
 
     if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
     {
@@ -101,5 +98,5 @@ int TestITKBoundedReciprocalImagevectorTest()
 
 private:
   ITKBoundedReciprocalImageTest(const ITKBoundedReciprocalImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKBoundedReciprocalImageTest&);  // Operator '=' Not Implemented
+  void operator=(const ITKBoundedReciprocalImageTest&);                // Operator '=' Not Implemented
 };

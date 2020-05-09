@@ -285,8 +285,6 @@ public:
    */
   void execute() override;
 
-
-
 protected:
   void setRowCount(int32_t value);
   void setColumnCount(int32_t value);

@@ -4,7 +4,6 @@
  * Your License or Copyright can go here
  */
 
-
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKBinaryErodeImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 #include "SIMPLib/Common/Constants.h"
@@ -20,7 +19,6 @@
 
 #include <itkFlatStructuringElement.h>
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -31,7 +29,6 @@ ITKBinaryErodeImage::ITKBinaryErodeImage()
   m_BoundaryToForeground = StaticCastScalar<bool, bool, bool>(true);
   m_KernelRadius = CastStdToVec3<std::vector<unsigned int>, FloatVec3Type, float>(std::vector<unsigned int>(3, 1));
   m_KernelType = StaticCastScalar<int, int, int>(itk::simple::sitkBall);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -69,7 +66,6 @@ void ITKBinaryErodeImage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_BOOL_FP("BoundaryToForeground", BoundaryToForeground, FilterParameter::Parameter, ITKBinaryErodeImage));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("KernelRadius", KernelRadius, FilterParameter::Parameter, ITKBinaryErodeImage));
 
-
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Save as New Array", SaveAsNewArray, FilterParameter::Parameter, ITKBinaryErodeImage, linkedProps));
@@ -106,7 +102,8 @@ void ITKBinaryErodeImage::readFilterParameters(AbstractFilterParametersReader* r
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKBinaryErodeImage::dataCheckImpl()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKBinaryErodeImage::dataCheckImpl()
 {
   clearErrorCode();
   clearWarningCode();
@@ -140,7 +137,8 @@ void ITKBinaryErodeImage::dataCheck()
 //
 // -----------------------------------------------------------------------------
 
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKBinaryErodeImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKBinaryErodeImage::filter()
 {
   typedef itk::Image<InputPixelType, Dimension> InputImageType;
   typedef itk::Image<OutputPixelType, Dimension> OutputImageType;
@@ -174,7 +172,6 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   filter->SetBoundaryToForeground(static_cast<bool>(m_BoundaryToForeground));
   filter->SetKernel(structuringElement);
   this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -231,7 +228,7 @@ ITKBinaryErodeImage::Pointer ITKBinaryErodeImage::NullPointer()
 // -----------------------------------------------------------------------------
 std::shared_ptr<ITKBinaryErodeImage> ITKBinaryErodeImage::New()
 {
-  struct make_shared_enabler : public ITKBinaryErodeImage  
+  struct make_shared_enabler : public ITKBinaryErodeImage
   {
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
@@ -310,5 +307,3 @@ int ITKBinaryErodeImage::getKernelType() const
 {
   return m_KernelType;
 }
-
-

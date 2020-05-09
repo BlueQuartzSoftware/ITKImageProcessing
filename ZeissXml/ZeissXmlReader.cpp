@@ -35,25 +35,21 @@
 #include <cstdio>
 #include <iostream>
 
-
 #include "ITKImageProcessing/ZeissXml/ZeissTagMapping.h"
-
-
 
 #define BUFFER_SIZE 1024
 
-
 namespace Zeiss
 {
-  namespace MicroScope
-  {
-    const std::string AxioObserverZ1("Axio Observer.Z1"); // CMU's Microscope
-    const std::string Axiovert200MMAT("Axiovert 200 M MAT"); // WPAFB Microscope
-  }
+namespace MicroScope
+{
+const std::string AxioObserverZ1("Axio Observer.Z1");    // CMU's Microscope
+const std::string Axiovert200MMAT("Axiovert 200 M MAT"); // WPAFB Microscope
+} // namespace MicroScope
 
-  namespace XML
-  {
-    // Mosaic XML file
+namespace XML
+{
+// Mosaic XML file
 //    const std::string V3("V3");
 //    const std::string V4("V4");
 //    const std::string V15("V15");
@@ -69,39 +65,38 @@ namespace Zeiss
 //    const std::string V119("V119");
 //    const std::string Factor_0("Factor_0");
 
-    /* These are for the Slice XML File */
+/* These are for the Slice XML File */
 //    const std::string V25("V25");
 //    const std::string V26("V26");
 //    const std::string V29("V29");
 //    const std::string V30("V30");
 //    const std::string V32("V32");
 //    const std::string V33("V33");
-    const std::string Root("ROOT");
-    const std::string Tags("Tags");
+const std::string Root("ROOT");
+const std::string Tags("Tags");
 
 //   const std::string Scaling("Scaling");
 
-    const std::string V2072("V2072");
-    const std::string V2121("V2121");
-    const std::string V2149("V2149");
+const std::string V2072("V2072");
+const std::string V2121("V2121");
+const std::string V2149("V2149");
 
-    int RootSection = 1;
+int RootSection = 1;
 //    int MosaicSection = 2;
 //    int ScaleSection = 3;
-    int TileSection = 4;
-    int TagsSection = 5;
+int TileSection = 4;
+int TagsSection = 5;
 
-  }
-}
-
+} // namespace XML
+} // namespace Zeiss
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ZeissXMLReader::ZeissXMLReader(const std::string& xmlFile) :
-  _xmlFilename(xmlFile),
-  _xmlParseError(0),
-  _parseData(false)
+ZeissXMLReader::ZeissXMLReader(const std::string& xmlFile)
+: _xmlFilename(xmlFile)
+, _xmlParseError(0)
+, _parseData(false)
 {
   _xmlSection = Zeiss::XML::RootSection;
   _tileSection = 0;
@@ -116,7 +111,7 @@ ZeissXMLReader::~ZeissXMLReader() = default;
 // Call back struct to sort Commands and properties based on their name
 // -----------------------------------------------------------------------------
 template <typename T>
-struct Compare: std::binary_function<const T, const T, bool>
+struct Compare : std::binary_function<const T, const T, bool>
 {
   bool operator()(const T lhs, const T rhs) const
   {
@@ -125,14 +120,13 @@ struct Compare: std::binary_function<const T, const T, bool>
   }
 };
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 int32_t ZeissXMLReader::parse()
 {
 
-  if (this->_xmlFilename.empty() )
+  if(this->_xmlFilename.empty())
   {
     std::cout << "Input XML File must be set." << std::endl;
     _xmlParseError = -3;
@@ -143,11 +137,13 @@ int32_t ZeissXMLReader::parse()
   _xmlParseError = 1; // Clear the error flag
   _xmlParseError = this->_parseXMLFile();
 
-  if (_xmlParseError < 0) { return _xmlParseError; }
+  if(_xmlParseError < 0)
+  {
+    return _xmlParseError;
+  }
 
   return _xmlParseError;
 }
-
 
 // -----------------------------------------------------------------------------
 int32_t ZeissXMLReader::_parseXMLFile()
@@ -158,21 +154,21 @@ int32_t ZeissXMLReader::_parseXMLFile()
   _charData.clear();
   char buf[BUFFER_SIZE];
   // Create and initialise an instance of the parser.
-  ExpatParser parser( static_cast<ExpatEvtHandler*>( this ) );
-  //this->_parser = &parser;
+  ExpatParser parser(static_cast<ExpatEvtHandler*>(this));
+  // this->_parser = &parser;
   parser.Create(nullptr, nullptr);
   parser.EnableElementHandler();
   parser.EnableCharacterDataHandler();
   // Load the XML file.
-  FILE*  fh    = fopen(_xmlFilename.c_str(), "r");
-  if (nullptr == fh)
+  FILE* fh = fopen(_xmlFilename.c_str(), "r");
+  if(nullptr == fh)
   {
     std::cout << "Could Not Open XML File for reading: " << _xmlFilename << std::endl;
     return -1;
   }
-  bool   atEnd = false;
+  bool atEnd = false;
   size_t nRead;
-  while (!atEnd && this->_xmlParseError >= 0)
+  while(!atEnd && this->_xmlParseError >= 0)
   {
     // Read a block from the XML file and pass it to the parser
     nRead = fread(buf, 1, BUFFER_SIZE, fh);
@@ -191,34 +187,32 @@ void ZeissXMLReader::OnStartElement(const XML_Char* name, const XML_Char** attrs
 {
   std::string currentTag(name);
   // std::cout << "currentTag: " << name << std::endl;
-  if ( currentTag.compare(Zeiss::XML::Tags) == 0 )
+  if(currentTag.compare(Zeiss::XML::Tags) == 0)
   {
     onTags_StartTag(name, attrs);
     _xmlSection = Zeiss::XML::TagsSection;
   }
-  else if (name[0] == 'V')  // The value of this tag
+  else if(name[0] == 'V') // The value of this tag
   {
     onVx_StartTag(name, attrs);
   }
-  else if (name[0] == 'I')  // The ID of the unique Tag
+  else if(name[0] == 'I') // The ID of the unique Tag
   {
     onIx_StartTag(name, attrs);
   }
-  else if (name[0] == 'A')
+  else if(name[0] == 'A')
   {
-
   }
-  else if (name[0] == 'p')
+  else if(name[0] == 'p')
   {
     onTile_StartTag(name, attrs);
   }
 
-//    else
-//    {
-//      std::cout << logTime() << "No XML Section Defined" << std::endl;
-//    }
+  //    else
+  //    {
+  //      std::cout << logTime() << "No XML Section Defined" << std::endl;
+  //    }
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -226,31 +220,30 @@ void ZeissXMLReader::OnStartElement(const XML_Char* name, const XML_Char** attrs
 void ZeissXMLReader::OnEndElement(const XML_Char* name)
 {
   std::string currentTag(name);
-  if ( currentTag.compare(Zeiss::XML::Tags) == 0 )
+  if(currentTag.compare(Zeiss::XML::Tags) == 0)
   {
     onTags_EndTag(name);
   }
-  else if (name[0] == 'V')  // The value of this tag
+  else if(name[0] == 'V') // The value of this tag
   {
     onVx_EndTag(name);
   }
-  else if (name[0] == 'I')  // The ID of the unique Tag
+  else if(name[0] == 'I') // The ID of the unique Tag
   {
     onIx_EndTag(name);
   }
-  else if (name[0] == 'p')
+  else if(name[0] == 'p')
   {
     onTile_EndTag(name);
   }
-//  else if (name[0] == 'A')
-//  {
-//
-//  }
-//  else
-//  {
-//    std::cout << logTime() << "No XML Section Defined" << std::endl;
-//  }
-
+  //  else if (name[0] == 'A')
+  //  {
+  //
+  //  }
+  //  else
+  //  {
+  //    std::cout << logTime() << "No XML Section Defined" << std::endl;
+  //  }
 }
 
 // -----------------------------------------------------------------------------
@@ -258,8 +251,8 @@ void ZeissXMLReader::OnEndElement(const XML_Char* name)
 // -----------------------------------------------------------------------------
 void ZeissXMLReader::onTags_StartTag(const XML_Char* name, const XML_Char** attrs)
 {
-//  std::cout << "Starting: " << name << std::endl;
-  if (m_CurrentTagSection.get() == nullptr)
+  //  std::cout << "Starting: " << name << std::endl;
+  if(m_CurrentTagSection.get() == nullptr)
   {
     m_CurrentTagSection = ZeissTagsXmlSection::New();
   }
@@ -271,25 +264,23 @@ void ZeissXMLReader::onTags_StartTag(const XML_Char* name, const XML_Char** attr
 // -----------------------------------------------------------------------------
 void ZeissXMLReader::onTags_EndTag(const XML_Char* name)
 {
-//   std::cout << "  Ending Section: " << name << std::endl;
+  //   std::cout << "  Ending Section: " << name << std::endl;
   _xmlSection = Zeiss::XML::RootSection;
-  if (_tileSection == 0)
+  if(_tileSection == 0)
   {
     m_TagsSection = m_CurrentTagSection;
   }
 }
-
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void ZeissXMLReader::onTile_StartTag(const XML_Char* name, const XML_Char** attrs)
 {
-//  std::cout << "Starting: " << name << std::endl;
+  //  std::cout << "Starting: " << name << std::endl;
   _xmlSection = Zeiss::XML::TileSection;
   _tileSection = 1;
   m_CurrentTagSection = ZeissTagsXmlSection::New();
-
 }
 
 // -----------------------------------------------------------------------------
@@ -297,14 +288,13 @@ void ZeissXMLReader::onTile_StartTag(const XML_Char* name, const XML_Char** attr
 // -----------------------------------------------------------------------------
 void ZeissXMLReader::onTile_EndTag(const XML_Char* name)
 {
-//  std::cout << "  Ending Section: " << name << std::endl;
-  if (_tileSection == 1)
+  //  std::cout << "  Ending Section: " << name << std::endl;
+  if(_tileSection == 1)
   {
     m_ImageTags.push_back(m_CurrentTagSection);
   }
   _tileSection = 0;
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -320,7 +310,10 @@ void ZeissXMLReader::onVx_StartTag(const XML_Char* name, const XML_Char** attrs)
 // -----------------------------------------------------------------------------
 void ZeissXMLReader::onVx_EndTag(const XML_Char* name)
 {
-  if (this->_xmlParseError < 0) { return; }
+  if(this->_xmlParseError < 0)
+  {
+    return;
+  }
   this->_vTagContent = this->_charData;
   this->_parseData = false; // Stop parsing character data
 }
@@ -339,34 +332,33 @@ void ZeissXMLReader::onIx_StartTag(const XML_Char* name, const XML_Char** attrs)
 // -----------------------------------------------------------------------------
 void ZeissXMLReader::onIx_EndTag(const XML_Char* name)
 {
-  if (this->_xmlParseError < 0) { return; }
+  if(this->_xmlParseError < 0)
+  {
+    return;
+  }
   int32_t idValue;
   this->extractValue(this->_charData, idValue);
   this->_parseData = false; // Stop parsing character data
   AbstractZeissMetaData::Pointer ptr = ZeissTagMapping::instance()->metaDataForId(idValue, this->_vTagContent);
-  if (nullptr != ptr.get() && _vTagContent.size() > 0)
+  if(nullptr != ptr.get() && _vTagContent.size() > 0)
   {
-    if (_xmlSection == Zeiss::XML::TagsSection)
+    if(_xmlSection == Zeiss::XML::TagsSection)
     {
       m_CurrentTagSection->addMetaDataEntry(ptr);
     }
   }
 }
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void ZeissXMLReader::OnCharacterData(const XML_Char* data, int32_t len)
 {
-  if (this->_parseData)
+  if(this->_parseData)
   {
     this->_charData.append(data, len);
   }
 }
-
-
 
 // -----------------------------------------------------------------------------
 //
@@ -374,9 +366,7 @@ void ZeissXMLReader::OnCharacterData(const XML_Char* data, int32_t len)
 void ZeissXMLReader::printStats(std::ostream& out)
 {
   std::cout << "RoboMet XML Reader Statistics" << std::endl;
-
 }
-
 
 // -----------------------------------------------------------------------------
 //

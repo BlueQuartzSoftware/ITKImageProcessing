@@ -42,60 +42,58 @@ class ITKImageProcessing_EXPORT ITKThresholdImage : public ITKImageProcessingBas
   // End Python bindings declarations
 
 public:
-    using Self = ITKThresholdImage;
-    using Pointer = std::shared_ptr<Self>;
-    using ConstPointer = std::shared_ptr<const Self>;
-    using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<const Self>;
-    static Pointer NullPointer();
+  using Self = ITKThresholdImage;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<const Self>;
+  static Pointer NullPointer();
 
-    static std::shared_ptr<ITKThresholdImage> New();
+  static std::shared_ptr<ITKThresholdImage> New();
 
-    /**
-    * @brief Returns the name of the class for ITKThresholdImage
-    */
-    QString getNameOfClass() const override;
-    /**
-    * @brief Returns the name of the class for ITKThresholdImage
-    */
-    static QString ClassName();
-
+  /**
+   * @brief Returns the name of the class for ITKThresholdImage
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for ITKThresholdImage
+   */
+  static QString ClassName();
 
   ~ITKThresholdImage() override;
 
-    /**
-    * @brief Setter property for Lower
-    */
-    void setLower(double value); 
-    /**
-    * @brief Getter property for Lower
-    * @return Value of Lower
-    */
-    double getLower() const;
+  /**
+   * @brief Setter property for Lower
+   */
+  void setLower(double value);
+  /**
+   * @brief Getter property for Lower
+   * @return Value of Lower
+   */
+  double getLower() const;
   Q_PROPERTY(double Lower READ getLower WRITE setLower)
 
-    /**
-    * @brief Setter property for Upper
-    */
-    void setUpper(double value); 
-    /**
-    * @brief Getter property for Upper
-    * @return Value of Upper
-    */
-    double getUpper() const;
+  /**
+   * @brief Setter property for Upper
+   */
+  void setUpper(double value);
+  /**
+   * @brief Getter property for Upper
+   * @return Value of Upper
+   */
+  double getUpper() const;
   Q_PROPERTY(double Upper READ getUpper WRITE setUpper)
 
-    /**
-    * @brief Setter property for OutsideValue
-    */
-    void setOutsideValue(double value); 
-    /**
-    * @brief Getter property for OutsideValue
-    * @return Value of OutsideValue
-    */
-    double getOutsideValue() const;
+  /**
+   * @brief Setter property for OutsideValue
+   */
+  void setOutsideValue(double value);
+  /**
+   * @brief Getter property for OutsideValue
+   * @return Value of OutsideValue
+   */
+  double getOutsideValue() const;
   Q_PROPERTY(double OutsideValue READ getOutsideValue WRITE setOutsideValue)
-
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -139,32 +137,32 @@ protected:
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
    */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void dataCheckImpl();
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void dataCheckImpl();
 
   /**
-  * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
-  */
+   * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
+   */
   void filterInternal() override;
 
   /**
-  * @brief Applies the filter
-  */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
+   * @brief Applies the filter
+   */
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void filter();
 
 public:
-  ITKThresholdImage(const ITKThresholdImage&) = delete;    // Copy Constructor Not Implemented
-  ITKThresholdImage(ITKThresholdImage&&) = delete;         // Move Constructor Not Implemented
+  ITKThresholdImage(const ITKThresholdImage&) = delete;            // Copy Constructor Not Implemented
+  ITKThresholdImage(ITKThresholdImage&&) = delete;                 // Move Constructor Not Implemented
   ITKThresholdImage& operator=(const ITKThresholdImage&) = delete; // Copy Assignment Not Implemented
   ITKThresholdImage& operator=(ITKThresholdImage&&) = delete;      // Move Assignment Not Implemented
 
-  private:
-    double m_Lower = {};
-    double m_Upper = {};
-    double m_OutsideValue = {};
-
+private:
+  double m_Lower = {};
+  double m_Upper = {};
+  double m_OutsideValue = {};
 };
 
 #ifdef __clang__
 #pragma clang diagnostic pop
 #endif
-

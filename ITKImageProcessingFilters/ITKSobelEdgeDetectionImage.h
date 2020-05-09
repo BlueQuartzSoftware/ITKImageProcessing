@@ -30,24 +30,23 @@ class ITKImageProcessing_EXPORT ITKSobelEdgeDetectionImage : public ITKImageProc
   Q_OBJECT
 
 public:
-    using Self = ITKSobelEdgeDetectionImage;
-    using Pointer = std::shared_ptr<Self>;
-    using ConstPointer = std::shared_ptr<const Self>;
-    using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<const Self>;
-    static Pointer NullPointer();
+  using Self = ITKSobelEdgeDetectionImage;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<const Self>;
+  static Pointer NullPointer();
 
-    static std::shared_ptr<ITKSobelEdgeDetectionImage> New();
+  static std::shared_ptr<ITKSobelEdgeDetectionImage> New();
 
-    /**
-    * @brief Returns the name of the class for ITKSobelEdgeDetectionImage
-    */
-    QString getNameOfClass() const override;
-    /**
-    * @brief Returns the name of the class for ITKSobelEdgeDetectionImage
-    */
-    static QString ClassName();
-
+  /**
+   * @brief Returns the name of the class for ITKSobelEdgeDetectionImage
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for ITKSobelEdgeDetectionImage
+   */
+  static QString ClassName();
 
   ~ITKSobelEdgeDetectionImage() override;
 
@@ -93,29 +92,29 @@ protected:
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
    */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void dataCheck();
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void dataCheck();
 
   /**
-  * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
-  */
+   * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
+   */
   void filterInternal() override;
 
   /**
-  * @brief Applies the filter
-  */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
+   * @brief Applies the filter
+   */
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void filter();
 
 public:
-  ITKSobelEdgeDetectionImage(const ITKSobelEdgeDetectionImage&) = delete;    // Copy Constructor Not Implemented
-  ITKSobelEdgeDetectionImage(ITKSobelEdgeDetectionImage&&) = delete;         // Move Constructor Not Implemented
+  ITKSobelEdgeDetectionImage(const ITKSobelEdgeDetectionImage&) = delete;            // Copy Constructor Not Implemented
+  ITKSobelEdgeDetectionImage(ITKSobelEdgeDetectionImage&&) = delete;                 // Move Constructor Not Implemented
   ITKSobelEdgeDetectionImage& operator=(const ITKSobelEdgeDetectionImage&) = delete; // Copy Assignment Not Implemented
   ITKSobelEdgeDetectionImage& operator=(ITKSobelEdgeDetectionImage&&) = delete;      // Move Assignment Not Implemented
 
-  private:
-
+private:
 };
 
 #ifdef __clang__
 #pragma clang diagnostic pop
 #endif
-

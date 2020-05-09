@@ -16,8 +16,8 @@ class ITKBinaryMorphologicalClosingImageTest : public ITKTestBase
 {
 
 public:
-ITKBinaryMorphologicalClosingImageTest() = default;
-~ITKBinaryMorphologicalClosingImageTest() override = default;
+  ITKBinaryMorphologicalClosingImageTest() = default;
+  ~ITKBinaryMorphologicalClosingImageTest() override = default;
 
   int TestITKBinaryMorphologicalClosingImageBinaryMorphologicalClosingTest()
   {

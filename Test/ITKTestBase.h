@@ -63,31 +63,36 @@ public:
     return 0;
   }
 
-  template <typename PixelType> double ComputeDiff(itk::Vector<PixelType, 2> p1, itk::Vector<PixelType, 2> p2)
+  template <typename PixelType>
+  double ComputeDiff(itk::Vector<PixelType, 2> p1, itk::Vector<PixelType, 2> p2)
   {
     double diff = static_cast<double>((p1 - p2).GetNorm());
     return diff;
   }
 
-  template <typename PixelType> double ComputeDiff(itk::Vector<PixelType, 3> p1, itk::Vector<PixelType, 3> p2)
+  template <typename PixelType>
+  double ComputeDiff(itk::Vector<PixelType, 3> p1, itk::Vector<PixelType, 3> p2)
   {
     double diff = static_cast<double>((p1 - p2).GetNorm());
     return diff;
   }
 
-  template <typename PixelType> double ComputeDiff(itk::RGBAPixel<PixelType> p1, itk::RGBAPixel<PixelType> p2)
+  template <typename PixelType>
+  double ComputeDiff(itk::RGBAPixel<PixelType> p1, itk::RGBAPixel<PixelType> p2)
   {
     double diff = static_cast<double>((p1 - p2).GetScalarValue());
     return diff;
   }
 
-  template <typename PixelType> double ComputeDiff(itk::RGBPixel<PixelType> p1, itk::RGBPixel<PixelType> p2)
+  template <typename PixelType>
+  double ComputeDiff(itk::RGBPixel<PixelType> p1, itk::RGBPixel<PixelType> p2)
   {
     double diff = static_cast<double>((p1 - p2).GetScalarValue());
     return diff;
   }
 
-  template <typename PixelType> double ComputeDiff(PixelType p1, PixelType p2)
+  template <typename PixelType>
+  double ComputeDiff(PixelType p1, PixelType p2)
   {
     return static_cast<double>(p1 - p2);
   }
@@ -361,7 +366,8 @@ public:
     return 0;
   }
 
-  template <typename ImageType> int GetMD5FromITKImage(const typename ImageType::Pointer& image, QString& md5)
+  template <typename ImageType>
+  int GetMD5FromITKImage(const typename ImageType::Pointer& image, QString& md5)
   {
     try
     {
@@ -379,7 +385,8 @@ public:
     return 0;
   }
 
-  template <typename TPixel, unsigned int Dimensions> int GetMD5FromDataContainer(DataContainer::Pointer container, const DataArrayPath& path, QString& md5)
+  template <typename TPixel, unsigned int Dimensions>
+  int GetMD5FromDataContainer(DataContainer::Pointer container, const DataArrayPath& path, QString& md5)
   {
     try
     {
@@ -530,4 +537,3 @@ private:
   ITKTestBase(const ITKTestBase&) = delete;    // Copy Constructor Not Implemented
   void operator=(const ITKTestBase&) = delete; // Move assignment Not Implemented
 };
-

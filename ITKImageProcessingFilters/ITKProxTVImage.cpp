@@ -4,7 +4,6 @@
  * Your License or Copyright can go here
  */
 
-
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKProxTVImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 #include "SIMPLib/Common/Constants.h"
@@ -16,7 +15,6 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
-
 
 // -----------------------------------------------------------------------------
 //
@@ -42,10 +40,9 @@ void ITKProxTVImage::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
 
-    parameters.push_back(SIMPL_NEW_DOUBLE_FP("MaximumNumberOfIterations", MaximumNumberOfIterations, FilterParameter::Parameter, ITKProxTVImage));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("MaximumNumberOfIterations", MaximumNumberOfIterations, FilterParameter::Parameter, ITKProxTVImage));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Weights", Weights, FilterParameter::Parameter, ITKProxTVImage));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Norms", Norms, FilterParameter::Parameter, ITKProxTVImage));
-
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -81,7 +78,8 @@ void ITKProxTVImage::readFilterParameters(AbstractFilterParametersReader* reader
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKProxTVImage::dataCheckImpl()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKProxTVImage::dataCheckImpl()
 {
   clearErrorCode();
   clearWarningCode();
@@ -106,7 +104,8 @@ void ITKProxTVImage::dataCheck()
 //
 // -----------------------------------------------------------------------------
 
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKProxTVImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKProxTVImage::filter()
 {
   typedef itk::Image<InputPixelType, Dimension> InputImageType;
   typedef itk::Image<OutputPixelType, Dimension> OutputImageType;
@@ -117,7 +116,6 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   filter->SetWeights(CastVec3ToITK<FloatVec3Type, typename FilterType::ArrayType, typename FilterType::ArrayType::ValueType>(m_Weights, FilterType::ArrayType::Dimension));
   filter->SetNorms(CastVec3ToITK<FloatVec3Type, typename FilterType::ArrayType, typename FilterType::ArrayType::ValueType>(m_Norms, FilterType::ArrayType::Dimension));
   this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -174,7 +172,7 @@ ITKProxTVImage::Pointer ITKProxTVImage::NullPointer()
 // -----------------------------------------------------------------------------
 std::shared_ptr<ITKProxTVImage> ITKProxTVImage::New()
 {
-  struct make_shared_enabler : public ITKProxTVImage  
+  struct make_shared_enabler : public ITKProxTVImage
   {
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
@@ -229,5 +227,3 @@ FloatVec3Type ITKProxTVImage::getNorms() const
 {
   return m_Norms;
 }
-
-

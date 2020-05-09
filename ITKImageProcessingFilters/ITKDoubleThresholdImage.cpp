@@ -4,7 +4,6 @@
  * Your License or Copyright can go here
  */
 
-
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKDoubleThresholdImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 #include "SIMPLib/Common/Constants.h"
@@ -16,7 +15,6 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
-
 
 // -----------------------------------------------------------------------------
 //
@@ -30,7 +28,6 @@ ITKDoubleThresholdImage::ITKDoubleThresholdImage()
   m_InsideValue = StaticCastScalar<int, int, int>(1u);
   m_OutsideValue = StaticCastScalar<int, int, int>(0u);
   m_FullyConnected = StaticCastScalar<bool, bool, bool>(false);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -52,7 +49,6 @@ void ITKDoubleThresholdImage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_INTEGER_FP("InsideValue", InsideValue, FilterParameter::Parameter, ITKDoubleThresholdImage));
   parameters.push_back(SIMPL_NEW_INTEGER_FP("OutsideValue", OutsideValue, FilterParameter::Parameter, ITKDoubleThresholdImage));
   parameters.push_back(SIMPL_NEW_BOOL_FP("FullyConnected", FullyConnected, FilterParameter::Parameter, ITKDoubleThresholdImage));
-
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -92,7 +88,8 @@ void ITKDoubleThresholdImage::readFilterParameters(AbstractFilterParametersReade
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKDoubleThresholdImage::dataCheckImpl()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKDoubleThresholdImage::dataCheckImpl()
 {
   clearErrorCode();
   clearWarningCode();
@@ -109,14 +106,15 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
 // -----------------------------------------------------------------------------
 void ITKDoubleThresholdImage::dataCheck()
 {
-  Dream3DArraySwitchMacroOutputType(this->dataCheckImpl, getSelectedCellArrayPath(), -4,uint8_t, 0);
+  Dream3DArraySwitchMacroOutputType(this->dataCheckImpl, getSelectedCellArrayPath(), -4, uint8_t, 0);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKDoubleThresholdImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKDoubleThresholdImage::filter()
 {
   typedef itk::Image<InputPixelType, Dimension> InputImageType;
   typedef itk::Image<OutputPixelType, Dimension> OutputImageType;
@@ -131,7 +129,6 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   filter->SetOutsideValue(static_cast<uint8_t>(m_OutsideValue));
   filter->SetFullyConnected(static_cast<bool>(m_FullyConnected));
   this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -139,7 +136,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
 // -----------------------------------------------------------------------------
 void ITKDoubleThresholdImage::filterInternal()
 {
-  Dream3DArraySwitchMacroOutputType(this->filter, getSelectedCellArrayPath(), -4,uint8_t, 0);
+  Dream3DArraySwitchMacroOutputType(this->filter, getSelectedCellArrayPath(), -4, uint8_t, 0);
 }
 
 // -----------------------------------------------------------------------------
@@ -188,7 +185,7 @@ ITKDoubleThresholdImage::Pointer ITKDoubleThresholdImage::NullPointer()
 // -----------------------------------------------------------------------------
 std::shared_ptr<ITKDoubleThresholdImage> ITKDoubleThresholdImage::New()
 {
-  struct make_shared_enabler : public ITKDoubleThresholdImage  
+  struct make_shared_enabler : public ITKDoubleThresholdImage
   {
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
@@ -291,5 +288,3 @@ bool ITKDoubleThresholdImage::getFullyConnected() const
 {
   return m_FullyConnected;
 }
-
-

@@ -4,7 +4,6 @@
  * Your License or Copyright can go here
  */
 
-
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKBinaryContourImage.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 #include "SIMPLib/Common/Constants.h"
@@ -17,7 +16,6 @@
 
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -26,7 +24,6 @@ ITKBinaryContourImage::ITKBinaryContourImage()
   m_FullyConnected = StaticCastScalar<bool, bool, bool>(false);
   m_BackgroundValue = StaticCastScalar<double, double, double>(0.0);
   m_ForegroundValue = StaticCastScalar<double, double, double>(1.0);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -44,7 +41,6 @@ void ITKBinaryContourImage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_BOOL_FP("FullyConnected", FullyConnected, FilterParameter::Parameter, ITKBinaryContourImage));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("BackgroundValue", BackgroundValue, FilterParameter::Parameter, ITKBinaryContourImage));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("ForegroundValue", ForegroundValue, FilterParameter::Parameter, ITKBinaryContourImage));
-
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
@@ -80,7 +76,8 @@ void ITKBinaryContourImage::readFilterParameters(AbstractFilterParametersReader*
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKBinaryContourImage::dataCheckImpl()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKBinaryContourImage::dataCheckImpl()
 {
   clearErrorCode();
   clearWarningCode();
@@ -102,7 +99,8 @@ void ITKBinaryContourImage::dataCheck()
 //
 // -----------------------------------------------------------------------------
 
-template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension> void ITKBinaryContourImage::filter()
+template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
+void ITKBinaryContourImage::filter()
 {
   typedef itk::Image<InputPixelType, Dimension> InputImageType;
   typedef itk::Image<OutputPixelType, Dimension> OutputImageType;
@@ -113,7 +111,6 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
   filter->SetBackgroundValue(static_cast<double>(m_BackgroundValue));
   filter->SetForegroundValue(static_cast<double>(m_ForegroundValue));
   this->ITKImageProcessingBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -170,7 +167,7 @@ ITKBinaryContourImage::Pointer ITKBinaryContourImage::NullPointer()
 // -----------------------------------------------------------------------------
 std::shared_ptr<ITKBinaryContourImage> ITKBinaryContourImage::New()
 {
-  struct make_shared_enabler : public ITKBinaryContourImage  
+  struct make_shared_enabler : public ITKBinaryContourImage
   {
   };
   std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
@@ -225,5 +222,3 @@ double ITKBinaryContourImage::getForegroundValue() const
 {
   return m_ForegroundValue;
 }
-
-

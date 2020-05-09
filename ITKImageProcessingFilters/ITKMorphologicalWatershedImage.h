@@ -43,60 +43,58 @@ class ITKImageProcessing_EXPORT ITKMorphologicalWatershedImage : public ITKImage
   // End Python bindings declarations
 
 public:
-    using Self = ITKMorphologicalWatershedImage;
-    using Pointer = std::shared_ptr<Self>;
-    using ConstPointer = std::shared_ptr<const Self>;
-    using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<const Self>;
-    static Pointer NullPointer();
+  using Self = ITKMorphologicalWatershedImage;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<const Self>;
+  static Pointer NullPointer();
 
-    static std::shared_ptr<ITKMorphologicalWatershedImage> New();
+  static std::shared_ptr<ITKMorphologicalWatershedImage> New();
 
-    /**
-    * @brief Returns the name of the class for ITKMorphologicalWatershedImage
-    */
-    QString getNameOfClass() const override;
-    /**
-    * @brief Returns the name of the class for ITKMorphologicalWatershedImage
-    */
-    static QString ClassName();
-
+  /**
+   * @brief Returns the name of the class for ITKMorphologicalWatershedImage
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for ITKMorphologicalWatershedImage
+   */
+  static QString ClassName();
 
   ~ITKMorphologicalWatershedImage() override;
 
-    /**
-    * @brief Setter property for Level
-    */
-    void setLevel(double value); 
-    /**
-    * @brief Getter property for Level
-    * @return Value of Level
-    */
-    double getLevel() const;
+  /**
+   * @brief Setter property for Level
+   */
+  void setLevel(double value);
+  /**
+   * @brief Getter property for Level
+   * @return Value of Level
+   */
+  double getLevel() const;
   Q_PROPERTY(double Level READ getLevel WRITE setLevel)
 
-    /**
-    * @brief Setter property for MarkWatershedLine
-    */
-    void setMarkWatershedLine(bool value); 
-    /**
-    * @brief Getter property for MarkWatershedLine
-    * @return Value of MarkWatershedLine
-    */
-    bool getMarkWatershedLine() const;
+  /**
+   * @brief Setter property for MarkWatershedLine
+   */
+  void setMarkWatershedLine(bool value);
+  /**
+   * @brief Getter property for MarkWatershedLine
+   * @return Value of MarkWatershedLine
+   */
+  bool getMarkWatershedLine() const;
   Q_PROPERTY(bool MarkWatershedLine READ getMarkWatershedLine WRITE setMarkWatershedLine)
 
-    /**
-    * @brief Setter property for FullyConnected
-    */
-    void setFullyConnected(bool value); 
-    /**
-    * @brief Getter property for FullyConnected
-    * @return Value of FullyConnected
-    */
-    bool getFullyConnected() const;
+  /**
+   * @brief Setter property for FullyConnected
+   */
+  void setFullyConnected(bool value);
+  /**
+   * @brief Getter property for FullyConnected
+   * @return Value of FullyConnected
+   */
+  bool getFullyConnected() const;
   Q_PROPERTY(bool FullyConnected READ getFullyConnected WRITE setFullyConnected)
-
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -140,32 +138,32 @@ protected:
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
    */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void dataCheckImpl();
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void dataCheckImpl();
 
   /**
-  * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
-  */
+   * @brief filterInternal overloads filterInternal in ITKImageBase and calls templated filter
+   */
   void filterInternal() override;
 
   /**
-  * @brief Applies the filter
-  */
-  template <typename InputImageType, typename OutputImageType, unsigned int Dimension> void filter();
+   * @brief Applies the filter
+   */
+  template <typename InputImageType, typename OutputImageType, unsigned int Dimension>
+  void filter();
 
 public:
-  ITKMorphologicalWatershedImage(const ITKMorphologicalWatershedImage&) = delete;    // Copy Constructor Not Implemented
-  ITKMorphologicalWatershedImage(ITKMorphologicalWatershedImage&&) = delete;         // Move Constructor Not Implemented
+  ITKMorphologicalWatershedImage(const ITKMorphologicalWatershedImage&) = delete;            // Copy Constructor Not Implemented
+  ITKMorphologicalWatershedImage(ITKMorphologicalWatershedImage&&) = delete;                 // Move Constructor Not Implemented
   ITKMorphologicalWatershedImage& operator=(const ITKMorphologicalWatershedImage&) = delete; // Copy Assignment Not Implemented
   ITKMorphologicalWatershedImage& operator=(ITKMorphologicalWatershedImage&&) = delete;      // Move Assignment Not Implemented
 
-  private:
-    double m_Level = {};
-    bool m_MarkWatershedLine = {};
-    bool m_FullyConnected = {};
-
+private:
+  double m_Level = {};
+  bool m_MarkWatershedLine = {};
+  bool m_FullyConnected = {};
 };
 
 #ifdef __clang__
 #pragma clang diagnostic pop
 #endif
-

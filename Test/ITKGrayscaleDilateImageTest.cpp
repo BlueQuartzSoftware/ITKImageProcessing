@@ -14,8 +14,8 @@ class ITKGrayscaleDilateImageTest : public ITKTestBase
 {
 
 public:
-ITKGrayscaleDilateImageTest() = default;
-~ITKGrayscaleDilateImageTest() override = default;
+  ITKGrayscaleDilateImageTest() = default;
+  ~ITKGrayscaleDilateImageTest() override = default;
 
   int TestITKGrayscaleDilateImageGrayscaleDilateTest()
   {

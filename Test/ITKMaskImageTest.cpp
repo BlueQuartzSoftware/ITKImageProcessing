@@ -12,8 +12,8 @@ class ITKMaskImageTest : public ITKTestBase
 {
 
 public:
-ITKMaskImageTest() = default;
-~ITKMaskImageTest() override = default;
+  ITKMaskImageTest() = default;
+  ~ITKMaskImageTest() override = default;
 
   int TestITKMaskImage2dTest()
   {

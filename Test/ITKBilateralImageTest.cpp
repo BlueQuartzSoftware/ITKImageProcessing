@@ -8,16 +8,15 @@
 // Auto includes
 #include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
 
-
 class ITKBilateralImageTest : public ITKTestBase
 {
 
 public:
-ITKBilateralImageTest() = default;
-~ITKBilateralImageTest() override = default;
+  ITKBilateralImageTest() = default;
+  ~ITKBilateralImageTest() override = default;
 
   int TestITKBilateralImagedefaultTest()
-{
+  {
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/fruit.png");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -44,10 +43,10 @@ ITKBilateralImageTest() = default;
     GetMD5FromDataContainer(containerArray, input_path, md5Output);
     DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("40d02c04323fc303a8a28261c6d4eb23"));
     return 0;
-}
+  }
 
-int TestITKBilateralImage3dTest()
-{
+  int TestITKBilateralImage3dTest()
+  {
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/RA-Short.nrrd");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -66,18 +65,18 @@ int TestITKBilateralImage3dTest()
     propWasSet = filter->setProperty("SaveAsNewArray", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     {
-        double d3d_var;
-        d3d_var = 2.0;
-        var.setValue(d3d_var);
-        propWasSet = filter->setProperty("DomainSigma", var);
-        DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+      double d3d_var;
+      d3d_var = 2.0;
+      var.setValue(d3d_var);
+      propWasSet = filter->setProperty("DomainSigma", var);
+      DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     }
     {
-        double d3d_var;
-        d3d_var = 500;
-        var.setValue(d3d_var);
-        propWasSet = filter->setProperty("RangeSigma", var);
-        DREAM3D_REQUIRE_EQUAL(propWasSet, true);
+      double d3d_var;
+      d3d_var = 500;
+      var.setValue(d3d_var);
+      propWasSet = filter->setProperty("RangeSigma", var);
+      DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     }
     filter->setDataContainerArray(containerArray);
     filter->execute();
@@ -90,9 +89,7 @@ int TestITKBilateralImage3dTest()
     int res = this->CompareImages(containerArray, input_path, baseline_path, 1e-8);
     DREAM3D_REQUIRE_EQUAL(res, 0);
     return 0;
-}
-
-
+  }
 
   // -----------------------------------------------------------------------------
   //
@@ -103,8 +100,8 @@ int TestITKBilateralImage3dTest()
 
     DREAM3D_REGISTER_TEST(this->TestFilterAvailability("ITKBilateralImage"));
 
-    DREAM3D_REGISTER_TEST( TestITKBilateralImagedefaultTest());
-    DREAM3D_REGISTER_TEST( TestITKBilateralImage3dTest());
+    DREAM3D_REGISTER_TEST(TestITKBilateralImagedefaultTest());
+    DREAM3D_REGISTER_TEST(TestITKBilateralImage3dTest());
 
     if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
     {
@@ -114,5 +111,5 @@ int TestITKBilateralImage3dTest()
 
 private:
   ITKBilateralImageTest(const ITKBilateralImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKBilateralImageTest&);  // Operator '=' Not Implemented
+  void operator=(const ITKBilateralImageTest&);        // Operator '=' Not Implemented
 };

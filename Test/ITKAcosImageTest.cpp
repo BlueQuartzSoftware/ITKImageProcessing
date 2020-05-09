@@ -7,16 +7,15 @@
 #include "ITKTestBase.h"
 // Auto includes
 
-
 class ITKAcosImageTest : public ITKTestBase
 {
 
 public:
-ITKAcosImageTest() = default;
-~ITKAcosImageTest() override = default;
+  ITKAcosImageTest() = default;
+  ~ITKAcosImageTest() override = default;
 
   int TestITKAcosImagedefaultsTest()
-{
+  {
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/Ramp-Zero-One-Float.nrrd");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
@@ -45,9 +44,7 @@ ITKAcosImageTest() = default;
     int res = this->CompareImages(containerArray, input_path, baseline_path, 0.01);
     DREAM3D_REQUIRE_EQUAL(res, 0);
     return 0;
-}
-
-
+  }
 
   // -----------------------------------------------------------------------------
   //
@@ -58,7 +55,7 @@ ITKAcosImageTest() = default;
 
     DREAM3D_REGISTER_TEST(this->TestFilterAvailability("ITKAcosImage"));
 
-    DREAM3D_REGISTER_TEST( TestITKAcosImagedefaultsTest());
+    DREAM3D_REGISTER_TEST(TestITKAcosImagedefaultsTest());
 
     if(SIMPL::unittest::numTests == SIMPL::unittest::numTestsPass)
     {
