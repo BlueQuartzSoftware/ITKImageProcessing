@@ -32,8 +32,6 @@
 
 #pragma once
 
-#include "itkSingleValuedCostFunction.h"
-
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/FilterParameters/IntVec2FilterParameter.h"
@@ -42,6 +40,15 @@
 #include "SIMPLib/Utilities/MontageSelection.h"
 
 #include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
+
+#include <itkConfigure.h>
+#if(ITK_VERSION_MAJOR == 4) 
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wself-assign-field"
+#endif
+#endif
+#include "itkSingleValuedCostFunction.h"
 
 /**
  * @brief The ApplyDewarpParameters class. See [Filter documentation](@ref ApplyDewarpParameters) for details.
@@ -234,3 +241,10 @@ private:
   // FloatVec7Type m_XFactors = {1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
   // FloatVec7Type m_YFactors = {0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
 };
+
+
+
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
+

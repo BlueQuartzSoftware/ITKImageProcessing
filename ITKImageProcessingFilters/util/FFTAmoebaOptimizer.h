@@ -15,14 +15,23 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef itkFFTAmoebaOptimizer_h
-#define itkFFTAmoebaOptimizer_h
+#pragma once
 
-#include "itkSingleValuedNonLinearVnlOptimizer.h"
+#include <itkConfigure.h>
+#if(ITK_VERSION_MAJOR == 4) 
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wself-assign-field"
+#endif
+#endif
+
 #include "ITKImageProcessingFilters/util/FFTAmoeba.h"
 #include "ITKOptimizersExport.h"
 
 #include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
+
+#include "itkSingleValuedNonLinearVnlOptimizer.h"
+
 
 class AbstractFilter;
 
@@ -181,4 +190,7 @@ private:
 };
 } // end namespace itk
 
+
+#ifdef __clang__
+#pragma clang diagnostic pop
 #endif

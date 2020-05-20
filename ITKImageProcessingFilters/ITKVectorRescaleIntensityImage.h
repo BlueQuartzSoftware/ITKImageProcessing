@@ -35,16 +35,17 @@
 #ifdef __clang__
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
+#pragma clang diagnostic ignored "-Wself-assign-field"
 #endif
 
 #include <memory>
-
-#include <itkVectorRescaleIntensityImageFilter.h>
 
 #include "SIMPLib/SIMPLib.h"
 
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKImageProcessingBase.h"
 #include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
+
+#include <itkVectorRescaleIntensityImageFilter.h>
 
 /**
  * @brief The ITKVectorRescaleIntensityImage class. See [Filter documentation](@ref ITKVectorRescaleIntensityImage) for details.

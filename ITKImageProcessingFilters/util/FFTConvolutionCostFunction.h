@@ -32,18 +32,27 @@
 
 #pragma once
 
-#include "itkAmoebaOptimizer.h"
-#include "itkFFTConvolutionImageFilter.h"
-#include "itkSmartPointer.h"
+
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
 #include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
-#include "SIMPLib/Geometry/ImageGeom.h"
+
+#include <itkConfigure.h>
+#if(ITK_VERSION_MAJOR == 4) 
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wself-assign-field"
+#endif
+#endif
+#include "itkAmoebaOptimizer.h"
+#include "itkFFTConvolutionImageFilter.h"
+#include "itkSmartPointer.h"
 
 using Grayscale_T = uint8_t;
 using PixelValue_T = Grayscale_T;
@@ -246,3 +255,8 @@ private:
   double m_ImageDim_y;
   OverlapPairs m_Overlaps;
 };
+
+
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif

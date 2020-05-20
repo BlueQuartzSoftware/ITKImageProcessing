@@ -34,6 +34,14 @@
 
 #include <array>
 
+#include <itkConfigure.h>
+#if(ITK_VERSION_MAJOR == 4) 
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wself-assign-field"
+#endif
+#endif
+
 #include <itkSingleValuedCostFunction.h>
 
 namespace FFTDewarpHelper
@@ -77,3 +85,8 @@ PixelIndex getOldIndex(PixelIndex newIndex, PixelIndex offset, const ParametersT
 int64_t px(PixelIndex newIndex, PixelIndex offset, const ParametersType& parameters);
 int64_t py(PixelIndex newIndex, PixelIndex offset, const ParametersType& parameters);
 } // namespace FFTDewarpHelper
+
+
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif

@@ -48,6 +48,15 @@
 #include "itkSCIFIOImageIOFactory.h"
 #endif
 
+
+#include <itkConfigure.h>
+#if(ITK_VERSION_MAJOR == 4) 
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wself-assign-field"
+#endif
+#endif
+
 #include "itksys/SystemTools.hxx"
 #include <itkBMPImageIOFactory.h>
 #include <itkBioRadImageIOFactory.h>
@@ -380,3 +389,9 @@ void ITKImageProcessingPlugin::registerFilterWidgets(FilterWidgetManager* fwm)
 }
 
 #include "ITKImageProcessingFilters/RegisterKnownFilters.cpp"
+
+
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
+

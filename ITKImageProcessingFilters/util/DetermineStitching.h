@@ -31,13 +31,15 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #pragma once
 
-#include <vector>
+#include <itkConfigure.h>
+#if(ITK_VERSION_MAJOR == 4) 
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wself-assign-field"
+#endif
+#endif
 
-#include "itkChangeInformationImageFilter.h"
-#include "itkImageFileWriter.h"
-#include "itkMaskedFFTNormalizedCorrelationImageFilter.h"
-#include "itkMinimumMaximumImageCalculator.h"
-#include "itkRegionOfInterestImageFilter.h"
+#include <vector>
 
 #include <QtCore/QDir>
 #include <QtCore/QString>
@@ -49,6 +51,13 @@
 #include "SIMPLib/ITK/itkBridge.h"
 #include "SIMPLib/ITK/itkSupportConstants.h"
 #include "SIMPLib/SIMPLib.h"
+
+
+#include "itkChangeInformationImageFilter.h"
+#include "itkImageFileWriter.h"
+#include "itkMaskedFFTNormalizedCorrelationImageFilter.h"
+#include "itkMinimumMaximumImageCalculator.h"
+#include "itkRegionOfInterestImageFilter.h"
 
 #define WRITE_DEBUG_IMAGES 0
 
@@ -483,3 +492,9 @@ public:
   DetermineStitching& operator=(const DetermineStitching&) = delete; // Copy Assignment Not Implemented
   DetermineStitching& operator=(DetermineStitching&&) = delete;      // Move Assignment Not Implemented
 };
+
+
+
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
