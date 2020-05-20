@@ -6,7 +6,7 @@
 
 #include "ITKTestBase.h"
 // Auto includes
-#include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
+#include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
 
 #include "SIMPLib/ITK/itkInPlaceDream3DDataToImageFilter.h"
 #include "SIMPLib/ITK/itkInPlaceImageToDream3DDataFilter.h"

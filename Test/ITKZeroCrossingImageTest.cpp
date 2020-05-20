@@ -6,7 +6,7 @@
 
 #include "ITKTestBase.h"
 // Auto includes
-#include <SIMPLib/FilterParameters/IntFilterParameter.h>
+#include "SIMPLib/FilterParameters/IntFilterParameter.h"
 
 class ITKZeroCrossingImageTest : public ITKTestBase
 {

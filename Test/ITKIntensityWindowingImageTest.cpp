@@ -6,7 +6,7 @@
 
 #include "ITKTestBase.h"
 // Auto includes
-#include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
+#include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
 
 class ITKIntensityWindowingImageTest : public ITKTestBase
 {

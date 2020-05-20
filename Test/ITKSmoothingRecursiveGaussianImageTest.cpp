@@ -6,8 +6,8 @@
 
 #include "ITKTestBase.h"
 // Auto includes
-#include <SIMPLib/FilterParameters/BooleanFilterParameter.h>
-#include <SIMPLib/FilterParameters/FloatVec3FilterParameter.h>
+#include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 
 class ITKSmoothingRecursiveGaussianImageTest : public ITKTestBase
 {

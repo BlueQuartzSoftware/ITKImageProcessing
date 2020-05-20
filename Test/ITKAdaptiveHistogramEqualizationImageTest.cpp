@@ -7,9 +7,9 @@
 #include "ITKTestBase.h"
 // Auto includes
 #include "SIMPLib/CoreFilters/ConvertColorToGrayScale.h"
-#include <SIMPLib/FilterParameters/BooleanFilterParameter.h>
-#include <SIMPLib/FilterParameters/FloatFilterParameter.h>
-#include <SIMPLib/FilterParameters/FloatVec3FilterParameter.h>
+#include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/FloatFilterParameter.h"
+#include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 
 #include "ITKImageProcessingFilters/ITKAdaptiveHistogramEqualizationImage.h"
 

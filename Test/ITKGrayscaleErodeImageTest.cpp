@@ -7,8 +7,8 @@
 #include "ITKTestBase.h"
 #include "SIMPLib/ITK/SimpleITKEnums.h"
 // Auto includes
-#include <SIMPLib/FilterParameters/FloatVec3FilterParameter.h>
-#include <SIMPLib/FilterParameters/IntFilterParameter.h>
+#include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
+#include "SIMPLib/FilterParameters/IntFilterParameter.h"
 
 class ITKGrayscaleErodeImageTest : public ITKTestBase
 {
