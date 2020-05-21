@@ -35,7 +35,7 @@
 #include <QtCore/QJsonObject>
 #include <QtCore/QMetaType>
 
-typedef struct
+struct VectorFileListInfo_t
 {
   qint32 PaddingDigits = 3;
   quint32 Ordering = 0; /* Ordering=0 = Ascending, Ordering=1 = Descending */
@@ -50,7 +50,7 @@ typedef struct
   QString FileSuffix;
   QString FileExtension;
 
-  void writeJson(QJsonObject& json)
+  void writeJson(QJsonObject& json) const
   {
     json["PaddingDigits"] = static_cast<double>(PaddingDigits);
     json["Ordering"] = static_cast<double>(Ordering);
@@ -66,7 +66,7 @@ typedef struct
     json["Separator"] = Separator;
   }
 
-  bool readJson(QJsonObject& json)
+  bool readJson(const QJsonObject& json)
   {
     if(json["PaddingDigits"].isDouble() && json["Ordering"].isDouble() && json["StartIndex"].isDouble() && json["EndIndex"].isDouble() && json["IncrementIndex"].isDouble() &&
        json["InputPath"].isString() && json["FilePrefix"].isString() && json["FileSuffix"].isString() && json["FileExtension"].isString())
@@ -88,6 +88,6 @@ typedef struct
     }
     return false;
   }
-} VectorFileListInfo_t;
+};
 
 Q_DECLARE_METATYPE(VectorFileListInfo_t)
