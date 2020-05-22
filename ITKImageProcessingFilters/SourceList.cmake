@@ -10,6 +10,19 @@ SIMPL_START_FILTER_GROUP(
   BINARY_DIR ${${PLUGIN_NAME}_BINARY_DIR}
   )
 
+#---------------
+# This is the list of Filters Superclasses. Other filters use these filters as a
+# superclass. If the filters are NOT meant to be ever invoked from the user interface
+# then they go here. This is also so that the python wrapping will work correctly.
+set(_SuperclassFilters
+  ITKImageProcessingBase
+)
+
+#-----------------
+# Loop on the Filter Superclasses adding each one to the DREAM3DLib project so that it gets compiled.
+foreach(f ${_SuperclassFilters} )
+  ADD_SIMPL_SUPERCLASS_FILTER("${PLUGIN_NAME}" "${PLUGIN_NAME}" ${_filterGroupName} ${f})
+endforeach()
 
 #---------
 # List your public filters here
@@ -168,8 +181,7 @@ foreach(f ${_PublicFilters} )
   ADD_SIMPL_FILTER(  "${PLUGIN_NAME}" "${PLUGIN_NAME}"
                     ${_filterGroupName} ${f}
                     ${${PLUGIN_NAME}_SOURCE_DIR}/Documentation/${_filterGroupName}/${f}.md 
-                    TRUE
-                    ${${PLUGIN_NAME}_BINARY_DIR})
+                    TRUE)
 endforeach()
 
 
@@ -178,7 +190,7 @@ endforeach()
 # be able to use them from the DREAM3D user interface.
 set(_PrivateFilters
   ITKImportMontage
-  ITKImageProcessingBase
+  
 )
 
 #-----------------
@@ -186,7 +198,7 @@ set(_PrivateFilters
 foreach(f ${_PrivateFilters} )
   ADD_SIMPL_FILTER(  "${PLUGIN_NAME}" "${PLUGIN_NAME}"
                     ${_filterGroupName} ${f}
-                    ${${PLUGIN_NAME}_SOURCE_DIR}/Documentation/${_filterGroupName}/${f}.md FALSE ${${PLUGIN_NAME}_BINARY_DIR})
+                    ${${PLUGIN_NAME}_SOURCE_DIR}/Documentation/${_filterGroupName}/${f}.md FALSE)
 endforeach()
 
 #-------------
