@@ -263,7 +263,7 @@ protected:
   /**
    * @brief Generates internal grayscale array.
    */
-  void generateGrayscaleIPF();
+  int generateGrayscaleIPF();
 
   /**
    * @brief Removes internal grayscale array.

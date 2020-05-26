@@ -234,7 +234,10 @@ void CalcDewarpParameters::execute()
   }
 
   // Generate internal grayscale values
-  generateGrayscaleIPF();
+  if(generateGrayscaleIPF() < 0)
+  {
+    return;
+  }
   std::vector<double> xyParameters = getPxyVec();
   FFTDewarpHelper::ParametersType transformParams = ::convertVec2Params(xyParameters);
 
@@ -465,11 +468,13 @@ QString CalcDewarpParameters::getGrayscaleArrayName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CalcDewarpParameters::generateGrayscaleIPF()
+int CalcDewarpParameters::generateGrayscaleIPF()
 {
   ConvertColorToGrayScale::Pointer conversionFilter = ConvertColorToGrayScale::New();
   conversionFilter->setConversionAlgorithm(static_cast<int>(ConvertColorToGrayScale::ConversionType::Luminosity));
   conversionFilter->setOutputArrayPrefix(::InternalGrayscalePrefex);
+
+  connect(conversionFilter.get(), &AbstractFilter::messageGenerated, this, &AbstractFilter::messageGenerated);
 
   AbstractMontage::Pointer montage = getDataContainerArray()->getMontage(getMontageName());
   AbstractMontage::CollectionType dcs = montage->getDataContainers();
@@ -489,8 +494,11 @@ void CalcDewarpParameters::generateGrayscaleIPF()
     int err = conversionFilter->getErrorCode();
     if(err < 0)
     {
+      return err;
     }
   }
+
+  return 0;
 }
 
 // -----------------------------------------------------------------------------
