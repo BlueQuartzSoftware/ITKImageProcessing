@@ -234,8 +234,10 @@ void CalcDewarpParameters::execute()
   }
 
   // Generate internal grayscale values
-  if(generateGrayscaleIPF() < 0)
+  int err = generateGrayscaleIPF();
+  if(err < 0)
   {
+    setErrorCondition(err, QObject::tr("Sub-filter ConvertColorToGrayScale failed"));
     return;
   }
   std::vector<double> xyParameters = getPxyVec();
