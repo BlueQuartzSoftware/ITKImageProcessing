@@ -77,7 +77,7 @@
 //
 // -----------------------------------------------------------------------------
 ITKImageProcessingPlugin::ITKImageProcessingPlugin()
-: m_Version(ITKImageProcessing::Version::Package())
+: m_Version(ITKImageProcessing::Version::Complete())
 , m_CompatibilityVersion(ITKImageProcessing::Version::Package())
 , m_Vendor("BlueQuartz Software")
 , // Initialize ITKImageProcessing's Vendor Name Here
