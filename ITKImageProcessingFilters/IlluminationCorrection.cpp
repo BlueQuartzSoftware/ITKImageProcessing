@@ -198,8 +198,7 @@ void calculateOutputValues(IlluminationCorrection* filter)
 
   typename AccumDataArrayType::Pointer accumulateArrayPtr = AccumDataArrayType::CreateArray(backgroundArrayPtr->getNumberOfTuples(), "Accumulation Array", true);
   accumulateArrayPtr->initializeWithZeros();
-  DataArray<AccumType>& accumArray = *accumulateArrayPtr;
-  size_t numTuples = accumArray.getNumberOfTuples();
+  size_t numTuples = (*accumulateArrayPtr).getNumberOfTuples();
 
   typename SizeTArrayType::Pointer countArrayPtr = SizeTArrayType::CreateArray(backgroundArrayPtr->getNumberOfTuples(), "Count Array", true);
   countArrayPtr->initializeWithZeros();
@@ -222,7 +221,7 @@ void calculateOutputValues(IlluminationCorrection* filter)
     {
       if(imageArray[t] >= LowThreshold && imageArray[t] <= HighThreshold)
       {
-        accumArray[t] += imageArray[t];
+        (*accumulateArrayPtr)[t] += imageArray[t];
         counter[t]++;
       }
     }
@@ -235,7 +234,7 @@ void calculateOutputValues(IlluminationCorrection* filter)
   {
     if(counter[j] > 0) // Guard against Divide by zero
     {
-      accumArray[j] /= counter[j];
+      (*accumulateArrayPtr)[j] /= counter[j];
     }
   }
 
@@ -256,21 +255,25 @@ void calculateOutputValues(IlluminationCorrection* filter)
     imageProcessingFilter->setDataContainerArray(filter->getDataContainerArray());
     outPath.setDataArrayName(accumulateArrayPtr->getName());
 
+    QString medianArrayName = accumulateArrayPtr->getName() + "_Median";
+
     imageProcessingFilter->setSelectedCellArrayPath(outPath);
-    imageProcessingFilter->setSaveAsNewArray(false);
+    imageProcessingFilter->setNewCellArrayName(medianArrayName);
     imageProcessingFilter->setRadius(filter->getMedianRadius());
     imageProcessingFilter->execute();
     outAm->addOrReplaceAttributeArray(outArray); // Put the original back into the Attr Mat
 
+    typename AccumDataArrayType::Pointer medianArrayPtr = outAm->getAttributeArrayAs<AccumDataArrayType>(medianArrayName);
+    accumulateArrayPtr = medianArrayPtr;
   } // Median
 
   // Assign output array values
-  for(int i = 0; i < numTuples; ++i)
+  for(size_t i = 0; i < numTuples; ++i)
   {
-    backgroundArray[i] = static_cast<OutArrayType>(accumArray[i]);
+    backgroundArray[i] = static_cast<OutArrayType>((*accumulateArrayPtr)[i]);
   }
 
-  AccumType average = std::accumulate(accumArray.begin(), accumArray.end(), static_cast<AccumType>(0)) / accumArray.getNumberOfTuples();
+  AccumType average = std::accumulate((*accumulateArrayPtr).begin(), (*accumulateArrayPtr).end(), static_cast<AccumType>(0)) / (*accumulateArrayPtr).getNumberOfTuples();
 
   // Apply Correction
   if(filter->getApplyCorrection())
@@ -289,7 +292,7 @@ void calculateOutputValues(IlluminationCorrection* filter)
     for(const auto& dcName : dcNames)
     {
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-      g->run(ProcessInputImagesImpl<OutArrayType, AccumType>(filter, dcName, average, accumArray));
+      g->run(ProcessInputImagesImpl<OutArrayType, AccumType>(filter, dcName, average, (*accumulateArrayPtr)));
       threadCount++;
       if(threadCount == nthreads)
       {
