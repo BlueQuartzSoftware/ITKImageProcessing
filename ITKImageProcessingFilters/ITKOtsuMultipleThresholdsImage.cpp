@@ -66,7 +66,6 @@ void ITKOtsuMultipleThresholdsImage::readFilterParameters(AbstractFilterParamete
   reader->openFilterGroup(this, index);
   setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
   setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
-  setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
   setNumberOfThresholds(reader->readValue("NumberOfThresholds", getNumberOfThresholds()));
   setLabelOffset(reader->readValue("LabelOffset", getLabelOffset()));
   setNumberOfHistogramBins(reader->readValue("NumberOfHistogramBins", getNumberOfHistogramBins()));

@@ -76,7 +76,6 @@ void ITKVectorConnectedComponentImage::readFilterParameters(AbstractFilterParame
   reader->openFilterGroup(this, index);
   setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
   setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
-  setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
   setDistanceThreshold(reader->readValue("DistanceThreshold", getDistanceThreshold()));
   setFullyConnected(reader->readValue("FullyConnected", getFullyConnected()));
 

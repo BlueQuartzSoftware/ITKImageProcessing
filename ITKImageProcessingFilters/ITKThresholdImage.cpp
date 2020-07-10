@@ -64,7 +64,6 @@ void ITKThresholdImage::readFilterParameters(AbstractFilterParametersReader* rea
   reader->openFilterGroup(this, index);
   setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
   setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
-  setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
   setLower(reader->readValue("Lower", getLower()));
   setUpper(reader->readValue("Upper", getUpper()));
   setOutsideValue(reader->readValue("OutsideValue", getOutsideValue()));

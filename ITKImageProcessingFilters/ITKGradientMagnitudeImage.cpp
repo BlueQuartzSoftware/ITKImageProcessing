@@ -60,7 +60,6 @@ void ITKGradientMagnitudeImage::readFilterParameters(AbstractFilterParametersRea
   reader->openFilterGroup(this, index);
   setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
   setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
-  setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
   setUseImageSpacing(reader->readValue("UseImageSpacing", getUseImageSpacing()));
 
   reader->closeFilterGroup();

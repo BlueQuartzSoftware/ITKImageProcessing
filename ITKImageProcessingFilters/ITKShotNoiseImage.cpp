@@ -62,7 +62,6 @@ void ITKShotNoiseImage::readFilterParameters(AbstractFilterParametersReader* rea
   reader->openFilterGroup(this, index);
   setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
   setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
-  setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
   setScale(reader->readValue("Scale", getScale()));
   setSeed(reader->readValue("Seed", getSeed()));
 

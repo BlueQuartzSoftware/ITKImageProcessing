@@ -86,7 +86,6 @@ void ITKBinaryMorphologicalClosingImage::readFilterParameters(AbstractFilterPara
   reader->openFilterGroup(this, index);
   setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
   setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
-  setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
   setForegroundValue(reader->readValue("ForegroundValue", getForegroundValue()));
   setSafeBorder(reader->readValue("SafeBorder", getSafeBorder()));
   setKernelRadius(reader->readFloatVec3("KernelRadius", getKernelRadius()));

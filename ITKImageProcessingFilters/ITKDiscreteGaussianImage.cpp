@@ -67,7 +67,6 @@ void ITKDiscreteGaussianImage::readFilterParameters(AbstractFilterParametersRead
   reader->openFilterGroup(this, index);
   setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
   setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
-  setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
   setVariance(reader->readFloatVec3("Variance", getVariance()));
   setMaximumKernelWidth(reader->readValue("MaximumKernelWidth", getMaximumKernelWidth()));
   setMaximumError(reader->readFloatVec3("MaximumError", getMaximumError()));

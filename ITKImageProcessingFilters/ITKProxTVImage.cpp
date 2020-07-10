@@ -66,7 +66,6 @@ void ITKProxTVImage::readFilterParameters(AbstractFilterParametersReader* reader
   reader->openFilterGroup(this, index);
   setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
   setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
-  setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
   setMaximumNumberOfIterations(reader->readValue("MaximumNumberOfIterations", getMaximumNumberOfIterations()));
   setWeights(reader->readFloatVec3("Weights", getWeights()));
   setNorms(reader->readFloatVec3("Norms", getNorms()));

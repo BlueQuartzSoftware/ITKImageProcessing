@@ -60,7 +60,6 @@ void ITKValuedRegionalMinimaImage::readFilterParameters(AbstractFilterParameters
   reader->openFilterGroup(this, index);
   setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
   setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
-  setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
   setFullyConnected(reader->readValue("FullyConnected", getFullyConnected()));
 
   reader->closeFilterGroup();

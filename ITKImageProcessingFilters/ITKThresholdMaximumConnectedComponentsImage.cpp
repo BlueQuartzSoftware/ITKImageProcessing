@@ -66,7 +66,6 @@ void ITKThresholdMaximumConnectedComponentsImage::readFilterParameters(AbstractF
   reader->openFilterGroup(this, index);
   setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
   setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
-  setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
   setMinimumObjectSizeInPixels(reader->readValue("MinimumObjectSizeInPixels", getMinimumObjectSizeInPixels()));
   setUpperBoundary(reader->readValue("UpperBoundary", getUpperBoundary()));
   setInsideValue(reader->readValue("InsideValue", getInsideValue()));

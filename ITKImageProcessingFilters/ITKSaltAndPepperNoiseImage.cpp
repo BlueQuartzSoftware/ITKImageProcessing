@@ -63,7 +63,6 @@ void ITKSaltAndPepperNoiseImage::readFilterParameters(AbstractFilterParametersRe
   reader->openFilterGroup(this, index);
   setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
   setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
-  setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
   setProbability(reader->readValue("Probability", getProbability()));
   setSeed(reader->readValue("Seed", getSeed()));
 

@@ -84,7 +84,6 @@ void ITKGrayscaleMorphologicalOpeningImage::readFilterParameters(AbstractFilterP
   reader->openFilterGroup(this, index);
   setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
   setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
-  setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
   setSafeBorder(reader->readValue("SafeBorder", getSafeBorder()));
   setKernelRadius(reader->readFloatVec3("KernelRadius", getKernelRadius()));
   setKernelType(reader->readValue("KernelType", getKernelType()));

@@ -62,7 +62,6 @@ void ITKHMinimaImage::readFilterParameters(AbstractFilterParametersReader* reade
   reader->openFilterGroup(this, index);
   setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
   setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
-  setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
   setHeight(reader->readValue("Height", getHeight()));
   setFullyConnected(reader->readValue("FullyConnected", getFullyConnected()));
 

@@ -71,7 +71,6 @@ void ITKMorphologicalWatershedFromMarkersImage::readFilterParameters(AbstractFil
   setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
   setSelectedCellArrayPath(reader->readDataArrayPath("MarkerCellArrayPath", getMarkerCellArrayPath()));
   setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
-  setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
   setMarkWatershedLine(reader->readValue("MarkWatershedLine", getMarkWatershedLine()));
   setFullyConnected(reader->readValue("FullyConnected", getFullyConnected()));
 

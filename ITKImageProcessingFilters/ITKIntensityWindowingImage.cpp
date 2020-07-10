@@ -66,7 +66,6 @@ void ITKIntensityWindowingImage::readFilterParameters(AbstractFilterParametersRe
   reader->openFilterGroup(this, index);
   setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
   setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
-  setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
   setWindowMinimum(reader->readValue("WindowMinimum", getWindowMinimum()));
   setWindowMaximum(reader->readValue("WindowMaximum", getWindowMaximum()));
   setOutputMinimum(reader->readValue("OutputMinimum", getOutputMinimum()));

@@ -64,7 +64,6 @@ void ITKAdaptiveHistogramEqualizationImage::readFilterParameters(AbstractFilterP
   reader->openFilterGroup(this, index);
   setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
   setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
-  setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
   setRadius(reader->readFloatVec3("Radius", getRadius()));
   setAlpha(reader->readValue("Alpha", getAlpha()));
   setBeta(reader->readValue("Beta", getBeta()));

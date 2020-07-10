@@ -120,7 +120,6 @@ void ITKRescaleIntensityImage::readFilterParameters(AbstractFilterParametersRead
   reader->openFilterGroup(this, index);
   setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
   setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
-  setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
   setOutputMinimum(reader->readValue("OutputMinimum", getOutputMinimum()));
   setOutputMaximum(reader->readValue("OutputMaximum", getOutputMaximum()));
 

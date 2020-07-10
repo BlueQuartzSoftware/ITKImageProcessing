@@ -60,7 +60,6 @@ void ITKNormalizeToConstantImage::readFilterParameters(AbstractFilterParametersR
   reader->openFilterGroup(this, index);
   setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
   setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
-  setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
   setConstant(reader->readValue("Constant", getConstant()));
 
   reader->closeFilterGroup();

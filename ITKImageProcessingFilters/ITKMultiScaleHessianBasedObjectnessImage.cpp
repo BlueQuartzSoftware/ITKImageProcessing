@@ -83,7 +83,6 @@ void ITKMultiScaleHessianBasedObjectnessImage::readFilterParameters(AbstractFilt
   reader->openFilterGroup(this, index);
   setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
   setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
-  setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
   setObjectDimension(reader->readValue("ObjectDimension", getObjectDimension()));
   setAlpha(reader->readValue("Alpha", getAlpha()));
   setBeta(reader->readValue("Beta", getBeta()));

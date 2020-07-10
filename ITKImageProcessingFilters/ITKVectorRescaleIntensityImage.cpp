@@ -117,7 +117,6 @@ void ITKVectorRescaleIntensityImage::readFilterParameters(AbstractFilterParamete
   reader->openFilterGroup(this, index);
   setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
   setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
-  setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
   setOutputMaximumMagnitude(reader->readValue("OutputMaximumMagnitude", getOutputMaximumMagnitude()));
 
   reader->closeFilterGroup();

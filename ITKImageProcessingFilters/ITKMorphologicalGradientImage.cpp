@@ -82,7 +82,6 @@ void ITKMorphologicalGradientImage::readFilterParameters(AbstractFilterParameter
   reader->openFilterGroup(this, index);
   setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
   setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
-  setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
   setKernelRadius(reader->readFloatVec3("KernelRadius", getKernelRadius()));
   setKernelType(reader->readValue("KernelType", getKernelType()));
 

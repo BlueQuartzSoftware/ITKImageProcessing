@@ -62,7 +62,6 @@ void ITKRelabelComponentImage::readFilterParameters(AbstractFilterParametersRead
   reader->openFilterGroup(this, index);
   setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
   setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
-  setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
   setMinimumObjectSize(reader->readValue("MinimumObjectSize", getMinimumObjectSize()));
   setSortByObjectSize(reader->readValue("SortByObjectSize", getSortByObjectSize()));
 

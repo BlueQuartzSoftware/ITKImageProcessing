@@ -86,7 +86,6 @@ void ITKBinaryClosingByReconstructionImage::readFilterParameters(AbstractFilterP
   reader->openFilterGroup(this, index);
   setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
   setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
-  setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
   setForegroundValue(reader->readValue("ForegroundValue", getForegroundValue()));
   setFullyConnected(reader->readValue("FullyConnected", getFullyConnected()));
   setKernelRadius(reader->readFloatVec3("KernelRadius", getKernelRadius()));

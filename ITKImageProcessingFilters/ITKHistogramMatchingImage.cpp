@@ -66,7 +66,6 @@ void ITKHistogramMatchingImage::readFilterParameters(AbstractFilterParametersRea
   setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
   setReferenceCellArrayPath(reader->readDataArrayPath("ReferenceCellArrayPath", getReferenceCellArrayPath()));
   setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
-  setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
   setNumberOfHistogramLevels(reader->readValue("NumberOfHistogramLevels", getNumberOfHistogramLevels()));
   setNumberOfMatchPoints(reader->readValue("NumberOfMatchPoints", getNumberOfMatchPoints()));
   setThresholdAtMeanIntensity(reader->readValue("ThresholdAtMeanIntensity", getThresholdAtMeanIntensity()));

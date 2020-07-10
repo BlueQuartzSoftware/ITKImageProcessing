@@ -66,7 +66,6 @@ void ITKBinaryThresholdImage::readFilterParameters(AbstractFilterParametersReade
   reader->openFilterGroup(this, index);
   setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
   setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
-  setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
   setLowerThreshold(reader->readValue("LowerThreshold", getLowerThreshold()));
   setUpperThreshold(reader->readValue("UpperThreshold", getUpperThreshold()));
   setInsideValue(reader->readValue("InsideValue", getInsideValue()));

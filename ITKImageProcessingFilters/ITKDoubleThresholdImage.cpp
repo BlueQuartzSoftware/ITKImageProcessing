@@ -72,7 +72,6 @@ void ITKDoubleThresholdImage::readFilterParameters(AbstractFilterParametersReade
   reader->openFilterGroup(this, index);
   setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
   setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
-  setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
   setThreshold1(reader->readValue("Threshold1", getThreshold1()));
   setThreshold2(reader->readValue("Threshold2", getThreshold2()));
   setThreshold3(reader->readValue("Threshold3", getThreshold3()));

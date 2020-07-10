@@ -62,7 +62,6 @@ void ITKShiftScaleImage::readFilterParameters(AbstractFilterParametersReader* re
   reader->openFilterGroup(this, index);
   setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
   setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
-  setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
   setShift(reader->readValue("Shift", getShift()));
   setScale(reader->readValue("Scale", getScale()));
 

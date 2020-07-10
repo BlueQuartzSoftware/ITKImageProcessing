@@ -88,7 +88,6 @@ void ITKBinaryOpeningByReconstructionImage::readFilterParameters(AbstractFilterP
   reader->openFilterGroup(this, index);
   setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
   setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
-  setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
   setForegroundValue(reader->readValue("ForegroundValue", getForegroundValue()));
   setBackgroundValue(reader->readValue("BackgroundValue", getBackgroundValue()));
   setFullyConnected(reader->readValue("FullyConnected", getFullyConnected()));

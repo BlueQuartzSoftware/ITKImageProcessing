@@ -64,7 +64,6 @@ void ITKMaskImage::readFilterParameters(AbstractFilterParametersReader* reader, 
   setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
   setSelectedCellArrayPath(reader->readDataArrayPath("MaskCellArrayPath", getMaskCellArrayPath()));
   setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
-  setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
   setOutsideValue(reader->readValue("OutsideValue", getOutsideValue()));
 
   reader->closeFilterGroup();

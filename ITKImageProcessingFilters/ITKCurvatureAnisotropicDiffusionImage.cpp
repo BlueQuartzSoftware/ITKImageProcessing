@@ -66,7 +66,6 @@ void ITKCurvatureAnisotropicDiffusionImage::readFilterParameters(AbstractFilterP
   reader->openFilterGroup(this, index);
   setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
   setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
-  setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
   setTimeStep(reader->readValue("TimeStep", getTimeStep()));
   setConductanceParameter(reader->readValue("ConductanceParameter", getConductanceParameter()));
   setConductanceScalingUpdateInterval(reader->readValue("ConductanceScalingUpdateInterval", getConductanceScalingUpdateInterval()));

@@ -62,7 +62,6 @@ void ITKSpeckleNoiseImage::readFilterParameters(AbstractFilterParametersReader* 
   reader->openFilterGroup(this, index);
   setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
   setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
-  setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
   setStandardDeviation(reader->readValue("StandardDeviation", getStandardDeviation()));
   setSeed(reader->readValue("Seed", getSeed()));
 

@@ -60,7 +60,6 @@ void ITKBinomialBlurImage::readFilterParameters(AbstractFilterParametersReader* 
   reader->openFilterGroup(this, index);
   setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
   setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
-  setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
   setRepetitions(reader->readValue("Repetitions", getRepetitions()));
 
   reader->closeFilterGroup();

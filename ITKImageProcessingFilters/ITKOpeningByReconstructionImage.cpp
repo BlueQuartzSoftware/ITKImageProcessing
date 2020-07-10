@@ -86,7 +86,6 @@ void ITKOpeningByReconstructionImage::readFilterParameters(AbstractFilterParamet
   reader->openFilterGroup(this, index);
   setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
   setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
-  setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
   setFullyConnected(reader->readValue("FullyConnected", getFullyConnected()));
   setPreserveIntensities(reader->readValue("PreserveIntensities", getPreserveIntensities()));
   setKernelRadius(reader->readFloatVec3("KernelRadius", getKernelRadius()));

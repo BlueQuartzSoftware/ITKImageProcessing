@@ -55,7 +55,6 @@ void ITKCosImage::readFilterParameters(AbstractFilterParametersReader* reader, i
   reader->openFilterGroup(this, index);
   setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
   setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
-  setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
 
   reader->closeFilterGroup();
 }

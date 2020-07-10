@@ -101,7 +101,6 @@ void ITKPatchBasedDenoisingImage::readFilterParameters(AbstractFilterParametersR
   reader->openFilterGroup(this, index);
   setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
   setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
-  setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
   setKernelBandwidthSigma(reader->readValue("KernelBandwidthSigma", getKernelBandwidthSigma()));
   setPatchRadius(reader->readValue("PatchRadius", getPatchRadius()));
   setNumberOfIterations(reader->readValue("NumberOfIterations", getNumberOfIterations()));

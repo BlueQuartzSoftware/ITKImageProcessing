@@ -66,7 +66,6 @@ void ITKFFTNormalizedCorrelationImage::readFilterParameters(AbstractFilterParame
   setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
   setSelectedCellArrayPath(reader->readDataArrayPath("MovingCellArrayPath", getSelectedCellArrayPath()));
   setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
-  setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
   setRequiredNumberOfOverlappingPixels(reader->readValue("RequiredNumberOfOverlappingPixels", getRequiredNumberOfOverlappingPixels()));
   setRequiredFractionOfOverlappingPixels(reader->readValue("RequiredFractionOfOverlappingPixels", getRequiredFractionOfOverlappingPixels()));
 

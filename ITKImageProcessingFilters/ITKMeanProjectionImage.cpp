@@ -60,7 +60,6 @@ void ITKMeanProjectionImage::readFilterParameters(AbstractFilterParametersReader
   reader->openFilterGroup(this, index);
   setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
   setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
-  setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
   setProjectionDimension(reader->readValue("ProjectionDimension", getProjectionDimension()));
 
   reader->closeFilterGroup();

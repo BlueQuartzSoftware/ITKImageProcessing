@@ -64,7 +64,6 @@ void ITKBilateralImage::readFilterParameters(AbstractFilterParametersReader* rea
   reader->openFilterGroup(this, index);
   setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
   setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
-  setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
   setDomainSigma(reader->readValue("DomainSigma", getDomainSigma()));
   setRangeSigma(reader->readValue("RangeSigma", getRangeSigma()));
   setNumberOfRangeGaussianSamples(reader->readValue("NumberOfRangeGaussianSamples", getNumberOfRangeGaussianSamples()));
