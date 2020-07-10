@@ -26,7 +26,6 @@ class ITKImageProcessing_EXPORT ITKImageProcessingBase : public ITKImageBase
   PYB11_SHARED_POINTERS(ITKImageProcessingBase)
   PYB11_PROPERTY(DataArrayPath SelectedCellArrayPath READ getSelectedCellArrayPath WRITE setSelectedCellArrayPath)
   PYB11_PROPERTY(QString NewCellArrayName READ getNewCellArrayName WRITE setNewCellArrayName)
-  PYB11_PROPERTY(bool SaveAsNewArray READ getSaveAsNewArray WRITE setSaveAsNewArray)
   PYB11_END_BINDINGS()
   // End Python bindings declarations
 
@@ -70,17 +69,6 @@ public:
    */
   QString getNewCellArrayName() const;
   Q_PROPERTY(QString NewCellArrayName READ getNewCellArrayName WRITE setNewCellArrayName)
-
-  /**
-   * @brief Setter property for SaveAsNewArray
-   */
-  void setSaveAsNewArray(bool value);
-  /**
-   * @brief Getter property for SaveAsNewArray
-   * @return Value of SaveAsNewArray
-   */
-  bool getSaveAsNewArray() const;
-  Q_PROPERTY(bool SaveAsNewArray READ getSaveAsNewArray WRITE setSaveAsNewArray)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -140,22 +128,14 @@ protected:
       return;
     }
     std::vector<size_t> outputDims = ITKDream3DHelper::GetComponentsDimensions<OutputPixelType>();
-    if(m_SaveAsNewArray)
+    DataArrayPath tempPath;
+    tempPath.update(getSelectedCellArrayPath().getDataContainerName(), getSelectedCellArrayPath().getAttributeMatrixName(), getNewCellArrayName());
+    m_NewCellArrayPtr =
+        getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<OutputValueType>>(this, tempPath, 0, outputDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if(nullptr != m_NewCellArrayPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     {
-      DataArrayPath tempPath;
-      tempPath.update(getSelectedCellArrayPath().getDataContainerName(), getSelectedCellArrayPath().getAttributeMatrixName(), getNewCellArrayName());
-      m_NewCellArrayPtr =
-          getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<OutputValueType>>(this, tempPath, 0, outputDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-      if(nullptr != m_NewCellArrayPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
-      {
-        m_NewCellArray = m_NewCellArrayPtr.lock()->getVoidPointer(0);
-      } /* Now assign the raw pointer to data from the DataArray<T> object */
-    }
-    else
-    {
-      m_NewCellArrayPtr = DataArray<OutputValueType>::NullPointer();
-      m_NewCellArray = nullptr;
-    }
+      m_NewCellArray = m_NewCellArrayPtr.lock()->getVoidPointer(0);
+    } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 
   /**
@@ -166,11 +146,9 @@ protected:
   {
     std::string outputArrayName = getSelectedCellArrayPath().getDataArrayName().toStdString();
 
-    if(getSaveAsNewArray())
-    {
-      outputArrayName = getNewCellArrayName().toStdString();
-    }
-    ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter, outputArrayName, getSaveAsNewArray(), getSelectedCellArrayPath());
+    outputArrayName = getNewCellArrayName().toStdString();
+
+    ITKImageBase::filter<InputPixelType, OutputPixelType, Dimension, FilterType>(filter, outputArrayName, getSelectedCellArrayPath());
   }
 
   /**
@@ -181,11 +159,9 @@ protected:
   {
     std::string outputArrayName = getSelectedCellArrayPath().getDataArrayName().toStdString();
 
-    if(getSaveAsNewArray())
-    {
-      outputArrayName = getNewCellArrayName().toStdString();
-    }
-    ITKImageBase::filterCastToFloat<InputPixelType, OutputPixelType, Dimension, FilterType, FloatImageType>(filter, outputArrayName, getSaveAsNewArray(), getSelectedCellArrayPath());
+    outputArrayName = getNewCellArrayName().toStdString();
+
+    ITKImageBase::filterCastToFloat<InputPixelType, OutputPixelType, Dimension, FilterType, FloatImageType>(filter, outputArrayName, getSelectedCellArrayPath());
   }
 
   /**
@@ -199,7 +175,6 @@ private:
 
   DataArrayPath m_SelectedCellArrayPath = {};
   QString m_NewCellArrayName = {};
-  bool m_SaveAsNewArray = {};
 
 public:
   ITKImageProcessingBase(const ITKImageProcessingBase&) = delete;            // Copy Constructor Not Implemented
