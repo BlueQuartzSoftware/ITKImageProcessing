@@ -20,6 +20,8 @@ public:
   {
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/RA-Float.nrrd");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
+    QString outputName = "TestAttributeArrayName_Output";
+    DataArrayPath output_path("TestContainer", "TestAttributeMatrixName", outputName);
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
     this->ReadImage(input_filename, containerArray, input_path);
     QString filtName = "ITKMinMaxCurvatureFlowImage";
@@ -32,18 +34,18 @@ public:
     var.setValue(input_path);
     propWasSet = filter->setProperty("SelectedCellArrayPath", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
-    var.setValue(false);
-    propWasSet = filter->setProperty("SaveAsNewArray", var);
+    var.setValue(outputName);
+    propWasSet = filter->setProperty("NewCellArrayName", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     filter->setDataContainerArray(containerArray);
     filter->execute();
     DREAM3D_REQUIRED(filter->getErrorCode(), >=, 0);
     DREAM3D_REQUIRED(filter->getWarningCode(), >=, 0);
-    WriteImage("ITKMinMaxCurvatureFlowImagedefaults.nrrd", containerArray, input_path);
+    WriteImage("ITKMinMaxCurvatureFlowImagedefaults.nrrd", containerArray, output_path);
     QString baseline_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Baseline/BasicFilters_MinMaxCurvatureFlowImageFilter_defaults.nrrd");
     DataArrayPath baseline_path("BContainer", "BAttributeMatrixName", "BAttributeArrayName");
     this->ReadImage(baseline_filename, containerArray, baseline_path);
-    int res = this->CompareImages(containerArray, input_path, baseline_path, 0.01);
+    int res = this->CompareImages(containerArray, output_path, baseline_path, 0.01);
     DREAM3D_REQUIRE_EQUAL(res, 0);
     return 0;
   }
@@ -52,6 +54,8 @@ public:
   {
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/RA-Float.nrrd");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
+    QString outputName = "TestAttributeArrayName_Output";
+    DataArrayPath output_path("TestContainer", "TestAttributeMatrixName", outputName);
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
     this->ReadImage(input_filename, containerArray, input_path);
     QString filtName = "ITKMinMaxCurvatureFlowImage";
@@ -64,8 +68,8 @@ public:
     var.setValue(input_path);
     propWasSet = filter->setProperty("SelectedCellArrayPath", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
-    var.setValue(false);
-    propWasSet = filter->setProperty("SaveAsNewArray", var);
+    var.setValue(outputName);
+    propWasSet = filter->setProperty("NewCellArrayName", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     {
       double d3d_var;
@@ -85,11 +89,11 @@ public:
     filter->execute();
     DREAM3D_REQUIRED(filter->getErrorCode(), >=, 0);
     DREAM3D_REQUIRED(filter->getWarningCode(), >=, 0);
-    WriteImage("ITKMinMaxCurvatureFlowImagelonger.nrrd", containerArray, input_path);
+    WriteImage("ITKMinMaxCurvatureFlowImagelonger.nrrd", containerArray, output_path);
     QString baseline_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Baseline/BasicFilters_MinMaxCurvatureFlowImageFilter_longer.nrrd");
     DataArrayPath baseline_path("BContainer", "BAttributeMatrixName", "BAttributeArrayName");
     this->ReadImage(baseline_filename, containerArray, baseline_path);
-    int res = this->CompareImages(containerArray, input_path, baseline_path, 0.01);
+    int res = this->CompareImages(containerArray, output_path, baseline_path, 0.01);
     DREAM3D_REQUIRE_EQUAL(res, 0);
     return 0;
   }

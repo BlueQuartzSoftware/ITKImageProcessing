@@ -20,6 +20,8 @@ public:
   {
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/cthead1.png");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
+    QString outputName = "TestAttributeArrayName_Output";
+    DataArrayPath output_path("TestContainer", "TestAttributeMatrixName", outputName);
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
     this->ReadImage(input_filename, containerArray, input_path);
     QString filtName = "ITKThresholdMaximumConnectedComponentsImage";
@@ -32,16 +34,16 @@ public:
     var.setValue(input_path);
     propWasSet = filter->setProperty("SelectedCellArrayPath", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
-    var.setValue(false);
-    propWasSet = filter->setProperty("SaveAsNewArray", var);
+    var.setValue(outputName);
+    propWasSet = filter->setProperty("NewCellArrayName", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     filter->setDataContainerArray(containerArray);
     filter->execute();
     DREAM3D_REQUIRED(filter->getErrorCode(), >=, 0);
     DREAM3D_REQUIRED(filter->getWarningCode(), >=, 0);
-    WriteImage("ITKThresholdMaximumConnectedComponentsImagedefault.nrrd", containerArray, input_path);
+    WriteImage("ITKThresholdMaximumConnectedComponentsImagedefault.nrrd", containerArray, output_path);
     QString md5Output;
-    GetMD5FromDataContainer(containerArray, input_path, md5Output);
+    GetMD5FromDataContainer(containerArray, output_path, md5Output);
     DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("c84b75c78c33844251a1095d9cbcffb9"));
     return 0;
   }
@@ -50,6 +52,8 @@ public:
   {
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/cthead1.png");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
+    QString outputName = "TestAttributeArrayName_Output";
+    DataArrayPath output_path("TestContainer", "TestAttributeMatrixName", outputName);
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
     this->ReadImage(input_filename, containerArray, input_path);
     QString filtName = "ITKThresholdMaximumConnectedComponentsImage";
@@ -62,8 +66,8 @@ public:
     var.setValue(input_path);
     propWasSet = filter->setProperty("SelectedCellArrayPath", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
-    var.setValue(false);
-    propWasSet = filter->setProperty("SaveAsNewArray", var);
+    var.setValue(outputName);
+    propWasSet = filter->setProperty("NewCellArrayName", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     {
       double d3d_var;
@@ -83,9 +87,9 @@ public:
     filter->execute();
     DREAM3D_REQUIRED(filter->getErrorCode(), >=, 0);
     DREAM3D_REQUIRED(filter->getWarningCode(), >=, 0);
-    WriteImage("ITKThresholdMaximumConnectedComponentsImageparameters.nrrd", containerArray, input_path);
+    WriteImage("ITKThresholdMaximumConnectedComponentsImageparameters.nrrd", containerArray, output_path);
     QString md5Output;
-    GetMD5FromDataContainer(containerArray, input_path, md5Output);
+    GetMD5FromDataContainer(containerArray, output_path, md5Output);
     DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("27c6cf8494fcc4e414f1c420e7a9ca6f"));
     return 0;
   }
@@ -94,6 +98,8 @@ public:
   {
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/RA-Float.nrrd");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
+    QString outputName = "TestAttributeArrayName_Output";
+    DataArrayPath output_path("TestContainer", "TestAttributeMatrixName", outputName);
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
     this->ReadImage(input_filename, containerArray, input_path);
     QString filtName = "ITKThresholdMaximumConnectedComponentsImage";
@@ -106,16 +112,16 @@ public:
     var.setValue(input_path);
     propWasSet = filter->setProperty("SelectedCellArrayPath", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
-    var.setValue(false);
-    propWasSet = filter->setProperty("SaveAsNewArray", var);
+    var.setValue(outputName);
+    propWasSet = filter->setProperty("NewCellArrayName", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     filter->setDataContainerArray(containerArray);
     filter->execute();
     DREAM3D_REQUIRED(filter->getErrorCode(), >=, 0);
     DREAM3D_REQUIRED(filter->getWarningCode(), >=, 0);
-    WriteImage("ITKThresholdMaximumConnectedComponentsImagefloat.nrrd", containerArray, input_path);
+    WriteImage("ITKThresholdMaximumConnectedComponentsImagefloat.nrrd", containerArray, output_path);
     QString md5Output;
-    GetMD5FromDataContainer(containerArray, input_path, md5Output);
+    GetMD5FromDataContainer(containerArray, output_path, md5Output);
     DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("e475b27bd0dd66ede330c4eab93c17e9"));
     return 0;
   }

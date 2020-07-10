@@ -17,6 +17,8 @@ public:
   {
     QString inputFilename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/fruit.png");
     DataArrayPath inputPath("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
+    QString outputName = "TestAttributeArrayName_Output";
+    DataArrayPath output_path("TestContainer", "TestAttributeMatrixName", outputName);
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
     this->ReadImage(inputFilename, containerArray, inputPath);
 
@@ -31,8 +33,8 @@ public:
     var.setValue(inputPath);
     propWasSet = filter->setProperty("SelectedCellArrayPath", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
-    var.setValue(false);
-    propWasSet = filter->setProperty("SaveAsNewArray", var);
+    var.setValue(outputName);
+    propWasSet = filter->setProperty("NewCellArrayName", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     filter->setDataContainerArray(containerArray);
 
@@ -40,11 +42,11 @@ public:
     DREAM3D_REQUIRED(filter->getErrorCode(), >=, 0);
     DREAM3D_REQUIRED(filter->getWarningCode(), >=, 0);
 
-    WriteImage("ITKRGBToLuminanceImageInput.nrrd", containerArray, inputPath);
+    WriteImage("ITKRGBToLuminanceImageInput.nrrd", containerArray, output_path);
     QString baselineFilename = UnitTest::DataDir + QString("/Data/JSONFilters/Baseline/BasicFilters_RGBToLuminanceImageFilter_Input.nrrd");
     DataArrayPath baselinePath("BContainer", "BAttributeMatrixName", "BAttributeArrayName");
     this->ReadImage(baselineFilename, containerArray, baselinePath);
-    int result = this->CompareImages(containerArray, inputPath, baselinePath, 0.01);
+    int result = this->CompareImages(containerArray, output_path, baselinePath, 0.01);
     DREAM3D_REQUIRE_EQUAL(result, 0);
 
     return 0;

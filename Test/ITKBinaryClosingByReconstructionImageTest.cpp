@@ -23,6 +23,8 @@ public:
   {
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/2th_cthead1.png");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
+    QString outputName = "TestAttributeArrayName_Output";
+    DataArrayPath output_path("TestContainer", "TestAttributeMatrixName", outputName);
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
     this->ReadImage(input_filename, containerArray, input_path);
     QString filtName = "ITKBinaryClosingByReconstructionImage";
@@ -35,8 +37,8 @@ public:
     var.setValue(input_path);
     propWasSet = filter->setProperty("SelectedCellArrayPath", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
-    var.setValue(false);
-    propWasSet = filter->setProperty("SaveAsNewArray", var);
+    var.setValue(outputName);
+    propWasSet = filter->setProperty("NewCellArrayName", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     {
       FloatVec3Type d3d_var;
@@ -65,9 +67,9 @@ public:
     filter->execute();
     DREAM3D_REQUIRED(filter->getErrorCode(), >=, 0);
     DREAM3D_REQUIRED(filter->getWarningCode(), >=, 0);
-    WriteImage("ITKBinaryClosingByReconstructionImageBinaryClosingByReconstruction.nrrd", containerArray, input_path);
+    WriteImage("ITKBinaryClosingByReconstructionImageBinaryClosingByReconstruction.nrrd", containerArray, output_path);
     QString md5Output;
-    GetMD5FromDataContainer(containerArray, input_path, md5Output);
+    GetMD5FromDataContainer(containerArray, output_path, md5Output);
     DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("02dc78be92850eff775783073dbdd47d"));
     return 0;
   }

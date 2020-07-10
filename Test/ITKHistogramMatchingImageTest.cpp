@@ -20,6 +20,8 @@ public:
     QString reference_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/LargeWhiteCircle.nrrd");
     DataArrayPath source_path("SourceContainer", "SourceAttributeMatrixName", "SourceAttributeArrayName");
     DataArrayPath reference_path("ReferenceContainer", "ReferenceAttributeMatrixName", "ReferenceAttributeArrayName");
+    QString outputName = "SourceAttributeArrayName_Output";
+    DataArrayPath output_path("SourceContainer", "SourceAttributeMatrixName", outputName);
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
     this->ReadImage(source_filename, containerArray, source_path);
     this->ReadImage(reference_filename, containerArray, reference_path);
@@ -36,18 +38,18 @@ public:
     var.setValue(reference_path);
     propWasSet = filter->setProperty("ReferenceCellArrayPath", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
-    var.setValue(false);
-    propWasSet = filter->setProperty("SaveAsNewArray", var);
+    var.setValue(outputName);
+    propWasSet = filter->setProperty("NewCellArrayName", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     filter->setDataContainerArray(containerArray);
     filter->execute();
     DREAM3D_REQUIRED(filter->getErrorCode(), >=, 0);
     DREAM3D_REQUIRED(filter->getWarningCode(), >=, 0);
-    WriteImage("ITKHistogramMatchingImagedefaults.nrrd", containerArray, source_path);
+    WriteImage("ITKHistogramMatchingImagedefaults.nrrd", containerArray, output_path);
     QString baseline_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Baseline/BasicFilters_HistogramMatchingImageFilter_defaults.nrrd");
     DataArrayPath baseline_path("BContainer", "BAttributeMatrixName", "BAttributeArrayName");
     this->ReadImage(baseline_filename, containerArray, baseline_path);
-    int res = this->CompareImages(containerArray, source_path, baseline_path, 0.0001);
+    int res = this->CompareImages(containerArray, output_path, baseline_path, 0.0001);
     DREAM3D_REQUIRE_EQUAL(res, 0);
     return 0;
   }
@@ -58,6 +60,8 @@ public:
     QString reference_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/RA-Slice-Float.nrrd");
     DataArrayPath source_path("SourceContainer", "SourceAttributeMatrixName", "SourceAttributeArrayName");
     DataArrayPath reference_path("ReferenceContainer", "ReferenceAttributeMatrixName", "ReferenceAttributeArrayName");
+    QString outputName = "SourceAttributeArrayName_Output";
+    DataArrayPath output_path("SourceContainer", "SourceAttributeMatrixName", outputName);
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
     this->ReadImage(source_filename, containerArray, source_path);
     this->ReadImage(reference_filename, containerArray, reference_path);
@@ -74,8 +78,8 @@ public:
     var.setValue(reference_path);
     propWasSet = filter->setProperty("ReferenceCellArrayPath", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
-    var.setValue(false);
-    propWasSet = filter->setProperty("SaveAsNewArray", var);
+    var.setValue(outputName);
+    propWasSet = filter->setProperty("NewCellArrayName", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     filter->setDataContainerArray(containerArray);
     filter->execute();
@@ -89,6 +93,8 @@ public:
     QString reference_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/RA-Slice-Float.nrrd");
     DataArrayPath source_path("SourceContainer", "SourceAttributeMatrixName", "SourceAttributeArrayName");
     DataArrayPath reference_path("ReferenceContainer", "ReferenceAttributeMatrixName", "ReferenceAttributeArrayName");
+    QString outputName = "SourceAttributeArrayName_Output";
+    DataArrayPath output_path("SourceContainer", "SourceAttributeMatrixName", outputName);
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
     this->ReadImage(source_filename, containerArray, source_path);
     this->ReadImage(reference_filename, containerArray, reference_path);
@@ -105,8 +111,8 @@ public:
     var.setValue(reference_path);
     propWasSet = filter->setProperty("ReferenceCellArrayPath", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
-    var.setValue(false);
-    propWasSet = filter->setProperty("SaveAsNewArray", var);
+    var.setValue(outputName);
+    propWasSet = filter->setProperty("NewCellArrayName", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     filter->setDataContainerArray(containerArray);
     filter->execute();
@@ -119,6 +125,8 @@ public:
     QString source_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/cthead1.png");
     DataArrayPath source_path("SourceContainer", "SourceAttributeMatrixName", "SourceAttributeArrayName");
     DataArrayPath reference_path("ReferenceContainer", "ReferenceAttributeMatrixName", "ReferenceAttributeArrayName");
+    QString outputName = "SourceAttributeArrayName_Output";
+    DataArrayPath output_path("SourceContainer", "SourceAttributeMatrixName", outputName);
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
     this->ReadImage(source_filename, containerArray, source_path);
     QString filtName = "ITKHistogramMatchingImage";
@@ -134,8 +142,8 @@ public:
     var.setValue(reference_path);
     propWasSet = filter->setProperty("ReferenceCellArrayPath", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
-    var.setValue(false);
-    propWasSet = filter->setProperty("SaveAsNewArray", var);
+    var.setValue(outputName);
+    propWasSet = filter->setProperty("NewCellArrayName", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     filter->setDataContainerArray(containerArray);
     filter->execute();
@@ -148,6 +156,8 @@ public:
     QString source_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/RA-Short.nrrd");
     DataArrayPath source_path("SourceContainer", "SourceAttributeMatrixName", "SourceAttributeArrayName");
     DataArrayPath reference_path("ReferenceContainer", "ReferenceAttributeMatrixName", "ReferenceAttributeArrayName");
+    QString outputName = "SourceAttributeArrayName_Output";
+    DataArrayPath output_path("SourceContainer", "SourceAttributeMatrixName", outputName);
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
     this->ReadImage(source_filename, containerArray, source_path);
     this->ReadImage(source_filename, containerArray, reference_path);
@@ -164,8 +174,8 @@ public:
     var.setValue(reference_path);
     propWasSet = filter->setProperty("ReferenceCellArrayPath", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
-    var.setValue(false);
-    propWasSet = filter->setProperty("SaveAsNewArray", var);
+    var.setValue(outputName);
+    propWasSet = filter->setProperty("NewCellArrayName", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     {
       double d3d_var;
@@ -185,9 +195,9 @@ public:
     filter->execute();
     DREAM3D_REQUIRED(filter->getErrorCode(), >=, 0);
     DREAM3D_REQUIRED(filter->getWarningCode(), >=, 0);
-    WriteImage("ITKHistogramMatchingImagenear_identity.nrrd", containerArray, source_path);
+    WriteImage("ITKHistogramMatchingImagenear_identity.nrrd", containerArray, output_path);
     QString md5Output;
-    GetMD5FromDataContainer(containerArray, source_path, md5Output);
+    GetMD5FromDataContainer(containerArray, output_path, md5Output);
     DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("a963bd6a755b853103a2d195e01a50d3"));
     return 0;
   }

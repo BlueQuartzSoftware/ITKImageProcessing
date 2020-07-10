@@ -19,6 +19,8 @@ public:
   {
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/RA-Float.nrrd");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
+    QString outputName = "TestAttributeArrayName_Output";
+    DataArrayPath output_path("TestContainer", "TestAttributeMatrixName", outputName);
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
     this->ReadImage(input_filename, containerArray, input_path);
     QString filtName = "ITKLaplacianSharpeningImage";
@@ -31,18 +33,18 @@ public:
     var.setValue(input_path);
     propWasSet = filter->setProperty("SelectedCellArrayPath", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
-    var.setValue(false);
-    propWasSet = filter->setProperty("SaveAsNewArray", var);
+    var.setValue(outputName);
+    propWasSet = filter->setProperty("NewCellArrayName", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     filter->setDataContainerArray(containerArray);
     filter->execute();
     DREAM3D_REQUIRED(filter->getErrorCondition(), >=, 0);
     DREAM3D_REQUIRED(filter->getWarningCondition(), >=, 0);
-    WriteImage("ITKLaplacianSharpeningImagedefault.nrrd", containerArray, input_path);
+    WriteImage("ITKLaplacianSharpeningImagedefault.nrrd", containerArray, output_path);
     QString baseline_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Baseline/BasicFilters_LaplacianSharpeningImageFilter_default.nrrd");
     DataArrayPath baseline_path("BContainer", "BAttributeMatrixName", "BAttributeArrayName");
     this->ReadImage(baseline_filename, containerArray, baseline_path);
-    int res = this->CompareImages(containerArray, input_path, baseline_path, 0.0001);
+    int res = this->CompareImages(containerArray, output_path, baseline_path, 0.0001);
     DREAM3D_REQUIRE_EQUAL(res, 0);
     return 0;
   }
@@ -51,6 +53,8 @@ public:
   {
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/RA-Short.nrrd");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
+    QString outputName = "TestAttributeArrayName_Output";
+    DataArrayPath output_path("TestContainer", "TestAttributeMatrixName", outputName);
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
     this->ReadImage(input_filename, containerArray, input_path);
     QString filtName = "ITKLaplacianSharpeningImage";
@@ -63,16 +67,16 @@ public:
     var.setValue(input_path);
     propWasSet = filter->setProperty("SelectedCellArrayPath", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
-    var.setValue(false);
-    propWasSet = filter->setProperty("SaveAsNewArray", var);
+    var.setValue(outputName);
+    propWasSet = filter->setProperty("NewCellArrayName", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     filter->setDataContainerArray(containerArray);
     filter->execute();
     DREAM3D_REQUIRED(filter->getErrorCondition(), >=, 0);
     DREAM3D_REQUIRED(filter->getWarningCondition(), >=, 0);
-    WriteImage("ITKLaplacianSharpeningImageshortdefault.nrrd", containerArray, input_path);
+    WriteImage("ITKLaplacianSharpeningImageshortdefault.nrrd", containerArray, output_path);
     QString md5Output;
-    GetMD5FromDataContainer(containerArray, input_path, md5Output);
+    GetMD5FromDataContainer(containerArray, output_path, md5Output);
     DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("93a629b9dfad6814c5acbabd42f10c4c"));
     return 0;
   }
@@ -81,6 +85,8 @@ public:
   {
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/fruit.png");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
+    QString outputName = "TestAttributeArrayName_Output";
+    DataArrayPath output_path("TestContainer", "TestAttributeMatrixName", outputName);
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
     this->ReadImage(input_filename, containerArray, input_path);
     QString filtName = "ITKLaplacianSharpeningImage";
@@ -93,16 +99,16 @@ public:
     var.setValue(input_path);
     propWasSet = filter->setProperty("SelectedCellArrayPath", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
-    var.setValue(false);
-    propWasSet = filter->setProperty("SaveAsNewArray", var);
+    var.setValue(outputName);
+    propWasSet = filter->setProperty("NewCellArrayName", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     filter->setDataContainerArray(containerArray);
     filter->execute();
     DREAM3D_REQUIRED(filter->getErrorCondition(), >=, 0);
     DREAM3D_REQUIRED(filter->getWarningCondition(), >=, 0);
-    WriteImage("ITKLaplacianSharpeningImagevectordefault.nrrd", containerArray, input_path);
+    WriteImage("ITKLaplacianSharpeningImagevectordefault.nrrd", containerArray, output_path);
     QString md5Output;
-    GetMD5FromDataContainer(containerArray, input_path, md5Output);
+    GetMD5FromDataContainer(containerArray, output_path, md5Output);
     DREAM3D_REQUIRE_EQUAL(QString(md5Output), QString("f3ad8145d54e583b3e2354b24769df58"));
     return 0;
   }
