@@ -68,7 +68,6 @@ void ITKBinaryOpeningByReconstructionImage::setupFilterParameters()
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
-  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Save as New Array", SaveAsNewArray, FilterParameter::Parameter, ITKBinaryOpeningByReconstructionImage, linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
@@ -89,7 +88,6 @@ void ITKBinaryOpeningByReconstructionImage::readFilterParameters(AbstractFilterP
   reader->openFilterGroup(this, index);
   setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
   setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
-  setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
   setForegroundValue(reader->readValue("ForegroundValue", getForegroundValue()));
   setBackgroundValue(reader->readValue("BackgroundValue", getBackgroundValue()));
   setFullyConnected(reader->readValue("FullyConnected", getFullyConnected()));

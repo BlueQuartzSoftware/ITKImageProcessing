@@ -47,7 +47,6 @@ void ITKDiscreteGaussianImage::setupFilterParameters()
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
-  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Save as New Array", SaveAsNewArray, FilterParameter::Parameter, ITKDiscreteGaussianImage, linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
@@ -68,7 +67,6 @@ void ITKDiscreteGaussianImage::readFilterParameters(AbstractFilterParametersRead
   reader->openFilterGroup(this, index);
   setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
   setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
-  setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
   setVariance(reader->readFloatVec3("Variance", getVariance()));
   setMaximumKernelWidth(reader->readValue("MaximumKernelWidth", getMaximumKernelWidth()));
   setMaximumError(reader->readFloatVec3("MaximumError", getMaximumError()));

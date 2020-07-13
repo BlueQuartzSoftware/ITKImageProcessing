@@ -44,9 +44,6 @@ public:
     var.setValue(movingPath);
     propWasSet = filter->setProperty("MovingCellArrayPath", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
-    var.setValue(true);
-    propWasSet = filter->setProperty("SaveAsNewArray", var);
-    DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     var.setValue(newCellArrayName);
     propWasSet = filter->setProperty("NewCellArrayName", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);

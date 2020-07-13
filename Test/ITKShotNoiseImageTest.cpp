@@ -19,6 +19,8 @@ public:
   {
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/cthead1.png");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
+    QString outputName = "TestAttributeArrayName_Output";
+    DataArrayPath output_path("TestContainer", "TestAttributeMatrixName", outputName);
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
     this->ReadImage(input_filename, containerArray, input_path);
     QString filtName = "ITKShotNoiseImage";
@@ -31,8 +33,8 @@ public:
     var.setValue(input_path);
     propWasSet = filter->setProperty("SelectedCellArrayPath", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
-    var.setValue(false);
-    propWasSet = filter->setProperty("SaveAsNewArray", var);
+    var.setValue(outputName);
+    propWasSet = filter->setProperty("NewCellArrayName", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     {
       double d3d_var;
@@ -45,11 +47,11 @@ public:
     filter->execute();
     DREAM3D_REQUIRED(filter->getErrorCondition(), >=, 0);
     DREAM3D_REQUIRED(filter->getWarningCondition(), >=, 0);
-    WriteImage("ITKShotNoiseImage2d.nrrd", containerArray, input_path);
+    WriteImage("ITKShotNoiseImage2d.nrrd", containerArray, output_path);
     QString baseline_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Baseline/BasicFilters_ShotNoiseImageFilter_2d.nrrd");
     DataArrayPath baseline_path("BContainer", "BAttributeMatrixName", "BAttributeArrayName");
     this->ReadImage(baseline_filename, containerArray, baseline_path);
-    int res = this->CompareImages(containerArray, input_path, baseline_path, 500.0);
+    int res = this->CompareImages(containerArray, output_path, baseline_path, 500.0);
     DREAM3D_REQUIRE_EQUAL(res, 0);
     return 0;
   }
@@ -58,6 +60,8 @@ public:
   {
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/RA-Short.nrrd");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
+    QString outputName = "TestAttributeArrayName_Output";
+    DataArrayPath output_path("TestContainer", "TestAttributeMatrixName", outputName);
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
     this->ReadImage(input_filename, containerArray, input_path);
     QString filtName = "ITKShotNoiseImage";
@@ -70,8 +74,8 @@ public:
     var.setValue(input_path);
     propWasSet = filter->setProperty("SelectedCellArrayPath", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
-    var.setValue(false);
-    propWasSet = filter->setProperty("SaveAsNewArray", var);
+    var.setValue(outputName);
+    propWasSet = filter->setProperty("NewCellArrayName", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     {
       double d3d_var;
@@ -84,11 +88,11 @@ public:
     filter->execute();
     DREAM3D_REQUIRED(filter->getErrorCondition(), >=, 0);
     DREAM3D_REQUIRED(filter->getWarningCondition(), >=, 0);
-    WriteImage("ITKShotNoiseImage3d.nrrd", containerArray, input_path);
+    WriteImage("ITKShotNoiseImage3d.nrrd", containerArray, output_path);
     QString baseline_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Baseline/BasicFilters_ShotNoiseImageFilter_3d.nrrd");
     DataArrayPath baseline_path("BContainer", "BAttributeMatrixName", "BAttributeArrayName");
     this->ReadImage(baseline_filename, containerArray, baseline_path);
-    int res = this->CompareImages(containerArray, input_path, baseline_path, 500.0);
+    int res = this->CompareImages(containerArray, output_path, baseline_path, 500.0);
     DREAM3D_REQUIRE_EQUAL(res, 0);
     return 0;
   }
@@ -97,6 +101,8 @@ public:
   {
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/VM1111Shrink-RGB.png");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
+    QString outputName = "TestAttributeArrayName_Output";
+    DataArrayPath output_path("TestContainer", "TestAttributeMatrixName", outputName);
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
     this->ReadImage(input_filename, containerArray, input_path);
     QString filtName = "ITKShotNoiseImage";
@@ -109,8 +115,8 @@ public:
     var.setValue(input_path);
     propWasSet = filter->setProperty("SelectedCellArrayPath", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
-    var.setValue(false);
-    propWasSet = filter->setProperty("SaveAsNewArray", var);
+    var.setValue(outputName);
+    propWasSet = filter->setProperty("NewCellArrayName", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     {
       double d3d_var;
@@ -123,11 +129,11 @@ public:
     filter->execute();
     DREAM3D_REQUIRED(filter->getErrorCondition(), >=, 0);
     DREAM3D_REQUIRED(filter->getWarningCondition(), >=, 0);
-    WriteImage("ITKShotNoiseImagergb.nrrd", containerArray, input_path);
+    WriteImage("ITKShotNoiseImagergb.nrrd", containerArray, output_path);
     QString baseline_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Baseline/BasicFilters_ShotNoiseImageFilter_rgb.nrrd");
     DataArrayPath baseline_path("BContainer", "BAttributeMatrixName", "BAttributeArrayName");
     this->ReadImage(baseline_filename, containerArray, baseline_path);
-    int res = this->CompareImages(containerArray, input_path, baseline_path, 500.0);
+    int res = this->CompareImages(containerArray, output_path, baseline_path, 500.0);
     DREAM3D_REQUIRE_EQUAL(res, 0);
     return 0;
   }

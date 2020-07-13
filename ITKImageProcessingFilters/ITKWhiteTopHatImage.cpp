@@ -64,7 +64,6 @@ void ITKWhiteTopHatImage::setupFilterParameters()
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
-  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Save as New Array", SaveAsNewArray, FilterParameter::Parameter, ITKWhiteTopHatImage, linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
@@ -85,7 +84,6 @@ void ITKWhiteTopHatImage::readFilterParameters(AbstractFilterParametersReader* r
   reader->openFilterGroup(this, index);
   setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
   setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
-  setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
   setSafeBorder(reader->readValue("SafeBorder", getSafeBorder()));
   setKernelRadius(reader->readFloatVec3("KernelRadius", getKernelRadius()));
   setKernelType(reader->readValue("KernelType", getKernelType()));

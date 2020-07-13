@@ -49,7 +49,6 @@ void ITKMorphologicalWatershedFromMarkersImage::setupFilterParameters()
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
-  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Save as New Array", SaveAsNewArray, FilterParameter::Parameter, ITKMorphologicalWatershedFromMarkersImage, linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
@@ -72,7 +71,6 @@ void ITKMorphologicalWatershedFromMarkersImage::readFilterParameters(AbstractFil
   setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
   setSelectedCellArrayPath(reader->readDataArrayPath("MarkerCellArrayPath", getMarkerCellArrayPath()));
   setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
-  setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
   setMarkWatershedLine(reader->readValue("MarkWatershedLine", getMarkWatershedLine()));
   setFullyConnected(reader->readValue("FullyConnected", getFullyConnected()));
 

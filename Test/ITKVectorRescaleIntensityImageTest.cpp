@@ -57,6 +57,8 @@ public:
     const double desiredMaximum = 2.0;
     ////////////////////////////
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
+    QString outputName = "TestAttributeArrayName_Output";
+    DataArrayPath output_path("TestContainer", "TestAttributeMatrixName", outputName);
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
     // Convert ITK image to Dream3D data
     //
@@ -83,8 +85,8 @@ public:
     var.setValue(input_path);
     propWasSet = filter->setProperty("SelectedCellArrayPath", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
-    var.setValue(false);
-    propWasSet = filter->setProperty("SaveAsNewArray", var);
+    var.setValue(outputName);
+    propWasSet = filter->setProperty("NewCellArrayName", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     var.setValue(2.0);
     propWasSet = filter->setProperty("OutputMaximumMagnitude", var);
@@ -96,7 +98,7 @@ public:
     filter->execute();
     DREAM3D_REQUIRED(filter->getErrorCode(), >=, 0);
     DREAM3D_REQUIRED(filter->getWarningCode(), >=, 0);
-    WriteImage("ITKVectorRescaleIntensityImage3d.nrrd", containerArray, input_path);
+    WriteImage("ITKVectorRescaleIntensityImage3d.nrrd", containerArray, output_path);
     // Convert filter output to ITK image
     typedef itk::InPlaceDream3DDataToImageFilter<OutputPixelType, ImageDimension> toITKType;
     toITKType::Pointer toITK = toITKType::New();

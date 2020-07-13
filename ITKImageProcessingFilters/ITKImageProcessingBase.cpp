@@ -115,15 +115,3 @@ QString ITKImageProcessingBase::getNewCellArrayName() const
 {
   return m_NewCellArrayName;
 }
-
-// -----------------------------------------------------------------------------
-void ITKImageProcessingBase::setSaveAsNewArray(bool value)
-{
-  m_SaveAsNewArray = value;
-}
-
-// -----------------------------------------------------------------------------
-bool ITKImageProcessingBase::getSaveAsNewArray() const
-{
-  return m_SaveAsNewArray;
-}

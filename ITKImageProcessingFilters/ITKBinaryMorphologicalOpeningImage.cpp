@@ -66,7 +66,6 @@ void ITKBinaryMorphologicalOpeningImage::setupFilterParameters()
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
-  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Save as New Array", SaveAsNewArray, FilterParameter::Parameter, ITKBinaryMorphologicalOpeningImage, linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
@@ -87,7 +86,6 @@ void ITKBinaryMorphologicalOpeningImage::readFilterParameters(AbstractFilterPara
   reader->openFilterGroup(this, index);
   setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
   setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
-  setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
   setBackgroundValue(reader->readValue("BackgroundValue", getBackgroundValue()));
   setForegroundValue(reader->readValue("ForegroundValue", getForegroundValue()));
   setKernelRadius(reader->readFloatVec3("KernelRadius", getKernelRadius()));

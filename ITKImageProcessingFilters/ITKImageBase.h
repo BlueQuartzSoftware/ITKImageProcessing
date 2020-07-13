@@ -151,7 +151,7 @@ protected:
    * @brief Applies the filter
    */
   template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension, typename FilterType>
-  void filter(FilterType* filter, const std::string& outputArrayName, bool saveAsNewArray, const DataArrayPath& selectedArray)
+  void filter(FilterType* filter, const std::string& outputArrayName, const DataArrayPath& selectedArray)
   {
     try
     {
@@ -178,13 +178,6 @@ protected:
       image = filter->GetOutput();
       image->DisconnectPipeline();
 
-      if(!saveAsNewArray)
-      {
-        AttributeMatrix::Pointer attrMat = dc->getAttributeMatrix(selectedArray.getAttributeMatrixName());
-        // Remove the original input data array
-        attrMat->removeAttributeArray(selectedArray.getDataArrayName());
-      }
-
       using toDream3DType = itk::InPlaceImageToDream3DDataFilter<OutputPixelType, Dimension>;
       typename toDream3DType::Pointer toDream3DFilter = toDream3DType::New();
       toDream3DFilter->SetInput(image);
@@ -209,7 +202,7 @@ protected:
    */
 
   template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension, typename FilterType, typename FloatImageType>
-  void filterCastToFloat(FilterType* filter, const std::string& outputArrayName, bool saveAsNewArray, const DataArrayPath& selectedArray)
+  void filterCastToFloat(FilterType* filter, const std::string& outputArrayName, const DataArrayPath& selectedArray)
   {
     try
     {
@@ -244,13 +237,6 @@ protected:
       typename OutputImageType::Pointer image = OutputImageType::New();
       image = casterFrom->GetOutput();
       image->DisconnectPipeline();
-
-      if(!saveAsNewArray)
-      {
-        AttributeMatrix::Pointer attrMat = dc->getAttributeMatrix(selectedArray.getAttributeMatrixName());
-        // Remove the original input data array
-        attrMat->removeAttributeArray(selectedArray.getDataArrayName());
-      }
 
       using toDream3DType = itk::InPlaceImageToDream3DDataFilter<OutputPixelType, Dimension>;
       typename toDream3DType::Pointer toDream3DFilter = toDream3DType::New();

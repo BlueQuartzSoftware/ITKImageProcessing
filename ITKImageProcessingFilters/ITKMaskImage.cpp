@@ -42,7 +42,6 @@ void ITKMaskImage::setupFilterParameters()
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
-  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Save as New Array", SaveAsNewArray, FilterParameter::Parameter, ITKMaskImage, linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
@@ -65,7 +64,6 @@ void ITKMaskImage::readFilterParameters(AbstractFilterParametersReader* reader, 
   setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
   setSelectedCellArrayPath(reader->readDataArrayPath("MaskCellArrayPath", getMaskCellArrayPath()));
   setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
-  setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
   setOutsideValue(reader->readValue("OutsideValue", getOutsideValue()));
 
   reader->closeFilterGroup();

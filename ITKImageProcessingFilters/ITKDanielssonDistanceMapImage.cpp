@@ -44,7 +44,6 @@ void ITKDanielssonDistanceMapImage::setupFilterParameters()
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
-  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Save as New Array", SaveAsNewArray, FilterParameter::Parameter, ITKDanielssonDistanceMapImage, linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
@@ -65,7 +64,6 @@ void ITKDanielssonDistanceMapImage::readFilterParameters(AbstractFilterParameter
   reader->openFilterGroup(this, index);
   setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
   setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
-  setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
   setInputIsBinary(reader->readValue("InputIsBinary", getInputIsBinary()));
   setSquaredDistance(reader->readValue("SquaredDistance", getSquaredDistance()));
   setUseImageSpacing(reader->readValue("UseImageSpacing", getUseImageSpacing()));

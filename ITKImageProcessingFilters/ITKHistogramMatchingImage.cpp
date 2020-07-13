@@ -42,7 +42,6 @@ void ITKHistogramMatchingImage::setupFilterParameters()
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
-  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Save as New Array", SaveAsNewArray, FilterParameter::Parameter, ITKHistogramMatchingImage, linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize,
@@ -67,7 +66,6 @@ void ITKHistogramMatchingImage::readFilterParameters(AbstractFilterParametersRea
   setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
   setReferenceCellArrayPath(reader->readDataArrayPath("ReferenceCellArrayPath", getReferenceCellArrayPath()));
   setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
-  setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
   setNumberOfHistogramLevels(reader->readValue("NumberOfHistogramLevels", getNumberOfHistogramLevels()));
   setNumberOfMatchPoints(reader->readValue("NumberOfMatchPoints", getNumberOfMatchPoints()));
   setThresholdAtMeanIntensity(reader->readValue("ThresholdAtMeanIntensity", getThresholdAtMeanIntensity()));

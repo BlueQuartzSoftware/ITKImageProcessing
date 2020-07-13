@@ -23,6 +23,8 @@ public:
 
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/BrainProtonDensitySlice.png");
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
+    QString outputName = "TestAttributeArrayName_Output";
+    DataArrayPath output_path("TestContainer", "TestAttributeMatrixName", outputName);
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
     this->ReadImage(input_filename, containerArray, input_path);
 
@@ -51,11 +53,11 @@ public:
     filter->execute();
     DREAM3D_REQUIRED(filter->getErrorCode(), >=, 0)
     DREAM3D_REQUIRED(filter->getWarningCode(), >=, 0)
-    WriteImage("ITKProxTVImagedefaults.nrrd", containerArray, input_path);
+    WriteImage("ITKProxTVImagedefaults.nrrd", containerArray, output_path);
     QString baseline_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Baseline/BasicFilters_ProxTVImageFilter_defaults.nrrd");
     DataArrayPath baseline_path("BContainer", "BAttributeMatrixName", "BAttributeArrayName");
     this->ReadImage(baseline_filename, containerArray, baseline_path);
-    int res = this->CompareImages(containerArray, input_path, baseline_path, 0.0);
+    int res = this->CompareImages(containerArray, output_path, baseline_path, 0.0);
     DREAM3D_REQUIRE_EQUAL(res, 0)
     return 0;
   }

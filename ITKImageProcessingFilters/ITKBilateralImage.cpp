@@ -44,7 +44,6 @@ void ITKBilateralImage::setupFilterParameters()
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
-  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Save as New Array", SaveAsNewArray, FilterParameter::Parameter, ITKBilateralImage, linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
@@ -65,7 +64,6 @@ void ITKBilateralImage::readFilterParameters(AbstractFilterParametersReader* rea
   reader->openFilterGroup(this, index);
   setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
   setNewCellArrayName(reader->readString("NewCellArrayName", getNewCellArrayName()));
-  setSaveAsNewArray(reader->readValue("SaveAsNewArray", getSaveAsNewArray()));
   setDomainSigma(reader->readValue("DomainSigma", getDomainSigma()));
   setRangeSigma(reader->readValue("RangeSigma", getRangeSigma()));
   setNumberOfRangeGaussianSamples(reader->readValue("NumberOfRangeGaussianSamples", getNumberOfRangeGaussianSamples()));

@@ -47,6 +47,8 @@ public:
     QString input_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Input/sf4.png");
 #endif
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
+    QString outputName = "TestAttributeArrayName_Output";
+    DataArrayPath output_path("TestContainer", "TestAttributeMatrixName", outputName);
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
     this->ReadImage(input_filename, containerArray, input_path);
 
@@ -58,7 +60,7 @@ public:
     ITKAdaptiveHistogramEqualizationImage::Pointer filter = ITKAdaptiveHistogramEqualizationImage::New();
     filter->setDataContainerArray(containerArray);
     filter->setSelectedCellArrayPath(input_path);
-    filter->setSaveAsNewArray(false);
+    filter->setNewCellArrayName(outputName);
 
 #if defined(ITK_VERSION_MAJOR) && ITK_VERSION_MAJOR == 5
     // We change the values for the test
@@ -70,7 +72,7 @@ public:
     filter->execute();
     DREAM3D_REQUIRED(filter->getErrorCode(), >=, 0);
     DREAM3D_REQUIRED(filter->getWarningCode(), >=, 0);
-    WriteImage("ITKAdaptiveHistogramEqualizationImagedefaults.nrrd", containerArray, input_path);
+    WriteImage("ITKAdaptiveHistogramEqualizationImagedefaults.nrrd", containerArray, output_path);
 #if defined(ITK_VERSION_MAJOR) && ITK_VERSION_MAJOR == 4
     QString baseline_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Baseline/BasicFilters_AdaptiveHistogramEqualizationImageFilter_defaults.nrrd");
 #else
@@ -79,7 +81,7 @@ public:
 
     DataArrayPath baseline_path("BContainer", "BAttributeMatrixName", "BAttributeArrayName");
     this->ReadImage(baseline_filename, containerArray, baseline_path);
-    int res = this->CompareImages(containerArray, input_path, baseline_path, 2e-3);
+    int res = this->CompareImages(containerArray, output_path, baseline_path, 2e-3);
     DREAM3D_REQUIRE_EQUAL(res, 0);
     return 0;
   }
@@ -93,6 +95,8 @@ public:
 #endif
 
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
+    QString outputName = "TestAttributeArrayName_Output";
+    DataArrayPath output_path("TestContainer", "TestAttributeMatrixName", outputName);
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
     this->ReadImage(input_filename, containerArray, input_path);
 
@@ -104,7 +108,7 @@ public:
     ITKAdaptiveHistogramEqualizationImage::Pointer filter = ITKAdaptiveHistogramEqualizationImage::New();
     filter->setDataContainerArray(containerArray);
     filter->setSelectedCellArrayPath(input_path);
-    filter->setSaveAsNewArray(false);
+    filter->setNewCellArrayName(outputName);
 
 #if defined(ITK_VERSION_MAJOR) && ITK_VERSION_MAJOR == 4
     // We change the values for the test
@@ -121,7 +125,7 @@ public:
     filter->execute();
     DREAM3D_REQUIRED(filter->getErrorCode(), >=, 0);
     DREAM3D_REQUIRED(filter->getWarningCode(), >=, 0);
-    WriteImage("ITKAdaptiveHistogramEqualizationImagehisto.nrrd", containerArray, input_path);
+    WriteImage("ITKAdaptiveHistogramEqualizationImagehisto.nrrd", containerArray, output_path);
 
 #if defined(ITK_VERSION_MAJOR) && ITK_VERSION_MAJOR == 4
     QString baseline_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Baseline/BasicFilters_AdaptiveHistogramEqualizationImageFilter_histo.nrrd");
@@ -130,7 +134,7 @@ public:
 #endif
     DataArrayPath baseline_path("BContainer", "BAttributeMatrixName", "BAttributeArrayName");
     this->ReadImage(baseline_filename, containerArray, baseline_path);
-    int res = this->CompareImages(containerArray, input_path, baseline_path, 1e-5);
+    int res = this->CompareImages(containerArray, output_path, baseline_path, 1e-5);
     DREAM3D_REQUIRE_EQUAL(res, 0);
     return 0;
   }
