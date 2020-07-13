@@ -198,7 +198,8 @@ void calculateOutputValues(IlluminationCorrection* filter)
 
   typename AccumDataArrayType::Pointer accumulateArrayPtr = AccumDataArrayType::CreateArray(backgroundArrayPtr->getNumberOfTuples(), "Accumulation Array", true);
   accumulateArrayPtr->initializeWithZeros();
-  size_t numTuples = (*accumulateArrayPtr).getNumberOfTuples();
+  DataArray<AccumType>& accumArray = *accumulateArrayPtr;
+  size_t numTuples = accumArray.getNumberOfTuples();
 
   typename SizeTArrayType::Pointer countArrayPtr = SizeTArrayType::CreateArray(backgroundArrayPtr->getNumberOfTuples(), "Count Array", true);
   countArrayPtr->initializeWithZeros();
@@ -221,7 +222,7 @@ void calculateOutputValues(IlluminationCorrection* filter)
     {
       if(imageArray[t] >= LowThreshold && imageArray[t] <= HighThreshold)
       {
-        (*accumulateArrayPtr)[t] += imageArray[t];
+        accumArray[t] += imageArray[t];
         counter[t]++;
       }
     }
@@ -230,11 +231,11 @@ void calculateOutputValues(IlluminationCorrection* filter)
   // average the background values by the number of counts (counts will be the number of images unless the threshold
   // values do not include all the possible image values
   // (i.e. for an 8 bit image, if we only include values from 0 to 100, not every image value will be counted)
-  for(int j = 0; j < numTuples; j++)
+  for(size_t j = 0; j < numTuples; j++)
   {
     if(counter[j] > 0) // Guard against Divide by zero
     {
-      (*accumulateArrayPtr)[j] /= counter[j];
+      accumArray[j] /= counter[j];
     }
   }
 
@@ -267,13 +268,15 @@ void calculateOutputValues(IlluminationCorrection* filter)
     accumulateArrayPtr = medianArrayPtr;
   } // Median
 
+  DataArray<AccumType>& newAccumArray = *accumulateArrayPtr; // This is needed in case accumulateArrayPtr changes in the if-statement above
+
   // Assign output array values
   for(size_t i = 0; i < numTuples; ++i)
   {
-    backgroundArray[i] = static_cast<OutArrayType>((*accumulateArrayPtr)[i]);
+    backgroundArray[i] = static_cast<OutArrayType>(newAccumArray[i]);
   }
 
-  AccumType average = std::accumulate((*accumulateArrayPtr).begin(), (*accumulateArrayPtr).end(), static_cast<AccumType>(0)) / (*accumulateArrayPtr).getNumberOfTuples();
+  AccumType average = std::accumulate(newAccumArray.begin(), newAccumArray.end(), static_cast<AccumType>(0)) / newAccumArray.getNumberOfTuples();
 
   // Apply Correction
   if(filter->getApplyCorrection())
@@ -292,7 +295,7 @@ void calculateOutputValues(IlluminationCorrection* filter)
     for(const auto& dcName : dcNames)
     {
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-      g->run(ProcessInputImagesImpl<OutArrayType, AccumType>(filter, dcName, average, (*accumulateArrayPtr)));
+      g->run(ProcessInputImagesImpl<OutArrayType, AccumType>(filter, dcName, average, newAccumArray));
       threadCount++;
       if(threadCount == nthreads)
       {
