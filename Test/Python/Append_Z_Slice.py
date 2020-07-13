@@ -24,8 +24,7 @@ def append_z_slice():
     err = itkimageprocessingpy.itk_import_image_stack(dca, "RoboMet.3D Image Stack", "Optical Data",
                                                       simpl.FloatVec3Type(0, 0, 0), simpl.FloatVec3Type(1, 1, 1),
                                                       "", file_list_info, 164, "ImageData")
-    if err < 0:
-        print("ITK Import Image Stack ErrorCondition %d" % err)
+    assert err == 0, f'ITKImportImageStack ErrorCondition {err}'
 
     # Append Image Geometry Z Slice #1
     err = samplingpy.append_image_geometry_z_slice(dca,
@@ -33,8 +32,7 @@ def append_z_slice():
                                                                        "Optical Data", ""),
                                                    simpl.DataArrayPath("RoboMet.3D Image Stack",
                                                                        "Optical Data", ""), False)
-    if err < 0:
-        print("AppendImageGeometryZSlice #1 ErrorCondition: %d" % err)
+    assert err == 0, f'AppendImageGeometryZSlice #1 ErrorCondition {err}'
 
     # Append Image Geometry Z Slice #2
     err = samplingpy.append_image_geometry_z_slice(dca,
@@ -42,17 +40,14 @@ def append_z_slice():
                                                                        "Optical Data", ""),
                                                    simpl.DataArrayPath("RoboMet.3D Image Stack",
                                                                        "Optical Data", ""), False)
-    if err < 0:
-        print("AppendImageGeometryZSlice #2 ErrorCondition: %d" % err)
+    assert err == 0, f'AppendImageGeometryZSlice #2 ErrorCondition {err}'
 
     # Write to DREAM3D file
     err = sc.WriteDREAM3DFile(sd.GetBuildDirectory() +
                               "/Data/Output/CoreFilterTests/" + 
                               "AppendImageGeometryZSlice.dream3d",
                               dca)
-    if err < 0:
-        print("WriteDREAM3DFile ErrorCondition: %d" % err)
-
+    assert err == 0, f'WriteDREAM3DFile ErrorCondition {err}'
 
 """
 Main entry point for python script
