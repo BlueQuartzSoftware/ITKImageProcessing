@@ -196,12 +196,12 @@ void calculateOutputValues(IlluminationCorrection* filter)
   typename GeomType::Pointer outputGeom = outputDc->getGeometryAs<GeomType>();
   // SizeVec3Type dims = outputGeom->getDimensions();
 
-  typename AccumDataArrayType::Pointer accumulateArrayPtr = AccumDataArrayType::CreateArray(backgroundArrayPtr->getNumberOfTuples(), "Accumulation Array", true);
+  typename AccumDataArrayType::Pointer accumulateArrayPtr = AccumDataArrayType::CreateArray(backgroundArrayPtr->getNumberOfTuples(), std::string("Accumulation Array"), true);
   accumulateArrayPtr->initializeWithZeros();
   DataArray<AccumType>& accumArray = *accumulateArrayPtr;
   size_t numTuples = accumArray.getNumberOfTuples();
 
-  typename SizeTArrayType::Pointer countArrayPtr = SizeTArrayType::CreateArray(backgroundArrayPtr->getNumberOfTuples(), "Count Array", true);
+  typename SizeTArrayType::Pointer countArrayPtr = SizeTArrayType::CreateArray(backgroundArrayPtr->getNumberOfTuples(), std::string("Count Array"), true);
   countArrayPtr->initializeWithZeros();
   SizeTArrayType& counter = *(countArrayPtr);
 
