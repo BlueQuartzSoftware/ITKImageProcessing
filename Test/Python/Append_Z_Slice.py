@@ -3,7 +3,7 @@
 # These are the simpl_py python modules
 
 import simpl
-import simpl_helpers as sc
+import simpl_helpers as sh
 import simpl_test_dirs as sd
 import itkimageprocessing
 import itkimageprocessingpy
@@ -42,7 +42,7 @@ def append_z_slice():
     assert err == 0, f'AppendImageGeometryZSlice #2 ErrorCondition {err}'
 
     # Write to DREAM3D file
-    err = sc.WriteDREAM3DFile(sd.GetBuildDirectory() +
+    err = sh.WriteDREAM3DFile(sd.GetBuildDirectory() +
                               '/Data/Output/CoreFilterTests/' + 
                               'AppendImageGeometryZSlice.dream3d',
                               dca)
