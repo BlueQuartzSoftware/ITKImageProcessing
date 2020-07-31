@@ -130,8 +130,8 @@ protected:
     ValueType* cellArray;
 
     std::vector<size_t> dims = ITKDream3DHelper::GetComponentsDimensions<PixelType>();
-    cellArrayPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<ValueType>>(this, array_path, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if(nullptr != cellArrayPtr.lock())                                                                            /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+    cellArrayPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<ValueType>>(this, array_path, dims);
+    if(nullptr != cellArrayPtr.lock())
     {
       cellArray = cellArrayPtr.lock()->getPointer(0);
     } /* Now assign the raw pointer to data from the DataArray<T> object */
