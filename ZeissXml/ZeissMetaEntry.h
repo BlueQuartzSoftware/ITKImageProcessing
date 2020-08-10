@@ -41,8 +41,7 @@ using IDataArrayShPtrType = std::shared_ptr<IDataArray>;
 #include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 #ifdef ZEISS_HDF_SUPPORT
-#include "H5Support/H5Lite.h"
-#include "H5Support/H5Utilities.h"
+#include "H5Support/H5SupportTypeDefs.h"
 #endif
 
 using IDataArrayShPtrType = std::shared_ptr<IDataArray>;
