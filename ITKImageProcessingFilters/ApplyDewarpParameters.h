@@ -42,7 +42,8 @@
 #include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 #include <itkConfigure.h>
-#if(ITK_VERSION_MAJOR == 4) 
+#define SIMPL_ITK_VERSION_CHECK (ITK_VERSION_MAJOR == 4)
+#if SIMPL_ITK_VERSION_CHECK
 #ifdef __clang__
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wself-assign-field"
@@ -242,9 +243,9 @@ private:
   // FloatVec7Type m_YFactors = {0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
 };
 
-
-
+#if SIMPL_ITK_VERSION_CHECK
 #ifdef __clang__
 #pragma clang diagnostic pop
 #endif
-
+#endif
+#undef SIMPL_ITK_VERSION_CHECK
