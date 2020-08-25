@@ -33,6 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#pragma once
+
 #include <QtCore/QString>
 
 #define REMOVE_TEST_FILES 1
@@ -45,87 +47,85 @@
  *
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  */
 
-
 namespace UnitTest
 {
-
-  const QString DataDir("@DREAM3D_DATA_DIR@");
-  const QString TestTempDir("@TEST_TEMP_DIR@");
-  const QString DREAM3DProjDir("@DREAM3DProj_SOURCE_DIR@");
-  const QString ITKImageProcessingSourceDir("@ITKImageProcessing_SOURCE_DIR@");
-  const QString ITKImageProcessingDataDir("@ITKImageProcessing_SOURCE_DIR@/Data");
+  inline const QString DataDir("@DREAM3D_DATA_DIR@");
+  inline const QString TestTempDir("@TEST_TEMP_DIR@");
+  inline const QString DREAM3DProjDir("@DREAM3DProj_SOURCE_DIR@");
+  inline const QString ITKImageProcessingSourceDir("@ITKImageProcessing_SOURCE_DIR@");
+  inline const QString ITKImageProcessingDataDir("@ITKImageProcessing_SOURCE_DIR@/Data");
 
   namespace ITKImageProcessingReaderTest
   {
-    const QString METAIOInputTestFile("@TEST_TEMP_DIR@/METAIOFile.mha");
-    const QString TIFFIOInputTestFile("@TEST_TEMP_DIR@/TIFFIOFile.tif");
-    const QString PNGIOInputTestFile("@TEST_TEMP_DIR@/PNGIOFile.png");
-    const QString NRRDIOInputTestFile("@TEST_TEMP_DIR@/NRRDIOFile.nrrd");
-    const QString SCIFIOInputTestFile("@TEST_TEMP_DIR@/SCIFIOFile.tif");
-    const QString MRCIOInputTestFile("@TEST_TEMP_DIR@/MRCFile.mrc");
-    const QString NonExistentInputTestFile("@TEST_TEMP_DIR@/NotHere.ghost");
+    inline const QString METAIOInputTestFile("@TEST_TEMP_DIR@/METAIOFile.mha");
+    inline const QString TIFFIOInputTestFile("@TEST_TEMP_DIR@/TIFFIOFile.tif");
+    inline const QString PNGIOInputTestFile("@TEST_TEMP_DIR@/PNGIOFile.png");
+    inline const QString NRRDIOInputTestFile("@TEST_TEMP_DIR@/NRRDIOFile.nrrd");
+    inline const QString SCIFIOInputTestFile("@TEST_TEMP_DIR@/SCIFIOFile.tif");
+    inline const QString MRCIOInputTestFile("@TEST_TEMP_DIR@/MRCFile.mrc");
+    inline const QString NonExistentInputTestFile("@TEST_TEMP_DIR@/NotHere.ghost");
   } // namespace ITKImageProcessingReaderTest
 
   namespace ITKImportImageStackTest
   {
-    const QString StackInputTestDir("@DREAM3D_DATA_DIR@/Data/Image");
-    } // namespace ITKImportImageStackTest
+    inline const QString StackInputTestDir("@DREAM3D_DATA_DIR@/Data/Image");
+  } // namespace ITKImportImageStackTest
 
   namespace ITKImageProcessingWriterTest
   {
-    const QString OutputBaseFile("@TEST_TEMP_DIR@/OutputBaseFile");
+    inline const QString OutputBaseFile("@TEST_TEMP_DIR@/OutputBaseFile");
   } // namespace ITKImageProcessingWriterTest
 
   namespace ITKBinaryThresholdTest
   {
-   const QString TestFile1("@TEST_TEMP_DIR@/TestFile1.txt");
-   const QString TestFile2("@TEST_TEMP_DIR@/TestFile2.txt");
+    inline const QString TestFile1("@TEST_TEMP_DIR@/TestFile1.txt");
+    inline const QString TestFile2("@TEST_TEMP_DIR@/TestFile2.txt");
   }// namespace ITKBinaryThresholdTest
 
 
   namespace AxioVisionV4ToTileConfigurationTest
   {
-  const QString InputFile("@ITKImageProcessing_SOURCE_DIR@/Test/TestFiles/_meta.xml");
-  const QString ExemplarOutputFile("@ITKImageProcessing_SOURCE_DIR@/Test/TestFiles/TileConfiguration.txt");
-  const QString OutputFile("@TEST_TEMP_DIR@/TileConfiguration.txt");
+    inline const QString InputFile("@ITKImageProcessing_SOURCE_DIR@/Test/TestFiles/_meta.xml");
+    inline const QString ExemplarOutputFile("@ITKImageProcessing_SOURCE_DIR@/Test/TestFiles/TileConfiguration.txt");
+    inline const QString OutputFile("@TEST_TEMP_DIR@/TileConfiguration.txt");
   } // namespace AxioVisionV4ToTileConfiguration
 
   namespace ImportZenInfoMontageTest
   {
-  const QString ZenInfoFile("@ITKImageProcessing_SOURCE_DIR@/Data/ITKImageProcessing/Montage/SampleMosaic/SampleMosaic_Info.xml");
-  const QString OutputDREAM3DFile("@TEST_TEMP_DIR@/ZenInfoImportTest.dream3d");
+    inline const QString ZenInfoFile("@ITKImageProcessing_SOURCE_DIR@/Data/ITKImageProcessing/Montage/SampleMosaic/SampleMosaic_Info.xml");
+    inline const QString OutputDREAM3DFile("@TEST_TEMP_DIR@/ZenInfoImportTest.dream3d");
   } // namespace ImportZenInfoMontageTest
 
   namespace ImportAxioVisionV4MontageTest
   {
-  const QString AxioVisionMetaXmlFile("@ITKImageProcessing_SOURCE_DIR@/Data/ITKImageProcessing/Montage/SampleMosaic/_meta.xml");
-  const QString OutputDREAM3DFile("@TEST_TEMP_DIR@/AxioVisionMetaXmlTest.dream3d");
+    inline const QString AxioVisionMetaXmlFile("@ITKImageProcessing_SOURCE_DIR@/Data/ITKImageProcessing/Montage/SampleMosaic/_meta.xml");
+    inline const QString OutputDREAM3DFile("@TEST_TEMP_DIR@/AxioVisionMetaXmlTest.dream3d");
   } // namespace ImportAxioVisionV4MontageTest
 
   namespace ImportFijiConfigTest
   {
-  const QString InputFile("@ITKImageProcessing_SOURCE_DIR@/Data/ITKImageProcessing/Montage/SampleMosaic/TileConfiguration.txt");
-  const QString OutputDREAM3DFile("@TEST_TEMP_DIR@/FijiConfigTest.dream3d");
+    inline const QString InputFile("@ITKImageProcessing_SOURCE_DIR@/Data/ITKImageProcessing/Montage/SampleMosaic/TileConfiguration.txt");
+    inline const QString OutputDREAM3DFile("@TEST_TEMP_DIR@/FijiConfigTest.dream3d");
   } // namespace ImportFijiConfigTest
 
   namespace ImportRobometMontage
   {
-  // Input File & Constants
-  const QString InputFile("@ITKImageProcessing_SOURCE_DIR@/Data/ITKImageProcessing/Montage/0938410_ Mosaic Focus Details.csv");
-  const QString InputFilePrefix("0938410_");
-  const QString InputFileExtension("bmp");
-  // Output Files
-  const QString OutputDREAM3DFile("@TEST_TEMP_DIR@/RoboMetImportTest.dream3d");
+    // Input File & Constants
+    inline const QString InputFile("@ITKImageProcessing_SOURCE_DIR@/Data/ITKImageProcessing/Montage/0938410_ Mosaic Focus Details.csv");
+    inline const QString InputFilePrefix("0938410_");
+    inline const QString InputFileExtension("bmp");
+    // Output Files
+    inline const QString OutputDREAM3DFile("@TEST_TEMP_DIR@/RoboMetImportTest.dream3d");
   } // namespace ImportRobometMontage
 
-  } // namespace UnitTest
+} // namespace UnitTest
 
 namespace ZeissImport
 {
   namespace Tools
   {
-  const QString TagsTextFile("@ITKImageProcessing_SOURCE_DIR@/ZVI_Tags.txt");
-  const QString ZeissTagMappingConstantsFile("@ITKImageProcessing_SOURCE_DIR@/ZeissXML/ZeissTagMappingConstants.h");
-  const QString ZeissInitIdNameMapFile("@ITKImageProcessing_SOURCE_DIR@/ZeissXML/ZeissTagMapping_InitMaps.cpp");
+    inline const QString TagsTextFile("@ITKImageProcessing_SOURCE_DIR@/ZVI_Tags.txt");
+    inline const QString ZeissTagMappingConstantsFile("@ITKImageProcessing_SOURCE_DIR@/ZeissXML/ZeissTagMappingConstants.h");
+    inline const QString ZeissInitIdNameMapFile("@ITKImageProcessing_SOURCE_DIR@/ZeissXML/ZeissTagMapping_InitMaps.cpp");
   } // namespace Tools
 } // namespace ZeissImport
