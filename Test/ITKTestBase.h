@@ -338,6 +338,9 @@ public:
     AbstractFilter::Pointer writer = filterFactory->create();
     DREAM3D_REQUIRE_VALID_POINTER(writer.get());
 
+    Observer obs;
+    QObject::connect(writer.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)), &obs, SLOT(processPipelineMessage(const PipelineMessage&)));
+
     bool propertySet = false;
     writer->setDataContainerArray(containerArray);
     QVariant var;

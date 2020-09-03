@@ -105,6 +105,10 @@ public:
     IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filtName);
     DREAM3D_REQUIRE_NE(filterFactory.get(), 0);
     AbstractFilter::Pointer filter = filterFactory->create();
+
+    Observer obs;
+    QObject::connect(filter.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)), &obs, SLOT(processPipelineMessage(const PipelineMessage&)));
+
     QVariant var;
     bool propWasSet;
     var.setValue(input_path);

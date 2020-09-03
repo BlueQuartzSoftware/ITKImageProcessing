@@ -69,7 +69,7 @@
 #include "SIMPLib/Utilities/FileSystemPathHelper.h"
 #include "SIMPLib/ITK/itkInPlaceDream3DDataToImageFilter.h"
 #define DREAM3D_USE_RGB_RGBA 1
-#define DREAM3D_USE_Vector 1
+#define DREAM3D_USE_Vector 0
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
 
 
