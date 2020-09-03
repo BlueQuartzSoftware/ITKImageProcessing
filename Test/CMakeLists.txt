@@ -101,11 +101,11 @@ if(NOT ITKImageProcessing_LeanAndMean)
     ITKBinaryClosingByReconstructionImageTest
     ITKGrayscaleDilateImageTest
     ITKMultiScaleHessianBasedObjectnessImageTest
-    ITKVectorConnectedComponentImageTest
+    #ITKVectorConnectedComponentImageTest
     ITKConnectedComponentImageTest
     ITKMaskImageTest
     ITKFFTNormalizedCorrelationImageTest
-    ITKVectorRescaleIntensityImageTest
+    #ITKVectorRescaleIntensityImageTest
     ITKPatchBasedDenoisingImageTest
   )
 endif()

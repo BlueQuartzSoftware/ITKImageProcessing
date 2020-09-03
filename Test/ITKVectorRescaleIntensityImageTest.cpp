@@ -6,7 +6,7 @@
 
 #include "ITKTestBase.h"
 // Auto includes
-#include <SIMPLib/FilterParameters/DoubleFilterParameter.h>
+#include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
 
 #include "SIMPLib/ITK/itkInPlaceDream3DDataToImageFilter.h"
 #include "SIMPLib/ITK/itkInPlaceImageToDream3DDataFilter.h"
@@ -17,12 +17,8 @@ class ITKVectorRescaleIntensityImageTest : public ITKTestBase
 {
 
 public:
-  ITKVectorRescaleIntensityImageTest()
-  {
-  }
-  virtual ~ITKVectorRescaleIntensityImageTest()
-  {
-  }
+  ITKVectorRescaleIntensityImageTest() = default;
+  ~ITKVectorRescaleIntensityImageTest() override = default;
 
   int TestITKVectorRescaleIntensityImage3dTest()
   {
@@ -61,6 +57,8 @@ public:
     const double desiredMaximum = 2.0;
     ////////////////////////////
     DataArrayPath input_path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
+    QString outputName = "TestAttributeArrayName_Output";
+    DataArrayPath output_path("TestContainer", "TestAttributeMatrixName", outputName);
     DataContainerArray::Pointer containerArray = DataContainerArray::New();
     // Convert ITK image to Dream3D data
     //
@@ -87,20 +85,20 @@ public:
     var.setValue(input_path);
     propWasSet = filter->setProperty("SelectedCellArrayPath", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
-    var.setValue(false);
-    propWasSet = filter->setProperty("SaveAsNewArray", var);
+    var.setValue(outputName);
+    propWasSet = filter->setProperty("NewCellArrayName", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     var.setValue(2.0);
     propWasSet = filter->setProperty("OutputMaximumMagnitude", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
-    var.setValue(itk::ImageIOBase::IOComponentType::FLOAT - 1);
+    var.setValue(10); // Test with Float Type
     propWasSet = filter->setProperty("OutputType", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     filter->setDataContainerArray(containerArray);
     filter->execute();
     DREAM3D_REQUIRED(filter->getErrorCondition(), >=, 0);
     DREAM3D_REQUIRED(filter->getWarningCondition(), >=, 0);
-    WriteImage("ITKVectorRescaleIntensityImage3d.nrrd", containerArray, input_path);
+    WriteImage("ITKVectorRescaleIntensityImage3d.nrrd", containerArray, output_path);
     // Convert filter output to ITK image
     typedef itk::InPlaceDream3DDataToImageFilter<OutputPixelType, ImageDimension> toITKType;
     toITKType::Pointer toITK = toITKType::New();

@@ -122,11 +122,11 @@ if(NOT ITKImageProcessing_LeanAndMean)
     ITKBinaryClosingByReconstructionImage
     ITKGrayscaleDilateImage
     ITKMultiScaleHessianBasedObjectnessImage
-    ITKVectorConnectedComponentImage
+    #ITKVectorConnectedComponentImage
     ITKConnectedComponentImage
     ITKMaskImage
     ITKFFTNormalizedCorrelationImage
-    ITKVectorRescaleIntensityImage
+    #ITKVectorRescaleIntensityImage
     ITKPatchBasedDenoisingImage
   )
 endif()
