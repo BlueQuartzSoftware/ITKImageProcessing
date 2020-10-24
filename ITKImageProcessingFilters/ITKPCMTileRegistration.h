@@ -38,12 +38,12 @@
 #include <memory>
 
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 #include "SIMPLib/DataContainers/DataContainerArrayProxy.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/Geometry/CompositeTransformContainer.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Geometry/TransformContainer.h"
-#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "itkAffineTransform.h"
 #include "itkCompositeTransform.h"

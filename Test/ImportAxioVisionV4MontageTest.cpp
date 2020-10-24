@@ -5,24 +5,24 @@
 
 #include <QtCore/QFile>
 
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/Observer.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/Filtering/FilterFactory.hpp"
 #include "SIMPLib/Filtering/FilterManager.h"
 #include "SIMPLib/Filtering/FilterPipeline.h"
 #include "SIMPLib/Filtering/QMetaObjectUtilities.h"
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
-#include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/DataContainers/DataContainerArray.h"
 
 #include "UnitTestSupport.hpp"
 
 #include "ITKImageProcessing/ITKImageProcessingFilters/ImportAxioVisionV4Montage.h"
-#include "ITKImageProcessingTestFileLocations.h"
-#include "ITKImageProcessing/ZeissXml/ZeissTagMapping.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/MetaXmlUtils.h"
+#include "ITKImageProcessing/ZeissXml/ZeissTagMapping.h"
+#include "ITKImageProcessingTestFileLocations.h"
 
 class ImportAxioVisionV4MontageTest
 {

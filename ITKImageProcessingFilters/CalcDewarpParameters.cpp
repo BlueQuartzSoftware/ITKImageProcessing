@@ -44,8 +44,8 @@ using MutexType = tbb::queuing_mutex;
 #include "SIMPLib/Common/SIMPLRange.h"
 #include "SIMPLib/CoreFilters/ConvertColorToGrayScale.h"
 #include "SIMPLib/DataContainers/DataArrayPath.h"
-#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
 #include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
@@ -65,11 +65,11 @@ using MutexType = tbb::queuing_mutex;
 #include "SIMPLib/Utilities/ParallelData2DAlgorithm.h"
 #include "SIMPLib/Utilities/ParallelTaskAlgorithm.h"
 
+#include "ITKImageProcessing/FilterParameters/EbsdWarpPolynomialFilterParameter.h"
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/util/FFTConvolutionCostFunction.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/util/FFTDewarpHelper.h"
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
-#include "ITKImageProcessing/FilterParameters/EbsdWarpPolynomialFilterParameter.h"
 
 using Grayscale_T = uint8_t;
 

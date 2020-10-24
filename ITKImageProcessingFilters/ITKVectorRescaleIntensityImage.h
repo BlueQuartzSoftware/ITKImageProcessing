@@ -42,8 +42,8 @@
 
 #include "SIMPLib/SIMPLib.h"
 
-#include "ITKImageProcessing/ITKImageProcessingFilters/ITKImageProcessingBase.h"
 #include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/ITKImageProcessingBase.h"
 
 #include <itkVectorRescaleIntensityImageFilter.h>
 

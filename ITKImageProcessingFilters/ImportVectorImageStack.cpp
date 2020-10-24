@@ -40,6 +40,7 @@
 #include <QtCore/QDir>
 #include <QtCore/QString>
 
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
@@ -49,7 +50,6 @@
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Utilities/FilePathGenerator.h"
-#include "SIMPLib/DataContainers/DataContainerArray.h"
 
 #include "ITKImageProcessing/FilterParameters/ImportVectorImageStackFilterParameter.h"
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"

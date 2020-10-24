@@ -33,7 +33,6 @@
 
 #include "itkSingleValuedNonLinearVnlOptimizer.h"
 
-
 class AbstractFilter;
 
 namespace itk

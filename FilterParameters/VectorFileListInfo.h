@@ -30,10 +30,10 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include <QtCore/QtGlobal>
-#include <QtCore/QString>
 #include <QtCore/QJsonObject>
 #include <QtCore/QMetaType>
+#include <QtCore/QString>
+#include <QtCore/QtGlobal>
 
 struct VectorFileListInfo_t
 {

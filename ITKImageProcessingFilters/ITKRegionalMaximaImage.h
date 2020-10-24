@@ -22,8 +22,8 @@
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
 
-#include "ITKImageProcessingBase.h"
 #include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
+#include "ITKImageProcessingBase.h"
 
 /**
  * @brief The ITKRegionalMaximaImage class. See [Filter documentation](@ref ITKRegionalMaximaImage) for details.

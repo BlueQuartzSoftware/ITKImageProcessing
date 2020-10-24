@@ -40,11 +40,11 @@
 #include <QtCore/QString>
 
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/SIMPLArray.hpp"
 #include "SIMPLib/DataArrays/IDataArray.h"
 #include "SIMPLib/DataArrays/StringDataArray.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/ITK/itkImageReaderHelper.h"
-#include "SIMPLib/Common/SIMPLArray.hpp"
 
 #include "ITKImageProcessing/FilterParameters/ImportVectorImageStackFilterParameter.h"
 #include "ITKImageProcessing/ITKImageProcessingDLLExport.h"

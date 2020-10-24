@@ -5,7 +5,6 @@
  */
 
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKSmoothingRecursiveGaussianImage.h"
-#include "SIMPLib/ITK/SimpleITKEnums.h"
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -13,6 +12,7 @@
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/ITK/SimpleITKEnums.h"
 
 #define DREAM3D_USE_RGB_RGBA 1
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"

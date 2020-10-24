@@ -39,9 +39,12 @@
 #include <QtCore/QCoreApplication>
 #include <QtCore/QFile>
 
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
-#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/CoreFilters/DataContainerWriter.h"
+#include "SIMPLib/CoreFilters/SetOriginResolutionImageGeom.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Filtering/FilterFactory.hpp"
@@ -49,20 +52,17 @@
 #include "SIMPLib/Filtering/FilterPipeline.h"
 #include "SIMPLib/Filtering/QMetaObjectUtilities.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/Montages/GridMontage.h"
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
-#include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Math/SIMPLibMath.h"
-#include "SIMPLib/CoreFilters/SetOriginResolutionImageGeom.h"
-#include "SIMPLib/CoreFilters/DataContainerWriter.h"
 
-#include "ITKImageProcessing/ITKImageProcessingFilters/util/FFTConvolutionCostFunction.h"
-#include "ITKImageProcessing/Test/UnitTestSupport.hpp"
-#include "ITKImageProcessing/Test/ITKImageProcessingTestFileLocations.h"
-#include "ITKImageProcessing/ITKImageProcessingFilters/ITKImageReader.h"
-#include "ITKImageProcessing/ITKImageProcessingFilters/CalcDewarpParameters.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/ApplyDewarpParameters.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/CalcDewarpParameters.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/ITKImageReader.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/util/FFTConvolutionCostFunction.h"
+#include "ITKImageProcessing/Test/ITKImageProcessingTestFileLocations.h"
+#include "ITKImageProcessing/Test/UnitTestSupport.hpp"
 
 class EdaxEbsdMontageTest
 {

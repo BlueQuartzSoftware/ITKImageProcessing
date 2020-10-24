@@ -36,15 +36,15 @@
 #include <QtCore/QString>
 
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/Filtering/FilterFactory.hpp"
 #include "SIMPLib/Filtering/FilterManager.h"
-#include "SIMPLib/Utilities/MontageSelection.h"
 #include "SIMPLib/Geometry/IGeometryGrid.h"
-#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/Utilities/MontageSelection.h"
 
-#include "ITKImageProcessing/ZeissXml/ZeissTagsXmlSection.h"
 #include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
+#include "ITKImageProcessing/ZeissXml/ZeissTagsXmlSection.h"
 
 /**
  * @class IlluminationCorrection IlluminationCorrection.h ZeissImport/IlluminationCorrections/IlluminationCorrection.h

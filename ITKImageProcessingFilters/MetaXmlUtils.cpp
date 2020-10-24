@@ -33,11 +33,11 @@
 
 #include "SIMPLib/Filtering/AbstractFilter.h"
 
-#include "ITKImageProcessing/ZeissXml/ZeissTagsXmlSection.h"
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
-#include "ITKImageProcessing/ZeissXml/ZeissTagMapping.h"
 #include "ITKImageProcessing/ZeissXml/ZeissMetaEntry.h"
+#include "ITKImageProcessing/ZeissXml/ZeissTagMapping.h"
+#include "ITKImageProcessing/ZeissXml/ZeissTagsXmlSection.h"
 
 MetaXmlUtils::MetaXmlUtils() = default;
 

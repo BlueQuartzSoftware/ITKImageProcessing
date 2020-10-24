@@ -38,9 +38,9 @@
 #include <QtCore/QDateTime>
 
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
-#include "SIMPLib/DataContainers/DataContainer.h"
 #include "SIMPLib/ITK/itkImageReaderHelper.h"
 
 #include <itkImageFileReader.h>

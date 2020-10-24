@@ -37,8 +37,8 @@
 #include "SIMPLib/SIMPLib.h"
 
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
-#include "ITKImageProcessing/ZeissXml/ZeissMetaEntry.h"
 #include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
+#include "ITKImageProcessing/ZeissXml/ZeissMetaEntry.h"
 
 /**
  * @brief The ZeissTagsXmlSection class

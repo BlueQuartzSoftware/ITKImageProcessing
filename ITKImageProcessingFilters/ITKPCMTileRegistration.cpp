@@ -37,6 +37,7 @@
 #include <algorithm>
 #include <type_traits>
 
+#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Common/TemplateHelpers.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -55,7 +56,6 @@
 #include "SIMPLib/ITK/itkProgressObserver.hpp"
 #include "SIMPLib/ITK/itkTransformToDream3DITransformContainer.h"
 #include "SIMPLib/ITK/itkTransformToDream3DTransformContainer.h"
-#include "SIMPLib/SIMPLibVersion.h"
 
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/MetaXmlUtils.h"

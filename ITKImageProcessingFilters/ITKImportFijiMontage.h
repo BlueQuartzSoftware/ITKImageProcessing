@@ -36,9 +36,9 @@
 #include <memory>
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLArray.hpp"
 #include "SIMPLib/DataArrays/IDataArray.h"
+#include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/Geometry/IGeometry.h"
 
 #include "ITKImageProcessing/ITKImageProcessingDLLExport.h"

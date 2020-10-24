@@ -40,14 +40,13 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
-#include "SIMPLib/Utilities/FileSystemPathHelper.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
+#include "SIMPLib/Utilities/FileSystemPathHelper.h"
 
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
-#include "ITKImageProcessing/ITKImageProcessingVersion.h"
-#include "ITKImageProcessing/ZeissXml/ZeissTagsXmlSection.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/MetaXmlUtils.h"
+#include "ITKImageProcessing/ITKImageProcessingVersion.h"
 #include "ITKImageProcessing/ZeissXml/ZeissTagMappingConstants.h"
 #include "ITKImageProcessing/ZeissXml/ZeissTagsXmlSection.h"
 

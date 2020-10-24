@@ -5,15 +5,15 @@
 // \date   23 Oct 97
 //-----------------------------------------------------------------------------
 
+#include "FFTAmoeba.h"
 #include <cstdio>
 #include <cstdlib>
 #include <iostream>
 #include <vector>
-#include "FFTAmoeba.h"
 
-#include <vnl/vnl_math.h>
 #include <vnl/vnl_cost_function.h>
 #include <vnl/vnl_least_squares_function.h>
+#include <vnl/vnl_math.h>
 
 #include "ITKImageProcessing/ITKImageProcessingFilters/CalcDewarpParameters.h"
 

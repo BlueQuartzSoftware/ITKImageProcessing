@@ -7,8 +7,8 @@
 #include <memory>
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/DataArrays/StringDataArray.h"
 #include "SIMPLib/Common/SIMPLArray.hpp"
+#include "SIMPLib/DataArrays/StringDataArray.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"

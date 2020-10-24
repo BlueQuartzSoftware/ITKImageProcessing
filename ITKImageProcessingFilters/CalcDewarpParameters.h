@@ -32,11 +32,11 @@
 
 #pragma once
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
-#include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/FilterParameters/IntVec2FilterParameter.h"
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLArray.hpp"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/FilterParameters/IntVec2FilterParameter.h"
+#include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/Utilities/MontageSelection.h"
 
 #include <itkConfigure.h>
@@ -48,8 +48,8 @@
 #endif
 #endif
 
-#include "ITKImageProcessing/ITKImageProcessingFilters/util/FFTAmoebaOptimizer.h"
 #include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/util/FFTAmoebaOptimizer.h"
 
 #include "itkSingleValuedCostFunction.h"
 

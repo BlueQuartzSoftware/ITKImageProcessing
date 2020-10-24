@@ -48,7 +48,6 @@
 #include "itkSCIFIOImageIOFactory.h"
 #endif
 
-
 #include <itkConfigure.h>
 #define SIMPL_ITK_VERSION_CHECK (ITK_VERSION_MAJOR == 4)
 #if SIMPL_ITK_VERSION_CHECK
@@ -58,7 +57,6 @@
 #endif
 #endif
 
-#include "itksys/SystemTools.hxx"
 #include <itkBMPImageIOFactory.h>
 #include <itkBioRadImageIOFactory.h>
 #include <itkGE4ImageIOFactory.h>
@@ -73,6 +71,7 @@
 #include <itkStimulateImageIOFactory.h>
 #include <itkTIFFImageIOFactory.h>
 #include <itkVTKImageIOFactory.h>
+#include "itksys/SystemTools.hxx"
 
 // -----------------------------------------------------------------------------
 //

@@ -34,14 +34,14 @@
 //-- C++ Includes
 #include <memory>
 
-#include <string>
 #include <sstream>
+#include <string>
 #include <vector>
 
 #include "SIMPLib/SIMPLib.h"
 
-#include "ZeissTagsXmlSection.h"
 #include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
+#include "ZeissTagsXmlSection.h"
 
 /**
  * @class ZeissXMLReader ZeissXMLReader.h Importer/ZeissXMLReader.h

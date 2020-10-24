@@ -37,7 +37,6 @@
 #include <itkImageIOBase.h>
 #endif
 
-#include "SIMPLib/ITK/SimpleITKEnums.h"
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
@@ -47,6 +46,7 @@
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
+#include "SIMPLib/ITK/SimpleITKEnums.h"
 
 // -----------------------------------------------------------------------------
 //

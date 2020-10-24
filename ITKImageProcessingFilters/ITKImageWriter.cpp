@@ -59,15 +59,15 @@
 #include <itkVTKImageIOFactory.h>
 
 #include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
-#include "SIMPLib/Utilities/FileSystemPathHelper.h"
 #include "SIMPLib/ITK/itkInPlaceDream3DDataToImageFilter.h"
-#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/Utilities/FileSystemPathHelper.h"
 
 #define DREAM3D_USE_RGB_RGBA 1
 #define DREAM3D_USE_Vector 1

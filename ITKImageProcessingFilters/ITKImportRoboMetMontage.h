@@ -41,8 +41,8 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/Geometry/IGeometry.h"
 
-#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 // our PIMPL private class
 class ITKImportRoboMetMontagePrivate;

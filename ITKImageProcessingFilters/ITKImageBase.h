@@ -13,9 +13,9 @@
 #include "SIMPLib/ITK/itkInPlaceDream3DDataToImageFilter.h"
 #include "SIMPLib/ITK/itkInPlaceImageToDream3DDataFilter.h"
 
-#include "itkImageToImageFilter.h"
 #include <itkCastImageFilter.h>
 #include <itkNumericTraits.h>
+#include "itkImageToImageFilter.h"
 
 #include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 

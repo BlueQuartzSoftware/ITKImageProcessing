@@ -1,7 +1,7 @@
 
+#include <QtCore/QFile>
 #include <QtCore/QString>
 #include <QtCore/QTextStream>
-#include <QtCore/QFile>
 
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
 #include "ITKImageProcessing/Test/TestFileLocations.h"

@@ -46,9 +46,9 @@
 #include <itkImage.h>
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/DataArrays/IDataArray.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/Filtering/AbstractFilter.h"
 
 #include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 

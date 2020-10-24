@@ -382,11 +382,11 @@ QString ImportImageMontage::getHumanLabel() const
 
 #define ITK_IMAGE_READER_CLASS_NAME ImportImageMontage
 
-#include "SIMPLib/ITK/itkGetComponentsDimensions.h"
-#include "SIMPLib/ITK/itkInPlaceImageToDream3DDataFilter.h"
-#include "SIMPLib/ITK/itkImageReaderHelper.cpp"
-#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/ITK/itkGetComponentsDimensions.h"
+#include "SIMPLib/ITK/itkImageReaderHelper.cpp"
+#include "SIMPLib/ITK/itkInPlaceImageToDream3DDataFilter.h"
 
 // -----------------------------------------------------------------------------
 ImportImageMontage::Pointer ImportImageMontage::NullPointer()

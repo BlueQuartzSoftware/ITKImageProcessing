@@ -36,8 +36,8 @@
 
 #include "ITKImageProcessing/ZeissXml/ZeissMetaFactory.h"
 
-#include "SIMPLib/Geometry/IGeometry.h"
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Geometry/IGeometry.h"
 
 #include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 

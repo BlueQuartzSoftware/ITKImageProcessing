@@ -45,14 +45,13 @@
 #include <QtCore/QDir>
 #include <QtCore/QString>
 
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/DataArrays/IDataArray.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/ITK/itkBridge.h"
 #include "SIMPLib/ITK/itkSupportConstants.h"
-#include "SIMPLib/SIMPLib.h"
-
 
 #include "itkChangeInformationImageFilter.h"
 #include "itkImageFileWriter.h"

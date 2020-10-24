@@ -41,8 +41,8 @@
 
 #include "SIMPLib/SIMPLib.h"
 
-#include "ITKImageProcessing/ITKImageProcessingFilters/ITKImageReader.h"
 #include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/ITKImageReader.h"
 
 // our PIMPL private class
 class ITKImportMontagePrivate;

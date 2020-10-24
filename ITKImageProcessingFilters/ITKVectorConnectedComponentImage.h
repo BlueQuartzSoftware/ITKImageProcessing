@@ -16,10 +16,10 @@
 
 #include <itkVectorConnectedComponentImageFilter.h>
 
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
-#include "SIMPLib/SIMPLib.h"
 
 #include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKImageProcessingBase.h"

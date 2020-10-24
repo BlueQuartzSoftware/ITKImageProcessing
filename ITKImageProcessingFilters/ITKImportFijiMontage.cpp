@@ -39,9 +39,9 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QStringList>
 
-#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/CoreFilters/ConvertColorToGrayScale.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"

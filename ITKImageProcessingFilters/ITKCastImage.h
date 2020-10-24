@@ -16,8 +16,8 @@
 
 #include "SIMPLib/SIMPLib.h"
 
-#include "ITKImageProcessing/ITKImageProcessingFilters/ITKImageProcessingBase.h"
 #include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
+#include "ITKImageProcessing/ITKImageProcessingFilters/ITKImageProcessingBase.h"
 
 /**
  * @brief The ITKCastImage class. See [Filter documentation](@ref ITKCastImage) for details.

@@ -4,7 +4,6 @@
  * Your License or Copyright can go here
  */
 
-#include "SIMPLib/ITK/SimpleITKEnums.h"
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -13,6 +12,7 @@
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
+#include "SIMPLib/ITK/SimpleITKEnums.h"
 
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKValuedRegionalMaximaImage.h"
 
