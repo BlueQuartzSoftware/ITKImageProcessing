@@ -10,6 +10,7 @@
 #include <QtCore/QTextStream>
 
 #include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
@@ -22,7 +23,11 @@
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Filtering/FilterManager.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/ITK/itkGetComponentsDimensions.h"
+#include "SIMPLib/ITK/itkInPlaceImageToDream3DDataFilter.h"
 #include "SIMPLib/Utilities/FilePathGenerator.h"
+#define ITK_IMAGE_READER_CLASS_NAME ImportImageMontage
+#include "SIMPLib/ITK/itkImageReaderHelper.cpp"
 
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
@@ -379,14 +384,6 @@ QString ImportImageMontage::getHumanLabel() const
 {
   return "ITK::Import Image Montage";
 }
-
-#define ITK_IMAGE_READER_CLASS_NAME ImportImageMontage
-
-#include "SIMPLib/DataContainers/DataContainer.h"
-#include "SIMPLib/DataContainers/DataContainerArray.h"
-#include "SIMPLib/ITK/itkGetComponentsDimensions.h"
-#include "SIMPLib/ITK/itkImageReaderHelper.cpp"
-#include "SIMPLib/ITK/itkInPlaceImageToDream3DDataFilter.h"
 
 // -----------------------------------------------------------------------------
 ImportImageMontage::Pointer ImportImageMontage::NullPointer()

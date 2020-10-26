@@ -42,6 +42,10 @@
 #include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/ITK/itkGetComponentsDimensions.h"
+#include "SIMPLib/ITK/itkInPlaceImageToDream3DDataFilter.h"
+#define ITK_IMAGE_READER_CLASS_NAME ITKImageReader
+#include "SIMPLib/ITK/itkImageReaderHelper.cpp"
 
 #include "ITKImageProcessing/ITKImageProcessingConstants.h"
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
@@ -312,12 +316,6 @@ QString ITKImageReader::getHumanLabel() const
 {
   return "ITK::Image Reader";
 }
-
-#define ITK_IMAGE_READER_CLASS_NAME ITKImageReader
-
-#include "SIMPLib/ITK/itkGetComponentsDimensions.h"
-#include "SIMPLib/ITK/itkImageReaderHelper.cpp"
-#include "SIMPLib/ITK/itkInPlaceImageToDream3DDataFilter.h"
 
 // -----------------------------------------------------------------------------
 ITKImageReader::Pointer ITKImageReader::NullPointer()
