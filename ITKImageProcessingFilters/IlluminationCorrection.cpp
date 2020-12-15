@@ -86,6 +86,11 @@ enum createdPathID : RenameDataPath::DataID_t
 
 namespace
 {
+
+const int32_t k_DataContainerDoesNotExist = -53000;
+const int32_t k_DataContainerMissingGeometry = -53001;
+const int32_t k_InvalidGeometry = -53002;
+
 const QString k_BackgroundDataContainerLabel("Created Data Container (Corrected)");
 const QString k_BackgroundAttributeMatrixLabel("Created Attribute Matrix (Corrected)");
 const QString k_BackgroundAttributeArrayLabel("Created Image Array Name (Corrected)");
@@ -466,13 +471,22 @@ IlluminationCorrection::GeomType IlluminationCorrection::getGeomType()
   const QStringList dcNames = getMontageSelection().getDataContainerNamesCombOrder();
   for(const auto& dcName : dcNames)
   {
-    IGeometryGrid::Pointer gridGeom = dca->getDataContainer(dcName)->getGeometryAs<IGeometryGrid>();
+    DataContainer::Pointer dc = dca->getDataContainer(dcName);
+    if(nullptr == dc.get())
+    {
+      QString msg;
+      QTextStream out(&msg);
+      out << "DataContainer: " << dcName << " does not exist.";
+      setErrorCondition(::k_DataContainerDoesNotExist, msg);
+      return GeomType::Error;
+    }
+    IGeometryGrid::Pointer gridGeom = dc->getGeometryAs<IGeometryGrid>();
     if(nullptr == gridGeom)
     {
       QString msg;
       QTextStream out(&msg);
       out << "DataContainer: " << dcName << " needs to have an IGeometryGrid assigned. There is either no geometry assign to the Data Container or the Geometry is not of type IGeometryGrid.";
-      setErrorCondition(-53001, msg);
+      setErrorCondition(::k_DataContainerMissingGeometry, msg);
       return GeomType::Error;
     }
     switch(gridGeom->getGeometryType())
@@ -482,7 +496,7 @@ IlluminationCorrection::GeomType IlluminationCorrection::getGeomType()
     case IGeometry::Type::RectGrid:
       return GeomType::RectGridGeom;
     default:
-      setErrorCondition(-53002, "Invalid Geometry type detected.  An ImageGeometry or RectGridGeometry is required for incoming data.");
+      setErrorCondition(::k_InvalidGeometry, "Invalid Geometry type detected.  An ImageGeometry or RectGridGeometry is required for incoming data.");
       return GeomType::Error;
     }
   }
