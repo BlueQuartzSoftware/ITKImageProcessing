@@ -550,7 +550,7 @@ QString ApplyDewarpParameters::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 QString ApplyDewarpParameters::getBrandingString() const
 {
-  return "ITKImageProcessing";
+  return ITKImageProcessingConstants::ITKImageProcessingBaseName;
 }
 
 // -----------------------------------------------------------------------------

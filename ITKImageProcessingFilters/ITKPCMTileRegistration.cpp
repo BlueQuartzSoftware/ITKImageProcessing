@@ -628,7 +628,7 @@ QString ITKPCMTileRegistration::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 QString ITKPCMTileRegistration::getBrandingString() const
 {
-  return "ITKImageProcessing";
+  return ITKImageProcessingConstants::ITKImageProcessingBaseName;
 }
 
 // -----------------------------------------------------------------------------

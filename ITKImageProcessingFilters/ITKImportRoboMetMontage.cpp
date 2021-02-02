@@ -872,7 +872,7 @@ QString ITKImportRoboMetMontage::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 QString ITKImportRoboMetMontage::getBrandingString() const
 {
-  return "ITKImageProcessing";
+  return ITKImageProcessingConstants::ITKImageProcessingBaseName;
 }
 
 // -----------------------------------------------------------------------------

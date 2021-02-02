@@ -863,7 +863,7 @@ QString ITKImportFijiMontage::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 QString ITKImportFijiMontage::getBrandingString() const
 {
-  return "ITKImageProcessing";
+  return ITKImageProcessingConstants::ITKImageProcessingBaseName;
 }
 
 // -----------------------------------------------------------------------------

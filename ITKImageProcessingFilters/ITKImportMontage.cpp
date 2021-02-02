@@ -356,7 +356,7 @@ QString ITKImportMontage::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 QString ITKImportMontage::getBrandingString() const
 {
-  return "ITKImageProcessing";
+  return ITKImageProcessingConstants::ITKImageProcessingBaseName;
 }
 
 // -----------------------------------------------------------------------------

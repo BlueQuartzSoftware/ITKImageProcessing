@@ -211,14 +211,13 @@ void ITKImageReader::dataCheck()
 
   if(getDataContainerName().isEmpty())
   {
-    setErrorCondition(-2, "No container name.");
+    setErrorCondition(-2, "No Data Container name.");
     return;
   }
 
   DataContainer::Pointer container = getDataContainerArray()->createNonPrereqDataContainer(this, getDataContainerName(), DataContainerID);
-  if(container.get() == nullptr)
+  if(getErrorCode() < 0)
   {
-    setErrorCondition(-3, "No container.");
     return;
   }
   DataArrayPath dap(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), getImageDataArrayName());
@@ -240,7 +239,7 @@ void ITKImageReader::execute()
   {
     return;
   }
-  notifyProgressMessage(100, QString("Importing %1").arg(getFileName()));
+  notifyStatusMessage(QString("Importing %1").arg(getFileName()));
   DataArrayPath dap(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), getImageDataArrayName());
   readImage(dap, false);
 }
@@ -271,7 +270,7 @@ QString ITKImageReader::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 QString ITKImageReader::getBrandingString() const
 {
-  return "ITKImageProcessing";
+  return ITKImageProcessingConstants::ITKImageProcessingBaseName;
 }
 
 // -----------------------------------------------------------------------------

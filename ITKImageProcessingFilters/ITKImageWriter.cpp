@@ -490,7 +490,7 @@ QString ITKImageWriter::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 QString ITKImageWriter::getBrandingString() const
 {
-  return "ITKImageProcessing";
+  return ITKImageProcessingConstants::ITKImageProcessingBaseName;
 }
 
 // -----------------------------------------------------------------------------

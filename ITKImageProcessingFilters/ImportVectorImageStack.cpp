@@ -461,7 +461,7 @@ QString ImportVectorImageStack::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 QString ImportVectorImageStack::getBrandingString() const
 {
-  return "ITKImageProcessing";
+  return ITKImageProcessingConstants::ITKImageProcessingBaseName;
 }
 
 // -----------------------------------------------------------------------------
