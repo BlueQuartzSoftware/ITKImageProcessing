@@ -65,9 +65,6 @@ void ITKExpNegativeImage::readFilterParameters(AbstractFilterParametersReader* r
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ITKExpNegativeImage::dataCheckImpl()
 {
-  clearErrorCode();
-  clearWarningCode();
-
   // Check consistency of parameters
 
   ITKImageProcessingBase::dataCheckImpl<InputPixelType, OutputPixelType, Dimension>();
@@ -78,6 +75,8 @@ void ITKExpNegativeImage::dataCheckImpl()
 // -----------------------------------------------------------------------------
 void ITKExpNegativeImage::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
   Dream3DArraySwitchMacro(this->dataCheckImpl, getSelectedCellArrayPath(), -4);
 }
 

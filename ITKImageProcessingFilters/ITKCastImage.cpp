@@ -108,6 +108,9 @@ void ITKCastImage::dataCheckImpl()
 // -----------------------------------------------------------------------------
 void ITKCastImage::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
+
   using CastingType = itk::ITK_IOCOMPONENT_CLASS::ITK_IOCOMPONENT_TYPE;
   CastingType castingType = static_cast<CastingType>(m_CastingType + 1);
   Dream3DArraySwitchOutputComponentMacro(this->dataCheckImpl, castingType, getSelectedCellArrayPath(), -4);

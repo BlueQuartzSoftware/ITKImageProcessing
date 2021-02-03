@@ -77,9 +77,6 @@ void ITKDanielssonDistanceMapImage::readFilterParameters(AbstractFilterParameter
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ITKDanielssonDistanceMapImage::dataCheckImpl()
 {
-  clearErrorCode();
-  clearWarningCode();
-
   // Check consistency of parameters
 
   ITKImageProcessingBase::dataCheckImpl<InputPixelType, OutputPixelType, Dimension>();
@@ -90,6 +87,8 @@ void ITKDanielssonDistanceMapImage::dataCheckImpl()
 // -----------------------------------------------------------------------------
 void ITKDanielssonDistanceMapImage::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
   Dream3DArraySwitchMacroOutputType(this->dataCheckImpl, getSelectedCellArrayPath(), -4, float, 0);
 }
 

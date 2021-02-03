@@ -74,9 +74,6 @@ void ITKLabelContourImage::readFilterParameters(AbstractFilterParametersReader* 
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ITKLabelContourImage::dataCheckImpl()
 {
-  clearErrorCode();
-  clearWarningCode();
-
   // Check consistency of parameters
 
   ITKImageProcessingBase::dataCheckImpl<InputPixelType, OutputPixelType, Dimension>();
@@ -87,6 +84,8 @@ void ITKLabelContourImage::dataCheckImpl()
 // -----------------------------------------------------------------------------
 void ITKLabelContourImage::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
   Dream3DArraySwitchMacro(this->dataCheckImpl, getSelectedCellArrayPath(), -4);
 }
 

@@ -71,9 +71,6 @@ void ITKBinomialBlurImage::readFilterParameters(AbstractFilterParametersReader* 
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ITKBinomialBlurImage::dataCheckImpl()
 {
-  clearErrorCode();
-  clearWarningCode();
-
   // Check consistency of parameters
   this->CheckIntegerEntry<unsigned int, double>(m_Repetitions, "Repetitions", true);
 
@@ -85,6 +82,8 @@ void ITKBinomialBlurImage::dataCheckImpl()
 // -----------------------------------------------------------------------------
 void ITKBinomialBlurImage::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
   Dream3DArraySwitchMacro(this->dataCheckImpl, getSelectedCellArrayPath(), -4);
 }
 

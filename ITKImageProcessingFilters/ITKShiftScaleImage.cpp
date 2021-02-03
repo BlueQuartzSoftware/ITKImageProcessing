@@ -74,9 +74,6 @@ void ITKShiftScaleImage::readFilterParameters(AbstractFilterParametersReader* re
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ITKShiftScaleImage::dataCheckImpl()
 {
-  clearErrorCode();
-  clearWarningCode();
-
   // Check consistency of parameters
 
   ITKImageProcessingBase::dataCheckImpl<InputPixelType, OutputPixelType, Dimension>();
@@ -87,6 +84,8 @@ void ITKShiftScaleImage::dataCheckImpl()
 // -----------------------------------------------------------------------------
 void ITKShiftScaleImage::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
   Dream3DArraySwitchMacro(this->dataCheckImpl, getSelectedCellArrayPath(), -4);
 }
 

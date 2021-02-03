@@ -80,9 +80,6 @@ void ITKCurvatureAnisotropicDiffusionImage::readFilterParameters(AbstractFilterP
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ITKCurvatureAnisotropicDiffusionImage::dataCheckImpl()
 {
-  clearErrorCode();
-  clearWarningCode();
-
   // Check consistency of parameters
   this->CheckIntegerEntry<unsigned int, double>(m_ConductanceScalingUpdateInterval, "ConductanceScalingUpdateInterval", true);
   this->CheckIntegerEntry<uint32_t, double>(m_NumberOfIterations, "NumberOfIterations", true);
@@ -95,6 +92,8 @@ void ITKCurvatureAnisotropicDiffusionImage::dataCheckImpl()
 // -----------------------------------------------------------------------------
 void ITKCurvatureAnisotropicDiffusionImage::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
   Dream3DArraySwitchMacro(this->dataCheckImpl, getSelectedCellArrayPath(), -4);
 }
 

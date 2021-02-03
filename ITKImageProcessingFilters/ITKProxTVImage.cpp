@@ -79,9 +79,6 @@ void ITKProxTVImage::readFilterParameters(AbstractFilterParametersReader* reader
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ITKProxTVImage::dataCheckImpl()
 {
-  clearErrorCode();
-  clearWarningCode();
-
   // Check consistency of parameters
   this->CheckIntegerEntry<unsigned int, double>(m_MaximumNumberOfIterations, "MaximumNumberOfIterations", 1);
   this->CheckVectorEntry<double, FloatVec3Type>(m_Weights, "Weights", 0);
@@ -95,6 +92,8 @@ void ITKProxTVImage::dataCheckImpl()
 // -----------------------------------------------------------------------------
 void ITKProxTVImage::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
   Dream3DArraySwitchMacro(this->dataCheckImpl, getSelectedCellArrayPath(), -4);
 }
 

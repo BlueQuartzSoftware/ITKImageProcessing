@@ -74,9 +74,6 @@ void ITKHMinimaImage::readFilterParameters(AbstractFilterParametersReader* reade
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ITKHMinimaImage::dataCheckImpl()
 {
-  clearErrorCode();
-  clearWarningCode();
-
   // Check consistency of parameters
 
   ITKImageProcessingBase::dataCheckImpl<InputPixelType, OutputPixelType, Dimension>();
@@ -87,6 +84,8 @@ void ITKHMinimaImage::dataCheckImpl()
 // -----------------------------------------------------------------------------
 void ITKHMinimaImage::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
   Dream3DArraySwitchMacro(this->dataCheckImpl, getSelectedCellArrayPath(), -4);
 }
 

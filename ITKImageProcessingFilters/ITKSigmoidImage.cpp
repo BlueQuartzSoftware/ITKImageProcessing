@@ -80,9 +80,6 @@ void ITKSigmoidImage::readFilterParameters(AbstractFilterParametersReader* reade
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ITKSigmoidImage::dataCheckImpl()
 {
-  clearErrorCode();
-  clearWarningCode();
-
   // Check consistency of parameters
 
   ITKImageProcessingBase::dataCheckImpl<InputPixelType, OutputPixelType, Dimension>();
@@ -93,6 +90,8 @@ void ITKSigmoidImage::dataCheckImpl()
 // -----------------------------------------------------------------------------
 void ITKSigmoidImage::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
   Dream3DArraySwitchMacro(this->dataCheckImpl, getSelectedCellArrayPath(), -4);
 }
 

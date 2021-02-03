@@ -80,9 +80,6 @@ void ITKIntensityWindowingImage::readFilterParameters(AbstractFilterParametersRe
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ITKIntensityWindowingImage::dataCheckImpl()
 {
-  clearErrorCode();
-  clearWarningCode();
-
   // Check consistency of parameters
 
   ITKImageProcessingBase::dataCheckImpl<InputPixelType, OutputPixelType, Dimension>();
@@ -93,6 +90,8 @@ void ITKIntensityWindowingImage::dataCheckImpl()
 // -----------------------------------------------------------------------------
 void ITKIntensityWindowingImage::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
   Dream3DArraySwitchMacro(this->dataCheckImpl, getSelectedCellArrayPath(), -4);
 }
 

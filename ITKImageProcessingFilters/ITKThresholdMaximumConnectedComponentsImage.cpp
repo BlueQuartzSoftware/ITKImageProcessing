@@ -80,9 +80,6 @@ void ITKThresholdMaximumConnectedComponentsImage::readFilterParameters(AbstractF
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ITKThresholdMaximumConnectedComponentsImage::dataCheckImpl()
 {
-  clearErrorCode();
-  clearWarningCode();
-
   // Check consistency of parameters
   this->CheckIntegerEntry<uint32_t, double>(m_MinimumObjectSizeInPixels, "MinimumObjectSizeInPixels", true);
   this->CheckIntegerEntry<uint8_t, int>(m_InsideValue, "InsideValue", true);
@@ -96,6 +93,8 @@ void ITKThresholdMaximumConnectedComponentsImage::dataCheckImpl()
 // -----------------------------------------------------------------------------
 void ITKThresholdMaximumConnectedComponentsImage::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
   Dream3DArraySwitchMacroOutputType(this->dataCheckImpl, getSelectedCellArrayPath(), -4, uint8_t, 0);
 }
 

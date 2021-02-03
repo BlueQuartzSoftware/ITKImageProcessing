@@ -264,6 +264,8 @@ void ImportAxioVisionV4Montage::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void ImportAxioVisionV4Montage::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
   initialize();
 
   QString ss;

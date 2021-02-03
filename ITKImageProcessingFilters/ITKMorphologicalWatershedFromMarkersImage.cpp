@@ -98,6 +98,8 @@ void ITKMorphologicalWatershedFromMarkersImage::dataCheckImpl()
 // -----------------------------------------------------------------------------
 void ITKMorphologicalWatershedFromMarkersImage::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
   Dream3DArraySwitchMacroOutputType(this->dataCheckImpl, getSelectedCellArrayPath(), -4, uint16_t, 0);
 }
 

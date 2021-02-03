@@ -80,9 +80,6 @@ void ITKOtsuMultipleThresholdsImage::readFilterParameters(AbstractFilterParamete
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ITKOtsuMultipleThresholdsImage::dataCheckImpl()
 {
-  clearErrorCode();
-  clearWarningCode();
-
   // Check consistency of parameters
   this->CheckIntegerEntry<uint8_t, int>(m_NumberOfThresholds, "NumberOfThresholds", true);
   this->CheckIntegerEntry<uint8_t, int>(m_LabelOffset, "LabelOffset", true);
@@ -96,6 +93,8 @@ void ITKOtsuMultipleThresholdsImage::dataCheckImpl()
 // -----------------------------------------------------------------------------
 void ITKOtsuMultipleThresholdsImage::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
   Dream3DArraySwitchMacroOutputType(this->dataCheckImpl, getSelectedCellArrayPath(), -4, uint8_t, 0);
 }
 

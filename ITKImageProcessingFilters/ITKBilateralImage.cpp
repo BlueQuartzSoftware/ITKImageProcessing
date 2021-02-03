@@ -77,9 +77,6 @@ void ITKBilateralImage::readFilterParameters(AbstractFilterParametersReader* rea
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ITKBilateralImage::dataCheckImpl()
 {
-  clearErrorCode();
-  clearWarningCode();
-
   // Check consistency of parameters
   this->CheckIntegerEntry<unsigned int, double>(m_NumberOfRangeGaussianSamples, "NumberOfRangeGaussianSamples", true);
 
@@ -91,6 +88,8 @@ void ITKBilateralImage::dataCheckImpl()
 // -----------------------------------------------------------------------------
 void ITKBilateralImage::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
   Dream3DArraySwitchMacro(this->dataCheckImpl, getSelectedCellArrayPath(), -4);
 }
 

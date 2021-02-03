@@ -81,9 +81,6 @@ void ITKDiscreteGaussianImage::readFilterParameters(AbstractFilterParametersRead
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ITKDiscreteGaussianImage::dataCheckImpl()
 {
-  clearErrorCode();
-  clearWarningCode();
-
   // Check consistency of parameters
   this->CheckVectorEntry<float, FloatVec3Type>(m_Variance, "Variance", false);
   this->CheckIntegerEntry<uint32_t, int32_t>(m_MaximumKernelWidth, "MaximumKernelWidth", true);
@@ -97,6 +94,8 @@ void ITKDiscreteGaussianImage::dataCheckImpl()
 // -----------------------------------------------------------------------------
 void ITKDiscreteGaussianImage::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
   Dream3DArraySwitchMacro(this->dataCheckImpl, getSelectedCellArrayPath(), -4);
 }
 

@@ -78,9 +78,6 @@ void ITKFFTNormalizedCorrelationImage::readFilterParameters(AbstractFilterParame
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ITKFFTNormalizedCorrelationImage::dataCheckImpl()
 {
-  clearErrorCode();
-  clearWarningCode();
-
   // Check consistency of parameters
   this->CheckIntegerEntry<uint64_t, double>(m_RequiredNumberOfOverlappingPixels, "RequiredNumberOfOverlappingPixels", true);
 
@@ -92,6 +89,8 @@ void ITKFFTNormalizedCorrelationImage::dataCheckImpl()
 // -----------------------------------------------------------------------------
 void ITKFFTNormalizedCorrelationImage::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
   Dream3DArraySwitchMacroOutputType(this->dataCheckImpl, getSelectedCellArrayPath(), -4, float, 0);
 }
 

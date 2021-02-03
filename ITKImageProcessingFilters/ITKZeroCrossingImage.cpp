@@ -74,9 +74,6 @@ void ITKZeroCrossingImage::readFilterParameters(AbstractFilterParametersReader* 
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ITKZeroCrossingImage::dataCheckImpl()
 {
-  clearErrorCode();
-  clearWarningCode();
-
   // Check consistency of parameters
   this->CheckIntegerEntry<uint8_t, int>(m_ForegroundValue, "ForegroundValue", true);
   this->CheckIntegerEntry<uint8_t, int>(m_BackgroundValue, "BackgroundValue", true);
@@ -89,6 +86,8 @@ void ITKZeroCrossingImage::dataCheckImpl()
 // -----------------------------------------------------------------------------
 void ITKZeroCrossingImage::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
   Dream3DArraySwitchMacroOutputType(this->dataCheckImpl, getSelectedCellArrayPath(), -4, uint8_t, 0);
 }
 

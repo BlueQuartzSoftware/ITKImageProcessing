@@ -146,8 +146,6 @@ void ITKVectorRescaleIntensityImage::dataCheckImpl()
   {
     return;
   }
-  clearErrorCode();
-  clearWarningCode();
   // OutputPixelType is based on scalar types. Create corresponding vector pixel type.
   typedef itk::Vector<OutputPixelType, InputPixelType::Dimension> VectorOutputPixelType;
   ITKImageProcessingBase::dataCheckImpl<InputPixelType, VectorOutputPixelType, Dimension>();
@@ -158,6 +156,9 @@ void ITKVectorRescaleIntensityImage::dataCheckImpl()
 // -----------------------------------------------------------------------------
 void ITKVectorRescaleIntensityImage::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
+
 #if(ITK_VERSION_MAJOR == 5) && (ITK_VERSION_MINOR >= 1)
   itk::CommonEnums::IOComponent castingType = static_cast<itk::CommonEnums::IOComponent>(m_OutputType + 1);
 #else

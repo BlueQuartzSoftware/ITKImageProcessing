@@ -71,9 +71,6 @@ void ITKBoxMeanImage::readFilterParameters(AbstractFilterParametersReader* reade
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ITKBoxMeanImage::dataCheckImpl()
 {
-  clearErrorCode();
-  clearWarningCode();
-
   // Check consistency of parameters
   this->CheckVectorEntry<unsigned int, FloatVec3Type>(m_Radius, "Radius", true);
 
@@ -85,6 +82,8 @@ void ITKBoxMeanImage::dataCheckImpl()
 // -----------------------------------------------------------------------------
 void ITKBoxMeanImage::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
   Dream3DArraySwitchMacro(this->dataCheckImpl, getSelectedCellArrayPath(), -4);
 }
 

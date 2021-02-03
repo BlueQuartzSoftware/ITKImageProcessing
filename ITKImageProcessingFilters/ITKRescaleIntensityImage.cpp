@@ -147,9 +147,6 @@ void ITKRescaleIntensityImage::CheckEntryBounds(double value, QString name)
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ITKRescaleIntensityImage::dataCheckImpl()
 {
-  clearErrorCode();
-  clearWarningCode();
-
   // Check consistency of parameters
   CheckEntryBounds<OutputPixelType>(m_OutputMaximum, "OutputMaximum");
   CheckEntryBounds<OutputPixelType>(m_OutputMinimum, "OutputMinimum");
@@ -162,6 +159,8 @@ void ITKRescaleIntensityImage::dataCheckImpl()
 // -----------------------------------------------------------------------------
 void ITKRescaleIntensityImage::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
   Dream3DArraySwitchMacro(this->dataCheckImpl, getSelectedCellArrayPath(), -4);
 }
 

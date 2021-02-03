@@ -243,8 +243,6 @@ void ImportImageMontage::dataCheck()
 // -----------------------------------------------------------------------------
 void ImportImageMontage::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

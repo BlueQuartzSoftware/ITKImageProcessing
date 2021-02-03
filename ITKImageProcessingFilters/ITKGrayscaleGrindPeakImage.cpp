@@ -71,9 +71,6 @@ void ITKGrayscaleGrindPeakImage::readFilterParameters(AbstractFilterParametersRe
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ITKGrayscaleGrindPeakImage::dataCheckImpl()
 {
-  clearErrorCode();
-  clearWarningCode();
-
   // Check consistency of parameters
 
   ITKImageProcessingBase::dataCheckImpl<InputPixelType, OutputPixelType, Dimension>();
@@ -84,6 +81,8 @@ void ITKGrayscaleGrindPeakImage::dataCheckImpl()
 // -----------------------------------------------------------------------------
 void ITKGrayscaleGrindPeakImage::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
   Dream3DArraySwitchMacro(this->dataCheckImpl, getSelectedCellArrayPath(), -4);
 }
 

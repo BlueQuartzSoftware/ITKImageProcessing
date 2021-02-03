@@ -103,9 +103,6 @@ void ITKBinaryErodeImage::readFilterParameters(AbstractFilterParametersReader* r
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ITKBinaryErodeImage::dataCheckImpl()
 {
-  clearErrorCode();
-  clearWarningCode();
-
   // Check consistency of parameters
   this->CheckVectorEntry<unsigned int, FloatVec3Type>(m_KernelRadius, "KernelRadius", true);
   QVector<QString> supportedTypes;
@@ -128,6 +125,8 @@ void ITKBinaryErodeImage::dataCheckImpl()
 // -----------------------------------------------------------------------------
 void ITKBinaryErodeImage::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
   Dream3DArraySwitchMacro(this->dataCheckImpl, getSelectedCellArrayPath(), -4);
 }
 

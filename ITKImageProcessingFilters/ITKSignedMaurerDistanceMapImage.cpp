@@ -80,9 +80,6 @@ void ITKSignedMaurerDistanceMapImage::readFilterParameters(AbstractFilterParamet
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ITKSignedMaurerDistanceMapImage::dataCheckImpl()
 {
-  clearErrorCode();
-  clearWarningCode();
-
   // Check consistency of parameters
 
   ITKImageProcessingBase::dataCheckImpl<InputPixelType, OutputPixelType, Dimension>();
@@ -93,6 +90,8 @@ void ITKSignedMaurerDistanceMapImage::dataCheckImpl()
 // -----------------------------------------------------------------------------
 void ITKSignedMaurerDistanceMapImage::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
   Dream3DArraySwitchMacroOutputType(this->dataCheckImpl, getSelectedCellArrayPath(), -4, float, 0);
 }
 

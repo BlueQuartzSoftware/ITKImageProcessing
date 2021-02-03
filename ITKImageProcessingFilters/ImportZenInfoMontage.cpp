@@ -242,6 +242,8 @@ void ImportZenInfoMontage::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void ImportZenInfoMontage::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
   initialize();
 
   QString ss;

@@ -65,9 +65,6 @@ void ITKCosImage::readFilterParameters(AbstractFilterParametersReader* reader, i
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ITKCosImage::dataCheckImpl()
 {
-  clearErrorCode();
-  clearWarningCode();
-
   // Check consistency of parameters
 
   ITKImageProcessingBase::dataCheckImpl<InputPixelType, OutputPixelType, Dimension>();
@@ -78,6 +75,8 @@ void ITKCosImage::dataCheckImpl()
 // -----------------------------------------------------------------------------
 void ITKCosImage::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
   Dream3DArraySwitchMacro(this->dataCheckImpl, getSelectedCellArrayPath(), -4);
 }
 

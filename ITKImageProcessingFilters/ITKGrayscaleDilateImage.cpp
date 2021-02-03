@@ -94,9 +94,6 @@ void ITKGrayscaleDilateImage::readFilterParameters(AbstractFilterParametersReade
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ITKGrayscaleDilateImage::dataCheckImpl()
 {
-  clearErrorCode();
-  clearWarningCode();
-
   // Check consistency of parameters
   this->CheckVectorEntry<unsigned int, FloatVec3Type>(m_KernelRadius, "KernelRadius", true);
 
@@ -108,6 +105,8 @@ void ITKGrayscaleDilateImage::dataCheckImpl()
 // -----------------------------------------------------------------------------
 void ITKGrayscaleDilateImage::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
   Dream3DArraySwitchMacro(this->dataCheckImpl, getSelectedCellArrayPath(), -4);
 }
 

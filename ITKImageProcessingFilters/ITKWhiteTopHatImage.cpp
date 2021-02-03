@@ -97,9 +97,6 @@ void ITKWhiteTopHatImage::readFilterParameters(AbstractFilterParametersReader* r
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ITKWhiteTopHatImage::dataCheckImpl()
 {
-  clearErrorCode();
-  clearWarningCode();
-
   // Check consistency of parameters
   this->CheckVectorEntry<unsigned int, FloatVec3Type>(m_KernelRadius, "KernelRadius", true);
 
@@ -111,6 +108,8 @@ void ITKWhiteTopHatImage::dataCheckImpl()
 // -----------------------------------------------------------------------------
 void ITKWhiteTopHatImage::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
   Dream3DArraySwitchMacro(this->dataCheckImpl, getSelectedCellArrayPath(), -4);
 }
 

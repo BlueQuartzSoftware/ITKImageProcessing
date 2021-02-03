@@ -74,9 +74,6 @@ void ITKGradientMagnitudeRecursiveGaussianImage::readFilterParameters(AbstractFi
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ITKGradientMagnitudeRecursiveGaussianImage::dataCheckImpl()
 {
-  clearErrorCode();
-  clearWarningCode();
-
   // Check consistency of parameters
 
   ITKImageProcessingBase::dataCheckImpl<InputPixelType, OutputPixelType, Dimension>();
@@ -87,6 +84,8 @@ void ITKGradientMagnitudeRecursiveGaussianImage::dataCheckImpl()
 // -----------------------------------------------------------------------------
 void ITKGradientMagnitudeRecursiveGaussianImage::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
   Dream3DArraySwitchMacroOutputType(this->dataCheckImpl, getSelectedCellArrayPath(), -4, float, 0);
 }
 

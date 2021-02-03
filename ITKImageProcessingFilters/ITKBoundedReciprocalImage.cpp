@@ -65,9 +65,6 @@ void ITKBoundedReciprocalImage::readFilterParameters(AbstractFilterParametersRea
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ITKBoundedReciprocalImage::dataCheckImpl()
 {
-  clearErrorCode();
-  clearWarningCode();
-
   // Check consistency of parameters
 
   ITKImageProcessingBase::dataCheckImpl<InputPixelType, OutputPixelType, Dimension>();
@@ -78,6 +75,8 @@ void ITKBoundedReciprocalImage::dataCheckImpl()
 // -----------------------------------------------------------------------------
 void ITKBoundedReciprocalImage::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
   Dream3DArraySwitchMacroOutputType(this->dataCheckImpl, getSelectedCellArrayPath(), -4, typename itk::NumericTraits<typename InputImageType::PixelType>::RealType, 1);
 }
 

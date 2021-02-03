@@ -115,6 +115,8 @@ void ITKMultiScaleHessianBasedObjectnessImage::dataCheckImpl()
 // -----------------------------------------------------------------------------
 void ITKMultiScaleHessianBasedObjectnessImage::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
   Dream3DArraySwitchMacro(this->dataCheckImpl, getSelectedCellArrayPath(), -4);
 }
 

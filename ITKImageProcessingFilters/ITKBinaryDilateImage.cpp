@@ -103,9 +103,6 @@ void ITKBinaryDilateImage::readFilterParameters(AbstractFilterParametersReader* 
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ITKBinaryDilateImage::dataCheckImpl()
 {
-  clearErrorCode();
-  clearWarningCode();
-
   // Check consistency of parameters
   this->CheckVectorEntry<unsigned int, FloatVec3Type>(m_KernelRadius, "KernelRadius", true);
   QVector<QString> supportedTypes;
@@ -127,6 +124,8 @@ void ITKBinaryDilateImage::dataCheckImpl()
 // -----------------------------------------------------------------------------
 void ITKBinaryDilateImage::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
   Dream3DArraySwitchMacro(this->dataCheckImpl, getSelectedCellArrayPath(), -4);
 }
 

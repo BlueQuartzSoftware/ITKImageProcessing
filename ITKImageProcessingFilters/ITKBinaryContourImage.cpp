@@ -77,9 +77,6 @@ void ITKBinaryContourImage::readFilterParameters(AbstractFilterParametersReader*
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ITKBinaryContourImage::dataCheckImpl()
 {
-  clearErrorCode();
-  clearWarningCode();
-
   // Check consistency of parameters
 
   ITKImageProcessingBase::dataCheckImpl<InputPixelType, OutputPixelType, Dimension>();
@@ -90,6 +87,8 @@ void ITKBinaryContourImage::dataCheckImpl()
 // -----------------------------------------------------------------------------
 void ITKBinaryContourImage::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
   Dream3DArraySwitchMacro(this->dataCheckImpl, getSelectedCellArrayPath(), -4);
 }
 

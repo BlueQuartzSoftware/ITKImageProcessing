@@ -100,9 +100,6 @@ void ITKBinaryClosingByReconstructionImage::readFilterParameters(AbstractFilterP
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ITKBinaryClosingByReconstructionImage::dataCheckImpl()
 {
-  clearErrorCode();
-  clearWarningCode();
-
   // Check consistency of parameters
   this->CheckVectorEntry<unsigned int, FloatVec3Type>(m_KernelRadius, "KernelRadius", true);
   QVector<QString> supportedTypes;
@@ -125,6 +122,8 @@ void ITKBinaryClosingByReconstructionImage::dataCheckImpl()
 // -----------------------------------------------------------------------------
 void ITKBinaryClosingByReconstructionImage::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
   Dream3DArraySwitchMacro(this->dataCheckImpl, getSelectedCellArrayPath(), -4);
 }
 

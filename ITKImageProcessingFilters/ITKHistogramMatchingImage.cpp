@@ -194,6 +194,8 @@ void ITKHistogramMatchingImage::dataCheckImpl()
 // -----------------------------------------------------------------------------
 void ITKHistogramMatchingImage::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
   Dream3DArraySwitchMacro(this->dataCheckImpl, getSelectedCellArrayPath(), -4);
 }
 

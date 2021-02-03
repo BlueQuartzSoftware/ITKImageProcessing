@@ -83,6 +83,8 @@ void ITKRGBToLuminanceImage::dataCheckImpl()
 // -----------------------------------------------------------------------------
 void ITKRGBToLuminanceImage::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
   Dream3DArraySwitchMacro(this->dataCheckImpl, getSelectedCellArrayPath(), -4);
 }
 

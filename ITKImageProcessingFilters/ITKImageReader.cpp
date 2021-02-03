@@ -195,6 +195,8 @@ void ITKImageReader::initialize()
 // -----------------------------------------------------------------------------
 void ITKImageReader::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
   // check file name exists
   QFileInfo fi(getFileName());
 
@@ -232,8 +234,6 @@ void ITKImageReader::dataCheck()
 // -----------------------------------------------------------------------------
 void ITKImageReader::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

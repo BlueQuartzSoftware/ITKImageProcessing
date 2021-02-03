@@ -71,9 +71,6 @@ void ITKGrayscaleFillholeImage::readFilterParameters(AbstractFilterParametersRea
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ITKGrayscaleFillholeImage::dataCheckImpl()
 {
-  clearErrorCode();
-  clearWarningCode();
-
   // Check consistency of parameters
 
   ITKImageProcessingBase::dataCheckImpl<InputPixelType, OutputPixelType, Dimension>();
@@ -84,6 +81,8 @@ void ITKGrayscaleFillholeImage::dataCheckImpl()
 // -----------------------------------------------------------------------------
 void ITKGrayscaleFillholeImage::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
   Dream3DArraySwitchMacro(this->dataCheckImpl, getSelectedCellArrayPath(), -4);
 }
 

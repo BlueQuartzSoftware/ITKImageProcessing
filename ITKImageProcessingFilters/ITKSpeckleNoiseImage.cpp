@@ -74,9 +74,6 @@ void ITKSpeckleNoiseImage::readFilterParameters(AbstractFilterParametersReader* 
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ITKSpeckleNoiseImage::dataCheckImpl()
 {
-  clearErrorCode();
-  clearWarningCode();
-
   // Check consistency of parameters
   this->CheckIntegerEntry<uint32_t, double>(m_Seed, "Seed", true);
 
@@ -88,6 +85,8 @@ void ITKSpeckleNoiseImage::dataCheckImpl()
 // -----------------------------------------------------------------------------
 void ITKSpeckleNoiseImage::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
   Dream3DArraySwitchMacro(this->dataCheckImpl, getSelectedCellArrayPath(), -4);
 }
 

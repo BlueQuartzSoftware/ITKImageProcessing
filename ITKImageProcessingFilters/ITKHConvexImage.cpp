@@ -74,9 +74,6 @@ void ITKHConvexImage::readFilterParameters(AbstractFilterParametersReader* reade
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ITKHConvexImage::dataCheckImpl()
 {
-  clearErrorCode();
-  clearWarningCode();
-
   // Check consistency of parameters
 
   ITKImageProcessingBase::dataCheckImpl<InputPixelType, OutputPixelType, Dimension>();
@@ -87,6 +84,8 @@ void ITKHConvexImage::dataCheckImpl()
 // -----------------------------------------------------------------------------
 void ITKHConvexImage::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
   Dream3DArraySwitchMacro(this->dataCheckImpl, getSelectedCellArrayPath(), -4);
 }
 

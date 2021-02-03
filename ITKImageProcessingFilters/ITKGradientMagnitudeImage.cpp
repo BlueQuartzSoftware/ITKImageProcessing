@@ -71,9 +71,6 @@ void ITKGradientMagnitudeImage::readFilterParameters(AbstractFilterParametersRea
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ITKGradientMagnitudeImage::dataCheckImpl()
 {
-  clearErrorCode();
-  clearWarningCode();
-
   // Check consistency of parameters
 
   ITKImageProcessingBase::dataCheckImpl<InputPixelType, OutputPixelType, Dimension>();
@@ -84,6 +81,8 @@ void ITKGradientMagnitudeImage::dataCheckImpl()
 // -----------------------------------------------------------------------------
 void ITKGradientMagnitudeImage::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
   Dream3DArraySwitchMacroOutputType(this->dataCheckImpl, getSelectedCellArrayPath(), -4, float, 0);
 }
 

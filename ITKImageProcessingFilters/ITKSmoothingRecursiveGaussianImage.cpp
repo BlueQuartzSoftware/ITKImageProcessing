@@ -75,9 +75,6 @@ void ITKSmoothingRecursiveGaussianImage::readFilterParameters(AbstractFilterPara
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ITKSmoothingRecursiveGaussianImage::dataCheckImpl()
 {
-  clearErrorCode();
-  clearWarningCode();
-
   // Check consistency of parameters
   this->CheckVectorEntry<double, FloatVec3Type>(m_Sigma, "Sigma", false);
 
@@ -89,6 +86,8 @@ void ITKSmoothingRecursiveGaussianImage::dataCheckImpl()
 // -----------------------------------------------------------------------------
 void ITKSmoothingRecursiveGaussianImage::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
   Dream3DArraySwitchMacroOutputType(this->dataCheckImpl, getSelectedCellArrayPath(), -4, typename InputImageType::template Rebind<float>::Type::PixelType, 1);
 }
 

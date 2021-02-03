@@ -80,9 +80,6 @@ void ITKBinaryThresholdImage::readFilterParameters(AbstractFilterParametersReade
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ITKBinaryThresholdImage::dataCheckImpl()
 {
-  clearErrorCode();
-  clearWarningCode();
-
   // Check consistency of parameters
   this->CheckIntegerEntry<uint8_t, int>(m_InsideValue, "InsideValue", true);
   this->CheckIntegerEntry<uint8_t, int>(m_OutsideValue, "OutsideValue", true);
@@ -95,6 +92,8 @@ void ITKBinaryThresholdImage::dataCheckImpl()
 // -----------------------------------------------------------------------------
 void ITKBinaryThresholdImage::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
   Dream3DArraySwitchMacroOutputType(this->dataCheckImpl, getSelectedCellArrayPath(), -4, uint8_t, 0);
 }
 

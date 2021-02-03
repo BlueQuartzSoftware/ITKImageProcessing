@@ -65,9 +65,6 @@ void ITKBinaryThinningImage::readFilterParameters(AbstractFilterParametersReader
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ITKBinaryThinningImage::dataCheckImpl()
 {
-  clearErrorCode();
-  clearWarningCode();
-
   // Check consistency of parameters
 
   ITKImageProcessingBase::dataCheckImpl<InputPixelType, OutputPixelType, Dimension>();
@@ -78,6 +75,8 @@ void ITKBinaryThinningImage::dataCheckImpl()
 // -----------------------------------------------------------------------------
 void ITKBinaryThinningImage::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
   Dream3DArraySwitchMacro(this->dataCheckImpl, getSelectedCellArrayPath(), -4);
 }
 

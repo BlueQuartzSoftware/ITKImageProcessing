@@ -65,9 +65,6 @@ void ITKTanImage::readFilterParameters(AbstractFilterParametersReader* reader, i
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ITKTanImage::dataCheckImpl()
 {
-  clearErrorCode();
-  clearWarningCode();
-
   // Check consistency of parameters
 
   ITKImageProcessingBase::dataCheckImpl<InputPixelType, OutputPixelType, Dimension>();
@@ -78,6 +75,8 @@ void ITKTanImage::dataCheckImpl()
 // -----------------------------------------------------------------------------
 void ITKTanImage::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
   Dream3DArraySwitchMacro(this->dataCheckImpl, getSelectedCellArrayPath(), -4);
 }
 

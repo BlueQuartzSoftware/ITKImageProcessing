@@ -71,9 +71,6 @@ void ITKLaplacianSharpeningImage::readFilterParameters(AbstractFilterParametersR
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ITKLaplacianSharpeningImage::dataCheckImpl()
 {
-  clearErrorCode();
-  clearWarningCode();
-
   // Check consistency of parameters
 
   ITKImageProcessingBase::dataCheckImpl<InputPixelType, OutputPixelType, Dimension>();
@@ -84,6 +81,8 @@ void ITKLaplacianSharpeningImage::dataCheckImpl()
 // -----------------------------------------------------------------------------
 void ITKLaplacianSharpeningImage::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
   Dream3DArraySwitchMacro(this->dataCheckImpl, getSelectedCellArrayPath(), -4);
 }
 

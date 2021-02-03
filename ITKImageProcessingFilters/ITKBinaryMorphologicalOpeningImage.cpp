@@ -100,9 +100,6 @@ void ITKBinaryMorphologicalOpeningImage::readFilterParameters(AbstractFilterPara
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ITKBinaryMorphologicalOpeningImage::dataCheckImpl()
 {
-  clearErrorCode();
-  clearWarningCode();
-
   // Check consistency of parameters
   this->CheckVectorEntry<unsigned int, FloatVec3Type>(m_KernelRadius, "KernelRadius", true);
   QVector<QString> supportedTypes;
@@ -125,6 +122,8 @@ void ITKBinaryMorphologicalOpeningImage::dataCheckImpl()
 // -----------------------------------------------------------------------------
 void ITKBinaryMorphologicalOpeningImage::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
   Dream3DArraySwitchMacro(this->dataCheckImpl, getSelectedCellArrayPath(), -4);
 }
 

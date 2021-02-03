@@ -88,9 +88,6 @@ void ITKVectorConnectedComponentImage::readFilterParameters(AbstractFilterParame
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ITKVectorConnectedComponentImage::dataCheckImpl()
 {
-  clearErrorCode();
-  clearWarningCode();
-
   // Check consistency of parameters
   QVector<QString> supportedTypes;
   // All integer types
@@ -106,6 +103,8 @@ void ITKVectorConnectedComponentImage::dataCheckImpl()
 // -----------------------------------------------------------------------------
 void ITKVectorConnectedComponentImage::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
   Dream3DArraySwitchMacroOutputType(this->dataCheckImpl, getSelectedCellArrayPath(), -4, uint32_t, 0);
 }
 

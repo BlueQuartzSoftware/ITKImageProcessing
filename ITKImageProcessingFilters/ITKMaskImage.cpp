@@ -92,6 +92,8 @@ void ITKMaskImage::dataCheckImpl()
 // -----------------------------------------------------------------------------
 void ITKMaskImage::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
   Dream3DArraySwitchMacro(this->dataCheckImpl, getSelectedCellArrayPath(), -5);
 }
 

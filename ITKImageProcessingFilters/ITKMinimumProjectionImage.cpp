@@ -71,9 +71,6 @@ void ITKMinimumProjectionImage::readFilterParameters(AbstractFilterParametersRea
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ITKMinimumProjectionImage::dataCheckImpl()
 {
-  clearErrorCode();
-  clearWarningCode();
-
   // Check consistency of parameters
   this->CheckIntegerEntry<unsigned int, double>(m_ProjectionDimension, "ProjectionDimension", true);
 
@@ -85,6 +82,8 @@ void ITKMinimumProjectionImage::dataCheckImpl()
 // -----------------------------------------------------------------------------
 void ITKMinimumProjectionImage::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
   Dream3DArraySwitchMacro(this->dataCheckImpl, getSelectedCellArrayPath(), -4);
 }
 

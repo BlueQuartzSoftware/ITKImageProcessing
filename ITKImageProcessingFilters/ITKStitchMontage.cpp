@@ -444,8 +444,6 @@ void ITKStitchMontage::dataCheck()
 // -----------------------------------------------------------------------------
 void ITKStitchMontage::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

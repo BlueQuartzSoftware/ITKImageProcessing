@@ -80,9 +80,6 @@ void ITKRegionalMinimaImage::readFilterParameters(AbstractFilterParametersReader
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ITKRegionalMinimaImage::dataCheckImpl()
 {
-  clearErrorCode();
-  clearWarningCode();
-
   // Check consistency of parameters
 
   ITKImageProcessingBase::dataCheckImpl<InputPixelType, OutputPixelType, Dimension>();
@@ -93,6 +90,8 @@ void ITKRegionalMinimaImage::dataCheckImpl()
 // -----------------------------------------------------------------------------
 void ITKRegionalMinimaImage::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
   Dream3DArraySwitchMacroOutputType(this->dataCheckImpl, getSelectedCellArrayPath(), -4, uint32_t, 0);
 }
 

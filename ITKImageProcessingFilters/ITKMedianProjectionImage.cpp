@@ -71,9 +71,6 @@ void ITKMedianProjectionImage::readFilterParameters(AbstractFilterParametersRead
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ITKMedianProjectionImage::dataCheckImpl()
 {
-  clearErrorCode();
-  clearWarningCode();
-
   // Check consistency of parameters
   this->CheckIntegerEntry<unsigned int, double>(m_ProjectionDimension, "ProjectionDimension", true);
 
@@ -85,6 +82,8 @@ void ITKMedianProjectionImage::dataCheckImpl()
 // -----------------------------------------------------------------------------
 void ITKMedianProjectionImage::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
   Dream3DArraySwitchMacro(this->dataCheckImpl, getSelectedCellArrayPath(), -4);
 }
 

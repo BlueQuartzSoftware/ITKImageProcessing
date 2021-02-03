@@ -139,6 +139,8 @@ void ITKPatchBasedDenoisingImage::dataCheckImpl()
 // -----------------------------------------------------------------------------
 void ITKPatchBasedDenoisingImage::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
   Dream3DArraySwitchMacroOutputType(this->dataCheckImpl, getSelectedCellArrayPath(), -4, double, 0);
 }
 

@@ -100,9 +100,6 @@ void ITKClosingByReconstructionImage::readFilterParameters(AbstractFilterParamet
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ITKClosingByReconstructionImage::dataCheckImpl()
 {
-  clearErrorCode();
-  clearWarningCode();
-
   // Check consistency of parameters
   this->CheckVectorEntry<unsigned int, FloatVec3Type>(m_KernelRadius, "KernelRadius", true);
 
@@ -114,6 +111,8 @@ void ITKClosingByReconstructionImage::dataCheckImpl()
 // -----------------------------------------------------------------------------
 void ITKClosingByReconstructionImage::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
   Dream3DArraySwitchMacro(this->dataCheckImpl, getSelectedCellArrayPath(), -4);
 }
 

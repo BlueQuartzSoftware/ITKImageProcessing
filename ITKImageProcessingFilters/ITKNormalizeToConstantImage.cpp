@@ -71,9 +71,6 @@ void ITKNormalizeToConstantImage::readFilterParameters(AbstractFilterParametersR
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ITKNormalizeToConstantImage::dataCheckImpl()
 {
-  clearErrorCode();
-  clearWarningCode();
-
   // Check consistency of parameters
 
   ITKImageProcessingBase::dataCheckImpl<InputPixelType, OutputPixelType, Dimension>();
@@ -84,6 +81,8 @@ void ITKNormalizeToConstantImage::dataCheckImpl()
 // -----------------------------------------------------------------------------
 void ITKNormalizeToConstantImage::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
   Dream3DArraySwitchMacroOutputType(this->dataCheckImpl, getSelectedCellArrayPath(), -4, typename itk::NumericTraits<typename InputImageType::PixelType>::RealType, 1);
 }
 

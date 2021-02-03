@@ -231,6 +231,8 @@ void ITKImportRoboMetMontage::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void ITKImportRoboMetMontage::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
   initialize();
 
   QString ss;

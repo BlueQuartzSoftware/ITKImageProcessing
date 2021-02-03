@@ -204,6 +204,8 @@ void ITKPCMTileRegistration::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void ITKPCMTileRegistration::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
   initialize();
 
   if(m_MontageStart[0] > m_MontageEnd[0])
@@ -306,8 +308,6 @@ void ITKPCMTileRegistration::dataCheck()
 // -----------------------------------------------------------------------------
 void ITKPCMTileRegistration::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

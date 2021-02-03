@@ -75,9 +75,6 @@ void ITKSaltAndPepperNoiseImage::readFilterParameters(AbstractFilterParametersRe
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ITKSaltAndPepperNoiseImage::dataCheckImpl()
 {
-  clearErrorCode();
-  clearWarningCode();
-
   // Check consistency of parameters
   this->CheckIntegerEntry<uint32_t, double>(m_Seed, "Seed", true);
 
@@ -89,6 +86,8 @@ void ITKSaltAndPepperNoiseImage::dataCheckImpl()
 // -----------------------------------------------------------------------------
 void ITKSaltAndPepperNoiseImage::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
   Dream3DArraySwitchMacro(this->dataCheckImpl, getSelectedCellArrayPath(), -4);
 }
 

@@ -71,9 +71,6 @@ void ITKValuedRegionalMaximaImage::readFilterParameters(AbstractFilterParameters
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ITKValuedRegionalMaximaImage::dataCheckImpl()
 {
-  clearErrorCode();
-  clearWarningCode();
-
   // Check consistency of parameters
 
   ITKImageProcessingBase::dataCheckImpl<InputPixelType, OutputPixelType, Dimension>();
@@ -84,6 +81,8 @@ void ITKValuedRegionalMaximaImage::dataCheckImpl()
 // -----------------------------------------------------------------------------
 void ITKValuedRegionalMaximaImage::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
   Dream3DArraySwitchMacro(this->dataCheckImpl, getSelectedCellArrayPath(), -4);
 }
 

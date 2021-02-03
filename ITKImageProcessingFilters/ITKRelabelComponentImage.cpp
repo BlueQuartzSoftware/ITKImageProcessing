@@ -74,9 +74,6 @@ void ITKRelabelComponentImage::readFilterParameters(AbstractFilterParametersRead
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ITKRelabelComponentImage::dataCheckImpl()
 {
-  clearErrorCode();
-  clearWarningCode();
-
   // Check consistency of parameters
   this->CheckIntegerEntry<uint64_t, double>(m_MinimumObjectSize, "MinimumObjectSize", true);
 
@@ -88,6 +85,8 @@ void ITKRelabelComponentImage::dataCheckImpl()
 // -----------------------------------------------------------------------------
 void ITKRelabelComponentImage::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
   Dream3DArraySwitchMacro(this->dataCheckImpl, getSelectedCellArrayPath(), -4);
 }
 

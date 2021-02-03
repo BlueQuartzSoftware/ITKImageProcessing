@@ -71,9 +71,6 @@ void ITKMeanProjectionImage::readFilterParameters(AbstractFilterParametersReader
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ITKMeanProjectionImage::dataCheckImpl()
 {
-  clearErrorCode();
-  clearWarningCode();
-
   // Check consistency of parameters
   this->CheckIntegerEntry<unsigned int, double>(m_ProjectionDimension, "ProjectionDimension", true);
 
@@ -85,6 +82,8 @@ void ITKMeanProjectionImage::dataCheckImpl()
 // -----------------------------------------------------------------------------
 void ITKMeanProjectionImage::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
   Dream3DArraySwitchMacroOutputType(this->dataCheckImpl, getSelectedCellArrayPath(), -4, typename itk::NumericTraits<typename InputImageType::PixelType>::RealType, 1);
 }
 

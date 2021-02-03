@@ -239,6 +239,8 @@ void ITKImportFijiMontage::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void ITKImportFijiMontage::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
   initialize();
 
   QString ss;

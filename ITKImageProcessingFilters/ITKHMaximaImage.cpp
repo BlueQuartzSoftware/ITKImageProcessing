@@ -71,9 +71,6 @@ void ITKHMaximaImage::readFilterParameters(AbstractFilterParametersReader* reade
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ITKHMaximaImage::dataCheckImpl()
 {
-  clearErrorCode();
-  clearWarningCode();
-
   // Check consistency of parameters
 
   ITKImageProcessingBase::dataCheckImpl<InputPixelType, OutputPixelType, Dimension>();
@@ -84,6 +81,8 @@ void ITKHMaximaImage::dataCheckImpl()
 // -----------------------------------------------------------------------------
 void ITKHMaximaImage::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
   Dream3DArraySwitchMacro(this->dataCheckImpl, getSelectedCellArrayPath(), -4);
 }
 

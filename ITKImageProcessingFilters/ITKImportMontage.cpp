@@ -331,8 +331,6 @@ void ITKImportMontage::adjustOriginAndSpacing()
 // -----------------------------------------------------------------------------
 void ITKImportMontage::execute()
 {
-  clearErrorCode();
-  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

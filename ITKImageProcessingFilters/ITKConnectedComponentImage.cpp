@@ -71,9 +71,6 @@ void ITKConnectedComponentImage::readFilterParameters(AbstractFilterParametersRe
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ITKConnectedComponentImage::dataCheckImpl()
 {
-  clearErrorCode();
-  clearWarningCode();
-
   // Check consistency of parameters
 
   ITKImageProcessingBase::dataCheckImpl<InputPixelType, OutputPixelType, Dimension>();
@@ -84,6 +81,8 @@ void ITKConnectedComponentImage::dataCheckImpl()
 // -----------------------------------------------------------------------------
 void ITKConnectedComponentImage::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
   Dream3DArraySwitchMacroOutputType(this->dataCheckImpl, getSelectedCellArrayPath(), -4, uint32_t, 0);
 }
 

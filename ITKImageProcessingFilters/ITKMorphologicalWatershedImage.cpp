@@ -77,9 +77,6 @@ void ITKMorphologicalWatershedImage::readFilterParameters(AbstractFilterParamete
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ITKMorphologicalWatershedImage::dataCheckImpl()
 {
-  clearErrorCode();
-  clearWarningCode();
-
   // Check consistency of parameters
 
   ITKImageProcessingBase::dataCheckImpl<InputPixelType, OutputPixelType, Dimension>();
@@ -90,6 +87,8 @@ void ITKMorphologicalWatershedImage::dataCheckImpl()
 // -----------------------------------------------------------------------------
 void ITKMorphologicalWatershedImage::dataCheck()
 {
+  clearErrorCode();
+  clearWarningCode();
   Dream3DArraySwitchMacroOutputType(this->dataCheckImpl, getSelectedCellArrayPath(), -4, uint32_t, 0);
 }
 
