@@ -129,7 +129,7 @@ void EbsdWarpPolynomialWidget::setupGui()
   {
     m_Ui->label->setText(getFilterParameter()->getHumanLabel());
 
-    FloatVec7Type data = getFilter()->property(PROPERTY_NAME_AS_CHAR).value<FloatVec7Type>();
+    FloatVec7Type data = m_FilterParameter->getGetterCallback()();
     m_Ui->a0->setText(loc.toString(data[0]));
     m_Ui->a1->setText(loc.toString(data[1]));
     m_Ui->a2->setText(loc.toString(data[2]));
@@ -180,13 +180,7 @@ void EbsdWarpPolynomialWidget::filterNeedsInputParameters(AbstractFilter* filter
   EWPW_EXTRACT_VALUE(5)
   EWPW_EXTRACT_VALUE(6)
 
-  QVariant v;
-  v.setValue(data);
-  ok = filter->setProperty(PROPERTY_NAME_AS_CHAR, v);
-  if(!ok)
-  {
-    getFilter()->notifyMissingProperty(getFilterParameter());
-  }
+  m_FilterParameter->getSetterCallback()(data);
 }
 
 // -----------------------------------------------------------------------------

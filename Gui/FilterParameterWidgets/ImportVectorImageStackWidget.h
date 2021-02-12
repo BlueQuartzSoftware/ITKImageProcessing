@@ -47,6 +47,8 @@
 
 #include "ui_ImportVectorImageStackWidget.h"
 
+class ImportVectorImageStackFilterParameter;
+
 /**
  * @class ImportVectorImageStackWidget ImportVectorImageStackWidget.h Plugins/EbsdImport/UI/ImportVectorImageStackWidget.h
  * @brief This class represents the User Interface for the EBSD file import module
@@ -157,6 +159,7 @@ private:
   QAction* m_ShowFileAction = nullptr;
   QString m_CurrentText = "";
   bool m_DidCausePreflight = false;
+  ImportVectorImageStackFilterParameter* m_FilterParameter = nullptr;
 
   /**
    * @brief connectSignalsSlots
