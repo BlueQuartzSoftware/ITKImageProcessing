@@ -253,11 +253,11 @@ public:
   ImportVectorImageStack& operator=(ImportVectorImageStack&&) = delete;      // Move Assignment Not Implemented
 
 private:
-  DataArrayPath m_DataContainerName = {};
-  QString m_CellAttributeMatrixName = {};
+  DataArrayPath m_DataContainerName = {SIMPL::Defaults::ImageDataContainerName, "", ""};
+  QString m_CellAttributeMatrixName = {SIMPL::Defaults::CellAttributeMatrixName};
   FloatVec3Type m_Origin = {};
   FloatVec3Type m_Spacing = {};
   VectorFileListInfo_t m_InputFileListInfo = {};
-  QString m_VectorDataArrayName = {};
-  bool m_ConvertToGrayscale = {};
+  QString m_VectorDataArrayName = {SIMPL::CellData::VectorData};
+  bool m_ConvertToGrayscale = {true};
 };

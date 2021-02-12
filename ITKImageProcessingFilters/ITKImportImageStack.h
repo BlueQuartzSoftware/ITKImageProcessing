@@ -239,13 +239,13 @@ protected:
   void initialize();
 
 private:
-  DataArrayPath m_DataContainerName = {};
-  QString m_CellAttributeMatrixName = {};
+  DataArrayPath m_DataContainerName = {SIMPL::Defaults::ImageDataContainerName, "", ""};
+  QString m_CellAttributeMatrixName = {SIMPL::Defaults::CellAttributeMatrixName};
   FloatVec3Type m_Origin = {};
   FloatVec3Type m_Spacing = {};
   StackFileListInfo m_InputFileListInfo = {};
   int m_ImageStack = {};
-  QString m_ImageDataArrayName = {};
+  QString m_ImageDataArrayName = {SIMPL::CellData::ImageData};
   std::weak_ptr<DataArray<uint8_t>> m_ImageDataPtr;
   uint8_t* m_ImageData = nullptr;
 

@@ -78,10 +78,6 @@ enum createdPathID : RenameDataPath::DataID_t
 //
 // -----------------------------------------------------------------------------
 ImportVectorImageStack::ImportVectorImageStack()
-: m_DataContainerName(SIMPL::Defaults::ImageDataContainerName)
-, m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName)
-, m_VectorDataArrayName(SIMPL::CellData::VectorData)
-, m_ConvertToGrayscale(true)
 {
   initialize();
 }

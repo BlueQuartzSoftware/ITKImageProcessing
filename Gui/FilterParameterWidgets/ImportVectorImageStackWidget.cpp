@@ -598,7 +598,6 @@ void ImportVectorImageStackWidget::filterNeedsInputParameters(AbstractFilter* fi
     emit errorSettingFilterParameter(ss);
     return;
   }
-  bool ok = false;
 
   VectorFileListInfo_t data;
   // data.IncrementIndex = m_Ui->increment->value();

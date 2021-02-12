@@ -255,10 +255,10 @@ protected:
   ITK_IMAGE_READER_HELPER_DECL()
 
 private:
-  QString m_FileName = {};
-  DataArrayPath m_DataContainerName = {};
-  QString m_CellAttributeMatrixName = {};
-  QString m_ImageDataArrayName = {};
+  QString m_FileName = {""};
+  DataArrayPath m_DataContainerName = {SIMPL::Defaults::ImageDataContainerName, "", ""};
+  QString m_CellAttributeMatrixName = {SIMPL::Defaults::CellAttributeMatrixName};
+  QString m_ImageDataArrayName = {SIMPL::CellData::ImageData};
 
   QScopedPointer<ITKImageReaderPrivate> const d_ptr;
 

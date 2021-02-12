@@ -48,6 +48,7 @@
 #include "itkAffineTransform.h"
 #include "itkCompositeTransform.h"
 
+#include "ITKImageProcessing/ITKImageProcessingConstants.h"
 #include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 using AffineType = itk::AffineTransform<double, 3>;
@@ -265,9 +266,9 @@ private:
   IntVec2Type m_RowMontageLimits = {0, 0};
   IntVec2Type m_MontageStart = {0, 0};
   IntVec2Type m_MontageEnd = {0, 0};
-  QString m_DataContainerPrefix = {};
-  QString m_CommonAttributeMatrixName = {};
-  QString m_CommonDataArrayName = {};
+  QString m_DataContainerPrefix = {ITKImageProcessing::Montage::k_DataContainerPrefixDefaultName};
+  QString m_CommonAttributeMatrixName = {ITKImageProcessing::Montage::k_TileAttributeMatrixDefaultName};
+  QString m_CommonDataArrayName = {ITKImageProcessing::Montage::k_TileDataArrayDefaultName};
 
   static constexpr unsigned Dimension = 2;
   std::vector<DataContainer::Pointer> m_DataContainers;
