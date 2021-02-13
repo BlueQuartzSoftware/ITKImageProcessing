@@ -41,7 +41,8 @@
 
 #include "SIMPLib/FilterParameters/FilterParameter.h"
 
-#include "VectorFileListInfo.h"
+#include "ITKImageProcessing/FilterParameters/VectorFileListInfo.h"
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief SIMPL_NEW_FILELISTINFO_FP This macro is a short-form way of instantiating an instance of
@@ -57,7 +58,7 @@
 #define SIMPL_NEW_VECTORFILELISTINFO_FP(...)                                                                                                                                                           \
   SIMPL_EXPAND(_FP_GET_OVERRIDE(__VA_ARGS__, SIMPL_NEW_FP_9, SIMPL_NEW_FP_8, SIMPL_NEW_FP_7, SIMPL_NEW_FP_6, SIMPL_NEW_FP_5, SIMPL_NEW_FP_4)(ImportVectorImageStackFilterParameter, __VA_ARGS__))
 
-class ImportVectorImageStackFilterParameter : public FilterParameter
+class ITKImageProcessing_EXPORT ImportVectorImageStackFilterParameter : public FilterParameter
 {
 public:
   using Self = ImportVectorImageStackFilterParameter;

@@ -35,7 +35,9 @@
 #include <QtCore/QString>
 #include <QtCore/QtGlobal>
 
-struct VectorFileListInfo_t
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
+
+struct ITKImageProcessing_EXPORT VectorFileListInfo_t
 {
   qint32 PaddingDigits = 3;
   quint32 Ordering = 0; /* Ordering=0 = Ascending, Ordering=1 = Descending */

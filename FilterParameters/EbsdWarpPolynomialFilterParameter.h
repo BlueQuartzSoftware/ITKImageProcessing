@@ -39,6 +39,8 @@
 #include "SIMPLib/Common/SIMPLArray.hpp"
 #include "SIMPLib/FilterParameters/FilterParameter.h"
 
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
+
 /**
  * @brief SIMPL_NEW_EBSDWARPPOLYNOMIALFP This macro is a short-form way of instantiating an instance of
  * FileListInfoFilterParameter. There are 4 required parameters that are always passed to this macro
@@ -53,7 +55,7 @@
 #define SIMPL_NEW_EBSDWARPPOLYNOMIAL_FP(...)                                                                                                                                                           \
   SIMPL_EXPAND(_FP_GET_OVERRIDE(__VA_ARGS__, SIMPL_NEW_FP_9, SIMPL_NEW_FP_8, SIMPL_NEW_FP_7, SIMPL_NEW_FP_6, SIMPL_NEW_FP_5, SIMPL_NEW_FP_4)(EbsdWarpPolynomialFilterParameter, __VA_ARGS__))
 
-class EbsdWarpPolynomialFilterParameter : public FilterParameter
+class ITKImageProcessing_EXPORT EbsdWarpPolynomialFilterParameter : public FilterParameter
 {
 public:
   using Self = EbsdWarpPolynomialFilterParameter;
