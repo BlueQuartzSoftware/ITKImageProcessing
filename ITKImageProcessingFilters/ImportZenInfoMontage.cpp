@@ -203,36 +203,36 @@ void ImportZenInfoMontage::initialize()
 void ImportZenInfoMontage::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
-  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Zen Export File (*_info.xml)", InputFile, FilterParameter::Parameter, ImportZenInfoMontage, "*.xml"));
+  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Zen Export File (*_info.xml)", InputFile, FilterParameter::Category::Parameter, ImportZenInfoMontage, "*.xml"));
 
-  parameters.push_back(SIMPL_NEW_STRING_FP("Name of Created Montage", MontageName, FilterParameter::Parameter, ImportZenInfoMontage));
-  parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage Column Start/End [Inclusive, Zero Based]", ColumnMontageLimits, FilterParameter::Parameter, ImportZenInfoMontage));
-  parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage Row Start/End [Inclusive, Zero Based]", RowMontageLimits, FilterParameter::Parameter, ImportZenInfoMontage));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Name of Created Montage", MontageName, FilterParameter::Category::Parameter, ImportZenInfoMontage));
+  parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage Column Start/End [Inclusive, Zero Based]", ColumnMontageLimits, FilterParameter::Category::Parameter, ImportZenInfoMontage));
+  parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage Row Start/End [Inclusive, Zero Based]", RowMontageLimits, FilterParameter::Category::Parameter, ImportZenInfoMontage));
   QVector<QString> choices = IGeometry::GetAllLengthUnitStrings();
-  parameters.push_back(SIMPL_NEW_CHOICE_FP("Length Unit", LengthUnit, FilterParameter::Parameter, ImportZenInfoMontage, choices, false));
+  parameters.push_back(SIMPL_NEW_CHOICE_FP("Length Unit", LengthUnit, FilterParameter::Category::Parameter, ImportZenInfoMontage, choices, false));
 
-  PreflightUpdatedValueFilterParameter::Pointer param = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Montage Information", MontageInformation, FilterParameter::Parameter, ImportZenInfoMontage);
+  PreflightUpdatedValueFilterParameter::Pointer param = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Montage Information", MontageInformation, FilterParameter::Category::Parameter, ImportZenInfoMontage);
   param->setReadOnly(true);
   parameters.push_back(param);
 
   QStringList linkedProps("Origin");
-  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Change Origin", ChangeOrigin, FilterParameter::Parameter, ImportZenInfoMontage, linkedProps));
-  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Origin", Origin, FilterParameter::Parameter, ImportZenInfoMontage));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Change Origin", ChangeOrigin, FilterParameter::Category::Parameter, ImportZenInfoMontage, linkedProps));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Origin", Origin, FilterParameter::Category::Parameter, ImportZenInfoMontage));
 
   // Changing the Spacing makes NO sense because the origins in the XML file are in Pixel Coordinates so the spacing MUST be 1.0
   //  linkedProps.clear();
   //  linkedProps << "Spacing";
-  //  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Change Spacing", ChangeSpacing, FilterParameter::Parameter, ImportZenInfoMontage, linkedProps));
-  //  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Spacing", Spacing, FilterParameter::Parameter, ImportZenInfoMontage));
+  //  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Change Spacing", ChangeSpacing, FilterParameter::Category::Parameter, ImportZenInfoMontage, linkedProps));
+  //  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Spacing", Spacing, FilterParameter::Category::Parameter, ImportZenInfoMontage));
 
   linkedProps.clear();
   linkedProps << "ColorWeights";
-  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Convert To GrayScale", ConvertToGrayScale, FilterParameter::Parameter, ImportZenInfoMontage, linkedProps));
-  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Color Weighting", ColorWeights, FilterParameter::Parameter, ImportZenInfoMontage));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Convert To GrayScale", ConvertToGrayScale, FilterParameter::Category::Parameter, ImportZenInfoMontage, linkedProps));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Color Weighting", ColorWeights, FilterParameter::Category::Parameter, ImportZenInfoMontage));
 
-  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("DataContainer Prefix", DataContainerPath, FilterParameter::CreatedArray, ImportZenInfoMontage));
-  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Cell Attribute Matrix Name", CellAttributeMatrixName, DataContainerPath, FilterParameter::CreatedArray, ImportZenInfoMontage));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Image DataArray Name", ImageDataArrayName, FilterParameter::CreatedArray, ImportZenInfoMontage));
+  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("DataContainer Prefix", DataContainerPath, FilterParameter::Category::CreatedArray, ImportZenInfoMontage));
+  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Cell Attribute Matrix Name", CellAttributeMatrixName, DataContainerPath, FilterParameter::Category::CreatedArray, ImportZenInfoMontage));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Image DataArray Name", ImageDataArrayName, FilterParameter::Category::CreatedArray, ImportZenInfoMontage));
 
   setFilterParameters(parameters);
 }

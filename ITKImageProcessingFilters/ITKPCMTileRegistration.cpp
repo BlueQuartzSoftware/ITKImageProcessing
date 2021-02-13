@@ -186,15 +186,15 @@ void ITKPCMTileRegistration::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
 
-  parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage Column Start/End [Inclusive, Zero Based]", ColumnMontageLimits, FilterParameter::Parameter, ITKPCMTileRegistration));
-  parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage Row Start/End [Inclusive, Zero Based]", RowMontageLimits, FilterParameter::Parameter, ITKPCMTileRegistration));
+  parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage Column Start/End [Inclusive, Zero Based]", ColumnMontageLimits, FilterParameter::Category::Parameter, ITKPCMTileRegistration));
+  parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage Row Start/End [Inclusive, Zero Based]", RowMontageLimits, FilterParameter::Category::Parameter, ITKPCMTileRegistration));
 
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Padding Digits for DataContainer Names", DataContainerPaddingDigits, FilterParameter::Category::Parameter, ITKPCMTileRegistration));
 
-  parameters.push_back(SIMPL_NEW_STRING_FP("Data Container Prefix", DataContainerPrefix, FilterParameter::RequiredArray, ITKPCMTileRegistration));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Data Container Prefix", DataContainerPrefix, FilterParameter::Category::RequiredArray, ITKPCMTileRegistration));
 
-  parameters.push_back(SIMPL_NEW_STRING_FP("Common Attribute Matrix", CommonAttributeMatrixName, FilterParameter::RequiredArray, ITKPCMTileRegistration));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Common Data Array", CommonDataArrayName, FilterParameter::RequiredArray, ITKPCMTileRegistration));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Common Attribute Matrix", CommonAttributeMatrixName, FilterParameter::Category::RequiredArray, ITKPCMTileRegistration));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Common Data Array", CommonDataArrayName, FilterParameter::Category::RequiredArray, ITKPCMTileRegistration));
 
   setFilterParameters(parameters);
 }

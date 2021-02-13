@@ -56,8 +56,8 @@ void ITKRefineTileCoordinates::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
 
-  parameters.push_back(SeparatorFilterParameter::New("Mosaic Layout", FilterParameter::RequiredArray));
-  parameters.push_back(SIMPL_NEW_INT_VEC3_FP("Montage Size (Cols, Rows)", MontageSize, FilterParameter::Parameter, ITKRefineTileCoordinates));
+  parameters.push_back(SeparatorFilterParameter::New("Mosaic Layout", FilterParameter::Category::RequiredArray));
+  parameters.push_back(SIMPL_NEW_INT_VEC3_FP("Montage Size (Cols, Rows)", MontageSize, FilterParameter::Category::Parameter, ITKRefineTileCoordinates));
   {
     LinkedChoicesFilterParameter::Pointer parameter = LinkedChoicesFilterParameter::New();
     parameter->setHumanLabel("Import Mode");
@@ -73,29 +73,29 @@ void ITKRefineTileCoordinates::setupFilterParameters()
     QStringList linkedProps;
     parameter->setLinkedProperties(linkedProps);
     parameter->setEditable(false);
-    parameter->setCategory(FilterParameter::Parameter);
+    parameter->setCategory(FilterParameter::Category::Parameter);
     parameters.push_back(parameter);
   }
 
-  parameters.push_back(SIMPL_NEW_FLOAT_FP("Tile Overlap (Percent)", TileOverlap, FilterParameter::RequiredArray, ITKRefineTileCoordinates));
-  parameters.push_back(SIMPL_NEW_BOOL_FP("Apply Refined Origin to Geometries", ApplyRefinedOrigin, FilterParameter::Parameter, ITKRefineTileCoordinates));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("Tile Overlap (Percent)", TileOverlap, FilterParameter::Category::RequiredArray, ITKRefineTileCoordinates));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Apply Refined Origin to Geometries", ApplyRefinedOrigin, FilterParameter::Category::Parameter, ITKRefineTileCoordinates));
 
   MultiDataContainerSelectionFilterParameter::RequirementType req;
   req.dcGeometryTypes.push_back(IGeometry::Type::Image);
   req.dcGeometryTypes.push_back(IGeometry::Type::RectGrid);
-  parameters.push_back(SeparatorFilterParameter::New("Input Image Setup", FilterParameter::RequiredArray));
-  parameters.push_back(SIMPL_NEW_MDC_SELECTION_FP("Select Image Data Containers", DataContainers, FilterParameter::Parameter, ITKRefineTileCoordinates, req));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Common Attribute Matrix", CommonAttributeMatrixName, FilterParameter::RequiredArray, ITKRefineTileCoordinates));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Common Data Array", CommonDataArrayName, FilterParameter::RequiredArray, ITKRefineTileCoordinates));
+  parameters.push_back(SeparatorFilterParameter::New("Input Image Setup", FilterParameter::Category::RequiredArray));
+  parameters.push_back(SIMPL_NEW_MDC_SELECTION_FP("Select Image Data Containers", DataContainers, FilterParameter::Category::Parameter, ITKRefineTileCoordinates, req));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Common Attribute Matrix", CommonAttributeMatrixName, FilterParameter::Category::RequiredArray, ITKRefineTileCoordinates));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Common Data Array", CommonDataArrayName, FilterParameter::Category::RequiredArray, ITKRefineTileCoordinates));
 
-  // parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
+  // parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::Category::CreatedArray));
   //  parameters.push_back( SIMPL_NEW_AM_WITH_LINKED_DC_FP("Stitched Attribute Matrix", TileCalculatedInfoAttributeMatrixName, AttributeMatrixName,
-  //                                     FilterParameter::CreatedArray, ITKRefineTileCoordinates));
+  //                                     FilterParameter::Category::CreatedArray, ITKRefineTileCoordinates));
   //  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Stitched Coordinates", StitchedCoordinatesArrayName, AttributeMatrixName,
-  //                                                      TileCalculatedInfoAttributeMatrixName, FilterParameter::CreatedArray,
+  //                                                      TileCalculatedInfoAttributeMatrixName, FilterParameter::Category::CreatedArray,
   //                                                      ITKRefineTileCoordinates));
   //  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Stitched Coordinates Names", StitchedArrayNames, AttributeMatrixName,
-  //                                                      TileCalculatedInfoAttributeMatrixName, FilterParameter::CreatedArray,
+  //                                                      TileCalculatedInfoAttributeMatrixName, FilterParameter::Category::CreatedArray,
   //                                                      ITKRefineTileCoordinates));
 
   setFilterParameters(parameters);

@@ -189,39 +189,39 @@ void ITKImportRoboMetMontage::initialize()
 void ITKImportRoboMetMontage::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
-  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Registration File (Mosaic Details)", InputFile, FilterParameter::Parameter, ITKImportRoboMetMontage, "", "*.txt"));
+  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Registration File (Mosaic Details)", InputFile, FilterParameter::Category::Parameter, ITKImportRoboMetMontage, "", "*.txt"));
 
-  parameters.push_back(SIMPL_NEW_STRING_FP("Name of Created Montage", MontageName, FilterParameter::Parameter, ITKImportRoboMetMontage));
-  parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage Column Start/End [Inclusive, Zero Based]", ColumnMontageLimits, FilterParameter::Parameter, ITKImportRoboMetMontage));
-  parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage Row Start/End [Inclusive, Zero Based]", RowMontageLimits, FilterParameter::Parameter, ITKImportRoboMetMontage));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Name of Created Montage", MontageName, FilterParameter::Category::Parameter, ITKImportRoboMetMontage));
+  parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage Column Start/End [Inclusive, Zero Based]", ColumnMontageLimits, FilterParameter::Category::Parameter, ITKImportRoboMetMontage));
+  parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage Row Start/End [Inclusive, Zero Based]", RowMontageLimits, FilterParameter::Category::Parameter, ITKImportRoboMetMontage));
   QVector<QString> choices = IGeometry::GetAllLengthUnitStrings();
-  parameters.push_back(SIMPL_NEW_CHOICE_FP("Length Unit", LengthUnit, FilterParameter::Parameter, ITKImportRoboMetMontage, choices, false));
+  parameters.push_back(SIMPL_NEW_CHOICE_FP("Length Unit", LengthUnit, FilterParameter::Category::Parameter, ITKImportRoboMetMontage, choices, false));
 
-  PreflightUpdatedValueFilterParameter::Pointer param = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Montage Information", MontageInformation, FilterParameter::Parameter, ITKImportRoboMetMontage);
+  PreflightUpdatedValueFilterParameter::Pointer param = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Montage Information", MontageInformation, FilterParameter::Category::Parameter, ITKImportRoboMetMontage);
   param->setReadOnly(true);
   parameters.push_back(param);
 
-  parameters.push_back(SIMPL_NEW_INTEGER_FP("Slice Number", SliceNumber, FilterParameter::Parameter, ITKImportRoboMetMontage));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Image File Prefix", ImageFilePrefix, FilterParameter::Parameter, ITKImportRoboMetMontage));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Image File Extension", ImageFileExtension, FilterParameter::Parameter, ITKImportRoboMetMontage));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Slice Number", SliceNumber, FilterParameter::Category::Parameter, ITKImportRoboMetMontage));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Image File Prefix", ImageFilePrefix, FilterParameter::Category::Parameter, ITKImportRoboMetMontage));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Image File Extension", ImageFileExtension, FilterParameter::Category::Parameter, ITKImportRoboMetMontage));
 
   QStringList linkedProps("Origin");
-  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Change Origin", ChangeOrigin, FilterParameter::Parameter, ITKImportRoboMetMontage, linkedProps));
-  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Origin", Origin, FilterParameter::Parameter, ITKImportRoboMetMontage));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Change Origin", ChangeOrigin, FilterParameter::Category::Parameter, ITKImportRoboMetMontage, linkedProps));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Origin", Origin, FilterParameter::Category::Parameter, ITKImportRoboMetMontage));
 
   linkedProps.clear();
   linkedProps << "Spacing";
-  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Change Spacing", ChangeSpacing, FilterParameter::Parameter, ITKImportRoboMetMontage, linkedProps));
-  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Spacing", Spacing, FilterParameter::Parameter, ITKImportRoboMetMontage));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Change Spacing", ChangeSpacing, FilterParameter::Category::Parameter, ITKImportRoboMetMontage, linkedProps));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Spacing", Spacing, FilterParameter::Category::Parameter, ITKImportRoboMetMontage));
 
   linkedProps.clear();
   linkedProps << "ColorWeights";
-  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Convert To GrayScale", ConvertToGrayScale, FilterParameter::Parameter, ITKImportRoboMetMontage, linkedProps));
-  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Color Weighting", ColorWeights, FilterParameter::Parameter, ITKImportRoboMetMontage));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Convert To GrayScale", ConvertToGrayScale, FilterParameter::Category::Parameter, ITKImportRoboMetMontage, linkedProps));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Color Weighting", ColorWeights, FilterParameter::Category::Parameter, ITKImportRoboMetMontage));
 
-  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("DataContainer Prefix", DataContainerPath, FilterParameter::CreatedArray, ITKImportRoboMetMontage));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Cell Attribute Matrix Name", CellAttributeMatrixName, FilterParameter::CreatedArray, ITKImportRoboMetMontage));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Image DataArray Name", ImageDataArrayName, FilterParameter::CreatedArray, ITKImportRoboMetMontage));
+  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("DataContainer Prefix", DataContainerPath, FilterParameter::Category::CreatedArray, ITKImportRoboMetMontage));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Cell Attribute Matrix Name", CellAttributeMatrixName, FilterParameter::Category::CreatedArray, ITKImportRoboMetMontage));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Image DataArray Name", ImageDataArrayName, FilterParameter::Category::CreatedArray, ITKImportRoboMetMontage));
 
   setFilterParameters(parameters);
 }

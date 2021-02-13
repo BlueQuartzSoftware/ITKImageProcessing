@@ -51,26 +51,26 @@ void ITKMultiScaleHessianBasedObjectnessImage::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
 
-  parameters.push_back(SIMPL_NEW_INTEGER_FP("ObjectDimension", ObjectDimension, FilterParameter::Parameter, ITKMultiScaleHessianBasedObjectnessImage));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Alpha", Alpha, FilterParameter::Parameter, ITKMultiScaleHessianBasedObjectnessImage));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Beta", Beta, FilterParameter::Parameter, ITKMultiScaleHessianBasedObjectnessImage));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Gamma", Gamma, FilterParameter::Parameter, ITKMultiScaleHessianBasedObjectnessImage));
-  parameters.push_back(SIMPL_NEW_BOOL_FP("BrightObject", BrightObject, FilterParameter::Parameter, ITKMultiScaleHessianBasedObjectnessImage));
-  parameters.push_back(SIMPL_NEW_BOOL_FP("ScaleObjectnessMeasure", ScaleObjectnessMeasure, FilterParameter::Parameter, ITKMultiScaleHessianBasedObjectnessImage));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("SigmaMinimum", SigmaMinimum, FilterParameter::Parameter, ITKMultiScaleHessianBasedObjectnessImage));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("SigmaMaximum", SigmaMaximum, FilterParameter::Parameter, ITKMultiScaleHessianBasedObjectnessImage));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("NumberOfSigmaSteps", NumberOfSigmaSteps, FilterParameter::Parameter, ITKMultiScaleHessianBasedObjectnessImage));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("ObjectDimension", ObjectDimension, FilterParameter::Category::Parameter, ITKMultiScaleHessianBasedObjectnessImage));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Alpha", Alpha, FilterParameter::Category::Parameter, ITKMultiScaleHessianBasedObjectnessImage));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Beta", Beta, FilterParameter::Category::Parameter, ITKMultiScaleHessianBasedObjectnessImage));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Gamma", Gamma, FilterParameter::Category::Parameter, ITKMultiScaleHessianBasedObjectnessImage));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("BrightObject", BrightObject, FilterParameter::Category::Parameter, ITKMultiScaleHessianBasedObjectnessImage));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("ScaleObjectnessMeasure", ScaleObjectnessMeasure, FilterParameter::Category::Parameter, ITKMultiScaleHessianBasedObjectnessImage));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("SigmaMinimum", SigmaMinimum, FilterParameter::Category::Parameter, ITKMultiScaleHessianBasedObjectnessImage));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("SigmaMaximum", SigmaMaximum, FilterParameter::Category::Parameter, ITKMultiScaleHessianBasedObjectnessImage));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("NumberOfSigmaSteps", NumberOfSigmaSteps, FilterParameter::Category::Parameter, ITKMultiScaleHessianBasedObjectnessImage));
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
-  parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
+  parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::Category::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
         DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Attribute Array to filter", SelectedCellArrayPath, FilterParameter::RequiredArray, ITKMultiScaleHessianBasedObjectnessImage, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Attribute Array to filter", SelectedCellArrayPath, FilterParameter::Category::RequiredArray, ITKMultiScaleHessianBasedObjectnessImage, req));
   }
-  parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Filtered Array", NewCellArrayName, FilterParameter::CreatedArray, ITKMultiScaleHessianBasedObjectnessImage));
+  parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::Category::CreatedArray));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Filtered Array", NewCellArrayName, FilterParameter::Category::CreatedArray, ITKMultiScaleHessianBasedObjectnessImage));
 
   setFilterParameters(parameters);
 }

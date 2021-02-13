@@ -42,24 +42,24 @@ void ITKDoubleThresholdImage::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
 
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Threshold1", Threshold1, FilterParameter::Parameter, ITKDoubleThresholdImage));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Threshold2", Threshold2, FilterParameter::Parameter, ITKDoubleThresholdImage));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Threshold3", Threshold3, FilterParameter::Parameter, ITKDoubleThresholdImage));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Threshold4", Threshold4, FilterParameter::Parameter, ITKDoubleThresholdImage));
-  parameters.push_back(SIMPL_NEW_INTEGER_FP("InsideValue", InsideValue, FilterParameter::Parameter, ITKDoubleThresholdImage));
-  parameters.push_back(SIMPL_NEW_INTEGER_FP("OutsideValue", OutsideValue, FilterParameter::Parameter, ITKDoubleThresholdImage));
-  parameters.push_back(SIMPL_NEW_BOOL_FP("FullyConnected", FullyConnected, FilterParameter::Parameter, ITKDoubleThresholdImage));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Threshold1", Threshold1, FilterParameter::Category::Parameter, ITKDoubleThresholdImage));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Threshold2", Threshold2, FilterParameter::Category::Parameter, ITKDoubleThresholdImage));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Threshold3", Threshold3, FilterParameter::Category::Parameter, ITKDoubleThresholdImage));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("Threshold4", Threshold4, FilterParameter::Category::Parameter, ITKDoubleThresholdImage));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("InsideValue", InsideValue, FilterParameter::Category::Parameter, ITKDoubleThresholdImage));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("OutsideValue", OutsideValue, FilterParameter::Category::Parameter, ITKDoubleThresholdImage));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("FullyConnected", FullyConnected, FilterParameter::Category::Parameter, ITKDoubleThresholdImage));
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
-  parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
+  parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::Category::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
         DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Attribute Array to filter", SelectedCellArrayPath, FilterParameter::RequiredArray, ITKDoubleThresholdImage, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Attribute Array to filter", SelectedCellArrayPath, FilterParameter::Category::RequiredArray, ITKDoubleThresholdImage, req));
   }
-  parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Filtered Array", NewCellArrayName, FilterParameter::CreatedArray, ITKDoubleThresholdImage));
+  parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::Category::CreatedArray));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Filtered Array", NewCellArrayName, FilterParameter::Category::CreatedArray, ITKDoubleThresholdImage));
 
   setFilterParameters(parameters);
 }

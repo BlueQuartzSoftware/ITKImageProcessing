@@ -40,21 +40,21 @@ void ITKDiscreteGaussianImage::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
 
-  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Variance", Variance, FilterParameter::Parameter, ITKDiscreteGaussianImage));
-  parameters.push_back(SIMPL_NEW_INTEGER_FP("MaximumKernelWidth", MaximumKernelWidth, FilterParameter::Parameter, ITKDiscreteGaussianImage));
-  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("MaximumError", MaximumError, FilterParameter::Parameter, ITKDiscreteGaussianImage));
-  parameters.push_back(SIMPL_NEW_BOOL_FP("UseImageSpacing", UseImageSpacing, FilterParameter::Parameter, ITKDiscreteGaussianImage));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Variance", Variance, FilterParameter::Category::Parameter, ITKDiscreteGaussianImage));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("MaximumKernelWidth", MaximumKernelWidth, FilterParameter::Category::Parameter, ITKDiscreteGaussianImage));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("MaximumError", MaximumError, FilterParameter::Category::Parameter, ITKDiscreteGaussianImage));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("UseImageSpacing", UseImageSpacing, FilterParameter::Category::Parameter, ITKDiscreteGaussianImage));
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
-  parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
+  parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::Category::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
         DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Attribute Array to filter", SelectedCellArrayPath, FilterParameter::RequiredArray, ITKDiscreteGaussianImage, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Attribute Array to filter", SelectedCellArrayPath, FilterParameter::Category::RequiredArray, ITKDiscreteGaussianImage, req));
   }
-  parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Filtered Array", NewCellArrayName, FilterParameter::CreatedArray, ITKDiscreteGaussianImage));
+  parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::Category::CreatedArray));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Filtered Array", NewCellArrayName, FilterParameter::Category::CreatedArray, ITKDiscreteGaussianImage));
 
   setFilterParameters(parameters);
 }

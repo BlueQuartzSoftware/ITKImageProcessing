@@ -285,8 +285,8 @@ void ApplyDewarpParameters::setupFilterParameters()
 
   parameters.push_back(SIMPL_NEW_MONTAGE_STRUCTURE_SELECTION_FP("Montage Name", MontageName, FilterParameter::Category::Parameter, ApplyDewarpParameters));
 
-  // parameters.push_back(SIMPL_NEW_EBSDWARPPOLYNOMIAL_FP("X Factors", XFactors, FilterParameter::Parameter, ApplyDewarpParameters));
-  // parameters.push_back(SIMPL_NEW_EBSDWARPPOLYNOMIAL_FP("Y Factors", YFactors, FilterParameter::Parameter, ApplyDewarpParameters));
+  // parameters.push_back(SIMPL_NEW_EBSDWARPPOLYNOMIAL_FP("X Factors", XFactors, FilterParameter::Category::Parameter, ApplyDewarpParameters));
+  // parameters.push_back(SIMPL_NEW_EBSDWARPPOLYNOMIAL_FP("Y Factors", YFactors, FilterParameter::Category::Parameter, ApplyDewarpParameters));
 
   parameters.push_back(SIMPL_NEW_STRING_FP("Attribute Matrix Name", AttributeMatrixName, FilterParameter::Category::Parameter, ApplyDewarpParameters));
   DataArraySelectionFilterParameter::RequirementType req;

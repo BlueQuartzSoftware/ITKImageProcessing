@@ -62,33 +62,34 @@ void ITKPatchBasedDenoisingImage::setupFilterParameters()
     choices.push_back("Rician");
     choices.push_back("Poisson");
     parameter->setChoices(choices);
-    parameter->setCategory(FilterParameter::Parameter);
+    parameter->setCategory(FilterParameter::Category::Parameter);
     parameters.push_back(parameter);
   }
 
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("KernelBandwidthSigma", KernelBandwidthSigma, FilterParameter::Parameter, ITKPatchBasedDenoisingImage));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("PatchRadius", PatchRadius, FilterParameter::Parameter, ITKPatchBasedDenoisingImage));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("NumberOfIterations", NumberOfIterations, FilterParameter::Parameter, ITKPatchBasedDenoisingImage));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("NumberOfSamplePatches", NumberOfSamplePatches, FilterParameter::Parameter, ITKPatchBasedDenoisingImage));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("SampleVariance", SampleVariance, FilterParameter::Parameter, ITKPatchBasedDenoisingImage));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("NoiseSigma", NoiseSigma, FilterParameter::Parameter, ITKPatchBasedDenoisingImage));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("NoiseModelFidelityWeight", NoiseModelFidelityWeight, FilterParameter::Parameter, ITKPatchBasedDenoisingImage));
-  parameters.push_back(SIMPL_NEW_BOOL_FP("AlwaysTreatComponentsAsEuclidean", AlwaysTreatComponentsAsEuclidean, FilterParameter::Parameter, ITKPatchBasedDenoisingImage));
-  parameters.push_back(SIMPL_NEW_BOOL_FP("KernelBandwidthEstimation", KernelBandwidthEstimation, FilterParameter::Parameter, ITKPatchBasedDenoisingImage));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("KernelBandwidthMultiplicationFactor", KernelBandwidthMultiplicationFactor, FilterParameter::Parameter, ITKPatchBasedDenoisingImage));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("KernelBandwidthUpdateFrequency", KernelBandwidthUpdateFrequency, FilterParameter::Parameter, ITKPatchBasedDenoisingImage));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("KernelBandwidthFractionPixelsForEstimation", KernelBandwidthFractionPixelsForEstimation, FilterParameter::Parameter, ITKPatchBasedDenoisingImage));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("KernelBandwidthSigma", KernelBandwidthSigma, FilterParameter::Category::Parameter, ITKPatchBasedDenoisingImage));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("PatchRadius", PatchRadius, FilterParameter::Category::Parameter, ITKPatchBasedDenoisingImage));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("NumberOfIterations", NumberOfIterations, FilterParameter::Category::Parameter, ITKPatchBasedDenoisingImage));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("NumberOfSamplePatches", NumberOfSamplePatches, FilterParameter::Category::Parameter, ITKPatchBasedDenoisingImage));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("SampleVariance", SampleVariance, FilterParameter::Category::Parameter, ITKPatchBasedDenoisingImage));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("NoiseSigma", NoiseSigma, FilterParameter::Category::Parameter, ITKPatchBasedDenoisingImage));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("NoiseModelFidelityWeight", NoiseModelFidelityWeight, FilterParameter::Category::Parameter, ITKPatchBasedDenoisingImage));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("AlwaysTreatComponentsAsEuclidean", AlwaysTreatComponentsAsEuclidean, FilterParameter::Category::Parameter, ITKPatchBasedDenoisingImage));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("KernelBandwidthEstimation", KernelBandwidthEstimation, FilterParameter::Category::Parameter, ITKPatchBasedDenoisingImage));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("KernelBandwidthMultiplicationFactor", KernelBandwidthMultiplicationFactor, FilterParameter::Category::Parameter, ITKPatchBasedDenoisingImage));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("KernelBandwidthUpdateFrequency", KernelBandwidthUpdateFrequency, FilterParameter::Category::Parameter, ITKPatchBasedDenoisingImage));
+  parameters.push_back(
+      SIMPL_NEW_DOUBLE_FP("KernelBandwidthFractionPixelsForEstimation", KernelBandwidthFractionPixelsForEstimation, FilterParameter::Category::Parameter, ITKPatchBasedDenoisingImage));
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
-  parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
+  parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::Category::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
         DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Attribute Array to filter", SelectedCellArrayPath, FilterParameter::RequiredArray, ITKPatchBasedDenoisingImage, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Attribute Array to filter", SelectedCellArrayPath, FilterParameter::Category::RequiredArray, ITKPatchBasedDenoisingImage, req));
   }
-  parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Filtered Array", NewCellArrayName, FilterParameter::CreatedArray, ITKPatchBasedDenoisingImage));
+  parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::Category::CreatedArray));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Filtered Array", NewCellArrayName, FilterParameter::Category::CreatedArray, ITKPatchBasedDenoisingImage));
 
   setFilterParameters(parameters);
 }
