@@ -143,7 +143,7 @@ void ITKImageWriter::setupFilterParameters()
   QString supportedExtensions = ITKImageProcessingPlugin::getListSupportedWriteExtensions();
   parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Output File", FileName, FilterParameter::Category::Parameter, ITKImageWriter, supportedExtensions));
 
-  parameters.push_back(SeparatorFilterParameter::New("Image Data", FilterParameter::Category::RequiredArray));
+  parameters.push_back(SeparatorFilterParameter::Create("Image Data", FilterParameter::Category::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
         DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize, AttributeMatrix::Type::Cell, IGeometry::Type::Image);

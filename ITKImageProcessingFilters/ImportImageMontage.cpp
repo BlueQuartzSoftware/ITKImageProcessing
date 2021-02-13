@@ -85,7 +85,7 @@ void ImportImageMontage::setupFilterParameters()
 
   parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container", DataContainerName, FilterParameter::Category::CreatedArray, ImportImageMontage));
 
-  parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::Category::CreatedArray));
+  parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::CreatedArray));
 
   parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Cell Attribute Matrix", CellAttributeMatrixName, DataContainerName, FilterParameter::Category::CreatedArray, ImportImageMontage));
   parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Meta Data Attribute Matrix", MetaDataAttributeMatrixName, DataContainerName, FilterParameter::Category::CreatedArray, ImportImageMontage));

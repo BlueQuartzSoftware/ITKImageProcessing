@@ -106,7 +106,7 @@ void ITKImportImageStack::setupFilterParameters()
   parameters.back()->setLegacyPropertyName("Resolution");
 
   parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container", DataContainerName, FilterParameter::Category::CreatedArray, ITKImportImageStack));
-  parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::Category::CreatedArray));
+  parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::CreatedArray));
   parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Cell Attribute Matrix", CellAttributeMatrixName, DataContainerName, FilterParameter::Category::CreatedArray, ITKImportImageStack));
   parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Image Data", ImageDataArrayName, DataContainerName, CellAttributeMatrixName, FilterParameter::Category::CreatedArray, ITKImportImageStack));
   setFilterParameters(parameters);

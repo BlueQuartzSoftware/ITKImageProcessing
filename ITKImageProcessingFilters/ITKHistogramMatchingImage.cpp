@@ -42,7 +42,7 @@ void ITKHistogramMatchingImage::setupFilterParameters()
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
-  parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::Category::RequiredArray));
+  parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize,
                                                                                                                   // Source image
@@ -51,7 +51,7 @@ void ITKHistogramMatchingImage::setupFilterParameters()
     // Reference image
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Reference Attribute Array to filter", ReferenceCellArrayPath, FilterParameter::Category::RequiredArray, ITKHistogramMatchingImage, req));
   }
-  parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::Category::CreatedArray));
+  parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::CreatedArray));
   parameters.push_back(SIMPL_NEW_STRING_FP("Filtered Array", NewCellArrayName, FilterParameter::Category::CreatedArray, ITKHistogramMatchingImage));
 
   setFilterParameters(parameters);

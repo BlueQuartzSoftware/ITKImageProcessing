@@ -166,7 +166,7 @@ void ITKImageReader::setupFilterParameters()
   QString supportedExtensions = ITKImageProcessingPlugin::getListSupportedReadExtensions();
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("File", FileName, FilterParameter::Category::Parameter, ITKImageReader, supportedExtensions, "Image"));
   parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container", DataContainerName, FilterParameter::Category::CreatedArray, ITKImageReader));
-  parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::Category::CreatedArray));
+  parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::CreatedArray));
   parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Cell Attribute Matrix", CellAttributeMatrixName, DataContainerName, FilterParameter::Category::CreatedArray, ITKImageReader));
   parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Image Data", ImageDataArrayName, DataContainerName, CellAttributeMatrixName, FilterParameter::Category::CreatedArray, ITKImageReader));
   setFilterParameters(parameters);

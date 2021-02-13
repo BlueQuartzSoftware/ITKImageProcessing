@@ -361,7 +361,7 @@ void IlluminationCorrection::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_STRING_FP("Input Image Array Name", ImageDataArrayName, FilterParameter::Category::RequiredArray, IlluminationCorrection));
   parameters.push_back(SIMPL_NEW_STRING_FP(::k_OutputProcessedImageLabel, CorrectedImageDataArrayName, FilterParameter::Category::CreatedArray, IlluminationCorrection));
 
-  parameters.push_back(SeparatorFilterParameter::New("Created Background Image Name", FilterParameter::Category::CreatedArray));
+  parameters.push_back(SeparatorFilterParameter::Create("Created Background Image Name", FilterParameter::Category::CreatedArray));
 
   parameters.push_back(SIMPL_NEW_DC_CREATION_FP(::k_BackgroundDataContainerLabel, BackgroundDataContainerPath, FilterParameter::Category::CreatedArray, IlluminationCorrection));
   AttributeMatrixCreationFilterParameter::RequirementType cellAmReq;
@@ -380,13 +380,13 @@ void IlluminationCorrection::setupFilterParameters()
 
   QStringList linkedProps;
 
-  parameters.push_back(SeparatorFilterParameter::New("Background Image Processing", FilterParameter::Category::Parameter));
+  parameters.push_back(SeparatorFilterParameter::Create("Background Image Processing", FilterParameter::Category::Parameter));
   linkedProps.clear();
   linkedProps << "MedianRadius";
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Apply median filter to background image", ApplyMedianFilter, FilterParameter::Category::Parameter, IlluminationCorrection, linkedProps));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("MedianRadius", MedianRadius, FilterParameter::Category::Parameter, IlluminationCorrection));
 
-  parameters.push_back(SeparatorFilterParameter::New("Process Input Images", FilterParameter::Category::Parameter));
+  parameters.push_back(SeparatorFilterParameter::Create("Process Input Images", FilterParameter::Category::Parameter));
   linkedProps.clear();
   linkedProps << "CorrectedImageDataArrayName"
               << "ExportCorrectedImages";

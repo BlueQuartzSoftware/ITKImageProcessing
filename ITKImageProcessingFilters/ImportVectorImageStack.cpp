@@ -106,7 +106,7 @@ void ImportVectorImageStack::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_BOOL_FP("Convert Color To Grayscale", ConvertToGrayscale, FilterParameter::Category::Parameter, ImportVectorImageStack));
 
   parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container Name", DataContainerName, FilterParameter::Category::CreatedArray, ImportVectorImageStack));
-  parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::Category::CreatedArray));
+  parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::CreatedArray));
 
   parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Cell Attribute Matrix Name", CellAttributeMatrixName, DataContainerName, FilterParameter::Category::CreatedArray, ImportVectorImageStack));
   parameters.push_back(

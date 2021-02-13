@@ -56,7 +56,7 @@ void ITKRefineTileCoordinates::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
 
-  parameters.push_back(SeparatorFilterParameter::New("Mosaic Layout", FilterParameter::Category::RequiredArray));
+  parameters.push_back(SeparatorFilterParameter::Create("Mosaic Layout", FilterParameter::Category::RequiredArray));
   parameters.push_back(SIMPL_NEW_INT_VEC3_FP("Montage Size (Cols, Rows)", MontageSize, FilterParameter::Category::Parameter, ITKRefineTileCoordinates));
   {
     LinkedChoicesFilterParameter::Pointer parameter = LinkedChoicesFilterParameter::New();
@@ -83,12 +83,12 @@ void ITKRefineTileCoordinates::setupFilterParameters()
   MultiDataContainerSelectionFilterParameter::RequirementType req;
   req.dcGeometryTypes.push_back(IGeometry::Type::Image);
   req.dcGeometryTypes.push_back(IGeometry::Type::RectGrid);
-  parameters.push_back(SeparatorFilterParameter::New("Input Image Setup", FilterParameter::Category::RequiredArray));
+  parameters.push_back(SeparatorFilterParameter::Create("Input Image Setup", FilterParameter::Category::RequiredArray));
   parameters.push_back(SIMPL_NEW_MDC_SELECTION_FP("Select Image Data Containers", DataContainers, FilterParameter::Category::Parameter, ITKRefineTileCoordinates, req));
   parameters.push_back(SIMPL_NEW_STRING_FP("Common Attribute Matrix", CommonAttributeMatrixName, FilterParameter::Category::RequiredArray, ITKRefineTileCoordinates));
   parameters.push_back(SIMPL_NEW_STRING_FP("Common Data Array", CommonDataArrayName, FilterParameter::Category::RequiredArray, ITKRefineTileCoordinates));
 
-  // parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::Category::CreatedArray));
+  // parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::CreatedArray));
   //  parameters.push_back( SIMPL_NEW_AM_WITH_LINKED_DC_FP("Stitched Attribute Matrix", TileCalculatedInfoAttributeMatrixName, AttributeMatrixName,
   //                                     FilterParameter::Category::CreatedArray, ITKRefineTileCoordinates));
   //  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Stitched Coordinates", StitchedCoordinatesArrayName, AttributeMatrixName,
