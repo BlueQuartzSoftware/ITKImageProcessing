@@ -287,7 +287,7 @@ void ImportVectorImageStackWidget::getGuiParametersFromFilter()
 {
   blockSignals(true);
 
-  VectorFileListInfo_t data = getFilter()->property(PROPERTY_NAME_AS_CHAR).value<VectorFileListInfo_t>();
+  VectorFileListInfo_t data = m_FilterParameter->getGetterCallback()();
 
   m_Ui->startComp->setValue(data.StartComponent);
   m_Ui->endComp->setValue(data.EndComponent);
@@ -315,7 +315,7 @@ void ImportVectorImageStackWidget::getGuiParametersFromFilter()
 // -----------------------------------------------------------------------------
 void ImportVectorImageStackWidget::validateInputFile()
 {
-  VectorFileListInfo_t data = getFilter()->property(PROPERTY_NAME_AS_CHAR).value<VectorFileListInfo_t>();
+  VectorFileListInfo_t data = m_FilterParameter->getGetterCallback()();
 
   QString currentPath = data.InputPath;
   QFileInfo fi(currentPath);
@@ -338,12 +338,7 @@ void ImportVectorImageStackWidget::validateInputFile()
 
     data.InputPath = file;
 
-    QVariant v;
-    v.setValue(data);
-    bool ok = getFilter()->setProperty(PROPERTY_NAME_AS_CHAR, v);
-    if(!ok)
-    {
-    }
+    m_FilterParameter->getSetterCallback()(data);
   }
 }
 
@@ -619,13 +614,7 @@ void ImportVectorImageStackWidget::filterNeedsInputParameters(AbstractFilter* fi
   data.EndComponent = m_Ui->endComp->value();
   data.Separator = m_Ui->separator->text();
 
-  QVariant v;
-  v.setValue(data);
-  ok = filter->setProperty(PROPERTY_NAME_AS_CHAR, v);
-  if(!ok)
-  {
-    getFilter()->notifyMissingProperty(getFilterParameter());
-  }
+  m_FilterParameter->getSetterCallback()(data);
 }
 
 // -----------------------------------------------------------------------------

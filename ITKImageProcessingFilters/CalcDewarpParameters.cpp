@@ -169,22 +169,22 @@ void CalcDewarpParameters::setupFilterParameters()
 
   parameters.push_back(SIMPL_NEW_MONTAGE_STRUCTURE_SELECTION_FP("Montage Name", MontageName, FilterParameter::Category::Parameter, CalcDewarpParameters));
 
-  parameters.push_back(SeparatorFilterParameter::New("Amoeba Optimizer", FilterParameter::Parameter));
+  parameters.push_back(SeparatorFilterParameter::Create("Amoeba Optimizer", FilterParameter::Category::Parameter));
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Max Iterations", MaxIterations, FilterParameter::Category::Parameter, CalcDewarpParameters));
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Delta", Delta, FilterParameter::Category::Parameter, CalcDewarpParameters));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Fractional Convergence Tolerance", FractionalTolerance, FilterParameter::Category::Parameter, CalcDewarpParameters));
 
   QStringList linkedSpecifySimplexProps{"XFactors", "YFactors"};
-  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Specify Initial Simplex", SpecifyInitialSimplex, FilterParameter::Parameter, CalcDewarpParameters, linkedSpecifySimplexProps));
-  parameters.push_back(SIMPL_NEW_EBSDWARPPOLYNOMIAL_FP("X Factors", XFactors, FilterParameter::Parameter, CalcDewarpParameters));
-  parameters.push_back(SIMPL_NEW_EBSDWARPPOLYNOMIAL_FP("Y Factors", YFactors, FilterParameter::Parameter, CalcDewarpParameters));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Specify Initial Simplex", SpecifyInitialSimplex, FilterParameter::Category::Parameter, CalcDewarpParameters, linkedSpecifySimplexProps));
+  parameters.push_back(SIMPL_NEW_EBSDWARPPOLYNOMIAL_FP("X Factors", XFactors, FilterParameter::Category::Parameter, CalcDewarpParameters));
+  parameters.push_back(SIMPL_NEW_EBSDWARPPOLYNOMIAL_FP("Y Factors", YFactors, FilterParameter::Category::Parameter, CalcDewarpParameters));
 
-  parameters.push_back(SeparatorFilterParameter::New("Montage Data Path", FilterParameter::Parameter));
+  parameters.push_back(SeparatorFilterParameter::Create("Montage Data Path", FilterParameter::Category::Parameter));
   parameters.push_back(SIMPL_NEW_STRING_FP("Attribute Matrix Name", AttributeMatrixName, FilterParameter::Category::Parameter, CalcDewarpParameters));
   parameters.push_back(SIMPL_NEW_STRING_FP("IPF Colors Array Name", IPFColorsArrayName, FilterParameter::Category::Parameter, CalcDewarpParameters));
 
   // SIMPL_NEW_LINKED_BOOL_FP
-  parameters.push_back(SeparatorFilterParameter::New("Transformation Arrays", FilterParameter::CreatedArray));
+  parameters.push_back(SeparatorFilterParameter::Create("Transformation Arrays", FilterParameter::Category::CreatedArray));
   parameters.push_back(SIMPL_NEW_STRING_FP("Transform Container", TransformDCName, FilterParameter::Category::CreatedArray, CalcDewarpParameters));
   parameters.push_back(SIMPL_NEW_STRING_FP("Transform Matrix", TransformMatrixName, FilterParameter::Category::CreatedArray, CalcDewarpParameters));
   parameters.push_back(SIMPL_NEW_STRING_FP("Transform Array", TransformArrayName, FilterParameter::Category::CreatedArray, CalcDewarpParameters));

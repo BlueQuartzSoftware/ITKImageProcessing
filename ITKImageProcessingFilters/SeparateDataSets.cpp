@@ -77,12 +77,12 @@ void SeparateDataSets::setupFilterParameters()
 
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(AttributeMatrix::Type::Cell, IGeometry::Type::Image);
-    parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Dataset Attribute Matrix", DatasetAMPath, FilterParameter::RequiredArray, SeparateDataSets, req));
+    parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Dataset Attribute Matrix", DatasetAMPath, FilterParameter::Category::RequiredArray, SeparateDataSets, req));
   }
 
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(AttributeMatrix::Type::Generic, IGeometry::Type::Image);
-    parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Metadata Attribute Matrix", MetadataAMPath, FilterParameter::RequiredArray, SeparateDataSets, req));
+    parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Metadata Attribute Matrix", MetadataAMPath, FilterParameter::Category::RequiredArray, SeparateDataSets, req));
   }
 
   setFilterParameters(parameters);

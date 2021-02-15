@@ -76,19 +76,19 @@ ImportImageMontage::~ImportImageMontage() = default;
 void ImportImageMontage::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
-  parameters.push_back(SIMPL_NEW_FILELISTINFO_FP("Input File List", InputFileListInfo, FilterParameter::Parameter, ImportImageMontage));
+  parameters.push_back(SIMPL_NEW_FILELISTINFO_FP("Input File List", InputFileListInfo, FilterParameter::Category::Parameter, ImportImageMontage));
 
-  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Origin", Origin, FilterParameter::Parameter, ImportImageMontage));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Origin", Origin, FilterParameter::Category::Parameter, ImportImageMontage));
 
-  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Spacing", Spacing, FilterParameter::Parameter, ImportImageMontage));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Spacing", Spacing, FilterParameter::Category::Parameter, ImportImageMontage));
   parameters.back()->setLegacyPropertyName("Resolution");
 
-  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container", DataContainerName, FilterParameter::CreatedArray, ImportImageMontage));
+  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container", DataContainerName, FilterParameter::Category::CreatedArray, ImportImageMontage));
 
-  parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
+  parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::CreatedArray));
 
-  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Cell Attribute Matrix", CellAttributeMatrixName, DataContainerName, FilterParameter::CreatedArray, ImportImageMontage));
-  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Meta Data Attribute Matrix", MetaDataAttributeMatrixName, DataContainerName, FilterParameter::CreatedArray, ImportImageMontage));
+  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Cell Attribute Matrix", CellAttributeMatrixName, DataContainerName, FilterParameter::Category::CreatedArray, ImportImageMontage));
+  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Meta Data Attribute Matrix", MetaDataAttributeMatrixName, DataContainerName, FilterParameter::Category::CreatedArray, ImportImageMontage));
 
   setFilterParameters(parameters);
 }

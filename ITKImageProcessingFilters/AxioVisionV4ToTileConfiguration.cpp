@@ -79,8 +79,8 @@ void AxioVisionV4ToTileConfiguration::initialize()
 void AxioVisionV4ToTileConfiguration::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
-  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Input File", InputFile, FilterParameter::Parameter, AxioVisionV4ToTileConfiguration, "*.xml"));
-  parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Output File", OutputFile, FilterParameter::Parameter, AxioVisionV4ToTileConfiguration, ".txt"));
+  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Input File", InputFile, FilterParameter::Category::Parameter, AxioVisionV4ToTileConfiguration, "*.xml"));
+  parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Output File", OutputFile, FilterParameter::Category::Parameter, AxioVisionV4ToTileConfiguration, ".txt"));
   setFilterParameters(parameters);
 }
 

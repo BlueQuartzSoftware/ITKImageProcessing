@@ -98,19 +98,19 @@ void ImportVectorImageStack::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
 
-  parameters.push_back(SIMPL_NEW_VECTORFILELISTINFO_FP("Input File List", InputFileListInfo, FilterParameter::Parameter, ImportVectorImageStack));
-  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Origin", Origin, FilterParameter::Parameter, ImportVectorImageStack));
-  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Spacing", Spacing, FilterParameter::Parameter, ImportVectorImageStack));
+  parameters.push_back(SIMPL_NEW_VECTORFILELISTINFO_FP("Input File List", InputFileListInfo, FilterParameter::Category::Parameter, ImportVectorImageStack));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Origin", Origin, FilterParameter::Category::Parameter, ImportVectorImageStack));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Spacing", Spacing, FilterParameter::Category::Parameter, ImportVectorImageStack));
   parameters.back()->setLegacyPropertyName("Resolution");
 
-  parameters.push_back(SIMPL_NEW_BOOL_FP("Convert Color To Grayscale", ConvertToGrayscale, FilterParameter::Parameter, ImportVectorImageStack));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Convert Color To Grayscale", ConvertToGrayscale, FilterParameter::Category::Parameter, ImportVectorImageStack));
 
-  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container Name", DataContainerName, FilterParameter::CreatedArray, ImportVectorImageStack));
-  parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
+  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container Name", DataContainerName, FilterParameter::Category::CreatedArray, ImportVectorImageStack));
+  parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::CreatedArray));
 
-  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Cell Attribute Matrix Name", CellAttributeMatrixName, DataContainerName, FilterParameter::CreatedArray, ImportVectorImageStack));
+  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Cell Attribute Matrix Name", CellAttributeMatrixName, DataContainerName, FilterParameter::Category::CreatedArray, ImportVectorImageStack));
   parameters.push_back(
-      SIMPL_NEW_DA_WITH_LINKED_AM_FP("Vector Data Array Name", VectorDataArrayName, DataContainerName, CellAttributeMatrixName, FilterParameter::CreatedArray, ImportVectorImageStack));
+      SIMPL_NEW_DA_WITH_LINKED_AM_FP("Vector Data Array Name", VectorDataArrayName, DataContainerName, CellAttributeMatrixName, FilterParameter::Category::CreatedArray, ImportVectorImageStack));
 
   setFilterParameters(parameters);
 }

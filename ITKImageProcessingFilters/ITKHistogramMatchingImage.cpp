@@ -36,23 +36,23 @@ void ITKHistogramMatchingImage::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
 
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("NumberOfHistogramLevels", NumberOfHistogramLevels, FilterParameter::Parameter, ITKHistogramMatchingImage));
-  parameters.push_back(SIMPL_NEW_DOUBLE_FP("NumberOfMatchPoints", NumberOfMatchPoints, FilterParameter::Parameter, ITKHistogramMatchingImage));
-  parameters.push_back(SIMPL_NEW_BOOL_FP("ThresholdAtMeanIntensity", ThresholdAtMeanIntensity, FilterParameter::Parameter, ITKHistogramMatchingImage));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("NumberOfHistogramLevels", NumberOfHistogramLevels, FilterParameter::Category::Parameter, ITKHistogramMatchingImage));
+  parameters.push_back(SIMPL_NEW_DOUBLE_FP("NumberOfMatchPoints", NumberOfMatchPoints, FilterParameter::Category::Parameter, ITKHistogramMatchingImage));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("ThresholdAtMeanIntensity", ThresholdAtMeanIntensity, FilterParameter::Category::Parameter, ITKHistogramMatchingImage));
 
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
-  parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
+  parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize,
                                                                                                                   // Source image
                                                                                                                   AttributeMatrix::Type::Cell, IGeometry::Type::Image);
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Input Attribute Array to filter", SelectedCellArrayPath, FilterParameter::RequiredArray, ITKHistogramMatchingImage, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Input Attribute Array to filter", SelectedCellArrayPath, FilterParameter::Category::RequiredArray, ITKHistogramMatchingImage, req));
     // Reference image
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Reference Attribute Array to filter", ReferenceCellArrayPath, FilterParameter::RequiredArray, ITKHistogramMatchingImage, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Reference Attribute Array to filter", ReferenceCellArrayPath, FilterParameter::Category::RequiredArray, ITKHistogramMatchingImage, req));
   }
-  parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Filtered Array", NewCellArrayName, FilterParameter::CreatedArray, ITKHistogramMatchingImage));
+  parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::CreatedArray));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Filtered Array", NewCellArrayName, FilterParameter::Category::CreatedArray, ITKHistogramMatchingImage));
 
   setFilterParameters(parameters);
 }

@@ -356,48 +356,48 @@ void IlluminationCorrection::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
 
-  parameters.push_back(SIMPL_NEW_MONTAGE_SELECTION_FP("Montage Selection", MontageSelection, FilterParameter::Parameter, IlluminationCorrection));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Input Attribute Matrix Name", CellAttributeMatrixName, FilterParameter::RequiredArray, IlluminationCorrection));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Input Image Array Name", ImageDataArrayName, FilterParameter::RequiredArray, IlluminationCorrection));
-  parameters.push_back(SIMPL_NEW_STRING_FP(::k_OutputProcessedImageLabel, CorrectedImageDataArrayName, FilterParameter::CreatedArray, IlluminationCorrection));
+  parameters.push_back(SIMPL_NEW_MONTAGE_SELECTION_FP("Montage Selection", MontageSelection, FilterParameter::Category::Parameter, IlluminationCorrection));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Input Attribute Matrix Name", CellAttributeMatrixName, FilterParameter::Category::RequiredArray, IlluminationCorrection));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Input Image Array Name", ImageDataArrayName, FilterParameter::Category::RequiredArray, IlluminationCorrection));
+  parameters.push_back(SIMPL_NEW_STRING_FP(::k_OutputProcessedImageLabel, CorrectedImageDataArrayName, FilterParameter::Category::CreatedArray, IlluminationCorrection));
 
-  parameters.push_back(SeparatorFilterParameter::New("Created Background Image Name", FilterParameter::CreatedArray));
+  parameters.push_back(SeparatorFilterParameter::Create("Created Background Image Name", FilterParameter::Category::CreatedArray));
 
-  parameters.push_back(SIMPL_NEW_DC_CREATION_FP(::k_BackgroundDataContainerLabel, BackgroundDataContainerPath, FilterParameter::CreatedArray, IlluminationCorrection));
+  parameters.push_back(SIMPL_NEW_DC_CREATION_FP(::k_BackgroundDataContainerLabel, BackgroundDataContainerPath, FilterParameter::Category::CreatedArray, IlluminationCorrection));
   AttributeMatrixCreationFilterParameter::RequirementType cellAmReq;
   cellAmReq.dcGeometryTypes.push_back(IGeometry::Type::Image);
   cellAmReq.dcGeometryTypes.push_back(IGeometry::Type::RectGrid);
-  parameters.push_back(SIMPL_NEW_AM_CREATION_FP(::k_BackgroundAttributeMatrixLabel, BackgroundCellAttributeMatrixPath, FilterParameter::CreatedArray, IlluminationCorrection, cellAmReq));
+  parameters.push_back(SIMPL_NEW_AM_CREATION_FP(::k_BackgroundAttributeMatrixLabel, BackgroundCellAttributeMatrixPath, FilterParameter::Category::CreatedArray, IlluminationCorrection, cellAmReq));
 
   DataArrayCreationFilterParameter::RequirementType imageReq;
   imageReq.dcGeometryTypes.push_back(IGeometry::Type::Image);
   imageReq.dcGeometryTypes.push_back(IGeometry::Type::RectGrid);
   imageReq.amTypes.push_back(AttributeMatrix::Type::Cell);
-  parameters.push_back(SIMPL_NEW_DA_CREATION_FP(::k_BackgroundAttributeArrayLabel, BackgroundImageArrayPath, FilterParameter::CreatedArray, IlluminationCorrection, imageReq));
+  parameters.push_back(SIMPL_NEW_DA_CREATION_FP(::k_BackgroundAttributeArrayLabel, BackgroundImageArrayPath, FilterParameter::Category::CreatedArray, IlluminationCorrection, imageReq));
 
-  parameters.push_back(SIMPL_NEW_INTEGER_FP("Lowest allowed Image value (Image Value)", LowThreshold, FilterParameter::Parameter, IlluminationCorrection));
-  parameters.push_back(SIMPL_NEW_INTEGER_FP("Highest allowed Image value (Image Value)", HighThreshold, FilterParameter::Parameter, IlluminationCorrection));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Lowest allowed Image value (Image Value)", LowThreshold, FilterParameter::Category::Parameter, IlluminationCorrection));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Highest allowed Image value (Image Value)", HighThreshold, FilterParameter::Category::Parameter, IlluminationCorrection));
 
   QStringList linkedProps;
 
-  parameters.push_back(SeparatorFilterParameter::New("Background Image Processing", FilterParameter::Parameter));
+  parameters.push_back(SeparatorFilterParameter::Create("Background Image Processing", FilterParameter::Category::Parameter));
   linkedProps.clear();
   linkedProps << "MedianRadius";
-  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Apply median filter to background image", ApplyMedianFilter, FilterParameter::Parameter, IlluminationCorrection, linkedProps));
-  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("MedianRadius", MedianRadius, FilterParameter::Parameter, IlluminationCorrection));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Apply median filter to background image", ApplyMedianFilter, FilterParameter::Category::Parameter, IlluminationCorrection, linkedProps));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("MedianRadius", MedianRadius, FilterParameter::Category::Parameter, IlluminationCorrection));
 
-  parameters.push_back(SeparatorFilterParameter::New("Process Input Images", FilterParameter::Parameter));
+  parameters.push_back(SeparatorFilterParameter::Create("Process Input Images", FilterParameter::Category::Parameter));
   linkedProps.clear();
   linkedProps << "CorrectedImageDataArrayName"
               << "ExportCorrectedImages";
-  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Apply Background Correction to Input Images", ApplyCorrection, FilterParameter::Parameter, IlluminationCorrection, linkedProps));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Apply Background Correction to Input Images", ApplyCorrection, FilterParameter::Category::Parameter, IlluminationCorrection, linkedProps));
 
   linkedProps.clear();
   linkedProps << "OutputPath"
               << "FileExtension";
-  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Export Corrected Images", ExportCorrectedImages, FilterParameter::Parameter, IlluminationCorrection, linkedProps));
-  parameters.push_back(SIMPL_NEW_OUTPUT_PATH_FP("Output Path", OutputPath, FilterParameter::Parameter, IlluminationCorrection, "*", "*", 0));
-  parameters.push_back(SIMPL_NEW_STRING_FP("File Extension", FileExtension, FilterParameter::Parameter, IlluminationCorrection, 0));
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Export Corrected Images", ExportCorrectedImages, FilterParameter::Category::Parameter, IlluminationCorrection, linkedProps));
+  parameters.push_back(SIMPL_NEW_OUTPUT_PATH_FP("Output Path", OutputPath, FilterParameter::Category::Parameter, IlluminationCorrection, "*", "*", 0));
+  parameters.push_back(SIMPL_NEW_STRING_FP("File Extension", FileExtension, FilterParameter::Category::Parameter, IlluminationCorrection, 0));
   setFilterParameters(parameters);
 }
 

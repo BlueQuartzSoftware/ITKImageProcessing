@@ -41,7 +41,8 @@
 
 #include "SIMPLib/FilterParameters/FilterParameter.h"
 
-#include "VectorFileListInfo.h"
+#include "ITKImageProcessing/FilterParameters/VectorFileListInfo.h"
+#include "ITKImageProcessing/ITKImageProcessingDLLExport.h"
 
 /**
  * @brief SIMPL_NEW_FILELISTINFO_FP This macro is a short-form way of instantiating an instance of
@@ -52,12 +53,12 @@
  * SIMPL_NEW_FILELISTINFO_FP("HumanLabel", PropertyName, Category, FilterName)
  *
  * Example 1 (instantiated within a filter called [GenericExample](@ref genericexample)):
- * SIMPL_NEW_FILELISTINFO_FP("Input File List", InputFileListInfo, FilterParameter::Parameter, GenericExample);
+ * SIMPL_NEW_FILELISTINFO_FP("Input File List", InputFileListInfo, FilterParameter::Category::Parameter, GenericExample);
  */
 #define SIMPL_NEW_VECTORFILELISTINFO_FP(...)                                                                                                                                                           \
   SIMPL_EXPAND(_FP_GET_OVERRIDE(__VA_ARGS__, SIMPL_NEW_FP_9, SIMPL_NEW_FP_8, SIMPL_NEW_FP_7, SIMPL_NEW_FP_6, SIMPL_NEW_FP_5, SIMPL_NEW_FP_4)(ImportVectorImageStackFilterParameter, __VA_ARGS__))
 
-class ImportVectorImageStackFilterParameter : public FilterParameter
+class ITKImageProcessing_EXPORT ImportVectorImageStackFilterParameter : public FilterParameter
 {
 public:
   using Self = ImportVectorImageStackFilterParameter;
@@ -97,8 +98,8 @@ public:
   * that this FilterParameter subclass represents.
    * @return
    */
-  static Pointer New(const QString& humanLabel, const QString& propertyName, const VectorFileListInfo_t& defaultValue, Category category, const SetterCallbackType& setterCallback,
-                     const GetterCallbackType& getterCallback, int groupIndex = -1);
+  static Pointer Create(const QString& humanLabel, const QString& propertyName, const VectorFileListInfo_t& defaultValue, Category category, const SetterCallbackType& setterCallback,
+                        const GetterCallbackType& getterCallback, int groupIndex = -1);
 
   ~ImportVectorImageStackFilterParameter() override;
 

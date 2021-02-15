@@ -51,9 +51,9 @@ ImportVectorImageStackFilterParameter::~ImportVectorImageStackFilterParameter() 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ImportVectorImageStackFilterParameter::Pointer ImportVectorImageStackFilterParameter::New(const QString& humanLabel, const QString& propertyName, const VectorFileListInfo_t& defaultValue,
-                                                                                          Category category, const SetterCallbackType& setterCallback, const GetterCallbackType& getterCallback,
-                                                                                          int groupIndex)
+ImportVectorImageStackFilterParameter::Pointer ImportVectorImageStackFilterParameter::Create(const QString& humanLabel, const QString& propertyName, const VectorFileListInfo_t& defaultValue,
+                                                                                             Category category, const SetterCallbackType& setterCallback, const GetterCallbackType& getterCallback,
+                                                                                             int groupIndex)
 {
   ImportVectorImageStackFilterParameter::Pointer ptr = ImportVectorImageStackFilterParameter::New();
   ptr->setHumanLabel(humanLabel);
