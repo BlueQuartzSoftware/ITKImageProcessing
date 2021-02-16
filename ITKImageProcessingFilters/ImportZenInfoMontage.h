@@ -84,7 +84,7 @@ class ITKImageProcessing_EXPORT ImportZenInfoMontage : public AbstractFilter
   Q_DECLARE_PRIVATE(ImportZenInfoMontage)
 
 public:
-  using BoundsType = struct
+  struct BoundsType
   {
     QString Filename;
     SizeVec3Type Dims;

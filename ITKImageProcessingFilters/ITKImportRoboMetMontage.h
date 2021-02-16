@@ -85,7 +85,7 @@ class ITKImageProcessing_EXPORT ITKImportRoboMetMontage : public AbstractFilter
   Q_DECLARE_PRIVATE(ITKImportRoboMetMontage)
 
 public:
-  using BoundsType = struct
+  struct BoundsType
   {
     QString Filename;
     SizeVec3Type Dims;

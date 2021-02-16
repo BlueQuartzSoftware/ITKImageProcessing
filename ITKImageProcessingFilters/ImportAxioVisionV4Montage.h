@@ -92,7 +92,7 @@ class ITKImageProcessing_EXPORT ImportAxioVisionV4Montage : public AbstractFilte
   Q_DECLARE_PRIVATE(ImportAxioVisionV4Montage)
 
 public:
-  using BoundsType = struct
+  struct BoundsType
   {
     QString Filename;
     SizeVec3Type Dims;

@@ -80,7 +80,7 @@ class ITKImageProcessing_EXPORT ITKImportFijiMontage : public AbstractFilter
   Q_DECLARE_PRIVATE(ITKImportFijiMontage)
 
 public:
-  using BoundsType = struct
+  struct BoundsType
   {
     QString Filename;
     SizeVec3Type Dims;
