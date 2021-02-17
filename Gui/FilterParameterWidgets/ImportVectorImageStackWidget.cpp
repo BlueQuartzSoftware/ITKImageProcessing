@@ -52,6 +52,7 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Utilities/FilePathGenerator.h"
+#include "SIMPLib/Utilities/FilterCompatibility.hpp"
 #include "SIMPLib/Utilities/StringOperations.h"
 
 #include "SVWidgetsLib/QtSupport/QtSFileCompleter.h"
@@ -69,16 +70,7 @@ ImportVectorImageStackWidget::ImportVectorImageStackWidget(FilterParameter* para
 : FilterParameterWidget(parameter, filter, parent)
 , m_Ui(new Ui::ImportVectorImageStackWidget)
 {
-  ImportVectorImageStackFilterParameter* fli = dynamic_cast<ImportVectorImageStackFilterParameter*>(parameter);
-  if(nullptr == fli)
-  {
-    QString msg;
-    QTextStream ss(&msg);
-    ss << "ImportVectorImageStackWidget can ONLY be used with ImportVectorImageStackFilterParameter objects. The programmer of the filter has a bug.";
-    ss << " The name of the filter was " << filter->getHumanLabel() << " and the name of the Filter Parameter was " << parameter->getHumanLabel();
-    ss << " and is trying to get the propery " << parameter->getPropertyName() << " in the filter";
-    Q_ASSERT_X(nullptr != fli, msg.toLatin1().constData(), __FILE__);
-  }
+  m_FilterParameter = SIMPL_FILTER_PARAMETER_COMPATIBILITY_CHECK(filter, parameter, ImportVectorImageStackWidget, ImportVectorImageStackFilterParameter);
 
   m_Ui->setupUi(this);
   setupGui();

@@ -33,6 +33,7 @@
 #include "EbsdWarpPolynomialWidget.h"
 
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/Utilities/FilterCompatibility.hpp"
 
 #include "ITKImageProcessing/FilterParameters/EbsdWarpPolynomialFilterParameter.h"
 
@@ -85,16 +86,7 @@ EbsdWarpPolynomialWidget::EbsdWarpPolynomialWidget(FilterParameter* parameter, A
 : FilterParameterWidget(parameter, filter, parent)
 , m_Ui(new Ui::EbsdWarpPolynomialWidget)
 {
-  m_FilterParameter = dynamic_cast<EbsdWarpPolynomialFilterParameter*>(parameter);
-  if(nullptr == m_FilterParameter)
-  {
-    QString msg;
-    QTextStream ss(&msg);
-    ss << "EbsdMontageImportWidget can ONLY be used with EbsdWarpPolynomialFilterParameter objects. The programmer of the filter has a bug.";
-    ss << " The name of the filter was " << filter->getHumanLabel() << " and the name of the Filter Parameter was " << parameter->getHumanLabel();
-    ss << " and is trying to get the propery " << parameter->getPropertyName() << " in the filter";
-    Q_ASSERT_X(nullptr != m_FilterParameter, msg.toLatin1().constData(), __FILE__);
-  }
+  m_FilterParameter = SIMPL_FILTER_PARAMETER_COMPATIBILITY_CHECK(filter, parameter, EbsdWarpPolynomialWidget, EbsdWarpPolynomialFilterParameter);
   m_Ui->setupUi(this);
   setupGui();
 }
