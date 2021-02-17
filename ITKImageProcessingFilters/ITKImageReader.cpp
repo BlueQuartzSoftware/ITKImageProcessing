@@ -85,11 +85,7 @@ enum createdPathID : RenameDataPath::DataID_t
 //
 // -----------------------------------------------------------------------------
 ITKImageReader::ITKImageReader()
-: m_FileName("")
-, m_DataContainerName(SIMPL::Defaults::ImageDataContainerName)
-, m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName)
-, m_ImageDataArrayName(SIMPL::CellData::ImageData)
-, d_ptr(new ITKImageReaderPrivate(this))
+: d_ptr(new ITKImageReaderPrivate(this))
 {
 }
 

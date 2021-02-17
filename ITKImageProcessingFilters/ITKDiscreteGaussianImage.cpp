@@ -20,13 +20,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKDiscreteGaussianImage::ITKDiscreteGaussianImage()
-{
-  m_Variance = CastStdToVec3<std::vector<double>, FloatVec3Type, float>(std::vector<double>(3, 1.0));
-  m_MaximumKernelWidth = StaticCastScalar<double, double, double>(32u);
-  m_MaximumError = CastStdToVec3<std::vector<double>, FloatVec3Type, float>(std::vector<double>(3, 0.01));
-  m_UseImageSpacing = StaticCastScalar<bool, bool, bool>(true);
-}
+ITKDiscreteGaussianImage::ITKDiscreteGaussianImage() = default;
 
 // -----------------------------------------------------------------------------
 //

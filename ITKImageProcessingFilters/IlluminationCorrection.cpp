@@ -323,7 +323,7 @@ void calculateOutputValues(IlluminationCorrection* filter)
 } // namespace
 
 // -----------------------------------------------------------------------------
-//
+// clang-format off
 // -----------------------------------------------------------------------------
 IlluminationCorrection::IlluminationCorrection()
 : m_CellAttributeMatrixName(ITKImageProcessing::Montage::k_TileAttributeMatrixDefaultName)
@@ -334,8 +334,7 @@ IlluminationCorrection::IlluminationCorrection()
 , m_FileExtension(".tif")
 , m_BackgroundDataContainerPath(ITKImageProcessing::Montage::k_BackgroundDataContainerDefaultName)
 , m_BackgroundCellAttributeMatrixPath(ITKImageProcessing::Montage::k_BackgroundDataContainerDefaultName, ITKImageProcessing::Montage::k_BackgroundAttributeMatrixDefaultName, "")
-, m_BackgroundImageArrayPath(ITKImageProcessing::Montage::k_BackgroundDataContainerDefaultName, ITKImageProcessing::Montage::k_BackgroundAttributeMatrixDefaultName,
-                             ITKImageProcessing::Montage::k_BackgroundDataArrayDefaultName)
+, m_BackgroundImageArrayPath(ITKImageProcessing::Montage::k_BackgroundDataContainerDefaultName, ITKImageProcessing::Montage::k_BackgroundAttributeMatrixDefaultName, ITKImageProcessing::Montage::k_BackgroundDataArrayDefaultName)
 , m_LowThreshold(20000)
 , m_HighThreshold(65535)
 , m_ApplyCorrection(false)
@@ -343,7 +342,7 @@ IlluminationCorrection::IlluminationCorrection()
   m_ApplyMedianFilter = true;
   m_MedianRadius = {10.0f, 10.0f, 1.0f};
 }
-
+// clang-format on
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

@@ -45,9 +45,6 @@ enum createdPathID : RenameDataPath::DataID_t
 //
 // -----------------------------------------------------------------------------
 ImportImageMontage::ImportImageMontage()
-: m_DataContainerName(SIMPL::Defaults::ImageDataContainerName)
-, m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName)
-, m_MetaDataAttributeMatrixName("MetaDataAttributeMatrix")
 {
   m_Origin[0] = 0.0;
   m_Origin[1] = 0.0;

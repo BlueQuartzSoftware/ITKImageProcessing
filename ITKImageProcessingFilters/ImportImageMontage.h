@@ -208,9 +208,9 @@ protected:
   void initialize();
 
 private:
-  DataArrayPath m_DataContainerName = {};
-  QString m_CellAttributeMatrixName = {};
-  QString m_MetaDataAttributeMatrixName = {};
+  DataArrayPath m_DataContainerName = {SIMPL::Defaults::ImageDataContainerName, "", ""};
+  QString m_CellAttributeMatrixName = {SIMPL::Defaults::CellAttributeMatrixName};
+  QString m_MetaDataAttributeMatrixName = {"MetaDataAttributeMatrix"};
   FloatVec3Type m_Origin = {};
   FloatVec3Type m_Spacing = {};
   StackFileListInfo m_InputFileListInfo = {};

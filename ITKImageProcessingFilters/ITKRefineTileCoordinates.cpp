@@ -37,13 +37,7 @@ enum createdPathID : RenameDataPath::DataID_t
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKRefineTileCoordinates::ITKRefineTileCoordinates()
-: m_DataContainers("")
-, m_CommonAttributeMatrixName(ITKImageProcessing::Montage::k_TileAttributeMatrixDefaultName)
-, m_CommonDataArrayName(ITKImageProcessing::Montage::k_TileDataArrayDefaultName)
-, m_TileOverlap(10.0f)
-{
-}
+ITKRefineTileCoordinates::ITKRefineTileCoordinates() = default;
 
 // -----------------------------------------------------------------------------
 // Class Destructor

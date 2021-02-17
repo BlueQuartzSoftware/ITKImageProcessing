@@ -232,11 +232,11 @@ protected:
 
 private:
   IntVec3Type m_MontageSize = {};
-  QStringList m_DataContainers = {};
-  QString m_CommonAttributeMatrixName = {};
-  QString m_CommonDataArrayName = {};
+  QStringList m_DataContainers = {""};
+  QString m_CommonAttributeMatrixName = {ITKImageProcessing::Montage::k_TileAttributeMatrixDefaultName};
+  QString m_CommonDataArrayName = {ITKImageProcessing::Montage::k_TileDataArrayDefaultName};
   int m_ImportMode = {};
-  float m_TileOverlap = {};
+  float m_TileOverlap = {10.0f};
   bool m_ApplyRefinedOrigin = {};
   std::weak_ptr<DataArray<ITKImageProcessingConstants::DefaultPixelType>> m_SelectedCellArrayPtr;
   ITKImageProcessingConstants::DefaultPixelType* m_SelectedCellArray = nullptr;

@@ -172,10 +172,10 @@ public:
   ITKDiscreteGaussianImage& operator=(ITKDiscreteGaussianImage&&) = delete;      // Move Assignment Not Implemented
 
 private:
-  FloatVec3Type m_Variance = {};
-  int32_t m_MaximumKernelWidth = {};
-  FloatVec3Type m_MaximumError = {};
-  bool m_UseImageSpacing = {};
+  FloatVec3Type m_Variance = CastStdToVec3<std::vector<double>, FloatVec3Type, float>(std::vector<double>(3, 1.0));
+  int32_t m_MaximumKernelWidth = StaticCastScalar<double, double, double>(32u);
+  FloatVec3Type m_MaximumError = CastStdToVec3<std::vector<double>, FloatVec3Type, float>(std::vector<double>(3, 0.01));
+  bool m_UseImageSpacing = StaticCastScalar<bool, bool, bool>(true);
 };
 
 #ifdef __clang__

@@ -231,8 +231,8 @@ protected:
   void writeAsOneFile(typename itk::Image<TPixel, Dimensions>* image);
 
 private:
-  QString m_FileName = {};
-  DataArrayPath m_ImageArrayPath = {};
+  QString m_FileName = {""};
+  DataArrayPath m_ImageArrayPath = {"", "", ""};
   int m_Plane = {};
 
   /**

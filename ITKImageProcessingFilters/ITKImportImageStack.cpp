@@ -71,9 +71,6 @@ enum createdPathID : RenameDataPath::DataID_t
 //
 // -----------------------------------------------------------------------------
 ITKImportImageStack::ITKImportImageStack()
-: m_DataContainerName(SIMPL::Defaults::ImageDataContainerName)
-, m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName)
-, m_ImageDataArrayName(SIMPL::CellData::ImageData)
 {
   m_Origin[0] = 0.0f;
   m_Origin[1] = 0.0f;

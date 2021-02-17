@@ -57,7 +57,6 @@
 #include "SIMPLib/ITK/itkTransformToDream3DITransformContainer.h"
 #include "SIMPLib/ITK/itkTransformToDream3DTransformContainer.h"
 
-#include "ITKImageProcessing/ITKImageProcessingConstants.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/MetaXmlUtils.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/util/MontageImportHelper.h"
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
@@ -151,9 +150,6 @@ itk::NumericTraits<float> nmfloat;
 //
 // -----------------------------------------------------------------------------
 ITKPCMTileRegistration::ITKPCMTileRegistration()
-: m_DataContainerPrefix(ITKImageProcessing::Montage::k_DataContainerPrefixDefaultName)
-, m_CommonAttributeMatrixName(ITKImageProcessing::Montage::k_TileAttributeMatrixDefaultName)
-, m_CommonDataArrayName(ITKImageProcessing::Montage::k_TileDataArrayDefaultName)
 {
   m_MontageStart = IntVec2Type(0, 0);
   m_MontageEnd = IntVec2Type(0, 0);
