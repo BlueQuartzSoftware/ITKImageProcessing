@@ -42,8 +42,8 @@ void ITKFFTNormalizedCorrelationImage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("RequiredNumberOfOverlappingPixels", RequiredNumberOfOverlappingPixels, FilterParameter::Category::Parameter, ITKFFTNormalizedCorrelationImage));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("RequiredFractionOfOverlappingPixels", RequiredFractionOfOverlappingPixels, FilterParameter::Category::Parameter, ITKFFTNormalizedCorrelationImage));
 
-  QStringList linkedProps;
-  linkedProps << "NewCellArrayName";
+  std::vector<QString> linkedProps;
+  linkedProps.push_back("NewCellArrayName");
   parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =

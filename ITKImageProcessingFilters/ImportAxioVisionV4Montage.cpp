@@ -237,17 +237,17 @@ void ImportAxioVisionV4Montage::setupFilterParameters()
 
   parameters.push_back(SIMPL_NEW_BOOL_FP("Import All MetaData", ImportAllMetaData, FilterParameter::Category::Parameter, ImportAxioVisionV4Montage));
 
-  QStringList linkedProps("Origin");
+  std::vector<QString> linkedProps = {"Origin"};
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Change Origin", ChangeOrigin, FilterParameter::Category::Parameter, ImportAxioVisionV4Montage, linkedProps));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Origin", Origin, FilterParameter::Category::Parameter, ImportAxioVisionV4Montage));
 
   linkedProps.clear();
-  linkedProps << "Spacing";
+  linkedProps.push_back("Spacing");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Change Spacing", ChangeSpacing, FilterParameter::Category::Parameter, ImportAxioVisionV4Montage, linkedProps));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Spacing", Spacing, FilterParameter::Category::Parameter, ImportAxioVisionV4Montage));
 
   linkedProps.clear();
-  linkedProps << "ColorWeights";
+  linkedProps.push_back("ColorWeights");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Convert To GrayScale", ConvertToGrayScale, FilterParameter::Category::Parameter, ImportAxioVisionV4Montage, linkedProps));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Color Weighting", ColorWeights, FilterParameter::Category::Parameter, ImportAxioVisionV4Montage));
 

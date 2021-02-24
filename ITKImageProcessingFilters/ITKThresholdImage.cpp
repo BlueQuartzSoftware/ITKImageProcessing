@@ -42,8 +42,8 @@ void ITKThresholdImage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Upper", Upper, FilterParameter::Category::Parameter, ITKThresholdImage));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("OutsideValue", OutsideValue, FilterParameter::Category::Parameter, ITKThresholdImage));
 
-  QStringList linkedProps;
-  linkedProps << "NewCellArrayName";
+  std::vector<QString> linkedProps;
+  linkedProps.push_back("NewCellArrayName");
   parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =

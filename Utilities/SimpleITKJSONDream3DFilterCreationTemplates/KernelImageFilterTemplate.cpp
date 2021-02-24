@@ -59,7 +59,7 @@ void $
     parameter->setSetterCallback(SIMPL_BIND_SETTER(${FilterName}, this, KernelType));
     parameter->setGetterCallback(SIMPL_BIND_GETTER(${FilterName}, this, KernelType));
 
-    QVector<QString> choices;
+    std::vector<QString> choices;
     choices.push_back("Annulus");
     choices.push_back("Ball");
     choices.push_back("Box");
@@ -71,8 +71,8 @@ void $
   // Other parameters
   ${SetupFilterParameters}
 
-  QStringList linkedProps;
-  linkedProps << "NewCellArrayName";
+  std::vector<QString> linkedProps;
+  linkedProps.push_back("NewCellArrayName");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Save as New Array", SaveAsNewArray, FilterParameter::Category::Parameter, ${FilterName}, linkedProps));
   parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::RequiredArray));
   {

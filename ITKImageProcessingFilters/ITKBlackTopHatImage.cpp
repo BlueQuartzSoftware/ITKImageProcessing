@@ -49,7 +49,7 @@ void ITKBlackTopHatImage::setupFilterParameters()
     parameter->setSetterCallback(SIMPL_BIND_SETTER(ITKBlackTopHatImage, this, KernelType));
     parameter->setGetterCallback(SIMPL_BIND_GETTER(ITKBlackTopHatImage, this, KernelType));
 
-    QVector<QString> choices;
+    std::vector<QString> choices;
     choices.push_back("Annulus");
     choices.push_back("Ball");
     choices.push_back("Box");
@@ -62,8 +62,8 @@ void ITKBlackTopHatImage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_BOOL_FP("SafeBorder", SafeBorder, FilterParameter::Category::Parameter, ITKBlackTopHatImage));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("KernelRadius", KernelRadius, FilterParameter::Category::Parameter, ITKBlackTopHatImage));
 
-  QStringList linkedProps;
-  linkedProps << "NewCellArrayName";
+  std::vector<QString> linkedProps;
+  linkedProps.push_back("NewCellArrayName");
   parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =

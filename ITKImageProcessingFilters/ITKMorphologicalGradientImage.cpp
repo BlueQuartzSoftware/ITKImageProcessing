@@ -48,7 +48,7 @@ void ITKMorphologicalGradientImage::setupFilterParameters()
     parameter->setSetterCallback(SIMPL_BIND_SETTER(ITKMorphologicalGradientImage, this, KernelType));
     parameter->setGetterCallback(SIMPL_BIND_GETTER(ITKMorphologicalGradientImage, this, KernelType));
 
-    QVector<QString> choices;
+    std::vector<QString> choices;
     choices.push_back("Annulus");
     choices.push_back("Ball");
     choices.push_back("Box");
@@ -60,8 +60,8 @@ void ITKMorphologicalGradientImage::setupFilterParameters()
   // Other parameters
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("KernelRadius", KernelRadius, FilterParameter::Category::Parameter, ITKMorphologicalGradientImage));
 
-  QStringList linkedProps;
-  linkedProps << "NewCellArrayName";
+  std::vector<QString> linkedProps;
+  linkedProps.push_back("NewCellArrayName");
   parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =

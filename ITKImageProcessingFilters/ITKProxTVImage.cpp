@@ -44,8 +44,8 @@ void ITKProxTVImage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Weights", Weights, FilterParameter::Category::Parameter, ITKProxTVImage));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Norms", Norms, FilterParameter::Category::Parameter, ITKProxTVImage));
 
-  QStringList linkedProps;
-  linkedProps << "NewCellArrayName";
+  std::vector<QString> linkedProps;
+  linkedProps.push_back("NewCellArrayName");
   parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =

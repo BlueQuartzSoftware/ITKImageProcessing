@@ -40,8 +40,8 @@ void ITKHistogramMatchingImage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("NumberOfMatchPoints", NumberOfMatchPoints, FilterParameter::Category::Parameter, ITKHistogramMatchingImage));
   parameters.push_back(SIMPL_NEW_BOOL_FP("ThresholdAtMeanIntensity", ThresholdAtMeanIntensity, FilterParameter::Category::Parameter, ITKHistogramMatchingImage));
 
-  QStringList linkedProps;
-  linkedProps << "NewCellArrayName";
+  std::vector<QString> linkedProps;
+  linkedProps.push_back("NewCellArrayName");
   parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize,

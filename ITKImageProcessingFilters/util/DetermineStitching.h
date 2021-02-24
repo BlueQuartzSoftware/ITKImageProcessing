@@ -84,7 +84,7 @@ public:
   template <typename T, unsigned int ImageDimension>
   static FloatArrayType::Pointer FindGlobalOrigins(AbstractFilter* filter, int xTileCount, int yTileCount, int importMode, float overlapPer,
                                                    const std::vector<typename DataArray<T>::Pointer>& dataArrayList, const SizeVec3Type& udims, const FloatVec3Type& sampleOrigin,
-                                                   const FloatVec3Type& spacing, const QStringList& dataContainerNames)
+                                                   const FloatVec3Type& spacing, const std::vector<QString>& dataContainerNames)
   {
     // The assumption is that we are working on a 2D image where the XY dims are in the 0 and 1 index of the udims variable
     size_t totalPoints = udims[0] * udims[1];

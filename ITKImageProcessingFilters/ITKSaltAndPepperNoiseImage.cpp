@@ -41,8 +41,8 @@ void ITKSaltAndPepperNoiseImage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Probability", Probability, FilterParameter::Category::Parameter, ITKSaltAndPepperNoiseImage));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Seed", Seed, FilterParameter::Category::Parameter, ITKSaltAndPepperNoiseImage));
 
-  QStringList linkedProps;
-  linkedProps << "NewCellArrayName";
+  std::vector<QString> linkedProps;
+  linkedProps.push_back("NewCellArrayName");
   parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =

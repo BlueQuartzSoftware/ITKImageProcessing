@@ -51,7 +51,7 @@ void ITKBinaryOpeningByReconstructionImage::setupFilterParameters()
     parameter->setSetterCallback(SIMPL_BIND_SETTER(ITKBinaryOpeningByReconstructionImage, this, KernelType));
     parameter->setGetterCallback(SIMPL_BIND_GETTER(ITKBinaryOpeningByReconstructionImage, this, KernelType));
 
-    QVector<QString> choices;
+    std::vector<QString> choices;
     choices.push_back("Annulus");
     choices.push_back("Ball");
     choices.push_back("Box");
@@ -66,8 +66,8 @@ void ITKBinaryOpeningByReconstructionImage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_BOOL_FP("FullyConnected", FullyConnected, FilterParameter::Category::Parameter, ITKBinaryOpeningByReconstructionImage));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("KernelRadius", KernelRadius, FilterParameter::Category::Parameter, ITKBinaryOpeningByReconstructionImage));
 
-  QStringList linkedProps;
-  linkedProps << "NewCellArrayName";
+  std::vector<QString> linkedProps;
+  linkedProps.push_back("NewCellArrayName");
   parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =

@@ -42,8 +42,8 @@ void ITKAdaptiveHistogramEqualizationImage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_FLOAT_FP("Alpha", Alpha, FilterParameter::Category::Parameter, ITKAdaptiveHistogramEqualizationImage));
   parameters.push_back(SIMPL_NEW_FLOAT_FP("Beta", Beta, FilterParameter::Category::Parameter, ITKAdaptiveHistogramEqualizationImage));
 
-  QStringList linkedProps;
-  linkedProps << "NewCellArrayName";
+  std::vector<QString> linkedProps;
+  linkedProps.push_back("NewCellArrayName");
   parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =

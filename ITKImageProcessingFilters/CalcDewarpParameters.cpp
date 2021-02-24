@@ -174,7 +174,7 @@ void CalcDewarpParameters::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Delta", Delta, FilterParameter::Category::Parameter, CalcDewarpParameters));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("Fractional Convergence Tolerance", FractionalTolerance, FilterParameter::Category::Parameter, CalcDewarpParameters));
 
-  QStringList linkedSpecifySimplexProps{"XFactors", "YFactors"};
+  std::vector<QString> linkedSpecifySimplexProps{"XFactors", "YFactors"};
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Specify Initial Simplex", SpecifyInitialSimplex, FilterParameter::Category::Parameter, CalcDewarpParameters, linkedSpecifySimplexProps));
   parameters.push_back(SIMPL_NEW_EBSDWARPPOLYNOMIAL_FP("X Factors", XFactors, FilterParameter::Category::Parameter, CalcDewarpParameters));
   parameters.push_back(SIMPL_NEW_EBSDWARPPOLYNOMIAL_FP("Y Factors", YFactors, FilterParameter::Category::Parameter, CalcDewarpParameters));
@@ -488,7 +488,7 @@ int CalcDewarpParameters::generateGrayscaleIPF()
 
     // Create internal grayscale version
     conversionFilter->setDataContainerArray(getDataContainerArray());
-    QVector<DataArrayPath> dataArrayPaths;
+    std::vector<DataArrayPath> dataArrayPaths;
     dataArrayPaths.push_back(DataArrayPath(dc->getName(), m_AttributeMatrixName, m_IPFColorsArrayName));
     conversionFilter->setInputDataArrayVector(dataArrayPaths);
 

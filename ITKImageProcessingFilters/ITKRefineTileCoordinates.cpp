@@ -59,13 +59,13 @@ void ITKRefineTileCoordinates::setupFilterParameters()
     parameter->setPropertyName("ImportMode");
     parameter->setSetterCallback(SIMPL_BIND_SETTER(ITKRefineTileCoordinates, this, ImportMode));
     parameter->setGetterCallback(SIMPL_BIND_GETTER(ITKRefineTileCoordinates, this, ImportMode));
-    QVector<QString> choices;
+    std::vector<QString> choices;
     choices.push_back("Row-By-Row (Comb Order)");
     choices.push_back("Column-By-Column");
     choices.push_back("Snake-By-Row");
     choices.push_back("Snake-By-Column");
     parameter->setChoices(choices);
-    QStringList linkedProps;
+    std::vector<QString> linkedProps;
     parameter->setLinkedProperties(linkedProps);
     parameter->setEditable(false);
     parameter->setCategory(FilterParameter::Category::Parameter);
@@ -197,7 +197,7 @@ void ITKRefineTileCoordinates::dataCheck()
   initialize();
 
   // Check for empty list. If list is empty then the OutputGeometry was never formed and it wont help to go on..
-  if(m_DataContainers.isEmpty())
+  if(m_DataContainers.empty())
   {
     setErrorCondition(-53006, "At least one DataContainer must be selected.");
     return;
@@ -241,7 +241,7 @@ void executeRefinement(ITKRefineTileCoordinates* filter)
   using DataArrayPointerType = typename DataArrayType::Pointer;
 
   std::vector<DataArrayPointerType> pointers;
-  QStringList dataContainerNames = filter->getDataContainers();
+  std::vector<QString> dataContainerNames = filter->getDataContainers();
   // Loop over each Data Container and get the Input Image Data
   for(const auto& dcName : dataContainerNames)
   {
@@ -309,7 +309,7 @@ void executeRefinement(ITKRefineTileCoordinates* filter)
     FloatArrayType::Pointer originalCoords = std::dynamic_pointer_cast<FloatArrayType>(coordsPtr->deepCopy());
     originalCoords->setName("Original Origins");
 
-    for(int32_t dcIndex = 0; dcIndex < dataContainerNames.size(); dcIndex++)
+    for(size_t dcIndex = 0; dcIndex < dataContainerNames.size(); dcIndex++)
     {
       DataContainer::Pointer dc = dca.getDataContainer(dataContainerNames.at(dcIndex));
       imageGeom = dc->getGeometryAs<ImageGeom>();
@@ -468,13 +468,13 @@ IntVec3Type ITKRefineTileCoordinates::getMontageSize() const
 }
 
 // -----------------------------------------------------------------------------
-void ITKRefineTileCoordinates::setDataContainers(const QStringList& value)
+void ITKRefineTileCoordinates::setDataContainers(const std::vector<QString>& value)
 {
   m_DataContainers = value;
 }
 
 // -----------------------------------------------------------------------------
-QStringList ITKRefineTileCoordinates::getDataContainers() const
+std::vector<QString> ITKRefineTileCoordinates::getDataContainers() const
 {
   return m_DataContainers;
 }

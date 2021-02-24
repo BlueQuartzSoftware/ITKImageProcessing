@@ -377,23 +377,23 @@ void IlluminationCorrection::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Lowest allowed Image value (Image Value)", LowThreshold, FilterParameter::Category::Parameter, IlluminationCorrection));
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Highest allowed Image value (Image Value)", HighThreshold, FilterParameter::Category::Parameter, IlluminationCorrection));
 
-  QStringList linkedProps;
+  std::vector<QString> linkedProps;
 
   parameters.push_back(SeparatorFilterParameter::Create("Background Image Processing", FilterParameter::Category::Parameter));
   linkedProps.clear();
-  linkedProps << "MedianRadius";
+  linkedProps.push_back("MedianRadius");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Apply median filter to background image", ApplyMedianFilter, FilterParameter::Category::Parameter, IlluminationCorrection, linkedProps));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("MedianRadius", MedianRadius, FilterParameter::Category::Parameter, IlluminationCorrection));
 
   parameters.push_back(SeparatorFilterParameter::Create("Process Input Images", FilterParameter::Category::Parameter));
   linkedProps.clear();
-  linkedProps << "CorrectedImageDataArrayName"
-              << "ExportCorrectedImages";
+  linkedProps.push_back("CorrectedImageDataArrayName");
+  linkedProps.push_back("ExportCorrectedImages");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Apply Background Correction to Input Images", ApplyCorrection, FilterParameter::Category::Parameter, IlluminationCorrection, linkedProps));
 
   linkedProps.clear();
-  linkedProps << "OutputPath"
-              << "FileExtension";
+  linkedProps.push_back("OutputPath");
+  linkedProps.push_back("FileExtension");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Export Corrected Images", ExportCorrectedImages, FilterParameter::Category::Parameter, IlluminationCorrection, linkedProps));
   parameters.push_back(SIMPL_NEW_OUTPUT_PATH_FP("Output Path", OutputPath, FilterParameter::Category::Parameter, IlluminationCorrection, "*", "*", 0));
   parameters.push_back(SIMPL_NEW_STRING_FP("File Extension", FileExtension, FilterParameter::Category::Parameter, IlluminationCorrection, 0));

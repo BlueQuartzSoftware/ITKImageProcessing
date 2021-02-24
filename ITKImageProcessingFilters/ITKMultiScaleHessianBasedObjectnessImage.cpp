@@ -61,8 +61,8 @@ void ITKMultiScaleHessianBasedObjectnessImage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("SigmaMaximum", SigmaMaximum, FilterParameter::Category::Parameter, ITKMultiScaleHessianBasedObjectnessImage));
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("NumberOfSigmaSteps", NumberOfSigmaSteps, FilterParameter::Category::Parameter, ITKMultiScaleHessianBasedObjectnessImage));
 
-  QStringList linkedProps;
-  linkedProps << "NewCellArrayName";
+  std::vector<QString> linkedProps;
+  linkedProps.push_back("NewCellArrayName");
   parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =

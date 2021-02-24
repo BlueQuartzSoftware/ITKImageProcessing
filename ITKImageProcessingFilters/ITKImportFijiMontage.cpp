@@ -205,25 +205,25 @@ void ITKImportFijiMontage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_STRING_FP("Name of Created Montage", MontageName, FilterParameter::Category::Parameter, ITKImportFijiMontage));
   parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage Column Start/End [Inclusive, Zero Based]", ColumnMontageLimits, FilterParameter::Category::Parameter, ITKImportFijiMontage));
   parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage Row Start/End [Inclusive, Zero Based]", RowMontageLimits, FilterParameter::Category::Parameter, ITKImportFijiMontage));
-  QVector<QString> choices = IGeometry::GetAllLengthUnitStrings();
+  std::vector<QString> choices = IGeometry::GetAllLengthUnitStrings();
   parameters.push_back(SIMPL_NEW_CHOICE_FP("Length Unit", LengthUnit, FilterParameter::Category::Parameter, ITKImportFijiMontage, choices, false));
 
   PreflightUpdatedValueFilterParameter::Pointer param = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Montage Information", MontageInformation, FilterParameter::Category::Parameter, ITKImportFijiMontage);
   param->setReadOnly(true);
   parameters.push_back(param);
 
-  QStringList linkedProps("Origin");
+  std::vector<QString> linkedProps = {"Origin"};
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Change Origin", ChangeOrigin, FilterParameter::Category::Parameter, ITKImportFijiMontage, linkedProps));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Origin", Origin, FilterParameter::Category::Parameter, ITKImportFijiMontage));
 
   // Changing the Spacing makes NO sense because the origins in the XML file are in Pixel Coordinates so the spacing MUST be 1.0
   //  linkedProps.clear();
-  //  linkedProps << "Spacing";
+  //  linkedProps.push_back("Spacing");
   //  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Change Spacing", ChangeSpacing, FilterParameter::Category::Parameter, ITKImportFijiMontage, linkedProps));
   //  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Spacing", Spacing, FilterParameter::Category::Parameter, ITKImportFijiMontage));
 
   linkedProps.clear();
-  linkedProps << "ColorWeights";
+  linkedProps.push_back("ColorWeights");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Convert To GrayScale", ConvertToGrayScale, FilterParameter::Category::Parameter, ITKImportFijiMontage, linkedProps));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Color Weighting", ColorWeights, FilterParameter::Category::Parameter, ITKImportFijiMontage));
 

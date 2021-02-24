@@ -38,7 +38,7 @@ void ITKCastImage::setupFilterParameters()
     parameter->setSetterCallback(SIMPL_BIND_SETTER(ITKCastImage, this, CastingType));
     parameter->setGetterCallback(SIMPL_BIND_GETTER(ITKCastImage, this, CastingType));
 
-    QVector<QString> choices;
+    std::vector<QString> choices;
     choices.push_back("unsigned char");
     choices.push_back("char");
     choices.push_back("unsigned short");
@@ -56,8 +56,8 @@ void ITKCastImage::setupFilterParameters()
     parameters.push_back(parameter);
   }
 
-  QStringList linkedProps;
-  linkedProps << "NewCellArrayName";
+  std::vector<QString> linkedProps;
+  linkedProps.push_back("NewCellArrayName");
   parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =

@@ -50,7 +50,7 @@ void ITKBinaryMorphologicalOpeningImage::setupFilterParameters()
     parameter->setSetterCallback(SIMPL_BIND_SETTER(ITKBinaryMorphologicalOpeningImage, this, KernelType));
     parameter->setGetterCallback(SIMPL_BIND_GETTER(ITKBinaryMorphologicalOpeningImage, this, KernelType));
 
-    QVector<QString> choices;
+    std::vector<QString> choices;
     choices.push_back("Annulus");
     choices.push_back("Ball");
     choices.push_back("Box");
@@ -64,8 +64,8 @@ void ITKBinaryMorphologicalOpeningImage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("ForegroundValue", ForegroundValue, FilterParameter::Category::Parameter, ITKBinaryMorphologicalOpeningImage));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("KernelRadius", KernelRadius, FilterParameter::Category::Parameter, ITKBinaryMorphologicalOpeningImage));
 
-  QStringList linkedProps;
-  linkedProps << "NewCellArrayName";
+  std::vector<QString> linkedProps;
+  linkedProps.push_back("NewCellArrayName");
   parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =

@@ -82,7 +82,7 @@ ConvertColorToGrayScale::Pointer MontageImportHelper::CreateColorToGrayScaleFilt
   rgbToGray->setDataContainerArray(filter->getDataContainerArray());
   rgbToGray->setConversionAlgorithm(0);
   rgbToGray->setColorWeights(colorWeights);
-  QVector<DataArrayPath> inputDataArrayVector = {daPath};
+  std::vector<DataArrayPath> inputDataArrayVector = {daPath};
   rgbToGray->setInputDataArrayVector(inputDataArrayVector);
   rgbToGray->setCreateNewAttributeMatrix(false);
   rgbToGray->setOutputAttributeMatrixName(daPath.getAttributeMatrixName());

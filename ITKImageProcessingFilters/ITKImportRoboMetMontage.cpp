@@ -194,7 +194,7 @@ void ITKImportRoboMetMontage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_STRING_FP("Name of Created Montage", MontageName, FilterParameter::Category::Parameter, ITKImportRoboMetMontage));
   parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage Column Start/End [Inclusive, Zero Based]", ColumnMontageLimits, FilterParameter::Category::Parameter, ITKImportRoboMetMontage));
   parameters.push_back(SIMPL_NEW_INT_VEC2_FP("Montage Row Start/End [Inclusive, Zero Based]", RowMontageLimits, FilterParameter::Category::Parameter, ITKImportRoboMetMontage));
-  QVector<QString> choices = IGeometry::GetAllLengthUnitStrings();
+  std::vector<QString> choices = IGeometry::GetAllLengthUnitStrings();
   parameters.push_back(SIMPL_NEW_CHOICE_FP("Length Unit", LengthUnit, FilterParameter::Category::Parameter, ITKImportRoboMetMontage, choices, false));
 
   PreflightUpdatedValueFilterParameter::Pointer param = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Montage Information", MontageInformation, FilterParameter::Category::Parameter, ITKImportRoboMetMontage);
@@ -205,17 +205,17 @@ void ITKImportRoboMetMontage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_STRING_FP("Image File Prefix", ImageFilePrefix, FilterParameter::Category::Parameter, ITKImportRoboMetMontage));
   parameters.push_back(SIMPL_NEW_STRING_FP("Image File Extension", ImageFileExtension, FilterParameter::Category::Parameter, ITKImportRoboMetMontage));
 
-  QStringList linkedProps("Origin");
+  std::vector<QString> linkedProps = {"Origin"};
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Change Origin", ChangeOrigin, FilterParameter::Category::Parameter, ITKImportRoboMetMontage, linkedProps));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Origin", Origin, FilterParameter::Category::Parameter, ITKImportRoboMetMontage));
 
   linkedProps.clear();
-  linkedProps << "Spacing";
+  linkedProps.push_back("Spacing");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Change Spacing", ChangeSpacing, FilterParameter::Category::Parameter, ITKImportRoboMetMontage, linkedProps));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Spacing", Spacing, FilterParameter::Category::Parameter, ITKImportRoboMetMontage));
 
   linkedProps.clear();
-  linkedProps << "ColorWeights";
+  linkedProps.push_back("ColorWeights");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Convert To GrayScale", ConvertToGrayScale, FilterParameter::Category::Parameter, ITKImportRoboMetMontage, linkedProps));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Color Weighting", ColorWeights, FilterParameter::Category::Parameter, ITKImportRoboMetMontage));
 

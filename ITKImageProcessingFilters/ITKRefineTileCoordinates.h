@@ -31,7 +31,7 @@ class ITKImageProcessing_EXPORT ITKRefineTileCoordinates : public AbstractFilter
   PYB11_SHARED_POINTERS(ITKRefineTileCoordinates)
   PYB11_FILTER_NEW_MACRO(ITKRefineTileCoordinates)
   PYB11_PROPERTY(IntVec3Type MontageSize READ getMontageSize WRITE setMontageSize)
-  PYB11_PROPERTY(QStringList DataContainers READ getDataContainers WRITE setDataContainers)
+  PYB11_PROPERTY(std::vector<QString> DataContainers READ getDataContainers WRITE setDataContainers)
   PYB11_PROPERTY(QString CommonAttributeMatrixName READ getCommonAttributeMatrixName WRITE setCommonAttributeMatrixName)
   PYB11_PROPERTY(QString CommonDataArrayName READ getCommonDataArrayName WRITE setCommonDataArrayName)
   PYB11_PROPERTY(int ImportMode READ getImportMode WRITE setImportMode)
@@ -75,13 +75,13 @@ public:
   /**
    * @brief Setter property for DataContainers
    */
-  void setDataContainers(const QStringList& value);
+  void setDataContainers(const std::vector<QString>& value);
   /**
    * @brief Getter property for DataContainers
    * @return Value of DataContainers
    */
-  QStringList getDataContainers() const;
-  Q_PROPERTY(QStringList DataContainers READ getDataContainers WRITE setDataContainers)
+  std::vector<QString> getDataContainers() const;
+  Q_PROPERTY(QStringVec DataContainers READ getDataContainers WRITE setDataContainers)
 
   /**
    * @brief Setter property for CommonAttributeMatrixName
@@ -232,7 +232,7 @@ protected:
 
 private:
   IntVec3Type m_MontageSize = {};
-  QStringList m_DataContainers = {""};
+  std::vector<QString> m_DataContainers = {""};
   QString m_CommonAttributeMatrixName = {ITKImageProcessing::Montage::k_TileAttributeMatrixDefaultName};
   QString m_CommonDataArrayName = {ITKImageProcessing::Montage::k_TileDataArrayDefaultName};
   int m_ImportMode = {};

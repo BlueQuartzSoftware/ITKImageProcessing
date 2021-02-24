@@ -56,7 +56,7 @@ void ITKPatchBasedDenoisingImage::setupFilterParameters()
     parameter->setSetterCallback(SIMPL_BIND_SETTER(ITKPatchBasedDenoisingImage, this, NoiseModel));
     parameter->setGetterCallback(SIMPL_BIND_GETTER(ITKPatchBasedDenoisingImage, this, NoiseModel));
 
-    QVector<QString> choices;
+    std::vector<QString> choices;
     choices.push_back("No Model");
     choices.push_back("Gaussian");
     choices.push_back("Rician");
@@ -80,8 +80,8 @@ void ITKPatchBasedDenoisingImage::setupFilterParameters()
   parameters.push_back(
       SIMPL_NEW_DOUBLE_FP("KernelBandwidthFractionPixelsForEstimation", KernelBandwidthFractionPixelsForEstimation, FilterParameter::Category::Parameter, ITKPatchBasedDenoisingImage));
 
-  QStringList linkedProps;
-  linkedProps << "NewCellArrayName";
+  std::vector<QString> linkedProps;
+  linkedProps.push_back("NewCellArrayName");
   parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =

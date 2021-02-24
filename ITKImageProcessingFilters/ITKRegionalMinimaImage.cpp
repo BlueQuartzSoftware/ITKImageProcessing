@@ -44,8 +44,8 @@ void ITKRegionalMinimaImage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_BOOL_FP("FullyConnected", FullyConnected, FilterParameter::Category::Parameter, ITKRegionalMinimaImage));
   parameters.push_back(SIMPL_NEW_BOOL_FP("FlatIsMinima", FlatIsMinima, FilterParameter::Category::Parameter, ITKRegionalMinimaImage));
 
-  QStringList linkedProps;
-  linkedProps << "NewCellArrayName";
+  std::vector<QString> linkedProps;
+  linkedProps.push_back("NewCellArrayName");
   parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =

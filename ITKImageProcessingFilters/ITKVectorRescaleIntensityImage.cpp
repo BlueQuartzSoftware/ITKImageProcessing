@@ -75,7 +75,7 @@ void ITKVectorRescaleIntensityImage::setupFilterParameters()
     parameter->setSetterCallback(SIMPL_BIND_SETTER(ITKVectorRescaleIntensityImage, this, OutputType));
     parameter->setGetterCallback(SIMPL_BIND_GETTER(ITKVectorRescaleIntensityImage, this, OutputType));
 
-    QVector<QString> choices;
+    std::vector<QString> choices;
     choices.push_back("unsigned char");
     choices.push_back("char");
     choices.push_back("unsigned short");
@@ -95,8 +95,8 @@ void ITKVectorRescaleIntensityImage::setupFilterParameters()
 
   parameters.push_back(SIMPL_NEW_DOUBLE_FP("OutputMaximumMagnitude", OutputMaximumMagnitude, FilterParameter::Category::Parameter, ITKVectorRescaleIntensityImage));
 
-  QStringList linkedProps;
-  linkedProps << "NewCellArrayName";
+  std::vector<QString> linkedProps;
+  linkedProps.push_back("NewCellArrayName");
   parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
