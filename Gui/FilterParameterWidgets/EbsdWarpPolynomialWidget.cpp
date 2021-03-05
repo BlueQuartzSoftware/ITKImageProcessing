@@ -150,7 +150,7 @@ void EbsdWarpPolynomialWidget::widgetChanged(const QString& text)
   EWPW_CHECK_LINEEDIT(a5)
   EWPW_CHECK_LINEEDIT(a6)
 
-  emit parametersChanged();
+  Q_EMIT parametersChanged();
 }
 
 // -----------------------------------------------------------------------------

@@ -211,7 +211,7 @@ public:
    */
   void execute() override;
 
-public slots:
+public Q_SLOTS:
   /**
    * @brief Cancel the operation
    */
