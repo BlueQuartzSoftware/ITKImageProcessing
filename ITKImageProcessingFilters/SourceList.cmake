@@ -55,12 +55,17 @@ if(ITK_VERSION_MAJOR EQUAL 4)
     )
 elseif(ITK_VERSION_MAJOR EQUAL 5)
   # Put ITK 5 Specific Modules in here
-  set( _PublicFilters 
-      ${_PublicFilters} 
-      ITKPCMTileRegistration
+  if(ITKImageProcessing_ENABLE_ITK_MONTAGE)
+    list(APPEND _PublicFilters
       ITKStitchMontage
+      ITKPCMTileRegistration
+    )
+  endif()
+  if(ITKImageProcessing_ENABLE_ITK_TOTAL_VARIATION)
+    list(APPEND _PublicFilters
       ITKProxTVImage
-  )
+    )
+  endif()
 endif()
 
 if(NOT ITKImageProcessing_LeanAndMean)

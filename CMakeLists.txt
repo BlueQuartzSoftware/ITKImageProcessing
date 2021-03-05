@@ -44,6 +44,9 @@ set(ITK_NO_IO_FACTORY_REGISTER_MANAGER TRUE)
 find_package(ITK REQUIRED)
 #message(STATUS "ITK_VERSION_MAJOR: ${ITK_VERSION_MAJOR}")
 
+option(ITKImageProcessing_ENABLE_ITK_MONTAGE "Enable ITK Montage module" ON)
+option(ITKImageProcessing_ENABLE_ITK_TOTAL_VARIATION "Enable ITK TotalVariation module" ON)
+
 ## YOU MUST INCLUDE THIS FILE TO USE ITK !!!
 ## Then do not forget to add "${ITK_LIBRARIES}" to the target_link_libraries below
 # --------------------------------------------------------------------
@@ -75,12 +78,16 @@ if(ITK_VERSION_MAJOR EQUAL 4)
 elseif(ITK_VERSION_MAJOR EQUAL 5)
   #message(STATUS "Using ITK v5")
   # Put ITK 5 Specific Modyles in here
-  set( ADDITIONAL_ITK_MODULES ${ADDITIONAL_ITK_MODULES}
-          ITKImageFeature
-          ITKTransform
-          Montage 
-          TotalVariation
-   )
+  set(ADDITIONAL_ITK_MODULES ${ADDITIONAL_ITK_MODULES}
+    ITKImageFeature
+    ITKTransform
+  )
+  if(ITKImageProcessing_ENABLE_ITK_MONTAGE)
+    list(APPEND ADDITIONAL_ITK_MODULES Montage)
+  endif()
+  if(ITKImageProcessing_ENABLE_ITK_TOTAL_VARIATION)
+    list(APPEND ADDITIONAL_ITK_MODULES TotalVariation)
+  endif()
 endif()
 
 option(${PLUGIN_NAME}_ENABLE_SCIFIO "Enable SCIFIO ITK Modules" OFF)
