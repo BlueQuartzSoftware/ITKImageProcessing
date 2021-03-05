@@ -593,7 +593,7 @@ QString ApplyDewarpParameters::getHumanLabel() const
 // -----------------------------------------------------------------------------
 QUuid ApplyDewarpParameters::getUuid() const
 {
-  return QUuid("{7c2a7ce-4582-52a6-2de-16b62d43fbf}");
+  return QUuid("{7c2a7c4e-4582-52a6-92de-16b626d43fbf}");
 }
 
 // -----------------------------------------------------------------------------
