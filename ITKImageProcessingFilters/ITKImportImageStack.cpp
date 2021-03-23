@@ -41,11 +41,8 @@
 #include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/FileListInfoFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
-#include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
-#include "SIMPLib/FilterParameters/LinkedChoicesFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
-#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/ITK/itkInPlaceImageToDream3DDataFilter.h"
 #include "SIMPLib/Utilities/FilePathGenerator.h"
@@ -300,16 +297,12 @@ void readImageStack(ITKImportImageStack* filter, const QVector<QString>& fileLis
 
   // Variables for the progress Reporting
   size_t slice = 0;
-  int32_t progress = 0;
   int64_t zStartIndex = 0;
   int64_t z = zStartIndex;
   float total = static_cast<float>(fileList.size() - zStartIndex);
   // Loop over all the files importing them one by one and copying the data into the data array
   for(const auto& filePath : fileList)
   {
-    // Do some progress message
-    progress = static_cast<int32_t>(z - zStartIndex);
-    progress = static_cast<int32_t>(100.0f * static_cast<float>(progress) / total);
     QString msg = "Importing: " + filePath;
     filter->notifyStatusMessage(msg.toLatin1().data());
 
@@ -325,8 +318,22 @@ void readImageStack(ITKImportImageStack* filter, const QVector<QString>& fileLis
     imageReader->execute();
     if(imageReader->getErrorCode() < 0)
     {
-      QString msg = QString("Error reading image %1").arg(filePath);
+      msg = QString("Error reading image %1").arg(filePath);
       filter->setErrorCondition(imageReader->getErrorCode(), msg);
+      return;
+    }
+
+    // Check the ImageGeometry of the imported Image matches the destination
+    ImageGeom::Pointer importedImageGeom = dca->getDataContainer(dcName)->template getGeometryAs<ImageGeom>();
+    SizeVec3Type importedDims = importedImageGeom->getDimensions();
+    if(dims[0] != importedDims[0] || dims[1] != importedDims[1])
+    {
+      msg.clear();
+      QTextStream out(&msg);
+      out << "Slice " << slice << " image dimensions are different than the first slice.\n";
+      out << "  First Slice Dims are:  " << dims[0] << " x " << dims[1] << "\n";
+      out << "  Current Slice Dims are:" << importedDims[0] << " x " << importedDims[1] << "\n";
+      filter->setErrorCondition(-64510, msg);
       return;
     }
 
@@ -337,7 +344,7 @@ void readImageStack(ITKImportImageStack* filter, const QVector<QString>& fileLis
     // Copy that into the output array...
     if(!outputData->copyFromArray(tupleIndex, tempData, 0, tuplesPerSlice))
     {
-      QString msg = QString("Error copying source image data into destination array.    Slice:%1    TupleIndex:%2    MaxTupleIndex:%3").arg(slice).arg(tupleIndex).arg(outputData->getSize());
+      msg = QString("Error copying source image data into destination array.    Slice:%1    TupleIndex:%2    MaxTupleIndex:%3").arg(slice).arg(tupleIndex).arg(outputData->getSize());
       filter->setErrorCondition(imageReader->getErrorCode(), msg);
       return;
     }
