@@ -322,9 +322,24 @@ void readImageStack(ITKImportImageStack* filter, const QVector<QString>& fileLis
     imageReader->execute();
     if(imageReader->getErrorCondition() < 0)
     {
+      msg = QString("Error reading image %1").arg(filePath);
       filter->setErrorCondition(imageReader->getErrorCondition());
-      QString msg = QString("Error reading image %1").arg(filePath);
-      filter->notifyErrorMessage(filter->getHumanLabel(), msg, filter->getErrorCondition());
+      return;
+    }
+
+    // Check the ImageGeometry of the imported Image matches the destination
+    ImageGeom::Pointer importedImageGeom = dca->getDataContainer(dcName)->template getGeometryAs<ImageGeom>();
+    size_t xDimImp, yDimImp, zDimImp;
+    std::tie(xDimImp, yDimImp, zDimImp) = imageGeom->getDimensions();
+    if(xDim != xDimImp || yDim != yDimImp)
+    {
+      msg.clear();
+      QTextStream out(&msg);
+      out << "Slice " << slice << " image dimensions are different than the first slice.\n";
+      out << "  First Slice Dims are:  " << xDim << " x " << yDim << "\n";
+      out << "  Current Slice Dims are:" << xDimImp << " x " << yDimImp << "\n";
+      filter->setErrorCondition(-64510);
+      filter->notifyErrorMessage(filter->getHumanLabel(), msg, -64510);
       return;
     }
 
