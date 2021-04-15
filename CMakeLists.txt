@@ -44,6 +44,9 @@ set(ITK_NO_IO_FACTORY_REGISTER_MANAGER TRUE)
 find_package(ITK REQUIRED)
 #message(STATUS "ITK_VERSION_MAJOR: ${ITK_VERSION_MAJOR}")
 
+option(ITKImageProcessing_ENABLE_ITK_MONTAGE "Enable ITK Montage module" ON)
+option(ITKImageProcessing_ENABLE_ITK_TOTAL_VARIATION "Enable ITK TotalVariation module" ON)
+
 ## YOU MUST INCLUDE THIS FILE TO USE ITK !!!
 ## Then do not forget to add "${ITK_LIBRARIES}" to the target_link_libraries below
 # --------------------------------------------------------------------
@@ -75,12 +78,16 @@ if(ITK_VERSION_MAJOR EQUAL 4)
 elseif(ITK_VERSION_MAJOR EQUAL 5)
   #message(STATUS "Using ITK v5")
   # Put ITK 5 Specific Modyles in here
-  set( ADDITIONAL_ITK_MODULES ${ADDITIONAL_ITK_MODULES}
-          ITKImageFeature
-          ITKTransform
-          Montage 
-          TotalVariation
-   )
+  set(ADDITIONAL_ITK_MODULES ${ADDITIONAL_ITK_MODULES}
+    ITKImageFeature
+    ITKTransform
+  )
+  if(ITKImageProcessing_ENABLE_ITK_MONTAGE)
+    list(APPEND ADDITIONAL_ITK_MODULES Montage)
+  endif()
+  if(ITKImageProcessing_ENABLE_ITK_TOTAL_VARIATION)
+    list(APPEND ADDITIONAL_ITK_MODULES TotalVariation)
+  endif()
 endif()
 
 option(${PLUGIN_NAME}_ENABLE_SCIFIO "Enable SCIFIO ITK Modules" OFF)
@@ -275,6 +282,10 @@ if(NOT APPLE AND UNIX)
   set(${plug_target_name}_install_dest "lib")
 endif()
 
+if(DREAM3D_ANACONDA AND WIN32)
+  set(${plug_target_name}_install_dest "bin")
+endif()
+
 PluginProperties(TARGET_NAME ${plug_target_name}
                 DEBUG_EXTENSION "_debug"
                 VERSION "${DREAM3D_VERSION}"
@@ -312,7 +323,7 @@ endif()
 
 # -------------------------------------------------------------------- 
 # If Python Wrapping is enabled then generate the Python module code 
-if(SIMPL_ENABLE_PYTHON)
+if(SIMPL_WRAP_PYTHON)
   include(${SIMPLProj_SOURCE_DIR}/Wrapping/Python/Binding/CreatePybind11Module.cmake)
 
   CreatePybind11Plugin(PLUGIN_NAME ${PLUGIN_NAME} PLUGIN_TARGET ${plug_target_name})
@@ -335,9 +346,14 @@ if(EXISTS ${${PLUGIN_NAME}_SOURCE_DIR}/ExamplePipelines/${PLUGIN_NAME})
     set(INSTALL_DESTINATION "${DREAM3D_PACKAGE_DEST_PREFIX}/PrebuiltPipelines/Examples")
   endif()
 
+  if(DREAM3D_ANACONDA)
+    set(INSTALL_DESTINATION "share/DREAM3D/PrebuiltPipelines/Examples")
+  endif()
+
   install(DIRECTORY ${${PLUGIN_NAME}_SOURCE_DIR}/ExamplePipelines/${PLUGIN_NAME}
-          DESTINATION ${INSTALL_DESTINATION}
-          COMPONENT Applications )
+    DESTINATION ${INSTALL_DESTINATION}
+    COMPONENT Applications
+  )
 endif()
 
 
@@ -352,15 +368,15 @@ if(EXISTS ${${PLUGIN_NAME}_SOURCE_DIR}/Data/${PLUGIN_NAME})
               COMMENT "Copying ${PLUGIN_NAME} Data Folder into Binary Directory")
   set_target_properties(${PLUGIN_NAME}DataFolderCopy PROPERTIES FOLDER ZZ_COPY_FILES)
 
-  if(APPLE)
-    set(INSTALL_DESTINATION "${DREAM3D_PACKAGE_DEST_PREFIX}/Resources/Data")
-  else()
-    set(INSTALL_DESTINATION "${DREAM3D_PACKAGE_DEST_PREFIX}")
+  set(INSTALL_DESTINATION "Data")
+  if(DREAM3D_ANACONDA)
+    set(INSTALL_DESTINATION "share/DREAM3D/Data")
   endif()
 
   install(DIRECTORY ${${PLUGIN_NAME}_SOURCE_DIR}/Data/${PLUGIN_NAME}
-          DESTINATION Data
-          COMPONENT Applications )
+    DESTINATION ${INSTALL_DESTINATION}
+    COMPONENT Applications
+  )
 endif()
 # -- Include the GUI Plugin codes
 include(${${PLUGIN_NAME}_SOURCE_DIR}/Gui/CMakeLists.txt)
