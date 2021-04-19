@@ -129,7 +129,7 @@ void EbsdWarpPolynomialFilterParameter::readJson(const QJsonObject& json)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EbsdWarpPolynomialFilterParameter::writeJson(QJsonObject& obj)
+void EbsdWarpPolynomialFilterParameter::writeJson(QJsonObject& obj) const
 {
   if(m_GetterCallback)
   {

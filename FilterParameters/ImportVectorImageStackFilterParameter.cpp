@@ -99,7 +99,7 @@ void ImportVectorImageStackFilterParameter::readJson(const QJsonObject& json)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ImportVectorImageStackFilterParameter::writeJson(QJsonObject& json)
+void ImportVectorImageStackFilterParameter::writeJson(QJsonObject& json) const
 {
   if(m_GetterCallback)
   {
