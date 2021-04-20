@@ -37,34 +37,27 @@
 #include <algorithm>
 #include <type_traits>
 
-#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Common/TemplateHelpers.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatFilterParameter.h"
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
 #include "SIMPLib/FilterParameters/IntVec2FilterParameter.h"
-#include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
-#include "SIMPLib/FilterParameters/MultiDataContainerSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
-#include "SIMPLib/ITK/Dream3DTemplateAliasMacro.h"
-#include "SIMPLib/ITK/itkDream3DFilterInterruption.h"
 #include "SIMPLib/ITK/itkInPlaceDream3DDataToImageFilter.h"
 #include "SIMPLib/ITK/itkInPlaceImageToDream3DDataFilter.h"
 #include "SIMPLib/ITK/itkProgressObserver.hpp"
 #include "SIMPLib/ITK/itkTransformToDream3DITransformContainer.h"
 #include "SIMPLib/ITK/itkTransformToDream3DTransformContainer.h"
 
-#include "ITKImageProcessing/ITKImageProcessingFilters/MetaXmlUtils.h"
+
 #include "ITKImageProcessing/ITKImageProcessingFilters/util/MontageImportHelper.h"
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
 
-#include "itkImageFileWriter.h"
 #include "itkRGBToLuminanceImageFilter.h"
 #include "itkStreamingImageFilter.h"
-#include "itkTileMergeImageFilter.h"
 #include "itkTileMontage.h"
 #include "itkTxtTransformIOFactory.h"
 
@@ -344,7 +337,10 @@ typename MontageType::Pointer ITKPCMTileRegistration::createMontage(int peakMeth
     y1 = 0;
   }
 
-#if(ITK_VERSION_MAJOR == 5) && (ITK_VERSION_MINOR >= 1)
+#if(ITK_VERSION_MAJOR == 5) && (ITK_VERSION_MINOR >= 2)
+  using PaddingMethodEnum = typename PCMType::PaddingMethodEnum;
+  using PeakInterpolationType = itk::PhaseCorrelationOptimizerEnums::PeakInterpolationMethod;
+#elif (ITK_VERSION_MAJOR == 5) && (ITK_VERSION_MINOR >= 1)
   using PaddingMethodEnum = typename PCMType::PaddingMethodEnum;
   using PeakInterpolationType = typename itk::MaxPhaseCorrelationOptimizer<PCMType>::PeakInterpolationMethodEnum;
 #else
