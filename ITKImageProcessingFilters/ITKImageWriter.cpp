@@ -34,6 +34,7 @@
 
 #include <cmath>
 #include <cstring>
+#include <iomanip>
 
 #include <QtCore/QDir>
 
