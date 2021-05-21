@@ -32,6 +32,7 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "ITKImageWriter.h"
 
+#include <cmath>
 #include <cstring>
 
 #include <QtCore/QDir>
@@ -65,7 +66,6 @@
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
-#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/ITK/itkInPlaceDream3DDataToImageFilter.h"
 #include "SIMPLib/Utilities/FileSystemPathHelper.h"
 
@@ -443,16 +443,18 @@ void ITKImageWriter::saveImageData(DataContainerArray::Pointer dca, size_t slice
   QString originalFileName = getFileName();
   QFileInfo fi(originalFileName);
 
-  QString adjustedFilePath;
-  QTextStream out(&adjustedFilePath);
-  out << fi.absolutePath() << "/" << fi.completeBaseName();
+  std::stringstream ss;
+  ss << fi.absolutePath().toStdString() << "/" << fi.completeBaseName().toStdString();
+
+  int32_t total_digits = static_cast<int32_t>(std::log10(maxSlice) + 1);
+
   if(maxSlice != 1)
   {
-    out << "_" << slice;
+    ss << "_" << std::setw(total_digits) << std::setfill('0') << slice;
   }
-  out << "." << fi.suffix();
+  ss << "." << fi.suffix().toStdString();
 
-  setFileName(adjustedFilePath);
+  setFileName(QString::fromStdString(ss.str()));
   DataContainerArray::Pointer originalDataContainerArray = getDataContainerArray();
   setDataContainerArray(dca);
   Dream3DArraySwitchMacro(this->writeImage, getImageArrayPath(), -21010);
