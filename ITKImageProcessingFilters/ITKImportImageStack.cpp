@@ -171,7 +171,7 @@ void ITKImportImageStack::dataCheck()
   QFileInfo fi(m_InputFileListInfo.InputPath);
   if(!fi.exists())
   {
-    QString ss = QObject::tr("The input directory does not exist: %1").arg(m_InputFileListInfo.InputPath);
+    ss = QObject::tr("The input directory does not exist: %1").arg(m_InputFileListInfo.InputPath);
     setErrorCondition(-64501, ss);
   }
 
@@ -186,10 +186,6 @@ void ITKImportImageStack::dataCheck()
   if(m_InputFileListInfo.Ordering == 0)
   {
     orderAscending = true;
-  }
-  else if(m_InputFileListInfo.Ordering == 1)
-  {
-    orderAscending = false;
   }
 
   // Now generate all the file names the user is asking for and populate the table
@@ -213,8 +209,8 @@ void ITKImportImageStack::dataCheck()
   // Validate all the files in the list. Throw an error for each one if it does not exist
   for(const auto& filePath : fileList)
   {
-    QFileInfo fi(filePath);
-    if(!fi.exists())
+    QFileInfo fi2(filePath);
+    if(!fi2.exists())
     {
       QString errorMessage = QString("File does not exist: %1").arg(filePath);
       setErrorCondition(-64502, errorMessage);
@@ -297,9 +293,9 @@ void readImageStack(ITKImportImageStack* filter, const QVector<QString>& fileLis
 
   // Variables for the progress Reporting
   size_t slice = 0;
-  int64_t zStartIndex = 0;
-  int64_t z = zStartIndex;
-  float total = static_cast<float>(fileList.size() - zStartIndex);
+  // int64_t zStartIndex = 0;
+  // int64_t z = zStartIndex;
+  // float total = static_cast<float>(fileList.size() - zStartIndex);
   // Loop over all the files importing them one by one and copying the data into the data array
   for(const auto& filePath : fileList)
   {
