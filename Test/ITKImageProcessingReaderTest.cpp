@@ -186,19 +186,6 @@ public:
   }
 
   // -----------------------------------------------------------------------------
-  //  Test methods
-  // -----------------------------------------------------------------------------
-  int TestAvailability(const QString& filterName)
-  {
-    if(nullptr == GetFilterByName(filterName))
-    {
-      QString msg;
-      msg = "The test requires the use of %1 filter which is found in the ITKImageProcessing Plugin";
-      DREAM3D_TEST_THROW_EXCEPTION(msg.arg(filterName).toStdString())
-    }
-    return 0;
-  }
-
   int TestNoInput()
   {
     AbstractFilter::Pointer reader = GetFilterByName("ITKImageReader");
@@ -208,18 +195,15 @@ public:
     }
 
     reader->execute();
-    DREAM3D_REQUIRED(reader->getErrorCode(), ==, -5);
+    DREAM3D_REQUIRED(reader->getErrorCode(), ==, -387);
     DREAM3D_REQUIRED(reader->getWarningCode(), >=, 0);
     return EXIT_SUCCESS;
   }
 
   int TestNoDataContainer()
   {
-    AbstractFilter::Pointer reader = GetFilterByName("ITKImageReader");
-    if(!reader)
-    {
-      return EXIT_FAILURE;
-    }
+    ITKImageReader::Pointer reader = ITKImageReader::New();
+
     bool propertySet = false;
     // No data container (and bogus filename)
     propertySet = reader->setProperty("FileName", UnitTest::ITKImageProcessingReaderTest::NonExistentInputTestFile);
@@ -236,29 +220,17 @@ public:
 
   int TestBadFilename()
   {
-    AbstractFilter::Pointer reader = GetFilterByName("ITKImageReader");
-    if(!reader)
-    {
-      return EXIT_FAILURE;
-    }
-    bool propertySet = false;
-
+    ITKImageReader::Pointer reader = ITKImageReader::New();
     const QString containerName = "TestContainer";
     DataContainer::Pointer inputContainer = DataContainer::New(containerName);
     DataContainerArray::Pointer inputContainerArray = DataContainerArray::New();
-    inputContainerArray->addOrReplaceDataContainer(inputContainer);
 
     reader->setDataContainerArray(inputContainerArray);
-    QVariant var;
-    var.setValue(DataArrayPath(containerName, "", ""));
-    propertySet = reader->setProperty("DataContainerName", var);
-    DREAM3D_REQUIRE_EQUAL(propertySet, true);
-
-    propertySet = reader->setProperty("FileName", UnitTest::ITKImageProcessingReaderTest::NonExistentInputTestFile);
-    DREAM3D_REQUIRE_EQUAL(propertySet, true);
+    reader->setDataContainerName(DataArrayPath(containerName, "", ""));
+    reader->setFileName(UnitTest::ITKImageProcessingReaderTest::NonExistentInputTestFile);
 
     reader->execute();
-    DREAM3D_REQUIRED(reader->getErrorCode(), ==, -3);
+    DREAM3D_REQUIRED(reader->getErrorCode(), ==, -388);
     DREAM3D_REQUIRED(reader->getWarningCode(), >=, 0);
     return EXIT_SUCCESS;
   }
@@ -268,14 +240,7 @@ public:
   {
     FilterPipeline::Pointer pipeline = FilterPipeline::New();
 
-    QString filtName = "ITKImageReader";
-    FilterManager* fm = FilterManager::Instance();
-    IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filtName);
-
-    DREAM3D_REQUIRE_NE(0, filterFactory.get());
-
-    AbstractFilter::Pointer reader = filterFactory->create();
-    DREAM3D_REQUIRE_NE(0, reader.get());
+    ITKImageReader::Pointer reader = ITKImageReader::New();
 
     bool propertySet = false;
 
@@ -353,9 +318,10 @@ public:
   // -----------------------------------------------------------------------------
   void operator()()
   {
+    std::cout << "# --------- Starting ITKImageProcessingReaderTest -------" << std::endl;
+
     int err = EXIT_SUCCESS;
 
-    DREAM3D_REGISTER_TEST(TestAvailability("ITKImageReader"));
     DREAM3D_REGISTER_TEST(TestNoInput());
     DREAM3D_REGISTER_TEST(TestNoDataContainer());
     DREAM3D_REGISTER_TEST(TestBadFilename());

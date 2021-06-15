@@ -9,17 +9,17 @@
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/Filtering/FilterFactory.hpp"
 #include "SIMPLib/Filtering/FilterManager.h"
 #include "SIMPLib/Filtering/FilterPipeline.h"
 #include "SIMPLib/Filtering/QMetaObjectUtilities.h"
-#include "SIMPLib/Plugin/ISIMPLibPlugin.h"
+#include "SIMPLib/ITK/itkInPlaceDream3DDataToImageFilter.h"
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
+
 #include "UnitTestSupport.hpp"
 
 #include "ITKImageProcessingTestFileLocations.h"
-
-#include "SIMPLib/ITK/itkInPlaceDream3DDataToImageFilter.h"
 
 // Testing
 #include <itkTestingHashImageFilter.h>

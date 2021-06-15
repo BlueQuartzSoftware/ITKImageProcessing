@@ -34,6 +34,7 @@
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/Filtering/FilterFactory.hpp"
 #include "SIMPLib/Filtering/FilterManager.h"
 #include "SIMPLib/Filtering/FilterPipeline.h"
@@ -41,6 +42,7 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
+
 #include "UnitTestSupport.hpp"
 
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKImportImageStack.h"
@@ -61,20 +63,6 @@ public:
   using PixelType = short;
   using ImageType = itk::Image<PixelType, Dimension>;
 
-  // -----------------------------------------------------------------------------
-  //  Helper methods
-  // -----------------------------------------------------------------------------
-  AbstractFilter::Pointer GetFilterByName(const QString& filterName)
-  {
-    FilterManager* fm = FilterManager::Instance();
-    IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filterName);
-    if(nullptr == filterFactory.get())
-    {
-      return nullptr;
-    }
-    return filterFactory->create();
-  }
-
   void WriteTestFile(const QString& filePath, ImageType* image)
   {
     using WriterType = itk::ImageFileWriter<ImageType>;
@@ -85,77 +73,59 @@ public:
   }
 
   // -----------------------------------------------------------------------------
-  //  Test methods
-  // -----------------------------------------------------------------------------
-  int TestAvailability(const QString& filterName)
-  {
-    if(nullptr == GetFilterByName(filterName))
-    {
-      QString msg;
-      msg = "The test requires the use of %1 filter which is found in the ITKImageProcessing Plugin";
-      DREAM3D_TEST_THROW_EXCEPTION(msg.arg(filterName).toStdString())
-    }
-    return 0;
-  }
-
-  // -----------------------------------------------------------------------------
   int TestNoInput()
   {
-    AbstractFilter::Pointer reader = GetFilterByName("ITKImportImageStack");
-    if(!reader)
+    ITKImportImageStack::Pointer filter = ITKImportImageStack::New();
+    if(!filter)
     {
       return EXIT_FAILURE;
     }
 
-    reader->execute();
-    DREAM3D_REQUIRED(reader->getErrorCode(), ==, -64501);
-    DREAM3D_REQUIRED(reader->getWarningCode(), >=, 0);
+    filter->execute();
+    DREAM3D_REQUIRED(filter->getErrorCode(), ==, -64501);
+    DREAM3D_REQUIRED(filter->getWarningCode(), >=, 0);
     return EXIT_SUCCESS;
   }
 
   // -----------------------------------------------------------------------------
   int TestNoDataContainer()
   {
-    AbstractFilter::Pointer abstractFilter = GetFilterByName("ITKImportImageStack");
-    if(!abstractFilter)
+    ITKImportImageStack::Pointer filter = ITKImportImageStack::New();
+    if(!filter)
     {
       return EXIT_FAILURE;
     }
 
-    ITKImportImageStack::Pointer reader = std::static_pointer_cast<ITKImportImageStack>(abstractFilter);
-
     StackFileListInfo fileListInfo;
     fileListInfo.InputPath = UnitTest::ITKImportImageStackTest::StackInputTestDir;
 
-    reader->setInputFileListInfo(fileListInfo);
+    filter->setInputFileListInfo(fileListInfo);
 
     bool propertySet = false;
     QVariant var;
     var.setValue(DataArrayPath());
-    propertySet = reader->setProperty("DataContainerName", var);
+    propertySet = filter->setProperty("DataContainerName", var);
     DREAM3D_REQUIRE_EQUAL(propertySet, true);
-    reader->execute();
-    DREAM3D_REQUIRED(reader->getErrorCode(), ==, -887);
-    DREAM3D_REQUIRED(reader->getWarningCode(), >=, 0);
+    filter->execute();
+    DREAM3D_REQUIRED(filter->getErrorCode(), ==, -887);
+    DREAM3D_REQUIRED(filter->getWarningCode(), >=, 0);
     return EXIT_SUCCESS;
   }
 
   // -----------------------------------------------------------------------------
   int TestNoFiles()
   {
-    AbstractFilter::Pointer abstractFilter = GetFilterByName("ITKImportImageStack");
-    if(!abstractFilter)
+    ITKImportImageStack::Pointer filter = ITKImportImageStack::New();
+    if(!filter)
     {
       return EXIT_FAILURE;
     }
-
-    ITKImportImageStack::Pointer reader = std::static_pointer_cast<ITKImportImageStack>(abstractFilter);
 
     bool propertySet = false;
     const QString containerName = "TestNoFiles";
     QVariant var;
     var.setValue(DataArrayPath(containerName, "", ""));
-    propertySet = reader->setProperty("DataContainerName", var);
+    propertySet = filter->setProperty("DataContainerName", var);
     DREAM3D_REQUIRE_EQUAL(propertySet, true);
 
     StackFileListInfo fileListInfo;
@@ -167,29 +137,27 @@ public:
     fileListInfo.FileSuffix = "";
     fileListInfo.PaddingDigits = 4;
 
-    reader->setInputFileListInfo(fileListInfo);
+    filter->setInputFileListInfo(fileListInfo);
 
-    reader->execute();
-    DREAM3D_REQUIRED(reader->getErrorCode(), ==, -64501);
-    DREAM3D_REQUIRED(reader->getWarningCode(), >=, 0);
+    filter->execute();
+    DREAM3D_REQUIRED(filter->getErrorCode(), ==, -64501);
+    DREAM3D_REQUIRED(filter->getWarningCode(), >=, 0);
     return EXIT_SUCCESS;
   }
 
   int TestFileDoesNotExist()
   {
-    AbstractFilter::Pointer abstractFilter = GetFilterByName("ITKImportImageStack");
-    if(!abstractFilter)
+    ITKImportImageStack::Pointer filter = ITKImportImageStack::New();
+    if(!filter)
     {
       return EXIT_FAILURE;
     }
-
-    ITKImportImageStack::Pointer reader = std::static_pointer_cast<ITKImportImageStack>(abstractFilter);
 
     bool propertySet = false;
     const QString containerName = "TestFileDoesNotExist";
     QVariant var;
     var.setValue(DataArrayPath(containerName, "", ""));
-    propertySet = reader->setProperty("DataContainerName", var);
+    propertySet = filter->setProperty("DataContainerName", var);
     DREAM3D_REQUIRE_EQUAL(propertySet, true);
 
     StackFileListInfo fileListInfo;
@@ -201,11 +169,11 @@ public:
     fileListInfo.FileSuffix = "";
     fileListInfo.PaddingDigits = 4;
 
-    reader->setInputFileListInfo(fileListInfo);
+    filter->setInputFileListInfo(fileListInfo);
 
-    reader->execute();
-    DREAM3D_REQUIRED(reader->getErrorCode(), ==, -64502);
-    DREAM3D_REQUIRED(reader->getWarningCode(), >=, 0);
+    filter->execute();
+    DREAM3D_REQUIRED(filter->getErrorCode(), ==, -64502);
+    DREAM3D_REQUIRED(filter->getWarningCode(), >=, 0);
     return EXIT_SUCCESS;
   }
 
@@ -219,20 +187,18 @@ public:
 
     DREAM3D_REQUIRE_NE(0, filterFactory.get());
 
-    AbstractFilter::Pointer abstractFilter = GetFilterByName("ITKImportImageStack");
-    if(!abstractFilter)
+    ITKImportImageStack::Pointer filter = ITKImportImageStack::New();
+    if(!filter)
     {
       return EXIT_FAILURE;
     }
-
-    ITKImportImageStack::Pointer reader = std::static_pointer_cast<ITKImportImageStack>(abstractFilter);
 
     bool propertySet = false;
 
     const QString containerName = "TestCompareImage";
     QVariant var;
     var.setValue(DataArrayPath(containerName, "", ""));
-    propertySet = reader->setProperty("DataContainerName", var);
+    propertySet = filter->setProperty("DataContainerName", var);
     DREAM3D_REQUIRE_EQUAL(propertySet, true);
 
     StackFileListInfo fileListInfo;
@@ -245,29 +211,29 @@ public:
     fileListInfo.FileSuffix = "";
     fileListInfo.PaddingDigits = 2;
     fileListInfo.Ordering = 0;
-    reader->setInputFileListInfo(fileListInfo);
+    filter->setInputFileListInfo(fileListInfo);
 
     static const unsigned int Dimension = 3;
     FloatVec3Type inputOrigin;
     inputOrigin[0] = 1.f;
     inputOrigin[1] = 4.f;
     inputOrigin[2] = 8.f;
-    reader->setOrigin(inputOrigin);
+    filter->setOrigin(inputOrigin);
     DREAM3D_REQUIRE_EQUAL(propertySet, true);
 
     FloatVec3Type inputspacing;
     inputspacing[0] = 0.3f;
     inputspacing[1] = 0.2f;
     inputspacing[2] = 0.9f;
-    reader->setSpacing(inputspacing);
+    filter->setSpacing(inputspacing);
     DREAM3D_REQUIRE_EQUAL(propertySet, true);
 
-    reader->execute();
-    DREAM3D_REQUIRED(reader->getErrorCode(), >=, 0);
-    DREAM3D_REQUIRED(reader->getWarningCode(), >=, 0);
+    filter->execute();
+    DREAM3D_REQUIRED(filter->getErrorCode(), >=, 0);
+    DREAM3D_REQUIRED(filter->getWarningCode(), >=, 0);
 
     // Compare read data
-    DataContainerArray::Pointer containerArray = reader->getDataContainerArray();
+    DataContainerArray::Pointer containerArray = filter->getDataContainerArray();
     DREAM3D_REQUIRE_NE(containerArray.get(), 0);
     DREAM3D_REQUIRE(containerArray->getDataContainerNames().contains(containerName));
 
@@ -307,10 +273,9 @@ public:
   // -----------------------------------------------------------------------------
   void operator()()
   {
-    std::cout << "############# ITKImportImageStackTest ###############" << std::endl;
+    std::cout << "--------------------- ITKImportImageStackTest ---------------------" << std::endl;
     int err = EXIT_SUCCESS;
 
-    DREAM3D_REGISTER_TEST(TestAvailability("ITKImportImageStack"));
     DREAM3D_REGISTER_TEST(TestNoInput());
     DREAM3D_REGISTER_TEST(TestNoDataContainer());
     DREAM3D_REGISTER_TEST(TestNoFiles());

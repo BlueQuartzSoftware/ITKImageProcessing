@@ -7,15 +7,7 @@ set(${PLUGIN_NAME}Test_BINARY_DIR ${${PLUGIN_NAME}_BINARY_DIR}/Test)
 # be directly included in the main test source file. We list them here so that
 # they will show up in IDEs
 set(TEST_NAMES
-  # These are from ZeissImport
-#  ImportZenInfoMontageTest
-#  AxioVisionV4ToTileConfigurationTest
-#  ImportAxioVisionV4MontageTest
-#  ITKImageProcessingReaderTest
-#  ITKImageProcessingWriterTest
-#  ITKImportImageStackTest
-#  ImportVectorImageStackTest
-#  ITKMedianImageTest
+
 )
 
 if(ITK_VERSION_MAJOR EQUAL 4)
@@ -24,108 +16,113 @@ elseif(ITK_VERSION_MAJOR EQUAL 5)
   # Put ITK 5 Specific Modyles in here
   set( TEST_NAMES
       ${TEST_NAMES}
-#      ITKImportFijiMontageTest
-#      ITKImportRoboMetMontageTest
-#      ITKProxTVImageTest
+      AxioVisionV4ToTileConfigurationTest
+      ImportAxioVisionV4MontageTest
+      ImportZenInfoMontageTest
+      ITKImportFijiMontageTest
+      ITKImportRoboMetMontageTest
+      ITKMedianImageTest
+      ITKImportImageStackTest
+      ImportVectorImageStackTest
+      ITKImageProcessingWriterTest  
+      ITKImageProcessingReaderTest
       EdaxEbsdMontageTest
 
-      # These are not viable any more....
-      # ITKPCMTileRegistrationTest
-      # ITKStitchMontageTest
+    # ITKProxTVImageTest
   )
 endif()
 
 if(NOT ITKImageProcessing_LeanAndMean)
   set(TEST_NAMES
     ${TEST_NAMES}
-    ITKImageProcessingImageTest
     ITKAbsImageTest
     ITKAcosImageTest
-    ITKAtanImageTest
-    ITKSqrtImageTest
-    ITKMinMaxCurvatureFlowImageTest
-    ITKSigmoidImageTest
-    ITKBinaryThinningImageTest
-    ITKHMaximaImageTest
-    ITKCurvatureAnisotropicDiffusionImageTest
-    ITKCosImageTest
-    ITKHMinimaImageTest
-    ITKExpImageTest
-    ITKLogImageTest
-    ITKRescaleIntensityImageTest
-    ITKLabelContourImageTest
-    ITKTanImageTest
-    ITKBinaryContourImageTest
-    ITKShiftScaleImageTest
-    ITKNotImageTest
-    ITKBinaryProjectionImageTest
-#    ITKBinaryMinMaxCurvatureFlowImageTest
-    ITKInvertIntensityImageTest
-    ITKGrayscaleFillholeImageTest
-    ITKAsinImageTest
-    ITKHConvexImageTest
-    ITKIntensityWindowingImageTest
-    ITKGradientAnisotropicDiffusionImageTest
-    ITKExpNegativeImageTest
-    ITKSinImageTest
-    ITKValuedRegionalMinimaImageTest
-    ITKLog10ImageTest
-    ITKSquareImageTest
-#    ITKSobelEdgeDetectionImageTest
-    ITKValuedRegionalMaximaImageTest
-    ITKRelabelComponentImageTest
-    ITKGrayscaleGrindPeakImageTest
-    ITKBinaryThresholdImageTest
-    ITKGradientMagnitudeImageTest
-    ITKGradientMagnitudeRecursiveGaussianImageTest
-    ITKSignedMaurerDistanceMapImageTest
-    ITKLaplacianRecursiveGaussianImageTest
-    ITKOtsuMultipleThresholdsImageTest
-    ITKDoubleThresholdImageTest
-    ITKSumProjectionImageTest
-    ITKApproximateSignedDistanceMapImageTest
-    ITKCurvatureFlowImageTest
-    ITKIsoContourDistanceImageTest
-    ITKRegionalMinimaImageTest
-    ITKRegionalMaximaImageTest
-    ITKSignedDanielssonDistanceMapImageTest
-    ITKStandardDeviationProjectionImageTest
-    ITKDanielssonDistanceMapImageTest
-    ITKMeanProjectionImageTest
-    ITKZeroCrossingImageTest
-    ITKThresholdMaximumConnectedComponentsImageTest
-    ITKSmoothingRecursiveGaussianImageTest
     ITKAdaptiveHistogramEqualizationImageTest
-    ITKCastImageTest
-    ITKRGBToLuminanceImageTest
-    ITKHistogramMatchingImageTest
-    ITKMorphologicalWatershedImageTest
-    ITKMorphologicalWatershedFromMarkersImageTest
-    ITKThresholdImageTest
-    ITKBlackTopHatImageTest
-    ITKWhiteTopHatImageTest
-    ITKGrayscaleErodeImageTest
+    ITKApproximateSignedDistanceMapImageTest
+    ITKAsinImageTest
+    ITKAtanImageTest
+    ITKBinaryClosingByReconstructionImageTest
+    ITKBinaryContourImageTest
     ITKBinaryDilateImageTest
-    ITKGrayscaleMorphologicalOpeningImageTest
-    ITKGrayscaleMorphologicalClosingImageTest
-    ITKErodeObjectMorphologyImageTest
-    ITKClosingByReconstructionImageTest
-    ITKDilateObjectMorphologyImageTest
     ITKBinaryErodeImageTest
-    ITKMorphologicalGradientImageTest
-    ITKOpeningByReconstructionImageTest
+    ITKBinaryMorphologicalClosingImageTest
     ITKBinaryMorphologicalOpeningImageTest
     ITKBinaryOpeningByReconstructionImageTest
-    ITKBinaryMorphologicalClosingImageTest
-    ITKBinaryClosingByReconstructionImageTest
-    ITKGrayscaleDilateImageTest
-    ITKMultiScaleHessianBasedObjectnessImageTest
-    ITKVectorConnectedComponentImageTest
+    ITKBinaryProjectionImageTest
+    ITKBinaryThinningImageTest
+    ITKBinaryThresholdImageTest
+    ITKBlackTopHatImageTest
+    ITKCastImageTest
+    ITKClosingByReconstructionImageTest
     ITKConnectedComponentImageTest
-    ITKMaskImageTest
+    ITKCosImageTest
+    ITKCurvatureAnisotropicDiffusionImageTest
+    ITKCurvatureFlowImageTest
+    ITKDanielssonDistanceMapImageTest
+    ITKDilateObjectMorphologyImageTest
+    ITKDoubleThresholdImageTest
+    ITKErodeObjectMorphologyImageTest
+    ITKExpImageTest
+    ITKExpNegativeImageTest
     ITKFFTNormalizedCorrelationImageTest
-    ITKVectorRescaleIntensityImageTest
+    ITKGradientAnisotropicDiffusionImageTest
+    ITKGradientMagnitudeImageTest
+    ITKGradientMagnitudeRecursiveGaussianImageTest
+    ITKGrayscaleDilateImageTest
+    ITKGrayscaleErodeImageTest
+    ITKGrayscaleFillholeImageTest
+    ITKGrayscaleGrindPeakImageTest
+    ITKGrayscaleMorphologicalClosingImageTest
+    ITKGrayscaleMorphologicalOpeningImageTest
+    ITKHConvexImageTest
+    ITKHistogramMatchingImageTest
+    ITKHMaximaImageTest
+    ITKHMinimaImageTest
+    ITKImageProcessingImageTest
+    ITKIntensityWindowingImageTest
+    ITKInvertIntensityImageTest
+    ITKIsoContourDistanceImageTest
+    ITKLabelContourImageTest
+    ITKLaplacianRecursiveGaussianImageTest
+    ITKLog10ImageTest
+    ITKLogImageTest
+    ITKMaskImageTest
+    ITKMeanProjectionImageTest
+    ITKMinMaxCurvatureFlowImageTest
+    ITKMorphologicalGradientImageTest
+    ITKMorphologicalWatershedFromMarkersImageTest
+    ITKMorphologicalWatershedImageTest
+    ITKMultiScaleHessianBasedObjectnessImageTest
+    ITKNotImageTest
+    ITKOpeningByReconstructionImageTest
+    ITKOtsuMultipleThresholdsImageTest
     ITKPatchBasedDenoisingImageTest
+    ITKRegionalMaximaImageTest
+    ITKRegionalMinimaImageTest
+    ITKRelabelComponentImageTest
+    ITKRescaleIntensityImageTest
+    ITKRGBToLuminanceImageTest
+    ITKShiftScaleImageTest
+    ITKSigmoidImageTest
+    ITKSignedDanielssonDistanceMapImageTest
+    ITKSignedMaurerDistanceMapImageTest
+    ITKSinImageTest
+    ITKSmoothingRecursiveGaussianImageTest
+    ITKSqrtImageTest
+    ITKSquareImageTest
+    ITKStandardDeviationProjectionImageTest
+    ITKSumProjectionImageTest
+    ITKTanImageTest
+    ITKThresholdImageTest
+    ITKThresholdMaximumConnectedComponentsImageTest
+    ITKValuedRegionalMaximaImageTest
+    ITKValuedRegionalMinimaImageTest
+    ITKVectorConnectedComponentImageTest
+    ITKVectorRescaleIntensityImageTest
+    ITKWhiteTopHatImageTest
+    ITKZeroCrossingImageTest
+#    ITKBinaryMinMaxCurvatureFlowImageTest
+#    ITKSobelEdgeDetectionImageTest
   )
 endif()
 

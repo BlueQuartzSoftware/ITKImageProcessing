@@ -5,7 +5,7 @@
 // -----------------------------------------------------------------------------
 
 #include "ITKTestBase.h"
-// Auto includes
+
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 
 class ITKMedianImageTest : public ITKTestBase
@@ -93,6 +93,8 @@ public:
   // -----------------------------------------------------------------------------
   void operator()() override
   {
+    std::cout << "--------------------- ITKMedianImageTest ---------------------" << std::endl;
+
     int err = EXIT_SUCCESS;
 
     DREAM3D_REGISTER_TEST(this->TestFilterAvailability("ITKMedianImage"));

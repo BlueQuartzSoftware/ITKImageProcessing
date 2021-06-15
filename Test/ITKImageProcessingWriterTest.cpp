@@ -47,12 +47,14 @@
 
 #include "UnitTestSupport.hpp"
 
+#include "ITKImageProcessing/ITKImageProcessingFilters/ITKImageReader.h"
 #include "ITKImageProcessing/ITKImageProcessingFilters/ITKImageWriter.h"
-
+#include "ITKImageProcessing/ITKImageProcessingFilters/ITKImportImageStack.h"
 #include "ITKImageProcessingTestFileLocations.h"
 
 #include <QFileInfo>
 #include <itkNumericSeriesFileNames.h>
+#include <memory>
 
 class ITKImageProcessingWriterTest
 {
@@ -259,9 +261,8 @@ public:
       DREAM3D_REQUIRE_VALID_POINTER(filterFactory.get())
       filter = filterFactory->create();
 
-      var.setValue(inputFilename);
-      propWasSet = filter->setProperty("FileName", var);
-      DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+      ITKImageReader::Pointer filter2 = std::dynamic_pointer_cast<ITKImageReader>(filter);
+      filter2->setFileName(inputFilename);
     }
     else if(Dimension == 3)
     {
@@ -269,8 +270,10 @@ public:
       DREAM3D_REQUIRE_VALID_POINTER(filterFactory.get())
       filter = filterFactory->create();
 
+      ITKImportImageStack::Pointer filter2 = std::dynamic_pointer_cast<ITKImportImageStack>(filter);
+
       StackFileListInfo listInfo;
-      listInfo.PaddingDigits = 0;
+      listInfo.PaddingDigits = 2;
       listInfo.Ordering = 0;
       listInfo.StartIndex = 0;
       listInfo.EndIndex = 95;
@@ -283,9 +286,7 @@ public:
 
       listInfo.FileExtension = fi.suffix();
 
-      var.setValue(listInfo);
-      propWasSet = filter->setProperty("InputFileListInfo", var);
-      DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+      filter2->setInputFileListInfo(listInfo);
 
       bool hasMissingFiles = false;
       bool orderAscending = false;
@@ -374,10 +375,11 @@ public:
   template <class PixelType, unsigned int Dimension>
   void TestWriteImage(const QString& suffix, const QString& extension, const QString& dataFileExtension)
   {
-    //    std::cout << "******** TestWriteImageSeries " << suffix.toStdString() << ", " << extension.toStdString() << ", " << dataFileExtension.toStdString() << ", " << Dimension
-    //              << " ******************************" << std::endl;
+    std::cout << "******** TestWriteImageSeries " << suffix.toStdString() << ", " << extension.toStdString() << ", " << dataFileExtension.toStdString() << ", " << Dimension
+              << " ******************************" << std::endl;
 
     QString filename = UnitTest::ITKImageProcessingWriterTest::OutputBaseFile + suffix + extension;
+    std::cout << "    " << filename.toStdString() << std::endl;
     DataArrayPath path("TestContainer", "TestAttributeMatrixName", "TestAttributeArrayName");
     DataContainerArray::Pointer containerArray = CreateTestData<PixelType, Dimension>(path);
     bool success = RunWriteImage<PixelType, Dimension>(filename, containerArray, path);
@@ -391,22 +393,10 @@ public:
       filename = UnitTest::ITKImageProcessingWriterTest::OutputBaseFile + suffix + dataFileExtension;
       this->FilesToRemove << filename;
     }
+    this->RemoveTestFiles();
   }
 
   // -----------------------------------------------------------------------------
-  //  Test methods
-  // -----------------------------------------------------------------------------
-  int TestAvailability(const QString& filterName)
-  {
-    if(nullptr == GetFilterByName(filterName))
-    {
-      QString msg;
-      msg = "The test requires the use of %1 filter which is found in the ITKImageProcessing Plugin";
-      DREAM3D_TEST_THROW_EXCEPTION(msg.arg(filterName).toStdString())
-    }
-    return 0;
-  }
-
   int TestNoInput()
   {
     AbstractFilter::Pointer writer = GetFilterByName("ITKImageWriter");
@@ -485,7 +475,7 @@ public:
     bool success = RunWriteImage<uint8_t, 2>(filename, containerArray, path);
     DREAM3D_REQUIRE(success)
     using NamesGeneratorType = itk::NumericSeriesFileNames;
-    QString seriesfilename = UnitTest::ITKImageProcessingWriterTest::OutputBaseFile + "_%d.png";
+    QString seriesfilename = UnitTest::ITKImageProcessingWriterTest::OutputBaseFile + "_%02d.png";
     NamesGeneratorType::Pointer namesGenerator = NamesGeneratorType::New();
     namesGenerator->SetSeriesFormat(seriesfilename.toStdString());
     namesGenerator->SetIncrementIndex(k_Increment);
@@ -513,12 +503,13 @@ public:
   // -----------------------------------------------------------------------------
   void operator()()
   {
+    std::cout << "--------------------- ITKImageProcessingWriterTest ---------------------" << std::endl;
+
     int err = EXIT_SUCCESS;
 
     // Clean up before running the tests
     this->RemoveTestFiles();
 
-    DREAM3D_REGISTER_TEST(TestAvailability("ITKImageWriter"))
     DREAM3D_REGISTER_TEST(TestNoInput())
 
     // TIFF
