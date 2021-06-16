@@ -83,6 +83,6 @@ public:
   }
 
 private:
-  ITKMorphologicalGradientImageTest(const ITKMorphologicalGradientImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKMorphologicalGradientImageTest&);                    // Move assignment Not Implemented
+  ITKMorphologicalGradientImageTest(const ITKMorphologicalGradientImageTest&) = delete; // Copy Constructor Not Implemented
+  void operator=(const ITKMorphologicalGradientImageTest&) = delete;                    // Move assignment Not Implemented
 };

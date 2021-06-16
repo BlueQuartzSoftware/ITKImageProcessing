@@ -66,6 +66,6 @@ public:
   }
 
 private:
-  ITKAcosImageTest(const ITKAcosImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKAcosImageTest&);   // Move assignment Not Implemented
+  ITKAcosImageTest(const ITKAcosImageTest&) = delete; // Copy Constructor Not Implemented
+  void operator=(const ITKAcosImageTest&) = delete;   // Move assignment Not Implemented
 };

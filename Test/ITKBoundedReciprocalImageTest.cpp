@@ -101,6 +101,6 @@ public:
   }
 
 private:
-  ITKBoundedReciprocalImageTest(const ITKBoundedReciprocalImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKBoundedReciprocalImageTest&);                // Operator '=' Not Implemented
+  ITKBoundedReciprocalImageTest(const ITKBoundedReciprocalImageTest&) = delete; // Copy Constructor Not Implemented
+  void operator=(const ITKBoundedReciprocalImageTest&) = delete;                // Operator '=' Not Implemented
 };

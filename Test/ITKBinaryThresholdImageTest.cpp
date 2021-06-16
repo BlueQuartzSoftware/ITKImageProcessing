@@ -127,6 +127,6 @@ public:
   }
 
 private:
-  ITKBinaryThresholdImageTest(const ITKBinaryThresholdImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKBinaryThresholdImageTest&);              // Move assignment Not Implemented
+  ITKBinaryThresholdImageTest(const ITKBinaryThresholdImageTest&) = delete; // Copy Constructor Not Implemented
+  void operator=(const ITKBinaryThresholdImageTest&) = delete;              // Move assignment Not Implemented
 };

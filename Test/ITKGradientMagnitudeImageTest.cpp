@@ -67,6 +67,6 @@ public:
   }
 
 private:
-  ITKGradientMagnitudeImageTest(const ITKGradientMagnitudeImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKGradientMagnitudeImageTest&);                // Move assignment Not Implemented
+  ITKGradientMagnitudeImageTest(const ITKGradientMagnitudeImageTest&) = delete; // Copy Constructor Not Implemented
+  void operator=(const ITKGradientMagnitudeImageTest&) = delete;                // Move assignment Not Implemented
 };

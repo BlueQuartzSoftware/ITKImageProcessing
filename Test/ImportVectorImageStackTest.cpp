@@ -52,7 +52,7 @@ class ImportVectorImageStackTest : public ITKTestBase
 public:
   ImportVectorImageStackTest() = default;
 
-  virtual ~ImportVectorImageStackTest() = default;
+  ~ImportVectorImageStackTest() override = default;
 
   ImportVectorImageStackTest(const ImportVectorImageStackTest&) = delete;            // Copy Constructor Not Implemented
   ImportVectorImageStackTest(ImportVectorImageStackTest&&) = delete;                 // Move Constructor

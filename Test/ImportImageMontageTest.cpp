@@ -51,7 +51,7 @@ class ImportImageMontageTest : public ITKTestBase
 public:
   ImportImageMontageTest() = default;
 
-  virtual ~ImportImageMontageTest() = default;
+  ~ImportImageMontageTest() override = default;
 
   ImportImageMontageTest(const ImportImageMontageTest&) = delete;            // Copy Constructor Not Implemented
   ImportImageMontageTest(ImportImageMontageTest&&) = delete;                 // Move Constructor

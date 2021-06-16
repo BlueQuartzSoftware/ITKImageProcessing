@@ -71,6 +71,6 @@ public:
   }
 
 private:
-  ITKMorphologicalWatershedFromMarkersImageTest(const ITKMorphologicalWatershedFromMarkersImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKMorphologicalWatershedFromMarkersImageTest&);                                // Move assignment Not Implemented
+  ITKMorphologicalWatershedFromMarkersImageTest(const ITKMorphologicalWatershedFromMarkersImageTest&) = delete; // Copy Constructor Not Implemented
+  void operator=(const ITKMorphologicalWatershedFromMarkersImageTest&) = delete;                                // Move assignment Not Implemented
 };

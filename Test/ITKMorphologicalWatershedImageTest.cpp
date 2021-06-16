@@ -113,6 +113,6 @@ public:
   }
 
 private:
-  ITKMorphologicalWatershedImageTest(const ITKMorphologicalWatershedImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKMorphologicalWatershedImageTest&);                     // Move assignment Not Implemented
+  ITKMorphologicalWatershedImageTest(const ITKMorphologicalWatershedImageTest&) = delete; // Copy Constructor Not Implemented
+  void operator=(const ITKMorphologicalWatershedImageTest&) = delete;                     // Move assignment Not Implemented
 };

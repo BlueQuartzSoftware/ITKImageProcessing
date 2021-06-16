@@ -112,6 +112,6 @@ public:
   }
 
 private:
-  ITKBinaryProjectionImageTest(const ITKBinaryProjectionImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKBinaryProjectionImageTest&);               // Move assignment Not Implemented
+  ITKBinaryProjectionImageTest(const ITKBinaryProjectionImageTest&) = delete; // Copy Constructor Not Implemented
+  void operator=(const ITKBinaryProjectionImageTest&) = delete;               // Move assignment Not Implemented
 };

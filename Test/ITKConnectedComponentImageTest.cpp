@@ -108,6 +108,6 @@ public:
   }
 
 private:
-  ITKConnectedComponentImageTest(const ITKConnectedComponentImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKConnectedComponentImageTest&);                 // Move assignment Not Implemented
+  ITKConnectedComponentImageTest(const ITKConnectedComponentImageTest&) = delete; // Copy Constructor Not Implemented
+  void operator=(const ITKConnectedComponentImageTest&) = delete;                 // Move assignment Not Implemented
 };

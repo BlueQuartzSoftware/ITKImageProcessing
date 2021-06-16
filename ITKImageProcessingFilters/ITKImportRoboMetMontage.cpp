@@ -105,7 +105,6 @@ class ITKImportRoboMetMontagePrivate
 ITKImportRoboMetMontagePrivate::ITKImportRoboMetMontagePrivate(ITKImportRoboMetMontage* ptr)
 : q_ptr(ptr)
 , m_InputFile_Cache("")
-, m_TimeStamp_Cache(QDateTime())
 {
 }
 /* ############## Start Public Implementation ############################### */

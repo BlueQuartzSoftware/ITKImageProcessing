@@ -67,6 +67,6 @@ public:
   }
 
 private:
-  ITKSignedDanielssonDistanceMapImageTest(const ITKSignedDanielssonDistanceMapImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKSignedDanielssonDistanceMapImageTest&);                          // Move assignment Not Implemented
+  ITKSignedDanielssonDistanceMapImageTest(const ITKSignedDanielssonDistanceMapImageTest&) = delete; // Copy Constructor Not Implemented
+  void operator=(const ITKSignedDanielssonDistanceMapImageTest&) = delete;                          // Move assignment Not Implemented
 };

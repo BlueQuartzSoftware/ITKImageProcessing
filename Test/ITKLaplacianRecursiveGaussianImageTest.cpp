@@ -68,6 +68,6 @@ public:
   }
 
 private:
-  ITKLaplacianRecursiveGaussianImageTest(const ITKLaplacianRecursiveGaussianImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKLaplacianRecursiveGaussianImageTest&);                         // Move assignment Not Implemented
+  ITKLaplacianRecursiveGaussianImageTest(const ITKLaplacianRecursiveGaussianImageTest&) = delete; // Copy Constructor Not Implemented
+  void operator=(const ITKLaplacianRecursiveGaussianImageTest&) = delete;                         // Move assignment Not Implemented
 };

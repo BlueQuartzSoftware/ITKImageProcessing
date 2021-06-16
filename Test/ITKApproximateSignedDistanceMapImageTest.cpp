@@ -122,6 +122,6 @@ public:
   }
 
 private:
-  ITKApproximateSignedDistanceMapImageTest(const ITKApproximateSignedDistanceMapImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKApproximateSignedDistanceMapImageTest&);                           // Move assignment Not Implemented
+  ITKApproximateSignedDistanceMapImageTest(const ITKApproximateSignedDistanceMapImageTest&) = delete; // Copy Constructor Not Implemented
+  void operator=(const ITKApproximateSignedDistanceMapImageTest&) = delete;                           // Move assignment Not Implemented
 };

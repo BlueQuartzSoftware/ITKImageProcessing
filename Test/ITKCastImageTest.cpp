@@ -102,6 +102,6 @@ public:
   }
 
 private:
-  ITKCastImageTest(const ITKCastImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKCastImageTest&);   // Move assignment Not Implemented
+  ITKCastImageTest(const ITKCastImageTest&) = delete; // Copy Constructor Not Implemented
+  void operator=(const ITKCastImageTest&) = delete;   // Move assignment Not Implemented
 };

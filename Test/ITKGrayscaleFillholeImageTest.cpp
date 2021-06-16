@@ -98,6 +98,6 @@ public:
   }
 
 private:
-  ITKGrayscaleFillholeImageTest(const ITKGrayscaleFillholeImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKGrayscaleFillholeImageTest&);                // Move assignment Not Implemented
+  ITKGrayscaleFillholeImageTest(const ITKGrayscaleFillholeImageTest&) = delete; // Copy Constructor Not Implemented
+  void operator=(const ITKGrayscaleFillholeImageTest&) = delete;                // Move assignment Not Implemented
 };

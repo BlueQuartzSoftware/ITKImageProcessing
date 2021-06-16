@@ -64,7 +64,7 @@ public:
   /**
    * @brief Returns the name of the class for ZeissXMLReader
    */
-  QString getNameOfClass() const override;
+  QString getNameOfClass() const;
   /**
    * @brief Returns the name of the class for ZeissXMLReader
    */

@@ -112,6 +112,6 @@ public:
   }
 
 private:
-  ITKZeroCrossingImageTest(const ITKZeroCrossingImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKZeroCrossingImageTest&);           // Move assignment Not Implemented
+  ITKZeroCrossingImageTest(const ITKZeroCrossingImageTest&) = delete; // Copy Constructor Not Implemented
+  void operator=(const ITKZeroCrossingImageTest&) = delete;           // Move assignment Not Implemented
 };

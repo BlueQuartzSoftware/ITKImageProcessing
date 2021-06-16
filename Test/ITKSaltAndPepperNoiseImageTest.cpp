@@ -158,6 +158,6 @@ public:
   }
 
 private:
-  ITKSaltAndPepperNoiseImageTest(const ITKSaltAndPepperNoiseImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKSaltAndPepperNoiseImageTest&);                 // Operator '=' Not Implemented
+  ITKSaltAndPepperNoiseImageTest(const ITKSaltAndPepperNoiseImageTest&) = delete; // Copy Constructor Not Implemented
+  void operator=(const ITKSaltAndPepperNoiseImageTest&) = delete;                 // Operator '=' Not Implemented
 };

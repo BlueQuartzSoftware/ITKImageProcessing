@@ -66,6 +66,6 @@ public:
   }
 
 private:
-  ITKRegionalMaximaImageTest(const ITKRegionalMaximaImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKRegionalMaximaImageTest&);             // Move assignment Not Implemented
+  ITKRegionalMaximaImageTest(const ITKRegionalMaximaImageTest&) = delete; // Copy Constructor Not Implemented
+  void operator=(const ITKRegionalMaximaImageTest&) = delete;             // Move assignment Not Implemented
 };

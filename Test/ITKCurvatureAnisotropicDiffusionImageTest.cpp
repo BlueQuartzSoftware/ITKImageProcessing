@@ -123,6 +123,6 @@ public:
   }
 
 private:
-  ITKCurvatureAnisotropicDiffusionImageTest(const ITKCurvatureAnisotropicDiffusionImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKCurvatureAnisotropicDiffusionImageTest&);                            // Move assignment Not Implemented
+  ITKCurvatureAnisotropicDiffusionImageTest(const ITKCurvatureAnisotropicDiffusionImageTest&) = delete; // Copy Constructor Not Implemented
+  void operator=(const ITKCurvatureAnisotropicDiffusionImageTest&) = delete;                            // Move assignment Not Implemented
 };

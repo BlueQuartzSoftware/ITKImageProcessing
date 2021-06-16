@@ -92,6 +92,6 @@ public:
   }
 
 private:
-  ITKBinaryErodeImageTest(const ITKBinaryErodeImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKBinaryErodeImageTest&);          // Move assignment Not Implemented
+  ITKBinaryErodeImageTest(const ITKBinaryErodeImageTest&) = delete; // Copy Constructor Not Implemented
+  void operator=(const ITKBinaryErodeImageTest&) = delete;          // Move assignment Not Implemented
 };

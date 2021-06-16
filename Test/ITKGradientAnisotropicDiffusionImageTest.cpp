@@ -123,6 +123,6 @@ public:
   }
 
 private:
-  ITKGradientAnisotropicDiffusionImageTest(const ITKGradientAnisotropicDiffusionImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKGradientAnisotropicDiffusionImageTest&);                           // Move assignment Not Implemented
+  ITKGradientAnisotropicDiffusionImageTest(const ITKGradientAnisotropicDiffusionImageTest&) = delete; // Copy Constructor Not Implemented
+  void operator=(const ITKGradientAnisotropicDiffusionImageTest&) = delete;                           // Move assignment Not Implemented
 };

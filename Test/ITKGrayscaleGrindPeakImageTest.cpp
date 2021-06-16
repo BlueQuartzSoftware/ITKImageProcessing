@@ -98,6 +98,6 @@ public:
   }
 
 private:
-  ITKGrayscaleGrindPeakImageTest(const ITKGrayscaleGrindPeakImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKGrayscaleGrindPeakImageTest&);                 // Move assignment Not Implemented
+  ITKGrayscaleGrindPeakImageTest(const ITKGrayscaleGrindPeakImageTest&) = delete; // Copy Constructor Not Implemented
+  void operator=(const ITKGrayscaleGrindPeakImageTest&) = delete;                 // Move assignment Not Implemented
 };

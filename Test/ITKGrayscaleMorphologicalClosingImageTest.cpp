@@ -84,6 +84,6 @@ public:
   }
 
 private:
-  ITKGrayscaleMorphologicalClosingImageTest(const ITKGrayscaleMorphologicalClosingImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKGrayscaleMorphologicalClosingImageTest&);                            // Move assignment Not Implemented
+  ITKGrayscaleMorphologicalClosingImageTest(const ITKGrayscaleMorphologicalClosingImageTest&) = delete; // Copy Constructor Not Implemented
+  void operator=(const ITKGrayscaleMorphologicalClosingImageTest&) = delete;                            // Move assignment Not Implemented
 };

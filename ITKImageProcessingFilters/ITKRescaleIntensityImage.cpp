@@ -52,7 +52,6 @@
 //
 // -----------------------------------------------------------------------------
 ITKRescaleIntensityImage::ITKRescaleIntensityImage()
-: m_OutputType(0)
 {
   m_OutputMinimum = StaticCastScalar<double, double, double>(0);
   m_OutputMaximum = StaticCastScalar<double, double, double>(255);

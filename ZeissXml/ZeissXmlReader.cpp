@@ -187,7 +187,7 @@ void ZeissXMLReader::OnStartElement(const XML_Char* name, const XML_Char** attrs
 {
   std::string currentTag(name);
   // std::cout << "currentTag: " << name << std::endl;
-  if(currentTag.compare(Zeiss::XML::Tags) == 0)
+  if(currentTag == Zeiss::XML::Tags)
   {
     onTags_StartTag(name, attrs);
     _xmlSection = Zeiss::XML::TagsSection;
@@ -220,7 +220,7 @@ void ZeissXMLReader::OnStartElement(const XML_Char* name, const XML_Char** attrs
 void ZeissXMLReader::OnEndElement(const XML_Char* name)
 {
   std::string currentTag(name);
-  if(currentTag.compare(Zeiss::XML::Tags) == 0)
+  if(currentTag == Zeiss::XML::Tags)
   {
     onTags_EndTag(name);
   }
@@ -340,7 +340,7 @@ void ZeissXMLReader::onIx_EndTag(const XML_Char* name)
   this->extractValue(this->_charData, idValue);
   this->_parseData = false; // Stop parsing character data
   AbstractZeissMetaData::Pointer ptr = ZeissTagMapping::instance()->metaDataForId(idValue, this->_vTagContent);
-  if(nullptr != ptr.get() && _vTagContent.size() > 0)
+  if(nullptr != ptr.get() && !_vTagContent.empty())
   {
     if(_xmlSection == Zeiss::XML::TagsSection)
     {

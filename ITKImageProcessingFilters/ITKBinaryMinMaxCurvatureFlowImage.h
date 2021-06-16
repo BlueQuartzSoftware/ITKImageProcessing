@@ -138,7 +138,7 @@ protected:
   /**
    * @brief dataCheckInternal overloads dataCheckInternal in ITKImageBase and calls templated dataCheck
    */
-  void dataCheckInternal() override;
+  void dataCheckInternal();
 
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays

@@ -148,6 +148,6 @@ public:
   }
 
 private:
-  ITKBinaryDilateImageTest(const ITKBinaryDilateImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKBinaryDilateImageTest&);           // Move assignment Not Implemented
+  ITKBinaryDilateImageTest(const ITKBinaryDilateImageTest&) = delete; // Copy Constructor Not Implemented
+  void operator=(const ITKBinaryDilateImageTest&) = delete;           // Move assignment Not Implemented
 };

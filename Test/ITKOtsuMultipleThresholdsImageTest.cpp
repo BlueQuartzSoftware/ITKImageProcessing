@@ -202,6 +202,6 @@ public:
   }
 
 private:
-  ITKOtsuMultipleThresholdsImageTest(const ITKOtsuMultipleThresholdsImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKOtsuMultipleThresholdsImageTest&);                     // Move assignment Not Implemented
+  ITKOtsuMultipleThresholdsImageTest(const ITKOtsuMultipleThresholdsImageTest&) = delete; // Copy Constructor Not Implemented
+  void operator=(const ITKOtsuMultipleThresholdsImageTest&) = delete;                     // Move assignment Not Implemented
 };

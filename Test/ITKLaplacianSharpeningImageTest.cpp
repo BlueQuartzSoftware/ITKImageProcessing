@@ -133,6 +133,6 @@ public:
   }
 
 private:
-  ITKLaplacianSharpeningImageTest(const ITKLaplacianSharpeningImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKLaplacianSharpeningImageTest&);                  // Operator '=' Not Implemented
+  ITKLaplacianSharpeningImageTest(const ITKLaplacianSharpeningImageTest&) = delete; // Copy Constructor Not Implemented
+  void operator=(const ITKLaplacianSharpeningImageTest&) = delete;                  // Operator '=' Not Implemented
 };

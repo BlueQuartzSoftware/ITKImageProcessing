@@ -65,6 +65,6 @@ public:
   }
 
 private:
-  ITKInvertIntensityImageTest(const ITKInvertIntensityImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKInvertIntensityImageTest&);              // Move assignment Not Implemented
+  ITKInvertIntensityImageTest(const ITKInvertIntensityImageTest&) = delete; // Copy Constructor Not Implemented
+  void operator=(const ITKInvertIntensityImageTest&) = delete;              // Move assignment Not Implemented
 };

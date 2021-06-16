@@ -84,6 +84,6 @@ public:
   }
 
 private:
-  ITKBlackTopHatImageTest(const ITKBlackTopHatImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKBlackTopHatImageTest&);          // Move assignment Not Implemented
+  ITKBlackTopHatImageTest(const ITKBlackTopHatImageTest&) = delete; // Copy Constructor Not Implemented
+  void operator=(const ITKBlackTopHatImageTest&) = delete;          // Move assignment Not Implemented
 };

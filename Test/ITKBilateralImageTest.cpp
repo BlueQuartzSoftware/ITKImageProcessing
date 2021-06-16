@@ -114,6 +114,6 @@ public:
   }
 
 private:
-  ITKBilateralImageTest(const ITKBilateralImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKBilateralImageTest&);        // Operator '=' Not Implemented
+  ITKBilateralImageTest(const ITKBilateralImageTest&) = delete; // Copy Constructor Not Implemented
+  void operator=(const ITKBilateralImageTest&) = delete;        // Operator '=' Not Implemented
 };

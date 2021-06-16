@@ -80,6 +80,6 @@ public:
   }
 
 private:
-  ITKFFTNormalizedCorrelationImageTest(const ITKFFTNormalizedCorrelationImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKFFTNormalizedCorrelationImageTest&);                       // Move assignment Not Implemented
+  ITKFFTNormalizedCorrelationImageTest(const ITKFFTNormalizedCorrelationImageTest&) = delete; // Copy Constructor Not Implemented
+  void operator=(const ITKFFTNormalizedCorrelationImageTest&) = delete;                       // Move assignment Not Implemented
 };

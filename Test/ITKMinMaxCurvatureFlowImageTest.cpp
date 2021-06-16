@@ -117,6 +117,6 @@ public:
   }
 
 private:
-  ITKMinMaxCurvatureFlowImageTest(const ITKMinMaxCurvatureFlowImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKMinMaxCurvatureFlowImageTest&);                  // Move assignment Not Implemented
+  ITKMinMaxCurvatureFlowImageTest(const ITKMinMaxCurvatureFlowImageTest&) = delete; // Copy Constructor Not Implemented
+  void operator=(const ITKMinMaxCurvatureFlowImageTest&) = delete;                  // Move assignment Not Implemented
 };

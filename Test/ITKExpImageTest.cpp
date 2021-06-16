@@ -66,6 +66,6 @@ public:
   }
 
 private:
-  ITKExpImageTest(const ITKExpImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKExpImageTest&);  // Move assignment Not Implemented
+  ITKExpImageTest(const ITKExpImageTest&) = delete; // Copy Constructor Not Implemented
+  void operator=(const ITKExpImageTest&) = delete;  // Move assignment Not Implemented
 };

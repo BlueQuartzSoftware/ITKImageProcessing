@@ -116,9 +116,7 @@ class ImportAxioVisionV4MontagePrivate
 // -----------------------------------------------------------------------------
 ImportAxioVisionV4MontagePrivate::ImportAxioVisionV4MontagePrivate(ImportAxioVisionV4Montage* ptr)
 : q_ptr(ptr)
-, m_Root(QDomElement())
 , m_InputFile_Cache("")
-, m_TimeStamp_Cache(QDateTime())
 {
 }
 

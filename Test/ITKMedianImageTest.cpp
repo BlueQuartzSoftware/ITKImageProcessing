@@ -109,6 +109,6 @@ public:
   }
 
 private:
-  ITKMedianImageTest(const ITKMedianImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKMedianImageTest&);     // Move assignment Not Implemented
+  ITKMedianImageTest(const ITKMedianImageTest&) = delete; // Copy Constructor Not Implemented
+  void operator=(const ITKMedianImageTest&) = delete;     // Move assignment Not Implemented
 };

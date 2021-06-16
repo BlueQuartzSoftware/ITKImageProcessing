@@ -70,6 +70,6 @@ public:
   }
 
 private:
-  ITKRGBToLuminanceImageTest(const ITKRGBToLuminanceImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKRGBToLuminanceImageTest&);             // Move assignment Not Implemented
+  ITKRGBToLuminanceImageTest(const ITKRGBToLuminanceImageTest&) = delete; // Copy Constructor Not Implemented
+  void operator=(const ITKRGBToLuminanceImageTest&) = delete;             // Move assignment Not Implemented
 };

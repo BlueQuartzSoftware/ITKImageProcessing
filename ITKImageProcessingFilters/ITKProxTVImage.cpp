@@ -80,9 +80,9 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
 void ITKProxTVImage::dataCheckImpl()
 {
   // Check consistency of parameters
-  this->CheckIntegerEntry<unsigned int, double>(m_MaximumNumberOfIterations, "MaximumNumberOfIterations", 1);
-  this->CheckVectorEntry<double, FloatVec3Type>(m_Weights, "Weights", 0);
-  this->CheckVectorEntry<double, FloatVec3Type>(m_Norms, "Norms", 0);
+  this->CheckIntegerEntry<unsigned int, double>(m_MaximumNumberOfIterations, "MaximumNumberOfIterations", true);
+  this->CheckVectorEntry<double, FloatVec3Type>(m_Weights, "Weights", false);
+  this->CheckVectorEntry<double, FloatVec3Type>(m_Norms, "Norms", false);
 
   ITKImageProcessingBase::dataCheckImpl<InputPixelType, OutputPixelType, Dimension>();
 }

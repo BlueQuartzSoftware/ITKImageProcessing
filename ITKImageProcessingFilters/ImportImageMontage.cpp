@@ -133,7 +133,6 @@ void ImportImageMontage::dataCheck()
 
   ss = QObject::tr("This filter is NOT supported or working.");
   setErrorCondition(-1, ss);
-  return;
 #if 0
   if(m_InputFileListInfo.InputPath.isEmpty())
   {

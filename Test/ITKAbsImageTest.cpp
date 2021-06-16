@@ -101,6 +101,6 @@ public:
   }
 
 private:
-  ITKAbsImageTest(const ITKAbsImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKAbsImageTest&);  // Move assignment Not Implemented
+  ITKAbsImageTest(const ITKAbsImageTest&) = delete; // Copy Constructor Not Implemented
+  void operator=(const ITKAbsImageTest&) = delete;  // Move assignment Not Implemented
 };

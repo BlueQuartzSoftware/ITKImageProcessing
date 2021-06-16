@@ -83,6 +83,6 @@ public:
   }
 
 private:
-  ITKGrayscaleErodeImageTest(const ITKGrayscaleErodeImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKGrayscaleErodeImageTest&);             // Move assignment Not Implemented
+  ITKGrayscaleErodeImageTest(const ITKGrayscaleErodeImageTest&) = delete; // Copy Constructor Not Implemented
+  void operator=(const ITKGrayscaleErodeImageTest&) = delete;             // Move assignment Not Implemented
 };

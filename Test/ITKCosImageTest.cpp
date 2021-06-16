@@ -101,6 +101,6 @@ public:
   }
 
 private:
-  ITKCosImageTest(const ITKCosImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKCosImageTest&);  // Move assignment Not Implemented
+  ITKCosImageTest(const ITKCosImageTest&) = delete; // Copy Constructor Not Implemented
+  void operator=(const ITKCosImageTest&) = delete;  // Move assignment Not Implemented
 };

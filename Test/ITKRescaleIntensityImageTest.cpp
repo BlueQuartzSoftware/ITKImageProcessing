@@ -67,6 +67,6 @@ public:
   }
 
 private:
-  ITKRescaleIntensityImageTest(const ITKRescaleIntensityImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKRescaleIntensityImageTest&);               // Move assignment Not Implemented
+  ITKRescaleIntensityImageTest(const ITKRescaleIntensityImageTest&) = delete; // Copy Constructor Not Implemented
+  void operator=(const ITKRescaleIntensityImageTest&) = delete;               // Move assignment Not Implemented
 };

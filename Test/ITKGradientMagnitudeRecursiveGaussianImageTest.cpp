@@ -68,6 +68,6 @@ public:
   }
 
 private:
-  ITKGradientMagnitudeRecursiveGaussianImageTest(const ITKGradientMagnitudeRecursiveGaussianImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKGradientMagnitudeRecursiveGaussianImageTest&);                                 // Move assignment Not Implemented
+  ITKGradientMagnitudeRecursiveGaussianImageTest(const ITKGradientMagnitudeRecursiveGaussianImageTest&) = delete; // Copy Constructor Not Implemented
+  void operator=(const ITKGradientMagnitudeRecursiveGaussianImageTest&) = delete;                                 // Move assignment Not Implemented
 };

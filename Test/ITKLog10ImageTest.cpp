@@ -66,6 +66,6 @@ public:
   }
 
 private:
-  ITKLog10ImageTest(const ITKLog10ImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKLog10ImageTest&);    // Move assignment Not Implemented
+  ITKLog10ImageTest(const ITKLog10ImageTest&) = delete; // Copy Constructor Not Implemented
+  void operator=(const ITKLog10ImageTest&) = delete;    // Move assignment Not Implemented
 };

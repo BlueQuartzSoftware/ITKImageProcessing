@@ -65,6 +65,6 @@ public:
   }
 
 private:
-  ITKBinomialBlurImageTest(const ITKBinomialBlurImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKBinomialBlurImageTest&);           // Operator '=' Not Implemented
+  ITKBinomialBlurImageTest(const ITKBinomialBlurImageTest&) = delete; // Copy Constructor Not Implemented
+  void operator=(const ITKBinomialBlurImageTest&) = delete;           // Operator '=' Not Implemented
 };

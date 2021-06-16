@@ -148,6 +148,6 @@ public:
   }
 
 private:
-  ITKBinaryMorphologicalClosingImageTest(const ITKBinaryMorphologicalClosingImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKBinaryMorphologicalClosingImageTest&);                         // Move assignment Not Implemented
+  ITKBinaryMorphologicalClosingImageTest(const ITKBinaryMorphologicalClosingImageTest&) = delete; // Copy Constructor Not Implemented
+  void operator=(const ITKBinaryMorphologicalClosingImageTest&) = delete;                         // Move assignment Not Implemented
 };

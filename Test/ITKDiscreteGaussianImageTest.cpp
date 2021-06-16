@@ -153,6 +153,6 @@ public:
   }
 
 private:
-  ITKDiscreteGaussianImageTest(const ITKDiscreteGaussianImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKDiscreteGaussianImageTest&);               // Operator '=' Not Implemented
+  ITKDiscreteGaussianImageTest(const ITKDiscreteGaussianImageTest&) = delete; // Copy Constructor Not Implemented
+  void operator=(const ITKDiscreteGaussianImageTest&) = delete;               // Operator '=' Not Implemented
 };

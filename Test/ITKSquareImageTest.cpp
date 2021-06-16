@@ -64,6 +64,6 @@ public:
   }
 
 private:
-  ITKSquareImageTest(const ITKSquareImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKSquareImageTest&);     // Move assignment Not Implemented
+  ITKSquareImageTest(const ITKSquareImageTest&) = delete; // Copy Constructor Not Implemented
+  void operator=(const ITKSquareImageTest&) = delete;     // Move assignment Not Implemented
 };

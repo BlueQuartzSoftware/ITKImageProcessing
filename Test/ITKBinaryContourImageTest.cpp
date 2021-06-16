@@ -120,6 +120,6 @@ public:
   }
 
 private:
-  ITKBinaryContourImageTest(const ITKBinaryContourImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKBinaryContourImageTest&);            // Move assignment Not Implemented
+  ITKBinaryContourImageTest(const ITKBinaryContourImageTest&) = delete; // Copy Constructor Not Implemented
+  void operator=(const ITKBinaryContourImageTest&) = delete;            // Move assignment Not Implemented
 };

@@ -65,6 +65,6 @@ public:
   }
 
 private:
-  ITKSigmoidImageTest(const ITKSigmoidImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKSigmoidImageTest&);      // Move assignment Not Implemented
+  ITKSigmoidImageTest(const ITKSigmoidImageTest&) = delete; // Copy Constructor Not Implemented
+  void operator=(const ITKSigmoidImageTest&) = delete;      // Move assignment Not Implemented
 };

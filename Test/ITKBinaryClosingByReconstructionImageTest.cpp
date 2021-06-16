@@ -92,6 +92,6 @@ public:
   }
 
 private:
-  ITKBinaryClosingByReconstructionImageTest(const ITKBinaryClosingByReconstructionImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKBinaryClosingByReconstructionImageTest&);                            // Move assignment Not Implemented
+  ITKBinaryClosingByReconstructionImageTest(const ITKBinaryClosingByReconstructionImageTest&) = delete; // Copy Constructor Not Implemented
+  void operator=(const ITKBinaryClosingByReconstructionImageTest&) = delete;                            // Move assignment Not Implemented
 };

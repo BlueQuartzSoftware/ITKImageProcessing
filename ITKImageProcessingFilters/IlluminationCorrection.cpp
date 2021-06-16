@@ -329,7 +329,6 @@ IlluminationCorrection::IlluminationCorrection()
 : m_CellAttributeMatrixName(ITKImageProcessing::Montage::k_TileAttributeMatrixDefaultName)
 , m_ImageDataArrayName(ITKImageProcessing::Montage::k_TileDataArrayDefaultName)
 , m_CorrectedImageDataArrayName(ITKImageProcessing::Montage::k_TileCorrectedDefaultName)
-, m_ExportCorrectedImages(false)
 , m_OutputPath("")
 , m_FileExtension(".tif")
 , m_BackgroundDataContainerPath(ITKImageProcessing::Montage::k_BackgroundDataContainerDefaultName)
@@ -337,7 +336,6 @@ IlluminationCorrection::IlluminationCorrection()
 , m_BackgroundImageArrayPath(ITKImageProcessing::Montage::k_BackgroundDataContainerDefaultName, ITKImageProcessing::Montage::k_BackgroundAttributeMatrixDefaultName, ITKImageProcessing::Montage::k_BackgroundDataArrayDefaultName)
 , m_LowThreshold(20000)
 , m_HighThreshold(65535)
-, m_ApplyCorrection(false)
 {
   m_ApplyMedianFilter = true;
   m_MedianRadius = {10.0f, 10.0f, 1.0f};

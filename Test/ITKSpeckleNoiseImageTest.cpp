@@ -158,6 +158,6 @@ public:
   }
 
 private:
-  ITKSpeckleNoiseImageTest(const ITKSpeckleNoiseImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKSpeckleNoiseImageTest&);           // Operator '=' Not Implemented
+  ITKSpeckleNoiseImageTest(const ITKSpeckleNoiseImageTest&) = delete; // Copy Constructor Not Implemented
+  void operator=(const ITKSpeckleNoiseImageTest&) = delete;           // Operator '=' Not Implemented
 };

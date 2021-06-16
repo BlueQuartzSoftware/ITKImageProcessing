@@ -23,7 +23,7 @@ fft_amoeba::fft_amoeba(vnl_cost_function& f)
 : fptr(&f)
 , num_evaluations_(0)
 {
-  verbose = default_verbose;
+  verbose = static_cast<int>(default_verbose);
   maxiter = f.get_number_of_unknowns() * 200;
   X_tolerance = 1e-8;
   F_tolerance = 1e-4;
@@ -118,9 +118,13 @@ static double fractional_range(const std::vector<fft_amoeba_SimplexCorner>& simp
   {
     const double val = corner.fv;
     if(val < min)
+    {
       min = val;
+    }
     if(val > max)
+    {
       max = val;
+    }
   }
   double diff = 2 * std::abs(max - min);
   double sum = std::abs(max) + std::abs(min);
@@ -148,7 +152,9 @@ std::ostream& operator<<(std::ostream& s, const fft_amoeba_SimplexCorner& simple
 std::ostream& operator<<(std::ostream& s, const std::vector<fft_amoeba_SimplexCorner>& simplex)
 {
   for(const auto& i : simplex)
+  {
     s << i.fv << ' ';
+  }
   return s;
 }
 
@@ -176,9 +182,13 @@ void fft_amoebaFit::set_up_simplex_relative(std::vector<fft_amoeba_SimplexCorner
 
     // perturb s->v(j)
     if(vnl_math::abs(s->v[j]) > zero_term_delta)
+    {
       s->v[j] = (1 + usual_delta) * s->v[j];
+    }
     else
+    {
       s->v[j] = zero_term_delta;
+    }
 
     s->fv = f(s->v);
   }
@@ -260,7 +270,7 @@ void fft_amoebaFit::amoeba(vnl_vector<double>& x, std::vector<fft_amoeba_Simplex
   {
     std::cerr << "initial\n" << simplex;
   }
-  else if(verbose)
+  else if(verbose != 0)
   {
     std::cerr << "initial: " << simplex << '\n';
   }
@@ -277,14 +287,18 @@ void fft_amoebaFit::amoeba(vnl_vector<double>& x, std::vector<fft_amoeba_Simplex
   {
     frac_range = fractional_range(simplex);
     if(frac_range < F_tolerance)
+    {
       break;
+    }
 
     // One step of the Nelder-Mead simplex algorithm
     for(int k = 0; k < n; ++k)
     {
       vbar[k] = 0;
       for(int i = 0; i < n; ++i)
+      {
         vbar[k] += simplex[i].v[k];
+      }
       vbar[k] /= n;
     }
 
@@ -313,8 +327,10 @@ void fft_amoebaFit::amoeba(vnl_vector<double>& x, std::vector<fft_amoeba_Simplex
       {
         fft_amoeba_SimplexCorner* tmp = &simplex[n];
         if(reflect.fv < tmp->fv)
+        {
           // replace simplex[n] by reflection as at least it's better than that
           tmp = &reflect;
+        }
         set_corner_a_plus_bl(&contract, vbar, tmp->v, 0.5);
       }
 
@@ -328,8 +344,10 @@ void fft_amoebaFit::amoeba(vnl_vector<double>& x, std::vector<fft_amoeba_Simplex
       {
         // The contraction point was only average, shrink the entire simplex.
         for(int j = 1; j < n; ++j)
+        {
 
           set_corner_a_plus_bl(&simplex[j], simplex[0].v, simplex[j].v, 0.5);
+        }
         set_corner_a_plus_bl(&shrink, simplex[0].v, simplex[n].v, 0.5);
 
         next = &shrink;
@@ -341,24 +359,28 @@ void fft_amoebaFit::amoeba(vnl_vector<double>& x, std::vector<fft_amoeba_Simplex
     sort_simplex(simplex);
 
     // Print debugging info
-    if(verbose)
+    if(verbose != 0)
     {
       char buf[16383];
       std::sprintf(buf, "iter %5d: %s ", cnt, how);
       std::cerr << buf;
       if(verbose == 2)
+      {
         std::cerr << "\nFirst corner: " << simplex[0].v;
+      }
       if(verbose > 1)
       {
         std::streamsize a = std::cerr.width(10);
         std::cerr << '\n' << simplex << '\n';
         std::cerr.width(a);
       }
-      else if(verbose)
+      else if(verbose != 0)
+      {
         std::cerr << simplex << '\n';
+      }
     }
 
-    if(simpl_filter)
+    if(simpl_filter != nullptr)
     {
       simpl_filter->notifyStatusMessage(QString("Completed %1 iterations").arg(cnt));
     }
@@ -371,7 +393,7 @@ void fft_amoebaFit::amoeba(vnl_vector<double>& x, std::vector<fft_amoeba_Simplex
 //: Set max iterations to 0 to stop optimizing
 void fft_amoeba::cancel()
 {
-  if(m_Fit)
+  if(m_Fit != nullptr)
   {
     m_Fit->maxiter = 0;
   }
@@ -411,9 +433,11 @@ void fft_amoeba::minimize(vnl_cost_function& f, vnl_vector<double>& x)
 void fft_amoeba::minimize(vnl_cost_function& f, vnl_vector<double>& x, double delta)
 {
   fft_amoeba a(f);
-  a.verbose = fft_amoeba::default_verbose;
+  a.verbose = static_cast<int>(fft_amoeba::default_verbose);
   if(delta != 0)
+  {
     a.relative_diameter = delta;
+  }
   fft_amoebaFit amoeba(a);
   amoeba.amoeba(x);
 }
@@ -422,7 +446,7 @@ void fft_amoeba::minimize(vnl_cost_function& f, vnl_vector<double>& x, double de
 void fft_amoeba::minimize(vnl_cost_function& f, vnl_vector<double>& x, const vnl_vector<double>& dx)
 {
   fft_amoeba a(f);
-  a.verbose = fft_amoeba::default_verbose;
+  a.verbose = static_cast<int>(fft_amoeba::default_verbose);
   fft_amoebaFit amoeba(a);
   amoeba.amoeba(x, dx);
 }

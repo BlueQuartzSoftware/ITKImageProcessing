@@ -84,8 +84,6 @@ void TestFilterAvailability()
     ss << "The ZeissImport Plugin Requires the use of the " << filtName.toStdString() << " filter which is found in the ImageProcessing Plugin";
     DREAM3D_TEST_THROW_EXCEPTION(ss.str())
   }
-
-  return;
 }
 
 // -----------------------------------------------------------------------------

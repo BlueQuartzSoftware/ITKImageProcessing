@@ -149,6 +149,6 @@ public:
   }
 
 private:
-  ITKBoxMeanImageTest(const ITKBoxMeanImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKBoxMeanImageTest&);      // Operator '=' Not Implemented
+  ITKBoxMeanImageTest(const ITKBoxMeanImageTest&) = delete; // Copy Constructor Not Implemented
+  void operator=(const ITKBoxMeanImageTest&) = delete;      // Operator '=' Not Implemented
 };

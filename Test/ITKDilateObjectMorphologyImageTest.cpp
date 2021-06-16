@@ -137,6 +137,6 @@ public:
   }
 
 private:
-  ITKDilateObjectMorphologyImageTest(const ITKDilateObjectMorphologyImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKDilateObjectMorphologyImageTest&);                     // Move assignment Not Implemented
+  ITKDilateObjectMorphologyImageTest(const ITKDilateObjectMorphologyImageTest&) = delete; // Copy Constructor Not Implemented
+  void operator=(const ITKDilateObjectMorphologyImageTest&) = delete;                     // Move assignment Not Implemented
 };

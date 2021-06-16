@@ -79,6 +79,6 @@ public:
   }
 
 private:
-  ITKMultiScaleHessianBasedObjectnessImageTest(const ITKMultiScaleHessianBasedObjectnessImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKMultiScaleHessianBasedObjectnessImageTest&);                               // Move assignment Not Implemented
+  ITKMultiScaleHessianBasedObjectnessImageTest(const ITKMultiScaleHessianBasedObjectnessImageTest&) = delete; // Copy Constructor Not Implemented
+  void operator=(const ITKMultiScaleHessianBasedObjectnessImageTest&) = delete;                               // Move assignment Not Implemented
 };

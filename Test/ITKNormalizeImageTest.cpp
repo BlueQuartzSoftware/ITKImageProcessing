@@ -101,6 +101,6 @@ public:
   }
 
 private:
-  ITKNormalizeImageTest(const ITKNormalizeImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKNormalizeImageTest&);        // Operator '=' Not Implemented
+  ITKNormalizeImageTest(const ITKNormalizeImageTest&) = delete; // Copy Constructor Not Implemented
+  void operator=(const ITKNormalizeImageTest&) = delete;        // Operator '=' Not Implemented
 };

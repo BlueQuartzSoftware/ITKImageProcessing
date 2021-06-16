@@ -178,6 +178,6 @@ public:
   }
 
 private:
-  ITKMedianProjectionImageTest(const ITKMedianProjectionImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKMedianProjectionImageTest&);               // Operator '=' Not Implemented
+  ITKMedianProjectionImageTest(const ITKMedianProjectionImageTest&) = delete; // Copy Constructor Not Implemented
+  void operator=(const ITKMedianProjectionImageTest&) = delete;               // Operator '=' Not Implemented
 };

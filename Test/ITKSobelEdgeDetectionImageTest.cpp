@@ -66,6 +66,6 @@ public:
   }
 
 private:
-  ITKSobelEdgeDetectionImageTest(const ITKSobelEdgeDetectionImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKSobelEdgeDetectionImageTest&);                 // Move assignment Not Implemented
+  ITKSobelEdgeDetectionImageTest(const ITKSobelEdgeDetectionImageTest&) = delete; // Copy Constructor Not Implemented
+  void operator=(const ITKSobelEdgeDetectionImageTest&) = delete;                 // Move assignment Not Implemented
 };

@@ -178,6 +178,6 @@ public:
   }
 
 private:
-  ITKMinimumProjectionImageTest(const ITKMinimumProjectionImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKMinimumProjectionImageTest&);                // Operator '=' Not Implemented
+  ITKMinimumProjectionImageTest(const ITKMinimumProjectionImageTest&) = delete; // Copy Constructor Not Implemented
+  void operator=(const ITKMinimumProjectionImageTest&) = delete;                // Operator '=' Not Implemented
 };

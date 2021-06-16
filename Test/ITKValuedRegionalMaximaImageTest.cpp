@@ -65,6 +65,6 @@ public:
   }
 
 private:
-  ITKValuedRegionalMaximaImageTest(const ITKValuedRegionalMaximaImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKValuedRegionalMaximaImageTest&);                   // Move assignment Not Implemented
+  ITKValuedRegionalMaximaImageTest(const ITKValuedRegionalMaximaImageTest&) = delete; // Copy Constructor Not Implemented
+  void operator=(const ITKValuedRegionalMaximaImageTest&) = delete;                   // Move assignment Not Implemented
 };

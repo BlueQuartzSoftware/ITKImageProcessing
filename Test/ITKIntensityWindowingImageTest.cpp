@@ -131,6 +131,6 @@ public:
   }
 
 private:
-  ITKIntensityWindowingImageTest(const ITKIntensityWindowingImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKIntensityWindowingImageTest&);                 // Move assignment Not Implemented
+  ITKIntensityWindowingImageTest(const ITKIntensityWindowingImageTest&) = delete; // Copy Constructor Not Implemented
+  void operator=(const ITKIntensityWindowingImageTest&) = delete;                 // Move assignment Not Implemented
 };

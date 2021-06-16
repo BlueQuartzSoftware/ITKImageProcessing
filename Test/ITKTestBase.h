@@ -28,12 +28,8 @@ class ITKTestBase
 {
 
 public:
-  ITKTestBase()
-  {
-  }
-  virtual ~ITKTestBase()
-  {
-  }
+  ITKTestBase() = default;
+  virtual ~ITKTestBase() = default;
 
   // -----------------------------------------------------------------------------
   //
@@ -136,10 +132,8 @@ public:
     {
       return EXIT_FAILURE;
     }
-    else
-    {
-      return EXIT_SUCCESS;
-    }
+
+    return EXIT_SUCCESS;
   }
 
   template <typename PixelType, unsigned int Dimensions>
@@ -153,7 +147,7 @@ public:
       {
         return CompareImages<itk::Vector<PixelType, 2>, Dimensions>(input_container, input_path, baseline_container, baseline_path, tolerance);
       }
-      else if(cDims.size() == 3)
+      if(cDims.size() == 3)
       {
         return CompareImages<itk::Vector<PixelType, 3>, Dimensions>(input_container, input_path, baseline_container, baseline_path, tolerance);
       }
@@ -171,7 +165,7 @@ public:
         return CompareImages<PixelType, Dimensions>(input_container, input_path, baseline_container, baseline_path, tolerance);
       }
       // RGB images
-      else if(cDims[0] == 3)
+      if(cDims[0] == 3)
       {
         return CompareImages<itk::RGBPixel<PixelType>, Dimensions>(input_container, input_path, baseline_container, baseline_path, tolerance);
       }
@@ -417,7 +411,7 @@ public:
       {
         return GetMD5FromDataContainer<itk::Vector<PixelType, 2>, Dimensions>(container, path, md5);
       }
-      else if(cDims.size() == 3)
+      if(cDims.size() == 3)
       {
         return GetMD5FromDataContainer<itk::Vector<PixelType, 3>, Dimensions>(container, path, md5);
       }
@@ -435,7 +429,7 @@ public:
         return GetMD5FromDataContainer<PixelType, Dimensions>(container, path, md5);
       }
       // RGB images
-      else if(cDims[0] == 3)
+      if(cDims[0] == 3)
       {
         return GetMD5FromDataContainer<itk::RGBPixel<PixelType>, Dimensions>(container, path, md5);
       }

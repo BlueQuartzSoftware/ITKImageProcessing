@@ -112,6 +112,6 @@ public:
   }
 
 private:
-  ITKSmoothingRecursiveGaussianImageTest(const ITKSmoothingRecursiveGaussianImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKSmoothingRecursiveGaussianImageTest&);                         // Move assignment Not Implemented
+  ITKSmoothingRecursiveGaussianImageTest(const ITKSmoothingRecursiveGaussianImageTest&) = delete; // Copy Constructor Not Implemented
+  void operator=(const ITKSmoothingRecursiveGaussianImageTest&) = delete;                         // Move assignment Not Implemented
 };

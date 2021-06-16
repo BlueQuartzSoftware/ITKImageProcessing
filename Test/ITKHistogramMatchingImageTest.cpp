@@ -223,6 +223,6 @@ public:
   }
 
 private:
-  ITKHistogramMatchingImageTest(const ITKHistogramMatchingImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKHistogramMatchingImageTest&);                // Move assignment Not Implemented
+  ITKHistogramMatchingImageTest(const ITKHistogramMatchingImageTest&) = delete; // Copy Constructor Not Implemented
+  void operator=(const ITKHistogramMatchingImageTest&) = delete;                // Move assignment Not Implemented
 };

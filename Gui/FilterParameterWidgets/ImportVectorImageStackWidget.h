@@ -73,12 +73,12 @@ public:
    */
   ImportVectorImageStackWidget(FilterParameter* parameter, AbstractFilter* filter = nullptr, QWidget* parent = nullptr);
 
-  virtual ~ImportVectorImageStackWidget();
+  ~ImportVectorImageStackWidget() override;
 
   /**
    * @brief Initializes some of the GUI elements with selections or other GUI related items
    */
-  virtual void setupGui();
+  void setupGui() override;
 
 public Q_SLOTS:
   void widgetChanged(const QString& msg);
@@ -141,7 +141,7 @@ protected:
    * @brief
    * @param event
    */
-  void keyPressEvent(QKeyEvent* event);
+  void keyPressEvent(QKeyEvent* event) override;
 
   /**
    * @brief setupMenuField

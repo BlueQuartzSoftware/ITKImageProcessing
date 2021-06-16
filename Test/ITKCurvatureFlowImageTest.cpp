@@ -116,6 +116,6 @@ public:
   }
 
 private:
-  ITKCurvatureFlowImageTest(const ITKCurvatureFlowImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKCurvatureFlowImageTest&);            // Move assignment Not Implemented
+  ITKCurvatureFlowImageTest(const ITKCurvatureFlowImageTest&) = delete; // Copy Constructor Not Implemented
+  void operator=(const ITKCurvatureFlowImageTest&) = delete;            // Move assignment Not Implemented
 };

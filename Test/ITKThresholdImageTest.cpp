@@ -166,6 +166,6 @@ public:
   }
 
 private:
-  ITKThresholdImageTest(const ITKThresholdImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKThresholdImageTest&);        // Move assignment Not Implemented
+  ITKThresholdImageTest(const ITKThresholdImageTest&) = delete; // Copy Constructor Not Implemented
+  void operator=(const ITKThresholdImageTest&) = delete;        // Move assignment Not Implemented
 };

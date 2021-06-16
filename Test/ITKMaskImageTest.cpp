@@ -156,6 +156,6 @@ public:
   }
 
 private:
-  ITKMaskImageTest(const ITKMaskImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKMaskImageTest&);   // Move assignment Not Implemented
+  ITKMaskImageTest(const ITKMaskImageTest&) = delete; // Copy Constructor Not Implemented
+  void operator=(const ITKMaskImageTest&) = delete;   // Move assignment Not Implemented
 };

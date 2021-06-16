@@ -178,6 +178,6 @@ public:
   }
 
 private:
-  ITKMaximumProjectionImageTest(const ITKMaximumProjectionImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKMaximumProjectionImageTest&);                // Operator '=' Not Implemented
+  ITKMaximumProjectionImageTest(const ITKMaximumProjectionImageTest&) = delete; // Copy Constructor Not Implemented
+  void operator=(const ITKMaximumProjectionImageTest&) = delete;                // Operator '=' Not Implemented
 };

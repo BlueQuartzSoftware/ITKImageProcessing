@@ -73,6 +73,6 @@ public:
   }
 
 private:
-  ITKVectorConnectedComponentImageTest(const ITKVectorConnectedComponentImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKVectorConnectedComponentImageTest&);                       // Move assignment Not Implemented
+  ITKVectorConnectedComponentImageTest(const ITKVectorConnectedComponentImageTest&) = delete; // Copy Constructor Not Implemented
+  void operator=(const ITKVectorConnectedComponentImageTest&) = delete;                       // Move assignment Not Implemented
 };

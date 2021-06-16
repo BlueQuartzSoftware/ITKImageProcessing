@@ -119,6 +119,6 @@ public:
   }
 
 private:
-  ITKRelabelComponentImageTest(const ITKRelabelComponentImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKRelabelComponentImageTest&);               // Move assignment Not Implemented
+  ITKRelabelComponentImageTest(const ITKRelabelComponentImageTest&) = delete; // Copy Constructor Not Implemented
+  void operator=(const ITKRelabelComponentImageTest&) = delete;               // Move assignment Not Implemented
 };

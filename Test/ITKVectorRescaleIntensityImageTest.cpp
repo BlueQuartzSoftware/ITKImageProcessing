@@ -63,7 +63,7 @@ public:
     // Convert ITK image to Dream3D data
     //
     typedef itk::InPlaceImageToDream3DDataFilter<InputPixelType, ImageDimension> toDream3DType;
-    DataContainer::Pointer container = containerArray->createNonPrereqDataContainer(0, input_path.getDataContainerName());
+    DataContainer::Pointer container = containerArray->createNonPrereqDataContainer(nullptr, input_path.getDataContainerName());
     DREAM3D_REQUIRED(container.get(), !=, 0);
     std::vector<size_t> dims = ITKDream3DHelper::GetComponentsDimensions<OutputPixelType>();
     DataContainer::Pointer dc = containerArray->getDataContainer(input_path.getDataContainerName());
@@ -167,6 +167,6 @@ public:
   }
 
 private:
-  ITKVectorRescaleIntensityImageTest(const ITKVectorRescaleIntensityImageTest&); // Copy Constructor Not Implemented
-  void operator=(const ITKVectorRescaleIntensityImageTest&);                     // Move assignment Not Implemented
+  ITKVectorRescaleIntensityImageTest(const ITKVectorRescaleIntensityImageTest&) = delete; // Copy Constructor Not Implemented
+  void operator=(const ITKVectorRescaleIntensityImageTest&) = delete;                     // Move assignment Not Implemented
 };
