@@ -389,6 +389,10 @@ void ITKImageWriter::execute()
         }
       }
       saveImageData(dca, slice + m_IndexOffset, dims[2]);
+      if(getCancel())
+      {
+        break;
+      }
     }
   }
   else if(ITKImageWriter::XZPlane == m_Plane) // XZ plane
@@ -407,6 +411,10 @@ void ITKImageWriter::execute()
         }
       }
       saveImageData(dca, slice, dims[1]);
+      if(getCancel())
+      {
+        break;
+      }
     }
   }
   else if(ITKImageWriter::YZPlane == m_Plane) // YZ plane
@@ -425,6 +433,10 @@ void ITKImageWriter::execute()
         }
       }
       saveImageData(dca, slice, dims[0]);
+      if(getCancel())
+      {
+        break;
+      }
     }
   }
 }
