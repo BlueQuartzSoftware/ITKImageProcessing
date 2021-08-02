@@ -67,6 +67,7 @@
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/IntFilterParameter.h"
 #include "SIMPLib/ITK/itkInPlaceDream3DDataToImageFilter.h"
 #include "SIMPLib/Utilities/FileSystemPathHelper.h"
 
@@ -140,12 +141,16 @@ void ITKImageWriter::setupFilterParameters()
   QString supportedExtensions = ITKImageProcessingPlugin::getListSupportedWriteExtensions();
   parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Output File", FileName, FilterParameter::Category::Parameter, ITKImageWriter, supportedExtensions));
 
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Index Offset", IndexOffset, FilterParameter::Category::Parameter, ITKImageWriter));
+
   parameters.push_back(SeparatorFilterParameter::Create("Image Data", FilterParameter::Category::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
         DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Image", ImageArrayPath, FilterParameter::Category::RequiredArray, ITKImageWriter, req));
   }
+
+
   setFilterParameters(parameters);
 }
 
@@ -224,7 +229,7 @@ void ITKImageWriter::writeAs2DStack(typename itk::Image<TPixel, Dimensions>* ima
   std::string format = path + "/" + filename + "%03d" + extension;
   namesGenerator->SetSeriesFormat(format);
   namesGenerator->SetIncrementIndex(1);
-  namesGenerator->SetStartIndex(0);
+  namesGenerator->SetStartIndex(getIndexOffset());
   namesGenerator->SetEndIndex(z_size - 1);
   typedef itk::Image<TPixel, Dimensions> InputImageType;
   typedef itk::Image<TPixel, Dimensions - 1> OutputImageType;
@@ -383,7 +388,7 @@ void ITKImageWriter::execute()
           copyTuple(index, axisA, dB, axisB, nComp, currentData.get(), sliceData.get());
         }
       }
-      saveImageData(dca, slice, dims[2]);
+      saveImageData(dca, slice + m_IndexOffset, dims[2]);
     }
   }
   else if(ITKImageWriter::XZPlane == m_Plane) // XZ plane
@@ -598,4 +603,16 @@ void ITKImageWriter::setPlane(int value)
 int ITKImageWriter::getPlane() const
 {
   return m_Plane;
+}
+
+// -----------------------------------------------------------------------------
+void ITKImageWriter::setIndexOffset(int value)
+{
+  m_IndexOffset = value;
+}
+
+// -----------------------------------------------------------------------------
+int ITKImageWriter::getIndexOffset() const
+{
+  return m_IndexOffset;
 }

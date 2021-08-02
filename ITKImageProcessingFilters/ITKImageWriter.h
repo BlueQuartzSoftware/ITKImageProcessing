@@ -68,6 +68,7 @@ class ITKImageProcessing_EXPORT ITKImageWriter : public AbstractFilter
   PYB11_PROPERTY(QString FileName READ getFileName WRITE setFileName)
   PYB11_PROPERTY(DataArrayPath ImageArrayPath READ getImageArrayPath WRITE setImageArrayPath)
   PYB11_PROPERTY(int Plane READ getPlane WRITE setPlane)
+  PYB11_PROPERTY(int IndexOffset READ getIndexOffset WRITE setIndexOffset)
   PYB11_METHOD(void registerImageIOFactories)
   PYB11_END_BINDINGS()
   // End Python bindings declarations
@@ -129,6 +130,17 @@ public:
    */
   int getPlane() const;
   Q_PROPERTY(int Plane READ getPlane WRITE setPlane)
+
+  /**
+   * @brief Setter property for IndexOffset
+   */
+  void setIndexOffset(int value);
+  /**
+   * @brief Getter property for IndexOffset
+   * @return Value of IndexOffset
+   */
+  int getIndexOffset() const;
+  Q_PROPERTY(int IndexOffset READ getIndexOffset WRITE setIndexOffset)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -234,6 +246,7 @@ private:
   QString m_FileName = {""};
   DataArrayPath m_ImageArrayPath = {"", "", ""};
   int m_Plane = {};
+  int m_IndexOffset = {0};
 
   /**
    * @brief copyTuple

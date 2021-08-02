@@ -12,10 +12,11 @@ An example of a **Filter** that produces color data that can be used as input to
 
 ## Parameters ##
 
-| Name             | Type |
-|------------------|------|
+| Name             | Type | Description |
+|------------------|------| --------------|
 | Output File | String | Path to the output file to write. |
 | Plane | Enumeration | Selection for plane normal for writing the images (XY, XZ, or YZ) |
+| Index Offeset | Integer | Default=0, This is the starting index when writing mulitple images |
 
 ## Required Geometry ##
 
