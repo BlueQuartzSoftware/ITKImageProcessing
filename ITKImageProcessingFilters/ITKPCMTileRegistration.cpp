@@ -26,7 +26,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * The code contained herein was partially funded by the followig contracts:
+ * The code contained herein was partially funded by the following contracts:
  *    United States Air Force Prime Contract FA8650-07-D-5800
  *    United States Air Force Prime Contract FA8650-10-D-5210
  *    United States Prime Contract Navy N00173-07-C-2068
@@ -51,7 +51,6 @@
 #include "SIMPLib/ITK/itkProgressObserver.hpp"
 #include "SIMPLib/ITK/itkTransformToDream3DITransformContainer.h"
 #include "SIMPLib/ITK/itkTransformToDream3DTransformContainer.h"
-
 
 #include "ITKImageProcessing/ITKImageProcessingFilters/util/MontageImportHelper.h"
 #include "ITKImageProcessing/ITKImageProcessingVersion.h"
@@ -340,7 +339,7 @@ typename MontageType::Pointer ITKPCMTileRegistration::createMontage(int peakMeth
 #if(ITK_VERSION_MAJOR == 5) && (ITK_VERSION_MINOR >= 2)
   using PaddingMethodEnum = typename PCMType::PaddingMethodEnum;
   using PeakInterpolationType = itk::PhaseCorrelationOptimizerEnums::PeakInterpolationMethod;
-#elif (ITK_VERSION_MAJOR == 5) && (ITK_VERSION_MINOR >= 1)
+#elif(ITK_VERSION_MAJOR == 5) && (ITK_VERSION_MINOR >= 1)
   using PaddingMethodEnum = typename PCMType::PaddingMethodEnum;
   using PeakInterpolationType = typename itk::MaxPhaseCorrelationOptimizer<PCMType>::PeakInterpolationMethodEnum;
 #else
