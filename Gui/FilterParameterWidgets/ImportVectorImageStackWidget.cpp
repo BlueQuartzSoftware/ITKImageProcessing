@@ -279,7 +279,7 @@ void ImportVectorImageStackWidget::getGuiParametersFromFilter()
 {
   blockSignals(true);
 
-  VectorFileListInfo_t data = m_FilterParameter->getGetterCallback()();
+  VectorFileListInfo_t data = SafeFilterParameterGetter(m_FilterParameter, getFilter());
 
   m_Ui->startComp->setValue(data.StartComponent);
   m_Ui->endComp->setValue(data.EndComponent);
@@ -307,7 +307,7 @@ void ImportVectorImageStackWidget::getGuiParametersFromFilter()
 // -----------------------------------------------------------------------------
 void ImportVectorImageStackWidget::validateInputFile()
 {
-  VectorFileListInfo_t data = m_FilterParameter->getGetterCallback()();
+  VectorFileListInfo_t data = SafeFilterParameterGetter(m_FilterParameter, getFilter());
 
   QString currentPath = data.InputPath;
   QFileInfo fi(currentPath);
@@ -330,7 +330,7 @@ void ImportVectorImageStackWidget::validateInputFile()
 
     data.InputPath = file;
 
-    m_FilterParameter->getSetterCallback()(data);
+    SafeFilterParameterSetter(m_FilterParameter, data, getFilter());
   }
 }
 
@@ -605,7 +605,7 @@ void ImportVectorImageStackWidget::filterNeedsInputParameters(AbstractFilter* fi
   data.EndComponent = m_Ui->endComp->value();
   data.Separator = m_Ui->separator->text();
 
-  m_FilterParameter->getSetterCallback()(data);
+  SafeFilterParameterSetter(m_FilterParameter, data, getFilter());
 }
 
 // -----------------------------------------------------------------------------
