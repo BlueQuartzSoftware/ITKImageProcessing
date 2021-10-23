@@ -1060,7 +1060,7 @@ QString ImportAxioVisionV4Montage::getGroupName() const
 // -----------------------------------------------------------------------------
 QString ImportAxioVisionV4Montage::getSubGroupName() const
 {
-  return SIMPL::FilterSubGroups::ImportFilters;
+  return SIMPL::FilterSubGroups::InputFilters;
 }
 
 // -----------------------------------------------------------------------------

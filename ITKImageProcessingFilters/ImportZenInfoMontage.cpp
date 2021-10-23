@@ -883,7 +883,7 @@ QString ImportZenInfoMontage::getGroupName() const
 // -----------------------------------------------------------------------------
 QString ImportZenInfoMontage::getSubGroupName() const
 {
-  return SIMPL::FilterSubGroups::ImportFilters;
+  return SIMPL::FilterSubGroups::InputFilters;
 }
 
 // -----------------------------------------------------------------------------
