@@ -258,6 +258,10 @@ target_link_libraries(${plug_target_name}
                     SIMPLib
                     ${ITK_LIBRARIES}
 )
+
+target_include_directories(${plug_target_name} PUBLIC
+  ${ITK_INCLUDE_DIRS}
+)
 if(MSVC)
   set_target_properties(${plug_target_name} PROPERTIES LINK_FLAGS_DEBUG "/INCREMENTAL:NO" )
   # enable per object parallel compilation in this large library

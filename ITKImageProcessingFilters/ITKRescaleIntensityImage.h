@@ -113,6 +113,7 @@ public:
   ITKRescaleIntensityImage(ITKRescaleIntensityImage&&) = delete;         // Move Constructor Not Implemented
   ITKRescaleIntensityImage& operator=(const ITKRescaleIntensityImage&) = delete; // Copy Assignment Not Implemented
   ITKRescaleIntensityImage& operator=(ITKRescaleIntensityImage&&) = delete;      // Move Assignment Not Implemented
+
 };
 
 #ifdef __clang__
