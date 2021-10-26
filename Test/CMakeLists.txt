@@ -76,7 +76,7 @@ if(NOT ITKImageProcessing_LeanAndMean)
     ITKThresholdMaximumConnectedComponentsImageTest
     ITKSmoothingRecursiveGaussianImageTest
     ITKAdaptiveHistogramEqualizationImageTest
-    ITKCastImageTest
+    #ITKCastImageTest
     ITKMedianImageTest
     ITKRGBToLuminanceImageTest
     ITKHistogramMatchingImageTest
