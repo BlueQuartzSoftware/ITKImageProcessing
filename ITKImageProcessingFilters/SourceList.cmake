@@ -98,7 +98,7 @@ if(NOT ITKImageProcessing_LeanAndMean)
     ITKThresholdMaximumConnectedComponentsImage
     ITKSmoothingRecursiveGaussianImage
     ITKAdaptiveHistogramEqualizationImage
-    ITKCastImage
+    #ITKCastImage
     ITKRGBToLuminanceImage
     ITKHistogramMatchingImage
     ITKMorphologicalWatershedImage

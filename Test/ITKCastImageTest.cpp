@@ -36,7 +36,7 @@ public:
     var.setValue(false);
     propWasSet = filter->setProperty("SaveAsNewArray", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
-    var.setValue(itk::ImageIOBase::IOComponentType::DOUBLE - 1);
+    var.setValue(itk::ImageIOBase::IOComponentType::DOUBLE);
     propWasSet = filter->setProperty("CastingType", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     filter->setDataContainerArray(containerArray);
@@ -71,7 +71,7 @@ public:
     var.setValue(false);
     propWasSet = filter->setProperty("SaveAsNewArray", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
-    var.setValue(itk::ImageIOBase::IOComponentType::UCHAR - 1);
+    var.setValue(itk::ImageIOBase::IOComponentType::UCHAR);
     propWasSet = filter->setProperty("CastingType", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     filter->setDataContainerArray(containerArray);

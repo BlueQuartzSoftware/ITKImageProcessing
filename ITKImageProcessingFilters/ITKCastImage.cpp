@@ -20,7 +20,7 @@
 //
 // -----------------------------------------------------------------------------
 ITKCastImage::ITKCastImage()
-: m_CastingType(itk::ImageIOBase::IOComponentType::UCHAR - 1)
+: m_CastingType(static_cast<int>(itk::ImageIOBase::IOComponentType::UCHAR))
 {
 }
 
@@ -113,7 +113,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
 // -----------------------------------------------------------------------------
 void ITKCastImage::dataCheckInternal()
 {
-  Dream3DArraySwitchOutputComponentMacro(this->dataCheck, m_CastingType, getSelectedCellArrayPath(), -4);
+  Dream3DArraySwitchOutputComponentMacro(this->dataCheck, static_cast<itk::ImageIOBase::IOComponentType>(m_CastingType), getSelectedCellArrayPath(), -4);
 }
 
 // -----------------------------------------------------------------------------
@@ -135,7 +135,7 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
 // -----------------------------------------------------------------------------
 void ITKCastImage::filterInternal()
 {
-  Dream3DArraySwitchOutputComponentMacro(this->filter, m_CastingType, getSelectedCellArrayPath(), -4);
+  Dream3DArraySwitchOutputComponentMacro(this->filter, static_cast<itk::ImageIOBase::IOComponentType>(m_CastingType), getSelectedCellArrayPath(), -4);
 }
 
 // -----------------------------------------------------------------------------
