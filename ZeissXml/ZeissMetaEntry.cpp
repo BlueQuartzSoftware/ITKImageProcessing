@@ -35,6 +35,7 @@
 #include "H5Support/H5Lite.h"
 #include "H5Support/H5Utilities.h"
 #include "H5Support/QH5Lite.h"
+using namespace H5Support;
 #endif
 
 #include <QtCore/QDebug>
