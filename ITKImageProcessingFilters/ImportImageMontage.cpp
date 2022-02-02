@@ -174,7 +174,12 @@ void ImportImageMontage::dataCheck()
     DataArrayPath dap(getDataContainerName(), getCellAttributeMatrixName(), fi.baseName());
     readImage(dap, true);
     // The previous call will add an attribute array that we don't need at this point
-    // so just remove it.
+    // so just remove it, assuming the call worked..
+    // Make sure we didn't error out.
+    if(getErrorCondition() < 0)
+    {
+      return;
+    }
     AttributeMatrix::Pointer am = m->getAttributeMatrix(getCellAttributeMatrixName());
     am->removeAttributeArray(fi.baseName());
 
