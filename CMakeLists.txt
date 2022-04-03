@@ -59,6 +59,10 @@ set(DREAM3D_ADDITIONAL_ITK_MODULES
     ITKIOGE
     ITKIOMRC
     ITKTestKernel
+    ITKSpatialObjects
+    ITKSmoothing
+    ITKMathematicalMorphology
+    ITKImageFeature
     )
     
 option(${PLUGIN_NAME}_ENABLE_SCIFIO "Enable SCIFIO ITK Modules" OFF)
