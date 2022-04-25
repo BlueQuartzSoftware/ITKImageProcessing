@@ -74,7 +74,7 @@ public:
   // -----------------------------------------------------------------------------
   void RemoveTestFiles()
   {
-    foreach(QString filename, this->FilesToRemove)
+    Q_FOREACH(QString filename, this->FilesToRemove)
     {
       QFile::remove(filename);
     }

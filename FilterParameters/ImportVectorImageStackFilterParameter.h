@@ -40,7 +40,7 @@
 #include <QtCore/QJsonObject>
 #include <QtCore/QJsonValue>
 
-typedef struct
+ struct VectorFileListInfo_t
 {
   qint32 PaddingDigits = 3;
   quint32 Ordering = 0; /* Ordering=0 = Ascending, Ordering=1 = Descending */
@@ -93,7 +93,7 @@ typedef struct
     }
     return false;
   }
-} VectorFileListInfo_t;
+} ;
 
 Q_DECLARE_METATYPE(VectorFileListInfo_t)
 
