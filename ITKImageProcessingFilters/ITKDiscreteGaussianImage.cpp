@@ -75,9 +75,10 @@ void ITKDiscreteGaussianImage::readFilterParameters(AbstractFilterParametersRead
 template <typename InputPixelType, typename OutputPixelType, unsigned int Dimension>
 void ITKDiscreteGaussianImage::dataCheckImpl()
 {
+
   // Check consistency of parameters
   this->CheckVectorEntry<float, FloatVec3Type>(m_Variance, "Variance", false);
-  this->CheckIntegerEntry<uint32_t, int32_t>(m_MaximumKernelWidth, "MaximumKernelWidth", true);
+  this->CheckIntegerEntry<uint32_t, uint32_t>(static_cast<uint32_t>(m_MaximumKernelWidth), "MaximumKernelWidth", true);
   this->CheckVectorEntry<float, FloatVec3Type>(m_MaximumError, "MaximumError", false);
 
   ITKImageProcessingBase::dataCheckImpl<InputPixelType, OutputPixelType, Dimension>();
@@ -90,6 +91,14 @@ void ITKDiscreteGaussianImage::dataCheck()
 {
   clearErrorCode();
   clearWarningCode();
+
+  if(m_MaximumKernelWidth < 0)
+  {
+    QString errorMessage = QString("Maximum Kernel Width must be greater than ZERO.");
+    setErrorCondition(-11234, errorMessage);
+    return;
+  }
+
   Dream3DArraySwitchMacro(this->dataCheckImpl, getSelectedCellArrayPath(), -4);
 }
 
