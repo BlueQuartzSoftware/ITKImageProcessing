@@ -53,7 +53,7 @@ ImportVectorImageStackFilterParameter::~ImportVectorImageStackFilterParameter() 
 // -----------------------------------------------------------------------------
 ImportVectorImageStackFilterParameter::Pointer ImportVectorImageStackFilterParameter::Create(const QString& humanLabel, const QString& propertyName, const VectorFileListInfo_t& defaultValue,
                                                                                              Category category, const SetterCallbackType& setterCallback, const GetterCallbackType& getterCallback,
-                                                                                             int groupIndex)
+                                                                                             const std::vector<int>& groupIndices)
 {
   ImportVectorImageStackFilterParameter::Pointer ptr = ImportVectorImageStackFilterParameter::New();
   ptr->setHumanLabel(humanLabel);
@@ -64,7 +64,7 @@ ImportVectorImageStackFilterParameter::Pointer ImportVectorImageStackFilterParam
   ptr->setCategory(category);
   ptr->setSetterCallback(setterCallback);
   ptr->setGetterCallback(getterCallback);
-  ptr->setGroupIndex(groupIndex);
+  ptr->setGroupIndices(groupIndices);
 
   return ptr;
 }

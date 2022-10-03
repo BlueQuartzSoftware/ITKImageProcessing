@@ -393,8 +393,8 @@ void IlluminationCorrection::setupFilterParameters()
   linkedProps.push_back("OutputPath");
   linkedProps.push_back("FileExtension");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Export Corrected Images", ExportCorrectedImages, FilterParameter::Category::Parameter, IlluminationCorrection, linkedProps));
-  parameters.push_back(SIMPL_NEW_OUTPUT_PATH_FP("Output Path", OutputPath, FilterParameter::Category::Parameter, IlluminationCorrection, 0));
-  parameters.push_back(SIMPL_NEW_STRING_FP("File Extension", FileExtension, FilterParameter::Category::Parameter, IlluminationCorrection, 0));
+  parameters.push_back(SIMPL_NEW_OUTPUT_PATH_FP("Output Path", OutputPath, FilterParameter::Category::Parameter, IlluminationCorrection, {0}));
+  parameters.push_back(SIMPL_NEW_STRING_FP("File Extension", FileExtension, FilterParameter::Category::Parameter, IlluminationCorrection, {0}));
   setFilterParameters(parameters);
 }
 
