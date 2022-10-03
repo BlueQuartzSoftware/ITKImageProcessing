@@ -49,7 +49,7 @@ EbsdWarpPolynomialFilterParameter::~EbsdWarpPolynomialFilterParameter() = defaul
 //
 // -----------------------------------------------------------------------------
 EbsdWarpPolynomialFilterParameter::Pointer EbsdWarpPolynomialFilterParameter::Create(const QString& humanLabel, const QString& propertyName, const FloatVec7Type& defaultValue, Category category,
-                                                                                     const SetterCallbackType& setterCallback, const GetterCallbackType& getterCallback, int groupIndex)
+                                                                                     const SetterCallbackType& setterCallback, const GetterCallbackType& getterCallback, const std::vector<int>& groupIndices)
 {
 
   EbsdWarpPolynomialFilterParameter::Pointer ptr = EbsdWarpPolynomialFilterParameter::New();
@@ -59,7 +59,7 @@ EbsdWarpPolynomialFilterParameter::Pointer EbsdWarpPolynomialFilterParameter::Cr
   v.setValue(defaultValue);
   ptr->setDefaultValue(v);
   ptr->setCategory(category);
-  ptr->setGroupIndex(groupIndex);
+  ptr->setGroupIndices(groupIndices);
   ptr->setSetterCallback(setterCallback);
   ptr->setGetterCallback(getterCallback);
 
