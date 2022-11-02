@@ -37,10 +37,13 @@
 #include <QtCore/QFileInfo>
 
 #include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/CoreFilters/RotateSampleRefFrame.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/FileListInfoFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedChoicesFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
@@ -54,6 +57,15 @@
 
 #include <itkImageFileReader.h>
 #include <itkImageIOBase.h>
+
+namespace
+{
+const int32_t k_NoTransform = 0;
+const int32_t k_FlipXAxis = 1;
+const int32_t k_FlipYAxis = 2;
+// Insert new transforms here and then update the k_InvalidTransform value
+const int32_t k_InvalidTransform = 3;
+} // namespace
 
 enum createdPathID : RenameDataPath::DataID_t
 {
@@ -98,6 +110,19 @@ void ITKImportImageStack::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Origin", Origin, FilterParameter::Category::Parameter, ITKImportImageStack, {0}));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Spacing", Spacing, FilterParameter::Category::Parameter, ITKImportImageStack, {0}));
   parameters.back()->setLegacyPropertyName("Resolution");
+
+  {
+    ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
+    parameter->setHumanLabel("Optional Slice Operations");
+    parameter->setPropertyName("ImageTransformChoice");
+    parameter->setSetterCallback(SIMPL_BIND_SETTER(ITKImportImageStack, this, ImageTransformChoice));
+    parameter->setGetterCallback(SIMPL_BIND_GETTER(ITKImportImageStack, this, ImageTransformChoice));
+    std::vector<QString> choices{"None", "Flip along X axis", "Flip along Y axis"};
+    parameter->setChoices(choices);
+    parameter->setEditable(false);
+    parameter->setCategory(FilterParameter::Category::Parameter);
+    parameters.push_back(parameter);
+  }
 
   parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container", DataContainerName, FilterParameter::Category::CreatedArray, ITKImportImageStack));
   parameters.push_back(SeparatorFilterParameter::Create("Cell Data", FilterParameter::Category::CreatedArray));
@@ -179,6 +204,12 @@ void ITKImportImageStack::dataCheck()
   if(getErrorCode() < 0 || nullptr == m.get())
   {
     return;
+  }
+
+  if(getImageTransformChoice() < 0 || getImageTransformChoice() > k_InvalidTransform)
+  {
+    ss = QObject::tr("Invalid Image Transform value. Valid values are between %2 and %3: %1").arg(m_InputFileListInfo.InputPath, k_NoTransform, k_InvalidTransform - 1);
+    setErrorCondition(-64509, ss);
   }
 
   bool orderAscending = false;
@@ -331,6 +362,37 @@ void readImageStack(ITKImportImageStack* filter, const QVector<QString>& fileLis
       out << "  Current Slice Dims are:" << importedDims[0] << " x " << importedDims[1] << "\n";
       filter->setErrorCondition(-64510, msg);
       return;
+    }
+
+    if(filter->getImageTransformChoice() != k_NoTransform)
+    {
+      RotateSampleRefFrame::Pointer rot_Sample = RotateSampleRefFrame::New();
+      // Connect up the Error/Warning/Progress object so the filter can report those things
+      filter->connect(rot_Sample.get(), SIGNAL(messageGenerated(const AbstractMessage::Pointer&)), filter, SIGNAL(messageGenerated(const AbstractMessage::Pointer&)));
+      rot_Sample->setDataContainerArray(dca); // AbstractFilter implements this so no problem
+      // Now set the filter parameters for the filter
+      rot_Sample->setRotationAngle(180.0F);
+
+      rot_Sample->setSliceBySlice(true);
+
+      FloatVec3Type sampleAxis;
+      if(filter->getImageTransformChoice() == k_FlipXAxis)
+      {
+        sampleAxis = {1.0F, 0.0F, 0.0F};
+      }
+      else if(filter->getImageTransformChoice() == k_FlipYAxis)
+      {
+        sampleAxis = {0.0F, 1.0F, 0.0F};
+      }
+      rot_Sample->setRotationAxis(sampleAxis);
+
+      DataArrayPath tempPath = dcName;
+      tempPath.setAttributeMatrixName(attrMatName);
+      tempPath.setDataArrayName("");
+
+      rot_Sample->setCellAttributeMatrixPath(tempPath);
+
+      rot_Sample->execute();
     }
 
     // Compute the Tuple Index we are at:
@@ -607,4 +669,14 @@ void ITKImportImageStack::setImageDataArrayName(const QString& value)
 QString ITKImportImageStack::getImageDataArrayName() const
 {
   return m_ImageDataArrayName;
+}
+
+void ITKImportImageStack::setImageTransformChoice(int value)
+{
+  m_ImageTransformChoice = value;
+}
+
+int ITKImportImageStack::getImageTransformChoice() const
+{
+  return m_ImageTransformChoice;
 }

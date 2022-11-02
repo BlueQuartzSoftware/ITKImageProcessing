@@ -65,6 +65,7 @@ class ITKImageProcessing_EXPORT ITKImportImageStack : public AbstractFilter
   PYB11_PROPERTY(StackFileListInfo InputFileListInfo READ getInputFileListInfo WRITE setInputFileListInfo)
   PYB11_PROPERTY(int ImageStack READ getImageStack WRITE setImageStack)
   PYB11_PROPERTY(QString ImageDataArrayName READ getImageDataArrayName WRITE setImageDataArrayName)
+  PYB11_PROPERTY(int ImageTransformChoice READ getImageTransformChoice WRITE setImageTransformChoice)
   PYB11_END_BINDINGS()
   // End Python bindings declarations
 
@@ -167,6 +168,17 @@ public:
   Q_PROPERTY(QString ImageDataArrayName READ getImageDataArrayName WRITE setImageDataArrayName)
 
   /**
+   * @brief Setter property for ImageTransformChoice
+   */
+  void setImageTransformChoice(int value);
+  /**
+   * @brief Getter property for ImageTransformChoice
+   * @return Value of ImageTransformChoice
+   */
+  int getImageTransformChoice() const;
+  Q_PROPERTY(int ImageTransformChoice READ getImageTransformChoice WRITE setImageTransformChoice)
+
+  /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
   QString getCompiledLibraryName() const override;
@@ -248,6 +260,7 @@ private:
   QString m_ImageDataArrayName = {SIMPL::CellData::ImageData};
   std::weak_ptr<DataArray<uint8_t>> m_ImageDataPtr;
   uint8_t* m_ImageData = nullptr;
+  int32_t m_ImageTransformChoice = 0;
 
   /**
    * @brief Get the ordered list of input files.
