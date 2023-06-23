@@ -89,12 +89,6 @@ template <typename InputPixelType, typename OutputPixelType, unsigned int Dimens
 void ITKVectorConnectedComponentImage::dataCheckImpl()
 {
   // Check consistency of parameters
-  QVector<QString> supportedTypes;
-  // All integer types
-  supportedTypes << "float"
-                 << "double";
-  checkImageType(supportedTypes, getSelectedCellArrayPath());
-
   ITKImageProcessingBase::dataCheckImpl<InputPixelType, OutputPixelType, Dimension>();
 }
 
@@ -105,6 +99,16 @@ void ITKVectorConnectedComponentImage::dataCheck()
 {
   clearErrorCode();
   clearWarningCode();
+    QVector<QString> supportedTypes;
+  // All integer types
+  supportedTypes << "float"
+                 << "double";
+  if(!checkImageType(supportedTypes, getSelectedCellArrayPath()))
+  {
+      setErrorCondition(-24560, "Unsupported input array type. Only float and double types are supported.");
+      return;
+  }
+
   Dream3DArraySwitchMacroOutputType(this->dataCheckImpl, getSelectedCellArrayPath(), -4, uint32_t, 0);
 }
 

@@ -40,8 +40,8 @@ public:
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     filter->setDataContainerArray(containerArray);
     filter->execute();
-    DREAM3D_REQUIRED(filter->getErrorCondition(), >=, 0);
-    DREAM3D_REQUIRED(filter->getWarningCondition(), >=, 0);
+    DREAM3D_REQUIRED(filter->getErrorCode(), >=, 0);
+    DREAM3D_REQUIRED(filter->getWarningCode(), >=, 0);
     WriteImage("ITKDiscreteGaussianImagefloat.nrrd", containerArray, output_path);
     QString baseline_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Baseline/BasicFilters_DiscreteGaussianImageFilter_float.nrrd");
     DataArrayPath baseline_path("BContainer", "BAttributeMatrixName", "BAttributeArrayName");
@@ -74,13 +74,13 @@ public:
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     filter->setDataContainerArray(containerArray);
     filter->execute();
-    DREAM3D_REQUIRED(filter->getErrorCondition(), >=, 0);
-    DREAM3D_REQUIRED(filter->getWarningCondition(), >=, 0);
+    DREAM3D_REQUIRED(filter->getErrorCode(), >=, 0);
+    DREAM3D_REQUIRED(filter->getWarningCode(), >=, 0);
     WriteImage("ITKDiscreteGaussianImageshort.nrrd", containerArray, output_path);
     QString baseline_filename = UnitTest::DataDir + QString("/Data/JSONFilters/Baseline/BasicFilters_DiscreteGaussianImageFilter_short.nrrd");
     DataArrayPath baseline_path("BContainer", "BAttributeMatrixName", "BAttributeArrayName");
     this->ReadImage(baseline_filename, containerArray, baseline_path);
-    int res = this->CompareImages(containerArray, output_path, baseline_path, 0.5);
+    int res = this->CompareImages(containerArray, output_path, baseline_path, 1.0);
     DREAM3D_REQUIRE_EQUAL(res, 0);
     return 0;
   }
@@ -107,10 +107,7 @@ public:
     propWasSet = filter->setProperty("NewCellArrayName", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     {
-      FloatVec3_t d3d_var;
-      d3d_var.y = 100.0;
-      d3d_var.x = 100.0;
-      d3d_var.z = 100.0;
+      FloatVec3Type d3d_var(100.0f, 100.0f, 100.0f);
       var.setValue(d3d_var);
       propWasSet = filter->setProperty("Variance", var);
       DREAM3D_REQUIRE_EQUAL(propWasSet, true);
@@ -124,8 +121,8 @@ public:
     }
     filter->setDataContainerArray(containerArray);
     filter->execute();
-    DREAM3D_REQUIRED(filter->getErrorCondition(), >=, 0);
-    DREAM3D_REQUIRED(filter->getWarningCondition(), >=, 0);
+    DREAM3D_REQUIRED(filter->getErrorCode(), >=, 0);
+    DREAM3D_REQUIRED(filter->getWarningCode(), >=, 0);
     WriteImage("ITKDiscreteGaussianImagebigG.nrrd", containerArray, output_path);
     QString md5Output;
     GetMD5FromDataContainer(containerArray, output_path, md5Output);

@@ -102,17 +102,6 @@ void ITKBinaryMorphologicalOpeningImage::dataCheckImpl()
 {
   // Check consistency of parameters
   this->CheckVectorEntry<unsigned int, FloatVec3Type>(m_KernelRadius, "KernelRadius", true);
-  QVector<QString> supportedTypes;
-  // All integer types
-  supportedTypes << "uint8_t"
-                 << "int8_t"
-                 << "uint16_t"
-                 << "int16_t"
-                 << "uint_32_t"
-                 << "int32_t"
-                 << "uint64_t"
-                 << "int64_t";
-  checkImageType(supportedTypes, getSelectedCellArrayPath());
 
   ITKImageProcessingBase::dataCheckImpl<InputPixelType, OutputPixelType, Dimension>();
 }
@@ -124,6 +113,22 @@ void ITKBinaryMorphologicalOpeningImage::dataCheck()
 {
   clearErrorCode();
   clearWarningCode();
+    QVector<QString> supportedTypes;
+  // All integer types
+  supportedTypes << "uint8_t"
+                 << "int8_t"
+                 << "uint16_t"
+                 << "int16_t"
+                 << "uint_32_t"
+                 << "int32_t"
+                 << "uint64_t"
+                 << "int64_t";
+  if(!checkImageType(supportedTypes, getSelectedCellArrayPath()))
+  {
+    setErrorCondition(-24560, "Unsupported input array type. Only Numeric types are supported.");
+    return;
+  }
+
   Dream3DArraySwitchMacro(this->dataCheckImpl, getSelectedCellArrayPath(), -4);
 }
 

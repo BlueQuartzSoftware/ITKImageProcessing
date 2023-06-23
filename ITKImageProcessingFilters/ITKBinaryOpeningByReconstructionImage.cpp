@@ -115,7 +115,10 @@ void ITKBinaryOpeningByReconstructionImage::dataCheckImpl()
                  << "int32_t"
                  << "uint64_t"
                  << "int64_t";
-  checkImageType(supportedTypes, getSelectedCellArrayPath());
+  if(!checkImageType(supportedTypes, getSelectedCellArrayPath()))
+  {
+    setErrorCondition(-24560, "Unsupported input array type. Only Numeric types are supported.");
+  }
 
   ITKImageProcessingBase::dataCheckImpl<InputPixelType, OutputPixelType, Dimension>();
 }

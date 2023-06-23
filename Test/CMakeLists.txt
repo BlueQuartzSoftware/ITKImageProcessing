@@ -27,7 +27,7 @@ elseif(ITK_VERSION_MAJOR EQUAL 5)
       ITKImageProcessingWriterTest  
       ITKImageProcessingReaderTest
       EdaxEbsdMontageTest
-
+      ITKDiscreteGaussianImageTest
     # ITKProxTVImageTest
   )
 endif()
